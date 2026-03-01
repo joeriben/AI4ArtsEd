@@ -1,5 +1,102 @@
 # Development Log
 
+## Session 229 - IONOS AI Model Hub Provider Integration
+**Date:** 2026-03-01
+**Focus:** Full integration of IONOS AI Model Hub as 2nd DSGVO-compliant cloud LLM provider (EU datacenter Berlin)
+**Commits:** `a70f0f8`, `69c7bb3`, `1d9a750`
+
+### Context
+
+IONOS AI Model Hub offers an OpenAI-compatible API at `https://openai.inference.de-txl.ionos.com/v1/chat/completions`, hosted in EU datacenter Berlin. Authentication via JWT Bearer token from DCD Token Manager. This is the platform's second DSGVO-compliant cloud provider (after Mistral AI).
+
+### Available Models (IONOS)
+
+| Model | Parameters | Context | Notes |
+|---|---|---|---|
+| `meta-llama/Meta-Llama-3.1-405B-Instruct-FP8` | 405B | 128K | Largest, slowest (~12s) |
+| `openai/gpt-oss-120b` | 120B | — | **Reasoning model**, fastest (~5.2s), best quality |
+| `meta-llama/Llama-3.3-70B-Instruct` | 70B | 128K | Good for structural tasks |
+| `mistralai/Mistral-Small-24B-Instruct` | 24B | — | Lightweight |
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 8B | 128K | Minimal |
+| `openGPT-X/Teuken-7B-instruct-commercial` | 7B | — | German/multilingual |
+
+### Comparative Testing Results
+
+Tested gpt-oss-120b vs Mistral Large vs Llama 405B with two pedagogical prompts ("Ein Baum im Wind", "Eine Stadt bei Nacht mit Regen") using the interception system prompt:
+
+| Model | Speed | Synesthesia | Metaphors | Instruction Following |
+|---|---|---|---|---|
+| **gpt-oss-120b** | **5.2s** | **Excellent** | **Most original** | **Perfect** |
+| Mistral Large | 8-12s | Good | Good, some clichés | Good |
+| Llama 405B | 12s | Moderate | Conventional | Good |
+
+**Decision:** gpt-oss-120b as default for creative stages (Stage 2 interception/optimization, chat helper). Llama 70B for structural stages (translation, safety, legacy, coding) where reasoning overhead is unnecessary.
+
+### Reasoning Model Discovery
+
+gpt-oss-120b is a **reasoning model** — responses include both `reasoning_content` (chain-of-thought) and `content` (final answer). This has two implications:
+
+1. **Token budget**: The UI_MODE max_tokens cap (kids=200, youth=400, expert=600) would starve reasoning, producing null `content`. Fix: minimum 2048 max_tokens for gpt-oss models in both `_call_ionos()` and `_call_ionos_chat()`.
+
+2. **Pedagogical opportunity**: The reasoning chain is visible to students via the existing ChatOverlay "Thinking" toggle (built in Session 175). Updated `_call_ionos_chat()` to return `{"content", "thinking"}` dict (like Ollama) instead of plain string, so `reasoning_content` flows through to the UI.
+
+### Backend Changes
+
+**`prompt_interception_engine.py`:**
+- Provider registry: `ionos` entry with URL, key_file, env_var
+- `_call_ionos()`: Clone of Mistral pattern, IONOS-specific prefix strip, reasoning model max_tokens floor, defensive `content`/`reasoning_content` fallback
+- Routing: `elif request.model.startswith("ionos/"):`
+
+**`chat_routes.py`:**
+- `get_ionos_credentials()`: Reads JWT from `ionos.key` or `IONOS_API_KEY` env var
+- `_call_ionos_chat()`: Returns dict with `thinking` field for ChatOverlay reasoning display
+- Routing in `call_chat_helper()`
+
+**`settings_routes.py`:**
+- `IONOS_KEY_FILE` constant
+- `GET /api/settings/ionos-key` endpoint (masked JWT display)
+- Key saving in `save_settings()`
+- Status in `cloud_apis` dict
+
+**`model_selector.py`:**
+- `ionos/` added to `strip_prefix()` and `extract_model_name()`
+
+**`config.py`:**
+- Provider prefix comment updated
+
+**`hardware_matrix.json`:**
+- IONOS preset with split model strategy:
+  - `gpt-oss-120b`: STAGE2_INTERCEPTION, STAGE2_OPTIMIZATION, CHAT_HELPER
+  - `Llama-3.3-70B-Instruct`: STAGE1_TEXT, STAGE3, STAGE4_LEGACY, CODING
+
+### Frontend Changes
+
+**`SettingsView.vue`:**
+- Provider dropdown: `ionos` option
+- Info box (green/DSGVO): API base URL + DCD Token Manager link
+- JWT token input field
+- DSGVO compliance recognition for `ionos/` prefix
+- Key loading/saving/clearing logic
+
+**`ModelMatrixTab.vue`:**
+- IONOS EU cloud column with DSGVO badge
+
+**`types/settings.ts`:**
+- `'ionos'` added to `CloudProvider` type
+
+**`en.ts`:**
+- 3 new keys: `ionosEu`, `ionosInfo`, `ionosDsgvo`
+
+**`WORK_ORDERS.md`:**
+- `WO-2026-03-01-ionos-provider-strings` for batch translation
+
+### Remaining TODOs
+
+1. **Serverseitige Kostenkontrolle** via IONOS Billing API v3 (`usageFindByDC` endpoint) — API docs are JS-rendered Swagger UI, OpenAPI spec endpoint returns 404
+2. **Live smoke test** with running backend — verify interception output quality and reasoning display in ChatOverlay
+
+---
+
 ## Session 228 - Diffusers JSON→Python Chunk Migration
 **Date:** 2026-03-01
 **Focus:** Eliminate proxy-chunk anti-pattern — migrate 6 Diffusers JSON chunks to self-contained Python chunks
