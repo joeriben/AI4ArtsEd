@@ -33,6 +33,16 @@ logger = logging.getLogger(__name__)
 # Import centralized model selector
 from .model_selector import model_selector
 
+# Import UI_MODE for adaptive token limits
+from config import UI_MODE
+
+# UI_MODE-adaptive max_tokens (hard API limit, ~2 tokens per word)
+UI_MODE_MAX_TOKENS = {
+    "kids": 200,    # ~100 words
+    "youth": 400,   # ~200 words
+    "expert": 600,  # ~300 words
+}
+
 @dataclass
 class PromptInterceptionRequest:
     """Request für Prompt Interception Engine
@@ -154,6 +164,14 @@ class PromptInterceptionEngine:
             # Backend-spezifische Verarbeitung (check fresh model lists)
             self.openrouter_models = self.model_selector.get_openrouter_models()
             self.ollama_models = self.model_selector.get_ollama_models()
+
+            # Cap max_tokens by UI_MODE (only cap DOWN, never increase)
+            mode_limit = UI_MODE_MAX_TOKENS.get(UI_MODE, 600)
+            req_params = request.parameters or {}
+            if req_params.get("max_tokens", 2048) > mode_limit:
+                req_params["max_tokens"] = mode_limit
+                request.parameters = req_params
+                logger.info(f"[BACKEND] max_tokens capped to {mode_limit} (UI_MODE={UI_MODE})")
 
             # Route based on provider prefix (explicit routing)
             # Canvas and other components select specific providers via prefix
