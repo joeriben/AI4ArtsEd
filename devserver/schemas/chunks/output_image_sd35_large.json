@@ -222,7 +222,6 @@
       "1024x1024",
       "1280x1280"
     ],
-    "fallback_chunk": "output_image_sd35_diffusers",
     "notes": "SD3.5 Large requires Dual CLIP (clip_g + t5xxl). Works best at 1024x1024 resolution."
   }
 }

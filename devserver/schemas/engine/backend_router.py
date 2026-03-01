@@ -552,7 +552,21 @@ class BackendRouter:
             chunk_py_path = Path(__file__).parent.parent / "chunks" / f"{chunk_name}.py"
             if chunk_py_path.exists():
                 logger.info(f"[ROUTER] Detected Python chunk: {chunk_name}.py")
-                return await self._execute_python_chunk(chunk_py_path, parameters)
+                result = await self._execute_python_chunk(chunk_py_path, parameters)
+                if result.success:
+                    return result
+
+                # Fallback: Read CHUNK_META.fallback_chunk from the loaded module
+                import sys
+                module = sys.modules.get(f"chunk_{chunk_name}")
+                fallback_name = getattr(module, 'CHUNK_META', {}).get('fallback_chunk') if module else None
+                if fallback_name:
+                    text_prompt = parameters.get('prompt', '') or parameters.get('PREVIOUS_OUTPUT', '') or parameters.get('TEXT_1', '')
+                    logger.info(f"[FALLBACK] Python chunk '{chunk_name}' failed ({result.error}), trying '{fallback_name}'")
+                    fallback_chunk = self._load_output_chunk(fallback_name)
+                    if fallback_chunk:
+                        return await self._process_workflow_chunk(fallback_name, text_prompt, parameters, fallback_chunk)
+                return result
 
             # 2. Load Output-Chunk from JSON (legacy)
             chunk = self._load_output_chunk(chunk_name)
@@ -577,9 +591,6 @@ class BackendRouter:
             if backend_type == 'triton':
                 logger.info(f"[ROUTER] Using Triton backend for '{chunk_name}'")
                 return await self._process_triton_chunk(chunk_name, text_prompt, parameters, chunk)
-            elif backend_type == 'diffusers':
-                logger.info(f"[ROUTER] Using Diffusers backend for '{chunk_name}'")
-                return await self._process_diffusers_chunk(chunk_name, text_prompt, parameters, chunk)
             elif backend_type == 'heartmula':
                 logger.info(f"[ROUTER] Using HeartMuLa backend for '{chunk_name}'")
                 return await self._process_heartmula_chunk(chunk_name, text_prompt, parameters, chunk)
@@ -600,30 +611,10 @@ class BackendRouter:
                 # Check if LoRAs are configured (config-specific or global)
                 has_loras = bool(parameters.get('loras', LORA_TRIGGERS))
 
-                if requires_workflow:
-                    logger.info(f"[ROUTER] Using workflow API for '{chunk_name}' (requires_workflow=true)")
-                    return await self._process_workflow_chunk(chunk_name, text_prompt, parameters, chunk)
-                elif has_loras:
-                    # Prefer Diffusers for LoRA when enabled (native load_lora_weights)
-                    from config import DIFFUSERS_ENABLED
-                    if DIFFUSERS_ENABLED:
-                        diffusers_chunk = self._get_diffusers_compatible_chunk(chunk_name, chunk)
-                        if diffusers_chunk:
-                            logger.info(f"[ROUTER] Using Diffusers backend for '{chunk_name}' (LoRA + DIFFUSERS_ENABLED)")
-                            return await self._process_diffusers_chunk(chunk_name, text_prompt, parameters, diffusers_chunk)
-                    # Fallback: ComfyUI workflow with LoRA injection
-                    logger.info(f"[ROUTER] Using workflow API for '{chunk_name}' (LoRA injection, ComfyUI fallback)")
+                if requires_workflow or has_loras:
+                    logger.info(f"[ROUTER] Using workflow API for '{chunk_name}' (requires_workflow={requires_workflow}, has_loras={has_loras})")
                     return await self._process_workflow_chunk(chunk_name, text_prompt, parameters, chunk)
                 else:
-                    # Session 150: Prefer Diffusers when enabled (faster, simpler)
-                    from config import DIFFUSERS_ENABLED
-                    if DIFFUSERS_ENABLED:
-                        # Session 150: Auto-detect Diffusers-compatible models
-                        diffusers_chunk = self._get_diffusers_compatible_chunk(chunk_name, chunk)
-                        if diffusers_chunk:
-                            logger.info(f"[ROUTER] Using Diffusers backend for '{chunk_name}' (DIFFUSERS_ENABLED=true)")
-                            return await self._process_diffusers_chunk(chunk_name, text_prompt, parameters, diffusers_chunk)
-                    # Fallback: SwarmUI's simple Text2Image API
                     logger.info(f"[ROUTER] Using SwarmUI simple API for '{chunk_name}'")
                     return await self._process_image_chunk_simple(chunk_name, text_prompt, parameters, chunk)
             else:
@@ -639,40 +630,6 @@ class BackendRouter:
                 content="",
                 error=f"Output-Chunk processing error: {str(e)}"
             )
-
-    def _get_diffusers_compatible_chunk(self, chunk_name: str, chunk: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """
-        Check if chunk can be handled by Diffusers and return modified chunk with diffusers_config.
-
-        Session 150: Auto-detect Diffusers-compatible models (SD3.5, Flux2)
-        Returns None if not compatible, otherwise returns chunk with diffusers_config.
-        """
-        # Already has diffusers_config - use as-is
-        if chunk.get('diffusers_config'):
-            return chunk
-
-        # Auto-detect based on chunk name
-        diffusers_models = {
-            'sd35': {
-                'model_id': 'stabilityai/stable-diffusion-3.5-large',
-                'pipeline_class': 'StableDiffusion3Pipeline',
-                'torch_dtype': 'float16'
-            },
-            # Flux2 NOT auto-detected: 106GB BF16 model exceeds from_pretrained() RAM limits.
-            # Use ComfyUI (config 'flux2') or explicit diffusers chunk (config 'flux2_diffusers').
-        }
-
-        chunk_lower = chunk_name.lower()
-        for key, config in diffusers_models.items():
-            if key in chunk_lower:
-                logger.info(f"[ROUTER] Auto-detected Diffusers model for '{chunk_name}': {config['model_id']}")
-                # Create modified chunk with diffusers_config
-                modified_chunk = chunk.copy()
-                modified_chunk['diffusers_config'] = config
-                return modified_chunk
-
-        # Not a Diffusers-compatible model
-        return None
 
     async def _process_image_chunk_simple(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
         """Process image chunks — routes to ComfyUI direct (WS) or SwarmUI legacy based on config."""
@@ -1971,265 +1928,6 @@ class BackendRouter:
             # Fallback to ComfyUI on error
             logger.info(f"[TRITON] Falling back to ComfyUI due to error")
             return await self._process_workflow_chunk(chunk_name, prompt, parameters, chunk)
-
-    async def _process_diffusers_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
-        """Process image generation using HuggingFace Diffusers directly
-
-        Session 149: Alternative backend for direct model inference.
-        Provides full control and optional TensorRT acceleration.
-
-        Args:
-            chunk_name: Name of the output chunk
-            prompt: Text prompt for generation
-            parameters: Generation parameters (width, height, steps, etc.)
-            chunk: Chunk configuration with diffusers_config
-
-        Returns:
-            BackendResponse with generated image
-        """
-        try:
-            from my_app.services.diffusers_backend import get_diffusers_backend
-            from config import DIFFUSERS_ENABLED
-            import random
-
-            # Check if Diffusers backend is enabled
-            if not DIFFUSERS_ENABLED:
-                logger.warning(f"[DIFFUSERS] Backend disabled in config, falling back to ComfyUI")
-                if chunk.get('meta', {}).get('fallback_chunk'):
-                    return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Backend disabled in config")
-                return await self._process_workflow_chunk(chunk_name, prompt, parameters, chunk)
-
-            backend = get_diffusers_backend()
-
-            # Check availability (torch, diffusers, GPU)
-            if not await backend.is_available():
-                logger.warning(f"[DIFFUSERS] Backend not available, falling back to ComfyUI")
-                if chunk.get('meta', {}).get('fallback_chunk'):
-                    return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Backend not available (missing packages or GPU)")
-                return await self._process_workflow_chunk(chunk_name, prompt, parameters, chunk)
-
-            # Extract parameters from chunk config
-            input_mappings = chunk.get('input_mappings', {})
-            diffusers_config = chunk.get('diffusers_config', {})
-
-            model_id = diffusers_config.get('model_id', 'stabilityai/stable-diffusion-3.5-large')
-            pipeline_class = diffusers_config.get('pipeline_class', 'StableDiffusion3Pipeline')
-
-            # Get generation parameters
-            width = int(parameters.get('width') or input_mappings.get('width', {}).get('default', 1024))
-            height = int(parameters.get('height') or input_mappings.get('height', {}).get('default', 1024))
-            steps = int(parameters.get('steps') or input_mappings.get('steps', {}).get('default', 25))
-            cfg_scale = float(parameters.get('cfg') or input_mappings.get('cfg', {}).get('default', 4.5))
-            negative_prompt = parameters.get('negative_prompt') or input_mappings.get('negative_prompt', {}).get('default', '')
-
-            # Seed handling
-            seed = parameters.get('seed') or input_mappings.get('seed', {}).get('default', 'random')
-            if seed == 'random' or seed == -1:
-                seed = random.randint(0, 2**32 - 1)
-                logger.info(f"[DIFFUSERS] Generated random seed: {seed}")
-            else:
-                seed = int(seed)
-
-            # LoRA extraction
-            loras = parameters.get('loras') or []
-            if loras:
-                logger.info(f"[DIFFUSERS] Applying {len(loras)} LoRA(s): {[l['name'] for l in loras]}")
-
-            # Generate image via Diffusers
-            logger.info(f"[DIFFUSERS] Generating image: model={model_id}, steps={steps}, size={width}x{height}")
-
-            # Attention Cartography mode: capture attention maps during generation
-            if diffusers_config.get('attention_mode'):
-                capture_layers_param = parameters.get('capture_layers') or diffusers_config.get('capture_layers', [3, 9, 17])
-                capture_every_n = int(parameters.get('capture_every_n_steps') or diffusers_config.get('capture_every_n_steps', 5))
-
-                logger.info(f"[DIFFUSERS] Attention cartography mode: layers={capture_layers_param}, every_n={capture_every_n}")
-                attention_result = await backend.generate_image_with_attention(
-                    prompt=prompt,
-                    model_id=model_id,
-                    negative_prompt=negative_prompt,
-                    width=width,
-                    height=height,
-                    steps=steps,
-                    cfg_scale=cfg_scale,
-                    seed=seed,
-                    capture_layers=capture_layers_param,
-                    capture_every_n_steps=capture_every_n,
-                )
-
-                if not attention_result:
-                    logger.error("[DIFFUSERS] Attention generation failed, falling back to ComfyUI")
-                    if chunk.get('meta', {}).get('fallback_chunk'):
-                        return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Attention generation returned empty result")
-                    return await self._process_workflow_chunk(chunk_name, prompt, parameters, chunk)
-
-                return BackendResponse(
-                    success=True,
-                    content="diffusers_attention_generated",
-                    metadata={
-                        'chunk_name': chunk_name,
-                        'media_type': 'image',
-                        'backend': 'diffusers',
-                        'model_id': model_id,
-                        'seed': attention_result['seed'],
-                        'image_data': attention_result['image_base64'],
-                        'attention_data': {
-                            'tokens': attention_result['tokens'],
-                            'word_groups': attention_result.get('word_groups', []),
-                            'tokens_t5': attention_result.get('tokens_t5', []),
-                            'word_groups_t5': attention_result.get('word_groups_t5', []),
-                            'clip_token_count': attention_result.get('clip_token_count', 0),
-                            'attention_maps': attention_result['attention_maps'],
-                            'spatial_resolution': attention_result['spatial_resolution'],
-                            'image_resolution': attention_result['image_resolution'],
-                            'capture_layers': attention_result['capture_layers'],
-                            'capture_steps': attention_result['capture_steps'],
-                        },
-                        'parameters': {
-                            'width': width,
-                            'height': height,
-                            'steps': steps,
-                            'cfg_scale': cfg_scale
-                        }
-                    }
-                )
-
-            # Feature Probing mode: analyze embedding differences between two prompts
-            if diffusers_config.get('feature_probing_mode'):
-                prompt_b = parameters.get('prompt_b', '')
-                probing_encoder = parameters.get('probing_encoder') or diffusers_config.get('probing_encoder', 't5')
-                transfer_dims = parameters.get('transfer_dims')
-
-                logger.info(f"[DIFFUSERS] Feature probing mode: encoder={probing_encoder}, transfer={'yes' if transfer_dims else 'no'}")
-                probing_result = await backend.generate_image_with_probing(
-                    prompt_a=prompt,
-                    prompt_b=prompt_b,
-                    encoder=probing_encoder,
-                    transfer_dims=transfer_dims,
-                    negative_prompt=negative_prompt,
-                    width=width,
-                    height=height,
-                    steps=steps,
-                    cfg_scale=cfg_scale,
-                    seed=seed,
-                    model_id=model_id,
-                )
-
-                if not probing_result or (isinstance(probing_result, dict) and 'error' in probing_result):
-                    error_detail = probing_result.get('error', 'unknown') if isinstance(probing_result, dict) else 'empty result'
-                    logger.error(f"[DIFFUSERS] Feature probing failed: {error_detail}")
-                    return BackendResponse(
-                        success=False,
-                        content="Feature probing generation failed",
-                        error=f"Feature probing: {error_detail}",
-                    )
-
-                return BackendResponse(
-                    success=True,
-                    content="diffusers_probing_generated",
-                    metadata={
-                        'chunk_name': chunk_name,
-                        'media_type': 'image',
-                        'backend': 'diffusers',
-                        'model_id': model_id,
-                        'seed': probing_result['seed'],
-                        'image_data': probing_result['image_base64'],
-                        'probing_data': probing_result['probing_data'],
-                        'parameters': {
-                            'width': width,
-                            'height': height,
-                            'steps': steps,
-                            'cfg_scale': cfg_scale
-                        }
-                    }
-                )
-
-            # Surrealizer: T5-CLIP alpha fusion mode
-            alpha_factor = parameters.get('alpha_factor')
-            t5_prompt = parameters.get('t5_prompt')
-            # Auto-generate alpha for fusion configs when not explicitly provided (e.g. Canvas)
-            if alpha_factor is None and diffusers_config.get('fusion_mode') == 't5_clip_alpha':
-                import random as _rng
-                alpha_factor = _rng.randint(20, 30)
-                logger.info(f"[DIFFUSERS] Auto-generated alpha_factor: {alpha_factor} (fusion_mode requires it)")
-            if alpha_factor is not None and diffusers_config.get('fusion_mode') == 't5_clip_alpha':
-                fusion_strategy = parameters.get('fusion_strategy', 'dual_alpha')
-                logger.info(f"[DIFFUSERS] Fusion mode: t5_clip_alpha, strategy={fusion_strategy}, alpha={alpha_factor}, t5_expanded={t5_prompt is not None}")
-                image_bytes = await backend.generate_image_with_fusion(
-                    prompt=prompt,
-                    t5_prompt=t5_prompt,
-                    alpha_factor=float(alpha_factor),
-                    model_id=model_id,
-                    negative_prompt=negative_prompt,
-                    width=width,
-                    height=height,
-                    steps=steps,
-                    cfg_scale=cfg_scale,
-                    seed=seed,
-                    loras=loras if loras else None,
-                    fusion_strategy=fusion_strategy,
-                )
-            else:
-                # SD3.5 triple-prompt: forward per-encoder prompts if present
-                extra_kwargs = {}
-                if parameters.get('prompt_2'):
-                    extra_kwargs['prompt_2'] = parameters['prompt_2']
-                if parameters.get('prompt_3'):
-                    extra_kwargs['prompt_3'] = parameters['prompt_3']
-                if extra_kwargs:
-                    logger.info(f"[DIFFUSERS] Triple-prompt: forwarding {list(extra_kwargs.keys())}")
-
-                image_bytes = await backend.generate_image(
-                    prompt=prompt,
-                    model_id=model_id,
-                    negative_prompt=negative_prompt,
-                    width=width,
-                    height=height,
-                    steps=steps,
-                    cfg_scale=cfg_scale,
-                    seed=seed,
-                    pipeline_class=pipeline_class,
-                    loras=loras if loras else None,
-                    **extra_kwargs,
-                )
-
-            if not image_bytes:
-                logger.error("[DIFFUSERS] Generation returned empty result")
-                if chunk.get('meta', {}).get('fallback_chunk'):
-                    return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Generation returned empty result")
-                return await self._process_image_chunk_simple(chunk_name, prompt, parameters, chunk)
-
-            # Return with binary image data
-            import base64
-            return BackendResponse(
-                success=True,
-                content="diffusers_generated",
-                metadata={
-                    'chunk_name': chunk_name,
-                    'media_type': chunk.get('media_type', 'image'),
-                    'backend': 'diffusers',
-                    'model_id': model_id,
-                    'seed': seed,
-                    'image_data': base64.b64encode(image_bytes).decode('utf-8'),
-                    'parameters': {
-                        'width': width,
-                        'height': height,
-                        'steps': steps,
-                        'cfg_scale': cfg_scale
-                    }
-                }
-            )
-
-        except Exception as e:
-            logger.error(f"[DIFFUSERS] Error processing chunk '{chunk_name}': {e}")
-            import traceback
-            traceback.print_exc()
-
-            # Fallback: prefer chunk-declared fallback, else SwarmUI simple API
-            logger.info(f"[DIFFUSERS] Falling back due to error: {e}")
-            if chunk.get('meta', {}).get('fallback_chunk'):
-                return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, f"Exception: {e}")
-            return await self._process_image_chunk_simple(chunk_name, prompt, parameters, chunk)
 
     async def _process_heartmula_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
         """Process music generation using HeartMuLa (heartlib)

@@ -14,7 +14,7 @@
   },
 
   "parameters": {
-    "OUTPUT_CHUNK": "output_image_sd35_large",
+    "OUTPUT_CHUNK": "output_image_sd35_diffusers",
     "NEGATIVE_PROMPT": "blurry, bad quality, watermark, text, distorted, malformed, disfigured, low resolution",
     "WIDTH": 1024,
     "HEIGHT": 1024,
@@ -37,8 +37,8 @@
     "stage": "output",
     "model": "DEFAULT",
     "model_file": "sd3.5_large.safetensors",
-    "backend": "comfyui",
-    "backend_type": "comfyui",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
     "clip_models": [
       "clip_g.safetensors",
       "t5xxl_enconly.safetensors"
