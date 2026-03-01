@@ -282,7 +282,7 @@ function getShortModelName(fullModel: string): string {
     // Try to find a meaningful short form
     // e.g. "Meta-Llama-3.1-405B-Instruct-FP8" → "Llama-3.1-405B"
     const match = name.match(/(Llama[- ]\d[\w.-]*\d+B|gpt-oss[:\-]\w+|Mistral[- ]\w+|claude[- ]\w+)/i)
-    if (match) return match[1]
+    if (match?.[1]) return match[1]
     return name.substring(0, 18) + '...'
   }
   return name
