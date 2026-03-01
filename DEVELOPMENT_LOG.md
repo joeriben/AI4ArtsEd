@@ -1,5 +1,104 @@
 # Development Log
 
+## Session 228 - Diffusers JSON→Python Chunk Migration
+**Date:** 2026-03-01
+**Focus:** Eliminate proxy-chunk anti-pattern — migrate 6 Diffusers JSON chunks to self-contained Python chunks
+**Commit:** `5d5daf3`
+
+### Problem
+
+The 6 Diffusers JSON chunks (`output_image_sd35_diffusers.json`, etc.) violated the 3-layer architecture principle documented in `ARCHITECTURE_VIOLATION_ProxyChunkPattern.md`. They declared parameters (input_mappings, diffusers_config) but contained zero execution logic — all ~260 lines of generation code lived in `_process_diffusers_chunk()` inside `backend_router.py`. This created a monolithic routing method that handled SD3.5, Turbo, Flux2, Surrealizer fusion, Attention Cartography, and Feature Probing through a single if/elif chain reading JSON-declared flags (`attention_mode`, `feature_probing_mode`, `fusion_mode`).
+
+### Solution
+
+6 self-contained Python chunks, each owning its complete execution flow. Pattern follows the existing reference implementations (`output_image_concept_algebra_diffusers.py`, `output_image_denoising_archaeology_diffusers.py`).
+
+**Key design decisions:**
+
+1. **Dual-signature for parameter names**: Output configs pass UPPERCASE params (`CFG`, `STEPS`, `WIDTH`), pipeline/frontend may pass lowercase. Each chunk accepts both and resolves with `is not None` checks (critical: `CFG=0.0` for Turbo must not be treated as falsy).
+
+2. **Fallback via CHUNK_META, not chunk code**: Chunks raise `RuntimeError` on failure. The router's `_process_output_chunk()` reads `CHUNK_META.fallback_chunk` from the loaded `sys.modules` entry and falls back to ComfyUI. This keeps fallback knowledge in the router (where it belongs) while chunks declare their fallback target declaratively.
+
+3. **Fallback chains preserved**:
+   - `sd35_diffusers.py` → `sd35_large.json` (ComfyUI)
+   - `sd35_turbo_diffusers.py` → `sd35_diffusers.py` → `sd35_large.json`
+   - `flux2_diffusers.py` → `flux2.json` (ComfyUI)
+   - Surrealizer / Attention / Probing → None (no ComfyUI equivalent)
+
+4. **`sd35_large.json` config updated**: `OUTPUT_CHUNK` now points to `output_image_sd35_diffusers` (was `output_image_sd35_large` with auto-detection). `backend_type` changed from `comfyui` to `diffusers`. The old auto-detection via `_get_diffusers_compatible_chunk()` is removed.
+
+5. **`flux2.json` stays on ComfyUI**: 106GB BF16 model, ComfyUI handles FP8 quantization. The `output_image_flux2_diffusers.py` chunk exists for configs that explicitly opt in.
+
+### Dead Code Removed (323 lines from backend_router.py)
+
+- `_process_diffusers_chunk()` (~260 lines) — the monolithic Diffusers handler
+- `_get_diffusers_compatible_chunk()` (~30 lines) — auto-detection heuristic
+- `elif backend_type == 'diffusers'` routing branch
+- LoRA auto-detection + `DIFFUSERS_ENABLED` branching for ComfyUI-declared chunks
+
+The `_fallback_to_comfyui()` method stays — still used by `_process_stable_audio_chunk()` and `_process_heartmula_chunk()`.
+
+### Bugfix: Circular Fallback in output_image_sd35_large.json
+
+The ComfyUI chunk `output_image_sd35_large.json` had `"fallback_chunk": "output_image_sd35_diffusers"`, creating a potential circular reference (Diffusers → ComfyUI → Diffusers). Removed. ComfyUI chunks are terminal fallback targets.
+
+### Test Strategy
+
+Wrote 39 unit tests in `devserver/tests/test_diffusers_chunk_migration.py` covering 11 test suites. Tests use `unittest.mock.AsyncMock` to mock the GPU backend — no GPU or running service required.
+
+| Suite | Tests | Coverage |
+|---|---|---|
+| 1. Structure | 7 | Files exist, JSON deleted, CHUNK_META fields, DEFAULTS, execute() async, fallback chains, fallback targets exist |
+| 2. Content markers | 1 | All 3 markers (`diffusers_generated`, `diffusers_attention_generated`, `diffusers_probing_generated`) found in `schema_pipeline_routes.py` consumers |
+| 3. Parameters | 10 | Prompt resolution (prompt → TEXT_1 → PREVIOUS_OUTPUT), uppercase/lowercase params, lowercase priority, CFG=0.0 preserved, triple-prompt forwarding, LoRA forwarding, empty prompt rejection |
+| 4. Backend unavailability | 2 | All chunks raise RuntimeError when `is_available()=False`, all standard chunks raise on empty backend result |
+| 5. Surrealizer | 3 | Auto-alpha 20-30, explicit alpha/strategy/t5_prompt forwarding, no fallback |
+| 6. Attention | 2 | Correct return structure (attention_data with all sub-fields), default capture_layers [3,9,17] |
+| 7. Probing | 3 | Correct return structure, transfer_dims forwarding, error dict handling |
+| 8. Flux2 | 1 | Correct model_id, pipeline_class=Flux2Pipeline, defaults |
+| 9. Configs | 3 | 5 output configs point to correct chunks, sd35_large.json backend_type=diffusers, no circular fallbacks in any JSON chunk |
+| 10. Router | 4 | No dangling method refs, no diffusers routing branch, fallback logic present in _process_output_chunk, reference chunks untouched |
+| 11. Seeds | 3 | seed='random' → valid int, explicit seed forwarded, seed=-1 → random |
+
+**Critical test: CFG=0.0 (tests 3.6, 3.7)** — the Turbo model requires `cfg_scale=0.0`. Using `or` instead of `is not None` would silently fall through to a default value, producing wrong images. Both lowercase and uppercase paths are tested.
+
+**Critical test: Content markers (test 2.1)** — wrong markers = silent data loss. The test reads `schema_pipeline_routes.py` source and verifies all 3 marker strings appear. If a consumer branch is renamed or removed, this test fails.
+
+### Files Created
+- `devserver/schemas/chunks/output_image_sd35_diffusers.py`
+- `devserver/schemas/chunks/output_image_sd35_turbo_diffusers.py`
+- `devserver/schemas/chunks/output_image_flux2_diffusers.py`
+- `devserver/schemas/chunks/output_image_surrealizer_diffusers.py`
+- `devserver/schemas/chunks/output_image_attention_cartography_diffusers.py`
+- `devserver/schemas/chunks/output_image_feature_probing_diffusers.py`
+- `devserver/tests/test_diffusers_chunk_migration.py`
+
+### Files Modified
+- `devserver/schemas/engine/backend_router.py` — fallback logic added, 323 lines removed
+- `devserver/schemas/configs/output/sd35_large.json` — OUTPUT_CHUNK + backend_type
+- `devserver/schemas/chunks/output_image_sd35_large.json` — circular fallback removed
+
+### Files Deleted
+- `devserver/schemas/chunks/output_image_sd35_diffusers.json`
+- `devserver/schemas/chunks/output_image_sd35_turbo_diffusers.json`
+- `devserver/schemas/chunks/output_image_flux2_diffusers.json`
+- `devserver/schemas/chunks/output_image_surrealizer_diffusers.json`
+- `devserver/schemas/chunks/output_image_attention_cartography_diffusers.json`
+- `devserver/schemas/chunks/output_image_feature_probing_diffusers.json`
+
+### Status
+Migration complete. All 39 tests pass. The `ARCHITECTURE_VIOLATION_ProxyChunkPattern.md` anti-pattern is resolved for all Diffusers chunks. Remaining JSON chunks (ComfyUI, Stable Audio, HeartMuLa, video) are not proxy-chunks — they either contain workflow definitions or are handled by dedicated router methods with domain-specific logic.
+
+### Verification Pending
+Smoke-test with running backend (GPU service + DevServer). The unit tests mock the backend — a live test should verify:
+1. SD3.5 generation via `sd35_large` config → log shows `[PYTHON-CHUNK] Loading chunk:`
+2. GPU service stopped → fallback to ComfyUI → log shows `[FALLBACK]`
+3. Surrealizer with alpha slider → fusion works
+4. Attention Cartography → heatmaps render
+5. Recorder → generated images appear in session history
+
+---
+
 ## Session 227 - T5 Interpretability: From SAE to Cultural Drift
 **Date:** 2026-02-28 / 2026-03-01
 **Focus:** Complete T5 interpretability pipeline, validate sonification methods, discover cultural drift in semantic axes
