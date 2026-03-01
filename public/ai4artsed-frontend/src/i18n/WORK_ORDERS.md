@@ -6,6 +6,27 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
+### WO-2026-03-01-step-sequencer
+- **Session**: 231
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.modeSequencer` (NEW): 'Sequencer'
+  - `latentLab.crossmodal.synth.sequencer.play` (NEW): 'Play'
+  - `latentLab.crossmodal.synth.sequencer.stop` (NEW): 'Stop'
+  - `latentLab.crossmodal.synth.sequencer.bpm` (NEW): 'BPM'
+  - `latentLab.crossmodal.synth.sequencer.bpmHint` (NEW): 'Tempo in beats per minute (16th-note steps)'
+  - `latentLab.crossmodal.synth.sequencer.pattern` (NEW): 'Pattern'
+  - `latentLab.crossmodal.synth.sequencer.midiSync` (NEW): 'MIDI Sync'
+  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_up` (NEW): 'Arpeggio Up'
+  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_down` (NEW): 'Arpeggio Down'
+  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_updown` (NEW): 'Arpeggio Up-Down'
+  - `latentLab.crossmodal.synth.sequencer.patterns.octaves` (NEW): 'Octaves'
+  - `latentLab.crossmodal.synth.sequencer.patterns.power_chord` (NEW): 'Power Chord'
+  - `latentLab.crossmodal.synth.sequencer.patterns.minor_pentatonic` (NEW): 'Minor Pentatonic'
+  - `latentLab.crossmodal.synth.sequencer.patterns.bass_groove` (NEW): 'Bass Groove'
+  - `latentLab.crossmodal.synth.sequencer.patterns.trance_gate` (NEW): 'Trance Gate'
+- **Context**: Step sequencer for the Crossmodal Lab synth tab. Replaces the broken Wavetable mode as the 3rd playback option. Musical pattern names should be translated naturally (e.g. "Arpeggio Aufwärts" in DE, not literal). BPM stays as "BPM" in all languages. "MIDI Sync" can stay English in most languages or be adapted.
+
 ### WO-2026-03-01-semantic-axes-synth
 - **Session**: 230
 - **Scope**: en.ts

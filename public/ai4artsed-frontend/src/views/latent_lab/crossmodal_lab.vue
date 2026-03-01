@@ -325,12 +325,11 @@
             >{{ t('latentLab.crossmodal.synth.modePingPong') }}</button>
             <button
               class="mode-btn"
-              :class="{ active: playbackMode === 'wavetable' }"
-              :disabled="!wavetableSupported"
-              @click="setPlaybackMode('wavetable')"
-            >{{ t('latentLab.crossmodal.synth.modeWavetable') }}</button>
+              :class="{ active: playbackMode === 'sequencer' }"
+              @click="setPlaybackMode('sequencer')"
+            >{{ t('latentLab.crossmodal.synth.modeSequencer') }}</button>
           </div>
-          <div v-if="playbackMode !== 'wavetable'" class="loop-options">
+          <div v-if="playbackMode !== 'sequencer'" class="loop-options">
             <label class="inline-toggle">
               <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
               {{ t('latentLab.crossmodal.synth.loopOptimize') }}
@@ -339,27 +338,49 @@
               → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
             </span>
           </div>
-          <span v-if="playbackMode !== 'wavetable'" class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
+          <span v-if="playbackMode !== 'sequencer'" class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
         </div>
-        <!-- Wavetable scan slider -->
-        <div v-if="playbackMode === 'wavetable'" class="wavetable-controls">
-          <div class="transpose-row">
-            <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
+        <!-- Step Sequencer controls -->
+        <div v-if="playbackMode === 'sequencer'" class="sequencer-controls">
+          <div class="sequencer-transport">
+            <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
+              {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
+            </button>
+            <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
+              {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
+              <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
+            </span>
+          </div>
+          <div class="sequencer-pattern-row">
+            <label>{{ t('latentLab.crossmodal.synth.sequencer.pattern') }}</label>
+            <select :value="sequencer.patternIndex.value" @change="onPatternChange">
+              <option v-for="(p, idx) in sequencer.patterns" :key="idx" :value="idx">
+                {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
+              </option>
+            </select>
+          </div>
+          <div class="sequencer-bpm-row">
+            <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
             <input
               type="range"
-              :value="wavetableScan"
-              min="0"
-              max="1"
-              step="0.001"
-              :disabled="!wavetableOsc.hasFrames.value"
-              @input="onScanInput"
+              :value="sequencer.bpm.value"
+              min="60"
+              max="200"
+              step="1"
+              :disabled="sequencer.midiClockActive.value"
+              @input="onBpmInput"
             />
-            <span class="transpose-value">{{ wavetableScan.toFixed(3) }}</span>
+            <span class="transpose-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
+            <span class="param-hint">{{ t('latentLab.crossmodal.synth.sequencer.bpmHint') }}</span>
           </div>
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
-          <span v-if="wavetableOsc.frameCount.value > 0" class="wavetable-frame-count">
-            {{ t('latentLab.crossmodal.synth.wavetableFrames', { count: wavetableOsc.frameCount.value }) }}
-          </span>
+          <div class="step-dots">
+            <span
+              v-for="i in sequencer.stepCount.value"
+              :key="i"
+              class="step-dot"
+              :class="{ active: sequencer.isPlaying.value && sequencer.currentStep.value === i - 1 }"
+            />
+          </div>
         </div>
         <!-- Transpose -->
         <div class="transpose-row">
@@ -376,7 +397,7 @@
           <span class="transpose-value">{{ formatTranspose(looper.transposeSemitones.value) }}</span>
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.transposeHint') }}</span>
         </div>
-        <div v-if="playbackMode !== 'wavetable'" class="transpose-mode-row">
+        <div v-if="playbackMode !== 'sequencer'" class="transpose-mode-row">
           <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
             <input
               type="radio"
@@ -399,7 +420,7 @@
           </label>
         </div>
         <!-- Crossfade duration -->
-        <div v-if="playbackMode !== 'wavetable'" class="transpose-row">
+        <div v-if="playbackMode !== 'sequencer'" class="transpose-row">
           <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
           <input
             type="range"
@@ -456,7 +477,7 @@
           <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
             {{ t('latentLab.crossmodal.synth.saveRaw') }}
           </button>
-          <button v-if="playbackMode !== 'wavetable'" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+          <button v-if="playbackMode !== 'sequencer'" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
             {{ t('latentLab.crossmodal.synth.saveLoop') }}
           </button>
         </div>
@@ -725,6 +746,7 @@ import { useAudioLooper } from '@/composables/useAudioLooper'
 import { useWavetableOsc } from '@/composables/useWavetableOsc'
 import { useEnvelope } from '@/composables/useEnvelope'
 import { useWebMidi } from '@/composables/useWebMidi'
+import { useStepSequencer } from '@/composables/useStepSequencer'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -816,12 +838,14 @@ function drawWaveform() {
   }
 }
 
-// ===== Wavetable Oscillator =====
+// ===== Wavetable Oscillator (dormant — no UI entry point, kept for future) =====
 const wavetableOsc = useWavetableOsc()
-type PlaybackMode = 'loop' | 'pingpong' | 'wavetable'
+type PlaybackMode = 'loop' | 'pingpong' | 'sequencer'
 const playbackMode = ref<PlaybackMode>('loop')
 const wavetableScan = ref(0)
-const wavetableSupported = ref(typeof AudioWorkletNode !== 'undefined')
+
+// ===== Step Sequencer =====
+const sequencer = useStepSequencer()
 
 // ===== ADSR Envelope =====
 const envelope = useEnvelope()
@@ -830,10 +854,8 @@ let envelopeWired = false
 /** Lazily wire envelope GainNode between engines and AudioContext destination. */
 function wireEnvelope() {
   if (envelopeWired) return
-  // Need an AudioContext — get it from whichever engine is active
-  const ac = playbackMode.value === 'wavetable'
-    ? wavetableOsc.getContext()
-    : looper.getContext()
+  // Need an AudioContext — get from looper (always available, sequencer uses it too)
+  const ac = looper.getContext()
   const envNode = envelope.createNode(ac)
   envNode.connect(ac.destination)
   looper.setDestination(envNode)
@@ -865,8 +887,13 @@ midi.mapCC(64, (v) => { looper.setLoop(v > 0.5) })
 // CC5 → Wavetable scan position
 midi.mapCC(5, (v) => { wavetableScan.value = v; wavetableOsc.setScanPosition(v) })
 
+// MIDI Clock → Step Sequencer
+midi.onClock(sequencer.handleMidiClock)
+
 // MIDI Note → Monophonic synth with ADSR envelope (NEVER triggers generation)
+// In sequencer mode, MIDI notes are ignored (sequencer drives the looper)
 midi.onNote((note, velocity, on) => {
+  if (playbackMode.value === 'sequencer') return
   if (on) {
     wireEnvelope()
     const wasEmpty = heldNotes.length === 0
@@ -875,26 +902,14 @@ midi.onNote((note, velocity, on) => {
     if (idx !== -1) heldNotes.splice(idx, 1)
     heldNotes.push(note)
 
-    if (playbackMode.value === 'wavetable') {
-      wavetableOsc.setFrequencyFromNote(note)
-      if (wasEmpty) {
-        // Non-legato: retrigger engine + attack
-        if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) {
-          wavetableOsc.start()
-        }
-        envelope.triggerAttack(velocity)
-      }
-      // Legato: just pitch change, envelope continues at sustain
-    } else {
-      const semitones = note - MIDI_REF_NOTE
-      looper.setTranspose(semitones)
-      if (wasEmpty) {
-        // Non-legato: hard retrigger + attack
-        if (looper.hasAudio.value) looper.retrigger()
-        envelope.triggerAttack(velocity)
-      }
-      // Legato: just transpose, envelope continues at sustain
+    const semitones = note - MIDI_REF_NOTE
+    looper.setTranspose(semitones)
+    if (wasEmpty) {
+      // Non-legato: hard retrigger + attack
+      if (looper.hasAudio.value) looper.retrigger()
+      envelope.triggerAttack(velocity)
     }
+    // Legato: just transpose, envelope continues at sustain
   } else {
     // Note-off: remove from stack
     const idx = heldNotes.indexOf(note)
@@ -904,21 +919,13 @@ midi.onNote((note, velocity, on) => {
       // Last note released: start release phase, stop engines after release
       envelope.triggerRelease(() => {
         if (heldNotes.length === 0) {
-          if (playbackMode.value === 'wavetable') {
-            wavetableOsc.stop()
-          } else {
-            looper.stop()
-          }
+          looper.stop()
         }
       })
     } else {
       // Notes remaining: switch pitch to last held note
       const lastNote = heldNotes[heldNotes.length - 1]!
-      if (playbackMode.value === 'wavetable') {
-        wavetableOsc.setFrequencyFromNote(lastNote)
-      } else {
-        looper.setTranspose(lastNote - MIDI_REF_NOTE)
-      }
+      looper.setTranspose(lastNote - MIDI_REF_NOTE)
     }
   }
 })
@@ -1392,11 +1399,7 @@ function toggleLoop() {
 
 function onTransposeInput(event: Event) {
   const val = parseInt((event.target as HTMLInputElement).value)
-  if (playbackMode.value === 'wavetable') {
-    wavetableOsc.setFrequencyFromNote(60 + val)
-  } else {
-    looper.setTranspose(val)
-  }
+  looper.setTranspose(val)
 }
 
 function onLoopStartInput(event: Event) {
@@ -1427,28 +1430,25 @@ function onPingPongChange(event: Event) {
   looper.setLoopPingPong((event.target as HTMLInputElement).checked)
 }
 
-async function setPlaybackMode(mode: PlaybackMode) {
+function setPlaybackMode(mode: PlaybackMode) {
   playbackMode.value = mode
+  // Stop sequencer when leaving sequencer mode
+  if (mode !== 'sequencer' && sequencer.isPlaying.value) {
+    sequencer.stop()
+  }
   // Wire envelope if ADSR is non-neutral
   if (!envelope.isNeutral.value) wireEnvelope()
   if (envelopeWired) {
     if (envelope.isNeutral.value) {
       envelope.bypass()
-    } else {
+    } else if (mode !== 'sequencer') {
       envelope.triggerAttack(1)
     }
   }
-  // Stop both engines
-  wavetableOsc.stop()
-  if (mode === 'wavetable') {
+  if (mode === 'sequencer') {
+    // Stop looper free-running — sequencer will drive it
     looper.stop()
     looper.setLoopPingPong(false)
-    // Load frames and start if audio exists
-    const buf = looper.getOriginalBuffer()
-    if (buf) {
-      await wavetableOsc.loadFrames(buf)
-      await wavetableOsc.start()
-    }
   } else {
     looper.setLoopPingPong(mode === 'pingpong')
     if (looper.hasAudio.value) looper.replay()
@@ -1465,11 +1465,58 @@ watch(wavetableScan, (v) => {
   wavetableOsc.setScanPosition(v)
 })
 
+// ===== Sequencer transport =====
+function wireSequencerCallbacks() {
+  sequencer.setCallbacks(
+    // noteOn: retrigger looper at new pitch, fire ADSR attack
+    (note, velocity) => {
+      wireEnvelope()
+      const semitones = note - MIDI_REF_NOTE
+      looper.setTranspose(semitones)
+      if (looper.hasAudio.value) looper.retrigger()
+      envelope.triggerAttack(velocity)
+    },
+    // noteOff: fire ADSR release (don't stop looper — sequencer still running)
+    () => {
+      envelope.triggerRelease()
+    },
+  )
+}
+
+function toggleSequencer() {
+  if (sequencer.isPlaying.value) {
+    sequencer.stop()
+    envelope.triggerRelease()
+    return
+  }
+  wireEnvelope()
+  wireSequencerCallbacks()
+  const ac = looper.getContext()
+  sequencer.start(ac)
+}
+
+function onBpmInput(event: Event) {
+  const val = parseInt((event.target as HTMLInputElement).value)
+  sequencer.setBpm(val)
+}
+
+function onPatternChange(event: Event) {
+  const idx = parseInt((event.target as HTMLSelectElement).value)
+  sequencer.setPattern(idx)
+}
+
+// Stop sequencer when navigating away from synth tab
+watch(activeTab, (tab) => {
+  if (tab !== 'synth' && sequencer.isPlaying.value) {
+    sequencer.stop()
+  }
+})
+
 // Re-apply envelope when ADSR values change during playback
 watch(
   [envelope.attackMs, envelope.decayMs, envelope.sustain, envelope.releaseMs],
   () => {
-    const playing = looper.isPlaying.value || wavetableOsc.isPlaying.value
+    const playing = looper.isPlaying.value || sequencer.isPlaying.value
     if (!playing) return
     if (envelope.isNeutral.value) {
       if (envelopeWired) envelope.bypass()
@@ -1653,15 +1700,8 @@ async function runSynth() {
         outputs: [{ type: 'audio', format: 'wav', dataBase64: result.audio_base64 }],
       })
 
-      // In wavetable mode, extract frames from the new buffer
-      if (playbackMode.value === 'wavetable') {
-        const buf = looper.getOriginalBuffer()
-        if (buf) {
-          await wavetableOsc.loadFrames(buf)
-          if (!wavetableOsc.isPlaying.value) await wavetableOsc.start()
-        }
-        looper.stop() // looper not needed in wavetable mode
-      }
+      // In sequencer mode, don't auto-start looper (sequencer drives it)
+      // Looper.play() above already loaded the buffer; sequencer will retrigger
     } else {
       error.value = result.error || 'Synth generation failed'
     }
@@ -1776,6 +1816,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('resize', drawWaveform)
+  sequencer.dispose()
   envelope.dispose()
   looper.dispose()
   wavetableOsc.dispose()
@@ -2690,16 +2731,110 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
-/* Wavetable controls */
-.wavetable-controls {
+/* Step Sequencer controls */
+.sequencer-controls {
   margin-bottom: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-.wavetable-frame-count {
+.sequencer-transport {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.seq-play-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.seq-play-btn:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.25);
+}
+
+.seq-play-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.midi-sync-badge {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.35);
-  display: block;
-  margin-top: 0.2rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(33, 150, 243, 0.15);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 4px;
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.sequencer-pattern-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.sequencer-pattern-row label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.sequencer-pattern-row select {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
+.sequencer-bpm-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.sequencer-bpm-row label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.sequencer-bpm-row input[type="range"] {
+  flex: 1;
+  min-width: 100px;
+  accent-color: #4CAF50;
+}
+
+.step-dots {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.3rem 0;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.1s, box-shadow 0.1s;
+}
+
+.step-dot.active {
+  background: #4CAF50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
 }
 
 /* ADSR Envelope */

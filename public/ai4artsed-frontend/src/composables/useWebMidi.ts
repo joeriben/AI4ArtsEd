@@ -2,12 +2,15 @@
  * Web MIDI API composable for Crossmodal Lab Synth tab.
  *
  * Provides MIDI input device selection, CC-to-callback mapping,
- * and note-to-callback mapping for external hardware control.
+ * note-to-callback mapping, and MIDI realtime clock forwarding
+ * for external hardware control.
  *
  * Gracefully degrades: if Web MIDI is unsupported, `isSupported`
  * is false and no errors are thrown.
  */
 import { ref, readonly, onUnmounted, type Ref } from 'vue'
+
+export type MidiClockType = 'clock' | 'start' | 'stop'
 
 export interface MidiInputInfo {
   id: string
@@ -25,12 +28,21 @@ export function useWebMidi() {
   // Callback registries
   const ccCallbacks = new Map<number, (value01: number) => void>()
   let noteCallback: ((note: number, velocity: number, on: boolean) => void) | null = null
+  let clockCallback: ((type: MidiClockType) => void) | null = null
 
   function handleMidiMessage(event: MIDIMessageEvent) {
     const data = event.data
-    if (!data || data.length < 3) return
+    if (!data || data.length === 0) return
 
-    const status = data[0]! & 0xf0
+    // Handle single-byte MIDI realtime messages before the 3-byte guard
+    const byte0 = data[0]!
+    if (byte0 === 0xf8) { clockCallback?.('clock'); return }
+    if (byte0 === 0xfa) { clockCallback?.('start'); return }
+    if (byte0 === 0xfc) { clockCallback?.('stop'); return }
+
+    if (data.length < 3) return
+
+    const status = byte0 & 0xf0
     const d1 = data[1]!
     const d2 = data[2]!
 
@@ -116,6 +128,10 @@ export function useWebMidi() {
     noteCallback = callback
   }
 
+  function onClock(callback: (type: MidiClockType) => void) {
+    clockCallback = callback
+  }
+
   function dispose() {
     if (activeInput) {
       activeInput.onmidimessage = null
@@ -123,6 +139,7 @@ export function useWebMidi() {
     }
     ccCallbacks.clear()
     noteCallback = null
+    clockCallback = null
     midiAccess = null
   }
 
@@ -134,6 +151,7 @@ export function useWebMidi() {
     mapCC,
     unmapCC,
     onNote,
+    onClock,
     dispose,
     isSupported: readonly(isSupported),
     inputs: inputs as Readonly<Ref<MidiInputInfo[]>>,
