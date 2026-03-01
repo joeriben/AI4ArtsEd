@@ -371,7 +371,7 @@ export function useAudioLooper() {
   const bufferDuration = ref(0)
   const hasAudio = ref(false)
   const crossfadeMs = ref(150)
-  const normalizeOn = ref(false)
+  const normalizeOn = ref(true)
   const peakAmplitude = ref(0)
   const loopOptimize = ref(false)
   const loopPingPong = ref(false)
@@ -783,6 +783,24 @@ export function useAudioLooper() {
     startSource(ac, prepareBuffer(ac, originalBuffer))
   }
 
+  function getWaveformPeaks(numBins: number): Float32Array | null {
+    if (!originalBuffer) return null
+    const ch = originalBuffer.getChannelData(0)
+    const peaks = new Float32Array(numBins)
+    const binSize = ch.length / numBins
+    for (let i = 0; i < numBins; i++) {
+      const start = Math.floor(i * binSize)
+      const end = Math.min(Math.floor((i + 1) * binSize), ch.length)
+      let max = 0
+      for (let j = start; j < end; j++) {
+        const abs = Math.abs(ch[j]!)
+        if (abs > max) max = abs
+      }
+      peaks[i] = max
+    }
+    return peaks
+  }
+
   function dispose() {
     stop()
     invalidatePitchCache()
@@ -796,7 +814,7 @@ export function useAudioLooper() {
     setLoop, setTranspose, setTransposeMode, setDestination, getContext,
     setLoopStart, setLoopEnd, setLoopOptimize, setLoopPingPong,
     setCrossfade, setNormalize,
-    exportRaw, exportLoop, dispose,
+    exportRaw, exportLoop, getWaveformPeaks, dispose,
     getOriginalBuffer: () => originalBuffer,
     isPlaying: readonly(isPlaying),
     isLooping: readonly(isLooping),

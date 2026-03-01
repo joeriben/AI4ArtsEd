@@ -286,27 +286,30 @@
               – {{ (looper.loopEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
             </span>
           </div>
-          <div class="dual-range">
-            <input
-              type="range"
-              :value="looper.loopStartFrac.value"
-              min="0"
-              max="1"
-              step="0.001"
-              class="range-start"
-              :disabled="!looper.hasAudio.value"
-              @input="onLoopStartInput"
-            />
-            <input
-              type="range"
-              :value="looper.loopEndFrac.value"
-              min="0"
-              max="1"
-              step="0.001"
-              class="range-end"
-              :disabled="!looper.hasAudio.value"
-              @input="onLoopEndInput"
-            />
+          <div class="waveform-loop-container">
+            <canvas ref="waveformCanvasRef" class="waveform-canvas" />
+            <div class="dual-range">
+              <input
+                type="range"
+                :value="looper.loopStartFrac.value"
+                min="0"
+                max="1"
+                step="0.001"
+                class="range-start"
+                :disabled="!looper.hasAudio.value"
+                @input="onLoopStartInput"
+              />
+              <input
+                type="range"
+                :value="looper.loopEndFrac.value"
+                min="0"
+                max="1"
+                step="0.001"
+                class="range-end"
+                :disabled="!looper.hasAudio.value"
+                @input="onLoopEndInput"
+              />
+            </div>
           </div>
           <!-- Playback mode selector -->
           <div class="playback-mode-selector">
@@ -421,6 +424,33 @@
             {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
           </span>
         </div>
+        <!-- ADSR Envelope -->
+        <div class="adsr-section">
+          <h5>{{ t('latentLab.crossmodal.synth.adsrTitle') }}</h5>
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.adsrHint') }}</span>
+          <div class="adsr-grid">
+            <div class="adsr-slider">
+              <label>{{ t('latentLab.crossmodal.synth.adsrAttack') }}</label>
+              <input type="range" v-model.number="envelope.attackMs.value" min="0" max="1000" step="1" />
+              <span class="adsr-value">{{ envelope.attackMs.value }}ms</span>
+            </div>
+            <div class="adsr-slider">
+              <label>{{ t('latentLab.crossmodal.synth.adsrDecay') }}</label>
+              <input type="range" v-model.number="envelope.decayMs.value" min="0" max="2000" step="1" />
+              <span class="adsr-value">{{ envelope.decayMs.value }}ms</span>
+            </div>
+            <div class="adsr-slider">
+              <label>{{ t('latentLab.crossmodal.synth.adsrSustain') }}</label>
+              <input type="range" v-model.number="envelope.sustain.value" min="0" max="1" step="0.01" />
+              <span class="adsr-value">{{ envelope.sustain.value.toFixed(2) }}</span>
+            </div>
+            <div class="adsr-slider">
+              <label>{{ t('latentLab.crossmodal.synth.adsrRelease') }}</label>
+              <input type="range" v-model.number="envelope.releaseMs.value" min="0" max="3000" step="1" />
+              <span class="adsr-value">{{ envelope.releaseMs.value }}ms</span>
+            </div>
+          </div>
+        </div>
         <!-- Save buttons -->
         <div class="save-row">
           <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
@@ -465,33 +495,6 @@
                   <tr><td>{{ t('latentLab.crossmodal.synth.midiPitch') }}</td><td>{{ t('latentLab.crossmodal.synth.transpose') }}</td></tr>
                 </tbody>
               </table>
-            </div>
-            <!-- ADSR Envelope -->
-            <div class="adsr-section">
-              <h5>{{ t('latentLab.crossmodal.synth.adsrTitle') }}</h5>
-              <span class="slider-hint">{{ t('latentLab.crossmodal.synth.adsrHint') }}</span>
-              <div class="adsr-grid">
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.adsrAttack') }}</label>
-                  <input type="range" v-model.number="envelope.attackMs.value" min="0" max="1000" step="1" />
-                  <span class="adsr-value">{{ envelope.attackMs.value }}ms</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.adsrDecay') }}</label>
-                  <input type="range" v-model.number="envelope.decayMs.value" min="0" max="2000" step="1" />
-                  <span class="adsr-value">{{ envelope.decayMs.value }}ms</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.adsrSustain') }}</label>
-                  <input type="range" v-model.number="envelope.sustain.value" min="0" max="1" step="0.01" />
-                  <span class="adsr-value">{{ envelope.sustain.value.toFixed(2) }}</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.adsrRelease') }}</label>
-                  <input type="range" v-model.number="envelope.releaseMs.value" min="0" max="3000" step="1" />
-                  <span class="adsr-value">{{ envelope.releaseMs.value }}ms</span>
-                </div>
-              </div>
             </div>
           </template>
         </div>
@@ -776,6 +779,42 @@ const lastSynthFingerprint = ref('')
 
 // ===== Audio Looper =====
 const looper = useAudioLooper()
+const waveformCanvasRef = ref<HTMLCanvasElement | null>(null)
+
+function drawWaveform() {
+  const canvas = waveformCanvasRef.value
+  if (!canvas || !looper.hasAudio.value) return
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  const dpr = window.devicePixelRatio || 1
+  const w = canvas.clientWidth
+  const h = canvas.clientHeight
+  if (w === 0 || h === 0) return
+  canvas.width = w * dpr
+  canvas.height = h * dpr
+  ctx.scale(dpr, dpr)
+  ctx.clearRect(0, 0, w, h)
+
+  const peaks = looper.getWaveformPeaks(w)
+  if (!peaks) return
+
+  const startX = looper.loopStartFrac.value * w
+  const endX = looper.loopEndFrac.value * w
+
+  // Dim regions outside loop selection
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'
+  ctx.fillRect(0, 0, startX, h)
+  ctx.fillRect(endX, 0, w - endX, h)
+
+  // Draw waveform bars
+  const mid = h / 2
+  for (let i = 0; i < peaks.length; i++) {
+    const inLoop = i >= startX && i <= endX
+    ctx.fillStyle = inLoop ? 'rgba(76, 175, 80, 0.6)' : 'rgba(76, 175, 80, 0.2)'
+    const barH = peaks[i]! * mid
+    ctx.fillRect(i, mid - barH, 1, barH * 2)
+  }
+}
 
 // ===== Wavetable Oscillator =====
 const wavetableOsc = useWavetableOsc()
@@ -1363,11 +1402,13 @@ function onTransposeInput(event: Event) {
 function onLoopStartInput(event: Event) {
   const val = parseFloat((event.target as HTMLInputElement).value)
   looper.setLoopStart(val)
+  drawWaveform()
 }
 
 function onLoopEndInput(event: Event) {
   const val = parseFloat((event.target as HTMLInputElement).value)
   looper.setLoopEnd(val)
+  drawWaveform()
 }
 
 function onCrossfadeInput(event: Event) {
@@ -1388,8 +1429,15 @@ function onPingPongChange(event: Event) {
 
 async function setPlaybackMode(mode: PlaybackMode) {
   playbackMode.value = mode
-  // Non-MIDI mode switch: bypass envelope so gain=1
-  if (envelopeWired) envelope.bypass()
+  // Wire envelope if ADSR is non-neutral
+  if (!envelope.isNeutral.value) wireEnvelope()
+  if (envelopeWired) {
+    if (envelope.isNeutral.value) {
+      envelope.bypass()
+    } else {
+      envelope.triggerAttack(1)
+    }
+  }
   // Stop both engines
   wavetableOsc.stop()
   if (mode === 'wavetable') {
@@ -1442,18 +1490,81 @@ function downloadResultAudio() {
 
 function saveRaw() {
   const blob = looper.exportRaw()
-  if (blob) downloadBlob(blob, `synth_raw_${resultSeed.value ?? 0}.wav`)
+  if (!blob) return
+  if (envelope.isNeutral.value) {
+    downloadBlob(blob, `synth_raw_${resultSeed.value ?? 0}.wav`)
+    return
+  }
+  // Apply envelope offline: decode raw → apply ADSR → re-encode
+  const reader = new FileReader()
+  reader.onload = () => {
+    const ac = new AudioContext()
+    ac.decodeAudioData(reader.result as ArrayBuffer).then((buf) => {
+      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+        envelope.applyToSamples(buf.getChannelData(ch), buf.sampleRate)
+      }
+      downloadBlob(audioBufferToWav(buf, 0, buf.length), `synth_raw_${resultSeed.value ?? 0}.wav`)
+      ac.close()
+    })
+  }
+  reader.readAsArrayBuffer(blob)
 }
 
 function saveLoop() {
   const blob = looper.exportLoop()
-  if (blob) downloadBlob(blob, `synth_loop_${resultSeed.value ?? 0}.wav`)
+  if (!blob) return
+  if (envelope.isNeutral.value) {
+    downloadBlob(blob, `synth_loop_${resultSeed.value ?? 0}.wav`)
+    return
+  }
+  // Apply envelope offline: decode loop → apply ADSR → re-encode
+  const reader = new FileReader()
+  reader.onload = () => {
+    const ac = new AudioContext()
+    ac.decodeAudioData(reader.result as ArrayBuffer).then((buf) => {
+      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+        envelope.applyToSamples(buf.getChannelData(ch), buf.sampleRate)
+      }
+      downloadBlob(audioBufferToWav(buf, 0, buf.length), `synth_loop_${resultSeed.value ?? 0}.wav`)
+      ac.close()
+    })
+  }
+  reader.readAsArrayBuffer(blob)
+}
+
+/** Encode AudioBuffer region as WAV Blob (16-bit PCM). */
+function audioBufferToWav(buffer: AudioBuffer, startSample: number, endSample: number): Blob {
+  const nc = buffer.numberOfChannels, sr = buffer.sampleRate
+  const len = endSample - startSample, ds = len * nc * 2
+  const ab = new ArrayBuffer(44 + ds), v = new DataView(ab)
+  const ws = (o: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)) }
+  ws(0, 'RIFF'); v.setUint32(4, 36 + ds, true); ws(8, 'WAVE'); ws(12, 'fmt ')
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nc, true)
+  v.setUint32(24, sr, true); v.setUint32(28, sr * nc * 2, true)
+  v.setUint16(32, nc * 2, true); v.setUint16(34, 16, true); ws(36, 'data'); v.setUint32(40, ds, true)
+  const chs: Float32Array[] = []
+  for (let c = 0; c < nc; c++) chs.push(buffer.getChannelData(c))
+  let off = 44
+  for (let i = startSample; i < endSample; i++) {
+    for (let c = 0; c < nc; c++) {
+      const s = Math.max(-1, Math.min(1, chs[c]![i]!))
+      v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true); off += 2
+    }
+  }
+  return new Blob([ab], { type: 'audio/wav' })
 }
 
 // ===== Synth =====
 async function runSynth() {
-  // Non-MIDI playback: bypass envelope so gain=1
-  if (envelopeWired) envelope.bypass()
+  // Wire envelope if ADSR is non-neutral (so it shapes playback)
+  if (!envelope.isNeutral.value) wireEnvelope()
+  if (envelopeWired) {
+    if (envelope.isNeutral.value) {
+      envelope.bypass()
+    } else {
+      envelope.triggerAttack(1)
+    }
+  }
   // Don't clear looper state — keep playing during generation
   error.value = ''
   resultSeed.value = null
@@ -1512,6 +1623,7 @@ async function runSynth() {
 
       // Feed into looper (crossfades if already playing)
       await looper.play(result.audio_base64)
+      nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
 
       // Record for research export
@@ -1642,11 +1754,13 @@ function onKeyDown(e: KeyboardEvent) {
 
 onMounted(() => {
   window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('resize', drawWaveform)
   fetchSemanticAxes()
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('resize', drawWaveform)
   envelope.dispose()
   looper.dispose()
   wavetableOsc.dispose()
@@ -2017,9 +2131,24 @@ onUnmounted(() => {
   margin-bottom: 0.8rem;
 }
 
+.waveform-loop-container {
+  position: relative;
+  height: 3rem;
+}
+
+.waveform-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+
 .dual-range {
   position: relative;
   height: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .dual-range input[type="range"] {

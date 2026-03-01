@@ -5,13 +5,18 @@
  * Provides triggerAttack / triggerRelease for MIDI note-on/off and
  * bypass() for non-MIDI playback (sets gain=1, no envelope).
  */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export function useEnvelope() {
-  const attackMs = ref(50)
-  const decayMs = ref(200)
-  const sustain = ref(0.7)
-  const releaseMs = ref(300)
+  const attackMs = ref(0)
+  const decayMs = ref(0)
+  const sustain = ref(1.0)
+  const releaseMs = ref(0)
+
+  /** True when all ADSR values are at neutral defaults (envelope has no effect). */
+  const isNeutral = computed(() =>
+    attackMs.value === 0 && decayMs.value === 0 && sustain.value >= 1.0 && releaseMs.value === 0,
+  )
 
   let gainNode: GainNode | null = null
   let releaseTimer: ReturnType<typeof setTimeout> | null = null
@@ -64,6 +69,43 @@ export function useEnvelope() {
     gainNode.gain.setValueAtTime(1, now)
   }
 
+  /**
+   * Apply ADSR gain curve to a Float32Array of samples (offline, for export).
+   * Mutates the array in-place. Returns immediately if envelope is neutral.
+   */
+  function applyToSamples(samples: Float32Array, sampleRate: number): void {
+    if (isNeutral.value) return
+    const a = attackMs.value / 1000
+    const d = decayMs.value / 1000
+    const s = sustain.value
+    const r = releaseMs.value / 1000
+    const len = samples.length
+    const aSamples = Math.floor(a * sampleRate)
+    const dSamples = Math.floor(d * sampleRate)
+    const rSamples = Math.floor(r * sampleRate)
+    const releaseStart = Math.max(0, len - rSamples)
+
+    for (let i = 0; i < len; i++) {
+      let gain: number
+      if (i < aSamples) {
+        // Attack: 0 → 1
+        gain = aSamples > 0 ? i / aSamples : 1
+      } else if (i < aSamples + dSamples) {
+        // Decay: 1 → sustain
+        const t = (i - aSamples) / dSamples
+        gain = 1 - t * (1 - s)
+      } else if (i < releaseStart) {
+        // Sustain
+        gain = s
+      } else {
+        // Release: sustain → 0
+        const t = rSamples > 0 ? (i - releaseStart) / rSamples : 1
+        gain = s * (1 - t)
+      }
+      samples[i]! *= gain
+    }
+  }
+
   function dispose(): void {
     if (releaseTimer) { clearTimeout(releaseTimer); releaseTimer = null }
     if (gainNode) { gainNode.disconnect(); gainNode = null }
@@ -74,10 +116,12 @@ export function useEnvelope() {
     decayMs,
     sustain,
     releaseMs,
+    isNeutral,
     createNode,
     triggerAttack,
     triggerRelease,
     bypass,
+    applyToSamples,
     dispose,
   }
 }
