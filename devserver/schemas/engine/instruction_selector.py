@@ -20,7 +20,7 @@ CULTURAL RESPECT PRINCIPLES:
 - FORBIDDEN: Orientalist tropes (exotic, mysterious, timeless, ancient wisdom, etc.)
 - FORBIDDEN: Homogenizing diverse cultures into aesthetic stereotypes
 
-Output ONLY the transformed result.
+Output ONLY the transformed result. Maximum 300 words.
 NO meta-commentary ("I will...", "This shows...", "wird ausgeführt als...").
 NO headlines, NO titles, NO bulletpoints, NO **formatting**.
 Use the specific vocabulary and techniques defined in Context."""
