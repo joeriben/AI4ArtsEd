@@ -6,6 +6,23 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
+### WO-2026-03-02-synth-engine-arpeggiator
+- **Session**: 232
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.engineDirect` (NEW): 'Buffer'
+  - `latentLab.crossmodal.synth.engineWavetable` (NEW): 'Wavetable'
+  - `latentLab.crossmodal.synth.behaviorFreerun` (NEW): 'Free-run'
+  - `latentLab.crossmodal.synth.behaviorSequencer` (NEW): 'Sequencer'
+  - `latentLab.crossmodal.synth.oscillating` (NEW): 'Oscillating'
+  - `latentLab.crossmodal.synth.sequencing` (NEW): 'Sequencing'
+  - `latentLab.crossmodal.synth.arpeggiator` (NEW): 'Arpeggiator'
+  - `latentLab.crossmodal.synth.arpeggiatorPatterns.up` (NEW): 'Up'
+  - `latentLab.crossmodal.synth.arpeggiatorPatterns.down` (NEW): 'Down'
+  - `latentLab.crossmodal.synth.arpeggiatorPatterns.updown` (NEW): 'Up-Down'
+  - `latentLab.crossmodal.synth.arpeggiatorPatterns.random` (NEW): 'Random'
+- **Context**: Synthesis engine architecture rework. Replaces flat PlaybackMode enum with orthogonal SynthEngine (Buffer/Wavetable) x PlaybackBehavior (Free-run/Sequencer) selectors. Arpeggiator is a post-processing note transformer (up/down/up-down/random chord patterns). "Buffer" = direct audio buffer playback. "Wavetable" = pitch-synchronous oscillator. "Free-run" = continuous playback. Translate naturally (e.g. DE: "Puffer", "Wellentabelle", "Freilauf", "Sequenzer", "Arpeggiator"). Pattern names are musical terms.
+
 ### WO-2026-03-01-step-sequencer
 - **Session**: 231
 - **Scope**: en.ts

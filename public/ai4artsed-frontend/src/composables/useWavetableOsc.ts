@@ -30,6 +30,15 @@ export function useWavetableOsc() {
   const frameCount = ref(0)
   const currentFrequency = ref(440)
 
+  /** Accept an external AudioContext (e.g. from looper) for shared routing. */
+  function setContext(ac: AudioContext): void {
+    if (ctx && ctx !== ac) {
+      stop()
+      workletReady = false
+    }
+    ctx = ac
+  }
+
   function ensureContext(): AudioContext {
     if (!ctx || ctx.state === 'closed') {
       ctx = new AudioContext()
@@ -303,6 +312,7 @@ export function useWavetableOsc() {
     loadFrames,
     start,
     stop,
+    setContext,
     setFrequency,
     setFrequencyFromNote,
     setScanPosition,
