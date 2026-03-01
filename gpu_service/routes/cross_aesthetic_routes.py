@@ -126,6 +126,7 @@ def multi_axis_synth():
 
     result = _run_async(backend.multi_axis_synth(
         axes=data['axes'],
+        base_prompt=data.get('base_prompt'),
         dimension_offsets=data.get('dimension_offsets'),
         duration_seconds=float(data.get('duration_seconds', 1.0)),
         steps=int(data.get('steps', 20)),

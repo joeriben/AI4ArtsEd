@@ -262,6 +262,7 @@ class CrossmodalLabBackend:
     async def multi_axis_synth(
         self,
         axes: Dict[str, float],
+        base_prompt: Optional[str] = None,
         dimension_offsets: Optional[Dict[int, float]] = None,
         duration_seconds: float = 1.0,
         steps: int = 20,
@@ -271,11 +272,13 @@ class CrossmodalLabBackend:
         """
         Multi-axis semantic synth.
 
-        Computes: result = neutral + Σ(t_i * (pole_a_i - neutral) + (1-t_i) * (pole_b_i - neutral))
-        for each active axis, then optionally applies dimension offsets.
+        Computes: result = base + Σ(t_i * (pole_a_i - neutral) + (1-t_i) * (pole_b_i - neutral))
+        where base = encode(base_prompt) if given, else neutral embedding.
+        Axis directions are always relative to neutral, so they act as semantic modifiers.
 
         Args:
             axes: {axis_name: 0.0-1.0} — 0.0 = pole_b, 1.0 = pole_a, 0.5 = neutral for that axis
+            base_prompt: Optional text prompt as starting point (if None, uses neutral "sound")
             dimension_offsets: Per-dimension offset values {dim_idx: offset}
             duration_seconds: Audio duration
             steps: Inference steps
@@ -294,16 +297,24 @@ class CrossmodalLabBackend:
             from services.stable_audio_backend import get_stable_audio_backend
             stable_audio = get_stable_audio_backend()
 
-            # Cache neutral + all requested axes
+            # Cache neutral (always needed for axis direction computation) + requested axes
             await self._ensure_neutral_cached()
             for axis_name in axes:
                 await self._ensure_axis_cached(axis_name)
 
             neutral_emb, neutral_mask = self._neutral_cache
 
-            # Compute: result = neutral + Σ contributions
-            result = neutral_emb.clone()
-            result_mask = neutral_mask.clone()
+            # Base embedding: user prompt if given, else neutral
+            if base_prompt and base_prompt.strip():
+                base_emb, base_mask = await stable_audio.encode_prompt(base_prompt.strip())
+                if base_emb is None:
+                    return None
+                result = base_emb.clone()
+                result_mask = base_mask.clone()
+                logger.info(f"[CROSSMODAL] Multi-axis base: \"{base_prompt.strip()[:50]}\"")
+            else:
+                result = neutral_emb.clone()
+                result_mask = neutral_mask.clone()
 
             # Track per-dimension contributions for drawbar coloring
             # axis_deltas[axis_name] = [768] tensor of that axis's contribution

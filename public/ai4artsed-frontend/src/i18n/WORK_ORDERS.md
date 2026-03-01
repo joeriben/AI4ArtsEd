@@ -10,13 +10,12 @@ each processed work order to **Completed** with a date stamp.
 - **Session**: 230
 - **Scope**: en.ts
 - **Changed keys** (new):
-  - `latentLab.crossmodal.synth.semanticAxes.modeToggle` (NEW): 'Semantic Axes'
-  - `latentLab.crossmodal.synth.semanticAxes.freeModeToggle` (NEW): 'Free Prompt'
-  - `latentLab.crossmodal.synth.semanticAxes.info` (NEW): Explanatory text about interpolation between text poles
+  - `latentLab.crossmodal.synth.semanticAxes.modeToggle` (NEW): 'Semantic Axes' (collapsible section header)
+  - `latentLab.crossmodal.synth.semanticAxes.info` (NEW): Explanatory text about axes steering prompt embedding
   - `latentLab.crossmodal.synth.semanticAxes.slotNone` (NEW): '— none —'
   - `latentLab.crossmodal.synth.semanticAxes.resetAll` (NEW): 'Reset all to center'
   - `latentLab.crossmodal.synth.semanticAxes.experimental` (NEW): 'experimental'
-- **Context**: New "Semantic Axes" mode in Crossmodal Lab synth tab. Allows users to control audio generation via semantic slider axes (e.g. tonal/noisy, rhythmic/sustained) instead of free-text prompts. Each axis interpolates between two text poles in T5 embedding space. These are UI labels for the mode toggle and axis controls.
+- **Context**: New "Semantic Axes" section in Crossmodal Lab synth tab. Collapsible section below the prompt that steers audio generation via semantic slider axes (e.g. tonal/noisy, rhythmic/sustained) on top of the user's prompt. Each axis interpolates between two text poles in T5 embedding space.
 
 ### WO-2026-03-01-ionos-provider-strings
 - **Session**: 229

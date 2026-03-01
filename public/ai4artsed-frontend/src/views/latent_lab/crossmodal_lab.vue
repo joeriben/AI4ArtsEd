@@ -41,132 +41,118 @@
         </div>
       </details>
 
-      <!-- Mode Toggle: Free Prompt vs. Semantic Axes -->
-      <div class="synth-mode-toggle">
-        <button
-          class="mode-toggle-btn"
-          :class="{ active: synthMode === 'freePrompt' }"
-          @click="synthMode = 'freePrompt'"
-        >{{ t('latentLab.crossmodal.synth.semanticAxes.freeModeToggle') }}</button>
-        <button
-          class="mode-toggle-btn"
-          :class="{ active: synthMode === 'semanticAxes' }"
-          @click="synthMode = 'semanticAxes'"
-        >{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</button>
+      <!-- Prompt A -->
+      <MediaInputBox
+        icon="💡"
+        :label="t('latentLab.crossmodal.synth.promptA')"
+        :placeholder="t('latentLab.crossmodal.synth.promptAPlaceholder')"
+        :value="synth.promptA"
+        @update:value="synth.promptA = $event"
+        :rows="2"
+        :isEmpty="!synth.promptA"
+        :isFilled="!!synth.promptA"
+        @copy="copySynthPromptA"
+        @paste="pasteSynthPromptA"
+        @clear="clearSynthPromptA"
+      />
+
+      <!-- Prompt B (optional) -->
+      <MediaInputBox
+        icon="➕"
+        :label="t('latentLab.crossmodal.synth.promptB')"
+        :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
+        :value="synth.promptB"
+        @update:value="synth.promptB = $event"
+        :rows="2"
+        :isEmpty="!synth.promptB"
+        :isFilled="!!synth.promptB"
+        @copy="copySynthPromptB"
+        @paste="pasteSynthPromptB"
+        @clear="clearSynthPromptB"
+      />
+
+      <!-- Sliders -->
+      <div class="slider-group">
+        <div class="slider-item">
+          <div class="slider-header">
+            <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
+            <span class="slider-value">{{ synth.alpha.toFixed(2) }}</span>
+          </div>
+          <input type="range" v-model.number="synth.alpha" min="-2" max="3" step="0.01" />
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.alphaHint') }}</span>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header">
+            <label>{{ t('latentLab.crossmodal.synth.magnitude') }}</label>
+            <span class="slider-value">{{ synth.magnitude.toFixed(2) }}</span>
+          </div>
+          <input type="range" v-model.number="synth.magnitude" min="0.1" max="5" step="0.1" />
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.magnitudeHint') }}</span>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header">
+            <label>{{ t('latentLab.crossmodal.synth.noise') }}</label>
+            <span class="slider-value">{{ synth.noise.toFixed(2) }}</span>
+          </div>
+          <input type="range" v-model.number="synth.noise" min="0" max="1" step="0.05" />
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.noiseHint') }}</span>
+        </div>
       </div>
 
-      <!-- ===== Semantic Axes Mode ===== -->
-      <template v-if="synthMode === 'semanticAxes'">
-        <p class="semantic-axes-info">{{ t('latentLab.crossmodal.synth.semanticAxes.info') }}</p>
+      <!-- Semantic Axes (collapsible, modifies prompt embedding) -->
+      <details v-if="availableAxes.length > 0" class="semantic-axes-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggle">
+        <summary>{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</summary>
+        <div class="semantic-axes-content">
+          <p class="semantic-axes-info">{{ t('latentLab.crossmodal.synth.semanticAxes.info') }}</p>
 
-        <div class="semantic-axes-slots">
-          <div
-            v-for="(slot, idx) in axisSlots"
-            :key="idx"
-            class="axis-slot"
-          >
-            <span class="axis-color-dot" :style="{ background: axisColors[idx] }" />
-            <select
-              :value="slot.axis"
-              class="axis-select"
-              @change="onAxisSelectChange(idx, ($event.target as HTMLSelectElement).value)"
+          <div class="semantic-axes-slots">
+            <div
+              v-for="(slot, idx) in axisSlots"
+              :key="idx"
+              class="axis-slot"
             >
-              <option value="">{{ t('latentLab.crossmodal.synth.semanticAxes.slotNone') }}</option>
-              <option
-                v-for="ax in availableAxes"
-                :key="ax.name"
-                :value="ax.name"
+              <span class="axis-color-dot" :style="{ background: axisColors[idx] }" />
+              <select
+                :value="slot.axis"
+                class="axis-select"
+                @change="onAxisSelectChange(idx, ($event.target as HTMLSelectElement).value)"
               >
-                {{ ax.pole_a }} — {{ ax.pole_b }}
-                <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
-                <template v-if="ax.level === 'experimental'"> *</template>
-              </option>
-            </select>
-            <div v-if="slot.axis" class="axis-slider-row">
-              <span class="axis-pole-label pole-a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
-              <input
-                type="range"
-                :value="slot.value"
-                min="0"
-                max="1"
-                step="0.01"
-                class="axis-range"
-                :style="{ accentColor: axisColors[idx] }"
-                @input="slot.value = parseFloat(($event.target as HTMLInputElement).value)"
-              />
-              <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
-              <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
+                <option value="">{{ t('latentLab.crossmodal.synth.semanticAxes.slotNone') }}</option>
+                <option
+                  v-for="ax in availableAxes"
+                  :key="ax.name"
+                  :value="ax.name"
+                >
+                  {{ ax.pole_a }} — {{ ax.pole_b }}
+                  <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
+                  <template v-if="ax.level === 'experimental'"> *</template>
+                </option>
+              </select>
+              <div v-if="slot.axis" class="axis-slider-row">
+                <span class="axis-pole-label pole-a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
+                <input
+                  type="range"
+                  :value="slot.value"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  class="axis-range"
+                  :style="{ accentColor: axisColors[idx] }"
+                  @input="slot.value = parseFloat(($event.target as HTMLInputElement).value)"
+                />
+                <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
+                <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
+
+          <button class="dim-btn dim-btn-reset semantic-reset-btn" @click="resetAxesToCenter">
+            {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
+          </button>
         </div>
-
-        <button class="dim-btn dim-btn-reset semantic-reset-btn" @click="resetAxesToCenter">
-          {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
-        </button>
-      </template>
-
-      <!-- ===== Free Prompt Mode ===== -->
-      <template v-else>
-        <!-- Prompt A -->
-        <MediaInputBox
-          icon="💡"
-          :label="t('latentLab.crossmodal.synth.promptA')"
-          :placeholder="t('latentLab.crossmodal.synth.promptAPlaceholder')"
-          :value="synth.promptA"
-          @update:value="synth.promptA = $event"
-          :rows="2"
-          :isEmpty="!synth.promptA"
-          :isFilled="!!synth.promptA"
-          @copy="copySynthPromptA"
-          @paste="pasteSynthPromptA"
-          @clear="clearSynthPromptA"
-        />
-
-        <!-- Prompt B (optional) -->
-        <MediaInputBox
-          icon="➕"
-          :label="t('latentLab.crossmodal.synth.promptB')"
-          :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
-          :value="synth.promptB"
-          @update:value="synth.promptB = $event"
-          :rows="2"
-          :isEmpty="!synth.promptB"
-          :isFilled="!!synth.promptB"
-          @copy="copySynthPromptB"
-          @paste="pasteSynthPromptB"
-          @clear="clearSynthPromptB"
-        />
-
-        <!-- Sliders -->
-        <div class="slider-group">
-          <div class="slider-item">
-            <div class="slider-header">
-              <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
-              <span class="slider-value">{{ synth.alpha.toFixed(2) }}</span>
-            </div>
-            <input type="range" v-model.number="synth.alpha" min="-2" max="3" step="0.01" />
-            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.alphaHint') }}</span>
-          </div>
-
-          <div class="slider-item">
-            <div class="slider-header">
-              <label>{{ t('latentLab.crossmodal.synth.magnitude') }}</label>
-              <span class="slider-value">{{ synth.magnitude.toFixed(2) }}</span>
-            </div>
-            <input type="range" v-model.number="synth.magnitude" min="0.1" max="5" step="0.1" />
-            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.magnitudeHint') }}</span>
-          </div>
-
-          <div class="slider-item">
-            <div class="slider-header">
-              <label>{{ t('latentLab.crossmodal.synth.noise') }}</label>
-              <span class="slider-value">{{ synth.noise.toFixed(2) }}</span>
-            </div>
-            <input type="range" v-model.number="synth.noise" min="0" max="1" step="0.05" />
-            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.noiseHint') }}</span>
-          </div>
-        </div>
-      </template>
+      </details>
 
       <!-- Params row -->
       <div class="params-row">
@@ -193,7 +179,7 @@
       </div>
 
       <div class="action-row">
-        <button class="generate-btn" :disabled="(!synth.promptA && synthMode === 'freePrompt') || (!hasActiveAxes && synthMode === 'semanticAxes') || generating" @click="runSynth">
+        <button class="generate-btn" :disabled="(!synth.promptA && !hasActiveAxes) || generating" @click="runSynth">
           {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
         </button>
         <button class="loop-btn" :class="{ active: looper.isLooping.value }" @click="toggleLoop">
@@ -910,7 +896,7 @@ const synth = reactive({
 })
 
 // ===== Semantic Axes =====
-const synthMode = ref<'freePrompt' | 'semanticAxes'>('freePrompt')
+const { isOpen: semanticAxesOpen, onToggle: onSemanticAxesToggle } = useDetailsState('ll_crossmodal_semantic_axes')
 
 interface AxisDef {
   name: string
@@ -1087,7 +1073,7 @@ function drawSpectralStrip() {
   // Build axis color lookup for semantic mode
   // Maps axis_name → color string
   const axisColorMap: Record<string, string> = {}
-  if (synthMode.value === 'semanticAxes' && axisContributions.value.length > 0) {
+  if (axisContributions.value.length > 0) {
     for (let si = 0; si < axisSlots.length; si++) {
       const slot = axisSlots[si]!
       if (slot.axis) {
@@ -1106,7 +1092,7 @@ function drawSpectralStrip() {
 
     // Determine bar color: axis-colored in semantic mode, muted green in free prompt mode
     let barColor = 'rgba(76, 175, 80, 0.35)'
-    if (synthMode.value === 'semanticAxes' && axisContributions.value.length > 0) {
+    if (axisContributions.value.length > 0) {
       const contrib = axisContributions.value.find(c => c.dim === dim)
       if (contrib && contrib.top_axis && axisColorMap[contrib.top_axis]) {
         barColor = hexToRgba(axisColorMap[contrib.top_axis]!, 0.45)
@@ -1269,16 +1255,10 @@ watch(embeddingStats, () => {
 
 /** Deterministic fingerprint of all generation-affecting synth params */
 function synthFingerprint(): string {
-  if (synthMode.value === 'semanticAxes') {
-    return JSON.stringify([
-      'semantic', axisSlots.map(s => [s.axis, s.value]),
-      synth.duration, synth.steps, synth.cfg, synth.seed,
-      dimensionOffsets,
-    ])
-  }
   return JSON.stringify([
     synth.promptA, synth.promptB, synth.alpha, synth.magnitude,
     synth.noise, synth.duration, synth.steps, synth.cfg, synth.seed,
+    axisSlots.map(s => [s.axis, s.value]),
     dimensionOffsets,
   ])
 }
@@ -1484,27 +1464,32 @@ async function runSynth() {
   embeddingStats.value = null
   generating.value = true
   try {
+    // Collect active semantic axes
+    const activeAxes: Record<string, number> = {}
+    for (const slot of axisSlots) {
+      if (slot.axis) activeAxes[slot.axis] = slot.value
+    }
+    const useAxes = Object.keys(activeAxes).length > 0
+
+    // Collect non-zero dimension offsets
+    const nonZeroOffsets: Record<string, number> = {}
+    for (const [k, v] of Object.entries(dimensionOffsets)) {
+      if (v !== 0) nonZeroOffsets[k] = v
+    }
+
     let result: any
 
-    if (synthMode.value === 'semanticAxes') {
-      // Multi-axis synth mode
-      const axes: Record<string, number> = {}
-      for (const slot of axisSlots) {
-        if (slot.axis) axes[slot.axis] = slot.value
-      }
-
+    if (useAxes) {
+      // Multi-axis synth: axes modify the prompt embedding (or neutral if no prompt)
       const body: Record<string, unknown> = {
-        axes,
+        axes: activeAxes,
         duration_seconds: synth.duration,
         steps: synth.steps,
         cfg_scale: synth.cfg,
         seed: synth.seed,
       }
-
-      // Add non-zero dimension offsets
-      const nonZeroOffsets: Record<string, number> = {}
-      for (const [k, v] of Object.entries(dimensionOffsets)) {
-        if (v !== 0) nonZeroOffsets[k] = v
+      if (synth.promptA.trim()) {
+        body.base_prompt = synth.promptA
       }
       if (Object.keys(nonZeroOffsets).length > 0) {
         body.dimension_offsets = nonZeroOffsets
@@ -1516,7 +1501,7 @@ async function runSynth() {
         axisContributions.value = result.axis_contributions
       }
     } else {
-      // Free prompt mode
+      // Standard free prompt synth (no axes active)
       const body: Record<string, unknown> = {
         prompt_a: synth.promptA,
         alpha: synth.alpha,
@@ -1529,11 +1514,6 @@ async function runSynth() {
       }
       if (synth.promptB.trim()) {
         body.prompt_b = synth.promptB
-      }
-      // Add non-zero dimension offsets
-      const nonZeroOffsets: Record<string, number> = {}
-      for (const [k, v] of Object.entries(dimensionOffsets)) {
-        if (v !== 0) nonZeroOffsets[k] = v
       }
       if (Object.keys(nonZeroOffsets).length > 0) {
         body.dimension_offsets = nonZeroOffsets
@@ -1555,14 +1535,13 @@ async function runSynth() {
       lastSynthFingerprint.value = synthFingerprint()
 
       // Record for research export
-      const recordParams = synthMode.value === 'semanticAxes'
-        ? { tab: 'synth_semantic', axes: Object.fromEntries(axisSlots.filter(s => s.axis).map(s => [s.axis, s.value])),
-            duration: synth.duration, steps: synth.steps, cfg: synth.cfg, seed: synth.seed }
-        : { tab: 'synth', prompt_a: synth.promptA, prompt_b: synth.promptB,
-            alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise,
-            duration: synth.duration, steps: synth.steps, cfg: synth.cfg, seed: synth.seed }
       labRecord({
-        parameters: recordParams,
+        parameters: {
+          tab: useAxes ? 'synth_semantic' : 'synth',
+          prompt_a: synth.promptA, prompt_b: synth.promptB,
+          ...(useAxes ? { axes: activeAxes } : { alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise }),
+          duration: synth.duration, steps: synth.steps, cfg: synth.cfg, seed: synth.seed,
+        },
         results: { seed: result.seed, generation_time_ms: result.generation_time_ms },
         outputs: [{ type: 'audio', format: 'wav', dataBase64: result.audio_base64 }],
       })
@@ -2635,43 +2614,31 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-/* Synth Mode Toggle */
-.synth-mode-toggle {
-  display: flex;
-  gap: 0;
+/* Semantic Axes Section */
+.semantic-axes-section {
   margin-bottom: 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.mode-toggle-btn {
-  flex: 1;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.5);
+.semantic-axes-section summary {
+  padding: 0.7rem 1rem;
   font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.03);
+  font-weight: 500;
 }
 
-.mode-toggle-btn:last-child {
-  border-right: none;
+.semantic-axes-section summary:hover {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.mode-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+.semantic-axes-content {
+  padding: 0.8rem;
 }
 
-.mode-toggle-btn.active {
-  background: rgba(76, 175, 80, 0.15);
-  color: #4CAF50;
-  font-weight: 600;
-}
-
-/* Semantic Axes */
 .semantic-axes-info {
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.4);

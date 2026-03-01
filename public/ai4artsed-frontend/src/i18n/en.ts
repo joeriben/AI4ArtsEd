@@ -1327,8 +1327,7 @@ export const en = {
         },
         semanticAxes: {
           modeToggle: 'Semantic Axes',
-          freeModeToggle: 'Free Prompt',
-          info: 'Each slider interpolates between two text poles in T5 embedding space. More active axes = weaker per-axis effect. Recommended: 3\u20135 axes.',
+          info: 'Semantic axes steer the prompt embedding in specific directions. Each slider interpolates between two text poles in T5 space. More active axes = weaker per-axis effect. Recommended: 3\u20135 axes.',
           slotNone: '\u2014 none \u2014',
           resetAll: 'Reset all to center',
           experimental: 'experimental'
