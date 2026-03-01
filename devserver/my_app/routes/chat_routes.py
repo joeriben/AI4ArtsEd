@@ -350,18 +350,33 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             "Content-Type": "application/json"
         }
 
+        # Reasoning models (e.g. gpt-oss-120b) need sufficient tokens for
+        # chain-of-thought before generating content
+        effective_max_tokens = max_tokens
+        if "gpt-oss" in model and effective_max_tokens < 2048:
+            effective_max_tokens = 2048
+
         payload = {
             "model": model,
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": max_tokens
+            "max_tokens": effective_max_tokens
         }
 
-        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=30)
+        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=60)
 
         if response.status_code == 200:
             result = response.json()
-            content = result["choices"][0]["message"]["content"]
+            message = result["choices"][0]["message"]
+            content = message.get("content") or ""
+
+            # Fallback to reasoning_content for reasoning models
+            if not content and message.get("reasoning_content"):
+                content = message["reasoning_content"]
+
+            if not content:
+                raise Exception("IONOS returned empty response")
+
             logger.info(f"[CHAT] IONOS Success: {len(content)} chars")
             return content
         else:

@@ -172,7 +172,7 @@
         <ul>
           <li v-for="model in nonDsgvoModels" :key="model">{{ model }}</li>
         </ul>
-        <p class="help">{{ $t('settings.dsgvo.compliantHint') }} <code>local/*</code> | <code>mistral/*</code></p>
+        <p class="help">{{ $t('settings.dsgvo.compliantHint') }} <code>local/*</code> | <code>mistral/*</code> | <code>ionos/*</code></p>
       </div>
 
       <!-- Model Configuration -->
@@ -247,6 +247,7 @@
               <select v-model="settings.EXTERNAL_LLM_PROVIDER">
                 <option value="none">{{ $t('settings.api.noneLocal') }}</option>
                 <option value="mistral">{{ $t('settings.api.mistralEu') }}</option>
+                <option value="ionos">{{ $t('settings.api.ionosEu') }}</option>
                 <option value="anthropic">{{ $t('settings.api.anthropicDirect') }}</option>
                 <option value="openai">{{ $t('settings.api.openaiDirect') }}</option>
                 <option value="openrouter">{{ $t('settings.api.openrouterDirect') }}</option>
@@ -259,6 +260,13 @@
                 <p>{{ $t('settings.api.mistralDsgvo') }}</p>
                 <p>API Base URL: https://api.mistral.ai/v1</p>
                 <p>API Key: <a href="https://console.mistral.ai/" target="_blank">console.mistral.ai</a></p>
+              </div>
+
+              <div v-if="settings.EXTERNAL_LLM_PROVIDER === 'ionos'" class="info-box info-box-success" style="margin-top: 12px;">
+                <strong>{{ $t('settings.api.ionosInfo') }}</strong>
+                <p>{{ $t('settings.api.ionosDsgvo') }}</p>
+                <p>API Base URL: https://openai.inference.de-txl.ionos.com/v1</p>
+                <p>Token: <a href="https://dcd.ionos.com/" target="_blank">DCD Token Manager</a></p>
               </div>
 
               <div v-if="settings.EXTERNAL_LLM_PROVIDER === 'anthropic'" class="info-box" style="margin-top: 12px; border-color: #ff9800;">
@@ -334,6 +342,20 @@
               />
               <span class="help-text" v-if="mistralKeyMasked">{{ $t('settings.api.currentKey') }}: {{ mistralKeyMasked }}</span>
               <span class="help-text">{{ $t('settings.api.storedIn') }} devserver/mistral.key</span>
+            </td>
+          </tr>
+
+          <tr v-if="settings.EXTERNAL_LLM_PROVIDER === 'ionos'">
+            <td class="label-cell">IONOS Token Value</td>
+            <td class="value-cell">
+              <input
+                type="password"
+                v-model="ionosKey"
+                placeholder="eyJ0eXAi..."
+                class="text-input"
+              />
+              <span class="help-text" v-if="ionosKeyMasked">{{ $t('settings.api.currentKey') }}: {{ ionosKeyMasked }}</span>
+              <span class="help-text">{{ $t('settings.api.storedIn') }} devserver/ionos.key</span>
             </td>
           </tr>
 
@@ -417,6 +439,8 @@ const openaiKey = ref('')
 const openaiKeyMasked = ref('')
 const mistralKey = ref('')
 const mistralKeyMasked = ref('')
+const ionosKey = ref('')
+const ionosKeyMasked = ref('')
 const awsCredentialsConfigured = ref(false)
 const saveMessage = ref('')
 const saveSuccess = ref(true)
@@ -451,7 +475,7 @@ const nonDsgvoModels = computed(() => {
   const labels = modelLabels.value
   Object.keys(modelLabelKeys).forEach(key => {
     const modelValue = settings.value[key] || ''
-    if (modelValue && !modelValue.startsWith('local/') && !modelValue.startsWith('mistral/')) {
+    if (modelValue && !modelValue.startsWith('local/') && !modelValue.startsWith('mistral/') && !modelValue.startsWith('ionos/')) {
       problematic.push(`${labels[key]}: ${modelValue}`)
     }
   })
@@ -533,6 +557,16 @@ async function loadSettings() {
       const mistralData = await mistralResponse.json()
       if (mistralData.exists) {
         mistralKeyMasked.value = mistralData.masked
+      }
+    }
+
+    const ionosResponse = await fetch('/api/settings/ionos-key', {
+      credentials: 'include'
+    })
+    if (ionosResponse.ok) {
+      const ionosData = await ionosResponse.json()
+      if (ionosData.exists) {
+        ionosKeyMasked.value = ionosData.masked
       }
     }
 
@@ -653,6 +687,9 @@ async function saveAndApply() {
     if (mistralKey.value) {
       payload.MISTRAL_API_KEY = mistralKey.value
     }
+    if (ionosKey.value) {
+      payload.IONOS_API_KEY = ionosKey.value
+    }
 
     // Step 1: Save settings
     const saveResponse = await fetch('/api/settings/', {
@@ -730,6 +767,19 @@ async function saveAndApply() {
         const mistralData = await mistralResponse.json()
         if (mistralData.exists) {
           mistralKeyMasked.value = mistralData.masked
+        }
+      }
+    }
+
+    if (ionosKey.value) {
+      ionosKey.value = ''
+      const ionosResponse = await fetch('/api/settings/ionos-key', {
+        credentials: 'include'
+      })
+      if (ionosResponse.ok) {
+        const ionosData = await ionosResponse.json()
+        if (ionosData.exists) {
+          ionosKeyMasked.value = ionosData.masked
         }
       }
     }

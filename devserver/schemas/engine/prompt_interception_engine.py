@@ -502,18 +502,36 @@ class PromptInterceptionEngine:
             api_model = model.replace("ionos/", "") if model.startswith("ionos/") else model
 
             params = parameters or {}
+
+            # Reasoning models (e.g. gpt-oss-120b) use tokens for chain-of-thought
+            # before generating content. The UI_MODE cap (200-600) would starve them,
+            # producing null content. Ensure minimum 2048 for reasoning models.
+            max_tokens = params.get("max_tokens", 2048)
+            if "gpt-oss" in api_model and max_tokens < 2048:
+                max_tokens = 2048
+                logger.info(f"[BACKEND] max_tokens raised to 2048 for reasoning model {api_model}")
+
             payload = {
                 "model": api_model,
                 "messages": messages,
                 "temperature": params.get("temperature", 0.7),
+                "max_tokens": max_tokens,
             }
-            if "max_tokens" in params:
-                payload["max_tokens"] = params["max_tokens"]
 
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             if response.status_code == 200:
                 result = response.json()
-                output_text = result["choices"][0]["message"]["content"]
+                message = result["choices"][0]["message"]
+                output_text = message.get("content") or ""
+
+                # Reasoning models may put output in reasoning_content if content is empty
+                if not output_text and message.get("reasoning_content"):
+                    output_text = message["reasoning_content"]
+                    logger.warning(f"[BACKEND] IONOS: content was empty, fell back to reasoning_content")
+
+                if not output_text:
+                    raise Exception(f"IONOS returned empty response (content and reasoning_content both empty)")
+
                 logger.info(f"[BACKEND] ✅ IONOS Success: {model} ({len(output_text)} chars)")
 
                 if debug:

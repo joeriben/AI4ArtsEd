@@ -6,6 +6,15 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
+### WO-2026-03-01-ionos-provider-strings
+- **Session**: 229
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `settings.api.ionosEu` (NEW): 'IONOS AI Model Hub (EU Berlin, DSGVO)'
+  - `settings.api.ionosInfo` (NEW): 'IONOS AI Model Hub (EU)'
+  - `settings.api.ionosDsgvo` (NEW): 'DSGVO-compliant (EU datacenter Berlin)'
+- **Context**: New DSGVO-compliant cloud LLM provider (IONOS AI Model Hub, EU datacenter Berlin). Dropdown option and info box strings for Settings page. Keep "DSGVO" as-is in German, translate to local equivalent elsewhere (e.g. "GDPR" in English is already done, use local terms in FR/ES/etc.).
+
 ### WO-2026-02-28-optimization-loading-messages
 - **Session**: 226
 - **Scope**: en.ts

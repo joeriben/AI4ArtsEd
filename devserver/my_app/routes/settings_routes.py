@@ -824,6 +824,42 @@ def get_mistral_key():
         return jsonify({"error": str(e)}), 500
 
 
+@settings_bp.route('/ionos-key', methods=['GET'])
+@require_settings_auth
+def get_ionos_key():
+    """Get masked IONOS API Key (JWT Token) for display"""
+    try:
+        if not IONOS_KEY_FILE.exists():
+            return jsonify({"exists": False}), 200
+
+        with open(IONOS_KEY_FILE) as f:
+            # Skip comment lines
+            key = ""
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and not line.startswith('//'):
+                    key = line
+                    break
+
+        if not key:
+            return jsonify({"exists": False}), 200
+
+        # Return masked version (show only first 7 and last 4 chars)
+        if len(key) > 11:
+            masked = f"{key[:7]}...{key[-4:]}"
+        else:
+            masked = "***"
+
+        return jsonify({
+            "exists": True,
+            "masked": masked
+        }), 200
+
+    except Exception as e:
+        logger.error(f"[SETTINGS] Error reading IONOS key: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @settings_bp.route('/aws-credentials', methods=['POST'])
 @require_settings_auth
 def upload_aws_credentials():

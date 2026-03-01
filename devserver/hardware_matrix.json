@@ -74,11 +74,11 @@
       "DSGVO_CONFORMITY": true,
       "models": {
         "STAGE1_TEXT_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
-        "STAGE2_INTERCEPTION_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
-        "STAGE2_OPTIMIZATION_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "STAGE2_INTERCEPTION_MODEL": "ionos/openai/gpt-oss-120b",
+        "STAGE2_OPTIMIZATION_MODEL": "ionos/openai/gpt-oss-120b",
         "STAGE3_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
         "STAGE4_LEGACY_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
-        "CHAT_HELPER_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "CHAT_HELPER_MODEL": "ionos/openai/gpt-oss-120b",
         "CODING_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct"
       }
     },

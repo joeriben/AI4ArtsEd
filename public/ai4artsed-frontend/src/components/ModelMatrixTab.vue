@@ -195,6 +195,7 @@ const emit = defineEmits<{
 // Cloud column definitions (4 providers)
 const cloudColumns: CloudColumn[] = [
   { id: 'mistral', label: 'Mistral EU', dsgvoCompliant: true },
+  { id: 'ionos', label: 'IONOS EU', dsgvoCompliant: true },
   { id: 'anthropic', label: 'Anthropic', dsgvoCompliant: false },
   { id: 'openai', label: 'OpenAI', dsgvoCompliant: false },
   { id: 'openrouter', label: 'OpenRouter', dsgvoCompliant: false },
