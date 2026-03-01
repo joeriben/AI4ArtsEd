@@ -68,6 +68,20 @@
         "CODING_MODEL": "openai/gpt-OSS:120b"
       }
     },
+    "ionos": {
+      "label": "IONOS AI Model Hub (EU, DSGVO)",
+      "EXTERNAL_LLM_PROVIDER": "ionos",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "STAGE2_INTERCEPTION_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "STAGE2_OPTIMIZATION_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "STAGE3_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "STAGE4_LEGACY_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "CHAT_HELPER_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct",
+        "CODING_MODEL": "ionos/meta-llama/Llama-3.3-70B-Instruct"
+      }
+    },
     "openrouter": {
       "label": "OpenRouter (NOT DSGVO, EU routing available)",
       "EXTERNAL_LLM_PROVIDER": "openrouter",

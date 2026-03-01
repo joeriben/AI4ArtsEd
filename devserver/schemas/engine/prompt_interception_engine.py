@@ -201,6 +201,10 @@ class PromptInterceptionEngine:
                 output_text, model_used = await self._call_mistral(
                     full_prompt, real_model_name, request.debug, parameters=params
                 )
+            elif request.model.startswith("ionos/"):
+                output_text, model_used = await self._call_ionos(
+                    full_prompt, real_model_name, request.debug, parameters=params
+                )
             elif real_model_name in self.openrouter_models:
                 output_text, model_used = await self._call_openrouter(
                     full_prompt, real_model_name, request.debug, parameters=params
@@ -474,6 +478,55 @@ class PromptInterceptionEngine:
             logger.error(f"Mistral API call failed: {e}")
             raise e
 
+    async def _call_ionos(self, prompt: str, model: str, debug: bool,
+                          parameters: Optional[Dict[str, Any]] = None) -> Tuple[str, str]:
+        """IONOS AI Model Hub API Call (EU datacenter Berlin, DSGVO-compliant)"""
+        try:
+            logger.info(f"[BACKEND] ☁️  IONOS Request: {model}")
+
+            api_url, api_key = self._get_api_credentials("ionos")
+
+            if not api_key:
+                raise Exception("IONOS API Key not configured")
+
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+
+            messages = [
+                {"role": "user", "content": prompt}
+            ]
+
+            # Remove 'ionos/' prefix before sending to API
+            api_model = model.replace("ionos/", "") if model.startswith("ionos/") else model
+
+            params = parameters or {}
+            payload = {
+                "model": api_model,
+                "messages": messages,
+                "temperature": params.get("temperature", 0.7),
+            }
+            if "max_tokens" in params:
+                payload["max_tokens"] = params["max_tokens"]
+
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            if response.status_code == 200:
+                result = response.json()
+                output_text = result["choices"][0]["message"]["content"]
+                logger.info(f"[BACKEND] ✅ IONOS Success: {model} ({len(output_text)} chars)")
+
+                if debug:
+                    self._log_debug("IONOS", model, prompt, output_text)
+
+                return output_text, model
+            else:
+                raise Exception(f"API Error: {response.status_code}\n{response.text}")
+
+        except Exception as e:
+            logger.error(f"IONOS API call failed: {e}")
+            raise e
+
     def _call_mistral_stream(self, prompt: str, model: str, debug: bool,
                              parameters: Optional[Dict[str, Any]] = None):
         """
@@ -686,6 +739,12 @@ class PromptInterceptionEngine:
                 "url": "https://api.mistral.ai/v1/chat/completions",
                 "key_file": "mistral.key",
                 "env_var": "MISTRAL_API_KEY",
+                "key_prefix": ""
+            },
+            "ionos": {
+                "url": "https://openai.inference.de-txl.ionos.com/v1/chat/completions",
+                "key_file": "ionos.key",
+                "env_var": "IONOS_API_KEY",
                 "key_prefix": ""
             }
         }

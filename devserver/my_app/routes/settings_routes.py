@@ -59,6 +59,7 @@ OPENROUTER_KEY_FILE = Path(__file__).parent.parent.parent / "openrouter.key"
 ANTHROPIC_KEY_FILE = Path(__file__).parent.parent.parent / "anthropic.key"
 OPENAI_KEY_FILE = Path(__file__).parent.parent.parent / "openai.key"
 MISTRAL_KEY_FILE = Path(__file__).parent.parent.parent / "mistral.key"
+IONOS_KEY_FILE = Path(__file__).parent.parent.parent / "ionos.key"
 
 # Path to settings password file (stores password hash)
 SETTINGS_PASSWORD_FILE = Path(__file__).parent.parent.parent / "settings_password.key"
@@ -690,6 +691,13 @@ def save_settings():
             with open(MISTRAL_KEY_FILE, 'w') as f:
                 f.write(mistral_key.strip())
             logger.info("[SETTINGS] Mistral API Key updated")
+
+        ionos_key = data.pop('IONOS_API_KEY', None)
+        if ionos_key:
+            IONOS_KEY_FILE.parent.mkdir(exist_ok=True)
+            with open(IONOS_KEY_FILE, 'w') as f:
+                f.write(ionos_key.strip())
+            logger.info("[SETTINGS] IONOS API Key updated")
 
         # Write all other settings to user_settings.json
         SETTINGS_FILE.parent.mkdir(exist_ok=True)
@@ -1637,6 +1645,7 @@ def get_backend_status():
         "openai":      {"key_configured": OPENAI_KEY_FILE.exists(),     "dsgvo_compliant": False, "region": "US"},
         "anthropic":   {"key_configured": ANTHROPIC_KEY_FILE.exists(),  "dsgvo_compliant": False, "region": "US"},
         "mistral":     {"key_configured": MISTRAL_KEY_FILE.exists(),    "dsgvo_compliant": True,  "region": "EU"},
+        "ionos":       {"key_configured": IONOS_KEY_FILE.exists(),      "dsgvo_compliant": True,  "region": "EU"},
         "aws_bedrock": {"key_configured": aws_env_script.exists(),      "dsgvo_compliant": True,  "region": "EU"},
     }
 

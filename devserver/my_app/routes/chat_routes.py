@@ -201,6 +201,38 @@ def get_mistral_credentials():
     return api_url, ""
 
 
+def get_ionos_credentials():
+    """Get IONOS AI Model Hub credentials (EU datacenter Berlin, DSGVO-compliant)"""
+    api_url = "https://openai.inference.de-txl.ionos.com/v1/chat/completions"
+
+    # 1. Try Environment Variable
+    api_key = os.environ.get("IONOS_API_KEY", "")
+    if api_key:
+        logger.debug("IONOS API Key from environment variable")
+        return api_url, api_key
+
+    # 2. Try Key-File (devserver/ionos.key)
+    try:
+        key_file = Path(__file__).parent.parent.parent / "ionos.key"
+        if key_file.exists():
+            lines = key_file.read_text().strip().split('\n')
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith('#') and not line.startswith('//'):
+                    api_key = line
+                    logger.info(f"IONOS API Key loaded from {key_file}")
+                    return api_url, api_key
+            logger.error(f"No valid API key found in {key_file}")
+        else:
+            logger.warning(f"IONOS key file not found: {key_file}")
+    except Exception as e:
+        logger.warning(f"Failed to read ionos.key: {e}")
+
+    # 3. No key found
+    logger.error("IONOS API Key not found! Set IONOS_API_KEY environment variable or create devserver/ionos.key file")
+    return api_url, ""
+
+
 def _split_system_and_messages(messages: list):
     """Separate system messages from user/assistant messages."""
     system_parts = []
@@ -305,6 +337,43 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
         raise
 
 
+def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens: int):
+    """Call IONOS AI Model Hub API (EU datacenter Berlin, DSGVO-compliant)"""
+    try:
+        api_url, api_key = get_ionos_credentials()
+
+        if not api_key:
+            raise Exception("IONOS API Key not configured")
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens
+        }
+
+        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=30)
+
+        if response.status_code == 200:
+            result = response.json()
+            content = result["choices"][0]["message"]["content"]
+            logger.info(f"[CHAT] IONOS Success: {len(content)} chars")
+            return content
+        else:
+            error_msg = f"API Error: {response.status_code}\n{response.text}"
+            logger.error(f"[CHAT] IONOS Error: {error_msg}")
+            raise Exception(error_msg)
+
+    except Exception as e:
+        logger.error(f"[CHAT] IONOS call failed: {e}", exc_info=True)
+        raise
+
+
 def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int):
     """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
     try:
@@ -388,6 +457,11 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
         logger.info(f"[CHAT] Calling Mistral with model: {model}")
         result = _call_mistral_chat(messages, model, temperature, max_tokens)
 
+    elif model_string.startswith("ionos/"):
+        model = model_string[len("ionos/"):]
+        logger.info(f"[CHAT] Calling IONOS with model: {model}")
+        result = _call_ionos_chat(messages, model, temperature, max_tokens)
+
     # OpenRouter-compatible providers
     elif model_string.startswith("anthropic/"):
         model = model_string[len("anthropic/"):]
@@ -410,7 +484,7 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
         result = _call_ollama_chat(messages, model, temperature, max_tokens)
 
     else:
-        raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, anthropic/, openai/, openrouter/")
+        raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, anthropic/, openai/, openrouter/")
 
     # Normalize: Ollama returns dict, other providers return plain strings
     if isinstance(result, str):

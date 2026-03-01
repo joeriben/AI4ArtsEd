@@ -351,9 +351,12 @@ class ModelSelector:
 
         Supported prefixes:
         - local/
+        - bedrock/
         - anthropic/
         - openai/
         - openrouter/
+        - mistral/
+        - ionos/
 
         Args:
             model: Model string with or without prefix
@@ -371,6 +374,10 @@ class ModelSelector:
             return model[7:]
         elif model.startswith("openrouter/"):
             return model[11:]
+        elif model.startswith("mistral/"):
+            return model[8:]
+        elif model.startswith("ionos/"):
+            return model[6:]
         return model
 
 
@@ -497,6 +504,12 @@ class ModelSelector:
             return without_prefix.split(" [")[0]
         elif full_model_string.startswith("openrouter/"):
             without_prefix = full_model_string[11:]
+            return without_prefix.split(" [")[0]
+        elif full_model_string.startswith("mistral/"):
+            without_prefix = full_model_string[8:]
+            return without_prefix.split(" [")[0]
+        elif full_model_string.startswith("ionos/"):
+            without_prefix = full_model_string[6:]
             return without_prefix.split(" [")[0]
         elif full_model_string.startswith("local/"):
             without_prefix = full_model_string[6:]
