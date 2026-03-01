@@ -4,96 +4,115 @@
 **Date:** 2026-03-01
 **Focus:** Full integration of IONOS AI Model Hub as 2nd DSGVO-compliant cloud LLM provider (EU datacenter Berlin)
 **Commits:** `a70f0f8`, `69c7bb3`, `1d9a750`
+**Test Report:** `docs/sessions/TEST_REPORT_IONOS_Model_Comparison_Session229.md`
 
-### Context
+### Die DSGVO-Odyssee: Angemessene LLM-Qualität aus EU-Rechenzentren
 
-IONOS AI Model Hub offers an OpenAI-compatible API at `https://openai.inference.de-txl.ionos.com/v1/chat/completions`, hosted in EU datacenter Berlin. Authentication via JWT Bearer token from DCD Token Manager. This is the platform's second DSGVO-compliant cloud provider (after Mistral AI).
+Die Plattform benötigt für die pädagogische Prompt Interception (Stage 2) ein Sprachmodell, das Metaphern, Synästhesien und bildhafte Beschreibungen in deutscher Sprache generiert — ohne Stilreferenzen, ohne Meta-Kommentare, nur pure sinnliche Transformation. Das ist eine Nische, die die meisten LLMs schlecht bedienen: kreative deutsche Prosa nach strikten pädagogischen Regeln.
 
-### Available Models (IONOS)
+**Chronologie der Versuche:**
 
-| Model | Parameters | Context | Notes |
+| Session | Provider / Modell | Ergebnis | Problem |
 |---|---|---|---|
-| `meta-llama/Meta-Llama-3.1-405B-Instruct-FP8` | 405B | 128K | Largest, slowest (~12s) |
-| `openai/gpt-oss-120b` | 120B | — | **Reasoning model**, fastest (~5.2s), best quality |
-| `meta-llama/Llama-3.3-70B-Instruct` | 70B | 128K | Good for structural tasks |
-| `mistralai/Mistral-Small-24B-Instruct` | 24B | — | Lightweight |
-| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 8B | 128K | Minimal |
-| `openGPT-X/Teuken-7B-instruct-commercial` | 7B | — | German/multilingual |
+| ~115 | Lokale Modelle (Ollama) | 4-6/10 | Zu klein für komplexe deutsche Synästhesie |
+| ~180 | **Mistral AI EU** (erste Cloud-Integration) | 7-8/10 | DSGVO-konform, aber Qualitätsschwankungen |
+| 217 | Mistral `mistral-large-latest` | **Desaster** | Stiller Modellwechsel auf Large 3 (675B MoE) → 85s Latenz, Plan "LLM Inference Migration" abgebrochen |
+| 217+ | Mistral `mistral-large-2411` | 8/10 | Stabilisiert durch Modell-Pinning auf Large 2 (123B dense) |
+| 221 | Mistral `mistral-large-2512` | **8.5/10** | Upgrade auf Large 3 (2512-Release), nun ~6s statt 85s. Systematischer Benchmark über 10 Interception-Kategorien. Erkenntnis: Task Instruction ist tragend (ohne: 4/10, mit: 8.5/10) |
+| 221 | Mistral vs Claude (qualitativ) | — | Claude stärker bei expressiven Configs (Overdrive, Daguerreotype), Mistral stärker bei analytischen (Planetarizer, De-Kitsch). Mistral-Vorteil: DSGVO |
+| **229** | **IONOS AI Model Hub** (EU Berlin) | **9.7/10** | Zweiter DSGVO-Provider. `gpt-oss-120b` (Reasoning-Modell) schlägt alle bisherigen EU-Modelle in Qualität UND Geschwindigkeit |
 
-### Comparative Testing Results
+**Das Kernproblem:** DSGVO-Konformität schränkt die Modellauswahl massiv ein. US-Provider (Anthropic, OpenAI) bieten die besten Modelle, sind aber für eine Bildungsplattform mit Schülerdaten nicht einsetzbar. Die EU-Anbieter (Mistral, IONOS) hosten zwar in Europa, haben aber bisher nicht die gleiche Qualitätsstufe erreicht.
 
-Tested gpt-oss-120b vs Mistral Large vs Llama 405B with two pedagogical prompts ("Ein Baum im Wind", "Eine Stadt bei Nacht mit Regen") using the interception system prompt:
+**Der Durchbruch (Session 229):** IONOS bietet mit `gpt-oss-120b` ein Reasoning-Modell, das durch Chain-of-Thought vor der eigentlichen Antwort "nachdenkt". Dieses Nachdenken ist nicht nur qualitätsverbessernd (9.7/10 vs Mistral 8.5/10), sondern **pädagogisch wertvoll**: Über die bereits existierende "Thinking"-Anzeige in ChatOverlay (Session 175) können Schüler sehen, WIE das Modell die Transformation plant.
 
-| Model | Speed | Synesthesia | Metaphors | Instruction Following |
+### Testergebnisse (Kurzfassung)
+
+Vollständige Outputs, Reasoning-Chains und Bewertungsmatrix: → `docs/sessions/TEST_REPORT_IONOS_Model_Comparison_Session229.md`
+
+**Zwei Testprompts** mit dem echten Interception-Systemprompt (Metaphern, Synästhesien, WIE statt WAS):
+
+**Prompt 1: "Ein Baum im Wind"**
+
+| Modell | Latenz | Tokens | Bewertung | Auffälligkeit |
 |---|---|---|---|---|
-| **gpt-oss-120b** | **5.2s** | **Excellent** | **Most original** | **Perfect** |
-| Mistral Large | 8-12s | Good | Good, some clichés | Good |
-| Llama 405B | 12s | Moderate | Conventional | Good |
+| **gpt-oss-120b** | **5.19s** | 437 | **9.7** | "das Auge zum Flüstern bringt" — echte Synästhesie |
+| Mistral Large 2512 | 7.87s | 300 | 8.5 | Gut, aber Truncation bei 300 Tokens |
+| Llama 405B | 8.44s | 200 | 6.5 | Konventionelle Metaphern ("Schwarm von Schmetterlingen") |
+| Llama 70B | 4.38s | 261 | 7.0 | Schnellstes, aber flach |
 
-**Decision:** gpt-oss-120b as default for creative stages (Stage 2 interception/optimization, chat helper). Llama 70B for structural stages (translation, safety, legacy, coding) where reasoning overhead is unnecessary.
+**Prompt 2: "Eine Stadt bei Nacht mit Regen"**
 
-### Reasoning Model Discovery
+| Modell | Latenz | Tokens | Bewertung | Auffälligkeit |
+|---|---|---|---|---|
+| **gpt-oss-120b** | **5.27s** | 515 | **9.7** | "Straßenwellen in schillernden Adern" — originell |
+| Mistral Large 2512 | 11.71s | 483 | 8.5 | "poliertes Obsidian" — gut, aber Klischee |
+| Llama 405B | 11.90s | 284 | 7.0 | Repetitiv ("wie ... Spiegel" 3×) |
 
-gpt-oss-120b is a **reasoning model** — responses include both `reasoning_content` (chain-of-thought) and `content` (final answer). This has two implications:
+**Entscheidung:** gpt-oss-120b als Default für kreative Stages (Interception, Optimization, Chat). Llama 70B für strukturelle Tasks (Übersetzung, Safety, Legacy).
 
-1. **Token budget**: The UI_MODE max_tokens cap (kids=200, youth=400, expert=600) would starve reasoning, producing null `content`. Fix: minimum 2048 max_tokens for gpt-oss models in both `_call_ionos()` and `_call_ionos_chat()`.
+### Reasoning-Modell: Technische Implikationen
 
-2. **Pedagogical opportunity**: The reasoning chain is visible to students via the existing ChatOverlay "Thinking" toggle (built in Session 175). Updated `_call_ionos_chat()` to return `{"content", "thinking"}` dict (like Ollama) instead of plain string, so `reasoning_content` flows through to the UI.
+gpt-oss-120b ist ein **Reasoning-Modell** — Antworten enthalten `reasoning_content` (Chain-of-Thought) UND `content` (finale Antwort).
+
+**Problem entdeckt und gelöst:** Die `UI_MODE_MAX_TOKENS`-Begrenzung (kids=200, youth=400, expert=600) ließ dem Reasoning-Modell nicht genug Token-Budget. Bei 20 max_tokens war `content: null`, die gesamten Tokens flossen in `reasoning_content`. Fix: Minimum 2048 max_tokens für `gpt-oss`-Modelle in `_call_ionos()` und `_call_ionos_chat()`.
+
+**Reasoning-Sichtbarkeit:** Das System zur Anzeige von LLM-Reasoning existiert und war **nie entfernt worden** — aktiv seit Session 175 in `ChatOverlay.vue` (kollabierbare "Thinking"-Sektion). War bisher nur für Ollama's `thinking`-Feld verdrahtet. Jetzt fließt auch IONOS' `reasoning_content` durch: `_call_ionos_chat()` gibt `{"content", "thinking"}` dict zurück (wie Ollama), statt plain string.
 
 ### Backend Changes
 
 **`prompt_interception_engine.py`:**
-- Provider registry: `ionos` entry with URL, key_file, env_var
-- `_call_ionos()`: Clone of Mistral pattern, IONOS-specific prefix strip, reasoning model max_tokens floor, defensive `content`/`reasoning_content` fallback
+- Provider registry: `ionos` entry mit URL, key_file, env_var
+- `_call_ionos()`: Klon des Mistral-Patterns, IONOS-spezifischer Prefix-Strip, Reasoning-Modell max_tokens Floor (2048), defensives `content`/`reasoning_content` Fallback
 - Routing: `elif request.model.startswith("ionos/"):`
 
 **`chat_routes.py`:**
-- `get_ionos_credentials()`: Reads JWT from `ionos.key` or `IONOS_API_KEY` env var
-- `_call_ionos_chat()`: Returns dict with `thinking` field for ChatOverlay reasoning display
+- `get_ionos_credentials()`: Liest JWT aus `ionos.key` oder `IONOS_API_KEY` env var
+- `_call_ionos_chat()`: Gibt dict mit `thinking`-Feld zurück für ChatOverlay-Reasoning-Anzeige
 - Routing in `call_chat_helper()`
 
 **`settings_routes.py`:**
-- `IONOS_KEY_FILE` constant
-- `GET /api/settings/ionos-key` endpoint (masked JWT display)
-- Key saving in `save_settings()`
+- `IONOS_KEY_FILE` Konstante
+- `GET /api/settings/ionos-key` Endpoint (maskierte JWT-Anzeige)
+- Key-Speicherung in `save_settings()`
 - Status in `cloud_apis` dict
 
 **`model_selector.py`:**
-- `ionos/` added to `strip_prefix()` and `extract_model_name()`
+- `ionos/` in `strip_prefix()` und `extract_model_name()` ergänzt
 
 **`config.py`:**
-- Provider prefix comment updated
+- Provider-Prefix-Kommentar erweitert
 
 **`hardware_matrix.json`:**
-- IONOS preset with split model strategy:
+- IONOS-Preset mit Split-Model-Strategie:
   - `gpt-oss-120b`: STAGE2_INTERCEPTION, STAGE2_OPTIMIZATION, CHAT_HELPER
   - `Llama-3.3-70B-Instruct`: STAGE1_TEXT, STAGE3, STAGE4_LEGACY, CODING
 
 ### Frontend Changes
 
 **`SettingsView.vue`:**
-- Provider dropdown: `ionos` option
-- Info box (green/DSGVO): API base URL + DCD Token Manager link
-- JWT token input field
-- DSGVO compliance recognition for `ionos/` prefix
-- Key loading/saving/clearing logic
+- Provider-Dropdown: `ionos` Option
+- Info-Box (grün/DSGVO): API Base URL + DCD Token Manager Link
+- JWT Token Input-Feld
+- DSGVO-Compliance-Erkennung für `ionos/` Prefix
+- Key Loading/Saving/Clearing Logik
 
 **`ModelMatrixTab.vue`:**
-- IONOS EU cloud column with DSGVO badge
+- IONOS EU Cloud-Spalte mit DSGVO-Badge
 
 **`types/settings.ts`:**
-- `'ionos'` added to `CloudProvider` type
+- `'ionos'` zum `CloudProvider` Type ergänzt
 
 **`en.ts`:**
-- 3 new keys: `ionosEu`, `ionosInfo`, `ionosDsgvo`
+- 3 neue Keys: `ionosEu`, `ionosInfo`, `ionosDsgvo`
 
 **`WORK_ORDERS.md`:**
-- `WO-2026-03-01-ionos-provider-strings` for batch translation
+- `WO-2026-03-01-ionos-provider-strings` für Batch-Translation
 
 ### Remaining TODOs
 
-1. **Serverseitige Kostenkontrolle** via IONOS Billing API v3 (`usageFindByDC` endpoint) — API docs are JS-rendered Swagger UI, OpenAPI spec endpoint returns 404
-2. **Live smoke test** with running backend — verify interception output quality and reasoning display in ChatOverlay
+1. **Serverseitige Kostenkontrolle** via IONOS Billing API v3 (`usageFindByDC` Endpoint) — API-Docs sind JS-gerenderte Swagger UI, OpenAPI Spec Endpoint gibt 404
+2. **Live Smoke Test** mit laufendem Backend — Interception Output-Qualität und Reasoning-Anzeige in ChatOverlay verifizieren
 
 ---
 
