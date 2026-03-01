@@ -277,7 +277,7 @@ class CrossmodalLabBackend:
         Axis directions are always relative to neutral, so they act as semantic modifiers.
 
         Args:
-            axes: {axis_name: 0.0-1.0} — 0.0 = pole_b, 1.0 = pole_a, 0.5 = neutral for that axis
+            axes: {axis_name: -1.0 to 1.0} — 0 = no effect, +1 = full pole_a, -1 = full pole_b
             base_prompt: Optional text prompt as starting point (if None, uses neutral "sound")
             dimension_offsets: Per-dimension offset values {dim_idx: offset}
             duration_seconds: Audio duration
@@ -329,8 +329,11 @@ class CrossmodalLabBackend:
                 dir_a = emb_a - neutral_emb  # towards pole_a
                 dir_b = emb_b - neutral_emb  # towards pole_b
 
-                # t=1.0 → full pole_a, t=0.0 → full pole_b, t=0.5 → both half
-                delta = t * dir_a + (1.0 - t) * dir_b
+                # t in [-1, 1]: 0 = no effect, +1 = full pole_a, -1 = full pole_b
+                if t >= 0:
+                    delta = t * dir_a
+                else:
+                    delta = (-t) * dir_b
                 result = result + delta
 
                 # Store mean delta per dimension for contribution tracking

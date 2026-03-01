@@ -135,7 +135,7 @@
                 <input
                   type="range"
                   :value="slot.value"
-                  min="0"
+                  min="-1"
                   max="1"
                   step="0.01"
                   class="axis-range"
@@ -912,11 +912,11 @@ interface AxisSlot {
   value: number
 }
 const axisSlots = reactive<AxisSlot[]>([
-  { axis: 'tonal_noisy', value: 0.5 },
-  { axis: 'rhythmic_sustained', value: 0.5 },
-  { axis: 'ceremonial_everyday', value: 0.5 },
-  { axis: 'acoustic_electronic', value: 0.5 },
-  { axis: 'music_soundscape', value: 0.5 },
+  { axis: 'tonal_noisy', value: 0 },
+  { axis: 'rhythmic_sustained', value: 0 },
+  { axis: 'ceremonial_everyday', value: 0 },
+  { axis: 'acoustic_electronic', value: 0 },
+  { axis: 'music_soundscape', value: 0 },
 ])
 
 const axisColors = ['#e91e63', '#2196f3', '#4caf50', '#ff9800', '#9c27b0']
@@ -939,12 +939,12 @@ function getAxisMeta(axisName: string): AxisDef | undefined {
 
 function onAxisSelectChange(idx: number, value: string) {
   axisSlots[idx]!.axis = value
-  axisSlots[idx]!.value = 0.5
+  axisSlots[idx]!.value = 0
 }
 
 function resetAxesToCenter() {
   for (const slot of axisSlots) {
-    slot.value = 0.5
+    slot.value = 0
   }
 }
 
@@ -1464,10 +1464,12 @@ async function runSynth() {
   embeddingStats.value = null
   generating.value = true
   try {
-    // Collect active semantic axes
+    // Collect active semantic axes (only those moved away from center)
     const activeAxes: Record<string, number> = {}
     for (const slot of axisSlots) {
-      if (slot.axis) activeAxes[slot.axis] = slot.value
+      if (slot.axis && Math.abs(slot.value) > 0.001) {
+        activeAxes[slot.axis] = slot.value
+      }
     }
     const useAxes = Object.keys(activeAxes).length > 0
 
