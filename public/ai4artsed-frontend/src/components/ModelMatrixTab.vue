@@ -271,18 +271,21 @@ function getCloudModel(provider: string, field: ModelField): string {
 function getShortModelName(fullModel: string): string {
   if (!fullModel || fullModel === '-') return '-'
 
-  // Remove provider prefix (local/, bedrock/, etc.)
-  const withoutPrefix = fullModel.replace(/^[a-z]+\//, '')
+  // Remove all provider prefixes (local/, ionos/openai/, ionos/meta-llama/, etc.)
+  // Strip known provider prefixes, then known org prefixes
+  let name = fullModel
+    .replace(/^(local|bedrock|mistral|ionos|anthropic|openai|openrouter)\//, '')
+    .replace(/^(openai|meta-llama|mistralai|openGPT-X)\//, '')
 
   // Shorten long model names
-  if (withoutPrefix.length > 20) {
-    const parts = withoutPrefix.split(/[:\-.]/)
-    if (parts.length > 1 && parts[0]) {
-      return parts[0].substring(0, 12) + '...'
-    }
-    return withoutPrefix.substring(0, 15) + '...'
+  if (name.length > 22) {
+    // Try to find a meaningful short form
+    // e.g. "Meta-Llama-3.1-405B-Instruct-FP8" → "Llama-3.1-405B"
+    const match = name.match(/(Llama[- ]\d[\w.-]*\d+B|gpt-oss[:\-]\w+|Mistral[- ]\w+|claude[- ]\w+)/i)
+    if (match) return match[1]
+    return name.substring(0, 18) + '...'
   }
-  return withoutPrefix
+  return name
 }
 
 // Check if a specific cell matches current settings
