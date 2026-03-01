@@ -231,20 +231,39 @@ def _load_optimization_instruction(output_config_name: str):
                 logger.info(f"[LOAD-OPT] Found in output config meta for '{output_config_name}' ({len(opt_inst)} chars)")
                 return opt_inst
 
-        # 2. Fallback: load from chunk meta
+        # 2. Fallback: load from chunk meta (.py CHUNK_META or .json meta)
         if output_config_obj and hasattr(output_config_obj, 'parameters'):
             output_chunk_name = output_config_obj.parameters.get('OUTPUT_CHUNK')
             if output_chunk_name:
                 import json
                 from pathlib import Path
-                chunk_file = Path(__file__).parent.parent.parent / "schemas" / "chunks" / f"{output_chunk_name}.json"
+                chunks_dir = Path(__file__).parent.parent.parent / "schemas" / "chunks"
+
+                # 2a. Try Python chunk CHUNK_META first
+                chunk_py = chunks_dir / f"{output_chunk_name}.py"
+                if chunk_py.exists():
+                    try:
+                        import importlib.util
+                        spec = importlib.util.spec_from_file_location(f"opt_{output_chunk_name}", chunk_py)
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                        chunk_meta = getattr(mod, 'CHUNK_META', {})
+                        opt_inst = chunk_meta.get('optimization_instruction')
+                        if opt_inst:
+                            logger.info(f"[LOAD-OPT] Found in Python chunk '{output_chunk_name}' CHUNK_META for '{output_config_name}' ({len(opt_inst)} chars)")
+                            return opt_inst
+                    except Exception as e:
+                        logger.debug(f"[LOAD-OPT] Failed to load Python chunk '{output_chunk_name}': {e}")
+
+                # 2b. Fallback to JSON chunk
+                chunk_file = chunks_dir / f"{output_chunk_name}.json"
                 if chunk_file.exists():
                     with open(chunk_file, 'r', encoding='utf-8') as f:
                         output_chunk = json.load(f)
                     if output_chunk and 'meta' in output_chunk:
                         opt_inst = output_chunk['meta'].get('optimization_instruction')
                         if opt_inst:
-                            logger.info(f"[LOAD-OPT] Found in chunk '{output_chunk_name}' meta for '{output_config_name}' ({len(opt_inst)} chars)")
+                            logger.info(f"[LOAD-OPT] Found in JSON chunk '{output_chunk_name}' meta for '{output_config_name}' ({len(opt_inst)} chars)")
                             return opt_inst
     except Exception as e:
         logger.warning(f"[LOAD-OPT] Failed to load optimization_instruction for '{output_config_name}': {e}")

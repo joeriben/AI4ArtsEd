@@ -763,6 +763,77 @@ def test_seed_minus_one():
 
 
 # ══════════════════════════════════════════════════════════════════════
+# Test Suite 12: Fallback-Chain & Infrastructure Fixes
+# ══════════════════════════════════════════════════════════════════════
+
+def test_router_fallback_uses_recursive_entry():
+    """Router fallback re-enters _process_output_chunk (not _load_output_chunk).
+
+    Critical: sd35_turbo fallback target is sd35_diffusers (.py), not a .json.
+    The fallback must go through _process_output_chunk so both .py and .json work.
+    """
+    router_path = devserver_path / "schemas" / "engine" / "backend_router.py"
+    content = router_path.read_text()
+    # The fallback should call _process_output_chunk recursively, not _load_output_chunk
+    assert "_process_output_chunk(fallback_name" in content, \
+        "Fallback should recursively call _process_output_chunk, not _load_output_chunk"
+    print("  PASS: Router fallback uses recursive _process_output_chunk")
+
+
+def test_turbo_fallback_target_is_python_chunk():
+    """sd35_turbo's fallback target (sd35_diffusers) is a .py file, not .json.
+
+    This means _load_output_chunk() would fail — the recursive fallback fix is essential.
+    """
+    module = load_chunk_module("output_image_sd35_turbo_diffusers")
+    fallback = module.CHUNK_META['fallback_chunk']
+    assert fallback == "output_image_sd35_diffusers"
+
+    # Verify the fallback target is a .py (not .json)
+    py_path = CHUNK_DIR / f"{fallback}.py"
+    json_path = CHUNK_DIR / f"{fallback}.json"
+    assert py_path.exists(), f"Fallback target {fallback}.py should exist"
+    assert not json_path.exists(), f"Fallback target {fallback}.json should NOT exist (deleted)"
+    print("  PASS: Turbo fallback target is .py (recursive fix required)")
+
+
+def test_model_availability_load_chunk_meta():
+    """ModelAvailabilityService._load_chunk_meta reads .py CHUNK_META."""
+    avail_service_path = devserver_path / "my_app" / "services" / "model_availability_service.py"
+    content = avail_service_path.read_text()
+    assert '_load_chunk_meta' in content, "ModelAvailabilityService should have _load_chunk_meta method"
+    assert 'CHUNK_META' in content, "_load_chunk_meta should read CHUNK_META from Python chunks"
+    assert 'importlib.util' in content, "_load_chunk_meta should use importlib to load .py chunks"
+    print("  PASS: ModelAvailabilityService has _load_chunk_meta for .py support")
+
+
+def test_model_availability_check_fallback_uses_load_chunk_meta():
+    """_check_fallback_chunk uses _load_chunk_meta instead of JSON-only loading."""
+    avail_service_path = devserver_path / "my_app" / "services" / "model_availability_service.py"
+    content = avail_service_path.read_text()
+    # Should NOT have the old JSON-only pattern in _check_fallback_chunk
+    # Old: primary_chunk_path = self.chunk_dir / f"{output_chunk_name}.json"
+    assert '_load_chunk_meta(output_chunk_name)' in content, \
+        "_check_fallback_chunk should use _load_chunk_meta, not direct JSON loading"
+    print("  PASS: _check_fallback_chunk uses _load_chunk_meta")
+
+
+def test_optimization_instruction_supports_python_chunks():
+    """_load_optimization_instruction checks .py CHUNK_META before .json."""
+    routes_path = devserver_path / "my_app" / "routes" / "schema_pipeline_routes.py"
+    content = routes_path.read_text()
+    # Find the _load_optimization_instruction function
+    func_start = content.find('def _load_optimization_instruction')
+    func_end = content.find('\ndef ', func_start + 1)
+    func_body = content[func_start:func_end]
+    assert 'CHUNK_META' in func_body, \
+        "_load_optimization_instruction should read CHUNK_META from Python chunks"
+    assert '.py' in func_body, \
+        "_load_optimization_instruction should check for .py chunk files"
+    print("  PASS: _load_optimization_instruction supports Python chunks")
+
+
+# ══════════════════════════════════════════════════════════════════════
 # Run all tests
 # ══════════════════════════════════════════════════════════════════════
 
@@ -819,6 +890,12 @@ def run_all_tests():
         ("11.1", "seed='random' handling", test_seed_random_string),
         ("11.2", "Explicit seed forwarding", test_seed_explicit),
         ("11.3", "seed=-1 → random", test_seed_minus_one),
+        # Suite 12: Fallback-chain & infrastructure fixes
+        ("12.1", "Router fallback uses recursive entry", test_router_fallback_uses_recursive_entry),
+        ("12.2", "Turbo fallback target is .py chunk", test_turbo_fallback_target_is_python_chunk),
+        ("12.3", "ModelAvailability _load_chunk_meta", test_model_availability_load_chunk_meta),
+        ("12.4", "_check_fallback_chunk uses _load_chunk_meta", test_model_availability_check_fallback_uses_load_chunk_meta),
+        ("12.5", "optimization_instruction supports .py", test_optimization_instruction_supports_python_chunks),
     ]
 
     print("=" * 70)

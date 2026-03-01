@@ -561,11 +561,9 @@ class BackendRouter:
                 module = sys.modules.get(f"chunk_{chunk_name}")
                 fallback_name = getattr(module, 'CHUNK_META', {}).get('fallback_chunk') if module else None
                 if fallback_name:
-                    text_prompt = parameters.get('prompt', '') or parameters.get('PREVIOUS_OUTPUT', '') or parameters.get('TEXT_1', '')
                     logger.info(f"[FALLBACK] Python chunk '{chunk_name}' failed ({result.error}), trying '{fallback_name}'")
-                    fallback_chunk = self._load_output_chunk(fallback_name)
-                    if fallback_chunk:
-                        return await self._process_workflow_chunk(fallback_name, text_prompt, parameters, fallback_chunk)
+                    # Re-enter _process_output_chunk so fallback works for both .py and .json chunks
+                    return await self._process_output_chunk(fallback_name, None, parameters)
                 return result
 
             # 2. Load Output-Chunk from JSON (legacy)

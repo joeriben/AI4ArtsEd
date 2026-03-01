@@ -260,6 +260,35 @@ class ModelAvailabilityService:
             self._cache["last_reachable"] = False
             raise
 
+    def _load_chunk_meta(self, chunk_name: str) -> dict:
+        """Load chunk meta from .py (CHUNK_META) or .json (meta field).
+
+        Python chunks take priority over JSON chunks.
+        Returns the meta dict, or empty dict if not found.
+        """
+        # 1. Try Python chunk first
+        chunk_py = self.chunk_dir / f"{chunk_name}.py"
+        if chunk_py.exists():
+            try:
+                import importlib.util
+                spec = importlib.util.spec_from_file_location(f"avail_{chunk_name}", chunk_py)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                return getattr(mod, 'CHUNK_META', {})
+            except Exception as e:
+                logger.debug(f"[MODEL_AVAILABILITY] Failed to load Python chunk {chunk_name}: {e}")
+
+        # 2. Fallback to JSON
+        chunk_json = self.chunk_dir / f"{chunk_name}.json"
+        if chunk_json.exists():
+            try:
+                with open(chunk_json, 'r', encoding='utf-8') as f:
+                    return json.load(f).get("meta", {})
+            except Exception as e:
+                logger.debug(f"[MODEL_AVAILABILITY] Failed to load JSON chunk {chunk_name}: {e}")
+
+        return {}
+
     async def _check_fallback_chunk(self, config_id: str, output_chunk_name: str) -> bool:
         """Check if a chunk's fallback_chunk is available via ComfyUI.
 
@@ -267,12 +296,9 @@ class ModelAvailabilityService:
         ComfyUI has all models required by the fallback chunk's workflow.
         """
         try:
-            # Load primary chunk to get fallback_chunk name
-            primary_chunk_path = self.chunk_dir / f"{output_chunk_name}.json"
-            with open(primary_chunk_path, 'r', encoding='utf-8') as f:
-                primary_chunk = json.load(f)
-
-            fallback_name = primary_chunk.get("meta", {}).get("fallback_chunk")
+            # Load primary chunk meta (.py or .json)
+            primary_meta = self._load_chunk_meta(output_chunk_name)
+            fallback_name = primary_meta.get("fallback_chunk")
             if not fallback_name:
                 return False
 
