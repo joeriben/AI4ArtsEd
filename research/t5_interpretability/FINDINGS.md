@@ -361,7 +361,111 @@ A pedagogical interface could display the cultural drift alongside the sound out
 
 ---
 
-## 7. What Survives Scrutiny
+## 7. Three-Level Taxonomy: Empirical Validation (21 Axes)
+
+### Method
+
+The drift analysis (Section 6) classified axes into three pedagogical categories based on embedding-space cultural drift magnitude: **neutral** (safe for aesthetic exploration), **biased** (drift should be shown to learners), and **constitutive** (reproduces music/non-music boundaries). This classification was based on drift analysis alone — no audio was generated.
+
+To test whether these categories predict *acoustic* behavior, all 21 semantic axes were sonified via LERP interpolation. 8 perceptual axes, 8 cultural-contextual axes, and 5 critical axes, each at 5 LERP positions (t = 0.0, 0.25, 0.5, 0.75, 1.0). The 6 axes from the initial taxonomy study used N=50 per position (250 per axis); the 15 expansion axes used N=30 per position (150 per axis). Total: 3,750 audio samples. 11 acoustic features extracted per sample via librosa.
+
+### Per-Axis Results
+
+| Axis | Level | Max |d| | Sig (p<.05) | Top Feature | Gradient r |
+|---|---|---|---|---|---|
+| tonal↔noisy | perceptual | 4.806 | 8/11 | rms_mean | +0.767 |
+| rhythmic↔sustained | perceptual | 2.604 | 7/11 | spectral_centroid_std | +0.639 |
+| ceremonial↔everyday | cultural | 2.391 | 9/11 | onset_density | -0.441 |
+| improvised↔composed | cultural | 2.109 | 9/11 | onset_density | +0.562 |
+| music↔noise | critical | 2.058 | 10/11 | spectral_centroid_mean | -0.545 |
+| acoustic↔electronic | cultural | 2.013 | 7/11 | spectral_flatness_mean | -0.487 |
+| complex↔simple | critical | 1.914 | 6/11 | onset_density | -0.570 |
+| sacred↔secular | cultural | 1.756 | 7/11 | onset_density | -0.518 |
+| refined↔raw | critical | 1.735 | 7/11 | spectral_flatness_mean | -0.497 |
+| solo↔ensemble | cultural | 1.593 | 1/11 | onset_density | +0.486 |
+| bright↔dark | perceptual | 1.281 | 5/11 | spectral_centroid_mean | +0.427 |
+| traditional↔modern | cultural | 1.213 | 5/11 | spectral_bandwidth_mean | -0.355 |
+| beautiful↔ugly | critical | 1.097 | 3/11 | zcr_mean | +0.357 |
+| loud↔quiet | perceptual | 1.024 | 8/11 | spectral_flux_std | +0.325 |
+| professional↔amateur | cultural | 0.965 | 6/11 | onset_density | -0.315 |
+| smooth↔harsh | perceptual | 0.810 | 7/11 | rms_std | -0.299 |
+| fast↔slow | perceptual | 0.800 | 3/11 | spectral_flux_std | +0.291 |
+| close↔distant | perceptual | 0.758 | 2/11 | onset_density | -0.238 |
+| dense↔sparse | perceptual | 0.735 | 2/11 | rms_std | -0.296 |
+| vocal↔instrumental | cultural | 0.673 | 3/11 | spectral_flux_mean | -0.212 |
+| authentic↔fusion | critical | 0.649 | 2/11 | spectral_bandwidth_mean | -0.230 |
+
+All 21 axes produce statistically significant acoustic effects. The weakest axis (authentic↔fusion, d=0.649) still qualifies as a "medium" effect by conventional thresholds (d > 0.5).
+
+### Aggregation by Level
+
+| Level | N axes | Mean max |d| | Mean sig features | Mean |gradient r| |
+|---|---|---|---|---|
+| perceptual | 8 | 1.602 | 5.2/11 | 0.410 |
+| cultural | 8 | 1.589 | 5.9/11 | 0.422 |
+| critical | 5 | 1.491 | 5.6/11 | 0.440 |
+
+The three levels produce **comparable** mean acoustic effects. This contradicts the hypothesis that constitutive axes would produce stronger acoustic effects than neutral axes. When classified by the original drift-based taxonomy:
+
+| Drift-based level | N axes | Mean max |d| |
+|---|---|---|
+| constitutive | 3 | 2.866 |
+| neutral | 4 | 1.108 |
+| biased | 5 | 1.136 |
+
+Constitutive axes (tonal↔noisy, music↔noise, refined↔raw) do produce the strongest effects. But this is driven by tonal↔noisy (d=4.806) — an outlier. Neutral and biased axes are indistinguishable in acoustic effect magnitude.
+
+### Drift-Acoustic Correlation
+
+Does embedding-space cultural drift magnitude predict acoustic effect size?
+
+- **Pearson r = +0.688** (p = 0.0006, N = 21)
+- **Spearman ρ = +0.314** (p = 0.17, N = 21)
+
+The Pearson correlation is high and significant. The Spearman rank correlation is not. This divergence reveals that the linear relationship is driven by a few high-leverage points — primarily tonal↔noisy (drift = 0.321, d = 4.806) and ceremonial↔everyday (drift = 0.197, d = 2.391). Remove these two outliers and the Pearson correlation weakens substantially.
+
+**Interpretation**: There is a trend — axes with more cultural baggage in embedding space tend to produce stronger acoustic effects — but it is not a robust rank-order relationship. The trend is real for the extremes (constitutive axes dominate both drift and acoustic effect) but noisy for the middle range.
+
+### Effect Profile Correlation Matrix (Selected Clusters)
+
+The 21×21 matrix of Cohen's d profiles (11 features per axis) reveals axis clusters that share acoustic fingerprints:
+
+**Strongly correlated pairs** (|r| > 0.8):
+- dense↔sparse ↔ smooth↔harsh: r = +0.92 (both control spectral density/energy)
+- fast↔slow ↔ smooth↔harsh: r = -0.91 (fast ≈ harsh, slow ≈ smooth)
+- sacred↔secular ↔ ceremonial↔everyday: r = +0.87 (overlapping cultural categories)
+- sacred↔secular ↔ beautiful↔ugly: r = +0.83 (aesthetic and sacral overlap)
+- smooth↔harsh ↔ vocal↔instrumental: r = +0.85 (vocal ≈ smooth)
+- professional↔amateur ↔ rhythmic↔sustained: r = +0.83 (professional ≈ rhythmic)
+
+**Key pattern**: Perceptual axes cluster with each other through shared acoustic mechanisms (energy, spectral shape). Cultural axes cluster through shared semantic associations in T5's training data. Cross-level clusters (e.g., professional↔amateur ↔ rhythmic↔sustained) reveal how cultural categories encode implicit perceptual expectations.
+
+### Within-Level vs Between-Level Similarity
+
+Do axes within the same level produce similar acoustic effects?
+
+| Comparison | Mean r | Std | N pairs |
+|---|---|---|---|
+| Within perceptual | -0.084 | 0.517 | 28 |
+| Within cultural | -0.079 | 0.433 | 28 |
+| Within critical | -0.058 | 0.303 | 10 |
+| **Between levels** | +0.031 | 0.399 | 144 |
+
+Within-level correlations are **not higher** than between-level correlations. The three-level taxonomy does not capture acoustic groupings — axes within the same level are no more similar to each other than to axes in other levels. The taxonomy is useful for *pedagogical* categorization (how to present axes to learners) but does not reflect *acoustic* structure.
+
+### Acoustic Feature Profiles by Level
+
+Each level tends to engage different acoustic features:
+
+- **Perceptual**: rms_mean (mean |d| = 1.021), spectral_centroid_std (0.876), spectral_bandwidth_mean (0.806) — energy and spectral shape
+- **Cultural**: onset_density (1.243), spectral_centroid_std (0.959), spectral_flux_std (0.791) — temporal structure and spectral variation
+- **Critical**: spectral_flux_mean (0.939), zcr_mean (0.910), spectral_centroid_mean (0.866) — spectral character and noise content
+
+This suggests that perceptual axes operate primarily through energy/loudness dimensions, cultural axes through rhythmic/temporal dimensions, and critical axes through timbral/noise dimensions — consistent with the semantic content of each category.
+
+---
+
+## 8. What Survives Scrutiny
 
 | Finding | Status | Evidence |
 |---|---|---|
@@ -384,10 +488,15 @@ A pedagogical interface could display the cultural drift alongside the sound out
 | Latent Audio Synth via embedding injection | **Not viable** | Effect too weak for perceptual control |
 | Latent Audio Synth via single-axis LERP | **Viable** | 84% signal retention, monotonic control |
 | Latent Audio Synth via multi-axis additive LERP | **Marginal** | 35% retention; usable but needs bridge model for full signal |
+| All 21 axes produce LERP effects | **Confirmed** | Weakest: authentic↔fusion d=0.649 (medium effect); 3,750 samples |
+| 3-level taxonomy predicts acoustic effect size | **Partially confirmed** | Constitutive (mean d=2.87) >> neutral (1.11) ≈ biased (1.14) |
+| Drift-acoustic correlation (N=21) | **Partially confirmed** | Pearson r=0.688 (p<0.001) but Spearman ρ=0.314 (p=0.17); driven by outliers |
+| Axes within same level share acoustic profiles | **Rejected** | Within-level r ≈ between-level r ≈ 0; no acoustic clustering by taxonomy |
+| Perceptual/cultural/critical affect different features | **Confirmed** | Perceptual → energy, cultural → temporal, critical → timbral |
 
 ---
 
-## 8. Implications for a Pedagogical Audio Interface
+## 9. Implications for a Pedagogical Audio Interface
 
 The original vision — SAE feature sliders directly manipulating embeddings — is not viable. LERP interpolation between text-encoded poles recovers 84% of the text-prompt effect for a single axis, but degrades to ~35% when 3 axes are combined additively. A functional multi-axis synth requires either accepting the degradation or training a bridge model.
 
@@ -434,7 +543,7 @@ This would potentially recover the full 84% signal per axis even with multiple a
 
 ---
 
-## 9. Experimental Details
+## 10. Experimental Details
 
 | Parameter | Value |
 |---|---|
@@ -447,7 +556,7 @@ This would potentially recover the full 84% signal per axis even with multiple a
 | Audio model | Stable Audio (via GPU service, port 17803) |
 | Audio parameters | 5s duration, 100 steps, CFG 7.0 |
 | Statistical tests | Welch's t-test, Cohen's d, Mann-Whitney U |
-| Samples per condition | N=100 (seeds 0-99); LERP: N=100 x 5 positions; Multi-axis: N=50 x 8 conditions |
+| Samples per condition | N=100 (seeds 0-99); LERP: N=100 x 5 positions; Multi-axis: N=50 x 8 conditions; 21-axis: N=30-50 x 5 positions |
 | Acoustic features | 11 (librosa: onset density, spectral centroid mean/std, RMS mean/std, spectral flatness, ZCR, tempo, spectral bandwidth, spectral flux mean/std) |
 
 ### Scripts
@@ -468,6 +577,9 @@ This would potentially recover the full 84% signal per axis even with multiple a
 | `statistical_lerp_test.py` | Validation: LERP interpolation statistics (N=500) |
 | `statistical_multiaxis_test.py` | Validation: Multi-axis factorial test (N=400) |
 | `cultural_drift_analysis.py` | Cultural drift per axis (21 axes x 15 traditions) |
+| `statistical_threelevel_test.py` | 3-level taxonomy sonification (6 initial axes, N=50/pos) |
+| `statistical_remaining_axes.py` | 15 expansion axes sonification (N=30/pos) |
+| `analyze_threelevel.py` | Comprehensive 21-axis cross-analysis |
 
 ### Data
 
@@ -487,3 +599,6 @@ All outputs in `research/t5_interpretability/data/` (gitignored). Key files:
 - `statistical_lerp_test/` (500 WAV, LERP gradient experiment)
 - `statistical_multiaxis_test/` (400 WAV, multi-axis factorial experiment)
 - `cultural_drift/cultural_drift_report.md` (21 axes x 15 traditions drift analysis)
+- `statistical_threelevel_test/` (3,750 WAV, 21 axes x 5 positions x N=30-50)
+- `statistical_threelevel_test/comprehensive_report.md` (21-axis cross-analysis)
+- `statistical_threelevel_test/statistical_report.md` (per-axis detail, 6 initial axes)
