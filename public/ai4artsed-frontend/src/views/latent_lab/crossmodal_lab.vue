@@ -179,7 +179,7 @@
       </div>
 
       <div class="action-row">
-        <button class="generate-btn" :disabled="(!synth.promptA && !hasActiveAxes) || generating" @click="runSynth">
+        <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
           {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
         </button>
         <button class="loop-btn" :class="{ active: looper.isLooping.value }" @click="toggleLoop">
@@ -929,10 +929,6 @@ interface AxisContribution {
 }
 const axisContributions = ref<AxisContribution[]>([])
 
-const hasActiveAxes = computed(() =>
-  axisSlots.some(s => s.axis !== '')
-)
-
 function getAxisMeta(axisName: string): AxisDef | undefined {
   return availableAxes.value.find(a => a.name === axisName)
 }
@@ -1464,6 +1460,30 @@ async function runSynth() {
   embeddingStats.value = null
   generating.value = true
   try {
+    // Build request body — always /synth, axes included when active
+    const body: Record<string, unknown> = {
+      prompt_a: synth.promptA,
+      alpha: synth.alpha,
+      magnitude: synth.magnitude,
+      noise_sigma: synth.noise,
+      duration_seconds: synth.duration,
+      steps: synth.steps,
+      cfg_scale: synth.cfg,
+      seed: synth.seed,
+    }
+    if (synth.promptB.trim()) {
+      body.prompt_b = synth.promptB
+    }
+
+    // Collect non-zero dimension offsets
+    const nonZeroOffsets: Record<string, number> = {}
+    for (const [k, v] of Object.entries(dimensionOffsets)) {
+      if (v !== 0) nonZeroOffsets[k] = v
+    }
+    if (Object.keys(nonZeroOffsets).length > 0) {
+      body.dimension_offsets = nonZeroOffsets
+    }
+
     // Collect active semantic axes (only those moved away from center)
     const activeAxes: Record<string, number> = {}
     for (const slot of axisSlots) {
@@ -1471,59 +1491,16 @@ async function runSynth() {
         activeAxes[slot.axis] = slot.value
       }
     }
-    const useAxes = Object.keys(activeAxes).length > 0
-
-    // Collect non-zero dimension offsets
-    const nonZeroOffsets: Record<string, number> = {}
-    for (const [k, v] of Object.entries(dimensionOffsets)) {
-      if (v !== 0) nonZeroOffsets[k] = v
+    if (Object.keys(activeAxes).length > 0) {
+      body.axes = activeAxes
     }
 
-    let result: any
+    const result = await apiPost('/api/cross_aesthetic/synth', body)
 
-    if (useAxes) {
-      // Multi-axis synth: axes modify the prompt embedding (or neutral if no prompt)
-      const body: Record<string, unknown> = {
-        axes: activeAxes,
-        duration_seconds: synth.duration,
-        steps: synth.steps,
-        cfg_scale: synth.cfg,
-        seed: synth.seed,
-      }
-      if (synth.promptA.trim()) {
-        body.base_prompt = synth.promptA
-      }
-      if (Object.keys(nonZeroOffsets).length > 0) {
-        body.dimension_offsets = nonZeroOffsets
-      }
-
-      result = await apiPost('/api/cross_aesthetic/multi_axis_synth', body)
-
-      if (result.success && result.axis_contributions) {
-        axisContributions.value = result.axis_contributions
-      }
-    } else {
-      // Standard free prompt synth (no axes active)
-      const body: Record<string, unknown> = {
-        prompt_a: synth.promptA,
-        alpha: synth.alpha,
-        magnitude: synth.magnitude,
-        noise_sigma: synth.noise,
-        duration_seconds: synth.duration,
-        steps: synth.steps,
-        cfg_scale: synth.cfg,
-        seed: synth.seed,
-      }
-      if (synth.promptB.trim()) {
-        body.prompt_b = synth.promptB
-      }
-      if (Object.keys(nonZeroOffsets).length > 0) {
-        body.dimension_offsets = nonZeroOffsets
-      }
-
-      result = await apiPost('/api/cross_aesthetic/synth', body)
-      axisContributions.value = []
-    }
+    // Store axis contributions for drawbar coloring
+    axisContributions.value = result.success && result.axis_contributions
+      ? result.axis_contributions
+      : []
 
     if (result.success) {
       lastSynthBase64.value = result.audio_base64
@@ -1539,9 +1516,9 @@ async function runSynth() {
       // Record for research export
       labRecord({
         parameters: {
-          tab: useAxes ? 'synth_semantic' : 'synth',
-          prompt_a: synth.promptA, prompt_b: synth.promptB,
-          ...(useAxes ? { axes: activeAxes } : { alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise }),
+          tab: 'synth', prompt_a: synth.promptA, prompt_b: synth.promptB,
+          alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise,
+          ...(Object.keys(activeAxes).length > 0 ? { axes: activeAxes } : {}),
           duration: synth.duration, steps: synth.steps, cfg: synth.cfg, seed: synth.seed,
         },
         results: { seed: result.seed, generation_time_ms: result.generation_time_ms },
@@ -2686,6 +2663,11 @@ onUnmounted(() => {
 .axis-select:focus {
   outline: none;
   border-color: rgba(76, 175, 80, 0.5);
+}
+
+.axis-select option {
+  background: #1a1a1a;
+  color: #ffffff;
 }
 
 .axis-slider-row {

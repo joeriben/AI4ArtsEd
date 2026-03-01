@@ -77,6 +77,7 @@ def synth():
         magnitude=float(data.get('magnitude', 1.0)),
         noise_sigma=float(data.get('noise_sigma', 0.0)),
         dimension_offsets=data.get('dimension_offsets'),
+        axes=data.get('axes'),
         duration_seconds=float(data.get('duration_seconds', 1.0)),
         steps=int(data.get('steps', 20)),
         cfg_scale=float(data.get('cfg_scale', 3.5)),
@@ -86,13 +87,16 @@ def synth():
     if result is None:
         return jsonify({"success": False, "error": "Synth generation failed"}), 500
 
-    return jsonify({
+    resp = {
         "success": True,
         "audio_base64": base64.b64encode(result["audio_bytes"]).decode('utf-8'),
         "embedding_stats": result["embedding_stats"],
         "generation_time_ms": result["generation_time_ms"],
         "seed": result["seed"],
-    })
+    }
+    if result.get("axis_contributions"):
+        resp["axis_contributions"] = result["axis_contributions"]
+    return jsonify(resp)
 
 
 @cross_aesthetic_bp.route('/api/cross_aesthetic/semantic_axes', methods=['GET'])

@@ -81,6 +81,7 @@ class CrossmodalLabBackend:
         magnitude: float = 1.0,
         noise_sigma: float = 0.0,
         dimension_offsets: Optional[Dict[int, float]] = None,
+        axes: Optional[Dict[str, float]] = None,
         duration_seconds: float = 1.0,
         steps: int = 20,
         cfg_scale: float = 3.5,
@@ -89,9 +90,12 @@ class CrossmodalLabBackend:
         """
         Latent Audio Synth: manipulate T5 embeddings and generate audio.
 
+        Pipeline:
         1. Encode prompt_a (and optionally prompt_b) via T5
-        2. Apply manipulation operations on the embedding(s)
-        3. Generate audio from manipulated embedding via Stable Audio
+        2. Apply A/B interpolation, magnitude, noise
+        3. Apply semantic axis deltas on top (if any)
+        4. Apply per-dimension offsets
+        5. Generate audio
 
         Args:
             prompt_a: Base text prompt
@@ -100,13 +104,14 @@ class CrossmodalLabBackend:
             magnitude: Global embedding scale (0.1-5.0)
             noise_sigma: Gaussian noise strength (0=none, 0.5=moderate)
             dimension_offsets: Per-dimension offset values {dim_idx: offset}
-            duration_seconds: Audio duration (0.5-5.0s for looping)
+            axes: Semantic axes {axis_name: -1.0 to 1.0}, 0 = no effect
+            duration_seconds: Audio duration
             steps: Inference steps
             cfg_scale: Classifier-free guidance scale
             seed: Random seed (-1 = random)
 
         Returns:
-            Dict with audio_base64, embedding_stats, generation_time_ms, seed
+            Dict with audio_bytes, embedding_stats, axis_contributions, generation_time_ms, seed
         """
         import torch
         import random as random_mod
@@ -130,9 +135,9 @@ class CrossmodalLabBackend:
                 emb_b = None
                 mask_b = None
 
-            # Step 2: Apply manipulations
+            # Step 2: A/B interpolation, magnitude, noise (dimension_offsets handled later)
             result_emb = self._manipulate_embedding(
-                emb_a, emb_b, alpha, magnitude, noise_sigma, dimension_offsets, seed
+                emb_a, emb_b, alpha, magnitude, noise_sigma, None, seed
             )
 
             # Use mask from prompt_a (or combined mask if both prompts)
@@ -140,10 +145,24 @@ class CrossmodalLabBackend:
             if mask_b is not None:
                 result_mask = torch.maximum(mask_a, mask_b)
 
-            # Step 3: Compute embedding stats for visualization
+            # Step 3: Apply semantic axis deltas on top
+            axis_contributions: List[Dict[str, Any]] = []
+            if axes:
+                result_emb, axis_contributions, result_mask = await self._apply_axes(
+                    result_emb, result_mask, axes
+                )
+
+            # Step 4: Per-dimension offsets (last, so user can fine-tune everything)
+            if dimension_offsets:
+                for dim_idx, offset_value in dimension_offsets.items():
+                    dim_idx = int(dim_idx)
+                    if 0 <= dim_idx < result_emb.shape[-1]:
+                        result_emb[:, :, dim_idx] += offset_value
+
+            # Step 5: Compute embedding stats for visualization
             stats = self._compute_stats(result_emb, emb_a, emb_b)
 
-            # Step 4: Generate audio
+            # Step 6: Generate audio
             duration_seconds = max(0.5, min(duration_seconds, 47.0))
 
             if seed == -1:
@@ -166,12 +185,14 @@ class CrossmodalLabBackend:
 
             logger.info(
                 f"[CROSSMODAL] Synth complete: alpha={alpha}, magnitude={magnitude}, "
-                f"noise={noise_sigma}, duration={duration_seconds}s, time={elapsed_ms}ms"
+                f"noise={noise_sigma}, axes={len(axes) if axes else 0}, "
+                f"duration={duration_seconds}s, time={elapsed_ms}ms"
             )
 
             return {
                 "audio_bytes": audio_bytes,
                 "embedding_stats": stats,
+                "axis_contributions": axis_contributions,
                 "generation_time_ms": elapsed_ms,
                 "seed": seed,
             }
@@ -181,6 +202,40 @@ class CrossmodalLabBackend:
             import traceback
             traceback.print_exc()
             return None
+
+    async def _apply_axes(
+        self,
+        result_emb,
+        result_mask,
+        axes: Dict[str, float],
+    ) -> Tuple[Any, List[Dict[str, Any]], Any]:
+        """Apply semantic axis deltas on top of an existing embedding."""
+        import torch
+
+        await self._ensure_neutral_cached()
+        for axis_name in axes:
+            await self._ensure_axis_cached(axis_name)
+
+        neutral_emb, _ = self._neutral_cache
+        axis_deltas: Dict[str, Any] = {}
+
+        for axis_name, t in axes.items():
+            cache = self._axis_cache[axis_name]
+            dir_a = cache['emb_a'] - neutral_emb
+            dir_b = cache['emb_b'] - neutral_emb
+
+            # t in [-1, 1]: 0 = no effect, +1 = full pole_a, -1 = full pole_b
+            if t >= 0:
+                delta = t * dir_a
+            else:
+                delta = (-t) * dir_b
+            result_emb = result_emb + delta
+
+            axis_deltas[axis_name] = delta.detach().squeeze(0).mean(dim=0)
+            result_mask = torch.maximum(result_mask, cache['mask_a'])
+            result_mask = torch.maximum(result_mask, cache['mask_b'])
+
+        return result_emb, self._compute_axis_contributions(axis_deltas), result_mask
 
     def _manipulate_embedding(
         self,
