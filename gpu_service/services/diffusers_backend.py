@@ -993,6 +993,10 @@ class DiffusersImageGenerator:
 
             finally:
                 self._model_in_use[model_id] -= 1
+                # Fusion creates manual embeddings (CLIP-L, T5, fused tensors) outside
+                # the pipeline's scope. Without explicit cleanup, these fragment VRAM
+                # and cause OOM on the next call at full resolution.
+                torch.cuda.empty_cache()
 
         except Exception as e:
             logger.error(f"[DIFFUSERS-FUSION] Generation error: {e}")
@@ -1567,6 +1571,9 @@ class DiffusersImageGenerator:
 
             finally:
                 self._model_in_use[model_id] -= 1
+                # Probing creates manual embeddings (up to 6 encoder passes for "all" mode)
+                # outside the pipeline's scope. Cleanup prevents VRAM fragmentation.
+                torch.cuda.empty_cache()
 
         except Exception as e:
             logger.error(f"[DIFFUSERS-PROBING] Generation error: {e}")
@@ -1816,6 +1823,9 @@ class DiffusersImageGenerator:
 
             finally:
                 self._model_in_use[model_id] -= 1
+                # Algebra creates manual embeddings (3 prompts x up to 3 encoders)
+                # outside the pipeline's scope. Cleanup prevents VRAM fragmentation.
+                torch.cuda.empty_cache()
 
         except Exception as e:
             logger.error(f"[DIFFUSERS-ALGEBRA] Generation error: {e}")
