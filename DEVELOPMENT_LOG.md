@@ -49,11 +49,41 @@ Vollständige Outputs, Reasoning-Chains und Bewertungsmatrix: → `docs/sessions
 | Mistral Large 2512 | 11.71s | 483 | 8.5 | "poliertes Obsidian" — gut, aber Klischee |
 | Llama 405B | 11.90s | 284 | 7.0 | Repetitiv ("wie ... Spiegel" 3×) |
 
-**Entscheidung:** gpt-oss-120b als Default für kreative Stages (Interception, Optimization, Chat). Llama 70B für strukturelle Tasks (Übersetzung, Safety, Legacy).
+**Erste Entscheidung (unzureichend getestet):** gpt-oss-120b für kreative Stages, Llama 70B für "strukturelle" Tasks.
+
+### Erweiterte Per-Task-Tests (Runde 2)
+
+Die erste Entscheidung basierte nur auf Interception-Tests. Runde 2 testete jede tatsächliche Pipeline-Aufgabe mit Edge Cases.
+
+**Modell-Recherche:**
+- **gpt-oss-120b**: OpenAI Open-Weight MoE (Apache 2.0). 117B total, **5.1B aktiv** — deshalb schneller als dense 70B Llama. General-Purpose Reasoning, KEIN Safety-Modell.
+- **gpt-oss-safeguard-120b**: Separates Fine-Tune für Safety-Klassifikation. **Nicht verfügbar auf IONOS.**
+- **Code Llama 13B**: Auf IONOS verfügbar, dediziertes Coding-Modell.
+- IONOS bietet insgesamt 13 Modelle (7 LLMs, 1 Coding, 1 Image, 3 Embedding, 1 OCR).
+
+**Translation (5 Edge Cases mit echtem TRANSLATION_PROMPT):**
+
+| Test | gpt-oss-120b | Llama 70B |
+|---|---|---|
+| Yoruba + (((Brackets))) | 5.9s — Perfekt | 1.0s — OK |
+| Gemischt DE/EN | 4.0s — "silver plate" | 0.9s — **FAIL**: "Silberplatte" stehen gelassen |
+| Kurdisch + ((Tembûr)) | 2.3s — Perfekt | 1.0s — OK |
+| Mathe + (((Selbstähnlichkeit))) | 4.4s — "self-similarity" | 1.1s — **FAIL**: 3 Komposita nicht übersetzt |
+| Abstrakte Komposita | 4.9s — "timbre", "spatial perception" | 1.1s — **FAIL**: "Klangfarbe", "Raumwahrnehmung" deutsch gelassen |
+
+**Llama 70B scheitert an deutschen Komposita (3/5 Edge Cases).** "Klangfarbe" in einem SD3.5-Prompt erzeugt Müll.
+
+**Safety NER (10 Edge Cases):** Beide 8-9/10, diskutable Grenzfälle (Märchentitel, Platzhalternamen). Llama 70B 2.5× schneller, aber DSGVO-NER-Verification ist in 95%+ der Fälle kein LLM-Task (SpaCy Fast-Filter).
+
+**Coding:** Code Llama 13B (2023, 13B) hat keine Chance gegen gpt-oss-120b (2025, 117B MoE). Schlechteres Instruction Following, unvollständiger Code, falsche Interpretation der Aufgabe.
+
+**Revidierte Entscheidung:** **gpt-oss-120b für alle Stages.** Der Geschwindigkeitsvorteil von Llama 70B (~4s) rechtfertigt nicht die Übersetzungsfehler, die direkt die Bildgenerierungsqualität ruinieren.
+
+Vollständige Testergebnisse: → `docs/sessions/TEST_REPORT_IONOS_Model_Comparison_Session229.md`
 
 ### Reasoning-Modell: Technische Implikationen
 
-gpt-oss-120b ist ein **Reasoning-Modell** — Antworten enthalten `reasoning_content` (Chain-of-Thought) UND `content` (finale Antwort).
+gpt-oss-120b ist ein **MoE-Reasoning-Modell** (117B total, 5.1B aktiv) — Antworten enthalten `reasoning_content` (Chain-of-Thought) UND `content` (finale Antwort).
 
 **Problem entdeckt und gelöst:** Die `UI_MODE_MAX_TOKENS`-Begrenzung (kids=200, youth=400, expert=600) ließ dem Reasoning-Modell nicht genug Token-Budget. Bei 20 max_tokens war `content: null`, die gesamten Tokens flossen in `reasoning_content`. Fix: Minimum 2048 max_tokens für `gpt-oss`-Modelle in `_call_ionos()` und `_call_ionos_chat()`.
 
@@ -84,9 +114,7 @@ gpt-oss-120b ist ein **Reasoning-Modell** — Antworten enthalten `reasoning_con
 - Provider-Prefix-Kommentar erweitert
 
 **`hardware_matrix.json`:**
-- IONOS-Preset mit Split-Model-Strategie:
-  - `gpt-oss-120b`: STAGE2_INTERCEPTION, STAGE2_OPTIMIZATION, CHAT_HELPER
-  - `Llama-3.3-70B-Instruct`: STAGE1_TEXT, STAGE3, STAGE4_LEGACY, CODING
+- IONOS-Preset: `gpt-oss-120b` für alle 7 Stages (evidenzbasiert nach Per-Task-Tests)
 
 ### Frontend Changes
 
