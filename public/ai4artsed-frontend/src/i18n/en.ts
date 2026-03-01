@@ -1324,6 +1324,14 @@ export const en = {
           applyAndGenerate: 'Apply and regenerate',
           undo: 'Undo',
           redo: 'Redo'
+        },
+        semanticAxes: {
+          modeToggle: 'Semantic Axes',
+          freeModeToggle: 'Free Prompt',
+          info: 'Each slider interpolates between two text poles in T5 embedding space. More active axes = weaker per-axis effect. Recommended: 3\u20135 axes.',
+          slotNone: '\u2014 none \u2014',
+          resetAll: 'Reset all to center',
+          experimental: 'experimental'
         }
       },
       mmaudio: {

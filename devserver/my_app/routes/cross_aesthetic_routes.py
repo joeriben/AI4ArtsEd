@@ -68,6 +68,16 @@ def available():
     return _proxy_get('/api/cross_aesthetic/available')
 
 
+@cross_aesthetic_bp.route('/semantic_axes', methods=['GET'])
+def semantic_axes():
+    return _proxy_get('/api/cross_aesthetic/semantic_axes')
+
+
+@cross_aesthetic_bp.route('/multi_axis_synth', methods=['POST'])
+def multi_axis_synth():
+    return _proxy_post('/api/cross_aesthetic/multi_axis_synth')
+
+
 @cross_aesthetic_bp.route('/synth', methods=['POST'])
 def synth():
     return _proxy_post('/api/cross_aesthetic/synth')

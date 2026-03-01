@@ -95,6 +95,57 @@ def synth():
     })
 
 
+@cross_aesthetic_bp.route('/api/cross_aesthetic/semantic_axes', methods=['GET'])
+def semantic_axes():
+    """Return available semantic axis metadata for frontend dropdown population."""
+    from services.cross_aesthetic_backend import get_cross_aesthetic_backend
+    backend = get_cross_aesthetic_backend()
+    return jsonify({"success": True, "axes": backend.get_available_axes()})
+
+
+@cross_aesthetic_bp.route('/api/cross_aesthetic/multi_axis_synth', methods=['POST'])
+def multi_axis_synth():
+    """Multi-axis semantic synth: combine multiple semantic axes into audio.
+
+    Request JSON:
+        axes: dict (required) - {axis_name: 0.0-1.0}
+        dimension_offsets: dict (optional) - {dim_idx: offset_value}
+        duration_seconds: float (default 1.0)
+        steps: int (default 20)
+        cfg_scale: float (default 3.5)
+        seed: int (default -1)
+
+    Returns: { success, audio_base64, embedding_stats, axis_contributions, generation_time_ms, seed }
+    """
+    data = request.get_json()
+    if not data or 'axes' not in data:
+        return jsonify({"success": False, "error": "axes dict required"}), 400
+
+    from services.cross_aesthetic_backend import get_cross_aesthetic_backend
+    backend = get_cross_aesthetic_backend()
+
+    result = _run_async(backend.multi_axis_synth(
+        axes=data['axes'],
+        dimension_offsets=data.get('dimension_offsets'),
+        duration_seconds=float(data.get('duration_seconds', 1.0)),
+        steps=int(data.get('steps', 20)),
+        cfg_scale=float(data.get('cfg_scale', 3.5)),
+        seed=int(data.get('seed', -1)),
+    ))
+
+    if result is None:
+        return jsonify({"success": False, "error": "Multi-axis synth failed"}), 500
+
+    return jsonify({
+        "success": True,
+        "audio_base64": base64.b64encode(result["audio_bytes"]).decode('utf-8'),
+        "embedding_stats": result["embedding_stats"],
+        "axis_contributions": result["axis_contributions"],
+        "generation_time_ms": result["generation_time_ms"],
+        "seed": result["seed"],
+    })
+
+
 @cross_aesthetic_bp.route('/api/cross_aesthetic/image_guided_audio', methods=['POST'])
 def image_guided_audio():
     """ImageBind gradient guidance: image-guided audio generation.

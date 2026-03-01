@@ -26,6 +26,38 @@ from typing import Optional, Dict, Any, List, Tuple
 
 logger = logging.getLogger(__name__)
 
+# =============================================================================
+# Semantic Axes — 21 validated + 1 experimental
+# Each axis = two text poles in T5 embedding space. LERP between them.
+# d = cosine distance between encoded poles (higher = more distinct).
+# =============================================================================
+SEMANTIC_AXES: Dict[str, Dict[str, Any]] = {
+    'tonal_noisy':          {'pole_a': 'sound tonal',       'pole_b': 'sound noisy',        'level': 'perceptual',   'd': 4.806},
+    'rhythmic_sustained':   {'pole_a': 'sound rhythmic',    'pole_b': 'sound sustained',    'level': 'perceptual',   'd': 2.604},
+    'ceremonial_everyday':  {'pole_a': 'ceremonial music',  'pole_b': 'everyday music',     'level': 'cultural',     'd': 2.391},
+    'improvised_composed':  {'pole_a': 'improvised music',  'pole_b': 'composed music',     'level': 'cultural',     'd': 2.109},
+    'acoustic_electronic':  {'pole_a': 'acoustic music',    'pole_b': 'electronic music',   'level': 'cultural',     'd': 2.013},
+    'music_noise':          {'pole_a': 'music',             'pole_b': 'noise',              'level': 'critical',     'd': 2.058},
+    'complex_simple':       {'pole_a': 'complex music',     'pole_b': 'simple music',       'level': 'critical',     'd': 1.914},
+    'sacred_secular':       {'pole_a': 'sacred music',      'pole_b': 'secular music',      'level': 'cultural',     'd': 1.756},
+    'refined_raw':          {'pole_a': 'refined music',     'pole_b': 'raw music',          'level': 'critical',     'd': 1.735},
+    'solo_ensemble':        {'pole_a': 'solo music',        'pole_b': 'ensemble music',     'level': 'cultural',     'd': 1.593},
+    'bright_dark':          {'pole_a': 'sound bright',      'pole_b': 'sound dark',         'level': 'perceptual',   'd': 1.281},
+    'traditional_modern':   {'pole_a': 'traditional music', 'pole_b': 'modern music',       'level': 'cultural',     'd': 1.213},
+    'beautiful_ugly':       {'pole_a': 'beautiful music',   'pole_b': 'ugly music',         'level': 'critical',     'd': 1.097},
+    'loud_quiet':           {'pole_a': 'sound loud',        'pole_b': 'sound quiet',        'level': 'perceptual',   'd': 1.024},
+    'professional_amateur': {'pole_a': 'professional music','pole_b': 'amateur music',      'level': 'cultural',     'd': 0.965},
+    'smooth_harsh':         {'pole_a': 'sound smooth',      'pole_b': 'sound harsh',        'level': 'perceptual',   'd': 0.810},
+    'fast_slow':            {'pole_a': 'sound fast',        'pole_b': 'sound slow',         'level': 'perceptual',   'd': 0.800},
+    'close_distant':        {'pole_a': 'sound close',       'pole_b': 'sound distant',      'level': 'perceptual',   'd': 0.758},
+    'dense_sparse':         {'pole_a': 'sound dense',       'pole_b': 'sound sparse',       'level': 'perceptual',   'd': 0.735},
+    'vocal_instrumental':   {'pole_a': 'vocal music',       'pole_b': 'instrumental music', 'level': 'cultural',     'd': 0.673},
+    'authentic_fusion':     {'pole_a': 'authentic music',   'pole_b': 'fusion music',       'level': 'critical',     'd': 0.649},
+    'music_soundscape':     {'pole_a': 'music',             'pole_b': 'soundscape',         'level': 'experimental', 'd': None},
+}
+
+NEUTRAL_PROMPT = 'sound'
+
 
 class CrossmodalLabBackend:
     """
@@ -37,6 +69,8 @@ class CrossmodalLabBackend:
     """
 
     def __init__(self):
+        self._axis_cache: Dict[str, Any] = {}  # {axis_name: {emb_a, mask_a, emb_b, mask_b}}
+        self._neutral_cache: Optional[Tuple[Any, Any]] = None  # (emb, mask)
         logger.info("[CROSSMODAL] Initialized CrossmodalLabBackend")
 
     async def synth(
@@ -187,6 +221,217 @@ class CrossmodalLabBackend:
                     result[:, :, dim_idx] += offset_value
 
         return result
+
+    # =====================================================================
+    # Semantic Axes — multi-axis synth
+    # =====================================================================
+
+    async def _ensure_neutral_cached(self):
+        """Lazy-encode the neutral prompt on first use."""
+        if self._neutral_cache is not None:
+            return
+        from services.stable_audio_backend import get_stable_audio_backend
+        sa = get_stable_audio_backend()
+        emb, mask = await sa.encode_prompt(NEUTRAL_PROMPT)
+        if emb is None:
+            raise RuntimeError("Failed to encode neutral prompt")
+        self._neutral_cache = (emb, mask)
+
+    async def _ensure_axis_cached(self, axis_name: str):
+        """Lazy-encode one axis's poles on first use."""
+        if axis_name in self._axis_cache:
+            return
+        axis = SEMANTIC_AXES.get(axis_name)
+        if not axis:
+            raise ValueError(f"Unknown axis: {axis_name}")
+
+        from services.stable_audio_backend import get_stable_audio_backend
+        sa = get_stable_audio_backend()
+
+        emb_a, mask_a = await sa.encode_prompt(axis['pole_a'])
+        emb_b, mask_b = await sa.encode_prompt(axis['pole_b'])
+        if emb_a is None or emb_b is None:
+            raise RuntimeError(f"Failed to encode axis {axis_name}")
+
+        self._axis_cache[axis_name] = {
+            'emb_a': emb_a, 'mask_a': mask_a,
+            'emb_b': emb_b, 'mask_b': mask_b,
+        }
+        logger.info(f"[CROSSMODAL] Cached axis: {axis_name}")
+
+    async def multi_axis_synth(
+        self,
+        axes: Dict[str, float],
+        dimension_offsets: Optional[Dict[int, float]] = None,
+        duration_seconds: float = 1.0,
+        steps: int = 20,
+        cfg_scale: float = 3.5,
+        seed: int = -1,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Multi-axis semantic synth.
+
+        Computes: result = neutral + Σ(t_i * (pole_a_i - neutral) + (1-t_i) * (pole_b_i - neutral))
+        for each active axis, then optionally applies dimension offsets.
+
+        Args:
+            axes: {axis_name: 0.0-1.0} — 0.0 = pole_b, 1.0 = pole_a, 0.5 = neutral for that axis
+            dimension_offsets: Per-dimension offset values {dim_idx: offset}
+            duration_seconds: Audio duration
+            steps: Inference steps
+            cfg_scale: CFG scale
+            seed: Random seed (-1 = random)
+
+        Returns:
+            Dict with audio_bytes, embedding_stats, axis_contributions, generation_time_ms, seed
+        """
+        import torch
+        import random as random_mod
+
+        start_time = time.time()
+
+        try:
+            from services.stable_audio_backend import get_stable_audio_backend
+            stable_audio = get_stable_audio_backend()
+
+            # Cache neutral + all requested axes
+            await self._ensure_neutral_cached()
+            for axis_name in axes:
+                await self._ensure_axis_cached(axis_name)
+
+            neutral_emb, neutral_mask = self._neutral_cache
+
+            # Compute: result = neutral + Σ contributions
+            result = neutral_emb.clone()
+            result_mask = neutral_mask.clone()
+
+            # Track per-dimension contributions for drawbar coloring
+            # axis_deltas[axis_name] = [768] tensor of that axis's contribution
+            axis_deltas: Dict[str, Any] = {}
+
+            for axis_name, t in axes.items():
+                cache = self._axis_cache[axis_name]
+                emb_a = cache['emb_a']  # pole_a embedding
+                emb_b = cache['emb_b']  # pole_b embedding
+
+                # Direction vectors from neutral
+                dir_a = emb_a - neutral_emb  # towards pole_a
+                dir_b = emb_b - neutral_emb  # towards pole_b
+
+                # t=1.0 → full pole_a, t=0.0 → full pole_b, t=0.5 → both half
+                delta = t * dir_a + (1.0 - t) * dir_b
+                result = result + delta
+
+                # Store mean delta per dimension for contribution tracking
+                axis_deltas[axis_name] = delta.detach().squeeze(0).mean(dim=0)  # [768]
+
+                # Combine masks
+                result_mask = torch.maximum(result_mask, cache['mask_a'])
+                result_mask = torch.maximum(result_mask, cache['mask_b'])
+
+            # Apply dimension offsets on top
+            if dimension_offsets:
+                for dim_idx, offset_value in dimension_offsets.items():
+                    dim_idx = int(dim_idx)
+                    if 0 <= dim_idx < result.shape[-1]:
+                        result[:, :, dim_idx] += offset_value
+
+            # Compute axis contributions for drawbar coloring
+            axis_contributions = self._compute_axis_contributions(axis_deltas)
+
+            # Compute embedding stats
+            stats = self._compute_stats(result)
+
+            # Generate audio
+            duration_seconds = max(0.5, min(duration_seconds, 47.0))
+            if seed == -1:
+                seed = random_mod.randint(0, 2**32 - 1)
+
+            audio_bytes = await stable_audio.generate_from_embeddings(
+                prompt_embeds=result,
+                attention_mask=result_mask,
+                seconds_start=0.0,
+                seconds_end=duration_seconds,
+                steps=steps,
+                cfg_scale=cfg_scale,
+                seed=seed,
+            )
+
+            if audio_bytes is None:
+                return None
+
+            elapsed_ms = int((time.time() - start_time) * 1000)
+
+            logger.info(
+                f"[CROSSMODAL] Multi-axis synth: {len(axes)} axes, "
+                f"duration={duration_seconds}s, time={elapsed_ms}ms"
+            )
+
+            return {
+                "audio_bytes": audio_bytes,
+                "embedding_stats": stats,
+                "axis_contributions": axis_contributions,
+                "generation_time_ms": elapsed_ms,
+                "seed": seed,
+            }
+
+        except Exception as e:
+            logger.error(f"[CROSSMODAL] Multi-axis synth error: {e}")
+            import traceback
+            traceback.print_exc()
+            return None
+
+    def _compute_axis_contributions(
+        self, axis_deltas: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        """
+        Compute per-dimension axis contribution for drawbar coloring.
+
+        Returns list of 768 entries:
+        [{"dim": 0, "top_axis": "tonal_noisy", "contribution": 0.42,
+          "all": {"tonal_noisy": 0.42, "bright_dark": -0.11}}, ...]
+        """
+        import torch
+
+        if not axis_deltas:
+            return []
+
+        n_dims = 768
+        contributions = []
+
+        for d in range(n_dims):
+            all_contribs = {}
+            max_abs = 0.0
+            top_axis = ""
+
+            for axis_name, delta_tensor in axis_deltas.items():
+                val = float(delta_tensor[d].item())
+                all_contribs[axis_name] = round(val, 4)
+                if abs(val) > max_abs:
+                    max_abs = abs(val)
+                    top_axis = axis_name
+
+            contributions.append({
+                "dim": d,
+                "top_axis": top_axis,
+                "contribution": round(max_abs, 4),
+                "all": all_contribs,
+            })
+
+        return contributions
+
+    def get_available_axes(self) -> List[Dict[str, Any]]:
+        """Return axis metadata for frontend dropdown population."""
+        return [
+            {
+                "name": name,
+                "pole_a": axis["pole_a"],
+                "pole_b": axis["pole_b"],
+                "level": axis["level"],
+                "d": axis["d"],
+            }
+            for name, axis in SEMANTIC_AXES.items()
+        ]
 
     def _compute_stats(self, embedding, emb_a=None, emb_b=None) -> Dict[str, Any]:
         """Compute embedding statistics for frontend visualization.
