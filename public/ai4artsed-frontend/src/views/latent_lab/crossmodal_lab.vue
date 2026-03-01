@@ -342,45 +342,91 @@
         </div>
         <!-- Step Sequencer controls -->
         <div v-if="playbackMode === 'sequencer'" class="sequencer-controls">
+          <!-- Transport + step count -->
           <div class="sequencer-transport">
             <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
               {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
             </button>
+            <div class="seq-step-count">
+              <button
+                v-for="opt in sequencer.stepCountOptions"
+                :key="opt"
+                class="step-count-btn"
+                :class="{ active: sequencer.stepCount.value === opt }"
+                @click="sequencer.setStepCount(opt)"
+              >{{ opt }}</button>
+            </div>
             <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
               {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
               <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
             </span>
           </div>
-          <div class="sequencer-pattern-row">
-            <label>{{ t('latentLab.crossmodal.synth.sequencer.pattern') }}</label>
-            <select :value="sequencer.patternIndex.value" @change="onPatternChange">
-              <option v-for="(p, idx) in sequencer.patterns" :key="idx" :value="idx">
-                {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
-              </option>
-            </select>
+          <!-- Preset + BPM row -->
+          <div class="sequencer-settings-row">
+            <div class="sequencer-preset">
+              <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
+              <select :value="sequencer.presetIndex.value" @change="onPresetChange">
+                <option :value="-1">—</option>
+                <option v-for="(p, idx) in sequencer.presets" :key="idx" :value="idx">
+                  {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
+                </option>
+              </select>
+            </div>
+            <div class="sequencer-bpm">
+              <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
+              <input
+                type="range"
+                :value="sequencer.bpm.value"
+                min="60"
+                max="200"
+                step="1"
+                :disabled="sequencer.midiClockActive.value"
+                @input="onBpmInput"
+              />
+              <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
+            </div>
           </div>
-          <div class="sequencer-bpm-row">
-            <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
-            <input
-              type="range"
-              :value="sequencer.bpm.value"
-              min="60"
-              max="200"
-              step="1"
-              :disabled="sequencer.midiClockActive.value"
-              @input="onBpmInput"
-            />
-            <span class="transpose-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
-            <span class="param-hint">{{ t('latentLab.crossmodal.synth.sequencer.bpmHint') }}</span>
+          <!-- Step Grid -->
+          <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
+            <div
+              v-for="(step, idx) in sequencer.steps"
+              :key="idx"
+              class="seq-step"
+              :class="{
+                active: step.active,
+                playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx,
+                muted: !step.active,
+              }"
+            >
+              <span class="seq-step-num">{{ idx + 1 }}</span>
+              <input
+                type="range"
+                class="seq-semitone-slider"
+                :value="step.semitone"
+                min="-24"
+                max="24"
+                step="1"
+                orient="vertical"
+                @input="onStepSemitoneInput(idx, $event)"
+              />
+              <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
+              <button
+                class="seq-step-toggle"
+                :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }"
+                @click="sequencer.setStepActive(idx, !step.active)"
+              />
+              <input
+                type="range"
+                class="seq-velocity-slider"
+                :value="step.velocity"
+                min="0"
+                max="1"
+                step="0.05"
+                @input="onStepVelocityInput(idx, $event)"
+              />
+            </div>
           </div>
-          <div class="step-dots">
-            <span
-              v-for="i in sequencer.stepCount.value"
-              :key="i"
-              class="step-dot"
-              :class="{ active: sequencer.isPlaying.value && sequencer.currentStep.value === i - 1 }"
-            />
-          </div>
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.sequencer.gridHint') }}</span>
         </div>
         <!-- Transpose -->
         <div class="transpose-row">
@@ -1500,9 +1546,19 @@ function onBpmInput(event: Event) {
   sequencer.setBpm(val)
 }
 
-function onPatternChange(event: Event) {
+function onPresetChange(event: Event) {
   const idx = parseInt((event.target as HTMLSelectElement).value)
-  sequencer.setPattern(idx)
+  if (idx >= 0) sequencer.loadPreset(idx)
+}
+
+function onStepSemitoneInput(idx: number, event: Event) {
+  const val = parseInt((event.target as HTMLInputElement).value)
+  sequencer.setStepSemitone(idx, val)
+}
+
+function onStepVelocityInput(idx: number, event: Event) {
+  const val = parseFloat((event.target as HTMLInputElement).value)
+  sequencer.setStepVelocity(idx, val)
 }
 
 // Stop sequencer when navigating away from synth tab
@@ -2766,6 +2822,35 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
+.seq-step-count {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.step-count-btn {
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.step-count-btn:last-child {
+  border-right: none;
+}
+
+.step-count-btn.active {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  font-weight: 600;
+}
+
 .midi-sync-badge {
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
@@ -2774,67 +2859,144 @@ onUnmounted(() => {
   border-radius: 4px;
   color: #2196F3;
   font-weight: 500;
+  margin-left: auto;
 }
 
-.sequencer-pattern-row {
+.sequencer-settings-row {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  gap: 0.8rem;
-}
-
-.sequencer-pattern-row label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  flex-shrink: 0;
-}
-
-.sequencer-pattern-row select {
-  flex: 1;
-  padding: 0.4rem 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #ffffff;
-  font-size: 0.8rem;
-}
-
-.sequencer-bpm-row {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
   flex-wrap: wrap;
 }
 
-.sequencer-bpm-row label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+.sequencer-preset {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sequencer-preset label,
+.sequencer-bpm label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
   flex-shrink: 0;
 }
 
-.sequencer-bpm-row input[type="range"] {
+.sequencer-preset select {
+  padding: 0.3rem 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+.sequencer-bpm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex: 1;
-  min-width: 100px;
+}
+
+.sequencer-bpm input[type="range"] {
+  flex: 1;
+  min-width: 80px;
   accent-color: #4CAF50;
 }
 
-.step-dots {
+.seq-bpm-value {
+  font-size: 0.75rem;
+  color: #4CAF50;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 2rem;
+  text-align: right;
+}
+
+/* Step Grid */
+.seq-grid {
+  display: grid;
+  gap: 2px;
+  padding: 0.4rem 0;
+}
+
+.seq-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.seq-grid-8 { grid-template-columns: repeat(8, 1fr); }
+.seq-grid-16 { grid-template-columns: repeat(16, 1fr); }
+
+.seq-step {
   display: flex;
-  gap: 0.4rem;
-  justify-content: center;
-  padding: 0.3rem 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 2px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.1s, background 0.1s;
 }
 
-.step-dot {
-  width: 8px;
-  height: 8px;
+.seq-step.playing {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(76, 175, 80, 0.06);
+}
+
+.seq-step.muted {
+  opacity: 0.35;
+}
+
+.seq-step-num {
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vertical semitone slider */
+.seq-semitone-slider {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 18px;
+  height: 60px;
+  accent-color: #4CAF50;
+  cursor: pointer;
+}
+
+.seq-semitone-val {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+  min-height: 1em;
+}
+
+/* Step active toggle dot */
+.seq-step-toggle {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  transition: background 0.1s, box-shadow 0.1s;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.1s;
+  padding: 0;
 }
 
-.step-dot.active {
+.seq-step-toggle.on {
+  background: rgba(76, 175, 80, 0.5);
+  border-color: rgba(76, 175, 80, 0.7);
+}
+
+.seq-step-toggle.playing {
   background: #4CAF50;
-  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+  border-color: #4CAF50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.7);
+}
+
+/* Horizontal velocity slider (small) */
+.seq-velocity-slider {
+  width: 100%;
+  height: 4px;
+  accent-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
 }
 
 /* ADSR Envelope */

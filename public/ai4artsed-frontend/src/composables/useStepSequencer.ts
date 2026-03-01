@@ -1,132 +1,125 @@
 /**
  * Step Sequencer composable for Crossmodal Lab Synth tab.
  *
+ * A proper step sequencer with user-editable grid:
+ * - Selectable step count: 5 (Eastcoast!), 8, 16
+ * - Each step: active toggle, semitone offset, velocity, gate
+ * - Preset patterns as grid initializers (not fixed arpeggiator)
+ *
  * Chris Wilson "Tale of Two Clocks" scheduler: setInterval (25ms) polls
  * + AudioContext lookahead (100ms) for sample-accurate timing.
  *
- * Drives the looper with rhythmic melodic patterns — each step retriggers
- * audio at a new pitch with its own velocity and gate length, so the ADSR
- * envelope actually shapes every note.
- *
  * Supports internal BPM clock and external MIDI clock (24ppqn).
  */
-import { ref, readonly, type Ref } from 'vue'
+import { ref, reactive, readonly, computed, type Ref } from 'vue'
 import type { MidiClockType } from './useWebMidi'
 
 export interface Step {
-  note: number    // MIDI note number
-  velocity: number // 0-1
-  gate: number    // 0-1 fraction of step duration
+  active: boolean    // toggle on/off
+  semitone: number   // -24 to +24 offset from base note (C3 = 0)
+  velocity: number   // 0-1
+  gate: number       // 0-1 fraction of step duration
 }
 
-export interface Pattern {
+export interface Preset {
   name: string   // i18n key suffix
   steps: Step[]
 }
 
-// 8 preset patterns
-const PATTERNS: Pattern[] = [
+export type StepCountOption = 5 | 8 | 16
+export const STEP_COUNT_OPTIONS: StepCountOption[] = [5, 8, 16]
+
+function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step {
+  return { active, semitone, velocity, gate }
+}
+
+// Preset patterns — used as grid initializers, user can modify after loading
+const PRESETS: Preset[] = [
   {
     name: 'arpeggio_up',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.8 },
-      { note: 52, velocity: 0.8, gate: 0.8 },
-      { note: 55, velocity: 0.8, gate: 0.8 },
-      { note: 60, velocity: 1.0, gate: 0.8 },
+      makeStep(0, 1.0), makeStep(4, 0.8), makeStep(7, 0.8), makeStep(12, 1.0),
+      makeStep(0, 0.9), makeStep(4, 0.7), makeStep(7, 0.7), makeStep(12, 0.9),
     ],
   },
   {
     name: 'arpeggio_down',
     steps: [
-      { note: 60, velocity: 1.0, gate: 0.8 },
-      { note: 55, velocity: 0.8, gate: 0.8 },
-      { note: 52, velocity: 0.8, gate: 0.8 },
-      { note: 48, velocity: 1.0, gate: 0.8 },
+      makeStep(12, 1.0), makeStep(7, 0.8), makeStep(4, 0.8), makeStep(0, 1.0),
+      makeStep(12, 0.9), makeStep(7, 0.7), makeStep(4, 0.7), makeStep(0, 0.9),
     ],
   },
   {
     name: 'arpeggio_updown',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.8 },
-      { note: 52, velocity: 0.8, gate: 0.8 },
-      { note: 55, velocity: 0.8, gate: 0.8 },
-      { note: 60, velocity: 1.0, gate: 0.8 },
-      { note: 55, velocity: 0.8, gate: 0.8 },
-      { note: 52, velocity: 0.8, gate: 0.8 },
+      makeStep(0, 1.0), makeStep(4, 0.8), makeStep(7, 0.8), makeStep(12, 1.0),
+      makeStep(12, 0.9), makeStep(7, 0.7), makeStep(4, 0.7), makeStep(0, 0.9),
     ],
   },
   {
     name: 'octaves',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.7 },
-      { note: 60, velocity: 0.9, gate: 0.7 },
-      { note: 48, velocity: 0.9, gate: 0.7 },
-      { note: 60, velocity: 1.0, gate: 0.7 },
+      makeStep(0, 1.0, 0.7), makeStep(12, 0.9, 0.7),
+      makeStep(0, 0.9, 0.7), makeStep(12, 1.0, 0.7),
+      makeStep(0, 1.0, 0.7), makeStep(12, 0.9, 0.7),
+      makeStep(0, 0.9, 0.7), makeStep(12, 1.0, 0.7),
     ],
   },
   {
     name: 'power_chord',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.9 },
-      { note: 55, velocity: 0.9, gate: 0.9 },
-      { note: 48, velocity: 0.9, gate: 0.9 },
-      { note: 55, velocity: 1.0, gate: 0.9 },
+      makeStep(0, 1.0, 0.9), makeStep(7, 0.9, 0.9),
+      makeStep(0, 0.9, 0.9), makeStep(7, 1.0, 0.9),
+      makeStep(0, 1.0, 0.9), makeStep(7, 0.9, 0.9),
+      makeStep(0, 0.9, 0.9), makeStep(7, 1.0, 0.9),
     ],
   },
   {
     name: 'minor_pentatonic',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.8 },
-      { note: 51, velocity: 0.8, gate: 0.8 },
-      { note: 53, velocity: 0.9, gate: 0.8 },
-      { note: 55, velocity: 0.8, gate: 0.8 },
-      { note: 58, velocity: 1.0, gate: 0.8 },
+      makeStep(0, 1.0), makeStep(3, 0.8), makeStep(5, 0.9),
+      makeStep(7, 0.8), makeStep(10, 1.0),
+      makeStep(7, 0.7), makeStep(5, 0.8), makeStep(3, 0.7),
     ],
   },
   {
     name: 'bass_groove',
     steps: [
-      { note: 36, velocity: 1.0, gate: 0.9 },
-      { note: 36, velocity: 0.5, gate: 0.4 },
-      { note: 43, velocity: 1.0, gate: 0.9 },
-      { note: 43, velocity: 0.5, gate: 0.4 },
-      { note: 46, velocity: 1.0, gate: 0.9 },
-      { note: 46, velocity: 0.5, gate: 0.4 },
-      { note: 41, velocity: 1.0, gate: 0.9 },
-      { note: 41, velocity: 0.5, gate: 0.4 },
+      makeStep(-12, 1.0, 0.9), makeStep(-12, 0.4, 0.3),
+      makeStep(-5, 1.0, 0.9), makeStep(-5, 0.4, 0.3),
+      makeStep(-2, 1.0, 0.9), makeStep(-2, 0.4, 0.3),
+      makeStep(-7, 1.0, 0.9), makeStep(-7, 0.4, 0.3),
     ],
   },
   {
     name: 'trance_gate',
     steps: [
-      { note: 48, velocity: 1.0, gate: 0.9 },
-      { note: 48, velocity: 0.4, gate: 0.3 },
-      { note: 48, velocity: 1.0, gate: 0.9 },
-      { note: 48, velocity: 0.4, gate: 0.3 },
-      { note: 48, velocity: 1.0, gate: 0.9 },
-      { note: 48, velocity: 0.4, gate: 0.3 },
-      { note: 48, velocity: 1.0, gate: 0.9 },
-      { note: 48, velocity: 0.4, gate: 0.3 },
+      makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
+      makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
+      makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
+      makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
     ],
   },
 ]
 
 export function useStepSequencer() {
   const isPlaying = ref(false)
-  const currentStep = ref(0)
+  const currentStep = ref(-1)
   const bpm = ref(120)
-  const patternIndex = ref(0)
-  const pattern = ref<Pattern>(PATTERNS[0]!)
+  const stepCount = ref<StepCountOption>(8)
+  const presetIndex = ref(-1) // -1 = custom / no preset
   const midiClockActive = ref(false)
   const midiClockBpm = ref(0)
-  const stepCount = ref(PATTERNS[0]!.steps.length)
+
+  // User-editable step grid (reactive array)
+  const steps = reactive<Step[]>(createDefaultSteps(8))
 
   let audioCtx: AudioContext | null = null
   let schedulerInterval: ReturnType<typeof setInterval> | null = null
-  let nextStepTime = 0 // AudioContext time of the next step
-  let scheduledStep = 0 // Next step index to schedule
+  let nextStepTime = 0
+  let scheduledStep = 0
 
-  // Gate-off timers: step index -> timer ID
+  // Gate-off timers: scheduled step counter -> timer ID
   const gateTimers = new Map<number, ReturnType<typeof setTimeout>>()
 
   // Callbacks
@@ -140,6 +133,14 @@ export function useStepSequencer() {
 
   const SCHEDULER_INTERVAL_MS = 25
   const LOOKAHEAD_SEC = 0.1
+  const BASE_NOTE = 60 // C3
+
+  // Active steps count (for display)
+  const activeStepCount = computed(() => steps.filter(s => s.active).length)
+
+  function createDefaultSteps(count: number): Step[] {
+    return Array.from({ length: count }, () => makeStep(0, 0.8, 0.8, true))
+  }
 
   function setCallbacks(
     onNoteOn: (note: number, velocity: number) => void,
@@ -154,45 +155,46 @@ export function useStepSequencer() {
   }
 
   function stepDurationSec(): number {
-    // 16th notes: quarter note / 4
     return (60 / getEffectiveBpm()) / 4
   }
 
-  function scheduleStep(stepIdx: number, time: number) {
-    const step = pattern.value.steps[stepIdx]
-    if (!step) return
+  function scheduleStep(stepIdx: number, time: number, schedId: number) {
+    const step = steps[stepIdx]
+    if (!step || !step.active) return
 
     const now = audioCtx?.currentTime ?? 0
     const delayMs = Math.max(0, (time - now) * 1000)
     const gateDurMs = step.gate * stepDurationSec() * 1000
+    const midiNote = BASE_NOTE + step.semitone
 
     // Schedule noteOn
     setTimeout(() => {
       if (!isPlaying.value) return
       currentStep.value = stepIdx
-      noteOnCb?.(step.note, step.velocity)
+      noteOnCb?.(midiNote, step.velocity)
     }, delayMs)
 
-    // Cancel any pending gate-off for this step index
-    const existingTimer = gateTimers.get(stepIdx)
+    // Cancel any pending gate-off for this schedule ID
+    const existingTimer = gateTimers.get(schedId)
     if (existingTimer != null) clearTimeout(existingTimer)
 
     // Schedule noteOff at end of gate
     const offTimer = setTimeout(() => {
       if (!isPlaying.value) return
-      gateTimers.delete(stepIdx)
+      gateTimers.delete(schedId)
       noteOffCb?.()
     }, delayMs + gateDurMs)
-    gateTimers.set(stepIdx, offTimer)
+    gateTimers.set(schedId, offTimer)
   }
 
   function schedulerTick() {
     if (!audioCtx || !isPlaying.value) return
     const endWindow = audioCtx.currentTime + LOOKAHEAD_SEC
+    const count = steps.length
 
     while (nextStepTime < endWindow) {
-      const stepIdx = scheduledStep % pattern.value.steps.length
-      scheduleStep(stepIdx, nextStepTime)
+      const stepIdx = scheduledStep % count
+      scheduleStep(stepIdx, nextStepTime, scheduledStep)
       nextStepTime += stepDurationSec()
       scheduledStep++
     }
@@ -203,11 +205,11 @@ export function useStepSequencer() {
     audioCtx = ac
     isPlaying.value = true
     scheduledStep = 0
-    currentStep.value = 0
-    nextStepTime = ac.currentTime + 0.05 // Small offset to avoid scheduling in the past
+    currentStep.value = -1
+    nextStepTime = ac.currentTime + 0.05
 
     schedulerInterval = setInterval(schedulerTick, SCHEDULER_INTERVAL_MS)
-    schedulerTick() // Fire immediately
+    schedulerTick()
   }
 
   function stop() {
@@ -216,10 +218,9 @@ export function useStepSequencer() {
       clearInterval(schedulerInterval)
       schedulerInterval = null
     }
-    // Cancel all pending gate timers
     for (const timer of gateTimers.values()) clearTimeout(timer)
     gateTimers.clear()
-    currentStep.value = 0
+    currentStep.value = -1
     scheduledStep = 0
   }
 
@@ -227,22 +228,58 @@ export function useStepSequencer() {
     bpm.value = Math.max(60, Math.min(200, newBpm))
   }
 
-  function setPattern(idx: number) {
-    if (idx < 0 || idx >= PATTERNS.length) return
-    patternIndex.value = idx
-    pattern.value = PATTERNS[idx]!
-    stepCount.value = pattern.value.steps.length
-    // Reset to step 0 on pattern change
-    if (isPlaying.value) {
-      // Cancel pending gates and restart scheduling from step 0
-      for (const timer of gateTimers.values()) clearTimeout(timer)
-      gateTimers.clear()
-      scheduledStep = 0
-      currentStep.value = 0
-      if (audioCtx) {
-        nextStepTime = audioCtx.currentTime + 0.05
-      }
+  function setStepCount(count: StepCountOption) {
+    const wasPlaying = isPlaying.value
+    if (wasPlaying) stop()
+
+    stepCount.value = count
+    // Resize the steps array
+    while (steps.length < count) {
+      steps.push(makeStep(0, 0.8, 0.8, true))
     }
+    while (steps.length > count) {
+      steps.pop()
+    }
+    presetIndex.value = -1 // custom after resize
+
+    if (wasPlaying && audioCtx) start(audioCtx)
+  }
+
+  function loadPreset(idx: number) {
+    if (idx < 0 || idx >= PRESETS.length) return
+    const preset = PRESETS[idx]!
+    presetIndex.value = idx
+
+    const wasPlaying = isPlaying.value
+    if (wasPlaying) stop()
+
+    // Adapt preset to current step count:
+    // fill grid by wrapping or truncating
+    const count = stepCount.value
+    steps.length = 0
+    for (let i = 0; i < count; i++) {
+      const src = preset.steps[i % preset.steps.length]!
+      steps.push({ ...src })
+    }
+
+    if (wasPlaying && audioCtx) start(audioCtx)
+  }
+
+  // Edit individual step properties
+  function setStepActive(idx: number, active: boolean) {
+    if (steps[idx]) { steps[idx].active = active; presetIndex.value = -1 }
+  }
+
+  function setStepSemitone(idx: number, semitone: number) {
+    if (steps[idx]) { steps[idx].semitone = Math.max(-24, Math.min(24, semitone)); presetIndex.value = -1 }
+  }
+
+  function setStepVelocity(idx: number, velocity: number) {
+    if (steps[idx]) { steps[idx].velocity = Math.max(0, Math.min(1, velocity)); presetIndex.value = -1 }
+  }
+
+  function setStepGate(idx: number, gate: number) {
+    if (steps[idx]) { steps[idx].gate = Math.max(0.1, Math.min(1, gate)); presetIndex.value = -1 }
   }
 
   function handleMidiClock(type: MidiClockType) {
@@ -273,13 +310,11 @@ export function useStepSequencer() {
     lastClockTime = now
 
     if (interval > 0 && interval < 1000) {
-      // EMA smoothing (alpha = 0.2)
       if (emaInterval === 0) {
         emaInterval = interval
       } else {
         emaInterval = 0.2 * interval + 0.8 * emaInterval
       }
-      // BPM from 24ppqn: quarter note = 24 pulses
       const quarterNoteMs = emaInterval * 24
       if (quarterNoteMs > 0) {
         midiClockBpm.value = Math.round(60000 / quarterNoteMs)
@@ -299,19 +334,31 @@ export function useStepSequencer() {
   }
 
   return {
+    // Reactive state
     isPlaying: readonly(isPlaying),
     currentStep: readonly(currentStep),
     bpm: readonly(bpm) as Readonly<Ref<number>>,
-    patternIndex: readonly(patternIndex),
-    pattern: readonly(pattern) as Readonly<Ref<Pattern>>,
-    stepCount: readonly(stepCount),
+    stepCount: readonly(stepCount) as Readonly<Ref<StepCountOption>>,
+    presetIndex: readonly(presetIndex),
+    steps,
+    activeStepCount,
     midiClockActive: readonly(midiClockActive),
     midiClockBpm: readonly(midiClockBpm),
-    patterns: PATTERNS,
+
+    // Constants
+    presets: PRESETS,
+    stepCountOptions: STEP_COUNT_OPTIONS,
+
+    // Methods
     start,
     stop,
     setBpm,
-    setPattern,
+    setStepCount,
+    loadPreset,
+    setStepActive,
+    setStepSemitone,
+    setStepVelocity,
+    setStepGate,
     setCallbacks,
     handleMidiClock,
     dispose,

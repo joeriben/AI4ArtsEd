@@ -1301,8 +1301,9 @@ export const en = {
           stop: 'Stop',
           bpm: 'BPM',
           bpmHint: 'Tempo in beats per minute (16th-note steps)',
-          pattern: 'Pattern',
+          preset: 'Preset',
           midiSync: 'MIDI Sync',
+          gridHint: 'Slider = semitone offset, dot = active toggle, bottom = velocity',
           patterns: {
             arpeggio_up: 'Arpeggio Up',
             arpeggio_down: 'Arpeggio Down',
