@@ -153,8 +153,8 @@
                 <input
                   type="range"
                   :value="slot.value"
-                  min="-1"
-                  max="1"
+                  min="-2"
+                  max="2"
                   step="0.01"
                   class="axis-range"
                   :style="{ accentColor: axisColors[idx] }"
@@ -925,8 +925,8 @@ midi.onNote((note, velocity, on) => {
 
 // Synth params
 const synth = reactive({
-  promptA: '',
-  promptB: '',
+  promptA: 'minimoog sawtooth wave, c3',
+  promptB: 'prophet5 PWM chord, c minor7',
   alpha: 0.5,
   magnitude: 1.0,
   noise: 0.0,
@@ -1464,6 +1464,21 @@ function onScanInput(event: Event) {
 watch(wavetableScan, (v) => {
   wavetableOsc.setScanPosition(v)
 })
+
+// Re-apply envelope when ADSR values change during playback
+watch(
+  [envelope.attackMs, envelope.decayMs, envelope.sustain, envelope.releaseMs],
+  () => {
+    const playing = looper.isPlaying.value || wavetableOsc.isPlaying.value
+    if (!playing) return
+    if (envelope.isNeutral.value) {
+      if (envelopeWired) envelope.bypass()
+    } else {
+      wireEnvelope()
+      envelope.triggerAttack(1)
+    }
+  },
+)
 
 function onMidiInputChange(event: Event) {
   const val = (event.target as HTMLSelectElement).value
