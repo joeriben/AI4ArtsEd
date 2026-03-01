@@ -370,15 +370,19 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             message = result["choices"][0]["message"]
             content = message.get("content") or ""
 
-            # Fallback to reasoning_content for reasoning models
-            if not content and message.get("reasoning_content"):
-                content = message["reasoning_content"]
+            # Extract reasoning chain (gpt-oss-120b reasoning model)
+            thinking = message.get("reasoning_content") or message.get("reasoning") or None
+
+            # Fallback to reasoning_content if content is empty
+            if not content and thinking:
+                content = thinking
 
             if not content:
                 raise Exception("IONOS returned empty response")
 
             logger.info(f"[CHAT] IONOS Success: {len(content)} chars")
-            return content
+            # Return dict like Ollama so reasoning is visible in ChatOverlay
+            return {"content": content, "thinking": thinking}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
             logger.error(f"[CHAT] IONOS Error: {error_msg}")
