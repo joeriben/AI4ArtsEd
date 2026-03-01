@@ -27,6 +27,50 @@
 
 ---
 
+## Session 227 (2026-03-01): Meta-Prompt Quality — Affect Collapse Prevention
+
+**Date:** 2026-03-01
+**Status:** COMPLETE
+**Branch:** develop
+**Commits:** `7354524` (kraftvoll VERSCHRÄNKUNG), `054b04f` (planetarizer assemblage)
+
+### Context
+
+Mistral Large 2512 produced monotone "Elendskitsch" (misery-kitsch) from the kraftvoll interception config and eco-guilt lectures from the planetarizer. Systematic testing revealed that the problem is always the context (disposition text), never the instruction (Task field). Same instructions work identically well across all configs.
+
+### Changes
+
+**kraftvoll (forceful.json):**
+- Context rewritten with VERSCHRÄNKUNG (entanglement) pattern
+- Both registers (critical gaze + nature beauty) declared as simultaneously entangled
+- Formal abstract pattern templates replace prose description
+- Updated in DE, EN, TR, KO
+
+**Planetarizer (planetarizer.json):**
+- Context rewritten from "ecological connections" to Deleuze/Guattari assemblage model
+- 6 equal-rank elements: material flows, technical mediations, living agents, social bonds, hegemonic dispositifs, temporal layers
+- Removes "ökologisch" trigger word; adds Foucault/Spivak dispositifs
+- Updated in DE, EN, TR, KO
+
+**Documentation:**
+- `docs/META_PROMPT_CONSTRUCTION_RESEARCH.md` — comprehensive research memo with 7 design principles, 6 academic references (RLHF preference collapse, negation failure, typicality bias, prompt architecture artifacts)
+- `devserver/trashy_interface_reference.txt` — SECTION 17: age-appropriate collapse prevention guidance for users writing their own rules
+- `docs/DEVELOPMENT_DECISIONS.md` — 3 decisions documented
+- `docs/STAGE2_PROMPT_QUALITY_CRITERIA.md` — planetarizer gold standard description needs update (reflects old context)
+
+### Testing Methodology
+- ~30 API calls to Mistral Large 2512 across 8 test scripts in `/tmp/pi_comparison/`
+- Matrix testing: 4 instructions × 3 configs confirmed instruction is not the problem
+- 5 kraftvoll context variants → VERSCHRÄNKUNG won
+- 7 planetarizer context variants (A-G) → Assemblage + dispositifs won
+- Content contamination test: abstract vs. thematic examples × 2 prompts → abstract safe
+
+### Key Insight
+
+RLHF preference collapse (Xu et al., 2024) means multi-register prompts are inherently fragile: the model's reward function amplifies the majority-preferred mode and suppresses minority registers. Countermeasure: structural constraints (pattern templates, equal-rank enumeration) force multi-register output at the generation level, bypassing reward-function bias.
+
+---
+
 ## Session 218 (2026-02-27): Post-Mortem Repair — Safety Restoration + Dead Code Removal
 
 **Date:** 2026-02-27

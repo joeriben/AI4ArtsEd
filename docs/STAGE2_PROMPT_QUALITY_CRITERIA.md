@@ -158,15 +158,44 @@ Key Features:
 
 ### 6.3 Critical Thinking: `planetarizer.json`
 
-Key Features:
-- Clear framework: Anthropocene thinking, planetary perspective
-- Specific prohibitions: "Jede Form von Othering, Exotisierung, Romantisierung... ist STRIKT untersagt"
-- Named theoretical basis: "Frantz Fanon, Homi Bhabha, Gayatri Spivak, Walter Mignolo"
-- Actionable rules: "normalisierte Konsumwelt-Bezüge umgeschrieben werden zu einer planetar... orientierten Perspektive"
+Key Features (updated Session 227):
+- Assemblage model (Deleuze/Guattari): 6 equal-rank elements instead of ecological framing
+- Equal-rank enumeration: "GLEICHRANGIG. Kein Element dominiert. Kein Element ist bloß Hintergrund."
+- Hegemonic dispositifs (Foucault/Spivak): power structures as descriptive elements, not accusations
+- Concrete tone anchors: "NÜCHTERN, DICHT und KONKRET. Kein Urteil. Keine Anklage. Nur Beschreibung."
+- Avoids "ökologisch" trigger word that caused eco-guilt collapse in earlier version
+- See `docs/META_PROMPT_CONSTRUCTION_RESEARCH.md` for the collapse research behind this redesign
 
 ---
 
-## 7. Common Anti-Patterns
+## 7. Collapse Patterns (Session 227)
+
+Multi-register contexts are inherently fragile due to RLHF preference collapse. See `docs/META_PROMPT_CONSTRUCTION_RESEARCH.md` for full research with academic citations.
+
+### 7.1 Affect Collapse
+When a context requires two simultaneous emotional registers, the LLM latches onto the most dramatic one and discards the rest. **Countermeasure:** VERSCHRÄNKUNG pattern — explicitly declare entangled perception with structural pattern templates.
+
+### 7.2 Eco-Guilt Collapse
+The word "ökologisch" triggers catastrophist training-data priors. Even origin-tracing questions ("Woher?") activate supply-chain guilt chains. **Countermeasure:** Assemblage model — equal-rank elements, remove ecological trigger word, use concrete tone anchors.
+
+### 7.3 Negation-Priming
+"NOT dystopia" primes dystopian output. Autoregressive LLMs ignore negation operators. **Countermeasure:** Positive framing — describe what you want, not what you don't want.
+
+### 7.4 Content Priming from Examples
+Thematic few-shot examples (agricultural, urban) prime their content into all outputs. **Countermeasure:** Abstract structural examples that teach form without theme.
+
+### Design Principles Summary
+1. Positive framing over negation
+2. Structural constraints over semantic instructions
+3. Equal-rank enumeration against hierarchy collapse
+4. Avoid trigger words ("ökologisch", "kritisch", "Dystopie")
+5. Concrete tone anchors ("NÜCHTERN, DICHT, KONKRET" > "situated realism")
+6. "Was ist HIER?" > "Woher?"
+7. Test against minimal inputs (collapse is most visible with sparse prompts)
+
+---
+
+## 8. Common Anti-Patterns
 
 | Anti-Pattern | Why Problematic | Solution |
 |--------------|-----------------|----------|
@@ -178,7 +207,7 @@ Key Features:
 
 ---
 
-## 8. Revision Workflow
+## 9. Revision Workflow
 
 ### 8.1 Triage
 
@@ -201,7 +230,7 @@ Key Features:
 
 ---
 
-## 9. Special Cases
+## 10. Special Cases
 
 ### 9.1 Passthrough Configs (skip_stage2: true)
 
@@ -226,7 +255,7 @@ Configs like `cooked_negatives.json` primarily inject trigger terms:
 
 ---
 
-## 10. Documentation Integration
+## 11. Documentation Integration
 
 This framework should be used for:
 1. **Quality Review** - Evaluating existing prompts

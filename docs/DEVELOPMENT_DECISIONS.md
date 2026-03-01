@@ -29,6 +29,40 @@
 
 ---
 
+## Session 227: Meta-Prompt Quality — Affect Collapse Prevention (2026-03-01)
+
+### Decision 1: VERSCHRÄNKUNG pattern for multi-register dispositions
+
+**Problem:** kraftvoll interception config requires holding two simultaneous perceptual registers (critical social gaze + nature beauty). Mistral Large 2512 consistently collapsed into pure misery-kitsch — the nature-beauty register was entirely discarded. Testing with 5 alternative instruction prompts confirmed: the problem is NOT the instruction (Task field), it is the context (disposition text). The same instructions work perfectly for single-register configs (sensibel, clichéfilter).
+
+**Root cause:** RLHF preference collapse (Xu et al., 2024, arXiv:2405.16455) — KL-regularized optimization suppresses minority preferences. For "critical perspective," the majority mode in training data is catastrophizing. Additional factor: negation failure — "Ziel ist keine Dystopie" primes dystopian output because autoregressive models ignore negation operators (Alhamoud et al., CVPR 2025).
+
+**Decision:** Introduce the VERSCHRÄNKUNG (entanglement) pattern: explicitly declare that perception is entangled (`VERSCHRÄNKT`) so both registers must appear in every detail. Provide formal abstract pattern templates (`[Eingriff] — und [Lebenskraft]`) that teach structure without priming content. Tested: no content contamination from abstract patterns; thematic examples (agricultural) do contaminate.
+
+**Files:** `devserver/schemas/configs/interception/forceful.json` (context field, all 4 languages)
+
+### Decision 2: Assemblage model with dispositifs for Planetarizer
+
+**Problem:** Planetarizer's "ecological connections" framing caused eco-guilt collapse — every input became an environmental damage lecture. The word "ökologisch" itself triggers catastrophist training-data priors. Origin-tracing questions ("Woher?") activate supply-chain guilt chains.
+
+**Root cause:** Training data skew — environmental content in LLM corpora is overwhelmingly catastrophist. Combined with negation failure ("keine Dystopie" primes dystopia).
+
+**Decision:** Replace ecological framing with Deleuze/Guattari assemblage model: 6 equal-rank elements (material flows, technical mediations, living agents, social bonds, hegemonic dispositifs, temporal layers). Added Foucault/Spivak hegemonic dispositifs (property relations, norms, access conditions) as equal-rank assemblage elements — making power structures visible without moralizing. Key instruction: "GLEICHRANGIG. Kein Element dominiert." + "NÜCHTERN, DICHT, KONKRET. Nur Beschreibung."
+
+**Trade-off:** Theoretically dense prompt — requires workshop facilitator to explain assemblage concept to younger students. Acceptable because the planetarizer is rated difficulty 4 (advanced) with min_age 14.
+
+**Files:** `devserver/schemas/configs/interception/planetarizer.json` (context field, all 4 languages)
+
+### Decision 3: Meta-prompt construction research document
+
+**Problem:** Collapse patterns are reproducible, theory-grounded, and affect any future interception config. No systematic documentation existed.
+
+**Decision:** Create `docs/META_PROMPT_CONSTRUCTION_RESEARCH.md` with 7 design principles for collapse-resistant meta-prompts, backed by 6 academic references. Also added SECTION 17 to Träshy's knowledge base (`trashy_interface_reference.txt`) with age-appropriate versions of the same principles.
+
+**Files:** `docs/META_PROMPT_CONSTRUCTION_RESEARCH.md` (new), `devserver/trashy_interface_reference.txt` (SECTION 17 added)
+
+---
+
 ## Session 226: SD3.5 Per-Encoder CLIP Optimization (2026-02-28)
 
 ### Decision 1: Only optimize CLIP, T5-XXL gets user text directly

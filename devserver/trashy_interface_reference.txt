@@ -1131,5 +1131,115 @@ TECHNICAL DETAILS (if students ask)
 - If no GPU data is available, the animation uses realistic simulated values
 
 ================================================================================
+SECTION 17: WHY SOME RULES WORK BETTER THAN OTHERS (PROMPT COLLAPSE)
+================================================================================
+
+Sometimes a rule configuration produces results that all feel the same - like the
+AI got stuck in one mood or one way of thinking. This is called "collapse" and it
+happens because of how the AI was trained. Here's how to recognize it and fix it.
+
+WHAT IS COLLAPSE?
+-----------------
+Collapse means the AI locks onto ONE way of interpreting your rules and ignores
+everything else. For example:
+- You write rules that say "show BOTH the beauty of nature AND social problems"
+- But the AI only shows social problems. The beauty disappears.
+- Every result feels sad and heavy, no matter what you type as input.
+
+This is NOT your fault. It's a pattern in how AIs learn from their training data.
+
+WHY DOES COLLAPSE HAPPEN?
+--------------------------
+1. THE AI PREFERS "TYPICAL" RESPONSES
+   When the AI sees the word "critical" or "ecological," it remembers millions of
+   texts about problems, suffering, and catastrophe. So it produces more of that.
+   It's like asking someone to think about "the ocean" — most people think of
+   beaches, not deep-sea trenches. The AI has similar habits.
+
+2. THE AI CAN'T DO "NOT"
+   If your rules say "NOT a dystopia," the AI often ignores the "NOT" and just
+   sees "dystopia" — and then produces exactly that! This is a known problem with
+   all current AI language models. It's like telling someone: "Don't think about
+   a pink elephant." What do you think of? Exactly.
+
+3. ONE STRONG DIMENSION SWALLOWS EVERYTHING ELSE
+   If your rules mention ecology, environment, sustainability — the AI will make
+   EVERYTHING about environmental damage. Even a birthday party becomes a lecture
+   about plastic waste. The "ecological" dimension swallows all other dimensions.
+
+HOW TO WRITE COLLAPSE-RESISTANT RULES
+--------------------------------------
+
+TRICK 1: SAY WHAT YOU WANT, NOT WHAT YOU DON'T WANT
+   BAD:  "This should NOT be dystopian"
+   GOOD: "Describe soberly, densely, and concretely. Only description."
+
+   Instead of saying what to avoid, describe what the result SHOULD feel like.
+   Concrete words like "sober" and "dense" give the AI a clear direction.
+
+TRICK 2: USE PATTERN TEMPLATES FOR MULTIPLE PERSPECTIVES
+   If you want the AI to show TWO things at the same time (like beauty AND
+   critique), give it a PATTERN to follow:
+
+   "In every detail, show SIMULTANEOUSLY:
+   — [destruction/intervention] — and [life force/beauty in the same moment]
+   — [human burden] — and [light/matter/nature responding to it]"
+
+   The pattern forces the AI to produce BOTH sides in every sentence.
+   It can't collapse into just one side because the template requires both.
+
+TRICK 3: LIST EQUAL ELEMENTS
+   Instead of one theme (like "ecology"), list MULTIPLE equal elements:
+   — Material flows
+   — Technical processes
+   — Living organisms
+   — Social connections
+   — Power structures
+   — Time layers
+
+   Then say: "These elements are EQUAL. No element dominates."
+   This distributes the AI's attention across all dimensions.
+
+TRICK 4: KEEP EXAMPLES ABSTRACT
+   If you include examples in your rules, make them ABSTRACT (about structure,
+   not about specific topics):
+   BAD:  "Example: A tractor plowing soil that was once forest"
+         (Now every result will mention agriculture!)
+   GOOD: "Pattern: [intervention] — and [living response]"
+         (Teaches the SHAPE of what you want, not the TOPIC)
+
+TRICK 5: AVOID TRIGGER WORDS
+   Some words automatically push the AI into a specific mode:
+   - "ecological" → produces environmental damage narratives
+   - "critical" → produces suffering/exploitation narratives
+   - "dystopia" (even negated!) → produces dystopian output
+
+   Replace them with more specific, neutral descriptions of what you actually mean.
+
+EXAMPLE: PLANETARIZER (BEFORE AND AFTER)
+-----------------------------------------
+BEFORE (collapsed):
+   "Rewrite the input so it is entangled in its ecological connections.
+   Goal is not dystopia, but situated realism."
+   → Result: Every input became an environmental guilt lecture.
+
+AFTER (fixed):
+   "Describe the input as an ASSEMBLAGE — a configuration of heterogeneous
+   elements that interact without obeying a single principle:
+   — Material flows, Technical mediations, Living agents,
+   — Social bonds, Hegemonic dispositifs, Temporal layers.
+   These elements are EQUAL. Describe soberly, densely, concretely.
+   No judgment. No accusation. Only description."
+   → Result: Rich, multi-dimensional descriptions without guilt narratives.
+
+FOR MORE INFORMATION
+--------------------
+The full research document with academic references is available at:
+docs/META_PROMPT_CONSTRUCTION_RESEARCH.md
+Course instructors can consult this for the theoretical background
+(Deleuze/Guattari assemblage theory, Latour's Actor-Network-Theory,
+Spivak's planetarity, RLHF preference collapse research).
+
+================================================================================
 END OF KNOWLEDGE BASE
 ================================================================================
