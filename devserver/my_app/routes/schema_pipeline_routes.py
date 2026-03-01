@@ -391,17 +391,33 @@ def _load_estimated_duration(output_config_name: str) -> str:
             if output_chunk_name:
                 import json
                 from pathlib import Path
+                chunks_dir = Path(__file__).parent.parent.parent / "schemas" / "chunks"
 
-                chunk_file = Path(__file__).parent.parent.parent / "schemas" / "chunks" / f"{output_chunk_name}.json"
+                # 1. Try Python chunk CHUNK_META first
+                chunk_py = chunks_dir / f"{output_chunk_name}.py"
+                if chunk_py.exists():
+                    try:
+                        import importlib.util
+                        spec = importlib.util.spec_from_file_location(f"dur_{output_chunk_name}", chunk_py)
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                        chunk_meta = getattr(mod, 'CHUNK_META', {})
+                        duration = chunk_meta.get('estimated_duration_seconds')
+                        if duration is not None:
+                            logger.info(f"[LOAD-DURATION] Found in Python chunk: {duration}")
+                            return str(duration)
+                    except Exception as e:
+                        logger.debug(f"[LOAD-DURATION] Failed to load Python chunk '{output_chunk_name}': {e}")
 
+                # 2. Fallback to JSON chunk
+                chunk_file = chunks_dir / f"{output_chunk_name}.json"
                 if chunk_file.exists():
                     with open(chunk_file, 'r', encoding='utf-8') as f:
                         output_chunk = json.load(f)
-
                     if output_chunk and 'meta' in output_chunk:
                         duration = output_chunk['meta'].get('estimated_duration_seconds')
                         if duration is not None:
-                            logger.info(f"[LOAD-DURATION] Found: {duration}")
+                            logger.info(f"[LOAD-DURATION] Found in JSON chunk: {duration}")
                             return str(duration)
 
         logger.warning(f"[LOAD-DURATION] No duration found for '{output_config_name}', using fallback")
@@ -638,27 +654,7 @@ async def execute_stage2_with_optimization_SINGLE_RUN_VERSION(
     if target_output_config:
         logger.info(f"[STAGE2-OPT] Target output config: {target_output_config}")
         try:
-            # Load output config to get OUTPUT_CHUNK name
-            output_config_obj = pipeline_executor.config_loader.get_config(target_output_config)
-            if output_config_obj and hasattr(output_config_obj, 'parameters'):
-                output_chunk_name = output_config_obj.parameters.get('OUTPUT_CHUNK')
-                if output_chunk_name:
-                    logger.info(f"[STAGE2-OPT] Output chunk: {output_chunk_name}")
-                    # Load output chunk JSON directly to get optimization_instruction
-                    import json
-                    from pathlib import Path
-                    chunk_file = Path(__file__).parent.parent.parent / "schemas" / "chunks" / f"{output_chunk_name}.json"
-                    if chunk_file.exists():
-                        with open(chunk_file, 'r', encoding='utf-8') as f:
-                            output_chunk = json.load(f)
-                        if output_chunk and 'meta' in output_chunk:
-                            optimization_instruction = output_chunk['meta'].get('optimization_instruction')
-                            if optimization_instruction:
-                                logger.info(f"[STAGE2-OPT] Found optimization instruction (length: {len(optimization_instruction)})")
-                            else:
-                                logger.info(f"[STAGE2-OPT] No optimization instruction in chunk {output_chunk_name}")
-                    else:
-                        logger.warning(f"[STAGE2-OPT] Chunk file not found: {chunk_file}")
+            optimization_instruction = _load_optimization_instruction(target_output_config)
         except Exception as e:
             logger.warning(f"[STAGE2-OPT] Failed to load optimization instruction: {e}")
 

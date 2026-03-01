@@ -304,6 +304,13 @@ class ModelAvailabilityService:
 
             # Load fallback chunk and check its models against ComfyUI
             fallback_path = self.chunk_dir / f"{fallback_name}.json"
+            if not fallback_path.exists():
+                # Python fallback chunks use GPU service, not ComfyUI workflows.
+                # Their availability is checked separately via GPU service status.
+                fallback_py = self.chunk_dir / f"{fallback_name}.py"
+                if fallback_py.exists():
+                    return True
+                return False
             requirements = self._extract_chunk_requirements(fallback_path)
 
             if not requirements:
