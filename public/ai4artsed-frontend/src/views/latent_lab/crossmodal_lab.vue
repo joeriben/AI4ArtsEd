@@ -41,35 +41,53 @@
         </div>
       </details>
 
-      <!-- Prompt A -->
-      <MediaInputBox
-        icon="💡"
-        :label="t('latentLab.crossmodal.synth.promptA')"
-        :placeholder="t('latentLab.crossmodal.synth.promptAPlaceholder')"
-        :value="synth.promptA"
-        @update:value="synth.promptA = $event"
-        :rows="2"
-        :isEmpty="!synth.promptA"
-        :isFilled="!!synth.promptA"
-        @copy="copySynthPromptA"
-        @paste="pasteSynthPromptA"
-        @clear="clearSynthPromptA"
-      />
+      <!-- Sticky prompt + generate area -->
+      <div class="synth-sticky-top">
+        <!-- Prompt A -->
+        <MediaInputBox
+          icon="💡"
+          :label="t('latentLab.crossmodal.synth.promptA')"
+          :placeholder="t('latentLab.crossmodal.synth.promptAPlaceholder')"
+          :value="synth.promptA"
+          @update:value="synth.promptA = $event"
+          :rows="2"
+          :isEmpty="!synth.promptA"
+          :isFilled="!!synth.promptA"
+          @copy="copySynthPromptA"
+          @paste="pasteSynthPromptA"
+          @clear="clearSynthPromptA"
+        />
 
-      <!-- Prompt B (optional) -->
-      <MediaInputBox
-        icon="➕"
-        :label="t('latentLab.crossmodal.synth.promptB')"
-        :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
-        :value="synth.promptB"
-        @update:value="synth.promptB = $event"
-        :rows="2"
-        :isEmpty="!synth.promptB"
-        :isFilled="!!synth.promptB"
-        @copy="copySynthPromptB"
-        @paste="pasteSynthPromptB"
-        @clear="clearSynthPromptB"
-      />
+        <!-- Prompt B (optional) -->
+        <MediaInputBox
+          icon="➕"
+          :label="t('latentLab.crossmodal.synth.promptB')"
+          :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
+          :value="synth.promptB"
+          @update:value="synth.promptB = $event"
+          :rows="2"
+          :isEmpty="!synth.promptB"
+          :isFilled="!!synth.promptB"
+          @copy="copySynthPromptB"
+          @paste="pasteSynthPromptB"
+          @clear="clearSynthPromptB"
+        />
+
+        <div class="action-row">
+          <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
+            {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
+          </button>
+          <button class="loop-btn" :class="{ active: looper.isLooping.value }" @click="toggleLoop">
+            {{ looper.isLooping.value ? t('latentLab.crossmodal.synth.loopOn') : t('latentLab.crossmodal.synth.loopOff') }}
+          </button>
+          <button v-if="looper.isPlaying.value" class="stop-btn" @click="looper.stop()">
+            {{ t('latentLab.crossmodal.synth.stop') }}
+          </button>
+          <button v-if="!looper.isPlaying.value && looper.hasAudio.value" class="play-btn" @click="looper.replay()">
+            {{ t('latentLab.crossmodal.synth.play') }}
+          </button>
+        </div>
+      </div>
 
       <!-- Sliders -->
       <div class="slider-group">
@@ -131,7 +149,7 @@
                 </option>
               </select>
               <div v-if="slot.axis" class="axis-slider-row">
-                <span class="axis-pole-label pole-a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
+                <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
                 <input
                   type="range"
                   :value="slot.value"
@@ -142,7 +160,7 @@
                   :style="{ accentColor: axisColors[idx] }"
                   @input="slot.value = parseFloat(($event.target as HTMLInputElement).value)"
                 />
-                <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
+                <span class="axis-pole-label pole-a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
                 <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
               </div>
             </div>
@@ -176,21 +194,6 @@
           <input v-model.number="synth.seed" type="number" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.seedHint') }}</span>
         </div>
-      </div>
-
-      <div class="action-row">
-        <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
-          {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
-        </button>
-        <button class="loop-btn" :class="{ active: looper.isLooping.value }" @click="toggleLoop">
-          {{ looper.isLooping.value ? t('latentLab.crossmodal.synth.loopOn') : t('latentLab.crossmodal.synth.loopOff') }}
-        </button>
-        <button v-if="looper.isPlaying.value" class="stop-btn" @click="looper.stop()">
-          {{ t('latentLab.crossmodal.synth.stop') }}
-        </button>
-        <button v-if="!looper.isPlaying.value && looper.hasAudio.value" class="play-btn" @click="looper.replay()">
-          {{ t('latentLab.crossmodal.synth.play') }}
-        </button>
       </div>
 
       <!-- Dimension Explorer Section (open by default) -->
@@ -888,9 +891,9 @@ const synth = reactive({
   alpha: 0.5,
   magnitude: 1.0,
   noise: 0.0,
-  duration: 1.0,
-  steps: 20,
-  cfg: 3.5,
+  duration: 3.0,
+  steps: 100,
+  cfg: 7.0,
   seed: -1,
   loop: true,
 })
@@ -1787,6 +1790,18 @@ onUnmounted(() => {
   line-height: 1.5;
 }
 
+/* Sticky prompt + generate area */
+.synth-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0a0a0a;
+  padding-bottom: 0.5rem;
+  margin: 0 -1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 /* Slider groups */
 .slider-group {
   margin-bottom: 1.5rem;
@@ -2658,16 +2673,12 @@ onUnmounted(() => {
   border-radius: 4px;
   color: #ffffff;
   font-size: 0.8rem;
+  color-scheme: dark;
 }
 
 .axis-select:focus {
   outline: none;
   border-color: rgba(76, 175, 80, 0.5);
-}
-
-.axis-select option {
-  background: #1a1a1a;
-  color: #ffffff;
 }
 
 .axis-slider-row {
