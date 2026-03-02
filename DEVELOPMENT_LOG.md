@@ -777,6 +777,18 @@ data: {"percent": 45, "preview": "data:image/jpeg;base64,/9j/...", "node": "KSam
 
 ---
 
+## Session 217 - LLM Inference Migration (CANCELLED)
+**Date:** 2026-02-25 (approximate)
+**Focus:** Attempted migration of LLM inference — aborted due to Mistral model switch disaster
+
+### Note
+This session was not logged at the time. It is referenced in Sessions 221 and 229:
+- Mistral `mistral-large-latest` had silently switched to Large 3 (675B MoE) → 85s latency
+- Plan "LLM Inference Migration" was cancelled
+- Stabilized by pinning to `mistral-large-2411` (Large 2, 123B dense)
+
+---
+
 ## Session 216 - Standalone ComfyUI Installation (SwarmUI-Abloesung)
 **Date:** 2026-02-26
 **Focus:** Replace SwarmUI's embedded ComfyUI with a standalone installation; fix WebSocket race condition and model availability fallback
@@ -1014,6 +1026,8 @@ Session 210 führte SketchCanvas als Komponente ein, verankerte die Toggle-Logik
 | `src/views/multi_image_transformation.vue` | Added `:allow-sketch="true"` to 3 image boxes |
 | `src/views/latent_lab/crossmodal_lab.vue` | Added `:allow-sketch="true"` to 2 image boxes |
 
+---
+
 ## Session 211 - Surrealizer Fusion Strategy Redesign
 **Date:** 2026-02-26
 **Focus:** Fix fundamental misunderstanding in Surrealizer T5-CLIP fusion — T5 tokens beyond 77 were appended unchanged, diluting surreal effect on long prompts
@@ -1052,6 +1066,8 @@ Full pipeline from frontend to GPU service (10 files initially, refined in follo
 | `src/i18n/en.ts` | Rewritten info/purpose/tech texts, 10 new keys |
 | `src/i18n/WORK_ORDERS.md` | Translation work order for all new/modified keys |
 
+---
+
 ## Session 210 - Sketch Canvas for Image Transformation
 **Date:** 2026-02-25
 **Focus:** Let kids draw a freehand sketch in the browser that feeds into img2img pipelines
@@ -1073,6 +1089,8 @@ No new backend routes, pipelines, or output configs needed.
 | `src/views/image_transformation.vue` | Upload/sketch toggle, `imageInputMode` ref, CSS |
 | `src/i18n/en.ts` | `sketchCanvas.*` (9 keys) + `imageTransform.uploadMode/sketchMode` |
 | `src/i18n/WORK_ORDERS.md` | Translation work order for 11 new keys |
+
+---
 
 ## Session 209 - Trans-Aktion: Parameter Pipeline Fix + Global Poet Lineup
 **Date:** 2026-02-24
@@ -1210,6 +1228,17 @@ Full analysis with 20+ sources documented in `docs/DEVELOPMENT_DECISIONS.md` und
 4. Mechanical pre-processing layer (SpaCy sentence-interleaving + N+7) as Python chunk
 5. SLERP on T5 embeddings (connects to T5 SAE research, Session 192)
 6. Test across SD3.5/FLUX/Wan2.1
+
+---
+
+## Session 207.5 - Trans-Aktion Concept PoC
+**Date:** 2026-02-25 (approximate)
+**Focus:** Material-Kollision via model insufficiency — Trans-Aktion concept development
+
+### Note
+This session was not logged at the time. Referenced in Session 208:
+- Deliberately tiny LLM (qwen3:1.7b) receives two semantically alien texts
+- PoC succeeded (commit `447ea3a`)
 
 ---
 
@@ -2553,6 +2582,8 @@ Canvas und Latent Lab nutzen direkte Pipeline-Aufrufe ohne vollständige Safety-
 - `docs/DEVELOPMENT_DECISIONS.md` — 2 neue Entscheidungen
 - `docs/ARCHITECTURE PART 28 - Latent-Lab.md` — NEU
 
+---
+
 ## Session 164 - Landing Page Restructure + Preset Selection Overlay
 **Date:** 2026-02-10
 **Focus:** Replace outdated `/select` bubble page with proper landing page; move interception preset selection into contextual overlay
@@ -2601,6 +2632,8 @@ The platform outgrew its original entry point (`/select` = PropertyQuadrantsView
 - `src/router/index.ts` — route changes
 - `src/i18n.ts` — landing + presetOverlay + multiImage keys (DE/EN)
 - `public/config-previews/` — resized preview images
+
+---
 
 ## Session 163 - Hallucinator: Exact ComfyUI Replication + Configurable Parameters
 **Date:** 2026-02-09
@@ -3714,7 +3747,7 @@ SSE (Server-Sent Events) streaming endpoint that yields events IMMEDIATELY durin
 
 ---
 
-## Session 136 - Anti-Orientalism Meta-Prompt Enhancement
+## Session 140c - Anti-Orientalism Meta-Prompt Enhancement
 **Date:** 2026-01-26
 **Focus:** Prevent orientalist stereotypes in prompt interception
 **Status:** COMPLETED
@@ -3815,169 +3848,7 @@ Based on postcolonial theory (Said, Fanon, Spivak) - see analysis document for d
 
 ---
 
-## Session 139 - Wikipedia Research Capability
-**Date:** 2026-01-26
-**Focus:** Enable LLM to fetch Wikipedia content during prompt interception
-**Status:** COMPLETED
-
-### Feature Overview
-LLM can now request Wikipedia content using `<wiki>term</wiki>` markers in its output. System fetches content and re-executes chunk with enriched context.
-
-### Architecture
-- **Chunk-Level Orchestration**: Wikipedia loop in `pipeline_executor._execute_single_step()`
-- **NOT a new pipeline** - fundamental capability of ALL interceptions
-- **Max 3 iterations** per chunk execution (configurable)
-
-### New Files
-| File | Purpose |
-|------|---------|
-| `my_app/services/wikipedia_service.py` | Secure Wikipedia API client (whitelist-only) |
-| `schemas/engine/wikipedia_processor.py` | Marker extraction, content formatting |
-
-### Modified Files
-| File | Change |
-|------|--------|
-| `config.py` | `WIKIPEDIA_MAX_ITERATIONS`, `WIKIPEDIA_FALLBACK_LANGUAGE`, `WIKIPEDIA_CACHE_TTL` |
-| `schemas/chunks/manipulate.json` | `{{WIKIPEDIA_CONTEXT}}` placeholder, instruction text |
-| `schemas/engine/pipeline_executor.py` | Wikipedia loop, `WIKIPEDIA_STATUS` global for UI |
-| `my_app/routes/schema_pipeline_routes.py` | Refactored to use `pipeline_executor` (fixes architecture violation), SSE `wikipedia_lookup` events |
-| `MediaInputBox.vue` | Pulsing Wikipedia logo during lookup |
-
-### Trigger Pattern
-```
-<wiki lang="de">Suchbegriff</wiki>  - German Wikipedia
-<wiki lang="en">Search term</wiki>  - English Wikipedia
-<wiki>term</wiki>                    - Uses input language
-```
-
-### Key Decisions
-1. **Language auto-detection**: Uses input language, falls back to `WIKIPEDIA_FALLBACK_LANGUAGE`
-2. **Session per-request**: aiohttp session created/closed per lookup (avoids event loop issues with threading)
-3. **Architecture fix**: SSE route now uses `pipeline_executor` instead of direct `PromptInterceptionEngine` call
-
-### Commits
-- `d66c37f` feat(wikipedia): Core implementation
-- `b617273` fix(wikipedia): Import paths
-- `277dbf7` fix(wikipedia): Stronger prompt (MUST use when needed)
-- `8e03431` feat(wikipedia): Real-time UI feedback
-- `761cffa` fix(wikipedia): Session per-request (event loop fix)
-
----
-
-## Session 138 - Trashy Context-Awareness Fix
-**Date:** 2026-01-26
-**Focus:** Fix Trashy losing context after pipeline execution
-**Status:** COMPLETED
-
-### Problem
-Träshy (AI chat helper) was "forgetting" current page context after a pipeline run:
-
-**Root Cause Chain:**
-1. User runs pipeline → `runId` gets set via `updateSession()`
-2. User changes MediaInputBox content → `runId` stays set (no `clearSession()` call)
-3. User opens Träshy → ChatOverlay sees `runId` exists
-4. ChatOverlay sends draft_context ONLY if `!runId` (Zeile 213)
-5. Backend loads **stale** session context from `exports/json/{runId}/`
-6. Träshy doesn't know about current input changes
-
-**Confirmed:** No Vue view calls `clearSession()` → `runId` persists until browser refresh
-
-### Solution: Always Send Draft Context
-
-**Option B (chosen):** Send `draft_context` as separate field, backend combines both contexts.
-
-**Frontend (`ChatOverlay.vue`):**
-```javascript
-// BEFORE: Conditional logic
-if (!currentSession.value.runId && draftContextString.value) {
-  messageForBackend = `${draftContextString.value}\n\n${userMessage}`
-}
-
-// AFTER: Always send as separate field
-const response = await axios.post('/api/chat', {
-  message: userMessage,  // Clean message
-  run_id: currentSession.value.runId || undefined,
-  draft_context: draftContextString.value || undefined,  // NEW: Always send
-  history: historyForBackend
-})
-```
-
-**Backend (`chat_routes.py`):**
-```python
-draft_context = data.get('draft_context')  # Current page state (transient)
-
-system_prompt = build_system_prompt(context)  # Session context from files
-
-# Append draft_context if provided (NOT saved to exports/)
-if draft_context:
-    system_prompt += f"\n\n[Aktuelle Eingaben auf der Seite]\n{draft_context}"
-```
-
-### Key Points
-
-- `draft_context` is **transient** (LLM context only, not persisted)
-- NOT saved to `chat_history.json` or `exports/json/`
-- Backend now knows BOTH: session files + current page state
-- No changes to exports system
-
-### Result
-
-**Before:**
-- Without runId: draft_context sent ✓
-- With runId: draft_context ignored ✗
-
-**After:**
-- Without runId: draft_context in system prompt ✓
-- With runId: BOTH session + draft_context in system prompt ✓
-
-**Commit:** `1fee080` - fix(trashy): Always send draft_context for context-aware chat
-
----
-
-## Session 137 - Stage 3/4 Separation (Clean Architecture)
-**Date:** 2026-01-26
-**Focus:** Separate Stage 3 (Translation+Safety) from Stage 4 (Generation) for clean architecture
-**Status:** COMPLETED
-
-### Problem
-`execute_generation_stage4()` contained **embedded Stage 3 logic**, forcing Canvas to use `skip_translation=True` workaround when it had its own Translation node.
-
-**Old Architecture (problematic):**
-```
-Canvas: Translation Node → Generation Node (skip_translation=True) → Media
-Lab:    execute_generation_stage4() → [Stage 3 embedded] → Stage 4 → Media
-```
-
-**Bug Found:** Parameter was `skip_stage3` but code used undefined `skip_translation` variable.
-
-### Solution
-Created clean separation with new function `execute_stage4_generation_only()`:
-
-**New Architecture:**
-```
-Canvas: Translation Node → execute_stage4_generation_only() → Media
-Lab:    execute_generation_stage4() → Stage 3 → execute_stage4_generation_only() → Media
-```
-
-### Changes
-
-| File | Change |
-|------|--------|
-| `schema_pipeline_routes.py` | Added `execute_stage4_generation_only()` - pure Stage 4 generation |
-| `schema_pipeline_routes.py` | Refactored `execute_generation_stage4()` to call new function internally |
-| `canvas_routes.py` | Generation node now calls `execute_stage4_generation_only()` directly |
-| `canvas_routes.py` | Removed `skip_translation=True` workaround |
-
-### Key Principle
-- `execute_stage4_generation_only()` = Pure generation, expects ready-to-use prompt
-- `execute_generation_stage4()` = Legacy wrapper for Lab (handles Stage 3 first)
-- Canvas workflows call the clean function directly - no flags needed
-
-**Commit:** `9f34ca2` - refactor(stage4): Separate Stage 3 and Stage 4 for clean architecture
-
----
-
-## Session 135 - Canvas Cosmetic Fixes & Live Data Flow
+## Session 140b - Canvas Cosmetic Fixes & Live Data Flow
 **Date:** 2026-01-26
 **Focus:** UI polish for Canvas workflow builder + live execution visualization
 **Status:** COMPLETED
@@ -4063,7 +3934,7 @@ Frontend displays: `Score: 7/10 ✓ Pass`
 
 ---
 
-## Session 134 - Canvas Decision & Evaluation Nodes (Unified Architecture)
+## Session 140a - Canvas Decision & Evaluation Nodes (Unified Architecture)
 **Date:** 2026-01-25 → 2026-01-26
 **Focus:** Implement evaluation nodes with 3-output branching logic + Tracer-Pattern execution
 **Status:** COMPLETED (Phase 1-4) - Reflexiv agierendes Frontend für genAI
@@ -4267,6 +4138,168 @@ Input → Interception → Evaluation → [Score < 5?]
 ### Architecture Documentation
 
 See: `docs/ARCHITECTURE_CANVAS_EVALUATION_NODES.md` (created this session)
+
+---
+
+## Session 139 - Wikipedia Research Capability
+**Date:** 2026-01-26
+**Focus:** Enable LLM to fetch Wikipedia content during prompt interception
+**Status:** COMPLETED
+
+### Feature Overview
+LLM can now request Wikipedia content using `<wiki>term</wiki>` markers in its output. System fetches content and re-executes chunk with enriched context.
+
+### Architecture
+- **Chunk-Level Orchestration**: Wikipedia loop in `pipeline_executor._execute_single_step()`
+- **NOT a new pipeline** - fundamental capability of ALL interceptions
+- **Max 3 iterations** per chunk execution (configurable)
+
+### New Files
+| File | Purpose |
+|------|---------|
+| `my_app/services/wikipedia_service.py` | Secure Wikipedia API client (whitelist-only) |
+| `schemas/engine/wikipedia_processor.py` | Marker extraction, content formatting |
+
+### Modified Files
+| File | Change |
+|------|--------|
+| `config.py` | `WIKIPEDIA_MAX_ITERATIONS`, `WIKIPEDIA_FALLBACK_LANGUAGE`, `WIKIPEDIA_CACHE_TTL` |
+| `schemas/chunks/manipulate.json` | `{{WIKIPEDIA_CONTEXT}}` placeholder, instruction text |
+| `schemas/engine/pipeline_executor.py` | Wikipedia loop, `WIKIPEDIA_STATUS` global for UI |
+| `my_app/routes/schema_pipeline_routes.py` | Refactored to use `pipeline_executor` (fixes architecture violation), SSE `wikipedia_lookup` events |
+| `MediaInputBox.vue` | Pulsing Wikipedia logo during lookup |
+
+### Trigger Pattern
+```
+<wiki lang="de">Suchbegriff</wiki>  - German Wikipedia
+<wiki lang="en">Search term</wiki>  - English Wikipedia
+<wiki>term</wiki>                    - Uses input language
+```
+
+### Key Decisions
+1. **Language auto-detection**: Uses input language, falls back to `WIKIPEDIA_FALLBACK_LANGUAGE`
+2. **Session per-request**: aiohttp session created/closed per lookup (avoids event loop issues with threading)
+3. **Architecture fix**: SSE route now uses `pipeline_executor` instead of direct `PromptInterceptionEngine` call
+
+### Commits
+- `d66c37f` feat(wikipedia): Core implementation
+- `b617273` fix(wikipedia): Import paths
+- `277dbf7` fix(wikipedia): Stronger prompt (MUST use when needed)
+- `8e03431` feat(wikipedia): Real-time UI feedback
+- `761cffa` fix(wikipedia): Session per-request (event loop fix)
+
+---
+
+## Session 138 - Trashy Context-Awareness Fix
+**Date:** 2026-01-26
+**Focus:** Fix Trashy losing context after pipeline execution
+**Status:** COMPLETED
+
+### Problem
+Träshy (AI chat helper) was "forgetting" current page context after a pipeline run:
+
+**Root Cause Chain:**
+1. User runs pipeline → `runId` gets set via `updateSession()`
+2. User changes MediaInputBox content → `runId` stays set (no `clearSession()` call)
+3. User opens Träshy → ChatOverlay sees `runId` exists
+4. ChatOverlay sends draft_context ONLY if `!runId` (Zeile 213)
+5. Backend loads **stale** session context from `exports/json/{runId}/`
+6. Träshy doesn't know about current input changes
+
+**Confirmed:** No Vue view calls `clearSession()` → `runId` persists until browser refresh
+
+### Solution: Always Send Draft Context
+
+**Option B (chosen):** Send `draft_context` as separate field, backend combines both contexts.
+
+**Frontend (`ChatOverlay.vue`):**
+```javascript
+// BEFORE: Conditional logic
+if (!currentSession.value.runId && draftContextString.value) {
+  messageForBackend = `${draftContextString.value}\n\n${userMessage}`
+}
+
+// AFTER: Always send as separate field
+const response = await axios.post('/api/chat', {
+  message: userMessage,  // Clean message
+  run_id: currentSession.value.runId || undefined,
+  draft_context: draftContextString.value || undefined,  // NEW: Always send
+  history: historyForBackend
+})
+```
+
+**Backend (`chat_routes.py`):**
+```python
+draft_context = data.get('draft_context')  # Current page state (transient)
+
+system_prompt = build_system_prompt(context)  # Session context from files
+
+# Append draft_context if provided (NOT saved to exports/)
+if draft_context:
+    system_prompt += f"\n\n[Aktuelle Eingaben auf der Seite]\n{draft_context}"
+```
+
+### Key Points
+
+- `draft_context` is **transient** (LLM context only, not persisted)
+- NOT saved to `chat_history.json` or `exports/json/`
+- Backend now knows BOTH: session files + current page state
+- No changes to exports system
+
+### Result
+
+**Before:**
+- Without runId: draft_context sent ✓
+- With runId: draft_context ignored ✗
+
+**After:**
+- Without runId: draft_context in system prompt ✓
+- With runId: BOTH session + draft_context in system prompt ✓
+
+**Commit:** `1fee080` - fix(trashy): Always send draft_context for context-aware chat
+
+---
+
+## Session 137 - Stage 3/4 Separation (Clean Architecture)
+**Date:** 2026-01-26
+**Focus:** Separate Stage 3 (Translation+Safety) from Stage 4 (Generation) for clean architecture
+**Status:** COMPLETED
+
+### Problem
+`execute_generation_stage4()` contained **embedded Stage 3 logic**, forcing Canvas to use `skip_translation=True` workaround when it had its own Translation node.
+
+**Old Architecture (problematic):**
+```
+Canvas: Translation Node → Generation Node (skip_translation=True) → Media
+Lab:    execute_generation_stage4() → [Stage 3 embedded] → Stage 4 → Media
+```
+
+**Bug Found:** Parameter was `skip_stage3` but code used undefined `skip_translation` variable.
+
+### Solution
+Created clean separation with new function `execute_stage4_generation_only()`:
+
+**New Architecture:**
+```
+Canvas: Translation Node → execute_stage4_generation_only() → Media
+Lab:    execute_generation_stage4() → Stage 3 → execute_stage4_generation_only() → Media
+```
+
+### Changes
+
+| File | Change |
+|------|--------|
+| `schema_pipeline_routes.py` | Added `execute_stage4_generation_only()` - pure Stage 4 generation |
+| `schema_pipeline_routes.py` | Refactored `execute_generation_stage4()` to call new function internally |
+| `canvas_routes.py` | Generation node now calls `execute_stage4_generation_only()` directly |
+| `canvas_routes.py` | Removed `skip_translation=True` workaround |
+
+### Key Principle
+- `execute_stage4_generation_only()` = Pure generation, expects ready-to-use prompt
+- `execute_generation_stage4()` = Legacy wrapper for Lab (handles Stage 3 first)
+- Canvas workflows call the clean function directly - no flags needed
+
+**Commit:** `9f34ca2` - refactor(stage4): Separate Stage 3 and Stage 4 for clean architecture
 
 ---
 
@@ -4819,3 +4852,6 @@ Under load (e.g. 10 parallel requests), Ollama (120b model) gets overloaded.
 **Date:** 2025-12-28
 **Duration:** ~4 hours
 - Supports both emoji and string icon names ('lightbulb', 'clipboard', etc.)
+
+### Note
+This session entry was truncated. Original content not available.
