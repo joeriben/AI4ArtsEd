@@ -1255,10 +1255,10 @@ RECENT FEATURES AND IMPROVEMENTS:
    shift the visual character of results — painterly, photographic, graphic.
    Users don't load or configure these; they're set up by the instructor.
 
-2. RICHER TEXT TRANSFORMATIONS
-   A new, more expressive language model powers the text transformations.
-   Metaphors and synesthetic descriptions are noticeably more vivid. Users can
-   watch the model's reasoning process unfold live in the chat overlay.
+2. TEXT TRANSFORMATION: gpt-oss-120b (IONOS, EU DATACENTER BERLIN)
+   The text transformation now uses the gpt-oss-120b reasoning model from the
+   IONOS AI Model Hub (datacenter Berlin, GDPR-compliant). It's a reasoning
+   model — users can watch its thought process in the chat overlay.
 
 3. LIVE GENERATION PROGRESS
    Image generation now shows real progress — the picture emerges step by step

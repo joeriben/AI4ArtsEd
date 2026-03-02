@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-02T15:30:00Z",
+  "generated_at": "2026-03-02T16:00:00Z",
   "source_session": 234,
   "items": [
     {
@@ -9,12 +9,12 @@
       "session": 234,
       "category": "feature",
       "title": {
-        "en": "Style Adapters Shape Your Images",
-        "de": "Stiladapter praegen deine Bilder"
+        "en": "Style Adapters (LoRA) for Image Generation",
+        "de": "Stiladapter (LoRA) fuer die Bilderzeugung"
       },
       "summary": {
-        "en": "Image generation now supports style adapters (LoRA). When activated, they subtly shift the visual character of your results — painterly, photographic, graphic, or something entirely different.",
-        "de": "Die Bilderzeugung unterstuetzt jetzt Stiladapter (LoRA). Wenn aktiviert, verschieben sie den visuellen Charakter deiner Ergebnisse — malerisch, fotografisch, grafisch, oder etwas ganz anderes."
+        "en": "The image generation can now be influenced by style adapters (LoRA). These are small trained model extensions that shift the visual character of results — e.g. towards painterly, photographic, or graphic aesthetics.",
+        "de": "Die Bilderzeugung kann jetzt durch Stiladapter (LoRA) beeinflusst werden. Das sind kleine trainierte Modellerweiterungen, die den visuellen Charakter der Ergebnisse verschieben — z.B. in Richtung malerischer, fotografischer oder grafischer Aesthetik."
       }
     },
     {
@@ -23,12 +23,12 @@
       "session": 229,
       "category": "improvement",
       "title": {
-        "en": "Richer Text Transformations",
-        "de": "Reichhaltigere Text-Transformationen"
+        "en": "Text Transformation: New Model (gpt-oss-120b, EU Datacenter)",
+        "de": "Text-Transformation: Neues Modell (gpt-oss-120b, EU-Rechenzentrum)"
       },
       "summary": {
-        "en": "A new, more expressive language model powers the text transformations. Metaphors and synesthetic descriptions are noticeably more vivid. You can now watch the model's reasoning process unfold live in the chat overlay.",
-        "de": "Ein neues, ausdrucksstaerkeres Sprachmodell treibt die Text-Transformationen an. Metaphern und synaesthetische Beschreibungen sind spuerbar lebendiger. Du kannst den Denkprozess des Modells jetzt live im Chat-Overlay verfolgen."
+        "en": "The text transformation now uses gpt-oss-120b from the IONOS AI Model Hub (datacenter Berlin). It's a reasoning model — you can watch its thought process live in the chat overlay before it produces the final transformation.",
+        "de": "Die Text-Transformation nutzt jetzt gpt-oss-120b vom IONOS AI Model Hub (Rechenzentrum Berlin). Es ist ein Reasoning-Modell — du kannst seinen Denkprozess live im Chat-Overlay verfolgen, bevor die finale Transformation entsteht."
       }
     },
     {
@@ -37,12 +37,12 @@
       "session": 219,
       "category": "improvement",
       "title": {
-        "en": "Live Generation Progress",
-        "de": "Fortschritt der Bilderzeugung live verfolgen"
+        "en": "Live Image Generation: See the Picture Emerge",
+        "de": "Live-Bilderzeugung: Dem Bild beim Entstehen zusehen"
       },
       "summary": {
-        "en": "Image generation now shows real progress — you see the picture emerge step by step as it's being created, instead of waiting for a surprise at the end.",
-        "de": "Die Bilderzeugung zeigt jetzt echten Fortschritt — du siehst, wie das Bild Schritt fuer Schritt entsteht, statt am Ende eine Ueberraschung zu erleben."
+        "en": "During image generation, you now see the actual denoising process — the picture builds up step by step from noise. This replaces the previous loading animation and makes the technical process visible.",
+        "de": "Waehrend der Bilderzeugung siehst du jetzt den tatsaechlichen Denoising-Prozess — das Bild baut sich Schritt fuer Schritt aus Rauschen auf. Das ersetzt die bisherige Ladeanimation und macht den technischen Vorgang sichtbar."
       }
     },
     {
@@ -51,12 +51,12 @@
       "session": 212,
       "category": "feature",
       "title": {
-        "en": "Draw Sketches, Generate Images",
-        "de": "Skizzieren und Bilder erzeugen"
+        "en": "Sketch Input: Draw Instead of Describe",
+        "de": "Skizzen-Eingabe: Zeichnen statt Beschreiben"
       },
       "summary": {
-        "en": "A new sketch canvas lets you draw freehand — your drawing becomes the starting point for image generation. Available everywhere you can upload an image. Just grab a pen and start.",
-        "de": "Ein neues Skizzen-Canvas laesst dich frei zeichnen — deine Zeichnung wird zum Ausgangspunkt fuer die Bilderzeugung. Ueberall verfuegbar, wo du auch ein Bild hochladen kannst. Einfach loszeichnen."
+        "en": "A sketch canvas is now available wherever images can be uploaded. Freehand drawings serve as input for image-to-image generation — an alternative entry point when words aren't enough to capture an idea.",
+        "de": "Ein Skizzen-Canvas steht jetzt ueberall zur Verfuegung, wo Bilder hochgeladen werden koennen. Freihandzeichnungen dienen als Eingabe fuer die Bild-zu-Bild-Generierung — ein alternativer Zugang, wenn Worte nicht ausreichen, um eine Idee zu fassen."
       }
     },
     {
@@ -65,12 +65,12 @@
       "session": 193,
       "category": "feature",
       "title": {
-        "en": "From Sound to Image and Back",
-        "de": "Vom Klang zum Bild und zurueck"
+        "en": "Crossmodal Lab: Image, Sound, and Synthesis",
+        "de": "Crossmodales Labor: Bild, Klang und Synthese"
       },
       "summary": {
-        "en": "The Crossmodal Lab now bridges image and audio generation. Generate audio from a picture, or let a sound inspire an image. The built-in wavetable synth turns any generated audio into a playable instrument.",
-        "de": "Das Crossmodale Labor verbindet jetzt Bild- und Audiogenerierung. Erzeuge Klang aus einem Bild oder lass einen Sound ein Bild inspirieren. Der eingebaute Wavetable-Synth macht jedes generierte Audio zu einem spielbaren Instrument."
+        "en": "The Crossmodal Lab connects image and audio generation. A picture can become the starting point for audio, and generated audio can be loaded as a wavetable in the built-in synthesizer — playable as an instrument.",
+        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild kann zum Ausgangspunkt fuer Audio werden, und generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden — spielbar als Instrument."
       }
     },
     {
@@ -79,12 +79,12 @@
       "session": 208,
       "category": "content",
       "title": {
-        "en": "Poetry Collision: Your Words Meet Real Poems",
-        "de": "Poesie-Kollision: Deine Worte treffen echte Gedichte"
+        "en": "Poetry as Collision Material",
+        "de": "Poesie als Kollisionsmaterial"
       },
       "summary": {
-        "en": "The poetry transformation collides your prompt with genuine public-domain poems — Rilke, Dickinson, Rumi and many more. The result is unpredictable imagery born from the encounter between your idea and the poem's language.",
-        "de": "Die Poesie-Transformation laesst deinen Prompt mit echten gemeinfreien Gedichten kollidieren — Rilke, Dickinson, Rumi und viele mehr. Das Ergebnis ist unvorhersehbare Bildsprache, geboren aus der Begegnung deiner Idee mit der Sprache des Gedichts."
+        "en": "The poetry transformation feeds your text together with a genuine public-domain poem (Rilke, Dickinson, Rumi u.a.) into a small language model. Both texts collide — the result is neither your prompt nor the poem, but something born from the encounter.",
+        "de": "Die Poesie-Transformation speist deinen Text zusammen mit einem echten gemeinfreien Gedicht (Rilke, Dickinson, Rumi u.a.) in ein kleines Sprachmodell. Beide Texte kollidieren — das Ergebnis ist weder dein Prompt noch das Gedicht, sondern etwas, das aus der Begegnung entsteht."
       }
     },
     {
@@ -93,12 +93,12 @@
       "session": 211,
       "category": "improvement",
       "title": {
-        "en": "Surrealizer: Three Ways to Dream",
-        "de": "Surrealizer: Drei Arten zu traeumen"
+        "en": "Surrealizer: Three Fusion Strategies",
+        "de": "Surrealizer: Drei Fusionsstrategien"
       },
       "summary": {
-        "en": "The Surrealizer now offers three fusion modes. Choose between a structural anchor that keeps your subject recognizable, a balanced blend, or full creative chaos. The surreal effect is noticeably stronger on detailed descriptions.",
-        "de": "Der Surrealizer bietet jetzt drei Fusionsmodi. Waehle zwischen einem strukturellen Anker, der dein Motiv erkennbar haelt, einer ausgewogenen Mischung oder vollem kreativem Chaos. Der surreale Effekt ist bei ausfuehrlichen Beschreibungen spuerbar staerker."
+        "en": "The Surrealizer now provides three strategies for how strongly the surreal transformation overrides the original description: structural anchor (subject stays recognizable), normalized (balanced blend), or full override. The choice is visible and adjustable.",
+        "de": "Der Surrealizer bietet jetzt drei Strategien, wie stark die surreale Transformation die urspruengliche Beschreibung ueberschreibt: struktureller Anker (Motiv bleibt erkennbar), normalisiert (ausgewogene Mischung) oder volle Ueberschreibung. Die Wahl ist sichtbar und einstellbar."
       }
     },
     {
@@ -107,12 +107,12 @@
       "session": 201,
       "category": "feature",
       "title": {
-        "en": "9 Languages — Including Arabic and Hebrew",
-        "de": "9 Sprachen — inklusive Arabisch und Hebraeisch"
+        "en": "9 Languages — Including Arabic and Hebrew (RTL)",
+        "de": "9 Sprachen — inklusive Arabisch und Hebraeisch (RTL)"
       },
       "summary": {
-        "en": "The platform now speaks nine languages: German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, and Arabic. Right-to-left languages are fully supported with proper text direction and layout.",
-        "de": "Die Plattform spricht jetzt neun Sprachen: Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch und Arabisch. Rechts-nach-links-Sprachen werden mit korrekter Textrichtung und Layout vollstaendig unterstuetzt."
+        "en": "The interface is available in DE, EN, TR, KO, UK, FR, ES, HE, and AR. Arabic and Hebrew are rendered right-to-left with adapted layout. All translations are maintained via a batch process and may contain gaps — English is always the fallback.",
+        "de": "Die Oberflaeche ist verfuegbar in DE, EN, TR, KO, UK, FR, ES, HE und AR. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt. Alle Uebersetzungen werden per Batch-Prozess gepflegt und koennen Luecken enthalten — Englisch ist immer der Fallback."
       }
     },
     {
@@ -121,12 +121,12 @@
       "session": 139,
       "category": "feature",
       "title": {
-        "en": "AI Learns from Wikipedia",
-        "de": "KI lernt aus Wikipedia"
+        "en": "Wikipedia Research During Transformation",
+        "de": "Wikipedia-Recherche waehrend der Transformation"
       },
       "summary": {
-        "en": "The text transformation can now look things up on Wikipedia while processing your prompt. A small badge shows which articles it found — click to read them yourself and check what the AI claims to know.",
-        "de": "Die Text-Transformation kann jetzt waehrend der Verarbeitung deines Prompts auf Wikipedia nachschlagen. Ein kleines Badge zeigt, welche Artikel gefunden wurden — klick drauf und pruefe selbst, was die KI zu wissen glaubt."
+        "en": "The text transformation can query Wikipedia during processing. A badge shows which articles were found and which terms returned no results — clickable, so you can verify what the AI draws on.",
+        "de": "Die Text-Transformation kann waehrend der Verarbeitung Wikipedia abfragen. Ein Badge zeigt, welche Artikel gefunden und welche Begriffe kein Ergebnis geliefert haben — anklickbar, damit du pruefen kannst, worauf sich die KI stuetzt."
       }
     },
     {
@@ -135,12 +135,12 @@
       "session": 141,
       "category": "feature",
       "title": {
-        "en": "Canvas: Build Your Own AI Workflows",
-        "de": "Canvas: Eigene KI-Workflows bauen"
+        "en": "Canvas: Visual AI Workflow Builder",
+        "de": "Canvas: Visueller KI-Workflow-Builder"
       },
       "summary": {
-        "en": "The Canvas lets you connect text, image, and evaluation nodes into custom multi-step workflows. Chain transformations together, add decision points, and watch each step execute live.",
-        "de": "Das Canvas laesst dich Text-, Bild- und Bewertungsknoten zu eigenen mehrstufigen Workflows verbinden. Verkette Transformationen, fuege Entscheidungspunkte hinzu und beobachte jeden Schritt live."
+        "en": "The Canvas allows connecting text, image, and evaluation nodes into multi-step workflows. Transformations can be chained, conditional branches added. Each step executes visibly. Designed for educators who want to build structured AI experiments.",
+        "de": "Das Canvas erlaubt es, Text-, Bild- und Bewertungsknoten zu mehrstufigen Workflows zu verbinden. Transformationen lassen sich verketten, bedingte Verzweigungen einfuegen. Jeder Schritt wird sichtbar ausgefuehrt. Konzipiert fuer PaedagogInnen, die strukturierte KI-Experimente bauen wollen."
       }
     }
   ]
