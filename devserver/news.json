@@ -32,17 +32,17 @@
       }
     },
     {
-      "id": "news-2026-02-25-progress",
-      "date": "2026-02-25",
-      "session": 219,
-      "category": "improvement",
+      "id": "news-2026-02-27-denoising",
+      "date": "2026-02-27",
+      "session": 220,
+      "category": "feature",
       "title": {
-        "en": "Live Image Generation: See the Picture Emerge",
-        "de": "Live-Bilderzeugung: Dem Bild beim Entstehen zusehen"
+        "en": "Watch Your Image Being Generated",
+        "de": "Dem eigenen Bild beim Entstehen zusehen"
       },
       "summary": {
-        "en": "During image generation, you now see the actual denoising process — the picture builds up step by step from noise. This replaces the previous loading animation and makes the technical process visible.",
-        "de": "Waehrend der Bilderzeugung siehst du jetzt den tatsaechlichen Denoising-Prozess — das Bild baut sich Schritt fuer Schritt aus Rauschen auf. Das ersetzt die bisherige Ladeanimation und macht den technischen Vorgang sichtbar."
+        "en": "While the interactive games play during generation, a small live preview (bottom right) now shows the actual image emerging from noise in real time. In expert mode (educators/researchers), the games are replaced entirely by a denoising view with GPU load, energy consumption (kWh), and a model identity card.",
+        "de": "Waehrend die interaktiven Spiele bei der Bilderzeugung laufen, zeigt eine kleine Live-Vorschau (unten rechts) jetzt in Echtzeit, wie das Bild aus Rauschen entsteht. Im Expert-Modus (PaedagogInnen/Forschende) werden die Spiele komplett durch eine Denoising-Ansicht mit GPU-Auslastung, Energieverbrauch (kWh) und Modell-Steckbrief ersetzt."
       }
     },
     {

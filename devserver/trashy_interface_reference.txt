@@ -1260,9 +1260,11 @@ RECENT FEATURES AND IMPROVEMENTS:
    IONOS AI Model Hub (datacenter Berlin, GDPR-compliant). It's a reasoning
    model — users can watch its thought process in the chat overlay.
 
-3. LIVE GENERATION PROGRESS
-   Image generation now shows real progress — the picture emerges step by step
-   as it's being created, instead of just a loading animation.
+3. LIVE DENOISING PREVIEW DURING GENERATION
+   While interactive games play during generation, a small live preview (bottom
+   right) shows the image emerging from noise in real time. In expert mode, the
+   games are replaced entirely by a denoising view with GPU load, energy
+   consumption (kWh), and a model identity card.
 
 4. SKETCH CANVAS
    Users can draw freehand sketches that become the starting point for image
