@@ -29,6 +29,25 @@
 
 ---
 
+## Session 235: Surrealizer CLIP Encoder Selection — CLIP-L Only by Design (2026-03-02)
+
+### Decision: No toggleable CLIP encoder selection in Surrealizer
+
+**Context:** After fixing `dual_alpha` and `normalized` fusion strategies (swapped alpha roles, replaced global normalization with magnitude-matching), the question arose whether CLIP-L / CLIP-G / T5-XXL should be individually toggleable.
+
+**Analysis:** The Surrealizer effect is mechanistically dependent on **embedding sparsity**. CLIP-L (768d) padded to 4096d leaves 81% zero dimensions. Extrapolating between this sparse vector and the full T5 vector pushes into unoccupied embedding regions — this IS the surreal effect.
+
+- **CLIP-G instead of CLIP-L**: 1280d → only 69% zeros. Less sparse → weaker extrapolation → Session 211 confirmed "destroys the surreal effect."
+- **CLIP-L + CLIP-G together**: 2048d → 50% zeros. Even less sparse, even less surreal.
+- **No CLIP (T5 only)**: No sparse anchor → no extrapolation possible.
+- **No T5 (CLIP only)**: No target vector → no extrapolation possible.
+
+**Decision:** CLIP-L remains the only active CLIP encoder. CLIP-G stays zeroed (`F.pad(clip_l_pooled, (0, 1280))`). No encoder toggle UI. The sparsity is the mechanism, not a side effect. Creative variance is provided through the three fusion strategies (legacy, dual_alpha, normalized), not through encoder selection.
+
+**Files:** No changes — architectural decision documented for future reference.
+
+---
+
 ## Session 227: Meta-Prompt Quality — Affect Collapse Prevention (2026-03-01)
 
 ### Decision 1: VERSCHRÄNKUNG pattern for multi-register dispositions
