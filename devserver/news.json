@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-03-02T12:00:00Z",
+  "source_session": 234,
+  "items": [
+    {
+      "id": "news-2026-03-02-lora",
+      "date": "2026-03-02",
+      "session": 234,
+      "category": "feature",
+      "title": {
+        "en": "LoRA Support for Image Generation",
+        "de": "LoRA-Unterstuetzung fuer Bilderzeugung"
+      },
+      "summary": {
+        "en": "You can now apply LoRA style models to all image generators (SD3.5, SD3.5 Turbo, Flux2, Surrealizer). This lets you steer the visual style of generated images using community-trained style adapters.",
+        "de": "Du kannst jetzt LoRA-Stilmodelle auf alle Bildgeneratoren anwenden (SD3.5, SD3.5 Turbo, Flux2, Surrealizer). Damit laesst sich der visuelle Stil generierter Bilder durch von der Community trainierte Stil-Adapter beeinflussen."
+      }
+    },
+    {
+      "id": "news-2026-03-02-synth",
+      "date": "2026-03-02",
+      "session": 233,
+      "category": "improvement",
+      "title": {
+        "en": "Crossmodal Lab: Clearer Synth Controls",
+        "de": "Crossmodales Labor: Klarere Synth-Steuerung"
+      },
+      "summary": {
+        "en": "The synthesizer controls in the Crossmodal Lab are now organized as independent sections (Loop, Wavetable, Sequencer, Arpeggiator) instead of abstract categories. Each section can be toggled on and off individually.",
+        "de": "Die Synthesizer-Steuerung im Crossmodalen Labor ist jetzt in eigenstaendige Bereiche gegliedert (Loop, Wavetable, Sequenzer, Arpeggiator) statt in abstrakte Kategorien. Jeder Bereich kann einzeln ein- und ausgeschaltet werden."
+      }
+    },
+    {
+      "id": "news-2026-03-01-ionos",
+      "date": "2026-03-01",
+      "session": 229,
+      "category": "improvement",
+      "title": {
+        "en": "Better Text Transformations (GDPR-Compliant)",
+        "de": "Bessere Text-Transformationen (DSGVO-konform)"
+      },
+      "summary": {
+        "en": "Text transformations now use a more capable language model hosted in an EU datacenter (Berlin). Metaphors and synesthetic descriptions are richer, and you can see the model's reasoning process in the chat overlay.",
+        "de": "Text-Transformationen nutzen jetzt ein leistungsfaehigeres Sprachmodell aus einem EU-Rechenzentrum (Berlin). Metaphern und synaesthetische Beschreibungen sind reichhaltiger, und du kannst den Denkprozess des Modells im Chat-Overlay verfolgen."
+      }
+    }
+  ]
+}

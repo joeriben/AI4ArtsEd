@@ -246,6 +246,7 @@ def create_app():
     from my_app.routes.text_routes import text_bp  # Session 176: Latent Text Lab
     from my_app.routes.cross_aesthetic_routes import cross_aesthetic_bp  # Session 177: Cross-Aesthetic proxy
     from my_app.routes.latent_lab_recorder_routes import latent_lab_recorder_bp  # Latent Lab research data export
+    from my_app.routes.news_routes import news_bp  # Platform news items
 
     # Register API blueprints FIRST (before static catch-all)
     app.register_blueprint(config_bp)
@@ -266,6 +267,7 @@ def create_app():
     app.register_blueprint(text_bp)  # Session 176: Latent Text Lab proxy: /api/text/*
     app.register_blueprint(cross_aesthetic_bp)  # Session 177: Cross-Aesthetic proxy: /api/cross_aesthetic/*
     app.register_blueprint(latent_lab_recorder_bp)  # Latent Lab research data: /api/latent-lab/record/*
+    app.register_blueprint(news_bp)  # Platform news: /api/news
 
     # Register static blueprint LAST (catch-all for SPA routing)
     app.register_blueprint(static_bp)
