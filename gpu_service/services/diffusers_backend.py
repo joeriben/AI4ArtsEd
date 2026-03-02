@@ -183,9 +183,9 @@ class DiffusersImageGenerator:
         loading everything in float32 (~106GB RAM). Loading components
         individually with torch_dtype=bfloat16 uses ~1.2GB RAM instead.
 
-        FP8 mode (DIFFUSERS_FLUX2_QUANTIZE=fp8): quantizes the transformer
-        to float8_weight_only via TorchAoConfig. Transformer ~16GB instead
-        of ~31GB. Text encoder stays bf16 (~24GB). CPU offload for both.
+        FP8 mode (DIFFUSERS_FLUX2_QUANTIZE=fp8): quantizes transformer to
+        float8_weight_only via TorchAoConfig (~16GB) and text encoder to
+        int8_weight_only (~12GB). Peak VRAM ~24GB with CPU offload.
         """
         import torch
         from diffusers import (
@@ -201,24 +201,31 @@ class DiffusersImageGenerator:
 
         if quantize == "fp8":
             from diffusers import TorchAoConfig
-            quant_config = TorchAoConfig("float8_weight_only")
-            logger.info(f"[DIFFUSERS] Flux2: loading transformer in FP8 (float8_weight_only)...")
+            from transformers import TorchAoConfig as TransformersAoConfig
+            diff_quant = TorchAoConfig("float8_weight_only")
+            # transformers doesn't support float8_weight_only, int8 is equivalent
+            tf_quant = TransformersAoConfig("int8_weight_only")
+            logger.info(f"[DIFFUSERS] Flux2: loading transformer FP8 + text encoder INT8...")
             transformer = Flux2Transformer2DModel.from_pretrained(
                 model_id, subfolder="transformer",
-                quantization_config=quant_config,
+                quantization_config=diff_quant,
+                low_cpu_mem_usage=True, **cache_kwargs
+            )
+            text_encoder = AutoModelForImageTextToText.from_pretrained(
+                model_id, subfolder="text_encoder",
+                quantization_config=tf_quant,
                 low_cpu_mem_usage=True, **cache_kwargs
             )
         else:
-            logger.info(f"[DIFFUSERS] Flux2: loading transformer in bf16...")
+            logger.info(f"[DIFFUSERS] Flux2: loading components in bf16...")
             transformer = Flux2Transformer2DModel.from_pretrained(
                 model_id, subfolder="transformer",
                 torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
             )
-
-        text_encoder = AutoModelForImageTextToText.from_pretrained(
-            model_id, subfolder="text_encoder",
-            torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
-        )
+            text_encoder = AutoModelForImageTextToText.from_pretrained(
+                model_id, subfolder="text_encoder",
+                torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
+            )
         vae = AutoencoderKLFlux2.from_pretrained(
             model_id, subfolder="vae",
             torch_dtype=dtype, **cache_kwargs
