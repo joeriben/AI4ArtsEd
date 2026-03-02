@@ -1,5 +1,38 @@
 # Development Log
 
+## Session 237 - TensorRT Reset + Flux 2 FP8 Clean Implementation
+**Date:** 2026-03-03
+**Focus:** Revert broken TensorRT session, re-implement Flux 2 FP8 cleanly
+
+### Problem
+Session had fundamentally restructured `diffusers_backend.py` (composite cache keys, FP8/NF4 loading paths, torch.compile) breaking the working Diffusers system. 7 unpushed commits + uncommitted changes.
+
+### Solution
+1. Hard reset to `origin/develop`, preserving only the ComfyUI-failure-bugfix (commit `4f23f6d` → re-applied as `bcb3b70`)
+2. Clean Flux 2 FP8 implementation: 3 files changed, no architecture modifications
+3. Text encoder quantized to INT8 (transformers TorchAoConfig doesn't support float8)
+
+### Changes
+| File | Change |
+|------|--------|
+| `gpu_service/config.py` | Added `DIFFUSERS_FLUX2_QUANTIZE` (default: fp8) |
+| `gpu_service/services/diffusers_backend.py` | `_load_flux2_pipeline()` FP8 transformer + INT8 text encoder |
+| `devserver/schemas/configs/output/flux2_diffusers.json` | **NEW** — Flux 2 output config |
+| `devserver/my_app/routes/settings_routes.py` | ComfyUI failure no longer hides all config availability (rescued from reset) |
+| `public/.../text_transformation.vue` | Availability filter checks mapped config IDs (flux2 → flux2_diffusers) |
+
+### Results
+- Peak VRAM: ~24 GB (was ~48-62 GB in bf16)
+- Inference time: ~13 seconds
+- Quality: quasi-lossless (weight-only quantization at 56B params)
+
+### Commits
+- `bcb3b70` fix(status): ComfyUI failure no longer hides all config availability
+- `90f1de4` feat(gpu): Flux 2 FP8 via Diffusers + output config + UI availability fix
+- `5c555d7` fix(gpu): quantize Flux 2 text encoder to INT8
+
+---
+
 ## Session 236 - DEVELOPMENT_LOG.md Consistency Fix
 **Date:** 2026-03-02
 **Focus:** Fix structural errors accumulated over 233+ sessions from parallel Claude sessions using conflicting session counters

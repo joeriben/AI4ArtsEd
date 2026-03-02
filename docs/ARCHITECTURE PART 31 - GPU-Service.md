@@ -79,6 +79,7 @@ These models are loaded via HuggingFace `from_pretrained()` and cached in `~/.ca
 | Backend | Model | Cache Location | Size |
 |---------|-------|----------------|------|
 | Diffusers | SD3.5 Large | `~/.cache/huggingface/` | ~16 GB |
+| Diffusers | Flux 2 Dev | `~/.cache/huggingface/` | ~106 GB (BF16 on disk, loaded as FP8+INT8) |
 | Stable Audio | `stabilityai/stable-audio-open-1.0` | `~/.cache/huggingface/` | ~2.6 GB |
 | CLIP Vision | `openai/clip-vit-large-patch14` | `~/.cache/huggingface/` | ~0.6 GB |
 | HeartMuLa | HeartMuLa-oss-3B | `~/ai/heartlib/ckpt/` | ~12 GB |
@@ -110,6 +111,7 @@ All settings use environment variables with sensible defaults. The `_AI_TOOLS_BA
 | `GPU_SERVICE_PORT` | `17803` | Service port |
 | `AI_TOOLS_BASE` | `~/ai` | Root for sibling repos |
 | `DIFFUSERS_ENABLED` | `true` | Enable Diffusers backends |
+| `DIFFUSERS_FLUX2_QUANTIZE` | `fp8` | Flux 2 quantization: `fp8` (FP8 transformer + INT8 text encoder, ~24GB peak) or `bf16` (~62GB with CPU offload) |
 | `HEARTMULA_ENABLED` | `true` | Enable HeartMuLa music |
 | `HEARTMULA_MODEL_PATH` | `{AI_TOOLS_BASE}/heartlib/ckpt` | HeartMuLa checkpoint |
 | `STABLE_AUDIO_ENABLED` | `true` | Enable Stable Audio |
@@ -205,5 +207,5 @@ GPU Service handles **media inference only** (Diffusers, HeartMuLa, Stable Audio
 
 ---
 
-**Document Status:** Active (2026-02-27, Session 218)
+**Document Status:** Active (2026-03-03, Session 237)
 **Maintainer:** AI4ArtsEd Development Team

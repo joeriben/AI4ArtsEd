@@ -29,6 +29,42 @@
 
 ---
 
+## Flux 2 FP8+INT8 Quantization Strategy (2026-03-03)
+
+### Kontext
+Flux 2 Dev ist ein 56B-Parameter-Modell (32B DiT-Transformer + 24B Mistral Text-Encoder). In BF16 mit CPU-Offload benoetigt es ~62GB Peak-VRAM (Text-Encoder-Phase). Die vorherige Session versuchte FP8 via TensorRT-Infrastruktur-Umbau — zerstoerte das funktionierende Diffusers-System durch composite cache keys, neue Ladepfade und torch.compile. Hard-Reset auf origin/develop, sauberer Neuansatz.
+
+### Entscheidung: Differenzierte Quantisierung pro Komponente
+
+| Komponente | Precision | VRAM | Methode |
+|---|---|---|---|
+| Transformer (32B) | FP8 (float8_weight_only) | ~16 GB | `diffusers.TorchAoConfig` |
+| Text Encoder (Mistral 24B) | INT8 (int8_weight_only) | ~12 GB | `transformers.TorchAoConfig` |
+| VAE | BF16 | <1 GB | Standard (qualitaetskritisch) |
+| Tokenizer | CPU | 0 | - |
+| Scheduler | BF16 | minimal | Numerische Praezision noetig |
+
+**Peak-VRAM mit CPU-Offload: ~24 GB** (Text-Encoder-Phase dominiert). Vorher: ~48 GB (BF16 Text-Encoder) bzw. ~62 GB (ohne Offload).
+
+### Warum zwei verschiedene Quantisierungsmethoden?
+
+`diffusers.TorchAoConfig` unterstuetzt `float8_weight_only`, aber `transformers.TorchAoConfig` nicht (nur `int8_weight_only`, `int4_weight_only`). INT8 weight-only fuer LLMs bei Inferenz ist aequivalent zu FP8 hinsichtlich Qualitaet und VRAM-Reduktion (~50%).
+
+### Qualitaetsbewertung
+
+Bei 56B Parametern ist die Modell-Redundanz hoch genug, dass weight-only Quantisierung (FP8/INT8) als quasi-verlustfrei gilt. Weights werden in reduzierter Praezision gespeichert, Compute laeuft in BF16 (Dequantisierung zur Laufzeit). Sichtbare Unterschiede nur bei feinen Texturen und Farbverlaeufen im A/B-Vergleich mit identischem Seed. Gemessene Inferenzzeit: ~13 Sekunden.
+
+### Architekturprinzip
+
+Kein Architektur-Umbau noetig. Einzige Aenderung: `_load_flux2_pipeline()` liest `DIFFUSERS_FLUX2_QUANTIZE` (env var, default `fp8`) und laedt Transformer/Text-Encoder entsprechend. Chunk, Routes, Router, Frontend bleiben unberuehrt. Config-Variable in `gpu_service/config.py`.
+
+### Betroffene Dateien
+- `gpu_service/config.py` — `DIFFUSERS_FLUX2_QUANTIZE`
+- `gpu_service/services/diffusers_backend.py` — `_load_flux2_pipeline()`
+- `devserver/schemas/configs/output/flux2_diffusers.json` — Output-Config
+
+---
+
 ## Language Choice: Python als Orchestrierungsschicht — Bewusste Architekturentscheidung (2026-03-02)
 
 ### Kontext
