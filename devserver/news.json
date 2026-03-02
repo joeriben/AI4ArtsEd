@@ -9,12 +9,12 @@
       "session": 234,
       "category": "feature",
       "title": {
-        "en": "Style Models (LoRA) for All Image Generators",
-        "de": "Stilmodelle (LoRA) fuer alle Bildgeneratoren"
+        "en": "Style Adapters Shape Your Images",
+        "de": "Stiladapter praegen deine Bilder"
       },
       "summary": {
-        "en": "All image generators now support LoRA style adapters. Load a community-trained style model and let it shape the visual character of your images — from painterly textures to photographic moods.",
-        "de": "Alle Bildgeneratoren unterstuetzen jetzt LoRA-Stiladapter. Lade ein von der Community trainiertes Stilmodell und lass es den visuellen Charakter deiner Bilder praegen — von malerischen Texturen bis zu fotografischen Stimmungen."
+        "en": "Image generation now supports style adapters (LoRA). When activated, they subtly shift the visual character of your results — painterly, photographic, graphic, or something entirely different.",
+        "de": "Die Bilderzeugung unterstuetzt jetzt Stiladapter (LoRA). Wenn aktiviert, verschieben sie den visuellen Charakter deiner Ergebnisse — malerisch, fotografisch, grafisch, oder etwas ganz anderes."
       }
     },
     {

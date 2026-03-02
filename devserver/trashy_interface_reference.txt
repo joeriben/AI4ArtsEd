@@ -1241,5 +1241,73 @@ Course instructors can consult this for the theoretical background
 Spivak's planetarity, RLHF preference collapse research).
 
 ================================================================================
+SECTION 18: PLATFORM NEWS / WHAT'S NEW
+================================================================================
+
+The platform is continuously evolving. When users ask what's new, what they can
+try, or seem unsure what to explore next, you can mention recent additions.
+These are the current highlights:
+
+RECENT FEATURES AND IMPROVEMENTS:
+
+1. STYLE ADAPTERS (LoRA)
+   Image generation now supports style adapters. When activated, they subtly
+   shift the visual character of results — painterly, photographic, graphic.
+   Users don't load or configure these; they're set up by the instructor.
+
+2. RICHER TEXT TRANSFORMATIONS
+   A new, more expressive language model powers the text transformations.
+   Metaphors and synesthetic descriptions are noticeably more vivid. Users can
+   watch the model's reasoning process unfold live in the chat overlay.
+
+3. LIVE GENERATION PROGRESS
+   Image generation now shows real progress — the picture emerges step by step
+   as it's being created, instead of just a loading animation.
+
+4. SKETCH CANVAS
+   Users can draw freehand sketches that become the starting point for image
+   generation. Available everywhere an image can be uploaded. Great for younger
+   students or when words aren't enough to express an idea.
+
+5. CROSSMODAL LAB: FROM SOUND TO IMAGE AND BACK
+   The Crossmodal Lab bridges image and audio generation. Users can generate
+   audio from a picture, or let a sound inspire an image. The built-in wavetable
+   synth turns any generated audio into a playable instrument.
+
+6. POETRY COLLISION
+   The poetry transformation collides the user's prompt with genuine public-
+   domain poems — Rilke, Dickinson, Rumi and many more. The result is
+   unpredictable imagery born from the encounter between two languages.
+
+7. SURREALIZER: THREE FUSION MODES
+   The Surrealizer now offers three modes. Users can choose between a structural
+   anchor (subject stays recognizable), a balanced blend, or full creative chaos.
+
+8. 9 LANGUAGES INCLUDING ARABIC AND HEBREW
+   The platform now supports: German, English, Turkish, Korean, Ukrainian,
+   French, Spanish, Hebrew, and Arabic — with full right-to-left layout support.
+
+9. WIKIPEDIA RESEARCH
+   The text transformation can look things up on Wikipedia while processing a
+   prompt. A small badge shows which articles it found — users can click to read
+   them and check what the AI claims to know.
+
+10. CANVAS WORKFLOW BUILDER
+    The Canvas lets users connect text, image, and evaluation nodes into custom
+    multi-step workflows. Great for advanced users and educators who want to
+    design their own AI experiments.
+
+HOW TO USE THIS INFORMATION:
+- Do NOT list all features unprompted. That's overwhelming.
+- When a user asks "What can I do here?" or "What's new?", mention 2-3
+  features that fit their current context (e.g., sketch canvas for someone
+  struggling with prompts, crossmodal lab for someone who just made an image).
+- When a user seems stuck or bored, suggest ONE new thing to try.
+- Keep it casual: "By the way, did you know you can also draw a sketch and
+  turn it into an image?" — not a feature announcement.
+
+The full news list is also visible in the About tab (Documentation > About).
+
+================================================================================
 END OF KNOWLEDGE BASE
 ================================================================================
