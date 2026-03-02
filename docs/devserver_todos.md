@@ -55,9 +55,9 @@ Output-Chunks wurden zu Metadaten-Containern degradiert statt Ausführungseinhei
 
 Production war ohne SpaCy deployed → DSGVO-Schutz komplett deaktiviert.
 
-1. **Startup-Check**: Prüfen ob SpaCy + 2 Modelle (`de_core_news_lg`, `xx_ent_wiki_sm`) installiert sind → Abbruch bei Fehlen
-2. **requirements.txt**: Kommentare aktualisieren (alte 12 Modelle → 2 tatsächlich verwendete)
-3. **Installationsskript** für `python -m spacy download`
+1. ~~**Startup-Check**: Prüfen ob SpaCy + 2 Modelle (`de_core_news_lg`, `xx_ent_wiki_sm`) installiert sind → Abbruch bei Fehlen~~ ✅ Done — `_check_spacy_models()` in `__init__.py` + `check_prerequisites.sh` section 6
+2. ~~**requirements.txt**: Kommentare aktualisieren (alte 12 Modelle → 2 tatsächlich verwendete)~~ ✅ Already done
+3. ~~**Installationsskript** für `python -m spacy download`~~ → Not needed: install commands printed by startup check + prerequisites script
 
 ### LoRA Support for Diffusers GPU Service
 

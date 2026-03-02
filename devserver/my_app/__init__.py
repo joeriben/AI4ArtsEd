@@ -3,6 +3,7 @@ Flask application factory and initialization
 """
 import logging
 import os
+import sys
 from flask import Flask, request
 from flask_cors import CORS
 from flask_compress import Compress
@@ -123,6 +124,34 @@ def reload_user_settings():
         logging.error(f"[CONFIG] Error loading user settings: {e}")
 
 
+def _check_spacy_models():
+    """Verify SpaCy + required NER models are installed. Abort if missing."""
+    required_models = ['de_core_news_lg', 'xx_ent_wiki_sm']
+
+    try:
+        import spacy
+    except ImportError:
+        logging.error("[STARTUP] FATAL: spacy is not installed!")
+        logging.error("[STARTUP] Install: venv/bin/python -m pip install 'spacy>=3.8.0'")
+        logging.error("[STARTUP] Then:    venv/bin/python -m spacy download de_core_news_lg")
+        logging.error("[STARTUP]          venv/bin/python -m spacy download xx_ent_wiki_sm")
+        sys.exit(1)
+
+    missing = []
+    for model_name in required_models:
+        if not spacy.util.is_package(model_name):
+            missing.append(model_name)
+
+    if missing:
+        logging.error(f"[STARTUP] FATAL: Missing SpaCy NER models: {', '.join(missing)}")
+        logging.error("[STARTUP] DSGVO protection requires these models. Install with:")
+        for m in missing:
+            logging.error(f"[STARTUP]   venv/bin/python -m spacy download {m}")
+        sys.exit(1)
+
+    logging.info(f"[STARTUP] SpaCy NER models OK: {', '.join(required_models)}")
+
+
 def create_app():
     """
     Create and configure the Flask application
@@ -135,7 +164,10 @@ def create_app():
 
     # Load user settings BEFORE creating app
     reload_user_settings()
-    
+
+    # Verify DSGVO-critical SpaCy models are available
+    _check_spacy_models()
+
     # Create Flask app
     # static_url_path=None disables Flask's automatic static file serving
     # We handle static files manually in static_routes.py for SPA support

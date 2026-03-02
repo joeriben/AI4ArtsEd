@@ -33,7 +33,7 @@ format_size() {
 }
 
 # 1. Check Disk Space
-echo -e "${BLUE}[1/9]${NC} Checking disk space..."
+echo -e "${BLUE}[1/10]${NC} Checking disk space..."
 REQUIRED_SPACE=$((350 * 1024 * 1024)) # 350GB in KB
 AVAILABLE_SPACE=$(df /opt 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}')
 
@@ -45,7 +45,7 @@ else
 fi
 
 # 2. Check RAM
-echo -e "${BLUE}[2/9]${NC} Checking RAM..."
+echo -e "${BLUE}[2/10]${NC} Checking RAM..."
 TOTAL_RAM=$(free -g | awk '/^Mem:/ {print $2}')
 if [ "$TOTAL_RAM" -ge 16 ]; then
     echo -e "${GREEN}${CHECK}${NC} RAM: ${TOTAL_RAM}GB (recommended 16GB+)"
@@ -55,7 +55,7 @@ else
 fi
 
 # 3. Check GPU
-echo -e "${BLUE}[3/9]${NC} Checking GPU..."
+echo -e "${BLUE}[3/10]${NC} Checking GPU..."
 if command_exists nvidia-smi; then
     GPU_INFO=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null | head -1)
     if [ -n "$GPU_INFO" ]; then
@@ -77,7 +77,7 @@ else
 fi
 
 # 4. Check CUDA Version
-echo -e "${BLUE}[4/9]${NC} Checking CUDA version..."
+echo -e "${BLUE}[4/10]${NC} Checking CUDA version..."
 if command_exists nvidia-smi; then
     CUDA_VERSION=$(nvidia-smi | grep "CUDA Version" | awk '{print $9}' | cut -d. -f1)
     if [ -n "$CUDA_VERSION" ] && [ "$CUDA_VERSION" -ge 12 ]; then
@@ -89,7 +89,7 @@ if command_exists nvidia-smi; then
 fi
 
 # 5. Check Python
-echo -e "${BLUE}[5/9]${NC} Checking Python..."
+echo -e "${BLUE}[5/10]${NC} Checking Python..."
 if command_exists python3; then
     PYTHON_VERSION=$(python3 --version | awk '{print $2}')
     PYTHON_MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
@@ -106,8 +106,31 @@ else
     FAILED=$((FAILED + 1))
 fi
 
-# 6. Check Node.js
-echo -e "${BLUE}[6/9]${NC} Checking Node.js..."
+# 6. Check SpaCy NER Models
+echo -e "${BLUE}[6/10]${NC} Checking SpaCy NER models..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_PYTHON="$SCRIPT_DIR/venv/bin/python"
+if [ -f "$VENV_PYTHON" ]; then
+    SPACY_MISSING=()
+    for MODEL in de_core_news_lg xx_ent_wiki_sm; do
+        if ! "$VENV_PYTHON" -c "import spacy; spacy.util.is_package('$MODEL') or exit(1)" 2>/dev/null; then
+            SPACY_MISSING+=("$MODEL")
+        fi
+    done
+    if [ ${#SPACY_MISSING[@]} -eq 0 ]; then
+        echo -e "${GREEN}${CHECK}${NC} SpaCy: Both NER models installed"
+    else
+        echo -e "${RED}${CROSS}${NC} SpaCy: Missing models: ${SPACY_MISSING[*]}"
+        echo -e "        Install: venv/bin/python -m spacy download ${SPACY_MISSING[*]}"
+        FAILED=$((FAILED + 1))
+    fi
+else
+    echo -e "${YELLOW}${WARNING}${NC} SpaCy: venv not found, cannot check (run setup first)"
+    WARNINGS=$((WARNINGS + 1))
+fi
+
+# 7. Check Node.js
+echo -e "${BLUE}[7/10]${NC} Checking Node.js..."
 if command_exists node; then
     NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d. -f1)
     if [ "$NODE_VERSION" -ge 20 ]; then
@@ -121,8 +144,8 @@ else
     FAILED=$((FAILED + 1))
 fi
 
-# 7. Check Ports
-echo -e "${BLUE}[7/9]${NC} Checking required ports..."
+# 8. Check Ports
+echo -e "${BLUE}[8/10]${NC} Checking required ports..."
 PORTS=(7801 7821 11434 17801)
 PORTS_OK=true
 
@@ -146,8 +169,8 @@ if $PORTS_OK; then
     echo -e "${GREEN}${CHECK}${NC} Ports: 7801, 7821, 11434, 17801 are available"
 fi
 
-# 8. Check Internet Connectivity
-echo -e "${BLUE}[8/9]${NC} Checking internet connectivity..."
+# 9. Check Internet Connectivity
+echo -e "${BLUE}[9/10]${NC} Checking internet connectivity..."
 if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
     echo -e "${GREEN}${CHECK}${NC} Internet: Connected"
 else
@@ -155,8 +178,8 @@ else
     FAILED=$((FAILED + 1))
 fi
 
-# 9. Check System Packages
-echo -e "${BLUE}[9/9]${NC} Checking required system packages..."
+# 10. Check System Packages
+echo -e "${BLUE}[10/10]${NC} Checking required system packages..."
 MISSING_PACKAGES=()
 
 # Essential packages
