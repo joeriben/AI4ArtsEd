@@ -306,8 +306,8 @@ class DiffusersImageGenerator:
 
                 vram_before = torch.cuda.memory_allocated(0) if torch.cuda.is_available() else 0
 
-                # Flux2Pipeline ignores `dtype` (loads float32 → OOM). Keep torch_dtype for it.
-                dtype_key = "torch_dtype" if pipeline_class == "Flux2Pipeline" else "dtype"
+                # All diffusers pipelines use torch_dtype in from_pretrained()
+                dtype_key = "torch_dtype"
                 kwargs = {
                     dtype_key: self._get_torch_dtype(),
                     "use_safetensors": True,
@@ -851,17 +851,18 @@ class DiffusersImageGenerator:
                     """
                     device = pipe._execution_device
 
-                    # --- CLIP-L only (no CLIP-G) ---
-                    clip_l_embeds, clip_l_pooled = pipe._get_clip_prompt_embeds(
-                        prompt=clip_text, device=device, num_images_per_prompt=1, clip_model_index=0
-                    )
-                    clip_padded = F.pad(clip_l_embeds, (0, 4096 - clip_l_embeds.shape[-1]))
-                    pooled = F.pad(clip_l_pooled, (0, 1280))
+                    with torch.no_grad():
+                        # --- CLIP-L only (no CLIP-G) ---
+                        clip_l_embeds, clip_l_pooled = pipe._get_clip_prompt_embeds(
+                            prompt=clip_text, device=device, num_images_per_prompt=1, clip_model_index=0
+                        )
+                        clip_padded = F.pad(clip_l_embeds, (0, 4096 - clip_l_embeds.shape[-1]))
+                        pooled = F.pad(clip_l_pooled, (0, 1280))
 
-                    # --- T5 encoding ---
-                    t5_embeds = pipe._get_t5_prompt_embeds(
-                        prompt=t5_text, num_images_per_prompt=1, max_sequence_length=512, device=device
-                    )
+                        # --- T5 encoding ---
+                        t5_embeds = pipe._get_t5_prompt_embeds(
+                            prompt=t5_text, num_images_per_prompt=1, max_sequence_length=512, device=device
+                        )
 
                     interp_len = min(77, clip_padded.shape[1])
                     t5_len = t5_embeds.shape[1]
@@ -939,6 +940,9 @@ class DiffusersImageGenerator:
                         # Fuse positive prompt (CLIP-L gets original, T5 gets expanded)
                         pos_embeds, pos_pooled = _fuse_prompt(prompt, effective_t5_prompt)
 
+                        # Free cached CUDA memory from pos encoding before neg pass
+                        torch.cuda.empty_cache()
+
                         # Fuse negative prompt (no expansion — same text for both)
                         neg_text = negative_prompt if negative_prompt else ""
                         neg_embeds, neg_pooled = _fuse_prompt(neg_text, neg_text)
@@ -1002,7 +1006,7 @@ class DiffusersImageGenerator:
             logger.error(f"[DIFFUSERS-FUSION] Generation error: {e}")
             import traceback
             traceback.print_exc()
-            return None
+            raise
 
     async def generate_image_with_attention(
         self,
