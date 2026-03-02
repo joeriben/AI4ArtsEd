@@ -1647,10 +1647,16 @@ def get_backend_status():
         try:
             if force_refresh:
                 service.invalidate_caches()
-            models = loop.run_until_complete(service.get_comfyui_models(force_refresh=force_refresh))
-            if models:
-                comfyui_status["reachable"] = True
-                comfyui_status["models"] = models
+
+            # ComfyUI check — failure must NOT prevent config availability check
+            try:
+                models = loop.run_until_complete(service.get_comfyui_models(force_refresh=force_refresh))
+                if models:
+                    comfyui_status["reachable"] = True
+                    comfyui_status["models"] = models
+            except Exception as e:
+                logger.info(f"[BACKEND-STATUS] ComfyUI unreachable (non-critical): {e}")
+
             config_availability = loop.run_until_complete(service.check_all_configs())
         finally:
             loop.close()
