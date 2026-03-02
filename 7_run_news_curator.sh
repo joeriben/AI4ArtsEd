@@ -22,6 +22,7 @@ CLAUDE_OPTS=(
     -p
     --permission-mode bypassPermissions
     --model haiku
+    --verbose
     --allowedTools "Read" "Write" "Bash" "Glob" "Grep"
 )
 
@@ -32,12 +33,23 @@ if [[ "$1" == "--unattended" ]]; then
 
     WORKDIR="$(pwd)"
     tmux new-session -d -s news-curator \
-        "cd $WORKDIR && echo '$PROMPT' | claude ${CLAUDE_OPTS[*]} 2>&1 | tee $LOGFILE; echo; echo '=== Done ==='; sleep 86400" \
+        "cd $WORKDIR && echo '$PROMPT' | claude ${CLAUDE_OPTS[*]} 2>&1 | stdbuf -oL tee $LOGFILE; echo; echo '=== Done (exit \$?) ==='; sleep 86400" \
     && echo "Started. Attach with: tmux attach -t news-curator" \
     || echo "Failed to start tmux session (already running?)"
 else
     echo "=== News Curator (interactive) ==="
     echo "Log: $LOGFILE"
+    echo "Running claude (--verbose)... tool calls will appear below."
+    echo "---"
 
-    echo "$PROMPT" | claude "${CLAUDE_OPTS[@]}" 2>&1 | tee "$LOGFILE"
+    echo "$PROMPT" | claude "${CLAUDE_OPTS[@]}" 2>&1 | stdbuf -oL tee "$LOGFILE"
+    EXIT_CODE=${PIPESTATUS[1]}
+
+    echo "---"
+    if [[ $EXIT_CODE -eq 0 ]]; then
+        echo "=== Done (exit $EXIT_CODE) ==="
+    else
+        echo "=== FAILED (exit $EXIT_CODE) ==="
+        echo "Check log: $LOGFILE"
+    fi
 fi
