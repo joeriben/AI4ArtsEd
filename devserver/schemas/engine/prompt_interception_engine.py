@@ -518,16 +518,24 @@ class PromptInterceptionEngine:
                 "max_tokens": max_tokens,
             }
 
+            # Reasoning models (gpt-oss-120b) can't disable thinking entirely,
+            # but reasoning_effort="low" minimizes token waste. Use when caller
+            # needs structured output (e.g. JSON) rather than chain-of-thought.
+            if params.get("enable_thinking") is False:
+                payload["reasoning_effort"] = "low"
+                logger.info(f"[BACKEND] IONOS: reasoning_effort=low (enable_thinking=False)")
+
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             if response.status_code == 200:
                 result = response.json()
                 message = result["choices"][0]["message"]
                 output_text = message.get("content") or ""
 
-                # Reasoning models may put output in reasoning_content if content is empty
+                # Log reasoning_content for diagnostics, but NEVER use it as output.
+                # Reasoning models' thinking output is not structured/usable content.
                 if not output_text and message.get("reasoning_content"):
-                    output_text = message["reasoning_content"]
-                    logger.warning(f"[BACKEND] IONOS: content was empty, fell back to reasoning_content")
+                    reasoning_len = len(message["reasoning_content"])
+                    logger.warning(f"[BACKEND] IONOS: content empty, reasoning_content={reasoning_len} chars (NOT used as output)")
 
                 if not output_text:
                     raise Exception(f"IONOS returned empty response (content and reasoning_content both empty)")

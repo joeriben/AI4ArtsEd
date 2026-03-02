@@ -278,12 +278,16 @@ def _parse_triple_prompt(text: str) -> dict | None:
     Accepts 2-key {clip_l, clip_g} or legacy 3-key {clip_l, clip_g, t5}.
     T5-XXL receives the user's interception result directly (not from optimization).
     Returns dict with at least clip_l + clip_g, or None if parsing fails.
-    Strips markdown code fences if present (LLM sometimes wraps in ```json).
+    Strips markdown code fences and <think> blocks (reasoning model artifacts).
+    Falls back to regex extraction if JSON isn't cleanly parseable.
     """
     import json
+    import re
     if not text or not text.strip():
         return None
     cleaned = text.strip()
+    # Strip <think>...</think> blocks (reasoning model artifacts)
+    cleaned = re.sub(r'<think>.*?</think>', '', cleaned, flags=re.DOTALL).strip()
     # Strip markdown code fences
     if cleaned.startswith('```'):
         lines = cleaned.split('\n')
@@ -302,6 +306,19 @@ def _parse_triple_prompt(text: str) -> dict | None:
             return data
     except (json.JSONDecodeError, TypeError, AttributeError):
         pass
+
+    # Regex fallback: extract {clip_l, clip_g} JSON from mixed text
+    json_match = re.search(r'\{[^{}]*"clip_l"\s*:\s*"[^"]*"[^{}]*"clip_g"\s*:\s*"[^"]*"[^{}]*\}', text)
+    if json_match:
+        try:
+            data = json.loads(json_match.group())
+            if 'clip_l' in data and 'clip_g' in data:
+                logger.info(f"[CLIP-PROMPT] Extracted from mixed text via regex: "
+                            f"CLIP-L={len(data['clip_l'].split())}w, CLIP-G={len(data['clip_g'].split())}w")
+                return data
+        except json.JSONDecodeError:
+            pass
+
     return None
 
 
@@ -518,7 +535,8 @@ async def execute_optimization(
         style_prompt=optimization_instruction,  # Style-specific rules
         task_instruction=get_instruction("prompt_optimization"),  # Meta-instruction
         model=STAGE2_INTERCEPTION_MODEL,
-        debug=False
+        debug=False,
+        parameters={"enable_thinking": False}  # Structured JSON output, no reasoning
     )
 
     try:
@@ -1869,7 +1887,8 @@ def execute_optimization_streaming(data: dict):
             task_instruction=task_instruction,  # Session 134: Meta-instruction
             model=model,
             debug=False,
-            unload_model=False
+            unload_model=False,
+            parameters={"enable_thinking": False}  # Structured JSON output, no reasoning
         )
         pi_response = asyncio.run(engine.process_request(pi_request))
 
