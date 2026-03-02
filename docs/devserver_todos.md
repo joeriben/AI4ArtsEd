@@ -39,11 +39,13 @@ Das `output_image.json` Proxy-Chunk-Pattern verletzt die 3-Ebenen-Architektur:
 
 **Datum:** 2026-02-02
 
-Output-Chunks wurden zu Metadaten-Containern degradiert statt Ausführungseinheiten zu sein:
+~~**Diffusers**: `_process_diffusers_chunk()` + `_get_diffusers_compatible_chunk()` entfernt, 8 Python-Chunks erstellt (sd35, sd35_turbo, flux2, surrealizer, attention_cartography, feature_probing, concept_algebra, denoising_archaeology). Alle JSON-Chunks gelöscht.~~ ✅ Done
 
-- `backend_router.py` enthält Backend-spezifische Logik die in Chunks gehört (`_process_diffusers_chunk()`, `_process_heartmula_chunk()`)
-- Neue Backends erfordern Änderungen am zentralen Router statt "einfach einen Chunk hinzufügen"
-- **Plan vorhanden:** `docs/plans/diffusers-chunk-migration.md` (User-Approval steht aus)
+**Noch offen:**
+- `_process_heartmula_chunk()` — Dead Code (Python-Chunk `output_music_heartmula.py` existiert bereits, Router-Methode kann entfernt werden)
+- `_process_stable_audio_chunk()` — noch kein Python-Chunk
+- `_process_triton_chunk()` — noch kein Python-Chunk
+- ComfyUI-Workflow-Logik (`_process_workflow_chunk()`, `_process_image_chunk_simple()`, `_build_simple_t2i_workflow()`, `_inject_lora_nodes()`, `_apply_encoder_type()`) — noch im Router
 
 ---
 
@@ -96,12 +98,12 @@ User starren 5+ Minuten auf den Bildschirm ohne Feedback. Minimum: Spinner/"Gene
 
 **Datum:** 2026-01-26
 **Handover:** `docs/HANDOVER_SAFETY_REFACTORING.md`
-**Plan:** `~/.claude/plans/wise-napping-metcalfe.md`
+**Regression-Bugs** (fail-open parse, fail-open pipeline, JSON-Requirement): ✅ GEFIXT
 
 1. **KRITISCH: context_prompt nicht geprüft** — User-editierbarer Meta-Prompt wird nirgends safety-geprüft
-2. **Namens-Inkonsistenz**: `/interception` macht Stage 1 + Stage 2
-3. **Code-Duplikation**: Stage 1 Safety in 4 Endpoints embedded
-4. **Frontend Bug**: MediaInputBox ignoriert 'blocked' SSE Events
+2. **Namens-Inkonsistenz**: `/interception` macht Stage 1 + Stage 2 (Architektur korrekt, Name irreführend)
+3. **Code-Duplikation**: Stage 1 Safety in 4 Endpoints embedded (Funktionen zentralisiert, Callsites noch 4x)
+4. ✅ ~~**Frontend Bug**: MediaInputBox ignoriert 'blocked' SSE Events~~ — gefixt (Handler Zeile 528-538)
 
 ### Stage 3 Negative Prompts nicht an Stage 4 weitergereicht
 
@@ -215,7 +217,7 @@ Idee: Schneller Schalter im Interface zum Wechseln zwischen UI-Modes (kids/youth
 ### Debug-Stufen-System
 
 **Plan:** `~/.claude/plans/dynamic-sprouting-stonebraker.md`
-**Status:** DEFERRED — wartet auf Safety Regression Fix
+**Status:** DEFERRED — Safety Regression Fix erledigt, Blocker aufgelöst
 
 ### Pipeline-Autonomie Check
 
