@@ -919,7 +919,10 @@ const configsForCategory = computed(() => {
     return categoryConfigs.filter(config => {
       // STRICT MODE: Only show if explicitly marked as available
       // If not in availability map or marked as false → HIDE
+      // Check both the tile ID and the mapped output config ID (e.g. flux2 → flux2_diffusers)
+      const mappedId = configIdToChunkName[config.id]
       return modelAvailability.value[config.id] === true
+        || (mappedId && modelAvailability.value[mappedId] === true)
     })
   }
 

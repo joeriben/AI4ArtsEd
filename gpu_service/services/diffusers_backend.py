@@ -182,6 +182,10 @@ class DiffusersImageGenerator:
         Flux2Pipeline.from_pretrained ignores torch_dtype/dtype kwargs,
         loading everything in float32 (~106GB RAM). Loading components
         individually with torch_dtype=bfloat16 uses ~1.2GB RAM instead.
+
+        FP8 mode (DIFFUSERS_FLUX2_QUANTIZE=fp8): quantizes the transformer
+        to float8_weight_only via TorchAoConfig. Transformer ~16GB instead
+        of ~31GB. Text encoder stays bf16 (~24GB). CPU offload for both.
         """
         import torch
         from diffusers import (
@@ -189,16 +193,28 @@ class DiffusersImageGenerator:
             AutoencoderKLFlux2, FlowMatchEulerDiscreteScheduler,
         )
         from transformers import AutoModelForImageTextToText, PixtralProcessor
+        from config import DIFFUSERS_FLUX2_QUANTIZE
 
         dtype = torch.bfloat16
         cache_kwargs = {"cache_dir": str(self.cache_dir)} if self.cache_dir else {}
+        quantize = DIFFUSERS_FLUX2_QUANTIZE.lower()
 
-        logger.info(f"[DIFFUSERS] Flux2: loading components in bf16...")
+        if quantize == "fp8":
+            from diffusers import TorchAoConfig
+            quant_config = TorchAoConfig("float8_weight_only")
+            logger.info(f"[DIFFUSERS] Flux2: loading transformer in FP8 (float8_weight_only)...")
+            transformer = Flux2Transformer2DModel.from_pretrained(
+                model_id, subfolder="transformer",
+                quantization_config=quant_config,
+                low_cpu_mem_usage=True, **cache_kwargs
+            )
+        else:
+            logger.info(f"[DIFFUSERS] Flux2: loading transformer in bf16...")
+            transformer = Flux2Transformer2DModel.from_pretrained(
+                model_id, subfolder="transformer",
+                torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
+            )
 
-        transformer = Flux2Transformer2DModel.from_pretrained(
-            model_id, subfolder="transformer",
-            torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
-        )
         text_encoder = AutoModelForImageTextToText.from_pretrained(
             model_id, subfolder="text_encoder",
             torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
@@ -223,7 +239,7 @@ class DiffusersImageGenerator:
         )
         pipe.enable_model_cpu_offload()
 
-        logger.info(f"[DIFFUSERS] Flux2: pipeline loaded with cpu_offload")
+        logger.info(f"[DIFFUSERS] Flux2: pipeline loaded ({quantize}) with cpu_offload")
         return pipe
 
     def _ensure_vram_available(self, required_mb: float = 0) -> None:

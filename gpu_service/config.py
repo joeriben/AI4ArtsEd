@@ -33,6 +33,7 @@ DIFFUSERS_TENSORRT_MODELS = {
     "sd35_medium": "stabilityai/stable-diffusion-3.5-medium-tensorrt",
 }
 LORA_DIR = Path(os.environ.get("LORA_DIR", str(_AI_TOOLS_BASE / "SwarmUI" / "Models" / "loras")))
+DIFFUSERS_FLUX2_QUANTIZE = os.environ.get("DIFFUSERS_FLUX2_QUANTIZE", "fp8")  # bf16 or fp8
 
 # --- HeartMuLa ---
 HEARTMULA_ENABLED = os.environ.get("HEARTMULA_ENABLED", "true").lower() == "true"

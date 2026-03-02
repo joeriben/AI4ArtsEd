@@ -1,0 +1,80 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 2 Dev",
+    "de": "Flux 2 Dev"
+  },
+  "description": {
+    "en": "High-quality image generation using Flux 2 Dev with Mistral text encoder via Diffusers.",
+    "de": "Hochwertige Bildgenerierung mit Flux 2 Dev und Mistral Text-Encoder via Diffusers."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2_diffusers",
+    "NEGATIVE_PROMPT": "text, watermark",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 20,
+    "CFG": 1,
+    "seed": "random"
+  },
+
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 34000,
+    "estimated_duration_seconds": "15-30",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev via Diffusers GPU service. FP8 transformer + BF16 text encoder with CPU offload. Quantization controlled by DIFFUSERS_FLUX2_QUANTIZE env var (default: fp8).",
+    "display_name": "FLUX.2 [dev]",
+    "icon": "flash_on",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B Mistral text encoder)",
+    "text_encoders": ["Mistral-Small-3.2-24B (24B)"],
+    "quantization": "FP8 (transformer) + BF16 (text encoder, VAE)",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering",
+    "version": "1.0"
+  },
+
+  "display": {
+    "icon": "flash_on",
+    "color": "#FF6B35",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 20
+  },
+
+  "tags": {
+    "en": ["image", "flux", "flux2", "diffusers", "mistral", "fp8"],
+    "de": ["bild", "flux", "flux2", "diffusers", "mistral", "fp8"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}
