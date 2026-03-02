@@ -29,6 +29,38 @@
 
 ---
 
+## Language Choice: Python als Orchestrierungsschicht — Bewusste Architekturentscheidung (2026-03-02)
+
+### Kontext
+Diskussion darueber, ob Python eine professionelle Sprachwahl fuer das Projekt ist, und warum Python nicht zu nativen Anwendungen kompiliert wird.
+
+### Entscheidung: Python ist die korrekte Wahl fuer die Orchestrierungsschicht
+
+**Kernargument**: Python optimiert fuer Entwicklergeschwindigkeit und Flexibilitaet. Native Kompilierung optimiert fuer Ausfuehrungsgeschwindigkeit. Fuer AI4ArtsEd ist Entwicklergeschwindigkeit der entscheidende Faktor — die GPU-schwere Arbeit laeuft ohnehin in C++/CUDA via PyTorch.
+
+**Warum native Kompilierung fuer Python schwierig ist:**
+- Dynamische Typisierung: `a + b` kann int+int, str+str, list+list, custom `__add__` sein — der Compiler muesste alle Kombinationen vorhalten oder Runtime-Checks einfuegen
+- Extreme Laufzeitdynamik: Monkey-Patching, `eval()`, dynamische Imports setzen einen Interpreter voraus
+- C-Extension-Oekosystem: NumPy, torch etc. sind C/C++-Libraries mit CPython-ABI-Bindungen
+
+**Existierende Kompilierungstools** (Nuitka, Cython, mypyc, Codon) erzeugen entweder nur 2-4x Speedup bei voller Python-Kompatibilitaet, oder schnellen Code bei eingeschraenktem Featureset.
+
+**Wo Python die Industriestandard-Wahl ist:**
+- ML/AI, Data Science, DevOps/Infrastructure, Scientific Computing, Backend APIs (Instagram, Spotify, Reddit)
+
+**Wo Python NICHT passt:**
+- Latenz-kritische Systeme, Mobile Apps, Browser-Frontend, Embedded/OS-Level
+
+**AI4ArtsEd-Architektur als Textbook-Beispiel:**
+- Python orchestriert die 4-Stage-Pipeline (wartet auf LLMs und Diffusionsmodelle — Interpreter-Overhead irrelevant)
+- GPU-schwere Arbeit laeuft in C++/CUDA via PyTorch im GPU Service
+- Frontend ist Vue/TypeScript (wo Python nicht hingehoert)
+
+### Prinzip
+Die professionelle Entscheidung ist nicht "immer die schnellste Sprache", sondern das richtige Werkzeug fuer jede Schicht. Python fuer Orchestrierung + C++/CUDA fuer Compute + TypeScript fuer Frontend.
+
+---
+
 ## Session 235: Surrealizer CLIP Encoder Selection — CLIP-L Only by Design (2026-03-02)
 
 ### Decision: No toggleable CLIP encoder selection in Surrealizer
