@@ -6,14 +6,15 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
-### WO-2026-03-02-synth-engine-arpeggiator
-- **Session**: 232
+### WO-2026-03-02-flatten-synth-toggles
+- **Session**: 233
 - **Scope**: en.ts
-- **Changed keys** (new):
-  - `latentLab.crossmodal.synth.engineDirect` (NEW): 'Buffer'
-  - `latentLab.crossmodal.synth.engineWavetable` (NEW): 'Wavetable'
-  - `latentLab.crossmodal.synth.behaviorFreerun` (NEW): 'Free-run'
-  - `latentLab.crossmodal.synth.behaviorSequencer` (NEW): 'Sequencer'
+- **Changed keys** (new or removed):
+  - `latentLab.crossmodal.synth.loopToggle` (NEW): 'Loop'
+  - `latentLab.crossmodal.synth.wavetableToggle` (NEW): 'Wavetable'
+  - `latentLab.crossmodal.synth.wavetableStatic` (NEW): 'Static'
+  - `latentLab.crossmodal.synth.wavetableDynamic` (NEW): 'Dynamic (coming soon)'
+  - `latentLab.crossmodal.synth.sequencerToggle` (NEW): 'Sequencer'
   - `latentLab.crossmodal.synth.oscillating` (NEW): 'Oscillating'
   - `latentLab.crossmodal.synth.sequencing` (NEW): 'Sequencing'
   - `latentLab.crossmodal.synth.arpeggiator` (NEW): 'Arpeggiator'
@@ -21,7 +22,17 @@ each processed work order to **Completed** with a date stamp.
   - `latentLab.crossmodal.synth.arpeggiatorPatterns.down` (NEW): 'Down'
   - `latentLab.crossmodal.synth.arpeggiatorPatterns.updown` (NEW): 'Up-Down'
   - `latentLab.crossmodal.synth.arpeggiatorPatterns.random` (NEW): 'Random'
-- **Context**: Synthesis engine architecture rework. Replaces flat PlaybackMode enum with orthogonal SynthEngine (Buffer/Wavetable) x PlaybackBehavior (Free-run/Sequencer) selectors. Arpeggiator is a post-processing note transformer (up/down/up-down/random chord patterns). "Buffer" = direct audio buffer playback. "Wavetable" = pitch-synchronous oscillator. "Free-run" = continuous playback. Translate naturally (e.g. DE: "Puffer", "Wellentabelle", "Freilauf", "Sequenzer", "Arpeggiator"). Pattern names are musical terms.
+  - `latentLab.crossmodal.synth.loopOn` (REMOVED)
+  - `latentLab.crossmodal.synth.loopOff` (REMOVED)
+  - `latentLab.crossmodal.synth.engineDirect` (REMOVED)
+  - `latentLab.crossmodal.synth.engineWavetable` (REMOVED)
+  - `latentLab.crossmodal.synth.behaviorFreerun` (REMOVED)
+  - `latentLab.crossmodal.synth.behaviorSequencer` (REMOVED)
+  - `latentLab.crossmodal.synth.modeLoop` (REMOVED)
+  - `latentLab.crossmodal.synth.modePingPong` (REMOVED)
+  - `latentLab.crossmodal.synth.modeWavetable` (REMOVED)
+  - `latentLab.crossmodal.synth.modeSequencer` (REMOVED)
+- **Context**: UI flattened from two abstract selector rows (Buffer/Wavetable × Free-run/Sequencer) to independent toggle sections. Each section (Loop, Wavetable, Sequencer, Arpeggiator) has its own on/off checkbox. "Static" vs "Dynamic" are wavetable sub-modes (dynamic is placeholder). Removed keys had abstract synth-jargon labels. Translate toggles naturally (e.g. DE: "Schleife", "Wellentabelle", "Sequenzer", "Arpeggiator", "Statisch", "Dynamisch (demnächst)"). Pattern names are musical terms.
 
 ### WO-2026-03-01-step-sequencer
 - **Session**: 231

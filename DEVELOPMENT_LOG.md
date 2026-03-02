@@ -1,5 +1,36 @@
 # Development Log
 
+## Session 233 - Flatten Synth UI to Independent Toggle Sections
+**Date:** 2026-03-02
+**Focus:** Replace abstract selector rows (Buffer/Free-run) with independent on/off toggle sections
+
+### Problem
+The synth tab UI had two selector rows with labels no synth user understands: "Buffer" (for looper) and "Free-run" (for continuous playback). The internal engine/behavior architecture was correct, but the UI exposed implementation details instead of user-facing concepts.
+
+### Solution
+Flattened the UI into four independent toggle sections, each with its own checkbox:
+
+1. **Loop** — off by default, enables looping when toggled on. Ping-Pong and Auto-optimize as sub-options.
+2. **Wavetable** — disabled until frames are extracted from generated audio. Static/Dynamic sub-switch (dynamic = placeholder for future scanning mode).
+3. **Sequencer** — own on/off toggle, step grid appears when enabled.
+4. **Arpeggiator** — moved from inside the sequencer to its own independent section. Processes sequencer notes identically to MIDI notes.
+
+### Technical Changes
+- Removed `PlaybackBehavior` type and `playbackBehavior` ref
+- Added `loopOn`, `wavetableOn`, `sequencerOn` boolean refs (UI-facing)
+- Kept `synthEngine` ref internally for engine routing (direct vs wavetable)
+- Replaced `setSynthEngine()` / `setPlaybackBehavior()` with `toggleLoopSection()`, `toggleWavetable()`, `toggleSequencerSection()`
+- Removed Loop On/Off button from action row (loop is now a section toggle)
+- Removed `.engine-behavior-selectors`, `.selector-row`, `.mode-btn`, `.loop-btn` CSS
+- Added `.section-toggle`, `.wavetable-mode-row` CSS
+- i18n: removed 10 keys (engineDirect, behaviorFreerun, etc.), added 5 new keys (loopToggle, wavetableToggle, etc.)
+
+### Files Changed
+- `crossmodal_lab.vue` — template, script, CSS
+- `en.ts` — i18n keys
+- `WORK_ORDERS.md` — updated pending WO
+- `DEVELOPMENT_LOG.md` — this entry
+
 ## Session 229 - IONOS AI Model Hub Provider Integration
 **Date:** 2026-03-01
 **Focus:** Full integration of IONOS AI Model Hub as 2nd DSGVO-compliant cloud LLM provider (EU datacenter Berlin)

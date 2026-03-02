@@ -77,9 +77,6 @@
           <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
             {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
           </button>
-          <button v-if="synthEngine === 'direct'" class="loop-btn" :class="{ active: looper.isLooping.value }" @click="toggleLoop">
-            {{ looper.isLooping.value ? t('latentLab.crossmodal.synth.loopOn') : t('latentLab.crossmodal.synth.loopOff') }}
-          </button>
           <button v-if="isEngineActive" class="stop-btn" @click="synthEngine === 'direct' ? looper.stop() : wavetableOsc.stop()">
             {{ t('latentLab.crossmodal.synth.stop') }}
           </button>
@@ -281,7 +278,7 @@
             {{ looper.bufferDuration.value.toFixed(2) }}s
           </span>
         </div>
-        <!-- Loop Interval (direct engine only) -->
+        <!-- Waveform + loop region (always visible when audio loaded) -->
         <div v-if="synthEngine === 'direct'" class="loop-interval">
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.loopInterval') }}</label>
@@ -316,53 +313,48 @@
             </div>
           </div>
         </div>
-        <!-- Engine + Behavior selectors (always visible) -->
-        <div class="engine-behavior-selectors">
-          <div class="selector-row">
-            <button
-              class="mode-btn"
-              :class="{ active: synthEngine === 'direct' }"
-              @click="setSynthEngine('direct')"
-            >{{ t('latentLab.crossmodal.synth.engineDirect') }}</button>
-            <button
-              class="mode-btn"
-              :class="{ active: synthEngine === 'wavetable', disabled: !wavetableOsc.hasFrames.value }"
-              :disabled="!wavetableOsc.hasFrames.value"
-              @click="setSynthEngine('wavetable')"
-            >{{ t('latentLab.crossmodal.synth.engineWavetable') }}
-              <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
-            </button>
-          </div>
-          <div class="selector-row">
-            <button
-              class="mode-btn"
-              :class="{ active: playbackBehavior === 'freerun' }"
-              @click="setPlaybackBehavior('freerun')"
-            >{{ t('latentLab.crossmodal.synth.behaviorFreerun') }}</button>
-            <button
-              class="mode-btn"
-              :class="{ active: playbackBehavior === 'sequencer' }"
-              @click="setPlaybackBehavior('sequencer')"
-            >{{ t('latentLab.crossmodal.synth.behaviorSequencer') }}</button>
-          </div>
-        </div>
-        <!-- Loop options (direct engine + freerun only) -->
-        <div v-if="synthEngine === 'direct' && playbackBehavior === 'freerun'" class="loop-options">
+
+        <!-- ===== Loop Section ===== -->
+        <div class="section-toggle">
           <label class="inline-toggle">
-            <input type="checkbox" :checked="pingPongOn" :disabled="!looper.hasAudio.value" @change="onPingPongChange" />
-            {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+            <input type="checkbox" :checked="loopOn" @change="toggleLoopSection(($event.target as HTMLInputElement).checked)" />
+            {{ t('latentLab.crossmodal.synth.loopToggle') }}
           </label>
+        </div>
+        <div v-if="loopOn" class="loop-options">
           <label class="inline-toggle">
             <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
             {{ t('latentLab.crossmodal.synth.loopOptimize') }}
           </label>
+          <label class="inline-toggle">
+            <input type="checkbox" :checked="pingPongOn" :disabled="!looper.hasAudio.value" @change="onPingPongChange" />
+            {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+          </label>
           <span v-if="looper.loopOptimize.value" class="optimized-hint">
             → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
           </span>
+          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
         </div>
-        <span v-if="synthEngine === 'direct' && playbackBehavior === 'freerun'" class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
-        <!-- Wavetable scan position (wavetable engine only) -->
-        <div v-if="synthEngine === 'wavetable'" class="wavetable-controls">
+
+        <!-- ===== Wavetable Section ===== -->
+        <div class="section-toggle">
+          <label class="inline-toggle">
+            <input type="checkbox" :checked="wavetableOn" :disabled="!wavetableOsc.hasFrames.value" @change="toggleWavetable(($event.target as HTMLInputElement).checked)" />
+            {{ t('latentLab.crossmodal.synth.wavetableToggle') }}
+            <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
+          </label>
+        </div>
+        <div v-if="wavetableOn" class="wavetable-controls">
+          <div class="wavetable-mode-row">
+            <label class="inline-toggle" :class="{ active: true }">
+              <input type="radio" value="static" checked disabled />
+              {{ t('latentLab.crossmodal.synth.wavetableStatic') }}
+            </label>
+            <label class="inline-toggle disabled">
+              <input type="radio" value="dynamic" disabled />
+              {{ t('latentLab.crossmodal.synth.wavetableDynamic') }}
+            </label>
+          </div>
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
             <span class="slider-value">{{ wavetableScan.toFixed(2) }}</span>
@@ -370,9 +362,15 @@
           <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
           <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
         </div>
-        <!-- Step Sequencer controls -->
-        <div v-if="playbackBehavior === 'sequencer'" class="sequencer-controls">
-          <!-- Transport + step count -->
+
+        <!-- ===== Sequencer Section ===== -->
+        <div class="section-toggle">
+          <label class="inline-toggle">
+            <input type="checkbox" :checked="sequencerOn" @change="toggleSequencerSection(($event.target as HTMLInputElement).checked)" />
+            {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
+          </label>
+        </div>
+        <div v-if="sequencerOn" class="sequencer-controls">
           <div class="sequencer-transport">
             <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
               {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
@@ -391,7 +389,6 @@
               <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
             </span>
           </div>
-          <!-- Preset + BPM row -->
           <div class="sequencer-settings-row">
             <div class="sequencer-preset">
               <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
@@ -416,7 +413,6 @@
               <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
             </div>
           </div>
-          <!-- Step Grid -->
           <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
             <div
               v-for="(step, idx) in sequencer.steps"
@@ -457,24 +453,25 @@
             </div>
           </div>
           <span class="slider-hint">{{ t('latentLab.crossmodal.synth.sequencer.gridHint') }}</span>
-          <!-- Arpeggiator -->
-          <div class="arpeggiator-section">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.arpeggiator') }}
-            </label>
-            <select
-              v-if="arpeggiator.enabled.value"
-              class="arp-pattern-select"
-              :value="arpeggiator.pattern.value"
-              @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')"
-            >
-              <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
-              <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
-              <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
-              <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
-            </select>
-          </div>
+        </div>
+
+        <!-- ===== Arpeggiator Section (independent, after sequencer) ===== -->
+        <div class="section-toggle">
+          <label class="inline-toggle">
+            <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
+            {{ t('latentLab.crossmodal.synth.arpeggiator') }}
+          </label>
+          <select
+            v-if="arpeggiator.enabled.value"
+            class="arp-pattern-select"
+            :value="arpeggiator.pattern.value"
+            @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')"
+          >
+            <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
+            <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
+            <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
+            <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
+          </select>
         </div>
         <!-- Transpose -->
         <div class="transpose-row">
@@ -491,7 +488,7 @@
           <span class="transpose-value">{{ formatTranspose(looper.transposeSemitones.value) }}</span>
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.transposeHint') }}</span>
         </div>
-        <div v-if="synthEngine === 'direct' && playbackBehavior === 'freerun'" class="transpose-mode-row">
+        <div v-if="synthEngine === 'direct' && !sequencerOn" class="transpose-mode-row">
           <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
             <input
               type="radio"
@@ -514,7 +511,7 @@
           </label>
         </div>
         <!-- Crossfade duration -->
-        <div v-if="synthEngine === 'direct' && playbackBehavior === 'freerun'" class="transpose-row">
+        <div v-if="synthEngine === 'direct' && !sequencerOn" class="transpose-row">
           <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
           <input
             type="range"
@@ -571,7 +568,7 @@
           <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
             {{ t('latentLab.crossmodal.synth.saveRaw') }}
           </button>
-          <button v-if="synthEngine === 'direct' && playbackBehavior === 'freerun'" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+          <button v-if="synthEngine === 'direct' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
             {{ t('latentLab.crossmodal.synth.saveLoop') }}
           </button>
         </div>
@@ -936,10 +933,12 @@ function drawWaveform() {
 // ===== Wavetable Oscillator =====
 const wavetableOsc = useWavetableOsc()
 type SynthEngine = 'direct' | 'wavetable'
-type PlaybackBehavior = 'freerun' | 'sequencer'
 const synthEngine = ref<SynthEngine>('direct')
-const playbackBehavior = ref<PlaybackBehavior>('freerun')
-const pingPongOn = ref(false) // sub-toggle for direct+freerun
+// Independent toggle states (UI-facing)
+const loopOn = ref(false)
+const wavetableOn = ref(false)
+const sequencerOn = ref(false)
+const pingPongOn = ref(false)
 const wavetableScan = ref(0)
 
 // ===== Step Sequencer =====
@@ -1003,7 +1002,7 @@ midi.onClock(sequencer.handleMidiClock)
 // MIDI Note → Monophonic synth with ADSR envelope (NEVER triggers generation)
 // In sequencer mode, MIDI notes are ignored (sequencer drives the engine)
 midi.onNote((note, velocity, on) => {
-  if (playbackBehavior.value === 'sequencer') return
+  if (sequencerOn.value) return
   if (on) {
     wireEnvelope()
     const wasEmpty = heldNotes.length === 0
@@ -1517,9 +1516,6 @@ function formatTranspose(semitones: number): string {
   return semitones > 0 ? `+${semitones}` : `${semitones}`
 }
 
-function toggleLoop() {
-  looper.setLoop(!looper.isLooping.value)
-}
 
 function onTransposeInput(event: Event) {
   const val = parseInt((event.target as HTMLInputElement).value)
@@ -1569,62 +1565,60 @@ function triggerEngine(note: number, velocity: number) {
   envelope.triggerAttack(velocity)
 }
 
-function setSynthEngine(engine: SynthEngine) {
-  if (engine === synthEngine.value) return
-  // Stop previous engine
-  if (synthEngine.value === 'direct') {
-    looper.stop()
-  } else {
-    wavetableOsc.stop()
+/** Toggle the Loop section on/off. */
+function toggleLoopSection(on: boolean) {
+  loopOn.value = on
+  looper.setLoop(on)
+  if (on) {
+    looper.setLoopPingPong(pingPongOn.value)
   }
-  synthEngine.value = engine
+}
 
-  // Share AudioContext with wavetable engine
-  if (engine === 'wavetable') {
+/** Toggle wavetable engine on/off. */
+function toggleWavetable(on: boolean) {
+  wavetableOn.value = on
+  if (on) {
+    // Switch to wavetable engine
+    looper.stop()
+    synthEngine.value = 'wavetable'
     const ac = looper.getContext()
     wavetableOsc.setContext(ac)
     if (!envelopeWired) wireEnvelope()
-  }
-
-  // Resume freerun if applicable
-  if (playbackBehavior.value === 'freerun') {
-    if (engine === 'direct' && looper.hasAudio.value) {
+    if (wavetableOsc.hasFrames.value && !sequencerOn.value) {
+      wavetableOsc.start()
+      if (!envelope.isNeutral.value && envelopeWired) envelope.triggerAttack(1)
+    }
+  } else {
+    // Switch back to direct (looper) engine
+    wavetableOsc.stop()
+    synthEngine.value = 'direct'
+    if (looper.hasAudio.value && !sequencerOn.value) {
       looper.setLoopPingPong(pingPongOn.value)
       looper.replay()
-    } else if (engine === 'wavetable' && wavetableOsc.hasFrames.value) {
-      wavetableOsc.start()
-    }
-    if (!envelope.isNeutral.value && envelopeWired) {
-      envelope.triggerAttack(1)
+      if (!envelope.isNeutral.value && envelopeWired) envelope.triggerAttack(1)
     }
   }
 }
 
-function setPlaybackBehavior(behavior: PlaybackBehavior) {
-  if (behavior === playbackBehavior.value) return
-  // Stop sequencer when leaving sequencer mode
-  if (playbackBehavior.value === 'sequencer' && sequencer.isPlaying.value) {
-    sequencer.stop()
-    arpeggiator.stop()
-  }
-  playbackBehavior.value = behavior
-
-  // Wire envelope if ADSR is non-neutral
-  if (!envelope.isNeutral.value) wireEnvelope()
-  if (envelopeWired) {
-    if (envelope.isNeutral.value) {
-      envelope.bypass()
-    } else if (behavior !== 'sequencer') {
-      envelope.triggerAttack(1)
-    }
-  }
-
-  if (behavior === 'sequencer') {
-    // Stop engines free-running — sequencer will drive them
-    looper.stop()
-    wavetableOsc.stop()
+/** Toggle sequencer section on/off. */
+function toggleSequencerSection(on: boolean) {
+  sequencerOn.value = on
+  if (on) {
+    // Wire envelope if ADSR is non-neutral
+    if (!envelope.isNeutral.value) wireEnvelope()
+    if (envelopeWired && envelope.isNeutral.value) envelope.bypass()
   } else {
-    // Resume freerun with active engine
+    // Stop sequencer when toggled off
+    if (sequencer.isPlaying.value) {
+      sequencer.stop()
+      arpeggiator.stop()
+    }
+    // Resume continuous playback with active engine
+    if (!envelope.isNeutral.value) wireEnvelope()
+    if (envelopeWired) {
+      if (envelope.isNeutral.value) envelope.bypass()
+      else envelope.triggerAttack(1)
+    }
     if (synthEngine.value === 'direct') {
       looper.setLoopPingPong(pingPongOn.value)
       if (looper.hasAudio.value) looper.replay()
@@ -1891,7 +1885,7 @@ async function runSynth() {
         const ac = looper.getContext()
         wavetableOsc.setContext(ac)
         if (!envelopeWired) wireEnvelope()
-        if (wavetableOsc.hasFrames.value && playbackBehavior.value === 'freerun') {
+        if (wavetableOsc.hasFrames.value && !sequencerOn.value) {
           await wavetableOsc.start()
         }
       }
@@ -2293,25 +2287,12 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
-.loop-btn,
 .stop-btn {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
-}
-
-.loop-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.loop-btn.active {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: rgba(76, 175, 80, 0.4);
-  color: #4CAF50;
 }
 
 .stop-btn {
@@ -2899,21 +2880,33 @@ onUnmounted(() => {
   margin-left: auto;
 }
 
-/* Playback mode selector (segmented control) */
-/* Engine + Behavior selectors */
-.engine-behavior-selectors {
+/* Section toggles (independent on/off sections) */
+.section-toggle {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section-toggle .inline-toggle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.section-toggle .inline-toggle input:checked + * {
+  color: #4CAF50;
+}
+
+.wavetable-mode-row {
+  display: flex;
+  gap: 1rem;
   margin-bottom: 0.5rem;
 }
 
-.selector-row {
-  display: flex;
-  gap: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  overflow: hidden;
+.wavetable-mode-row .inline-toggle.disabled {
+  opacity: 0.35;
 }
 
 .frame-badge {
@@ -2937,16 +2930,6 @@ onUnmounted(() => {
   accent-color: #4CAF50;
 }
 
-/* Arpeggiator section */
-.arpeggiator-section {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.6rem;
-  padding: 0.5rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
 .arp-pattern-select {
   padding: 0.3rem 0.5rem;
   background: rgba(255, 255, 255, 0.05);
@@ -2956,36 +2939,6 @@ onUnmounted(() => {
   font-size: 0.75rem;
 }
 
-.mode-btn {
-  flex: 1;
-  padding: 0.35rem 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.mode-btn:last-child {
-  border-right: none;
-}
-
-.mode-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.mode-btn.active {
-  background: rgba(76, 175, 80, 0.15);
-  color: #4CAF50;
-  font-weight: 600;
-}
-
-.mode-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
 
 /* Step Sequencer controls */
 .sequencer-controls {
