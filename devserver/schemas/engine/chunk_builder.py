@@ -317,6 +317,10 @@ class ChunkBuilder:
             # Include chunk_name in parameters for router detection (Python chunks)
             processed_parameters['_chunk_name'] = chunk_name
 
+            # Ensure text prompt is available in parameters for backend_router
+            # (router re-loads JSON workflow and needs prompt text for input_mappings injection)
+            processed_parameters['PREVIOUS_OUTPUT'] = replacement_context.get('PREVIOUS_OUTPUT', '')
+
             chunk_request = {
                 'backend_type': template.backend_type,
                 'model': final_model,
