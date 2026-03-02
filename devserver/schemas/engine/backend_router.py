@@ -10,7 +10,7 @@ from pathlib import Path
 import json
 
 from my_app.services.pipeline_recorder import load_recorder
-from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS, COMFYUI_DIRECT
+from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS
 from schemas.engine.progress_callback import get_progress_callback
 
 logger = logging.getLogger(__name__)
@@ -128,7 +128,7 @@ class BackendType(Enum):
     MISTRAL = "mistral"
     AWS_BEDROCK = "bedrock"
     COMFYUI = "comfyui"
-    # Session 149: New inference backends for SwarmUI/ComfyUI independence
+    # Session 149: Direct inference backends
     TRITON = "triton"      # NVIDIA Triton Inference Server (batched, multi-user)
     DIFFUSERS = "diffusers"  # Direct HuggingFace Diffusers (TensorRT optional)
     # Python chunks: Self-contained executable Python modules (HeartMuLa, future backends)
@@ -158,18 +158,10 @@ class BackendRouter:
         self.backends: Dict[BackendType, Any] = {}
         self._initialized = False
 
-        # Initialize manager for auto-recovery (ComfyUI direct or SwarmUI legacy)
-        if COMFYUI_DIRECT:
-            from my_app.services.comfyui_manager import get_comfyui_manager
-            self.comfyui_manager = get_comfyui_manager()
-            # Alias for backward compatibility in methods that reference swarmui_manager
-            self.swarmui_manager = self.comfyui_manager
-            logger.info("[ROUTER] Using COMFYUI_DIRECT mode (WebSocket client)")
-        else:
-            from my_app.services.swarmui_manager import get_swarmui_manager
-            self.swarmui_manager = get_swarmui_manager()
-            self.comfyui_manager = self.swarmui_manager
-            logger.info("[ROUTER] Using legacy SwarmUI mode")
+        # Initialize ComfyUI manager for auto-recovery
+        from my_app.services.comfyui_manager import get_comfyui_manager
+        self.comfyui_manager = get_comfyui_manager()
+        logger.info("[ROUTER] ComfyUI manager initialized")
     
     def initialize(self, ollama_service=None, workflow_logic_service=None, comfyui_service=None):
         """Router mit Legacy-Services initialisieren"""
@@ -486,8 +478,8 @@ class BackendRouter:
 
         - Python Chunks (.py): Execute directly via importlib
         - Legacy Workflows: Use complete workflow passthrough with title-based prompt injection
-        - Images: Use SwarmUI /API/GenerateText2Image (simple, fast)
-        - Audio/Video: Use custom workflow submission via /ComfyBackendDirect
+        - Images: Use ComfyUI simple text2image workflow
+        - Audio/Video: Use custom workflow submission via ComfyUI WebSocket
         """
         try:
             # 1. Check for Python-Chunk first (new standard)
@@ -548,7 +540,7 @@ class BackendRouter:
                     logger.info(f"[ROUTER] Using workflow API for '{chunk_name}' (requires_workflow={requires_workflow}, has_loras={has_loras})")
                     return await self._process_workflow_chunk(chunk_name, text_prompt, parameters, chunk)
                 else:
-                    logger.info(f"[ROUTER] Using SwarmUI simple API for '{chunk_name}'")
+                    logger.info(f"[ROUTER] Using ComfyUI simple API for '{chunk_name}'")
                     return await self._process_image_chunk_simple(chunk_name, text_prompt, parameters, chunk)
             else:
                 # For audio/video: use custom workflow submission
@@ -565,7 +557,7 @@ class BackendRouter:
             )
 
     async def _process_image_chunk_simple(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
-        """Process image chunks — routes to ComfyUI direct (WS) or SwarmUI legacy based on config."""
+        """Process image chunks via ComfyUI WebSocket."""
         try:
             # Extract parameters from input_mappings
             import sys
@@ -605,114 +597,49 @@ class BackendRouter:
             else:
                 seed = int(seed)
 
-            # ── COMFYUI_DIRECT: If chunk has a workflow, use submit_and_track ──
-            if COMFYUI_DIRECT and chunk.get('workflow'):
+            # If chunk has a workflow, use submit_and_track
+            if chunk.get('workflow'):
                 return await self._process_workflow_chunk(chunk_name, prompt, parameters, chunk)
 
-            # ── COMFYUI_DIRECT: Simple image (no workflow) ──
-            if COMFYUI_DIRECT:
-                from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            # Simple image (no workflow)
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
 
-                logger.info("[COMFYUI-DIRECT] Ensuring ComfyUI is available...")
-                if not await self.comfyui_manager.ensure_comfyui_available():
-                    return BackendResponse(success=False, content="", error="ComfyUI not available")
+            logger.info("[COMFYUI] Ensuring ComfyUI is available...")
+            if not await self.comfyui_manager.ensure_comfyui_available():
+                return BackendResponse(success=False, content="", error="ComfyUI not available")
 
-                client = get_comfyui_ws_client()
-                if not await client.health_check():
-                    return BackendResponse(success=False, content="", error="ComfyUI not reachable")
+            client = get_comfyui_ws_client()
+            if not await client.health_check():
+                return BackendResponse(success=False, content="", error="ComfyUI not reachable")
 
-                # Build minimal workflow JSON for simple text2image
-                workflow = self._build_simple_t2i_workflow(
-                    prompt=positive_prompt,
-                    negative_prompt=negative_prompt,
-                    model=model,
-                    width=width or 1024,
-                    height=height or 1024,
-                    steps=steps,
-                    cfg_scale=cfg_scale,
-                    seed=seed,
-                )
-
-                logger.info(f"[COMFYUI-DIRECT] Generating image: model={model}, steps={steps}, size={width}x{height}")
-
-                result = await client.submit_and_track(workflow, timeout=parameters.get('timeout', 300), on_progress=get_progress_callback())
-
-                if not result.media_files:
-                    return BackendResponse(success=False, content="", error="ComfyUI generated no output")
-
-                return BackendResponse(
-                    success=True,
-                    content="comfyui_direct_generated",
-                    metadata={
-                        'chunk_name': chunk_name,
-                        'media_type': media_type,
-                        'prompt_id': result.prompt_id,
-                        'media_files': [f.data for f in result.media_files],
-                        'outputs_metadata': [{'filename': f.filename, 'type': f.media_type, 'node_id': f.node_id} for f in result.media_files],
-                        'comfyui_direct': True,
-                        'seed': seed,
-                        'model': model,
-                        'parameters': {
-                            'width': width,
-                            'height': height,
-                            'steps': steps,
-                            'cfg_scale': cfg_scale
-                        }
-                    }
-                )
-
-            # ── LEGACY: SwarmUI path ──
-            logger.info("[SWARMUI-TEXT2IMAGE] Ensuring SwarmUI is available...")
-            if not await self.swarmui_manager.ensure_swarmui_available():
-                logger.error("[SWARMUI-TEXT2IMAGE] Failed to start SwarmUI")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="SwarmUI server not available (failed to auto-start)"
-                )
-
-            from my_app.services.swarmui_client import get_swarmui_client
-
-            client = get_swarmui_client()
-            is_healthy = await client.health_check()
-
-            if not is_healthy:
-                logger.warning("SwarmUI server not reachable after auto-start")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="SwarmUI server not available"
-                )
-
-            logger.info(f"[SWARMUI] Generating image with model={model}, steps={steps}, size={width}x{height}")
-            image_paths = await client.generate_image(
+            # Build minimal workflow JSON for simple text2image
+            workflow = self._build_simple_t2i_workflow(
                 prompt=positive_prompt,
-                model=model,
                 negative_prompt=negative_prompt,
-                width=width,
-                height=height,
+                model=model,
+                width=width or 1024,
+                height=height or 1024,
                 steps=steps,
                 cfg_scale=cfg_scale,
-                seed=seed
+                seed=seed,
             )
 
-            if not image_paths:
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="SwarmUI failed to generate image"
-                )
+            logger.info(f"[COMFYUI] Generating image: model={model}, steps={steps}, size={width}x{height}")
 
-            logger.info(f"[SWARMUI] Generated {len(image_paths)} image(s)")
+            result = await client.submit_and_track(workflow, timeout=parameters.get('timeout', 300), on_progress=get_progress_callback())
+
+            if not result.media_files:
+                return BackendResponse(success=False, content="", error="ComfyUI generated no output")
 
             return BackendResponse(
                 success=True,
-                content="swarmui_generated",
+                content="comfyui_generated",
                 metadata={
                     'chunk_name': chunk_name,
-                    'media_type': chunk.get('media_type'),
-                    'image_paths': image_paths,
-                    'swarmui_available': True,
+                    'media_type': media_type,
+                    'prompt_id': result.prompt_id,
+                    'media_files': [f.data for f in result.media_files],
+                    'outputs_metadata': [{'filename': f.filename, 'type': f.media_type, 'node_id': f.node_id} for f in result.media_files],
                     'seed': seed,
                     'model': model,
                     'parameters': {
@@ -739,11 +666,7 @@ class BackendRouter:
         prompt: str, negative_prompt: str, model: str,
         width: int, height: int, steps: int, cfg_scale: float, seed: int,
     ) -> Dict[str, Any]:
-        """Build a minimal ComfyUI workflow JSON for simple text-to-image generation.
-
-        This replaces SwarmUI's /API/GenerateText2Image which internally builds
-        the same kind of workflow.
-        """
+        """Build a minimal ComfyUI workflow JSON for simple text-to-image generation."""
         return {
             "1": {
                 "class_type": "CheckpointLoaderSimple",
@@ -803,10 +726,7 @@ class BackendRouter:
         }
 
     async def _process_workflow_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
-        """Process audio/video/image chunks using custom ComfyUI workflows.
-
-        Routes to ComfyUI direct (WebSocket) or SwarmUI legacy based on COMFYUI_DIRECT config.
-        """
+        """Process audio/video/image chunks using custom ComfyUI workflows via WebSocket."""
         try:
             # 1. Load workflow from chunk
             workflow = chunk.get('workflow')
@@ -857,135 +777,29 @@ class BackendRouter:
 
                 workflow = json.loads(workflow_str)
 
-            # ── COMFYUI_DIRECT: WebSocket submit + track ──
-            if COMFYUI_DIRECT:
-                from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            # Submit workflow via ComfyUI WebSocket
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
 
-                logger.info("[COMFYUI-DIRECT] Ensuring ComfyUI is available...")
-                if not await self.comfyui_manager.ensure_comfyui_available():
-                    return BackendResponse(success=False, content="", error="ComfyUI not available")
+            logger.info("[COMFYUI] Ensuring ComfyUI is available...")
+            if not await self.comfyui_manager.ensure_comfyui_available():
+                return BackendResponse(success=False, content="", error="ComfyUI not available")
 
-                client = get_comfyui_ws_client()
-                if not await client.health_check():
-                    return BackendResponse(success=False, content="", error="ComfyUI not reachable")
+            client = get_comfyui_ws_client()
+            if not await client.health_check():
+                return BackendResponse(success=False, content="", error="ComfyUI not reachable")
 
-                logger.info(f"[COMFYUI-DIRECT] Submitting {media_type} workflow")
-                timeout = parameters.get('timeout', 600)
-
-                result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
-
-                if not result.media_files:
-                    return BackendResponse(
-                        success=False, content="",
-                        error=f"No {media_type} files in workflow output"
-                    )
-
-                logger.info(f"[COMFYUI-DIRECT] Workflow complete: {len(result.media_files)} file(s) in {result.execution_time:.1f}s")
-
-                return BackendResponse(
-                    success=True,
-                    content="workflow_generated",
-                    metadata={
-                        'chunk_name': chunk_name,
-                        'media_type': media_type,
-                        'prompt_id': result.prompt_id,
-                        'comfyui_direct': True,
-                        'media_files': [f.data for f in result.media_files],
-                        'outputs_metadata': [
-                            {'filename': f.filename, 'type': f.media_type,
-                             'subfolder': f.subfolder, 'node_id': f.node_id}
-                            for f in result.media_files
-                        ],
-                        'seed': generated_seed,
-                        'workflow_completed': True,
-                    }
-                )
-
-            # ── LEGACY: SwarmUI path ──
-            import sys
-            devserver_path = Path(__file__).parent.parent.parent
-            if str(devserver_path) not in sys.path:
-                sys.path.insert(0, str(devserver_path))
-
-            logger.info("[SWARMUI-WORKFLOW] Ensuring SwarmUI is available...")
-            if not await self.swarmui_manager.ensure_swarmui_available():
-                logger.error("[SWARMUI-WORKFLOW] Failed to start SwarmUI")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="SwarmUI server not available (failed to auto-start)"
-                )
-
-            from my_app.services.swarmui_client import get_swarmui_client
-
-            client = get_swarmui_client()
-            is_healthy = await client.health_check()
-
-            if not is_healthy:
-                logger.warning("SwarmUI server not reachable after auto-start")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="SwarmUI server not available"
-                )
-
-            logger.info(f"[WORKFLOW-CHUNK] Submitting {media_type} workflow to SwarmUI")
-            prompt_id = await client.submit_workflow(workflow)
-
-            if not prompt_id:
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="Failed to submit workflow to SwarmUI"
-                )
-
-            logger.info(f"[WORKFLOW-CHUNK] Workflow submitted: {prompt_id}")
-
+            logger.info(f"[COMFYUI] Submitting {media_type} workflow")
             timeout = parameters.get('timeout', 600)
-            history = await client.wait_for_completion(prompt_id, timeout=timeout)
 
-            if not history:
+            result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
+
+            if not result.media_files:
                 return BackendResponse(
-                    success=False,
-                    content="",
-                    error="Timeout or error waiting for workflow completion"
+                    success=False, content="",
+                    error=f"No {media_type} files in workflow output"
                 )
 
-            logger.info(f"[WORKFLOW-CHUNK] Workflow completed: {prompt_id}")
-
-            # Legacy: Extract media files from filesystem (the glob hack)
-            import os
-            import glob
-
-            if media_type == 'image':
-                output_dir = f'{COMFYUI_BASE_PATH}/output'
-                file_extension = 'png'
-            elif media_type == 'audio':
-                output_dir = f'{COMFYUI_BASE_PATH}/output/audio'
-                file_extension = 'mp3'
-            elif media_type == 'video':
-                output_dir = f'{COMFYUI_BASE_PATH}/output/video'
-                file_extension = 'mp4'
-            else:
-                logger.warning(f"Unknown media type '{media_type}', using audio directory")
-                output_dir = f'{COMFYUI_BASE_PATH}/output/audio'
-                file_extension = 'mp3'
-
-            filesystem_path = None
-            if os.path.exists(output_dir):
-                files = glob.glob(f"{output_dir}/*.{file_extension}")
-                if files:
-                    most_recent = max(files, key=os.path.getmtime)
-                    filesystem_path = most_recent
-                    logger.info(f"[WORKFLOW-CHUNK] Found {media_type} file: {filesystem_path}")
-
-            if not filesystem_path:
-                logger.error(f"[WORKFLOW-CHUNK] No {media_type} files found in {output_dir}")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error=f"No {media_type} files found in workflow output"
-                )
+            logger.info(f"[COMFYUI] Workflow complete: {len(result.media_files)} file(s) in {result.execution_time:.1f}s")
 
             return BackendResponse(
                 success=True,
@@ -993,11 +807,15 @@ class BackendRouter:
                 metadata={
                     'chunk_name': chunk_name,
                     'media_type': media_type,
-                    'prompt_id': prompt_id,
-                    'filesystem_path': filesystem_path,
-                    'swarmui_available': True,
+                    'prompt_id': result.prompt_id,
+                    'media_files': [f.data for f in result.media_files],
+                    'outputs_metadata': [
+                        {'filename': f.filename, 'type': f.media_type,
+                         'subfolder': f.subfolder, 'node_id': f.node_id}
+                        for f in result.media_files
+                    ],
                     'seed': generated_seed,
-                    'workflow_completed': True
+                    'workflow_completed': True,
                 }
             )
 
@@ -1012,10 +830,7 @@ class BackendRouter:
             )
 
     async def _process_legacy_workflow(self, chunk: Dict[str, Any], prompt: str, parameters: Dict[str, Any]) -> BackendResponse:
-        """Process legacy workflow: Complete workflow passthrough with title-based prompt injection.
-
-        Routes to ComfyUI direct (WebSocket) or SwarmUI legacy based on COMFYUI_DIRECT config.
-        """
+        """Process legacy workflow: Complete workflow passthrough with title-based prompt injection."""
         try:
             chunk_name = chunk.get('name', 'unknown')
             media_type = chunk.get('media_type', 'image')
@@ -1120,63 +935,28 @@ class BackendRouter:
             if has_multi_image:
                 workflow = _adapt_workflow_for_multi_image(workflow, parameters)
 
-            # ── COMFYUI_DIRECT: Use WS client for execution ──
-            if COMFYUI_DIRECT:
-                from my_app.services.comfyui_ws_client import get_comfyui_ws_client
-                from my_app.services.legacy_workflow_service import LegacyWorkflowService
+            # Use LegacyWorkflowService for prompt injection logic
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            from my_app.services.legacy_workflow_service import LegacyWorkflowService
 
-                # Still use LegacyWorkflowService for prompt injection logic
-                legacy_svc = LegacyWorkflowService.__new__(LegacyWorkflowService)
-                workflow, injection_success = legacy_svc._inject_prompt(workflow, prompt, chunk)
-                if not injection_success:
-                    logger.warning("[LEGACY-WORKFLOW] Prompt injection failed, continuing anyway")
+            legacy_svc = LegacyWorkflowService.__new__(LegacyWorkflowService)
+            workflow, injection_success = legacy_svc._inject_prompt(workflow, prompt, chunk)
+            if not injection_success:
+                logger.warning("[LEGACY-WORKFLOW] Prompt injection failed, continuing anyway")
 
-                # Replace LLM model names
-                workflow = legacy_svc._replace_llm_models(workflow)
+            # Replace LLM model names
+            workflow = legacy_svc._replace_llm_models(workflow)
 
-                logger.info("[COMFYUI-DIRECT] Ensuring ComfyUI is available...")
-                if not await self.comfyui_manager.ensure_comfyui_available():
-                    return BackendResponse(success=False, content="", error="ComfyUI not available")
+            logger.info("[COMFYUI] Ensuring ComfyUI is available...")
+            if not await self.comfyui_manager.ensure_comfyui_available():
+                return BackendResponse(success=False, content="", error="ComfyUI not available")
 
-                client = get_comfyui_ws_client()
-                timeout = parameters.get('timeout', 300)
+            client = get_comfyui_ws_client()
+            timeout = parameters.get('timeout', 300)
 
-                result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
+            result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
 
-                logger.info(f"[LEGACY-WORKFLOW] Completed: {len(result.media_files)} file(s)")
-
-                return BackendResponse(
-                    success=True,
-                    content="workflow_generated",
-                    metadata={
-                        'chunk_name': chunk_name,
-                        'media_type': media_type,
-                        'prompt_id': result.prompt_id,
-                        'legacy_workflow': True,
-                        'comfyui_direct': True,
-                        'media_files': [f.data for f in result.media_files],
-                        'outputs_metadata': [
-                            {'node_id': f.node_id, 'type': f.media_type,
-                             'filename': f.filename, 'subfolder': f.subfolder}
-                            for f in result.media_files
-                        ],
-                        'seed': generated_seed,
-                    }
-                )
-
-            # ── LEGACY: SwarmUI path ──
-            from my_app.services.legacy_workflow_service import get_legacy_workflow_service
-
-            service = get_legacy_workflow_service()
-            logger.info(f"[LEGACY-WORKFLOW] Using service base URL: {service.base_url}")
-
-            result = await service.execute_workflow(
-                workflow=workflow,
-                prompt=prompt,
-                chunk_config=chunk
-            )
-
-            logger.info(f"[LEGACY-WORKFLOW] Completed: {len(result['media_files'])} file(s) downloaded")
+            logger.info(f"[LEGACY-WORKFLOW] Completed: {len(result.media_files)} file(s)")
 
             return BackendResponse(
                 success=True,
@@ -1184,11 +964,14 @@ class BackendRouter:
                 metadata={
                     'chunk_name': chunk_name,
                     'media_type': media_type,
-                    'prompt_id': result['prompt_id'],
+                    'prompt_id': result.prompt_id,
                     'legacy_workflow': True,
-                    'media_files': result['media_files'],
-                    'outputs_metadata': result['outputs_metadata'],
-                    'workflow_json': result['workflow_json'],
+                    'media_files': [f.data for f in result.media_files],
+                    'outputs_metadata': [
+                        {'node_id': f.node_id, 'type': f.media_type,
+                         'filename': f.filename, 'subfolder': f.subfolder}
+                        for f in result.media_files
+                    ],
                     'seed': generated_seed,
                 }
             )
@@ -1214,46 +997,18 @@ class BackendRouter:
         source_path = _resolve_media_url_to_path(parameters['input_image'])
         source_file = Path(source_path)
 
-        if COMFYUI_DIRECT:
-            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+        from my_app.services.comfyui_ws_client import get_comfyui_ws_client
 
-            logger.info("[LEGACY-WORKFLOW] Uploading image via ComfyUI WS client...")
-            if not await self.comfyui_manager.ensure_comfyui_available():
-                logger.error("[LEGACY-WORKFLOW] ComfyUI not available for image upload")
-                return
+        logger.info("[LEGACY-WORKFLOW] Uploading image via ComfyUI WS client...")
+        if not await self.comfyui_manager.ensure_comfyui_available():
+            logger.error("[LEGACY-WORKFLOW] ComfyUI not available for image upload")
+            return
 
-            client = get_comfyui_ws_client()
-            with open(source_path, 'rb') as f:
-                image_data = f.read()
+        client = get_comfyui_ws_client()
+        with open(source_path, 'rb') as f:
+            image_data = f.read()
 
-            uploaded_filename = await client.upload_image(image_data, source_file.name)
-        else:
-            import aiohttp
-
-            logger.info("[LEGACY-WORKFLOW] Ensuring SwarmUI available for image upload...")
-            if not await self.swarmui_manager.ensure_swarmui_available():
-                logger.error("[LEGACY-WORKFLOW] SwarmUI not available, image upload will fail")
-                return
-
-            comfyui_url = "http://127.0.0.1:7821"
-            upload_url = f"{comfyui_url}/upload/image"
-            uploaded_filename = None
-
-            try:
-                async with aiohttp.ClientSession() as session:
-                    with open(source_path, 'rb') as f:
-                        form = aiohttp.FormData()
-                        form.add_field('image', f, filename=source_file.name, content_type='image/png')
-                        form.add_field('overwrite', 'true')
-
-                        async with session.post(upload_url, data=form) as response:
-                            if response.status == 200:
-                                result = await response.json()
-                                uploaded_filename = result.get('name', source_file.name)
-                            else:
-                                logger.error(f"[LEGACY-WORKFLOW] Failed to upload image: HTTP {response.status}")
-            except Exception as e:
-                logger.error(f"[LEGACY-WORKFLOW] Error uploading image: {e}")
+        uploaded_filename = await client.upload_image(image_data, source_file.name)
 
         if uploaded_filename:
             logger.info(f"[LEGACY-WORKFLOW] Uploaded image: {uploaded_filename}")
@@ -1271,82 +1026,38 @@ class BackendRouter:
         parameters: Dict[str, Any], multi_image_keys: List[str]
     ):
         """Handle multi-image uploads (input_image1/2/3)."""
-        if COMFYUI_DIRECT:
-            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+        from my_app.services.comfyui_ws_client import get_comfyui_ws_client
 
-            logger.info("[LEGACY-WORKFLOW] Multi-image upload via ComfyUI WS client...")
-            if not await self.comfyui_manager.ensure_comfyui_available():
-                return
+        logger.info("[LEGACY-WORKFLOW] Multi-image upload via ComfyUI WS client...")
+        if not await self.comfyui_manager.ensure_comfyui_available():
+            return
 
-            client = get_comfyui_ws_client()
+        client = get_comfyui_ws_client()
 
-            for image_key in multi_image_keys:
-                if image_key not in input_mappings or image_key not in parameters or not parameters[image_key]:
-                    continue
+        for image_key in multi_image_keys:
+            if image_key not in input_mappings or image_key not in parameters or not parameters[image_key]:
+                continue
 
-                image_mapping = input_mappings[image_key]
-                source_path = _resolve_media_url_to_path(parameters[image_key])
-                source_file = Path(source_path)
+            image_mapping = input_mappings[image_key]
+            source_path = _resolve_media_url_to_path(parameters[image_key])
+            source_file = Path(source_path)
 
-                try:
-                    with open(source_path, 'rb') as f:
-                        image_data = f.read()
-                    uploaded_filename = await client.upload_image(image_data, source_file.name)
-                    if uploaded_filename:
-                        image_node_id = image_mapping.get('node_id')
-                        image_field = image_mapping.get('field', 'inputs.image')
-                        if image_node_id and image_node_id in workflow:
-                            field_parts = image_field.split('.')
-                            target = workflow[image_node_id]
-                            for part in field_parts[:-1]:
-                                target = target.setdefault(part, {})
-                            target[field_parts[-1]] = uploaded_filename
-                            logger.info(f"[LEGACY-WORKFLOW] Injected {image_key}: {uploaded_filename}")
-                except Exception as e:
-                    logger.error(f"[LEGACY-WORKFLOW] Error uploading {image_key}: {e}")
-        else:
-            import aiohttp
-
-            logger.info("[LEGACY-WORKFLOW] Ensuring SwarmUI available for multi-image upload...")
-            await self.swarmui_manager.ensure_swarmui_available()
-
-            comfyui_url = "http://127.0.0.1:7821"
-            upload_url = f"{comfyui_url}/upload/image"
-
-            for image_key in multi_image_keys:
-                if image_key not in input_mappings or image_key not in parameters or not parameters[image_key]:
-                    logger.info(f"[LEGACY-WORKFLOW] {image_key} is empty (optional), skipping")
-                    continue
-
-                image_mapping = input_mappings[image_key]
-                source_path = _resolve_media_url_to_path(parameters[image_key])
-                source_file = Path(source_path)
-
-                try:
-                    async with aiohttp.ClientSession() as session:
-                        with open(source_path, 'rb') as f:
-                            form = aiohttp.FormData()
-                            form.add_field('image', f, filename=source_file.name, content_type='image/png')
-                            form.add_field('overwrite', 'true')
-
-                            async with session.post(upload_url, data=form) as response:
-                                if response.status == 200:
-                                    result = await response.json()
-                                    uploaded_filename = result.get('name', source_file.name)
-                                    logger.info(f"[LEGACY-WORKFLOW] Uploaded {image_key}: {uploaded_filename}")
-
-                                    image_node_id = image_mapping.get('node_id')
-                                    image_field = image_mapping.get('field', 'inputs.image')
-                                    if image_node_id and image_node_id in workflow:
-                                        field_parts = image_field.split('.')
-                                        target = workflow[image_node_id]
-                                        for part in field_parts[:-1]:
-                                            target = target.setdefault(part, {})
-                                        target[field_parts[-1]] = uploaded_filename
-                                else:
-                                    logger.error(f"[LEGACY-WORKFLOW] Failed to upload {image_key}: HTTP {response.status}")
-                except Exception as e:
-                    logger.error(f"[LEGACY-WORKFLOW] Error uploading {image_key}: {e}")
+            try:
+                with open(source_path, 'rb') as f:
+                    image_data = f.read()
+                uploaded_filename = await client.upload_image(image_data, source_file.name)
+                if uploaded_filename:
+                    image_node_id = image_mapping.get('node_id')
+                    image_field = image_mapping.get('field', 'inputs.image')
+                    if image_node_id and image_node_id in workflow:
+                        field_parts = image_field.split('.')
+                        target = workflow[image_node_id]
+                        for part in field_parts[:-1]:
+                            target = target.setdefault(part, {})
+                        target[field_parts[-1]] = uploaded_filename
+                        logger.info(f"[LEGACY-WORKFLOW] Injected {image_key}: {uploaded_filename}")
+            except Exception as e:
+                logger.error(f"[LEGACY-WORKFLOW] Error uploading {image_key}: {e}")
                     import traceback
                     traceback.print_exc()
 

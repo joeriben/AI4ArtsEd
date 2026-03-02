@@ -17,7 +17,6 @@ from config import (
     DEFAULT_NEGATIVE_TERMS,
     ENABLE_MODEL_PATH_RESOLUTION,
     MODEL_RESOLUTION_FALLBACK,
-    SWARMUI_BASE_PATH,
     COMFYUI_BASE_PATH
 )
 from my_app.utils.helpers import (
@@ -41,9 +40,8 @@ class WorkflowLogicService:
         self._load_metadata()
         
         # Initialize model path resolver if enabled
-        if ENABLE_MODEL_PATH_RESOLUTION and SWARMUI_BASE_PATH and COMFYUI_BASE_PATH:
+        if ENABLE_MODEL_PATH_RESOLUTION and COMFYUI_BASE_PATH:
             self.model_resolver = ModelPathResolver(
-                swarmui_base=SWARMUI_BASE_PATH,
                 comfyui_base=COMFYUI_BASE_PATH
             )
             logger.info("Model path resolver initialized")

@@ -1,13 +1,10 @@
 """
-ComfyUI Manager — Direct process lifecycle management
-
-Replaces swarmui_manager.py (248 lines).
-Manages ComfyUI directly without SwarmUI as middleware.
+ComfyUI Manager — Process lifecycle management
 
 Architecture:
     - Health check via GET /system_stats on ComfyUI port
     - Auto-start via 2_start_comfyui.sh startup script
-    - Singleton with double-check locking (same pattern as SwarmUIManager)
+    - Singleton with double-check locking
 """
 
 import asyncio
@@ -31,44 +28,24 @@ class ComfyUIManager:
         try:
             from config import (
                 COMFYUI_PORT,
-                COMFYUI_DIRECT,
+                COMFYUI_AUTO_START,
+                COMFYUI_STARTUP_TIMEOUT,
+                COMFYUI_HEALTH_CHECK_INTERVAL,
                 BASE_DIR,
             )
-            # Try to load ComfyUI-specific auto-start settings, fall back to SwarmUI ones
-            try:
-                from config import COMFYUI_AUTO_START
-                self._auto_start_enabled = COMFYUI_AUTO_START
-            except ImportError:
-                # Fall back to SWARMUI_AUTO_START during transition
-                from config import SWARMUI_AUTO_START
-                self._auto_start_enabled = SWARMUI_AUTO_START
-
-            try:
-                from config import COMFYUI_STARTUP_TIMEOUT
-                self._startup_timeout = COMFYUI_STARTUP_TIMEOUT
-            except ImportError:
-                from config import SWARMUI_STARTUP_TIMEOUT
-                self._startup_timeout = SWARMUI_STARTUP_TIMEOUT
-
-            try:
-                from config import COMFYUI_HEALTH_CHECK_INTERVAL
-                self._health_check_interval = COMFYUI_HEALTH_CHECK_INTERVAL
-            except ImportError:
-                from config import SWARMUI_HEALTH_CHECK_INTERVAL
-                self._health_check_interval = SWARMUI_HEALTH_CHECK_INTERVAL
-
             self.comfyui_port = int(COMFYUI_PORT)
+            self._auto_start_enabled = COMFYUI_AUTO_START
+            self._startup_timeout = COMFYUI_STARTUP_TIMEOUT
+            self._health_check_interval = COMFYUI_HEALTH_CHECK_INTERVAL
             self._base_dir = BASE_DIR
-            self._comfyui_direct = COMFYUI_DIRECT
 
         except ImportError as e:
             logger.error(f"[COMFYUI-MANAGER] Failed to import config: {e}")
-            self.comfyui_port = 7821
+            self.comfyui_port = 17804
             self._auto_start_enabled = True
             self._startup_timeout = 120
             self._health_check_interval = 2.0
             self._base_dir = Path(__file__).parent.parent.parent.parent
-            self._comfyui_direct = False
 
         # Concurrency control
         self._startup_lock = asyncio.Lock()
@@ -76,7 +53,7 @@ class ComfyUIManager:
 
         logger.info(
             f"[COMFYUI-MANAGER] Initialized (port={self.comfyui_port}, "
-            f"auto_start={self._auto_start_enabled}, direct={self._comfyui_direct})"
+            f"auto_start={self._auto_start_enabled})"
         )
 
     async def ensure_comfyui_available(self) -> bool:
@@ -170,19 +147,8 @@ class ComfyUIManager:
             await asyncio.sleep(self._health_check_interval)
 
     def _get_startup_script_path(self) -> Path:
-        """Resolve path to 2_start_comfyui.sh (or fall back to 2_start_swarmui.sh)."""
-        # Prefer direct ComfyUI script
-        comfyui_script = self._base_dir / "2_start_comfyui.sh"
-        if comfyui_script.exists():
-            return comfyui_script
-
-        # Fall back to SwarmUI script during transition
-        swarmui_script = self._base_dir / "2_start_swarmui.sh"
-        if swarmui_script.exists():
-            logger.info("[COMFYUI-MANAGER] Using SwarmUI startup script as fallback")
-            return swarmui_script
-
-        return comfyui_script  # Will fail with file-not-found
+        """Resolve path to 2_start_comfyui.sh."""
+        return self._base_dir / "2_start_comfyui.sh"
 
     def is_starting(self) -> bool:
         """Check if ComfyUI is currently in startup process."""

@@ -403,14 +403,8 @@ class LivePipelineRecorder:
             Filename of saved entity, or None if failed
         """
         try:
-            # Use WS client in COMFYUI_DIRECT mode, legacy client otherwise
-            from config import COMFYUI_DIRECT
-            if COMFYUI_DIRECT:
-                from my_app.services.comfyui_ws_client import get_comfyui_ws_client
-                client = get_comfyui_ws_client()
-            else:
-                from my_app.services.comfyui_client import get_comfyui_client
-                client = get_comfyui_client()
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            client = get_comfyui_ws_client()
 
             # Check ComfyUI health before waiting
             is_healthy = await client.health_check()
@@ -551,79 +545,6 @@ class LivePipelineRecorder:
 
         except Exception as e:
             logger.error(f"[RECORDER] Error downloading from ComfyUI: {e}")
-            return None
-
-    async def download_and_save_from_swarmui(
-        self,
-        image_paths: list,
-        media_type: str,
-        config: str,
-        seed: Optional[int] = None
-    ) -> Optional[str]:
-        """
-        Download media from SwarmUI and save as entity.
-
-        Args:
-            image_paths: List of SwarmUI image paths (e.g., ["View/local/raw/2024-01-02/image.png"])
-            media_type: Type of media ('image', 'audio', 'video')
-            config: Output config name
-            seed: Optional seed value used for generation
-
-        Returns:
-            Filename of saved entity, or None if failed
-        """
-        try:
-            from my_app.services.swarmui_client import get_swarmui_client
-
-            if not image_paths:
-                logger.error(f"[RECORDER] ✗ No image paths provided for SwarmUI download")
-                return None
-
-            client = get_swarmui_client()
-
-            # Download first image
-            first_path = image_paths[0]
-            logger.info(f"[RECORDER] Downloading from SwarmUI: {first_path}")
-
-            file_data = await client.download_image(first_path)
-
-            if not file_data:
-                logger.error(f"Failed to download {media_type} from SwarmUI: {first_path}")
-                return None
-
-            # Detect format
-            file_format = self._detect_format_from_data(file_data, media_type)
-
-            # Get dimensions for images
-            metadata = {
-                'config': config,
-                'format': file_format,
-                'backend': 'swarmui',
-                'image_path': first_path
-            }
-
-            # Add seed if provided
-            if seed is not None:
-                metadata['seed'] = seed
-
-            if media_type == 'image':
-                dims = self._get_image_dimensions_from_bytes(file_data)
-                if dims[0] and dims[1]:
-                    metadata['width'] = dims[0]
-                    metadata['height'] = dims[1]
-
-            # Save as entity
-            filename = self.save_entity(
-                entity_type=f"output_{media_type}",
-                content=file_data,
-                metadata=metadata
-            )
-
-            logger.info(f"[RECORDER] Downloaded and saved {media_type} from SwarmUI ({len(file_data)} bytes)")
-            return filename
-
-        except Exception as e:
-            logger.error(f"[RECORDER] Error downloading from SwarmUI: {e}")
             return None
 
     async def download_and_save_from_url(

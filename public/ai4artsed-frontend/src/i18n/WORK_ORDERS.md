@@ -6,6 +6,13 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
+### WO-2026-03-03-comfyui-label-cleanup
+- **Session**: SwarmUI cleanup
+- **Scope**: en.ts
+- **Changed keys** (modified):
+  - `settings.status.comfyui` (MODIFIED): 'ComfyUI / SwarmUI' -> 'ComfyUI'
+- **Context**: SwarmUI has been removed from the project. The settings status label should only show "ComfyUI". Simple change, just remove " / SwarmUI" from all translations.
+
 ### WO-2026-03-02-looper-section-header
 - **Session**: 233
 - **Scope**: en.ts

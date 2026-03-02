@@ -309,11 +309,11 @@ class PipelineExecutor:
             "pipeline_name": self._current_config.pipeline_name if self._current_config else None
         }
 
-        # Add backend metadata from last completed step (e.g., image_paths from SwarmUI)
+        # Add backend metadata from last completed step
         if completed_steps:
             last_step_metadata = completed_steps[-1].metadata
             # Merge backend-specific keys into result metadata
-            for key in ['image_paths', 'seed', 'model', 'media_type', 'swarmui_available', 'parameters', 'filesystem_path', 'prompt_id', 'workflow_completed', 'legacy_workflow', 'media_files', 'outputs_metadata', 'workflow_json', 'download_all', 'chunk_name', 'chunk_type', 'image_data', 'audio_data', 'audio_format', 'video_data', 'video_format', 'size_bytes', 'model_id', 'backend', 'attention_data', 'probing_data', 'algebra_data', 'reference_image', 'result_image', 'archaeology_data']:
+            for key in ['image_paths', 'seed', 'model', 'media_type', 'parameters', 'filesystem_path', 'prompt_id', 'workflow_completed', 'legacy_workflow', 'media_files', 'outputs_metadata', 'workflow_json', 'download_all', 'chunk_name', 'chunk_type', 'image_data', 'audio_data', 'audio_format', 'video_data', 'video_format', 'size_bytes', 'model_id', 'backend', 'attention_data', 'probing_data', 'algebra_data', 'reference_image', 'result_image', 'archaeology_data']:
                 if key in last_step_metadata:
                     result_metadata[key] = last_step_metadata[key]
 

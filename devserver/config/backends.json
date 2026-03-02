@@ -87,15 +87,14 @@
 
     "comfyui": {
       "enabled": true,
-      "description": "ComfyUI via SwarmUI (Fallback for all media types)",
+      "description": "ComfyUI Standalone (Fallback for all media types)",
       "media_types": ["image", "audio", "video", "music"],
       "requirements": {
         "external_service": true,
-        "ports": [7801, 7821]
+        "ports": [17804]
       },
       "config": {
-        "api_port": 7801,
-        "comfy_port": 7821,
+        "comfy_port": 17804,
         "auto_start": true,
         "startup_timeout": 120
       }

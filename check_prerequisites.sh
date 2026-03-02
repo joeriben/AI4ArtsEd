@@ -146,7 +146,7 @@ fi
 
 # 8. Check Ports
 echo -e "${BLUE}[8/10]${NC} Checking required ports..."
-PORTS=(7801 7821 11434 17801)
+PORTS=(11434 17801 17804)
 PORTS_OK=true
 
 for PORT in "${PORTS[@]}"; do
@@ -166,7 +166,7 @@ for PORT in "${PORTS[@]}"; do
 done
 
 if $PORTS_OK; then
-    echo -e "${GREEN}${CHECK}${NC} Ports: 7801, 7821, 11434, 17801 are available"
+    echo -e "${GREEN}${CHECK}${NC} Ports: 11434, 17801, 17804 are available"
 fi
 
 # 9. Check Internet Connectivity

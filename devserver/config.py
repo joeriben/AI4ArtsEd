@@ -294,35 +294,15 @@ EXTERNAL_LLM_PROVIDER = os.environ.get("EXTERNAL_LLM_PROVIDER", "none")
 # True = DSGVO-compliant (no cloud services), False = Cloud services allowed
 DSGVO_CONFORMITY = os.environ.get("DSGVO_CONFORMITY", "true").lower() == "true"
 COMFYUI_PREFIX = "comfyui"
-COMFYUI_PORT = "7821"  # ComfyUI backend port (direct or via SwarmUI)
-SWARMUI_API_PORT = "7801"  # SwarmUI REST API (legacy, used when COMFYUI_DIRECT=False)
-
-# ============================================================================
-# COMFYUI CONNECTION MODE
-# ============================================================================
-# True  = Direct WebSocket connection to ComfyUI (no SwarmUI middleware)
-#         Real progress tracking, denoising previews, no filesystem hacks
-# False = Legacy SwarmUI proxy mode (Port 7801, polling, glob-based output)
-#
-# Toggle via env var for safe transition: COMFYUI_DIRECT=true in dev startup
-COMFYUI_DIRECT = os.environ.get("COMFYUI_DIRECT", "true").lower() == "true"
-
-# Legacy SwarmUI flags (only used when COMFYUI_DIRECT=False)
-USE_SWARMUI_ORCHESTRATION = True  # Route all workflows via SwarmUI
-ALLOW_DIRECT_COMFYUI = False      # Emergency only: direct port 7821
+COMFYUI_PORT = "17804"  # AI4ArtsEd embedded ComfyUI (17801=prod, 17802=dev, 17803=GPU, 17804=ComfyUI)
 
 # ============================================================================
 # COMFYUI AUTO-RECOVERY CONFIGURATION
 # ============================================================================
-# Controls automatic startup of ComfyUI/SwarmUI when needed
+# Controls automatic startup of ComfyUI when needed
 COMFYUI_AUTO_START = os.environ.get("COMFYUI_AUTO_START", "true").lower() == "true"
 COMFYUI_STARTUP_TIMEOUT = int(os.environ.get("COMFYUI_STARTUP_TIMEOUT", "120"))  # seconds
 COMFYUI_HEALTH_CHECK_INTERVAL = float(os.environ.get("COMFYUI_HEALTH_CHECK_INTERVAL", "2.0"))  # seconds
-
-# Legacy aliases (for backward compatibility with SwarmUIManager during transition)
-SWARMUI_AUTO_START = COMFYUI_AUTO_START
-SWARMUI_STARTUP_TIMEOUT = COMFYUI_STARTUP_TIMEOUT
-SWARMUI_HEALTH_CHECK_INTERVAL = COMFYUI_HEALTH_CHECK_INTERVAL
 
 
 # ============================================================================
@@ -535,12 +515,11 @@ POLLING_TIMEOUT = 15
 MEDIA_DOWNLOAD_TIMEOUT = 30
 
 # Model Path Resolution Configuration
-ENABLE_MODEL_PATH_RESOLUTION = True  # ENABLED: SwarmUI uses OfficialStableDiffusion/ prefix format
+ENABLE_MODEL_PATH_RESOLUTION = True  # ENABLED: ComfyUI uses OfficialStableDiffusion/ prefix format
 MODEL_RESOLUTION_FALLBACK = True      # Fallback to original names if resolution fails
 
 # Base paths for model resolution (configure these to your actual paths)
 # Note: _SERVER_BASE and _AI_TOOLS_BASE are defined at top of file
-SWARMUI_BASE_PATH = os.environ.get("SWARMUI_PATH", str(_AI_TOOLS_BASE / "SwarmUI"))
 COMFYUI_BASE_PATH = os.environ.get("COMFYUI_PATH", str(_SERVER_BASE / "dlbackend" / "ComfyUI"))
 
 # LoRA Training Paths (Kohya SS)

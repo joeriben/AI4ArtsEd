@@ -1,7 +1,7 @@
 """
 Diffusers Backend - Direct HuggingFace Diffusers inference
 
-Session 149: Alternative backend for direct model inference without SwarmUI/ComfyUI.
+Session 149: Direct model inference backend.
 Provides full control over the inference pipeline and optional TensorRT acceleration.
 
 Features:

@@ -260,7 +260,7 @@ def add_or_update_nodes(workflow_path: Path, über_text: str, info_text: str):
 
 def main():
     # Target directory for GUI workflows
-    gui_workflows_dir = Path("/home/joerissen/ai/SwarmUI/dlbackend/ComfyUI/user/default/workflows/ai4artsed_comfyui_workflows")
+    gui_workflows_dir = Path("/home/joerissen/ai/ai4artsed_webserver/dlbackend/ComfyUI/user/default/workflows/ai4artsed_comfyui_workflows")
     
     # Process each workflow
     success_count = 0

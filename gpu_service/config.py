@@ -32,7 +32,8 @@ DIFFUSERS_TENSORRT_MODELS = {
     "sd35_large": "stabilityai/stable-diffusion-3.5-large-tensorrt",
     "sd35_medium": "stabilityai/stable-diffusion-3.5-medium-tensorrt",
 }
-LORA_DIR = Path(os.environ.get("LORA_DIR", str(_AI_TOOLS_BASE / "SwarmUI" / "Models" / "loras")))
+_SERVER_BASE = Path(os.environ.get("SERVER_BASE", str(_AI_TOOLS_BASE / "ai4artsed_webserver")))
+LORA_DIR = Path(os.environ.get("LORA_DIR", str(_SERVER_BASE / "dlbackend" / "ComfyUI" / "models" / "loras")))
 DIFFUSERS_FLUX2_QUANTIZE = os.environ.get("DIFFUSERS_FLUX2_QUANTIZE", "fp8")  # bf16 or fp8
 
 # --- HeartMuLa ---

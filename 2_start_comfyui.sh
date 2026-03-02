@@ -1,14 +1,14 @@
 #!/bin/bash
 # Start ComfyUI directly (standalone installation)
 #
-# ComfyUI runs on port 7821 and is accessed directly by the DevServer
+# ComfyUI runs on port 17804 and is accessed directly by the DevServer
 # via WebSocket (progress tracking) and HTTP (media download).
 # Models are in dlbackend/ComfyUI/models/ (ComfyUI standard paths).
 
 # Keep window open on error
 trap 'echo ""; echo "❌ Script failed! Press any key to close..."; read -n 1 -s -r' ERR
 
-COMFYUI_PORT=7821
+COMFYUI_PORT=17804
 
 # Get directory where this script lives (repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,7 +58,7 @@ trap - ERR
 
 # Start ComfyUI directly
 # --listen 127.0.0.1: only local access (DevServer connects locally)
-# --port 7821: ComfyUI backend port
+# --port 17804: AI4ArtsEd embedded ComfyUI port
 # Models are in standard ComfyUI paths (models/checkpoints, models/clip, etc.)
 # No --extra-model-paths-config needed
 python main.py \

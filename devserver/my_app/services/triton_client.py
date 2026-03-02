@@ -1,7 +1,7 @@
 """
 Triton Inference Server Client - High-performance batched inference
 
-Session 149: Alternative backend to SwarmUI/ComfyUI for workshop scenarios
+Session 149: Alternative backend for workshop scenarios
 with multiple simultaneous users. Triton provides dynamic batching.
 
 Architecture:

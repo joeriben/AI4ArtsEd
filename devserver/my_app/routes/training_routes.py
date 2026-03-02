@@ -89,8 +89,9 @@ def clear_vram():
         if unload_comfyui:
             try:
                 # ComfyUI's /free endpoint clears all loaded models
+                from config import COMFYUI_PORT
                 response = requests.post(
-                    "http://127.0.0.1:7821/free",
+                    f"http://127.0.0.1:{COMFYUI_PORT}/free",
                     json={"unload_models": True},
                     timeout=30
                 )

@@ -455,7 +455,7 @@ class BackendRegistry:
             import aiohttp
 
             comfyui_config = self.get_config("comfyui")
-            port = comfyui_config.get("comfy_port", 7821)
+            port = comfyui_config.get("comfy_port", 17804)
             url = f"http://localhost:{port}/object_info"
 
             async with aiohttp.ClientSession() as session:

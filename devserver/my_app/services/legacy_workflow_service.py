@@ -1,8 +1,8 @@
 """
 Legacy Workflow Service - Handles complete ComfyUI workflow execution
 
-This service encapsulates all legacy workflow logic:
-- Direct ComfyUI API access (Port 7821)
+This service encapsulates legacy workflow logic:
+- Direct ComfyUI API access
 - Prompt injection using title-based node search
 - LLM model name replacement
 - Polling until completion
@@ -31,32 +31,18 @@ class LegacyWorkflowService:
         if comfyui_base_url:
             self.base_url = comfyui_base_url
         else:
-            # Load configuration
             try:
-                from config import USE_SWARMUI_ORCHESTRATION, ALLOW_DIRECT_COMFYUI, SWARMUI_API_PORT, COMFYUI_PORT
-                
-                if USE_SWARMUI_ORCHESTRATION:
-                    # Use SwarmUI Proxy
-                    self.base_url = f"http://127.0.0.1:{SWARMUI_API_PORT}/ComfyBackendDirect"
-                    logger.info(f"[LEGACY-SERVICE] Using SwarmUI Orchestration via {self.base_url}")
-                elif ALLOW_DIRECT_COMFYUI:
-                    # Use Direct ComfyUI (Legacy/Emergency)
-                    self.base_url = f"http://127.0.0.1:{COMFYUI_PORT}"
-                    logger.warning(f"[LEGACY-SERVICE] ⚠️ Using DIRECT ComfyUI access (Port {COMFYUI_PORT}) - Deprecated!")
-                else:
-                    # Default to SwarmUI if configuration is ambiguous but direct access not explicitly allowed
-                    self.base_url = f"http://127.0.0.1:{SWARMUI_API_PORT}/ComfyBackendDirect"
-                    logger.warning(f"[LEGACY-SERVICE] Configuration ambiguous, defaulting to SwarmUI Proxy: {self.base_url}")
+                from config import COMFYUI_PORT
+                self.base_url = f"http://127.0.0.1:{COMFYUI_PORT}"
             except ImportError:
-                 # Fallback for tests or missing config
-                self.base_url = "http://127.0.0.1:7821"
-                logger.warning(f"[LEGACY-SERVICE] Config not found, using default: {self.base_url}")
+                self.base_url = "http://127.0.0.1:17804"
+            logger.info(f"[LEGACY-SERVICE] Using ComfyUI at {self.base_url}")
 
         self.timeout = aiohttp.ClientTimeout(total=300)  # 5 min for long workflows
 
-        # Initialize SwarmUI Manager for auto-recovery
-        from my_app.services.swarmui_manager import get_swarmui_manager
-        self.swarmui_manager = get_swarmui_manager()
+        # Initialize ComfyUI Manager for auto-recovery
+        from my_app.services.comfyui_manager import get_comfyui_manager
+        self.comfyui_manager = get_comfyui_manager()
 
     async def execute_workflow(
         self,
@@ -92,10 +78,10 @@ class LegacyWorkflowService:
             if not injection_success:
                 logger.warning("[LEGACY-SERVICE] Prompt injection failed, continuing anyway")
 
-            # Step 2.5: Ensure SwarmUI is available
-            logger.info("[LEGACY-SERVICE] Ensuring SwarmUI is available...")
-            if not await self.swarmui_manager.ensure_swarmui_available():
-                raise Exception("Failed to start SwarmUI - cannot submit workflow")
+            # Step 2.5: Ensure ComfyUI is available
+            logger.info("[LEGACY-SERVICE] Ensuring ComfyUI is available...")
+            if not await self.comfyui_manager.ensure_comfyui_available():
+                raise Exception("Failed to start ComfyUI - cannot submit workflow")
 
             # Step 3: Submit workflow
             prompt_id = await self._submit_workflow(workflow)
@@ -256,7 +242,7 @@ class LegacyWorkflowService:
 
     async def _submit_workflow(self, workflow: Dict[str, Any]) -> Optional[str]:
         """
-        Submit workflow to ComfyUI (direct Port 7821)
+        Submit workflow to ComfyUI
 
         Args:
             workflow: Workflow definition

@@ -3176,26 +3176,7 @@ async def execute_stage4_generation_only(
                     'run_id': run_id
                 }
 
-        elif output_value == 'swarmui_generated':
-            # SwarmUI generation
-            image_paths = output_result.metadata.get('image_paths', [])
-            saved_filename = await recorder.download_and_save_from_swarmui(
-                image_paths=image_paths,
-                media_type=media_type,
-                config=output_config,
-                seed=result_seed
-            )
-            media_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == f'output_{media_type}']
-            media_index = len(media_entities) - 1 if media_entities else 0
-            media_output = {
-                'media_type': media_type,
-                'url': f'/api/media/{media_type}/{run_id}/{media_index}',
-                'run_id': run_id,
-                'index': media_index,
-                'seed': result_seed
-            }
-
-        elif output_value == 'comfyui_direct_generated':
+        elif output_value in ('comfyui_generated', 'comfyui_direct_generated'):
             # ComfyUI Direct (WebSocket) — media bytes already in metadata
             media_files_data = output_result.metadata.get('media_files', [])
             outputs_meta = output_result.metadata.get('outputs_metadata', [])
@@ -5095,20 +5076,7 @@ def interception_pipeline():
                                         }
 
                                 # Detect generation backend and download appropriately
-                                elif not media_stored and output_value == 'swarmui_generated':
-                                    logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: swarmui_generated")
-                                    # SwarmUI generation - image paths returned directly
-                                    logger.info(f"[RECORDER-DEBUG] output_result.metadata keys: {list(output_result.metadata.keys())}")
-                                    logger.info(f"[RECORDER-DEBUG] full metadata: {output_result.metadata}")
-                                    image_paths = output_result.metadata.get('image_paths', [])
-                                    logger.info(f"[RECORDER] Downloading from SwarmUI: {len(image_paths)} image(s)")
-                                    saved_filename = asyncio.run(recorder.download_and_save_from_swarmui(
-                                        image_paths=image_paths,
-                                        media_type=media_type,
-                                        config=output_config_name,
-                                        seed=seed
-                                    ))
-                                elif not media_stored and output_value == 'comfyui_direct_generated':
+                                elif not media_stored and output_value in ('comfyui_generated', 'comfyui_direct_generated'):
                                     # ComfyUI Direct (WebSocket) — media bytes in metadata
                                     logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: comfyui_direct_generated")
                                     media_files_data = output_result.metadata.get('media_files', [])

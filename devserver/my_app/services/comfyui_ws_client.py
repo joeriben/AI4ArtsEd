@@ -1,17 +1,14 @@
 """
 ComfyUI WebSocket Client — Direct connection to ComfyUI
 
-Replaces SwarmUI middleware with a direct WebSocket connection to ComfyUI.
 Provides real-time progress tracking, denoising previews, and clean media download
 via ComfyUI's HTTP API (no filesystem access).
 
 Architecture:
-    DevServer --WebSocket--> ComfyUI (port 7821)
+    DevServer --WebSocket--> ComfyUI (port 17804)
     - JSON events: progress, node completion, errors
     - Binary messages: denoising preview images
     - HTTP: /prompt (submit), /view (download media), /history (outputs)
-
-Protocol reference: Documented from ComfyUI source + SwarmUI's ComfyUIAPIAbstractBackend.cs
 """
 
 import asyncio
@@ -69,8 +66,7 @@ class ComfyUIWebSocketClient:
     """
     Direct WebSocket client to ComfyUI.
 
-    Replaces swarmui_client.py (465 lines), comfyui_client.py (391 lines, deprecated),
-    and parts of legacy_workflow_service.py.
+    Provides workflow submission, progress tracking, and media download.
     """
 
     def __init__(self, base_url: Optional[str] = None, ws_url: Optional[str] = None):

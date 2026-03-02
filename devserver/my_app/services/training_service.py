@@ -23,7 +23,6 @@ from config import (
     LORA_OUTPUT_DIR,
     TRAINING_DATASET_DIR,
     TRAINING_LOG_DIR,
-    SWARMUI_BASE_PATH,
     SD35_LARGE_MODEL_PATH,
     CLIP_L_PATH,
     CLIP_G_PATH,
@@ -162,8 +161,9 @@ class TrainingService:
 
         # Step 3: Unload ComfyUI models
         try:
+            from config import COMFYUI_PORT
             response = requests.post(
-                "http://127.0.0.1:7821/free",
+                f"http://127.0.0.1:{COMFYUI_PORT}/free",
                 json={"unload_models": True},
                 timeout=30
             )

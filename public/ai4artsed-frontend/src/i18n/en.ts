@@ -275,7 +275,7 @@ export const en = {
       gpuService: 'GPU Service',
       subBackend: 'Sub-Backend',
       status: 'Status',
-      comfyui: 'ComfyUI / SwarmUI',
+      comfyui: 'ComfyUI',
       ollama: 'Ollama',
       gpuHardware: 'GPU Hardware',
       notDetected: 'Not detected',
