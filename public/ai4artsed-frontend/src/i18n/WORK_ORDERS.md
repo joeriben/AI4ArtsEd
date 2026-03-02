@@ -6,6 +6,13 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
+### WO-2026-03-02-looper-section-header
+- **Session**: 233
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.looperSection` (NEW): 'Looper / Sequencer'
+- **Context**: Section header for the collapsible Looper/Sequencer widget in Crossmodal Lab synth tab. Was previously an always-visible div, now wrapped in <details>. Translate naturally.
+
 ### WO-2026-03-02-flatten-synth-toggles
 - **Session**: 233
 - **Scope**: en.ts

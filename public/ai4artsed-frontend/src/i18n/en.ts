@@ -1273,6 +1273,7 @@ export const en = {
         playing: 'Playing',
         stopped: 'Stopped',
         transpose: 'Transpose (semitones)',
+        looperSection: 'Looper / Sequencer',
         midiSection: 'MIDI Control',
         midiUnsupported: 'Web MIDI is not supported by this browser.',
         midiInput: 'MIDI Input',

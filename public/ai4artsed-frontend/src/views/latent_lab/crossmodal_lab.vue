@@ -116,8 +116,32 @@
         </div>
       </div>
 
+      <!-- Params row -->
+      <div class="params-row">
+        <div class="param">
+          <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
+          <input v-model.number="synth.duration" type="number" min="0.1" max="5" step="0.1" />
+          <span class="param-hint">{{ t('latentLab.crossmodal.synth.durationHint') }}</span>
+        </div>
+        <div class="param">
+          <label>{{ t('latentLab.crossmodal.synth.steps') }}</label>
+          <input v-model.number="synth.steps" type="number" min="10" max="100" step="5" />
+          <span class="param-hint">{{ t('latentLab.crossmodal.synth.stepsHint') }}</span>
+        </div>
+        <div class="param">
+          <label>{{ t('latentLab.crossmodal.synth.cfg') }}</label>
+          <input v-model.number="synth.cfg" type="number" min="1" max="15" step="0.5" />
+          <span class="param-hint">{{ t('latentLab.crossmodal.synth.cfgHint') }}</span>
+        </div>
+        <div class="param">
+          <label>{{ t('latentLab.crossmodal.seed') }}</label>
+          <input v-model.number="synth.seed" type="number" />
+          <span class="param-hint">{{ t('latentLab.crossmodal.synth.seedHint') }}</span>
+        </div>
+      </div>
+
       <!-- Semantic Axes (collapsible, modifies prompt embedding) -->
-      <details v-if="availableAxes.length > 0" class="semantic-axes-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggle">
+      <details v-if="availableAxes.length > 0" class="semantic-axes-section lab-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggle">
         <summary>{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</summary>
         <div class="semantic-axes-content">
           <p class="semantic-axes-info">{{ t('latentLab.crossmodal.synth.semanticAxes.info') }}</p>
@@ -163,38 +187,19 @@
             </div>
           </div>
 
-          <button class="dim-btn dim-btn-reset semantic-reset-btn" @click="resetAxesToCenter">
-            {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
-          </button>
+          <div class="section-action-bar">
+            <button class="dim-btn dim-btn-generate" :disabled="generating" @click="runSynth">
+              {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
+            </button>
+            <button class="dim-btn dim-btn-reset" @click="resetAxesToCenter">
+              {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
+            </button>
+          </div>
         </div>
       </details>
 
-      <!-- Params row -->
-      <div class="params-row">
-        <div class="param">
-          <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
-          <input v-model.number="synth.duration" type="number" min="0.1" max="5" step="0.1" />
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.durationHint') }}</span>
-        </div>
-        <div class="param">
-          <label>{{ t('latentLab.crossmodal.synth.steps') }}</label>
-          <input v-model.number="synth.steps" type="number" min="10" max="100" step="5" />
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.stepsHint') }}</span>
-        </div>
-        <div class="param">
-          <label>{{ t('latentLab.crossmodal.synth.cfg') }}</label>
-          <input v-model.number="synth.cfg" type="number" min="1" max="15" step="0.5" />
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.cfgHint') }}</span>
-        </div>
-        <div class="param">
-          <label>{{ t('latentLab.crossmodal.seed') }}</label>
-          <input v-model.number="synth.seed" type="number" />
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.seedHint') }}</span>
-        </div>
-      </div>
-
       <!-- Dimension Explorer Section (open by default) -->
-      <details class="dim-explorer-section" :open="dimExplorerOpen" @toggle="onDimExplorerToggle">
+      <details class="dim-explorer-section lab-section" :open="dimExplorerOpen" @toggle="onDimExplorerToggle">
         <summary>{{ t('latentLab.crossmodal.synth.dimensions.section') }}</summary>
         <div class="dim-explorer-content">
           <p class="dim-hint">{{ t('latentLab.crossmodal.synth.dimensions.hint') }}</p>
@@ -233,7 +238,7 @@
           </div>
 
           <!-- Controls Row -->
-          <div class="dim-controls-row">
+          <div class="section-action-bar">
             <button
               v-if="activeOffsetCount > 0"
               class="dim-btn dim-btn-generate"
@@ -242,11 +247,11 @@
             >
               {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
             </button>
-            <button class="dim-btn dim-btn-undo" :disabled="!canUndo" @click="undo" title="Ctrl+Z">
-              {{ t('latentLab.crossmodal.synth.dimensions.undo') }}
+            <button class="dim-btn dim-btn-undo" :disabled="!canUndo" @click="undo" :title="t('latentLab.crossmodal.synth.dimensions.undo')">
+              <img src="@/assets/icons/undo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Undo" class="action-icon" />
             </button>
-            <button class="dim-btn dim-btn-undo" :disabled="!canRedo" @click="redo" title="Ctrl+Shift+Z">
-              {{ t('latentLab.crossmodal.synth.dimensions.redo') }}
+            <button class="dim-btn dim-btn-undo" :disabled="!canRedo" @click="redo" :title="t('latentLab.crossmodal.synth.dimensions.redo')">
+              <img src="@/assets/icons/redo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Redo" class="action-icon" />
             </button>
             <span v-if="activeOffsetCount > 0" class="dim-offset-status">
               {{ t('latentLab.crossmodal.synth.dimensions.activeOffsets', { count: activeOffsetCount }) }}
@@ -254,15 +259,14 @@
             <button v-if="activeOffsetCount > 0" class="dim-btn dim-btn-reset" @click="resetAllOffsets">
               {{ t('latentLab.crossmodal.synth.dimensions.resetAll') }}
             </button>
-            <span class="dim-right-click-hint">
-              {{ t('latentLab.crossmodal.synth.dimensions.rightClickReset') }}
-            </span>
           </div>
         </div>
       </details>
 
-      <!-- Looper Widget (always visible, disabled when no audio) -->
-      <div class="looper-widget" :class="{ disabled: !looper.hasAudio.value }">
+      <!-- Looper Widget (collapsible, disabled when no audio) -->
+      <details class="looper-widget lab-section" :open="looperOpen" @toggle="onLooperToggle"
+               :class="{ disabled: !looper.hasAudio.value }">
+        <summary>{{ t('latentLab.crossmodal.synth.looperSection') }}</summary>
         <div class="looper-status">
           <span class="looper-indicator" :class="{ pulsing: isEngineActive }" />
           <span class="looper-label">
@@ -572,10 +576,10 @@
             {{ t('latentLab.crossmodal.synth.saveLoop') }}
           </button>
         </div>
-      </div>
+      </details>
 
       <!-- MIDI Section (collapsed by default) -->
-      <details class="midi-section" :open="midiOpen" @toggle="onMidiToggle">
+      <details class="midi-section lab-section" :open="midiOpen" @toggle="onMidiToggle">
         <summary>{{ t('latentLab.crossmodal.synth.midiSection') }}</summary>
         <div class="midi-content">
           <div v-if="!midi.isSupported.value" class="midi-unsupported">
@@ -850,6 +854,7 @@ const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const { record: labRecord } = useLatentLabRecorder('crossmodal_lab')
 const { isOpen: synthExplainOpen, onToggle: onSynthExplainToggle } = useDetailsState('ll_crossmodal_explain')
 const { isOpen: dimExplorerOpen, onToggle: onDimExplorerToggle } = useDetailsState('ll_crossmodal_dims', true)
+const { isOpen: looperOpen, onToggle: onLooperToggle } = useDetailsState('ll_crossmodal_looper', true)
 const { isOpen: midiOpen, onToggle: onMidiToggle } = useDetailsState('ll_crossmodal_midi')
 const { isOpen: mmaudioExplainOpen, onToggle: onMmaudioExplainToggle } = useDetailsState('ll_crossmodal_mmaudio_explain')
 const { isOpen: guidanceExplainOpen, onToggle: onGuidanceExplainToggle } = useDetailsState('ll_crossmodal_guidance_explain')
@@ -2056,6 +2061,7 @@ onUnmounted(() => {
   border: 1px solid rgba(76, 175, 80, 0.15);
   border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 0.8rem;
 }
 
 .explanation-details summary {
@@ -2157,7 +2163,7 @@ onUnmounted(() => {
 .tab-description {
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.85rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
   line-height: 1.5;
 }
 
@@ -2171,15 +2177,18 @@ onUnmounted(() => {
   margin: 0 -1.5rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 /* Slider groups */
 .slider-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .slider-item {
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 
 .slider-header {
@@ -2217,7 +2226,7 @@ onUnmounted(() => {
 .params-row {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -2263,7 +2272,6 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .generate-btn {
@@ -2324,8 +2332,6 @@ onUnmounted(() => {
 .looper-widget {
   padding: 1rem;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
   margin-bottom: 1rem;
   transition: opacity 0.2s;
 }
@@ -2559,21 +2565,10 @@ onUnmounted(() => {
 /* MIDI section */
 .midi-section {
   margin-top: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .midi-section summary {
-  padding: 0.7rem 1rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
   background: rgba(255, 255, 255, 0.03);
-}
-
-.midi-section summary:hover {
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .midi-content {
@@ -2722,20 +2717,47 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
+/* Shared collapsible section style */
+.lab-section {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lab-section summary {
+  padding: 0.7rem 1rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.lab-section summary:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Section action bars (Semantic Axes + Dim Explorer) */
+.section-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
 /* Dimension Explorer */
 .dim-explorer-section {
   margin-top: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
   padding: 0.6rem;
 }
 
-.dim-explorer-section summary {
-  cursor: pointer;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
-}
 
 .dim-explorer-content {
   margin-top: 0.6rem;
@@ -2793,13 +2815,6 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.25);
 }
 
-.dim-controls-row {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
 
 .dim-control-group {
   display: flex;
@@ -2874,11 +2889,6 @@ onUnmounted(() => {
   font-variant-numeric: tabular-nums;
 }
 
-.dim-right-click-hint {
-  font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.2);
-  margin-left: auto;
-}
 
 /* Section toggles (independent on/off sections) */
 .section-toggle {
@@ -3203,22 +3213,10 @@ onUnmounted(() => {
 /* Semantic Axes Section */
 .semantic-axes-section {
   margin-bottom: 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .semantic-axes-section summary {
-  padding: 0.7rem 1rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
   background: rgba(255, 255, 255, 0.03);
-  font-weight: 500;
-}
-
-.semantic-axes-section summary:hover {
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .semantic-axes-content {
@@ -3307,8 +3305,5 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-.semantic-reset-btn {
-  margin-bottom: 1rem;
-}
 
 </style>
