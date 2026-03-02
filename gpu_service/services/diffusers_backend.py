@@ -868,49 +868,51 @@ class DiffusersImageGenerator:
                     t5_len = t5_embeds.shape[1]
 
                     if fusion_strategy == "dual_alpha":
-                        # Kontingente Ähnlichkeit: gentle distortion on core (structural
-                        # anchor via CLIP-L), full extrapolation on extended tokens.
-                        alpha_core = alpha_factor * 0.15
-                        alpha_ext = alpha_factor
+                        # Full extrapolation on core (where CLIP-T5 mixing creates
+                        # surreal direction), gentle anchor on extended (prevents
+                        # normal T5 semantics from dominating MMDiT attention).
+                        alpha_core = alpha_factor
+                        alpha_ext = alpha_factor * 0.15
 
                         clip_interp = clip_padded[:, :interp_len, :]
                         t5_interp = t5_embeds[:, :interp_len, :]
                         t5_remainder = t5_embeds[:, interp_len:, :]
 
-                        # Core: gentle blend preserves structural recognizability
+                        # Core: full extrapolation (surreal direction from CLIP-T5 blend)
                         fused_core = (1.0 - alpha_core) * clip_interp + alpha_core * t5_interp
-                        # Extended: full alpha (CLIP is implicitly 0 here)
+                        # Extended: gentle anchor (doesn't overwhelm core with normal semantics)
                         fused_ext = alpha_ext * t5_remainder
 
                         fused_embeds = torch.cat([fused_core, fused_ext], dim=1)
 
                         logger.info(
                             f"[FUSION:dual_alpha] core_α={alpha_core:.2f} ({interp_len}t), "
-                            f"ext_α={alpha_ext} ({t5_len - interp_len}t)"
+                            f"ext_α={alpha_ext:.2f} ({t5_len - interp_len}t)"
                         )
 
                     elif fusion_strategy == "normalized":
-                        # Uniform alpha on all positions, then L2-normalize to
-                        # reference magnitude. Preserves extrapolation DIRECTION
-                        # while keeping attention weights balanced.
+                        # Full extrapolation on core tokens, then scale extended
+                        # tokens to match core magnitude. This preserves the surreal
+                        # extrapolation direction while keeping attention balanced
+                        # (extended tokens don't overwhelm OR underwhelm core).
 
-                        # Pad CLIP to match T5 sequence length (zeros beyond 77)
-                        if t5_len > interp_len:
-                            clip_full = F.pad(clip_padded, (0, 0, 0, t5_len - interp_len))
-                        else:
-                            clip_full = clip_padded[:, :t5_len, :]
+                        clip_interp = clip_padded[:, :interp_len, :]
+                        t5_interp = t5_embeds[:, :interp_len, :]
+                        t5_remainder = t5_embeds[:, interp_len:, :]
 
-                        # Uniform LERP: for pos 78+, CLIP=0 → result = α*T5
-                        fused_embeds = (1.0 - alpha_factor) * clip_full + alpha_factor * t5_embeds
+                        # Core: full extrapolation (same as legacy)
+                        fused_core = (1.0 - alpha_factor) * clip_interp + alpha_factor * t5_interp
 
-                        # Normalize: scale each token to mean T5 embedding magnitude
-                        ref_norm = t5_embeds.norm(dim=-1, keepdim=True).mean()
-                        fused_norms = fused_embeds.norm(dim=-1, keepdim=True).clamp(min=1e-8)
-                        fused_embeds = fused_embeds * (ref_norm / fused_norms)
+                        # Scale extended tokens to match core's extrapolated magnitude
+                        core_mag = fused_core.norm(dim=-1).mean()
+                        t5_ext_norms = t5_remainder.norm(dim=-1, keepdim=True).clamp(min=1e-8)
+                        fused_ext = t5_remainder * (core_mag / t5_ext_norms)
+
+                        fused_embeds = torch.cat([fused_core, fused_ext], dim=1)
 
                         logger.info(
-                            f"[FUSION:normalized] α={alpha_factor}, ref_norm={ref_norm:.2f}, "
-                            f"total_tokens={t5_len}"
+                            f"[FUSION:normalized] α={alpha_factor}, core_mag={core_mag:.2f}, "
+                            f"core={interp_len}t, ext={t5_len - interp_len}t"
                         )
 
                     else:

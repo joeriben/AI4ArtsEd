@@ -497,8 +497,8 @@ class DiffusersImageGenerator:
                     t5_len = t5_embeds.shape[1]
 
                     if fusion_strategy == "dual_alpha":
-                        alpha_core = alpha_factor * 0.15
-                        alpha_ext = alpha_factor
+                        alpha_core = alpha_factor
+                        alpha_ext = alpha_factor * 0.15
                         clip_interp = clip_padded[:, :interp_len, :]
                         t5_interp = t5_embeds[:, :interp_len, :]
                         t5_remainder = t5_embeds[:, interp_len:, :]
@@ -507,14 +507,14 @@ class DiffusersImageGenerator:
                         fused_embeds = torch.cat([fused_core, fused_ext], dim=1)
 
                     elif fusion_strategy == "normalized":
-                        if t5_len > interp_len:
-                            clip_full = F.pad(clip_padded, (0, 0, 0, t5_len - interp_len))
-                        else:
-                            clip_full = clip_padded[:, :t5_len, :]
-                        fused_embeds = (1.0 - alpha_factor) * clip_full + alpha_factor * t5_embeds
-                        ref_norm = t5_embeds.norm(dim=-1, keepdim=True).mean()
-                        fused_norms = fused_embeds.norm(dim=-1, keepdim=True).clamp(min=1e-8)
-                        fused_embeds = fused_embeds * (ref_norm / fused_norms)
+                        clip_interp = clip_padded[:, :interp_len, :]
+                        t5_interp = t5_embeds[:, :interp_len, :]
+                        t5_remainder = t5_embeds[:, interp_len:, :]
+                        fused_core = (1.0 - alpha_factor) * clip_interp + alpha_factor * t5_interp
+                        core_mag = fused_core.norm(dim=-1).mean()
+                        t5_ext_norms = t5_remainder.norm(dim=-1, keepdim=True).clamp(min=1e-8)
+                        fused_ext = t5_remainder * (core_mag / t5_ext_norms)
+                        fused_embeds = torch.cat([fused_core, fused_ext], dim=1)
 
                     else:  # legacy
                         clip_interp = clip_padded[:, :interp_len, :]
