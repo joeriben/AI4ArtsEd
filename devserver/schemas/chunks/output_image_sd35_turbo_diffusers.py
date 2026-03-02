@@ -52,6 +52,7 @@ async def execute(
     HEIGHT: int = None,
     prompt_2: str = None,
     prompt_3: str = None,
+    loras: list = None,
     **kwargs
 ) -> dict:
     """Returns dict with base64 image — uses extended Python chunk dict-return path."""
@@ -85,6 +86,9 @@ async def execute(
     if prompt_3:
         extra_kwargs['prompt_3'] = prompt_3
 
+    if loras:
+        logger.info(f"[SD35-TURBO] Applying {len(loras)} LoRA(s): {[l['name'] for l in loras]}")
+
     logger.info(f"[SD35-TURBO] Generating: steps={steps}, size={w}x{h}, cfg={cfg_scale}")
     image_bytes = await backend.generate_image(
         prompt=prompt,
@@ -96,6 +100,7 @@ async def execute(
         cfg_scale=cfg_scale,
         seed=seed,
         pipeline_class=PIPELINE_CLASS,
+        loras=loras if loras else None,
         **extra_kwargs,
     )
 

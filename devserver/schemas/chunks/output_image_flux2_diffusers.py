@@ -50,6 +50,7 @@ async def execute(
     WIDTH: int = None,
     height: int = None,
     HEIGHT: int = None,
+    loras: list = None,
     **kwargs
 ) -> dict:
     """Returns dict with base64 image — uses extended Python chunk dict-return path."""
@@ -76,6 +77,9 @@ async def execute(
     if not await backend.is_available():
         raise RuntimeError("Diffusers backend not available")
 
+    if loras:
+        logger.info(f"[FLUX2] Applying {len(loras)} LoRA(s): {[l['name'] for l in loras]}")
+
     logger.info(f"[FLUX2] Generating: steps={steps}, size={w}x{h}, cfg={cfg_scale}")
     image_bytes = await backend.generate_image(
         prompt=prompt,
@@ -87,6 +91,7 @@ async def execute(
         cfg_scale=cfg_scale,
         seed=seed,
         pipeline_class=PIPELINE_CLASS,
+        loras=loras if loras else None,
     )
 
     if not image_bytes:
