@@ -1,8 +1,17 @@
 # Architektur-Verletzung: Proxy-Chunk-Pattern
 
 **Datum:** 2026-02-02
-**Status:** Dokumentiert, Refactoring empfohlen
+**Behoben:** 2026-03-02 (Session 230)
+**Status:** RESOLVED — Proxy-Chunks eliminiert, Pipelines nutzen `{{OUTPUT_CHUNK}}` direkt
 **Betrifft:** `single_text_media_generation` Pipeline + `output_image.json` Proxy-Chunk
+
+### Resolution Summary
+- Pipelines umgestellt: `"chunks": ["output_image"]` → `"chunks": ["{{OUTPUT_CHUNK}}"]`
+- Proxy-Chunks gelöscht: `output_image.json`, `output_legacy.json`
+- Dead Code aus `backend_router.py` entfernt: ~492 Zeilen (2777 → 2285)
+- Entfernte Methoden: `_process_heartmula_chunk`, `_process_triton_chunk`, `_process_ollama_request`, `_process_direct_request`, `_inject_legacy_prompt`, `_process_comfyui_legacy`
+- Verwaiste Chunks gelöscht: `output_music_heartmula.json`, `output_image_sd35_large.json`, `output_image_sd35_triton.json`
+- Template-Resolution via `config_loader._resolve_configs()` (Zeilen 307-323) — bereits Production-bewährt via `dual_text_media_generation`
 
 ---
 

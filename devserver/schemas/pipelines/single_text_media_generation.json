@@ -8,19 +8,16 @@
     "texts": 1
   },
   "chunks": [
-    "output_image"
+    "{{OUTPUT_CHUNK}}"
   ],
-  "config_mappings": {
-    "output_image": "{{MEDIA_TYPE}}_generation.{{MODEL_CONFIG}}"
-  },
   "meta": {
-    "version": "2.2",
+    "version": "3.0",
     "description_de": "Direkte Medien-Generierung aus Text-Prompt (Output-Pipeline ist primitiv - KEIN manipulate!)",
     "description_en": "Direct Media Generation from Text Prompt (Output-Pipeline is primitive - NO manipulate!)",
     "input_type": "single_text",
     "output_types": ["image", "audio", "video"],
     "backend_agnostic": true,
     "replaces": ["audio_generation", "image_generation"],
-    "note": "Uses Proxy-Chunk system: output_image.json → OUTPUT_CHUNK parameter → specialized Output-Chunk"
+    "note": "OUTPUT_CHUNK resolved from config parameters at load time by config_loader._resolve_configs()"
   }
 }

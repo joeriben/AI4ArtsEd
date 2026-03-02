@@ -8,18 +8,16 @@
     "texts": 1
   },
   "chunks": [
-    "output_legacy"
+    "{{OUTPUT_CHUNK}}"
   ],
-  "config_mappings": {},
   "meta": {
-    "version": "1.0",
+    "version": "2.0",
     "description_de": "Legacy-Workflow-Passthrough: Direkte Ausführung kompletter ComfyUI-Workflows",
     "description_en": "Legacy Workflow Passthrough: Direct execution of complete ComfyUI workflows",
     "input_type": "single_text",
     "output_types": ["image", "audio", "video"],
     "backend_agnostic": false,
     "backend_type": "comfyui_legacy_workflow",
-    "note": "For complex legacy workflows that cannot be decomposed into DevServer chunks. Uses complete workflow JSON with title-based prompt injection.",
-    "todo_2026": "Refactoring planned for Spring 2026: Move execution logic from backend_router into pipeline itself"
+    "note": "OUTPUT_CHUNK resolved from config parameters at load time by config_loader._resolve_configs()"
   }
 }
