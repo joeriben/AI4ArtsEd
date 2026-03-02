@@ -36,13 +36,15 @@
       </div>
     </div>
     <button
-      v-if="newsItems.length > initialCount"
+      v-if="newsItems.length > pageSize"
       class="news-toggle"
-      @click="expanded = !expanded"
+      @click="toggleNews"
     >
-      {{ expanded
+      {{ visibleCount >= newsItems.length
         ? (currentLanguage === 'de' ? 'Weniger anzeigen' : 'Show less')
-        : (currentLanguage === 'de' ? `Mehr anzeigen (${newsItems.length - initialCount})` : `Show more (${newsItems.length - initialCount})`) }}
+        : (currentLanguage === 'de'
+          ? `Mehr anzeigen (${newsItems.length - visibleCount} weitere)`
+          : `Show more (${newsItems.length - visibleCount} remaining)`) }}
     </button>
   </section>
 
@@ -73,12 +75,20 @@ interface NewsItem {
 }
 
 const newsItems = ref<NewsItem[]>([])
-const expanded = ref(false)
-const initialCount = 5
+const pageSize = 5
+const visibleCount = ref(pageSize)
 
 const visibleNews = computed(() =>
-  expanded.value ? newsItems.value : newsItems.value.slice(0, initialCount)
+  newsItems.value.slice(0, visibleCount.value)
 )
+
+function toggleNews() {
+  if (visibleCount.value >= newsItems.value.length) {
+    visibleCount.value = pageSize
+  } else {
+    visibleCount.value = Math.min(visibleCount.value + pageSize, newsItems.value.length)
+  }
+}
 
 const categoryLabels: Record<string, { de: string; en: string }> = {
   feature: { de: 'Neu', en: 'New' },
@@ -100,7 +110,7 @@ function categoryLabel(category: string): string {
 onMounted(async () => {
   try {
     const base = import.meta.env.DEV ? 'http://localhost:17802' : ''
-    const res = await fetch(`${base}/api/news?limit=10`)
+    const res = await fetch(`${base}/api/news`)
     if (res.ok) {
       const data = await res.json()
       newsItems.value = data.items || []

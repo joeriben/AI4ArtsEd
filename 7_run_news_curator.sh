@@ -16,7 +16,7 @@ LOGDIR="logs/news"
 mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/$(date +%Y%m%d_%H%M%S).log"
 
-PROMPT="You are the news curator agent. Follow the workflow in .claude/agents/news-curator.md exactly: 1) Read the last ~20 sessions from DEVELOPMENT_LOG.md. 2) Filter for user-relevant changes. 3) Read existing devserver/news.json to avoid duplicates. 4) Write up to 5 bilingual (DE+EN) news items from the user perspective. 5) Save devserver/news.json. 6) Validate JSON."
+PROMPT="You are the news curator agent. Follow .claude/agents/news-curator.md EXACTLY — it defines item count, writing style, and verification rules. Execute its Workflow section step by step. Pay special attention to step 3 (VERIFY EVERY ITEM): always verify the current state of code/configs, not just dev log entries."
 
 CLAUDE_OPTS=(
     -p

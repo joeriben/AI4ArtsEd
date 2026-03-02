@@ -36,17 +36,20 @@ def get_news():
     Get recent news items.
 
     Query parameters:
-        - limit: Max items to return (default 5, max 20)
+        - limit: Max items to return (default: all)
 
     Returns:
         200: { items: [...] }
     """
-    try:
-        limit = min(int(request.args.get('limit', 5)), 20)
-    except (ValueError, TypeError):
-        limit = 5
-
     data = _load_news()
-    items = data.get('items', [])[:limit]
+    items = data.get('items', [])
+
+    limit_param = request.args.get('limit')
+    if limit_param is not None:
+        try:
+            limit = int(limit_param)
+            items = items[:limit]
+        except (ValueError, TypeError):
+            pass
 
     return jsonify({'items': items}), 200
