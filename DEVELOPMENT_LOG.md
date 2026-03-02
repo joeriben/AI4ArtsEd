@@ -1,5 +1,61 @@
 # Development Log
 
+## Session 238 - SwarmUI Removal + ComfyUI Standalone (Port 17804)
+**Date:** 2026-03-03
+**Focus:** Complete removal of SwarmUI middleware, standalone ComfyUI on dedicated port
+
+### Context
+ComfyUI had been running standalone for a while (`dlbackend/ComfyUI/`, started via `2_start_comfyui.sh`), but the codebase still contained the full SwarmUI integration: legacy code paths behind `COMFYUI_DIRECT` flags, dead service files, SwarmUI-era port 7821, and outdated documentation.
+
+### Changes
+| File | Change |
+|------|--------|
+| `devserver/my_app/services/swarmui_manager.py` | **DELETED** (248 lines) |
+| `devserver/my_app/services/swarmui_client.py` | **DELETED** (464 lines) |
+| `devserver/my_app/services/comfyui_client.py` | **DELETED** (390 lines, deprecated) |
+| `devserver/schemas/engine/backend_router.py` | Removed all `COMFYUI_DIRECT` guards + SwarmUI legacy paths (~500 lines) |
+| `devserver/config.py` | Removed `SWARMUI_API_PORT`, `COMFYUI_DIRECT`, `USE_SWARMUI_ORCHESTRATION`, `ALLOW_DIRECT_COMFYUI`, `SWARMUI_BASE_PATH`, legacy aliases. Port 7821 → 17804 |
+| `devserver/my_app/services/comfyui_manager.py` | Removed SwarmUI fallback imports, cleaned startup script resolution |
+| `devserver/my_app/services/legacy_workflow_service.py` | Removed SwarmUI routing logic, now uses ComfyUI directly |
+| `devserver/my_app/services/pipeline_recorder.py` | Removed `download_and_save_from_swarmui()`, fixed import to `comfyui_ws_client` |
+| `devserver/my_app/services/model_path_resolver.py` | Removed SwarmUI model path resolution |
+| `devserver/my_app/services/workflow_logic_service.py` | Removed `SWARMUI_BASE_PATH` import |
+| `devserver/my_app/routes/schema_pipeline_routes.py` | Removed `swarmui_generated` handler branches |
+| `devserver/my_app/routes/training_routes.py` | ComfyUI `/free` now uses config port |
+| `devserver/my_app/services/training_service.py` | Removed `SWARMUI_BASE_PATH` import, config-based ComfyUI port |
+| `devserver/schemas/engine/pipeline_executor.py` | Removed `swarmui_available` from metadata keys |
+| `devserver/config/backends.json` | ComfyUI: removed `api_port: 7801`, updated to port 17804 |
+| `2_start_comfyui.sh` | Port 7821 → 17804 |
+| `check_prerequisites.sh` | Port list: `(7801 7821 11434 17801)` → `(11434 17801 17804)` |
+| `gpu_service/config.py` | `LORA_DIR` path: SwarmUI → ComfyUI |
+| `docs/ARCHITECTURE PART 24` | **Rewritten**: "SwarmUI Integration" → "ComfyUI Integration" |
+| `docs/PORT_ARCHITECTURE_DECISION.md` | Rewritten with current port schema |
+| `public/.../en.ts` | `'ComfyUI / SwarmUI'` → `'ComfyUI'` |
+| `public/.../WORK_ORDERS.md` | Added WO for 8 target languages |
+
+### Port Schema (final)
+| Port | Service |
+|------|---------|
+| 17801 | DevServer (prod) |
+| 17802 | DevServer (dev) |
+| 17803 | GPU Service |
+| 17804 | ComfyUI |
+| 11434 | Ollama |
+
+### Stats
+- 30 files changed, +368/-2574 lines
+- ~2200 lines dead code removed
+- Zero remaining SwarmUI/7821 references in Python code
+
+### Still Open
+- `transfer_models.sh` still references SwarmUI paths (deployment script, separate task)
+- `update.sh` references `ai4artsed-swarmui.service` (systemd, separate task)
+
+### Commit
+- `2b2449f` refactor: remove SwarmUI, standalone ComfyUI on port 17804
+
+---
+
 ## Session 237 - TensorRT Reset + Flux 2 FP8 Clean Implementation
 **Date:** 2026-03-03
 **Focus:** Revert broken TensorRT session, re-implement Flux 2 FP8 cleanly
