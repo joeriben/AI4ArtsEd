@@ -9,7 +9,6 @@ import requests
 from flask import Blueprint, Response
 from pathlib import Path
 
-from config import COMFYUI_DIRECT
 from my_app.services.comfyui_service import comfyui_service
 from my_app.services.pipeline_recorder import get_recorder
 
@@ -27,11 +26,9 @@ def generate_sse_event(event_type: str, data: dict):
 
 
 def _get_comfyui_base_url() -> str:
-    """Get ComfyUI base URL from the appropriate client."""
-    if COMFYUI_DIRECT:
-        from my_app.services.comfyui_ws_client import get_comfyui_ws_client
-        return get_comfyui_ws_client().base_url
-    return comfyui_service.base_url
+    """Get ComfyUI base URL from the WebSocket client."""
+    from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+    return get_comfyui_ws_client().base_url
 
 
 @pipeline_stream_bp.route('/api/pipeline/<run_id>/stream')

@@ -9,29 +9,25 @@ from flask import Blueprint, Response, request, session
 from collections import defaultdict
 from threading import Lock
 
-from config import COMFYUI_DIRECT
 from my_app.services.comfyui_service import comfyui_service
 
 logger = logging.getLogger(__name__)
 
 
 def _get_queue_status() -> dict:
-    """Get ComfyUI queue status from the appropriate client."""
-    if COMFYUI_DIRECT:
-        # Use async WS client via synchronous bridge
-        import asyncio
-        from my_app.services.comfyui_ws_client import get_comfyui_ws_client
-        client = get_comfyui_ws_client()
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                # Already in async context — use sync fallback
-                return comfyui_service.get_queue_status()
-            return loop.run_until_complete(client.get_queue_status())
-        except RuntimeError:
-            # No event loop — create one
-            return asyncio.run(client.get_queue_status())
-    return comfyui_service.get_queue_status()
+    """Get ComfyUI queue status via WebSocket client."""
+    import asyncio
+    from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+    client = get_comfyui_ws_client()
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # Already in async context — use sync fallback
+            return comfyui_service.get_queue_status()
+        return loop.run_until_complete(client.get_queue_status())
+    except RuntimeError:
+        # No event loop — create one
+        return asyncio.run(client.get_queue_status())
 
 # Create blueprint
 sse_bp = Blueprint('sse', __name__)

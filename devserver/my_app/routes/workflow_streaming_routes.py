@@ -9,7 +9,6 @@ from flask import Blueprint, jsonify, request, current_app, Response
 from config import (
     ENABLE_VALIDATION_PIPELINE,
     COMFYUI_PREFIX,
-    COMFYUI_DIRECT,
     POLLING_TIMEOUT
 )
 from my_app.services.ollama_service import ollama_service
@@ -105,20 +104,17 @@ def execute_workflow_stream():
                 status_updates.append("Bild wurde in Inpainting-Workflow eingefügt.")
             
             # Submit to ComfyUI
-            if COMFYUI_DIRECT:
-                import asyncio
-                from my_app.services.comfyui_ws_client import get_comfyui_ws_client
-                ws_client = get_comfyui_ws_client()
-                try:
-                    loop = asyncio.get_event_loop()
-                    if loop.is_running():
-                        prompt_id = comfyui_service.submit_workflow(workflow)
-                    else:
-                        prompt_id = loop.run_until_complete(ws_client._submit_workflow(workflow))
-                except RuntimeError:
-                    prompt_id = asyncio.run(ws_client._submit_workflow(workflow))
-            else:
-                prompt_id = comfyui_service.submit_workflow(workflow)
+            import asyncio
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            ws_client = get_comfyui_ws_client()
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    prompt_id = comfyui_service.submit_workflow(workflow)
+                else:
+                    prompt_id = loop.run_until_complete(ws_client._submit_workflow(workflow))
+            except RuntimeError:
+                prompt_id = asyncio.run(ws_client._submit_workflow(workflow))
 
             if not prompt_id:
                 return {"error": "ComfyUI hat kein Prompt-ID zurückgegeben."}

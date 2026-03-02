@@ -1058,8 +1058,8 @@ class BackendRouter:
                         logger.info(f"[LEGACY-WORKFLOW] Injected {image_key}: {uploaded_filename}")
             except Exception as e:
                 logger.error(f"[LEGACY-WORKFLOW] Error uploading {image_key}: {e}")
-                    import traceback
-                    traceback.print_exc()
+                import traceback
+                traceback.print_exc()
 
     async def _process_api_output_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
         """Process API-based Output-Chunk (OpenRouter, Replicate, etc.)"""
