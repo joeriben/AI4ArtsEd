@@ -1,5 +1,37 @@
 # Development Log
 
+## Session 235 - Proxy-Chunk-Pattern Elimination + Router Cleanup
+**Date:** 2026-03-02
+**Focus:** Eliminate architectural violation (Proxy-Chunk-Pattern) + remove dead code from backend_router.py
+**Commit:** `d0ed7ce`
+
+### Problem
+The `output_image.json` and `output_legacy.json` proxy chunks violated the 3-layer architecture (Pipeline→Config→Chunk). Instead of pipelines resolving the correct chunk directly, a proxy chunk routed at runtime — an unnecessary indirection layer documented in `docs/ARCHITECTURE_VIOLATION_ProxyChunkPattern.md` since Feb 2026.
+
+### Solution
+Switched both pipelines to the `{{OUTPUT_CHUNK}}` pattern already proven in production via `dual_text_media_generation`. The template variable resolution in `config_loader._resolve_configs()` (lines 307-323) handles this at load time — zero new infrastructure needed.
+
+### Changes
+- `single_text_media_generation.json`: `chunks: ["output_image"]` → `["{{OUTPUT_CHUNK}}"]` (v3.0)
+- `legacy_workflow_passthrough.json`: `chunks: ["output_legacy"]` → `["{{OUTPUT_CHUNK}}"]` (v2.0)
+- Deleted proxy chunks: `output_image.json`, `output_legacy.json`
+- Deleted orphaned chunks: `output_music_heartmula.json` (superseded by .py), `output_image_sd35_large.json`, `output_image_sd35_triton.json`
+- Removed 492 lines dead code from `backend_router.py` (2777→2285):
+  - `_process_heartmula_chunk()` — Python chunk takes priority, never reached
+  - `_process_triton_chunk()` — Triton backend removed (GPU Service/Diffusers covers all)
+  - `_process_ollama_request()` — never called from dispatch
+  - `_process_direct_request()` — never called from dispatch
+  - `_inject_legacy_prompt()` — duplicate of `LegacyWorkflowService._inject_prompt()`
+  - `_process_comfyui_legacy()` — deprecated, zero active callers
+
+### Verification
+All 23 configs using `single_text_media_generation` or `legacy_workflow_passthrough` have `OUTPUT_CHUNK` in their parameters — confirmed via exhaustive grep.
+
+### Not in scope
+- `acestep_instrumental.json` dangling reference (chunk missing) — separate TODO
+- Further router slimming: `_process_api_output_chunk` (~346 lines), `_process_stable_audio_chunk` (~119 lines) — future Python chunk migration
+- `output_vector_fusion_clip_sd35.json` intentionally kept — vector manipulation planned for t2X return
+
 ## Session 234 - LoRA Support for Diffusers (Completion)
 **Date:** 2026-03-02
 **Focus:** Complete LoRA passthrough in remaining Diffusers Python chunks
