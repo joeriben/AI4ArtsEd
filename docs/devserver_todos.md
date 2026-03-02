@@ -59,19 +59,11 @@ Production war ohne SpaCy deployed → DSGVO-Schutz komplett deaktiviert.
 2. ~~**requirements.txt**: Kommentare aktualisieren (alte 12 Modelle → 2 tatsächlich verwendete)~~ ✅ Already done
 3. ~~**Installationsskript** für `python -m spacy download`~~ → Not needed: install commands printed by startup check + prerequisites script
 
-### LoRA Support for Diffusers GPU Service
+### ✅ LoRA Support for Diffusers GPU Service
 
-**Datum:** 2026-02-17
-**Plan:** `docs/plans/lora-diffusers-support.md` (approved)
+**Datum:** 2026-02-17 → **Erledigt:** 2026-03-02 (Session 234)
 
-Diffusers GPU service hat NO LoRA support. `_process_diffusers_chunk` ignoriert `parameters['loras']` komplett.
-
-**Scope (5 files):**
-1. `gpu_service/config.py` — `LORA_DIR`
-2. `gpu_service/services/diffusers_backend.py` — `_apply_loras()` / `_remove_loras()`
-3. `gpu_service/routes/diffusers_routes.py` — `loras` from request
-4. `devserver/my_app/services/diffusers_client.py` — `loras` in HTTP payloads
-5. `devserver/schemas/engine/backend_router.py` — Extract + fix auto-detection routing
+Alle Standard-Generierungs-Chunks (SD3.5, SD3.5 Turbo, Flux 2, Surrealizer) unterstützen jetzt LoRAs via Diffusers GPU Service. Research-Methoden (attention/probing/algebra/archaeology) deferred.
 
 ### Video Generation Wan 2.1 — PoC pending
 

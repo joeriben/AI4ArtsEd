@@ -1,5 +1,30 @@
 # Development Log
 
+## Session 234 - LoRA Support for Diffusers (Completion)
+**Date:** 2026-03-02
+**Focus:** Complete LoRA passthrough in remaining Diffusers Python chunks
+**Commit:** `1f05c0c`
+
+### Context
+The LoRA plan (`docs/plans/lora-diffusers-support.md`) was approved earlier. Exploration revealed that most of the 5-file plan was already implemented in a prior session: `_apply_loras()`/`_remove_loras()` in the GPU service, LoRA params in `generate_image()`/`generate_image_with_fusion()`, routes, and client. Two Python chunks were the last missing pieces.
+
+### Changes
+- `output_image_sd35_turbo_diffusers.py` — added `loras: list = None` param, logging, passthrough to `backend.generate_image()`
+- `output_image_flux2_diffusers.py` — same pattern
+
+### Architectural Correction
+The original plan's step 5 (fix `has_loras` routing in `backend_router.py` line 610) was **not needed**. Python chunks are caught at line 553-567 via `_execute_python_chunk()` and exit BEFORE the `has_loras` JSON-chunk routing decision. That check only affects legacy JSON/ComfyUI chunks.
+
+### LoRA Coverage (complete for standard generation)
+| Chunk | Status |
+|---|---|
+| `output_image_sd35_diffusers.py` | Was already done |
+| `output_image_sd35_turbo_diffusers.py` | Done this session |
+| `output_image_flux2_diffusers.py` | Done this session |
+| `output_image_surrealizer_diffusers.py` | Was already done |
+| Research methods (attention/probing/algebra/archaeology) | Deferred — not needed for standard generation |
+| Video (Wan 2.1) | Out of scope |
+
 ## Session 233 - Flatten Synth UI to Independent Toggle Sections
 **Date:** 2026-03-02
 **Focus:** Replace abstract selector rows (Buffer/Free-run) with independent on/off toggle sections
