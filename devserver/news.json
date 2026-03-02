@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-02T12:00:00Z",
+  "generated_at": "2026-03-02T15:30:00Z",
   "source_session": 234,
   "items": [
     {
@@ -9,26 +9,12 @@
       "session": 234,
       "category": "feature",
       "title": {
-        "en": "LoRA Support for Image Generation",
-        "de": "LoRA-Unterstuetzung fuer Bilderzeugung"
+        "en": "Style Models (LoRA) for All Image Generators",
+        "de": "Stilmodelle (LoRA) fuer alle Bildgeneratoren"
       },
       "summary": {
-        "en": "You can now apply LoRA style models to all image generators (SD3.5, SD3.5 Turbo, Flux2, Surrealizer). This lets you steer the visual style of generated images using community-trained style adapters.",
-        "de": "Du kannst jetzt LoRA-Stilmodelle auf alle Bildgeneratoren anwenden (SD3.5, SD3.5 Turbo, Flux2, Surrealizer). Damit laesst sich der visuelle Stil generierter Bilder durch von der Community trainierte Stil-Adapter beeinflussen."
-      }
-    },
-    {
-      "id": "news-2026-03-02-synth",
-      "date": "2026-03-02",
-      "session": 233,
-      "category": "improvement",
-      "title": {
-        "en": "Crossmodal Lab: Clearer Synth Controls",
-        "de": "Crossmodales Labor: Klarere Synth-Steuerung"
-      },
-      "summary": {
-        "en": "The synthesizer controls in the Crossmodal Lab are now organized as independent sections (Loop, Wavetable, Sequencer, Arpeggiator) instead of abstract categories. Each section can be toggled on and off individually.",
-        "de": "Die Synthesizer-Steuerung im Crossmodalen Labor ist jetzt in eigenstaendige Bereiche gegliedert (Loop, Wavetable, Sequenzer, Arpeggiator) statt in abstrakte Kategorien. Jeder Bereich kann einzeln ein- und ausgeschaltet werden."
+        "en": "All image generators now support LoRA style adapters. Load a community-trained style model and let it shape the visual character of your images — from painterly textures to photographic moods.",
+        "de": "Alle Bildgeneratoren unterstuetzen jetzt LoRA-Stiladapter. Lade ein von der Community trainiertes Stilmodell und lass es den visuellen Charakter deiner Bilder praegen — von malerischen Texturen bis zu fotografischen Stimmungen."
       }
     },
     {
@@ -37,12 +23,124 @@
       "session": 229,
       "category": "improvement",
       "title": {
-        "en": "Better Text Transformations (GDPR-Compliant)",
-        "de": "Bessere Text-Transformationen (DSGVO-konform)"
+        "en": "Richer Text Transformations",
+        "de": "Reichhaltigere Text-Transformationen"
       },
       "summary": {
-        "en": "Text transformations now use a more capable language model hosted in an EU datacenter (Berlin). Metaphors and synesthetic descriptions are richer, and you can see the model's reasoning process in the chat overlay.",
-        "de": "Text-Transformationen nutzen jetzt ein leistungsfaehigeres Sprachmodell aus einem EU-Rechenzentrum (Berlin). Metaphern und synaesthetische Beschreibungen sind reichhaltiger, und du kannst den Denkprozess des Modells im Chat-Overlay verfolgen."
+        "en": "A new, more expressive language model powers the text transformations. Metaphors and synesthetic descriptions are noticeably more vivid. You can now watch the model's reasoning process unfold live in the chat overlay.",
+        "de": "Ein neues, ausdrucksstaerkeres Sprachmodell treibt die Text-Transformationen an. Metaphern und synaesthetische Beschreibungen sind spuerbar lebendiger. Du kannst den Denkprozess des Modells jetzt live im Chat-Overlay verfolgen."
+      }
+    },
+    {
+      "id": "news-2026-02-25-progress",
+      "date": "2026-02-25",
+      "session": 219,
+      "category": "improvement",
+      "title": {
+        "en": "Live Generation Progress",
+        "de": "Fortschritt der Bilderzeugung live verfolgen"
+      },
+      "summary": {
+        "en": "Image generation now shows real progress — you see the picture emerge step by step as it's being created, instead of waiting for a surprise at the end.",
+        "de": "Die Bilderzeugung zeigt jetzt echten Fortschritt — du siehst, wie das Bild Schritt fuer Schritt entsteht, statt am Ende eine Ueberraschung zu erleben."
+      }
+    },
+    {
+      "id": "news-2026-02-15-sketch",
+      "date": "2026-02-15",
+      "session": 212,
+      "category": "feature",
+      "title": {
+        "en": "Draw Sketches, Generate Images",
+        "de": "Skizzieren und Bilder erzeugen"
+      },
+      "summary": {
+        "en": "A new sketch canvas lets you draw freehand — your drawing becomes the starting point for image generation. Available everywhere you can upload an image. Just grab a pen and start.",
+        "de": "Ein neues Skizzen-Canvas laesst dich frei zeichnen — deine Zeichnung wird zum Ausgangspunkt fuer die Bilderzeugung. Ueberall verfuegbar, wo du auch ein Bild hochladen kannst. Einfach loszeichnen."
+      }
+    },
+    {
+      "id": "news-2026-02-10-crossaesthetic",
+      "date": "2026-02-10",
+      "session": 193,
+      "category": "feature",
+      "title": {
+        "en": "From Sound to Image and Back",
+        "de": "Vom Klang zum Bild und zurueck"
+      },
+      "summary": {
+        "en": "The Crossmodal Lab now bridges image and audio generation. Generate audio from a picture, or let a sound inspire an image. The built-in wavetable synth turns any generated audio into a playable instrument.",
+        "de": "Das Crossmodale Labor verbindet jetzt Bild- und Audiogenerierung. Erzeuge Klang aus einem Bild oder lass einen Sound ein Bild inspirieren. Der eingebaute Wavetable-Synth macht jedes generierte Audio zu einem spielbaren Instrument."
+      }
+    },
+    {
+      "id": "news-2026-02-08-poetry",
+      "date": "2026-02-08",
+      "session": 208,
+      "category": "content",
+      "title": {
+        "en": "Poetry Collision: Your Words Meet Real Poems",
+        "de": "Poesie-Kollision: Deine Worte treffen echte Gedichte"
+      },
+      "summary": {
+        "en": "The poetry transformation collides your prompt with genuine public-domain poems — Rilke, Dickinson, Rumi and many more. The result is unpredictable imagery born from the encounter between your idea and the poem's language.",
+        "de": "Die Poesie-Transformation laesst deinen Prompt mit echten gemeinfreien Gedichten kollidieren — Rilke, Dickinson, Rumi und viele mehr. Das Ergebnis ist unvorhersehbare Bildsprache, geboren aus der Begegnung deiner Idee mit der Sprache des Gedichts."
+      }
+    },
+    {
+      "id": "news-2026-02-05-surrealizer",
+      "date": "2026-02-05",
+      "session": 211,
+      "category": "improvement",
+      "title": {
+        "en": "Surrealizer: Three Ways to Dream",
+        "de": "Surrealizer: Drei Arten zu traeumen"
+      },
+      "summary": {
+        "en": "The Surrealizer now offers three fusion modes. Choose between a structural anchor that keeps your subject recognizable, a balanced blend, or full creative chaos. The surreal effect is noticeably stronger on detailed descriptions.",
+        "de": "Der Surrealizer bietet jetzt drei Fusionsmodi. Waehle zwischen einem strukturellen Anker, der dein Motiv erkennbar haelt, einer ausgewogenen Mischung oder vollem kreativem Chaos. Der surreale Effekt ist bei ausfuehrlichen Beschreibungen spuerbar staerker."
+      }
+    },
+    {
+      "id": "news-2026-02-01-languages",
+      "date": "2026-02-01",
+      "session": 201,
+      "category": "feature",
+      "title": {
+        "en": "9 Languages — Including Arabic and Hebrew",
+        "de": "9 Sprachen — inklusive Arabisch und Hebraeisch"
+      },
+      "summary": {
+        "en": "The platform now speaks nine languages: German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, and Arabic. Right-to-left languages are fully supported with proper text direction and layout.",
+        "de": "Die Plattform spricht jetzt neun Sprachen: Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch und Arabisch. Rechts-nach-links-Sprachen werden mit korrekter Textrichtung und Layout vollstaendig unterstuetzt."
+      }
+    },
+    {
+      "id": "news-2026-01-20-wikipedia",
+      "date": "2026-01-20",
+      "session": 139,
+      "category": "feature",
+      "title": {
+        "en": "AI Learns from Wikipedia",
+        "de": "KI lernt aus Wikipedia"
+      },
+      "summary": {
+        "en": "The text transformation can now look things up on Wikipedia while processing your prompt. A small badge shows which articles it found — click to read them yourself and check what the AI claims to know.",
+        "de": "Die Text-Transformation kann jetzt waehrend der Verarbeitung deines Prompts auf Wikipedia nachschlagen. Ein kleines Badge zeigt, welche Artikel gefunden wurden — klick drauf und pruefe selbst, was die KI zu wissen glaubt."
+      }
+    },
+    {
+      "id": "news-2026-01-15-canvas",
+      "date": "2026-01-15",
+      "session": 141,
+      "category": "feature",
+      "title": {
+        "en": "Canvas: Build Your Own AI Workflows",
+        "de": "Canvas: Eigene KI-Workflows bauen"
+      },
+      "summary": {
+        "en": "The Canvas lets you connect text, image, and evaluation nodes into custom multi-step workflows. Chain transformations together, add decision points, and watch each step execute live.",
+        "de": "Das Canvas laesst dich Text-, Bild- und Bewertungsknoten zu eigenen mehrstufigen Workflows verbinden. Verkette Transformationen, fuege Entscheidungspunkte hinzu und beobachte jeden Schritt live."
       }
     }
   ]

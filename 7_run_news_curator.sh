@@ -9,6 +9,9 @@
 
 cd "$(dirname "$0")"
 
+# Allow running from within a Claude Code session (unset nesting guard)
+unset CLAUDECODE
+
 LOGDIR="logs/news"
 mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/$(date +%Y%m%d_%H%M%S).log"

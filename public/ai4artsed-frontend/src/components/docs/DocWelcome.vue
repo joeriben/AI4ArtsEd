@@ -24,7 +24,7 @@
   <section v-if="newsItems.length > 0" class="info-section">
     <h3>{{ currentLanguage === 'de' ? 'Neuigkeiten' : 'News' }}</h3>
     <div class="news-list">
-      <div v-for="item in newsItems" :key="item.id" class="news-item">
+      <div v-for="item in visibleNews" :key="item.id" class="news-item">
         <div class="news-item-header">
           <span class="news-date">{{ item.date }}</span>
           <span :class="['news-badge', `news-badge--${item.category}`]">
@@ -35,6 +35,15 @@
         <p class="news-summary">{{ localized(item.summary) }}</p>
       </div>
     </div>
+    <button
+      v-if="newsItems.length > initialCount"
+      class="news-toggle"
+      @click="expanded = !expanded"
+    >
+      {{ expanded
+        ? (currentLanguage === 'de' ? 'Weniger anzeigen' : 'Show less')
+        : (currentLanguage === 'de' ? `Mehr anzeigen (${newsItems.length - initialCount})` : `Show more (${newsItems.length - initialCount})`) }}
+    </button>
   </section>
 
   <section class="info-section contact-welcome">
@@ -46,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const props = defineProps<{ currentLanguage: string }>()
 
@@ -64,6 +73,12 @@ interface NewsItem {
 }
 
 const newsItems = ref<NewsItem[]>([])
+const expanded = ref(false)
+const initialCount = 5
+
+const visibleNews = computed(() =>
+  expanded.value ? newsItems.value : newsItems.value.slice(0, initialCount)
+)
 
 const categoryLabels: Record<string, { de: string; en: string }> = {
   feature: { de: 'Neu', en: 'New' },
@@ -85,7 +100,7 @@ function categoryLabel(category: string): string {
 onMounted(async () => {
   try {
     const base = import.meta.env.DEV ? 'http://localhost:17802' : ''
-    const res = await fetch(`${base}/api/news?limit=5`)
+    const res = await fetch(`${base}/api/news?limit=10`)
     if (res.ok) {
       const data = await res.json()
       newsItems.value = data.items || []
@@ -164,5 +179,23 @@ onMounted(async () => {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
+}
+
+.news-toggle {
+  display: block;
+  margin-top: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.news-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
 }
 </style>
