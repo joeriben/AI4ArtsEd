@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-02T16:00:00Z",
-  "source_session": 234,
+  "generated_at": "2026-03-02T23:59:59Z",
+  "source_session": 236,
   "items": [
     {
       "id": "news-2026-03-02-lora",
@@ -23,8 +23,8 @@
       "session": 229,
       "category": "improvement",
       "title": {
-        "en": "Text Transformation: New Model (gpt-oss-120b, EU Datacenter)",
-        "de": "Text-Transformation: Neues Modell (gpt-oss-120b, EU-Rechenzentrum)"
+        "en": "Text Transformation: Reasoning Model (gpt-oss-120b, EU Datacenter)",
+        "de": "Text-Transformation: Reasoning-Modell (gpt-oss-120b, EU-Rechenzentrum)"
       },
       "summary": {
         "en": "The text transformation now uses gpt-oss-120b from the IONOS AI Model Hub (datacenter Berlin). It's a reasoning model — you can watch its thought process live in the chat overlay before it produces the final transformation.",
@@ -46,8 +46,8 @@
       }
     },
     {
-      "id": "news-2026-02-15-sketch",
-      "date": "2026-02-15",
+      "id": "news-2026-02-26-sketch",
+      "date": "2026-02-26",
       "session": 212,
       "category": "feature",
       "title": {
@@ -83,22 +83,22 @@
         "de": "Poesie als Kollisionsmaterial"
       },
       "summary": {
-        "en": "The poetry transformation feeds your text together with a genuine public-domain poem (Rilke, Dickinson, Rumi u.a.) into a small language model. Both texts collide — the result is neither your prompt nor the poem, but something born from the encounter.",
-        "de": "Die Poesie-Transformation speist deinen Text zusammen mit einem echten gemeinfreien Gedicht (Rilke, Dickinson, Rumi u.a.) in ein kleines Sprachmodell. Beide Texte kollidieren — das Ergebnis ist weder dein Prompt noch das Gedicht, sondern etwas, das aus der Begegnung entsteht."
+        "en": "The poetry transformation feeds your text together with a genuine public-domain poem (Sappho, Basho, Mirabai, and others from diverse traditions) into a small language model. Both texts collide — the result is neither your prompt nor the poem, but something born from the encounter.",
+        "de": "Die Poesie-Transformation speist deinen Text zusammen mit einem echten gemeinfreien Gedicht (Sappho, Basho, Mirabai und andere aus verschiedenen Traditionen) in ein kleines Sprachmodell. Beide Texte kollidieren — das Ergebnis ist weder dein Prompt noch das Gedicht, sondern etwas, das aus der Begegnung entsteht."
       }
     },
     {
-      "id": "news-2026-02-05-surrealizer",
-      "date": "2026-02-05",
-      "session": 211,
-      "category": "improvement",
+      "id": "news-2026-02-06-music-unified",
+      "date": "2026-02-06",
+      "session": 158,
+      "category": "feature",
       "title": {
-        "en": "Surrealizer: Three Fusion Strategies",
-        "de": "Surrealizer: Drei Fusionsstrategien"
+        "en": "Music Generation Unified: Simple & Advanced Modes",
+        "de": "Musikgenerierung vereinheitlicht: Einfach- und Experten-Modus"
       },
       "summary": {
-        "en": "The Surrealizer now provides three strategies for how strongly the surreal transformation overrides the original description: structural anchor (subject stays recognizable), normalized (balanced blend), or full override. The choice is visible and adjustable.",
-        "de": "Der Surrealizer bietet jetzt drei Strategien, wie stark die surreale Transformation die urspruengliche Beschreibung ueberschreibt: struktureller Anker (Motiv bleibt erkennbar), normalisiert (ausgewogene Mischung) oder volle Ueberschreibung. Die Wahl ist sichtbar und einstellbar."
+        "en": "Music generation now offers both simple (quick lyrics → music) and advanced modes (lyrics workshop + sound explorer with 8-dimension tag system). Toggle between modes on the same page. Advanced mode teaches music vocabulary — genre, timbre, mood, instruments — through interactive tag selection.",
+        "de": "Musikgenerierung bietet jetzt einfachen Modus (schnell Lyrics → Musik) und Experten-Modus (Lyrik-Workshop + Sound Explorer mit 8-dimensionalem Tag-System). Wechsel zwischen den Modi auf der gleichen Seite. Der Experten-Modus vermittelt Musikvokabular — Genre, Klangfarbe, Stimmung, Instrumente — durch interaktive Tag-Auswahl."
       }
     },
     {
