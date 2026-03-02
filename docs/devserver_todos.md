@@ -1,5 +1,5 @@
 # DevServer Implementation TODOs
-**Last Updated:** 2026-02-23
+**Last Updated:** 2026-03-02
 **Context:** Current priorities and active TODOs
 
 ---
@@ -8,64 +8,36 @@
 
 | Session | Datum | Was |
 |---------|-------|-----|
-| 203 | 2026-02-23 | T5 Interpretability Research — 7-Phase Pipeline implementiert (Code complete, Erstdurchlauf steht aus) |
-| 202 | 2026-02-23 | LLM Inference Migration — Ollama → GPU Service (6 Phasen, 4 neue Dateien, Ollama-Fallback) |
-| 201 | 2026-02-23 | Hebrew + Arabic RTL Support (9 Sprachen, CSS logical properties, 23 LTR-pinned components) |
-| 199 | 2026-02-23 | i18n Split — 8275-Zeilen-Monolith → per-language files + Batch Translation Workflow |
-| 194 | 2026-02-22 | Forest MiniGame Flowerpot Cursor |
-| 193 | 2026-02-22 | Wavetable Synthesis (Crossmodal Lab) |
-| 192 | 2026-02-22 | LatentLabRecorder — Research Data Export |
-| 190 | 2026-02-21 | Age-Filter Fail-Open Bug Fix + DSGVO Fallback Fix |
-| 188 | 2026-02-20 | Crossmodal Lab — MMAudio + ImageBind installiert |
+| 235 | 2026-03-02 | Proxy-Chunk-Pattern Elimination + Router Cleanup |
+| 234 | 2026-03-01 | LoRA Support for Diffusers GPU Service |
+| ~234 | 2026-03-01 | SpaCy Startup-Check + Prerequisites Script |
+| 229 | 2026-02-27 | IONOS AI Model Hub Integration |
+| 228 | 2026-02-27 | Diffusers JSON→Python Chunk Migration (8 Chunks) |
+| 227-229 | 2026-02-26 | T5 Interpretability Research (Code + Analyse complete) |
+| 203 | 2026-02-23 | T5 Interpretability Research — 7-Phase Pipeline implementiert |
+| 202 | 2026-02-23 | LLM Inference Migration — Ollama → GPU Service |
+| 201 | 2026-02-23 | Hebrew + Arabic RTL Support (9 Sprachen, CSS logical properties) |
+| 199 | 2026-02-23 | i18n Split — per-language files + Batch Translation Workflow |
 
 ---
 
 ## 🔴 CRITICAL: Architektur-Verletzungen
 
-### Proxy-Chunk-Pattern eliminieren
+### Remaining Router Cleanup (ex Output-Chunks + Proxy-Chunk)
 
-**Datum:** 2026-02-02
-**Dokumentation:** `docs/ARCHITECTURE_VIOLATION_ProxyChunkPattern.md`
+**Datum:** 2026-02-02 | **Aktualisiert:** 2026-03-02
+**Kontext:** Proxy-Chunk-Pattern ✅ eliminiert (Session 235), Diffusers-Chunk-Migration ✅ done (Session 228). Restarbeit:
 
-Das `output_image.json` Proxy-Chunk-Pattern verletzt die 3-Ebenen-Architektur:
-
-- **Soll:** Pipeline entscheidet welche Chunks ausgeführt werden
-- **Ist:** Config.OUTPUT_CHUNK entscheidet, Proxy-Chunk routet zu anderem Chunk
-- **Scope:** 17 Output-Configs betroffen
-- **Lösung:** Pipeline sollte `{{OUTPUT_CHUNK}}` direkt in `chunks` Array verwenden
-- **Referenz:** `dual_text_media_generation` Pipeline zeigt korrektes Pattern
-
-### Output-Chunks als Ausführungseinheiten wiederherstellen
-
-**Datum:** 2026-02-02
-
-~~**Diffusers**: `_process_diffusers_chunk()` + `_get_diffusers_compatible_chunk()` entfernt, 8 Python-Chunks erstellt (sd35, sd35_turbo, flux2, surrealizer, attention_cartography, feature_probing, concept_algebra, denoising_archaeology). Alle JSON-Chunks gelöscht.~~ ✅ Done
-
-**Noch offen:**
 - `_process_heartmula_chunk()` — Dead Code (Python-Chunk `output_music_heartmula.py` existiert bereits, Router-Methode kann entfernt werden)
 - `_process_stable_audio_chunk()` — noch kein Python-Chunk
 - `_process_triton_chunk()` — noch kein Python-Chunk
 - ComfyUI-Workflow-Logik (`_process_workflow_chunk()`, `_process_image_chunk_simple()`, `_build_simple_t2i_workflow()`, `_inject_lora_nodes()`, `_apply_encoder_type()`) — noch im Router
 
+**Plan-Referenz:** `docs/plans/diffusers-chunk-migration.md`
+
 ---
 
 ## 🔴 HIGH Priority
-
-### SpaCy Startup-Check + requirements.txt bereinigen
-
-**Datum:** 2026-02-18
-
-Production war ohne SpaCy deployed → DSGVO-Schutz komplett deaktiviert.
-
-1. ~~**Startup-Check**: Prüfen ob SpaCy + 2 Modelle (`de_core_news_lg`, `xx_ent_wiki_sm`) installiert sind → Abbruch bei Fehlen~~ ✅ Done — `_check_spacy_models()` in `__init__.py` + `check_prerequisites.sh` section 6
-2. ~~**requirements.txt**: Kommentare aktualisieren (alte 12 Modelle → 2 tatsächlich verwendete)~~ ✅ Already done
-3. ~~**Installationsskript** für `python -m spacy download`~~ → Not needed: install commands printed by startup check + prerequisites script
-
-### ✅ LoRA Support for Diffusers GPU Service
-
-**Datum:** 2026-02-17 → **Erledigt:** 2026-03-02 (Session 234)
-
-Alle Standard-Generierungs-Chunks (SD3.5, SD3.5 Turbo, Flux 2, Surrealizer) unterstützen jetzt LoRAs via Diffusers GPU Service. Research-Methoden (attention/probing/algebra/archaeology) deferred.
 
 ### Video Generation Wan 2.1 — PoC pending
 
@@ -116,18 +88,21 @@ Stage 3 generiert Negative Prompts basierend auf Safety Level (kids/youth), aber
 
 **Fix:** `safety_result['negative_prompt']` an `pipeline_executor.execute_pipeline()` in Stage 4 übergeben.
 
+### Frontend bleibt im Loading-State bei Backend-Fehler (Expert Mode)
+
+**Datum:** 2026-02-28
+**Status:** Offen
+
+Wenn Stage 4 fehlschlägt (z.B. ComfyUI-Timeout), bleibt das Frontend in der Model-Card ("Modell wird geladen") hängen. Der `stage4_error` SSE-Event kommt nicht durch oder wird nicht behandelt. `isExecuting` wird nie auf `false` gesetzt. Zusätzlich: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein.
+
+Zu untersuchen:
+- Wie propagiert `schema_pipeline_routes.py` den Fehler via SSE?
+- Wie reagiert die View (text_transformation.vue etc.) auf Error-Events?
+- Wird `isExecuting` bei Fehler zurückgesetzt?
+
 ---
 
 ## 🟡 MEDIUM Priority
-
-### ✅ Mistral Large 2411 → 2512 Upgrade
-
-**Datum:** 2026-02-27 — **Erledigt**
-
-Live-Benchmark: 2411 vs 2512 bei Interception-Prompts → gleiche Latenz (~6s), bessere Output-Qualität (kompakter, englisch, stop statt length-cutoff). Upgrade durchgeführt:
-- `devserver/hardware_matrix.json` (6 Einträge)
-- `devserver/schemas/configs/interception/*.json` (4 Configs: lyrics_from_theme, lyrics_refinement, tag_suggestion_from_lyrics, tags_generation)
-- `devserver/my_app/routes/canvas_routes.py` (Canvas Model-Liste)
 
 ### source_view in Favorites für korrektes Restore-Routing
 
@@ -195,18 +170,6 @@ Nightly `2.11.0.dev20260203+cu130` → Stable `2.11.0` (sollte seit Feb 16 relea
 **Datum:** 2025-11-02
 Template-System für Educational Error Messages (hardcoded German → konfigurierbar). Nicht blocking für aktuelles Deployment.
 
-### Frontend bleibt im Loading-State bei Backend-Fehler (Expert Mode)
-
-**Datum:** 2026-02-28
-**Status:** Offen — nächste Session
-
-Wenn Stage 4 fehlschlägt (z.B. ComfyUI-Timeout), bleibt das Frontend in der Model-Card ("Modell wird geladen") hängen. Der `stage4_error` SSE-Event kommt nicht durch oder wird nicht behandelt. `isExecuting` wird nie auf `false` gesetzt. Zusätzlich: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein.
-
-Zu untersuchen:
-- Wie propagiert `schema_pipeline_routes.py` den Fehler via SSE?
-- Wie reagiert die View (text_transformation.vue etc.) auf Error-Events?
-- Wird `isExecuting` bei Fehler zurückgesetzt?
-
 ### Quick-Toggle UI Mode (Expert/Youth/Kids)
 
 **Datum:** 2026-02-28
@@ -217,7 +180,7 @@ Idee: Schneller Schalter im Interface zum Wechseln zwischen UI-Modes (kids/youth
 ### Debug-Stufen-System
 
 **Plan:** `~/.claude/plans/dynamic-sprouting-stonebraker.md`
-**Status:** DEFERRED — Safety Regression Fix erledigt, Blocker aufgelöst
+**Status:** DEFERRED
 
 ### Pipeline-Autonomie Check
 
@@ -262,4 +225,4 @@ Pädagogischer Content über Web-Scraping für generative AI, Künstler-Kompensa
 ---
 
 **Created:** 2025-10-26
-**Major Cleanups:** 2025-11-02 (Session 14), 2026-02-23 (von ~2100 auf ~220 Zeilen)
+**Major Cleanups:** 2025-11-02 (Session 14), 2026-02-23 (von ~2100 auf ~220 Zeilen), 2026-03-02 (erledigte Items bereinigt)
