@@ -1,0 +1,85 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 2 Visual Conditioning",
+    "de": "Flux 2 Visuelle Konditionierung"
+  },
+  "description": {
+    "en": "Image transformation using Flux 2 Dev's native visual conditioning. The reference image guides generation as attention context — creative transformations, not reproductions.",
+    "de": "Bildtransformation mit Flux 2 Devs nativer visueller Konditionierung. Das Referenzbild steuert die Generierung als Attention-Kontext — kreative Transformationen, keine Reproduktionen."
+  },
+  "category": {
+    "en": "Image Transformation",
+    "de": "Bildtransformation"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2_img2img_diffusers",
+    "NEGATIVE_PROMPT": "text, watermark",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 20,
+    "CFG": 1,
+    "seed": "random"
+  },
+
+  "capabilities": {
+    "img2img": true,
+    "text2img": false
+  },
+
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 24000,
+    "estimated_duration_seconds": "30-45",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev visual conditioning via Diffusers. Reference image is VAE-encoded and used as attention context tokens — generation from pure noise with image guidance.",
+    "display_name": "FLUX.2 [dev] Visual Conditioning",
+    "icon": "flash_on",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B Mistral text encoder)",
+    "text_encoders": ["Mistral-Small-3.2-24B (24B)"],
+    "quantization": "FP8 (transformer) + INT8 (text encoder) + BF16 (VAE)",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering",
+    "version": "1.0"
+  },
+
+  "display": {
+    "icon": "flash_on",
+    "color": "#FF6B35",
+    "category": "image_transformation",
+    "difficulty": 2,
+    "order": 25
+  },
+
+  "tags": {
+    "en": ["image", "flux", "flux2", "diffusers", "img2img", "visual-conditioning"],
+    "de": ["bild", "flux", "flux2", "diffusers", "img2img", "visuelle-konditionierung"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

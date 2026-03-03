@@ -431,6 +431,18 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       color: '#FF6B6B',
       logo: '/logos/Qwen_logo.png',
       lightBg: false
+    },
+    {
+      id: 'flux2_img2img_diffusers',
+      label: 'Flux 2\nDiffusers',
+      emoji: '⚡',
+      name: 'Flux 2 Visual Conditioning',
+      quality: 5,
+      speed: 3,
+      duration: '30-45',
+      color: '#FF6B35',
+      logo: '/logos/flux2_logo.png',
+      lightBg: false
     }
   ],
   video: [
@@ -444,6 +456,18 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       duration: '35',
       color: '#9C27B0',
       logo: '/logos/wan_logo.png',
+      lightBg: false
+    },
+    {
+      id: 'wan22_i2v_diffusers',
+      label: 'Wan 2.2\nI2V-A14B',
+      emoji: '🎬',
+      name: 'Wan 2.2 I2V-A14B (MoE)',
+      quality: 5,
+      speed: 2,
+      duration: '120-240',
+      color: '#E91E63',
+      logo: '/logos/Qwen_logo.png',
       lightBg: false
     }
   ],

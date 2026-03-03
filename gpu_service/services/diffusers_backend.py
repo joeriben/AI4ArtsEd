@@ -751,6 +751,13 @@ class DiffusersImageGenerator:
                                         f"{len(clip_tokens)} tokens, T5-XXL uses full prompt"
                                     )
 
+                        # Flux2 visual conditioning: pass reference image as context tokens
+                        if pipeline_class == "Flux2Pipeline" and kwargs.get('image_bytes'):
+                            from PIL import Image
+                            pil_image = Image.open(io.BytesIO(kwargs['image_bytes'])).convert("RGB")
+                            gen_kwargs["image"] = pil_image
+                            logger.info(f"[DIFFUSERS] Flux2 visual conditioning: {pil_image.size}")
+
                         gen_kwargs["callback_on_step_end"] = step_callback
                         gen_kwargs["callback_on_step_end_tensor_inputs"] = ["latents"]
 
