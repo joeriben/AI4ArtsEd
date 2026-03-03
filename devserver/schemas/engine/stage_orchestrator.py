@@ -690,9 +690,9 @@ def parse_llamaguard_output(output: str) -> Tuple[bool, List[str]]:
 
 def build_safety_message(codes: List[str], lang: str = 'de') -> str:
     """
-    Build user-friendly safety message from Llama-Guard codes using llama_guard_explanations.json
+    Build user-friendly safety message from safety codes using safety_code_explanations.json
     """
-    explanations_path = Path(__file__).parent.parent / 'llama_guard_explanations.json'
+    explanations_path = Path(__file__).parent.parent / 'safety_code_explanations.json'
 
     try:
         with open(explanations_path, 'r', encoding='utf-8') as f:
