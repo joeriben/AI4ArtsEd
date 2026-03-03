@@ -1,5 +1,89 @@
 # Development Log
 
+## Session 240 - Fix VRAM Eviction on Model Switch (3 Cascading Bugs)
+**Date:** 2026-03-03
+**Focus:** GPU service VRAM coordinator fails to evict models when switching between diffusers models (e.g. Flux2 → SD 3.5)
+
+### Root Cause
+Three cascading bugs in the eviction chain:
+
+1. **Priority filter too strict** (`vram_coordinator.py:231`): Used `<` instead of `<=`, so NORMAL-priority models could never evict other NORMAL-priority models. Since all diffusers/text models register as NORMAL, cross-model eviction never happened. In-use models are already protected (elevated to HIGH priority), so `<=` is safe.
+
+2. **`float('inf')` makes success always False** (`diffusers_backend.py:437`): Cold loads pass `required_mb=float('inf')`. The coordinator's `free_mb >= inf` check is mathematically always False, even after successful eviction.
+
+3. **Eviction failure silently ignored** (`diffusers_backend.py:383`): `request_vram()` return value was discarded. Load proceeded regardless of eviction outcome.
+
+**Secondary**: Missing `gc.collect()` before `torch.cuda.empty_cache()`. PyTorch pipelines have circular references — without GC, `del pipeline` doesn't immediately free GPU memory.
+
+### Changes
+| File | Change |
+|------|--------|
+| `gpu_service/services/vram_coordinator.py` | `<` → `<=` in priority filter; handle `float('inf')` as "evict all, succeed if freed anything"; `gc.collect()` before `empty_cache()` |
+| `gpu_service/services/diffusers_backend.py` | Log warning on eviction failure; `gc.collect()` before `empty_cache()` in `_unload_model_sync()` |
+| `gpu_service/services/text_backend.py` | `gc.collect()` before `empty_cache()` in `_unload_model_sync()` (consistency) |
+
+### Verification
+1. Start GPU service → generate with Flux2 (~37GB with cpu_offload)
+2. Switch to SD 3.5 Large
+3. Expected: logs show `[VRAM-COORD] Evicting diffusers/...` → successful load
+
+### Commit
+- `83299f5` fix(gpu): fix VRAM eviction failing on model switch (3 cascading bugs)
+
+---
+
+## Session 239 - Wan 2.2 A14B MoE: T2V + I2V via Diffusers
+**Date:** 2026-03-03
+**Focus:** Upgrade video generation from Wan 2.2 TI2V-5B to A14B MoE (27B total), add Image-to-Video
+
+### Context
+Wan 2.2 5B (TI2V) was already implemented. The A14B MoE models offer significantly better quality: 27B total params (2x 14B experts, only 14B active per step). With FP8 quantization both transformer experts fit in ~14GB VRAM. This session upgrades T2V and adds I2V as a new capability.
+
+### Architecture: MoE Dual Transformer
+- **T2V-A14B**: `transformer` + `transformer_2` (boundary_ratio=0.875)
+- **I2V-A14B**: `transformer` + `transformer_2` (boundary_ratio=0.9)
+- **Text Encoder**: UMT5EncoderModel (~4.7B)
+- **VAE**: AutoencoderKLWan (MUST be float32)
+- **New parameter**: `guidance_scale_2=3.0` (second guidance scale for MoE)
+
+### Changes
+| File | Change |
+|------|--------|
+| `gpu_service/config.py` | +`DIFFUSERS_WAN22_QUANTIZE` (bf16 default, fp8 optional) |
+| `gpu_service/services/diffusers_backend.py` | New `_load_wan_pipeline()` with component-level loading, FP8/BF16 quantization, auto-detect dual transformer. `WanImageToVideoPipeline` registered. New `generate_video_from_image()`. `guidance_scale_2` on `generate_video()` |
+| `gpu_service/routes/diffusers_routes.py` | `guidance_scale_2` passthrough on T2V, new `/api/diffusers/generate/video/i2v` endpoint, fixed defaults (40 steps, 4.0 cfg) |
+| `devserver/my_app/services/diffusers_client.py` | `guidance_scale_2` on `generate_video()`, new `generate_video_from_image()` |
+| `devserver/schemas/chunks/output_video_wan22_diffusers.py` | Updated to T2V-A14B: model_id, guidance_scale_2, defaults |
+| `devserver/schemas/chunks/output_video_wan22_i2v_diffusers.py` | **NEW** — I2V chunk accepting `image_base64` |
+| `devserver/schemas/configs/output/wan22_t2v_diffusers.json` | Updated model, params, MoE info, `videocam` icon |
+| `devserver/schemas/configs/output/wan22_i2v_diffusers.json` | **NEW** — I2V config with boundary_ratio=0.9 |
+| `public/.../text_transformation.vue` | Updated T2V tile, added I2V tile + mapping + model name |
+
+### Key Design Decisions
+- **`_load_wan_pipeline()`** follows the Flux 2 pattern: component-level loading instead of `from_pretrained()`. This enables per-component quantization (FP8 transformers, INT8 text encoder, FP32 VAE).
+- **Auto-detect dual transformer**: Downloads `model_index.json` from HuggingFace to check for `transformer_2`. Falls back to heuristic (`A14B` in model_id).
+- **Shared method for T2V + I2V**: `_load_wan_pipeline()` accepts `pipeline_class_str` parameter, works for both `WanPipeline` and `WanImageToVideoPipeline`.
+- **I2V image handling**: Route decodes base64 → bytes, backend converts to PIL Image with RGB normalization and LANCZOS resize to target dimensions.
+
+### VRAM Estimates
+| Mode | VRAM |
+|------|------|
+| BF16 (default) | ~40GB |
+| FP8 (`DIFFUSERS_WAN22_QUANTIZE=fp8`) | ~14GB |
+
+### Stats
+- 9 files changed, +624/-66 lines
+- 2 new files (I2V chunk + config)
+
+### Still Open
+- I2V frontend: Currently a tile in text_transformation.vue — needs UX for image upload (file picker or use previous generation result)
+- PoC testing pending (model download required)
+
+### Commit
+- `0b12380` feat: Wan 2.2 A14B MoE — T2V + I2V via Diffusers
+
+---
+
 ## Session 238 - SwarmUI Removal + ComfyUI Standalone (Port 17804)
 **Date:** 2026-03-03
 **Focus:** Complete removal of SwarmUI middleware, standalone ComfyUI on dedicated port
