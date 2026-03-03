@@ -305,14 +305,17 @@ class ChunkBuilder:
         # Apply placeholder replacement to parameter values
         processed_parameters = self._replace_placeholders_in_dict(merged_parameters, replacement_context)
 
-        # PHASE 2B: Detect output chunks (have workflow field)
-        is_output_chunk = bool(template.workflow)
+        # PHASE 2B: Detect output chunks (have workflow field OR are api_output/text_passthrough type)
+        is_output_chunk = bool(template.workflow) or template.chunk_type in ('api_output_chunk', 'text_passthrough')
 
         # Chunk-Request zusammenstellen
         if is_output_chunk:
             # Output chunk: workflow dict with replaced placeholders
-            logger.debug(f"[CHUNK-BUILD] '{chunk_name}' is output chunk - processing workflow")
-            processed_workflow = self._process_workflow_placeholders(template.workflow, replacement_context)
+            logger.debug(f"[CHUNK-BUILD] '{chunk_name}' is output chunk (type={template.chunk_type})")
+            if template.workflow:
+                processed_workflow = self._process_workflow_placeholders(template.workflow, replacement_context)
+            else:
+                processed_workflow = {}  # api_output_chunk/text_passthrough: no workflow, router re-loads JSON
 
             # Include chunk_name in parameters for router detection (Python chunks)
             processed_parameters['_chunk_name'] = chunk_name
@@ -330,12 +333,12 @@ class ChunkBuilder:
                     'chunk_name': chunk_name,
                     'config_name': resolved_config.name,
                     'chunk_type': 'output_chunk',
-                    'has_workflow': True,
-                    'workflow_nodes': len(processed_workflow),
+                    'has_workflow': bool(template.workflow),
+                    'workflow_nodes': len(processed_workflow) if processed_workflow else 0,
                     **resolved_config.meta
                 }
             }
-            logger.debug(f"[CHUNK-BUILD] Output chunk '{chunk_name}' built with {len(processed_workflow)} workflow nodes")
+            logger.debug(f"[CHUNK-BUILD] Output chunk '{chunk_name}' built with {len(processed_workflow) if processed_workflow else 0} workflow nodes")
         else:
             # Processing chunk: string prompt (existing behavior)
             chunk_request = {
