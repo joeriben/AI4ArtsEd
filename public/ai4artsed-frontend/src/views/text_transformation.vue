@@ -454,6 +454,7 @@ import { usePageContextStore } from '@/stores/pageContext'
 import { useUiModeStore } from '@/stores/uiMode'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { getModelAvailability, type ModelAvailability } from '@/services/api'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 // Import styles (Phase 1 refactoring: extracted from inline <style scoped>)
 import '@/assets/animations.css'
@@ -468,6 +469,9 @@ const favoritesStore = useFavoritesStore()
 
 // UI mode for expert denoising view
 const uiModeStore = useUiModeStore()
+
+// Safety store for pre-generation check
+const safetyStore = useSafetyEventStore()
 
 // ============================================================================
 // Session Management (Session 82: Chat Overlay Context)
@@ -591,7 +595,7 @@ const {
   reset: resetGenerationStream
 } = useGenerationStream()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const estimatedDurationSeconds = ref<string>('30')  // Stores duration from backend (30s default if optimization skipped)
 const activeLoras = ref<Array<{name: string, strength: number}>>([])
@@ -719,8 +723,7 @@ const configsByCategory: Record<string, Config[]> = {
   video: [
     { id: 'ltx_video', label: 'LTX\nVideo', emoji: '⚡', color: '#9C27B0', description: 'Schnelle lokale Videogenerierung', logo: '/logos/ltx_logo.png', lightBg: false },
     { id: 'wan22_video', label: 'Wan 2.2', emoji: '🎬', color: '#E91E63', description: 'Hochwertige 720p Videogenerierung mit Wan 2.2 (5B)', logo: '/logos/Qwen_logo.png', lightBg: false },
-    { id: 'wan22_t2v_diffusers', label: 'Wan 2.2\nT2V-A14B', emoji: '🎬', color: '#9B59B6', description: 'Text-to-Video mit Wan 2.2 A14B MoE (27B, 14B aktiv) via Diffusers', logo: '/logos/Qwen_logo.png', lightBg: false },
-    { id: 'wan22_i2v_diffusers', label: 'Wan 2.2\nI2V-A14B', emoji: '🎬', color: '#E91E63', description: 'Image-to-Video mit Wan 2.2 A14B MoE — animiert ein Bild', logo: '/logos/Qwen_logo.png', lightBg: false }
+    { id: 'wan22_t2v_diffusers', label: 'Wan 2.2\nT2V-A14B', emoji: '🎬', color: '#9B59B6', description: 'Text-to-Video mit Wan 2.2 A14B MoE (27B, 14B aktiv) via Diffusers', logo: '/logos/Qwen_logo.png', lightBg: false }
   ],
   sound: [
     { id: 'acenet_t2instrumental', label: 'ACE\nInstrumental', emoji: '🎵', color: '#FF5722', description: 'KI-Musikgenerierung für Instrumentalstücke', logo: '/logos/ace_logo.png', lightBg: false },
@@ -752,7 +755,6 @@ const configIdToChunkName: Record<string, string> = {
   'ltx_video': 'ltx',
   'wan22_video': 'wan22',
   'wan22_t2v_diffusers': 'wan22_diffusers',
-  'wan22_i2v_diffusers': 'wan22_i2v_diffusers',
   'acenet_t2instrumental': 'acenet',
   'stableaudio_open': 'stableaudio'
 }
@@ -862,7 +864,6 @@ const modelFullNames: Record<string, string> = {
   ltx_video: 'LTX Video',
   wan22_video: 'Wan 2.2 Text-to-Video',
   wan22_t2v_diffusers: 'Wan 2.2 T2V-A14B (MoE)',
-  wan22_i2v_diffusers: 'Wan 2.2 I2V-A14B (MoE)',
   acenet_t2instrumental: 'ACE Step Instrumental',
   stableaudio_open: 'Stable Audio Open'
 }
@@ -1529,6 +1530,28 @@ async function startGeneration() {
   if (!selectedConfig.value) {
     alert('Bitte wähle ein Modell aus')
     return
+  }
+
+  // Pre-generation safety check on the prompt that will be sent to Stage 3-4.
+  // MediaInputBox checks on blur/paste, but if the user edits the optimized prompt
+  // and clicks Generate without blurring, the check wouldn't have fired.
+  const finalPrompt = optimizedPrompt.value || interceptionResult.value || inputText.value
+  if (finalPrompt?.trim()) {
+    try {
+      const baseUrl = import.meta.env.DEV ? 'http://localhost:17802' : ''
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/safety/quick`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: finalPrompt.trim(), user_language: locale.value })
+      })
+      const data = await res.json()
+      if (!data.safe) {
+        safetyStore.reportBlock(1, data.error_message || t('mediaInput.contentBlocked'), [])
+        return
+      }
+    } catch {
+      // Network error → fail-open, let Stage 3 backend handle it
+    }
   }
 
   isPipelineExecuting.value = true
