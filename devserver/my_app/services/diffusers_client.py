@@ -139,7 +139,7 @@ class DiffusersClient:
     async def generate_video(
         self,
         prompt: str,
-        model_id: str = "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+        model_id: str = "Wan-AI/Wan2.2-T2V-A14B-Diffusers",
         negative_prompt: str = "",
         width: int = 1280,
         height: int = 720,
@@ -149,6 +149,7 @@ class DiffusersClient:
         fps: int = 16,
         seed: int = -1,
         pipeline_class: str = "WanPipeline",
+        guidance_scale_2: float = None,
         **kwargs
     ) -> Optional[bytes]:
         """Generate a video. Returns MP4 bytes or None.
@@ -156,7 +157,7 @@ class DiffusersClient:
         Video generation takes significantly longer than images (~4min for 14B).
         """
         import asyncio
-        result = await asyncio.to_thread(self._post, '/api/diffusers/generate/video', {
+        payload = {
             'prompt': prompt,
             'model_id': model_id,
             'negative_prompt': negative_prompt,
@@ -168,7 +169,50 @@ class DiffusersClient:
             'fps': fps,
             'seed': seed,
             'pipeline_class': pipeline_class,
-        }, self.timeout_video)
+        }
+        if guidance_scale_2 is not None:
+            payload['guidance_scale_2'] = guidance_scale_2
+        result = await asyncio.to_thread(self._post, '/api/diffusers/generate/video', payload, self.timeout_video)
+
+        if result is None or not result.get('success'):
+            return None
+
+        return base64.b64decode(result['video_base64'])
+
+    async def generate_video_from_image(
+        self,
+        image_bytes: bytes,
+        prompt: str = "",
+        model_id: str = "Wan-AI/Wan2.2-I2V-A14B-Diffusers",
+        negative_prompt: str = "",
+        width: int = 1280,
+        height: int = 720,
+        num_frames: int = 81,
+        steps: int = 40,
+        cfg_scale: float = 4.0,
+        fps: int = 16,
+        seed: int = -1,
+        guidance_scale_2: float = None,
+        **kwargs
+    ) -> Optional[bytes]:
+        """Generate a video from an image. Returns MP4 bytes or None."""
+        import asyncio
+        payload = {
+            'image_base64': base64.b64encode(image_bytes).decode('utf-8'),
+            'prompt': prompt,
+            'model_id': model_id,
+            'negative_prompt': negative_prompt,
+            'width': width,
+            'height': height,
+            'num_frames': num_frames,
+            'steps': steps,
+            'cfg_scale': cfg_scale,
+            'fps': fps,
+            'seed': seed,
+        }
+        if guidance_scale_2 is not None:
+            payload['guidance_scale_2'] = guidance_scale_2
+        result = await asyncio.to_thread(self._post, '/api/diffusers/generate/video/i2v', payload, self.timeout_video)
 
         if result is None or not result.get('success'):
             return None

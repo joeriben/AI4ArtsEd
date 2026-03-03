@@ -1,11 +1,12 @@
 """
-Output Chunk: Wan 2.2 T2V-A14B Video Generation (Diffusers)
+Output Chunk: Wan 2.2 I2V-A14B Image-to-Video Generation (Diffusers)
 
-Generates video from text using Wan 2.2 T2V-A14B (MoE, 27B total, 14B active)
-via the GPU service. Uses official HuggingFace Diffusers WanPipeline.
+Generates video from an input image using Wan 2.2 I2V-A14B (MoE, 27B total, 14B active)
+via the GPU service. Uses WanImageToVideoPipeline from HuggingFace Diffusers.
 
-Input (from Stage 2/3 or direct):
-    - prompt (TEXT_1): Text description of the video to generate
+Input:
+    - image_base64: Base64-encoded PNG/JPEG image to animate
+    - prompt (TEXT_1): Optional text description to guide the animation
 
 Output:
     - MP4 video bytes
@@ -17,7 +18,7 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 CHUNK_META = {
-    "name": "output_video_wan22_diffusers",
+    "name": "output_video_wan22_i2v_diffusers",
     "media_type": "video",
     "output_format": "mp4",
     "estimated_duration_seconds": "120-240",
@@ -40,9 +41,10 @@ DEFAULTS = {
 
 
 async def execute(
+    image_base64: str = None,
     prompt: str = None,
     TEXT_1: str = None,
-    model_id: str = "Wan-AI/Wan2.2-T2V-A14B-Diffusers",
+    model_id: str = "Wan-AI/Wan2.2-I2V-A14B-Diffusers",
     negative_prompt: str = None,
     width: int = None,
     height: int = None,
@@ -55,29 +57,33 @@ async def execute(
     **kwargs
 ) -> bytes:
     """
-    Execute Wan 2.2 T2V-A14B video generation.
+    Execute Wan 2.2 I2V-A14B image-to-video generation.
 
-    The output config provides resolution defaults and model_id.
-    GPU service handles WanPipeline loading with VAE float32 separation
-    and optional FP8 quantization for the dual MoE transformers.
+    The image_base64 parameter contains the input image to animate.
+    An optional text prompt can guide the animation direction.
 
     Returns:
         MP4 video bytes
 
     Raises:
-        Exception: If generation fails or backend unavailable
+        Exception: If generation fails, backend unavailable, or no image provided
     """
     from my_app.services.diffusers_backend import get_diffusers_backend
+    import base64
     import random
 
     # Map pipeline convention
     if prompt is None and TEXT_1 is not None:
         prompt = TEXT_1
 
-    if not prompt or not prompt.strip():
-        raise ValueError("No prompt provided for video generation")
+    if not image_base64:
+        raise ValueError("No image_base64 provided for I2V generation")
+
+    # Decode image
+    image_bytes = base64.b64decode(image_base64)
 
     # Apply defaults
+    prompt = prompt or ""
     negative_prompt = negative_prompt if negative_prompt is not None else DEFAULTS["negative_prompt"]
     width = width if width is not None else DEFAULTS["width"]
     height = height if height is not None else DEFAULTS["height"]
@@ -90,15 +96,17 @@ async def execute(
     if seed is None or seed == "random":
         seed = random.randint(0, 2**32 - 1)
 
-    logger.info(f"[CHUNK:wan22-t2v] Executing: model={model_id}, {width}x{height}, {num_frames} frames, {steps} steps")
-    logger.info(f"[CHUNK:wan22-t2v] Prompt: {prompt[:100]}...")
+    logger.info(f"[CHUNK:wan22-i2v] Executing: model={model_id}, {width}x{height}, {num_frames} frames, {steps} steps")
+    if prompt:
+        logger.info(f"[CHUNK:wan22-i2v] Prompt: {prompt[:100]}...")
 
     backend = get_diffusers_backend()
 
     if not await backend.is_available():
         raise Exception("Diffusers backend not available")
 
-    video_bytes = await backend.generate_video(
+    video_bytes = await backend.generate_video_from_image(
+        image_bytes=image_bytes,
         prompt=prompt,
         model_id=model_id,
         negative_prompt=negative_prompt,
@@ -113,7 +121,7 @@ async def execute(
     )
 
     if video_bytes is None:
-        raise Exception("Video generation failed")
+        raise Exception("I2V video generation failed")
 
-    logger.info(f"[CHUNK:wan22-t2v] Generated {len(video_bytes)} bytes (seed={seed})")
+    logger.info(f"[CHUNK:wan22-i2v] Generated {len(video_bytes)} bytes (seed={seed})")
     return video_bytes

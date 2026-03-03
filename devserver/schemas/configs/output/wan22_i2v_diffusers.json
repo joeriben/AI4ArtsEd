@@ -1,0 +1,81 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Wan 2.2 I2V-A14B (Diffusers)",
+    "de": "Wan 2.2 I2V-A14B (Diffusers)"
+  },
+  "description": {
+    "en": "Image-to-video generation using Wan 2.2 I2V-A14B (MoE, 27B total) via Diffusers",
+    "de": "Bild-zu-Video-Generierung mit Wan 2.2 I2V-A14B (MoE, 27B gesamt) via Diffusers"
+  },
+  "category": {
+    "en": "Video Generation",
+    "de": "Videogenerierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_video_wan22_i2v_diffusers",
+    "model_id": "Wan-AI/Wan2.2-I2V-A14B-Diffusers",
+    "negative_prompt": "blurry, distorted, low quality, static, watermark",
+    "width": 1280,
+    "height": 720,
+    "num_frames": 81,
+    "steps": 40,
+    "cfg_scale": 4.0,
+    "guidance_scale_2": 3.0,
+    "fps": 16
+  },
+
+  "media_preferences": {
+    "default_output": "video",
+    "supported_types": ["video"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 14000,
+    "estimated_duration_seconds": "120-240",
+    "recommended_resolution": "1280x720",
+    "supported_resolutions": [
+      "1280x720",
+      "848x480"
+    ],
+    "recommended_frames": 81,
+    "supported_fps": [16, 24],
+    "notes": "Wan 2.2 I2V-A14B via Diffusers GPU service. Image-to-video: animates an input image. MoE architecture: 27B total params (2x 14B experts, 14B active per step, boundary_ratio=0.9). With FP8 quantization: ~14GB VRAM. BF16: ~40GB VRAM. VAE runs in float32.",
+    "display_name": "Wan 2.2 I2V-A14B (Diffusers)",
+    "icon": "videocam",
+    "publisher": "Wan-AI / Alibaba Group (Hangzhou, CN)",
+    "architecture": "Diffusion Transformer (I2V, MoE, 2x14B experts, boundary_ratio=0.9)",
+    "params": "27B total (2x 14B MoE experts, 14B active)",
+    "text_encoders": ["uMT5-XXL (multilingual)"],
+    "quantization": "BF16 default, FP8 optional (DIFFUSERS_WAN22_QUANTIZE=fp8)",
+    "license": "Apache 2.0",
+    "fair_culture": "Trained on ~1.5B videos + 10B images (sources undisclosed)",
+    "safety_by_design": "Optional safety checker in pipeline",
+    "img2img": true,
+    "optimization_instruction": "YOUR OUTPUT WILL BE IN THE LANGUAGE OF THE INPUT!\n\n=== CORE TRANSFORMATION: IMAGE-TO-VIDEO PROMPT ===\nThe user provides an IMAGE that will be animated. Your prompt guides HOW the image comes to life.\n\nRULES:\n1. Describe MOTION and CAMERA that will animate the still image.\n2. Reference what is VISIBLE in the image — don't invent new subjects.\n3. Use cinematic language: 'camera slowly zooms in', 'gentle wind moves the leaves'.\n4. Keep it SHORT (1-2 sentences). The image provides the visual context.\n5. Focus on: what moves, how it moves, camera movement, lighting changes.\n6. Do NOT describe the image itself — the model already sees it.\n7. Do NOT mention 'video', 'animate', 'come to life' — just describe the motion.\n\nEXAMPLE INPUT: (image of a cat on a windowsill)\nEXAMPLE OUTPUT: 'The cat stretches slowly and turns its head toward the window. Soft afternoon sunlight shifts across the fur as curtains sway gently in a breeze.'"
+  },
+
+  "display": {
+    "icon": "videocam",
+    "color": "#E91E63",
+    "category": "video_generation",
+    "difficulty": 2,
+    "order": 23
+  },
+
+  "tags": {
+    "en": ["video", "wan", "image-to-video", "diffusers", "14b", "moe", "i2v"],
+    "de": ["video", "wan", "bild-zu-video", "diffusers", "14b", "moe", "i2v"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

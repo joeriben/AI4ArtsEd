@@ -35,6 +35,7 @@ DIFFUSERS_TENSORRT_MODELS = {
 _SERVER_BASE = Path(os.environ.get("SERVER_BASE", str(_AI_TOOLS_BASE / "ai4artsed_webserver")))
 LORA_DIR = Path(os.environ.get("LORA_DIR", str(_SERVER_BASE / "dlbackend" / "ComfyUI" / "models" / "loras")))
 DIFFUSERS_FLUX2_QUANTIZE = os.environ.get("DIFFUSERS_FLUX2_QUANTIZE", "fp8")  # bf16 or fp8
+DIFFUSERS_WAN22_QUANTIZE = os.environ.get("DIFFUSERS_WAN22_QUANTIZE", "bf16")  # bf16 or fp8
 
 # --- HeartMuLa ---
 HEARTMULA_ENABLED = os.environ.get("HEARTMULA_ENABLED", "true").lower() == "true"

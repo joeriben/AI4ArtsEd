@@ -257,18 +257,23 @@ def generate_video():
 
     backend = _get_backend()
     try:
+        extra_kwargs = {}
+        if 'guidance_scale_2' in data:
+            extra_kwargs['guidance_scale_2'] = float(data['guidance_scale_2'])
+
         video_bytes = _run_async(backend.generate_video(
             prompt=data['prompt'],
-            model_id=data.get('model_id', 'Wan-AI/Wan2.1-T2V-14B-Diffusers'),
+            model_id=data.get('model_id', 'Wan-AI/Wan2.2-T2V-A14B-Diffusers'),
             negative_prompt=data.get('negative_prompt', ''),
             width=int(data.get('width', 1280)),
             height=int(data.get('height', 720)),
             num_frames=int(data.get('num_frames', 81)),
-            steps=int(data.get('steps', 30)),
-            cfg_scale=float(data.get('cfg_scale', 5.0)),
+            steps=int(data.get('steps', 40)),
+            cfg_scale=float(data.get('cfg_scale', 4.0)),
             fps=int(data.get('fps', 16)),
             seed=int(data.get('seed', -1)),
             pipeline_class=data.get('pipeline_class', 'WanPipeline'),
+            **extra_kwargs,
         ))
     except Exception as e:
         import traceback
@@ -277,6 +282,52 @@ def generate_video():
 
     if video_bytes is None:
         return jsonify({"success": False, "error": "Video generation returned None (check GPU service logs)"}), 500
+
+    return jsonify({
+        "success": True,
+        "video_base64": base64.b64encode(video_bytes).decode('utf-8'),
+    })
+
+
+@diffusers_bp.route('/api/diffusers/generate/video/i2v', methods=['POST'])
+def generate_video_i2v():
+    """Image-to-video generation.
+
+    Returns: { success, video_base64 }
+    """
+    data = request.get_json()
+    if not data or 'image_base64' not in data:
+        return jsonify({"success": False, "error": "image_base64 required"}), 400
+
+    backend = _get_backend()
+    try:
+        image_bytes = base64.b64decode(data['image_base64'])
+
+        extra_kwargs = {}
+        if 'guidance_scale_2' in data:
+            extra_kwargs['guidance_scale_2'] = float(data['guidance_scale_2'])
+
+        video_bytes = _run_async(backend.generate_video_from_image(
+            image_bytes=image_bytes,
+            prompt=data.get('prompt', ''),
+            model_id=data.get('model_id', 'Wan-AI/Wan2.2-I2V-A14B-Diffusers'),
+            negative_prompt=data.get('negative_prompt', ''),
+            width=int(data.get('width', 1280)),
+            height=int(data.get('height', 720)),
+            num_frames=int(data.get('num_frames', 81)),
+            steps=int(data.get('steps', 40)),
+            cfg_scale=float(data.get('cfg_scale', 4.0)),
+            fps=int(data.get('fps', 16)),
+            seed=int(data.get('seed', -1)),
+            **extra_kwargs,
+        ))
+    except Exception as e:
+        import traceback
+        logger.error(f"I2V video generation error: {e}\n{traceback.format_exc()}")
+        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+
+    if video_bytes is None:
+        return jsonify({"success": False, "error": "I2V generation returned None (check GPU service logs)"}), 500
 
     return jsonify({
         "success": True,

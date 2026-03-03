@@ -22,6 +22,7 @@ Usage:
         )
 """
 
+import gc
 import logging
 import threading
 import time
@@ -141,6 +142,7 @@ class DiffusersImageGenerator:
                 self._current_model = None
 
             if torch.cuda.is_available():
+                gc.collect()
                 torch.cuda.empty_cache()
 
             logger.info(f"[DIFFUSERS] Unloaded model: {model_id}")
@@ -173,6 +175,9 @@ class DiffusersImageGenerator:
         elif pipeline_class == "WanPipeline":
             from diffusers import WanPipeline
             return WanPipeline
+        elif pipeline_class == "WanImageToVideoPipeline":
+            from diffusers import WanImageToVideoPipeline
+            return WanImageToVideoPipeline
         else:
             raise ValueError(f"Unknown pipeline class: {pipeline_class}")
 
@@ -249,6 +254,116 @@ class DiffusersImageGenerator:
         logger.info(f"[DIFFUSERS] Flux2: pipeline loaded ({quantize}) with cpu_offload")
         return pipe
 
+    def _load_wan_pipeline(self, model_id: str, kwargs: dict, pipeline_class_str: str = "WanPipeline"):
+        """Load Wan 2.2 pipeline component-by-component with quantization support.
+
+        Handles both T2V (WanPipeline) and I2V (WanImageToVideoPipeline).
+        MoE models (A14B) have dual transformers (transformer + transformer_2).
+
+        FP8 mode (DIFFUSERS_WAN22_QUANTIZE=fp8): quantizes transformers to
+        float8_weight_only via TorchAoConfig (~14GB total) and text encoder to
+        int8_weight_only. Peak VRAM ~14GB with CPU offload.
+        """
+        import torch
+        from diffusers import AutoencoderKLWan
+        from config import DIFFUSERS_WAN22_QUANTIZE
+
+        PipelineClass = self._resolve_pipeline_class(pipeline_class_str)
+        dtype = torch.bfloat16
+        cache_kwargs = {"cache_dir": str(self.cache_dir)} if self.cache_dir else {}
+        quantize = DIFFUSERS_WAN22_QUANTIZE.lower()
+
+        # Check if model has dual transformers (MoE A14B models)
+        import json
+        from pathlib import Path
+        from huggingface_hub import cached_assets_path
+        has_dual_transformer = False
+        try:
+            # Try loading model_index.json to detect dual transformer
+            from huggingface_hub import hf_hub_download
+            model_index_path = hf_hub_download(model_id, "model_index.json", **cache_kwargs)
+            with open(model_index_path) as f:
+                model_index = json.load(f)
+            has_dual_transformer = "transformer_2" in model_index
+        except Exception as e:
+            logger.warning(f"[DIFFUSERS] Could not check model_index.json for dual transformer: {e}")
+            # Heuristic: A14B models have dual transformers
+            has_dual_transformer = "A14B" in model_id
+
+        if quantize == "fp8":
+            from diffusers import TorchAoConfig, WanTransformer3DModel
+            from transformers import TorchAoConfig as TransformersAoConfig, UMT5EncoderModel
+            diff_quant = TorchAoConfig("float8_weight_only")
+            tf_quant = TransformersAoConfig("int8_weight_only")
+
+            logger.info(f"[DIFFUSERS] Wan: loading transformer(s) FP8 + text encoder INT8...")
+            transformer = WanTransformer3DModel.from_pretrained(
+                model_id, subfolder="transformer",
+                quantization_config=diff_quant,
+                low_cpu_mem_usage=True, **cache_kwargs
+            )
+            transformer_2 = None
+            if has_dual_transformer:
+                transformer_2 = WanTransformer3DModel.from_pretrained(
+                    model_id, subfolder="transformer_2",
+                    quantization_config=diff_quant,
+                    low_cpu_mem_usage=True, **cache_kwargs
+                )
+            text_encoder = UMT5EncoderModel.from_pretrained(
+                model_id, subfolder="text_encoder",
+                quantization_config=tf_quant,
+                low_cpu_mem_usage=True, **cache_kwargs
+            )
+        else:
+            from diffusers import WanTransformer3DModel
+            from transformers import UMT5EncoderModel
+
+            logger.info(f"[DIFFUSERS] Wan: loading components in bf16...")
+            transformer = WanTransformer3DModel.from_pretrained(
+                model_id, subfolder="transformer",
+                torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
+            )
+            transformer_2 = None
+            if has_dual_transformer:
+                transformer_2 = WanTransformer3DModel.from_pretrained(
+                    model_id, subfolder="transformer_2",
+                    torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
+                )
+            text_encoder = UMT5EncoderModel.from_pretrained(
+                model_id, subfolder="text_encoder",
+                torch_dtype=dtype, low_cpu_mem_usage=True, **cache_kwargs
+            )
+
+        # VAE MUST be float32
+        vae = AutoencoderKLWan.from_pretrained(
+            model_id, subfolder="vae",
+            torch_dtype=torch.float32, **cache_kwargs
+        )
+
+        # Tokenizer + Scheduler
+        from transformers import AutoTokenizer
+        from diffusers import UniPCMultistepScheduler
+        tokenizer = AutoTokenizer.from_pretrained(model_id, subfolder="tokenizer", **cache_kwargs)
+        scheduler = UniPCMultistepScheduler.from_pretrained(model_id, subfolder="scheduler", **cache_kwargs)
+
+        # Assemble pipeline
+        pipe_kwargs = {
+            "transformer": transformer,
+            "vae": vae,
+            "text_encoder": text_encoder,
+            "tokenizer": tokenizer,
+            "scheduler": scheduler,
+        }
+        if transformer_2 is not None:
+            pipe_kwargs["transformer_2"] = transformer_2
+
+        pipe = PipelineClass(**pipe_kwargs)
+        pipe.enable_model_cpu_offload()
+
+        dual_info = " (dual MoE)" if has_dual_transformer else ""
+        logger.info(f"[DIFFUSERS] Wan: pipeline loaded ({quantize}{dual_info}) with cpu_offload")
+        return pipe
+
     def _ensure_vram_available(self, required_mb: float = 0) -> None:
         """Request VRAM via coordinator, triggering cross-backend eviction if needed.
 
@@ -267,7 +382,10 @@ class DiffusersImageGenerator:
         try:
             from services.vram_coordinator import get_vram_coordinator, EvictionPriority
             coordinator = get_vram_coordinator()
-            coordinator.request_vram("diffusers", target_mb, EvictionPriority.NORMAL)
+            success = coordinator.request_vram("diffusers", target_mb, EvictionPriority.NORMAL)
+            if not success:
+                target_str = "max available" if target_mb == float('inf') else f"{target_mb:.0f}MB"
+                logger.warning(f"[DIFFUSERS] VRAM eviction incomplete (requested {target_str})")
         except Exception as e:
             logger.warning(f"[DIFFUSERS] VRAM coordinator request failed: {e}")
             # Fallback to local-only eviction
@@ -339,21 +457,12 @@ class DiffusersImageGenerator:
                 if self.cache_dir:
                     kwargs["cache_dir"] = str(self.cache_dir)
 
-                # WanPipeline requires float32 VAE loaded separately
-                if pipeline_class == "WanPipeline":
-                    from diffusers import AutoencoderKLWan
-                    kwargs[dtype_key] = torch.bfloat16
-                    vae_kwargs = {dtype_key: torch.float32}
-                    if self.cache_dir:
-                        vae_kwargs["cache_dir"] = str(self.cache_dir)
-                    vae = AutoencoderKLWan.from_pretrained(
-                        model_id, subfolder="vae", **vae_kwargs
-                    )
-                    kwargs["vae"] = vae
-
+                # Wan pipelines: component-level loading with quantization support
+                if pipeline_class in ("WanPipeline", "WanImageToVideoPipeline"):
+                    pipe = self._load_wan_pipeline(model_id, kwargs, pipeline_class)
                 # Flux2: from_pretrained ignores torch_dtype → loads float32 (~106GB RAM).
                 # Load components individually with explicit bf16 to avoid float32 intermediate.
-                if pipeline_class == "Flux2Pipeline":
+                elif pipeline_class == "Flux2Pipeline":
                     pipe = self._load_flux2_pipeline(model_id, kwargs)
                 else:
                     pipe = PipelineClass.from_pretrained(model_id, **kwargs)
@@ -674,7 +783,7 @@ class DiffusersImageGenerator:
     async def generate_video(
         self,
         prompt: str,
-        model_id: str = "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+        model_id: str = "Wan-AI/Wan2.2-T2V-A14B-Diffusers",
         negative_prompt: str = "",
         width: int = 1280,
         height: int = 720,
@@ -684,6 +793,7 @@ class DiffusersImageGenerator:
         fps: int = 16,
         seed: int = -1,
         pipeline_class: str = "WanPipeline",
+        guidance_scale_2: float = None,
         **kwargs
     ) -> Optional[bytes]:
         """
@@ -691,7 +801,7 @@ class DiffusersImageGenerator:
 
         Args:
             prompt: Positive prompt
-            model_id: Wan model to use (14B or 1.3B)
+            model_id: Wan model to use
             negative_prompt: Negative prompt
             width: Video width
             height: Video height
@@ -701,6 +811,7 @@ class DiffusersImageGenerator:
             fps: Frames per second for output MP4
             seed: Random seed (-1 for random)
             pipeline_class: Pipeline class string
+            guidance_scale_2: Second guidance scale for MoE models (A14B)
 
         Returns:
             MP4 video bytes, or None on failure
@@ -732,6 +843,8 @@ class DiffusersImageGenerator:
                     _generation_progress["total_steps"] = steps
                     return callback_kwargs
 
+                _guidance_scale_2 = guidance_scale_2
+
                 def _generate():
                     _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
                     try:
@@ -747,6 +860,9 @@ class DiffusersImageGenerator:
                             "callback_on_step_end": video_step_callback,
                             "callback_on_step_end_tensor_inputs": ["latents"],
                         }
+                        # MoE models use a second guidance scale
+                        if _guidance_scale_2 is not None:
+                            gen_kwargs["guidance_scale_2"] = _guidance_scale_2
                         result = pipe(**gen_kwargs)
                         if not hasattr(result, 'frames') or result.frames is None or len(result.frames) == 0:
                             raise ValueError("Pipeline returned no video frames")
@@ -781,6 +897,135 @@ class DiffusersImageGenerator:
 
         except Exception as e:
             logger.error(f"[DIFFUSERS] Video generation error: {e}")
+            import traceback
+            traceback.print_exc()
+            return None
+
+    async def generate_video_from_image(
+        self,
+        image_bytes: bytes,
+        prompt: str = "",
+        model_id: str = "Wan-AI/Wan2.2-I2V-A14B-Diffusers",
+        negative_prompt: str = "",
+        width: int = 1280,
+        height: int = 720,
+        num_frames: int = 81,
+        steps: int = 40,
+        cfg_scale: float = 4.0,
+        fps: int = 16,
+        seed: int = -1,
+        guidance_scale_2: float = None,
+        **kwargs
+    ) -> Optional[bytes]:
+        """
+        Generate a video from an image using WanImageToVideoPipeline.
+
+        Args:
+            image_bytes: PNG/JPEG image bytes
+            prompt: Optional text prompt to guide the animation
+            model_id: Wan I2V model to use
+            negative_prompt: Negative prompt
+            width: Video width
+            height: Video height
+            num_frames: Number of frames to generate
+            steps: Number of inference steps
+            cfg_scale: Guidance scale
+            fps: Frames per second for output MP4
+            seed: Random seed (-1 for random)
+            guidance_scale_2: Second guidance scale for MoE models (A14B)
+
+        Returns:
+            MP4 video bytes, or None on failure
+        """
+        try:
+            import torch
+            from PIL import Image
+            import io
+
+            pipeline_class = "WanImageToVideoPipeline"
+
+            if not await self.load_model(model_id, pipeline_class):
+                return None
+
+            self._model_in_use[model_id] = self._model_in_use.get(model_id, 0) + 1
+            try:
+                self._model_last_used[model_id] = time.time()
+                pipe = self._pipelines[model_id]
+
+                # Convert image bytes to PIL Image
+                pil_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+                # Resize to target dimensions
+                pil_image = pil_image.resize((width, height), Image.LANCZOS)
+
+                if seed == -1:
+                    import random
+                    seed = random.randint(0, 2**32 - 1)
+
+                generator = torch.Generator(device=self.device).manual_seed(seed)
+
+                logger.info(
+                    f"[DIFFUSERS] Generating I2V video: steps={steps}, "
+                    f"size={width}x{height}, frames={num_frames}, seed={seed}"
+                )
+
+                def video_step_callback(pipe_inst, step, timestep, callback_kwargs):
+                    _generation_progress["step"] = step + 1
+                    _generation_progress["total_steps"] = steps
+                    return callback_kwargs
+
+                _guidance_scale_2 = guidance_scale_2
+                _pil_image = pil_image
+
+                def _generate():
+                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    try:
+                        gen_kwargs = {
+                            "image": _pil_image,
+                            "prompt": prompt if prompt else "",
+                            "negative_prompt": negative_prompt if negative_prompt else None,
+                            "width": width,
+                            "height": height,
+                            "num_frames": num_frames,
+                            "num_inference_steps": steps,
+                            "guidance_scale": cfg_scale,
+                            "generator": generator,
+                            "callback_on_step_end": video_step_callback,
+                            "callback_on_step_end_tensor_inputs": ["latents"],
+                        }
+                        if _guidance_scale_2 is not None:
+                            gen_kwargs["guidance_scale_2"] = _guidance_scale_2
+                        result = pipe(**gen_kwargs)
+                        if not hasattr(result, 'frames') or result.frames is None or len(result.frames) == 0:
+                            raise ValueError("Pipeline returned no video frames")
+                        return result.frames[0]
+                    finally:
+                        _generation_progress["active"] = False
+
+                frames = await asyncio.to_thread(_generate)
+
+                import tempfile
+                import os
+                from diffusers.utils import export_to_video
+                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp:
+                    tmp_path = tmp.name
+                try:
+                    export_to_video(frames, tmp_path, fps=fps)
+                    with open(tmp_path, 'rb') as f:
+                        video_bytes = f.read()
+                finally:
+                    os.unlink(tmp_path)
+
+                logger.info(
+                    f"[DIFFUSERS] Generated I2V video: {len(video_bytes)} bytes, "
+                    f"{num_frames} frames @ {fps}fps, seed={seed}"
+                )
+                return video_bytes
+
+            finally:
+                self._model_in_use[model_id] -= 1
+
+        except Exception as e:
+            logger.error(f"[DIFFUSERS] I2V video generation error: {e}")
             import traceback
             traceback.print_exc()
             return None
