@@ -17,10 +17,14 @@ Added `_try_comfyui_eviction()` to `VRAMCoordinator` — calls ComfyUI's existin
 - **All-or-nothing**: ComfyUI API only supports "unload everything" — no selective model unload
 - **Asymmetric**: GPU service can evict ComfyUI, not vice versa (coordinator is authority)
 
+### Verified
+Tested with ComfyUI holding Wan 2.2 (~22 GB). `POST /free → 200` successfully evicted all models. ComfyUI dropped from 22,404 MB to 836 MB (bare CUDA context). NVML 5s polling window didn't catch the release (CUDA memory return was slower), but free VRAM confirmed on next query (+21.5 GB). In production this is fine — the subsequent model load (10-15s) gives CUDA plenty of time to return memory.
+
 ### Files Changed
 - `gpu_service/services/vram_coordinator.py` — `_try_comfyui_eviction()` + `_do_eviction()` integration
+- `gpu_service/tests/test_comfyui_eviction.py` — manual test script
 
-**Duration:** ~15 minutes
+**Duration:** ~30 minutes
 
 ## Session 244 - Fix Stage 3 Safety: Remove Redundant Double-Check + Fix Wrong Prompt Format
 **Date:** 2026-03-03
