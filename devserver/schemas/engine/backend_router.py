@@ -512,11 +512,29 @@ class BackendRouter:
             media_type = chunk.get('media_type', 'image')
             execution_mode = chunk.get('execution_mode', 'standard')
             backend_type = chunk.get('backend_type', 'comfyui')
+            chunk_type = chunk.get('type', 'output_chunk')
             logger.info(f"Loaded Output-Chunk: {chunk_name} ({media_type} media, {execution_mode} mode, {backend_type} backend)")
 
             # FIX: Extract text prompt from parameters (not from 'prompt' param which is workflow dict)
             text_prompt = parameters.get('prompt', '') or parameters.get('PREVIOUS_OUTPUT', '')
             logger.info(f"[DEBUG-FIX] Extracted text_prompt from parameters: '{text_prompt[:200]}...'" if text_prompt else f"[DEBUG-FIX] ⚠️ No text prompt in parameters!")
+
+            # Route by chunk type FIRST — api_output_chunk and text_passthrough bypass ComfyUI entirely
+            if chunk_type == 'api_output_chunk':
+                logger.info(f"[ROUTER] Using API output for '{chunk_name}' (backend: {backend_type})")
+                return await self._process_api_output_chunk(chunk_name, text_prompt, parameters, chunk)
+            elif chunk_type == 'text_passthrough':
+                logger.info(f"[ROUTER] Using text passthrough for '{chunk_name}'")
+                return BackendResponse(
+                    success=True,
+                    content=text_prompt,
+                    metadata={
+                        'chunk_name': chunk_name,
+                        'backend_type': backend_type,
+                        'frontend_processor': chunk.get('meta', {}).get('frontend_processor'),
+                        'passthrough': True
+                    }
+                )
 
             # Route based on backend_type FIRST (before execution_mode)
             if backend_type == 'stable_audio':
