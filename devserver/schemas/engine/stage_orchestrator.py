@@ -459,6 +459,66 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         return None
 
 
+def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
+    """
+    Single unconditional Llama-Guard check for Stage 3 generation prompts.
+
+    Uses the proper S1-S13 template (same as Stage 1) instead of the broken
+    free-form question format from the old safety_check_kids/youth chunks.
+
+    Args:
+        generation_prompt: The prompt that will be sent to the generation model.
+
+    Returns:
+        {
+            "safe": bool,
+            "codes": List[str],  # e.g. ['S1', 'S4']
+            "model_used": str,
+            "execution_time": float
+        }
+    """
+    import config
+
+    model = config.SAFETY_MODEL
+    template = _get_llamaguard_template()
+    prompt = template.replace("{{PREVIOUS_OUTPUT}}", generation_prompt)
+
+    try:
+        from my_app.services.llm_backend import get_llm_backend
+        from config import OLLAMA_TIMEOUT_SAFETY
+
+        start = _time.time()
+        llm_result = get_llm_backend().generate(
+            model=model,
+            prompt=prompt,
+            temperature=0.0,
+            max_new_tokens=50,
+            timeout=OLLAMA_TIMEOUT_SAFETY,
+            enable_thinking=False,
+        )
+        execution_time = _time.time() - start
+
+        if llm_result is None:
+            logger.error(f"[STAGE3-SAFETY] Llama-Guard ({model}) returned None ({execution_time*1000:.0f}ms) — fail-closed")
+            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time}
+
+        output = llm_result.get("response", "").strip()
+        if not output:
+            logger.error(f"[STAGE3-SAFETY] Llama-Guard ({model}) returned EMPTY ({execution_time*1000:.0f}ms) — fail-closed")
+            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time}
+
+        is_safe, codes = parse_llamaguard_output(output)
+        logger.info(
+            f"[STAGE3-SAFETY] Llama-Guard={output!r} → "
+            f"{'SAFE' if is_safe else 'UNSAFE ' + str(codes)} ({execution_time*1000:.0f}ms)"
+        )
+        return {"safe": is_safe, "codes": codes, "model_used": model, "execution_time": execution_time}
+
+    except Exception as e:
+        logger.error(f"[STAGE3-SAFETY] Llama-Guard failed ({model}): {e} — fail-closed")
+        return {"safe": False, "codes": [], "model_used": model, "execution_time": 0}
+
+
 # ============================================================================
 # HYBRID SAFETY: Fast String-Matching + LLM Context Verification
 # ============================================================================
@@ -684,7 +744,13 @@ def parse_llamaguard_output(output: str) -> Tuple[bool, List[str]]:
             return (False, codes)
         return (False, [])
     else:
-        # Unexpected format
+        # Check for bare S-codes without "unsafe" prefix (e.g. "S8", "S4,S8")
+        bare_codes = re.findall(r'[Ss]\d+', first_line)
+        if bare_codes:
+            bare_codes = [c.upper() for c in bare_codes]
+            logger.warning(f"Llama-Guard returned bare S-codes without 'unsafe' prefix: {output[:100]}")
+            return (False, bare_codes)
+        # Truly unexpected format
         logger.warning(f"Unexpected Llama-Guard output format: {output[:100]}")
         return (True, [])  # Default to safe if uncertain
 
@@ -1074,8 +1140,8 @@ async def execute_stage3_safety(
     1. research/adult → return original prompt immediately
     2. Translate to English (for kids/youth safety check)
     3. §86a fast-filter on translated text (instant block)
-    4. LLM safety check on translated text
-    5. Return: kids → translated prompt | youth → original prompt
+    4. Determine generation prompt (kids=translated, youth=original)
+    5. Single Llama-Guard check with proper S1-S13 template on generation prompt
 
     Args:
         prompt: Prompt to check before media generation
@@ -1143,106 +1209,40 @@ async def execute_stage3_safety(
             "execution_time": translate_time
         }
 
-    # STEP 3b: Age-appropriate fast-filter on ORIGINAL (pre-translation) text
-    # Translation models sanitize violence ("erschlägt"→"strikes", "erschiessen"→"arrest"),
-    # so the fast-filter MUST run on the original input, not the translated output.
-    has_age_terms, found_age_terms = fast_filter_check(prompt, safety_level, user_language)
-    if has_age_terms:
-        filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
-        logger.info(f"[STAGE3-SAFETY] {filter_name} fast-filter hit on original text: {found_age_terms[:3]} → LLM context check")
-        verify_result = llm_verify_age_filter_context(prompt, found_age_terms, safety_level)
-        if verify_result is None:
-            # LLM unavailable — fail-closed (defense-in-depth, Stage 1 should have caught this)
-            logger.warning(f"[STAGE3-SAFETY] {filter_name} LLM verify unavailable — fail-closed")
-            return {
-                "safe": False,
-                "method": "age_filter_verify_unavailable",
-                "abort_reason": f"{filter_name}: safety verification unavailable",
-                "positive_prompt": None,
-                "negative_prompt": None,
-                "execution_time": translate_time
-            }
-        elif verify_result:
-            logger.warning(f"[STAGE3-SAFETY] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]}")
-            return {
-                "safe": False,
-                "method": "age_filter",
-                "abort_reason": f'{filter_name}: {", ".join(found_age_terms[:3])}',
-                "positive_prompt": None,
-                "negative_prompt": None,
-                "execution_time": translate_time
-            }
-        else:
-            logger.info(f"[STAGE3-SAFETY] {filter_name} false positive (LLM rejected): {found_age_terms[:3]}")
-
-    # STEP 4: ALWAYS run LLM safety check for kids/youth
-    # Semantic violence/harm cannot be caught by wordlists alone —
-    # "Wesen sind feindselig zueinander und fügen einander Schaden zu"
-    # passes all fast-filters but generates harmful imagery for children.
-    safety_check_config = f'pre_output/safety_check_{safety_level}'
-
-    logger.info(f"[STAGE3-SAFETY] Running LLM safety check ({safety_level})")
-    llm_start_time = time.time()
-    result = await pipeline_executor.execute_pipeline(
-        safety_check_config,
-        translated_prompt,
-    )
-    llm_check_time = time.time() - llm_start_time
-
-    # Extract metadata from pipeline result
-    model_used = None
-    backend_type = None
-    if result.steps and len(result.steps) > 0:
-        for step in reversed(result.steps):
-            if step.metadata:
-                model_used = step.metadata.get('model_used', model_used)
-                backend_type = step.metadata.get('backend_type', backend_type)
-                if model_used and backend_type:
-                    break
-
-    # STEP 5: Select generation prompt by safety level
+    # STEP 4: Determine generation prompt by safety level
     # kids → auto-translated English (better model output, full guardrails)
     # youth → original language (user explores model behavior, manual translate available)
     generation_prompt = translated_prompt if safety_level == 'kids' else prompt
 
-    if result.success:
-        safety_data = parse_preoutput_json(result.final_output)
+    # STEP 5: Single unconditional Llama-Guard check with proper S1-S13 template
+    # Replaces the old two-step approach (age fast-filter + pipeline-based check with wrong prompt format).
+    # MediaInputBox /safety/quick handles Stage 1 (raw user input), this handles Stage 3 (post-interception).
+    logger.info(f"[STAGE3-SAFETY] Running Llama-Guard safety check ({safety_level}) on generation prompt")
+    llm_result = _llm_safety_check_generation(generation_prompt)
 
-        if not safety_data.get('safe', True):
-            abort_reason = safety_data.get('abort_reason', 'Content blocked by safety filter')
-            logger.warning(f"[STAGE3-SAFETY] BLOCKED by LLM: {abort_reason} (llm: {llm_check_time:.1f}s)")
-
-            return {
-                "safe": False,
-                "method": "llm_safety_check",
-                "abort_reason": abort_reason,
-                "positive_prompt": None,
-                "negative_prompt": None,
-                "model_used": model_used,
-                "backend_type": backend_type,
-                "execution_time": llm_check_time
-            }
-        else:
-            logger.info(f"[STAGE3-SAFETY] PASSED (LLM, {llm_check_time:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
-
-            return {
-                "safe": True,
-                "method": "llm_safety_check",
-                "abort_reason": None,
-                "positive_prompt": generation_prompt,
-                "negative_prompt": safety_data.get('negative_prompt', ''),
-                "model_used": model_used,
-                "backend_type": backend_type,
-                "execution_time": translate_time + llm_check_time
-            }
+    if llm_result["safe"]:
+        logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
+        return {
+            "safe": True,
+            "method": "llm_safety_check",
+            "abort_reason": None,
+            "positive_prompt": generation_prompt,
+            "negative_prompt": "",
+            "model_used": llm_result["model_used"],
+            "execution_time": translate_time + llm_result["execution_time"]
+        }
     else:
-        logger.warning(f"[STAGE3-SAFETY] LLM check failed: {result.error}, BLOCKING (fail-closed)")
+        codes = llm_result["codes"]
+        abort_reason = build_safety_message(codes) if codes else "Content blocked by safety filter"
+        logger.warning(f"[STAGE3-SAFETY] BLOCKED: {codes} ({llm_result['execution_time']:.1f}s)")
         return {
             "safe": False,
-            "method": "llm_check_failed",
-            "abort_reason": "Safety check failed (LLM error/timeout) — blocking as precaution",
+            "method": "llm_safety_check",
+            "abort_reason": abort_reason,
             "positive_prompt": None,
-            "negative_prompt": None
+            "negative_prompt": None,
+            "model_used": llm_result["model_used"],
+            "execution_time": llm_result["execution_time"]
         }
 
 

@@ -29,6 +29,32 @@
 
 ---
 
+## Stage 3 Safety: Single Llama-Guard Call with Proper Template (2026-03-03)
+
+### Kontext
+`execute_stage3_safety()` had two sequential Llama-Guard calls: STEP 3b (age fast-filter + LLM verify) and STEP 4 (pipeline-based safety chunk). STEP 4 used a free-form question prompt ("Is this appropriate for children?") forced onto `llama-guard3:1b` — a guard model trained on structured S1-S13 categories, not free-form questions. Result: the model classified the meta-prompt itself against safety categories, producing false positives (Lagos scene → S4 Violent Crimes).
+
+### Entscheidung: Replace Two-Step with Single Unconditional Llama-Guard Call
+
+| Aspect | Old (STEP 3b + STEP 4) | New (Single STEP 5) |
+|--------|------------------------|---------------------|
+| LLM calls per request | Up to 2 (age verify + pipeline check) | Exactly 1 |
+| Prompt format | STEP 3b: proper S1-S13 template; STEP 4: wrong free-form question | Proper S1-S13 template (same as Stage 1) |
+| Age fast-filter in Stage 3 | Yes (redundant with Stage 1) | Removed (MediaInputBox covers Stage 1) |
+| Fail mode | STEP 4 fail-closed | Single call fail-closed |
+
+**Why removing age fast-filter from Stage 3 is safe:**
+- MediaInputBox `/safety/quick` runs age fast-filter + LLM verify on raw user input (Stage 1) in ALL flows (t2x, i2x, multi-i2x)
+- Stage 3 checks POST-INTERCEPTION text — single unconditional Llama-Guard covers both specific terms and semantic violence
+- The fast-filter's only value was gating the LLM call; since we call Llama-Guard unconditionally, the gate adds no value
+
+**Additional fix:** `parse_llamaguard_output()` now recognizes bare S-codes (e.g. "S8" without "unsafe" prefix).
+
+### Betroffene Dateien
+- `devserver/schemas/engine/stage_orchestrator.py`
+
+---
+
 ## Flux 2 FP8+INT8 Quantization Strategy (2026-03-03)
 
 ### Kontext

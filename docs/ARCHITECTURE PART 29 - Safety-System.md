@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-02-27 (Session 218)
+**Last Updated:** 2026-03-03 (Session 244)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, legal basis
 
 ---
@@ -94,12 +94,27 @@ youth/kids     → VLM safety check via Ollama
 **Function:** `execute_stage3_safety()`
 
 ```
-research/adult → No translation, no safety — original prompt to model
-youth          → Translate internally (for safety LLM), return ORIGINAL prompt to model
-kids           → Translate (for safety LLM), return TRANSLATED prompt to model
+Input (post-interception prompt)
+  │
+  ├─ research/adult → SKIP (return original prompt)
+  │
+  ├─ STEP 2: Translate to English (cached if unchanged)
+  │
+  ├─ STEP 3: §86a fast-filter on translated text → instant block
+  │
+  ├─ STEP 4: Determine generation prompt
+  │   kids  → translated English prompt
+  │   youth → original language prompt
+  │
+  └─ STEP 5: Single Llama-Guard check (proper S1-S13 template)
+      └─ _llm_safety_check_generation(generation_prompt)
+      └─ Same template as Stage 1 (safety_llamaguard.json)
+      └─ Fail-closed on error/timeout
 ```
 
 **Tiered translation** (Session 183): Translation-for-safety is decoupled from translation-for-generation. Youth+ users can explore how models react to their native language. The translate button in MediaInputBox remains available for manual use. Kids still get auto-translated English prompts for better model output quality.
+
+**Session 244 redesign:** Previously, Stage 3 ran two sequential Llama-Guard calls: an age fast-filter + LLM verify (STEP 3b), then a pipeline-based safety chunk with the wrong prompt format (STEP 4). The pipeline chunk used a free-form question template on `llama-guard3:1b` — a guard model trained on structured S1-S13 categories. This caused false positives (e.g. Lagos scene → S4). Now replaced with a single unconditional `_llm_safety_check_generation()` call using the proper S1-S13 template. The age fast-filter was redundant with Stage 1 (MediaInputBox `/safety/quick` already covers it).
 
 Stage 3 catches prompts that pass all fast-filters but would generate harmful imagery. Example: "Wesen sind feindselig zueinander und fügen einander Schaden zu" — passes keyword filters but generates harmful content for children.
 
@@ -248,7 +263,7 @@ User Input
   ├─ [Stage 2] Prompt Interception (no safety)
   │
   ├─ [Stage 3] execute_stage3_safety()
-  │   └─ Translation + LLM semantic check (kids/youth)
+  │   └─ Translation + §86a filter + single Llama-Guard S1-S13 check (kids/youth)
   │
   ├─ [Stage 4] Media Generation
   │
@@ -275,7 +290,7 @@ OLLAMA_TIMEOUT_SAFETY = 30             # Short timeout for safety verification
 OLLAMA_TIMEOUT_DEFAULT = 120           # Standard LLM calls
 ```
 
-**Session 218 change:** Safety chunks (`safety_check_kids.json`, `safety_check_youth.json`) now use `DSGVO_VERIFY_MODEL` instead of `SAFETY_MODEL`. Guard models (llama-guard3) cannot do contextual age assessment — they only classify against trained S1-S13 categories. A general-purpose model (qwen3:1.7b) can understand context like "is a medieval battle appropriate for 6-year-olds?".
+**Session 244 change:** Stage 3 now calls `_llm_safety_check_generation()` directly with `SAFETY_MODEL` (llama-guard3:1b) using the proper S1-S13 template — no longer routes through `safety_check_kids/youth` chunks. Those chunks are now dead code (kept for reference, not called).
 
 ### user_settings.json
 
@@ -315,8 +330,8 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | `devserver/my_app/utils/vlm_safety.py` | VLM image analysis |
 | `devserver/my_app/utils/circuit_breaker.py` | Circuit breaker with Ollama self-healing |
 | `devserver/my_app/utils/ollama_watchdog.py` | Automatic Ollama restart on failure |
-| `devserver/schemas/chunks/safety_check_kids.json` | Stage 3 kids template (DSGVO_VERIFY_MODEL) |
-| `devserver/schemas/chunks/safety_check_youth.json` | Stage 3 youth template (DSGVO_VERIFY_MODEL) |
+| `devserver/schemas/chunks/safety_check_kids.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
+| `devserver/schemas/chunks/safety_check_youth.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/data/stage1_safety_filters_*.json` | Filter term lists |
 | `0_setup_ollama_watchdog.sh` | Passwordless sudo setup for self-healing |
 | `public/.../views/SettingsView.vue` | Safety level dropdown UI |
@@ -338,6 +353,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 183 | 2026-02-19 | Tiered translation: auto for kids, optional for youth+, none for adult/research |
 | 217 | 2026-02-26 | DISASTER: GPU Service LLM routing broke everything. Emergency fail-open patches |
 | 218 | 2026-02-27 | Full repair: circuit breaker, self-healing watchdog, dead code removal, timeout differentiation |
+| 244 | 2026-03-03 | Stage 3 redesign: single Llama-Guard call with proper S1-S13 template, removed redundant age fast-filter |
 
 ---
 

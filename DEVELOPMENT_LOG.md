@@ -1,5 +1,37 @@
 # Development Log
 
+## Session 244 - Fix Stage 3 Safety: Remove Redundant Double-Check + Fix Wrong Prompt Format
+**Date:** 2026-03-03
+**Focus:** Three bugs in `execute_stage3_safety()` that caused a culturally rich Lagos scene to be false-positive blocked as S4 (Violent Crimes)
+
+### Problem
+Stage 3 had two sequential Llama-Guard calls that could disagree:
+1. **STEP 3b**: Age fast-filter → `llm_verify_age_filter_context()` with proper S1-S13 template on original text
+2. **STEP 4**: Pipeline-based `safety_check_kids/youth` chunk with **wrong prompt format** (free-form question forced onto `llama-guard3:1b`, a guard model trained on structured S1-S13 categories)
+
+The guard model classified the meta-prompt ("Is this appropriate for children ages 6-12?") against its S-categories → biased toward false positives. Additionally, STEP 3b was redundant — MediaInputBox `/safety/quick` already runs the age fast-filter on raw user input (Stage 1).
+
+Third bug: `parse_llamaguard_output()` didn't recognize bare S-codes (e.g. "S8" without "unsafe" prefix).
+
+### Solution
+- **Removed STEP 3b** (age fast-filter in Stage 3) — redundant with Stage 1
+- **Removed old STEP 4** (pipeline-based check with wrong prompt format)
+- **Added `_llm_safety_check_generation()`**: Single unconditional Llama-Guard call with proper S1-S13 template (same as Stage 1), fail-closed
+- **Fixed `parse_llamaguard_output()`**: Bare S-codes now recognized before fallback
+
+New flow: STEP 1 (skip adult/research) → STEP 2 (translate) → STEP 3 (§86a) → STEP 4 (determine generation prompt) → STEP 5 (single Llama-Guard with proper template)
+
+### Files Changed
+- `devserver/schemas/engine/stage_orchestrator.py` — all changes in one file
+
+### Dead Code (not removed, cleanup later)
+- `safety_check_kids.json`, `safety_check_youth.json` (chunks) — no longer called from Stage 3
+- `pre_output/safety_check_kids.json`, `pre_output/safety_check_youth.json` (configs) — no longer called
+- `safety_check.json` (pipeline) — no longer called
+- `/pipeline/safety` endpoint (check_type='output') — dead code, no frontend callers
+
+**Duration:** ~30 minutes
+
 ## Session 243 - Rename llama_guard_explanations.json → safety_code_explanations.json
 **Date:** 2026-03-03
 **Focus:** Remove vendor-specific naming from model-agnostic safety taxonomy file
