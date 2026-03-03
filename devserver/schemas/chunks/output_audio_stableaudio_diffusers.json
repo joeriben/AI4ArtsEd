@@ -1,0 +1,59 @@
+{
+  "name": "output_audio_stableaudio_diffusers",
+  "type": "output_chunk",
+  "backend_type": "stable_audio",
+  "media_type": "audio",
+  "description": "Stable Audio Open via Diffusers - Direct HuggingFace inference without ComfyUI",
+
+  "input_mappings": {
+    "prompt": {
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Text description of audio/music to generate"
+    },
+    "negative_prompt": {
+      "default": "",
+      "description": "What to avoid in the generation"
+    },
+    "duration_seconds": {
+      "default": 30.0,
+      "description": "Duration of audio in seconds (max 47s for Stable Audio Open)"
+    },
+    "steps": {
+      "default": 100,
+      "description": "Number of inference steps (more = higher quality, slower)"
+    },
+    "cfg_scale": {
+      "default": 7.0,
+      "description": "Classifier Free Guidance scale"
+    },
+    "seed": {
+      "default": "random",
+      "description": "Seed for reproducibility (-1 or 'random' for random)"
+    },
+    "output_format": {
+      "default": "mp3",
+      "description": "Output format: 'mp3' or 'wav'"
+    }
+  },
+
+  "output_mapping": {
+    "output_type": "audio",
+    "format": "mp3",
+    "description": "Audio output from Stable Audio Open (Diffusers)"
+  },
+
+  "meta": {
+    "backend": "stable_audio",
+    "backend_type": "stable_audio",
+    "model_id": "stabilityai/stable-audio-open-1.0",
+    "fallback_chunk": "output_audio_stableaudio",
+    "estimated_duration_seconds": "8-12",
+    "quality_rating": 1,
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "recommended_duration": 30,
+    "max_duration": 47,
+    "notes": "Stable Audio Open 1.0 via HuggingFace Diffusers. Direct inference without ComfyUI. Falls back to ComfyUI if unavailable.",
+    "optimization_instruction": "Transform the input into a clear audio generation prompt; describe the sonic content (instruments, sounds, textures), the acoustic environment (reverb, space, atmosphere), the rhythm and tempo (if applicable), the mood and energy level, and any specific sonic characteristics (pitch, timbre, dynamics); keep it concise and focused on auditory elements; example: 'Gentle piano melody with soft reverb, slow tempo, melancholic mood, warm analog sound, minimal background ambience.'"
+  }
+}
