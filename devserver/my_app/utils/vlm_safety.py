@@ -8,10 +8,16 @@ Uses LLMClient (GPU Service primary, Ollama fallback).
 """
 
 import base64
+import io
 import logging
 from pathlib import Path
 
+from PIL import Image
+
 import config
+
+# Max dimension for VLM input — safety classification doesn't need full resolution
+VLM_MAX_SIZE = 768
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +57,17 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         if not prompt_text:
             return (True, '', '')
 
-        image_bytes = image_path.read_bytes()
+        # Downscale for VLM — safety classification doesn't need full resolution
+        img = Image.open(image_path)
+        original_size = img.size
+        if max(img.size) > VLM_MAX_SIZE:
+            img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=80)
+        image_bytes = buf.getvalue()
         image_b64 = base64.b64encode(image_bytes).decode('utf-8')
 
-        logger.info(f"[VLM-SAFETY] Checking image ({len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL} for safety_level={safety_level}")
+        logger.info(f"[VLM-SAFETY] Checking image ({original_size} -> {img.size}, {len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL} for safety_level={safety_level}")
 
         from my_app.services.llm_backend import get_llm_backend
         result = get_llm_backend().chat(
@@ -62,7 +75,7 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             messages=[{'role': 'user', 'content': prompt_text}],
             images=[image_b64],
             temperature=0.0,
-            max_new_tokens=2000,
+            max_new_tokens=500,
         )
 
         if result is None:

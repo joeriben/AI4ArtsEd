@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-03-cloud-processing-label
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `edutainment.denoising.cloudProcessing` (NEW)
+- **Context**: Loading label shown during cloud/API image generation (e.g. Gemini 3 Pro via OpenRouter, GPT Image 1). Replaces misleading "Loading model into GPU memory..." for models that don't use local GPU. Short status message.
+
 ## Completed
 
 ### WO-2026-03-03-comfyui-label-cleanup

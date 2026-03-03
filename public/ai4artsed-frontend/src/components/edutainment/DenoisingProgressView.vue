@@ -60,7 +60,7 @@
           <div class="loading-bar-track">
             <div class="loading-bar-fill loading-bar-indeterminate"></div>
           </div>
-          <span class="loading-label">{{ t('edutainment.denoising.modelLoading') }}</span>
+          <span class="loading-label">{{ isCloudModel ? t('edutainment.denoising.cloudProcessing') : t('edutainment.denoising.modelLoading') }}</span>
         </div>
 
         <!-- Rotating fact -->
@@ -131,12 +131,20 @@ const resolutionDisplay = computed(() => {
   return props.modelMeta?.recommended_resolution || ''
 })
 
+// Cloud/API models have no local GPU loading phase
+const isCloudModel = computed(() => props.modelMeta?.requires_gpu === false)
+
 /**
  * Detect model loading phase based on backend type:
+ * - Cloud/API: no GPU loading phase, but still waiting for API response
  * - Diffusers: only reports progress during actual inference → progress === 0 means loading
  * - ComfyUI: reports progress across ALL nodes (including loading) → no preview means loading
  */
 const isModelLoading = computed(() => {
+  if (isCloudModel.value) {
+    // Cloud models: "loading" until we get a result (progress stays 0 the whole time)
+    return props.progress === 0 && !props.previewImage
+  }
   if (props.modelMeta?.backend_type === 'diffusers') {
     return props.progress === 0
   }

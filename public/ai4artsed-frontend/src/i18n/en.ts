@@ -175,6 +175,7 @@ export const en = {
       germanDe: 'German (de)',
       englishEn: 'English (en)',
       arabicAr: 'Arabic (ar)',
+      bulgarianBg: 'Bulgarian (bg)',
       hebrewHe: 'Hebrew (he)',
       turkishTr: 'Turkish (tr)',
       koreanKo: 'Korean (ko)',
@@ -1409,6 +1410,7 @@ export const en = {
     },
     denoising: {
       modelLoading: 'Loading model into GPU memory...',
+      cloudProcessing: 'Sending request to cloud API...',
       modelCard: 'Model Profile',
       publisher: 'Publisher',
       architecture: 'Architecture',
