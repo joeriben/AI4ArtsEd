@@ -6,6 +6,7 @@ via the GPU service. Uses WanImageToVideoPipeline from HuggingFace Diffusers.
 
 Input:
     - image_base64: Base64-encoded PNG/JPEG image to animate
+    - input_image: File path to image on disk (from pipeline executor in i2X pages)
     - prompt (TEXT_1): Optional text description to guide the animation
 
 Output:
@@ -42,6 +43,7 @@ DEFAULTS = {
 
 async def execute(
     image_base64: str = None,
+    input_image: str = None,
     prompt: str = None,
     TEXT_1: str = None,
     model_id: str = "Wan-AI/Wan2.2-I2V-A14B-Diffusers",
@@ -59,7 +61,10 @@ async def execute(
     """
     Execute Wan 2.2 I2V-A14B image-to-video generation.
 
-    The image_base64 parameter contains the input image to animate.
+    Accepts image via either:
+    - image_base64: Base64-encoded image (direct API calls)
+    - input_image: File path on disk (pipeline executor in i2X pages)
+
     An optional text prompt can guide the animation direction.
 
     Returns:
@@ -76,11 +81,15 @@ async def execute(
     if prompt is None and TEXT_1 is not None:
         prompt = TEXT_1
 
-    if not image_base64:
-        raise ValueError("No image_base64 provided for I2V generation")
-
-    # Decode image
-    image_bytes = base64.b64decode(image_base64)
+    # Resolve image from base64 or file path
+    if image_base64:
+        image_bytes = base64.b64decode(image_base64)
+    elif input_image:
+        with open(input_image, 'rb') as f:
+            image_bytes = f.read()
+        logger.info(f"[CHUNK:wan22-i2v] Loaded image from path: {input_image}")
+    else:
+        raise ValueError("No image provided (need image_base64 or input_image)")
 
     # Apply defaults
     prompt = prompt or ""
