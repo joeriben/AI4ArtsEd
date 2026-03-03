@@ -3,6 +3,7 @@ VRAM Coordinator - Central VRAM management for all GPU backends
 
 Session 175: Enables bidirectional cross-backend eviction without loops.
 Session 244: NVML integration for real GPU visibility (foreign processes, zombies).
+Session 245: Cross-process ComfyUI eviction via POST /free (last resort).
 
 Architecture:
                     ┌─────────────────────┐
@@ -561,6 +562,17 @@ class VRAMCoordinator:
         else:
             success = free_mb >= required_mb
 
+        # Last resort: cross-process ComfyUI eviction
+        if not success or (is_inf and free_mb < self.get_total_vram_mb() * 0.5):
+            comfyui_freed = self._try_comfyui_eviction()
+            if comfyui_freed > 0:
+                free_mb = self.get_free_vram_mb(use_cache=False)
+                evicted_mb += comfyui_freed
+                if is_inf:
+                    success = True
+                else:
+                    success = free_mb >= required_mb
+
         logger.info(
             f"[VRAM-COORD] Eviction complete: evicted {evicted_count} models "
             f"({evicted_mb:.0f}MB), now have {free_mb:.0f}MB, "
@@ -568,6 +580,65 @@ class VRAMCoordinator:
         )
 
         return success
+
+    def _try_comfyui_eviction(self) -> float:
+        """
+        Ask ComfyUI to unload all models via POST /free.
+
+        Last resort: only called when internal eviction wasn't enough.
+        Returns MB freed (measured via NVML before/after). Returns 0 on failure.
+        """
+        from config import COMFYUI_PORT
+
+        # Check if ComfyUI port is listening
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.5)
+            result = sock.connect_ex(("127.0.0.1", COMFYUI_PORT))
+            sock.close()
+            if result != 0:
+                return 0
+        except Exception:
+            return 0
+
+        # Measure VRAM before
+        free_before = self.get_free_vram_mb(use_cache=False)
+
+        logger.info("[VRAM-COORD] Requesting ComfyUI cross-process eviction (last resort)")
+
+        # POST /free to ComfyUI
+        try:
+            url = f"http://localhost:{COMFYUI_PORT}/free"
+            payload = json.dumps({"unload_models": True, "free_memory": True}).encode()
+            req = urllib.request.Request(
+                url, data=payload, method="POST",
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                status = resp.status
+            logger.info(f"[VRAM-COORD] POST {url} → {status}")
+        except Exception as e:
+            logger.warning(f"[VRAM-COORD] ComfyUI /free request failed: {e}")
+            return 0
+
+        # Poll NVML for up to 5s waiting for VRAM release
+        freed_mb = 0
+        for _ in range(10):
+            time.sleep(0.5)
+            free_now = self.get_free_vram_mb(use_cache=False)
+            freed_mb = free_now - free_before
+            if freed_mb > 100:  # At least 100MB freed = meaningful
+                break
+
+        if freed_mb > 0:
+            logger.info(
+                f"[VRAM-COORD] ComfyUI freed {freed_mb:.0f}MB, "
+                f"now have {self.get_free_vram_mb(use_cache=False):.0f}MB free"
+            )
+        else:
+            logger.info("[VRAM-COORD] ComfyUI /free returned OK but no VRAM freed (may have been idle)")
+
+        return max(freed_mb, 0)
 
     # =========================================================================
     # Status
