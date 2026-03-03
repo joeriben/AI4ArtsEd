@@ -1,5 +1,80 @@
 # Development Log
 
+## Session 243 - Rename llama_guard_explanations.json → safety_code_explanations.json
+**Date:** 2026-03-03
+**Focus:** Remove vendor-specific naming from model-agnostic safety taxonomy file
+
+### Change
+The S1–S13 safety code explanations are a general classification scheme, not Llama Guard–specific. Renamed the file and updated the single code reference.
+
+### Files Changed
+- `devserver/schemas/llama_guard_explanations.json` → `devserver/schemas/safety_code_explanations.json` (git mv)
+- `devserver/schemas/engine/stage_orchestrator.py` — updated path + docstring in `build_safety_message()`
+
+**Duration:** ~5 minutes
+
+## Session 242 - Fix Ollama GPU Offloading (VLM Safety on CPU)
+**Date:** 2026-03-03
+**Focus:** All Ollama models (including VLM safety check) running on CPU instead of GPU
+
+### Problem
+VLM safety check (`qwen3-vl:2b`) ran on CPU despite ~16 GB free VRAM on 96 GB RTX 6000. `ollama ps` showed `vram=0.0GB`, Ollama logs confirmed `device=CPU` for all compute.
+
+### Root Cause
+`OLLAMA_NUM_GPU=1` in systemd override (`/etc/systemd/system/ollama.service.d/override.conf`). This parameter controls the **number of GPU layers** to offload, NOT the number of GPUs. `1` = only 1 layer on GPU, rest on CPU — effectively CPU-only.
+
+Same misconfiguration existed in `docs/installation/PC2_INSTALLATION.md`.
+
+### Fix
+- **Systemd override**: `OLLAMA_NUM_GPU=1` → `OLLAMA_NUM_GPU=-1` (auto-detect, all layers on GPU)
+- **`OLLAMA_MAX_LOADED_MODELS`**: `1` → `4` (concurrent safety models: DSGVO, VLM, guard, etc.)
+- **Installation docs**: Updated `PC2_INSTALLATION.md` to match
+
+### Files Changed
+- `docs/installation/PC2_INSTALLATION.md` — fixed `OLLAMA_NUM_GPU` value
+
+**Duration:** ~30 minutes
+
+## Session 241 - Flux 2 Visual Conditioning via Diffusers (img2img)
+**Date:** 2026-03-03
+**Focus:** Add native Flux 2 visual conditioning path through the Diffusers GPU service
+
+### Context
+The existing `flux2_img2img` (ComfyUI) uses traditional img2img: VAE-encode → noise at 55% → denoise. This **reproduces** the input image with minor variations — not what users expect from an image transformation tool.
+
+**Discovery**: `Flux2Pipeline` natively supports an `image=` parameter for **visual conditioning** — the reference image is VAE-encoded and appended as extra attention tokens in the transformer. Generation starts from pure noise but the model "sees" the reference. Combined with the text prompt, this produces genuinely creative transformations.
+
+### Architecture
+- No new endpoint needed — `image_base64` flows through the existing `generate_image` chain
+- GPU backend: decodes image bytes → PIL → passes `image=pil_image` to Flux2Pipeline's `gen_kwargs`
+- Route layer: `image_base64` (base64 string) → `image_bytes` (raw bytes) conversion
+- DiffusersClient: forwards `image_base64` kwarg in HTTP payload
+- New chunk follows the `output_image_flux2_diffusers.py` pattern, with image input like `output_video_wan22_i2v_diffusers.py`
+
+### Changes
+| File | Change |
+|------|--------|
+| `gpu_service/services/diffusers_backend.py` | Add Flux2 visual conditioning in `_generate()`: `image=` kwarg when `Flux2Pipeline` + `image_bytes` |
+| `gpu_service/routes/diffusers_routes.py` | Decode `image_base64` → `image_bytes` in `/api/diffusers/generate` |
+| `devserver/my_app/services/diffusers_client.py` | Forward `image_base64` kwarg in `generate_image()` payload |
+| `devserver/schemas/chunks/output_image_flux2_img2img_diffusers.py` | **NEW** — chunk accepting `input_image` (path) or `image_base64` |
+| `devserver/schemas/configs/output/flux2_img2img_diffusers.json` | **NEW** — output config with `img2img: true`, `backend_type: diffusers` |
+| `public/.../image_transformation.vue` | Add Flux2 Diffusers tile to `configsByCategory.image[]` |
+| `public/.../multi_image_transformation.vue` | Add Flux2 Diffusers tile to `configsByCategory.image[]` |
+
+### Key Design Decisions
+- **Reuse existing endpoint**: No new `/api/diffusers/generate/img2img` — the `image_base64` kwarg is optional on the standard generate path, keeping the API surface minimal.
+- **image_base64 vs image_bytes naming**: Route layer converts base64→bytes (naming shift reflects the encoding change), backend receives raw bytes and creates PIL Image.
+- **Chunk accepts both path and base64**: Like Wan I2V chunk — supports both pipeline executor (disk path) and direct API calls (base64).
+
+### Commit
+- `50004c2` feat: Flux 2 visual conditioning via Diffusers (img2img)
+
+### Type-check
+Pre-existing error: `bg.ts` module missing (incomplete Bulgarian language addition). No errors from this session's changes.
+
+---
+
 ## Session 240 - Fix VRAM Eviction on Model Switch (3 Cascading Bugs)
 **Date:** 2026-03-03
 **Focus:** GPU service VRAM coordinator fails to evict models when switching between diffusers models (e.g. Flux2 → SD 3.5)
