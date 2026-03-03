@@ -27,6 +27,61 @@
 
 ---
 
+## Session 244 (2026-03-03): VRAM Watchdog — NVML Foreign Process Detection
+
+**Date:** 2026-03-03
+**Status:** COMPLETE
+**Branch:** develop
+
+### Context
+
+Zombie processes (old ComfyUI/SwarmUI instances) persisted undetected, consuming 25-52 GB VRAM. The `VRAMCoordinator` used `torch.cuda.memory_allocated()` — completely blind to Ollama, ComfyUI, or any foreign process. Result: `get_free_vram_mb()` overestimated free VRAM by up to 52 GB, causing silent OOM on large model loads.
+
+### Changes
+
+**NVML Integration in VRAMCoordinator:**
+- `pynvml` (nvidia-ml-py) provides real GPU memory visibility via NVML
+- `_get_nvml_memory_info()` enumerates ALL GPU processes with PID, VRAM, cmdline
+- `get_free_vram_mb()` now prefers NVML (sees all processes), falls back to PyTorch
+- Startup scan logs full GPU process inventory with `[FOREIGN]`/`[self]` tags
+
+**Dynamic Foreign VRAM Threshold:**
+- Queries Ollama `GET /api/ps` for loaded model VRAM (adapts to safety level changes)
+- Checks ComfyUI port (17804) for expected ComfyUI presence
+- Adds configurable overhead (2048 MB for CUDA contexts, driver, display)
+- Warns when actual foreign > expected foreign (60s cooldown)
+
+**Port Blacklist:**
+- Ports 7801, 7821, 8188 (SwarmUI) must NEVER be active
+- Detection via `socket.connect_ex()`, PID identification via `psutil`
+- Exposed in `/api/health/vram` response
+
+**Kill Endpoint:**
+- `POST /api/health/kill-foreign {"pid": N}` with safety rails
+- Validates: foreign GPU process, not self, not Ollama, not expected ComfyUI
+- SIGTERM → 2s grace → SIGKILL escalation
+
+**TextBackend Fix:**
+- `_get_free_vram_gb()` delegates to coordinator (was duplicate PyTorch-only query)
+
+### Verified
+- NVML correctly detected ComfyUI (18,116 MB) + Ollama runner (2,314 MB)
+- Real free VRAM: 76,783 MB (PyTorch-only would have reported ~97,000 MB)
+- Blacklisted port scan: all clear
+
+### Documentation
+- `docs/ARCHITECTURE PART 27` — new NVML Watchdog section with full architecture
+- `docs/ARCHITECTURE PART 31` — updated VRAM Management section
+- `docs/DEVELOPMENT_DECISIONS.md` — design decision documented
+
+### Files Modified
+- `gpu_service/config.py`
+- `gpu_service/services/vram_coordinator.py`
+- `gpu_service/routes/health_routes.py`
+- `gpu_service/services/text_backend.py`
+
+---
+
 ## Session 227 (2026-03-01): Meta-Prompt Quality — Affect Collapse Prevention
 
 **Date:** 2026-03-01

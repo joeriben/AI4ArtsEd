@@ -2,6 +2,7 @@
 VRAM Coordinator - Central VRAM management for all GPU backends
 
 Session 175: Enables bidirectional cross-backend eviction without loops.
+Session 244: NVML integration for real GPU visibility (foreign processes, zombies).
 
 Architecture:
                     ┌─────────────────────┐
@@ -22,12 +23,19 @@ Key Features:
 - `request_vram()` triggers cross-backend LRU eviction
 - Priority system prevents evicting in-use models
 - Central coordination prevents eviction loops
+- NVML: sees ALL GPU processes (Ollama, ComfyUI, zombies)
+- Dynamic threshold: expected foreign VRAM adapts to Ollama/ComfyUI state
+- Port blacklist: detects SwarmUI zombies on forbidden ports
 """
 
 import gc
 import logging
+import os
+import socket
 import threading
 import time
+import urllib.request
+import json
 from typing import Optional, Dict, List, Any, Callable, Protocol
 from dataclasses import dataclass
 from enum import IntEnum
@@ -95,7 +103,266 @@ class VRAMCoordinator:
         self._cached_free_mb: float = 0
         self._cache_ttl_ms: float = 100  # 100ms cache
 
+        # NVML state
+        self._nvml_handle = None
+        self._nvml_available = False
+
+        # Warning cooldown
+        self._last_foreign_warn_time: float = 0
+
+        # Initialize NVML
+        self._init_nvml()
+
         logger.info("[VRAM-COORD] Initialized")
+
+        # Startup VRAM scan (after NVML init)
+        self._log_startup_vram()
+
+    # =========================================================================
+    # NVML Integration
+    # =========================================================================
+
+    def _init_nvml(self) -> None:
+        """One-time NVML init. Fail-open if nvidia-ml-py missing."""
+        from config import VRAM_USE_NVML
+
+        if not VRAM_USE_NVML:
+            logger.info("[VRAM-COORD] NVML disabled by config")
+            return
+
+        try:
+            import pynvml
+            pynvml.nvmlInit()
+            self._nvml_handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+            self._nvml_available = True
+            logger.info("[VRAM-COORD] NVML initialized — real GPU memory visibility enabled")
+        except ImportError:
+            logger.warning("[VRAM-COORD] nvidia-ml-py not installed — using PyTorch-only VRAM (blind to foreign processes)")
+        except Exception as e:
+            logger.warning(f"[VRAM-COORD] NVML init failed: {e} — using PyTorch-only VRAM")
+
+    def _get_nvml_memory_info(self) -> Optional[Dict[str, Any]]:
+        """
+        Get real GPU memory info via NVML.
+
+        Returns dict with total_mb, used_mb, free_mb, foreign_mb, processes[].
+        Returns None on failure (fail-open).
+        """
+        if not self._nvml_available or self._nvml_handle is None:
+            return None
+
+        try:
+            import pynvml
+
+            mem_info = pynvml.nvmlDeviceGetMemoryInfo(self._nvml_handle)
+            total_mb = mem_info.total / (1024 * 1024)
+            used_mb = mem_info.used / (1024 * 1024)
+            free_mb = mem_info.free / (1024 * 1024)
+
+            # Get all GPU processes
+            our_pid = os.getpid()
+            processes = []
+
+            try:
+                gpu_procs = pynvml.nvmlDeviceGetComputeRunningProcesses(self._nvml_handle)
+            except Exception:
+                gpu_procs = []
+
+            foreign_mb = 0
+            for proc in gpu_procs:
+                pid = proc.pid
+                vram_mb = (proc.usedGpuMemory or 0) / (1024 * 1024)
+                is_foreign = pid != our_pid
+                cmdline = self._read_proc_cmdline(pid)
+
+                if is_foreign:
+                    foreign_mb += vram_mb
+
+                processes.append({
+                    "pid": pid,
+                    "vram_mb": round(vram_mb, 1),
+                    "foreign": is_foreign,
+                    "cmdline": cmdline,
+                })
+
+            return {
+                "total_mb": round(total_mb, 1),
+                "used_mb": round(used_mb, 1),
+                "free_mb": round(free_mb, 1),
+                "foreign_mb": round(foreign_mb, 1),
+                "processes": processes,
+            }
+
+        except Exception as e:
+            logger.warning(f"[VRAM-COORD] NVML memory query failed: {e}")
+            return None
+
+    @staticmethod
+    def _read_proc_cmdline(pid: int) -> str:
+        """Read /proc/{pid}/cmdline. Returns '(unknown)' on failure."""
+        try:
+            with open(f"/proc/{pid}/cmdline", "rb") as f:
+                raw = f.read(512)
+            return raw.replace(b"\x00", b" ").decode("utf-8", errors="replace").strip()
+        except Exception:
+            return "(unknown)"
+
+    def _get_expected_foreign_vram_mb(self) -> float:
+        """
+        Dynamic threshold: how much foreign VRAM is expected.
+
+        Queries Ollama /api/ps + checks ComfyUI port + adds driver overhead.
+        Adapts automatically when safety models change or services start/stop.
+        """
+        from config import VRAM_FOREIGN_OVERHEAD_MB, OLLAMA_API_URL, COMFYUI_PORT
+
+        expected = VRAM_FOREIGN_OVERHEAD_MB  # Base: CUDA contexts + driver + display
+
+        # Query Ollama for loaded models
+        try:
+            req = urllib.request.Request(f"{OLLAMA_API_URL}/api/ps", method="GET")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                data = json.loads(resp.read())
+                for model in data.get("models", []):
+                    size_vram = model.get("size_vram", 0)
+                    expected += size_vram / (1024 * 1024)  # bytes → MB
+        except Exception:
+            pass  # Ollama unreachable → assume 0, still add overhead
+
+        # Check if expected ComfyUI is running
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.5)
+            result = sock.connect_ex(("127.0.0.1", COMFYUI_PORT))
+            sock.close()
+            if result == 0:
+                expected += 1024  # Generous estimate for idle ComfyUI
+        except Exception:
+            pass
+
+        return expected
+
+    def _check_foreign_processes(self, nvml_info: Dict[str, Any]) -> None:
+        """
+        Compare actual foreign VRAM vs expected.
+        Warns (with 60s cooldown) if unexpected foreign VRAM detected.
+        """
+        now = time.time()
+        if now - self._last_foreign_warn_time < 60:
+            return
+
+        actual_foreign_mb = nvml_info.get("foreign_mb", 0)
+        expected_foreign_mb = self._get_expected_foreign_vram_mb()
+
+        if actual_foreign_mb > expected_foreign_mb:
+            delta = actual_foreign_mb - expected_foreign_mb
+            self._last_foreign_warn_time = now
+            logger.warning(
+                f"[VRAM-COORD] Foreign VRAM {actual_foreign_mb:.0f}MB exceeds "
+                f"expected {expected_foreign_mb:.0f}MB by {delta:.0f}MB"
+            )
+            for proc in nvml_info.get("processes", []):
+                if proc["foreign"]:
+                    logger.warning(
+                        f"[VRAM-COORD]   Foreign: PID {proc['pid']} "
+                        f"({proc['vram_mb']:.0f}MB): {proc['cmdline']}"
+                    )
+
+    def _check_blacklisted_ports(self) -> List[Dict[str, Any]]:
+        """
+        Check if any blacklisted ports (SwarmUI zombies) are active.
+        Returns list of active blacklisted port info.
+        """
+        from config import VRAM_BLACKLISTED_PORTS
+
+        active = []
+        for port in VRAM_BLACKLISTED_PORTS:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(0.5)
+                result = sock.connect_ex(("127.0.0.1", port))
+                sock.close()
+                if result == 0:
+                    # Port is active — try to find the PID
+                    pid, cmdline = self._find_pid_for_port(port)
+                    entry = {"port": port, "pid": pid, "cmdline": cmdline}
+                    active.append(entry)
+                    logger.warning(
+                        f"[VRAM-COORD] BLACKLISTED PORT {port} ACTIVE — "
+                        f"AI Lab destabilization detected!"
+                    )
+                    if pid:
+                        logger.warning(
+                            f"[VRAM-COORD]   PID {pid} on port {port}: {cmdline}"
+                        )
+                        logger.warning(
+                            f'[VRAM-COORD]   Terminate via: POST /api/health/kill-foreign '
+                            f'{{"pid": {pid}}}'
+                        )
+            except Exception:
+                pass
+
+        return active
+
+    @staticmethod
+    def _find_pid_for_port(port: int) -> tuple:
+        """Find PID listening on a port via psutil. Returns (pid, cmdline) or (None, '')."""
+        try:
+            import psutil
+            for conn in psutil.net_connections(kind="inet"):
+                if conn.laddr.port == port and conn.status == "LISTEN":
+                    try:
+                        proc = psutil.Process(conn.pid)
+                        return conn.pid, " ".join(proc.cmdline())
+                    except Exception:
+                        return conn.pid, "(unknown)"
+        except Exception:
+            pass
+        return None, ""
+
+    def _log_startup_vram(self) -> None:
+        """One-time startup scan: log VRAM state + processes + blacklisted ports."""
+        nvml_info = self._get_nvml_memory_info()
+        if nvml_info is None:
+            logger.info("[VRAM-COORD] Startup: NVML not available, skipping detailed scan")
+            return
+
+        logger.info(
+            f"[VRAM-COORD] Startup VRAM: total={nvml_info['total_mb']:.0f}MB, "
+            f"used={nvml_info['used_mb']:.0f}MB, free={nvml_info['free_mb']:.0f}MB"
+        )
+
+        expected = self._get_expected_foreign_vram_mb()
+        actual_foreign = nvml_info["foreign_mb"]
+        logger.info(
+            f"[VRAM-COORD] Expected foreign: {expected:.0f}MB, "
+            f"actual foreign: {actual_foreign:.0f}MB"
+        )
+
+        if actual_foreign > expected:
+            logger.warning(
+                f"[VRAM-COORD] Actual foreign exceeds expected by "
+                f"{actual_foreign - expected:.0f}MB"
+            )
+        else:
+            logger.info("[VRAM-COORD] Actual foreign within expected range")
+
+        for proc in nvml_info.get("processes", []):
+            tag = "[FOREIGN]" if proc["foreign"] else "[self]"
+            logger.info(
+                f"[VRAM-COORD] Startup GPU process {tag}: PID {proc['pid']}, "
+                f"{proc['vram_mb']:.0f}MB — {proc['cmdline']}"
+            )
+
+        blacklisted = self._check_blacklisted_ports()
+        from config import VRAM_BLACKLISTED_PORTS
+        for port in VRAM_BLACKLISTED_PORTS:
+            status = "ACTIVE" if any(b["port"] == port for b in blacklisted) else "clear"
+            logger.info(f"[VRAM-COORD] Blacklisted port {port}={status}")
+
+    # =========================================================================
+    # Backend Registration
+    # =========================================================================
 
     def register_backend(self, backend: VRAMBackend) -> None:
         """Register a backend for VRAM coordination."""
@@ -109,20 +376,38 @@ class VRAMCoordinator:
             del self._backends[backend_id]
             logger.info(f"[VRAM-COORD] Unregistered backend: {backend_id}")
 
+    # =========================================================================
+    # VRAM Queries
+    # =========================================================================
+
     def get_free_vram_mb(self, use_cache: bool = True) -> float:
-        """Get currently free VRAM in MB."""
+        """
+        Get currently free VRAM in MB.
+
+        Prefers NVML (sees all processes) with PyTorch fallback.
+        Runs foreign process checks on non-cached queries.
+        """
         import torch
 
         now = time.time() * 1000
         if use_cache and (now - self._last_vram_check) < self._cache_ttl_ms:
             return self._cached_free_mb
 
-        if not torch.cuda.is_available():
-            return 0
+        # Try NVML first (sees all GPU processes)
+        nvml_info = self._get_nvml_memory_info()
+        if nvml_info is not None:
+            free_mb = nvml_info["free_mb"]
 
-        total = torch.cuda.get_device_properties(0).total_memory
-        allocated = torch.cuda.memory_allocated(0)
-        free_mb = (total - allocated) / (1024 * 1024)
+            # Run checks on fresh queries
+            self._check_foreign_processes(nvml_info)
+            self._check_blacklisted_ports()
+        else:
+            # Fallback: PyTorch only (blind to foreign processes)
+            if not torch.cuda.is_available():
+                return 0
+            total = torch.cuda.get_device_properties(0).total_memory
+            allocated = torch.cuda.memory_allocated(0)
+            free_mb = (total - allocated) / (1024 * 1024)
 
         self._cached_free_mb = free_mb
         self._last_vram_check = now
@@ -134,6 +419,10 @@ class VRAMCoordinator:
         if not torch.cuda.is_available():
             return 0
         return torch.cuda.get_device_properties(0).total_memory / (1024 * 1024)
+
+    # =========================================================================
+    # Eviction
+    # =========================================================================
 
     def request_vram(
         self,
@@ -280,13 +569,18 @@ class VRAMCoordinator:
 
         return success
 
+    # =========================================================================
+    # Status
+    # =========================================================================
+
     def get_status(self) -> Dict[str, Any]:
         """Get coordinator status for debugging/API."""
         all_models = self._collect_all_models()
 
-        return {
+        status = {
             "free_mb": self.get_free_vram_mb(),
             "total_mb": self.get_total_vram_mb(),
+            "nvml_available": self._nvml_available,
             "registered_backends": list(self._backends.keys()),
             "loaded_models": [
                 {
@@ -301,6 +595,26 @@ class VRAMCoordinator:
             ],
             "eviction_in_progress": self._eviction_in_progress,
         }
+
+        # Add NVML-specific info
+        nvml_info = self._get_nvml_memory_info()
+        if nvml_info is not None:
+            status["nvml_free_mb"] = nvml_info["free_mb"]
+            status["nvml_used_mb"] = nvml_info["used_mb"]
+            status["foreign_vram_mb"] = nvml_info["foreign_mb"]
+            status["expected_foreign_vram_mb"] = round(self._get_expected_foreign_vram_mb(), 1)
+            status["gpu_processes"] = nvml_info["processes"]
+        else:
+            status["nvml_free_mb"] = None
+            status["nvml_used_mb"] = None
+            status["foreign_vram_mb"] = None
+            status["expected_foreign_vram_mb"] = None
+            status["gpu_processes"] = []
+
+        # Blacklisted ports
+        status["blacklisted_ports"] = self._check_blacklisted_ports()
+
+        return status
 
 
 # =============================================================================

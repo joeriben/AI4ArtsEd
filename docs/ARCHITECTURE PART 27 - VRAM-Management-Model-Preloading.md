@@ -222,10 +222,121 @@ These were part of the original three-tier design and have been removed:
 
 ---
 
+## NVML Watchdog — Real GPU Visibility (Session 244)
+
+### Problem
+
+`torch.cuda.memory_allocated()` only sees PyTorch's own tensors. Foreign GPU processes (Ollama, ComfyUI, SwarmUI zombies) are invisible. On the RTX 6000 Blackwell (96GB), zombie SwarmUI instances regularly consume 25-52 GB, causing:
+- `get_free_vram_mb()` overestimates free VRAM (reports 90 GB when 40 GB is actually free)
+- Large model loads (Wan 2.2 = 40 GB) OOM
+- Ollama falls back to CPU inference (slow safety checks)
+- No warnings — silent degradation
+
+### Solution: NVML + Dynamic Thresholds
+
+The `VRAMCoordinator` now uses NVIDIA Management Library (NVML) via `pynvml` for real GPU visibility:
+
+```
+┌─────────────────────────────────────────────┐
+│  VRAMCoordinator                            │
+│                                             │
+│  NVML Layer (Session 244):                  │
+│  ├── _get_nvml_memory_info()  ← real GPU    │
+│  ├── _get_expected_foreign_vram_mb()        │
+│  │     └── Ollama /api/ps + ComfyUI port    │
+│  ├── _check_foreign_processes()             │
+│  │     └── actual vs expected threshold     │
+│  └── _check_blacklisted_ports()             │
+│        └── 7801, 7821, 8188 = SwarmUI       │
+│                                             │
+│  PyTorch Layer (original):                  │
+│  ├── _collect_all_models()                  │
+│  ├── _do_eviction()                         │
+│  └── request_vram()                         │
+└─────────────────────────────────────────────┘
+```
+
+### Dynamic Expected Threshold
+
+Rather than a static "foreign VRAM budget," the expected threshold **adapts automatically**:
+
+| Component | Method | Adapts when... |
+|-----------|--------|----------------|
+| Ollama models | `GET /api/ps` → sum `size_vram` | Safety models load/unload (kids↔adult) |
+| ComfyUI | Port `COMFYUI_PORT` (17804) listening → +1024 MB | ComfyUI starts/stops |
+| Overhead | `VRAM_FOREIGN_OVERHEAD_MB` (2048 MB) | Fixed (CUDA contexts, driver, display) |
+
+When `actual_foreign > expected_foreign`, the coordinator logs warnings with PIDs, cmdlines, and VRAM per process.
+
+### Port Blacklist
+
+Ports 7801, 7821, 8188 are SwarmUI ports that must NEVER be active. Detection via `socket.connect_ex()` (<1ms). Active blacklisted ports are:
+- Logged with full PID/cmdline identification (via `psutil`)
+- Exposed in `/api/health/vram` response
+- Killable via `POST /api/health/kill-foreign` (with safety rails)
+
+### Kill Endpoint Safety Rails
+
+`POST /api/health/kill-foreign {"pid": N}` validates before killing:
+1. PID must be in NVML's foreign GPU process list
+2. PID must NOT be our own process
+3. PID must NOT be Ollama (cmdline check)
+4. PID must NOT be expected ComfyUI on `COMFYUI_PORT`
+5. SIGTERM → 2s grace → SIGKILL escalation
+
+### Fail-Open Design
+
+Every NVML component fails open:
+- `nvidia-ml-py` missing → PyTorch fallback (blind but functional)
+- NVML query fails → PyTorch fallback
+- Ollama unreachable → assume 0 expected Ollama VRAM
+- `/proc/{pid}/cmdline` read fails → `"(unknown)"`
+- Port check fails → assume port clear
+
+### Configuration
+
+**File:** `gpu_service/config.py`
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `VRAM_USE_NVML` | `true` | Enable NVML real GPU visibility |
+| `VRAM_FOREIGN_OVERHEAD_MB` | `2048` | Expected baseline foreign VRAM (CUDA contexts, driver, display) |
+| `VRAM_BLACKLISTED_PORTS` | `[7801, 7821, 8188]` | SwarmUI ports — detection triggers warning |
+| `OLLAMA_API_URL` | `http://localhost:11434` | Ollama API for `/api/ps` model inventory |
+| `COMFYUI_PORT` | `17804` | Expected ComfyUI port (tolerated, not killed) |
+
+### `/api/health/vram` Extended Response
+
+```json
+{
+  "free_mb": 42000,
+  "total_mb": 97887,
+  "nvml_available": true,
+  "nvml_free_mb": 42000,
+  "nvml_used_mb": 55887,
+  "foreign_vram_mb": 60350,
+  "expected_foreign_vram_mb": 8200,
+  "gpu_processes": [
+    {"pid": 493620, "vram_mb": 2312, "foreign": true, "cmdline": "ollama runner ..."},
+    {"pid": 482447, "vram_mb": 550, "foreign": true, "cmdline": "python main.py --port 17804"}
+  ],
+  "blacklisted_ports": [],
+  "registered_backends": ["diffusers", "heartmula"],
+  "loaded_models": [],
+  "eviction_in_progress": false
+}
+```
+
+### Limitation: ComfyUI Eviction
+
+The NVML watchdog **sees** ComfyUI's VRAM but **cannot evict** its models. ComfyUI is a separate process with its own model management — the `VRAMCoordinator` only manages registered backends (Diffusers, HeartMuLa, etc.). A future enhancement could implement ComfyUI's REST API (`POST /free`) as a cross-process eviction backend.
+
+---
+
 ## Relationship to Other Components
 
 - **Backend Registry** (Part 8): VRAM management is internal to `DiffusersImageGenerator`. The registry's `min_vram_gb` gate is a coarse check; the VRAM manager provides fine-grained runtime control.
-- **SwarmUI Manager** (Part 8): Orthogonal. SwarmUI manages ComfyUI process lifecycle; VRAM manager handles Diffusers pipeline objects.
+- **SwarmUI Manager** (Part 8): Orthogonal. SwarmUI manages ComfyUI process lifecycle; VRAM manager handles Diffusers pipeline objects. The NVML watchdog detects SwarmUI zombies on blacklisted ports.
 - **LoRA Training** (Part 23): Training requires ~50GB VRAM. All cached models should be unloaded before training.
 
 ---

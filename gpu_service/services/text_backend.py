@@ -167,13 +167,17 @@ class TextBackend:
     # =========================================================================
 
     def _get_free_vram_gb(self) -> float:
-        """Get currently free VRAM in GB."""
-        import torch
-        if not torch.cuda.is_available():
-            return 0
-        total = torch.cuda.get_device_properties(0).total_memory
-        allocated = torch.cuda.memory_allocated(0)
-        return (total - allocated) / 1024**3
+        """Get currently free VRAM in GB (delegates to coordinator for NVML accuracy)."""
+        try:
+            from services.vram_coordinator import get_vram_coordinator
+            return get_vram_coordinator().get_free_vram_mb(use_cache=False) / 1024
+        except Exception:
+            import torch
+            if not torch.cuda.is_available():
+                return 0
+            total = torch.cuda.get_device_properties(0).total_memory
+            allocated = torch.cuda.memory_allocated(0)
+            return (total - allocated) / 1024**3
 
     def _load_model_sync(
         self,

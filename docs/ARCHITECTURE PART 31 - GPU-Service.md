@@ -150,11 +150,25 @@ The `cd gpu_service` is critical — MMAudio and ImageBind resolve weight paths 
 
 The GPU service uses a `VRAMCoordinator` (singleton) that manages VRAM across all backends. Each backend implements the `VRAMBackend` protocol:
 
-- `get_vram_info()` → current VRAM usage + eviction priority
-- `unload()` → release all VRAM
-- `is_loaded()` → whether model is in GPU memory
+- `get_registered_models()` → list of models with VRAM, priority, last_used, in_use
+- `evict_model(model_id)` → release specific model's VRAM
+- `get_backend_id()` → unique identifier
 
 When a backend needs VRAM, the coordinator evicts the lowest-priority loaded backend. See Part 27 for the Diffusers-specific LRU cache details.
+
+### NVML Watchdog (Session 244)
+
+The coordinator uses NVML (`pynvml`) for real GPU visibility beyond PyTorch's own tensors. This detects foreign GPU processes (Ollama, ComfyUI, SwarmUI zombies) and provides accurate `get_free_vram_mb()` that accounts for all VRAM consumers. Dynamic thresholds adapt to Ollama model loads and ComfyUI state. Port blacklist (7801, 7821, 8188) detects SwarmUI zombies. Kill endpoint (`POST /api/health/kill-foreign`) with safety rails. See Part 27 for full details.
+
+### Configuration (VRAM Watchdog)
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `VRAM_USE_NVML` | `true` | Enable NVML real GPU visibility |
+| `VRAM_FOREIGN_OVERHEAD_MB` | `2048` | Baseline foreign VRAM budget (CUDA contexts, driver) |
+| `VRAM_BLACKLISTED_PORTS` | `[7801, 7821, 8188]` | SwarmUI ports — triggers warning on detection |
+| `OLLAMA_API_URL` | `http://localhost:11434` | Ollama API for model inventory |
+| `COMFYUI_PORT` | `17804` | Expected ComfyUI port (tolerated) |
 
 ---
 
@@ -207,5 +221,5 @@ GPU Service handles **media inference only** (Diffusers, HeartMuLa, Stable Audio
 
 ---
 
-**Document Status:** Active (2026-03-03, Session 237)
+**Document Status:** Active (2026-03-03, Session 244)
 **Maintainer:** AI4ArtsEd Development Team

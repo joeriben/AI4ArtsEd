@@ -109,3 +109,10 @@ TEXT_QUANT_MULTIPLIERS = {
     "nf4": 0.25,  # bitsandbytes NormalFloat4
 }
 
+# --- VRAM Watchdog ---
+VRAM_USE_NVML = os.environ.get("VRAM_USE_NVML", "true").lower() == "true"
+VRAM_FOREIGN_OVERHEAD_MB = int(os.environ.get("VRAM_FOREIGN_OVERHEAD_MB", "2048"))  # CUDA context + driver overhead
+VRAM_BLACKLISTED_PORTS = [7801, 7821, 8188]  # SwarmUI ports — NEVER tolerated
+OLLAMA_API_URL = os.environ.get("OLLAMA_API_URL", "http://localhost:11434")
+COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", "17804"))  # Expected ComfyUI
+

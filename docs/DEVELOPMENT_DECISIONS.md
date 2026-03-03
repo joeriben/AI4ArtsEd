@@ -29,6 +29,35 @@
 
 ---
 
+## VRAM Watchdog: NVML + Dynamic Foreign Process Detection (2026-03-03)
+
+### Kontext
+`VRAMCoordinator` used `torch.cuda.memory_allocated()` which only sees PyTorch's own tensors. Foreign GPU processes (Ollama safety models, ComfyUI, SwarmUI zombies) were completely invisible. On the RTX 6000 Blackwell (96 GB), zombie SwarmUI instances consumed 25-52 GB undetected, causing OOM on large model loads and silent Ollama CPU fallback.
+
+### Entscheidung: NVML + Dynamic Thresholds + Port Blacklist
+
+| Aspect | Old | New |
+|--------|-----|-----|
+| GPU visibility | PyTorch only (own tensors) | NVML (all CUDA processes) |
+| Foreign process awareness | None | Full: PID, cmdline, VRAM per process |
+| Expected foreign VRAM | Not tracked | Dynamic: Ollama `/api/ps` + ComfyUI port check + overhead |
+| Zombie detection | None | Port blacklist (7801, 7821, 8188) + kill endpoint |
+| Failure mode | Overestimates free VRAM | Fail-open: NVML failure → PyTorch fallback |
+
+**Key design principle: Dynamic threshold, not static.** The expected foreign VRAM adapts automatically when Ollama loads/unloads safety models (kids↔adult level change), when ComfyUI starts/stops, etc. No magic numbers that break when the safety config changes.
+
+**Kill endpoint safety rails:** `POST /api/health/kill-foreign` validates that the PID is (1) in NVML's foreign GPU process list, (2) not our own process, (3) not Ollama, (4) not expected ComfyUI. Prevents accidental self-kill or safety-model-kill.
+
+**Limitation:** Can see but cannot evict ComfyUI's models — separate process boundary. Future: implement ComfyUI REST API as cross-process eviction backend.
+
+### Betroffene Dateien
+- `gpu_service/config.py` — 5 config constants
+- `gpu_service/services/vram_coordinator.py` — NVML init, real VRAM query, dynamic threshold, port blacklist
+- `gpu_service/routes/health_routes.py` — `POST /api/health/kill-foreign`
+- `gpu_service/services/text_backend.py` — `_get_free_vram_gb()` delegates to coordinator
+
+---
+
 ## Stage 3 Safety: Single Llama-Guard Call with Proper Template (2026-03-03)
 
 ### Kontext
