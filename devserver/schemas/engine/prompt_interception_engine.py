@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 from .model_selector import model_selector
 
 # Import UI_MODE for adaptive token limits
-from config import UI_MODE
+from config import UI_MODE, LLM_API_TIMEOUT
 
 # UI_MODE-adaptive max_tokens (hard API limit, ~2 tokens per word)
 UI_MODE_MAX_TOKENS = {
@@ -263,7 +263,7 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
@@ -366,7 +366,7 @@ class PromptInterceptionEngine:
             if "temperature" in params:
                 payload["temperature"] = params["temperature"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["content"][0]["text"]
@@ -411,7 +411,7 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
@@ -461,7 +461,7 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
@@ -525,7 +525,7 @@ class PromptInterceptionEngine:
                 payload["reasoning_effort"] = "low"
                 logger.info(f"[BACKEND] IONOS: reasoning_effort=low (enable_thinking=False)")
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 message = result["choices"][0]["message"]
@@ -610,7 +610,7 @@ class PromptInterceptionEngine:
                 headers=headers,
                 data=json.dumps(payload),
                 stream=True,  # Enable response streaming
-                timeout=90
+                timeout=LLM_API_TIMEOUT
             )
             response.raise_for_status()
 

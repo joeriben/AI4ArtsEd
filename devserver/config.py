@@ -381,6 +381,9 @@ GPU_SERVICE_TIMEOUT_MUSIC = 300       # HeartMuLa
 GPU_SERVICE_TIMEOUT_AUDIO = 300       # Stable Audio
 GPU_SERVICE_TIMEOUT = GPU_SERVICE_TIMEOUT_DEFAULT  # Backward compat
 
+# External LLM API timeouts (connect, read) in seconds
+LLM_API_TIMEOUT = (10, 90)            # 10s connect (fail fast if unreachable), 90s read (reasoning models need time)
+
 # Ollama LLM timeouts
 OLLAMA_TIMEOUT_SAFETY = 30            # Safety verify (small model, short prompt)
 OLLAMA_TIMEOUT_DEFAULT = 120          # Standard LLM calls
