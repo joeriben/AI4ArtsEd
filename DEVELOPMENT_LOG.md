@@ -1,5 +1,27 @@
 # Development Log
 
+## Session 245 - Cross-Process ComfyUI Eviction in VRAMCoordinator
+**Date:** 2026-03-03
+**Focus:** Enable GPU service to ask ComfyUI to release VRAM as a last-resort eviction step
+
+### Problem
+The NVML watchdog (Session 244) gives VRAMCoordinator real GPU visibility — it sees that ComfyUI holds 18+ GB VRAM (e.g. loaded Wan 2.1). But it cannot ask ComfyUI to release that memory. In a workshop with 10 concurrent users, if internal eviction isn't enough, the result is OOM or failure.
+
+### Solution
+Added `_try_comfyui_eviction()` to `VRAMCoordinator` — calls ComfyUI's existing `POST /free {"unload_models": true, "free_memory": true}` endpoint as a last resort after internal backend eviction fails.
+
+**Design:**
+- **Last resort only**: Called only when internal eviction didn't free enough VRAM
+- **NVML-verified**: Measures actual VRAM delta via NVML (polls up to 5s for async GC/CUDA release)
+- **Fail-open**: ComfyUI unreachable → skip, return 0. Never blocks eviction
+- **All-or-nothing**: ComfyUI API only supports "unload everything" — no selective model unload
+- **Asymmetric**: GPU service can evict ComfyUI, not vice versa (coordinator is authority)
+
+### Files Changed
+- `gpu_service/services/vram_coordinator.py` — `_try_comfyui_eviction()` + `_do_eviction()` integration
+
+**Duration:** ~15 minutes
+
 ## Session 244 - Fix Stage 3 Safety: Remove Redundant Double-Check + Fix Wrong Prompt Format
 **Date:** 2026-03-03
 **Focus:** Three bugs in `execute_stage3_safety()` that caused a culturally rich Lagos scene to be false-positive blocked as S4 (Violent Crimes)
@@ -30,7 +52,20 @@ New flow: STEP 1 (skip adult/research) → STEP 2 (translate) → STEP 3 (§86a)
 - `safety_check.json` (pipeline) — no longer called
 - `/pipeline/safety` endpoint (check_type='output') — dead code, no frontend callers
 
-**Duration:** ~30 minutes
+### Testing Insight: Complementary Safety Roles
+Testing revealed that Llama-Guard S1-S13 classifies "A child is being attacked by a monster" as `safe` — because S1 (Violent Crimes) covers content that "enables, encourages, or excuses" **crimes**, and a fantasy monster attack isn't a crime. Both `llama-guard3:1b` and `llama-guard3:8b` agree.
+
+The age fast-filter in `/safety/quick` catches this (keywords "monster", "verletzen"). This confirms Stage 1 and Stage 3 have **complementary, not redundant** roles:
+- **SAFETY-QUICK + Stage 1**: Age-inappropriate but legal content (Jugendschutz)
+- **Stage 3 Llama-Guard**: Criminal/harmful S1-S13 categories
+
+### Follow-up Fix: Pre-Generation Safety Gate
+Discovered that editing the optimized prompt box and clicking "Generate" without blurring could bypass MediaInputBox's blur/paste safety check. Added synchronous `/safety/quick` call in `startGeneration()` before Stage 3-4 execution.
+
+### Additional Files Changed
+- `public/ai4artsed-frontend/src/views/text_transformation.vue` — pre-generation `/safety/quick` gate
+
+**Duration:** ~60 minutes
 
 ## Session 243 - Rename llama_guard_explanations.json → safety_code_explanations.json
 **Date:** 2026-03-03

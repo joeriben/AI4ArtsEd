@@ -73,14 +73,19 @@ Input text
 
 **Endpoint:** `POST /api/schema/pipeline/safety/quick`
 
-Called autonomously by `MediaInputBox` on blur/paste. Two modes:
+Called from two places in the frontend:
+
+1. **MediaInputBox** — automatically on `blur` and `paste` events (all text input boxes)
+2. **`startGeneration()`** in `text_transformation.vue` — synchronous gate before Stage 3-4
+
+The second caller (Session 244) closes a gap: if a user edits the optimized prompt box and clicks "Generate" without blurring, MediaInputBox's blur/paste check wouldn't have fired. The pre-generation check ensures the age fast-filter always runs before generation, regardless of how the user triggers it.
 
 **Text mode** (field: `text`):
 ```
 research → SKIP (return safe=true, checks_passed=['safety_skip'])
-adult    → §86a fast-filter + DSGVO NER (full checks)
-youth    → §86a fast-filter + DSGVO NER (full checks)
-kids     → §86a fast-filter + DSGVO NER (full checks)
+adult    → §86a fast-filter + DSGVO NER (no age filter)
+youth    → §86a fast-filter + age filter + LLM verify + DSGVO NER
+kids     → §86a fast-filter + age filter + LLM verify + DSGVO NER
 ```
 
 **Image mode** (field: `image_path`):
@@ -88,6 +93,15 @@ kids     → §86a fast-filter + DSGVO NER (full checks)
 research/adult → SKIP (vlm_skipped)
 youth/kids     → VLM safety check via Ollama
 ```
+
+**CRITICAL — Complementary roles of SAFETY-QUICK vs Stage 3 (Session 244 insight):**
+
+| Check | What it catches | Mechanism | Example |
+|-------|----------------|-----------|---------|
+| **SAFETY-QUICK** (age filter) | Age-inappropriate but legal content | Fuzzy keyword match + LLM context verify | "Ein Kind wird von einem Monster angegriffen" → blocked by "monster, verletzen" |
+| **Stage 3** (Llama-Guard S1-S13) | Criminal/harmful content categories | S1-S13 structured classification | Terrorism instructions, weapons, hate speech |
+
+Llama-Guard's S1-S13 categories focus on content that "enables, encourages, or excuses" crimes — a fantasy monster scenario is NOT a crime and passes S1-S13. Only the age fast-filter in SAFETY-QUICK catches age-inappropriate-but-legal content. These two checks are **complementary, not redundant**.
 
 ### 3.3 Stage 3 — Pre-Output Safety (`stage_orchestrator.py`)
 
@@ -254,13 +268,16 @@ This creates `/etc/sudoers.d/ai4artsed-ollama` granting passwordless `systemctl 
 User Input
   │
   ├─ [Frontend] MediaInputBox on blur/paste
-  │   └─ POST /safety/quick (§86a + DSGVO, text)
+  │   └─ POST /safety/quick (§86a + age filter + DSGVO, text)
   │   └─ POST /safety/quick (VLM, uploaded images)
   │
   ├─ [Stage 1] execute_stage1_gpt_oss_unified()
   │   └─ §86a fast-filter → Age filter → DSGVO NER
   │
   ├─ [Stage 2] Prompt Interception (no safety)
+  │
+  ├─ [Frontend] startGeneration() pre-generation gate
+  │   └─ POST /safety/quick on final prompt (catches edits without blur)
   │
   ├─ [Stage 3] execute_stage3_safety()
   │   └─ Translation + §86a filter + single Llama-Guard S1-S13 check (kids/youth)
@@ -334,6 +351,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | `devserver/schemas/chunks/safety_check_youth.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/data/stage1_safety_filters_*.json` | Filter term lists |
 | `0_setup_ollama_watchdog.sh` | Passwordless sudo setup for self-healing |
+| `public/.../views/text_transformation.vue` | Pre-generation `/safety/quick` gate in `startGeneration()` |
 | `public/.../views/SettingsView.vue` | Safety level dropdown UI |
 | `LICENSE.md` §3(e) | Research mode legal restrictions |
 
@@ -354,6 +372,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 217 | 2026-02-26 | DISASTER: GPU Service LLM routing broke everything. Emergency fail-open patches |
 | 218 | 2026-02-27 | Full repair: circuit breaker, self-healing watchdog, dead code removal, timeout differentiation |
 | 244 | 2026-03-03 | Stage 3 redesign: single Llama-Guard call with proper S1-S13 template, removed redundant age fast-filter |
+| 244 | 2026-03-03 | Pre-generation `/safety/quick` gate in `startGeneration()` — closes blur-bypass gap |
 
 ---
 

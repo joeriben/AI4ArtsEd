@@ -58,6 +58,28 @@
 
 ---
 
+## Pre-Generation Safety Gate: startGeneration() calls /safety/quick (2026-03-03)
+
+### Kontext
+MediaInputBox calls `/safety/quick` on blur and paste events. But if a user edits the optimized prompt box and clicks "Generate" without leaving the field (no blur), the age filter never fires. Only Stage 3 (Llama-Guard S1-S13) would check — and Llama-Guard does NOT catch age-inappropriate-but-legal content (e.g. "Ein Kind wird von einem Monster angegriffen" passes S1-S13 because a fantasy monster attack isn't a crime).
+
+### Entscheidung: Synchronous /safety/quick in startGeneration()
+Added a `/safety/quick` call at the top of `startGeneration()` in `text_transformation.vue`. If blocked, `safetyStore.reportBlock()` fires (Trashy feedback) and generation is aborted. Fail-open on network errors (Stage 3 backend is the actual security boundary).
+
+### Architektur-Insight: Komplementaere Sicherheitsrollen
+
+| Pruefpunkt | Fängt ab | Beispiel |
+|------------|----------|----------|
+| **SAFETY-QUICK** (age filter) | Altersungerecht aber legal | Monster, Grusel, Gewaltszenen |
+| **Stage 3** (Llama-Guard S1-S13) | Kriminelle Inhalte (Crimes, Weapons, Hate) | Terrorismus, Waffen, Hassrede |
+
+Llama-Guard S1-S13 und Age-Filter sind **komplementaer, nicht redundant**. Beide 1b und 8b Modelle klassifizieren "A child attacked by a monster" als `safe`.
+
+### Betroffene Dateien
+- `public/ai4artsed-frontend/src/views/text_transformation.vue`
+
+---
+
 ## Stage 3 Safety: Single Llama-Guard Call with Proper Template (2026-03-03)
 
 ### Kontext
