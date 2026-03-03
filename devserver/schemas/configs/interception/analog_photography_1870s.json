@@ -10,7 +10,8 @@
     "fr": "Daguerréotype",
     "es": "Daguerrotipo",
     "he": "דגרוטיפ",
-    "ar": "الداغيروتيب"
+    "ar": "الداغيروتيب",
+    "bg": "Дагеротипия"
   },
   "description": {
     "en": "Reimagines concepts through the lens of 1870s daguerreotype photography. Large-format wooden cameras, silver-iodized copper plates, mercury development, and the unique metallic surface of the daguerreotype shape every decision.",
@@ -19,13 +20,15 @@
     "fr": "Réimagine les concepts à travers l'objectif de la photographie au daguerréotype des années 1870. Chambres photographiques en bois grand format, plaques de cuivre iodo-argentées, développement au mercure et la surface métallique unique du daguerréotype façonnent chaque décision.",
     "es": "Reimagina conceptos a través del lente de la fotografía de daguerrotipo de la década de 1870. Cámaras de gran formato en madera, placas de cobre yodadas con plata, revelado con mercurio y la superficie metálica única del daguerrotipo moldean cada decisión.",
     "he": "מדמיין מחדש מושגים דרך עדשת צילום הדגרוטיפ של שנות ה-1870. מצלמות עץ בפורמט גדול, לוחות נחושת מיוד בכסף, פיתוח כספית והמשטח המתכתי הייחודי של הדגרוטיפ מעצבים כל החלטה.",
-    "ar": "يعيد تصوّر المفاهيم من خلال عدسة تصوير الداغيروتيب في سبعينيات القرن التاسع عشر. الكاميرات الخشبية كبيرة الفورمات، وألواح النحاس المعالجة باليود والفضة، والتحميض بالزئبق، والسطح المعدني الفريد للداغيروتيب تشكّل كل قرار."
+    "ar": "يعيد تصوّر المفاهيم من خلال عدسة تصوير الداغيروتيب في سبعينيات القرن التاسع عشر. الكاميرات الخشبية كبيرة الفورمات، وألواح النحاس المعالجة باليود والفضة، والتحميض بالزئبق، والسطح المعدني الفريد للداغيروتيب تشكّل كل قرار.",
+    "bg": "Преосмисля концепции през призмата на дагеротипната фотография от 1870-те години. Широкоформатни дървени камери, сребърно-йодирани медни плочи, развитие с живак и уникалната метална повърхност на дагеротипа оформят всяко решение."
   },
   "category": {
     "de": "Fotografie & Medien",
     "en": "Photography & Media",
     "he": "צילום ומדיה",
-    "ar": "التصوير والإعلام"
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии"
   },
   "properties": [
     "technical_imaging"

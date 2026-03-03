@@ -10,7 +10,8 @@
     "fr": "Adoucisseur",
     "es": "Endulzador",
     "he": "ממתיק",
-    "ar": "مُحلّي"
+    "ar": "مُحلّي",
+    "bg": "Подсладител"
   },
   "description": {
     "en": "Makes everything feel harmonious and cute. Softens sharp edges and creates a calm, balanced atmosphere.",
@@ -19,13 +20,15 @@
     "fr": "Rend tout harmonieux et mignon. Adoucit les angles vifs et crée une atmosphère calme et équilibrée.",
     "es": "Hace que todo se sienta armonioso y tierno. Suaviza los bordes afilados y crea una atmósfera tranquila y equilibrada.",
     "he": "הופך הכל להרמוני וחמוד. מרכך קצוות חדים ויוצר אווירה רגועה ומאוזנת.",
-    "ar": "يجعل كل شيء يبدو متناغماً ولطيفاً. يخفف الحواف الحادة ويخلق أجواء هادئة ومتوازنة."
+    "ar": "يجعل كل شيء يبدو متناغماً ولطيفاً. يخفف الحواف الحادة ويخلق أجواء هادئة ومتوازنة.",
+    "bg": "Прави всичко да изглежда хармонично и сладко. Омекотява острите ръбове и създава спокойна, балансирана атмосфера."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "تحولات إبداعية"
+    "ar": "تحولات إبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "aesthetics"

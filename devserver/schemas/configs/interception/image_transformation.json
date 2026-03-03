@@ -10,7 +10,8 @@
     "fr": "Transformation d'image",
     "es": "Transformación de imagen",
     "he": "טרנספורמציית תמונה",
-    "ar": "تحويل الصورة"
+    "ar": "تحويل الصورة",
+    "bg": "Трансформация на изображение"
   },
   "description": {
     "en": "Transform images with AI-guided editing",
@@ -19,13 +20,15 @@
     "fr": "Transforme les images avec l'édition guidée par IA",
     "es": "Transforma imágenes con edición guiada por IA",
     "he": "טרנספורמציה של תמונות עם עריכה מונחית AI",
-    "ar": "تحويل الصور بالتحرير الموجَّه بالذكاء الاصطناعي"
+    "ar": "تحويل الصور بالتحرير الموجَّه بالذكاء الاصطناعي",
+    "bg": "Трансформирай изображения с ИИ-направлявана редакция"
   },
   "category": {
     "de": "System",
     "en": "System",
     "he": "מערכת",
-    "ar": "النظام"
+    "ar": "النظام",
+    "bg": "Система"
   },
   "properties": [],
   "context": {},

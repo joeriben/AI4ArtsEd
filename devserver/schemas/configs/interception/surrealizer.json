@@ -10,7 +10,8 @@
     "fr": "Surréalisateur",
     "es": "Surrealizador",
     "he": "מְסַרְיָאֵל",
-    "ar": "المُسرْيَل"
+    "ar": "المُسرْيَل",
+    "bg": "Сюрреализатор"
   },
   "description": {
     "en": "Two AI 'brains' (CLIP and T5) each read your text — the slider pushes the image far beyond what either would normally produce, into unexplored territory where surreal, dreamlike compositions emerge.",
@@ -19,13 +20,15 @@
     "fr": "Deux « cerveaux » d'IA (CLIP et T5) lisent chacun ton texte — le curseur pousse l'image bien au-delà de ce que chacun produirait normalement, dans un territoire inexploré où des compositions surréalistes et oniriques émergent.",
     "es": "Dos \"cerebros\" de IA (CLIP y T5) leen tu texto — el deslizador empuja la imagen mucho más allá de lo que cualquiera produciría normalmente, hacia territorio inexplorado donde emergen composiciones surreales y oníricas.",
     "he": "שני 'מוחות' AI (CLIP ו-T5) קוראים כל אחד את הטקסט שלך — המחוון דוחף את התמונה הרחק מעבר למה שכל אחד מהם היה מייצר בדרך כלל, לשטח בלתי מחוקר שבו צצות קומפוזיציות סוריאליסטיות וחלומיות.",
-    "ar": "يقرأ كل من دماغَي الذكاء الاصطناعي (CLIP وT5) نصك — يدفع المنزلق الصورة بعيداً جداً إلى ما هو أبعد مما سيُنتجه أيٌّ منهما عادةً، إلى أراضٍ غير مستكشفة تنبثق منها تأليفات سريالية وحالمة."
+    "ar": "يقرأ كل من دماغَي الذكاء الاصطناعي (CLIP وT5) نصك — يدفع المنزلق الصورة بعيداً جداً إلى ما هو أبعد مما سيُنتجه أيٌّ منهما عادةً، إلى أراضٍ غير مستكشفة تنبثق منها تأليفات سريالية وحالمة.",
+    "bg": "Два ИИ \"мозъка\" (CLIP и T5) четат текста ви поотделно — плъзгачът избутва изображението далеч отвъд това, което всеки от тях обикновено произвежда, в неизследвана територия, където възникват сюрреалистични, мечтателни композиции."
   },
   "category": {
     "de": "Forschung",
     "en": "Research",
     "he": "מחקר",
-    "ar": "البحث"
+    "ar": "البحث",
+    "bg": "Изследвания"
   },
   "properties": [
     "research"

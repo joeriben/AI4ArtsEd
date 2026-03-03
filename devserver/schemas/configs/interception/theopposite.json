@@ -10,7 +10,8 @@
     "fr": "Au contraire !",
     "es": "¡Al contrario!",
     "he": "ההיפך!",
-    "ar": "على العكس!"
+    "ar": "على العكس!",
+    "bg": "Напротив!"
   },
   "description": {
     "en": "Flips everything to its exact opposite. Bright becomes dark, happy becomes sad, and all relationships reverse completely.",
@@ -19,13 +20,15 @@
     "fr": "Inverse tout en son exact opposé. Le lumineux devient sombre, le joyeux devient triste, et toutes les relations s'inversent complètement.",
     "es": "Invierte todo a su opuesto exacto. Lo brillante se vuelve oscuro, lo alegre se vuelve triste y todas las relaciones se invierten completamente.",
     "he": "הופך הכל להיפך המדויק שלו. בהיר הופך לאפל, שמח הופך לעצוב, וכל הקשרים מתהפכים לחלוטין.",
-    "ar": "يقلب كل شيء إلى نقيضه الدقيق. يصبح المشرق مظلماً، والسعيد حزيناً، وتنعكس جميع العلاقات كلياً."
+    "ar": "يقلب كل شيء إلى نقيضه الدقيق. يصبح المشرق مظلماً، والسعيد حزيناً، وتنعكس جميع العلاقات كلياً.",
+    "bg": "Обръща всичко в точната му противоположност. Светлото става тъмно, щастливото — тъжно, и всички отношения се обръщат напълно."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "semantics"

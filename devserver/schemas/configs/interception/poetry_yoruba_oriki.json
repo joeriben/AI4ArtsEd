@@ -10,7 +10,8 @@
     "fr": "Yoruba Oriki",
     "es": "Yoruba Oriki",
     "he": "Yoruba Oriki",
-    "ar": "Yoruba Oriki"
+    "ar": "Yoruba Oriki",
+    "bg": "Yoruba Oriki"
   },
   "description": {
     "en": "Material collision with Yoruba Oriki praise poetry (West African oral tradition). Oya — storm, transformation, the one who sweeps the marketplace clean. Colliding with your prompt through a deliberately insufficient model.",
@@ -21,7 +22,8 @@
     "fr": "Collision matérielle avec la poésie de louange Yoruba Oriki (tradition orale d'Afrique de l'Ouest). Oya — tempête, transformation, celle qui balaie le marché. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
     "es": "Colisión material con la poesía de alabanza Yoruba Oriki (tradición oral de África Occidental). Oya — tormenta, transformación, la que barre el mercado. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם שירת שבח Yoruba Oriki (מסורת בעל-פה של מערב אפריקה). Oya — סערה, התמרה, זו שמטאטאת את השוק. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
-    "ar": "تصادم مادي مع شعر المديح Yoruba Oriki (التقليد الشفهي لغرب أفريقيا). Oya — العاصفة، التحول، التي تكنس السوق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد."
+    "ar": "تصادم مادي مع شعر المديح Yoruba Oriki (التقليد الشفهي لغرب أفريقيا). Oya — العاصفة، التحول، التي تكنس السوق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с хвалебствената поезия Yoruba Oriki (западноафриканска устна традиция). Oya — буря, трансформация, тази, която измита пазара. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
   },
   "category": {
     "en": "Poetry",
@@ -32,7 +34,8 @@
     "fr": "Po\u00e9sie",
     "es": "Poes\u00eda",
     "he": "\u05e9\u05d9\u05e8\u05d4",
-    "ar": "\u0634\u0639\u0631"
+    "ar": "\u0634\u0639\u0631",
+    "bg": "Поезия"
   },
   "properties": [
     "poetry"

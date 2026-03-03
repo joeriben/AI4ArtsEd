@@ -10,7 +10,8 @@
     "fr": "Puissant",
     "es": "Contundente",
     "he": "עוצמתי",
-    "ar": "قوي"
+    "ar": "قوي",
+    "bg": "Мощен"
   },
   "description": {
     "en": "Transforms input through radical sensation as a sustained mode of critical perception. Attends to political and social ruptures within everyday practices while simultaneously registering elemental dynamics of nature. Responds to input with decisive interpretation, employing intensification, distortion, contrast, and accentuation as necessary expressive operations. Emphasizes tension, contradiction, and forceful articulation as a committed response to the world.",
@@ -19,13 +20,15 @@
     "fr": "Transforme l'entrée par la sensation radicale comme mode soutenu de perception critique. S'attache aux ruptures politiques et sociales dans les pratiques quotidiennes tout en enregistrant les dynamiques élémentaires de la nature. Répond à l'entrée par une interprétation décisive, employant intensification, distorsion, contraste et accentuation comme opérations expressives nécessaires. Met l'accent sur la tension, la contradiction et l'articulation puissante comme réponse engagée au monde.",
     "es": "Transforma la entrada a través de la sensación radical como modo sostenido de percepción crítica. Atiende a las rupturas políticas y sociales dentro de las prácticas cotidianas mientras registra simultáneamente las dinámicas elementales de la naturaleza. Responde a la entrada con una interpretación decisiva, empleando intensificación, distorsión, contraste y acentuación como operaciones expresivas necesarias. Enfatiza la tensión, la contradicción y la articulación contundente como respuesta comprometida al mundo.",
     "he": "מעביר קלט דרך תחושה רדיקלית כאופן מתמשך של תפיסה ביקורתית. מתשומת לב לשבירות פוליטיות וחברתיות בתוך פרקטיקות יומיומיות תוך רישום בו-זמני של דינמיקות אלמנטריות של הטבע. מגיב לקלט בפרשנות נחרצת, תוך שימוש בהגברה, עיוות, ניגוד והדגשה כפעולות ביטויות הכרחיות.",
-    "ar": "يُحوّل المدخل من خلال الإحساس الجذري كنمط مستمر من الإدراك النقدي. ينتبه إلى التصدعات السياسية والاجتماعية في الممارسات اليومية بينما يُسجّل في آنٍ واحد الديناميكيات الأولية للطبيعة. يستجيب للمدخل بتفسير حاسم، مستخدماً التكثيف والتشويه والتناقض والتأكيد كعمليات تعبيرية ضرورية."
+    "ar": "يُحوّل المدخل من خلال الإحساس الجذري كنمط مستمر من الإدراك النقدي. ينتبه إلى التصدعات السياسية والاجتماعية في الممارسات اليومية بينما يُسجّل في آنٍ واحد الديناميكيات الأولية للطبيعة. يستجيب للمدخل بتفسير حاسم، مستخدماً التكثيف والتشويه والتناقض والتأكيد كعمليات تعبيرية ضرورية.",
+    "bg": "Трансформира входа чрез радикално усещане като устойчив режим на критично възприятие. Обръща внимание на политическите и социалните разломи в ежедневните практики, като едновременно регистрира елементарните динамики на природата. Отговаря на входа с решителна интерпретация, използвайки интензификация, изкривяване, контраст и акцентиране като необходими изразителни операции."
   },
   "category": {
     "de": "Haltungen",
     "en": "Attitudes",
     "he": "עמדות",
-    "ar": "المواقف"
+    "ar": "المواقف",
+    "bg": "Нагласи"
   },
   "properties": [
     "attitudes"

@@ -10,7 +10,8 @@
     "fr": "Sensible",
     "es": "Sensible",
     "he": "רגיש",
-    "ar": "حساس"
+    "ar": "حساس",
+    "bg": "Чувствителен"
   },
   "description": {
     "en": "Sensitive exploration is about paying close attention to what happens between things, images, sounds, or movements. Instead of looking at single objects, it notices transitions, small changes, and shifts. Rather than explaining or fixing meanings, it stays open and responds through an aesthetic form. The result does not have to be finished or clear.",
@@ -19,13 +20,15 @@
     "fr": "L'exploration sensible consiste à prêter une attention particulière à ce qui se passe entre les choses, les images, les sons ou les mouvements. Au lieu de regarder des objets isolés, elle remarque les transitions, les petits changements et les glissements. Plutôt que d'expliquer ou de fixer les significations, elle reste ouverte et répond par une forme esthétique. Le résultat n'a pas besoin d'être achevé ou clair.",
     "es": "La exploración sensible consiste en prestar atención cercana a lo que sucede entre las cosas, imágenes, sonidos o movimientos. En lugar de observar objetos aislados, nota transiciones, pequeños cambios y desplazamientos. En vez de explicar o fijar significados, permanece abierta y responde a través de una forma estética. El resultado no tiene que estar terminado ni ser claro.",
     "he": "חקירה רגישה עוסקת בתשומת לב קרובה למה שקורה בין דברים, תמונות, צלילים או תנועות. במקום להסתכל על עצמים בודדים, מבחינה במעברים, שינויים קטנים ותזוזות. במקום להסביר או לקבע משמעויות, נשארת פתוחה ומגיבה דרך צורה אסתטית. התוצאה אינה חייבת להיות מוגמרת או ברורה.",
-    "ar": "الاستكشاف الحساس يتعلق بالانتباه الدقيق لما يجري بين الأشياء والصور والأصوات أو الحركات. بدلاً من النظر إلى أشياء منفردة، يلاحظ الانتقالات والتغييرات الصغيرة والتحولات. بدلاً من شرح المعاني أو تثبيتها، يظل منفتحاً ويستجيب من خلال شكل جمالي. النتيجة لا يجب أن تكون مكتملة أو واضحة."
+    "ar": "الاستكشاف الحساس يتعلق بالانتباه الدقيق لما يجري بين الأشياء والصور والأصوات أو الحركات. بدلاً من النظر إلى أشياء منفردة، يلاحظ الانتقالات والتغييرات الصغيرة والتحولات. بدلاً من شرح المعاني أو تثبيتها، يظل منفتحاً ويستجيب من خلال شكل جمالي. النتيجة لا يجب أن تكون مكتملة أو واضحة.",
+    "bg": "Чувствителното изследване е свързано с внимателно наблюдаване на това, което се случва между нещата, изображенията, звуците или движенията. Вместо да се гледат отделни обекти, то забелязва преходите, малките промени и измествания. Вместо да обяснява или фиксира значения, остава отворено и отговаря чрез естетична форма. Резултатът не трябва да е завършен или ясен."
   },
   "category": {
     "de": "Haltungen",
     "en": "Attitudes",
     "he": "עמדות",
-    "ar": "المواقف"
+    "ar": "المواقف",
+    "bg": "Нагласи"
   },
   "properties": [
     "attitudes"

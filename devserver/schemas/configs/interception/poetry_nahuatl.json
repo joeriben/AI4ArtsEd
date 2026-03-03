@@ -10,7 +10,8 @@
     "fr": "Nahuatl Xochicuicatl",
     "es": "Nahuatl Xochicuicatl",
     "he": "Nahuatl Xochicuicatl",
-    "ar": "Nahuatl Xochicuicatl"
+    "ar": "Nahuatl Xochicuicatl",
+    "bg": "Nahuatl Xochicuicatl"
   },
   "description": {
     "en": "Material collision with Nahuatl Xochicuicatl — Flower and Song (Mesoamerican oral tradition). Everything vanishes, only flower-and-song remains. Colliding with your prompt through a deliberately insufficient model.",
@@ -21,7 +22,8 @@
     "fr": "Collision matérielle avec le Nahuatl Xochicuicatl — Fleur et Chant (tradition orale mésoaméricaine). Tout s'évanouit, seule la fleur-et-le-chant demeure. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
     "es": "Colisión material con el Nahuatl Xochicuicatl — Flor y Canto (tradición oral mesoamericana). Todo desaparece, solo flor-y-canto permanece. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם Nahuatl Xochicuicatl — פרח ושיר (מסורת בעל-פה מזו-אמריקאית). הכל נעלם, רק פרח-ושיר נותרים. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
-    "ar": "تصادم مادي مع Nahuatl Xochicuicatl — الزهرة والأغنية (التقليد الشفهي الميزوأمريكي). كل شيء يتلاشى، تبقى الزهرة-والأغنية فقط. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد."
+    "ar": "تصادم مادي مع Nahuatl Xochicuicatl — الزهرة والأغنية (التقليد الشفهي الميزوأمريكي). كل شيء يتلاشى، تبقى الزهرة-والأغنية فقط. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с Nahuatl Xochicuicatl — Цвете и песен (мезоамериканска устна традиция). Всичко изчезва, остава само цвете-и-песен. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
   },
   "category": {
     "en": "Poetry",
@@ -32,7 +34,8 @@
     "fr": "Po\u00e9sie",
     "es": "Poes\u00eda",
     "he": "\u05e9\u05d9\u05e8\u05d4",
-    "ar": "\u0634\u0639\u0631"
+    "ar": "\u0634\u0639\u0631",
+    "bg": "Поезия"
   },
   "properties": [
     "poetry"

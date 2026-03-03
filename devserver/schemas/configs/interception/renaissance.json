@@ -10,7 +10,8 @@
     "fr": "Renaissance",
     "es": "Renacimiento",
     "he": "רנסאנס",
-    "ar": "عصر النهضة"
+    "ar": "عصر النهضة",
+    "bg": "Ренесанс"
   },
   "description": {
     "en": "Creates descriptions using Renaissance principles: balanced composition, mathematical proportion, and harmonious light. Focuses on order, human dignity, and perspective.",
@@ -19,13 +20,15 @@
     "fr": "Crée des descriptions selon les principes de la Renaissance : composition équilibrée, proportion mathématique et lumière harmonieuse. Se concentre sur l'ordre, la dignité humaine et la perspective.",
     "es": "Crea descripciones utilizando principios del Renacimiento: composición equilibrada, proporción matemática y luz armoniosa. Se centra en el orden, la dignidad humana y la perspectiva.",
     "he": "יוצר תיאורים באמצעות עקרונות הרנסאנס: קומפוזיציה מאוזנת, פרופורציה מתמטית ואור הרמוני. מתמקד בסדר, כבוד האדם ופרספקטיבה.",
-    "ar": "يُنشئ أوصافاً بالاستناد إلى مبادئ عصر النهضة: التأليف المتوازن والتناسب الرياضي والضوء المتناسق. يركّز على النظام وكرامة الإنسان والمنظور."
+    "ar": "يُنشئ أوصافاً بالاستناد إلى مبادئ عصر النهضة: التأليف المتوازن والتناسب الرياضي والضوء المتناسق. يركّز على النظام وكرامة الإنسان والمنظور.",
+    "bg": "Създава описания, използвайки принципи на Ренесанса: балансирана композиция, математическа пропорция и хармонична светлина. Фокусира се върху реда, човешкото достойнство и перспективата."
   },
   "category": {
     "de": "Kunstgeschichte",
     "en": "Art History",
     "he": "היסטוריית האמנות",
-    "ar": "تاريخ الفن"
+    "ar": "تاريخ الفن",
+    "bg": "История на изкуството"
   },
   "properties": [
     "arts"

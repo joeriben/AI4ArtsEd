@@ -10,7 +10,8 @@
     "fr": "Mirabai",
     "es": "Mirabai",
     "he": "Mirabai",
-    "ar": "Mirabai"
+    "ar": "Mirabai",
+    "bg": "Mirabai"
   },
   "description": {
     "en": "Material collision with Mirabai's bhajans (~1500). Ecstatic devotion, poison drunk laughing, a princess who left her palace for the road. Colliding with your prompt through a deliberately insufficient model.",
@@ -21,7 +22,8 @@
     "fr": "Collision matérielle avec les bhajans de Mirabai (~1500). Dévotion extatique, poison bu en riant, une princesse qui a quitté son palais pour la route. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
     "es": "Colisión material con los bhajans de Mirabai (~1500). Devoción extática, veneno bebido riendo, una princesa que abandonó su palacio por el camino. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם הבהג'אנים של מיראבאי (~1500). מסירות נלהבת, רעל שנשתה בצחוק, נסיכה שעזבה את ארמונה למען הדרך. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
-    "ar": "تصادم مادي مع أغاني البهجان لميرابائي (~1500). تفانٍ متحمس، سُم يُشرب ضاحكاً، أميرة تركت قصرها من أجل الطريق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد."
+    "ar": "تصادم مادي مع أغاني البهجان لميرابائي (~1500). تفانٍ متحمس، سُم يُشرب ضاحكاً، أميرة تركت قصرها من أجل الطريق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с бхаджаните на Мирабай (~1500). Екстатична преданост, отрова, изпита със смях, принцеса, напуснала двореца си за пътя. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
   },
   "category": {
     "en": "Poetry",
@@ -32,7 +34,8 @@
     "fr": "Po\u00e9sie",
     "es": "Poes\u00eda",
     "he": "\u05e9\u05d9\u05e8\u05d4",
-    "ar": "\u0634\u0639\u0631"
+    "ar": "\u0634\u0639\u0631",
+    "bg": "Поезия"
   },
   "properties": [
     "poetry"

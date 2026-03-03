@@ -10,7 +10,8 @@
     "fr": "Élimination partielle",
     "es": "Eliminación parcial",
     "he": "הסרה חלקית",
-    "ar": "الحذف الجزئي"
+    "ar": "الحذف الجزئي",
+    "bg": "Частично елиминиране"
   },
   "description": {
     "en": "What happens when we 'switch off' parts of the AI's understanding? This workflow creates three images: one normal, and two where we've removed different halves of the AI's internal representation of your prompt. By comparing them, you can see which semantic features (objects, colors, moods) are stored in which parts of the neural network's 'memory'.",
@@ -19,13 +20,15 @@
     "fr": "Que se passe-t-il quand on « désactive » des parties de la compréhension de l'IA ? Ce workflow crée trois images : une normale, et deux où nous avons supprimé différentes moitiés de la représentation interne de ton prompt par l'IA. En les comparant, tu peux voir quelles caractéristiques sémantiques (objets, couleurs, ambiances) sont stockées dans quelles parties de la « mémoire » du réseau neuronal.",
     "es": "¿Qué sucede cuando \"apagamos\" partes de la comprensión de la IA? Este flujo de trabajo crea tres imágenes: una normal y dos donde hemos eliminado diferentes mitades de la representación interna de tu prompt por la IA. Al compararlas, puedes ver qué características semánticas (objetos, colores, estados de ánimo) se almacenan en qué partes de la \"memoria\" de la red neuronal.",
     "he": "מה קורה כשאנחנו 'מכבים' חלקים מהבנת ה-AI? זרימת עבודה זו יוצרת שלוש תמונות: אחת רגילה ושתיים שבהן הסרנו מחצאים שונים מהייצוג הפנימי של הפרומפט שלך ב-AI. על ידי השוואתן, תוכל לראות אילו מאפיינים סמנטיים מאוחסנים באילו חלקים של 'הזיכרון' של הרשת הנוירונית.",
-    "ar": "ماذا يحدث عندما نُطفئ أجزاءً من فهم الذكاء الاصطناعي؟ يُنشئ هذا السير ثلاث صور: واحدة عادية، واثنتان أزلنا فيهما نصفين مختلفين من التمثيل الداخلي للذكاء الاصطناعي لموجِّهك. بمقارنتها، يمكنك رؤية المميزات الدلالية (الأشياء والألوان والأجواء) المخزّنة في أي أجزاء من ذاكرة الشبكة العصبية."
+    "ar": "ماذا يحدث عندما نُطفئ أجزاءً من فهم الذكاء الاصطناعي؟ يُنشئ هذا السير ثلاث صور: واحدة عادية، واثنتان أزلنا فيهما نصفين مختلفين من التمثيل الداخلي للذكاء الاصطناعي لموجِّهك. بمقارنتها، يمكنك رؤية المميزات الدلالية (الأشياء والألوان والأجواء) المخزّنة في أي أجزاء من ذاكرة الشبكة العصبية.",
+    "bg": "Какво се случва, когато \"изключим\" части от разбирането на ИИ? Този работен процес създава три изображения: едно нормално и две, в които сме премахнали различни половини от вътрешното представяне на ИИ за вашия промпт. Сравнявайки ги, можете да видите кои семантични характеристики (обекти, цветове, настроения) се съхраняват в кои части от \"паметта\" на невронната мрежа."
   },
   "category": {
     "de": "Forschung",
     "en": "Research",
     "he": "מחקר",
-    "ar": "البحث"
+    "ar": "البحث",
+    "bg": "Изследвания"
   },
   "properties": [
     "research"

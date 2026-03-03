@@ -10,7 +10,8 @@
     "fr": "Téléphone arabe",
     "es": "Teléfono descompuesto",
     "he": "טלפון שבור",
-    "ar": "التلفون المكسور"
+    "ar": "التلفون المكسور",
+    "bg": "Развален телефон"
   },
   "description": {
     "en": "Passes your text through 8 random languages like a game of telephone. Creates surprising changes as meaning shifts through multiple translations.",
@@ -19,13 +20,15 @@
     "fr": "Fait passer ton texte à travers 8 langues aléatoires comme un jeu de téléphone arabe. Crée des changements surprenants au fur et à mesure que le sens se transforme à travers les traductions successives.",
     "es": "Pasa tu texto por 8 idiomas aleatorios como en un juego de teléfono descompuesto. Crea cambios sorprendentes a medida que el significado se transforma a través de múltiples traducciones.",
     "he": "מעביר את הטקסט שלך דרך 8 שפות אקראיות כמו משחק טלפון שבור. יוצר שינויים מפתיעים כשהמשמעות משתנה דרך תרגומים מרובים.",
-    "ar": "يمرّر نصك عبر 8 لغات عشوائية كلعبة التلفون المكسور. يخلق تغييرات مفاجئة مع تحوّل المعنى عبر ترجمات متعددة."
+    "ar": "يمرّر نصك عبر 8 لغات عشوائية كلعبة التلفون المكسور. يخلق تغييرات مفاجئة مع تحوّل المعنى عبر ترجمات متعددة.",
+    "bg": "Прекарва текста ви през 8 произволни езика като игра на развален телефон. Създава изненадващи промени, докато значението се измества през множество преводи."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "semantics"

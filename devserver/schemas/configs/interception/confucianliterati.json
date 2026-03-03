@@ -10,7 +10,8 @@
     "fr": "Literati",
     "es": "Literati",
     "he": "ליטרטי",
-    "ar": "الأدباء الكونفوشيوسيون"
+    "ar": "الأدباء الكونفوشيوسيون",
+    "bg": "Литерати"
   },
   "description": {
     "en": "Critical examination tool: Tests how AI handles complex cultural knowledge. Reveals AI's limitations in understanding Confucian literati culture - not for authentic representation, but to critically investigate how generative AI deals with cultural specifics.",
@@ -19,13 +20,15 @@
     "fr": "Outil d'examen critique : teste comment l'IA gère des savoirs culturels complexes. Révèle les limites de l'IA dans la compréhension de la culture lettrée confucéenne — non pour une représentation authentique, mais pour une investigation critique de la manière dont l'IA générative traite les spécificités culturelles.",
     "es": "Herramienta de examen crítico: prueba cómo la IA maneja el conocimiento cultural complejo. Revela las limitaciones de la IA para comprender la cultura letrada confuciana — no para una representación auténtica, sino para investigar críticamente cómo la IA generativa trata las especificidades culturales.",
     "he": "כלי בחינה ביקורתי: בוחן כיצד AI מתמודד עם ידע תרבותי מורכב. חושף את מגבלות ה-AI בהבנת תרבות הסופרים הקונפוציאנית — לא לייצוג אותנטי, אלא לחקירה ביקורתית כיצד AI גנרטיבי מתמודד עם ספציפיות תרבותית.",
-    "ar": "أداة فحص نقدي: تختبر كيف يتعامل الذكاء الاصطناعي مع المعرفة الثقافية المعقدة. تكشف عن قيود الذكاء الاصطناعي في فهم ثقافة الأدباء الكونفوشيوسيين — ليس للتمثيل الأصيل، بل للتحقيق النقدي في كيفية تعامل الذكاء الاصطناعي التوليدي مع الخصوصيات الثقافية."
+    "ar": "أداة فحص نقدي: تختبر كيف يتعامل الذكاء الاصطناعي مع المعرفة الثقافية المعقدة. تكشف عن قيود الذكاء الاصطناعي في فهم ثقافة الأدباء الكونفوشيوسيين — ليس للتمثيل الأصيل، بل للتحقيق النقدي في كيفية تعامل الذكاء الاصطناعي التوليدي مع الخصوصيات الثقافية.",
+    "bg": "Инструмент за критично изследване: тества как ИИ се справя със сложно културно знание. Разкрива ограниченията на ИИ в разбирането на конфуцианската литератска култура — не за автентично представяне, а за критично изследване как генеративният ИИ се справя с културните специфики."
   },
   "category": {
     "de": "Kunstgeschichte",
     "en": "Art History",
     "he": "היסטוריית האמנות",
-    "ar": "تاريخ الفن"
+    "ar": "تاريخ الفن",
+    "bg": "История на изкуството"
   },
   "properties": [
     "arts"

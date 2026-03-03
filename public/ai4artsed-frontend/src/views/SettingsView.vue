@@ -105,6 +105,7 @@
               <td class="value-cell">
                 <select v-model="settings.DEFAULT_LANGUAGE">
                   <option value="ar">{{ $t('settings.general.arabicAr') }}</option>
+                  <option value="bg">{{ $t('settings.general.bulgarianBg') }}</option>
                   <option value="de">{{ $t('settings.general.germanDe') }}</option>
                   <option value="en">{{ $t('settings.general.englishEn') }}</option>
                   <option value="es">{{ $t('settings.general.spanishEs') }}</option>

@@ -10,7 +10,8 @@
     "fr": "Copie analogique",
     "es": "Copia analógica",
     "he": "עותק אנלוגי",
-    "ar": "النسخ التناظري"
+    "ar": "النسخ التناظري",
+    "bg": "Аналогово копие"
   },
   "description": {
     "en": "Transforms ideas into analog-copy-based visual concepts. Emphasizes generational loss, material signal decay, soft detail, chroma drift, dropout patterns, and the structural imprint of physical duplication processes.",
@@ -19,13 +20,15 @@
     "fr": "Transforme les idées en concepts visuels basés sur la copie analogique. Met l'accent sur la perte générationnelle, la dégradation matérielle du signal, le détail adouci, la dérive chromatique, les motifs de dropout et l'empreinte structurelle des processus de duplication physique.",
     "es": "Transforma ideas en conceptos visuales basados en la copia analógica. Enfatiza la pérdida generacional, la degradación material de la señal, el detalle suavizado, la deriva cromática, patrones de dropout y la huella estructural de los procesos de duplicación física.",
     "he": "ממיר רעיונות למושגים חזותיים המבוססים על עותק אנלוגי. מדגיש אבדן דוריות, ריקבון אות חומרי, פרטים רכים, סחף כרומה, תבניות נשירה והחותם המבני של תהליכי שכפול פיזיים.",
-    "ar": "يحوّل الأفكار إلى مفاهيم بصرية قائمة على النسخ التناظري. يُبرز الفقد الجيلي وتدهور الإشارة المادية والتفاصيل الناعمة وانحراف الكروما وأنماط التسرب والبصمة الهيكلية لعمليات التكرار الفيزيائي."
+    "ar": "يحوّل الأفكار إلى مفاهيم بصرية قائمة على النسخ التناظري. يُبرز الفقد الجيلي وتدهور الإشارة المادية والتفاصيل الناعمة وانحراف الكروما وأنماط التسرب والبصمة الهيكلية لعمليات التكرار الفيزيائي.",
+    "bg": "Превръща идеите в визуални концепции на аналогово копиране. Подчертава загубата при поколенията, материалното разпадане на сигнала, меките детайли, хроматичния дрейф, моделите на отпадане и структурния отпечатък на физическите процеси на дублиране."
   },
   "category": {
     "de": "Fotografie & Medien",
     "en": "Photography & Media",
     "he": "צילום ומדיה",
-    "ar": "التصوير والإعلام"
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии"
   },
   "properties": [
     "technical_imaging"

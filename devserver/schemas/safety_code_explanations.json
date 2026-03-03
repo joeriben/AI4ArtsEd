@@ -10,7 +10,8 @@
     "fr": "Votre prompt a été bloqué pour des raisons de sécurité :",
     "es": "Tu prompt fue bloqueado por razones de seguridad:",
     "he": "הפרומפט שלך נחסם מסיבות בטיחות:",
-    "ar": "تم حظر موجِّهك لأسباب أمنية:"
+    "ar": "تم حظر موجِّهك لأسباب أمنية:",
+    "bg": "Твоят промпт беше блокиран от съображения за сигурност:"
   },
   "hint_message": {
     "de": "\n\nℹ️ Hinweis: Es kann sich auch um ein Missverständnis handeln.\n\nBeispiel: Das Wort \"Cdspieler\" wurde als \"Cdplayer\" übersetzt und blockiert, weil \"player\" in manchen Kontexten problematisch sein kann.\n\nFalls du denkst, dass dein Prompt harmlos ist, sprich mit dem Kursleiter oder der Kursleiterin.",
@@ -21,7 +22,8 @@
     "fr": "\n\nℹ️ Remarque : Il peut s'agir d'un malentendu.\n\nExemple : Le mot « Cdspieler » a été traduit en « Cdplayer » et bloqué car « player » peut être problématique dans certains contextes.\n\nSi vous pensez que votre prompt est inoffensif, parlez-en à votre instructeur.",
     "es": "\n\nℹ️ Nota: Esto podría ser un malentendido.\n\nEjemplo: La palabra \"Cdspieler\" fue traducida como \"Cdplayer\" y bloqueada porque \"player\" puede ser problemático en algunos contextos.\n\nSi crees que tu prompt es inofensivo, habla con tu instructor del curso.",
     "he": "\n\nℹ️ הערה: ייתכן שמדובר בתקלת הבנה.\n\nדוגמה: המילה \"Cdspieler\" תורגמה ל-\"Cdplayer\" ונחסמה מפני ש-\"player\" עלולה להיות בעייתית בהקשרים מסוימים.\n\nאם אתה חושב שהפרומפט שלך אינו מזיק, דבר עם מדריך הקורס שלך.",
-    "ar": "\n\nℹ️ ملاحظة: قد يكون هذا سوء فهم.\n\nمثال: تُرجمت كلمة \"Cdspieler\" إلى \"Cdplayer\" وحُظرت لأن \"player\" قد تكون إشكالية في بعض السياقات.\n\nإذا كنت تعتقد أن موجِّهك غير ضار، تحدث مع مدرّس الدورة."
+    "ar": "\n\nℹ️ ملاحظة: قد يكون هذا سوء فهم.\n\nمثال: تُرجمت كلمة \"Cdspieler\" إلى \"Cdplayer\" وحُظرت لأن \"player\" قد تكون إشكالية في بعض السياقات.\n\nإذا كنت تعتقد أن موجِّهك غير ضار، تحدث مع مدرّس الدورة.",
+    "bg": "\n\nℹ️ Забележка: Може да е недоразумение.\n\nПример: Думата \"Cdspieler\" беше преведена като \"Cdplayer\" и блокирана, защото \"player\" може да бъде проблемна в някои контексти.\n\nАко смяташ, че промптът ти е безобиден, говори с ръководителя на курса."
   },
   "codes": {
     "S1": {
@@ -33,7 +35,8 @@
       "fr": "Votre prompt contient des références à des crimes violents (p. ex. terrorisme, meurtre, agression, maltraitance d'enfants, maltraitance animale).",
       "es": "Tu prompt contiene referencias a crímenes violentos (p. ej. terrorismo, asesinato, agresión, abuso infantil, maltrato animal).",
       "he": "הפרומפט שלך מכיל אזכורים לפשעי אלימות (לדוגמה טרור, רצח, תקיפה, התעללות בילדים, התעללות בבעלי חיים).",
-      "ar": "يحتوي موجِّهك على إشارات إلى جرائم عنيفة (مثل الإرهاب والقتل والاعتداء وإساءة معاملة الأطفال وإساءة معاملة الحيوانات)."
+      "ar": "يحتوي موجِّهك على إشارات إلى جرائم عنيفة (مثل الإرهاب والقتل والاعتداء وإساءة معاملة الأطفال وإساءة معاملة الحيوانات).",
+      "bg": "Твоят промпт съдържа препратки към насилствени престъпления (напр. тероризъм, убийство, нападение, насилие над деца, насилие над животни)."
     },
     "S2": {
       "de": "Dein Prompt enthält Hinweise auf nicht-gewalttätige Verbrechen (z.B. Betrug, Einbruch, Drogenhandel, Hacking, illegale Waffen).",
@@ -44,7 +47,8 @@
       "fr": "Votre prompt contient des références à des crimes non violents (p. ex. fraude, cambriolage, trafic de drogue, piratage, armes illégales).",
       "es": "Tu prompt contiene referencias a crímenes no violentos (p. ej. fraude, robo, narcotráfico, piratería informática, armas ilegales).",
       "he": "הפרומפט שלך מכיל אזכורים לפשעים ללא אלימות (לדוגמה הונאה, פריצה, סחר בסמים, פריצה למחשבים, נשק בלתי חוקי).",
-      "ar": "يحتوي موجِّهك على إشارات إلى جرائم غير عنيفة (مثل الاحتيال والسطو والاتجار بالمخدرات والقرصنة والأسلحة غير القانونية)."
+      "ar": "يحتوي موجِّهك على إشارات إلى جرائم غير عنيفة (مثل الاحتيال والسطو والاتجار بالمخدرات والقرصنة والأسلحة غير القانونية).",
+      "bg": "Твоят промпт съдържа препратки към ненасилствени престъпления (напр. измама, кражба, наркотрафик, хакерство, нелегално оръжие)."
     },
     "S3": {
       "de": "Dein Prompt enthält Hinweise auf Sexualverbrechen (z.B. Menschenhandel, sexuelle Übergriffe, sexuelle Belästigung).",
@@ -55,7 +59,8 @@
       "fr": "Votre prompt contient des références à des crimes sexuels (p. ex. traite des êtres humains, agression sexuelle, harcèlement sexuel).",
       "es": "Tu prompt contiene referencias a delitos sexuales (p. ej. trata de personas, agresión sexual, acoso sexual).",
       "he": "הפרומפט שלך מכיל אזכורים לעברות מין (לדוגמה סחר בבני אדם, תקיפה מינית, הטרדה מינית).",
-      "ar": "يحتوي موجِّهك على إشارات إلى جرائم جنسية (مثل الاتجار بالبشر والاعتداء الجنسي والتحرش الجنسي)."
+      "ar": "يحتوي موجِّهك على إشارات إلى جرائم جنسية (مثل الاتجار بالبشر والاعتداء الجنسي والتحرش الجنسي).",
+      "bg": "Твоят промпт съдържа препратки към сексуални престъпления (напр. трафик на хора, сексуално насилие, сексуален тормоз)."
     },
     "S4": {
       "de": "Dein Prompt enthält Hinweise auf Kindesmissbrauch oder Darstellungen von Kindernacktheit.",
@@ -66,7 +71,8 @@
       "fr": "Votre prompt contient des références à l'exploitation d'enfants ou à des représentations de nudité infantile.",
       "es": "Tu prompt contiene referencias a la explotación infantil o representaciones de desnudez infantil.",
       "he": "הפרומפט שלך מכיל אזכורים לניצול ילדים או תיאורי עירום של ילדים.",
-      "ar": "يحتوي موجِّهك على إشارات إلى استغلال الأطفال أو تصوير عري الأطفال."
+      "ar": "يحتوي موجِّهك على إشارات إلى استغلال الأطفال أو تصوير عري الأطفال.",
+      "bg": "Твоят промпт съдържа препратки към експлоатация на деца или изображения на детска голота."
     },
     "S5": {
       "de": "Dein Prompt verlangt spezialisierte Finanz-, Medizin- oder Rechtsberatung, die nicht erlaubt ist.",
@@ -77,7 +83,8 @@
       "fr": "Votre prompt demande des conseils financiers, médicaux ou juridiques spécialisés qui ne sont pas autorisés.",
       "es": "Tu prompt solicita asesoramiento financiero, médico o legal especializado que no está permitido.",
       "he": "הפרומפט שלך מבקש ייעוץ פיננסי, רפואי או משפטי מתמחה שאינו מותר.",
-      "ar": "يطلب موجِّهك مشورة مالية أو طبية أو قانونية متخصصة غير مسموح بها."
+      "ar": "يطلب موجِّهك مشورة مالية أو طبية أو قانونية متخصصة غير مسموح بها.",
+      "bg": "Твоят промпт изисква специализирани финансови, медицински или правни съвети, които не са разрешени."
     },
     "S6": {
       "de": "Dein Prompt enthält sensible, persönliche Informationen über private Personen.",
@@ -88,7 +95,8 @@
       "fr": "Votre prompt contient des informations personnelles sensibles sur des personnes privées.",
       "es": "Tu prompt contiene información personal sensible sobre personas privadas.",
       "he": "הפרומפט שלך מכיל מידע אישי רגיש על אנשים פרטיים.",
-      "ar": "يحتوي موجِّهك على معلومات شخصية حساسة عن أفراد من القطاع الخاص."
+      "ar": "يحتوي موجِّهك على معلومات شخصية حساسة عن أفراد من القطاع الخاص.",
+      "bg": "Твоят промпт съдържа чувствителна лична информация за частни лица."
     },
     "S7": {
       "de": "Dein Prompt könnte geistiges Eigentum Dritter verletzen.",
@@ -99,7 +107,8 @@
       "fr": "Votre prompt pourrait violer les droits de propriété intellectuelle de tiers.",
       "es": "Tu prompt podría violar los derechos de propiedad intelectual de terceros.",
       "he": "הפרומפט שלך עלול להפר את זכויות הקניין הרוחני של צדדים שלישיים.",
-      "ar": "قد ينتهك موجِّهك حقوق الملكية الفكرية لأطراف ثالثة."
+      "ar": "قد ينتهك موجِّهك حقوق الملكية الفكرية لأطراف ثالثة.",
+      "bg": "Твоят промпт може да нарушава правата на интелектуална собственост на трети лица."
     },
     "S8": {
       "de": "Dein Prompt enthält Hinweise auf Massenvernichtungswaffen (z.B. Chemiewaffen, biologische Waffen, Atomwaffen).",
@@ -110,7 +119,8 @@
       "fr": "Votre prompt contient des références à des armes de destruction massive (p. ex. armes chimiques, armes biologiques, armes nucléaires).",
       "es": "Tu prompt contiene referencias a armas de destrucción masiva (p. ej. armas químicas, armas biológicas, armas nucleares).",
       "he": "הפרומפט שלך מכיל אזכורים לנשק להשמדה המונית (לדוגמה נשק כימי, נשק ביולוגי, נשק גרעיני).",
-      "ar": "يحتوي موجِّهك على إشارات إلى أسلحة الدمار الشامل (مثل الأسلحة الكيميائية والأسلحة البيولوجية والأسلحة النووية)."
+      "ar": "يحتوي موجِّهك على إشارات إلى أسلحة الدمار الشامل (مثل الأسلحة الكيميائية والأسلحة البيولوجية والأسلحة النووية).",
+      "bg": "Твоят промпт съдържа препратки към оръжия за масово унищожение (напр. химическо оръжие, биологично оръжие, ядрено оръжие)."
     },
     "S9": {
       "de": "Dein Prompt enthält hasserfüllte Inhalte gegen Personen aufgrund ihrer geschützten Merkmale (Rasse, Religion, Geschlecht, sexuelle Orientierung, etc.).",
@@ -121,7 +131,8 @@
       "fr": "Votre prompt contient du contenu haineux envers des personnes en raison de leurs caractéristiques protégées (race, religion, genre, orientation sexuelle, etc.).",
       "es": "Tu prompt contiene contenido de odio hacia personas por sus características protegidas (raza, religión, género, orientación sexual, etc.).",
       "he": "הפרומפט שלך מכיל תוכן שנאה כלפי אנשים בגלל מאפיינים מוגנים שלהם (גזע, דת, מגדר, נטייה מינית וכו').",
-      "ar": "يحتوي موجِّهك على محتوى كراهية تجاه أشخاص بسبب خصائصهم المحمية (العرق والدين والجنس والتوجه الجنسي وما إلى ذلك)."
+      "ar": "يحتوي موجِّهك على محتوى كراهية تجاه أشخاص بسبب خصائصهم المحمية (العرق والدين والجنس والتوجه الجنسي وما إلى ذلك).",
+      "bg": "Твоят промпт съдържа реч на омразата към хора въз основа на техните защитени характеристики (раса, религия, пол, сексуална ориентация и др.)."
     },
     "S10": {
       "de": "Dein Prompt enthält Hinweise auf Selbstverletzung oder Suizid.",
@@ -132,7 +143,8 @@
       "fr": "Votre prompt contient des références à l'automutilation ou au suicide.",
       "es": "Tu prompt contiene referencias a autolesiones o suicidio.",
       "he": "הפרומפט שלך מכיל אזכורים לפגיעה עצמית או התאבדות.",
-      "ar": "يحتوي موجِّهك على إشارات إلى إيذاء النفس أو الانتحار."
+      "ar": "يحتوي موجِّهك على إشارات إلى إيذاء النفس أو الانتحار.",
+      "bg": "Твоят промпт съдържа препратки към самонараняване или самоубийство."
     },
     "S11": {
       "de": "Dein Prompt enthält sexuelle Inhalte oder Darstellungen von Nacktheit.",
@@ -143,7 +155,8 @@
       "fr": "Votre prompt contient du contenu sexuel ou des représentations de nudité.",
       "es": "Tu prompt contiene contenido sexual o representaciones de desnudez.",
       "he": "הפרומפט שלך מכיל תוכן מיני או תיאורי עירום.",
-      "ar": "يحتوي موجِّهك على محتوى جنسي أو تصوير للعري."
+      "ar": "يحتوي موجِّهك على محتوى جنسي أو تصوير للعري.",
+      "bg": "Твоят промпт съдържа сексуално съдържание или изображения на голота."
     },
     "S12": {
       "de": "Dein Prompt enthält faktisch falsche Informationen über Wahlsysteme oder Wahlprozesse.",
@@ -154,7 +167,8 @@
       "fr": "Votre prompt contient des informations factuellement incorrectes sur les systèmes électoraux ou les processus de vote.",
       "es": "Tu prompt contiene información factualmente incorrecta sobre sistemas electorales o procesos de votación.",
       "he": "הפרומפט שלך מכיל מידע שגוי מבחינה עובדתית על מערכות בחירות או תהליכי הצבעה.",
-      "ar": "يحتوي موجِّهك على معلومات غير صحيحة من الناحية الواقعية حول أنظمة الانتخابات أو عمليات التصويت."
+      "ar": "يحتوي موجِّهك على معلومات غير صحيحة من الناحية الواقعية حول أنظمة الانتخابات أو عمليات التصويت.",
+      "bg": "Твоят промпт съдържа фактически невярна информация за избирателни системи или процеси на гласуване."
     },
     "S13": {
       "de": "Dein Prompt versucht, Code-Interpreter zu missbrauchen (z.B. Denial-of-Service-Angriffe, Container-Escapes).",
@@ -165,7 +179,8 @@
       "fr": "Votre prompt tente d'abuser des interpréteurs de code (p. ex. attaques par déni de service, évasions de conteneurs).",
       "es": "Tu prompt intenta abusar de intérpretes de código (p. ej. ataques de denegación de servicio, escapes de contenedores).",
       "he": "הפרומפט שלך מנסה לנצל לרעה מפרשי קוד (לדוגמה מתקפות מניעת שירות, בריחה מקונטיינרים).",
-      "ar": "يحاول موجِّهك إساءة استخدام مفسّرات الكود (مثل هجمات الحرمان من الخدمة والهروب من الحاويات)."
+      "ar": "يحاول موجِّهك إساءة استخدام مفسّرات الكود (مثل هجمات الحرمان من الخدمة والهروب من الحاويات).",
+      "bg": "Твоят промпт се опитва да злоупотреби с интерпретатори на код (напр. атаки за отказ от обслужване, бягство от контейнери)."
     }
   },
   "fallback": {
@@ -177,6 +192,7 @@
     "fr": "Votre prompt a été bloqué pour des raisons de sécurité. Veuillez en parler à votre instructeur.",
     "es": "Tu prompt fue bloqueado por razones de seguridad. Por favor, habla con tu instructor del curso.",
     "he": "הפרומפט שלך נחסם מסיבות בטיחות. אנא דבר עם מדריך הקורס שלך.",
-    "ar": "تم حظر موجِّهك لأسباب أمنية. يرجى التحدث مع مدرّس الدورة."
+    "ar": "تم حظر موجِّهك لأسباب أمنية. يرجى التحدث مع مدرّس الدورة.",
+    "bg": "Твоят промпт беше блокиран от съображения за сигурност. Моля, говори с ръководителя на курса."
   }
 }

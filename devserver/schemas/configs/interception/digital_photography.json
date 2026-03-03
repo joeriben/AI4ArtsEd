@@ -10,7 +10,8 @@
     "fr": "Photographie numérique",
     "es": "Fotografía digital",
     "he": "צילום דיגיטלי",
-    "ar": "التصوير الرقمي"
+    "ar": "التصوير الرقمي",
+    "bg": "Дигитална фотография"
   },
   "description": {
     "en": "Transforms ideas into contemporary photographic concepts. Emphasizes crisp digital clarity, controlled lighting setups, and precise composition techniques used in modern commercial and editorial photography.",
@@ -19,13 +20,15 @@
     "fr": "Transforme les idées en concepts photographiques contemporains. Met l'accent sur la netteté numérique, les configurations d'éclairage contrôlées et les techniques de composition précises utilisées en photographie commerciale et éditoriale moderne.",
     "es": "Transforma ideas en conceptos fotográficos contemporáneos. Enfatiza la nitidez digital, configuraciones de iluminación controlada y técnicas de composición precisas utilizadas en la fotografía comercial y editorial moderna.",
     "he": "ממיר רעיונות למושגים פוטוגרפיים עכשוויים. מדגיש בהירות דיגיטלית חדה, הגדרות תאורה מבוקרות וטכניקות קומפוזיציה מדויקות המשמשות בצילום מסחרי ועריכתי מודרני.",
-    "ar": "يحوّل الأفكار إلى مفاهيم تصويرية معاصرة. يُبرز الوضوح الرقمي الحاد وإعدادات الإضاءة المضبوطة وتقنيات التأليف الدقيقة المستخدمة في التصوير التجاري والتحريري الحديث."
+    "ar": "يحوّل الأفكار إلى مفاهيم تصويرية معاصرة. يُبرز الوضوح الرقمي الحاد وإعدادات الإضاءة المضبوطة وتقنيات التأليف الدقيقة المستخدمة في التصوير التجاري والتحريري الحديث.",
+    "bg": "Превръща идеите в съвременни фотографски концепции. Подчертава ясната дигитална острота, контролирани осветителни настройки и прецизни композиционни техники, използвани в модерната комерсиална и редакционна фотография."
   },
   "category": {
     "de": "Fotografie & Medien",
     "en": "Photography & Media",
     "he": "צילום ומדיה",
-    "ar": "التصوير والإعلام"
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии"
   },
   "properties": [
     "technical_imaging"

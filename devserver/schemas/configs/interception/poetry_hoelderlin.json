@@ -10,7 +10,8 @@
     "fr": "Hoelderlin",
     "es": "Hoelderlin",
     "he": "Hoelderlin",
-    "ar": "Hoelderlin"
+    "ar": "Hoelderlin",
+    "bg": "Hoelderlin"
   },
   "description": {
     "en": "Material collision with Hoelderlin's 'Haelfte des Lebens' (1805). Fullness shattering into emptiness — colliding with your prompt through a deliberately insufficient model.",
@@ -21,7 +22,8 @@
     "fr": "Collision matérielle avec 'Haelfte des Lebens' de Hoelderlin (1805). La plénitude se fracassant dans le vide — entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
     "es": "Colisión material con 'Haelfte des Lebens' de Hoelderlin (1805). La plenitud que se hace añicos en el vacío — chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם 'חצי החיים' של הלדרלין (1805). מלאות המתנפצת לתוך ריקנות — מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
-    "ar": "تصادم مادي مع قصيدة هولدرلين 'نصف الحياة' (1805). الامتلاء يتحطم في الفراغ — يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد."
+    "ar": "تصادم مادي مع قصيدة هولدرلين 'نصف الحياة' (1805). الامتلاء يتحطم في الفراغ — يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с \"Половината на живота\" на Хьолдерлин (1805). Пълнотата, разбиваща се в празнота — сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
   },
   "category": {
     "en": "Poetry",
@@ -32,7 +34,8 @@
     "fr": "Po\u00e9sie",
     "es": "Poes\u00eda",
     "he": "\u05e9\u05d9\u05e8\u05d4",
-    "ar": "\u0634\u0639\u0631"
+    "ar": "\u0634\u0639\u0631",
+    "bg": "Поезия"
   },
   "properties": [
     "poetry"

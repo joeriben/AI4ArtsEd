@@ -10,7 +10,8 @@
     "fr": "Paysage de la photographie ancienne",
     "es": "Paisaje fotográfico temprano",
     "he": "נוף הצילום המוקדם",
-    "ar": "منظر التصوير المبكر"
+    "ar": "منظر التصوير المبكر",
+    "bg": "Ранна фотография пейзаж"
   },
   "description": {
     "en": "Transforms ideas into the visual language of early photographic landscape imagery from 1850–1900, shaped by wet plate processes, albumen prints, and the atmospheric qualities of long-exposure large-format photography.",
@@ -21,7 +22,8 @@
     "fr": "Transforme les idées en langage visuel des premières images photographiques de paysage de 1850–1900, façonné par les procédés au collodion humide, les tirages albuminés et les qualités atmosphériques de la photographie grand format à longue exposition.",
     "es": "Transforma ideas en el lenguaje visual de las primeras imágenes fotográficas de paisaje de 1850–1900, moldeado por procesos de placa húmeda, impresiones de albúmina y las cualidades atmosféricas de la fotografía de gran formato con larga exposición.",
     "he": "ממיר רעיונות לשפה החזותית של צילומי הנוף המוקדמים מ-1850 עד 1900, שעוצבה על ידי תהליכי לוח רטוב, הדפסי אלבומין ואיכויות האווירה של צילום גדול-פורמט עם חשיפה ארוכה.",
-    "ar": "يحوّل الأفكار إلى اللغة البصرية لصور المناظر الطبيعية التصويرية المبكرة من 1850 إلى 1900، المشكّلة بعمليات الألواح الرطبة وطبعات الألبومين والجودة الجوية لتصوير الفورمات الكبير بالتعريض الطويل."
+    "ar": "يحوّل الأفكار إلى اللغة البصرية لصور المناظر الطبيعية التصويرية المبكرة من 1850 إلى 1900، المشكّلة بعمليات الألواح الرطبة وطبعات الألبومين والجودة الجوية لتصوير الفورمات الكبير بالتعريض الطويل.",
+    "bg": "Превръща идеите във визуалния език на ранната пейзажна фотография от 1850–1900, оформена от мокри колодионови процеси, албуминови отпечатъци и атмосферните качества на дългата експозиция с широкоформатна фотография."
   },
   "category": {
     "en": "Photography & Media",
@@ -32,7 +34,8 @@
     "fr": "Photographie & Médias",
     "es": "Fotografía & Medios",
     "he": "צילום ומדיה",
-    "ar": "التصوير والإعلام"
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии"
   },
   "properties": [
     "technical_imaging"

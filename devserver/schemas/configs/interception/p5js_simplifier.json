@@ -10,7 +10,8 @@
     "fr": "Listifieur",
     "es": "Listificador",
     "he": "מַפַרְסֵם",
-    "ar": "المُقوِّم للقوائم"
+    "ar": "المُقوِّم للقوائم",
+    "bg": "Листификатор"
   },
   "description": {
     "en": "Transforms scene descriptions into ordered lists of primitive elements organized by depth layers (background, middle ground, foreground). Perfect for additive visual construction.",
@@ -19,13 +20,15 @@
     "fr": "Transforme les descriptions de scènes en listes ordonnées d'éléments primitifs organisés par couches de profondeur (arrière-plan, plan intermédiaire, premier plan). Parfait pour la construction visuelle additive.",
     "es": "Transforma descripciones de escenas en listas ordenadas de elementos primitivos organizados por capas de profundidad (fondo, plano medio, primer plano). Perfecto para la construcción visual aditiva.",
     "he": "ממיר תיאורי סצנה לרשימות מסודרות של אלמנטים פרימיטיביים המאורגנים לפי שכבות עומק (רקע, אמצע, קדמה). מושלם לבנייה חזותית אדיטיבית.",
-    "ar": "يُحوّل أوصاف المشاهد إلى قوائم مرتّبة من العناصر البدائية المنظّمة حسب طبقات العمق (خلفية، مسافة متوسطة، مقدمة). مثالي للبناء البصري التراكمي."
+    "ar": "يُحوّل أوصاف المشاهد إلى قوائم مرتّبة من العناصر البدائية المنظّمة حسب طبقات العمق (خلفية، مسافة متوسطة، مقدمة). مثالي للبناء البصري التراكمي.",
+    "bg": "Превръща описания на сцени в подредени списъци от примитивни елементи, организирани по слоеве на дълбочина (фон, среден план, преден план). Перфектен за адитивно визуално конструиране."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "aesthetics"

@@ -10,7 +10,8 @@
     "fr": "Diviser et combiner",
     "es": "Dividir y combinar",
     "he": "פיצול ושילוב",
-    "ar": "التقسيم والجمع"
+    "ar": "التقسيم والجمع",
+    "bg": "Разделяне и комбиниране"
   },
   "description": {
     "en": "Split your prompt into two semantic parts and explore how they interact. This workflow creates four images: the original scene with both elements, each element separately, and a final recombination showing how AI understands their relationship. Perfect for exploring how concepts blend in neural networks.",
@@ -19,13 +20,15 @@
     "fr": "Divise ton prompt en deux parties sémantiques et explore comment elles interagissent. Ce workflow crée quatre images : la scène originale avec les deux éléments, chaque élément séparément, et une recombinaison finale montrant comment l'IA comprend leur relation. Parfait pour explorer comment les concepts fusionnent dans les réseaux neuronaux.",
     "es": "Divide tu prompt en dos partes semánticas y explora cómo interactúan. Este flujo de trabajo crea cuatro imágenes: la escena original con ambos elementos, cada elemento por separado y una recombinación final que muestra cómo la IA entiende su relación. Perfecto para explorar cómo los conceptos se fusionan en las redes neuronales.",
     "he": "פצל את הפרומפט לשני חלקים סמנטיים וחקור כיצד הם מתקשרים. זרימת עבודה זו יוצרת ארבע תמונות: הסצנה המקורית עם שני האלמנטים, כל אלמנט בנפרד, ושילוב מחדש סופי המראה כיצד AI מבין את הקשר ביניהם.",
-    "ar": "قسّم موجِّهك إلى جزأين دلاليين واستكشف كيف يتفاعلان. يُنشئ هذا السير أربع صور: المشهد الأصلي بكلا العنصرين، وكل عنصر منفرداً، وإعادة تركيب أخيرة تُظهر كيف يفهم الذكاء الاصطناعي علاقتهما."
+    "ar": "قسّم موجِّهك إلى جزأين دلاليين واستكشف كيف يتفاعلان. يُنشئ هذا السير أربع صور: المشهد الأصلي بكلا العنصرين، وكل عنصر منفرداً، وإعادة تركيب أخيرة تُظهر كيف يفهم الذكاء الاصطناعي علاقتهما.",
+    "bg": "Разделете промпта си на две семантични части и изследвайте как взаимодействат. Този работен процес създава четири изображения: оригиналната сцена с двата елемента, всеки елемент поотделно и финална рекомбинация, показваща как ИИ разбира тяхната връзка."
   },
   "category": {
     "de": "Forschung",
     "en": "Research",
     "he": "מחקר",
-    "ar": "البحث"
+    "ar": "البحث",
+    "bg": "Изследвания"
   },
   "properties": [
     "research"

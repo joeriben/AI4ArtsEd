@@ -8,9 +8,11 @@ import { fr } from './fr'
 import { es } from './es'
 import { he } from './he'
 import { ar } from './ar'
+import { bg } from './bg'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'ar', label: 'العربية', dir: 'rtl' as const },
+  { code: 'bg', label: 'Български', dir: 'ltr' as const },
   { code: 'de', label: 'Deutsch', dir: 'ltr' as const },
   { code: 'en', label: 'English', dir: 'ltr' as const },
   { code: 'es', label: 'Español', dir: 'ltr' as const },
@@ -37,7 +39,7 @@ export function getLanguageDir(code: string): 'ltr' | 'rtl' {
   return lang?.dir ?? 'ltr'
 }
 
-const messages = { de, en, tr, ko, uk, fr, es, he, ar }
+const messages = { de, en, tr, ko, uk, fr, es, he, ar, bg }
 
 // Cast locale to SupportedLanguage so vue-i18n accepts all supported languages
 // (ko/tr messages are intentionally partial — fallbackLocale handles gaps)

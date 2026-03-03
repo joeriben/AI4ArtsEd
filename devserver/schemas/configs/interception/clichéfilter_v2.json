@@ -10,7 +10,8 @@
     "fr": "Anti-cliché",
     "es": "Anti-cliché",
     "he": "נגד קלישאה",
-    "ar": "مكافح المبتذل"
+    "ar": "مكافح المبتذل",
+    "bg": "Анти-клише"
   },
   "description": {
     "en": "Removes overused phrases and stereotypical descriptions. Helps you avoid clichés and find more original ways to express your ideas.",
@@ -19,13 +20,15 @@
     "fr": "Supprime les expressions usées et les descriptions stéréotypées. T'aide à éviter les clichés et à trouver des moyens plus originaux d'exprimer tes idées.",
     "es": "Elimina frases sobreutilizadas y descripciones estereotipadas. Te ayuda a evitar clichés y encontrar formas más originales de expresar tus ideas.",
     "he": "מסיר ביטויים שחוקים ותיאורים סטריאוטיפיים. עוזר לך להימנע מקלישאות ולמצוא דרכים מקוריות יותר לבטא את רעיונותיך.",
-    "ar": "يُزيل العبارات المبتذلة والأوصاف النمطية. يساعدك على تجنب الكليشيهات وإيجاد طرق أكثر أصالة للتعبير عن أفكارك."
+    "ar": "يُزيل العبارات المبتذلة والأوصاف النمطية. يساعدك على تجنب الكليشيهات وإيجاد طرق أكثر أصالة للتعبير عن أفكارك.",
+    "bg": "Премахва изтъркани фрази и стереотипни описания. Помага ти да избягваш клишетата и да намериш по-оригинални начини за изразяване на идеите си."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "aesthetics"

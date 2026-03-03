@@ -10,7 +10,8 @@
     "fr": "C'est toi qui décides !",
     "es": "¡Tú decides!",
     "he": "אתה מחליט!",
-    "ar": "أنت تقرر!"
+    "ar": "أنت تقرر!",
+    "bg": "Ти решаваш!"
   },
   "description": {
     "en": "When you make art, you decide what you want to use and how you want to do it. Here, you can tell the AI what to use and what rules to follow.",
@@ -19,13 +20,15 @@
     "fr": "Quand tu fais de l'art, tu décides ce que tu veux utiliser et comment tu veux le faire. Ici, tu peux dire à l'IA quoi utiliser et quelles règles suivre.",
     "es": "Cuando haces arte, tú decides qué quieres usar y cómo quieres hacerlo. Aquí puedes decirle a la IA qué usar y qué reglas seguir.",
     "he": "כשאתה יוצר אמנות, אתה מחליט מה להשתמש בו וכיצד לעשות זאת. כאן תוכל לומר ל-AI מה להשתמש ואילו כללים לפעול לפיהם.",
-    "ar": "عندما تصنع الفن، أنت تقرر ما تريد استخدامه وكيف تريد القيام بذلك. هنا يمكنك إخبار الذكاء الاصطناعي بما يجب استخدامه وأي قواعد يجب اتباعها."
+    "ar": "عندما تصنع الفن، أنت تقرر ما تريد استخدامه وكيف تريد القيام بذلك. هنا يمكنك إخبار الذكاء الاصطناعي بما يجب استخدامه وأي قواعد يجب اتباعها.",
+    "bg": "Когато правиш изкуство, ти решаваш какво да използваш и как да го направиш. Тук можеш да кажеш на ИИ какво да използва и какви правила да следва."
   },
   "category": {
     "de": "Kunst & Kultur",
     "en": "Art & Culture",
     "he": "אמנות ותרבות",
-    "ar": "الفن والثقافة"
+    "ar": "الفن والثقافة",
+    "bg": "Изкуство и култура"
   },
   "properties": [
     "freestyle"

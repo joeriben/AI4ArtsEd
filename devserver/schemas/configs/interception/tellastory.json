@@ -10,7 +10,8 @@
     "fr": "Ton histoire",
     "es": "Tu historia",
     "he": "הסיפור שלך",
-    "ar": "قصتك"
+    "ar": "قصتك",
+    "bg": "Твоята история"
   },
   "description": {
     "en": "Helps you telling a story.",
@@ -19,13 +20,15 @@
     "fr": "T'aide à raconter une histoire.",
     "es": "Te ayuda a contar una historia.",
     "he": "עוזר לך לספר סיפור.",
-    "ar": "يساعدك على رواية قصة."
+    "ar": "يساعدك على رواية قصة.",
+    "bg": "Помага ти да разкажеш история."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "freestyle"

@@ -10,7 +10,8 @@
     "fr": "Technique",
     "es": "Técnico",
     "he": "טכני",
-    "ar": "تقني"
+    "ar": "تقني",
+    "bg": "Технически"
   },
   "description": {
     "en": "Translates everything into cold engineering language. Living beings become mechanical assemblies, emotions become operational states, and poetry becomes technical specifications.",
@@ -19,13 +20,15 @@
     "fr": "Traduit tout en langage froid d'ingénierie. Les êtres vivants deviennent des assemblages mécaniques, les émotions des états opérationnels et la poésie des spécifications techniques.",
     "es": "Traduce todo a lenguaje frío de ingeniería. Los seres vivos se convierten en ensamblajes mecánicos, las emociones en estados operativos y la poesía en especificaciones técnicas.",
     "he": "מתרגם הכל לשפת הנדסה קרה. יצורים חיים הופכים למכלולים מכניים, רגשות הופכים למצבי הפעלה ושירה הופכת למפרטים טכניים.",
-    "ar": "يترجم كل شيء إلى لغة هندسية باردة. تصبح الكائنات الحية تجميعات ميكانيكية، وتتحول العواطف إلى حالات تشغيلية، وتصبح الشعرية مواصفات تقنية."
+    "ar": "يترجم كل شيء إلى لغة هندسية باردة. تصبح الكائنات الحية تجميعات ميكانيكية، وتتحول العواطف إلى حالات تشغيلية، وتصبح الشعرية مواصفات تقنية.",
+    "bg": "Превежда всичко на студен инженерен език. Живите същества стават механични сборки, емоциите — оперативни състояния, а поезията — технически спецификации."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "aesthetics"

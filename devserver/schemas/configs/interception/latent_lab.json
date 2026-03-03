@@ -10,7 +10,8 @@
     "fr": "Latent Lab",
     "es": "Latent Lab",
     "he": "Latent Lab",
-    "ar": "Latent Lab"
+    "ar": "Latent Lab",
+    "bg": "Latent Lab"
   },
   "description": {
     "en": "Deconstructive platform for exploring vector and latent spaces. Reveals how generative models construct meaning internally through attention maps, feature probing, concept algebra, and more.",
@@ -19,13 +20,15 @@
     "fr": "Plateforme déconstructive pour explorer les espaces vectoriels et latents. Révèle comment les modèles génératifs construisent le sens en interne à travers les cartes d'attention, le sondage de caractéristiques, l'algèbre de concepts et plus encore.",
     "es": "Plataforma deconstructiva para explorar espacios vectoriales y latentes. Revela cómo los modelos generativos construyen significado internamente a través de mapas de atención, sondeo de características, álgebra de conceptos y más.",
     "he": "פלטפורמה דקונסטרוקטיבית לחקירת מרחבי וקטורים ולטנטיים. חושפת כיצד מודלים גנרטיביים בונים משמעות פנימית דרך מפות תשומת לב, בדיקת תכונות, אלגברת מושגים ועוד.",
-    "ar": "منصة تفكيكية لاستكشاف الفضاءات الشعاعية والكامنة. تكشف كيف تبني النماذج التوليدية المعنى داخلياً من خلال خرائط الانتباه ومسح الميزات وجبر المفاهيم وغير ذلك."
+    "ar": "منصة تفكيكية لاستكشاف الفضاءات الشعاعية والكامنة. تكشف كيف تبني النماذج التوليدية المعنى داخلياً من خلال خرائط الانتباه ومسح الميزات وجبر المفاهيم وغير ذلك.",
+    "bg": "Деконструктивна платформа за изследване на векторни и латентни пространства. Разкрива как генеративните модели конструират значение вътрешно чрез карти на вниманието, сондиране на характеристики, алгебра на концепции и други."
   },
   "category": {
     "de": "Forschung",
     "en": "Research",
     "he": "מחקר",
-    "ar": "البحث"
+    "ar": "البحث",
+    "bg": "Изследвания"
   },
   "properties": [
     "explore"

@@ -10,7 +10,8 @@
     "fr": "Planétariseur",
     "es": "Planetarizador",
     "he": "מַפְלָנֵטִי",
-    "ar": "المُكوكبِ"
+    "ar": "المُكوكبِ",
+    "bg": "Планетаризатор"
   },
   "description": {
     "en": "Reimagines image prompts through planetary perspectives in the anthropocene. Deconstructs capitalist consumerist norms and challenges AI's inherent biases toward capitalist subjects and consumerist aesthetics.",
@@ -19,13 +20,15 @@
     "fr": "Réimagine les prompts d'images à travers des perspectives planétaires dans l'anthropocène. Déconstruit les normes consuméristes capitalistes et questionne les biais inhérents de l'IA envers les sujets capitalistes et l'esthétique consumériste.",
     "es": "Reimagina prompts de imagen a través de perspectivas planetarias en el antropoceno. Deconstruye las normas consumistas capitalistas y cuestiona los sesgos inherentes de la IA hacia sujetos capitalistas y estéticas consumistas.",
     "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות פלנטריות באנתרופוצן. מפרק נורמות קפיטליסטיות-צרכניות ומאתגר את ההטיות הטבועות של AI כלפי נושאים קפיטליסטיים ואסתטיקות צרכניות.",
-    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر كوكبية في الأنثروبوسين. يفكّك المعايير الاستهلاكية الرأسمالية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات الرأسمالية والجماليات الاستهلاكية."
+    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر كوكبية في الأنثروبوسين. يفكّك المعايير الاستهلاكية الرأسمالية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات الرأسمالية والجماليات الاستهلاكية.",
+    "bg": "Преосмисля промптове за изображения през планетарни перспективи в антропоцена. Деконструира капиталистическите потребителски норми и предизвиква присъщите предразсъдъци на ИИ към капиталистически субекти и потребителска естетика."
   },
   "category": {
     "de": "Kritisches Denken",
     "en": "Critical Thinking",
     "he": "חשיבה ביקורתית",
-    "ar": "التفكير النقدي"
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене"
   },
   "properties": [
     "critical_analysis"

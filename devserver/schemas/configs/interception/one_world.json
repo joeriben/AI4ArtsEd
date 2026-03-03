@@ -10,7 +10,8 @@
     "fr": "Un seul monde",
     "es": "Un solo mundo",
     "he": "עולם אחד",
-    "ar": "عالم واحد"
+    "ar": "عالم واحد",
+    "bg": "Един свят"
   },
   "description": {
     "en": "Reimagines image prompts through perspectives that do not exclude the Global South. Deconstructs Western visual norms and challenges AI's inherent biases toward white-coded subjects, consumerist aesthetics, and Western cultural references.",
@@ -19,13 +20,15 @@
     "fr": "Réimagine les prompts d'images à travers des perspectives qui n'excluent pas le Sud global. Déconstruit les normes visuelles occidentales et questionne les biais inhérents de l'IA envers les sujets codés comme blancs, l'esthétique consumériste et les références culturelles occidentales.",
     "es": "Reimagina prompts de imagen a través de perspectivas que no excluyen al Sur Global. Deconstruye las normas visuales occidentales y cuestiona los sesgos inherentes de la IA hacia sujetos codificados como blancos, estéticas consumistas y referencias culturales occidentales.",
     "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות שאינן מדירות את הדרום הגלובלי. מפרק נורמות חזותיות מערביות ומאתגר את ההטיות הטבועות של AI כלפי נושאים מקודדים כלבנים, אסתטיקה צרכנית והפניות תרבותיות מערביות.",
-    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر لا تستثني الجنوب العالمي. يفكّك المعايير البصرية الغربية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات المُرمَّزة بالبياض والجماليات الاستهلاكية والمرجعيات الثقافية الغربية."
+    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر لا تستثني الجنوب العالمي. يفكّك المعايير البصرية الغربية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات المُرمَّزة بالبياض والجماليات الاستهلاكية والمرجعيات الثقافية الغربية.",
+    "bg": "Преосмисля промптове за изображения през перспективи, които не изключват Глобалния юг. Деконструира западните визуални норми и предизвиква присъщите предразсъдъци на ИИ към кодирани като бели субекти, потребителска естетика и западни културни референции."
   },
   "category": {
     "de": "Kritisches Denken",
     "en": "Critical Thinking",
     "he": "חשיבה ביקורתית",
-    "ar": "التفكير النقدي"
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене"
   },
   "properties": [
     "critical_analysis"

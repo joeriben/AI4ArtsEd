@@ -10,7 +10,8 @@
     "fr": "monde fou",
     "es": "mundo loco",
     "he": "עולם משוגע",
-    "ar": "عالم مجنون"
+    "ar": "عالم مجنون",
+    "bg": "луд свят"
   },
   "description": {
     "en": "Responds to input from a world in which familiar meanings, explanations, and orders no longer hold. Uses language, logic, and form as damaged but still operative materials, bringing out the absurd tensions evoked by the input. The result may appear playful, humorous, or sober, but always exposes the fragility of sense-making rather than repairing it.",
@@ -19,13 +20,15 @@
     "fr": "Répond à l'entrée depuis un monde où les significations, explications et ordres familiers ne tiennent plus. Utilise le langage, la logique et la forme comme matériaux endommagés mais encore opérationnels, faisant ressortir les tensions absurdes évoquées par l'entrée. Le résultat peut sembler ludique, humoristique ou sobre, mais expose toujours la fragilité de la production de sens plutôt que de la réparer.",
     "es": "Responde a la entrada desde un mundo en el que los significados, explicaciones y órdenes familiares ya no se sostienen. Usa el lenguaje, la lógica y la forma como materiales dañados pero aún operativos, sacando a la luz las tensiones absurdas evocadas por la entrada. El resultado puede parecer lúdico, humorístico o sobrio, pero siempre expone la fragilidad de la producción de sentido en lugar de repararla.",
     "he": "מגיב לקלט מתוך עולם שבו משמעויות, הסברים וסדרים מוכרים כבר אינם מחזיקים. משתמש בשפה, לוגיקה וצורה כחומרים פגועים אך עדיין פעילים, מביא את המתחים האבסורדיים שהקלט מעלה. התוצאה עשויה להיראות שובבה, הומוריסטית או מפוכחת, אך תמיד חושפת את שבירות יצירת המשמעות.",
-    "ar": "يستجيب للمدخل من عالم لم تعد المعاني والتفسيرات والأنظمة المألوفة فيه صالحة. يستخدم اللغة والمنطق والشكل كمواد تالفة لكنها لا تزال تعمل، مُبرزاً التوترات العبثية التي يستحضرها المدخل. قد تبدو النتيجة مرحة أو فكاهية أو رصينة، لكنها تكشف دائماً عن هشاشة صنع المعنى بدلاً من إصلاحها."
+    "ar": "يستجيب للمدخل من عالم لم تعد المعاني والتفسيرات والأنظمة المألوفة فيه صالحة. يستخدم اللغة والمنطق والشكل كمواد تالفة لكنها لا تزال تعمل، مُبرزاً التوترات العبثية التي يستحضرها المدخل. قد تبدو النتيجة مرحة أو فكاهية أو رصينة، لكنها تكشف دائماً عن هشاشة صنع المعنى بدلاً من إصلاحها.",
+    "bg": "Отговаря на входа от свят, в който познатите значения, обяснения и порядки вече не важат. Използва езика, логиката и формата като повредени, но все още работещи материали, извличайки абсурдните напрежения, предизвикани от входа. Резултатът може да изглежда игрив, хумористичен или трезвен, но винаги разкрива крехкостта на създаването на смисъл, вместо да го поправя."
   },
   "category": {
     "de": "Haltungen",
     "en": "Attitudes",
     "he": "עמדות",
-    "ar": "المواقف"
+    "ar": "المواقف",
+    "bg": "Нагласи"
   },
   "properties": [
     "attitudes"

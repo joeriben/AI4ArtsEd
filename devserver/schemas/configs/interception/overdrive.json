@@ -10,7 +10,8 @@
     "fr": "Amplificateur !",
     "es": "¡Amplificador!",
     "he": "מגבר!",
-    "ar": "المُضخِّم!"
+    "ar": "المُضخِّم!",
+    "bg": "Усилвател!"
   },
   "description": {
     "en": "Overdrive. Inspired by the guitar effect of the same name. Drives visual elements to and beyond their limits. Amplifies colors, contrasts and structures to the point of distortion.",
@@ -19,13 +20,15 @@
     "fr": "Overdrive. Inspiré de l'effet de guitare du même nom. Pousse les éléments visuels à leurs limites et au-delà. Amplifie les couleurs, les contrastes et les structures jusqu'à la distorsion.",
     "es": "Overdrive. Inspirado en el efecto de guitarra del mismo nombre. Lleva los elementos visuales hasta y más allá de sus límites. Amplifica colores, contrastes y estructuras hasta el punto de la distorsión.",
     "he": "Overdrive. בהשראת אפקט הגיטרה בעל אותו השם. דוחף אלמנטים חזותיים אל גבולותיהם ומעבר להם. מגביר צבעים, ניגודיות ומבנים עד לנקודת העיוות.",
-    "ar": "Overdrive. مستوحى من تأثير الغيتار الذي يحمل الاسم نفسه. يدفع العناصر البصرية إلى حدودها وما بعدها. يُضخّم الألوان والتباينات والهياكل حتى نقطة التشويه."
+    "ar": "Overdrive. مستوحى من تأثير الغيتار الذي يحمل الاسم نفسه. يدفع العناصر البصرية إلى حدودها وما بعدها. يُضخّم الألوان والتباينات والهياكل حتى نقطة التشويه.",
+    "bg": "Overdrive. Вдъхновен от едноименния китарен ефект. Довежда визуалните елементи до и отвъд границите им. Усилва цветовете, контрастите и структурите до степен на изкривяване."
   },
   "category": {
     "de": "Kreative Verwandlungen",
     "en": "Creative Transformations",
     "he": "טרנספורמציות יצירתיות",
-    "ar": "التحولات الإبداعية"
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации"
   },
   "properties": [
     "aesthetics"

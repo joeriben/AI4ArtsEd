@@ -10,7 +10,8 @@
     "fr": "Sappho",
     "es": "Sappho",
     "he": "Sappho",
-    "ar": "Sappho"
+    "ar": "Sappho",
+    "bg": "Sappho"
   },
   "description": {
     "en": "Material collision with Sappho's Fragment 31 (~600 BCE). Already broken by history — desire, dissolution of the body, a voice that shatters. Colliding with your prompt through a deliberately insufficient model.",
@@ -21,7 +22,8 @@
     "fr": "Collision matérielle avec le Fragment 31 de Sappho (~600 av. J.-C.). Déjà brisé par l'histoire — désir, dissolution du corps, une voix qui se fracasse. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
     "es": "Colisión material con el Fragmento 31 de Safo (~600 a.C.). Ya roto por la historia — deseo, disolución del cuerpo, una voz que se hace añicos. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם שבר 31 של ספו (~600 לפנה\"ס). כבר שבור על ידי ההיסטוריה — תשוקה, התמוססות הגוף, קול המתנפץ. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
-    "ar": "تصادم مادي مع الجزء 31 لسافو (~600 ق.م.). مكسور بالفعل من قِبل التاريخ — الرغبة، تفكك الجسد، صوت يتحطم. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد."
+    "ar": "تصادم مادي مع الجزء 31 لسافو (~600 ق.م.). مكسور بالفعل من قِبل التاريخ — الرغبة، تفكك الجسد، صوت يتحطم. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с Фрагмент 31 на Сапфо (~600 г. пр.н.е.). Вече разбит от историята — желание, разтваряне на тялото, глас, който се разбива. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
   },
   "category": {
     "en": "Poetry",
@@ -32,7 +34,8 @@
     "fr": "Po\u00e9sie",
     "es": "Poes\u00eda",
     "he": "\u05e9\u05d9\u05e8\u05d4",
-    "ar": "\u0634\u0639\u0631"
+    "ar": "\u0634\u0639\u0631",
+    "bg": "Поезия"
   },
   "properties": [
     "poetry"

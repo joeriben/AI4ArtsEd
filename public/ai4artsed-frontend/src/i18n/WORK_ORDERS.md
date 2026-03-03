@@ -1,7 +1,7 @@
 # i18n Translation Work Orders
 
 Instructions for the `i18n-translator` agent: process all entries under **Pending**, translate
-the listed keys from `en.ts` into `de.ts`, `tr.ts`, `ko.ts`, `uk.ts`, `fr.ts`, `es.ts`, `he.ts`, `ar.ts`, then move
+the listed keys from `en.ts` into `de.ts`, `tr.ts`, `ko.ts`, `uk.ts`, `fr.ts`, `es.ts`, `he.ts`, `ar.ts`, `bg.ts`, then move
 each processed work order to **Completed** with a date stamp.
 
 ## Pending
@@ -20,6 +20,12 @@ Tags:
   - (NEW) = key did not exist before, translate from English
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
+
+### WO-2026-03-03-bulgarian-language-label
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar (bg already has full translation)
+- **Changed keys** (new or modified):
+  - `settings.general.bulgarianBg` (NEW)
+- **Context**: Language label for Bulgarian in the settings dropdown. Translate as "Bulgarian (bg)" with native language name in the target language.
 
 ### WO-2026-03-03-cloud-processing-label
 - **Scope**: en.ts
