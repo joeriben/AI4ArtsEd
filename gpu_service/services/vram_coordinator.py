@@ -24,6 +24,7 @@ Key Features:
 - Central coordination prevents eviction loops
 """
 
+import gc
 import logging
 import threading
 import time
@@ -152,9 +153,9 @@ class VRAMCoordinator:
             True if enough VRAM is now available
 
         Eviction Strategy:
-        1. Only evict models with priority < requester_priority
+        1. Only evict models with priority <= requester_priority (same tier: LRU)
         2. Among evictable models, use LRU order
-        3. Never evict models with in_use > 0
+        3. Never evict models with in_use > 0 (elevated to HIGH priority)
         4. Stop when enough VRAM is free
         """
         with self._request_lock:
@@ -209,13 +210,15 @@ class VRAMCoordinator:
         import torch
 
         free_mb = self.get_free_vram_mb(use_cache=False)
+        is_inf = required_mb == float('inf')
 
-        if free_mb >= required_mb:
+        if not is_inf and free_mb >= required_mb:
             logger.debug(f"[VRAM-COORD] {requester_id}: Already have {free_mb:.0f}MB >= {required_mb:.0f}MB")
             return True
 
+        needed_str = "max available" if is_inf else f"{required_mb:.0f}MB"
         logger.info(
-            f"[VRAM-COORD] {requester_id} needs {required_mb:.0f}MB, "
+            f"[VRAM-COORD] {requester_id} needs {needed_str}, "
             f"have {free_mb:.0f}MB, starting eviction"
         )
 
@@ -223,12 +226,12 @@ class VRAMCoordinator:
         all_models = self._collect_all_models()
 
         # Filter evictable models:
-        # - priority < requester_priority (can't evict equal or higher priority)
-        # - in_use == 0 (not currently being used)
+        # - priority <= requester_priority (same priority: LRU decides)
+        # - in_use == 0 (not currently being used; in_use > 0 elevated to HIGH)
         # Note: We CAN evict from the same backend (requester evicting its own old models)
         evictable = [
             m for m in all_models
-            if m.priority < requester_priority
+            if m.priority <= requester_priority
             and m.in_use == 0
         ]
 
@@ -239,7 +242,7 @@ class VRAMCoordinator:
         evicted_mb = 0
 
         for model in evictable:
-            if free_mb >= required_mb:
+            if not is_inf and free_mb >= required_mb:
                 break
 
             logger.info(
@@ -253,7 +256,8 @@ class VRAMCoordinator:
                     evicted_count += 1
                     evicted_mb += model.vram_mb
 
-                    # Clear CUDA cache and recheck
+                    # Break circular refs, then release CUDA memory
+                    gc.collect()
                     torch.cuda.empty_cache()
                     free_mb = self.get_free_vram_mb(use_cache=False)
             except Exception as e:
@@ -261,12 +265,17 @@ class VRAMCoordinator:
 
         # Final check
         free_mb = self.get_free_vram_mb(use_cache=False)
-        success = free_mb >= required_mb
+
+        if is_inf:
+            # Unknown model size: success if we freed something or nothing to free
+            success = evicted_count > 0 or len(evictable) == 0
+        else:
+            success = free_mb >= required_mb
 
         logger.info(
             f"[VRAM-COORD] Eviction complete: evicted {evicted_count} models "
             f"({evicted_mb:.0f}MB), now have {free_mb:.0f}MB, "
-            f"needed {required_mb:.0f}MB, success={success}"
+            f"needed {needed_str}, success={success}"
         )
 
         return success

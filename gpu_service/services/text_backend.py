@@ -23,6 +23,7 @@ Usage:
     )
 """
 
+import gc
 import logging
 import threading
 import time
@@ -295,6 +296,7 @@ class TextBackend:
             self._model_quant.pop(model_id, None)
 
             if torch.cuda.is_available():
+                gc.collect()
                 torch.cuda.empty_cache()
 
             logger.info(f"[TEXT] Unloaded {model_id}")
