@@ -25,21 +25,28 @@
   },
   "category": {
     "en": "Poetry",
-    "de": "Trans-Aktion",
-    "tr": "Trans-Aktion",
-    "ko": "Trans-Aktion",
-    "uk": "Trans-Aktion",
-    "fr": "Trans-Aktion",
-    "es": "Trans-Aktion",
-    "he": "Trans-Aktion",
-    "ar": "Trans-Aktion"
+    "de": "Poesie",
+    "tr": "\u015eiir",
+    "ko": "\uc2dc",
+    "uk": "\u041f\u043e\u0435\u0437\u0456\u044f",
+    "fr": "Po\u00e9sie",
+    "es": "Poes\u00eda",
+    "he": "\u05e9\u05d9\u05e8\u05d4",
+    "ar": "\u0634\u0639\u0631"
   },
   "properties": [
     "poetry"
   ],
   "context": {
-    "en": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / Teich / Frosch / Sommergras / Stille / Fels / Zikade",
-    "de": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / Teich / Frosch / Sommergras / Stille / Fels / Zikade"
+    "en": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / pond / frog / summer grass / stillness / rock / cicada",
+    "de": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / Teich / Frosch / Sommergras / Stille / Fels / Zikade",
+    "tr": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / g\u00f6let / kurba\u011fa / yaz otu / sessizlik / kaya / a\u011fustosb\u00f6ce\u011fi",
+    "ko": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / \uc5f0\ubabb / \uac1c\uad6c\ub9ac / \uc5ec\ub984\ud480 / \uace0\uc694 / \ubc14\uc704 / \ub9e4\ubbf8",
+    "uk": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / \u0441\u0442\u0430\u0432\u043e\u043a / \u0436\u0430\u0431\u0430 / \u043b\u0456\u0442\u043d\u044f \u0442\u0440\u0430\u0432\u0430 / \u0442\u0438\u0448\u0430 / \u0441\u043a\u0435\u043b\u044f / \u0446\u0438\u043a\u0430\u0434\u0430",
+    "fr": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / \u00e9tang / grenouille / herbe d'\u00e9t\u00e9 / silence / rocher / cigale",
+    "es": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / estanque / rana / hierba de verano / quietud / roca / cigarra",
+    "he": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / \u05d1\u05e8\u05d9\u05db\u05d4 / \u05e6\u05e4\u05e8\u05d3\u05e2 / \u05e2\u05e9\u05d1 \u05e7\u05d9\u05e5 / \u05d3\u05de\u05de\u05d4 / \u05e1\u05dc\u05e2 / \u05e6\u05e8\u05e6\u05e8",
+    "ar": "furu ike / kawazu / mizu no oto / natsugusa / tsuwamonodomo / yume no ato / shizukasa / iwa / semi no koe / \u0628\u0631\u0643\u0629 / \u0636\u0641\u062f\u0639 / \u0639\u0634\u0628 \u0627\u0644\u0635\u064a\u0641 / \u0633\u0643\u0648\u0646 / \u0635\u062e\u0631\u0629 / \u0632\u064a\u0632"
   },
   "parameters": {
     "temperature": 0.85,

@@ -5,7 +5,7 @@
 #
 # Usage:
 #   ./6_run_i18n_translator.sh           # foreground (interactive terminal)
-#   ./6_run_i18n_translator.sh --nightly # tmux session + log file (cron/AFK)
+#   ./6_run_i18n_translator.sh --unattended # tmux session + log file (cron/AFK)
 
 cd "$(dirname "$0")"
 
@@ -22,6 +22,9 @@ CLAUDE_OPTS=(
     --allowedTools "Read" "Edit" "Write" "Bash" "Glob" "Grep"
 )
 
+# Allow running from within a Claude Code session
+unset CLAUDECODE
+
 if [[ "$1" == "--unattended" ]]; then
     echo "=== i18n Unattended Translator ==="
     echo "Log: $LOGFILE"
@@ -34,7 +37,12 @@ if [[ "$1" == "--unattended" ]]; then
     || echo "Failed to start tmux session (already running?)"
 else
     echo "=== i18n Batch Translator (interactive) ==="
+    echo "Processing: audit all 8 target languages, translate pending work orders"
+    echo "Model: sonnet | Mode: bypassPermissions"
     echo "Log: $LOGFILE"
+    echo ""
+    echo "Running... (output appears when Claude responds)"
+    echo ""
 
     echo "$PROMPT" | claude "${CLAUDE_OPTS[@]}" 2>&1 | tee "$LOGFILE"
 fi

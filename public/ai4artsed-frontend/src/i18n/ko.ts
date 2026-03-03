@@ -231,11 +231,14 @@ export const ko = {
       cloudProvider: '클라우드 LLM 프로바이더 - API 키 필요',
       noneLocal: '없음 (로컬 전용, 개인정보보호법)',
       mistralEu: 'Mistral AI (EU 기반, 개인정보보호법)',
+      ionosEu: 'IONOS AI Model Hub (EU 베를린, 개인정보보호법)',
       anthropicDirect: 'Anthropic Direct API (개인정보보호법 미준수)',
       openaiDirect: 'OpenAI Direct API (개인정보보호법 미준수)',
       openrouterDirect: 'OpenRouter (개인정보보호법 미준수, EU 라우팅 가능)',
       mistralInfo: 'Mistral AI (EU 기반)',
       mistralDsgvo: '개인정보보호법 준수 (EU 인프라)',
+      ionosInfo: 'IONOS AI Model Hub (EU)',
+      ionosDsgvo: '개인정보보호법 준수 (EU 데이터센터 베를린)',
       anthropicInfo: 'Anthropic Direct API',
       anthropicNotDsgvo: '개인정보보호법 미준수',
       anthropicWarning: 'EU 외부에서 데이터 처리. 비교육적 맥락에서만 사용하세요.',
@@ -271,7 +274,7 @@ export const ko = {
       gpuService: 'GPU Service',
       subBackend: '서브 백엔드',
       status: '상태',
-      comfyui: 'ComfyUI / SwarmUI',
+      comfyui: 'ComfyUI',
       ollama: 'Ollama',
       gpuHardware: 'GPU 하드웨어',
       notDetected: '감지되지 않음',
@@ -365,7 +368,8 @@ export const ko = {
     paste: '붙여넣기',
     delete: '삭제',
     loading: '불러오는 중...',
-    contentBlocked: '콘텐츠 차단됨'
+    contentBlocked: '콘텐츠 차단됨',
+    t5UsesYourText: 'T5-XXL은 원본 텍스트를 직접 사용합니다'
   },
   nav: {
     about: '소개',
@@ -536,7 +540,47 @@ export const ko = {
     privacy: {
       title: '개인정보 보호정책',
       notice: '안내: 생성된 콘텐츠는 연구 목적으로 서버에 저장됩니다. 사용자 또는 IP 데이터는 수집되지 않습니다. 업로드된 이미지는 저장되지 않습니다.',
-      usage: '이 플랫폼의 사용은 UCDCAE AI LAB의 등록된 협력 파트너에게만 허용됩니다. 이 맥락에서 합의된 데이터 보호 계약이 적용됩니다. 질문이 있으시면 연락해 주세요:'
+      usage: '이 플랫폼의 사용은 UCDCAE AI LAB의 등록된 협력 파트너에게만 허용됩니다. 이 맥락에서 합의된 데이터 보호 계약이 적용됩니다. 질문이 있으시면 연락해 주세요:',
+      controller: {
+        title: '관리자',
+        content: '에를랑겐-뉘른베르크 프리드리히-알렉산더 대학교(FAU), 총장이 대표합니다. 콘텐츠 책임자: Prof. Dr. Benjamin Jörissen, Bismarckstraße 1a, 91054 Erlangen.'
+      },
+      dataProcessing: {
+        title: '데이터 처리',
+        content: '이 플랫폼은 교육 연구 목적으로 다음 데이터를 처리합니다: 텍스트 입력(프롬프트), 모든 중간 변환 단계(번역, 교육학적 변환, 안전 검사), 생성된 미디어 출력물(이미지, 오디오, 비디오, 코드). 이 데이터는 서버에 가명화된 형태로 저장되며 디지털 문화 예술 교육 연구를 위해서만 사용됩니다.'
+      },
+      deviceId: {
+        title: '기기 식별',
+        content: '브라우저의 로컬 저장소(localStorage)에 임의의 기기 식별자가 생성되어 저장됩니다. 이 식별자는 워크숍 세션을 일별로 구성하기 위해 현재 날짜와 결합됩니다. 기기만 식별하며 사용자를 식별하지 않습니다. 여러 사용자가 같은 기기를 사용할 수 있습니다. 일별 갱신을 통해 생성된 콘텐츠가 워크숍 세션별로 올바르게 그룹화됩니다. 이 식별자에는 개인 데이터가 연결되지 않습니다.'
+      },
+      uploads: {
+        title: '업로드된 이미지',
+        content: '이미지-이미지 변환을 위해 업로드된 이미지는 처리를 위해 서버에 임시 저장됩니다. 영구 연구 데이터셋에 포함되지 않으며 주기적으로 삭제됩니다.'
+      },
+      cookies: {
+        title: '쿠키',
+        content: '이 플랫폼은 기기가 시작한 세션을 유지하기 위해 기술적으로 필요한 단일 세션 쿠키(24시간 유효)만 사용합니다. 추적 쿠키, 분석 쿠키 또는 제3자 쿠키는 사용하지 않습니다.'
+      },
+      externalServices: {
+        title: '외부 서비스',
+        content: '이미지 생성, 안전 검사(이미지 안전, 개인정보보호법 검사) 및 대부분의 AI 처리는 서버에서 로컬로 실행됩니다. 텍스트 기반 AI 처리(프롬프트 변환, 교육학적 인터셉션)를 위해 플랫폼은 Mistral AI(EU 기반)를 사용합니다. Mistral은 입력이 모델 훈련에 사용되지 않도록 계약상 구성되어 있습니다. 프롬프트 변환 중 Wikipedia에 대한 읽기 전용 조회가 발생할 수 있습니다. 외부 API 요청에는 개인 데이터나 기기 식별자가 포함되지 않습니다. 개인정보 이름 보호: 모든 표준 안전 수준(어린이, 청소년, 성인)에서 다단계 개인정보보호 필터가 실행됩니다. Canvas 워크플로우는 연구 지향 기능으로, 외부 LLM API를 사용할 수 있으며 Canvas 사용 시 개인정보보호법 준수는 사용자 책임입니다.'
+      },
+      legalBasis: {
+        title: '법적 근거',
+        content: '데이터 처리는 GDPR 제6조(1)(f)(교육 연구의 정당한 이익)에 근거합니다. 이 플랫폼에 대한 접근은 별도의 데이터 보호 계약이 적용되는 UCDCAE AI LAB의 등록 협력 파트너로 제한됩니다.'
+      },
+      retention: {
+        title: '데이터 보존',
+        content: '생성된 콘텐츠와 관련 메타데이터는 연구 프로젝트 기간 동안 보존됩니다. 자동 삭제는 이루어지지 않습니다. 언제든지 데이터 삭제를 요청할 수 있습니다.'
+      },
+      rights: {
+        title: '귀하의 권리',
+        content: 'GDPR에 따라 접근(제15조), 정정(제16조), 삭제(제17조), 처리 제한(제18조), 데이터 이동성(제20조), 이의 제기(제21조) 권리가 있습니다. 또한 감독 기관에 민원을 제기할 권리가 있습니다.'
+      },
+      fauReference: {
+        title: 'FAU 개인정보 보호정책',
+        content: '이 플랫폼별 공지에 추가하여 에를랑겐-뉘른베르크 프리드리히-알렉산더 대학교의 일반 개인정보 보호정책이 적용됩니다. 다음에서 확인하실 수 있습니다:'
+      }
     }
   },
   docs: {
@@ -606,7 +650,10 @@ export const ko = {
     resultLabel: '아이디어 + 규칙 = 프롬프트',
     resultPlaceholder: '시작 클릭 후 프롬프트가 표시됩니다 (또는 직접 텍스트 입력)',
     optimizedLabel: '모델 최적화 프롬프트',
-    optimizedPlaceholder: '모델 선택 후 최적화된 프롬프트가 표시됩니다.'
+    optimizedPlaceholder: '모델 선택 후 최적화된 프롬프트가 표시됩니다.',
+    loadingDefault: '선택한 모델에 맞게 프롬프트를 조정하고 있습니다. 각 모델은 설명을 다르게 이해합니다 — AI가 최상의 결과를 위해 텍스트를 최적화합니다.',
+    loadingSd35: 'SD3.5에는 세 개의 텍스트 인코더가 있습니다. CLIP-L과 CLIP-G는 시각적 정밀도를 위해 최적화되고 — T5-XXL은 원본 텍스트를 직접 수신하여 창작 의도를 보존합니다.',
+    loadingTranslateHint: '텍스트가 영어가 아닌 경우 먼저 번역 버튼을 사용하세요 — 모델은 영어 입력에서 가장 잘 작동합니다.'
   },
   training: {
     info: {
@@ -1219,8 +1266,6 @@ export const ko = {
         cfgHint: '오디오 생성을 위한 Classifier-Free Guidance',
         seedHint: '-1 = 무작위, 고정값 = 재현 가능한 결과',
         loop: '루프 재생',
-        loopOn: '루프 켜기',
-        loopOff: '루프 끄기',
         stop: '중지',
         looping: '루프 중',
         playing: '재생 중',
@@ -1238,15 +1283,46 @@ export const ko = {
         loopOptimize: '자동 최적화',
         loopPingPong: '핑퐁',
         loopIntervalHint: '루프 영역의 시작/끝 — Stable Audio 페이드아웃을 트리밍하려면 끝을 줄이세요',
-        modeLoop: '루프',
-        modePingPong: '핑퐁',
-        modeWavetable: '웨이브테이블',
+        looperSection: '루퍼 / 시퀀서',
+        loopToggle: '루프',
+        wavetableToggle: '웨이브테이블',
+        wavetableStatic: '정적',
+        wavetableDynamic: '동적 (곧 출시)',
+        sequencerToggle: '시퀀서',
+        oscillating: '진동 중',
+        sequencing: '시퀀싱 중',
+        arpeggiator: '아르페지에이터',
+        arpeggiatorPatterns: {
+          up: '상행',
+          down: '하행',
+          updown: '상행-하행',
+          random: '무작위',
+        },
         modeRate: '템포 (빠름)',
         modePitch: '피치 (OLA)',
         wavetableScan: '스캔 위치',
         wavetableScanHint: '프레임 간 모프 (0 = 시작, 1 = 끝)',
         wavetableFrames: '{count} 프레임',
         midiScan: '스캔 위치',
+        sequencer: {
+          play: '재생',
+          stop: '정지',
+          bpm: 'BPM',
+          bpmHint: '분당 비트 수의 템포 (16분음표 단계)',
+          preset: '프리셋',
+          midiSync: 'MIDI 동기화',
+          gridHint: '슬라이더 = 반음 오프셋, 점 = 활성 토글, 하단 = 벨로시티',
+          patterns: {
+            arpeggio_up: '아르페지오 상행',
+            arpeggio_down: '아르페지오 하행',
+            arpeggio_updown: '아르페지오 상하행',
+            octaves: '옥타브',
+            power_chord: '파워 코드',
+            minor_pentatonic: '단음계 펜타토닉',
+            bass_groove: '베이스 그루브',
+            trance_gate: '트랜스 게이트',
+          },
+        },
         adsrTitle: 'ADSR 엔벨로프',
         adsrAttack: 'A',
         adsrDecay: 'D',
@@ -1276,6 +1352,13 @@ export const ko = {
           applyAndGenerate: '적용 및 재생성',
           undo: '실행 취소',
           redo: '다시 실행'
+        },
+        semanticAxes: {
+          modeToggle: '의미 축',
+          info: '의미 축은 프롬프트 임베딩을 특정 방향으로 유도합니다. 각 슬라이더는 T5 공간의 두 텍스트 극 사이를 보간합니다. 활성 축이 많을수록 축당 효과가 약해집니다. 권장: 3–5개 축.',
+          slotNone: '— 없음 —',
+          resetAll: '모두 중앙으로 초기화',
+          experimental: '실험적'
         }
       },
       mmaudio: {
@@ -1323,6 +1406,21 @@ export const ko = {
       energyUsed: '사용된 에너지',
       co2Produced: '생성된 CO₂'
     },
+    denoising: {
+      modelLoading: 'GPU 메모리에 모델 로딩 중...',
+      modelCard: '모델 프로필',
+      publisher: '퍼블리셔',
+      architecture: '아키텍처',
+      parameters: '파라미터',
+      textEncoders: '텍스트 인코더',
+      quantization: '양자화',
+      vramRequired: '필요 VRAM',
+      resolution: '해상도',
+      license: '라이선스',
+      fairCulture: '공정 문화',
+      safetyByDesign: '안전 설계',
+      denoisingActive: '노이즈 제거 중...',
+    },
     energy: {
       kids_1: '💡 AI 이미지는 전기가 필요합니다 — 휴대폰을 3시간 충전하는 것만큼!',
       kids_2: '🔌 GPU는 전력을 많이 사용하는 슈퍼 계산기입니다!',
@@ -1330,7 +1428,7 @@ export const ko = {
       youth_1: '⚡ GPU는 생성 중에 {watts}W를 사용합니다 — 작은 히터 같습니다!',
       youth_2: '🔋 이미지 하나에 약 0.01-0.02 kWh — 적어 보이지만 쌓입니다!',
       youth_3: '🌡️ GPU가 현재 {temp}°C에 도달하고 있습니다 — 그래서 냉각이 필요합니다!',
-      expert_1: '📊 실시간: {watts}W, {util}% 활용률 = 현재까지 {kwh} kWh',
+      expert_1: '⚡ 현재 소비: {watts} W | GPU 부하: {util}% | 누적: {kwh} kWh (시간 적분)',
       expert_2: '🔥 TDP 한계: {tdp}W | 현재: {watts}W (한계의 {percent}%)',
       expert_3: '💾 VRAM: {used}/{total} GB ({percent}%) — 모델 + 활성화'
     },
@@ -1353,7 +1451,7 @@ export const ko = {
       youth_2: '📚 3개의 텍스트 인코더가 함께 작동합니다: CLIP-L, CLIP-G, T5-XXL',
       youth_3: '🔢 모델은 로드만 하는 데 {vram} GB의 VRAM이 필요합니다!',
       expert_1: '🏗️ 아키텍처: 38개 트랜스포머 블록의 Rectified Flow + MMDiT',
-      expert_2: '📊 FP16/FP8 양자화: 정밀도 vs. VRAM 트레이드오프',
+      expert_2: '🔧 FP16/FP8 양자화: 정밀도 vs. VRAM 트레이드오프',
       expert_3: '🔗 LoRA: Low-Rank Adaptation — 매개변수의 0.1%만 재학습'
     },
     ethics: {
@@ -1374,7 +1472,7 @@ export const ko = {
       youth_1: '🏭 독일 전력망: kWh당 ~400g CO₂ — 이것은 쌓입니다!',
       youth_2: '📈 이 이미지에 {co2}g CO₂ — 1000개 이미지면 {totalKg} kg이 됩니다!',
       youth_3: '💡 팁: 더 적게 생성하되 더 신중하게 — 에너지와 CO₂를 절약합니다.',
-      expert_1: '📊 계산: {watts}W × {seconds}초 ÷ 3600 × 400g/kWh = {co2}g CO₂',
+      expert_1: '🌍 계산: {watts}W × {seconds}초 ÷ 3600 × 400g/kWh = {co2}g CO₂',
       expert_2: '🔬 Scope 2 배출: 데이터 센터 위치가 결정적',
       expert_3: '⚡ PUE (전력 사용 효율성): 냉각을 위한 추가 에너지 오버헤드'
     },

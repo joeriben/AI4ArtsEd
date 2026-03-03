@@ -231,11 +231,14 @@ export const fr = {
       cloudProvider: 'Fournisseur LLM cloud — nécessite une clé API',
       noneLocal: 'Aucun (local uniquement, RGPD)',
       mistralEu: 'Mistral AI (basé en UE, RGPD)',
+      ionosEu: 'IONOS AI Model Hub (UE Berlin, RGPD)',
       anthropicDirect: 'API Anthropic directe (NON conforme RGPD)',
       openaiDirect: 'API OpenAI directe (NON conforme RGPD)',
       openrouterDirect: 'OpenRouter (NON conforme RGPD, routage UE disponible)',
       mistralInfo: 'Mistral AI (basé en UE)',
       mistralDsgvo: 'Conforme au RGPD (infrastructure UE)',
+      ionosInfo: 'IONOS AI Model Hub (UE)',
+      ionosDsgvo: 'Conforme au RGPD (centre de données UE Berlin)',
       anthropicInfo: 'API Anthropic directe',
       anthropicNotDsgvo: 'NON conforme au RGPD',
       anthropicWarning: 'Données traitées hors UE. À utiliser uniquement dans des contextes non éducatifs.',
@@ -271,7 +274,7 @@ export const fr = {
       gpuService: 'GPU Service',
       subBackend: 'Sous-backend',
       status: 'Statut',
-      comfyui: 'ComfyUI / SwarmUI',
+      comfyui: 'ComfyUI',
       ollama: 'Ollama',
       gpuHardware: 'Matériel GPU',
       notDetected: 'Non détecté',
@@ -365,7 +368,8 @@ export const fr = {
     paste: 'Coller',
     delete: 'Supprimer',
     loading: 'Chargement...',
-    contentBlocked: 'Contenu bloqué'
+    contentBlocked: 'Contenu bloqué',
+    t5UsesYourText: 'T5-XXL utilise directement votre texte original'
   },
   nav: {
     about: 'À propos',
@@ -536,7 +540,47 @@ export const fr = {
     privacy: {
       title: 'Politique de confidentialité',
       notice: 'Avis : Le contenu généré est stocké sur le serveur à des fins de recherche. Aucune donnée utilisateur ou IP n\'est collectée. Les images téléchargées ne sont pas stockées.',
-      usage: 'L\'utilisation de cette plateforme est exclusivement réservée aux partenaires de coopération enregistrés du UCDCAE AI LAB. Les accords de protection des données conclus dans ce cadre s\'appliquent. Pour toute question, veuillez contacter :'
+      usage: 'L\'utilisation de cette plateforme est exclusivement réservée aux partenaires de coopération enregistrés du UCDCAE AI LAB. Les accords de protection des données conclus dans ce cadre s\'appliquent. Pour toute question, veuillez contacter :',
+      controller: {
+        title: 'Responsable du traitement',
+        content: 'Université Friedrich-Alexander Erlangen-Nuremberg (FAU), représentée par le président. Responsable du contenu : Prof. Dr. Benjamin Jörissen, Bismarckstraße 1a, 91054 Erlangen.'
+      },
+      dataProcessing: {
+        title: 'Traitement des données',
+        content: 'Cette plateforme traite les données suivantes à des fins de recherche éducative : vos entrées textuelles (prompts), toutes les étapes intermédiaires de transformation (traductions, transformations pédagogiques, contrôles de sécurité) et les sorties médias générées (images, audio, vidéo, code). Ces données sont stockées sur le serveur sous forme pseudonymisée et utilisées exclusivement pour la recherche dans le domaine de l\'éducation artistique culturelle numérique.'
+      },
+      deviceId: {
+        title: 'Identification de l\'appareil',
+        content: 'Un identifiant d\'appareil aléatoire est généré et stocké localement dans votre navigateur (localStorage). Il est combiné avec la date actuelle pour organiser les sessions d\'atelier par jour. Il identifie uniquement l\'appareil — pas la personne qui l\'utilise. Plusieurs utilisateurs changeants peuvent utiliser le même appareil. La rotation quotidienne garantit que le contenu généré est correctement regroupé par session d\'atelier. Aucune donnée personnelle n\'est associée à cet identifiant.'
+      },
+      uploads: {
+        title: 'Images téléchargées',
+        content: 'Les images téléchargées pour les transformations image-vers-image sont temporairement stockées sur le serveur pour traitement. Elles ne font pas partie du jeu de données de recherche permanent et sont périodiquement supprimées.'
+      },
+      cookies: {
+        title: 'Cookies',
+        content: 'Cette plateforme utilise un seul cookie de session techniquement nécessaire (valide 24 heures) pour maintenir la session initiée par un appareil. Aucun cookie de suivi, d\'analyse ou tiers n\'est utilisé.'
+      },
+      externalServices: {
+        title: 'Services externes',
+        content: 'La génération d\'images, les contrôles de sécurité (sécurité des images, contrôles RGPD) et la plupart des traitements IA s\'exécutent localement sur le serveur. Pour le traitement IA textuel (transformation de prompts, interception pédagogique), la plateforme utilise Mistral AI (basé dans l\'UE). Mistral est contractuellement configuré pour que les entrées ne soient pas utilisées pour l\'entraînement du modèle. Des consultations en lecture seule de Wikipedia peuvent intervenir lors de la transformation de prompts. Aucune donnée personnelle ni identifiant d\'appareil n\'est inclus dans les requêtes API externes. Protection des noms RGPD : à tous les niveaux de sécurité standard (enfants, jeunes, adultes), un filtre RGPD multi-étapes s\'exécute sur chaque champ de saisie. Le flux de travail Canvas est une fonctionnalité orientée recherche ; la conformité RGPD lors de l\'utilisation de Canvas est de la responsabilité de l\'utilisateur.'
+      },
+      legalBasis: {
+        title: 'Base juridique',
+        content: 'Le traitement des données est fondé sur l\'art. 6(1)(f) RGPD (intérêt légitime à la recherche éducative). L\'accès à cette plateforme est limité aux partenaires de coopération enregistrés du UCDCAE AI LAB, régis par des accords de protection des données distincts.'
+      },
+      retention: {
+        title: 'Conservation des données',
+        content: 'Le contenu généré et les métadonnées associées sont conservés pendant la durée du projet de recherche. Il n\'y a pas de suppression automatique. Vous pouvez demander la suppression de vos données à tout moment.'
+      },
+      rights: {
+        title: 'Vos droits',
+        content: 'En vertu du RGPD, vous avez le droit d\'accès (art. 15), de rectification (art. 16), d\'effacement (art. 17), de limitation du traitement (art. 18), de portabilité des données (art. 20) et d\'opposition (art. 21). Vous avez également le droit d\'introduire une réclamation auprès d\'une autorité de contrôle.'
+      },
+      fauReference: {
+        title: 'Politique de confidentialité de la FAU',
+        content: 'La politique de confidentialité générale de l\'Université Friedrich-Alexander Erlangen-Nuremberg s\'applique en complément de cet avis spécifique à la plateforme. Vous pouvez la trouver à l\'adresse :'
+      }
     }
   },
   docs: {
@@ -606,7 +650,10 @@ export const fr = {
     resultLabel: 'Idée + Règles = Prompt',
     resultPlaceholder: 'Le prompt apparaîtra après avoir cliqué sur démarrer (ou entrez votre propre texte)',
     optimizedLabel: 'Prompt optimisé pour le modèle',
-    optimizedPlaceholder: 'Le prompt optimisé apparaîtra après la sélection du modèle.'
+    optimizedPlaceholder: 'Le prompt optimisé apparaîtra après la sélection du modèle.',
+    loadingDefault: 'Votre prompt est en cours d\'adaptation pour le modèle sélectionné. Chaque modèle comprend les descriptions différemment — l\'IA optimise le texte pour de meilleurs résultats.',
+    loadingSd35: 'SD3.5 possède trois encodeurs de texte. CLIP-L et CLIP-G sont optimisés pour la précision visuelle — T5-XXL reçoit directement votre texte original, préservant votre intention créative.',
+    loadingTranslateHint: 'Si votre texte n\'est pas en anglais, utilisez d\'abord le bouton de traduction — le modèle fonctionne mieux avec du texte en anglais.'
   },
   training: {
     info: {
@@ -1219,8 +1266,6 @@ export const fr = {
         cfgHint: 'Classifier-Free Guidance pour la génération audio',
         seedHint: '-1 = aléatoire, valeur fixe = résultat reproductible',
         loop: 'Lecture en boucle',
-        loopOn: 'Boucle activée',
-        loopOff: 'Boucle désactivée',
         stop: 'Arrêter',
         looping: 'En boucle',
         playing: 'Lecture',
@@ -1238,15 +1283,46 @@ export const fr = {
         loopOptimize: 'Auto-optimiser',
         loopPingPong: 'Ping-pong',
         loopIntervalHint: 'Début/fin de la région de boucle — raccourcissez la fin pour couper le fade-out de Stable Audio',
-        modeLoop: 'Boucle',
-        modePingPong: 'Ping-Pong',
-        modeWavetable: 'Wavetable',
+        looperSection: 'Looper / Séquenceur',
+        loopToggle: 'Boucle',
+        wavetableToggle: 'Wavetable',
+        wavetableStatic: 'Statique',
+        wavetableDynamic: 'Dynamique (bientôt)',
+        sequencerToggle: 'Séquenceur',
+        oscillating: 'En oscillation',
+        sequencing: 'En séquençage',
+        arpeggiator: 'Arpégiateur',
+        arpeggiatorPatterns: {
+          up: 'Montant',
+          down: 'Descendant',
+          updown: 'Montant-descendant',
+          random: 'Aléatoire',
+        },
         modeRate: 'Tempo (rapide)',
         modePitch: 'Hauteur (OLA)',
         wavetableScan: 'Position de balayage',
         wavetableScanHint: 'Morphing entre les trames (0 = début, 1 = fin)',
         wavetableFrames: '{count} trames',
         midiScan: 'Position de balayage',
+        sequencer: {
+          play: 'Jouer',
+          stop: 'Arrêter',
+          bpm: 'BPM',
+          bpmHint: 'Tempo en battements par minute (pas de double-croche)',
+          preset: 'Préréglage',
+          midiSync: 'Sync MIDI',
+          gridHint: 'Curseur = décalage en demi-ton, point = bascule active, bas = vélocité',
+          patterns: {
+            arpeggio_up: 'Arpège montant',
+            arpeggio_down: 'Arpège descendant',
+            arpeggio_updown: 'Arpège montant-descendant',
+            octaves: 'Octaves',
+            power_chord: 'Power chord',
+            minor_pentatonic: 'Pentatonique mineure',
+            bass_groove: 'Groove basse',
+            trance_gate: 'Gate trance',
+          },
+        },
         adsrTitle: 'Enveloppe ADSR',
         adsrAttack: 'A',
         adsrDecay: 'D',
@@ -1276,6 +1352,13 @@ export const fr = {
           applyAndGenerate: 'Appliquer et regénérer',
           undo: 'Annuler',
           redo: 'Rétablir'
+        },
+        semanticAxes: {
+          modeToggle: 'Axes sémantiques',
+          info: 'Les axes sémantiques orientent l\'incorporation du prompt dans des directions spécifiques. Chaque curseur interpole entre deux pôles textuels dans l\'espace T5. Plus d\'axes actifs = effet plus faible par axe. Recommandé : 3–5 axes.',
+          slotNone: '— aucun —',
+          resetAll: 'Tout réinitialiser au centre',
+          experimental: 'expérimental'
         }
       },
       mmaudio: {
@@ -1323,6 +1406,21 @@ export const fr = {
       energyUsed: 'Énergie utilisée',
       co2Produced: 'CO\u2082 produit'
     },
+    denoising: {
+      modelLoading: 'Chargement du modèle en mémoire GPU...',
+      modelCard: 'Profil du modèle',
+      publisher: 'Éditeur',
+      architecture: 'Architecture',
+      parameters: 'Paramètres',
+      textEncoders: 'Encodeurs de texte',
+      quantization: 'Quantification',
+      vramRequired: 'VRAM requise',
+      resolution: 'Résolution',
+      license: 'Licence',
+      fairCulture: 'Culture équitable',
+      safetyByDesign: 'Sécurité par conception',
+      denoisingActive: 'Débruitage en cours...',
+    },
     energy: {
       kids_1: '\ud83d\udca1 Les images IA ont besoin d\'\u00e9lectricit\u00e9 \u2014 autant que charger votre t\u00e9l\u00e9phone pendant 3 heures !',
       kids_2: '\ud83d\udd0c Le GPU est comme un super calculateur qui consomme beaucoup d\'\u00e9nergie !',
@@ -1330,7 +1428,7 @@ export const fr = {
       youth_1: '\u26a1 Un GPU utilise {watts}W pendant la g\u00e9n\u00e9ration \u2014 comme un petit radiateur !',
       youth_2: '\ud83d\udd0b Une image utilise environ 0,01-0,02 kWh \u2014 \u00e7a semble peu, mais \u00e7a s\'accumule !',
       youth_3: '\ud83c\udf21\ufe0f Le GPU atteint {temp}\u00b0C en ce moment \u2014 c\'est pourquoi il a besoin de refroidissement !',
-      expert_1: '\ud83d\udcca Temps r\u00e9el : {watts}W \u00e0 {util}% d\'utilisation = {kwh} kWh jusqu\'ici',
+      expert_1: '⚡ Consommation actuelle : {watts} W | Charge GPU : {util}% | Accumulé : {kwh} kWh (intégré dans le temps)',
       expert_2: '\ud83d\udd25 Limite TDP : {tdp}W | Actuel : {watts}W ({percent}% de la limite)',
       expert_3: '\ud83d\udcbe VRAM : {used}/{total} Go ({percent}%) \u2014 mod\u00e8le + activations'
     },
@@ -1353,7 +1451,7 @@ export const fr = {
       youth_2: '\ud83d\udcda 3 encodeurs de texte travaillent ensemble : CLIP-L, CLIP-G et T5-XXL',
       youth_3: '\ud83d\udd22 Le mod\u00e8le a besoin de {vram} Go de VRAM rien que pour \u00eatre charg\u00e9 !',
       expert_1: '\ud83c\udfd7\ufe0f Architecture : Rectified Flow + MMDiT avec 38 blocs transformer',
-      expert_2: '\ud83d\udcca Quantification FP16/FP8 : compromis pr\u00e9cision vs. VRAM',
+      expert_2: '🔧 Quantification FP16/FP8 : compromis précision vs. VRAM',
       expert_3: '\ud83d\udd17 LoRA : Low-Rank Adaptation \u2014 seulement 0,1% des param\u00e8tres r\u00e9-entra\u00een\u00e9s'
     },
     ethics: {
@@ -1374,7 +1472,7 @@ export const fr = {
       youth_1: '\ud83c\udfed Mix \u00e9lectrique allemand : ~400g CO\u2082 par kWh \u2014 \u00e7a s\'accumule !',
       youth_2: '\ud83d\udcc8 {co2}g CO\u2082 pour cette image \u2014 avec 1000 images, cela ferait {totalKg} kg !',
       youth_3: '\ud83d\udca1 Conseil : g\u00e9n\u00e9rez moins d\'images, mais de mani\u00e8re plus r\u00e9fl\u00e9chie \u2014 \u00e9conomise de l\'\u00e9nergie et du CO\u2082.',
-      expert_1: '\ud83d\udcca Calcul : {watts}W \u00d7 {seconds}s \u00f7 3600 \u00d7 400g/kWh = {co2}g CO\u2082',
+      expert_1: '🌍 Calcul : {watts}W × {seconds}s ÷ 3600 × 400g/kWh = {co2}g CO₂',
       expert_2: '\ud83d\udd2c \u00c9missions Scope 2 : la localisation du centre de donn\u00e9es est d\u00e9cisive',
       expert_3: '\u26a1 PUE (Power Usage Effectiveness) : surco\u00fbt \u00e9nerg\u00e9tique suppl\u00e9mentaire pour le refroidissement'
     },

@@ -231,11 +231,14 @@ export const he = {
       cloudProvider: 'ספק LLM בענן - דורש מפתח API',
       noneLocal: 'ללא (מקומי בלבד, GDPR)',
       mistralEu: 'Mistral AI (מבוסס באיחוד האירופי, GDPR)',
+      ionosEu: 'IONOS AI Model Hub (איחוד האירופי ברלין, GDPR)',
       anthropicDirect: 'Anthropic Direct API (לא תואם GDPR)',
       openaiDirect: 'OpenAI Direct API (לא תואם GDPR)',
       openrouterDirect: 'OpenRouter (לא תואם GDPR, ניתוב אירופי זמין)',
       mistralInfo: 'Mistral AI (מבוסס באיחוד האירופי)',
       mistralDsgvo: 'תואם GDPR (תשתית אירופית)',
+      ionosInfo: 'IONOS AI Model Hub (איחוד האירופי)',
+      ionosDsgvo: 'תואם GDPR (מרכז נתונים אירופי ברלין)',
       anthropicInfo: 'Anthropic Direct API',
       anthropicNotDsgvo: 'לא תואם GDPR',
       anthropicWarning: 'נתונים מעובדים מחוץ לאיחוד האירופי. לשימוש רק בהקשרים לא-חינוכיים.',
@@ -271,7 +274,7 @@ export const he = {
       gpuService: 'GPU Service',
       subBackend: 'Sub-Backend',
       status: 'סטטוס',
-      comfyui: 'ComfyUI / SwarmUI',
+      comfyui: 'ComfyUI',
       ollama: 'Ollama',
       gpuHardware: 'חומרת GPU',
       notDetected: 'לא זוהה',
@@ -365,7 +368,8 @@ export const he = {
     paste: 'הדבק',
     delete: 'מחק',
     loading: 'טוען...',
-    contentBlocked: 'תוכן חסום'
+    contentBlocked: 'תוכן חסום',
+    t5UsesYourText: 'T5-XXL משתמש בטקסט המקורי שלך ישירות'
   },
   nav: {
     about: 'אודות',
@@ -536,7 +540,47 @@ export const he = {
     privacy: {
       title: 'מדיניות פרטיות',
       notice: 'הודעה: תוכן שנוצר מאוחסן בשרת למטרות מחקר. לא נאספים נתוני משתמש או כתובות IP. תמונות שהועלו אינן מאוחסנות.',
-      usage: 'השימוש בפלטפורמה זו מותר אך ורק לשותפי שיתוף פעולה רשומים של UCDCAE AI LAB. הסכמי הגנת הנתונים שנערכו בהקשר זה חלים. לשאלות, אנא פנו אלינו:'
+      usage: 'השימוש בפלטפורמה זו מותר אך ורק לשותפי שיתוף פעולה רשומים של UCDCAE AI LAB. הסכמי הגנת הנתונים שנערכו בהקשר זה חלים. לשאלות, אנא פנו אלינו:',
+      controller: {
+        title: 'אחראי לעיבוד',
+        content: 'אוניברסיטת פרידריך-אלכסנדר ארלנגן-נירנברג (FAU), המיוצגת על ידי הנשיא. אחראי לתוכן: Prof. Dr. Benjamin Jörissen, Bismarckstraße 1a, 91054 Erlangen.'
+      },
+      dataProcessing: {
+        title: 'עיבוד נתונים',
+        content: 'פלטפורמה זו מעבדת את הנתונים הבאים למטרות מחקר חינוכי: הזנות הטקסט שלכם (פרומפטים), כל שלבי הביניים של הטרנספורמציה (תרגומים, טרנספורמציות פדגוגיות, בדיקות בטיחות) ופלטי המדיה שנוצרו (תמונות, שמע, וידאו, קוד). נתונים אלה מאוחסנים בשרת בצורה פסאודונימית ומשמשים אך ורק למחקר בתחום החינוך האמנותי התרבותי הדיגיטלי.'
+      },
+      deviceId: {
+        title: 'זיהוי מכשיר',
+        content: 'מזהה מכשיר אקראי נוצר ומאוחסן מקומית בדפדפן שלכם (localStorage). מזהה זה משולב עם התאריך הנוכחי לארגון מפגשי סדנה על בסיס יומי. הוא מזהה את המכשיר בלבד — לא את האדם שמשתמש בו. מספר משתמשים ומשתנים יכולים להשתמש באותו מכשיר. הרוטציה היומית מבטיחה שהתוכן שנוצר מקובץ כראוי לפי מפגש סדנה. לא מקושרים נתונים אישיים למזהה זה.'
+      },
+      uploads: {
+        title: 'תמונות שהועלו',
+        content: 'תמונות שהועלו לטרנספורמציות תמונה-לתמונה מאוחסנות זמנית בשרת לעיבוד. הן אינן כלולות במערך הנתונים הקבוע למחקר ומנוקות מעת לעת.'
+      },
+      cookies: {
+        title: 'עוגיות',
+        content: 'פלטפורמה זו משתמשת בעוגיית סשן אחת בלבד הנחוצה מבחינה טכנית (תקפה ל-24 שעות) לשמירת הסשן שהחל על ידי המכשיר. לא נעשה שימוש בעוגיות מעקב, עוגיות אנליטיקה או עוגיות צד שלישי.'
+      },
+      externalServices: {
+        title: 'שירותים חיצוניים',
+        content: 'יצירת תמונות, בדיקות בטיחות (בטיחות תמונות, בדיקות GDPR) ורוב עיבוד הבינה המלאכותית מתבצעים מקומית בשרת. לעיבוד בינה מלאכותית מבוסס טקסט (טרנספורמציה של פרומפטים, יירוט פדגוגי), הפלטפורמה משתמשת ב-Mistral AI (מבוסס באיחוד האירופי). Mistral מוגדר חוזית כך שהזנות לא משמשות לאימון מודלים. בדיקות קריאה בלבד ב-Wikipedia עשויות להתרחש במהלך טרנספורמציה של פרומפטים. שום נתונים אישיים או מזהי מכשיר אינם כלולים בבקשות API חיצוניות. הגנת שמות GDPR: בכל רמות הבטיחות הסטנדרטיות (ילדים, נוער, מבוגרים), מסנן GDPR רב-שלבי פועל על כל שדה קלט. תהליך עבודה Canvas הוא תכונה מחקרית; עמידה ב-GDPR בעת שימוש ב-Canvas היא באחריות המשתמש.'
+      },
+      legalBasis: {
+        title: 'בסיס משפטי',
+        content: 'עיבוד הנתונים מבוסס על סעיף 6(1)(f) ל-GDPR (אינטרס לגיטימי במחקר חינוכי). הגישה לפלטפורמה זו מוגבלת לשותפי שיתוף פעולה רשומים של UCDCAE AI LAB, המוסדרים על ידי הסכמי הגנת נתונים נפרדים.'
+      },
+      retention: {
+        title: 'שמירת נתונים',
+        content: 'התוכן שנוצר והמטאנתונים הנלווים נשמרים לאורך כל פרויקט המחקר. אין מחיקה אוטומטית. תוכלו לבקש מחיקת הנתונים שלכם בכל עת.'
+      },
+      rights: {
+        title: 'הזכויות שלכם',
+        content: 'מכוח GDPR, יש לכם זכות גישה (סע׳ 15), תיקון (סע׳ 16), מחיקה (סע׳ 17), הגבלת עיבוד (סע׳ 18), ניוד נתונים (סע׳ 20) והתנגדות (סע׳ 21). יש לכם גם זכות להגיש תלונה לרשות פיקוח.'
+      },
+      fauReference: {
+        title: 'מדיניות הפרטיות של FAU',
+        content: 'מדיניות הפרטיות הכללית של אוניברסיטת פרידריך-אלכסנדר ארלנגן-נירנברג חלה בנוסף להודעה ספציפית לפלטפורמה זו. ניתן למצוא אותה בכתובת:'
+      }
     }
   },
   docs: {
@@ -606,7 +650,10 @@ export const he = {
     resultLabel: 'רעיון + כללים = פרומפט',
     resultPlaceholder: 'הפרומפט יופיע לאחר לחיצה על התחל (או הזן טקסט משלך)',
     optimizedLabel: 'פרומפט מותאם למודל',
-    optimizedPlaceholder: 'הפרומפט המותאם יופיע לאחר בחירת מודל.'
+    optimizedPlaceholder: 'הפרומפט המותאם יופיע לאחר בחירת מודל.',
+    loadingDefault: 'הפרומפט שלך מותאם למודל הנבחר. כל מודל מבין תיאורים אחרת \u2014 ה-AI מייעל את הטקסט לתוצאות הטובות ביותר.',
+    loadingSd35: 'ל-SD3.5 יש שלושה מקודדי טקסט. CLIP-L ו-CLIP-G עוברים אופטימיזציה לדיוק חזותי \u2014 T5-XXL מקבל את הטקסט המקורי שלך ישירות, ושומר על הכוונה היצירתית שלך.',
+    loadingTranslateHint: 'אם הטקסט שלך אינו באנגלית, השתמש בכפתור התרגום קודם \u2014 המודל עובד הכי טוב עם קלט באנגלית.'
   },
   training: {
     info: {
@@ -1219,8 +1266,6 @@ export const he = {
         cfgHint: 'Classifier-Free Guidance ליצירת שמע',
         seedHint: '-1 = אקראי, ערך קבוע = תוצאה שניתנת לשחזור',
         loop: 'השמעה בלולאה',
-        loopOn: 'לולאה פועלת',
-        loopOff: 'לולאה כבויה',
         stop: 'עצור',
         looping: 'בלולאה',
         playing: 'מנגן',
@@ -1238,15 +1283,46 @@ export const he = {
         loopOptimize: 'אופטימיזציה אוטומטית',
         loopPingPong: 'פינג-פונג',
         loopIntervalHint: 'התחלה/סוף של אזור הלולאה \u2014 קצר את הסוף כדי לחתוך את דעיכת Stable Audio',
-        modeLoop: 'לולאה',
-        modePingPong: 'פינג-פונג',
-        modeWavetable: 'Wavetable',
+        looperSection: 'לופר / סקוונסר',
+        loopToggle: 'לולאה',
+        wavetableToggle: 'Wavetable',
+        wavetableStatic: 'סטטי',
+        wavetableDynamic: 'דינמי (בקרוב)',
+        sequencerToggle: 'סקוונסר',
+        oscillating: 'מתנדד',
+        sequencing: 'בסיקוונסינג',
+        arpeggiator: 'ארפג\'יאטור',
+        arpeggiatorPatterns: {
+          up: 'עולה',
+          down: 'יורד',
+          updown: 'עולה-יורד',
+          random: 'אקראי',
+        },
         modeRate: 'קצב (מהיר)',
         modePitch: 'גובה צליל (OLA)',
         wavetableScan: 'מיקום סריקה',
         wavetableScanHint: 'מורפינג בין פריימים (0 = התחלה, 1 = סוף)',
         wavetableFrames: '{count} פריימים',
         midiScan: 'מיקום סריקה',
+        sequencer: {
+          play: 'נגן',
+          stop: 'עצור',
+          bpm: 'BPM',
+          bpmHint: 'טמפו בפעימות לדקה (צעדים של שישה-עשר)',
+          preset: 'פריסט',
+          midiSync: 'סנכרון MIDI',
+          gridHint: 'מחוון = היסט חצי-טון, נקודה = מתג פעיל, תחתית = עוצמה',
+          patterns: {
+            arpeggio_up: 'ארפג\'יו עולה',
+            arpeggio_down: 'ארפג\'יו יורד',
+            arpeggio_updown: 'ארפג\'יו עולה-יורד',
+            octaves: 'אוקטבות',
+            power_chord: 'פאוור קורד',
+            minor_pentatonic: 'פנטטוניקה מינורית',
+            bass_groove: 'גרוב בס',
+            trance_gate: 'טראנס גייט',
+          },
+        },
         adsrTitle: 'מעטפת ADSR',
         adsrAttack: 'A',
         adsrDecay: 'D',
@@ -1276,6 +1352,13 @@ export const he = {
           applyAndGenerate: 'החל וצור מחדש',
           undo: 'בטל',
           redo: 'בצע שוב'
+        },
+        semanticAxes: {
+          modeToggle: 'צירים סמנטיים',
+          info: 'צירים סמנטיים מכוונים את הטמעת הפרומפט לכיוונים ספציפיים. כל מחוון מבצע אינטרפולציה בין שני קטבי טקסט במרחב T5. יותר צירים פעילים = אפקט חלש יותר לכל ציר. מומלץ: 3–5 צירים.',
+          slotNone: '— ללא —',
+          resetAll: 'אפס הכל למרכז',
+          experimental: 'ניסיוני'
         }
       },
       mmaudio: {
@@ -1323,6 +1406,21 @@ export const he = {
       energyUsed: 'אנרגיה שנוצלה',
       co2Produced: 'CO\u2082 שנוצר'
     },
+    denoising: {
+      modelLoading: 'טוען מודל לזיכרון GPU...',
+      modelCard: 'פרופיל מודל',
+      publisher: 'מפרסם',
+      architecture: 'ארכיטקטורה',
+      parameters: 'פרמטרים',
+      textEncoders: 'מקודדי טקסט',
+      quantization: 'קוונטיזציה',
+      vramRequired: 'VRAM נדרש',
+      resolution: 'רזולוציה',
+      license: 'רישיון',
+      fairCulture: 'תרבות הוגנת',
+      safetyByDesign: 'בטיחות בתכנון',
+      denoisingActive: 'הסרת רעש בתהליך...',
+    },
     energy: {
       kids_1: '\ud83d\udca1 תמונות AI צריכות חשמל \u2013 כמו טעינת הטלפון שלך למשך 3 שעות!',
       kids_2: '\ud83d\udd0c ה-GPU הוא כמו מחשבון-על שאוכל הרבה חשמל!',
@@ -1330,7 +1428,7 @@ export const he = {
       youth_1: '\u26a1 GPU צורך {watts}W בזמן יצירה \u2013 כמו תנור חימום קטן!',
       youth_2: '\ud83d\udd0b תמונה אחת צורכת כ-0.01-0.02 kWh \u2013 נשמע מעט, אבל מצטבר!',
       youth_3: '\ud83c\udf21\ufe0f ה-GPU מגיע ל-{temp}\u00b0C עכשיו \u2013 לכן הוא צריך קירור!',
-      expert_1: '\ud83d\udcca בזמן אמת: {watts}W ב-{util}% ניצול = {kwh} kWh עד כה',
+      expert_1: '⚡ צריכה נוכחית: {watts} W | עומס GPU: {util}% | מצטבר: {kwh} kWh (אינטגרל לפי זמן)',
       expert_2: '\ud83d\udd25 מגבלת TDP: {tdp}W | נוכחי: {watts}W ({percent}% מהמגבלה)',
       expert_3: '\ud83d\udcbe VRAM: {used}/{total} GB ({percent}%) \u2013 מודל + הפעלות'
     },
@@ -1353,7 +1451,7 @@ export const he = {
       youth_2: '\ud83d\udcda 3 מקודדי טקסט עובדים יחד: CLIP-L, CLIP-G, ו-T5-XXL',
       youth_3: '\ud83d\udd22 המודל צריך {vram} GB VRAM רק כדי להיטען!',
       expert_1: '\ud83c\udfd7\ufe0f ארכיטקטורה: Rectified Flow + MMDiT עם 38 בלוקי טרנספורמר',
-      expert_2: '\ud83d\udcca קוונטיזציית FP16/FP8: פשרה בין דיוק ל-VRAM',
+      expert_2: '🔧 קוונטיזציית FP16/FP8: פשרה בין דיוק ל-VRAM',
       expert_3: '\ud83d\udd17 LoRA: Low-Rank Adaptation \u2013 רק 0.1% מהפרמטרים מאומנים מחדש'
     },
     ethics: {
@@ -1374,7 +1472,7 @@ export const he = {
       youth_1: '\ud83c\udfed רשת החשמל הגרמנית: ~400 גרם CO\u2082 לכל kWh \u2013 זה מצטבר!',
       youth_2: '\ud83d\udcc8 {co2} גרם CO\u2082 לתמונה זו \u2013 עם 1000 תמונות זה היה {totalKg} ק"ג!',
       youth_3: '\ud83d\udca1 טיפ: צור פחות תמונות, אבל יותר מחושבות \u2013 חוסך אנרגיה ו-CO\u2082.',
-      expert_1: '\ud83d\udcca חישוב: {watts}W \u00d7 {seconds}s \u00f7 3600 \u00d7 400g/kWh = {co2}g CO\u2082',
+      expert_1: '🌍 חישוב: {watts}W × {seconds}s ÷ 3600 × 400g/kWh = {co2}g CO₂',
       expert_2: '\ud83d\udd2c פליטות Scope 2: מיקום מרכז הנתונים הוא המכריע',
       expert_3: '\u26a1 PUE (Power Usage Effectiveness): תקורת אנרגיה נוספת לקירור'
     },

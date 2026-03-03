@@ -25,21 +25,28 @@
   },
   "category": {
     "en": "Poetry",
-    "de": "Trans-Aktion",
-    "tr": "Trans-Aktion",
-    "ko": "Trans-Aktion",
-    "uk": "Trans-Aktion",
-    "fr": "Trans-Aktion",
-    "es": "Trans-Aktion",
-    "he": "Trans-Aktion",
-    "ar": "Trans-Aktion"
+    "de": "Poesie",
+    "tr": "\u015eiir",
+    "ko": "\uc2dc",
+    "uk": "\u041f\u043e\u0435\u0437\u0456\u044f",
+    "fr": "Po\u00e9sie",
+    "es": "Poes\u00eda",
+    "he": "\u05e9\u05d9\u05e8\u05d4",
+    "ar": "\u0634\u0639\u0631"
   },
   "properties": [
     "poetry"
   ],
   "context": {
     "en": "Dark One / Giridhar / ghunghroo / dance / vish ka pyala / cup of poison / drink laughing / rana / palace / thorns / garden / lotus eyes / separated / ocean / without you / anklets / jasmine / Vrindavan",
-    "de": "Dark One / Giridhar / ghunghroo / Tanz / vish ka pyala / Giftbecher / lachend trinken / Rana / Palast / Dornen / Garten / Lotusaugen / getrennt / Ozean / ohne dich / Fussschellen / Jasmin / Vrindavan"
+    "de": "Dark One / Giridhar / ghunghroo / Tanz / vish ka pyala / Giftbecher / lachend trinken / Rana / Palast / Dornen / Garten / Lotusaugen / getrennt / Ozean / ohne dich / Fussschellen / Jasmin / Vrindavan",
+    "tr": "Dark One / Giridhar / ghunghroo / dans / vish ka pyala / zehir kadehi / g\u00fclerek i\u00e7mek / rana / saray / dikenler / bah\u00e7e / nilüfer g\u00f6zler / ayr\u0131 / okyanus / sensiz / halhallar / yasemin / Vrindavan",
+    "ko": "Dark One / Giridhar / ghunghroo / \ucda4 / vish ka pyala / \ub3c5\uc758 \uc794 / \uc6c3\uc73c\uba70 \ub9c8\uc2dc\ub2e4 / rana / \uad81\uc804 / \uac00\uc2dc / \uc815\uc6d0 / \uc5f0\uaf43 \ub208 / \ubd84\ub9ac\ub41c / \ubc14\ub2e4 / \ub2f9\uc2e0 \uc5c6\uc774 / \ubc1c\ucc0c / \uc7ac\uc2a4\ubbfc / Vrindavan",
+    "uk": "Dark One / Giridhar / ghunghroo / \u0442\u0430\u043d\u0435\u0446\u044c / vish ka pyala / \u0447\u0430\u0448\u0430 \u043e\u0442\u0440\u0443\u0442\u0438 / \u043f\u0438\u0442\u0438 \u0441\u043c\u0456\u044e\u0447\u0438\u0441\u044c / rana / \u043f\u0430\u043b\u0430\u0446 / \u0442\u0435\u0440\u043d\u0438 / \u0441\u0430\u0434 / \u043e\u0447\u0456 \u043b\u043e\u0442\u043e\u0441\u0430 / \u0440\u043e\u0437\u043b\u0443\u0447\u0435\u043d\u0456 / \u043e\u043a\u0435\u0430\u043d / \u0431\u0435\u0437 \u0442\u0435\u0431\u0435 / \u043d\u043e\u0436\u043d\u0456 \u0431\u0440\u0430\u0441\u043b\u0435\u0442\u0438 / \u0436\u0430\u0441\u043c\u0438\u043d / Vrindavan",
+    "fr": "Dark One / Giridhar / ghunghroo / danse / vish ka pyala / coupe de poison / boire en riant / rana / palais / \u00e9pines / jardin / yeux de lotus / s\u00e9par\u00e9 / oc\u00e9an / sans toi / bracelets de cheville / jasmin / Vrindavan",
+    "es": "Dark One / Giridhar / ghunghroo / danza / vish ka pyala / copa de veneno / beber riendo / rana / palacio / espinas / jard\u00edn / ojos de loto / separado / oc\u00e9ano / sin ti / tobilleras / jazm\u00edn / Vrindavan",
+    "he": "Dark One / Giridhar / ghunghroo / \u05e8\u05d9\u05e7\u05d5\u05d3 / vish ka pyala / \u05db\u05d5\u05e1 \u05e8\u05e2\u05dc / \u05e9\u05d5\u05ea\u05d4 \u05d1\u05e6\u05d7\u05d5\u05e7 / rana / \u05d0\u05e8\u05de\u05d5\u05df / \u05e7\u05d5\u05e6\u05d9\u05dd / \u05d2\u05df / \u05e2\u05d9\u05e0\u05d9 \u05dc\u05d5\u05d8\u05d5\u05e1 / \u05e0\u05e4\u05e8\u05d3 / \u05d0\u05d5\u05e7\u05d9\u05d9\u05e0\u05d5\u05e1 / \u05d1\u05dc\u05e2\u05d3\u05d9\u05da / \u05e6\u05de\u05d9\u05d3\u05d9\u05dd / \u05d9\u05e1\u05de\u05d9\u05df / Vrindavan",
+    "ar": "Dark One / Giridhar / ghunghroo / \u0631\u0642\u0635 / vish ka pyala / \u0643\u0623\u0633 \u0633\u0645 / \u064a\u0634\u0631\u0628 \u0636\u0627\u062d\u0643\u0627\u064b / rana / \u0642\u0635\u0631 / \u0623\u0634\u0648\u0627\u0643 / \u062d\u062f\u064a\u0642\u0629 / \u0639\u064a\u0648\u0646 \u0627\u0644\u0644\u0648\u062a\u0633 / \u0645\u0646\u0641\u0635\u0644 / \u0645\u062d\u064a\u0637 / \u0628\u062f\u0648\u0646\u0643 / \u062e\u0644\u0627\u062e\u0644 / \u064a\u0627\u0633\u0645\u064a\u0646 / Vrindavan"
   },
   "parameters": {
     "temperature": 0.85,

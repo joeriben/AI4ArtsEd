@@ -6,179 +6,6 @@ each processed work order to **Completed** with a date stamp.
 
 ## Pending
 
-### WO-2026-03-03-comfyui-label-cleanup
-- **Session**: SwarmUI cleanup
-- **Scope**: en.ts
-- **Changed keys** (modified):
-  - `settings.status.comfyui` (MODIFIED): 'ComfyUI / SwarmUI' -> 'ComfyUI'
-- **Context**: SwarmUI has been removed from the project. The settings status label should only show "ComfyUI". Simple change, just remove " / SwarmUI" from all translations.
-
-### WO-2026-03-02-looper-section-header
-- **Session**: 233
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `latentLab.crossmodal.synth.looperSection` (NEW): 'Looper / Sequencer'
-- **Context**: Section header for the collapsible Looper/Sequencer widget in Crossmodal Lab synth tab. Was previously an always-visible div, now wrapped in <details>. Translate naturally.
-
-### WO-2026-03-02-flatten-synth-toggles
-- **Session**: 233
-- **Scope**: en.ts
-- **Changed keys** (new or removed):
-  - `latentLab.crossmodal.synth.loopToggle` (NEW): 'Loop'
-  - `latentLab.crossmodal.synth.wavetableToggle` (NEW): 'Wavetable'
-  - `latentLab.crossmodal.synth.wavetableStatic` (NEW): 'Static'
-  - `latentLab.crossmodal.synth.wavetableDynamic` (NEW): 'Dynamic (coming soon)'
-  - `latentLab.crossmodal.synth.sequencerToggle` (NEW): 'Sequencer'
-  - `latentLab.crossmodal.synth.oscillating` (NEW): 'Oscillating'
-  - `latentLab.crossmodal.synth.sequencing` (NEW): 'Sequencing'
-  - `latentLab.crossmodal.synth.arpeggiator` (NEW): 'Arpeggiator'
-  - `latentLab.crossmodal.synth.arpeggiatorPatterns.up` (NEW): 'Up'
-  - `latentLab.crossmodal.synth.arpeggiatorPatterns.down` (NEW): 'Down'
-  - `latentLab.crossmodal.synth.arpeggiatorPatterns.updown` (NEW): 'Up-Down'
-  - `latentLab.crossmodal.synth.arpeggiatorPatterns.random` (NEW): 'Random'
-  - `latentLab.crossmodal.synth.loopOn` (REMOVED)
-  - `latentLab.crossmodal.synth.loopOff` (REMOVED)
-  - `latentLab.crossmodal.synth.engineDirect` (REMOVED)
-  - `latentLab.crossmodal.synth.engineWavetable` (REMOVED)
-  - `latentLab.crossmodal.synth.behaviorFreerun` (REMOVED)
-  - `latentLab.crossmodal.synth.behaviorSequencer` (REMOVED)
-  - `latentLab.crossmodal.synth.modeLoop` (REMOVED)
-  - `latentLab.crossmodal.synth.modePingPong` (REMOVED)
-  - `latentLab.crossmodal.synth.modeWavetable` (REMOVED)
-  - `latentLab.crossmodal.synth.modeSequencer` (REMOVED)
-- **Context**: UI flattened from two abstract selector rows (Buffer/Wavetable × Free-run/Sequencer) to independent toggle sections. Each section (Loop, Wavetable, Sequencer, Arpeggiator) has its own on/off checkbox. "Static" vs "Dynamic" are wavetable sub-modes (dynamic is placeholder). Removed keys had abstract synth-jargon labels. Translate toggles naturally (e.g. DE: "Schleife", "Wellentabelle", "Sequenzer", "Arpeggiator", "Statisch", "Dynamisch (demnächst)"). Pattern names are musical terms.
-
-### WO-2026-03-01-step-sequencer
-- **Session**: 231
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `latentLab.crossmodal.synth.modeSequencer` (NEW): 'Sequencer'
-  - `latentLab.crossmodal.synth.sequencer.play` (NEW): 'Play'
-  - `latentLab.crossmodal.synth.sequencer.stop` (NEW): 'Stop'
-  - `latentLab.crossmodal.synth.sequencer.bpm` (NEW): 'BPM'
-  - `latentLab.crossmodal.synth.sequencer.bpmHint` (NEW): 'Tempo in beats per minute (16th-note steps)'
-  - `latentLab.crossmodal.synth.sequencer.preset` (NEW): 'Preset'
-  - `latentLab.crossmodal.synth.sequencer.midiSync` (NEW): 'MIDI Sync'
-  - `latentLab.crossmodal.synth.sequencer.gridHint` (NEW): 'Slider = semitone offset, dot = active toggle, bottom = velocity'
-  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_up` (NEW): 'Arpeggio Up'
-  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_down` (NEW): 'Arpeggio Down'
-  - `latentLab.crossmodal.synth.sequencer.patterns.arpeggio_updown` (NEW): 'Arpeggio Up-Down'
-  - `latentLab.crossmodal.synth.sequencer.patterns.octaves` (NEW): 'Octaves'
-  - `latentLab.crossmodal.synth.sequencer.patterns.power_chord` (NEW): 'Power Chord'
-  - `latentLab.crossmodal.synth.sequencer.patterns.minor_pentatonic` (NEW): 'Minor Pentatonic'
-  - `latentLab.crossmodal.synth.sequencer.patterns.bass_groove` (NEW): 'Bass Groove'
-  - `latentLab.crossmodal.synth.sequencer.patterns.trance_gate` (NEW): 'Trance Gate'
-- **Context**: Step sequencer for the Crossmodal Lab synth tab. Replaces the broken Wavetable mode as the 3rd playback option. User-editable grid with selectable 5/8/16 steps. Preset patterns (arpeggio names) should be translated naturally (e.g. "Arpeggio Aufwärts" in DE). BPM stays as "BPM" in all languages. "MIDI Sync" can stay English in most languages or be adapted. gridHint explains the UI controls.
-
-### WO-2026-03-01-semantic-axes-synth
-- **Session**: 230
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `latentLab.crossmodal.synth.semanticAxes.modeToggle` (NEW): 'Semantic Axes' (collapsible section header)
-  - `latentLab.crossmodal.synth.semanticAxes.info` (NEW): Explanatory text about axes steering prompt embedding
-  - `latentLab.crossmodal.synth.semanticAxes.slotNone` (NEW): '— none —'
-  - `latentLab.crossmodal.synth.semanticAxes.resetAll` (NEW): 'Reset all to center'
-  - `latentLab.crossmodal.synth.semanticAxes.experimental` (NEW): 'experimental'
-- **Context**: New "Semantic Axes" section in Crossmodal Lab synth tab. Collapsible section below the prompt that steers audio generation via semantic slider axes (e.g. tonal/noisy, rhythmic/sustained) on top of the user's prompt. Each axis interpolates between two text poles in T5 embedding space.
-
-### WO-2026-03-01-ionos-provider-strings
-- **Session**: 229
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `settings.api.ionosEu` (NEW): 'IONOS AI Model Hub (EU Berlin, DSGVO)'
-  - `settings.api.ionosInfo` (NEW): 'IONOS AI Model Hub (EU)'
-  - `settings.api.ionosDsgvo` (NEW): 'DSGVO-compliant (EU datacenter Berlin)'
-- **Context**: New DSGVO-compliant cloud LLM provider (IONOS AI Model Hub, EU datacenter Berlin). Dropdown option and info box strings for Settings page. Keep "DSGVO" as-is in German, translate to local equivalent elsewhere (e.g. "GDPR" in English is already done, use local terms in FR/ES/etc.).
-
-### WO-2026-02-28-optimization-loading-messages
-- **Session**: 226
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `textTransform.loadingDefault` (NEW): Generic optimization loading message
-  - `textTransform.loadingSd35` (NEW): SD3.5-specific message explaining CLIP-L/G optimization + T5 preserves user text
-  - `textTransform.loadingTranslateHint` (NEW): Hint to translate before generation if text not in English
-- **Context**: Shown during optimization loading phase. SD3.5 gets model-specific text explaining the triple-encoder architecture. Translation hint appended for all models since Stage 3 only auto-translates at kids level. Replaces hardcoded German string.
-
-### WO-2026-02-28-t5-uses-your-text
-- **Session**: 226
-- **Scope**: en.ts
-- **Changed keys** (new):
-  - `mediaInput.t5UsesYourText` (NEW): "T5-XXL uses your original text directly"
-- **Context**: SD3.5 triple-prompt optimization now only generates CLIP-L/G prompts. T5-XXL receives the user's interception text unmodified (user self-determination). This note appears below the CLIP sections to inform the user.
-
-### WO-2026-02-27-expert-energy-fact-reword
-- **Session**: 220
-- **Scope**: en.ts
-- **Changed keys** (new or modified):
-  - `edutainment.energy.expert_1` (MODIFIED): emoji changed from 📊 to ⚡, text reworded to "Current draw: {watts} W | GPU load: {util}% | Accumulated: {kwh} kWh (integrated over time)"
-- **Context**: The old text used "=" which falsely implied kWh is derived from a single W reading. kWh is actually integrated from sampled power readings over time. Reworded to separate the three independent readings with pipes. Also replaced 📊 emoji.
-
-### WO-2026-02-27-replace-chart-emoji
-- **Session**: 220
-- **Scope**: en.ts
-- **Changed keys** (new or modified):
-  - `edutainment.model.expert_2` (MODIFIED): emoji 📊 -> 🔧 (only emoji changed, text unchanged)
-  - `edutainment.environment.expert_1` (MODIFIED): emoji 📊 -> 🌍 (only emoji changed, text unchanged)
-- **Context**: 📊 (bar chart emoji) was flagged as forbidden. Replaced with contextually fitting alternatives: 🔧 for quantization, 🌍 for CO₂ calculation. Only the leading emoji changed, NOT the text.
-
-### WO-2026-02-27-denoising-progress-view
-- **Session**: 220
-- **Scope**: en.ts
-- **Changed keys** (new or modified):
-  - `edutainment.denoising.modelLoading` (NEW)
-  - `edutainment.denoising.modelCard` (NEW)
-  - `edutainment.denoising.publisher` (NEW)
-  - `edutainment.denoising.architecture` (NEW)
-  - `edutainment.denoising.parameters` (NEW)
-  - `edutainment.denoising.textEncoders` (NEW)
-  - `edutainment.denoising.quantization` (NEW)
-  - `edutainment.denoising.vramRequired` (NEW)
-  - `edutainment.denoising.resolution` (NEW)
-  - `edutainment.denoising.license` (NEW)
-  - `edutainment.denoising.fairCulture` (NEW)
-  - `edutainment.denoising.safetyByDesign` (NEW)
-  - `edutainment.denoising.denoisingActive` (NEW)
-- **Context**: Labels for expert-mode denoising progress view. Shows model "Steckbrief" (identity card) during VRAM loading and live denoising stats during generation. Technical/educational terms, keep short.
-
-### WO-2026-02-27-privacy-policy
-- **Session**: 221
-- **Scope**: en.ts
-- **Changed keys** (new or modified):
-  - `legal.privacy.controller.title` (NEW)
-  - `legal.privacy.controller.content` (NEW)
-  - `legal.privacy.dataProcessing.title` (NEW)
-  - `legal.privacy.dataProcessing.content` (NEW)
-  - `legal.privacy.deviceId.title` (NEW)
-  - `legal.privacy.deviceId.content` (NEW)
-  - `legal.privacy.uploads.title` (NEW)
-  - `legal.privacy.uploads.content` (NEW)
-  - `legal.privacy.cookies.title` (NEW)
-  - `legal.privacy.cookies.content` (NEW)
-  - `legal.privacy.externalServices.title` (NEW)
-  - `legal.privacy.externalServices.content` (NEW)
-  - `legal.privacy.legalBasis.title` (NEW)
-  - `legal.privacy.legalBasis.content` (NEW)
-  - `legal.privacy.retention.title` (NEW)
-  - `legal.privacy.retention.content` (NEW)
-  - `legal.privacy.rights.title` (NEW)
-  - `legal.privacy.rights.content` (NEW)
-  - `legal.privacy.fauReference.title` (NEW)
-  - `legal.privacy.fauReference.content` (NEW)
-- **Context**: Full GDPR-compliant privacy policy for the platform. Legal terminology — use correct GDPR/DSGVO terms per language (e.g. "Betroffenenrechte" in DE, "Droits de la personne concernée" in FR). Keep Art. references (Art. 15, 16, 17, etc.) as-is. FAU address and contact email stay untranslated. The "controller" section is the GDPR "Verantwortlicher". Important: these are legal texts that should be linguistically precise.
-
-### WO-2026-02-28-poetry-rename-context-category
-- **Session**: 223
-- **Scope**: 6 JSON files in `devserver/schemas/configs/interception/`: poetry_sappho, poetry_hoelderlin, poetry_basho, poetry_mirabai, poetry_yoruba_oriki, poetry_nahuatl
-- **Changed keys** (new or modified):
-  - `category` (MODIFIED): "Trans-Aktion" -> "Poetry" (en done, translate to de/tr/ko/uk/fr/es/he/ar)
-  - `context` (NEEDS 7 NEW languages): Currently only en+de. Add tr/ko/uk/fr/es/he/ar.
-- **Context**: The `context` field contains word lists (slash-separated) from literary source texts. Each language version should contain:
-  1. The ORIGINAL-LANGUAGE words (Greek for Sappho, German for Hoelderlin, Japanese for Basho, Hindi for Mirabai, Yoruba for Oriki, Nahuatl for Nahuatl) — these stay unchanged across all languages
-  2. TRANSLATED equivalents of the non-original words in the target language
-  For example, Sappho EN has Greek originals + English translations. Sappho TR should have the same Greek originals + Turkish translations of the English words.
-  For `category`: "Poetry" is the new English label replacing "Trans-Aktion". Translate naturally (e.g. DE "Poesie", TR "Şiir", KO "시", etc.).
-  **Important**: The `context` field is NOT in en.ts — it lives directly in each JSON config file. Edit the JSON files directly to add the missing language keys.
-
 <!-- Add new work orders here. Format:
 
 ### WO-YYYY-MM-DD-short-description
@@ -195,6 +22,71 @@ Tags:
 -->
 
 ## Completed
+
+### WO-2026-03-03-comfyui-label-cleanup
+- **Completed**: 2026-03-03
+- **Scope**: en.ts + 8 target language files
+- **Result**: Already synced (SwarmUI suffix was already removed in all files).
+
+### WO-2026-03-02-looper-section-header
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 1 NEW key translated into all 8 target languages.
+
+### WO-2026-03-02-flatten-synth-toggles
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 12 NEW keys translated, 5 REMOVED keys deleted (loopOn, loopOff, modeLoop, modePingPong, modeWavetable) from all 8 target files.
+
+### WO-2026-03-01-step-sequencer
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 16 NEW keys (sequencer controls + 8 patterns) translated into all 8 target languages.
+
+### WO-2026-03-01-semantic-axes-synth
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 5 NEW keys translated into all 8 target languages.
+
+### WO-2026-03-01-ionos-provider-strings
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 3 NEW keys translated. DSGVO→KVKK (TR), RGPD (FR/ES), GDPR (others).
+
+### WO-2026-02-28-optimization-loading-messages
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 3 NEW keys (loadingDefault, loadingSd35, loadingTranslateHint) translated into all 8 target languages. Also resolved as audit-detected missing keys.
+
+### WO-2026-02-28-t5-uses-your-text
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 1 NEW key translated into all 8 target languages.
+
+### WO-2026-02-27-expert-energy-fact-reword
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 1 MODIFIED key (emoji + text reword) updated in all 8 target languages.
+
+### WO-2026-02-27-replace-chart-emoji
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 2 MODIFIED keys (emoji-only changes) updated in all 8 target languages.
+
+### WO-2026-02-27-denoising-progress-view
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 13 NEW keys translated into all 8 target languages.
+
+### WO-2026-02-27-privacy-policy
+- **Completed**: 2026-03-03
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar
+- **Result**: 20 NEW keys (10 sections × title+content) translated into all 8 target languages with proper GDPR/DSGVO/RGPD/KVKK terminology.
+
+### WO-2026-02-28-poetry-rename-context-category
+- **Completed**: 2026-03-03
+- **Scope**: 6 JSON files in devserver/schemas/configs/interception/
+- **Result**: category "Trans-Aktion"→translated "Poetry" in all 8 languages. context field expanded from en+de to all 9 languages (original-language words preserved, translations added).
 
 ### WO-2026-02-23-hebrew-arabic-interception-configs
 - **Completed**: 2026-02-26

@@ -25,21 +25,28 @@
   },
   "category": {
     "en": "Poetry",
-    "de": "Trans-Aktion",
-    "tr": "Trans-Aktion",
-    "ko": "Trans-Aktion",
-    "uk": "Trans-Aktion",
-    "fr": "Trans-Aktion",
-    "es": "Trans-Aktion",
-    "he": "Trans-Aktion",
-    "ar": "Trans-Aktion"
+    "de": "Poesie",
+    "tr": "\u015eiir",
+    "ko": "\uc2dc",
+    "uk": "\u041f\u043e\u0435\u0437\u0456\u044f",
+    "fr": "Po\u00e9sie",
+    "es": "Poes\u00eda",
+    "he": "\u05e9\u05d9\u05e8\u05d4",
+    "ar": "\u0634\u0639\u0631"
   },
   "properties": [
     "poetry"
   ],
   "context": {
     "en": "Oya / iya mesanlogun / wind / marketplace / buffalo woman / fire / river Niger / tornado / warrior / transform / cloth / beads / thunder / sweep / nine / storm / mask / dance / Odo Oya",
-    "de": "Oya / iya mesanlogun / Wind / Marktplatz / Bueffelfrau / Feuer / Fluss Niger / Tornado / Kriegerin / verwandeln / Tuch / Perlen / Donner / fegen / neun / Sturm / Maske / Tanz / Odo Oya"
+    "de": "Oya / iya mesanlogun / Wind / Marktplatz / Bueffelfrau / Feuer / Fluss Niger / Tornado / Kriegerin / verwandeln / Tuch / Perlen / Donner / fegen / neun / Sturm / Maske / Tanz / Odo Oya",
+    "tr": "Oya / iya mesanlogun / r\u00fczg\u00e2r / pazar yeri / bufalo kad\u0131n / ate\u015f / Nijer nehri / kas\u0131rga / sava\u015f\u00e7\u0131 / d\u00f6n\u00fc\u015ft\u00fcrmek / kuma\u015f / boncuklar / g\u00f6k g\u00fcr\u00fclt\u00fcs\u00fc / s\u00fcpmek / dokuz / f\u0131rt\u0131na / maske / dans / Odo Oya",
+    "ko": "Oya / iya mesanlogun / \ubc14\ub78c / \uc2dc\uc7a5 / \ubb3c\uc18c \uc5ec\uc778 / \ubd88 / \ub2c8\uc81c\ub974 \uac15 / \ud1a0\ub124\uc774\ub3c4 / \uc804\uc0ac / \ubcc0\ud658 / \ucc9c / \uad6c\uc2ac / \ucc9c\ub465 / \uc4f8\ub2e4 / \uc544\ud648 / \ud3ed\ud48d / \uac00\uba74 / \ucda4 / Odo Oya",
+    "uk": "Oya / iya mesanlogun / \u0432\u0456\u0442\u0435\u0440 / \u0440\u0438\u043d\u043e\u043a / \u0436\u0456\u043d\u043a\u0430-\u0431\u0443\u0439\u0432\u043e\u043b / \u0432\u043e\u0433\u043e\u043d\u044c / \u0440\u0456\u0447\u043a\u0430 \u041d\u0456\u0433\u0435\u0440 / \u0442\u043e\u0440\u043d\u0430\u0434\u043e / \u0432\u043e\u0457\u043d / \u043f\u0435\u0440\u0435\u0442\u0432\u043e\u0440\u044e\u0432\u0430\u0442\u0438 / \u0442\u043a\u0430\u043d\u0438\u043d\u0430 / \u043d\u0430\u043c\u0438\u0441\u0442\u043e / \u0433\u0440\u0456\u043c / \u043c\u0435\u0441\u0442\u0438 / \u0434\u0435\u0432\u2019\u044f\u0442\u044c / \u0431\u0443\u0440\u044f / \u043c\u0430\u0441\u043a\u0430 / \u0442\u0430\u043d\u0435\u0446\u044c / Odo Oya",
+    "fr": "Oya / iya mesanlogun / vent / march\u00e9 / femme-buffle / feu / fleuve Niger / tornade / guerri\u00e8re / transformer / tissu / perles / tonnerre / balayer / neuf / temp\u00eate / masque / danse / Odo Oya",
+    "es": "Oya / iya mesanlogun / viento / mercado / mujer b\u00fafalo / fuego / r\u00edo N\u00edger / tornado / guerrera / transformar / tela / cuentas / trueno / barrer / nueve / tormenta / m\u00e1scara / danza / Odo Oya",
+    "he": "Oya / iya mesanlogun / \u05e8\u05d5\u05d7 / \u05e9\u05d5\u05e7 / \u05d0\u05e9\u05ea \u05d4\u05ea\u05d0\u05d5 / \u05d0\u05e9 / \u05e0\u05d4\u05e8 \u05e0\u05d9\u05d2\u05e8 / \u05d8\u05d5\u05e8\u05e0\u05d3\u05d5 / \u05dc\u05d5\u05d7\u05de\u05ea / \u05dc\u05d4\u05e4\u05d5\u05da / \u05d1\u05d3 / \u05d7\u05e8\u05d5\u05d6\u05d9\u05dd / \u05e8\u05e2\u05dd / \u05dc\u05d8\u05d0\u05d8\u05d0 / \u05ea\u05e9\u05e2 / \u05e1\u05e2\u05e8\u05d4 / \u05de\u05e1\u05db\u05d4 / \u05e8\u05d9\u05e7\u05d5\u05d3 / Odo Oya",
+    "ar": "Oya / iya mesanlogun / \u0631\u064a\u062d / \u0633\u0648\u0642 / \u0627\u0645\u0631\u0623\u0629 \u0627\u0644\u062c\u0627\u0645\u0648\u0633 / \u0646\u0627\u0631 / \u0646\u0647\u0631 \u0627\u0644\u0646\u064a\u062c\u0631 / \u0625\u0639\u0635\u0627\u0631 / \u0645\u062d\u0627\u0631\u0628\u0629 / \u062a\u062d\u0648\u064a\u0644 / \u0642\u0645\u0627\u0634 / \u062e\u0631\u0632 / \u0631\u0639\u062f / \u0643\u0646\u0633 / \u062a\u0633\u0639\u0629 / \u0639\u0627\u0635\u0641\u0629 / \u0642\u0646\u0627\u0639 / \u0631\u0642\u0635 / Odo Oya"
   },
   "parameters": {
     "temperature": 0.85,

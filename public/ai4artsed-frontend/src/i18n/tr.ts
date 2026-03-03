@@ -232,11 +232,14 @@ export const tr = {
       cloudProvider: 'Bulut LLM sağlayıcısı – API anahtarı gerekli',
       noneLocal: 'Yok (Yalnızca yerel, KVKK)',
       mistralEu: 'Mistral AI (AB merkezli, KVKK)',
+      ionosEu: 'IONOS AI Model Hub (AB Berlin, KVKK)',
       anthropicDirect: 'Anthropic Direct API (KVKK DEĞİL)',
       openaiDirect: 'OpenAI Direct API (KVKK DEĞİL)',
       openrouterDirect: 'OpenRouter (KVKK DEĞİL, AB yönlendirme mevcut)',
       mistralInfo: 'Mistral AI (AB merkezli)',
       mistralDsgvo: 'KVKK uyumlu (AB altyapısı)',
+      ionosInfo: 'IONOS AI Model Hub (AB)',
+      ionosDsgvo: 'KVKK uyumlu (AB veri merkezi Berlin)',
       anthropicInfo: 'Anthropic Direct API',
       anthropicNotDsgvo: 'KVKK uyumlu DEĞİL',
       anthropicWarning: 'Veriler AB dışında işlenir. Yalnızca eğitim dışı bağlamlarda kullanın.',
@@ -272,7 +275,7 @@ export const tr = {
       gpuService: 'GPU Service',
       subBackend: 'Alt Backend',
       status: 'Durum',
-      comfyui: 'ComfyUI / SwarmUI',
+      comfyui: 'ComfyUI',
       ollama: 'Ollama',
       gpuHardware: 'GPU Donanımı',
       notDetected: 'Algılanamadı',
@@ -366,7 +369,8 @@ export const tr = {
     paste: 'Yapıştır',
     delete: 'Sil',
     loading: 'Yükleniyor...',
-    contentBlocked: 'İçerik engellendi'
+    contentBlocked: 'İçerik engellendi',
+    t5UsesYourText: 'T5-XXL orijinal metninizi doğrudan kullanır'
   },
   nav: {
     about: 'Hakkında',
@@ -537,7 +541,47 @@ export const tr = {
     privacy: {
       title: 'Gizlilik Politikası',
       notice: 'Bildirim: Oluşturulan içerik araştırma amaçlı sunucuda saklanmaktadır. Kullanıcı veya IP verisi toplanmamaktadır. Yüklenen görseller saklanmamaktadır.',
-      usage: 'Bu platformun kullanımı yalnızca UCDCAE AI LAB\'ın kayıtlı iş birliği ortakları için izin verilmektedir. Bu bağlamda yapılan veri koruma anlaşmaları geçerlidir. Sorularınız için lütfen iletişime geçin:'
+      usage: 'Bu platformun kullanımı yalnızca UCDCAE AI LAB\'ın kayıtlı iş birliği ortakları için izin verilmektedir. Bu bağlamda yapılan veri koruma anlaşmaları geçerlidir. Sorularınız için lütfen iletişime geçin:',
+      controller: {
+        title: 'Sorumlu Taraf',
+        content: 'Friedrich-Alexander-Üniversitesi Erlangen-Nürnberg (FAU), rektör tarafından temsil edilmektedir. İçerikten sorumlu: Prof. Dr. Benjamin Jörissen, Bismarckstraße 1a, 91054 Erlangen.'
+      },
+      dataProcessing: {
+        title: 'Veri İşleme',
+        content: 'Bu platform, eğitim araştırması amaçlı şu verileri işlemektedir: metin girişleriniz (istemler), tüm ara dönüşüm adımları (çeviriler, pedagojik dönüşümler, güvenlik kontrolleri) ve oluşturulan medya çıktıları (görseller, ses, video, kod). Bu veriler sunucuda takma adlı biçimde saklanmakta ve yalnızca dijital kültürel sanat eğitimi alanındaki araştırmalar için kullanılmaktadır.'
+      },
+      deviceId: {
+        title: 'Cihaz Tanımlaması',
+        content: 'Tarayıcınızın yerel deposunda (localStorage) rastgele bir cihaz kimliği oluşturulur ve saklanır. Bu kimlik, çalıştay oturumlarını günlük olarak düzenlemek için mevcut tarihle birleştirilir. Yalnızca cihazı tanımlar — kullanan kişiyi değil. Birden fazla ve değişen kullanıcı aynı cihazı kullanabilir. Günlük değiştirme, oluşturulan içeriğin çalıştay oturumuna doğru şekilde gruplandırılmasını sağlar. Bu kimlikle hiçbir kişisel veri ilişkilendirilmez.'
+      },
+      uploads: {
+        title: 'Yüklenen Görseller',
+        content: 'Görsel-görsel dönüşümler için yüklenen görseller, işleme için geçici olarak sunucuda saklanır. Kalıcı araştırma veri kümesine dahil edilmez ve periyodik olarak temizlenir.'
+      },
+      cookies: {
+        title: 'Çerezler',
+        content: 'Bu platform, bir cihaz tarafından başlatılan oturumu sürdürmek için yalnızca tek bir teknik olarak zorunlu oturum çerezi (24 saat geçerli) kullanmaktadır. İzleme çerezleri, analitik çerezler veya üçüncü taraf çerezler kullanılmamaktadır.'
+      },
+      externalServices: {
+        title: 'Dış Hizmetler',
+        content: 'Görsel oluşturma, güvenlik kontrolleri (görsel güvenliği, KVKK kontrolleri) ve yapay zeka işlemlerinin büyük bölümü sunucuda yerel olarak çalışmaktadır — bu görevler için hiçbir veri kurumu dışına çıkmaz. Metin tabanlı yapay zeka işleme (istem dönüşümü, pedagojik araya girme) için platform Mistral AI (AB merkezli) kullanmaktadır. Mistral, girişlerin model eğitimi için kullanılmaması amacıyla sözleşmeyle yapılandırılmıştır. İstem dönüşümü sırasında Wikipedia\'ya salt okunur sorgular gerçekleşebilir. Dış API isteklerine hiçbir kişisel veri veya cihaz tanımlayıcısı eklenmez. KVKK ad koruması: Tüm standart güvenlik seviyelerinde (kids, youth, adult) her giriş alanında çok aşamalı bir KVKK filtresi çalışır. Aşama 1, potansiyel kişisel isimleri tespit etmek için yerel NER modellerini kullanır. Aşama 2, yanlış pozitifleri elemek için POS etiketi ön filtresi uygular. Aşama 3, kalan adayları yerel bir LLM aracılığıyla doğrular. Sistem hata kapalı (fail-closed) çalışır: herhangi bir aşamada belirsizlik varsa giriş geçirilmek yerine engellenir. Not: Canvas iş akışı araştırma odaklı bir özelliktir. Canvas iş akışları dış LLM API\'larını kullanabilir; Canvas kullanımında KVKK uyumluluğu kullanıcının sorumluluğundadır.'
+      },
+      legalBasis: {
+        title: 'Hukuki Dayanak',
+        content: 'Veri işleme, KVKK\'ya karşılık gelen AB Genel Veri Koruma Tüzüğü (GDPR) Madde 6(1)(f) (eğitim araştırmasında meşru menfaat) uyarınca gerçekleştirilmektedir. Bu platforma erişim, ayrı veri koruma anlaşmalarıyla yönetilen UCDCAE AI LAB\'ın kayıtlı iş birliği ortaklarıyla sınırlıdır.'
+      },
+      retention: {
+        title: 'Veri Saklama',
+        content: 'Oluşturulan içerik ve ilgili meta veriler, araştırma projesi süresince saklanır. Otomatik silme işlemi yapılmamaktadır. Verilerinizin silinmesini istediğiniz zaman talep edebilirsiniz.'
+      },
+      rights: {
+        title: 'Haklarınız',
+        content: 'GDPR kapsamında; erişim (Md. 15), düzeltme (Md. 16), silme (Md. 17), işlemenin kısıtlanması (Md. 18), veri taşınabilirliği (Md. 20) ve itiraz (Md. 21) haklarına sahipsiniz. Ayrıca denetleyici makama şikâyette bulunma hakkınız da mevcuttur.'
+      },
+      fauReference: {
+        title: 'FAU Gizlilik Politikası',
+        content: 'Bu platforma özgü bildirime ek olarak Friedrich-Alexander-Üniversitesi Erlangen-Nürnberg\'in genel gizlilik politikası da geçerlidir. Politikayı şu adreste bulabilirsiniz:'
+      }
     }
   },
   docs: {
@@ -607,7 +651,10 @@ export const tr = {
     resultLabel: 'Fikir + Kurallar = Prompt',
     resultPlaceholder: 'Prompt, başlat butonuna tıklandıktan sonra görünecek (veya kendi metninizi girin)',
     optimizedLabel: 'Model-Optimize Edilmiş Prompt',
-    optimizedPlaceholder: 'Optimize edilmiş prompt, model seçiminden sonra görünecek.'
+    optimizedPlaceholder: 'Optimize edilmiş prompt, model seçiminden sonra görünecek.',
+    loadingDefault: 'Promptunuz seçilen model için uyarlanıyor. Her model açıklamaları farklı anlar — yapay zeka metni en iyi sonuçlar için optimize eder.',
+    loadingSd35: 'SD3.5\'in üç metin kodlayıcısı var. CLIP-L ve CLIP-G görsel hassasiyet için optimize ediliyor — T5-XXL yaratıcı niyetinizi koruyarak orijinal metninizi doğrudan alır.',
+    loadingTranslateHint: 'Metniniz İngilizce değilse, önce çevir butonunu kullanın — model İngilizce girdiyle en iyi şekilde çalışır.'
   },
   training: {
     info: {
@@ -1220,8 +1267,7 @@ export const tr = {
         cfgHint: 'Ses üretimi için Classifier-Free Guidance',
         seedHint: '-1 = rastgele, sabit değer = tekrarlanabilir sonuç',
         loop: 'Döngü oynatma',
-        loopOn: 'Döngü Açık',
-        loopOff: 'Döngü Kapalı',
+        loopToggle: 'Döngü',
         stop: 'Durdur',
         looping: 'Döngüde',
         playing: 'Oynatılıyor',
@@ -1239,15 +1285,45 @@ export const tr = {
         loopOptimize: 'Otomatik optimize',
         loopPingPong: 'Ping-pong',
         loopIntervalHint: 'Döngü bölgesinin başlangıç/sonu — Stable Audio solmasını kesmek için sonu kısaltın',
-        modeLoop: 'Döngü',
-        modePingPong: 'Ping-Pong',
-        modeWavetable: 'Dalga Tablosu',
+        looperSection: 'Looper / Sequencer',
+        wavetableToggle: 'Dalga Tablosu',
+        wavetableStatic: 'Statik',
+        wavetableDynamic: 'Dinamik (yakında)',
+        sequencerToggle: 'Sequencer',
+        oscillating: 'Salınımlı',
+        sequencing: 'Sıralama',
+        arpeggiator: 'Arpejyatör',
+        arpeggiatorPatterns: {
+          up: 'Yukarı',
+          down: 'Aşağı',
+          updown: 'Yukarı-Aşağı',
+          random: 'Rastgele',
+        },
         modeRate: 'Tempo (hızlı)',
         modePitch: 'Perde (OLA)',
         wavetableScan: 'Tarama Konumu',
         wavetableScanHint: 'Kareler arasında morph (0 = başlangıç, 1 = bitiş)',
         wavetableFrames: '{count} kare',
         midiScan: 'Tarama Konumu',
+        sequencer: {
+          play: 'Oynat',
+          stop: 'Durdur',
+          bpm: 'BPM',
+          bpmHint: 'Dakika başına vuruş cinsinden tempo (16\'lık nota adımları)',
+          preset: 'Önayar',
+          midiSync: 'MIDI Senkron',
+          gridHint: 'Kaydırıcı = yarım ton ofseti, nokta = aktif anahtar, alt = hız',
+          patterns: {
+            arpeggio_up: 'Arpej Yukarı',
+            arpeggio_down: 'Arpej Aşağı',
+            arpeggio_updown: 'Arpej Yukarı-Aşağı',
+            octaves: 'Oktavlar',
+            power_chord: 'Güç Akoru',
+            minor_pentatonic: 'Minör Pentatonik',
+            bass_groove: 'Bas Groove',
+            trance_gate: 'Trance Kapısı',
+          },
+        },
         adsrTitle: 'ADSR Zarfı',
         adsrAttack: 'A',
         adsrDecay: 'D',
@@ -1277,6 +1353,13 @@ export const tr = {
           applyAndGenerate: 'Uygula ve yeniden oluştur',
           undo: 'Geri Al',
           redo: 'Yinele'
+        },
+        semanticAxes: {
+          modeToggle: 'Semantik Eksenler',
+          info: 'Semantik eksenler, prompt gömmeyi belirli yönlerde yönlendirir. Her kaydırıcı, T5 uzayındaki iki metin kutbu arasında interpolasyon yapar. Daha fazla aktif eksen = eksen başına daha zayıf etki. Önerilen: 3–5 eksen.',
+          slotNone: '— yok —',
+          resetAll: 'Tümünü merkeze sıfırla',
+          experimental: 'deneysel'
         }
       },
       mmaudio: {
@@ -1324,6 +1407,21 @@ export const tr = {
       energyUsed: 'Kullanılan enerji',
       co2Produced: 'Üretilen CO₂'
     },
+    denoising: {
+      modelLoading: 'Model GPU belleğine yükleniyor...',
+      modelCard: 'Model Profili',
+      publisher: 'Yayıncı',
+      architecture: 'Mimari',
+      parameters: 'Parametreler',
+      textEncoders: 'Metin Kodlayıcılar',
+      quantization: 'Niceleme',
+      vramRequired: 'Gerekli VRAM',
+      resolution: 'Çözünürlük',
+      license: 'Lisans',
+      fairCulture: 'Adil Kültür',
+      safetyByDesign: 'Tasarımda Güvenlik',
+      denoisingActive: 'Gürültü giderme sürüyor...',
+    },
     energy: {
       kids_1: '💡 Yapay zeka görselleri elektrik harcıyor – telefonunuzu 3 saat şarj etmek kadar!',
       kids_2: '🔌 GPU, çok güç tüketen bir süper hesap makinesi gibidir!',
@@ -1331,7 +1429,7 @@ export const tr = {
       youth_1: '⚡ GPU oluştururken {watts}W kullanıyor – küçük bir elektrik ısıtıcısı gibi!',
       youth_2: '🔋 Bir görsel yaklaşık 0,01-0,02 kWh kullanıyor – az gibi görünüyor ama birikir!',
       youth_3: '🌡️ GPU şu an {temp}°C sıcaklığa ulaşıyor – bu yüzden soğutma gerekiyor!',
-      expert_1: '📊 Anlık: {watts}W, %{util} kullanımda = şimdiye kadar {kwh} kWh',
+      expert_1: '⚡ Güç çekimi: {watts} W | GPU yükü: {util}% | Birikimli: {kwh} kWh (zamana göre integral)',
       expert_2: '🔥 TDP sınırı: {tdp}W | Şu anki: {watts}W (sınırın %{percent}\'i)',
       expert_3: '💾 VRAM: {used}/{total} GB (%{percent}) – model + aktivasyonlar'
     },
@@ -1354,7 +1452,7 @@ export const tr = {
       youth_2: '📚 3 metin kodlayıcı birlikte çalışıyor: CLIP-L, CLIP-G ve T5-XXL',
       youth_3: '🔢 Model yalnızca yüklenmek için {vram} GB VRAM\'a ihtiyaç duyuyor!',
       expert_1: '🏗️ Mimari: 38 transformatör bloğuyla Rectified Flow + MMDiT',
-      expert_2: '📊 FP16/FP8 nicemleme: hassasiyet ile VRAM dengesi',
+      expert_2: '🔧 FP16/FP8 nicemleme: hassasiyet ile VRAM dengesi',
       expert_3: '🔗 LoRA: Düşük Sıralı Uyarlama – yalnızca parametrelerin %0,1\'i yeniden eğitildi'
     },
     ethics: {
@@ -1375,7 +1473,7 @@ export const tr = {
       youth_1: '🏭 Alman elektrik şebekesi: kWh başına ~400g CO₂ – bu birikir!',
       youth_2: '📈 Bu görsel için {co2}g CO₂ – 1000 görselde bu {totalKg} kg olur!',
       youth_3: '💡 İpucu: Daha az görsel oluşturun ama daha düşünceli – enerji ve CO₂ tasarrufu sağlar.',
-      expert_1: '📊 Hesaplama: {watts}W × {seconds}s ÷ 3600 × 400g/kWh = {co2}g CO₂',
+      expert_1: '🌍 Hesaplama: {watts}W × {seconds}s ÷ 3600 × 400g/kWh = {co2}g CO₂',
       expert_2: '🔬 Kapsam 2 emisyonları: veri merkezi konumu belirleyicidir',
       expert_3: '⚡ PUE (Güç Kullanım Etkinliği): Soğutma için ek enerji yükü'
     },
