@@ -536,11 +536,6 @@ class BackendRouter:
                     }
                 )
 
-            # Route based on backend_type FIRST (before execution_mode)
-            if backend_type == 'stable_audio':
-                logger.info(f"[ROUTER] Using Stable Audio backend for '{chunk_name}'")
-                return await self._process_stable_audio_chunk(chunk_name, text_prompt, parameters, chunk)
-
             # 2. Route based on execution mode (for ComfyUI backend)
             if execution_mode == 'legacy_workflow':
                 # TODO (2026 Refactoring): Move this logic into pipeline itself
@@ -1427,126 +1422,6 @@ class BackendRouter:
             logger.error(f"[MEDIA-DOWNLOAD] Download error: {e}")
             return None
 
-    async def _process_stable_audio_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
-        """Process audio generation using Stable Audio Open (Diffusers)
-
-        Session 163: Audio generation backend using HuggingFace Diffusers StableAudioPipeline.
-        Generates sound effects and ambient audio from text prompts.
-        Falls back to ComfyUI via meta.fallback_chunk if unavailable.
-
-        Args:
-            chunk_name: Name of the output chunk
-            prompt: Text prompt describing desired audio
-            parameters: Generation parameters including duration, steps, etc.
-            chunk: Chunk configuration (must have meta.fallback_chunk for ComfyUI fallback)
-
-        Returns:
-            BackendResponse with generated audio
-        """
-        try:
-            from my_app.services.stable_audio_backend import get_stable_audio_backend
-            from my_app.services.backend_registry import get_backend_registry
-            import random
-            import base64
-
-            # Check if Stable Audio backend is enabled via registry
-            registry = get_backend_registry()
-            if not registry.is_enabled("stable_audio"):
-                return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Backend disabled in config")
-
-            backend = get_stable_audio_backend()
-
-            # Check availability (diffusers, GPU)
-            if not await backend.is_available():
-                return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Backend not available (missing packages or GPU)")
-
-            # Extract parameters from chunk config
-            input_mappings = chunk.get('input_mappings', {})
-
-            # Get prompt from parameters
-            audio_prompt = parameters.get('prompt') or parameters.get('PREVIOUS_OUTPUT', '') or prompt
-
-            if not audio_prompt:
-                logger.error("[STABLE_AUDIO] No prompt provided")
-                return BackendResponse(
-                    success=False,
-                    content="",
-                    error="No prompt provided for audio generation"
-                )
-
-            # Get generation parameters
-            duration_seconds = float(parameters.get('duration_seconds') or input_mappings.get('duration_seconds', {}).get('default', 30.0))
-            negative_prompt = parameters.get('negative_prompt') or input_mappings.get('negative_prompt', {}).get('default', '')
-            steps = int(parameters.get('steps') or input_mappings.get('steps', {}).get('default', 100))
-            cfg_scale = float(parameters.get('cfg_scale') or input_mappings.get('cfg_scale', {}).get('default', 7.0))
-
-            # Seed handling
-            seed = parameters.get('seed') or input_mappings.get('seed', {}).get('default', 'random')
-            if seed == 'random' or seed == -1:
-                seed = random.randint(0, 2**32 - 1)
-                logger.info(f"[STABLE_AUDIO] Generated random seed: {seed}")
-            else:
-                seed = int(seed)
-
-            # Output format
-            output_format = parameters.get('output_format') or input_mappings.get('output_format', {}).get('default', 'mp3')
-
-            # Generate audio via Stable Audio
-            logger.info(f"[STABLE_AUDIO] Generating audio: prompt='{audio_prompt[:100]}...', duration={duration_seconds}s")
-
-            audio_bytes = await backend.generate_audio(
-                prompt=audio_prompt,
-                negative_prompt=negative_prompt,
-                duration_seconds=duration_seconds,
-                steps=steps,
-                cfg_scale=cfg_scale,
-                seed=seed,
-                output_format=output_format
-            )
-
-            if not audio_bytes:
-                return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, "Generation returned empty result")
-
-            # Return with binary audio data (base64 encoded)
-            return BackendResponse(
-                success=True,
-                content="stable_audio_generated",
-                metadata={
-                    'chunk_name': chunk_name,
-                    'media_type': 'audio',
-                    'backend': 'stable_audio',
-                    'seed': seed,
-                    'audio_data': base64.b64encode(audio_bytes).decode('utf-8'),
-                    'audio_format': output_format,
-                    'parameters': {
-                        'prompt': audio_prompt[:200],
-                        'duration_seconds': duration_seconds,
-                        'steps': steps,
-                        'cfg_scale': cfg_scale
-                    }
-                }
-            )
-
-        except Exception as e:
-            logger.error(f"[STABLE_AUDIO] Error processing chunk '{chunk_name}': {e}")
-            import traceback
-            traceback.print_exc()
-
-            # Fallback to ComfyUI on error
-            try:
-                from my_app.services.backend_registry import get_backend_registry
-                registry = get_backend_registry()
-                if registry.should_fallback_to_comfyui():
-                    return await self._fallback_to_comfyui(chunk, chunk_name, prompt, parameters, f"Exception: {str(e)}")
-            except Exception:
-                pass
-
-            return BackendResponse(
-                success=False,
-                content="",
-                error=f"Stable Audio error: {str(e)}"
-            )
-
     def _set_nested_value(self, obj: Any, path: str, value: Any):
         """Set nested value in dict or list using path notation (e.g., 'messages[1].content')"""
         import re
@@ -1614,7 +1489,7 @@ class BackendRouter:
             backend_type = chunk.get('backend_type', 'comfyui')
 
             # Direct backends (no ComfyUI workflow needed)
-            DIRECT_BACKENDS = ['stable_audio', 'diffusers', 'heartmula', 'triton']
+            DIRECT_BACKENDS = ['diffusers', 'heartmula', 'triton']
 
             if chunk_type == 'output_chunk':
                 if execution_mode == 'legacy_workflow':
