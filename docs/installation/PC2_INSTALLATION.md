@@ -342,7 +342,7 @@ EOF
 sudo mkdir -p /etc/systemd/system/ollama.service.d
 sudo tee /etc/systemd/system/ollama.service.d/gpu.conf << 'EOF'
 [Service]
-Environment="OLLAMA_NUM_GPU=1"
+Environment="OLLAMA_NUM_GPU=-1"
 Environment="OLLAMA_MAX_LOADED_MODELS=1"
 EOF
 
