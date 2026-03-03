@@ -327,9 +327,16 @@ Every NVML component fails open:
 }
 ```
 
-### Limitation: ComfyUI Eviction
+### Cross-Process ComfyUI Eviction (Session 245)
 
-The NVML watchdog **sees** ComfyUI's VRAM but **cannot evict** its models. ComfyUI is a separate process with its own model management — the `VRAMCoordinator` only manages registered backends (Diffusers, HeartMuLa, etc.). A future enhancement could implement ComfyUI's REST API (`POST /free`) as a cross-process eviction backend.
+When internal backend eviction isn't enough, `_try_comfyui_eviction()` asks ComfyUI to release VRAM via `POST /free {"unload_models": true, "free_memory": true}` as a **last resort**.
+
+**Design:**
+- **Last resort only**: Called after all internal eviction fails (or `inf` request with <50% VRAM free)
+- **All-or-nothing**: ComfyUI's API only supports "unload everything" — no selective model unload
+- **NVML-verified**: Measures actual VRAM delta (polls up to 5s). CUDA memory return can be slow (~10s for 22 GB), but the subsequent model load gives enough time
+- **Fail-open**: ComfyUI unreachable → skip, return 0. Never blocks eviction
+- **Asymmetric**: GPU service can evict ComfyUI, not vice versa — the coordinator is the VRAM authority
 
 ---
 
