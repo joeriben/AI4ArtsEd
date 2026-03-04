@@ -517,7 +517,14 @@ class BackendRouter:
             logger.info(f"Loaded Output-Chunk: {chunk_name} ({media_type} media, {execution_mode} mode, {backend_type} backend)")
 
             # FIX: Extract text prompt from parameters (not from 'prompt' param which is workflow dict)
-            text_prompt = parameters.get('prompt', '') or parameters.get('PREVIOUS_OUTPUT', '')
+            # Fallback chain: prompt → PREVIOUS_OUTPUT → prompt_3 (user text/T5) → TEXT_1 (clip_l)
+            # prompt_3 preferred over TEXT_1 because it's natural language (TEXT_1 may be CLIP keywords)
+            text_prompt = (
+                parameters.get('prompt', '')
+                or parameters.get('PREVIOUS_OUTPUT', '')
+                or parameters.get('prompt_3', '')
+                or parameters.get('TEXT_1', '')
+            )
             logger.info(f"[DEBUG-FIX] Extracted text_prompt from parameters: '{text_prompt[:200]}...'" if text_prompt else f"[DEBUG-FIX] ⚠️ No text prompt in parameters!")
 
             # Route by chunk type FIRST — api_output_chunk and text_passthrough bypass ComfyUI entirely
