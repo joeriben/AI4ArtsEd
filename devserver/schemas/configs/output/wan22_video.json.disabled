@@ -1,8 +1,8 @@
 {
   "pipeline": "single_text_media_generation",
   "name": {
-    "en": "Wan 2.2 Video (5B)",
-    "de": "Wan 2.2 Video (5B)"
+    "en": "Wan 2.2 T2V 5B (ComfyUI)",
+    "de": "Wan 2.2 T2V 5B (ComfyUI)"
   },
   "description": {
     "en": "High-quality video generation using Wan 2.2 TI2V 5B model via ComfyUI",

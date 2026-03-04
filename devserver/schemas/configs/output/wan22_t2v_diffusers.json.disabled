@@ -1,8 +1,8 @@
 {
   "pipeline": "single_text_media_generation",
   "name": {
-    "en": "Wan 2.2 T2V-A14B (Diffusers)",
-    "de": "Wan 2.2 T2V-A14B (Diffusers)"
+    "en": "Wan 2.2 T2V 14B MoE (Diffusers)",
+    "de": "Wan 2.2 T2V 14B MoE (Diffusers)"
   },
   "description": {
     "en": "High-quality text-to-video generation using Wan 2.2 T2V-A14B (MoE, 27B total) via Diffusers",

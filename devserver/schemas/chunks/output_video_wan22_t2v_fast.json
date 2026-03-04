@@ -1,0 +1,225 @@
+{
+  "name": "output_video_wan22_t2v_fast",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "video",
+  "description": "WAN 2.2 Text-to-Video 14B FP8 - Two-stage sampling with LightX2V LoRA (4 steps)",
+
+  "legacy_config": {
+    "prompt_injection": {
+      "target_title": "CLIP Text Encode (Positive)",
+      "fallback_node_id": "positive_conditioning",
+      "fallback_field": "text"
+    }
+  },
+
+  "workflow": {
+    "clip_loader": {
+      "inputs": {
+        "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "type": "wan",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": { "title": "Load CLIP" }
+    },
+    "vae_loader": {
+      "inputs": {
+        "vae_name": "wan2.2_vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": { "title": "Load VAE" }
+    },
+    "unet_high_noise": {
+      "inputs": {
+        "unet_name": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": { "title": "Load High Noise UNet" }
+    },
+    "unet_low_noise": {
+      "inputs": {
+        "unet_name": "wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": { "title": "Load Low Noise UNet" }
+    },
+    "lora_high_noise": {
+      "inputs": {
+        "lora_name": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors",
+        "strength_model": 1.0,
+        "model": ["unet_high_noise", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": { "title": "Apply High Noise LoRA" }
+    },
+    "lora_low_noise": {
+      "inputs": {
+        "lora_name": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_low_noise.safetensors",
+        "strength_model": 1.0,
+        "model": ["unet_low_noise", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": { "title": "Apply Low Noise LoRA" }
+    },
+    "model_sampling_high": {
+      "inputs": {
+        "shift": 8.0,
+        "model": ["lora_high_noise", 0]
+      },
+      "class_type": "ModelSamplingSD3",
+      "_meta": { "title": "Model Sampling (High Noise)" }
+    },
+    "model_sampling_low": {
+      "inputs": {
+        "shift": 8.0,
+        "model": ["lora_low_noise", 0]
+      },
+      "class_type": "ModelSamplingSD3",
+      "_meta": { "title": "Model Sampling (Low Noise)" }
+    },
+    "positive_conditioning": {
+      "inputs": {
+        "text": "",
+        "clip": ["clip_loader", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Positive)" }
+    },
+    "negative_conditioning": {
+      "inputs": {
+        "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+        "clip": ["clip_loader", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Negative)" }
+    },
+    "empty_latent": {
+      "inputs": {
+        "width": 832,
+        "height": 480,
+        "length": 81,
+        "batch_size": 1
+      },
+      "class_type": "EmptyWanLatentVideo",
+      "_meta": { "title": "Empty Wan Latent Video" }
+    },
+    "ksampler_high_noise": {
+      "inputs": {
+        "add_noise": "enable",
+        "noise_seed": 0,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "start_at_step": 0,
+        "end_at_step": 2,
+        "return_with_leftover_noise": "enable",
+        "model": ["model_sampling_high", 0],
+        "positive": ["positive_conditioning", 0],
+        "negative": ["negative_conditioning", 0],
+        "latent_image": ["empty_latent", 0]
+      },
+      "class_type": "KSamplerAdvanced",
+      "_meta": { "title": "KSampler High Noise (Steps 0-2)" }
+    },
+    "ksampler_low_noise": {
+      "inputs": {
+        "add_noise": "disable",
+        "noise_seed": 0,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "start_at_step": 2,
+        "end_at_step": 4,
+        "return_with_leftover_noise": "disable",
+        "model": ["model_sampling_low", 0],
+        "positive": ["positive_conditioning", 0],
+        "negative": ["negative_conditioning", 0],
+        "latent_image": ["ksampler_high_noise", 0]
+      },
+      "class_type": "KSamplerAdvanced",
+      "_meta": { "title": "KSampler Low Noise (Steps 2-4)" }
+    },
+    "vae_decode": {
+      "inputs": {
+        "samples": ["ksampler_low_noise", 0],
+        "vae": ["vae_loader", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": { "title": "VAE Decode" }
+    },
+    "create_video": {
+      "inputs": {
+        "fps": 16,
+        "images": ["vae_decode", 0]
+      },
+      "class_type": "CreateVideo",
+      "_meta": { "title": "Create Video" }
+    },
+    "save_video": {
+      "inputs": {
+        "filename_prefix": "video/ComfyUI",
+        "format": "auto",
+        "codec": "auto",
+        "video": ["create_video", 0]
+      },
+      "class_type": "SaveVideo",
+      "_meta": { "title": "Save Video" }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "positive_conditioning",
+      "field": "inputs.text",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Video generation prompt"
+    },
+    "width": {
+      "node_id": "empty_latent",
+      "field": "inputs.width",
+      "default": 832
+    },
+    "height": {
+      "node_id": "empty_latent",
+      "field": "inputs.height",
+      "default": 480
+    },
+    "frames": {
+      "node_id": "empty_latent",
+      "field": "inputs.length",
+      "default": 81
+    },
+    "fps": {
+      "node_id": "create_video",
+      "field": "inputs.fps",
+      "default": 16
+    },
+    "seed": {
+      "node_id": "ksampler_high_noise",
+      "field": "inputs.noise_seed",
+      "default": 0
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "save_video",
+    "output_type": "video",
+    "format": "mp4",
+    "field": "filename_prefix"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "30-60",
+    "quality_rating": 4,
+    "requires_gpu": true,
+    "gpu_vram_mb": 24000,
+    "notes": "Wan 2.2 T2V 14B FP8 with LightX2V LoRA acceleration. Two-stage sampling: high noise (steps 0-2) → low noise (steps 2-4). Total 4 steps. Chinese negative prompt for better quality.",
+    "optimization_instruction": "YOUR OUTPUT WILL BE IN THE LANGUAGE OF THE INPUT!\n\n=== CORE TRANSFORMATION: TEXT TO VIDEO PROMPT ===\nTransform the user's idea into a concise, vivid VIDEO prompt.\nKEY: A video has MOTION, CAMERA MOVEMENT, and TEMPORAL FLOW.\n\nRULES:\n1. Describe a SHORT, COHERENT SCENE (5 seconds of footage).\n2. Include: subject, action/motion, environment, lighting, camera angle.\n3. Use cinematic language: 'camera slowly pans', 'tracking shot', 'close-up reveals'.\n4. Keep it CONCRETE — no abstract concepts, no text overlays, no UI elements.\n5. Maximum 2-3 sentences. Wan 2.2 works best with concise prompts.\n6. Do NOT add technical parameters (fps, resolution, codec).\n7. Do NOT mention 'video', 'clip', 'footage' — just describe the scene.\n8. Emphasize smooth, natural motion over complex multi-action sequences.\n\nEXAMPLE INPUT: 'Ein Hund rennt über eine Wiese'\nEXAMPLE OUTPUT: 'A golden retriever runs joyfully across a sunlit meadow, ears flapping in the wind. Camera follows at ground level, wildflowers swaying as the dog passes. Warm afternoon light, shallow depth of field.'"
+  }
+}
