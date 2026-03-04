@@ -1,5 +1,40 @@
 # Development Log
 
+## Session 247 - Wan 2.2 T2V Fast: Fix media_type Detection + 10s Video + MoE Cleanup
+**Date:** 2026-03-05
+**Focus:** Fix video detection, VLM safety check, and frontend rendering for Wan 2.2 T2V Fast config
+
+### Problem
+The new `wan22_t2v_fast` config (from Session 246) generated video successfully, but:
+1. **Media type detected as "image"** — backend uses `'video' in output_config.lower()` at 3+ locations, but config name didn't contain "video"
+2. **VLM safety check failed** — tried to open .mp4 as image (fail-open, no block but error in logs)
+3. **Frontend rendered `<img>` instead of `<video>`** — wrong media_type in SSE events
+
+### Solution
+**Config rename**: `wan22_t2v_fast` → `wan22_t2v_video_fast` (follows existing pattern: `ltx_video`, `wan22_i2v_video`)
+
+**Files changed:**
+- `devserver/schemas/configs/output/wan22_t2v_fast.json` → renamed to `wan22_t2v_video_fast.json`
+- `devserver/schemas/chunks/output_video_wan22_t2v_fast.json` — frames 81→161 (10s at 16fps), optimization instruction updated
+- `public/ai4artsed-frontend/src/views/text_transformation.vue` — config ID updated in 3 places (bubble, chunk mapping, display names)
+- `public/ai4artsed-frontend/src/views/image_transformation.vue` — removed dead `wan22_i2v_diffusers` MoE entry (leftover from Session 246)
+- `public/ai4artsed-frontend/src/views/multi_image_transformation.vue` — same MoE cleanup
+
+### Key Detail: Chunk Mapping
+The `configIdToChunkName` mapping maps config IDs to chunk base names (after stripping `output_video_` prefix). The chunk file stays `output_video_wan22_t2v_fast.json`, so the mapping is:
+- Config ID `wan22_t2v_video_fast` → chunk base name `wan22_t2v_fast` ✓
+
+### Performance
+Wan 2.2 14B FP8 + LightX2V 4-step: **5s video in ~5.6s inference** → bumped to 10s video (~161 frames), expected ~11s inference.
+
+### Verified
+- Backend picks up renamed config
+- `media_type: 'video'` correctly detected
+- VLM safety check skips (video type)
+- Frontend renders `<video>` player
+
+**Duration:** ~20 minutes
+
 ## Session 245 - Cross-Process ComfyUI Eviction in VRAMCoordinator
 **Date:** 2026-03-03
 **Focus:** Enable GPU service to ask ComfyUI to release VRAM as a last-resort eviction step
