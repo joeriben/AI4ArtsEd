@@ -764,6 +764,13 @@ class BackendRouter:
             input_mappings = chunk.get('input_mappings', {})
             input_data = {'prompt': prompt, **parameters}
 
+            # ComfyUI fallback: if chunk has no triple-prompt support but prompt_3
+            # (user's original text) is available, use it as main prompt instead of
+            # the optimized clip_l keywords which would look terrible on single-prompt workflows
+            if 'prompt_3' in parameters and 'prompt_3' not in input_mappings:
+                logger.info(f"[WORKFLOW-CHUNK] No prompt_3 mapping — using user text (T5) as main prompt for ComfyUI fallback")
+                input_data['prompt'] = parameters['prompt_3']
+
             first_mapping = next(iter(input_mappings.values()), {})
             if 'node_id' in first_mapping:
                 logger.info(f"[WORKFLOW-CHUNK] Using node-based mappings")
