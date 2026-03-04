@@ -18,7 +18,7 @@
           "demon", "zombie", "skeleton", "skull", "evil",
           "vampire", "werewolf", "monster", "creature", "beast",
           "fangs", "claws", "teeth", "bite",
-          "haunted", "creepy", "eerie", "sinister", "dark", "macabre",
+          "haunted", "creepy", "eerie", "sinister", "macabre",
           "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse"
         ],
         "de": [
@@ -238,7 +238,7 @@
         "fangs", "claws", "teeth", "bite"
       ],
       "creepy_macabre": [
-        "haunted", "creepy", "eerie", "sinister", "dark", "macabre"
+        "haunted", "creepy", "eerie", "sinister", "macabre"
       ],
       "sexual_content": [
         "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse"
