@@ -28,10 +28,10 @@
 **Datum:** 2026-02-02 | **Aktualisiert:** 2026-03-02
 **Kontext:** Proxy-Chunk-Pattern ✅ eliminiert (Session 235), Diffusers-Chunk-Migration ✅ done (Session 228). Restarbeit:
 
-- `_process_heartmula_chunk()` — Dead Code (Python-Chunk `output_music_heartmula.py` existiert bereits, Router-Methode kann entfernt werden)
-- `_process_stable_audio_chunk()` — noch kein Python-Chunk
-- `_process_triton_chunk()` — noch kein Python-Chunk
-- ComfyUI-Workflow-Logik (`_process_workflow_chunk()`, `_process_image_chunk_simple()`, `_build_simple_t2i_workflow()`, `_inject_lora_nodes()`, `_apply_encoder_type()`) — noch im Router
+- ✅ `_process_heartmula_chunk()` — bereits entfernt (Python-Chunk `output_music_heartmula.py` aktiv)
+- `_process_stable_audio_chunk()` — GPU Service nutzt bereits Diffusers (`stable_audio_backend.py`), aber Chunk ist noch JSON (`output_audio_stableaudio_diffusers.json`). Migration: JSON→Python-Chunk, dann Router-Methode entfernen. ComfyUI-Pfad (`output_audio_stableaudio.json`) bleibt JSON.
+- ✅ `_process_triton_chunk()` — deprecated, nie implementiert. Zwei tote Referenzen im Router (Enum + DIRECT_BACKENDS) können bei Gelegenheit entfernt werden.
+- ComfyUI-Workflow-Logik (`_process_workflow_chunk()`, `_process_image_chunk_simple()`, `_build_simple_t2i_workflow()`, `_inject_lora_nodes()`, `_apply_encoder_type()`) — **nicht** in Python-Chunks migrieren (JSON-Graph-basiert, würde Infrastruktur duplizieren). Stattdessen: in zentrale `comfyui_handler.py` extrahieren, Router ruft nur noch Handler auf.
 
 **Plan-Referenz:** `docs/plans/diffusers-chunk-migration.md`
 
