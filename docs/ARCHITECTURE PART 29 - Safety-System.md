@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-03 (Session 244)
+**Last Updated:** 2026-03-04 (Session 245)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, legal basis
 
 ---
@@ -63,6 +63,20 @@ Input text
        PER entity detected → LLM verification (false-positive reduction)
        Confirmed PER → BLOCK
 ```
+
+#### Stage 1 LLM Routing (CRITICAL — do not mix up)
+
+Each Stage 1 step uses a **different model for a different reason**. The logic:
+
+| Step | Fast-Filter | LLM Model | Prompt Format | Why this model |
+|------|------------|-----------|---------------|----------------|
+| **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` (llama-guard3:1b) | S1-S13 template (`safety_llamaguard.json`) | §86a = criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
+| **Age Filter** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this appropriate for ages {6-12/13-17}? SAFE/UNSAFE"` | Age-appropriateness = subjective judgement → needs general-purpose LLM, NOT a guard model (guard models classify crimes, not age suitability) |
+| **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → needs general-purpose LLM |
+
+**Why Llama Guard fails for the Age Filter:** Llama Guard's S1-S13 categories detect content that "enables, encourages, or excuses" crimes. "Blut" (blood) or "vampire" is not a crime — Llama Guard says "safe". But it's inappropriate for a 6-year-old. Only a general-purpose model can make that age-appropriateness judgement.
+
+**Why a general-purpose model fails for §86a:** A simple "SAFE/UNSAFE" question about Nazi symbols gives no structured framework for distinguishing educational from glorifying context. Llama Guard's S1-S13 taxonomy (especially S1: violent crimes, S4: hate) provides exactly that structure.
 
 **Key files:**
 - `devserver/schemas/engine/stage_orchestrator.py` — orchestration logic
@@ -166,7 +180,7 @@ Bilingual (DE+EN) keyword matching against known prohibited symbols:
 
 **Data:** `devserver/schemas/data/stage1_safety_filters_86a.json`
 
-On match → LLM context verification to reduce false positives (e.g., "1988" vs "88").
+On match → **Llama Guard** (`SAFETY_MODEL`) context check with S1-S13 template. Educational/historical context (e.g., "Geschichte des Hakenkreuzes in der Antike") passes; glorifying context (e.g., "Heil Hitler") is blocked. Fail-closed if LLM unavailable.
 
 ### 4.2 Age-Appropriate Fast-Filter
 
@@ -176,7 +190,7 @@ Fuzzy matching against level-specific filter lists:
 - `stage1_safety_filters_kids.json`
 - `stage1_safety_filters_youth.json`
 
-On match → LLM semantic check via pipeline executor.
+On match → **general-purpose LLM** (`DSGVO_VERIFY_MODEL`, qwen3:1.7b) with simple age-appropriate prompt: "Is this appropriate for ages 6-12/13-17? SAFE/UNSAFE". NOT Llama Guard — guard models classify crimes, not age suitability.
 
 ### 4.3 DSGVO SpaCy NER
 
@@ -300,8 +314,8 @@ Canvas routes (`/api/canvas/execute`, `/execute-stream`, `/execute-batch`) have 
 
 ```python
 DEFAULT_SAFETY_LEVEL = 'kids'          # Default, overridden by user_settings.json
-SAFETY_MODEL = 'llama-guard3:1b'       # Guard model for Stage 3 content safety (S1-S13 categories)
-DSGVO_VERIFY_MODEL = 'qwen3:1.7b'     # General-purpose model for NER + age verification (NOT guard)
+SAFETY_MODEL = 'llama-guard3:1b'       # Guard model — §86a context check (Stage 1) + pre-generation check (Stage 3)
+DSGVO_VERIFY_MODEL = 'qwen3:1.7b'     # General-purpose model — age filter (Stage 1) + DSGVO NER verify (Stage 1)
 VLM_SAFETY_MODEL = 'qwen3-vl:2b'      # Ollama model for image checks
 OLLAMA_TIMEOUT_SAFETY = 30             # Short timeout for safety verification
 OLLAMA_TIMEOUT_DEFAULT = 120           # Standard LLM calls
@@ -373,6 +387,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 218 | 2026-02-27 | Full repair: circuit breaker, self-healing watchdog, dead code removal, timeout differentiation |
 | 244 | 2026-03-03 | Stage 3 redesign: single Llama-Guard call with proper S1-S13 template, removed redundant age fast-filter |
 | 244 | 2026-03-03 | Pre-generation `/safety/quick` gate in `startGeneration()` — closes blur-bypass gap |
+| 245 | 2026-03-04 | Stage 1 LLM routing fix: §86a→Llama Guard (was blind block), Age Filter→qwen3 SAFE/UNSAFE (was Llama Guard) |
 
 ---
 

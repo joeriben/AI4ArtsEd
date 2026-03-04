@@ -386,8 +386,8 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
     """
     LLM context verification for age-filter fast-filter hits.
 
-    Uses Llama-Guard-3 (SAFETY_MODEL) — NOT DSGVO model.
-    Llama-Guard gets ONLY the user text, classifies safe/unsafe.
+    Uses DSGVO_VERIFY_MODEL (qwen3:1.7b) with a simple SAFE/UNSAFE prompt
+    asking whether the text is appropriate for the given age range.
 
     Results are cached for 60s to prevent inconsistent answers when
     /safety/quick and [UNIFIED-STREAMING] check the same text.
@@ -414,11 +414,16 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
             return cached_result
 
     terms_str = ", ".join(found_terms[:5])
-    model = config.SAFETY_MODEL  # llama-guard3, NOT DSGVO model
+    model = config.DSGVO_VERIFY_MODEL  # qwen3:1.7b — general-purpose, NOT guard model
 
-    # Build Llama-Guard prompt (same template as Stage 1)
-    template = _get_llamaguard_template()
-    prompt = template.replace("{{PREVIOUS_OUTPUT}}", text)
+    # Age-appropriate prompt with SAFE/UNSAFE answer format
+    age_range = "6-12" if safety_level == "kids" else "13-17"
+    prompt = (
+        f"Is the following text appropriate as an AI image generation prompt "
+        f"for children ages {age_range}?\n"
+        f"Answer SAFE or UNSAFE (one word only).\n\n"
+        f"Text: {text}"
+    )
 
     try:
         from my_app.services.llm_backend import get_llm_backend
@@ -436,26 +441,26 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         duration_ms = (_time.time() - start) * 1000
 
         if llm_result is None:
-            logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → Llama-Guard ({model}) returned None ({duration_ms:.0f}ms) — fail-closed")
+            logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned None ({duration_ms:.0f}ms) — fail-closed")
             return None
 
         output = llm_result.get("response", "").strip()
         if not output:
-            logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → Llama-Guard ({model}) returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
+            logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
             return None
 
-        is_safe, codes = parse_llamaguard_output(output)
-        is_unsafe = not is_safe
+        output_upper = output.upper()
+        is_unsafe = 'UNSAFE' in output_upper
 
         logger.info(
-            f"[AGE-LLM-VERIFY] terms={terms_str} → Llama-Guard={output!r} → "
-            f"{'UNSAFE ' + str(codes) if is_unsafe else 'SAFE — false positive'} ({duration_ms:.0f}ms)"
+            f"[AGE-LLM-VERIFY] terms={terms_str} → {model}={output!r} → "
+            f"{'UNSAFE (ages ' + age_range + ')' if is_unsafe else 'SAFE — false positive'} ({duration_ms:.0f}ms)"
         )
         _AGE_VERIFY_CACHE[cache_key] = (is_unsafe, _time.time())
         return is_unsafe
 
     except Exception as e:
-        logger.error(f"[AGE-LLM-VERIFY] Llama-Guard failed ({model}): {e} — fail-closed")
+        logger.error(f"[AGE-LLM-VERIFY] {model} failed: {e} — fail-closed")
         return None
 
 
@@ -953,22 +958,64 @@ async def execute_stage1_safety_unified(
         return (True, text, None, [])
 
     # ── STEP 1: §86a Fast-Filter (language-aware, ~0.001s) ─────────────
-    # §86a violations are unambiguous — no LLM context check needed
+    # §86a terms trigger Llama Guard context check (educational/historical exemption)
     s86a_start = _time.time()
     has_86a_terms, found_86a_terms = fast_filter_bilingual_86a(text, user_language)
     s86a_time = _time.time() - s86a_start
 
     if has_86a_terms:
-        error_message = (
-            f"⚠️ Dein Prompt wurde blockiert\n\n"
-            f"GRUND: §86a StGB\n\n"
-            f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sind: {', '.join(found_86a_terms[:3])}\n\n"
-            f"WARUM DIESE REGEL?\n"
-            f"Diese Symbole werden benutzt, um Gewalt und Hass zu verbreiten.\n"
-            f"Wir schützen dich und andere vor gefährlichen Inhalten."
+        # §86a hit → Llama Guard context check (educational/historical context is §86a-exempt)
+        logger.info(f"[STAGE1] §86a hit: {found_86a_terms[:3]} → Llama-Guard context check ({s86a_time*1000:.1f}ms)")
+        template = _get_llamaguard_template()
+        prompt = template.replace("{{PREVIOUS_OUTPUT}}", text)
+
+        from my_app.services.llm_backend import get_llm_backend
+        model = config.SAFETY_MODEL  # llama-guard3 — correct for §86a
+
+        llm_start = _time.time()
+        llm_result = get_llm_backend().generate(
+            model=model, prompt=prompt, temperature=0.0,
+            max_new_tokens=50, timeout=config.OLLAMA_TIMEOUT_SAFETY,
+            enable_thinking=False,
         )
-        logger.warning(f"[STAGE1] BLOCKED §86a fast-filter: {found_86a_terms[:3]} ({s86a_time*1000:.1f}ms)")
-        return (False, text, error_message, ['§86a'])
+        llm_time = _time.time() - llm_start
+
+        if llm_result is None:
+            # LLM unavailable → fail-closed (§86a errs on caution)
+            error_message = (
+                f"⚠️ Dein Prompt wurde blockiert\n\n"
+                f"GRUND: §86a StGB — Sicherheitssystem nicht erreichbar\n\n"
+                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sein können: "
+                f"{', '.join(found_86a_terms[:3])}\n\n"
+                f"Das Sicherheitssystem konnte den Kontext nicht prüfen.\n"
+                f"Bitte versuche es erneut."
+            )
+            logger.warning(f"[STAGE1] §86a LLM unavailable → fail-closed ({llm_time:.1f}s)")
+            return (False, text, error_message, ['§86a'])
+
+        output = llm_result.get("response", "").strip()
+        if not output:
+            logger.warning(f"[STAGE1] §86a Llama-Guard returned EMPTY → fail-closed ({llm_time:.1f}s)")
+            return (False, text, "§86a check returned empty — blocked for safety.", ['§86a'])
+
+        is_safe, codes = parse_llamaguard_output(output)
+
+        if not is_safe:
+            # Llama Guard confirmed → BLOCK
+            error_message = (
+                f"⚠️ Dein Prompt wurde blockiert\n\n"
+                f"GRUND: §86a StGB\n\n"
+                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sind: "
+                f"{', '.join(found_86a_terms[:3])}\n\n"
+                f"WARUM DIESE REGEL?\n"
+                f"Diese Symbole werden benutzt, um Gewalt und Hass zu verbreiten.\n"
+                f"Wir schützen dich und andere vor gefährlichen Inhalten."
+            )
+            logger.warning(f"[STAGE1] BLOCKED §86a (Llama-Guard confirmed: {codes}) ({llm_time:.1f}s)")
+            return (False, text, error_message, ['§86a'])
+        else:
+            # Llama Guard says safe (educational context) → continue
+            logger.info(f"[STAGE1] §86a false positive (Llama-Guard: safe, {llm_time:.1f}s)")
 
     # ── STEP 2: Age-appropriate Fast-Filter (~0.001s) ──────────────────
     # Skip for 'adult' and 'research' — only §86a and DSGVO apply
