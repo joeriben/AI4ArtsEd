@@ -189,8 +189,8 @@ class DiffusersImageGenerator:
         individually with torch_dtype=bfloat16 uses ~1.2GB RAM instead.
 
         FP8 mode (DIFFUSERS_FLUX2_QUANTIZE=fp8): quantizes transformer to
-        float8_weight_only via TorchAoConfig (~16GB) and text encoder to
-        int8_weight_only (~12GB). Peak VRAM ~24GB with CPU offload.
+        Float8WeightOnlyConfig via TorchAoConfig (~16GB) and text encoder to
+        Int8WeightOnlyConfig v2 (~12GB). Peak VRAM ~24GB with CPU offload.
         """
         import torch
         from diffusers import (
@@ -207,9 +207,9 @@ class DiffusersImageGenerator:
         if quantize == "fp8":
             from diffusers import TorchAoConfig
             from transformers import TorchAoConfig as TransformersAoConfig
-            diff_quant = TorchAoConfig("float8_weight_only")
-            # transformers doesn't support float8_weight_only, int8 is equivalent
-            tf_quant = TransformersAoConfig("int8_weight_only")
+            from torchao.quantization import Float8WeightOnlyConfig, Int8WeightOnlyConfig
+            diff_quant = TorchAoConfig(Float8WeightOnlyConfig())
+            tf_quant = TransformersAoConfig(Int8WeightOnlyConfig(version=2))
             logger.info(f"[DIFFUSERS] Flux2: loading transformer FP8 + text encoder INT8...")
             transformer = Flux2Transformer2DModel.from_pretrained(
                 model_id, subfolder="transformer",
@@ -261,8 +261,8 @@ class DiffusersImageGenerator:
         MoE models (A14B) have dual transformers (transformer + transformer_2).
 
         FP8 mode (DIFFUSERS_WAN22_QUANTIZE=fp8): quantizes transformers to
-        float8_weight_only via TorchAoConfig (~14GB total) and text encoder to
-        int8_weight_only. Peak VRAM ~14GB with CPU offload.
+        Float8WeightOnlyConfig via TorchAoConfig (~14GB total) and text encoder to
+        Int8WeightOnlyConfig v2. Peak VRAM ~14GB with CPU offload.
         """
         import torch
         from diffusers import AutoencoderKLWan
@@ -278,6 +278,7 @@ class DiffusersImageGenerator:
         from pathlib import Path
         from huggingface_hub import cached_assets_path
         has_dual_transformer = False
+        model_index = {}
         try:
             # Try loading model_index.json to detect dual transformer
             from huggingface_hub import hf_hub_download
@@ -293,8 +294,9 @@ class DiffusersImageGenerator:
         if quantize == "fp8":
             from diffusers import TorchAoConfig, WanTransformer3DModel
             from transformers import TorchAoConfig as TransformersAoConfig, UMT5EncoderModel
-            diff_quant = TorchAoConfig("float8_weight_only")
-            tf_quant = TransformersAoConfig("int8_weight_only")
+            from torchao.quantization import Float8WeightOnlyConfig, Int8WeightOnlyConfig
+            diff_quant = TorchAoConfig(Float8WeightOnlyConfig())
+            tf_quant = TransformersAoConfig(Int8WeightOnlyConfig(version=2))
 
             logger.info(f"[DIFFUSERS] Wan: loading transformer(s) FP8 + text encoder INT8...")
             transformer = WanTransformer3DModel.from_pretrained(
@@ -356,6 +358,7 @@ class DiffusersImageGenerator:
         }
         if transformer_2 is not None:
             pipe_kwargs["transformer_2"] = transformer_2
+            pipe_kwargs["boundary_ratio"] = model_index.get("boundary_ratio", 0.9)
 
         pipe = PipelineClass(**pipe_kwargs)
         pipe.enable_model_cpu_offload()

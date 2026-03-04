@@ -388,18 +388,6 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       color: '#FF6B35',
       logo: '/logos/flux2_logo.png',
       lightBg: false
-    },
-    {
-      id: 'flux2_img2img_diffusers',
-      label: 'Flux 2\nDiffusers',
-      emoji: '⚡',
-      name: 'Flux 2 Visual Conditioning',
-      quality: 5,
-      speed: 3,
-      duration: '30-45',
-      color: '#FF6B35',
-      logo: '/logos/flux2_logo.png',
-      lightBg: false
     }
   ],
   video: [

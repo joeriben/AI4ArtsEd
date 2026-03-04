@@ -9,10 +9,10 @@
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_img2img",
     "steps": 20,
-    "cfg": 1,
+    "cfg": 3.5,
     "sampler_name": "euler",
     "scheduler": "normal",
-    "denoise": 0.55,
+    "denoise": 0.75,
     "megapixels": 2.5,
     "seed": null,
     "temperature": 0.7,
@@ -29,14 +29,14 @@
     },
     "cfg": {
       "min": 1,
-      "max": 2,
-      "default": 1,
-      "description": "CFG scale (Flux2 uses low CFG like 1-2)"
+      "max": 7,
+      "default": 3.5,
+      "description": "CFG scale (3-4 for balanced transformation, higher = more text adherence)"
     },
     "denoise": {
-      "min": 0.3,
-      "max": 0.9,
-      "default": 0.55,
+      "min": 0.4,
+      "max": 0.95,
+      "default": 0.75,
       "description": "Denoise strength (0.3=light changes, 0.55=moderate, 0.9=heavy transformation)"
     },
     "megapixels": {
