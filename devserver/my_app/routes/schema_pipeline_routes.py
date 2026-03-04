@@ -3241,24 +3241,25 @@ async def execute_stage4_generation_only(
                     'run_id': run_id
                 }
 
-        elif output_value == 'heartmula_generated':
-            # HeartMuLa backend - audio data is base64 encoded
+        elif output_value in ('heartmula_generated', 'stable_audio_generated'):
+            # Audio backend (HeartMuLa, Stable Audio) - audio data is base64 encoded
+            audio_backend = output_result.metadata.get('backend', 'unknown')
             audio_data_b64 = output_result.metadata.get('audio_data')
             if audio_data_b64:
                 import base64
                 audio_bytes = base64.b64decode(audio_data_b64)
-                logger.info(f"[RECORDER] Saving HeartMuLa audio: {len(audio_bytes)} bytes")
+                logger.info(f"[RECORDER] Saving {audio_backend} audio: {len(audio_bytes)} bytes")
                 saved_filename = recorder.save_entity(
                     entity_type=f'output_{media_type}',
                     content=audio_bytes,
                     metadata={
                         'config': output_config,
-                        'backend': 'heartmula',
+                        'backend': audio_backend,
                         'format': output_result.metadata.get('audio_format', 'mp3'),
                         'seed': result_seed
                     }
                 )
-                logger.info(f"[RECORDER] HeartMuLa audio saved: {saved_filename}")
+                logger.info(f"[RECORDER] {audio_backend} audio saved: {saved_filename}")
                 media_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == f'output_{media_type}']
                 media_index = len(media_entities) - 1 if media_entities else 0
                 media_output = {
@@ -3271,7 +3272,7 @@ async def execute_stage4_generation_only(
             else:
                 return {
                     'success': False,
-                    'error': 'HeartMuLa: No audio_data in response',
+                    'error': f'{audio_backend}: No audio_data in response',
                     'run_id': run_id
                 }
 
@@ -5123,27 +5124,28 @@ def interception_pipeline():
                                     else:
                                         logger.error("[DIFFUSERS] No image_data in response metadata")
                                         saved_filename = None
-                                elif not media_stored and output_value == 'heartmula_generated':
-                                    # HeartMuLa backend - audio data is base64 encoded
-                                    logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: heartmula_generated")
+                                elif not media_stored and output_value in ('heartmula_generated', 'stable_audio_generated'):
+                                    # Audio backend (HeartMuLa, Stable Audio) - audio data is base64 encoded
+                                    audio_backend = output_result.metadata.get('backend', 'unknown')
+                                    logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: {output_value}")
                                     audio_data_b64 = output_result.metadata.get('audio_data')
                                     if audio_data_b64:
                                         import base64
                                         audio_bytes = base64.b64decode(audio_data_b64)
-                                        logger.info(f"[RECORDER] Saving HeartMuLa audio: {len(audio_bytes)} bytes")
+                                        logger.info(f"[RECORDER] Saving {audio_backend} audio: {len(audio_bytes)} bytes")
                                         saved_filename = recorder.save_entity(
                                             entity_type=f'output_{media_type}',
                                             content=audio_bytes,
                                             metadata={
                                                 'config': output_config_name,
-                                                'backend': 'heartmula',
+                                                'backend': audio_backend,
                                                 'format': output_result.metadata.get('audio_format', 'mp3'),
                                                 'seed': seed
                                             }
                                         )
-                                        logger.info(f"[RECORDER] HeartMuLa audio saved: {saved_filename}")
+                                        logger.info(f"[RECORDER] {audio_backend} audio saved: {saved_filename}")
                                     else:
-                                        logger.error("[HEARTMULA] No audio_data in response metadata")
+                                        logger.error(f"[{audio_backend.upper()}] No audio_data in response metadata")
                                         saved_filename = None
                                 elif not media_stored and output_value == 'workflow_generated':
                                     logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: workflow_generated")

@@ -280,9 +280,11 @@ class StableAudioGenerator:
             if audio.ndim == 2 and audio.shape[0] < audio.shape[1]:
                 audio = audio.T  # Transpose to [samples, channels]
 
-            # Normalize to int16
+            # Convert torch Tensor to numpy, then normalize to int16
+            # (matches gpu_service/services/stable_audio_backend.py:778)
             import numpy as np
-            audio_int16 = (audio * 32767).astype(np.int16)
+            audio_np = audio.cpu().float().numpy() if hasattr(audio, 'cpu') else audio
+            audio_int16 = (audio_np * 32767).astype(np.int16)
 
             wavfile.write(wav_buffer, sample_rate, audio_int16)
             wav_bytes = wav_buffer.getvalue()
