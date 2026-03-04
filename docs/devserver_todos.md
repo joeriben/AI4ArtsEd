@@ -1,5 +1,5 @@
 # DevServer Implementation TODOs
-**Last Updated:** 2026-03-02
+**Last Updated:** 2026-03-04
 **Context:** Current priorities and active TODOs
 
 ---
@@ -23,33 +23,11 @@
 
 ## 🔴 CRITICAL: Architektur-Verletzungen
 
-### Remaining Router Cleanup (ex Output-Chunks + Proxy-Chunk)
-
-**Datum:** 2026-02-02 | **Aktualisiert:** 2026-03-02
-**Kontext:** Proxy-Chunk-Pattern ✅ eliminiert (Session 235), Diffusers-Chunk-Migration ✅ done (Session 228). Restarbeit:
-
-- ✅ `_process_heartmula_chunk()` — bereits entfernt (Python-Chunk `output_music_heartmula.py` aktiv)
-- `_process_stable_audio_chunk()` — GPU Service nutzt bereits Diffusers (`stable_audio_backend.py`), aber Chunk ist noch JSON (`output_audio_stableaudio_diffusers.json`). Migration: JSON→Python-Chunk, dann Router-Methode entfernen. ComfyUI-Pfad (`output_audio_stableaudio.json`) bleibt JSON.
-- ✅ `_process_triton_chunk()` — deprecated, nie implementiert. Zwei tote Referenzen im Router (Enum + DIRECT_BACKENDS) können bei Gelegenheit entfernt werden.
-- ComfyUI-Workflow-Logik (`_process_workflow_chunk()`, `_process_image_chunk_simple()`, `_build_simple_t2i_workflow()`, `_inject_lora_nodes()`, `_apply_encoder_type()`) — **nicht** in Python-Chunks migrieren (JSON-Graph-basiert, würde Infrastruktur duplizieren). Stattdessen: in zentrale `comfyui_handler.py` extrahieren, Router ruft nur noch Handler auf.
-
-**Plan-Referenz:** `docs/plans/diffusers-chunk-migration.md`
+*Derzeit keine CRITICAL-Items.*
 
 ---
 
 ## 🔴 HIGH Priority
-
-### Video Generation Wan 2.1 — PoC pending
-
-**Datum:** 2026-02-15
-**Plan:** `docs/plans/video_generation_wan21_diffusers.md`
-
-Code komplett implementiert. Was noch fehlt:
-
-1. PoC-Test: `venv/bin/python test_wan21_video.py` — wartet auf Modell-Download
-2. 1.3B-Modell: Download prüfen (`ls ~/.cache/huggingface/hub/models--Wan-AI--Wan2.1-T2V-1.3B-Diffusers/snapshots/`)
-3. Integration Test: GPU Service → DevServer → Video Pipeline end-to-end
-4. Frontend: Vue-Komponente für Video-Anzeige
 
 ### Canvas Execution Feedback
 
@@ -91,14 +69,11 @@ Stage 3 generiert Negative Prompts basierend auf Safety Level (kids/youth), aber
 ### Frontend bleibt im Loading-State bei Backend-Fehler (Expert Mode)
 
 **Datum:** 2026-02-28
-**Status:** Offen
+**Status:** ⚠️ Unbestätigt — vermutlich kein Bug
 
-Wenn Stage 4 fehlschlägt (z.B. ComfyUI-Timeout), bleibt das Frontend in der Model-Card ("Modell wird geladen") hängen. Der `stage4_error` SSE-Event kommt nicht durch oder wird nicht behandelt. `isExecuting` wird nie auf `false` gesetzt. Zusätzlich: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein.
+Ursprüngliche Annahme: `stage4_error` SSE-Event kommt nicht durch. Bei Code-Review (Session 236) zeigt sich: `stage4_error` existiert gar nicht als Event-Typ im Backend. Stattdessen nutzen alle Views `finally`-Blöcke, die `isExecuting = false` setzen. Der beschriebene Bug konnte nicht reproduziert werden.
 
-Zu untersuchen:
-- Wie propagiert `schema_pipeline_routes.py` den Fehler via SSE?
-- Wie reagiert die View (text_transformation.vue etc.) auf Error-Events?
-- Wird `isExecuting` bei Fehler zurückgesetzt?
+Verbleibend: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein (kosmetisch).
 
 ---
 
@@ -148,6 +123,26 @@ Bei Festnetz-Verbindung:
 ---
 
 ## 📋 LOW / PLANNED / DEFERRED
+
+### Blender Headless Integration — Server-seitiger 3D-Rendering-Chunk
+
+**Datum:** 2026-03-04
+**Status:** PLANNED — Feasibility positiv
+**Plan:** `docs/plans/blender-headless-integration.md`
+
+Blender als headless Renderer auf dem Server, gesteuert via `blender --background --python script.py`. Eevee-Renderer (1-5s für einfache Szenen). Neuer Chunk-Typ in Stage 4, One-Shot UX. Erste 3D-Infrastruktur im Projekt — Grundlage für Image-to-3D, Text-to-3D, 3D-Compositing.
+
+### Remaining Router Cleanup — Stable Audio Chunk Migration
+
+**Datum:** 2026-02-02 | **Herabgestuft:** 2026-03-04 (von CRITICAL → LOW)
+**Kontext:** Stable Audio JSON→Python-Chunk-Migration mehrfach gescheitert, minimaler Nutzen. ComfyUI-Workflow-Extraktion nach `comfyui_handler.py` bleibt wünschenswert, aber nicht dringend.
+
+**Plan-Referenz:** `docs/plans/diffusers-chunk-migration.md`
+
+### ~~Video Generation Wan 2.1~~ — OBSOLET
+
+**Datum:** 2026-02-15 | **Gestrichen:** 2026-03-04
+Wan 2.2 ist installiert, dieses Todo bezog sich auf Wan 2.1 und ist damit hinfällig.
 
 ### "optimization" → "adaptation" Rename
 
