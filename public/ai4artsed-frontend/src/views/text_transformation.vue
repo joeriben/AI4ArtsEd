@@ -1633,8 +1633,14 @@ async function executePipeline() {
         currentRunHasOutput.value = true
 
         outputMediaType.value = mediaType
-        outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
         executionPhase.value = 'generation_done'
+
+        if (mediaType === 'code' && result.media_output.code) {
+          // Code output (Tone.js, p5.js): display in code editor, not MediaOutputBox
+          outputCode.value = result.media_output.code
+        } else {
+          outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
+        }
 
         // Session 82: Register session for chat overlay context
         updateSession(runId, {
