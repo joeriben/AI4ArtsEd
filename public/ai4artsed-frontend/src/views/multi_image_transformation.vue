@@ -457,18 +457,6 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       color: '#9C27B0',
       logo: '/logos/wan_logo.png',
       lightBg: false
-    },
-    {
-      id: 'wan22_i2v_diffusers',
-      label: 'Wan 2.2\nI2V-A14B',
-      emoji: '🎬',
-      name: 'Wan 2.2 I2V-A14B (MoE)',
-      quality: 5,
-      speed: 2,
-      duration: '120-240',
-      color: '#E91E63',
-      logo: '/logos/Qwen_logo.png',
-      lightBg: false
     }
   ],
   sound: []   // Future
