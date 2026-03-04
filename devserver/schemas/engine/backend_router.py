@@ -133,6 +133,7 @@ class BackendType(Enum):
     DIFFUSERS = "diffusers"  # Direct HuggingFace Diffusers (TensorRT optional)
     # Python chunks: Self-contained executable Python modules (HeartMuLa, future backends)
     PYTHON = "python"
+    PASSTHROUGH = "passthrough"  # text_passthrough chunks: no backend, frontend renders
 
 @dataclass
 class BackendRequest:

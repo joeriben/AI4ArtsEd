@@ -1,7 +1,7 @@
 {
   "name": "output_code_p5js",
   "type": "text_passthrough",
-  "backend_type": "vue_p5js",
+  "backend_type": "passthrough",
   "media_type": "code",
   "description": "P5.js Code Output - Passthrough to Vue frontend for display",
   "template": "{{PREVIOUS_OUTPUT}}",

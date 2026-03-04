@@ -1,7 +1,7 @@
 {
   "name": "output_code_tonejs",
   "type": "text_passthrough",
-  "backend_type": "vue_tonejs",
+  "backend_type": "passthrough",
   "media_type": "code",
   "description": "Tone.js Code Output - Passthrough to Vue frontend for audio playback",
   "template": "{{PREVIOUS_OUTPUT}}",

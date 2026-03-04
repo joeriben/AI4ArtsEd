@@ -332,7 +332,7 @@ class ChunkBuilder:
                 'metadata': {
                     'chunk_name': chunk_name,
                     'config_name': resolved_config.name,
-                    'chunk_type': 'output_chunk',
+                    'chunk_type': template.chunk_type or 'output_chunk',
                     'has_workflow': bool(template.workflow),
                     'workflow_nodes': len(processed_workflow) if processed_workflow else 0,
                     **resolved_config.meta
