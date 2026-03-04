@@ -161,6 +161,33 @@ class DiffusersImageGenerator:
         }
         return dtype_map.get(self.torch_dtype_str, torch.float16)
 
+    def _get_vram_estimate_key(self, model_id: str, pipeline_class: str) -> str:
+        """Map (model_id, pipeline_class, quantization) to a MODEL_PEAK_VRAM_MB key."""
+        from config import DIFFUSERS_FLUX2_QUANTIZE, DIFFUSERS_WAN22_QUANTIZE
+
+        if pipeline_class == "Flux2Pipeline":
+            return f"flux2_{DIFFUSERS_FLUX2_QUANTIZE.lower()}"
+        elif pipeline_class in ("WanPipeline", "WanImageToVideoPipeline"):
+            quant = DIFFUSERS_WAN22_QUANTIZE.lower()
+            kind = "i2v" if pipeline_class == "WanImageToVideoPipeline" else "t2v"
+            moe = "_moe" if "A14B" in model_id else ""
+            return f"wan22_{kind}{moe}_{quant}"
+        elif "stable-diffusion-3.5" in model_id:
+            return f"sd35_large_{self.torch_dtype_str}"
+        else:
+            return f"unknown_{pipeline_class}"
+
+    def _get_peak_vram_mb(self, model_id: str, pipeline_class: str) -> float:
+        """Get estimated peak VRAM (MB) from config table. Falls back to 20GB."""
+        from config import MODEL_PEAK_VRAM_MB
+
+        key = self._get_vram_estimate_key(model_id, pipeline_class)
+        estimate = MODEL_PEAK_VRAM_MB.get(key)
+        if estimate is None:
+            logger.warning(f"[DIFFUSERS] No VRAM estimate for key '{key}', using 20GB default")
+            return 20_000
+        return float(estimate)
+
     def _resolve_pipeline_class(self, pipeline_class: str):
         """Resolve pipeline class string to actual class."""
         if pipeline_class == "StableDiffusion3Pipeline":
@@ -442,7 +469,8 @@ class DiffusersImageGenerator:
                     return True
 
                 # Case 2: Not loaded → evict if needed, load from disk
-                self._ensure_vram_available(required_mb=float('inf'))
+                peak_vram = self._get_peak_vram_mb(model_id, pipeline_class)
+                self._ensure_vram_available(required_mb=peak_vram)
 
                 PipelineClass = self._resolve_pipeline_class(pipeline_class)
 
@@ -480,13 +508,16 @@ class DiffusersImageGenerator:
                 self._current_model = model_id
                 self._model_last_used[model_id] = time.time()
 
-                # Measure VRAM used by this model
-                vram_after = torch.cuda.memory_allocated(0) if torch.cuda.is_available() else 0
-                self._model_vram_mb[model_id] = (vram_after - vram_before) / (1024 * 1024)
+                # Use static peak estimate for coordinator (measurement is broken
+                # for CPU-offloaded models — they report ~0 since weights are on CPU)
+                self._model_vram_mb[model_id] = peak_vram
 
+                # Log measured vs estimated for validation
+                vram_after = torch.cuda.memory_allocated(0) if torch.cuda.is_available() else 0
+                measured_mb = (vram_after - vram_before) / (1024 * 1024)
                 logger.info(
                     f"[DIFFUSERS] Model loaded: {model_id} "
-                    f"(VRAM: {self._model_vram_mb[model_id]:.0f}MB)"
+                    f"(estimated: {peak_vram:.0f}MB, measured: {measured_mb:.0f}MB)"
                 )
                 return True
 

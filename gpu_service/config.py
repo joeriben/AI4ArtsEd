@@ -37,6 +37,24 @@ LORA_DIR = Path(os.environ.get("LORA_DIR", str(_SERVER_BASE / "dlbackend" / "Com
 DIFFUSERS_FLUX2_QUANTIZE = os.environ.get("DIFFUSERS_FLUX2_QUANTIZE", "fp8")  # bf16 or fp8
 DIFFUSERS_WAN22_QUANTIZE = os.environ.get("DIFFUSERS_WAN22_QUANTIZE", "bf16")  # bf16 or fp8
 
+# Peak VRAM estimates (MB) during inference — used by coordinator for eviction decisions.
+# CPU-offloaded models report ~0 via torch.cuda.memory_allocated() measurement,
+# so we use static estimates of peak usage (includes activations/intermediates).
+MODEL_PEAK_VRAM_MB = {
+    "sd35_large_fp16": 12_000,
+    "sd35_large_bf16": 12_000,
+    "flux2_bf16": 26_000,
+    "flux2_fp8": 18_000,
+    "wan22_t2v_bf16": 20_000,
+    "wan22_t2v_fp8": 14_000,
+    "wan22_t2v_moe_bf16": 40_000,
+    "wan22_t2v_moe_fp8": 22_000,
+    "wan22_i2v_bf16": 22_000,
+    "wan22_i2v_fp8": 16_000,
+    "wan22_i2v_moe_bf16": 42_000,
+    "wan22_i2v_moe_fp8": 24_000,
+}
+
 # --- HeartMuLa ---
 HEARTMULA_ENABLED = os.environ.get("HEARTMULA_ENABLED", "true").lower() == "true"
 HEARTMULA_MODEL_PATH = os.environ.get(

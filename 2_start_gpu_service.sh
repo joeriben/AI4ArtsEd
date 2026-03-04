@@ -35,5 +35,8 @@ echo ""
 # Remove error trap - allow normal server exit without "Script failed" message
 trap - ERR
 
+# Reduce CUDA memory fragmentation on large GPUs (recommended since PyTorch 2.1+)
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+
 # Use venv Python directly (shared with Flask backends)
 "$SCRIPT_DIR/venv/bin/python" server.py
