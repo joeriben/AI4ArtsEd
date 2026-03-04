@@ -722,8 +722,7 @@ const configsByCategory: Record<string, Config[]> = {
   ],
   video: [
     { id: 'ltx_video', label: 'LTX\nVideo', emoji: '⚡', color: '#9C27B0', description: 'Schnelle lokale Videogenerierung', logo: '/logos/ltx_logo.png', lightBg: false },
-    { id: 'wan22_video', label: 'Wan 2.2', emoji: '🎬', color: '#E91E63', description: 'Hochwertige 720p Videogenerierung mit Wan 2.2 (5B)', logo: '/logos/Qwen_logo.png', lightBg: false },
-    { id: 'wan22_t2v_diffusers', label: 'Wan 2.2\nT2V-A14B', emoji: '🎬', color: '#9B59B6', description: 'Text-to-Video mit Wan 2.2 A14B MoE (27B, 14B aktiv) via Diffusers', logo: '/logos/Qwen_logo.png', lightBg: false }
+    { id: 'wan22_t2v_video_fast', label: 'Wan 2.2\n14B Fast', emoji: '🎬', color: '#E91E63', description: 'Schnelle 14B Videogenerierung mit LightX2V (4 Steps)', logo: '/logos/Qwen_logo.png', lightBg: false }
   ],
   sound: [
     { id: 'acenet_t2instrumental', label: 'ACE\nInstrumental', emoji: '🎵', color: '#FF5722', description: 'KI-Musikgenerierung für Instrumentalstücke', logo: '/logos/ace_logo.png', lightBg: false },
@@ -753,8 +752,7 @@ const configIdToChunkName: Record<string, string> = {
   'p5js_code': 'p5js',
   'tonejs_code': 'tonejs',
   'ltx_video': 'ltx',
-  'wan22_video': 'wan22',
-  'wan22_t2v_diffusers': 'wan22_diffusers',
+  'wan22_t2v_video_fast': 'wan22_t2v_fast',
   'acenet_t2instrumental': 'acenet',
   'stableaudio_open': 'stableaudio'
 }
@@ -862,8 +860,7 @@ const modelFullNames: Record<string, string> = {
   p5js_code: 'p5.js Code Generation',
   tonejs_code: 'Tone.js Music Generation',
   ltx_video: 'LTX Video',
-  wan22_video: 'Wan 2.2 Text-to-Video',
-  wan22_t2v_diffusers: 'Wan 2.2 T2V-A14B (MoE)',
+  wan22_t2v_video_fast: 'Wan 2.2 T2V 14B Fast',
   acenet_t2instrumental: 'ACE Step Instrumental',
   stableaudio_open: 'Stable Audio Open'
 }

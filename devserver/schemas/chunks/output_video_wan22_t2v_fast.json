@@ -26,7 +26,7 @@
     },
     "vae_loader": {
       "inputs": {
-        "vae_name": "wan2.2_vae.safetensors"
+        "vae_name": "wan_2.1_vae.safetensors"
       },
       "class_type": "VAELoader",
       "_meta": { "title": "Load VAE" }
@@ -101,11 +101,12 @@
       "inputs": {
         "width": 832,
         "height": 480,
-        "length": 81,
-        "batch_size": 1
+        "length": 161,
+        "batch_size": 1,
+        "vae": ["vae_loader", 0]
       },
-      "class_type": "EmptyWanLatentVideo",
-      "_meta": { "title": "Empty Wan Latent Video" }
+      "class_type": "Wan22ImageToVideoLatent",
+      "_meta": { "title": "Wan22 Empty Latent" }
     },
     "ksampler_high_noise": {
       "inputs": {
@@ -193,7 +194,7 @@
     "frames": {
       "node_id": "empty_latent",
       "field": "inputs.length",
-      "default": 81
+      "default": 161
     },
     "fps": {
       "node_id": "create_video",
@@ -220,6 +221,6 @@
     "requires_gpu": true,
     "gpu_vram_mb": 24000,
     "notes": "Wan 2.2 T2V 14B FP8 with LightX2V LoRA acceleration. Two-stage sampling: high noise (steps 0-2) → low noise (steps 2-4). Total 4 steps. Chinese negative prompt for better quality.",
-    "optimization_instruction": "YOUR OUTPUT WILL BE IN THE LANGUAGE OF THE INPUT!\n\n=== CORE TRANSFORMATION: TEXT TO VIDEO PROMPT ===\nTransform the user's idea into a concise, vivid VIDEO prompt.\nKEY: A video has MOTION, CAMERA MOVEMENT, and TEMPORAL FLOW.\n\nRULES:\n1. Describe a SHORT, COHERENT SCENE (5 seconds of footage).\n2. Include: subject, action/motion, environment, lighting, camera angle.\n3. Use cinematic language: 'camera slowly pans', 'tracking shot', 'close-up reveals'.\n4. Keep it CONCRETE — no abstract concepts, no text overlays, no UI elements.\n5. Maximum 2-3 sentences. Wan 2.2 works best with concise prompts.\n6. Do NOT add technical parameters (fps, resolution, codec).\n7. Do NOT mention 'video', 'clip', 'footage' — just describe the scene.\n8. Emphasize smooth, natural motion over complex multi-action sequences.\n\nEXAMPLE INPUT: 'Ein Hund rennt über eine Wiese'\nEXAMPLE OUTPUT: 'A golden retriever runs joyfully across a sunlit meadow, ears flapping in the wind. Camera follows at ground level, wildflowers swaying as the dog passes. Warm afternoon light, shallow depth of field.'"
+    "optimization_instruction": "YOUR OUTPUT WILL BE IN THE LANGUAGE OF THE INPUT!\n\n=== CORE TRANSFORMATION: TEXT TO VIDEO PROMPT ===\nTransform the user's idea into a concise, vivid VIDEO prompt.\nKEY: A video has MOTION, CAMERA MOVEMENT, and TEMPORAL FLOW.\n\nRULES:\n1. Describe a SHORT, COHERENT SCENE (10 seconds of footage).\n2. Include: subject, action/motion, environment, lighting, camera angle.\n3. Use cinematic language: 'camera slowly pans', 'tracking shot', 'close-up reveals'.\n4. Keep it CONCRETE — no abstract concepts, no text overlays, no UI elements.\n5. Maximum 2-3 sentences. Wan 2.2 works best with concise prompts.\n6. Do NOT add technical parameters (fps, resolution, codec).\n7. Do NOT mention 'video', 'clip', 'footage' — just describe the scene.\n8. Emphasize smooth, natural motion over complex multi-action sequences.\n\nEXAMPLE INPUT: 'Ein Hund rennt über eine Wiese'\nEXAMPLE OUTPUT: 'A golden retriever runs joyfully across a sunlit meadow, ears flapping in the wind. Camera follows at ground level, wildflowers swaying as the dog passes. Warm afternoon light, shallow depth of field.'"
   }
 }
