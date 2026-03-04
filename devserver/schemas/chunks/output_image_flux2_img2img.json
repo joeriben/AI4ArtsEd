@@ -11,10 +11,10 @@
       "inputs": {
         "seed": 468029244405114,
         "steps": 20,
-        "cfg": 3.5,
+        "cfg": 1,
         "sampler_name": "euler",
         "scheduler": "normal",
-        "denoise": 0.75,
+        "denoise": 0.55,
         "model": ["4", 0],
         "positive": ["6", 0],
         "negative": ["7", 0],
@@ -179,13 +179,13 @@
     "cfg": {
       "node_id": "3",
       "field": "inputs.cfg",
-      "default": 3.5,
-      "description": "CFG scale (3-4 for balanced transformation)"
+      "default": 1,
+      "description": "CFG scale (Flux2 uses low CFG)"
     },
     "denoise": {
       "node_id": "3",
       "field": "inputs.denoise",
-      "default": 0.75,
+      "default": 0.55,
       "description": "Denoise strength (0.3=light, 0.55=moderate, 0.9=heavy transformation)"
     },
     "megapixels": {

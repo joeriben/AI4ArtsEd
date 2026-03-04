@@ -376,18 +376,6 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       color: '#9C27B0',
       logo: '/logos/Qwen_logo.png',
       lightBg: false
-    },
-    {
-      id: 'flux2_img2img',
-      label: 'Flux 2',
-      emoji: '⚡',
-      name: 'Flux2 Dev IMG2IMG',
-      quality: 5,
-      speed: 3,
-      duration: '45',
-      color: '#FF6B35',
-      logo: '/logos/flux2_logo.png',
-      lightBg: false
     }
   ],
   video: [
