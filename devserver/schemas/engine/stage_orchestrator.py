@@ -52,6 +52,16 @@ def _word_boundary_match(text_lower: str, term: str) -> bool:
     return bool(_WORD_BOUNDARY_CACHE[term].search(text_lower))
 
 
+_STEM_PREFIX_CACHE: Dict[str, re.Pattern] = {}
+
+def _stem_prefix_match(text_lower: str, term: str) -> bool:
+    """Stem-prefix match — term must start at a word boundary but may extend into the word.
+    Catches 'Blut' in 'blutiger' (same stem), rejects 'Leiche' in 'gleiche' (different word)."""
+    if term not in _STEM_PREFIX_CACHE:
+        _STEM_PREFIX_CACHE[term] = re.compile(r'\b' + re.escape(term))
+    return bool(_STEM_PREFIX_CACHE[term].search(text_lower))
+
+
 def _fuzzy_contains(text_lower: str, term: str, max_distance: int = 2) -> bool:
     """Check if any word/phrase in text fuzzy-matches term within Levenshtein distance"""
     term_len = len(term)
@@ -416,13 +426,14 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
     terms_str = ", ".join(found_terms[:5])
     model = config.DSGVO_VERIFY_MODEL  # qwen3:1.7b — general-purpose, NOT guard model
 
-    # Age-appropriate prompt with SAFE/UNSAFE answer format
-    age_range = "6-12" if safety_level == "kids" else "13-17"
+    # Focused prompt: concrete categories, positive framing, few-shot calibration
     prompt = (
-        f"Is the following text appropriate as an AI image generation prompt "
-        f"for children ages {age_range}?\n"
-        f"Answer SAFE or UNSAFE (one word only).\n\n"
-        f"Text: {text}"
+        f"Does this text describe violence, death, abuse, or horror?\n"
+        f"Examples:\n"
+        f"- 'a picnic in the dark' → SAFE\n"
+        f"- 'a corpse on the floor' → UNSAFE\n\n"
+        f"Text: {text}\n"
+        f"Answer SAFE or UNSAFE."
     )
 
     try:
@@ -451,6 +462,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
 
         output_upper = output.upper()
         is_unsafe = 'UNSAFE' in output_upper
+        age_range = "6-12" if safety_level == "kids" else "13-17"
 
         logger.info(
             f"[AGE-LLM-VERIFY] terms={terms_str} → {model}={output!r} → "
@@ -690,21 +702,20 @@ def fast_filter_check(prompt: str, safety_level: str, user_language: str = 'de')
     found_terms = []
     for term in terms_list:
         term_lower = term.lower()
-        if len(term_lower) >= 6:
-            # Fuzzy match: distance=1 for 6-7 char terms, distance=2 for 8+ chars
-            # (distance=2 on 6-char words gives 33% error rate → false positives like "Potter"→"Folter")
+        if safety_level == 'stage1' and len(term_lower) >= 6:
+            # §86a: Fuzzy matching needed (deliberate obfuscation like "Ha1kenkreuz")
             max_dist = 1 if len(term_lower) < 8 else 2
             if _fuzzy_contains(prompt_lower, term_lower, max_distance=max_dist):
                 found_terms.append(term)
+        elif len(term_lower) <= 3:
+            # Very short terms: word-boundary only (prevents 'kan' in 'scharfkantige')
+            if _word_boundary_match(prompt_lower, term_lower):
+                found_terms.append(term)
         else:
-            # Very short terms (<=3 chars): word-boundary only (prevents 'kan' in 'scharfkantige')
-            # 4-5 char terms: substring match (catches 'Blut' in 'blutiger', same word stem)
-            if len(term_lower) <= 3:
-                if _word_boundary_match(prompt_lower, term_lower):
-                    found_terms.append(term)
-            else:
-                if term_lower in prompt_lower:
-                    found_terms.append(term)
+            # Age filter (4+ chars): stem-prefix match — term must start at word boundary
+            # Catches 'Blut' in 'blutiger' (same stem), rejects 'Leiche' in 'gleiche' (different word)
+            if _stem_prefix_match(prompt_lower, term_lower):
+                found_terms.append(term)
 
     if found_terms:
         total = sum(len(v) for v in terms_by_lang.values()) if isinstance(terms_by_lang, dict) else len(terms_list)
@@ -1261,13 +1272,23 @@ async def execute_stage3_safety(
     # youth → original language (user explores model behavior, manual translate available)
     generation_prompt = translated_prompt if safety_level == 'kids' else prompt
 
-    # STEP 5: Single unconditional Llama-Guard check with proper S1-S13 template
-    # Replaces the old two-step approach (age fast-filter + pipeline-based check with wrong prompt format).
-    # MediaInputBox /safety/quick handles Stage 1 (raw user input), this handles Stage 3 (post-interception).
+    # STEP 5: Llama-Guard check — only image-generation-relevant S-codes block.
+    # S2 (non-violent crimes), S5 (advice), S6 (privacy), S7 (IP), S8 (weapons),
+    # S12 (elections), S13 (code abuse) are chat-specific and cause false positives
+    # on image prompts (e.g. "make a realistic photo" → S7).
+    _IMAGE_RELEVANT_CODES = {'S1', 'S3', 'S4', 'S9', 'S10', 'S11'}
+
     logger.info(f"[STAGE3-SAFETY] Running Llama-Guard safety check ({safety_level}) on generation prompt")
     llm_result = _llm_safety_check_generation(generation_prompt)
 
-    if llm_result["safe"]:
+    # Filter to image-relevant codes only
+    relevant_codes = [c for c in llm_result["codes"] if c in _IMAGE_RELEVANT_CODES]
+    ignored_codes = [c for c in llm_result["codes"] if c not in _IMAGE_RELEVANT_CODES]
+    if ignored_codes:
+        logger.info(f"[STAGE3-SAFETY] Ignoring chat-specific codes {ignored_codes} (not relevant for image generation)")
+    is_safe = llm_result["safe"] or len(relevant_codes) == 0
+
+    if is_safe:
         logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
         return {
             "safe": True,
@@ -1279,9 +1300,8 @@ async def execute_stage3_safety(
             "execution_time": translate_time + llm_result["execution_time"]
         }
     else:
-        codes = llm_result["codes"]
-        abort_reason = build_safety_message(codes) if codes else "Content blocked by safety filter"
-        logger.warning(f"[STAGE3-SAFETY] BLOCKED: {codes} ({llm_result['execution_time']:.1f}s)")
+        abort_reason = build_safety_message(relevant_codes) if relevant_codes else "Content blocked by safety filter"
+        logger.warning(f"[STAGE3-SAFETY] BLOCKED: {relevant_codes} ({llm_result['execution_time']:.1f}s)")
         return {
             "safe": False,
             "method": "llm_safety_check",

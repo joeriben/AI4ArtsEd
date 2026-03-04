@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-04 (Session 245)
+**Last Updated:** 2026-03-04 (Session 246)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, legal basis
 
 ---
@@ -71,7 +71,7 @@ Each Stage 1 step uses a **different model for a different reason**. The logic:
 | Step | Fast-Filter | LLM Model | Prompt Format | Why this model |
 |------|------------|-----------|---------------|----------------|
 | **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` (llama-guard3:1b) | S1-S13 template (`safety_llamaguard.json`) | §86a = criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
-| **Age Filter** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this appropriate for ages {6-12/13-17}? SAFE/UNSAFE"` | Age-appropriateness = subjective judgement → needs general-purpose LLM, NOT a guard model (guard models classify crimes, not age suitability) |
+| **Age Filter** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Does this text describe violence, death, abuse, or horror?"` + few-shot examples + `SAFE/UNSAFE` | Age-appropriateness = subjective judgement → needs general-purpose LLM with concrete categories + few-shot calibration (small models fail on abstract "appropriate?" questions) |
 | **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → needs general-purpose LLM |
 
 **Why Llama Guard fails for the Age Filter:** Llama Guard's S1-S13 categories detect content that "enables, encourages, or excuses" crimes. "Blut" (blood) or "vampire" is not a crime — Llama Guard says "safe". But it's inappropriate for a 6-year-old. Only a general-purpose model can make that age-appropriateness judgement.
@@ -112,7 +112,7 @@ youth/kids     → VLM safety check via Ollama
 
 | Check | What it catches | Mechanism | Example |
 |-------|----------------|-----------|---------|
-| **SAFETY-QUICK** (age filter) | Age-inappropriate but legal content | Fuzzy keyword match + LLM context verify | "Ein Kind wird von einem Monster angegriffen" → blocked by "monster, verletzen" |
+| **SAFETY-QUICK** (age filter) | Age-inappropriate but legal content | Stem-prefix keyword match + LLM context verify | "Ein Kind wird von einem Monster angegriffen" → blocked by "monster, verletzen" |
 | **Stage 3** (Llama-Guard S1-S13) | Criminal/harmful content categories | S1-S13 structured classification | Terrorism instructions, weapons, hate speech |
 
 Llama-Guard's S1-S13 categories focus on content that "enables, encourages, or excuses" crimes — a fantasy monster scenario is NOT a crime and passes S1-S13. Only the age fast-filter in SAFETY-QUICK catches age-inappropriate-but-legal content. These two checks are **complementary, not redundant**.
@@ -137,12 +137,33 @@ Input (post-interception prompt)
   └─ STEP 5: Single Llama-Guard check (proper S1-S13 template)
       └─ _llm_safety_check_generation(generation_prompt)
       └─ Same template as Stage 1 (safety_llamaguard.json)
+      └─ Only image-relevant S-codes block (see below)
       └─ Fail-closed on error/timeout
 ```
 
 **Tiered translation** (Session 183): Translation-for-safety is decoupled from translation-for-generation. Youth+ users can explore how models react to their native language. The translate button in MediaInputBox remains available for manual use. Kids still get auto-translated English prompts for better model output quality.
 
 **Session 244 redesign:** Previously, Stage 3 ran two sequential Llama-Guard calls: an age fast-filter + LLM verify (STEP 3b), then a pipeline-based safety chunk with the wrong prompt format (STEP 4). The pipeline chunk used a free-form question template on `llama-guard3:1b` — a guard model trained on structured S1-S13 categories. This caused false positives (e.g. Lagos scene → S4). Now replaced with a single unconditional `_llm_safety_check_generation()` call using the proper S1-S13 template. The age fast-filter was redundant with Stage 1 (MediaInputBox `/safety/quick` already covers it).
+
+**Stage 3 S-code filtering** (Session 246): Llama-Guard's S1-S13 categories were designed for chat safety, not image generation. Several categories cause false positives on harmless image prompts (e.g. "make a realistic photo" → S7 Intellectual Property). Stage 3 now only blocks on **image-generation-relevant** S-codes:
+
+| Blocks | Code | Category | Why relevant |
+|--------|------|----------|-------------|
+| Yes | S1 | Violent Crimes | Violence in generated images |
+| No | S2 | Non-Violent Crimes | Chat-specific (fraud, hacking instructions) |
+| Yes | S3 | Sex Crimes | Sexual content in images |
+| Yes | S4 | Child Exploitation | CSAM prevention |
+| No | S5 | Specialized Advice | Chat-specific (medical/legal/financial advice) |
+| No | S6 | Privacy | Chat-specific (personal data in text) |
+| No | S7 | Intellectual Property | Chat-specific — causes false positives ("realistic photo" → S7) |
+| No | S8 | Indiscriminate Weapons | Chat-specific (weapon instructions) |
+| Yes | S9 | Hate | Hate imagery |
+| Yes | S10 | Self-Harm | Self-harm imagery |
+| Yes | S11 | Sexual Content | Sexual imagery |
+| No | S12 | Elections | Chat-specific (election misinformation) |
+| No | S13 | Code Interpreter Abuse | Chat-specific |
+
+Ignored codes are logged but do not block generation. This filtering applies **only to Stage 3** (post-interception generation prompts). Stage 1 §86a still uses the full S1-S13 template for context verification.
 
 Stage 3 catches prompts that pass all fast-filters but would generate harmful imagery. Example: "Wesen sind feindselig zueinander und fügen einander Schaden zu" — passes keyword filters but generates harmful content for children.
 
@@ -186,11 +207,34 @@ On match → **Llama Guard** (`SAFETY_MODEL`) context check with S1-S13 template
 
 **Function:** `fast_filter_check()` in `stage_orchestrator.py`
 
-Fuzzy matching against level-specific filter lists:
+**Matching strategy** (Session 246 — false positive fix):
+
+| Context | Strategy | Rationale |
+|---------|----------|-----------|
+| **§86a** (`stage1`, ≥6 chars) | Fuzzy (Levenshtein distance 1-2) | Deliberate obfuscation ("Ha1kenkreuz") |
+| **Age filter** (≤3 chars) | Word-boundary (`\bterm\b`) | Prevents "kan" in "scharfkantige" |
+| **Age filter** (4+ chars) | Stem-prefix (`\bterm`) | Catches "Blut" in "blutiger" (same stem), rejects "Leiche" in "gleiche" (different word) |
+
+**Why no fuzzy matching for Age filter:** Kids don't deliberately obfuscate terms. Fuzzy matching (Levenshtein distance=1) caused widespread false positives: "leichte" → "Leiche", "gleiche" → "Leiche", "weiche" → "Leiche". Stem-prefix matching (`\bterm` — term must start at a word boundary) eliminates these while still catching compound forms ("Leichenschmaus", "blutiger").
+
+Filter term lists:
 - `stage1_safety_filters_kids.json`
 - `stage1_safety_filters_youth.json`
 
-On match → **general-purpose LLM** (`DSGVO_VERIFY_MODEL`, qwen3:1.7b) with simple age-appropriate prompt: "Is this appropriate for ages 6-12/13-17? SAFE/UNSAFE". NOT Llama Guard — guard models classify crimes, not age suitability.
+On match → **general-purpose LLM** (`DSGVO_VERIFY_MODEL`, qwen3:1.7b) with focused prompt. NOT Llama Guard — guard models classify crimes, not age suitability.
+
+**LLM verification prompt** (Session 246):
+```
+Does this text describe violence, death, abuse, or horror?
+Examples:
+- 'a picnic in the dark' → SAFE
+- 'a corpse on the floor' → UNSAFE
+
+Text: {text}
+Answer SAFE or UNSAFE.
+```
+
+**Why this format:** Small models (≤4B) are extremely prompt-sensitive. Concrete categories + few-shot examples + positive framing (SAFE first) outperform abstract questions like "Is this appropriate?" which trigger negativity bias on dark/ambiguous scenarios.
 
 ### 4.3 DSGVO SpaCy NER
 
@@ -388,6 +432,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 244 | 2026-03-03 | Stage 3 redesign: single Llama-Guard call with proper S1-S13 template, removed redundant age fast-filter |
 | 244 | 2026-03-03 | Pre-generation `/safety/quick` gate in `startGeneration()` — closes blur-bypass gap |
 | 245 | 2026-03-04 | Stage 1 LLM routing fix: §86a→Llama Guard (was blind block), Age Filter→qwen3 SAFE/UNSAFE (was Llama Guard) |
+| 246 | 2026-03-04 | Age filter: fuzzy→stem-prefix matching (false positive fix). LLM prompt: concrete categories + few-shot. Stage 3: only image-relevant S-codes block (S7 etc. ignored) |
 
 ---
 
