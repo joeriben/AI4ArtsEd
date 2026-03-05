@@ -44,6 +44,8 @@ export interface GenerationParams {
   denoise?: number
 }
 
+export type GenerationErrorType = 'busy' | 'offline' | 'unknown'
+
 export interface GenerationResult {
   status: 'success' | 'blocked' | 'error'
   media_output?: {
@@ -58,8 +60,18 @@ export interface GenerationResult {
   loras?: Array<{ name: string; strength: number }>
   was_translated?: boolean
   error?: string
+  errorType?: GenerationErrorType
   blocked_reason?: string
   found_terms?: string[]
+}
+
+/**
+ * Classify backend error messages into typed categories for i18n display.
+ */
+function classifyError(message: string): GenerationErrorType {
+  if (/queue full/i.test(message)) return 'busy'
+  if (/not available|not reachable|connection refused|timeout/i.test(message)) return 'offline'
+  return 'unknown'
 }
 
 export function useGenerationStream() {
@@ -266,9 +278,11 @@ export function useGenerationStream() {
           eventSource.close()
           isExecuting.value = false
           currentStage.value = 'idle'
+          const errorMsg = data.message || 'Unknown error'
           resolve({
             status: 'error',
-            error: data.message || 'Unknown error'
+            error: errorMsg,
+            errorType: classifyError(errorMsg)
           })
         } else {
           // Connection error

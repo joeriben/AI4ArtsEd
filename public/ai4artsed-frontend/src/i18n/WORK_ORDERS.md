@@ -21,6 +21,18 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-05-generation-button-i18n
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (new or modified):
+  - `common.start` (NEW)
+  - `common.generating` (NEW)
+  - `generationError.busy` (NEW)
+  - `generationError.offline` (NEW)
+  - `generationError.unknown` (NEW)
+  - `surrealizer.executeButton` (NEW)
+  - `surrealizer.executingButton` (NEW)
+- **Context**: Unified generation button across all views. `common.start` = default button label. `common.generating` = label during active generation. `generationError.*` = user-facing error messages when backend rejects (queue full, service down, etc). `surrealizer.executeButton/executingButton` = surrealizer-specific labels replacing hardcoded German strings.
+
 ### WO-2026-03-03-bulgarian-language-label
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar (bg already has full translation)
 - **Changed keys** (new or modified):

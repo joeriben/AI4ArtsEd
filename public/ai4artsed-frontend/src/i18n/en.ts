@@ -123,7 +123,14 @@ export const en = {
     error: 'Error',
     retry: 'Retry',
     cancel: 'Cancel',
-    checkingSafety: 'Checking...'
+    checkingSafety: 'Checking...',
+    start: 'Start',
+    generating: 'Generating...'
+  },
+  generationError: {
+    busy: 'The AI is very busy right now. Try again in a moment!',
+    offline: 'The AI is not available right now.',
+    unknown: 'Something went wrong. Please try again.'
   },
   gallery: {
     title: 'Favorites',  // Session 145: "My" redundant with switch
@@ -788,7 +795,9 @@ export const en = {
     cfgLabel: 'CFG Scale',
     cfgHint: 'Classifier-Free Guidance: strength of prompt influence. Higher = stronger effect, less variation.',
     seedLabel: 'Seed',
-    seedHint: '-1 = random. Fixed seed enables A/B comparison across strategies.'
+    seedHint: '-1 = random. Fixed seed enables A/B comparison across strategies.',
+    executeButton: 'Execute',
+    executingButton: 'Generating...'
   },
   musicGeneration: {
     infoTitle: 'Music Generation',

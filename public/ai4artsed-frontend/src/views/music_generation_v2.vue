@@ -152,27 +152,24 @@
       </section>
 
       <!-- Generate Button + Batch -->
-      <div class="start-button-container">
-        <div class="batch-control">
-          <button class="batch-btn" :disabled="batchCount <= 1" @click="batchCount--">-</button>
-          <span class="batch-value">{{ batchCount }}x</span>
-          <button class="batch-btn" @click="batchCount++">+</button>
-        </div>
-        <button
-          class="start-button"
-          :class="{
-            disabled: !canGenerate && !isAnySafetyChecking,
-            'checking-safety': isAnySafetyChecking
-          }"
-          :disabled="!canGenerate || isAnySafetyChecking"
-          @click="startGeneration"
-        >
-          <span class="button-arrows button-arrows-left">>>></span>
-          <span class="button-text">{{ isAnySafetyChecking ? $t('common.checkingSafety') : (batchCount > 1 ? `${batchCurrent}/${batchCount} ` : '') + $t('musicGenV2.generateButton') }}</span>
-          <span class="button-arrows button-arrows-right">>>></span>
-        </button>
-
-      </div>
+      <GenerationButton
+        :disabled="!canGenerate"
+        :executing="isGenerating"
+        :checking-safety="isAnySafetyChecking"
+        :label="generateButtonLabel"
+        :checking-label="$t('common.checkingSafety')"
+        :executing-label="$t('common.generating')"
+        :error-message="generationErrorMessage"
+        @click="startGeneration"
+      >
+        <template #before>
+          <div class="batch-control">
+            <button class="batch-btn" :disabled="batchCount <= 1" @click="batchCount--">-</button>
+            <span class="batch-value">{{ batchCount }}x</span>
+            <button class="batch-btn" @click="batchCount++">+</button>
+          </div>
+        </template>
+      </GenerationButton>
 
       <!-- OUTPUT -->
       <MediaOutputBox
@@ -205,6 +202,7 @@ import axios from 'axios'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MusicTagSelector from '@/components/MusicTagSelector.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import type { DimensionConfig } from '@/components/MusicTagSelector.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -323,6 +321,7 @@ const isSuggesting = ref(false)
 // ============================================================================
 
 const isGenerating = ref(false)
+const generationErrorMessage = ref('')
 const generationProgress = ref(0)
 const estimatedGenerationSeconds = ref(180)
 const outputAudio = ref<string | null>(null)
@@ -366,6 +365,11 @@ const compiledTags = computed(() => {
 
 const canGenerate = computed(() => {
   return !!effectiveLyrics.value && !isGenerating.value
+})
+
+const generateButtonLabel = computed(() => {
+  const prefix = batchCount.value > 1 ? `${batchCurrent.value}/${batchCount.value} ` : ''
+  return prefix + t('musicGenV2.generateButton')
 })
 
 // ============================================================================
@@ -532,6 +536,7 @@ async function startGeneration() {
 
 async function runSingleGeneration() {
   isGenerating.value = true
+  generationErrorMessage.value = ''
   outputAudio.value = null
   generationProgress.value = 0
   const finalLyrics = effectiveLyrics.value
@@ -571,9 +576,14 @@ async function runSingleGeneration() {
       }
     } else {
       console.error('[MusicGenV2] Generation failed:', response.data.error)
+      const msg = response.data.error || ''
+      if (/queue full/i.test(msg)) generationErrorMessage.value = t('generationError.busy')
+      else if (/not available|not reachable/i.test(msg)) generationErrorMessage.value = t('generationError.offline')
+      else generationErrorMessage.value = t('generationError.unknown')
     }
   } catch (error) {
     console.error('[MusicGenV2] Error:', error)
+    generationErrorMessage.value = t('generationError.unknown')
   } finally {
     clearInterval(progressInterval)
     generationProgress.value = 100
@@ -845,58 +855,12 @@ onMounted(() => {
   font-variant-numeric: tabular-nums;
 }
 
-/* Start Button */
-.start-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  position: relative;
-}
-
-.start-button {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 3rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, #9c27b0, #673ab7);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
-}
-
-.start-button:hover:not(.disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.5);
-}
-
-.start-button.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.start-button.checking-safety {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  animation: safety-check-pulse 1.2s ease-in-out infinite;
-}
+/* Start button styles now in GenerationButton.vue + generation-button.css */
 
 .action-chip.checking-safety {
   opacity: 0.6;
   cursor: not-allowed;
   animation: safety-check-pulse 1.2s ease-in-out infinite;
-}
-
-.button-arrows {
-  font-size: 0.8em;
-  opacity: 0.7;
 }
 
 /* Transitions */
@@ -918,11 +882,6 @@ onMounted(() => {
 
   .phase-2a {
     gap: 1.5rem;
-  }
-
-  .start-button {
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
   }
 
   .action-chip {

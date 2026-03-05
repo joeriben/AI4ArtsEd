@@ -129,14 +129,15 @@
         </details>
 
         <!-- Execute Button -->
-        <button
-          class="execute-button"
-          :class="{ disabled: !canExecute }"
-          :disabled="!canExecute"
+        <GenerationButton
+          :disabled="!inputText.trim()"
+          :executing="isExecuting"
+          :label="t('surrealizer.executeButton')"
+          :executing-label="isExpanding ? t('surrealizer.expandActive') : t('surrealizer.executingButton')"
+          :error-message="generationErrorMessage"
+          :show-arrows="true"
           @click="executeWorkflow"
-        >
-          <span class="button-text">{{ isExecuting && isExpanding ? t('surrealizer.expandActive') : isExecuting ? 'Generiere...' : 'Ausführen' }}</span>
-        </button>
+        />
       </section>
 
       <!-- Output Section -->
@@ -185,6 +186,7 @@ import axios from 'axios'
 import SpriteProgressAnimation from '@/components/SpriteProgressAnimation.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDeviceId } from '@/composables/useDeviceId'
@@ -243,6 +245,7 @@ const strategies = [
   { value: 'legacy' },
 ] as const
 const isExecuting = ref(false)
+const generationErrorMessage = ref('')
 const outputs = ref<WorkflowOutput[]>([])
 const fullscreenImage = ref<string | null>(null)
 const generationProgress = ref(0)
@@ -369,6 +372,7 @@ async function executeWorkflow() {
   outputs.value = []
   primaryOutput.value = null
   generationProgress.value = 0
+  generationErrorMessage.value = ''
 
   // Only expand if: checkbox on AND (no existing expansion OR prompt changed)
   const promptChanged = inputText.value !== previousPrompt.value
@@ -467,17 +471,22 @@ async function executeWorkflow() {
       } else {
         clearInterval(progressInterval)
         console.error('[Direct] No run_id in response')
-        alert('Fehler: Keine run_id erhalten')
+        generationErrorMessage.value = t('generationError.unknown')
       }
     } else {
       clearInterval(progressInterval)
-      alert(`Fehler: ${response.data.error}`)
+      const msg = response.data.error || ''
+      if (/queue full/i.test(msg)) generationErrorMessage.value = t('generationError.busy')
+      else if (/not available|not reachable/i.test(msg)) generationErrorMessage.value = t('generationError.offline')
+      else generationErrorMessage.value = t('generationError.unknown')
     }
   } catch (error: any) {
     clearInterval(progressInterval)
     console.error('[Direct] Execution error:', error)
-    const errorMessage = error.response?.data?.error || error.message
-    alert(`Fehler: ${errorMessage}`)
+    const errorMsg = error.response?.data?.error || error.message || ''
+    if (/queue full/i.test(errorMsg)) generationErrorMessage.value = t('generationError.busy')
+    else if (/not available|not reachable/i.test(errorMsg)) generationErrorMessage.value = t('generationError.offline')
+    else generationErrorMessage.value = t('generationError.unknown')
   } finally {
     isExecuting.value = false
     isExpanding.value = false
@@ -1247,34 +1256,7 @@ watch(() => favoritesStore.pendingRestoreData, (restoreData) => {
   scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
 }
 
-/* ============================================================================
-   Execute Button
-   ============================================================================ */
-
-.execute-button {
-  width: 100%;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-.execute-button:hover:not(.disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.execute-button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
+/* Execute button styles now in GenerationButton.vue + generation-button.css */
 
 /* ============================================================================
    Fullscreen Modal

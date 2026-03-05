@@ -1,0 +1,148 @@
+/* ============================================================================
+   Generation Button - Shared Styles
+   Canonical source: extracted from text_transformation.css
+   Keyframe animations referenced from animations.css
+   ============================================================================ */
+
+.generation-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  flex-wrap: wrap;
+}
+
+.generation-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 700;
+  background: #000000;
+  color: #FFB300;
+  border: 3px solid #FFB300;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 179, 0, 0.4),
+              0 4px 15px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 10px rgba(255, 179, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+.generation-button .button-arrows {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+.generation-button .button-arrows-left {
+  animation: arrow-pulse-left 1.5s ease-in-out infinite;
+}
+
+.generation-button .button-arrows-right {
+  animation: arrow-pulse-right 1.5s ease-in-out infinite;
+}
+
+.generation-button .button-text {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+}
+
+.generation-button:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 179, 0, 0.6),
+              0 6px 25px rgba(0, 0, 0, 0.6);
+  border-color: #FF8F00;
+}
+
+.generation-button:active {
+  transform: scale(0.98);
+}
+
+.generation-button.disabled,
+.generation-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.8);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.generation-button.disabled .button-arrows,
+.generation-button:disabled .button-arrows {
+  animation: none;
+  opacity: 0.3;
+}
+
+.generation-button.checking-safety,
+.generation-button.checking-safety:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  box-shadow: none;
+  text-shadow: none;
+  animation: safety-check-pulse 1.2s ease-in-out infinite;
+}
+
+.generation-button.checking-safety .button-arrows {
+  animation: none;
+  opacity: 0.4;
+}
+
+/* Executing state: gold pulse to indicate active generation */
+.generation-button.executing,
+.generation-button.executing:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  border-color: #FFB300;
+  box-shadow: 0 0 15px rgba(255, 179, 0, 0.3);
+  text-shadow: none;
+  animation: generation-executing-pulse 1.8s ease-in-out infinite;
+}
+
+.generation-button.executing .button-arrows {
+  animation: none;
+  opacity: 0.4;
+}
+
+@keyframes generation-executing-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    box-shadow: 0 0 10px rgba(255, 179, 0, 0.2);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 25px rgba(255, 179, 0, 0.5);
+  }
+}
+
+/* Error flash */
+.generation-button.error-flash {
+  border-color: #f44336;
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.4);
+  animation: generation-error-flash 0.6s ease-out;
+}
+
+@keyframes generation-error-flash {
+  0% { border-color: #f44336; box-shadow: 0 0 30px rgba(244, 67, 54, 0.6); }
+  100% { border-color: #FFB300; box-shadow: 0 0 20px rgba(255, 179, 0, 0.4); }
+}
+
+/* Error message below button */
+.generation-error-message {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  color: #f44336;
+  text-align: center;
+  opacity: 0;
+  animation: generation-error-appear 0.3s ease-out forwards;
+}
+
+@keyframes generation-error-appear {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

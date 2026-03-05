@@ -47,21 +47,15 @@
         </section>
 
         <!-- START BUTTON #1: Trigger Interception (Between Context and Interception) -->
-        <div class="start-button-container">
-          <button
-            class="start-button"
-            :class="{
-              disabled: !inputText && !isAnySafetyChecking,
-              'checking-safety': isAnySafetyChecking
-            }"
-            :disabled="!inputText || isAnySafetyChecking"
-            @click="runInterception()"
-          >
-            <span class="button-arrows button-arrows-left">>>></span>
-            <span class="button-text">{{ isAnySafetyChecking ? $t('common.checkingSafety') : 'Start' }}</span>
-            <span class="button-arrows button-arrows-right">>>></span>
-          </button>
-
+        <GenerationButton
+          :disabled="!inputText"
+          :executing="isInterceptionLoading"
+          :checking-safety="isAnySafetyChecking"
+          :label="$t('common.start')"
+          :checking-label="$t('common.checkingSafety')"
+          :executing-label="$t('common.generating')"
+          @click="runInterception()"
+        >
           <!-- Wikipedia Badge (Session 139) - stable area next to Stage 1 -->
           <transition name="fade">
             <div v-if="wikipediaData.terms.length > 0" class="lora-stamp wikipedia-lora" @click="wikipediaExpanded = !wikipediaExpanded">
@@ -99,7 +93,7 @@
               </div>
             </div>
           </transition>
-        </div>
+        </GenerationButton>
 
         <!-- Section 3: Interception Preview (filled after Start #1) -->
         <section class="interception-section" ref="interceptionSectionRef">
@@ -335,19 +329,14 @@
         </div>
 
         <!-- START BUTTON #2: Trigger Generation (Between Optimized Prompt and Output) -->
-        <div class="start-button-container">
-          <button
-            class="start-button"
-            :class="{ disabled: (executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt || isPipelineExecuting }"
-            :disabled="(executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt || isPipelineExecuting"
-            @click="startGeneration()"
-            ref="startButtonRef"
-          >
-            <span class="button-arrows button-arrows-left">>>></span>
-            <span class="button-text">Start</span>
-            <span class="button-arrows button-arrows-right">>>></span>
-          </button>
-
+        <GenerationButton
+          :disabled="(executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt"
+          :executing="isPipelineExecuting"
+          :label="$t('common.start')"
+          :executing-label="$t('common.generating')"
+          :error-message="generationErrorMessage"
+          @click="startGeneration()"
+        >
           <!-- Stage 3+4 Safety Badges (generation path) -->
           <SafetyBadges v-if="safetyChecks.length > 0" :checks="safetyChecks" />
 
@@ -382,7 +371,7 @@
               </div>
             </div>
           </transition>
-        </div>
+        </GenerationButton>
 
         <!-- OUTPUT BOX (Template Component) -->
         <MediaOutputBox
@@ -446,6 +435,7 @@ import axios from 'axios'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import SafetyBadges from '@/components/SafetyBadges.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useCurrentSession } from '@/composables/useCurrentSession'
 import { useGenerationStream } from '@/composables/useGenerationStream'
@@ -574,6 +564,7 @@ const executionPhase = ref<'initial' | 'interception_done' | 'optimization_done'
 
 // Pipeline execution state
 const isPipelineExecuting = ref(false)
+const generationErrorMessage = ref('')
 const outputImage = ref<string | null>(null)
 const outputMediaType = ref<string>('image') // Media type: image, video, audio, music, 3d, code
 const outputCode = ref<string | null>(null) // For code output (p5.js, etc.)
@@ -1567,6 +1558,7 @@ async function executePipeline() {
   outputCode.value = null  // Clear previous code
   outputMediaType.value = 'image'  // Reset to default media type
   resetGenerationStream()  // Session 148: Reset badges via composable
+  generationErrorMessage.value = ''
   activeLoras.value = []  // Session 116: Reset LoRAs
   loraExpanded.value = false
   // Session 139: Don't reset Wikipedia terms - badge stays persistent during generation
@@ -1649,14 +1641,17 @@ async function executePipeline() {
     } else if (result.status === 'blocked') {
       // safetyStore.reportBlock now handled centrally in useGenerationStream
       generationProgress.value = 0
-    } else {
+    } else if (result.status === 'error') {
       console.error('[Generation] Failed:', result.error)
       generationProgress.value = 0
+      const errorKey = result.errorType || 'unknown'
+      generationErrorMessage.value = t(`generationError.${errorKey}`)
     }
   } catch (error: any) {
     console.error('Pipeline error:', error)
 
     generationProgress.value = 0
+    generationErrorMessage.value = t('generationError.unknown')
     isPipelineExecuting.value = false
     outputImage.value = null
     outputCode.value = null

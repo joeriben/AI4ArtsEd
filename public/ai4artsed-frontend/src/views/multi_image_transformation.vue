@@ -179,21 +179,16 @@
       </section>
 
       <!-- START BUTTON (Always Visible) -->
-      <div class="start-button-container">
-        <button
-          class="start-button"
-          :class="{ disabled: !canStartGeneration || isPipelineExecuting }"
-          :disabled="!canStartGeneration || isPipelineExecuting"
-          @click="startGeneration"
-        >
-          <span class="button-arrows button-arrows-left">&gt;&gt;&gt;</span>
-          <span class="button-text">Start</span>
-          <span class="button-arrows button-arrows-right">&gt;&gt;&gt;</span>
-        </button>
-
-        <!-- Stage 3+4 Safety Badges (generation path) -->
+      <GenerationButton
+        :disabled="!canStartGeneration"
+        :executing="isPipelineExecuting"
+        :label="$t('common.start')"
+        :executing-label="$t('common.generating')"
+        :error-message="generationErrorMessage"
+        @click="startGeneration"
+      >
         <SafetyBadges v-if="safetyChecks.length > 0" :checks="safetyChecks" />
-      </div>
+      </GenerationButton>
 
       <!-- OUTPUT BOX (Template Component) -->
       <MediaOutputBox
@@ -250,6 +245,7 @@ import ImageUploadWidget from '@/components/ImageUploadWidget.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import SafetyBadges from '@/components/SafetyBadges.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { usePipelineExecutionStore } from '@/stores/pipelineExecution'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -307,6 +303,7 @@ const deviceId = useDeviceId()
 // Execution
 const executionPhase = ref<'initial' | 'image_uploaded' | 'ready_for_media' | 'generation_done'>('initial')
 const isPipelineExecuting = ref(false)
+const generationErrorMessage = ref('')
 const outputImage = ref<string | null>(null)
 const outputMediaType = ref<string>('image')
 const fullscreenImage = ref<string | null>(null)
@@ -865,6 +862,7 @@ async function startGeneration() {
 
   isPipelineExecuting.value = true
   resetGenerationStream()  // Session 148: Reset badges via composable
+  generationErrorMessage.value = ''
   outputImage.value = null  // Clear previous output
 
   // Scroll to output frame
@@ -924,13 +922,16 @@ async function startGeneration() {
     } else if (result.status === 'blocked') {
       // safetyStore.reportBlock now handled centrally in useGenerationStream
       generationProgress.value = 0
-    } else {
+    } else if (result.status === 'error') {
       console.error('[Generation] Failed:', result.error)
       generationProgress.value = 0
+      const errorKey = result.errorType || 'unknown'
+      generationErrorMessage.value = t(`generationError.${errorKey}`)
     }
   } catch (error: any) {
     console.error('[Generation] Error:', error)
     generationProgress.value = 0
+    generationErrorMessage.value = t('generationError.unknown')
   } finally {
     isPipelineExecuting.value = false
   }
@@ -1515,107 +1516,7 @@ watch(uploadedImagePath3, (newVal) => {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
-/* ============================================================================
-   Start Button Container
-   ============================================================================ */
-
-.start-button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1rem, 3vw, 2rem);
-  flex-wrap: wrap;
-}
-
-/* ============================================================================
-   Start Button
-   ============================================================================ */
-
-.start-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 1.5vw, 0.75rem);
-  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-  font-weight: 700;
-  background: #000000;
-  color: #FFB300;
-  border: 3px solid #FFB300;
-  border-radius: 16px;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(255, 179, 0, 0.4),
-              0 4px 15px rgba(0, 0, 0, 0.5);
-  text-shadow: 0 0 10px rgba(255, 179, 0, 0.6);
-  transition: all 0.3s ease;
-}
-
-.button-arrows {
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-}
-
-.button-arrows-left {
-  animation: arrow-pulse-left 1.5s ease-in-out infinite;
-}
-
-.button-arrows-right {
-  animation: arrow-pulse-right 1.5s ease-in-out infinite;
-}
-
-.button-text {
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-}
-
-@keyframes arrow-pulse-left {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes arrow-pulse-right {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-}
-
-.start-button:hover {
-  transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 0 30px rgba(255, 179, 0, 0.6),
-              0 6px 25px rgba(0, 0, 0, 0.6);
-  border-color: #FF8F00;
-}
-
-.start-button:active {
-  transform: scale(0.98);
-}
-
-.start-button.disabled,
-.start-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  pointer-events: none;
-  filter: grayscale(0.8);
-  box-shadow: none;
-  text-shadow: none;
-}
-
-.start-button.disabled .button-arrows,
-.start-button:disabled .button-arrows {
-  animation: none;
-  opacity: 0.3;
-}
-
-/* Output box styles moved to MediaOutputBox.vue component */
+/* Start button styles now in GenerationButton.vue + generation-button.css */
 
 /* ============================================================================
    Fullscreen Modal
