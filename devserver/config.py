@@ -77,7 +77,7 @@ DEFAULT_INTERCEPTION_CONFIG = "user_defined"  # ADMIN: Change to any interceptio
 # ----------------------------------------------------------------------------
 HOST = "0.0.0.0"
 PORT = 17802  # Development: 17802, Production: 17801
-THREADS = 8
+THREADS = 24
 
 # CORS: Allowed origins for cross-origin requests
 # Development origins are auto-generated from PORT; add production domains here
