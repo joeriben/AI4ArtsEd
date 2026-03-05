@@ -23,6 +23,22 @@ else
     echo "   ⚪ Backend prod (17801) not running"
 fi
 
+
+if lsof -ti:17803 > /dev/null 2>&1; then
+    lsof -ti:17803 | xargs -r kill -9
+    echo "   ✅ GPU Service (17803) stopped"
+else
+    echo "   ⚪ GPU Service (17803) not running"
+fi
+
+
+if lsof -ti:17804 > /dev/null 2>&1; then
+    lsof -ti:17804 | xargs -r kill -9
+    echo "   ✅ ComfyUI (17804) stopped"
+else
+    echo "   ⚪ ComfyUI (17804) not running"
+fi
+
 # Stop frontend process
 echo "[2/3] Stopping frontend process..."
 if lsof -ti:5173 > /dev/null 2>&1; then
