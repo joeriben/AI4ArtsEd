@@ -558,13 +558,16 @@ async function runSingleGeneration() {
         topk: topk.value,
         cfg_scale: cfgScale.value
       }
-    })
+    }, { timeout: 360000 })
 
     if (response.data.status === 'success') {
       const runId = response.data.run_id
       currentRunId.value = runId
-      if (runId) {
+      const mediaOutput = response.data.media_output
+      if (runId && mediaOutput?.status === 'success') {
         outputAudio.value = `/api/media/music/${runId}`
+      } else {
+        console.error('[MusicGenV2] Stage 4 failed:', mediaOutput?.error || 'unknown')
       }
     } else {
       console.error('[MusicGenV2] Generation failed:', response.data.error)
