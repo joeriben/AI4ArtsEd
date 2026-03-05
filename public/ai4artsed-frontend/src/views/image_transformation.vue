@@ -248,6 +248,7 @@ const availabilityLoading = ref(true)
 
 // Phase 4: Seed management
 const previousOptimizedPrompt = ref('')
+const previousSelectedConfig = ref('')
 const currentSeed = ref<number | null>(null)
 
 const deviceId = useDeviceId()
@@ -651,14 +652,25 @@ async function startGeneration() {
   setTimeout(() => scrollDownOnly(pipelineSectionRef.value?.sectionRef, 'start'), 150)
 
   // Phase 4: Intelligent seed logic
-  const promptChanged = contextPrompt.value !== previousOptimizedPrompt.value
-  if (promptChanged || currentSeed.value === null) {
-    currentSeed.value = Math.floor(Math.random() * 1000000000)
-    console.log('[Seed] New prompt or first run → new seed:', currentSeed.value)
+  // Track both prompt AND model — only randomize seed when NEITHER changed (user wants variation)
+  const currentPromptToUse = contextPrompt.value
+  const currentConfig = selectedConfig.value || ''
+
+  if (currentPromptToUse === previousOptimizedPrompt.value && currentConfig === previousSelectedConfig.value) {
+    // Prompt AND model unchanged → Generate new random seed (user wants variation)
+    currentSeed.value = Math.floor(Math.random() * 2147483647)
+    console.log('[Phase 4] Prompt+model unchanged → New random seed:', currentSeed.value)
   } else {
-    console.log('[Seed] Same prompt → reusing seed:', currentSeed.value)
+    // Prompt OR model changed → Keep same seed (user wants to compare)
+    if (currentSeed.value === null) {
+      currentSeed.value = 123456789
+      console.log('[Phase 4] First run → Default seed:', currentSeed.value)
+    } else {
+      console.log('[Phase 4] Prompt or model changed → Keeping seed:', currentSeed.value)
+    }
+    previousOptimizedPrompt.value = currentPromptToUse
+    previousSelectedConfig.value = currentConfig
   }
-  previousOptimizedPrompt.value = contextPrompt.value
 
   try {
     // Session 148: Use SSE streaming for real-time badge updates
