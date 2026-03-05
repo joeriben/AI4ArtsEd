@@ -338,8 +338,8 @@
         <div class="start-button-container">
           <button
             class="start-button"
-            :class="{ disabled: (executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt }"
-            :disabled="(executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt"
+            :class="{ disabled: (executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt || isPipelineExecuting }"
+            :disabled="(executionPhase !== 'optimization_done' && executionPhase !== 'generation_done') || !optimizedPrompt || isPipelineExecuting"
             @click="startGeneration()"
             ref="startButtonRef"
           >
