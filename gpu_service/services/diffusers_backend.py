@@ -82,6 +82,7 @@ class DiffusersImageGenerator:
         self._model_vram_mb: Dict[str, float] = {}    # measured per-model VRAM
         self._model_in_use: Dict[str, int] = {}       # refcount (eviction guard)
         self._load_lock = threading.Lock()             # serialize load/evict
+        self._inference_lock = threading.Lock()          # serialize inference (T5 tokenizer not thread-safe)
 
         # Register with VRAM coordinator for cross-backend eviction
         self._register_with_coordinator()
@@ -97,6 +98,16 @@ class DiffusersImageGenerator:
             logger.info("[DIFFUSERS] Registered with VRAM coordinator")
         except Exception as e:
             logger.warning(f"[DIFFUSERS] Failed to register with VRAM coordinator: {e}")
+
+    def _locked_generate(self, fn):
+        """Run a generation function under the inference lock.
+
+        HuggingFace Rust tokenizers raise 'Already borrowed' when called
+        concurrently from multiple threads. Since GPU inference is serial
+        anyway, we serialize at the tokenize+generate boundary.
+        """
+        with self._inference_lock:
+            return fn()
 
     # =========================================================================
     # VRAMBackend Protocol Implementation
@@ -802,7 +813,7 @@ class DiffusersImageGenerator:
                             self._remove_loras(pipe)
                         _generation_progress["active"] = False
 
-                image = await asyncio.to_thread(_generate)
+                image = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Convert to PNG bytes
                 buffer = io.BytesIO()
@@ -911,7 +922,7 @@ class DiffusersImageGenerator:
                     finally:
                         _generation_progress["active"] = False
 
-                frames = await asyncio.to_thread(_generate)
+                frames = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Convert frames to MP4 bytes via temp file
                 # (export_to_video only accepts file paths, not BytesIO)
@@ -1042,7 +1053,7 @@ class DiffusersImageGenerator:
                     finally:
                         _generation_progress["active"] = False
 
-                frames = await asyncio.to_thread(_generate)
+                frames = await asyncio.to_thread(self._locked_generate, _generate)
 
                 import tempfile
                 import os
@@ -1296,7 +1307,7 @@ class DiffusersImageGenerator:
                             self._remove_loras(pipe)
                         _generation_progress["active"] = False
 
-                image = await asyncio.to_thread(_generate)
+                image = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Convert to PNG bytes
                 buffer = io.BytesIO()
@@ -1534,7 +1545,7 @@ class DiffusersImageGenerator:
                         # Always restore original processors
                         restore_attention_processors(pipe, original_processors, capture_layers)
 
-                image = await asyncio.to_thread(_generate)
+                image = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Convert image to base64
                 buffer = io.BytesIO()
@@ -1856,7 +1867,7 @@ class DiffusersImageGenerator:
                     result = pipe(**gen_kwargs)
                     return result.images[0], diff_data
 
-                image, diff_data = await asyncio.to_thread(_generate)
+                image, diff_data = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Convert to base64
                 buffer = io.BytesIO()
@@ -2121,7 +2132,7 @@ class DiffusersImageGenerator:
 
                     return reference_b64, result_b64, l2_dist
 
-                reference_b64, result_b64, l2_dist = await asyncio.to_thread(_generate)
+                reference_b64, result_b64, l2_dist = await asyncio.to_thread(self._locked_generate, _generate)
 
                 return {
                     'reference_image': reference_b64,
@@ -2264,7 +2275,7 @@ class DiffusersImageGenerator:
                     finally:
                         _generation_progress["active"] = False
 
-                image = await asyncio.to_thread(_generate)
+                image = await asyncio.to_thread(self._locked_generate, _generate)
 
                 # Final image as full-resolution PNG base64
                 buffer = io.BytesIO()

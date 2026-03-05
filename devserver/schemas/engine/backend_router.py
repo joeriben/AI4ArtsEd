@@ -10,7 +10,7 @@ from pathlib import Path
 import json
 
 from my_app.services.pipeline_recorder import load_recorder
-from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS
+from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS, COMFYUI_MAX_QUEUE_DEPTH
 from schemas.engine.progress_callback import get_progress_callback
 
 logger = logging.getLogger(__name__)
@@ -645,7 +645,17 @@ class BackendRouter:
                 seed=seed,
             )
 
-            logger.info(f"[COMFYUI] Generating image: model={model}, steps={steps}, size={width}x{height}")
+            # Queue depth guard: reject early instead of waiting for timeout
+            queue_status = await client.get_queue_status()
+            queue_depth = queue_status.get("total", 0)
+            if queue_depth >= COMFYUI_MAX_QUEUE_DEPTH:
+                logger.warning(f"[COMFYUI] Queue full ({queue_depth}/{COMFYUI_MAX_QUEUE_DEPTH}), rejecting simple t2i")
+                return BackendResponse(
+                    success=False, content="",
+                    error=f"ComfyUI queue full ({queue_depth} pending). Please try again in a moment."
+                )
+
+            logger.info(f"[COMFYUI] Generating image: model={model}, steps={steps}, size={width}x{height} (queue: {queue_depth})")
 
             result = await client.submit_and_track(workflow, timeout=parameters.get('timeout', 300), on_progress=get_progress_callback())
 
@@ -816,7 +826,17 @@ class BackendRouter:
             if not await client.health_check():
                 return BackendResponse(success=False, content="", error="ComfyUI not reachable")
 
-            logger.info(f"[COMFYUI] Submitting {media_type} workflow")
+            # Queue depth guard: reject early instead of waiting for timeout
+            queue_status = await client.get_queue_status()
+            queue_depth = queue_status.get("total", 0)
+            if queue_depth >= COMFYUI_MAX_QUEUE_DEPTH:
+                logger.warning(f"[COMFYUI] Queue full ({queue_depth}/{COMFYUI_MAX_QUEUE_DEPTH}), rejecting {media_type} submission")
+                return BackendResponse(
+                    success=False, content="",
+                    error=f"ComfyUI queue full ({queue_depth} pending). Please try again in a moment."
+                )
+
+            logger.info(f"[COMFYUI] Submitting {media_type} workflow (queue: {queue_depth})")
             timeout = parameters.get('timeout', 600)
 
             result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
@@ -980,6 +1000,17 @@ class BackendRouter:
                 return BackendResponse(success=False, content="", error="ComfyUI not available")
 
             client = get_comfyui_ws_client()
+
+            # Queue depth guard: reject early instead of waiting for timeout
+            queue_status = await client.get_queue_status()
+            queue_depth = queue_status.get("total", 0)
+            if queue_depth >= COMFYUI_MAX_QUEUE_DEPTH:
+                logger.warning(f"[COMFYUI] Queue full ({queue_depth}/{COMFYUI_MAX_QUEUE_DEPTH}), rejecting legacy workflow")
+                return BackendResponse(
+                    success=False, content="",
+                    error=f"ComfyUI queue full ({queue_depth} pending). Please try again in a moment."
+                )
+
             timeout = parameters.get('timeout', 300)
 
             result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())

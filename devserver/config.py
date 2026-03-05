@@ -517,6 +517,10 @@ COMFYUI_TIMEOUT = 480  # 8 minutes for data-rich workflows
 POLLING_TIMEOUT = 15
 MEDIA_DOWNLOAD_TIMEOUT = 30
 
+# ComfyUI queue management — reject submissions when queue is too deep
+# (prevents timeout cascades under workshop load)
+COMFYUI_MAX_QUEUE_DEPTH = int(os.environ.get("COMFYUI_MAX_QUEUE_DEPTH", "8"))
+
 # Model Path Resolution Configuration
 ENABLE_MODEL_PATH_RESOLUTION = True  # ENABLED: ComfyUI uses OfficialStableDiffusion/ prefix format
 MODEL_RESOLUTION_FALLBACK = True      # Fallback to original names if resolution fails

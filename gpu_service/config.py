@@ -13,7 +13,7 @@ from pathlib import Path
 # --- Server ---
 HOST = "127.0.0.1"  # Localhost only — NEVER expose to network
 PORT = int(os.environ.get("GPU_SERVICE_PORT", "17803"))
-THREADS = 4  # GPU is the bottleneck, not I/O
+THREADS = 16  # Enough headroom for concurrent HTTP requests while GPU serializes inference
 
 # --- AI Tools Base ---
 _AI_TOOLS_BASE = Path(os.environ.get("AI_TOOLS_BASE", str(Path.home() / "ai")))
