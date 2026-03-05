@@ -27,6 +27,40 @@
 
 ---
 
+## Session 249 (2026-03-05): Workshop Performance Fixes
+
+**Date:** 2026-03-05
+**Focus:** Address 3 critical issues from first real-world workshop (9 iPads, kids safety level)
+
+### Context
+First workshop test revealed 22% timeout rate, T5 tokenizer crashes, and GPU service thread starvation. Full analysis in `docs/technical_reports/2026-03-05_workshop_performance.md`.
+
+### Changes
+1. **GPU Service Threads 4 -> 16** (`gpu_service/config.py`)
+   - Workshop saw queue depth 44 with only 4 threads
+   - 16 threads provide headroom for concurrent HTTP requests while GPU serializes inference
+
+2. **T5 Tokenizer Race Condition Fix** (`gpu_service/services/diffusers_backend.py`)
+   - HuggingFace Rust tokenizers crash with "Already borrowed" under concurrent access
+   - Added `_inference_lock` + `_locked_generate()` wrapper around all 8 generation methods
+   - Clean pattern: `asyncio.to_thread(self._locked_generate, _generate)` — zero re-indentation needed
+   - GPU is serial anyway, lock only adds wait time, no throughput loss
+
+3. **ComfyUI Queue Management** (`devserver/schemas/engine/backend_router.py`, `devserver/config.py`)
+   - Added `COMFYUI_MAX_QUEUE_DEPTH=8` (env-configurable)
+   - Queue depth check at all 3 ComfyUI submission points (simple t2i, workflow chunk, legacy workflow)
+   - Rejects early with user-friendly message instead of 300s timeout
+
+### Workshop Report
+- Created `docs/technical_reports/` directory
+- Full report: `docs/technical_reports/2026-03-05_workshop_performance.md`
+- Key findings: 58 requests in 31 min, 191 ComfyUI gens (100% success), safety system worked correctly
+
+### Open Item
+- Queue-full error reaches frontend as raw English string — needs i18n-friendly error handling in frontend (separate session)
+
+---
+
 ## Session 244 (2026-03-03): VRAM Watchdog — NVML Foreign Process Detection
 
 **Date:** 2026-03-03
