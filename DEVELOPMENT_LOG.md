@@ -1,5 +1,67 @@
 # Development Log
 
+## Session 248 - Unified GenerationButton Component + Error Display
+**Date:** 2026-03-05
+**Focus:** Extract shared GenerationButton component, fix double-submit bug, add i18n error messages
+
+### Problem
+Workshop scenario audit (9 iPads, single GPU) revealed:
+1. **Double-submit bug**: `text_transformation.vue` Stage 4 button missing `isPipelineExecuting` guard
+2. **Inconsistent button states**: 6 views with copy-pasted CSS (5 gold/black, 2 purple gradient)
+3. **Blur-safety race condition**: `checkSafety()` on blur disables button mid-click, swallowing the tap
+4. **Silent errors**: Backend errors (queue full, service down) either swallowed or shown via `alert()`
+5. **~400 lines duplicate CSS** across view files
+
+### Solution
+
+**Step 0 (separate commit):** Fixed double-submit by adding `|| isPipelineExecuting` to Stage 4 button guards.
+
+**GenerationButton.vue component** with:
+- Props: `disabled`, `executing`, `checkingSafety`, `label`, `checkingLabel`, `executingLabel`, `showArrows`, `errorMessage`
+- Click-queuing: If user clicks during safety check, intent is queued and fires when check completes
+- Slots: `before` (for batch controls), default (for SafetyBadges/LoRA badges)
+- Three visual states: disabled (gray), checking-safety (pulse), executing (gold pulse)
+
+**generation-button.css**: Canonical gold/black styling extracted from text_transformation.css. References existing `@keyframes` from animations.css. Adds `executing` pulse and `error-flash` states.
+
+**Error type classification** in `useGenerationStream.ts`:
+- `classifyError()` pattern-matches backend messages: `queue full` -> `busy`, `not available` -> `offline`, default -> `unknown`
+- `GenerationResult.errorType` field added
+- Views map errorType to i18n keys (`generationError.busy/offline/unknown`)
+
+**Surrealizer cleanup**: All `alert()` calls replaced with `generationErrorMessage` ref displayed in GenerationButton.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `src/components/GenerationButton.vue` | NEW - shared component |
+| `src/assets/generation-button.css` | NEW - canonical button CSS |
+| `src/composables/useGenerationStream.ts` | Error type classification |
+| `src/i18n/en.ts` | 7 new keys (common.start, common.generating, generationError.*, surrealizer.executeButton/executingButton) |
+| `src/i18n/WORK_ORDERS.md` | Translation work order |
+| `src/views/text_transformation.vue` | Both buttons migrated + error handling |
+| `src/views/text_transformation.css` | ~93 lines button CSS removed |
+| `src/views/image_transformation.vue` | Button migrated, ~100 lines CSS removed |
+| `src/views/multi_image_transformation.vue` | Button migrated, ~100 lines CSS removed |
+| `src/views/music_generation.vue` | Both buttons migrated, ~93 lines CSS removed |
+| `src/views/music_generation_v2.vue` | Button migrated, purple gradient removed |
+| `src/views/surrealizer.vue` | Button migrated, purple gradient + alert() removed |
+
+### Key Decisions
+- **All gold/black, no variant prop** — surrealizer + music_v2 adopt standard styling
+- **Error messages via i18n** — respects whatever language the user has set, not hardcoded
+- **Each view keeps its own canStart/isExecuting logic** — component is visual+interaction, not state owner
+- **Specialist views (split_and_combine, partial_elimination, direct) not migrated** — out of audit scope
+
+### Net Effect
+- **-596 lines, +417 lines** (net -179 lines)
+- 10 buttons across 6 views unified by construction
+- Double-submit impossible (executing state disables button)
+- Blur-safety race condition solved via click-queuing
+- Backend errors visible to users in their language
+
+**Duration:** ~45 minutes
+
 ## Session 247 - Wan 2.2 T2V Fast: Fix media_type Detection + 10s Video + MoE Cleanup
 **Date:** 2026-03-05
 **Focus:** Fix video detection, VLM safety check, and frontend rendering for Wan 2.2 T2V Fast config
