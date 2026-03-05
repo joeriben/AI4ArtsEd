@@ -1,0 +1,71 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Text to 3D (Hunyuan3D-2)",
+    "de": "Text zu 3D (Hunyuan3D-2)"
+  },
+  "description": {
+    "en": "Generate textured 3D models from text descriptions using Hunyuan3D-2",
+    "de": "Texturierte 3D-Modelle aus Textbeschreibungen generieren mit Hunyuan3D-2"
+  },
+  "category": {
+    "en": "3D Generation",
+    "de": "3D-Generierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_3d_hunyuan3d",
+    "seed": "random",
+    "num_inference_steps": 50,
+    "guidance_scale": 7.5,
+    "octree_resolution": 256,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 512
+  },
+
+  "media_preferences": {
+    "default_output": "3d",
+    "supported_types": ["3d"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "tencent/Hunyuan3D-2",
+    "backend": "hunyuan3d",
+    "backend_type": "hunyuan3d",
+    "requires_gpu": true,
+    "gpu_vram_mb": 16000,
+    "estimated_duration_seconds": "30-60",
+    "display_name": "Hunyuan3D-2",
+    "icon": "view_in_ar",
+    "publisher": "Tencent (Shenzhen, China)",
+    "architecture": "DiT Flow Matching (Shape 1.1B) + Paint Network (Texture 1.3B)",
+    "params": "~2.4B total (1.1B Shape + 1.3B Paint)",
+    "quantization": "FP16",
+    "license": "MIT License",
+    "fair_culture": "Training data: Tencent internal 3D dataset (Objaverse-based filtering)",
+    "safety_by_design": "Text-to-3D inherently limited to described objects",
+    "optimization_instruction": "Transform the user's text into a clear 3D object description. Describe the object's shape, materials, colors, and surface details. Focus on physical properties visible in 3D: geometry, texture, reflectivity, transparency. Avoid describing backgrounds, lighting, or camera angles — these are handled by the rendering engine. Keep it concise. Example: 'A polished red ceramic apple with a short brown wooden stem and a single green leaf, smooth glossy surface with subtle specular highlights.'",
+    "version": "1.0"
+  },
+
+  "display": {
+    "icon": "view_in_ar",
+    "color": "#00BCD4",
+    "category": "3d_generation",
+    "difficulty": 2,
+    "order": 40
+  },
+
+  "tags": {
+    "en": ["3d", "mesh", "hunyuan3d", "text-to-3d"],
+    "de": ["3d", "mesh", "hunyuan3d", "text-zu-3d"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

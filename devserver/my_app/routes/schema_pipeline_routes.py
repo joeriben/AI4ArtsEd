@@ -1339,6 +1339,8 @@ def execute_stage3_4():
             media_type = 'audio'
         elif 'video' in output_config.lower():
             media_type = 'video'
+        elif '3d' in output_config.lower():
+            media_type = '3d'
         else:
             media_type = 'image'  # Default fallback
 
@@ -2422,6 +2424,8 @@ def execute_generation_streaming(data: dict):
             media_type = 'video'
         elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
             media_type = 'audio'
+        elif '3d' in output_config.lower():
+            media_type = '3d'
         else:
             media_type = 'image'
 
@@ -2931,6 +2935,8 @@ async def execute_stage4_generation_only(
             media_type = 'video'
         elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
             media_type = 'audio'
+        elif '3d' in output_config.lower():
+            media_type = '3d'
         else:
             media_type = 'image'
 
@@ -3213,6 +3219,69 @@ async def execute_stage4_generation_only(
                 'seed': result_seed
             }
 
+        elif output_value == 'hunyuan3d_generated':
+            # Hunyuan3D-2 3D mesh generation — saves GLB mesh + optional PNG thumbnail
+            import base64
+            mesh_data_b64 = output_result.metadata.get('mesh_data')
+            if mesh_data_b64:
+                mesh_bytes = base64.b64decode(mesh_data_b64)
+                logger.info(f"[RECORDER] Saving Hunyuan3D mesh: {len(mesh_bytes)} bytes")
+
+                # Save GLB mesh as output_3d entity
+                saved_filename = recorder.save_entity(
+                    entity_type='output_3d',
+                    content=mesh_bytes,
+                    metadata={
+                        'config': output_config,
+                        'backend': 'hunyuan3d',
+                        'format': 'glb',
+                        'seed': result_seed,
+                        'size_bytes': len(mesh_bytes),
+                    }
+                )
+                logger.info(f"[RECORDER] Hunyuan3D mesh saved: {saved_filename}")
+
+                # Also save Blender-rendered thumbnail if available
+                image_data_b64 = output_result.metadata.get('image_data')
+                if image_data_b64:
+                    thumbnail_bytes = base64.b64decode(image_data_b64)
+                    recorder.save_entity(
+                        entity_type='output_image',
+                        content=thumbnail_bytes,
+                        metadata={
+                            'config': output_config,
+                            'backend': 'blender_preview',
+                            'format': 'png',
+                            'seed': result_seed,
+                        }
+                    )
+                    logger.info(f"[RECORDER] Blender thumbnail saved")
+
+                media_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_3d']
+                media_index = len(media_entities) - 1 if media_entities else 0
+
+                # Response includes both 3D mesh URL and optional thumbnail URL
+                media_output = {
+                    'media_type': '3d',
+                    'url': f'/api/media/3d/{run_id}',
+                    'mesh_url': f'/api/media/3d/{run_id}',
+                    'run_id': run_id,
+                    'index': media_index,
+                    'seed': result_seed,
+                }
+
+                # Add thumbnail URL if Blender render was successful
+                if image_data_b64:
+                    image_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_image']
+                    thumb_index = len(image_entities) - 1 if image_entities else 0
+                    media_output['thumbnail_url'] = f'/api/media/image/{run_id}/{thumb_index}'
+            else:
+                return {
+                    'success': False,
+                    'error': 'Hunyuan3D: No mesh_data in response',
+                    'run_id': run_id
+                }
+
         elif output_value == 'workflow_generated':
             # ComfyUI workflow
             filesystem_path = output_result.metadata.get('filesystem_path')
@@ -3413,6 +3482,8 @@ async def execute_generation_stage4(
             media_type = 'video'
         elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
             media_type = 'audio'
+        elif '3d' in output_config.lower():
+            media_type = '3d'
         else:
             media_type = 'image'
 
@@ -3934,6 +4005,39 @@ def legacy_workflow():
                     }
                 )
                 logger.info(f"[LEGACY-ENDPOINT] Saved denoising archaeology image: {len(image_bytes)} bytes")
+
+        elif output_value == 'hunyuan3d_generated':
+            # Hunyuan3D-2 3D mesh generation
+            mesh_data_b64 = output_result.metadata.get('mesh_data')
+            if mesh_data_b64:
+                import base64
+                mesh_bytes = base64.b64decode(mesh_data_b64)
+                recorder.save_entity(
+                    entity_type='output_3d',
+                    content=mesh_bytes,
+                    metadata={
+                        'config': output_config,
+                        'seed': result_seed,
+                        'format': 'glb',
+                        'backend': 'hunyuan3d'
+                    }
+                )
+                logger.info(f"[LEGACY-ENDPOINT] Saved Hunyuan3D mesh: {len(mesh_bytes)} bytes")
+
+                # Also save Blender thumbnail if available
+                image_data_b64 = output_result.metadata.get('image_data')
+                if image_data_b64:
+                    thumbnail_bytes = base64.b64decode(image_data_b64)
+                    recorder.save_entity(
+                        entity_type='output_image',
+                        content=thumbnail_bytes,
+                        metadata={
+                            'config': output_config,
+                            'backend': 'blender_preview',
+                            'format': 'png',
+                            'seed': result_seed,
+                        }
+                    )
 
         duration_ms = (time.time() - start_time) * 1000
         logger.info(f"[LEGACY-ENDPOINT] Success in {duration_ms:.0f}ms")
@@ -4553,6 +4657,8 @@ def interception_pipeline():
                     media_type = 'music'
                 elif 'video' in output_config_name.lower():
                     media_type = 'video'
+                elif '3d' in output_config_name.lower():
+                    media_type = '3d'
                 else:
                     media_type = 'image'  # Default fallback
 
@@ -4912,8 +5018,53 @@ def interception_pipeline():
                                             'url': f'/api/media/video/{run_id}'
                                         }
 
+                                    # Check for 3D mesh data (Hunyuan3D chunks)
+                                    elif output_result.metadata.get('mesh_data'):
+                                        mesh_data_b64 = output_result.metadata.get('mesh_data')
+                                        logger.info(f"[PYTHON-CHUNK-ROUTE] Mesh data found: {len(mesh_data_b64)} chars base64")
+                                        mesh_bytes = base64.b64decode(mesh_data_b64)
+
+                                        saved_filename = recorder.save_entity(
+                                            entity_type='output_3d',
+                                            content=mesh_bytes,
+                                            metadata={
+                                                'config': output_config_name,
+                                                'backend': output_result.metadata.get('backend', 'hunyuan3d'),
+                                                'media_type': '3d',
+                                                'seed': seed,
+                                                'size_bytes': len(mesh_bytes),
+                                                'format': output_result.metadata.get('mesh_format', 'glb'),
+                                            }
+                                        )
+                                        logger.info(f"[PYTHON-CHUNK-ROUTE] Mesh saved: {saved_filename}")
+                                        media_stored = True
+
+                                        # Also save Blender thumbnail if available
+                                        thumb_b64 = output_result.metadata.get('image_data')
+                                        if thumb_b64:
+                                            thumbnail_bytes = base64.b64decode(thumb_b64)
+                                            recorder.save_entity(
+                                                entity_type='output_image',
+                                                content=thumbnail_bytes,
+                                                metadata={
+                                                    'config': output_config_name,
+                                                    'backend': 'blender_preview',
+                                                    'format': 'png',
+                                                    'seed': seed,
+                                                }
+                                            )
+
+                                        media_output_data = {
+                                            'config': output_config_name,
+                                            'status': 'success',
+                                            'media_type': '3d',
+                                            'filename': saved_filename,
+                                            'url': f'/api/media/3d/{run_id}',
+                                            'mesh_url': f'/api/media/3d/{run_id}',
+                                        }
+
                                     else:
-                                        logger.error(f"[PYTHON-CHUNK-ROUTE] No audio_data, image_data, or video_data in metadata")
+                                        logger.error(f"[PYTHON-CHUNK-ROUTE] No audio_data, image_data, video_data, or mesh_data in metadata")
                                         media_stored = False
                                         media_output_data = {
                                             'config': output_config_name,
@@ -5051,6 +5202,46 @@ def interception_pipeline():
                                     else:
                                         logger.error(f"[{audio_backend.upper()}] No audio_data in response metadata")
                                         saved_filename = None
+                                elif not media_stored and output_value == 'hunyuan3d_generated':
+                                    # Hunyuan3D-2 3D mesh generation
+                                    logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: hunyuan3d_generated")
+                                    mesh_data_b64 = output_result.metadata.get('mesh_data')
+                                    if mesh_data_b64:
+                                        import base64
+                                        mesh_bytes = base64.b64decode(mesh_data_b64)
+                                        logger.info(f"[RECORDER] Saving Hunyuan3D mesh: {len(mesh_bytes)} bytes")
+                                        saved_filename = recorder.save_entity(
+                                            entity_type='output_3d',
+                                            content=mesh_bytes,
+                                            metadata={
+                                                'config': output_config_name,
+                                                'backend': 'hunyuan3d',
+                                                'format': 'glb',
+                                                'seed': seed,
+                                                'size_bytes': len(mesh_bytes),
+                                            }
+                                        )
+                                        logger.info(f"[RECORDER] Hunyuan3D mesh saved: {saved_filename}")
+                                        media_stored = True
+
+                                        # Also save Blender thumbnail if available
+                                        image_data_b64 = output_result.metadata.get('image_data')
+                                        if image_data_b64:
+                                            thumbnail_bytes = base64.b64decode(image_data_b64)
+                                            recorder.save_entity(
+                                                entity_type='output_image',
+                                                content=thumbnail_bytes,
+                                                metadata={
+                                                    'config': output_config_name,
+                                                    'backend': 'blender_preview',
+                                                    'format': 'png',
+                                                    'seed': seed,
+                                                }
+                                            )
+                                    else:
+                                        logger.error("[HUNYUAN3D] No mesh_data in response metadata")
+                                        saved_filename = None
+
                                 elif not media_stored and output_value == 'workflow_generated':
                                     logger.info(f"[MEDIA-STORAGE-DEBUG] ✓ Matched: workflow_generated")
                                     logger.info(f"[MEDIA-STORAGE-DEBUG] Metadata keys: {list(output_result.metadata.keys())}")

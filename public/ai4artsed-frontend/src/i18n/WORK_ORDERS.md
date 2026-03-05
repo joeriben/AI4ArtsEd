@@ -21,6 +21,15 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-06-3d-media-output
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (new or modified):
+  - `mediaOutput.download` (NEW)
+  - `mediaOutput.model3dReady` (NEW)
+  - `mediaOutput.model3dInteractive` (NEW)
+  - `mediaOutput.downloadGlb` (NEW)
+- **Context**: New 3D generation media type (Hunyuan3D-2). `mediaOutput.model3dReady` = shown when 3D model is generated but no interactive viewer available. `mediaOutput.model3dInteractive` = hint for touch/mouse interaction. `mediaOutput.downloadGlb` = download button for GLB 3D file.
+
 ### WO-2026-03-05-generation-button-i18n
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (new or modified):

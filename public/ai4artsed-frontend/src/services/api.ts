@@ -107,6 +107,8 @@ export interface PipelineExecuteResponse {
     status?: string
     config?: string
     metadata?: Record<string, any> // Media generation metadata (e.g., seed)
+    mesh_url?: string
+    thumbnail_url?: string
   }
   error?: string
   run_id?: string

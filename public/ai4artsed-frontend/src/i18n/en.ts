@@ -142,6 +142,12 @@ export const en = {
     viewMine: 'My favorites',  // Session 145
     viewAll: 'All favorites'  // Session 145
   },
+  mediaOutput: {
+    download: 'Download',
+    model3dReady: '3D model generated',
+    model3dInteractive: 'Rotate and zoom the 3D model with touch or mouse',
+    downloadGlb: 'Download 3D Model (GLB)',
+  },
   settings: {
     authRequired: 'Authentication Required',
     authPrompt: 'Please enter the password to access settings:',

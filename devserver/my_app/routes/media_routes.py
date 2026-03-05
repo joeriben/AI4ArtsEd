@@ -730,11 +730,13 @@ def get_3d(run_id: str):
         }
         mimetype = mimetype_map.get(file_format.lower(), 'application/octet-stream')
 
-        # Serve file directly from disk
+        # Serve file — inline by default for <model-viewer>, download if ?download=true
+        from flask import request as flask_request
+        as_download = flask_request.args.get('download', 'false').lower() == 'true'
         return send_file(
             file_path,
             mimetype=mimetype,
-            as_attachment=True,  # 3D models should download
+            as_attachment=as_download,
             download_name=f'{run_id}.{file_format}'
         )
 

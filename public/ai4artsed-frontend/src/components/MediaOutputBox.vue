@@ -201,18 +201,48 @@
 
         <!-- 3D Model with Actions -->
         <div v-else-if="mediaType === '3d'" class="model-with-actions">
-          <div class="model-container">
-            <div class="model-icon">🎨</div>
-            <p class="model-hint">3D-Modell erstellt</p>
+          <div class="model-viewer-container" dir="ltr">
+            <model-viewer
+              v-if="meshUrl"
+              :src="meshUrl"
+              :poster="thumbnailUrl || undefined"
+              auto-rotate
+              camera-controls
+              shadow-intensity="1"
+              environment-image="neutral"
+              interaction-prompt="auto"
+              touch-action="pan-y"
+              style="width: 100%; height: 100%; background-color: #0a0a0a;"
+            ></model-viewer>
+            <div v-else class="model-fallback">
+              <p>{{ $t('mediaOutput.model3dReady') }}</p>
+            </div>
           </div>
 
           <!-- Action Toolbar -->
-          <div class="action-toolbar">
-            <button class="action-btn" @click="$emit('save')" disabled title="Merken (Coming Soon)">
-              <span class="action-icon">⭐</span>
+          <div class="action-toolbar" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 10;">
+            <button
+              class="action-btn"
+              :class="{ 'favorited': isFavorited }"
+              @click="$emit('toggle-favorite')"
+              :disabled="!runId"
+              :title="isFavorited ? $t('gallery.unfavorite') : $t('gallery.favorite')"
+            >
+              <span class="action-icon">
+                <svg v-if="isFavorited" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+                </svg>
+              </span>
             </button>
-            <button class="action-btn" @click="$emit('download')" title="Herunterladen">
-              <span class="action-icon">💾</span>
+            <button class="action-btn" @click="$emit('download')" :title="$t('mediaOutput.download')">
+              <span class="action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
+                </svg>
+              </span>
             </button>
           </div>
         </div>
@@ -281,6 +311,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import '@google/model-viewer'
 import RandomEdutainmentAnimation from '@/components/edutainment/RandomEdutainmentAnimation.vue'
 import DenoisingProgressView from '@/components/edutainment/DenoisingProgressView.vue'
 
@@ -318,6 +349,9 @@ interface Props {
   modelMeta?: Record<string, any> | null
   uiMode?: string
   stage4DurationMs?: number
+  // 3D model support
+  meshUrl?: string | null
+  thumbnailUrl?: string | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -333,7 +367,9 @@ const props = withDefaults(defineProps<Props>(), {
   isFavorited: false,
   modelMeta: null,
   uiMode: 'youth',
-  stage4DurationMs: 0
+  stage4DurationMs: 0,
+  meshUrl: null,
+  thumbnailUrl: null,
 })
 
 defineEmits<{
@@ -513,6 +549,22 @@ defineExpose({
 .audio-with-actions .output-audio {
   flex: 1;
   max-width: 800px;
+}
+
+.model-with-actions .model-viewer-container {
+  flex: 1;
+  width: 100%;
+  min-height: 400px;
+  max-height: 600px;
+}
+
+.model-with-actions .model-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .model-with-actions .model-container {

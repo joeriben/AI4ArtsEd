@@ -390,6 +390,8 @@
           :model-meta="modelMeta"
           :ui-mode="uiModeStore.mode"
           :stage4-duration-ms="stage4DurationMs"
+          :mesh-url="outputMeshUrl"
+          :thumbnail-url="outputThumbnailUrl"
           forward-button-title="Weiterreichen zu Bild-Transformation"
           @save="saveMedia"
           @print="printImage"
@@ -568,6 +570,8 @@ const generationErrorMessage = ref('')
 const outputImage = ref<string | null>(null)
 const outputMediaType = ref<string>('image') // Media type: image, video, audio, music, 3d, code
 const outputCode = ref<string | null>(null) // For code output (p5.js, etc.)
+const outputMeshUrl = ref<string | null>(null) // For 3D model GLB URL
+const outputThumbnailUrl = ref<string | null>(null) // For 3D Blender thumbnail
 const editedCode = ref<string>('') // Editable code (user can modify)
 const iframeKey = ref<number>(0) // Force iframe re-render
 const fullscreenImage = ref<string | null>(null)
@@ -699,7 +703,7 @@ const availableCategories: Category[] = [
   { id: 'image', label: 'Bild', emoji: '🖼️', color: '#4CAF50' },
   { id: 'video', label: 'Video', emoji: '📽️', color: '#9C27B0' },
   { id: 'sound', label: 'Sound', emoji: '🔊', color: '#FF9800' },
-  { id: '3d', label: '3D', emoji: '🧊', color: '#00BCD4', disabled: true }
+  { id: '3d', label: '3D', emoji: '🧊', color: '#00BCD4' }
 ]
 
 const configsByCategory: Record<string, Config[]> = {
@@ -720,7 +724,9 @@ const configsByCategory: Record<string, Config[]> = {
     { id: 'stableaudio_open', label: 'Stable\nAudio', emoji: '🔊', color: '#00BCD4', description: 'Open-Source Audio-Generierung (max 47s)', logo: '/logos/stableaudio_logo.png', lightBg: false },
     { id: 'tonejs_code', label: 'Tone.js', emoji: '🎹', color: '#FF4081', description: 'Browser-basierte Musiksynthese mit Live-Code' }
   ],
-  '3d': []
+  '3d': [
+    { id: 'hunyuan3d_text_to_3d', label: 'Hunyuan\n3D', emoji: '🧊', color: '#00BCD4', description: 'Texturierte 3D-Modelle aus Text generieren' }
+  ]
 }
 
 // ============================================================================
@@ -745,7 +751,8 @@ const configIdToChunkName: Record<string, string> = {
   'ltx_video': 'ltx',
   'wan22_t2v_video_fast': 'wan22_t2v_fast',
   'acenet_t2instrumental': 'acenet',
-  'stableaudio_open': 'stableaudio'
+  'stableaudio_open': 'stableaudio',
+  'hunyuan3d_text_to_3d': 'hunyuan3d'
 }
 
 // Helper to calculate speed from duration (0s=5★, 90s=1★)
@@ -1556,6 +1563,8 @@ async function executePipeline() {
   // Reset UI state for fresh generation
   outputImage.value = ''  // Clear previous image
   outputCode.value = null  // Clear previous code
+  outputMeshUrl.value = null  // Clear previous 3D mesh
+  outputThumbnailUrl.value = null  // Clear previous 3D thumbnail
   outputMediaType.value = 'image'  // Reset to default media type
   resetGenerationStream()  // Session 148: Reset badges via composable
   generationErrorMessage.value = ''
@@ -1627,6 +1636,16 @@ async function executePipeline() {
         if (mediaType === 'code' && result.media_output.code) {
           // Code output (Tone.js, p5.js): display in code editor, not MediaOutputBox
           outputCode.value = result.media_output.code
+        } else if (mediaType === '3d') {
+          // 3D model: set mesh URL for <model-viewer>, use thumbnail as fallback image
+          const meshUrl = result.media_output.mesh_url || result.media_output.url
+          const apiPrefix = import.meta.env.DEV ? `http://localhost:17802` : ''
+          outputMeshUrl.value = `${apiPrefix}${meshUrl}`
+          if (result.media_output.thumbnail_url) {
+            outputThumbnailUrl.value = `${apiPrefix}${result.media_output.thumbnail_url}`
+          }
+          // outputImage is set so MediaOutputBox shows the final output section
+          outputImage.value = outputMeshUrl.value
         } else {
           outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
         }

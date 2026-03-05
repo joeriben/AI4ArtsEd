@@ -379,7 +379,15 @@ GPU_SERVICE_TIMEOUT_IMAGE = 120       # SD3.5, SDXL
 GPU_SERVICE_TIMEOUT_VIDEO = 1500      # Wan 2.1 14B (~20 min)
 GPU_SERVICE_TIMEOUT_MUSIC = 300       # HeartMuLa
 GPU_SERVICE_TIMEOUT_AUDIO = 300       # Stable Audio
+GPU_SERVICE_TIMEOUT_3D = 300          # Hunyuan3D-2 mesh generation
 GPU_SERVICE_TIMEOUT = GPU_SERVICE_TIMEOUT_DEFAULT  # Backward compat
+
+# --- Blender (headless mesh rendering) ---
+BLENDER_PATH = os.environ.get("BLENDER_PATH", str(Path.home() / "ai" / "blender" / "blender"))
+BLENDER_SCRIPTS_PATH = os.environ.get("BLENDER_SCRIPTS_PATH", str(Path(__file__).parent / "blender_scripts"))
+
+# --- Hunyuan3D-2 ---
+HUNYUAN3D_MODEL_ID = os.environ.get("HUNYUAN3D_MODEL_ID", "tencent/Hunyuan3D-2")
 
 # External LLM API timeouts (connect, read) in seconds
 LLM_API_TIMEOUT = (10, 90)            # 10s connect (fail fast if unreachable), 90s read (reasoning models need time)

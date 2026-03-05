@@ -55,6 +55,8 @@ export interface GenerationResult {
     index: number
     seed: number
     code?: string
+    mesh_url?: string
+    thumbnail_url?: string
   }
   run_id?: string
   loras?: Array<{ name: string; strength: number }>

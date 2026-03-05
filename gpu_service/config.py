@@ -134,3 +134,9 @@ VRAM_BLACKLISTED_PORTS = [7801, 7821, 8188]  # SwarmUI ports — NEVER tolerated
 OLLAMA_API_URL = os.environ.get("OLLAMA_API_URL", "http://localhost:11434")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", "17804"))  # Expected ComfyUI
 
+# --- Hunyuan3D-2 ---
+HUNYUAN3D_ENABLED = os.environ.get("HUNYUAN3D_ENABLED", "true").lower() == "true"
+HUNYUAN3D_MODEL_ID = os.environ.get("HUNYUAN3D_MODEL_ID", "tencent/Hunyuan3D-2")
+HUNYUAN3D_DEVICE = os.environ.get("HUNYUAN3D_DEVICE", "cuda")
+HUNYUAN3D_DTYPE = os.environ.get("HUNYUAN3D_DTYPE", "float16")
+

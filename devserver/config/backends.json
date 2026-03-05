@@ -85,6 +85,21 @@
       }
     },
 
+    "hunyuan3d": {
+      "enabled": true,
+      "description": "Hunyuan3D-2 Text-to-3D Mesh Generation (Tencent)",
+      "media_types": ["3d"],
+      "requirements": {
+        "min_vram_gb": 16,
+        "packages": ["hy3dgen"]
+      },
+      "config": {
+        "model_id": "tencent/Hunyuan3D-2",
+        "torch_dtype": "float16",
+        "device": "cuda"
+      }
+    },
+
     "comfyui": {
       "enabled": true,
       "description": "ComfyUI Standalone (Fallback for all media types)",
@@ -141,7 +156,8 @@
     "image": ["diffusers", "triton", "openai_images", "comfyui"],
     "music": ["heartmula", "comfyui"],
     "audio": ["stable_audio", "comfyui"],
-    "video": ["ltx_video", "wan_video", "comfyui"]
+    "video": ["ltx_video", "wan_video", "comfyui"],
+    "3d": ["hunyuan3d"]
   },
 
   "settings": {

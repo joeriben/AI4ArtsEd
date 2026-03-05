@@ -17,6 +17,7 @@
     "lint": "eslint . --fix --cache"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
     "axios": "^1.13.2",
     "jspdf": "^3.0.4",
     "jszip": "^3.10.1",

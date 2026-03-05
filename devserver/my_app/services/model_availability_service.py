@@ -41,6 +41,7 @@ class ModelAvailabilityService:
     _gpu_cache: Dict[str, Any] = {
         "diffusers_available": None,
         "heartmula_available": None,
+        "hunyuan3d_available": None,
         "timestamp": None,
         "ttl_seconds": 300  # 5 minutes
     }
@@ -108,10 +109,12 @@ class ModelAvailabilityService:
                 "diffusers": self._gpu_cache["diffusers_available"] or False,
                 "heartmula": self._gpu_cache["heartmula_available"] or False,
                 "stable_audio": self._gpu_cache.get("stable_audio_available") or False,
+                "hunyuan3d": self._gpu_cache.get("hunyuan3d_available") or False,
                 "gpu_service_reachable": bool(
                     self._gpu_cache["diffusers_available"]
                     or self._gpu_cache["heartmula_available"]
                     or self._gpu_cache.get("stable_audio_available")
+                    or self._gpu_cache.get("hunyuan3d_available")
                 ),
             }
 
@@ -120,6 +123,7 @@ class ModelAvailabilityService:
             "diffusers": False,
             "heartmula": False,
             "stable_audio": False,
+            "hunyuan3d": False,
             "gpu_service_reachable": False,
         }
 
@@ -153,15 +157,27 @@ class ModelAvailabilityService:
         except Exception as e:
             logger.warning(f"[MODEL_AVAILABILITY] Stable Audio check failed: {e}")
 
+        # Check Hunyuan3D via GPU service
+        try:
+            from my_app.services.hunyuan3d_client import Hunyuan3DClient
+            client = Hunyuan3DClient()
+            status["hunyuan3d"] = await client.is_available()
+            if status["hunyuan3d"]:
+                status["gpu_service_reachable"] = True
+        except Exception as e:
+            logger.warning(f"[MODEL_AVAILABILITY] Hunyuan3D check failed: {e}")
+
         # Update cache
         self._gpu_cache["diffusers_available"] = status["diffusers"]
         self._gpu_cache["heartmula_available"] = status["heartmula"]
         self._gpu_cache["stable_audio_available"] = status.get("stable_audio", False)
+        self._gpu_cache["hunyuan3d_available"] = status.get("hunyuan3d", False)
         self._gpu_cache["timestamp"] = time.time()
 
         logger.info(
             f"[MODEL_AVAILABILITY] GPU status: diffusers={status['diffusers']}, "
-            f"heartmula={status['heartmula']}, stable_audio={status['stable_audio']}"
+            f"heartmula={status['heartmula']}, stable_audio={status['stable_audio']}, "
+            f"hunyuan3d={status['hunyuan3d']}"
         )
 
         return status
@@ -473,7 +489,7 @@ class ModelAvailabilityService:
             # Route availability check by backend_type
             backend_type = config_data.get("meta", {}).get("backend_type")
 
-            if backend_type in ("diffusers", "heartmula", "stable_audio"):
+            if backend_type in ("diffusers", "heartmula", "stable_audio", "hunyuan3d"):
                 gpu_status = await self.get_gpu_service_status()
                 gpu_key = backend_type  # Keys match: "diffusers", "heartmula", "stable_audio"
                 available = gpu_status.get(gpu_key, False)
