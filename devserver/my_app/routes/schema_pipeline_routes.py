@@ -4828,7 +4828,6 @@ def interception_pipeline():
                                         saved_filename = recorder.save_entity(
                                             entity_type=f'output_{media_type}',  # e.g. output_music
                                             content=audio_bytes,
-                                            extension=f'.{audio_format}',
                                             metadata={
                                                 'config': output_config_name,
                                                 'backend': output_result.metadata.get('backend', 'unknown'),
@@ -4862,7 +4861,6 @@ def interception_pipeline():
                                         saved_filename = recorder.save_entity(
                                             entity_type='output_image',
                                             content=image_bytes,
-                                            extension=f'.{image_format}',
                                             metadata={
                                                 'config': output_config_name,
                                                 'backend': output_result.metadata.get('backend', 'unknown'),
@@ -4894,7 +4892,6 @@ def interception_pipeline():
                                         saved_filename = recorder.save_entity(
                                             entity_type='output_video',
                                             content=video_bytes,
-                                            extension=f'.{video_format}',
                                             metadata={
                                                 'config': output_config_name,
                                                 'backend': output_result.metadata.get('backend', 'unknown'),
