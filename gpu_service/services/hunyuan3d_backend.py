@@ -153,9 +153,6 @@ class Hunyuan3DBackend:
 
                 texture_pipe = Hunyuan3DPaintPipeline.from_pretrained(
                     self.model_id,
-                    subfolder="hunyuan3d-paint-v2-0",
-                    torch_dtype=torch_dtype,
-                    device=self.device,
                 )
 
                 return shape_pipe, texture_pipe
