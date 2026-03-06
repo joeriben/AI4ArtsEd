@@ -50,7 +50,7 @@ Ran workshop replay (58 requests, `--max-gap 15` to skip idle gaps) against prod
 
 **5 remaining errors (all expected):**
 - 4x `Config 'qwen' not found` — Qwen T2I intentionally disabled (Session 251)
-- 1x `Chunk too big` — single prompt expanded too much during interception
+- 1x `Chunk too big` — single prompt expanded too much during interception. Ursache unklar (nicht in unserem Code, vermutlich aiohttp HTTP-Chunk-Parser bei langer Ollama-Antwort). Beobachten ob es erneut auftritt.
 
 **Effective success rate on valid configs: 53/54 = 98%**
 
