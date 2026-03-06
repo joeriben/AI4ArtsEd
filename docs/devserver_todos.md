@@ -204,6 +204,37 @@ Idee: Schneller Schalter im Interface zum Wechseln zwischen UI-Modes (kids/youth
 **Datum:** 2026-02-02
 Prüfen ob in schema-/pipeline-/chunk-bezogenen Python-Files Funktionen absorbiert wurden, die zwischen Pipelines und "ihren" Chunks hätten realisiert werden sollen. Hängt zusammen mit Proxy-Chunk und Output-Chunk Refactoring.
 
+### Latent Audio Synth — Electron Standalone Extraction
+
+**Datum:** 2026-03-06
+**Status:** PLANNED — Extraction noch nicht begonnen
+**Plan:** `docs/plans/latent-audio-synth-extraction.md`
+
+Die ai4artsed-Plattform enthält ein neuartiges Latent-Audio-Synthese-System: T5-Embedding-Manipulation → Stable Audio Diffusion → browserseitige Audio-Verarbeitung (WSOLA Looper, Wavetable Oscillator, Step Sequencer, Arpeggiator). Eigenständig publizierbar als Electron-App.
+
+**Architektur:**
+- **Electron Shell**: GPU Service Subprocess Management, Model Download Manager, neue Synth-UI (Vue 3 + Vite)
+- **GPU Service** (Python Subprocess): `cross_aesthetic_backend.py`, `stable_audio_backend.py`, `vram_coordinator.py`
+- **Audio Composables** (Copy as-is, zero Platform-Dependencies): `useAudioLooper.ts`, `useWavetableOsc.ts`, `useStepSequencer.ts`, `useArpeggiator.ts`, `useEnvelope.ts`, `useWebMidi.ts`
+
+**6 Phasen:**
+1. Repo-Setup (`~/ai/latent-audio-synth/`, separates Git)
+2. GPU Service Extraction (nur Stable Audio + T5 Synth, KEIN ImageBind/MMAudio/Image/Video)
+3. Audio Composables kopieren (TypeScript + Web Audio API, plattformunabhängig)
+4. Neue Synth-UI (kein i18n, kein DevServer-Layout, Ableton/Bitwig-Ästhetik)
+5. Electron Integration (Subprocess-Management, Model-Download-UX)
+6. Packaging (electron-builder, Model ~3.6 GB wird beim ersten Start geladen)
+
+**Was novel ist (Paper/README):**
+- Semantic Axis System (21 validierte Achsen als Audio Control Surface)
+- Per-Dimension T5-Embedding-Manipulation als Synthese-Paradigma
+- Browser-side WSOLA Pitch Shifting für AI-generierte Audio-Loops
+- Wavetable-Extraktion aus Diffusion-generiertem Audio
+- Geplant: SAE Feature Sonification (T5 monosemantische Features → hörbar)
+
+**Lizenz:** Code = CC BY-SA 4.0, Stable Audio Open 1.0 = Community License (Weights nicht gebundled, User lädt selbst)
+**Backport-Strategie:** Identische Interfaces → einfacher File-Copy in beide Richtungen, kein Subtree/Submodule nötig
+
 ---
 
 ## 🎮 Minigames / Waiting Animations
