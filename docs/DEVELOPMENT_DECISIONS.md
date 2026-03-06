@@ -11,14 +11,15 @@
 
 ## 📋 Quick Reference - Current Architecture
 
-**Current System Status (as of 2025-12-02):**
+**Current System Status (as of 2026-03-06):**
 - ✅ 4-Stage Pipeline Architecture (DevServer orchestrates Stages 1-4)
 - ✅ GPT-OSS:20b for Stage 1 (Translation + §86a Safety unified)
 - ✅ Config-based system (Interception configs, Output configs, Pre-output safety)
-- ✅ Backend abstraction (Ollama, ComfyUI, SwarmUI APIs)
+- ✅ Backend abstraction (Ollama, ComfyUI, SwarmUI, GPU Service APIs)
 - ✅ Multi-output support (model comparison, batch generation)
 - ✅ Recursive pipelines ("Stille Post" iterative transformation)
 - ✅ Unified storage (symlink: prod → dev for shared research data)
+- ✅ 3D generation (Hunyuan3D-2 → GLB mesh + Blender Eevee preview + `<model-viewer>` frontend)
 
 **Deployment (Research Phase - 2025-11-16):**
 - 🌐 Internet-facing via Cloudflare tunnel (multiple courses)
@@ -26,6 +27,87 @@
 - 🔄 Legacy backend (port TBD) - Active for students
 - 🔧 Dev backend (port 17801) - Development only
 - 📊 Shared storage: `/home/joerissen/ai/ai4artsed_webserver/exports/`
+
+---
+
+## Qwen T2I permanent deaktiviert (2026-03-06)
+
+### Kontext
+Workshop-Replay (58 Requests, 1x Speed) zeigte 66% Erfolgsrate. 17 Backend-Errors (exakt 300s Timeout), 3 Timeouts (600s). Analyse ergab: 4 Qwen T2I Requests (je 600s Timeout) blockierten die ComfyUI-Queue, dahinter stauten sich img2img-Requests.
+
+### Entscheidung: Qwen T2I permanent entfernt (nicht nur disabled)
+
+**Begründung:**
+1. **Keine Safety-by-Design**: Qwen T2I hat keinen eigenen Safety-Filter — im Gegensatz zu Flux2, SD3.5, etc. die in die Platform-Pipeline integriert sind
+2. **Qualitativ unterlegen**: Flux2 produziert signifikant bessere Ergebnisse bei geringerem VRAM-Verbrauch
+3. **Workshop-Killer**: Einzelne Qwen T2I Requests blockieren die ComfyUI-Queue fuer bis zu 600s, was alle anderen Requests dahinter zum Timeout bringt
+4. **Kein paedagogischer Mehrwert**: Keine einzigartige Faehigkeit die nicht durch andere Modelle besser abgedeckt wird
+
+**Umsetzung:** `qwen.json` → `qwen.json.disabled` (bestehende Konvention), `qwen_img2img.json` bleibt (nutzt anderes Backend-Pattern, keine Queue-Blockade).
+
+### Zusaetzlich: Hardcoded Timeouts behoben
+- `backend_router.py`: Zwei Stellen nutzten `300` statt `config.COMFYUI_TIMEOUT` (480s)
+- Root cause der 17 "exakt 300s" Fehler im Workshop-Replay
+
+---
+
+## Text-to-3D Pipeline: Hunyuan3D-2 + Blender Headless + model-viewer (2026-03-06)
+
+### Kontext
+3D als neuer generativer Medientyp. Anforderung: Text → texturiertes 3D-Mesh → interaktive Anzeige im Browser (iPad-kompatibel, touch-basiert). Erster Schritt der 3D-Infrastruktur — Phase 2 (Image-to-3D) folgt.
+
+### Entscheidung: Hunyuan3D-2 (Tencent) als 3D-Generierungsmodell
+
+| Kriterium | Hunyuan3D-2 | TripoSR | Shap-E |
+|-----------|-------------|---------|--------|
+| Textur-Qualität | Sehr gut (Paint Pipeline) | Gut | Niedrig |
+| VRAM | ~16 GB (irrelevant bei RTX 6000 96GB) | ~8 GB | ~4 GB |
+| Output-Format | GLB (texturiert) | GLB (texturiert) | PLY (untexturiert) |
+| Architektur | DiT 1.1B (Shape) + Paint 1.3B (Texture) | ViT-L + NeRF | Transformer |
+| Open Source | Ja (Apache 2.0) | Ja | Ja |
+| Geschwindigkeit | 30-60s | 10-15s | 5-10s |
+
+**Begründung:** Beste Textur-Qualität, GLB-Output direkt kompatibel mit `<model-viewer>`, Apache-2.0 Lizenz, VRAM kein Constraint.
+
+### Entscheidung: Blender Headless (Eevee) für Preview-Rendering
+
+| Kriterium | Blender Eevee | Three.js Server-Side | Pillow 3D |
+|-----------|--------------|---------------------|-----------|
+| Render-Qualität | Profi-Qualität | Akzeptabel | Nicht möglich |
+| Setup | System-Paket (v4.5.6) | Node.js + headless GL | — |
+| Geschwindigkeit | 1-5s (Eevee) | 2-10s | — |
+| Beleuchtung | 3-Punkt + HDRI | Begrenzt | — |
+
+**Begründung:** Blender bereits system-installiert (Fedora), Eevee ist extrem schnell (kein Ray-Tracing nötig für Thumbnails), professionelle Beleuchtung. Subprocess-Pattern (nicht in GPU-Service) — Eevee nutzt OpenGL, kein CUDA.
+
+### Entscheidung: `<model-viewer>` Web Component für Frontend
+
+Google's `<model-viewer>` statt Three.js oder Babylon.js:
+- ~160 KB gzipped, keine Three.js-Boilerplate
+- Touch-basiert: Drehen + Zoomen auf iPad/Tablet (pädagogischer Kontext!)
+- Auto-rotate, Shadow, Environment Lighting out-of-the-box
+- Web Component = framework-agnostisch, funktioniert in Vue ohne Wrapper
+
+### Architektur-Pattern
+
+```
+Text → Stage 1-3 → Stage 4: output_3d_hunyuan3d chunk
+    → Schritt 1: GPU Service (Hunyuan3D-2) → GLB Mesh
+    → Schritt 2: Blender Subprocess (Eevee) → PNG Thumbnail
+    → Return: mesh_data (base64 GLB) + image_data (base64 PNG)
+Frontend: <model-viewer> für interaktive 3D-Anzeige, PNG als Thumbnail/Fallback
+```
+
+### Betroffene Dateien
+- `gpu_service/services/hunyuan3d_backend.py` — GPU backend (VRAMBackend protocol)
+- `gpu_service/routes/hunyuan3d_routes.py` — API routes
+- `devserver/my_app/services/hunyuan3d_client.py` — HTTP client
+- `devserver/my_app/services/blender_service.py` — Subprocess wrapper
+- `devserver/blender_scripts/render_mesh.py` — Blender-Python render script
+- `devserver/schemas/chunks/output_3d_hunyuan3d.py` — Output chunk
+- `devserver/schemas/configs/output/hunyuan3d_text_to_3d.json` — Output config
+- `public/.../src/components/MediaOutputBox.vue` — `<model-viewer>` integration
+- 17 weitere modifizierte Dateien (config, routes, types, i18n)
 
 ---
 

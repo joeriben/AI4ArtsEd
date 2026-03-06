@@ -10,7 +10,7 @@ from pathlib import Path
 import json
 
 from my_app.services.pipeline_recorder import load_recorder
-from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS, COMFYUI_MAX_QUEUE_DEPTH
+from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS, COMFYUI_MAX_QUEUE_DEPTH, COMFYUI_TIMEOUT
 from schemas.engine.progress_callback import get_progress_callback
 
 logger = logging.getLogger(__name__)
@@ -657,7 +657,7 @@ class BackendRouter:
 
             logger.info(f"[COMFYUI] Generating image: model={model}, steps={steps}, size={width}x{height} (queue: {queue_depth})")
 
-            result = await client.submit_and_track(workflow, timeout=parameters.get('timeout', 300), on_progress=get_progress_callback())
+            result = await client.submit_and_track(workflow, timeout=parameters.get('timeout', COMFYUI_TIMEOUT), on_progress=get_progress_callback())
 
             if not result.media_files:
                 return BackendResponse(success=False, content="", error="ComfyUI generated no output")
@@ -1011,7 +1011,7 @@ class BackendRouter:
                     error=f"ComfyUI queue full ({queue_depth} pending). Please try again in a moment."
                 )
 
-            timeout = parameters.get('timeout', 300)
+            timeout = parameters.get('timeout', COMFYUI_TIMEOUT)
 
             result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
 

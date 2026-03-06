@@ -27,6 +27,102 @@
 
 ---
 
+## Session 251 (2026-03-06): ComfyUI Workshop Performance Fix
+
+**Date:** 2026-03-06
+**Status:** COMPLETE
+**Branch:** develop
+
+### Context
+Workshop-Replay (58 Requests, 1x Speed) showed 66% success rate — 17 backend errors (exactly 300s) + 3 timeouts (600s). Session 249 fixes (Queue Guard, T5 Lock, GPU Threads) were NOT the cause. Root cause: hardcoded 300s timeout + Qwen T2I queue-blocking.
+
+### Changes
+1. **Qwen T2I permanently disabled** (`devserver/schemas/configs/output/qwen.json` → `qwen.json.disabled`)
+   - No safety-by-design (no integrated safety filter)
+   - Qualitatively inferior to Flux2
+   - 4 Qwen T2I requests (600s each) blocked ComfyUI queue, starving img2img behind them
+
+2. **Hardcoded timeouts fixed** (`devserver/schemas/engine/backend_router.py`)
+   - `_process_image_chunk_simple` (line ~660): `300` → `COMFYUI_TIMEOUT` (480s)
+   - `_process_legacy_workflow_chunk` (line ~1014): `300` → `COMFYUI_TIMEOUT` (480s)
+   - Root cause of the 17 "exactly 300s" errors in replay
+   - Added `COMFYUI_TIMEOUT` to imports
+
+### Files (2 changed, 1 renamed)
+- `devserver/schemas/engine/backend_router.py` (import + 2 timeout fixes)
+- `devserver/schemas/configs/output/qwen.json` → `qwen.json.disabled`
+- `docs/DEVELOPMENT_DECISIONS.md` (decision documented)
+- `docs/DEVELOPMENT_LOG.md` (this entry)
+
+---
+
+## Session 250 (2026-03-06): Hunyuan3D-2 Text-to-3D Pipeline + Blender Headless
+
+**Date:** 2026-03-06
+**Status:** COMPLETE
+**Branch:** develop
+
+### Context
+Added 3D as a new generative media type. Two-step pipeline: Hunyuan3D-2 (Tencent, 1.1B Shape DiT + 1.3B Paint) generates textured GLB meshes from text, Blender (headless, Eevee) renders preview thumbnails. Interactive `<model-viewer>` (Google Web Component) displays GLB in browser — touch-based, iPad-compatible.
+
+### Changes
+1. **GPU Service: Hunyuan3D-2 Backend** (`gpu_service/services/hunyuan3d_backend.py`, `gpu_service/routes/hunyuan3d_routes.py`)
+   - VRAMBackend protocol implementation with coordinator integration
+   - Shape + Texture pipeline, lazy-loaded (~16 GB VRAM)
+   - Routes: `/api/hunyuan3d/available`, `/api/hunyuan3d/generate`, `/api/hunyuan3d/unload`
+
+2. **DevServer: Hunyuan3D Client + Blender Service** (`devserver/my_app/services/hunyuan3d_client.py`, `devserver/my_app/services/blender_service.py`)
+   - HTTP client following established pattern (DiffusersClient, StableAudioClient)
+   - Blender subprocess wrapper: `blender --background --python render_mesh.py -- config.json`
+   - 30s timeout, Eevee renderer, spherical camera coordinates
+
+3. **Blender Render Script** (`devserver/blender_scripts/render_mesh.py`)
+   - Blender-Python script: GLB import, mesh normalize, 3-point lighting, Eevee render
+   - Runs in Blender's embedded Python, reads JSON config via sys.argv
+
+4. **Output Chunk + Config** (`devserver/schemas/chunks/output_3d_hunyuan3d.py`, `devserver/schemas/configs/output/hunyuan3d_text_to_3d.json`)
+   - Python chunk orchestrating GPU mesh gen → Blender preview render
+   - Returns dict with mesh_data (base64 GLB) + optional image_data (base64 PNG)
+   - Blender render fail-safe (non-fatal if unavailable)
+
+5. **Backend Router + Pipeline Routes** (`devserver/schemas/engine/pipeline_executor.py`, `devserver/my_app/routes/schema_pipeline_routes.py`)
+   - Added `mesh_data`, `mesh_format` to pipeline_executor metadata allowlist (CRITICAL — without this, data silently drops)
+   - 5 media type detection locations updated for `3d`
+   - 3 route handlers: streaming, legacy, 4-stage pipeline
+
+6. **Frontend: model-viewer** (`public/.../src/components/MediaOutputBox.vue`, `public/.../src/views/text_transformation.vue`)
+   - `@google/model-viewer` Web Component: auto-rotate, camera-controls, shadow, touch-action
+   - 3D category enabled in text_transformation, config selector, result handling
+   - TypeScript interfaces updated for mesh_url/thumbnail_url
+
+7. **Model Availability** (`devserver/my_app/services/model_availability_service.py`)
+   - Hunyuan3D backend check via GPU service `/api/hunyuan3d/available`
+   - Added to `get_gpu_service_status()` cache
+
+8. **Config + Dependencies**
+   - `devserver/config.py`: BLENDER_PATH (→ /usr/bin/blender), GPU_SERVICE_TIMEOUT_3D, HUNYUAN3D_MODEL_ID
+   - `gpu_service/config.py`: HUNYUAN3D_ENABLED, model/device/dtype settings
+   - `backends.json`: hunyuan3d backend entry, 3d media type priorities
+   - npm: @google/model-viewer v4.1.0
+   - pip: hy3dgen v2.0.2, trimesh v4.11.2
+
+### Key Insights
+- **Pipeline executor allowlist is a silent killer**: New metadata keys (mesh_data, mesh_format) must be added to the explicit allowlist in pipeline_executor.py:316, or data is silently dropped between chunk output and route handler.
+- **Media type detection is scattered**: 5 locations in schema_pipeline_routes.py check media type via string matching on output_config name — fragile but consistent with existing pattern.
+- **Blender is system-installed** (v4.5.6 LTS at /usr/bin/blender), no AppImage needed.
+
+### Files (24 changed, 7 new)
+- `gpu_service/services/hunyuan3d_backend.py` (NEW)
+- `gpu_service/routes/hunyuan3d_routes.py` (NEW)
+- `devserver/my_app/services/hunyuan3d_client.py` (NEW)
+- `devserver/my_app/services/blender_service.py` (NEW)
+- `devserver/blender_scripts/render_mesh.py` (NEW)
+- `devserver/schemas/chunks/output_3d_hunyuan3d.py` (NEW)
+- `devserver/schemas/configs/output/hunyuan3d_text_to_3d.json` (NEW)
+- Plus 17 modified files (config, routes, frontend, i18n)
+
+---
+
 ## Session 249 (2026-03-05): Workshop Performance Fixes
 
 **Date:** 2026-03-05
