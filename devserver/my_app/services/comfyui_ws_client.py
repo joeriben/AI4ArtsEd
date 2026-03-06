@@ -189,8 +189,11 @@ class ComfyUIWebSocketClient:
                 start_time=start_time,
                 client_id=request_client_id,
             )
-        except (RuntimeError, TimeoutError):
-            # ComfyUI execution errors and timeouts propagate immediately
+        except TimeoutError:
+            # Cancel the zombie job in ComfyUI before propagating
+            await self.cancel_job(prompt_id)
+            raise
+        except RuntimeError:
             raise
         except Exception as e:
             # Only fall back to polling for WebSocket connection failures
@@ -729,6 +732,26 @@ class ComfyUIWebSocketClient:
         except Exception as e:
             logger.error(f"[COMFYUI-WS] Interrupt error: {e}")
             return False
+
+    async def cancel_job(self, prompt_id: str) -> None:
+        """Cancel a specific job: interrupt if running, remove from queue if pending."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                # Interrupt if currently executing
+                await session.post(
+                    f"{self.base_url}/interrupt",
+                    json={"prompt_id": prompt_id},
+                    timeout=aiohttp.ClientTimeout(total=5),
+                )
+                # Remove from pending queue
+                await session.post(
+                    f"{self.base_url}/queue",
+                    json={"delete": [prompt_id]},
+                    timeout=aiohttp.ClientTimeout(total=5),
+                )
+                logger.info(f"[COMFYUI-WS] Cancelled job: {prompt_id}")
+        except Exception as e:
+            logger.debug(f"[COMFYUI-WS] Cancel job best-effort failed: {e}")
 
     async def free_memory(self) -> bool:
         """POST /free to release VRAM (unload models)."""

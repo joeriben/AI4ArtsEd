@@ -759,8 +759,10 @@ class BackendRouter:
     async def _process_workflow_chunk(self, chunk_name: str, prompt: str, parameters: Dict[str, Any], chunk: Dict[str, Any]) -> BackendResponse:
         """Process audio/video/image chunks using custom ComfyUI workflows via WebSocket."""
         try:
-            # 1. Load workflow from chunk
-            workflow = chunk.get('workflow')
+            # 1. Load workflow from chunk (deepcopy: chunk is cached, concurrent
+            # requests would mutate the same dict via input_mappings/encoder_type)
+            import copy
+            workflow = copy.deepcopy(chunk.get('workflow'))
             if not workflow:
                 return BackendResponse(
                     success=False,
@@ -837,7 +839,7 @@ class BackendRouter:
                 )
 
             logger.info(f"[COMFYUI] Submitting {media_type} workflow (queue: {queue_depth})")
-            timeout = parameters.get('timeout', 600)
+            timeout = parameters.get('timeout', COMFYUI_TIMEOUT)
 
             result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
 
@@ -887,8 +889,10 @@ class BackendRouter:
             logger.info(f"[DEBUG-PROMPT] Received prompt parameter: '{prompt[:200]}...'" if prompt else f"[DEBUG-PROMPT] Prompt is EMPTY or None: {repr(prompt)}")
             logger.info(f"[DEBUG-PROMPT] Received parameters: {list(parameters.keys())}")
 
-            # Get workflow from chunk
-            workflow = chunk.get('workflow')
+            # Get workflow from chunk (deepcopy: chunk is cached, concurrent
+            # requests would mutate the same dict via input_mappings/encoder_type)
+            import copy
+            workflow = copy.deepcopy(chunk.get('workflow'))
             if not workflow:
                 return BackendResponse(
                     success=False,
