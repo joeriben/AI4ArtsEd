@@ -30,6 +30,30 @@
 
 ## 🔴 HIGH Priority
 
+### Hunyuan3D-2 Aktivierung — custom_rasterizer kompilieren
+
+**Datum:** 2026-03-06 (Session 250)
+**Status:** BLOCKED — custom_rasterizer CUDA Extension nicht kompiliert
+**Kontext:** 3D-Pipeline (Text → GLB Mesh) vollständig implementiert, aber Hunyuan3D-2 Texture-Pipeline benötigt `custom_rasterizer` (CUDA C++ Extension). Kompilierung gegen torch 2.11.0.dev+cu130 Nightly zu riskant vor Workshop.
+
+**3D-Kategorie ist derzeit `disabled: true`** in `text_transformation.vue` — ausgegraut, nicht klickbar.
+
+**Schritte zur Aktivierung:**
+1. `custom_rasterizer` kompilieren (aus hy3dgen oder Hunyuan3D-2 Repo, gegen unseren CUDA 13 Nightly Build)
+2. Testen: `python -c "import custom_rasterizer"` im shared venv
+3. GPU Service neu starten, `/api/hunyuan3d/available` muss `true` returnen
+4. `disabled: true` entfernen in `text_transformation.vue:706`
+5. End-to-End Test: Text → 3D → model-viewer im Browser
+
+**Risiko:** CUDA Nightly ABI-Mismatch kann die gesamte venv brechen. **Nur nach Workshop, mit Backup.**
+
+**Betroffene Dateien:**
+- `public/ai4artsed-frontend/src/views/text_transformation.vue:706` — `disabled: true` entfernen
+- `gpu_service/services/hunyuan3d_backend.py` — Pipeline-Loading
+- Shared venv — `custom_rasterizer` Extension
+
+---
+
 ### Canvas Execution Feedback
 
 **Datum:** 2026-01-26 (Session 136)
