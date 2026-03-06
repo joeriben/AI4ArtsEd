@@ -20,10 +20,15 @@ Usage:
 import argparse
 import asyncio
 import aiohttp
+import os
 import time
 import sys
 from dataclasses import dataclass
 from typing import Optional
+
+# Force line-buffered output (critical when stdout is redirected to a file)
+import functools
+print = functools.partial(print, flush=True)  # type: ignore[assignment]
 
 
 # --- Workshop replay data (extracted from backend log) ---
