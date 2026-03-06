@@ -164,8 +164,13 @@ class ComfyUIWebSocketClient:
         """
         start_time = time.time()
 
+        # Per-request client_id: ComfyUI's sockets dict is keyed by clientId,
+        # so concurrent requests sharing the same clientId overwrite each other
+        # and only the last-connected WS receives events. (server.py:254-255)
+        request_client_id = str(uuid.uuid4())
+
         # 1. Submit workflow via HTTP
-        prompt_id = await self._submit_workflow(workflow)
+        prompt_id = await self._submit_workflow(workflow, request_client_id)
         if not prompt_id:
             raise RuntimeError("Failed to submit workflow to ComfyUI")
 
@@ -182,6 +187,7 @@ class ComfyUIWebSocketClient:
                 timeout=timeout,
                 on_progress=on_progress,
                 start_time=start_time,
+                client_id=request_client_id,
             )
         except (RuntimeError, TimeoutError):
             # ComfyUI execution errors and timeouts propagate immediately
@@ -210,11 +216,11 @@ class ComfyUIWebSocketClient:
     # HTTP: Workflow submission
     # ------------------------------------------------------------------
 
-    async def _submit_workflow(self, workflow: Dict[str, Any]) -> Optional[str]:
+    async def _submit_workflow(self, workflow: Dict[str, Any], client_id: str) -> Optional[str]:
         """POST workflow to ComfyUI /prompt endpoint."""
         payload = {
             "prompt": workflow,
-            "client_id": self.client_id,
+            "client_id": client_id,
         }
 
         try:
@@ -246,13 +252,14 @@ class ComfyUIWebSocketClient:
         timeout: int,
         on_progress: Optional[Callable],
         start_time: float,
+        client_id: str,
     ):
         """Track workflow execution via WebSocket events."""
         import websockets
 
-        # Use a fresh per-request WebSocket connection
-        # (reusable connections can miss events if another job ran between)
-        url = f"{self.ws_url}/ws?clientId={self.client_id}"
+        # Use per-request clientId: ComfyUI keys its sockets dict by clientId,
+        # so all concurrent requests MUST use different clientIds
+        url = f"{self.ws_url}/ws?clientId={client_id}"
 
         async with websockets.connect(
             url,
