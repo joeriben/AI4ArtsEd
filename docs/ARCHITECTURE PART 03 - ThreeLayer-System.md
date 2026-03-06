@@ -24,10 +24,12 @@
 | `output_image_sd35_standard` | ComfyUI | SD3.5 Large image generation | Image |
 | `output_audio_stable_audio` | ComfyUI | Stable Audio generation | Audio |
 | `output_music_acestep` | ComfyUI | AceStep music (Tags + Lyrics) | Music |
+| `output_3d_hunyuan3d` | GPU Service + Blender | Hunyuan3D-2 mesh gen + Eevee render | 3D |
 
 **Note:**
 - After consolidation, we have ONE text transformation chunk (`manipulate`) instead of multiple redundant chunks
 - Output-Chunks contain complete ComfyUI API workflows embedded in JSON (not generated dynamically)
+- Python-based chunks (HeartMuLa, Diffusers, Hunyuan3D) contain `execute()` functions — see "Output Chunk Types" below
 
 #### Chunk Structure
 
@@ -71,8 +73,9 @@
 **Standard (Python-Based Chunks):**
 - Format: `output_*.py`
 - Contains: Executable Python code with `execute()` function
-- Example: `output_music_heartmula.py`
-- Use for: ALL new Stage4 output chunks (HeartMuLa, Diffusers, future backends)
+- Examples: `output_music_heartmula.py`, `output_3d_hunyuan3d.py`
+- Use for: ALL new Stage4 output chunks (HeartMuLa, Diffusers, Hunyuan3D, future backends)
+- **3D chunks** return dict with `mesh_data` (base64 GLB) + optional `image_data` (base64 PNG thumbnail)
 
 **Legacy (JSON-Based Chunks) - DEPRECATED:**
 - Format: `output_*.json`

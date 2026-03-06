@@ -1,5 +1,5 @@
 # DevServer Implementation TODOs
-**Last Updated:** 2026-03-04
+**Last Updated:** 2026-03-06
 **Context:** Current priorities and active TODOs
 
 ---
@@ -8,6 +8,7 @@
 
 | Session | Datum | Was |
 |---------|-------|-----|
+| 250 | 2026-03-06 | Hunyuan3D-2 Text-to-3D Pipeline + Blender Headless + model-viewer |
 | 235 | 2026-03-02 | Proxy-Chunk-Pattern Elimination + Router Cleanup |
 | 234 | 2026-03-01 | LoRA Support for Diffusers GPU Service |
 | ~234 | 2026-03-01 | SpaCy Startup-Check + Prerequisites Script |
@@ -124,13 +125,10 @@ Bei Festnetz-Verbindung:
 
 ## 📋 LOW / PLANNED / DEFERRED
 
-### Blender Headless Integration — Server-seitiger 3D-Rendering-Chunk
+### ~~Blender Headless Integration~~ — ERLEDIGT (Session 250)
 
-**Datum:** 2026-03-04
-**Status:** PLANNED — Feasibility positiv
-**Plan:** `docs/plans/blender-headless-integration.md`
-
-Blender als headless Renderer auf dem Server, gesteuert via `blender --background --python script.py`. Eevee-Renderer (1-5s für einfache Szenen). Neuer Chunk-Typ in Stage 4, One-Shot UX. Erste 3D-Infrastruktur im Projekt — Grundlage für Image-to-3D, Text-to-3D, 3D-Compositing.
+**Datum:** 2026-03-04 | **Erledigt:** 2026-03-06
+Implementiert als Teil der Hunyuan3D-2 Text-to-3D Pipeline. Blender (v4.5.6, system-installiert) rendert Vorschau-PNGs via Eevee. `<model-viewer>` Web Component für interaktive GLB-Anzeige im Browser.
 
 ### Remaining Router Cleanup — Stable Audio Chunk Migration
 

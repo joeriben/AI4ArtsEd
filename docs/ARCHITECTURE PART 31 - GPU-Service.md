@@ -26,6 +26,7 @@ gpu_service/
 │   ├── imagebind_routes.py
 │   ├── stable_audio_routes.py
 │   ├── cross_aesthetic_routes.py
+│   ├── hunyuan3d_routes.py        # Text-to-3D mesh generation
 │   └── text_routes.py
 ├── services/
 │   ├── diffusers_backend.py       # SD3.5, Flux2 image generation
@@ -34,6 +35,7 @@ gpu_service/
 │   ├── imagebind_backend.py       # ImageBind embedding extraction
 │   ├── stable_audio_backend.py    # Stable Audio Open
 │   ├── cross_aesthetic_backend.py # Cross-aesthetic generation
+│   ├── hunyuan3d_backend.py       # 3D mesh gen (Hunyuan3D-2, Shape+Texture)
 │   ├── text_backend.py            # LLM introspection (Latent Text Lab)
 │   ├── vram_coordinator.py        # Cross-backend VRAM management
 │   └── attention_processors_sd3.py
@@ -83,6 +85,7 @@ These models are loaded via HuggingFace `from_pretrained()` and cached in `~/.ca
 | Stable Audio | `stabilityai/stable-audio-open-1.0` | `~/.cache/huggingface/` | ~2.6 GB |
 | CLIP Vision | `openai/clip-vit-large-patch14` | `~/.cache/huggingface/` | ~0.6 GB |
 | HeartMuLa | HeartMuLa-oss-3B | `~/ai/heartlib/ckpt/` | ~12 GB |
+| Hunyuan3D-2 | `tencent/Hunyuan3D-2` | `~/.cache/huggingface/` | ~16 GB |
 
 ### Deployment: external drive / production copy
 
@@ -119,17 +122,23 @@ All settings use environment variables with sensible defaults. The `_AI_TOOLS_BA
 | `MMAUDIO_REPO` | `{AI_TOOLS_BASE}/MMAudio` | MMAudio repo path |
 | `IMAGEBIND_ENABLED` | `true` | Enable ImageBind |
 | `CROSS_AESTHETIC_ENABLED` | `true` | Enable cross-aesthetic |
+| `HUNYUAN3D_ENABLED` | `true` | Enable Hunyuan3D-2 3D mesh gen |
+| `HUNYUAN3D_MODEL_ID` | `tencent/Hunyuan3D-2` | HuggingFace model ID |
+| `HUNYUAN3D_DEVICE` | `cuda` | Device (cuda/cpu) |
+| `HUNYUAN3D_DTYPE` | `float16` | Precision (float16/bfloat16) |
 | `TEXT_ENABLED` | `true` | Enable Latent Text Lab |
 
 ### Sibling repo dependencies (editable installs)
 
 These repos must be installed as editable packages in the shared venv:
 
-| Repo | Install command | Required by |
-|------|----------------|-------------|
+| Repo / Package | Install command | Required by |
+|----------------|----------------|-------------|
 | `~/ai/MMAudio` | `pip install -e ~/ai/MMAudio` | MMAudio backend |
 | `~/ai/ImageBind` | `pip install -e ~/ai/ImageBind` | ImageBind backend |
 | `~/ai/heartlib` | `pip install --no-deps -e ~/ai/heartlib` | HeartMuLa backend |
+| `hy3dgen` (PyPI) | `pip install hy3dgen` | Hunyuan3D-2 backend |
+| `trimesh` (PyPI) | `pip install trimesh` | GLB mesh export (Hunyuan3D-2) |
 
 ---
 
@@ -198,7 +207,9 @@ DevServer calls the GPU service via HTTP clients (`DiffusersClient`, `HeartMuLaC
 DevServer ──→ LLMClient ──→ Ollama :11434  (GGUF, direct)
 ```
 
-GPU Service handles **media inference only** (Diffusers, HeartMuLa, Stable Audio, MMAudio, Cross-Aesthetic, Latent Text Lab).
+GPU Service handles **media inference only** (Diffusers, HeartMuLa, Stable Audio, MMAudio, Cross-Aesthetic, Hunyuan3D-2, Latent Text Lab).
+
+**Note:** Blender headless rendering runs as a subprocess in the **DevServer** (not GPU Service), because Eevee uses OpenGL (not CUDA). See `devserver/my_app/services/blender_service.py`.
 
 ---
 
@@ -215,11 +226,12 @@ GPU Service handles **media inference only** (Diffusers, HeartMuLa, Stable Audio
 | `devserver/my_app/services/diffusers_client.py` | HTTP client (drop-in for DiffusersImageGenerator) |
 | `devserver/my_app/services/heartmula_client.py` | HTTP client (drop-in for HeartMuLaBackend) |
 | `devserver/my_app/services/stable_audio_client.py` | HTTP client (Stable Audio) |
+| `devserver/my_app/services/hunyuan3d_client.py` | HTTP client (Hunyuan3D-2 mesh gen) |
 | `devserver/my_app/services/text_client.py` | HTTP client (Latent Text Lab) |
 | `devserver/my_app/services/llm_client.py` | Ollama-direct LLM client (NOT GPU Service) |
 | `devserver/my_app/services/llm_backend.py` | LLM client singleton factory |
 
 ---
 
-**Document Status:** Active (2026-03-03, Session 244)
+**Document Status:** Active (2026-03-06, Session 250)
 **Maintainer:** AI4ArtsEd Development Team

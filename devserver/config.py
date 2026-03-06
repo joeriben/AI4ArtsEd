@@ -383,7 +383,7 @@ GPU_SERVICE_TIMEOUT_3D = 300          # Hunyuan3D-2 mesh generation
 GPU_SERVICE_TIMEOUT = GPU_SERVICE_TIMEOUT_DEFAULT  # Backward compat
 
 # --- Blender (headless mesh rendering) ---
-BLENDER_PATH = os.environ.get("BLENDER_PATH", str(Path.home() / "ai" / "blender" / "blender"))
+BLENDER_PATH = os.environ.get("BLENDER_PATH", "/usr/bin/blender")
 BLENDER_SCRIPTS_PATH = os.environ.get("BLENDER_SCRIPTS_PATH", str(Path(__file__).parent / "blender_scripts"))
 
 # --- Hunyuan3D-2 ---

@@ -84,6 +84,7 @@ Server selects OUTPUT-CONFIGS (not chunks directly) using `output_config_default
 | **audio** | `stable_audio` | `(fallback to eco)` | eco: ✅, fast: Not available |
 | **music** | `acestep` | `(fallback to eco)` | eco: ✅, fast: Not available |
 | **video** | `animatediff` | `sora2` | eco: Planned, fast: Planned |
+| **3d** | `hunyuan3d_text_to_3d` | `(no remote)` | eco: ✅, fast: Not available |
 
 **Implementation:** `schemas/output_config_defaults.json`
 

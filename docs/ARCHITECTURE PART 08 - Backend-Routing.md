@@ -24,6 +24,8 @@
 | **Ollama** | Local | Text transformation, translation | None (local) | ✅ Compliant |
 | **ComfyUI** | Local | Image/Audio/Video generation | None (local) | ✅ Compliant |
 | **HeartMuLa** | Local | Music generation (lyrics + tags → MP3) | None (local) | ✅ Compliant |
+| **Hunyuan3D** | Local | 3D mesh generation (text → GLB) | None (local) | ✅ Compliant |
+| **Blender** | Local | 3D mesh rendering (GLB → PNG thumbnail) | None (local) | ✅ Compliant |
 | **OpenRouter** | Cloud | Fast text/image tasks | API Key required | ❌ Non-compliant |
 | **OpenAI** | Cloud | GPT-5 Image, Sora2 Video (future) | API Key required | ⚠️ Enterprise only |
 
