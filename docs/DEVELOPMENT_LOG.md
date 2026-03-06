@@ -27,6 +27,55 @@
 
 ---
 
+## Session 252 (2026-03-06): Workshop Replay Evaluation — Fixes Validated
+
+**Date:** 2026-03-06
+**Status:** COMPLETE
+**Branch:** develop
+
+### Context
+Ran workshop replay (58 requests, `--max-gap 15` to skip idle gaps) against production before and after the Session 251 fixes + two critical new fixes (per-request clientId, deepcopy workflow chunks, zombie job cancel).
+
+### Workshop Replay Results
+
+| Metric | Workshop (Mar 5) | Prod BEFORE fixes | Prod AFTER fixes |
+|--------|-----------------|-------------------|------------------|
+| Success | 72-74% | 22% (13/58) | **91% (53/58)** |
+| Timeouts | 22% | 5% (3/58) | **0%** |
+| Errors | — | 72% (42/58) | 9% (5/58) |
+| Queue rejected | — | 3% (2/58) | **0%** |
+| Median latency | — | — | **9.8s** |
+| Max latency | — | — | **22.9s** |
+| Wall time | ~31 min | 988s | 703s |
+
+**5 remaining errors (all expected):**
+- 4x `Config 'qwen' not found` — Qwen T2I intentionally disabled (Session 251)
+- 1x `Chunk too big` — single prompt expanded too much during interception
+
+**Effective success rate on valid configs: 53/54 = 98%**
+
+### Root Causes Fixed (across Sessions 249-251)
+1. **Per-request clientId** (a488094) — #1 cause: only 1 of N concurrent requests received ComfyUI WS events
+2. **Deepcopy workflow chunks** (d43a9ef) — concurrent requests corrupted each other's workflows via shared mutation
+3. **Cancel zombie jobs on timeout** (d43a9ef) — timed-out workflows no longer block queue
+4. **Hardcoded timeouts → COMFYUI_TIMEOUT** (cbeb188) — 3 locations now consistently use config (480s)
+5. **Qwen T2I disabled** (cbeb188) — removed queue-heavy model with no safety-by-design
+6. **ComfyUI queue guard** (Session 249) — COMFYUI_MAX_QUEUE_DEPTH=8
+7. **T5 tokenizer lock** (Session 249) — thread-safe tokenization
+8. **GPU service 16 threads** (Session 249) — was 4
+
+### Changes
+1. **Replay script: `--max-gap` flag** (`devserver/testfiles/simulate_workshop_260305.py`)
+   - `--max-gap SECONDS` (default: 15) caps idle gaps between requests
+   - Preserves burst patterns exactly, compresses bathroom breaks
+   - Original 1830s → 690s at max-gap=15 (saves 19 min idle time)
+
+### Files (1 changed)
+- `devserver/testfiles/simulate_workshop_260305.py` (`--max-gap` flag + adjusted offset computation)
+- `docs/DEVELOPMENT_LOG.md` (this entry)
+
+---
+
 ## Session 251 (2026-03-06): ComfyUI Workshop Performance Fix
 
 **Date:** 2026-03-06
