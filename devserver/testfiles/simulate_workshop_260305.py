@@ -350,7 +350,8 @@ async def run_simulation(port: int, speed: float, dry_run: bool, no_image: bool,
         print(f"  Error details:")
         for r in errors:
             tag = " [QUEUE FULL]" if r.queue_rejected else ""
-            print(f"    #{r.index+1:2d} {r.config:15s} {r.duration_ms/1000:.1f}s  {r.error[:60]}{tag}")
+            print(f"    #{r.index+1:2d} {r.config:15s} {r.duration_ms/1000:.1f}s  {tag}")
+            print(f"        {r.error}")
         print()
 
     if timeouts:
