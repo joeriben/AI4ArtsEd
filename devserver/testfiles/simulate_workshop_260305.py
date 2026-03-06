@@ -9,12 +9,13 @@ the original timing pattern. Compares behavior before/after fixes:
 - GPU service 16 threads (was 4)
 
 Usage:
-    python simulate_workshop_260305.py [--port 17801] [--fast] [--dry-run]
+    python simulate_workshop_260305.py [--port 17801] [--fast] [--dry-run] [--max-gap 15]
 
-    --port PORT   Backend port (default: 17801 = production)
-    --fast        Run at 4x speed (compress 31min → ~8min)
-    --dry-run     Print timing without sending requests
-    --no-image    Skip img2img (use t2i prompts only — no input_image needed)
+    --port PORT       Backend port (default: 17801 = production)
+    --fast            Run at 4x speed (compress 31min → ~8min)
+    --dry-run         Print timing without sending requests
+    --no-image        Skip img2img (use t2i prompts only — no input_image needed)
+    --max-gap SECONDS Cap inter-request idle gaps (default: 15s, 0=no cap)
 """
 
 import argparse
@@ -97,6 +98,19 @@ WORKSHOP_REQUESTS = [
 ]
 
 assert len(WORKSHOP_REQUESTS) == 58, f"Expected 58 requests, got {len(WORKSHOP_REQUESTS)}"
+
+
+def compute_adjusted_offsets(max_gap: float) -> list[float]:
+    """Cap inter-request gaps at max_gap seconds while preserving burst timing."""
+    if max_gap <= 0:
+        return [offset for offset, _, _ in WORKSHOP_REQUESTS]
+
+    adjusted = [0.0]
+    for i in range(1, len(WORKSHOP_REQUESTS)):
+        raw_gap = WORKSHOP_REQUESTS[i][0] - WORKSHOP_REQUESTS[i - 1][0]
+        capped_gap = min(raw_gap, max_gap)
+        adjusted.append(adjusted[-1] + capped_gap)
+    return adjusted
 
 
 @dataclass
@@ -242,13 +256,18 @@ async def send_request(
         return RequestResult(index, effective_config, prompt, "error", duration, str(e))
 
 
-async def run_simulation(port: int, speed: float, dry_run: bool, no_image: bool, image_path: str):
+async def run_simulation(port: int, speed: float, dry_run: bool, no_image: bool, image_path: str, max_gap: float = 0):
     base_url = f"http://localhost:{port}"
+    adjusted = compute_adjusted_offsets(max_gap)
+    original_duration = WORKSHOP_REQUESTS[-1][0]
+    adjusted_duration = adjusted[-1]
+    saved = original_duration - adjusted_duration
 
     print(f"{'='*70}")
     print(f"  Workshop Load Replay — 2026-03-05")
     print(f"  Target: {base_url}")
-    print(f"  Speed:  {speed}x ({'~8 min' if speed == 4 else '~31 min' if speed == 1 else f'~{31/speed:.0f} min'})")
+    print(f"  Speed:  {speed}x")
+    print(f"  Max gap: {max_gap}s" + (f"  (saves {saved:.0f}s → {adjusted_duration/speed:.0f}s at {speed}x)" if max_gap > 0 and saved > 0 else "  (disabled)" if max_gap <= 0 else ""))
     print(f"  Mode:   {'DRY RUN' if dry_run else 'LIVE'}")
     print(f"  Image:  {'skip (t2i only)' if no_image else f'img2img with {image_path}'}")
     print(f"  Requests: {len(WORKSHOP_REQUESTS)}")
@@ -257,10 +276,13 @@ async def run_simulation(port: int, speed: float, dry_run: bool, no_image: bool,
 
     if dry_run:
         print("Timing preview (no requests sent):")
-        for offset, config, prompt in WORKSHOP_REQUESTS:
-            t = offset / speed
-            print(f"  T+{t:7.1f}s  {config:15s}  {prompt[:50]}")
-        print(f"\nTotal duration: {WORKSHOP_REQUESTS[-1][0] / speed:.0f}s")
+        for i, ((_offset, config, prompt), adj_offset) in enumerate(zip(WORKSHOP_REQUESTS, adjusted)):
+            t = adj_offset / speed
+            gap_orig = WORKSHOP_REQUESTS[i][0] - WORKSHOP_REQUESTS[i - 1][0] if i > 0 else 0
+            gap_adj = adjusted[i] - adjusted[i - 1] if i > 0 else 0
+            capped = " (capped)" if gap_orig != gap_adj else ""
+            print(f"  T+{t:7.1f}s  {config:15s}  {prompt[:45]}{capped}")
+        print(f"\nOriginal duration: {original_duration/speed:.0f}s  |  Adjusted: {adjusted_duration/speed:.0f}s  |  Saved: {saved/speed:.0f}s")
         return
 
     # Check server reachability
@@ -292,9 +314,9 @@ async def run_simulation(port: int, speed: float, dry_run: bool, no_image: bool,
     sim_start = time.monotonic()
 
     async with aiohttp.ClientSession() as session:
-        for i, (offset, config, prompt) in enumerate(WORKSHOP_REQUESTS):
-            # Wait until the right moment
-            target_time = offset / speed
+        for i, ((_offset, config, prompt), adj_offset) in enumerate(zip(WORKSHOP_REQUESTS, adjusted)):
+            # Wait until the right moment (using adjusted offsets with gap capping)
+            target_time = adj_offset / speed
             now = time.monotonic() - sim_start
             wait = target_time - now
             if wait > 0:
@@ -377,10 +399,12 @@ def main():
     parser.add_argument("--speed", type=float, default=None, help="Custom speed multiplier")
     parser.add_argument("--image", type=str, default="/home/joerissen/Pictures/dubestimmst1.png",
                         help="Test image for img2img (default: dubestimmst1.png)")
+    parser.add_argument("--max-gap", type=float, default=15.0,
+                        help="Cap idle gaps between requests in seconds (default: 15, 0=no cap)")
     args = parser.parse_args()
 
     speed = args.speed or (4.0 if args.fast else 1.0)
-    asyncio.run(run_simulation(args.port, speed, args.dry_run, args.no_image, args.image))
+    asyncio.run(run_simulation(args.port, speed, args.dry_run, args.no_image, args.image, args.max_gap))
 
 
 if __name__ == "__main__":
