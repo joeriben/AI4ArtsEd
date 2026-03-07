@@ -12,6 +12,8 @@ from pathlib import Path
 import logging
 import json
 import os
+import time
+import random
 import requests
 from datetime import datetime
 
@@ -233,6 +235,18 @@ def get_ionos_credentials():
     return api_url, ""
 
 
+def _requests_post_with_retry(url, max_retries=3, retry_on=(429, 502, 503, 504), **kwargs):
+    """POST with exponential backoff for transient HTTP errors."""
+    for attempt in range(max_retries):
+        response = requests.post(url, **kwargs)
+        if response.status_code not in retry_on or attempt == max_retries - 1:
+            return response
+        wait = (2 ** attempt) + random.uniform(0, 0.5)
+        logger.warning(f"[RETRY] HTTP {response.status_code} from {url}, attempt {attempt+1}/{max_retries}, waiting {wait:.1f}s")
+        time.sleep(wait)
+    return response  # unreachable but satisfies type checker
+
+
 def _split_system_and_messages(messages: list):
     """Separate system messages from user/assistant messages."""
     system_parts = []
@@ -320,7 +334,7 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
             "max_tokens": max_tokens
         }
 
-        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=30)
+        response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=30)
 
         if response.status_code == 200:
             result = response.json()
@@ -363,7 +377,7 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             "max_tokens": effective_max_tokens
         }
 
-        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=60)
+        response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=60)
 
         if response.status_code == 200:
             result = response.json()
@@ -437,7 +451,7 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
             "max_tokens": max_tokens
         }
 
-        response = requests.post(api_url, headers=headers, json=payload, timeout=30)
+        response = _requests_post_with_retry(api_url, headers=headers, json=payload, timeout=30)
 
         if response.status_code == 200:
             result = response.json()

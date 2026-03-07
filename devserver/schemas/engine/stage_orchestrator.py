@@ -173,6 +173,11 @@ def fast_dsgvo_check(text: str) -> Tuple[bool, List[str], bool]:
                     if not has_propn:
                         logger.debug(f"[DSGVO-NER] POS-filtered: '{ent.text}' ({[tok.pos_ for tok in ent]})")
                         continue
+                    # Filter: Entities containing digits or SD weight syntax (e.g., "shadow gradient:1.2")
+                    # Real person names never contain digits
+                    if re.search(r'\d', ent.text):
+                        logger.debug(f"[DSGVO-NER] Numeric filtered: '{ent.text}'")
+                        continue
                     found_entities.add(f"Name: {ent.text.strip()}")
         except Exception as e:
             logger.debug(f"[SPACY] Error with model {model_name}: {e}")

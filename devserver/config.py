@@ -293,6 +293,26 @@ EXTERNAL_LLM_PROVIDER = os.environ.get("EXTERNAL_LLM_PROVIDER", "none")
 # DSGVO Conformity - determines if cloud services are allowed
 # True = DSGVO-compliant (no cloud services), False = Cloud services allowed
 DSGVO_CONFORMITY = os.environ.get("DSGVO_CONFORMITY", "true").lower() == "true"
+
+# DSGVO-safe provider fallback: if True, fallback only to DSGVO-safe providers.
+# If False (international deployments), fallback may use any provider with credentials.
+DSGVO_ONLY_FALLBACK = os.environ.get("DSGVO_ONLY_FALLBACK", "true").lower() == "true"
+
+# DSGVO-safe cloud providers, ordered by preference (first = preferred).
+# Only providers with valid credentials (.key file or env var) are used at runtime.
+# Format: list of (provider_prefix, default_model) tuples.
+DSGVO_SAFE_PROVIDERS = [
+    ("mistral", "mistral/mistral-large-latest"),
+    ("ionos", "ionos/meta-llama-3.1-70b-instruct"),
+]
+
+# ALL cloud providers with fallback models (used when DSGVO_ONLY_FALLBACK=False).
+# Order = preference. Only those with valid credentials are used at runtime.
+ALL_CLOUD_PROVIDERS = DSGVO_SAFE_PROVIDERS + [
+    ("openai", "openai/gpt-4o"),
+    ("anthropic", "anthropic/claude-sonnet-4-20250514"),
+    ("openrouter", "openrouter/mistralai/mistral-large-latest"),
+]
 COMFYUI_PREFIX = "comfyui"
 COMFYUI_PORT = "17804"  # AI4ArtsEd embedded ComfyUI (17801=prod, 17802=dev, 17803=GPU, 17804=ComfyUI)
 
@@ -395,6 +415,11 @@ LLM_API_TIMEOUT = (10, 90)            # 10s connect (fail fast if unreachable), 
 # Ollama LLM timeouts
 OLLAMA_TIMEOUT_SAFETY = 30            # Safety verify (small model, short prompt)
 OLLAMA_TIMEOUT_DEFAULT = 120          # Standard LLM calls
+
+# Ollama concurrency limit (Python-side semaphore).
+# NOTE: Ollama server-side concurrency (OLLAMA_NUM_PARALLEL) must be configured
+# separately in the systemd unit / environment. This only caps the DevServer side.
+OLLAMA_MAX_CONCURRENT = int(os.environ.get("OLLAMA_MAX_CONCURRENT", "6"))
 
 # Feature Flags
 ENABLE_VALIDATION_PIPELINE = True

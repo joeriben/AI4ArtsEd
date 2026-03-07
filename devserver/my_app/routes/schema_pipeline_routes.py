@@ -10,6 +10,7 @@ import threading
 import json
 import uuid
 import config  # Session 154: For CODING_MODEL resolution in _load_model_from_output_config
+from config import OLLAMA_MAX_CONCURRENT
 import requests  # For direct Ollama calls (DSGVO LLM verification)
 
 # Schema-Engine importieren
@@ -71,7 +72,6 @@ pipeline_executor = None
 
 # Ollama Request Queue - Prevent concurrent overload of 120b model
 # Use threading.Semaphore because asyncio.run() runs in separate event loops
-OLLAMA_MAX_CONCURRENT = 3
 ollama_queue_semaphore = threading.Semaphore(OLLAMA_MAX_CONCURRENT)
 logger.info(f"[OLLAMA-QUEUE] Initialized with max concurrent requests: {OLLAMA_MAX_CONCURRENT}")
 

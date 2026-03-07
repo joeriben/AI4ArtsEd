@@ -23,6 +23,8 @@ import os
 import json
 import requests
 import re
+import time
+import random
 from typing import Dict, Any, Optional, Tuple, List
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,7 +36,7 @@ logger = logging.getLogger(__name__)
 from .model_selector import model_selector
 
 # Import UI_MODE for adaptive token limits
-from config import UI_MODE, LLM_API_TIMEOUT
+from config import UI_MODE, LLM_API_TIMEOUT, DSGVO_ONLY_FALLBACK, DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS
 
 # UI_MODE-adaptive max_tokens (hard API limit, ~2 tokens per word)
 UI_MODE_MAX_TOKENS = {
@@ -94,7 +96,39 @@ class PromptInterceptionEngine:
         self.model_selector = model_selector
         self.openrouter_models = self.model_selector.get_openrouter_models()
         self.ollama_models = self.model_selector.get_ollama_models()
-    
+
+    @staticmethod
+    def _requests_post_with_retry(url, max_retries=3, retry_on=(429, 502, 503, 504), **kwargs):
+        """POST with exponential backoff for transient HTTP errors."""
+        for attempt in range(max_retries):
+            response = requests.post(url, **kwargs)
+            if response.status_code not in retry_on or attempt == max_retries - 1:
+                return response
+            wait = (2 ** attempt) + random.uniform(0, 0.5)
+            logger.warning(f"[RETRY] HTTP {response.status_code} from {url}, attempt {attempt+1}/{max_retries}, waiting {wait:.1f}s")
+            time.sleep(wait)
+        return response  # unreachable but satisfies type checker
+
+    def _get_provider_fallback(self, failed_provider: str) -> Optional[Tuple[str, str]]:
+        """Find a fallback cloud provider after retry exhaustion.
+
+        Args:
+            failed_provider: Provider prefix that failed (e.g. "mistral")
+
+        Returns:
+            (provider_prefix, default_model) or None if no fallback available.
+        """
+        provider_list = DSGVO_SAFE_PROVIDERS if DSGVO_ONLY_FALLBACK else ALL_CLOUD_PROVIDERS
+
+        for provider, default_model in provider_list:
+            if provider == failed_provider:
+                continue
+            _, api_key = self._get_api_credentials(provider)
+            if api_key:
+                return (provider, default_model)
+
+        return None
+
     def extract_model_name(self, full_model_string: str) -> str:
         """Extract model name using centralized selector"""
         return self.model_selector.extract_model_name(full_model_string)
@@ -228,6 +262,29 @@ class PromptInterceptionEngine:
             )
             
         except Exception as e:
+            # Try DSGVO-safe provider fallback if a cloud provider failed
+            failed_provider = request.model.split("/")[0] if "/" in request.model else None
+            if failed_provider and failed_provider != "local":
+                fallback = self._get_provider_fallback(failed_provider)
+                if fallback:
+                    fb_provider, fb_model = fallback
+                    logger.warning(f"[PROVIDER-FALLBACK] {failed_provider} failed ({e}), trying {fb_provider}")
+                    try:
+                        fb_request = PromptInterceptionRequest(
+                            input_prompt=request.input_prompt,
+                            input_context=request.input_context,
+                            style_prompt=request.style_prompt,
+                            task_instruction=request.task_instruction,
+                            prebuilt_prompt=request.prebuilt_prompt,
+                            model=fb_model,
+                            debug=request.debug,
+                            unload_model=request.unload_model,
+                            parameters=request.parameters,
+                        )
+                        return await self.process_request(fb_request)
+                    except Exception as fb_e:
+                        logger.error(f"[PROVIDER-FALLBACK] {fb_provider} also failed: {fb_e}")
+
             logger.error(f"Prompt Interception Fehler: {e}")
             return PromptInterceptionResponse(
                 output_str="", output_float=0.0, output_int=0, output_binary=False,
@@ -263,19 +320,19 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
+            response = self._requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
                 logger.info(f"[BACKEND] ✅ OpenRouter Success: {model} ({len(output_text)} chars)")
-                
+
                 if debug:
                     self._log_debug("OpenRouter", model, prompt, output_text)
-                
+
                 return output_text, model
             else:
                 raise Exception(f"API Error: {response.status_code}\n{response.text}")
-                
+
         except Exception as e:
             if debug:
                 logger.error(f"OpenRouter Modell {model} fehlgeschlagen: {e}")
@@ -366,7 +423,7 @@ class PromptInterceptionEngine:
             if "temperature" in params:
                 payload["temperature"] = params["temperature"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
+            response = self._requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["content"][0]["text"]
@@ -411,7 +468,7 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
+            response = self._requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
@@ -461,7 +518,7 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
+            response = self._requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
@@ -525,7 +582,7 @@ class PromptInterceptionEngine:
                 payload["reasoning_effort"] = "low"
                 logger.info(f"[BACKEND] IONOS: reasoning_effort=low (enable_thinking=False)")
 
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
+            response = self._requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=LLM_API_TIMEOUT)
             if response.status_code == 200:
                 result = response.json()
                 message = result["choices"][0]["message"]
@@ -605,13 +662,23 @@ class PromptInterceptionEngine:
             if "max_tokens" in params:
                 payload["max_tokens"] = params["max_tokens"]
 
-            response = requests.post(
-                api_url,
-                headers=headers,
-                data=json.dumps(payload),
-                stream=True,  # Enable response streaming
-                timeout=LLM_API_TIMEOUT
-            )
+            # Retry logic for streaming (can't use _requests_post_with_retry with stream=True)
+            retry_on = (429, 502, 503, 504)
+            max_retries = 3
+            for attempt in range(max_retries):
+                response = requests.post(
+                    api_url,
+                    headers=headers,
+                    data=json.dumps(payload),
+                    stream=True,
+                    timeout=LLM_API_TIMEOUT
+                )
+                if response.status_code not in retry_on or attempt == max_retries - 1:
+                    break
+                response.close()
+                wait = (2 ** attempt) + random.uniform(0, 0.5)
+                logger.warning(f"[RETRY] HTTP {response.status_code} from Mistral stream, attempt {attempt+1}/{max_retries}, waiting {wait:.1f}s")
+                time.sleep(wait)
             response.raise_for_status()
 
             # Track accumulated text for debug logging

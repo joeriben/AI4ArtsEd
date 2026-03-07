@@ -30,6 +30,26 @@
 
 ## 🔴 HIGH Priority
 
+### Provider-agnostische API-Registry Refactor
+
+**Datum:** 2026-03-07
+**Status:** PLANNED
+**Kontext:** Workshop 06.03.2026 — brand-spezifische Methodennamen sind technische Schuld
+
+Bestehende `_call_mistral()`, `_call_ollama()`, `_call_openai()`, `_call_anthropic()`, `_call_ionos()`, `_call_openrouter()` durch generische Registry ersetzen:
+- Eine `_call_cloud_api(provider, model, prompt, params)` Methode statt 6 fast-identische
+- Provider-Registry mit Metadaten: `{name, api_url, auth_type, response_format, dsgvo_safe: bool}`
+- DSGVO-Safety als First-Class-Property jedes Providers + Praeferenz-Reihenfolge
+- Fallback-Logik waehlt automatisch NUR DSGVO-registrierte Anbieter (wenn `DSGVO_ONLY_FALLBACK=True`), oder alle verfuegbaren (wenn `False`, fuer internationale Deployments). In Settings-Matrix als Toggle.
+- Brand-Namen verschwinden aus Funktionsnamen, Variablen, Klassen
+
+**Betroffene Dateien:**
+- `devserver/schemas/engine/prompt_interception_engine.py` — 6 `_call_*` Methoden → 1 generische
+- `devserver/my_app/routes/chat_routes.py` — 4 `_call_*_chat` Funktionen → 1 generische
+- `devserver/config.py` — Provider-Registry-Konfiguration (DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS bereits vorhanden)
+
+---
+
 ### Hunyuan3D-2 Aktivierung — custom_rasterizer kompilieren
 
 **Datum:** 2026-03-06 (Session 250)
@@ -124,6 +144,25 @@ Code fertig (Phase 1-3 committed), Testing ausstehend:
 - [ ] Truck animation testen
 - [ ] Mobile Responsiveness prüfen
 - [ ] Vue type-check
+
+### Latent Audio Synth — WSOLA → AudioWorklet DSP Performance Fix
+
+**Datum:** 2026-03-06
+**Status:** PLANNED
+**Plan:** `docs/plans/latent-audio-synth-dsp-performance.md`
+
+WSOLA Pitch Shifting läuft auf dem **Main Thread in purem JavaScript** → UI-Lag bei aktivem Pitch Shift / MIDI Transpose. Wavetable Oscillator hat das Problem nicht (bereits in AudioWorklet).
+
+**2 Phasen:**
+1. **AudioWorklet Migration** (1 Session): Bestehenden WSOLA-Code in `wsola-processor.js` AudioWorkletProcessor verschieben. Gleicher Algorithmus, separater Thread, kein UI-Lag mehr.
+2. **Rubber Band WASM** (2-3 Sessions): WSOLA durch [Rubber Band Library](https://breakfastquay.com/rubberband/) (C++ → WASM) ersetzen. Formant-Preservation, Polyphonic-aware, Industriestandard-Qualität.
+
+**Betroffene Dateien:**
+- `src/composables/useAudioLooper.ts` — WSOLA-Extraktion, async message-pass
+- `src/audio/wsola-processor.js` — **Neu**: AudioWorkletProcessor
+- `src/audio/wavetable-processor.js` — Referenz-Pattern (keine Änderung)
+
+**Profitiert:** Sowohl AI4ArtsEd Web als auch geplante Electron Standalone App.
 
 ### Latent Lab UX Improvements
 
