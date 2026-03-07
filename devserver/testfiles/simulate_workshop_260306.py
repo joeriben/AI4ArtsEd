@@ -176,7 +176,9 @@ assert len(WORKSHOP_REQUESTS) == 119, f"Expected 119 requests, got {len(WORKSHOP
 
 
 # --- Configs that need img2img input ---
-IMG2IMG_CONFIGS = {"qwen_img2img", "qwen_2511_multi", "flux2_img2img"}
+IMG2IMG_CONFIGS = {"qwen_img2img", "flux2_img2img"}
+# qwen_2511_multi uses input_image1/2/3 (from device history), not input_image
+MULTI_IMG_CONFIGS = {"qwen_2511_multi"}
 
 
 def compute_adjusted_offsets(max_gap: float) -> list[float]:
@@ -254,9 +256,15 @@ async def send_request(
         "device_id": f"loadtest_{index % 9}",  # Simulate 9 iPads
     }
 
-    # Add input_image for img2img
+    # Add input_image for single img2img
     if effective_config in IMG2IMG_CONFIGS and input_image_path:
         params["input_image"] = input_image_path
+
+    # Add input_image1/2/3 for multi-image configs (same image 3x for load test)
+    if effective_config in MULTI_IMG_CONFIGS and input_image_path:
+        params["input_image1"] = input_image_path
+        params["input_image2"] = input_image_path
+        params["input_image3"] = input_image_path
 
     url = f"{base_url}/api/schema/pipeline/generation"
 

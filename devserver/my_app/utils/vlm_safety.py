@@ -23,14 +23,16 @@ logger = logging.getLogger(__name__)
 
 VLM_PROMPTS = {
     'kids': (
+        '/no_think\n'
         'Is the image free of violence, nudity, unsettling, scaring, '
         'potentially traumatizing, or other content unsafe or unhealthy '
-        'for children age 6-12 years? Provide a clear decision: "safe" or "unsafe".'
+        'for children age 6-12 years? Answer ONLY "safe" or "unsafe".'
     ),
     'youth': (
+        '/no_think\n'
         'Is the image free of violence, nudity, unsettling, scaring, '
         'potentially traumatizing, or other content unsafe or unhealthy '
-        'for teenagers age 14-18 years? Provide a clear decision: "safe" or "unsafe".'
+        'for teenagers age 14-18 years? Answer ONLY "safe" or "unsafe".'
     ),
 }
 
@@ -75,24 +77,28 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             messages=[{'role': 'user', 'content': prompt_text}],
             images=[image_b64],
             temperature=0.0,
-            max_new_tokens=500,
+            max_new_tokens=50,
         )
 
         if result is None:
             logger.warning("[VLM-SAFETY] LLM returned None (fail-open)")
             return (True, '', '')
 
-        # qwen3 uses thinking mode: answer may be in 'content' or 'thinking'
+        # With /no_think, verdict is in 'content' directly.
+        # Fallback: check 'thinking' too in case model ignores /no_think.
         content = result.get('content', '').lower().strip()
         thinking = (result.get('thinking') or '').lower().strip()
-        combined = content or thinking
-        logger.info(f"[VLM-SAFETY] Model response: content={content!r}, thinking={thinking!r}")
+        combined = f"{content} {thinking}"
+        logger.info(f"[VLM-SAFETY] Model response: content={content!r}, thinking={thinking[:200]!r}")
 
-        # Use thinking as image description (it contains the VLM's analysis)
-        description = (result.get('thinking') or '').strip()
+        description = content or thinking
 
         if 'unsafe' in combined:
             return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for {safety_level}", description)
+        if 'safe' in combined:
+            return (True, '', description)
+        # No clear verdict — fail-open but log warning
+        logger.warning(f"[VLM-SAFETY] No clear safe/unsafe verdict in response — fail-open")
         return (True, '', description)
 
     except Exception as e:
