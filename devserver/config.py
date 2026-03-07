@@ -550,11 +550,11 @@ COMFYUI_TIMEOUT = 480  # 8 minutes for data-rich workflows
 POLLING_TIMEOUT = 15
 MEDIA_DOWNLOAD_TIMEOUT = 30
 
-# ComfyUI queue management — reject submissions when queue is too deep
-# (prevents timeout cascades under workshop load)
-# Note: ComfyUI processes GPU jobs sequentially, so deep queues don't cause OOM —
-# they just mean longer wait times. 16 accommodates 9-iPad workshop bursts.
-COMFYUI_MAX_QUEUE_DEPTH = int(os.environ.get("COMFYUI_MAX_QUEUE_DEPTH", "16"))
+# ComfyUI queue management — reject submissions when queue is too deep.
+# Shallow queue = fast "busy" feedback (good UX) vs deep queue = long silent waits + timeouts.
+# At depth 10 with avg ~45s/job, worst-case wait is ~450s (within 480s COMFYUI_TIMEOUT).
+# Frontend shows friendly i18n message on queue-full (generationError.busy).
+COMFYUI_MAX_QUEUE_DEPTH = int(os.environ.get("COMFYUI_MAX_QUEUE_DEPTH", "10"))
 
 # Model Path Resolution Configuration
 ENABLE_MODEL_PATH_RESOLUTION = True  # ENABLED: ComfyUI uses OfficialStableDiffusion/ prefix format
