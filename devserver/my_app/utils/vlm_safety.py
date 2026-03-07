@@ -24,15 +24,13 @@ logger = logging.getLogger(__name__)
 VLM_PROMPTS = {
     'kids': (
         '/no_think\n'
-        'Is the image free of violence, nudity, unsettling, scaring, '
-        'potentially traumatizing, or other content unsafe or unhealthy '
-        'for children age 6-12 years? Answer ONLY "safe" or "unsafe".'
+        'Check this image for content inappropriate for children age 6-12. '
+        'Your FIRST word must be SAFE or UNSAFE. Then explain briefly.'
     ),
     'youth': (
         '/no_think\n'
-        'Is the image free of violence, nudity, unsettling, scaring, '
-        'potentially traumatizing, or other content unsafe or unhealthy '
-        'for teenagers age 14-18 years? Answer ONLY "safe" or "unsafe".'
+        'Check this image for content inappropriate for teenagers age 14-18. '
+        'Your FIRST word must be SAFE or UNSAFE. Then explain briefly.'
     ),
 }
 
@@ -77,28 +75,31 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             messages=[{'role': 'user', 'content': prompt_text}],
             images=[image_b64],
             temperature=0.0,
-            max_new_tokens=50,
+            max_new_tokens=500,
         )
 
         if result is None:
             logger.warning("[VLM-SAFETY] LLM returned None (fail-open)")
             return (True, '', '')
 
-        # With /no_think, verdict is in 'content' directly.
-        # Fallback: check 'thinking' too in case model ignores /no_think.
-        content = result.get('content', '').lower().strip()
-        thinking = (result.get('thinking') or '').lower().strip()
-        combined = f"{content} {thinking}"
+        content = result.get('content', '').strip()
+        thinking = (result.get('thinking') or '').strip()
         logger.info(f"[VLM-SAFETY] Model response: content={content!r}, thinking={thinking[:200]!r}")
 
         description = content or thinking
 
-        if 'unsafe' in combined:
+        # Extract verdict from the LAST word — model reasons its way to a conclusion.
+        # Avoids false positives from mid-reasoning mentions like "nothing unsafe".
+        verdict_text = content or thinking
+        last_word = verdict_text.split()[-1].lower().rstrip('.,!:') if verdict_text.split() else ''
+
+        if last_word == 'unsafe':
             return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for {safety_level}", description)
-        if 'safe' in combined:
+        if last_word == 'safe':
             return (True, '', description)
-        # No clear verdict — fail-open but log warning
-        logger.warning(f"[VLM-SAFETY] No clear safe/unsafe verdict in response — fail-open")
+
+        # No clear last-word verdict — fail-open but log warning
+        logger.warning(f"[VLM-SAFETY] No clear safe/unsafe verdict (last_word={last_word!r}) — fail-open")
         return (True, '', description)
 
     except Exception as e:
