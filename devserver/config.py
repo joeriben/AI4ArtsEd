@@ -552,7 +552,9 @@ MEDIA_DOWNLOAD_TIMEOUT = 30
 
 # ComfyUI queue management — reject submissions when queue is too deep
 # (prevents timeout cascades under workshop load)
-COMFYUI_MAX_QUEUE_DEPTH = int(os.environ.get("COMFYUI_MAX_QUEUE_DEPTH", "8"))
+# Note: ComfyUI processes GPU jobs sequentially, so deep queues don't cause OOM —
+# they just mean longer wait times. 16 accommodates 9-iPad workshop bursts.
+COMFYUI_MAX_QUEUE_DEPTH = int(os.environ.get("COMFYUI_MAX_QUEUE_DEPTH", "16"))
 
 # Model Path Resolution Configuration
 ENABLE_MODEL_PATH_RESOLUTION = True  # ENABLED: ComfyUI uses OfficialStableDiffusion/ prefix format
