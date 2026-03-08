@@ -1,5 +1,102 @@
 # Development Log
 
+## Session 253 - Workshop Optimization: Retry, Concurrency, NER, VLM Safety
+**Date:** 2026-03-07
+**Focus:** Implement 3 workshop optimizations from 06.03 performance report + fix VLM safety verdict parsing
+
+### Background
+Workshop 06.03.2026 performance report identified 3 medium-severity issues after all critical bugs from 05.03 were resolved. This session implements fixes and validates them using a full 119-request workshop replay.
+
+### Fixes Implemented
+
+#### Fix 1: Cloud-API Retry with Exponential Backoff
+**Problem**: 10 consecutive Mistral 503 errors in 74 seconds, all Stage-2 interceptions lost.
+**Root Cause**: No retry on transient HTTP errors. Affected ALL cloud-API backends.
+
+**Solution**: `_requests_post_with_retry()` helper with exponential backoff (1s/2s/4s + jitter) on 429/502/503/504. Applied to:
+- `prompt_interception_engine.py` — 5 non-streaming + 1 streaming `requests.post()` calls
+- `chat_routes.py` — 3 chat helper methods
+
+Plus DSGVO-safe provider fallback: if primary cloud provider fails after all retries, automatically tries the next available DSGVO-safe provider (configurable via `DSGVO_ONLY_FALLBACK` toggle in config.py).
+
+**Result**: 0% Mistral 503 in all replay runs (was 5.6%).
+
+#### Fix 2: Ollama Concurrency Increase
+**Problem**: 11 timeouts during peak (17:00-17:14), 8 failures in 3 seconds.
+**Root Cause**: `OLLAMA_MAX_CONCURRENT = 3` too low for 9 iPads.
+
+**Solution**: Raised to 6, made configurable via `config.py` / env var.
+
+**Result**: 0% Ollama timeouts in all replay runs (was 7%).
+
+#### Fix 3: DSGVO NER Numeric Pre-Filter
+**Problem**: SpaCy NER flagging SD weight syntax ("shadow gradient:1.2") and similar as person names. LLM-Verify corrected but cost 1-4s per false positive.
+**Root Cause**: POS-tag filter insufficient for numeric/technical entities.
+
+**Solution**: Added numeric filter in `stage_orchestrator.py:fast_dsgvo_check()` — entities containing digits are rejected before LLM-Verify. Real person names never contain digits.
+
+**Result**: Eliminates unnecessary LLM-Verify calls for SD-syntax and numeric entities.
+
+#### Fix 4: VLM Safety Verdict Parsing (found during testing)
+**Problem**: VLM post-generation check (qwen3-vl:2b) caused 12% false blocks. Two bugs:
+1. `/no_think` directive ignored by qwen3-vl:2b — model still uses thinking mode
+2. Substring check `'unsafe' in combined` matched reasoning text like "there's nothing unsafe" — false positive
+
+**Solution**: Check only the **last word** of model response (where the verdict lands after reasoning). Fail-open if no clear verdict. Restored `max_new_tokens=500` since thinking can't be disabled.
+
+**Result**: 0% VLM false blocks (was 12%).
+
+#### Fix 5: ComfyUI Queue Depth Tuning
+**Problem**: Original depth 8 caused queue-full rejections during bursts.
+**Progression**: 8 -> 16 (eliminated queue-full but caused 480s execution timeouts) -> 10 (balanced).
+**UX Decision**: Shallow queue with fast "busy" feedback (existing `generationError.busy` i18n) is better UX than deep queue with silent 10-minute waits followed by timeout.
+
+### Config Changes (config.py)
+```python
+DSGVO_ONLY_FALLBACK = True/False  # NEW: DSGVO-safe-only provider fallback toggle
+DSGVO_SAFE_PROVIDERS = [...]      # NEW: ordered provider preference list
+ALL_CLOUD_PROVIDERS = [...]       # NEW: all providers for international deployments
+OLLAMA_MAX_CONCURRENT = 6         # Changed: was 3
+COMFYUI_MAX_QUEUE_DEPTH = 10      # Changed: was 8
+```
+
+### TODO Added
+HIGH priority: Provider-agnostic API registry refactor — replace brand-specific `_call_mistral()`, `_call_ollama()` etc. with generic `_call_cloud_api()` + provider registry. Added to `docs/devserver_todos.md`.
+
+### Workshop Replay Validation
+
+Full chronological progress report with all data points (Workshop 05.03, Simulation 05.03, Workshop 06.03, Simulation 06.03 runs):
+**`docs/technical_reports/2026-03-08_workshop_optimization_progress.md`**
+
+Final result: **78% success (93/119)** — all 3 targeted software bugs at 0%, remaining failures are GPU throughput limits with proper UX feedback.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `devserver/schemas/engine/prompt_interception_engine.py` | Retry helper + 6x `requests.post` replaced + provider fallback |
+| `devserver/my_app/routes/chat_routes.py` | Retry helper + 3x `requests.post` replaced |
+| `devserver/config.py` | DSGVO fallback config, OLLAMA_MAX_CONCURRENT=6, COMFYUI_MAX_QUEUE_DEPTH=10 |
+| `devserver/my_app/routes/schema_pipeline_routes.py` | Import OLLAMA_MAX_CONCURRENT from config |
+| `devserver/schemas/engine/stage_orchestrator.py` | Numeric filter in fast_dsgvo_check() |
+| `devserver/my_app/utils/vlm_safety.py` | Last-word verdict parsing, /no_think prompt, token budget |
+| `devserver/testfiles/simulate_workshop_260306.py` | NEW: 119-entry workshop replay script |
+| `docs/devserver_todos.md` | HIGH: provider-agnostic API registry TODO |
+
+### Key Decisions
+- **Queue depth 10 (not 16)**: Fast "busy" feedback > silent long waits. Frontend already has i18n error display.
+- **VLM verdict = last word**: Model reasons toward conclusion. Substring search in reasoning causes false positives from negations like "nothing unsafe".
+- **Brand-specific methods untouched this session**: Existing `_call_mistral()` etc. stay as-is. HIGH-prio TODO for provider-registry refactor added.
+- **`/no_think` kept in prompt despite being ignored**: No harm, may work in future qwen3-vl versions.
+
+### Commits
+- `d19be5b` — feat: cloud-API retry, Ollama concurrency, DSGVO NER filter, provider fallback
+- `175e5ef` — feat: raise ComfyUI queue depth 8->16 + add 06.03 workshop replay script
+- `6a1d824` — fix: VLM safety thinking overflow + qwen_2511_multi test params
+- `8594905` — fix: VLM safety verdict parsing — use last word, not substring match
+- `b538feb` — tune: ComfyUI queue depth 16->10 for better UX
+
+---
+
 ## Session 248 - Unified GenerationButton Component + Error Display
 **Date:** 2026-03-05
 **Focus:** Extract shared GenerationButton component, fix double-submit bug, add i18n error messages
