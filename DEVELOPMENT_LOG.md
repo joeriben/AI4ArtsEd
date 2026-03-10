@@ -16,7 +16,7 @@
 
 5. **qwen3:1.7b fundamentally too weak for kids context verification**: Even with improved prompt, "Terroranschlag auf ein Hochhaus" passed. Model recognizes threat but says SAFE.
 
-6. **VLM max_new_tokens too low**: qwen3-vl:2b thinking mode consumed all 500 tokens for reasoning, never reached SAFE/UNSAFE verdict → fail-closed blocked harmless images.
+6. **VLM max_new_tokens too low**: qwen3-vl:2b thinking mode consumed all 500 tokens for reasoning, never reached SAFE/UNSAFE verdict → fail-open passed unchecked images.
 
 ### Architecture Change: DSGVO-First Ordering
 
@@ -2625,7 +2625,7 @@ No SSE changes. No threading complexity. Fail-open by design.
 - Added `GET /api/diffusers/progress` endpoint
 
 **Layer 2: DevServer Proxy** (`devserver/my_app/routes/settings_routes.py`)
-- Added `GET /api/settings/generation-progress` with 2s timeout, fail-open to `{step:0, total_steps:0, active:false}`
+- Added `GET /api/settings/generation-progress` with 2s timeout, fallback to `{step:0, total_steps:0, active:false}`
 
 **Layer 3: Frontend Composable** (`useAnimationProgress.ts`)
 - Added `backendProgress` ref + `fetchGenerationProgress()` polled every 2s alongside GPU stats
