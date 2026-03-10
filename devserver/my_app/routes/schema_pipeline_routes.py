@@ -1614,8 +1614,37 @@ def execute_pipeline_streaming(data: dict):
                 yield ''
                 return
 
+            # DSGVO NER check — runs BEFORE age filter to ensure no personal data
+            # leaves local system. This allows age filter to use external LLMs safely.
+            has_pii, found_pii, spacy_ok = fast_dsgvo_check(input_text)
+            if spacy_ok and has_pii:
+                verify_result = llm_verify_person_name(input_text, found_pii)
+                if verify_result is None:
+                    safety_breaker.record_failure()
+                    if safety_breaker.is_open():
+                        reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
+                        logger.warning(f"[UNIFIED-STREAMING] {reason}")
+                        yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
+                        yield ''
+                        return
+                    logger.warning(f"[UNIFIED-STREAMING] DSGVO LLM unavailable — circuit breaker recording failure")
+                elif verify_result:
+                    safety_breaker.record_success()
+                    reason = f'DSGVO: {", ".join(found_pii[:3])}'
+                    logger.warning(f"[UNIFIED-STREAMING] DSGVO BLOCKED: {reason}")
+                    yield generate_sse_event('blocked', {
+                        'stage': 'safety',
+                        'reason': reason
+                    })
+                    yield ''
+                    return
+                else:
+                    safety_breaker.record_success()
+
             # Age-appropriate fast-filter (kids/youth only, language-aware)
             # Fast filter triggers → LLM context check (prevents false positives)
+            # Kids: uses external gpt-oss-120b (DSGVO already cleared text above)
+            # Youth: uses local qwen3:1.7b
             if safety_level in ('kids', 'youth'):
                 has_age, found_age = fast_filter_check(input_text, safety_level, user_language)
                 if has_age:
@@ -1644,32 +1673,6 @@ def execute_pipeline_streaming(data: dict):
                     else:
                         safety_breaker.record_success()
                         logger.info(f"[UNIFIED-STREAMING] {filter_name} false positive (LLM rejected): {found_age[:3]}")
-
-            # DSGVO NER check
-            has_pii, found_pii, spacy_ok = fast_dsgvo_check(input_text)
-            if spacy_ok and has_pii:
-                verify_result = llm_verify_person_name(input_text, found_pii)
-                if verify_result is None:
-                    safety_breaker.record_failure()
-                    if safety_breaker.is_open():
-                        reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
-                        logger.warning(f"[UNIFIED-STREAMING] {reason}")
-                        yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
-                        yield ''
-                        return
-                    logger.warning(f"[UNIFIED-STREAMING] DSGVO LLM unavailable — circuit breaker recording failure")
-                elif verify_result:
-                    safety_breaker.record_success()
-                    reason = f'DSGVO: {", ".join(found_pii[:3])}'
-                    logger.warning(f"[UNIFIED-STREAMING] DSGVO BLOCKED: {reason}")
-                    yield generate_sse_event('blocked', {
-                        'stage': 'safety',
-                        'reason': reason
-                    })
-                    yield ''
-                    return
-                else:
-                    safety_breaker.record_success()
 
         logger.info(f"[UNIFIED-STREAMING] Stage 1: Safety PASSED (fast-filters clear)")
 
@@ -2094,42 +2097,10 @@ def safety_check_quick():
             })
         checks_passed.append('§86a')
 
-        # STEP 2: Age-appropriate fast-filter (kids/youth only, language-aware)
-        # Fast filter triggers → LLM context check (prevents false positives like "schlägt zum Ritter")
-        if safety_level in ('kids', 'youth'):
-            has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
-            if has_age_terms:
-                filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
-                logger.info(f"[SAFETY-QUICK] {filter_name} hit: {found_age_terms[:3]} → LLM context check")
-                verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
-                if verify_result is None:
-                    safety_breaker.record_failure()
-                    if safety_breaker.is_open():
-                        logger.warning(f"[SAFETY-QUICK] {filter_name}: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama")
-                        return jsonify({
-                            'safe': False,
-                            'checks_passed': checks_passed + ['age_filter'],
-                            'error_message': f'{filter_name}: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
-                        })
-                    logger.warning(f"[SAFETY-QUICK] {filter_name} LLM unavailable — circuit breaker recording failure")
-                elif verify_result:
-                    safety_breaker.record_success()
-                    logger.warning(f"[SAFETY-QUICK] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]}")
-                    return jsonify({
-                        'safe': False,
-                        'checks_passed': checks_passed + ['age_filter', 'age_llm_verify'],
-                        'error_message': f'{filter_name}: {", ".join(found_age_terms[:3])}'
-                    })
-                else:
-                    safety_breaker.record_success()
-                    logger.info(f"[SAFETY-QUICK] {filter_name} false positive (LLM rejected): {found_age_terms[:3]}")
-            checks_passed.append('age_filter')
-
-        # STEP 3: DSGVO SpaCy NER — only personal names (PER)
-        # NER is a fast trigger; on hit, LLM verifies before blocking
+        # STEP 2: DSGVO SpaCy NER — runs BEFORE age filter to ensure no personal
+        # data leaves local system. This allows age filter to use external LLMs safely.
         has_pii, found_pii, spacy_ok = fast_dsgvo_check(text)
         if spacy_ok and has_pii:
-            # NER triggered — LLM verification to avoid false positives
             logger.info(f"[SAFETY-QUICK] NER triggered: {found_pii[:3]} — verifying with LLM")
             verify_result = llm_verify_person_name(text, found_pii)
             if verify_result is None:
@@ -2155,6 +2126,38 @@ def safety_check_quick():
                 logger.info(f"[SAFETY-QUICK] NER false positive (LLM rejected): {found_pii[:3]}")
         if spacy_ok:
             checks_passed.append('dsgvo_ner')
+
+        # STEP 3: Age-appropriate fast-filter (kids/youth only, language-aware)
+        # Kids: uses external gpt-oss-120b (DSGVO already cleared text above)
+        # Youth: uses local qwen3:1.7b
+        if safety_level in ('kids', 'youth'):
+            has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
+            if has_age_terms:
+                filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
+                logger.info(f"[SAFETY-QUICK] {filter_name} hit: {found_age_terms[:3]} → LLM context check")
+                verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
+                if verify_result is None:
+                    safety_breaker.record_failure()
+                    if safety_breaker.is_open():
+                        logger.warning(f"[SAFETY-QUICK] {filter_name}: Sicherheitsprüfung nicht verfügbar")
+                        return jsonify({
+                            'safe': False,
+                            'checks_passed': checks_passed + ['age_filter'],
+                            'error_message': f'{filter_name}: Sicherheitsprüfung nicht verfügbar'
+                        })
+                    logger.warning(f"[SAFETY-QUICK] {filter_name} LLM unavailable — circuit breaker recording failure")
+                elif verify_result:
+                    safety_breaker.record_success()
+                    logger.warning(f"[SAFETY-QUICK] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]}")
+                    return jsonify({
+                        'safe': False,
+                        'checks_passed': checks_passed + ['age_filter', 'age_llm_verify'],
+                        'error_message': f'{filter_name}: {", ".join(found_age_terms[:3])}'
+                    })
+                else:
+                    safety_breaker.record_success()
+                    logger.info(f"[SAFETY-QUICK] {filter_name} false positive (LLM rejected): {found_age_terms[:3]}")
+            checks_passed.append('age_filter')
 
         return jsonify({'safe': True, 'checks_passed': checks_passed, 'error_message': None})
 

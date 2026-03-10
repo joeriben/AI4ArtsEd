@@ -430,20 +430,11 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
 
     terms_str = ", ".join(found_terms[:5])
 
-    # Kids: zero-tolerance — fast-filter hit = BLOCK, no LLM second-guessing.
-    # qwen3:1.7b is too weak to reliably catch semantic threats like "planning an attack".
-    # Youth still gets LLM context verification (fewer false positives matter more).
-    if safety_level == 'kids':
-        logger.info(f"[AGE-LLM-VERIFY] terms={terms_str} → KIDS zero-tolerance, skipping LLM → UNSAFE")
-        _AGE_VERIFY_CACHE[cache_key] = (True, _time.time())
-        return True
-
-    model = config.DSGVO_VERIFY_MODEL  # qwen3:1.7b — general-purpose, NOT guard model
-
     # Focused prompt: concrete categories, positive framing, few-shot calibration
     # Must cover: describing, planning, threatening, glorifying violence (not just depicting)
-    prompt = (
-        f"Is this text appropriate for children ages 6-12?\n"
+    age_range = "6-12" if safety_level == "kids" else "13-17"
+    prompt_text = (
+        f"Is this text appropriate for children ages {age_range}?\n"
         f"UNSAFE if it describes, plans, threatens, or glorifies: violence, weapons, terrorism, death, abuse, horror, war, drugs.\n"
         f"Examples:\n"
         f"- 'a picnic in the dark' → SAFE\n"
@@ -456,32 +447,67 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
     )
 
     try:
-        from my_app.services.llm_backend import get_llm_backend
-        from config import OLLAMA_TIMEOUT_SAFETY
-
         start = _time.time()
-        llm_result = get_llm_backend().generate(
-            model=model,
-            prompt=prompt,
-            temperature=0.0,
-            max_new_tokens=50,
-            timeout=OLLAMA_TIMEOUT_SAFETY,
-            enable_thinking=False,
-        )
-        duration_ms = (_time.time() - start) * 1000
 
-        if llm_result is None:
-            logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned None ({duration_ms:.0f}ms) — fail-closed")
-            return None
+        if safety_level == 'kids':
+            # Kids: use external gpt-oss-120b (IONOS, DSGVO-safe EU datacenter).
+            # DSGVO NER already ran (Step 2) — no personal data in text.
+            # gpt-oss-120b is far smarter than qwen3:1.7b for semantic context.
+            import requests as _requests
+            from my_app.routes.chat_routes import get_ionos_credentials
+            model = "openai/gpt-oss-120b"
+            api_url, api_key = get_ionos_credentials()
+            if not api_key:
+                logger.error(f"[AGE-LLM-VERIFY] IONOS API key unavailable — fail-closed")
+                return None
 
-        output = llm_result.get("response", "").strip()
+            response = _requests.post(
+                api_url,
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt_text}],
+                    "temperature": 0.0,
+                    "max_tokens": 50,
+                },
+                timeout=15,
+            )
+            duration_ms = (_time.time() - start) * 1000
+
+            if response.status_code != 200:
+                logger.error(f"[AGE-LLM-VERIFY] IONOS {response.status_code}: {response.text[:200]} ({duration_ms:.0f}ms) — fail-closed")
+                return None
+
+            data = response.json()
+            output = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+        else:
+            # Youth: use local DSGVO_VERIFY_MODEL (qwen3:1.7b)
+            from my_app.services.llm_backend import get_llm_backend
+            from config import OLLAMA_TIMEOUT_SAFETY
+            model = config.DSGVO_VERIFY_MODEL
+
+            llm_result = get_llm_backend().generate(
+                model=model,
+                prompt=prompt_text,
+                temperature=0.0,
+                max_new_tokens=50,
+                timeout=OLLAMA_TIMEOUT_SAFETY,
+                enable_thinking=False,
+            )
+            duration_ms = (_time.time() - start) * 1000
+
+            if llm_result is None:
+                logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned None ({duration_ms:.0f}ms) — fail-closed")
+                return None
+
+            output = llm_result.get("response", "").strip()
+
         if not output:
             logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
             return None
 
         output_upper = output.upper()
         is_unsafe = 'UNSAFE' in output_upper
-        age_range = "6-12" if safety_level == "kids" else "13-17"
 
         logger.info(
             f"[AGE-LLM-VERIFY] terms={terms_str} → {model}={output!r} → "
@@ -491,7 +517,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         return is_unsafe
 
     except Exception as e:
-        logger.error(f"[AGE-LLM-VERIFY] {model} failed: {e} — fail-closed")
+        logger.error(f"[AGE-LLM-VERIFY] failed: {e} — fail-closed")
         return None
 
 
@@ -1047,69 +1073,11 @@ async def execute_stage1_safety_unified(
             # Llama Guard says safe (educational context) → continue
             logger.info(f"[STAGE1] §86a false positive (Llama-Guard: safe, {llm_time:.1f}s)")
 
-    # ── STEP 2: Age-appropriate Fast-Filter (~0.001s) ──────────────────
-    # Skip for 'adult' and 'research' — only §86a and DSGVO apply
-    if safety_level not in ('research', 'adult'):
-        age_start = _time.time()
-        has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
-        age_time = _time.time() - age_start
-
-        if has_age_terms:
-            # Terms found → LLM context check (prevents false positives like "cute vampire")
-            logger.info(f"[STAGE1] Age-filter hit: {found_age_terms[:3]} → LLM context check ({age_time*1000:.1f}ms)")
-
-            llm_start = _time.time()
-            verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
-            llm_time = _time.time() - llm_start
-
-            if verify_result is None:
-                # LLM unavailable → fail-closed (kids safety errs on caution)
-                terms_str = ', '.join(found_age_terms[:5])
-                error_message = (
-                    f"⚠️ Dein Prompt wurde blockiert\n\n"
-                    f"GRUND: Sicherheitssystem nicht erreichbar\n\n"
-                    f"Gefundene Begriffe: {terms_str}\n\n"
-                    f"Das Sicherheitssystem konnte die Begriffe nicht im Kontext prüfen.\n"
-                    f"Bitte versuche es erneut oder formuliere deinen Prompt um."
-                )
-                logger.warning(f"[STAGE1] Age-filter LLM unavailable → fail-closed ({llm_time:.1f}s)")
-                return (False, text, error_message, ['§86a', 'age_filter'])
-
-            elif verify_result:
-                # LLM confirmed inappropriate → BLOCK with age-appropriate message
-                terms_str = ', '.join(found_age_terms[:5])
-                if safety_level == 'kids':
-                    error_message = (
-                        f"⚠️ Dein Prompt wurde blockiert\n\n"
-                        f"GRUND: Kinder-Schutzfilter (6-12 Jahre)\n\n"
-                        f"Gefundene Begriffe: {terms_str}\n\n"
-                        f"WARUM DIESE REGEL?\n"
-                        f"Dein Prompt enthält Begriffe, die für Kinder erschreckend oder verstörend sein können.\n"
-                        f"Wir schützen dich vor Inhalten, die Angst machen oder ungeeignet für dein Alter sind."
-                    )
-                else:
-                    error_message = (
-                        f"⚠️ Dein Prompt wurde blockiert\n\n"
-                        f"GRUND: Jugendschutzfilter (13-17 Jahre)\n\n"
-                        f"Gefundene Begriffe: {terms_str}\n\n"
-                        f"WARUM DIESE REGEL?\n"
-                        f"Dein Prompt enthält explizite Begriffe, die für Jugendliche ungeeignet sind."
-                    )
-                logger.warning(f"[STAGE1] BLOCKED age-filter (LLM confirmed, {llm_time:.1f}s)")
-                return (False, text, error_message, ['§86a', 'age_filter'])
-
-            else:
-                # LLM says benign context (false positive like "cute vampire") → allow
-                logger.info(f"[STAGE1] Age-filter false positive confirmed by LLM ({llm_time:.1f}s)")
-                # Fall through to DSGVO check
-    else:
-        logger.debug(f"[STAGE1] Age-filter skipped (safety_level={safety_level})")
-
-    # ── STEP 3: DSGVO SpaCy NER (~50-100ms) or LLM Fallback ──────────
-    # Track which checks we've passed so far
+    # ── STEP 2: DSGVO SpaCy NER (~50-100ms) or LLM Fallback ──────────
+    # DSGVO runs BEFORE age filter to ensure no personal data leaves local system.
+    # This allows the age filter (Step 3) to safely use external LLMs (gpt-oss-120b)
+    # for context verification — DSGVO already guaranteed no personal names in text.
     checks_passed = ['§86a']
-    if safety_level not in ('research', 'adult'):
-        checks_passed.append('age_filter')
 
     dsgvo_start = _time.time()
     has_personal_data, found_entities, spacy_available = fast_dsgvo_check(text)
@@ -1188,6 +1156,67 @@ async def execute_stage1_safety_unified(
             # LLM says no personal names → safe
             checks_passed.append('dsgvo_llm')
             logger.info(f"[STAGE1] DSGVO LLM fallback: SAFE ({llm_time:.1f}s)")
+
+    # ── STEP 3: Age-appropriate Fast-Filter (~0.001s) ──────────────────
+    # Runs AFTER DSGVO (Step 2) so that text is guaranteed free of personal data.
+    # This allows kids to use external gpt-oss-120b for LLM context verification
+    # (much smarter than qwen3:1.7b, correctly catches "planning an attack").
+    # Youth still uses local DSGVO_VERIFY_MODEL (qwen3:1.7b).
+    if safety_level not in ('research', 'adult'):
+        age_start = _time.time()
+        has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
+        age_time = _time.time() - age_start
+
+        if has_age_terms:
+            # Terms found → LLM context check (prevents false positives like "cute vampire")
+            logger.info(f"[STAGE1] Age-filter hit: {found_age_terms[:3]} → LLM context check ({age_time*1000:.1f}ms)")
+
+            llm_start = _time.time()
+            verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
+            llm_time = _time.time() - llm_start
+
+            if verify_result is None:
+                # LLM unavailable → fail-closed (kids safety errs on caution)
+                terms_str = ', '.join(found_age_terms[:5])
+                error_message = (
+                    f"⚠️ Dein Prompt wurde blockiert\n\n"
+                    f"GRUND: Sicherheitssystem nicht erreichbar\n\n"
+                    f"Gefundene Begriffe: {terms_str}\n\n"
+                    f"Das Sicherheitssystem konnte die Begriffe nicht im Kontext prüfen.\n"
+                    f"Bitte versuche es erneut oder formuliere deinen Prompt um."
+                )
+                logger.warning(f"[STAGE1] Age-filter LLM unavailable → fail-closed ({llm_time:.1f}s)")
+                return (False, text, error_message, checks_passed + ['age_filter'])
+
+            elif verify_result:
+                # LLM confirmed inappropriate → BLOCK with age-appropriate message
+                terms_str = ', '.join(found_age_terms[:5])
+                if safety_level == 'kids':
+                    error_message = (
+                        f"⚠️ Dein Prompt wurde blockiert\n\n"
+                        f"GRUND: Kinder-Schutzfilter (6-12 Jahre)\n\n"
+                        f"Gefundene Begriffe: {terms_str}\n\n"
+                        f"WARUM DIESE REGEL?\n"
+                        f"Dein Prompt enthält Begriffe, die für Kinder erschreckend oder verstörend sein können.\n"
+                        f"Wir schützen dich vor Inhalten, die Angst machen oder ungeeignet für dein Alter sind."
+                    )
+                else:
+                    error_message = (
+                        f"⚠️ Dein Prompt wurde blockiert\n\n"
+                        f"GRUND: Jugendschutzfilter (13-17 Jahre)\n\n"
+                        f"Gefundene Begriffe: {terms_str}\n\n"
+                        f"WARUM DIESE REGEL?\n"
+                        f"Dein Prompt enthält explizite Begriffe, die für Jugendliche ungeeignet sind."
+                    )
+                logger.warning(f"[STAGE1] BLOCKED age-filter (LLM confirmed, {llm_time:.1f}s)")
+                return (False, text, error_message, checks_passed + ['age_filter', 'age_llm_verify'])
+
+            else:
+                # LLM says benign context (false positive like "cute vampire") → allow
+                logger.info(f"[STAGE1] Age-filter false positive confirmed by LLM ({llm_time:.1f}s)")
+        checks_passed.append('age_filter')
+    else:
+        logger.debug(f"[STAGE1] Age-filter skipped (safety_level={safety_level})")
 
     # ── ALL CHECKS PASSED ──────────────────────────────────────────────
     total_time = _time.time() - total_start
