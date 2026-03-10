@@ -1022,13 +1022,31 @@ async def execute_stage1_safety_unified(
     s86a_time = _time.time() - s86a_start
 
     if has_86a_terms:
-        # §86a hit → Llama Guard context check (educational/historical context is §86a-exempt)
+        # §86a hit — behavior depends on safety level:
+        # kids/youth: HARDBLOCK (no LLM exemption — children don't need "educational context" for NS symbols)
+        # adult: LLM context check (educational/historical context is §86a-exempt for adults)
+        if safety_level in ('kids', 'youth'):
+            # Kids/Youth: §86a terms are unambiguous → immediate block, no LLM needed
+            error_message = (
+                f"⚠️ Dein Prompt wurde blockiert\n\n"
+                f"GRUND: §86a StGB\n\n"
+                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sind: "
+                f"{', '.join(found_86a_terms[:3])}\n\n"
+                f"WARUM DIESE REGEL?\n"
+                f"Diese Symbole werden benutzt, um Gewalt und Hass zu verbreiten.\n"
+                f"Wir schützen dich und andere vor gefährlichen Inhalten."
+            )
+            logger.warning(f"[STAGE1] HARDBLOCK §86a ({safety_level}): {found_86a_terms[:3]} ({s86a_time*1000:.1f}ms)")
+            return (False, text, error_message, ['§86a'])
+
+        # Adult: LLM context check — educational/historical context may be legitimate
         logger.info(f"[STAGE1] §86a hit: {found_86a_terms[:3]} → Llama-Guard context check ({s86a_time*1000:.1f}ms)")
         template = _get_llamaguard_template()
         prompt = template.replace("{{PREVIOUS_OUTPUT}}", text)
 
         from my_app.services.llm_backend import get_llm_backend
-        model = config.SAFETY_MODEL  # llama-guard3 — correct for §86a
+        import config
+        model = config.SAFETY_MODEL  # llama-guard3
 
         llm_start = _time.time()
         llm_result = get_llm_backend().generate(
@@ -1039,7 +1057,6 @@ async def execute_stage1_safety_unified(
         llm_time = _time.time() - llm_start
 
         if llm_result is None:
-            # LLM unavailable → fail-closed (§86a errs on caution)
             error_message = (
                 f"⚠️ Dein Prompt wurde blockiert\n\n"
                 f"GRUND: §86a StGB — Sicherheitssystem nicht erreichbar\n\n"
@@ -1059,7 +1076,6 @@ async def execute_stage1_safety_unified(
         is_safe, codes = parse_llamaguard_output(output)
 
         if not is_safe:
-            # Llama Guard confirmed → BLOCK
             error_message = (
                 f"⚠️ Dein Prompt wurde blockiert\n\n"
                 f"GRUND: §86a StGB\n\n"
@@ -1072,8 +1088,8 @@ async def execute_stage1_safety_unified(
             logger.warning(f"[STAGE1] BLOCKED §86a (Llama-Guard confirmed: {codes}) ({llm_time:.1f}s)")
             return (False, text, error_message, ['§86a'])
         else:
-            # Llama Guard says safe (educational context) → continue
-            logger.info(f"[STAGE1] §86a false positive (Llama-Guard: safe, {llm_time:.1f}s)")
+            # Llama Guard says safe (educational context) → continue for adults
+            logger.info(f"[STAGE1] §86a educational exemption (adult, Llama-Guard: safe, {llm_time:.1f}s)")
 
     # ── STEP 2: DSGVO SpaCy NER (~50-100ms) or LLM Fallback ──────────
     # DSGVO runs BEFORE age filter to ensure no personal data leaves local system.
