@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-04 (Session 246)
+**Last Updated:** 2026-03-10 (Session 254)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, legal basis
 
 ---
@@ -54,15 +54,19 @@ Input text
   │    Bilingual keyword matching (DE+EN)
   │    Hit → LLM context verification → BLOCK or allow
   │
-  ├─ STEP 2: Age-Appropriate Fast-Filter
-  │    Skip for adult/research
-  │    kids/youth → filter list match → LLM verification → BLOCK or allow
+  ├─ STEP 2: DSGVO SpaCy NER (~50-100ms)
+  │    Models: de_core_news_lg + xx_ent_wiki_sm (2 models only!)
+  │    PER entity detected → LLM verification (false-positive reduction)
+  │    Confirmed PER → BLOCK
+  │    *** MUST run before Age Filter — ensures no personal data before external LLM call ***
   │
-  └─ STEP 3: DSGVO SpaCy NER (~50-100ms)
-       Models: de_core_news_lg + xx_ent_wiki_sm (2 models only!)
-       PER entity detected → LLM verification (false-positive reduction)
-       Confirmed PER → BLOCK
+  └─ STEP 3: Age-Appropriate Fast-Filter
+       Skip for adult/research
+       kids → filter list match → gpt-oss-120b (IONOS, external) verification → BLOCK or allow
+       youth → filter list match → qwen3:1.7b (local) verification → BLOCK or allow
 ```
+
+**DSGVO-First Ordering (Session 255):** DSGVO NER runs before the age filter. This guarantees no personal data remains in the text, allowing the kids age-filter to safely send text to the external gpt-oss-120b (IONOS EU datacenter) for context verification.
 
 #### Stage 1 LLM Routing (CRITICAL — do not mix up)
 
@@ -70,13 +74,18 @@ Each Stage 1 step uses a **different model for a different reason**. The logic:
 
 | Step | Fast-Filter | LLM Model | Prompt Format | Why this model |
 |------|------------|-----------|---------------|----------------|
-| **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` (llama-guard3:1b) | S1-S13 template (`safety_llamaguard.json`) | §86a = criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
-| **Age Filter** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Does this text describe violence, death, abuse, or horror?"` + few-shot examples + `SAFE/UNSAFE` | Age-appropriateness = subjective judgement → needs general-purpose LLM with concrete categories + few-shot calibration (small models fail on abstract "appropriate?" questions) |
-| **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → needs general-purpose LLM |
+| **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` (llama-guard3:8b) | S1-S13 template (`safety_llamaguard.json`) | §86a = criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
+| **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → needs general-purpose LLM. **ALWAYS local** (sending detected names externally = DSGVO violation) |
+| **Age Filter (kids)** | `fast_filter_check()` | `gpt-oss-120b` (IONOS, external) | `"Is this text appropriate for children ages 6-12?"` + few-shot + `SAFE/UNSAFE` | Age-appropriateness = semantic judgement → needs large model. qwen3:1.7b too weak (classified "planning an attack" as SAFE). DSGVO NER already cleared text. |
+| **Age Filter (youth)** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | Same prompt as kids | Youth filter has fewer terms, less ambiguity → local model sufficient |
+
+**Why gpt-oss-120b for kids (Session 255):** qwen3:1.7b is too literal — "planning an attack" → SAFE because it's "planning, not describing violence". gpt-oss-120b correctly blocks semantic threats while allowing false positives like "cute vampire". DSGVO-first ordering makes external call safe.
 
 **Why Llama Guard fails for the Age Filter:** Llama Guard's S1-S13 categories detect content that "enables, encourages, or excuses" crimes. "Blut" (blood) or "vampire" is not a crime — Llama Guard says "safe". But it's inappropriate for a 6-year-old. Only a general-purpose model can make that age-appropriateness judgement.
 
 **Why a general-purpose model fails for §86a:** A simple "SAFE/UNSAFE" question about Nazi symbols gives no structured framework for distinguishing educational from glorifying context. Llama Guard's S1-S13 taxonomy (especially S1: violent crimes, S4: hate) provides exactly that structure.
+
+**gpt-oss-120b is a reasoning model:** Response in `reasoning` field (not `content`, which is `null`). Needs `max_tokens: 2048`. Parse: `msg.get("content") or msg.get("reasoning")`.
 
 **Key files:**
 - `devserver/schemas/engine/stage_orchestrator.py` — orchestration logic
@@ -145,18 +154,18 @@ Input (post-interception prompt)
 
 **Session 244 redesign:** Previously, Stage 3 ran two sequential Llama-Guard calls: an age fast-filter + LLM verify (STEP 3b), then a pipeline-based safety chunk with the wrong prompt format (STEP 4). The pipeline chunk used a free-form question template on `llama-guard3:1b` — a guard model trained on structured S1-S13 categories. This caused false positives (e.g. Lagos scene → S4). Now replaced with a single unconditional `_llm_safety_check_generation()` call using the proper S1-S13 template. The age fast-filter was redundant with Stage 1 (MediaInputBox `/safety/quick` already covers it).
 
-**Stage 3 S-code filtering** (Session 246): Llama-Guard's S1-S13 categories were designed for chat safety, not image generation. Several categories cause false positives on harmless image prompts (e.g. "make a realistic photo" → S7 Intellectual Property). Stage 3 now only blocks on **image-generation-relevant** S-codes:
+**Stage 3 S-code filtering** (Session 255, revised): Llama-Guard's S1-S13 categories were designed for chat safety, not image generation. Some categories cause false positives on harmless image prompts (e.g. "make a realistic photo" → S7 Intellectual Property, motorcycle photo → S7). Stage 3 blocks on **image-generation-relevant** S-codes:
 
 | Blocks | Code | Category | Why relevant |
 |--------|------|----------|-------------|
 | Yes | S1 | Violent Crimes | Violence in generated images |
-| No | S2 | Non-Violent Crimes | Chat-specific (fraud, hacking instructions) |
+| Yes | S2 | Non-Violent Crimes | Weapons crimes (Session 255: was excluded, 9/11 bypass) |
 | Yes | S3 | Sex Crimes | Sexual content in images |
 | Yes | S4 | Child Exploitation | CSAM prevention |
 | No | S5 | Specialized Advice | Chat-specific (medical/legal/financial advice) |
 | No | S6 | Privacy | Chat-specific (personal data in text) |
-| No | S7 | Intellectual Property | Chat-specific — causes false positives ("realistic photo" → S7) |
-| No | S8 | Indiscriminate Weapons | Chat-specific (weapon instructions) |
+| No | S7 | Intellectual Property | Chat-specific — causes false positives (motorcycle → S7, "realistic photo" → S7) |
+| Yes | S8 | Indiscriminate Weapons | Weapons imagery (Session 255: was excluded, weapons bypass) |
 | Yes | S9 | Hate | Hate imagery |
 | Yes | S10 | Self-Harm | Self-harm imagery |
 | Yes | S11 | Sexual Content | Sexual imagery |
@@ -326,11 +335,11 @@ This creates `/etc/sudoers.d/ai4artsed-ollama` granting passwordless `systemctl 
 User Input
   │
   ├─ [Frontend] MediaInputBox on blur/paste
-  │   └─ POST /safety/quick (§86a + age filter + DSGVO, text)
+  │   └─ POST /safety/quick (§86a + DSGVO + age filter, text)
   │   └─ POST /safety/quick (VLM, uploaded images)
   │
   ├─ [Stage 1] execute_stage1_gpt_oss_unified()
-  │   └─ §86a fast-filter → Age filter → DSGVO NER
+  │   └─ §86a fast-filter → DSGVO NER → Age filter (DSGVO-first!)
   │
   ├─ [Stage 2] Prompt Interception (no safety)
   │
@@ -338,7 +347,7 @@ User Input
   │   └─ POST /safety/quick on final prompt (catches edits without blur)
   │
   ├─ [Stage 3] execute_stage3_safety()
-  │   └─ Translation + §86a filter + single Llama-Guard S1-S13 check (kids/youth)
+  │   └─ Translation + §86a filter + Llama-Guard 8B S1-S13 check (kids/youth)
   │
   ├─ [Stage 4] Media Generation
   │
@@ -358,14 +367,15 @@ Canvas routes (`/api/canvas/execute`, `/execute-stream`, `/execute-batch`) have 
 
 ```python
 DEFAULT_SAFETY_LEVEL = 'kids'          # Default, overridden by user_settings.json
-SAFETY_MODEL = 'llama-guard3:1b'       # Guard model — §86a context check (Stage 1) + pre-generation check (Stage 3)
-DSGVO_VERIFY_MODEL = 'qwen3:1.7b'     # General-purpose model — age filter (Stage 1) + DSGVO NER verify (Stage 1)
+SAFETY_MODEL = 'llama-guard3:8b'       # Guard model — §86a context check (Stage 1) + pre-generation check (Stage 3)
+DSGVO_VERIFY_MODEL = 'qwen3:1.7b'     # General-purpose model — DSGVO NER verify (Stage 1) + youth age filter (Stage 1)
 VLM_SAFETY_MODEL = 'qwen3-vl:2b'      # Ollama model for image checks
 OLLAMA_TIMEOUT_SAFETY = 30             # Short timeout for safety verification
 OLLAMA_TIMEOUT_DEFAULT = 120           # Standard LLM calls
+# Kids age filter uses external gpt-oss-120b (IONOS) — not configurable via config.py, hardcoded in stage_orchestrator.py
 ```
 
-**Session 244 change:** Stage 3 now calls `_llm_safety_check_generation()` directly with `SAFETY_MODEL` (llama-guard3:1b) using the proper S1-S13 template — no longer routes through `safety_check_kids/youth` chunks. Those chunks are now dead code (kept for reference, not called).
+**Session 255 changes:** SAFETY_MODEL upgraded from 1b to 8b (1b too weak for semantic classification). Kids age-filter uses external gpt-oss-120b instead of local DSGVO_VERIFY_MODEL.
 
 ### user_settings.json
 
@@ -433,6 +443,8 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 244 | 2026-03-03 | Pre-generation `/safety/quick` gate in `startGeneration()` — closes blur-bypass gap |
 | 245 | 2026-03-04 | Stage 1 LLM routing fix: §86a→Llama Guard (was blind block), Age Filter→qwen3 SAFE/UNSAFE (was Llama Guard) |
 | 246 | 2026-03-04 | Age filter: fuzzy→stem-prefix matching (false positive fix). LLM prompt: concrete categories + few-shot. Stage 3: only image-relevant S-codes block (S7 etc. ignored) |
+| 254 | 2026-03-10 | VLM safety: fail-open → fail-closed. Only explicit SAFE verdict lets images through |
+| 255 | 2026-03-10 | **CRITICAL**: Kids safety bypass fix. EN/DE weapon terms added. Llama-Guard 1b→8b. DSGVO-first ordering. gpt-oss-120b for kids age-filter. S2+S8 added to Stage 3 blocking set |
 
 ---
 
