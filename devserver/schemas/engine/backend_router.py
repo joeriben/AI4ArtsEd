@@ -1243,8 +1243,15 @@ class BackendRouter:
                                 image_data = self._extract_image_from_chat_completion(data, output_mapping)
 
                             if not image_data:
-                                logger.error("No image found in API response")
-                                return BackendResponse(success=False, content="", error="No image found in response", metadata={})
+                                # Check if content-safety was logged (finish_reason or text-only response)
+                                choice = data.get('choices', [{}])[0] if isinstance(data, dict) else {}
+                                finish_reason = choice.get('finish_reason', '') if isinstance(choice, dict) else ''
+                                if finish_reason in ('content_filter', 'safety'):
+                                    error_msg = f"Content safety filter: API refused image generation (finish_reason={finish_reason})"
+                                else:
+                                    error_msg = "No image in API response (probable content-safety rejection — see [CONTENT-SAFETY] log)"
+                                logger.error(f"[CONTENT-SAFETY] {error_msg}")
+                                return BackendResponse(success=False, content="", error=error_msg, metadata={})
 
                             logger.info(f"API generation successful: Generated image data ({len(image_data)} chars)")
 
@@ -1277,7 +1284,17 @@ class BackendRouter:
     def _extract_image_from_chat_completion(self, data: Dict, output_mapping: Dict) -> Optional[str]:
         """Extract image URL from chat completion response with multimodal content"""
         try:
-            message = data['choices'][0]['message']
+            # Check finish_reason for content-filter stops (OpenRouter/Gemini)
+            choice = data.get('choices', [{}])[0]
+            finish_reason = choice.get('finish_reason', '')
+            if finish_reason in ('content_filter', 'safety'):
+                logger.warning(f"[CONTENT-SAFETY] API refused generation: finish_reason='{finish_reason}'")
+                return None
+
+            message = choice.get('message', {})
+            if not message:
+                logger.warning("[CONTENT-SAFETY] Empty message in API response — likely content-safety rejection")
+                return None
 
             # GPT-5 Image: Check message.images array first
             if 'images' in message and isinstance(message['images'], list) and len(message['images']) > 0:
@@ -1291,6 +1308,19 @@ class BackendRouter:
                 for item in content:
                     if item.get('type') == 'image_url':
                         return item['image_url']['url']
+
+            # No image found — check if there's a text-only response (content-safety refusal)
+            text_content = ''
+            if isinstance(content, str):
+                text_content = content
+            elif isinstance(content, list):
+                text_content = ' '.join(item.get('text', '') for item in content if item.get('type') == 'text')
+
+            if text_content:
+                logger.warning(f"[CONTENT-SAFETY] API returned text without image (probable content-safety refusal): "
+                               f"'{text_content[:200]}'")
+            else:
+                logger.warning("[CONTENT-SAFETY] API returned empty response without image — likely content-safety rejection")
 
             return None
         except (KeyError, IndexError, TypeError) as e:

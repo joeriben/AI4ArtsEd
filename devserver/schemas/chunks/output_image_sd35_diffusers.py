@@ -19,7 +19,7 @@ CHUNK_META = {
     "output_format": "png",
     "estimated_duration_seconds": "15-30",
     "requires_gpu": True,
-    "gpu_vram_mb": 8000,
+    "gpu_vram_mb": 28000,
     "fallback_chunk": "output_image_sd35_large",
 }
 

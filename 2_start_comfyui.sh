@@ -61,7 +61,9 @@ trap - ERR
 # --port 17804: AI4ArtsEd embedded ComfyUI port
 # Models are in standard ComfyUI paths (models/checkpoints, models/clip, etc.)
 # No --extra-model-paths-config needed
-python main.py \
+# Pipe through awk to prepend ISO timestamps (ComfyUI logs have none by default)
+PYTHONUNBUFFERED=1 python main.py \
     --listen 127.0.0.1 \
     --port "$COMFYUI_PORT" \
-    --preview-method auto
+    --preview-method auto \
+    2>&1 | awk '{ print strftime("%Y-%m-%dT%H:%M:%S"), $0; fflush() }'

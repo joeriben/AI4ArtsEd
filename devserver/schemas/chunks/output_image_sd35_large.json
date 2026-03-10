@@ -209,7 +209,7 @@
     "estimated_duration_seconds": "12",
     "quality_rating": 2,
     "requires_gpu": true,
-    "gpu_vram_mb": 8000,
+    "gpu_vram_mb": 28000,
     "model_file": "sd3.5_large.safetensors",
     "clip_models": [
       "clip_g.safetensors",

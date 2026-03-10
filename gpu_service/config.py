@@ -41,8 +41,8 @@ DIFFUSERS_WAN22_QUANTIZE = os.environ.get("DIFFUSERS_WAN22_QUANTIZE", "bf16")  #
 # CPU-offloaded models report ~0 via torch.cuda.memory_allocated() measurement,
 # so we use static estimates of peak usage (includes activations/intermediates).
 MODEL_PEAK_VRAM_MB = {
-    "sd35_large_fp16": 12_000,
-    "sd35_large_bf16": 12_000,
+    "sd35_large_fp16": 28_000,
+    "sd35_large_bf16": 28_000,
     "flux2_bf16": 26_000,
     "flux2_fp8": 18_000,
     "wan22_t2v_bf16": 20_000,

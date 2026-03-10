@@ -1,5 +1,32 @@
 # Development Log
 
+## Session 256 - Workshop 10.03.2026 Post-Mortem Fixes
+**Date:** 2026-03-10
+**Focus:** Implement action items from Workshop 10.03.2026 performance report
+
+### Changes
+
+1. **VRAM estimate for SD3.5 Large corrected to 28GB** (was 8GB user-facing, 12GB GPU service)
+   - Workshop measured 28,262 MB actual peak — previous estimates were 41-71% too low
+   - Updated: `gpu_service/config.py`, `sd35_large.json`, `output_image_sd35_diffusers.py`, `output_image_sd35_large.json`
+
+2. **Gemini content-safety rejections now logged as `[CONTENT-SAFETY]`** (was generic "No image found")
+   - `_extract_image_from_chat_completion()` now checks `finish_reason` for `content_filter`/`safety`
+   - Text-only responses (model refused but returned explanation) logged with first 200 chars
+   - Error message to frontend distinguishes content-safety from generic API failures
+   - File: `devserver/schemas/engine/backend_router.py`
+
+3. **ComfyUI logs now have timestamps** (was no timestamps at all)
+   - `2_start_comfyui.sh` pipes output through awk to prepend ISO timestamps
+   - No modification to third-party ComfyUI code needed
+
+### Workshop Performance Summary
+- 107 GPU Service + 42 ComfyUI generations, **0% local failure rate**
+- Safety system: 0 false blocks (down from 8.6% on 05.03., 7.7% on 06.03.)
+- Only failures: 3x Gemini/OpenRouter (1x 429 rate-limit, 2x content-safety refusal on sensitive topic)
+
+---
+
 ## Session 255 - CRITICAL: Kids Safety Filter Bypass — Live Workshop Emergency Fix
 **Date:** 2026-03-10
 **Focus:** Multiple kids safety bypasses discovered during live workshop. Weapons, 9/11 imagery, and terrorism prompts passed all filters.
