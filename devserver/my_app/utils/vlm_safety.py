@@ -24,25 +24,43 @@ logger = logging.getLogger(__name__)
 
 VLM_PROMPTS = {
     'kids': (
-        'Check this image for content inappropriate for children age 6-12. '
-        'Explain briefly, then end your response with exactly one word: SAFE or UNSAFE.'
+        'Is this image safe for children age 6-12? '
+        'Answer with one word only: SAFE or UNSAFE.'
     ),
     'youth': (
-        'Check this image for content inappropriate for teenagers age 14-18. '
-        'Explain briefly, then end your response with exactly one word: SAFE or UNSAFE.'
+        'Is this image safe for teenagers age 14-18? '
+        'Answer with one word only: SAFE or UNSAFE.'
     ),
 }
 
 
 def _extract_verdict(text: str) -> str | None:
-    """Extract SAFE/UNSAFE verdict from text. Checks first and last word."""
+    """Extract SAFE/UNSAFE verdict from text.
+
+    Priority: first word, last word, then last occurrence of 'unsafe'/'safe'
+    in text (to catch thinking conclusions like '...so this is unsafe').
+    'unsafe' is checked before 'safe' to avoid substring false matches.
+    """
     if not text or not text.strip():
         return None
     words = text.strip().split()
+    # Check first and last word (cleanest signal)
     for word in (words[0], words[-1]):
         cleaned = word.lower().rstrip('.,!:;')
         if cleaned in ('safe', 'unsafe'):
             return cleaned
+    # Fallback: scan for last standalone 'unsafe' or 'safe' in text.
+    # Check unsafe first — 'unsafe' contains 'safe' as substring.
+    lower = text.lower()
+    for target in ('unsafe', 'safe'):
+        pos = lower.rfind(target)
+        if pos != -1:
+            # Verify it's a standalone word (not part of e.g. "unsafely")
+            before_ok = pos == 0 or not lower[pos - 1].isalpha()
+            after_end = pos + len(target)
+            after_ok = after_end >= len(lower) or not lower[after_end].isalpha()
+            if before_ok and after_ok:
+                return target
     return None
 
 

@@ -50,9 +50,10 @@ class LLMClient:
             "keep_alive": keep_alive,
             "options": options,
         }
-        # Ollama Qwen3 thinking suppression: /no_think suffix or think param
+        # Ollama Qwen3 thinking suppression
         if not enable_thinking:
             payload["think"] = False
+            logger.debug(f"[LLM-CLIENT] Thinking disabled for {ollama_model}, payload has think={payload.get('think')}")
 
         try:
             resp = requests.post(f"{self.ollama_url}/api/chat", json=payload, timeout=timeout)
