@@ -89,6 +89,7 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             messages=[{'role': 'user', 'content': prompt_text}],
             images=[image_b64],
             temperature=0.0,
+            max_new_tokens=1000,  # qwen3-vl thinking mode eats tokens — 500 often cuts off before verdict
         )
 
         if result is None:
