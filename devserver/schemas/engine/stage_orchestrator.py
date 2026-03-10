@@ -1291,27 +1291,21 @@ async def execute_stage3_safety(
     # youth → original language (user explores model behavior, manual translate available)
     generation_prompt = translated_prompt if safety_level == 'kids' else prompt
 
-    # STEP 5: Llama-Guard check
-    # kids: ANY unsafe code blocks (zero tolerance — S7 caught 9/11 imagery)
-    # youth: only image-relevant codes block (S5/S6/S12/S13 cause false positives)
-    _IMAGE_RELEVANT_CODES = {'S1', 'S2', 'S3', 'S4', 'S7', 'S8', 'S9', 'S10', 'S11'}
+    # STEP 5: Llama-Guard check — S-code filtering by safety level.
+    # kids: broader set (includes S2 weapons crimes, S8 indiscriminate weapons)
+    # youth: same set (consistent policy)
+    # Excluded: S5 (advice), S6 (privacy), S7 (IP — false positives on "realistic photo"),
+    #           S12 (elections), S13 (code abuse) — chat-specific, not image-relevant
+    _IMAGE_RELEVANT_CODES = {'S1', 'S2', 'S3', 'S4', 'S8', 'S9', 'S10', 'S11'}
 
     logger.info(f"[STAGE3-SAFETY] Running Llama-Guard safety check ({safety_level}) on generation prompt")
     llm_result = _llm_safety_check_generation(generation_prompt)
 
-    if safety_level == 'kids':
-        # Kids: zero tolerance — if Llama-Guard says unsafe, it's blocked
-        relevant_codes = llm_result["codes"]
-        is_safe = llm_result["safe"]
-        if not is_safe:
-            logger.warning(f"[STAGE3-SAFETY] KIDS zero-tolerance: blocking on codes {relevant_codes}")
-    else:
-        # Youth: filter to image-relevant codes only
-        relevant_codes = [c for c in llm_result["codes"] if c in _IMAGE_RELEVANT_CODES]
-        ignored_codes = [c for c in llm_result["codes"] if c not in _IMAGE_RELEVANT_CODES]
-        if ignored_codes:
-            logger.info(f"[STAGE3-SAFETY] Ignoring chat-specific codes {ignored_codes} (not relevant for image generation)")
-        is_safe = llm_result["safe"] or len(relevant_codes) == 0
+    relevant_codes = [c for c in llm_result["codes"] if c in _IMAGE_RELEVANT_CODES]
+    ignored_codes = [c for c in llm_result["codes"] if c not in _IMAGE_RELEVANT_CODES]
+    if ignored_codes:
+        logger.info(f"[STAGE3-SAFETY] Ignoring chat-specific codes {ignored_codes} (not relevant for image generation)")
+    is_safe = llm_result["safe"] or len(relevant_codes) == 0
 
     if is_safe:
         logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
