@@ -429,6 +429,15 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
             return cached_result
 
     terms_str = ", ".join(found_terms[:5])
+
+    # Kids: zero-tolerance — fast-filter hit = BLOCK, no LLM second-guessing.
+    # qwen3:1.7b is too weak to reliably catch semantic threats like "planning an attack".
+    # Youth still gets LLM context verification (fewer false positives matter more).
+    if safety_level == 'kids':
+        logger.info(f"[AGE-LLM-VERIFY] terms={terms_str} → KIDS zero-tolerance, skipping LLM → UNSAFE")
+        _AGE_VERIFY_CACHE[cache_key] = (True, _time.time())
+        return True
+
     model = config.DSGVO_VERIFY_MODEL  # qwen3:1.7b — general-purpose, NOT guard model
 
     # Focused prompt: concrete categories, positive framing, few-shot calibration
