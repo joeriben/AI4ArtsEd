@@ -5,6 +5,7 @@ Extracted from schema_pipeline_routes.py to be reusable for both
 post-generation checks and input image upload checks.
 
 Uses LLMClient (GPU Service primary, Ollama fallback).
+Fail-closed: blocks if safety cannot be confirmed.
 """
 
 import base64
@@ -23,21 +24,34 @@ logger = logging.getLogger(__name__)
 
 VLM_PROMPTS = {
     'kids': (
-        '/no_think\n'
         'Check this image for content inappropriate for children age 6-12. '
-        'Your FIRST word must be SAFE or UNSAFE. Then explain briefly.'
+        'Explain briefly, then end your response with exactly one word: SAFE or UNSAFE.'
     ),
     'youth': (
-        '/no_think\n'
         'Check this image for content inappropriate for teenagers age 14-18. '
-        'Your FIRST word must be SAFE or UNSAFE. Then explain briefly.'
+        'Explain briefly, then end your response with exactly one word: SAFE or UNSAFE.'
     ),
 }
 
 
+def _extract_verdict(text: str) -> str | None:
+    """Extract SAFE/UNSAFE verdict from text. Checks first and last word."""
+    if not text or not text.strip():
+        return None
+    words = text.strip().split()
+    for word in (words[0], words[-1]):
+        cleaned = word.lower().rstrip('.,!:;')
+        if cleaned in ('safe', 'unsafe'):
+            return cleaned
+    return None
+
+
 def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, str, str]:
     """
-    Check image safety via qwen3-vl. Returns (is_safe, reason, description). Fail-open.
+    Check image safety via qwen3-vl. Returns (is_safe, reason, description).
+
+    Fail-closed: if safety cannot be confirmed, the image is blocked.
+    Only an explicit SAFE verdict from the VLM lets an image through.
 
     Args:
         image_path: Path to the image file on disk.
@@ -45,13 +59,13 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
 
     Returns:
         (is_safe, reason, description) — description is the VLM's image analysis.
-        (True, '', '') on safe or error (fail-open).
+        (False, reason, '') on any failure to confirm safety.
     """
     try:
         image_path = Path(image_path)
         if not image_path.exists():
-            logger.warning("[VLM-SAFETY] Image file not found — skipping check")
-            return (True, '', '')
+            logger.error("[VLM-SAFETY] Image file not found — BLOCKING (cannot verify safety)")
+            return (False, f"VLM safety check: image file not found, blocked for safety", '')
 
         prompt_text = VLM_PROMPTS.get(safety_level)
         if not prompt_text:
@@ -75,12 +89,11 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             messages=[{'role': 'user', 'content': prompt_text}],
             images=[image_b64],
             temperature=0.0,
-            max_new_tokens=500,
         )
 
         if result is None:
-            logger.warning("[VLM-SAFETY] LLM returned None (fail-open)")
-            return (True, '', '')
+            logger.error("[VLM-SAFETY] LLM returned None — BLOCKING (cannot verify safety)")
+            return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): model unreachable, blocked for safety", '')
 
         content = result.get('content', '').strip()
         thinking = (result.get('thinking') or '').strip()
@@ -88,21 +101,20 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
 
         description = content or thinking
 
-        # Extract verdict from the LAST word — model reasons its way to a conclusion.
-        # Avoids false positives from mid-reasoning mentions like "nothing unsafe".
-        verdict_text = content or thinking
-        last_word = verdict_text.split()[-1].lower().rstrip('.,!:') if verdict_text.split() else ''
+        verdict = _extract_verdict(content) or _extract_verdict(thinking)
 
-        if last_word == 'unsafe':
+        if verdict == 'unsafe':
             return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for {safety_level}", description)
-        if last_word == 'safe':
+        if verdict == 'safe':
             return (True, '', description)
 
-        # No clear last-word verdict — fail-open but log warning
-        logger.warning(f"[VLM-SAFETY] No clear safe/unsafe verdict (last_word={last_word!r}) — fail-open")
-        return (True, '', description)
+        # Model responded but no verdict — FAIL-CLOSED
+        logger.error(
+            "[VLM-SAFETY] Model responded but no SAFE/UNSAFE verdict — BLOCKING (fail-closed). "
+            f"content={content!r}, thinking={thinking[:200]!r}"
+        )
+        return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): no clear verdict, blocked for safety", description)
 
     except Exception as e:
-        # Fail-open: VLM failure should never block
-        logger.warning(f"[VLM-SAFETY] Error during check (fail-open): {e}")
-        return (True, '', '')
+        logger.error(f"[VLM-SAFETY] Error during check — BLOCKING (cannot verify safety): {e}")
+        return (False, f"VLM safety check: error during check, blocked for safety", '')
