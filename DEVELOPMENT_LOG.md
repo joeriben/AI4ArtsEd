@@ -1,5 +1,39 @@
 # Development Log
 
+## Session 254 - VLM Safety: Fail-Open → Fail-Closed
+**Date:** 2026-03-10
+**Focus:** Fix critical safety flaw — VLM image check was fail-open, letting unchecked images through to kids/youth
+
+### Problem
+Session 253's Fix 4 (commit `6a1d824`, Claude Sonnet 4.6) introduced a regression:
+- Reduced `max_new_tokens` from 500 to 50 (model cut off mid-thinking, never reaches verdict)
+- Added `/no_think` directive (model ignores it)
+- Added "no clear verdict → fail-open" code path
+
+Result: model burns 50 tokens thinking ("...the content is a bird"), never says SAFE/UNSAFE, fail-open → **all images pass unchecked**.
+
+Fundamental design flaw: the VLM safety check was fail-open for ALL failure modes — infrastructure errors AND ambiguous model responses. For child safety, this is unacceptable.
+
+### Fix
+**File:** `devserver/my_app/utils/vlm_safety.py`
+
+1. **Removed `max_new_tokens`** — model uses as many tokens as it needs
+2. **Removed `/no_think`** — doesn't work, model ignores it
+3. **Prompt fix** — "end your response with exactly one word: SAFE or UNSAFE" (matches last-word parsing)
+4. **Robust verdict parsing** — `_extract_verdict()` checks first AND last word of both `content` and `thinking` fields
+5. **Fail-closed everywhere** — file not found, model unreachable, exception, ambiguous verdict → all BLOCK
+6. **Only way through: explicit SAFE verdict from VLM**
+
+### Design Principle
+Kindersicherheit kennt kein fail-open. If the safety system cannot confirm an image is safe — for any reason — the image does not pass.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `devserver/my_app/utils/vlm_safety.py` | Complete rewrite: fail-closed, robust parsing, no token limit |
+
+---
+
 ## Session 253 - Workshop Optimization: Retry, Concurrency, NER, VLM Safety
 **Date:** 2026-03-07
 **Focus:** Implement 3 workshop optimizations from 06.03 performance report + fix VLM safety verdict parsing
