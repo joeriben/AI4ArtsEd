@@ -1,5 +1,80 @@
 # Development Log
 
+## Session 255 - CRITICAL: Kids Safety Filter Bypass — Live Workshop Emergency Fix
+**Date:** 2026-03-10
+**Focus:** Multiple kids safety bypasses discovered during live workshop. Weapons, 9/11 imagery, and terrorism prompts passed all filters.
+
+### Problems Discovered (in sequence)
+
+1. **EN/DE kids filter missing weapon terms**: TR/KO/UK/FR/ES/HE/AR all had war/weapon category (bomb, gun, rifle, etc.) but EN and DE were never updated. A prompt with "AK-47, RPG-7, bomb placer" passed Stage 1 completely.
+
+2. **Llama-Guard 1B too weak**: The 1B model classified "airplane + skyscraper + collision + debris" (9/11 imagery) as "safe" in 100ms. Upgraded to 8B.
+
+3. **Stage 3 S-code filtering too permissive**: S8 (Indiscriminate Weapons) and S2 (Weapons Crimes) were excluded as "chat-specific". Llama-Guard flagged 9/11 content as S7 (IP) which was also excluded. Added S2 and S8 to blocking set. S5/S6/S7/S12/S13 remain excluded (false positives on harmless images like motorcycles).
+
+4. **Age filter LLM verify prompt too narrow**: Asked "does this describe violence?" — qwen3:1.7b classified "planning an attack" as SAFE because planning ≠ describing. Broadened to "describes, plans, threatens, or glorifies".
+
+5. **qwen3:1.7b fundamentally too weak for kids context verification**: Even with improved prompt, "Terroranschlag auf ein Hochhaus" passed. Model recognizes threat but says SAFE.
+
+6. **VLM max_new_tokens too low**: qwen3-vl:2b thinking mode consumed all 500 tokens for reasoning, never reached SAFE/UNSAFE verdict → fail-closed blocked harmless images.
+
+### Architecture Change: DSGVO-First Ordering
+
+**Old**: §86a → Age Filter → DSGVO NER
+**New**: §86a → DSGVO NER → Age Filter
+
+**Why**: Moving DSGVO NER before the age filter guarantees no personal data in the text. This allows the kids age-filter to safely use **external gpt-oss-120b** (IONOS EU datacenter) for context verification instead of the weak local qwen3:1.7b.
+
+**Result**: gpt-oss-120b correctly blocks "Araber plant Anschlag" (UNSAFE) while allowing "cute vampire at party" (SAFE). Best of both worlds.
+
+### Reasoning Model Integration
+
+gpt-oss-120b is a reasoning model:
+- Response in `reasoning` field, NOT `content` (which is `null`)
+- Needs `max_tokens: 2048` (not 50) — thinking tokens count
+- Parse: `msg.get("content") or msg.get("reasoning")`
+
+### Final Safety Architecture (Kids, 3 Layers × 3 LLMs)
+
+| Layer | Check | Model | Location |
+|-------|-------|-------|----------|
+| **Stage 1** | Fast-filter keywords + LLM context verify | gpt-oss-120b (IONOS) | Pre-interception |
+| **Stage 3** | S-code classification (S1-S4,S8-S11) | llama-guard3:8b (Ollama) | Pre-generation |
+| **Post-Gen** | Visual image analysis | qwen3-vl:2b (Ollama) | Post-generation |
+
+Independent concerns (always active): §86a (llama-guard3:8b), DSGVO NER (SpaCy + qwen3:1.7b)
+
+### Commits
+| Commit | Change |
+|--------|--------|
+| `13a21dd` | Add missing weapon/war terms to EN+DE kids filter |
+| `e30ea7e` | Upgrade Llama-Guard 1B → 8B |
+| `e071002` | Kids zero-tolerance on Stage 3 + terrorism terms EN/DE |
+| `c52e276` | Broaden age-filter LLM prompt (plan/threaten/glorify) |
+| `6d3bce2` | Kids fast-filter: skip LLM verify (temporary) |
+| `6dd3850` | Revert Stage 3 zero-tolerance, add S2+S8 to blocking set |
+| `8957798` | DSGVO before age filter + gpt-oss-120b for kids verify |
+| `c920299` | VLM max_new_tokens 500→1000 |
+| `23bf245` | Handle gpt-oss-120b reasoning model response format |
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `devserver/schemas/youth_kids_safety_filters.json` | Added weapon + terrorism terms for EN/DE |
+| `devserver/config.py` | SAFETY_MODEL: llama-guard3:1b → 8b |
+| `devserver/schemas/engine/stage_orchestrator.py` | DSGVO-first ordering, gpt-oss-120b for kids, S-code set, prompt improvements |
+| `devserver/my_app/routes/schema_pipeline_routes.py` | DSGVO-first ordering in unified-streaming + /safety/quick |
+| `devserver/my_app/utils/vlm_safety.py` | max_new_tokens: 1000 |
+
+### Lessons Learned
+- **Never assume filter lists are consistent across languages** — EN/DE were originals, translations got expanded weapon category, originals never updated
+- **Small guard models (1B) cannot do semantic reasoning** — word-level classification only
+- **Small general-purpose models (1.7B) cannot judge age-appropriateness** — too literal, misses intent
+- **Reasoning models put answers in different fields** — check `reasoning`, not just `content`
+- **DSGVO-first ordering enables external LLM use** — architectural insight, not just a swap
+
+---
+
 ## Session 254 - VLM Safety: Fail-Open → Fail-Closed
 **Date:** 2026-03-10
 **Focus:** Fix critical safety flaw — VLM image check was fail-open, letting unchecked images through to kids/youth
