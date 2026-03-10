@@ -19,7 +19,10 @@
           "vampire", "werewolf", "monster", "creature", "beast",
           "fangs", "claws", "teeth", "bite",
           "haunted", "creepy", "eerie", "sinister", "macabre",
-          "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse"
+          "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse",
+          "war", "weapon", "bomb", "explosion", "strangling", "poison", "knife", "pistol",
+          "gun", "rifle", "grenade", "missile", "launcher", "sniper", "shoot", "shooting",
+          "soldier", "combat", "battlefield", "ammunition", "explosives"
         ],
         "de": [
           "Gewalt", "Mord", "Folter", "Blut", "blutig", "Verstümmelung",
@@ -30,7 +33,10 @@
           "Selbstmord", "Suizid", "Selbstverletzung",
           "Horror", "gruselig", "erschreckend", "Albtraum", "verstörend",
           "Dämon", "Skelett", "Totenkopf", "Vampir", "Werwolf", "Zombie",
-          "nackt", "Nacktheit", "sexuell", "Vergewaltigung", "pornografisch", "Genitalien", "Missbrauch"
+          "nackt", "Nacktheit", "sexuell", "Vergewaltigung", "pornografisch", "Genitalien", "Missbrauch",
+          "Krieg", "Waffe", "Bombe", "Explosion", "Würgen", "Gift", "Messer", "Pistole",
+          "Gewehr", "Granate", "Rakete", "Scharfschütze", "schießen", "Schießerei",
+          "Soldat", "Kampf", "Schlachtfeld", "Munition", "Sprengstoff"
         ],
         "tr": [
           "şiddet", "şiddetli", "infaz", "öldürme", "cinayet", "ölüm", "ceset",
@@ -242,6 +248,11 @@
       ],
       "sexual_content": [
         "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse"
+      ],
+      "weapons_war": [
+        "war", "weapon", "bomb", "explosion", "knife", "pistol",
+        "gun", "rifle", "grenade", "missile", "launcher", "sniper",
+        "shoot", "shooting", "ammunition", "explosives"
       ]
     },
     "youth": {
