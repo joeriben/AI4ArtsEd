@@ -468,7 +468,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
                     "model": model,
                     "messages": [{"role": "user", "content": prompt_text}],
                     "temperature": 0.0,
-                    "max_tokens": 50,
+                    "max_tokens": 2048,  # Reasoning model needs tokens for thinking + answer
                 },
                 timeout=15,
             )
@@ -479,7 +479,9 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
                 return None
 
             data = response.json()
-            output = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+            msg = data.get("choices", [{}])[0].get("message", {})
+            # gpt-oss-120b is a reasoning model: answer in content OR reasoning field
+            output = (msg.get("content") or msg.get("reasoning") or "").strip()
         else:
             # Youth: use local DSGVO_VERIFY_MODEL (qwen3:1.7b)
             from my_app.services.llm_backend import get_llm_backend
