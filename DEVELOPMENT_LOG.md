@@ -75,29 +75,39 @@ Independent concerns (always active): §86a (llama-guard3:8b), DSGVO NER (SpaCy 
 
 ---
 
-## Session 254 - VLM Safety: Fail-Open → Fail-Closed
+## Session 254 - VLM Safety: Fail-Open → Fail-Closed + Thinking-Loop Fix
 **Date:** 2026-03-10
-**Focus:** Fix critical safety flaw — VLM image check was fail-open, letting unchecked images through to kids/youth
+**Focus:** Fix critical VLM safety flaws — fail-open design + qwen3-vl infinite reasoning loops
 
-### Problem
+### Problem 1: Fail-Open Design
 Session 253's Fix 4 (commit `6a1d824`, Claude Sonnet 4.6) introduced a regression:
 - Reduced `max_new_tokens` from 500 to 50 (model cut off mid-thinking, never reaches verdict)
-- Added `/no_think` directive (model ignores it)
+- Added `/no_think` prompt directive (model ignores it)
 - Added "no clear verdict → fail-open" code path
 
-Result: model burns 50 tokens thinking ("...the content is a bird"), never says SAFE/UNSAFE, fail-open → **all images pass unchecked**.
+Result: model burns 50 tokens thinking ("...the content is a bird"), never says SAFE/UNSAFE, fail-open → all images pass unchecked.
 
-Fundamental design flaw: the VLM safety check was fail-open for ALL failure modes — infrastructure errors AND ambiguous model responses. For child safety, this is unacceptable.
+### Problem 2: Infinite Reasoning Loops
+qwen3-vl:2b enters endless deliberation in thinking mode ("is it inappropriate? Let's think... But is it inappropriate? Let's see..."). `/no_think` as prompt text has no effect. Even with 1000 tokens, the model never reaches a conclusion — it just loops.
 
-### Fix
-**File:** `devserver/my_app/utils/vlm_safety.py`
+### Root Cause
+`/no_think` is a prompt-level hack. The correct way to disable thinking in Ollama is the API-level parameter `think: false` in the request payload. The `LLMClient` already supported `enable_thinking=False` (sets `payload["think"] = False`), but VLM safety never used it.
 
-1. **Removed `max_new_tokens`** — model uses as many tokens as it needs
-2. **Removed `/no_think`** — doesn't work, model ignores it
-3. **Prompt fix** — "end your response with exactly one word: SAFE or UNSAFE" (matches last-word parsing)
-4. **Robust verdict parsing** — `_extract_verdict()` checks first AND last word of both `content` and `thinking` fields
-5. **Fail-closed everywhere** — file not found, model unreachable, exception, ambiguous verdict → all BLOCK
-6. **Only way through: explicit SAFE verdict from VLM**
+### Fixes
+**File:** `devserver/my_app/utils/vlm_safety.py` + `devserver/my_app/services/llm_client.py`
+
+1. **Fail-closed everywhere** — no fail-open for ANY failure mode. Kindersicherheit kennt kein fail-open.
+2. **`enable_thinking=False`** — uses Ollama API `think: false`, not prompt hack. Model responds with verdict in `content` field directly.
+3. **Prompt simplified** — "Is this image safe for children age 6-12? Answer with one word only: SAFE or UNSAFE." No "explain briefly" that invites deliberation.
+4. **Robust `_extract_verdict()`** — checks first word, last word, then scans full text for standalone 'unsafe'/'safe' as fallback.
+5. **Description = thinking** — `thinking or content` (not `content or thinking`) so Trashy gets the VLM's image analysis, not just "UNSAFE".
+6. **Removed `/no_think`** and **removed `max_new_tokens`** — neither needed with `think: false`.
+
+### Result
+- VLM responds in ~380ms with clear verdict in `content` field
+- Thinking still happens internally but doesn't block the verdict
+- Unsafe images (car crash, violence) correctly blocked for kids
+- Safe images pass without loops
 
 ### Design Principle
 Kindersicherheit kennt kein fail-open. If the safety system cannot confirm an image is safe — for any reason — the image does not pass.
@@ -105,7 +115,8 @@ Kindersicherheit kennt kein fail-open. If the safety system cannot confirm an im
 ### Files Changed
 | File | Change |
 |------|--------|
-| `devserver/my_app/utils/vlm_safety.py` | Complete rewrite: fail-closed, robust parsing, no token limit |
+| `devserver/my_app/utils/vlm_safety.py` | Rewrite: fail-closed, enable_thinking=False, robust parsing, direct prompt |
+| `devserver/my_app/services/llm_client.py` | Debug log for thinking suppression |
 
 ---
 
