@@ -22,7 +22,9 @@
           "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse",
           "war", "weapon", "bomb", "explosion", "strangling", "poison", "knife", "pistol",
           "gun", "rifle", "grenade", "missile", "launcher", "sniper", "shoot", "shooting",
-          "soldier", "combat", "battlefield", "ammunition", "explosives"
+          "soldier", "combat", "battlefield", "ammunition", "explosives",
+          "terrorism", "terrorist", "attack", "hijack", "hostage", "assassination",
+          "massacre", "genocide", "extremist", "radicalized", "suicide bomber"
         ],
         "de": [
           "Gewalt", "Mord", "Folter", "Blut", "blutig", "Verstümmelung",
@@ -36,7 +38,9 @@
           "nackt", "Nacktheit", "sexuell", "Vergewaltigung", "pornografisch", "Genitalien", "Missbrauch",
           "Krieg", "Waffe", "Bombe", "Explosion", "Würgen", "Gift", "Messer", "Pistole",
           "Gewehr", "Granate", "Rakete", "Scharfschütze", "schießen", "Schießerei",
-          "Soldat", "Kampf", "Schlachtfeld", "Munition", "Sprengstoff"
+          "Soldat", "Kampf", "Schlachtfeld", "Munition", "Sprengstoff",
+          "Terrorismus", "Terrorist", "Anschlag", "Attentat", "Entführung",
+          "Geisel", "Massaker", "Völkermord", "Extremist", "Selbstmordattentäter"
         ],
         "tr": [
           "şiddet", "şiddetli", "infaz", "öldürme", "cinayet", "ölüm", "ceset",
