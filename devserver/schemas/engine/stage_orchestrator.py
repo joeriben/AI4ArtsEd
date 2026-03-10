@@ -432,11 +432,16 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
     model = config.DSGVO_VERIFY_MODEL  # qwen3:1.7b — general-purpose, NOT guard model
 
     # Focused prompt: concrete categories, positive framing, few-shot calibration
+    # Must cover: describing, planning, threatening, glorifying violence (not just depicting)
     prompt = (
-        f"Does this text describe violence, death, abuse, or horror?\n"
+        f"Is this text appropriate for children ages 6-12?\n"
+        f"UNSAFE if it describes, plans, threatens, or glorifies: violence, weapons, terrorism, death, abuse, horror, war, drugs.\n"
         f"Examples:\n"
         f"- 'a picnic in the dark' → SAFE\n"
-        f"- 'a corpse on the floor' → UNSAFE\n\n"
+        f"- 'a corpse on the floor' → UNSAFE\n"
+        f"- 'planning the next attack' → UNSAFE\n"
+        f"- 'a soldier with a rifle' → UNSAFE\n"
+        f"- 'a cute vampire at a party' → SAFE\n\n"
         f"Text: {text}\n"
         f"Answer SAFE or UNSAFE."
     )
