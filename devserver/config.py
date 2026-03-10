@@ -134,7 +134,7 @@ CODING_MODEL = "mistral/codestral-2501"                    # Code generation (To
 
 # Local Safety Model (Ollama only — DSGVO: personal data must never leave local system)
 # Available safety models: llama-guard3:1b, llama-guard3:latest, llama-guard3:8b
-SAFETY_MODEL = "llama-guard3:1b"
+SAFETY_MODEL = "llama-guard3:8b"
 
 # DSGVO NER Verification Model (Ollama only — verifies SpaCy NER hits are actual names)
 # Must be a general-purpose model, NOT a guard model (guard models classify content safety, not names)
