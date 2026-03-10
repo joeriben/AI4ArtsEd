@@ -118,7 +118,9 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         thinking = (result.get('thinking') or '').strip()
         logger.info(f"[VLM-SAFETY] Model response: content={content!r}, thinking={thinking[:200]!r}")
 
-        description = content or thinking
+        # Use thinking as description (contains the analysis); fall back to content
+        # if no thinking. Pure verdict words ('SAFE'/'UNSAFE') aren't useful descriptions.
+        description = thinking or content
 
         verdict = _extract_verdict(content) or _extract_verdict(thinking)
 
