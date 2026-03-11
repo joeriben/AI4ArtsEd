@@ -1,5 +1,47 @@
 # Development Log
 
+## Session 257 - Canvas Modernization: Pan/Zoom + Output Drawer + Attribution
+**Date:** 2026-03-11
+**Focus:** Transform Canvas Workflow Builder into a fully interactive workspace with pan/zoom, dedicated output drawer, and model attribution.
+
+### Phase 1: Backend Attribution Pipeline
+- `canvas_executor.py`: `_execute_generation()` now saves metadata (config_id, seed, steps, cfg) in node results
+- `_execute_collector()` propagates metadata from any source result to collector items (was evaluation-only)
+- Frontend types (`canvas.ts`, `CanvasWorkspace.vue`, `StageModule.vue`) extended with `metadata` field on `CollectorOutputItem`
+
+### Phase 2: Pan/Zoom
+- `CanvasWorkspace.vue`: New `.canvas-transform-layer` wrapping all children, CSS `transform: translate() scale()`
+- `screenToCanvas()` utility converts all mouse coordinates through pan+zoom transform
+- Ctrl+Wheel = zoom toward cursor (0.25x–2.0x), Middle-mouse = pan, Plain wheel = scroll
+- `fitToContent()` calculates node bounding box, `panToNode(nodeId)` centers on specific node
+- New `ZoomControls.vue` component: floating controls with inline SVG icons (+, -, %, fit-to-content)
+- `ConnectionLine.vue`: `vector-effect="non-scaling-stroke"` for constant line width during zoom
+
+### Phase 3: Output Drawer
+- New `OutputDrawer.vue`: bottom drawer with horizontal card scroll, drag-resize handle
+- Each card: node label (clickable → highlight), media preview (image/audio/video/text), config name, seed
+- Click-to-highlight: pans canvas to node, 2s pulsing glow animation on StageModule
+- Auto-expands when collector output arrives after workflow execution
+- `canvas_workflow.vue` layout changed from flat `flex-row` to nested `canvas-and-drawer` column
+
+### Phase 4: Collector Node Simplification
+- `StageModule.vue`: Collector node shows "3 items" badge instead of full inline result list
+- Output rendering moved entirely to Output Drawer
+
+### Phase 5: Background Fix + Icon Cleanup
+- All `#0f172a` → `#0a0a0a`, all `#1e293b` → `#141414` across canvas components
+- Toolbar emoji icons (New/Import/Export/Execute/Batch/Abort) replaced with inline SVGs
+- `ConfigSelectorModal.vue` backgrounds updated to match
+
+### i18n
+- New keys: `canvas.outputDrawer.*` (4 keys), `canvas.zoomControls.*` (4 keys)
+- Work order `WO-2026-03-11-canvas-output-drawer-zoom` added
+
+### Type Check
+- `npm run type-check` passes clean
+
+---
+
 ## Session 256 - Workshop 10.03.2026 Post-Mortem Fixes
 **Date:** 2026-03-10
 **Focus:** Implement action items from Workshop 10.03.2026 performance report
