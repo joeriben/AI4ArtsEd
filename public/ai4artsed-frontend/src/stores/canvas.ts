@@ -86,6 +86,13 @@ export const useCanvasStore = defineStore('canvas', () => {
     nodeType: string
     output: unknown
     error: string | null
+    metadata?: {
+      config_id?: string
+      display_name?: string
+      seed?: number
+      steps?: number
+      cfg?: number
+    }
   }>>([])
 
   /** Session 135: Active node for bubble animation (shows one at a time) */

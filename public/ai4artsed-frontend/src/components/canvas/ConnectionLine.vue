@@ -70,6 +70,7 @@ const arrowCx = computed(() => {
     <path
       :d="pathD"
       class="connection-path"
+      vector-effect="non-scaling-stroke"
       @click.stop="emit('click')"
     />
     <!-- Arrow indicator at the end -->

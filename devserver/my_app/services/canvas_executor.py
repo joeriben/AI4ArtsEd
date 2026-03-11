@@ -720,7 +720,15 @@ class CanvasWorkflowExecutor:
             ))
             if gen_result['success']:
                 output = gen_result['media_output']
-                self.results[node_id] = {'type': 'generation', 'output': output, 'error': None, 'configId': config_id}
+                # Session 256: Propagate model metadata for Output Drawer attribution
+                metadata = {
+                    'config_id': config_id,
+                    'display_name': config_id,  # Frontend resolves localized name
+                    'seed': output.get('seed') if output else None,
+                    'steps': generation_steps,
+                    'cfg': generation_cfg,
+                }
+                self.results[node_id] = {'type': 'generation', 'output': output, 'error': None, 'configId': config_id, 'metadata': metadata}
                 if output and output.get('url'):
                     self.recorder.save_image_from_url(
                         node_id=node_id,
@@ -829,8 +837,11 @@ class CanvasWorkflowExecutor:
         source_result = self.results.get(source_node_id, {}) if source_node_id else {}
         source_metadata = source_result.get('metadata')
         collector_item = {'nodeId': source_node_id or node_id, 'nodeType': source_node_type or data_type, 'output': input_data, 'error': None}
-        if source_node_type == 'evaluation' and source_metadata:
-            collector_item['output'] = {'text': input_data, 'metadata': source_metadata}
+        # Session 256: Always propagate metadata for Output Drawer attribution
+        if source_metadata:
+            if source_node_type == 'evaluation':
+                collector_item['output'] = {'text': input_data, 'metadata': source_metadata}
+            collector_item['metadata'] = source_metadata
         self.collector_items.append(collector_item)
         self.results[node_id] = {'type': 'collector', 'output': self.collector_items, 'error': None}
         logger.info(f"[Canvas Executor] Collector: {len(self.collector_items)} items")

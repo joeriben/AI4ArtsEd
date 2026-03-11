@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useCanvasStore } from '@/stores/canvas'
 import CanvasWorkspace from '@/components/canvas/CanvasWorkspace.vue'
 import ModulePalette from '@/components/canvas/ModulePalette.vue'
+import ZoomControls from '@/components/canvas/ZoomControls.vue'
+import OutputDrawer from '@/components/canvas/OutputDrawer.vue'
 import ConfigSelectorModal from '@/components/canvas/ConfigSelectorModal.vue'
 import type { StageType, RandomPromptPreset, PhotoFilmType, ModelAdaptionPreset, InterceptionPreset, ImageEvaluationPreset } from '@/types/canvas'
 import { usePageContextStore } from '@/stores/pageContext'
@@ -23,6 +25,14 @@ const editingNameValue = ref('')
 // Panel visibility
 const showPalette = ref(true)
 
+// Session 256: Output Drawer state
+const drawerCollapsed = ref(true)
+const highlightedNodeId = ref<string | null>(null)
+let highlightTimer: ReturnType<typeof setTimeout> | null = null
+
+// Session 256: Canvas workspace ref for zoom/pan control
+const canvasWorkspaceRef = ref<InstanceType<typeof CanvasWorkspace> | null>(null)
+
 // Session 149: Batch modal state
 const showBatchModal = ref(false)
 const batchCount = ref(3)
@@ -32,6 +42,13 @@ const batchUseSeed = ref(false)
 onMounted(async () => {
   // Load available configs
   await canvasStore.loadAllConfigs()
+})
+
+// Session 256: Auto-expand drawer when collector output arrives
+watch(() => canvasStore.collectorOutput, (items) => {
+  if (items && items.length > 0) {
+    drawerCollapsed.value = false
+  }
 })
 
 // Event handlers
@@ -71,6 +88,20 @@ function handleConfigSelected(configId: string) {
   if (configSelectorNodeId.value) {
     canvasStore.updateNodeConfig(configSelectorNodeId.value, configId)
   }
+}
+
+// Session 256: Highlight node from Output Drawer click
+function highlightNode(nodeId: string) {
+  if (highlightTimer) clearTimeout(highlightTimer)
+  highlightedNodeId.value = nodeId
+
+  // Pan canvas to the node
+  canvasWorkspaceRef.value?.panToNode(nodeId)
+
+  // Clear highlight after 2s
+  highlightTimer = setTimeout(() => {
+    highlightedNodeId.value = null
+  }, 2000)
 }
 
 // Handlers for inline node editing (interception/translation)
@@ -283,8 +314,11 @@ const currentConfigId = computed(() => {
   return node?.configId
 })
 
-// Page Context for Träshy (Session 133)
-// Canvas: Träshy stays bottom-left to avoid interfering with workspace
+// Session 256: Zoom level from workspace (reactive via expose)
+const currentZoomLevel = computed(() => canvasWorkspaceRef.value?.zoomLevel ?? 1)
+
+// Page Context for Trashy (Session 133)
+// Canvas: Trashy stays bottom-left to avoid interfering with workspace
 const pageContextStore = usePageContextStore()
 
 const trashyFocusHint = computed<FocusHint>(() => {
@@ -317,6 +351,7 @@ watch(pageContext, (ctx) => {
 
 onUnmounted(() => {
   pageContextStore.clearContext()
+  if (highlightTimer) clearTimeout(highlightTimer)
 })
 </script>
 
@@ -361,7 +396,7 @@ onUnmounted(() => {
           class="validation-status"
           :class="{ valid: canvasStore.isWorkflowValid, invalid: !canvasStore.isWorkflowValid }"
         >
-          <span v-if="canvasStore.isWorkflowValid">✓ {{ $t('canvas.ready') }}</span>
+          <span v-if="canvasStore.isWorkflowValid">{{ $t('canvas.ready') }}</span>
           <span v-else>{{ canvasStore.validationErrors.length }} {{ $t('canvas.errors') }}</span>
         </div>
       </div>
@@ -381,7 +416,7 @@ onUnmounted(() => {
           @click="handleNewWorkflow"
           :title="$t('canvas.newWorkflow')"
         >
-          📄
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
         </button>
 
         <!-- Import -->
@@ -390,7 +425,7 @@ onUnmounted(() => {
           @click="handleImportWorkflow"
           :title="$t('canvas.importWorkflow')"
         >
-          📥
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         </button>
 
         <!-- Export -->
@@ -399,17 +434,17 @@ onUnmounted(() => {
           @click="handleExportWorkflow"
           :title="$t('canvas.exportWorkflow')"
         >
-          📤
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
         </button>
 
-        <!-- Execute (disabled for now) -->
+        <!-- Execute -->
         <button
           class="toolbar-btn primary"
           :disabled="!canvasStore.isWorkflowValid || canvasStore.isExecuting || canvasStore.isBatchExecuting"
           @click="canvasStore.executeWorkflow()"
           :title="$t('canvas.execute')"
         >
-          ▶️ {{ $t('canvas.execute') }}
+          {{ $t('canvas.execute') }}
         </button>
 
         <!-- Session 149: Batch Execute -->
@@ -419,7 +454,7 @@ onUnmounted(() => {
           @click="showBatchModal = true"
           :title="$t('canvas.batchExecute')"
         >
-          🔄 Batch
+          Batch
         </button>
       </div>
     </div>
@@ -437,7 +472,7 @@ onUnmounted(() => {
           @click="canvasStore.abortBatch()"
           :title="$t('canvas.batchAbort')"
         >
-          ⏹️ {{ $t('canvas.abort') }}
+          {{ $t('canvas.abort') }}
         </button>
       </div>
       <div class="batch-progress-track">
@@ -455,66 +490,92 @@ onUnmounted(() => {
         <ModulePalette @add-node="handleAddNodeFromPalette" />
       </div>
 
-      <!-- Canvas -->
-      <div class="canvas-container">
-        <CanvasWorkspace
-          :nodes="canvasStore.nodes"
-          :connections="canvasStore.connections"
-          :selected-node-id="canvasStore.selectedNodeId"
-          :connecting-from-id="canvasStore.connectingFromId"
-          :mouse-position="canvasStore.mousePosition"
-          :llm-models="canvasStore.llmModels"
-          :vision-models="canvasStore.visionModels"
-          :execution-results="canvasStore.executionResults"
-          :collector-output="canvasStore.collectorOutput"
-          :output-configs="canvasStore.outputConfigs"
-          :active-node-id="canvasStore.activeNodeId"
-          :connecting-label="canvasStore.connectingLabel"
-          @select-node="canvasStore.selectNode"
-          @update-node-position="canvasStore.updateNodePosition"
-          @delete-node="canvasStore.deleteNode"
-          @add-connection="canvasStore.completeConnection"
-          @delete-connection="canvasStore.deleteConnection"
-          @start-connection="canvasStore.startConnection"
-          @cancel-connection="canvasStore.cancelConnection"
-          @complete-connection="canvasStore.completeConnection"
-          @complete-connection-feedback="canvasStore.completeConnectionFeedback"
-          @update-mouse-position="canvasStore.updateMousePosition"
-          @add-node-at="handleAddNodeAt"
-          @select-config="handleSelectConfig"
-          @update-node-llm="handleUpdateNodeLLM"
-          @update-node-context-prompt="handleUpdateNodeContextPrompt"
-          @update-node-translation-prompt="handleUpdateNodeTranslationPrompt"
-          @update-node-prompt-text="handleUpdateNodePromptText"
-          @update-node-size="handleUpdateNodeSize"
-          @update-node-display-title="handleUpdateNodeDisplayTitle"
-          @update-node-display-mode="handleUpdateNodeDisplayMode"
-          @update-node-evaluation-type="handleUpdateNodeEvaluationType"
-          @update-node-evaluation-prompt="handleUpdateNodeEvaluationPrompt"
-          @update-node-output-type="handleUpdateNodeOutputType"
-          @update-node-random-prompt-preset="handleUpdateNodeRandomPromptPreset"
-          @update-node-random-prompt-model="handleUpdateNodeRandomPromptModel"
-          @update-node-random-prompt-film-type="handleUpdateNodeRandomPromptFilmType"
-          @update-node-random-prompt-token-limit="handleUpdateNodeRandomPromptTokenLimit"
-          @update-node-model-adaption-preset="handleUpdateNodeModelAdaptionPreset"
-          @update-node-interception-preset="handleUpdateNodeInterceptionPreset"
-          @update-node-comparison-llm="handleUpdateNodeComparisonLlm"
-          @update-node-comparison-criteria="handleUpdateNodeComparisonCriteria"
-          @update-node-seed-mode="handleUpdateNodeSeedMode"
-          @update-node-seed-value="handleUpdateNodeSeedValue"
-          @update-node-seed-base="handleUpdateNodeSeedBase"
-          @update-node-resolution-preset="handleUpdateNodeResolutionPreset"
-          @update-node-resolution-width="handleUpdateNodeResolutionWidth"
-          @update-node-resolution-height="handleUpdateNodeResolutionHeight"
-          @update-node-quality-steps="handleUpdateNodeQualitySteps"
-          @update-node-quality-cfg="handleUpdateNodeQualityCfg"
-          @end-connect-input-1="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-1')"
-          @end-connect-input-2="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-2')"
-          @end-connect-input-3="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-3')"
-          @update-node-image-data="handleUpdateNodeImageData"
-          @update-node-vision-model="handleUpdateNodeVisionModel"
-          @update-node-image-evaluation-preset="handleUpdateNodeImageEvaluationPreset"
-          @update-node-image-evaluation-prompt="handleUpdateNodeImageEvaluationPrompt"
+      <!-- Session 256: Canvas + Output Drawer column -->
+      <div class="canvas-and-drawer">
+        <!-- Canvas with zoom controls -->
+        <div class="canvas-container">
+          <CanvasWorkspace
+            ref="canvasWorkspaceRef"
+            :nodes="canvasStore.nodes"
+            :connections="canvasStore.connections"
+            :selected-node-id="canvasStore.selectedNodeId"
+            :connecting-from-id="canvasStore.connectingFromId"
+            :mouse-position="canvasStore.mousePosition"
+            :llm-models="canvasStore.llmModels"
+            :vision-models="canvasStore.visionModels"
+            :execution-results="canvasStore.executionResults"
+            :collector-output="canvasStore.collectorOutput"
+            :output-configs="canvasStore.outputConfigs"
+            :active-node-id="canvasStore.activeNodeId"
+            :connecting-label="canvasStore.connectingLabel"
+            :highlighted-node-id="highlightedNodeId"
+            @select-node="canvasStore.selectNode"
+            @update-node-position="canvasStore.updateNodePosition"
+            @delete-node="canvasStore.deleteNode"
+            @add-connection="canvasStore.completeConnection"
+            @delete-connection="canvasStore.deleteConnection"
+            @start-connection="canvasStore.startConnection"
+            @cancel-connection="canvasStore.cancelConnection"
+            @complete-connection="canvasStore.completeConnection"
+            @complete-connection-feedback="canvasStore.completeConnectionFeedback"
+            @update-mouse-position="canvasStore.updateMousePosition"
+            @add-node-at="handleAddNodeAt"
+            @select-config="handleSelectConfig"
+            @update-node-llm="handleUpdateNodeLLM"
+            @update-node-context-prompt="handleUpdateNodeContextPrompt"
+            @update-node-translation-prompt="handleUpdateNodeTranslationPrompt"
+            @update-node-prompt-text="handleUpdateNodePromptText"
+            @update-node-size="handleUpdateNodeSize"
+            @update-node-display-title="handleUpdateNodeDisplayTitle"
+            @update-node-display-mode="handleUpdateNodeDisplayMode"
+            @update-node-evaluation-type="handleUpdateNodeEvaluationType"
+            @update-node-evaluation-prompt="handleUpdateNodeEvaluationPrompt"
+            @update-node-output-type="handleUpdateNodeOutputType"
+            @update-node-random-prompt-preset="handleUpdateNodeRandomPromptPreset"
+            @update-node-random-prompt-model="handleUpdateNodeRandomPromptModel"
+            @update-node-random-prompt-film-type="handleUpdateNodeRandomPromptFilmType"
+            @update-node-random-prompt-token-limit="handleUpdateNodeRandomPromptTokenLimit"
+            @update-node-model-adaption-preset="handleUpdateNodeModelAdaptionPreset"
+            @update-node-interception-preset="handleUpdateNodeInterceptionPreset"
+            @update-node-comparison-llm="handleUpdateNodeComparisonLlm"
+            @update-node-comparison-criteria="handleUpdateNodeComparisonCriteria"
+            @update-node-seed-mode="handleUpdateNodeSeedMode"
+            @update-node-seed-value="handleUpdateNodeSeedValue"
+            @update-node-seed-base="handleUpdateNodeSeedBase"
+            @update-node-resolution-preset="handleUpdateNodeResolutionPreset"
+            @update-node-resolution-width="handleUpdateNodeResolutionWidth"
+            @update-node-resolution-height="handleUpdateNodeResolutionHeight"
+            @update-node-quality-steps="handleUpdateNodeQualitySteps"
+            @update-node-quality-cfg="handleUpdateNodeQualityCfg"
+            @end-connect-input-1="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-1')"
+            @end-connect-input-2="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-2')"
+            @end-connect-input-3="(nodeId: string) => canvasStore.completeConnectionToInput(nodeId, 'input-3')"
+            @update-node-image-data="handleUpdateNodeImageData"
+            @update-node-vision-model="handleUpdateNodeVisionModel"
+            @update-node-image-evaluation-preset="handleUpdateNodeImageEvaluationPreset"
+            @update-node-image-evaluation-prompt="handleUpdateNodeImageEvaluationPrompt"
+          />
+
+          <!-- Session 256: Floating zoom controls -->
+          <div class="zoom-controls-float">
+            <ZoomControls
+              :zoom-level="currentZoomLevel"
+              @zoom-in="canvasWorkspaceRef?.zoomIn()"
+              @zoom-out="canvasWorkspaceRef?.zoomOut()"
+              @zoom-reset="canvasWorkspaceRef?.zoomReset()"
+              @fit-to-content="canvasWorkspaceRef?.fitToContent()"
+            />
+          </div>
+        </div>
+
+        <!-- Session 256: Output Drawer -->
+        <OutputDrawer
+          :items="canvasStore.collectorOutput"
+          :is-collapsed="drawerCollapsed"
+          :highlighted-node-id="highlightedNodeId"
+          @toggle-collapse="drawerCollapsed = !drawerCollapsed"
+          @highlight-node="highlightNode"
+          @download="() => {}"
         />
       </div>
     </div>
@@ -562,7 +623,7 @@ onUnmounted(() => {
       <div class="batch-modal">
         <div class="batch-modal-header">
           <h3>{{ $t('canvas.batchExecution') }}</h3>
-          <button class="close-btn" @click="showBatchModal = false">×</button>
+          <button class="close-btn" @click="showBatchModal = false">&times;</button>
         </div>
         <div class="batch-modal-content">
           <div class="batch-field">
@@ -586,7 +647,7 @@ onUnmounted(() => {
             {{ $t('canvas.cancel') }}
           </button>
           <button class="btn primary" @click="handleStartBatch">
-            🔄 {{ $t('canvas.batchStart') }}
+            {{ $t('canvas.batchStart') }}
           </button>
         </div>
       </div>
@@ -599,7 +660,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #0f172a;
+  background: #0a0a0a;
   color: #e2e8f0;
 }
 
@@ -608,7 +669,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background: #1e293b;
+  background: #141414;
   border-bottom: 1px solid #334155;
   gap: 1rem;
 }
@@ -714,7 +775,7 @@ onUnmounted(() => {
 
 .name-input {
   padding: 0.25rem 0.5rem;
-  background: #0f172a;
+  background: #0a0a0a;
   border: 1px solid #3b82f6;
   border-radius: 4px;
   color: #e2e8f0;
@@ -747,21 +808,38 @@ onUnmounted(() => {
   display: flex;
   flex: 1;
   overflow: hidden;
-  min-height: 0;  /* Session 141: Allow flex children to shrink for proper scrolling */
+  min-height: 0;
 }
 
 .palette-panel {
   width: 240px;
-  background: #1e293b;
+  background: #141414;
   border-right: 1px solid #334155;
   overflow-y: auto;
+}
+
+/* Session 256: Canvas + Drawer column layout */
+.canvas-and-drawer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 .canvas-container {
   flex: 1;
   position: relative;
-  min-width: 0;   /* Session 141: Prevent flex item overflow */
-  min-height: 0;  /* Session 141: Prevent flex item overflow */
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Session 256: Floating zoom controls */
+.zoom-controls-float {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 50;
 }
 
 .loading-overlay {
@@ -770,7 +848,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(10, 10, 10, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -779,7 +857,7 @@ onUnmounted(() => {
 
 .loading-spinner {
   padding: 1rem 2rem;
-  background: #1e293b;
+  background: #141414;
   border-radius: 8px;
   font-size: 1rem;
 }
@@ -791,7 +869,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(10, 10, 10, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -805,7 +883,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 1.5rem;
   padding: 2rem 3rem;
-  background: linear-gradient(145deg, #1e293b, #0f172a);
+  background: linear-gradient(145deg, #141414, #0a0a0a);
   border-radius: 16px;
   border: 1px solid #334155;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -929,7 +1007,7 @@ onUnmounted(() => {
 }
 
 .batch-modal {
-  background: #1e293b;
+  background: #141414;
   border: 1px solid #334155;
   border-radius: 12px;
   width: 400px;
@@ -989,7 +1067,7 @@ onUnmounted(() => {
 .batch-field input[type="number"] {
   width: 100%;
   padding: 0.625rem;
-  background: #0f172a;
+  background: #0a0a0a;
   border: 1px solid #334155;
   border-radius: 6px;
   color: #f1f5f9;

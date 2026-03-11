@@ -428,6 +428,18 @@ export const en = {
     batchBaseSeed: 'Base Seed',
     batchSeedHint: 'Each run: seed + index',
     batchStart: 'Start Batch',
+    outputDrawer: {
+      title: 'Outputs',
+      emptyState: 'Run workflow to generate outputs',
+      download: 'Download',
+      imageAlt: 'Generated output'
+    },
+    zoomControls: {
+      zoomIn: 'Zoom in',
+      zoomOut: 'Zoom out',
+      resetZoom: 'Reset zoom',
+      fitToContent: 'Fit to content'
+    },
     stage: {
       configSelectPlaceholder: 'Select...',
       evaluationCriteriaFallback: 'Evaluation criteria...',

@@ -21,6 +21,20 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-11-canvas-output-drawer-zoom
+- **Session**: 256
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (new or modified):
+  - `canvas.outputDrawer.title` (NEW)
+  - `canvas.outputDrawer.emptyState` (NEW)
+  - `canvas.outputDrawer.download` (NEW)
+  - `canvas.outputDrawer.imageAlt` (NEW)
+  - `canvas.zoomControls.zoomIn` (NEW)
+  - `canvas.zoomControls.zoomOut` (NEW)
+  - `canvas.zoomControls.resetZoom` (NEW)
+  - `canvas.zoomControls.fitToContent` (NEW)
+- **Context**: Canvas modernization — new Output Drawer component shows media outputs with attribution. Zoom controls for pan/zoom canvas. All are short UI labels.
+
 ### WO-2026-03-06-3d-media-output
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (new or modified):

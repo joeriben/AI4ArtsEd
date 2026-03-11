@@ -148,7 +148,7 @@ watch(() => props.visible, (visible) => {
 }
 
 .modal-content {
-  background: #1e293b;
+  background: #141414;
   border-radius: 12px;
   width: 90%;
   max-width: 500px;
@@ -195,7 +195,7 @@ watch(() => props.visible, (visible) => {
 .search-box input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: #0f172a;
+  background: #0a0a0a;
   border: 1px solid #334155;
   border-radius: 8px;
   color: #e2e8f0;
