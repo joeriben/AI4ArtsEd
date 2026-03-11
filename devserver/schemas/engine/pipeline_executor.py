@@ -533,6 +533,9 @@ class PipelineExecutor:
         if wikipedia_enabled and 'WIKIPEDIA_CONTEXT' not in context.custom_placeholders:
             context.custom_placeholders['WIKIPEDIA_CONTEXT'] = ''
 
+        # Track already-fetched terms across iterations to prevent duplicates
+        fetched_terms: set = set()  # (term_lower, lang)
+
         while True:
             chunk_context = {
                 "input_text": context.input_text,
@@ -645,13 +648,23 @@ class PipelineExecutor:
                     # Markers found - fetch Wikipedia content
                     logger.info(f"[WIKI-LOOP] Iteration {wiki_iteration + 1}: Found {len(markers)} marker(s)")
 
-                    # Build lookup terms with language resolution
+                    # Build lookup terms with language resolution + deduplication
                     lookup_terms = []
-                    for marker in markers[:max_lookups]:
-                        # Use marker's language or fall back to input language
+                    for marker in markers:
                         lang = marker.language if marker.language else input_language
+                        key = (marker.term.lower(), lang)
+                        if key in fetched_terms:
+                            logger.debug(f"[WIKI-DEDUP] Skipping already-fetched: '{marker.term}' ({lang})")
+                            continue
                         lookup_terms.append((marker.term, lang))
                         logger.info(f"[WIKI-LOOKUP] '{marker.term}' ({lang})")
+                        if len(lookup_terms) >= max_lookups:
+                            break
+
+                    # All markers were duplicates - strip and return
+                    if not lookup_terms:
+                        logger.info(f"[WIKI-DEDUP] All {len(markers)} marker(s) are duplicates, stripping and returning")
+                        return remove_markers(output)
 
                     # Store Wikipedia status for real-time UI feedback
                     # Session 136: Include language information for correct links
@@ -682,6 +695,10 @@ class PipelineExecutor:
                             context.custom_placeholders['WIKIPEDIA_CONTEXT'] = wiki_content
 
                         logger.info(f"[WIKI-LOOP] Added {len(wiki_content)} chars to WIKIPEDIA_CONTEXT")
+
+                        # Record fetched terms to prevent duplicate lookups in next iteration
+                        for term, lang in lookup_terms:
+                            fetched_terms.add((term.lower(), lang))
 
                         # Update status to complete
                         # Session 136: Include REAL Wikipedia results (title, url) not just search terms

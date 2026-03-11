@@ -22,7 +22,11 @@ def get_wikipedia_instructions() -> str:
     """
     return """
 WIKIPEDIA RESEARCH:
-When you need factual information about topics mentioned in the USER'S INPUT PROMPT above - you MUST use Wikipedia lookup. Do not invent facts. Do NOT research terms from the Task or Context sections - only research terms from the user's input.
+You have access to Wikipedia for topics from the USER'S INPUT PROMPT. Use it wisely:
+- DO look up: specific cultural practices, rituals, historical events, art movements, named places you are not 100% certain about
+- Do NOT look up: everyday words (Unfall, Haus, Farbe, Animation...), generic concepts, or things you can confidently describe from your training data (e.g. Bauhaus, Renaissance)
+- When in doubt about a culturally specific topic, LOOK IT UP — getting cultural details wrong is worse than an extra lookup
+Do NOT research terms from the Task or Context sections - only from the user's input.
 
 IMPORTANT: Use Wikipedia in the CULTURAL REFERENCE LANGUAGE, not the prompt language.
 
