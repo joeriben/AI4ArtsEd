@@ -1,5 +1,41 @@
 # Development Log
 
+## Session 258 - Wikipedia Lookup Optimization: Dedup + Selective Prompt
+**Date:** 2026-03-11
+**Focus:** Fix duplicate and unnecessary Wikipedia lookups in Stage 2 Prompt Interception.
+
+### Problem
+1. LLM requested same Wikipedia terms multiple times across iterations (no dedup)
+2. LLM looked up trivial everyday words ("Unfall", "Animation") — prompt said "you MUST use Wikipedia lookup" for any factual info, forcing overcautious behavior
+
+### Changes
+
+#### 1. Backend Deduplication (`pipeline_executor.py`)
+- Added `fetched_terms: set` tracking `(term_lower, lang)` across wiki iterations
+- Markers for already-fetched terms are skipped with `[WIKI-DEDUP]` log
+- If all markers in an iteration are duplicates → strip markers and return immediately
+
+#### 2. Prompt Selectivity (`wikipedia_prompt_helper.py`)
+- Replaced "you MUST use Wikipedia lookup" with differentiated guidance
+- DO: cultural practices, rituals, historical events, named places the LLM isn't certain about
+- DON'T: everyday words, generic concepts, confidently known topics
+- Key principle: "When in doubt about a culturally specific topic, LOOK IT UP"
+
+### Test Results
+| Prompt | Wiki Lookups | Correct? |
+|--------|-------------|----------|
+| "Unfall Autobahn Bauhaus Dessau Animation" | 0 | Yes — all common knowledge |
+| "Rotes Haus blaues Dach grüne Bäume" | 0 | Yes — trivial |
+| "Igbo-Ritual 16. Jahrhundert" | 1 (New Yam Festival) | Yes — culturally specific |
+| Igbo iteration 2 (duplicate) | 0 (dedup) | Yes — `[WIKI-DEDUP]` logged |
+| "Mbira-Zeremonie der Shona" | 8 (Mbira, Shona, Griot, Kora...) | Yes — culturally specific |
+
+### Files Modified
+- `devserver/schemas/engine/pipeline_executor.py` — dedup logic
+- `devserver/schemas/engine/wikipedia_prompt_helper.py` — selective prompt
+
+---
+
 ## Session 257 - Canvas Modernization: Pan/Zoom + Output Drawer + Attribution
 **Date:** 2026-03-11
 **Focus:** Transform Canvas Workflow Builder into a fully interactive workspace with pan/zoom, dedicated output drawer, and model attribution.
