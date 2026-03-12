@@ -38,11 +38,18 @@ from .model_selector import model_selector
 # Import UI_MODE for adaptive token limits
 from config import UI_MODE, LLM_API_TIMEOUT, DSGVO_ONLY_FALLBACK, DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS
 
-# UI_MODE-adaptive max_tokens (hard API limit, ~2 tokens per word)
-UI_MODE_MAX_TOKENS = {
-    "kids": 200,    # ~100 words
-    "youth": 400,   # ~200 words
-    "expert": 600,  # ~300 words
+# UI_MODE-adaptive length guidance (injected into prompt, NOT hard-truncated)
+# The LLM is instructed to stay within this word budget.
+# max_tokens is set to 2x as a safety net (never truncates mid-sentence).
+UI_MODE_WORD_LIMITS = {
+    "kids": 80,     # short, age-appropriate
+    "youth": 150,   # moderate length
+    "expert": 250,  # detailed
+}
+UI_MODE_MAX_TOKENS_SAFETY = {
+    "kids": 400,    # 2x word limit (safety net, should never be reached)
+    "youth": 600,
+    "expert": 800,
 }
 
 @dataclass
@@ -199,13 +206,19 @@ class PromptInterceptionEngine:
             self.openrouter_models = self.model_selector.get_openrouter_models()
             self.ollama_models = self.model_selector.get_ollama_models()
 
-            # Cap max_tokens by UI_MODE (only cap DOWN, never increase)
-            mode_limit = UI_MODE_MAX_TOKENS.get(UI_MODE, 600)
+            # Inject length guidance into prompt (LLM self-limits instead of hard truncation)
+            word_limit = UI_MODE_WORD_LIMITS.get(UI_MODE)
+            if word_limit:
+                length_instruction = f"\n\nIMPORTANT: Keep your response under {word_limit} words. Be concise."
+                full_prompt = full_prompt + length_instruction
+                logger.info(f"[BACKEND] Length guidance injected: {word_limit} words (UI_MODE={UI_MODE})")
+
+            # Safety-net max_tokens (generous, should never truncate)
+            safety_limit = UI_MODE_MAX_TOKENS_SAFETY.get(UI_MODE, 800)
             req_params = request.parameters or {}
-            if req_params.get("max_tokens", 2048) > mode_limit:
-                req_params["max_tokens"] = mode_limit
+            if req_params.get("max_tokens", 2048) > safety_limit:
+                req_params["max_tokens"] = safety_limit
                 request.parameters = req_params
-                logger.info(f"[BACKEND] max_tokens capped to {mode_limit} (UI_MODE={UI_MODE})")
 
             # Route based on provider prefix (explicit routing)
             # Canvas and other components select specific providers via prefix
@@ -565,8 +578,7 @@ class PromptInterceptionEngine:
             params = parameters or {}
 
             # Reasoning models (e.g. gpt-oss-120b) use tokens for chain-of-thought
-            # before generating content. The UI_MODE cap (200-600) would starve them,
-            # producing null content. Ensure minimum 2048 for reasoning models.
+            # before generating content. Ensure minimum 2048 for reasoning models.
             max_tokens = params.get("max_tokens", 2048)
             if "gpt-oss" in api_model and max_tokens < 2048:
                 max_tokens = 2048
