@@ -196,6 +196,7 @@ const emit = defineEmits<{
 const cloudColumns: CloudColumn[] = [
   { id: 'mistral', label: 'Mistral EU', dsgvoCompliant: true },
   { id: 'ionos', label: 'IONOS EU', dsgvoCompliant: true },
+  { id: 'mammouth', label: 'Mammouth EU', dsgvoCompliant: true },
   { id: 'anthropic', label: 'Anthropic', dsgvoCompliant: false },
   { id: 'openai', label: 'OpenAI', dsgvoCompliant: false },
   { id: 'openrouter', label: 'OpenRouter', dsgvoCompliant: false },
@@ -274,7 +275,7 @@ function getShortModelName(fullModel: string): string {
   // Remove all provider prefixes (local/, ionos/openai/, ionos/meta-llama/, etc.)
   // Strip known provider prefixes, then known org prefixes
   let name = fullModel
-    .replace(/^(local|bedrock|mistral|ionos|anthropic|openai|openrouter)\//, '')
+    .replace(/^(local|bedrock|mistral|ionos|mammouth|anthropic|openai|openrouter)\//, '')
     .replace(/^(openai|meta-llama|mistralai|openGPT-X)\//, '')
 
   // Shorten long model names
