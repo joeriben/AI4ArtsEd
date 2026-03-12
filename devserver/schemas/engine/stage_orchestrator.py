@@ -397,7 +397,7 @@ _AGE_VERIFY_CACHE: Dict[tuple, tuple] = {}
 _AGE_VERIFY_CACHE_TTL = 60  # seconds
 
 
-def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: str) -> Optional[bool]:
+def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: str) -> tuple:
     """
     LLM context verification for age-filter fast-filter hits.
 
@@ -413,9 +413,9 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         safety_level: 'kids' or 'youth'
 
     Returns:
-        True if LLM confirms content is inappropriate (block).
-        False if LLM says benign context (allow).
-        None if LLM unavailable (fail-closed).
+        Tuple of (verdict, llm_output):
+        - verdict: True (block), False (allow), None (unavailable/fail-closed)
+        - llm_output: Raw LLM response text for debug logging
     """
     import config
 
@@ -426,7 +426,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         cached_result, cached_time = _AGE_VERIFY_CACHE[cache_key]
         if now - cached_time < _AGE_VERIFY_CACHE_TTL:
             logger.info(f"[AGE-LLM-VERIFY] Cache hit → {'UNSAFE' if cached_result else 'SAFE'} (age={now - cached_time:.0f}s)")
-            return cached_result
+            return cached_result, "(cached)"
 
     terms_str = ", ".join(found_terms[:5])
 
@@ -459,7 +459,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
             api_url, api_key = get_ionos_credentials()
             if not api_key:
                 logger.error(f"[AGE-LLM-VERIFY] IONOS API key unavailable — fail-closed")
-                return None
+                return None, ""
 
             response = _requests.post(
                 api_url,
@@ -476,7 +476,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
 
             if response.status_code != 200:
                 logger.error(f"[AGE-LLM-VERIFY] IONOS {response.status_code}: {response.text[:200]} ({duration_ms:.0f}ms) — fail-closed")
-                return None
+                return None, ""
 
             data = response.json()
             msg = data.get("choices", [{}])[0].get("message", {})
@@ -500,13 +500,13 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
 
             if llm_result is None:
                 logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned None ({duration_ms:.0f}ms) — fail-closed")
-                return None
+                return None, ""
 
             output = llm_result.get("response", "").strip()
 
         if not output:
             logger.error(f"[AGE-LLM-VERIFY] terms={terms_str} → {model} returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
-            return None
+            return None, ""
 
         output_upper = output.upper()
         is_unsafe = 'UNSAFE' in output_upper
@@ -516,11 +516,11 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
             f"{'UNSAFE (ages ' + age_range + ')' if is_unsafe else 'SAFE — false positive'} ({duration_ms:.0f}ms)"
         )
         _AGE_VERIFY_CACHE[cache_key] = (is_unsafe, _time.time())
-        return is_unsafe
+        return is_unsafe, output
 
     except Exception as e:
         logger.error(f"[AGE-LLM-VERIFY] failed: {e} — fail-closed")
-        return None
+        return None, ""
 
 
 def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
@@ -538,7 +538,8 @@ def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
             "safe": bool,
             "codes": List[str],  # e.g. ['S1', 'S4']
             "model_used": str,
-            "execution_time": float
+            "execution_time": float,
+            "llm_output": str  # Raw LLM response for debug logging
         }
     """
     import config
@@ -564,23 +565,23 @@ def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
 
         if llm_result is None:
             logger.error(f"[STAGE3-SAFETY] Llama-Guard ({model}) returned None ({execution_time*1000:.0f}ms) — fail-closed")
-            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time}
+            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time, "llm_output": ""}
 
         output = llm_result.get("response", "").strip()
         if not output:
             logger.error(f"[STAGE3-SAFETY] Llama-Guard ({model}) returned EMPTY ({execution_time*1000:.0f}ms) — fail-closed")
-            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time}
+            return {"safe": False, "codes": [], "model_used": model, "execution_time": execution_time, "llm_output": ""}
 
         is_safe, codes = parse_llamaguard_output(output)
         logger.info(
             f"[STAGE3-SAFETY] Llama-Guard={output!r} → "
             f"{'SAFE' if is_safe else 'UNSAFE ' + str(codes)} ({execution_time*1000:.0f}ms)"
         )
-        return {"safe": is_safe, "codes": codes, "model_used": model, "execution_time": execution_time}
+        return {"safe": is_safe, "codes": codes, "model_used": model, "execution_time": execution_time, "llm_output": output}
 
     except Exception as e:
         logger.error(f"[STAGE3-SAFETY] Llama-Guard failed ({model}): {e} — fail-closed")
-        return {"safe": False, "codes": [], "model_used": model, "execution_time": 0}
+        return {"safe": False, "codes": [], "model_used": model, "execution_time": 0, "llm_output": ""}
 
 
 # ============================================================================
@@ -1190,7 +1191,7 @@ async def execute_stage1_safety_unified(
             logger.info(f"[STAGE1] Age-filter hit: {found_age_terms[:3]} → LLM context check ({age_time*1000:.1f}ms)")
 
             llm_start = _time.time()
-            verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
+            verify_result, _llm_output = llm_verify_age_filter_context(text, found_age_terms, safety_level)
             llm_time = _time.time() - llm_start
 
             if verify_result is None:
@@ -1375,7 +1376,9 @@ async def execute_stage3_safety(
             "positive_prompt": None,
             "negative_prompt": None,
             "model_used": llm_result["model_used"],
-            "execution_time": llm_result["execution_time"]
+            "execution_time": llm_result["execution_time"],
+            "llm_output": llm_result.get("llm_output", ""),
+            "found_terms": relevant_codes
         }
 
 

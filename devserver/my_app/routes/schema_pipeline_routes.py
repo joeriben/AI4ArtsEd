@@ -1606,10 +1606,14 @@ def execute_pipeline_streaming(data: dict):
             # §86a fast-filter (language-aware)
             has_86a, found_86a = fast_filter_bilingual_86a(input_text, user_language)
             if has_86a:
+                reason = f'§86a StGB: {", ".join(found_86a[:3])}'
                 logger.warning(f"[UNIFIED-STREAMING] §86a BLOCKED: {found_86a[:3]}")
+                recorder.save_error(stage=1, error_type='safety_blocked', message=reason,
+                    details={'check': '86a', 'safety_level': safety_level, 'found_terms': found_86a, 'input_text': input_text})
                 yield generate_sse_event('blocked', {
                     'stage': 'safety',
-                    'reason': f'§86a StGB: {", ".join(found_86a[:3])}'
+                    'reason': reason,
+                    'found_terms': found_86a
                 })
                 yield ''
                 return
@@ -1632,9 +1636,12 @@ def execute_pipeline_streaming(data: dict):
                     safety_breaker.record_success()
                     reason = f'DSGVO: {", ".join(found_pii[:3])}'
                     logger.warning(f"[UNIFIED-STREAMING] DSGVO BLOCKED: {reason}")
+                    recorder.save_error(stage=1, error_type='safety_blocked', message=reason,
+                        details={'check': 'dsgvo', 'safety_level': safety_level, 'found_terms': found_pii, 'input_text': input_text})
                     yield generate_sse_event('blocked', {
                         'stage': 'safety',
-                        'reason': reason
+                        'reason': reason,
+                        'found_terms': found_pii
                     })
                     yield ''
                     return
@@ -1650,7 +1657,7 @@ def execute_pipeline_streaming(data: dict):
                 if has_age:
                     filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
                     logger.info(f"[UNIFIED-STREAMING] {filter_name} hit: {found_age[:3]} → LLM context check")
-                    verify_result = llm_verify_age_filter_context(input_text, found_age, safety_level)
+                    verify_result, llm_output = llm_verify_age_filter_context(input_text, found_age, safety_level)
                     if verify_result is None:
                         safety_breaker.record_failure()
                         if safety_breaker.is_open():
@@ -1663,10 +1670,15 @@ def execute_pipeline_streaming(data: dict):
                     elif verify_result:
                         safety_breaker.record_success()
                         reason = f'{filter_name}: {", ".join(found_age[:3])}'
-                        logger.warning(f"[UNIFIED-STREAMING] {filter_name} BLOCKED: {reason}")
+                        logger.warning(f"[UNIFIED-STREAMING] {filter_name} BLOCKED: {reason} | LLM: {llm_output}")
+                        recorder.save_error(stage=1, error_type='safety_blocked', message=reason,
+                            details={'check': 'age_filter', 'safety_level': safety_level, 'found_terms': found_age,
+                                     'llm_output': llm_output, 'filter_name': filter_name, 'input_text': input_text})
                         yield generate_sse_event('blocked', {
                             'stage': 'safety',
-                            'reason': reason
+                            'reason': reason,
+                            'llm_output': llm_output,
+                            'found_terms': found_age
                         })
                         yield ''
                         return
@@ -2135,7 +2147,7 @@ def safety_check_quick():
             if has_age_terms:
                 filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
                 logger.info(f"[SAFETY-QUICK] {filter_name} hit: {found_age_terms[:3]} → LLM context check")
-                verify_result = llm_verify_age_filter_context(text, found_age_terms, safety_level)
+                verify_result, llm_output = llm_verify_age_filter_context(text, found_age_terms, safety_level)
                 if verify_result is None:
                     safety_breaker.record_failure()
                     if safety_breaker.is_open():
@@ -2148,7 +2160,7 @@ def safety_check_quick():
                     logger.warning(f"[SAFETY-QUICK] {filter_name} LLM unavailable — circuit breaker recording failure")
                 elif verify_result:
                     safety_breaker.record_success()
-                    logger.warning(f"[SAFETY-QUICK] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]}")
+                    logger.warning(f"[SAFETY-QUICK] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]} | LLM: {llm_output}")
                     return jsonify({
                         'safe': False,
                         'checks_passed': checks_passed + ['age_filter', 'age_llm_verify'],
@@ -2447,11 +2459,24 @@ def execute_generation_streaming(data: dict):
 
         if not safety_result['safe']:
             # BLOCKED by Stage 3
-            logger.warning(f"[GENERATION-STREAMING] Stage 3 BLOCKED for run {run_id}")
+            logger.warning(f"[GENERATION-STREAMING] Stage 3 BLOCKED for run {run_id} | LLM: {safety_result.get('llm_output', '')}")
+            # Ensure recorder exists for error persistence
+            if existing_recorder:
+                recorder = existing_recorder
+            else:
+                recorder = get_recorder(
+                    run_id=run_id, config_name=output_config, safety_level=safety_level,
+                    device_id=device_id, base_path=JSON_STORAGE_DIR)
+            recorder.save_error(stage=3, error_type='safety_blocked',
+                message=safety_result.get('abort_reason', ''),
+                details={'check': 'llamaguard', 'safety_level': safety_level,
+                         'codes': safety_result.get('found_terms', []),
+                         'llm_output': safety_result.get('llm_output', ''), 'prompt': prompt})
             yield generate_sse_event('blocked', {
                 'stage': 3,
                 'reason': safety_result.get('abort_reason', 'Content blocked by safety check'),
                 'found_terms': safety_result.get('found_terms', []),
+                'llm_output': safety_result.get('llm_output', ''),
                 'run_id': run_id,
                 'checks_passed': ['translation', safety_result.get('method', 'llm_context_check')]
             })
@@ -2637,6 +2662,8 @@ def execute_generation_streaming(data: dict):
             vlm_safe, vlm_reason, vlm_description = _vlm_safety_check_image(recorder, safety_level)
             if not vlm_safe:
                 logger.warning(f"[GENERATION-STREAMING] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
+                recorder.save_error(stage=3, error_type='safety_blocked', message=f'VLM: {vlm_reason}',
+                    details={'check': 'vlm', 'safety_level': safety_level, 'vlm_reason': vlm_reason, 'vlm_description': vlm_description})
                 yield generate_sse_event('blocked', {
                     'stage': 'vlm_safety',
                     'reason': vlm_reason,
