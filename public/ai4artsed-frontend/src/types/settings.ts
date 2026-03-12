@@ -29,7 +29,7 @@ export type LLMModelField = Exclude<ModelField, VisionModelField>
 export type VramTier = 'vram_8' | 'vram_16' | 'vram_24' | 'vram_32' | 'vram_48' | 'vram_96'
 
 /** Cloud provider identifiers (bedrock removed) */
-export type CloudProvider = 'none' | 'local' | 'mistral' | 'ionos' | 'anthropic' | 'openai' | 'openrouter'
+export type CloudProvider = 'none' | 'local' | 'mistral' | 'ionos' | 'mammouth' | 'anthropic' | 'openai' | 'openrouter'
 
 /** Row definition for matrix display */
 export interface MatrixRow {

@@ -235,6 +235,38 @@ def get_ionos_credentials():
     return api_url, ""
 
 
+def get_mammouth_credentials():
+    """Get Mammouth AI credentials (EU-based, DSGVO-compliant)"""
+    api_url = "https://api.mammouth.ai/v1/chat/completions"
+
+    # 1. Try Environment Variable
+    api_key = os.environ.get("MAMMOUTH_API_KEY", "")
+    if api_key:
+        logger.debug("Mammouth API Key from environment variable")
+        return api_url, api_key
+
+    # 2. Try Key-File (devserver/mammouth.key)
+    try:
+        key_file = Path(__file__).parent.parent.parent / "mammouth.key"
+        if key_file.exists():
+            lines = key_file.read_text().strip().split('\n')
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith('#') and not line.startswith('//'):
+                    api_key = line
+                    logger.info(f"Mammouth API Key loaded from {key_file}")
+                    return api_url, api_key
+            logger.error(f"No valid API key found in {key_file}")
+        else:
+            logger.warning(f"Mammouth key file not found: {key_file}")
+    except Exception as e:
+        logger.warning(f"Failed to read mammouth.key: {e}")
+
+    # 3. No key found
+    logger.error("Mammouth API Key not found! Set MAMMOUTH_API_KEY environment variable or create devserver/mammouth.key file")
+    return api_url, ""
+
+
 def _requests_post_with_retry(url, max_retries=3, retry_on=(429, 502, 503, 504), **kwargs):
     """POST with exponential backoff for transient HTTP errors."""
     for attempt in range(max_retries):
@@ -407,6 +439,47 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
         raise
 
 
+def _call_mammouth_chat(messages: list, model: str, temperature: float, max_tokens: int):
+    """Call Mammouth AI API (EU-based, DSGVO-compliant)"""
+    try:
+        api_url, api_key = get_mammouth_credentials()
+
+        if not api_key:
+            raise Exception("Mammouth API Key not configured")
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens
+        }
+
+        response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=60)
+
+        if response.status_code == 200:
+            result = response.json()
+            content = result["choices"][0]["message"].get("content") or ""
+
+            if not content:
+                raise Exception("Mammouth returned empty response")
+
+            logger.info(f"[CHAT] Mammouth Success: {len(content)} chars")
+            return {"content": content, "thinking": None}
+        else:
+            error_msg = f"API Error: {response.status_code}\n{response.text}"
+            logger.error(f"[CHAT] Mammouth Error: {error_msg}")
+            raise Exception(error_msg)
+
+    except Exception as e:
+        logger.error(f"[CHAT] Mammouth call failed: {e}", exc_info=True)
+        raise
+
+
 def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int):
     """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
     try:
@@ -495,6 +568,11 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
         logger.info(f"[CHAT] Calling IONOS with model: {model}")
         result = _call_ionos_chat(messages, model, temperature, max_tokens)
 
+    elif model_string.startswith("mammouth/"):
+        model = model_string[len("mammouth/"):]
+        logger.info(f"[CHAT] Calling Mammouth with model: {model}")
+        result = _call_mammouth_chat(messages, model, temperature, max_tokens)
+
     # OpenRouter-compatible providers
     elif model_string.startswith("anthropic/"):
         model = model_string[len("anthropic/"):]
@@ -517,7 +595,7 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
         result = _call_ollama_chat(messages, model, temperature, max_tokens)
 
     else:
-        raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, anthropic/, openai/, openrouter/")
+        raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, mammouth/, anthropic/, openai/, openrouter/")
 
     # Normalize: Ollama returns dict, other providers return plain strings
     if isinstance(result, str):

@@ -60,6 +60,7 @@ ANTHROPIC_KEY_FILE = Path(__file__).parent.parent.parent / "anthropic.key"
 OPENAI_KEY_FILE = Path(__file__).parent.parent.parent / "openai.key"
 MISTRAL_KEY_FILE = Path(__file__).parent.parent.parent / "mistral.key"
 IONOS_KEY_FILE = Path(__file__).parent.parent.parent / "ionos.key"
+MAMMOUTH_KEY_FILE = Path(__file__).parent.parent.parent / "mammouth.key"
 
 # Path to settings password file (stores password hash)
 SETTINGS_PASSWORD_FILE = Path(__file__).parent.parent.parent / "settings_password.key"
@@ -699,6 +700,13 @@ def save_settings():
                 f.write(ionos_key.strip())
             logger.info("[SETTINGS] IONOS API Key updated")
 
+        mammouth_key = data.pop('MAMMOUTH_API_KEY', None)
+        if mammouth_key:
+            MAMMOUTH_KEY_FILE.parent.mkdir(exist_ok=True)
+            with open(MAMMOUTH_KEY_FILE, 'w') as f:
+                f.write(mammouth_key.strip())
+            logger.info("[SETTINGS] Mammouth API Key updated")
+
         # Write all other settings to user_settings.json
         SETTINGS_FILE.parent.mkdir(exist_ok=True)
         with open(SETTINGS_FILE, 'w') as f:
@@ -857,6 +865,42 @@ def get_ionos_key():
 
     except Exception as e:
         logger.error(f"[SETTINGS] Error reading IONOS key: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@settings_bp.route('/mammouth-key', methods=['GET'])
+@require_settings_auth
+def get_mammouth_key():
+    """Get masked Mammouth API Key for display"""
+    try:
+        if not MAMMOUTH_KEY_FILE.exists():
+            return jsonify({"exists": False}), 200
+
+        with open(MAMMOUTH_KEY_FILE) as f:
+            # Skip comment lines
+            key = ""
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and not line.startswith('//'):
+                    key = line
+                    break
+
+        if not key:
+            return jsonify({"exists": False}), 200
+
+        # Return masked version (show only first 7 and last 4 chars)
+        if len(key) > 11:
+            masked = f"{key[:7]}...{key[-4:]}"
+        else:
+            masked = "***"
+
+        return jsonify({
+            "exists": True,
+            "masked": masked
+        }), 200
+
+    except Exception as e:
+        logger.error(f"[SETTINGS] Error reading Mammouth key: {e}")
         return jsonify({"error": str(e)}), 500
 
 
@@ -1688,6 +1732,7 @@ def get_backend_status():
         "anthropic":   {"key_configured": ANTHROPIC_KEY_FILE.exists(),  "dsgvo_compliant": False, "region": "US"},
         "mistral":     {"key_configured": MISTRAL_KEY_FILE.exists(),    "dsgvo_compliant": True,  "region": "EU"},
         "ionos":       {"key_configured": IONOS_KEY_FILE.exists(),      "dsgvo_compliant": True,  "region": "EU"},
+        "mammouth":    {"key_configured": MAMMOUTH_KEY_FILE.exists(),   "dsgvo_compliant": True,  "region": "EU"},
         "aws_bedrock": {"key_configured": aws_env_script.exists(),      "dsgvo_compliant": True,  "region": "EU"},
     }
 

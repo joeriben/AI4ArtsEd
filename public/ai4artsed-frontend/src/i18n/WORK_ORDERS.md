@@ -21,6 +21,15 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-12-mammouth-provider
+- **Session**: 259
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (new or modified):
+  - `settings.api.mammouthEu` (NEW)
+  - `settings.api.mammouthInfo` (NEW)
+  - `settings.api.mammouthDsgvo` (NEW)
+- **Context**: New cloud LLM provider "Mammouth AI" — EU-based, DSGVO-compliant API aggregator. Used in Settings dropdown. mammouthEu = dropdown label, mammouthInfo = info box title, mammouthDsgvo = DSGVO compliance note.
+
 ### WO-2026-03-11-canvas-output-drawer-zoom
 - **Session**: 256
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg

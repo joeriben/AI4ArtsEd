@@ -107,6 +107,7 @@ DEFAULT_LANGUAGE = "de"  # "de" or "en"
 #   - "local/model-name" → Ollama (local inference, DSGVO-compliant ✓)
 #   - "mistral/model-name" → Mistral AI API direct (EU-based, DSGVO-compliant ✓)
 #   - "ionos/model-name"   → IONOS AI Model Hub (EU datacenter Berlin, DSGVO-compliant ✓)
+#   - "mammouth/model-name" → Mammouth AI (EU-based, DSGVO-compliant ✓)
 #   - "anthropic/model-name" → Anthropic API direct (NOT DSGVO-compliant ✗)
 #   - "openai/model-name" → OpenAI API direct (US-based, NOT DSGVO-compliant ✗)
 #   - "openrouter/provider/model-name" → OpenRouter aggregator (US proxy, NOT DSGVO-compliant ✗)
@@ -287,7 +288,7 @@ OLLAMA_API_BASE_URL = os.environ.get("OLLAMA_API_BASE_URL", "http://localhost:11
 LMSTUDIO_API_BASE_URL = os.environ.get("LMSTUDIO_API_BASE_URL", "http://localhost:1234")
 
 # External LLM Provider for cloud-based models
-# Options: "none", "openrouter", "anthropic", "openai", "mistral", "ionos"
+# Options: "none", "openrouter", "anthropic", "openai", "mistral", "ionos", "mammouth"
 EXTERNAL_LLM_PROVIDER = os.environ.get("EXTERNAL_LLM_PROVIDER", "none")
 
 # DSGVO Conformity - determines if cloud services are allowed
@@ -304,6 +305,7 @@ DSGVO_ONLY_FALLBACK = os.environ.get("DSGVO_ONLY_FALLBACK", "true").lower() == "
 DSGVO_SAFE_PROVIDERS = [
     ("mistral", "mistral/mistral-large-latest"),
     ("ionos", "ionos/meta-llama-3.1-70b-instruct"),
+    ("mammouth", "mammouth/claude-sonnet-4-6"),
 ]
 
 # ALL cloud providers with fallback models (used when DSGVO_ONLY_FALLBACK=False).

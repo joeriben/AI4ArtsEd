@@ -82,6 +82,20 @@
         "CODING_MODEL": "ionos/openai/gpt-oss-120b"
       }
     },
+    "mammouth": {
+      "label": "Mammouth AI (EU, DSGVO)",
+      "EXTERNAL_LLM_PROVIDER": "mammouth",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "mammouth/claude-sonnet-4-6",
+        "STAGE2_INTERCEPTION_MODEL": "mammouth/claude-sonnet-4-6",
+        "STAGE2_OPTIMIZATION_MODEL": "mammouth/claude-sonnet-4-6",
+        "STAGE3_MODEL": "mammouth/claude-sonnet-4-6",
+        "STAGE4_LEGACY_MODEL": "mammouth/claude-sonnet-4-6",
+        "CHAT_HELPER_MODEL": "mammouth/claude-sonnet-4-6",
+        "CODING_MODEL": "mammouth/claude-sonnet-4-6"
+      }
+    },
     "openrouter": {
       "label": "OpenRouter (NOT DSGVO, EU routing available)",
       "EXTERNAL_LLM_PROVIDER": "openrouter",

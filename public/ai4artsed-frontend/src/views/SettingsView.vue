@@ -173,7 +173,7 @@
         <ul>
           <li v-for="model in nonDsgvoModels" :key="model">{{ model }}</li>
         </ul>
-        <p class="help">{{ $t('settings.dsgvo.compliantHint') }} <code>local/*</code> | <code>mistral/*</code> | <code>ionos/*</code></p>
+        <p class="help">{{ $t('settings.dsgvo.compliantHint') }} <code>local/*</code> | <code>mistral/*</code> | <code>ionos/*</code> | <code>mammouth/*</code></p>
       </div>
 
       <!-- Model Configuration -->
@@ -249,6 +249,7 @@
                 <option value="none">{{ $t('settings.api.noneLocal') }}</option>
                 <option value="mistral">{{ $t('settings.api.mistralEu') }}</option>
                 <option value="ionos">{{ $t('settings.api.ionosEu') }}</option>
+                <option value="mammouth">{{ $t('settings.api.mammouthEu') }}</option>
                 <option value="anthropic">{{ $t('settings.api.anthropicDirect') }}</option>
                 <option value="openai">{{ $t('settings.api.openaiDirect') }}</option>
                 <option value="openrouter">{{ $t('settings.api.openrouterDirect') }}</option>
@@ -268,6 +269,13 @@
                 <p>{{ $t('settings.api.ionosDsgvo') }}</p>
                 <p>API Base URL: https://openai.inference.de-txl.ionos.com/v1</p>
                 <p>Token: <a href="https://dcd.ionos.com/" target="_blank">DCD Token Manager</a></p>
+              </div>
+
+              <div v-if="settings.EXTERNAL_LLM_PROVIDER === 'mammouth'" class="info-box info-box-success" style="margin-top: 12px;">
+                <strong>{{ $t('settings.api.mammouthInfo') }}</strong>
+                <p>{{ $t('settings.api.mammouthDsgvo') }}</p>
+                <p>API Base URL: https://api.mammouth.ai/v1</p>
+                <p>API Key: <a href="https://mammouth.ai" target="_blank">mammouth.ai</a></p>
               </div>
 
               <div v-if="settings.EXTERNAL_LLM_PROVIDER === 'anthropic'" class="info-box" style="margin-top: 12px; border-color: #ff9800;">
@@ -360,6 +368,20 @@
             </td>
           </tr>
 
+          <tr v-if="settings.EXTERNAL_LLM_PROVIDER === 'mammouth'">
+            <td class="label-cell">Mammouth API Key</td>
+            <td class="value-cell">
+              <input
+                type="password"
+                v-model="mammouthKey"
+                placeholder="..."
+                class="text-input"
+              />
+              <span class="help-text" v-if="mammouthKeyMasked">{{ $t('settings.api.currentKey') }}: {{ mammouthKeyMasked }}</span>
+              <span class="help-text">{{ $t('settings.api.storedIn') }} devserver/mammouth.key</span>
+            </td>
+          </tr>
+
           </tbody>
         </table>
       </div>
@@ -442,6 +464,8 @@ const mistralKey = ref('')
 const mistralKeyMasked = ref('')
 const ionosKey = ref('')
 const ionosKeyMasked = ref('')
+const mammouthKey = ref('')
+const mammouthKeyMasked = ref('')
 const awsCredentialsConfigured = ref(false)
 const saveMessage = ref('')
 const saveSuccess = ref(true)
@@ -476,7 +500,7 @@ const nonDsgvoModels = computed(() => {
   const labels = modelLabels.value
   Object.keys(modelLabelKeys).forEach(key => {
     const modelValue = settings.value[key] || ''
-    if (modelValue && !modelValue.startsWith('local/') && !modelValue.startsWith('mistral/') && !modelValue.startsWith('ionos/')) {
+    if (modelValue && !modelValue.startsWith('local/') && !modelValue.startsWith('mistral/') && !modelValue.startsWith('ionos/') && !modelValue.startsWith('mammouth/')) {
       problematic.push(`${labels[key]}: ${modelValue}`)
     }
   })
@@ -568,6 +592,16 @@ async function loadSettings() {
       const ionosData = await ionosResponse.json()
       if (ionosData.exists) {
         ionosKeyMasked.value = ionosData.masked
+      }
+    }
+
+    const mammouthResponse = await fetch('/api/settings/mammouth-key', {
+      credentials: 'include'
+    })
+    if (mammouthResponse.ok) {
+      const mammouthData = await mammouthResponse.json()
+      if (mammouthData.exists) {
+        mammouthKeyMasked.value = mammouthData.masked
       }
     }
 
@@ -691,6 +725,9 @@ async function saveAndApply() {
     if (ionosKey.value) {
       payload.IONOS_API_KEY = ionosKey.value
     }
+    if (mammouthKey.value) {
+      payload.MAMMOUTH_API_KEY = mammouthKey.value
+    }
 
     // Step 1: Save settings
     const saveResponse = await fetch('/api/settings/', {
@@ -781,6 +818,19 @@ async function saveAndApply() {
         const ionosData = await ionosResponse.json()
         if (ionosData.exists) {
           ionosKeyMasked.value = ionosData.masked
+        }
+      }
+    }
+
+    if (mammouthKey.value) {
+      mammouthKey.value = ''
+      const mammouthResponse = await fetch('/api/settings/mammouth-key', {
+        credentials: 'include'
+      })
+      if (mammouthResponse.ok) {
+        const mammouthData = await mammouthResponse.json()
+        if (mammouthData.exists) {
+          mammouthKeyMasked.value = mammouthData.masked
         }
       }
     }
