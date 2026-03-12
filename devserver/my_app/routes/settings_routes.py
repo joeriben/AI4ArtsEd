@@ -1486,7 +1486,7 @@ def get_preset_for_provider(provider):
             vram_tier = gpu_info.get('vram_tier', 'vram_16')
 
         # Validate provider
-        valid_providers = ['local', 'none', 'mistral', 'ionos', 'anthropic', 'openai', 'openrouter']
+        valid_providers = ['local', 'none', 'mistral', 'ionos', 'mammouth', 'anthropic', 'openai', 'openrouter']
         if provider not in valid_providers:
             return jsonify({"error": f"Invalid provider: {provider}"}), 400
 
