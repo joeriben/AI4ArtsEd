@@ -30,6 +30,30 @@
 
 ---
 
+## Mammouth AI: Keine eigenen Meta-Prompts trotz fehlender Hersteller-Sysprompts (2026-03-12)
+
+### Kontext
+Mammouth (mammouth.ai) ist ein EU-basierter API-Aggregator, der Modelle **ohne Hersteller-Sysprompt** ausliefert (z.B. kein "Du bist Claude, gemacht von Anthropic"). Grund: Kostenreduktion (weniger Tokens pro Request). Dokumentiert unter https://info.mammouth.ai/docs/model-self-awareness/.
+
+Dies betrifft potenziell alle API-Aggregatoren (OpenRouter etc.), nicht nur Mammouth — Mammouth macht es lediglich transparent.
+
+### Entscheidung: Keine eigenen Meta-Prompts hinzufügen
+
+1. **Unsere Pipeline-Prompts sind self-contained** — Stage 1-3 senden spezifische Instruktionen (Safety-Klassifikation, pädagogische Transformation, Übersetzung). Diese funktionieren unabhängig vom Identitätsbewusstsein des Modells.
+2. **Kernfähigkeiten nicht betroffen** — Reasoning, Sprachverständnis und Instruktionsbefolgung sind Modell-Eigenschaften, nicht Sysprompt-Eigenschaften.
+3. **Kosten-Kontraproduktivität** — Extra System-Prompts erhöhen Token-Kosten, was Mammouth's Preismodell konterkariert.
+4. **Verwaltungsaufwand** — Pro-Provider unterschiedliche Sysprompts zu managen (wer hat Hersteller-Prompt, wer nicht) wäre unverhältnismäßig.
+5. **Hersteller-Sysprompts sind Chat-Interface-orientiert** — Sie dienen primär der Nutzerinteraktion ("Ich bin Claude"), nicht der API-Pipeline-Nutzung.
+
+### Watchpoint
+Falls empirisch messbare Qualitätsverluste bei Mammouth-Modellen vs. Direkt-API auftreten (z.B. bei komplexen Interception-Aufgaben), ist ein minimaler System-Prompt (`"You are a helpful assistant."`) als erster Mitigationsschritt vorgesehen. Bis dahin: keine Aktion.
+
+### Betroffene Architektur
+- `prompt_interception_engine.py` — `_call_mammouth()` sendet nur User-Message, keinen System-Prompt (konsistent mit allen anderen Providern)
+- Gilt analog für `chat_routes.py` — `_call_mammouth_chat()` leitet Messages 1:1 durch
+
+---
+
 ## Qwen T2I permanent deaktiviert (2026-03-06)
 
 ### Kontext
