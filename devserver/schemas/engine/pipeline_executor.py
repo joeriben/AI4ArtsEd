@@ -94,7 +94,6 @@ class PipelineExecutor:
         self.chunk_builder = ChunkBuilder(schemas_path)
         self.backend_router = BackendRouter()
         self._initialized = False
-        self._current_config = None  # Store for _execute_single_step access
         
     def initialize(self, ollama_service=None, workflow_logic_service=None, comfyui_service=None):
         """Initialize pipeline executor with legacy services"""
@@ -161,8 +160,6 @@ class PipelineExecutor:
         # ====================================================================
         # DUMB EXECUTOR: Just execute chunks (Stage 1-3 in DevServer now)
         # ====================================================================
-        # Store config for step execution
-        self._current_config = resolved_config
 
         # Create pipeline context (or use override for multi-stage workflows)
         if context_override:
@@ -173,9 +170,6 @@ class PipelineExecutor:
                 input_text=input_text,
                 user_input=user_input or input_text
             )
-
-        # Store safety_level for chunk building (kids safety prefix injection)
-        self._safety_level = safety_level
 
         # Phase 4: Add seed_override to context if provided
         if seed_override is not None:
@@ -206,34 +200,31 @@ class PipelineExecutor:
         # Plan pipeline steps
         steps = self._plan_pipeline_steps(resolved_config)
 
-        result = await self._execute_pipeline_steps(config_name, steps, context, tracker=tracker)
+        result = await self._execute_pipeline_steps(config_name, steps, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
 
         logger.info(f"Pipeline for config '{config_name}' completed: {result.status}")
         return result
     
-    async def stream_pipeline(self, config_name: str, input_text: str, user_input: Optional[str] = None) -> AsyncGenerator[Tuple[str, Any], None]:
+    async def stream_pipeline(self, config_name: str, input_text: str, user_input: Optional[str] = None, safety_level: Optional[str] = None) -> AsyncGenerator[Tuple[str, Any], None]:
         """Execute pipeline with streaming updates"""
         if not self._initialized:
             yield ("error", "Pipeline-Executor not initialized")
             return
 
         logger.info(f"[PIPELINE] Streaming pipeline for config '{config_name}'")
-        
+
         resolved_config = self.config_loader.get_config(config_name)
         if not resolved_config:
             yield ("error", f"Config '{config_name}' not found")
             return
-        
-        # Store config for step execution
-        self._current_config = resolved_config
-        
+
         context = PipelineContext(
             input_text=input_text,
             user_input=user_input or input_text
         )
-        
+
         steps = self._plan_pipeline_steps(resolved_config)
-        
+
         yield ("pipeline_started", {
             "config_name": config_name,
             "pipeline_name": resolved_config.pipeline_name,
@@ -242,7 +233,7 @@ class PipelineExecutor:
         })
 
         # Execute pipeline steps with streaming
-        async for event_type, event_data in self._stream_pipeline_steps(config_name, steps, context):
+        async for event_type, event_data in self._stream_pipeline_steps(config_name, steps, context, resolved_config=resolved_config, safety_level=safety_level):
             yield (event_type, event_data)
     
     def _plan_pipeline_steps(self, resolved_config: ResolvedConfig) -> List[PipelineStep]:
@@ -259,12 +250,12 @@ class PipelineExecutor:
         logger.debug(f"Pipeline planned: {len(steps)} steps for config '{resolved_config.name}' (Pipeline: {resolved_config.pipeline_name})")
         return steps
     
-    async def _execute_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None) -> PipelineResult:
+    async def _execute_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> PipelineResult:
         """Execute pipeline steps sequentially (or recursively if pipeline supports it)"""
 
         # Check if this is a recursive pipeline
-        if self._current_config and self._current_config.pipeline_name == 'text_transformation_recursive':
-            return await self._execute_recursive_pipeline_steps(config_name, steps, context, tracker)
+        if resolved_config and resolved_config.pipeline_name == 'text_transformation_recursive':
+            return await self._execute_recursive_pipeline_steps(config_name, steps, context, tracker, resolved_config=resolved_config, safety_level=safety_level)
 
         # Normal sequential execution
         start_time = time.time()
@@ -273,7 +264,7 @@ class PipelineExecutor:
         for step in steps:
             try:
                 step.status = PipelineStatus.RUNNING
-                output = await self._execute_single_step(step, context, tracker=tracker)
+                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
 
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
@@ -321,7 +312,7 @@ class PipelineExecutor:
             "total_steps": len(steps),
             "input_length": len(context.input_text),
             "output_length": len(final_output),
-            "pipeline_name": self._current_config.pipeline_name if self._current_config else None
+            "pipeline_name": resolved_config.pipeline_name if resolved_config else None
         }
 
         # Add backend metadata from last completed step
@@ -341,7 +332,7 @@ class PipelineExecutor:
             metadata=result_metadata
         )
 
-    async def _execute_recursive_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None) -> PipelineResult:
+    async def _execute_recursive_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> PipelineResult:
         """Execute recursive pipeline with internal loop (e.g., Stille Post)"""
         from .random_language_selector import get_random_language, get_language_name
 
@@ -349,7 +340,7 @@ class PipelineExecutor:
         completed_steps = []
 
         # Read loop configuration from config parameters
-        config_params = self._current_config.parameters or {}
+        config_params = resolved_config.parameters or {}
         iterations = config_params.get('iterations', 8)
         use_random = config_params.get('use_random_languages', True)
         final_language = config_params.get('final_language', 'en')
@@ -393,7 +384,7 @@ class PipelineExecutor:
 
                 logger.info(f"[RECURSIVE-LOOP] Iteration {i+1}/{iterations}: Translating to {get_language_name(target_lang)} ({target_lang})")
 
-                output = await self._execute_single_step(step, context, tracker=tracker)
+                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
 
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
@@ -456,13 +447,13 @@ class PipelineExecutor:
                 "total_steps": len(completed_steps),
                 "input_length": len(context.input_text),
                 "output_length": len(final_output),
-                "pipeline_name": self._current_config.pipeline_name,
+                "pipeline_name": resolved_config.pipeline_name,
                 "iterations": iterations,
                 "language_sequence": languages
             }
         )
     
-    async def _stream_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext) -> AsyncGenerator[Tuple[str, Any], None]:
+    async def _stream_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, *, resolved_config=None, safety_level=None) -> AsyncGenerator[Tuple[str, Any], None]:
         """Execute pipeline steps with streaming updates"""
         for i, step in enumerate(steps):
             yield ("step_started", {
@@ -473,8 +464,8 @@ class PipelineExecutor:
             
             try:
                 step.status = PipelineStatus.RUNNING
-                output = await self._execute_single_step(step, context)
-                
+                output = await self._execute_single_step(step, context, resolved_config=resolved_config, safety_level=safety_level)
+
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
                 context.add_output(output)
@@ -508,7 +499,7 @@ class PipelineExecutor:
             "total_steps": len(steps)
         })
     
-    async def _execute_single_step(self, step: PipelineStep, context: PipelineContext, tracker=None) -> str:
+    async def _execute_single_step(self, step: PipelineStep, context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> str:
         """Execute single pipeline step with optional Wikipedia research capability
 
         Wikipedia Research (opt-in via config meta "wikipedia": true):
@@ -524,9 +515,9 @@ class PipelineExecutor:
 
         # Wikipedia: opt-in via config meta (default: disabled)
         wikipedia_enabled = (
-            self._current_config
-            and self._current_config.meta
-            and self._current_config.meta.get('wikipedia', False)
+            resolved_config
+            and resolved_config.meta
+            and resolved_config.meta.get('wikipedia', False)
         )
 
         # Wikipedia iteration tracking
@@ -565,9 +556,9 @@ class PipelineExecutor:
 
             chunk_request = self.chunk_builder.build_chunk(
                 chunk_name=step.chunk_name,
-                resolved_config=self._current_config,
+                resolved_config=resolved_config,
                 context=chunk_context,
-                safety_level=getattr(self, '_safety_level', None)
+                safety_level=safety_level
             )
 
             # Wikipedia: append instructions + context to prompt if enabled
