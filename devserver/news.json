@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "generated_at": "2026-03-13T14:00:00Z",
-  "source_session": 260,
+  "source_session": 261,
   "items": [
     {
       "id": "news-2026-03-13-safety-interception",
@@ -29,6 +29,20 @@
       "summary": {
         "en": "The post-generation image check (qwen3-vl:2b) now asks for specific categories — violence, gore, nudity, hate symbols, self-harm, terrorism — instead of the vague \"Is this safe?\". Construction sites and waterparks are no longer blocked. For kids, scary/unsettling content is additionally checked. The check is fail-closed: if the model cannot confirm safety, the image is blocked.",
         "de": "Die Bildsicherheitspruefung nach der Generierung (qwen3-vl:2b) fragt jetzt nach konkreten Kategorien — Gewalt, Nacktheit, Hasssymbole, Selbstverletzung, Terrorismus — statt dem vagen \"Ist das sicher?\". Baustellen und Wasserparks werden nicht mehr blockiert. Fuer Kinder wird zusaetzlich auf aengstigende/verstoerende Inhalte geprueft. Die Pruefung ist fail-closed: Wenn das Modell keine Sicherheit bestaetigen kann, wird das Bild blockiert."
+      }
+    },
+    {
+      "id": "news-2026-03-12-mammouth-claude",
+      "date": "2026-03-12",
+      "session": 259,
+      "category": "improvement",
+      "title": {
+        "en": "All Text Stages: Claude Sonnet 4.6 via Mammouth AI (EU, DSGVO)",
+        "de": "Alle Text-Stufen: Claude Sonnet 4.6 ueber Mammouth AI (EU, DSGVO)"
+      },
+      "summary": {
+        "en": "Text transformation, prompt interception, safety checks, and the Traeshy chat assistant all use Claude Sonnet 4.6 from Anthropic, routed through Mammouth AI — an EU-based API aggregator (DSGVO-compliant). This replaces the previous mix of IONOS gpt-oss-120b and local Ollama models for text stages.",
+        "de": "Text-Transformation, Prompt-Interception, Sicherheitspruefungen und der Traeshy-Chat-Assistent nutzen alle Claude Sonnet 4.6 von Anthropic, geroutet ueber Mammouth AI — einen EU-basierten API-Aggregator (DSGVO-konform). Das ersetzt den bisherigen Mix aus IONOS gpt-oss-120b und lokalen Ollama-Modellen fuer Text-Stufen."
       }
     },
     {
