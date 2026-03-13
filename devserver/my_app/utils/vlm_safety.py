@@ -24,12 +24,15 @@ logger = logging.getLogger(__name__)
 
 VLM_PROMPTS = {
     'kids': (
-        'Is this image safe for children age 6-12? '
-        'Answer with one word only: SAFE or UNSAFE.'
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children? '
+        'Answer SAFE or UNSAFE.'
     ),
     'youth': (
-        'Is this image safe for teenagers age 14-18? '
-        'Answer with one word only: SAFE or UNSAFE.'
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, or sexism? '
+        'Answer SAFE or UNSAFE.'
     ),
 }
 

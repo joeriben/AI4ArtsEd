@@ -9,6 +9,25 @@
 
 ---
 
+## 2026-03-13: VLM Safety Prompt — Content-Based Instead of Situation-Based
+
+**Decision:** VLM safety prompt rewritten from `"Is this image safe for children?"` to an explicit checklist of harmful content categories.
+
+**Reasoning:** Workshop 13.03.2026 showed 22.8% VLM false-positive rate (46/202 images blocked). Root cause: the broad question "Is this image safe?" led qwen3-vl:2b to confuse the **depicted situation** (construction site = dangerous place) with the **image itself** (photo of construction site = harmless to view). The model cannot reliably distinguish "harmful to look at" from "depicts something dangerous in real life" — a fundamental limitation at 2B parameters.
+
+**Fix:** Prompt now enumerates concrete harmful content categories (violence, gore, nudity, hate symbols, self-harm, racism, hate crime settings, terrorism, sexism). For `kids`, additionally: scary, unsettling, or traumatizing content. The model checks each category against the image — this is within its capability.
+
+**Design principle — Ambivalence as signal:** When the VLM encounters ambiguous images (e.g. dark ghostly figures), it enters extended deliberation loops without reaching a verdict (>1000 tokens of "but wait... however... let me reconsider..."). This deliberation failure is not a bug — it indicates genuine ambivalence. Combined with fail-closed, ambivalent images are blocked. For kids safety, this is the correct behavior: if a 2B VLM cannot confidently determine that an image is safe, a 6-year-old should not see it.
+
+**Test results (9 scary test images + 3 harmless workshop images):**
+- Kids prompt: 8/9 scary images blocked (4 explicit UNSAFE + 4 deliberation-fail-closed), all harmless images SAFE
+- Youth prompt: 1/9 blocked (only genuine gore), all harmless images SAFE
+- Previous prompt: blocked harmless construction sites and waterparks as UNSAFE
+
+**Affected Files:** `my_app/utils/vlm_safety.py`
+
+---
+
 ## 2026-03-13: Kids Safety — Keyword Filter → Safety-Aware Interception
 
 **Decision:** Keyword-based age filter for `kids` safety_level removed. Replaced by mandatory Stage 2 interception with safety prefix.
