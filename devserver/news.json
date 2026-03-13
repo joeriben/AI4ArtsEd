@@ -1,20 +1,62 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-02T23:59:59Z",
-  "source_session": 236,
+  "generated_at": "2026-03-13T14:00:00Z",
+  "source_session": 260,
   "items": [
     {
-      "id": "news-2026-03-02-lora",
-      "date": "2026-03-02",
-      "session": 234,
-      "category": "feature",
+      "id": "news-2026-03-13-safety-interception",
+      "date": "2026-03-13",
+      "session": 260,
+      "category": "improvement",
       "title": {
-        "en": "Style Adapters (LoRA) for Image Generation",
-        "de": "Stiladapter (LoRA) fuer die Bilderzeugung"
+        "en": "Kids/Youth Safety: Keyword Filter Replaced by Context-Aware LLM",
+        "de": "Kinder-/Jugendsicherheit: Wortfilter durch kontextverstehendes Sprachmodell ersetzt"
       },
       "summary": {
-        "en": "The image generation can now be influenced by style adapters (LoRA). These are small trained model extensions that shift the visual character of results — e.g. towards painterly, photographic, or graphic aesthetics.",
-        "de": "Die Bilderzeugung kann jetzt durch Stiladapter (LoRA) beeinflusst werden. Das sind kleine trainierte Modellerweiterungen, die den visuellen Charakter der Ergebnisse verschieben — z.B. in Richtung malerischer, fotografischer oder grafischer Aesthetik."
+        "en": "The keyword-based age filter (which blocked harmless words like \"fangs\", \"explosion\", \"claws\") has been removed. Instead, the text transformation itself now receives a safety instruction — the LLM understands context, so \"Tiger mit Zaehnen\" passes while actual threats are refused. In the workshop on 12.03, the old filter caused 98 false blocks out of 470 requests. The new system: 0 false blocks, all genuine threats refused.",
+        "de": "Der wortbasierte Altersfilter (der harmlose Woerter wie \"Reisszaehne\", \"Explosion\", \"Krallen\" blockiert hat) wurde entfernt. Stattdessen erhaelt die Text-Transformation selbst eine Sicherheitsanweisung — das Sprachmodell versteht Kontext, deshalb geht \"Tiger mit Zaehnen\" durch, waehrend echte Bedrohungen abgelehnt werden. Im Workshop am 12.03. verursachte der alte Filter 98 Fehlblockierungen bei 470 Anfragen. Das neue System: 0 Fehlblockierungen, alle echten Bedrohungen abgelehnt."
+      }
+    },
+    {
+      "id": "news-2026-03-13-vlm-checklist",
+      "date": "2026-03-13",
+      "session": 260,
+      "category": "improvement",
+      "title": {
+        "en": "Image Safety Check: Concrete Checklist Instead of Vague Question",
+        "de": "Bildsicherheitspruefung: Konkrete Checkliste statt vager Frage"
+      },
+      "summary": {
+        "en": "The post-generation image check (qwen3-vl:2b) now asks for specific categories — violence, gore, nudity, hate symbols, self-harm, terrorism — instead of the vague \"Is this safe?\". Construction sites and waterparks are no longer blocked. For kids, scary/unsettling content is additionally checked. The check is fail-closed: if the model cannot confirm safety, the image is blocked.",
+        "de": "Die Bildsicherheitspruefung nach der Generierung (qwen3-vl:2b) fragt jetzt nach konkreten Kategorien — Gewalt, Nacktheit, Hasssymbole, Selbstverletzung, Terrorismus — statt dem vagen \"Ist das sicher?\". Baustellen und Wasserparks werden nicht mehr blockiert. Fuer Kinder wird zusaetzlich auf aengstigende/verstoerende Inhalte geprueft. Die Pruefung ist fail-closed: Wenn das Modell keine Sicherheit bestaetigen kann, wird das Bild blockiert."
+      }
+    },
+    {
+      "id": "news-2026-03-11-canvas-zoom",
+      "date": "2026-03-11",
+      "session": 257,
+      "category": "improvement",
+      "title": {
+        "en": "Canvas: Pan/Zoom and Output Drawer",
+        "de": "Canvas: Verschieben/Zoomen und Ergebnis-Schublade"
+      },
+      "summary": {
+        "en": "The Canvas Workflow Builder now supports pan (middle mouse) and zoom (Ctrl+Wheel, 0.25x-2x). Generated outputs appear in a bottom drawer with preview cards — click a card to jump to its node on the canvas. Each card shows the config name and seed used.",
+        "de": "Der Canvas Workflow Builder unterstuetzt jetzt Verschieben (mittlere Maustaste) und Zoomen (Strg+Mausrad, 0.25x-2x). Generierte Ergebnisse erscheinen in einer Schublade am unteren Rand mit Vorschau-Karten — Klick auf eine Karte springt zum zugehoerigen Knoten. Jede Karte zeigt den Konfig-Namen und den verwendeten Seed."
+      }
+    },
+    {
+      "id": "news-2026-03-05-video-wan22",
+      "date": "2026-03-05",
+      "session": 247,
+      "category": "feature",
+      "title": {
+        "en": "Video Generation: Wan 2.2 A14B (10-Second Videos)",
+        "de": "Videogenerierung: Wan 2.2 A14B (10-Sekunden-Videos)"
+      },
+      "summary": {
+        "en": "Video generation uses Wan 2.2 A14B — a 27-billion-parameter model (two 14B experts, Mixture of Experts architecture). It generates 10-second videos from text. Image-to-video is also available: an uploaded or sketched image becomes the starting frame.",
+        "de": "Die Videogenerierung nutzt Wan 2.2 A14B — ein 27-Milliarden-Parameter-Modell (zwei 14B-Experten, Mixture-of-Experts-Architektur). Es erzeugt 10-Sekunden-Videos aus Text. Bild-zu-Video ist ebenfalls verfuegbar: Ein hochgeladenes oder gezeichnetes Bild wird zum Startframe."
       }
     },
     {
@@ -23,12 +65,12 @@
       "session": 229,
       "category": "improvement",
       "title": {
-        "en": "Text Transformation: Reasoning Model (gpt-oss-120b, EU Datacenter)",
-        "de": "Text-Transformation: Reasoning-Modell (gpt-oss-120b, EU-Rechenzentrum)"
+        "en": "Text Transformation: gpt-oss-120b (IONOS, EU Datacenter Berlin)",
+        "de": "Text-Transformation: gpt-oss-120b (IONOS, EU-Rechenzentrum Berlin)"
       },
       "summary": {
-        "en": "The text transformation now uses gpt-oss-120b from the IONOS AI Model Hub (datacenter Berlin). It's a reasoning model — you can watch its thought process live in the chat overlay before it produces the final transformation.",
-        "de": "Die Text-Transformation nutzt jetzt gpt-oss-120b vom IONOS AI Model Hub (Rechenzentrum Berlin). Es ist ein Reasoning-Modell — du kannst seinen Denkprozess live im Chat-Overlay verfolgen, bevor die finale Transformation entsteht."
+        "en": "The text transformation uses gpt-oss-120b from the IONOS AI Model Hub (datacenter Berlin). It is a reasoning model (117B total, 5.1B active parameters, Mixture of Experts) — you can follow its thought process live in the chat overlay before the final transformation appears.",
+        "de": "Die Text-Transformation nutzt gpt-oss-120b vom IONOS AI Model Hub (Rechenzentrum Berlin). Es ist ein Reasoning-Modell (117B gesamt, 5.1B aktive Parameter, Mixture of Experts) — du kannst seinen Denkprozess live im Chat-Overlay verfolgen, bevor die finale Transformation erscheint."
       }
     },
     {
@@ -37,12 +79,12 @@
       "session": 220,
       "category": "feature",
       "title": {
-        "en": "Watch Your Image Being Generated",
-        "de": "Dem eigenen Bild beim Entstehen zusehen"
+        "en": "Real-Time Denoising Preview + Expert View",
+        "de": "Echtzeit-Denoising-Vorschau + Expert-Ansicht"
       },
       "summary": {
-        "en": "While the interactive games play during generation, a small live preview (bottom right) now shows the actual image emerging from noise in real time. In expert mode (educators/researchers), the games are replaced entirely by a denoising view with GPU load, energy consumption (kWh), and a model identity card.",
-        "de": "Waehrend die interaktiven Spiele bei der Bilderzeugung laufen, zeigt eine kleine Live-Vorschau (unten rechts) jetzt in Echtzeit, wie das Bild aus Rauschen entsteht. Im Expert-Modus (PaedagogInnen/Forschende) werden die Spiele komplett durch eine Denoising-Ansicht mit GPU-Auslastung, Energieverbrauch (kWh) und Modell-Steckbrief ersetzt."
+        "en": "During image generation, a live thumbnail (bottom right) shows the image emerging from noise in real time — driven by actual backend data, not a fake progress bar. In expert mode, the interactive games are replaced by a denoising view with model identity card, GPU load, energy consumption (kWh), seed, and generation parameters.",
+        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail (unten rechts) in Echtzeit, wie das Bild aus Rauschen entsteht — basierend auf echten Backend-Daten, nicht einer gefaelschten Fortschrittsanzeige. Im Expert-Modus werden die interaktiven Spiele durch eine Denoising-Ansicht mit Modell-Steckbrief, GPU-Auslastung, Energieverbrauch (kWh), Seed und Generierungsparametern ersetzt."
       }
     },
     {
@@ -51,54 +93,26 @@
       "session": 212,
       "category": "feature",
       "title": {
-        "en": "Sketch Input: Draw Instead of Describe",
-        "de": "Skizzen-Eingabe: Zeichnen statt Beschreiben"
+        "en": "Sketch Canvas: Draw Instead of Upload",
+        "de": "Skizzen-Canvas: Zeichnen statt Hochladen"
       },
       "summary": {
-        "en": "A sketch canvas is now available wherever images can be uploaded. Freehand drawings serve as input for image-to-image generation — an alternative entry point when words aren't enough to capture an idea.",
-        "de": "Ein Skizzen-Canvas steht jetzt ueberall zur Verfuegung, wo Bilder hochgeladen werden koennen. Freihandzeichnungen dienen als Eingabe fuer die Bild-zu-Bild-Generierung — ein alternativer Zugang, wenn Worte nicht ausreichen, um eine Idee zu fassen."
+        "en": "A freehand drawing canvas is available wherever images can be uploaded — image transformation, multi-image, and the crossmodal lab. Pen, eraser, 3 brush sizes, undo. The sketch feeds into image-to-image generation identically to a photo upload.",
+        "de": "Ein Freihand-Zeichencanvas steht ueberall zur Verfuegung, wo Bilder hochgeladen werden koennen — Bild-Transformation, Multi-Bild und das Crossmodale Labor. Stift, Radierer, 3 Pinselgroessen, Rueckgaengig. Die Skizze geht identisch wie ein Foto-Upload in die Bild-zu-Bild-Generierung."
       }
     },
     {
-      "id": "news-2026-02-10-crossaesthetic",
-      "date": "2026-02-10",
-      "session": 193,
-      "category": "feature",
-      "title": {
-        "en": "Crossmodal Lab: Image, Sound, and Synthesis",
-        "de": "Crossmodales Labor: Bild, Klang und Synthese"
-      },
-      "summary": {
-        "en": "The Crossmodal Lab connects image and audio generation. A picture can become the starting point for audio, and generated audio can be loaded as a wavetable in the built-in synthesizer — playable as an instrument.",
-        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild kann zum Ausgangspunkt fuer Audio werden, und generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden — spielbar als Instrument."
-      }
-    },
-    {
-      "id": "news-2026-02-08-poetry",
-      "date": "2026-02-08",
-      "session": 208,
+      "id": "news-2026-02-24-poetry",
+      "date": "2026-02-24",
+      "session": 225,
       "category": "content",
       "title": {
-        "en": "Poetry as Collision Material",
-        "de": "Poesie als Kollisionsmaterial"
+        "en": "Poetry Collision: 6 Traditions from Sappho to Yoruba Oriki",
+        "de": "Poesie-Kollision: 6 Traditionen von Sappho bis Yoruba Oriki"
       },
       "summary": {
-        "en": "The poetry transformation feeds your text together with a genuine public-domain poem (Sappho, Basho, Mirabai, and others from diverse traditions) into a small language model. Both texts collide — the result is neither your prompt nor the poem, but something born from the encounter.",
-        "de": "Die Poesie-Transformation speist deinen Text zusammen mit einem echten gemeinfreien Gedicht (Sappho, Basho, Mirabai und andere aus verschiedenen Traditionen) in ein kleines Sprachmodell. Beide Texte kollidieren — das Ergebnis ist weder dein Prompt noch das Gedicht, sondern etwas, das aus der Begegnung entsteht."
-      }
-    },
-    {
-      "id": "news-2026-02-06-music-unified",
-      "date": "2026-02-06",
-      "session": 158,
-      "category": "feature",
-      "title": {
-        "en": "Music Generation Unified: Simple & Advanced Modes",
-        "de": "Musikgenerierung vereinheitlicht: Einfach- und Experten-Modus"
-      },
-      "summary": {
-        "en": "Music generation now offers both simple (quick lyrics → music) and advanced modes (lyrics workshop + sound explorer with 8-dimension tag system). Toggle between modes on the same page. Advanced mode teaches music vocabulary — genre, timbre, mood, instruments — through interactive tag selection.",
-        "de": "Musikgenerierung bietet jetzt einfachen Modus (schnell Lyrics → Musik) und Experten-Modus (Lyrik-Workshop + Sound Explorer mit 8-dimensionalem Tag-System). Wechsel zwischen den Modi auf der gleichen Seite. Der Experten-Modus vermittelt Musikvokabular — Genre, Klangfarbe, Stimmung, Instrumente — durch interaktive Tag-Auswahl."
+        "en": "The poetry transformation feeds your text together with genuine public-domain poem fragments into a small language model (qwen3:1.7b). Six sources from different traditions: Sappho (Greece), Hoelderlin (Germany), Basho (Japan), Mirabai (India), Yoruba Oriki (West Africa), Nahuatl Xochicuicatl (Mesoamerica). The model is deliberately too small for smooth synthesis — the structural collision between your text and the poem is the point.",
+        "de": "Die Poesie-Transformation speist deinen Text zusammen mit echten gemeinfreien Gedichtfragmenten in ein kleines Sprachmodell (qwen3:1.7b). Sechs Quellen aus verschiedenen Traditionen: Sappho (Griechenland), Hoelderlin (Deutschland), Basho (Japan), Mirabai (Indien), Yoruba Oriki (Westafrika), Nahuatl Xochicuicatl (Mesoamerika). Das Modell ist bewusst zu klein fuer eine glatte Synthese — die strukturelle Kollision zwischen deinem Text und dem Gedicht ist das Ziel."
       }
     },
     {
@@ -107,40 +121,26 @@
       "session": 201,
       "category": "feature",
       "title": {
-        "en": "9 Languages — Including Arabic and Hebrew (RTL)",
-        "de": "9 Sprachen — inklusive Arabisch und Hebraeisch (RTL)"
+        "en": "9 Languages Including Arabic and Hebrew (RTL)",
+        "de": "9 Sprachen inklusive Arabisch und Hebraeisch (RTL)"
       },
       "summary": {
-        "en": "The interface is available in DE, EN, TR, KO, UK, FR, ES, HE, and AR. Arabic and Hebrew are rendered right-to-left with adapted layout. All translations are maintained via a batch process and may contain gaps — English is always the fallback.",
-        "de": "Die Oberflaeche ist verfuegbar in DE, EN, TR, KO, UK, FR, ES, HE und AR. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt. Alle Uebersetzungen werden per Batch-Prozess gepflegt und koennen Luecken enthalten — Englisch ist immer der Fallback."
+        "en": "The interface is available in DE, EN, TR, KO, UK, FR, ES, HE, and AR. Arabic and Hebrew are rendered right-to-left with adapted layout. All translations are maintained via a batch process — English is always the fallback.",
+        "de": "Die Oberflaeche ist verfuegbar in DE, EN, TR, KO, UK, FR, ES, HE und AR. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt. Alle Uebersetzungen werden per Batch-Prozess gepflegt — Englisch ist immer der Fallback."
       }
     },
     {
-      "id": "news-2026-01-20-wikipedia",
-      "date": "2026-01-20",
-      "session": 139,
+      "id": "news-2026-02-10-crossmodal",
+      "date": "2026-02-10",
+      "session": 193,
       "category": "feature",
       "title": {
-        "en": "Wikipedia Research During Transformation",
-        "de": "Wikipedia-Recherche waehrend der Transformation"
+        "en": "Crossmodal Lab: Image to Sound to Synthesizer",
+        "de": "Crossmodales Labor: Bild zu Klang zu Synthesizer"
       },
       "summary": {
-        "en": "The text transformation can query Wikipedia during processing. A badge shows which articles were found and which terms returned no results — clickable, so you can verify what the AI draws on.",
-        "de": "Die Text-Transformation kann waehrend der Verarbeitung Wikipedia abfragen. Ein Badge zeigt, welche Artikel gefunden und welche Begriffe kein Ergebnis geliefert haben — anklickbar, damit du pruefen kannst, worauf sich die KI stuetzt."
-      }
-    },
-    {
-      "id": "news-2026-01-15-canvas",
-      "date": "2026-01-15",
-      "session": 141,
-      "category": "feature",
-      "title": {
-        "en": "Canvas: Visual AI Workflow Builder",
-        "de": "Canvas: Visueller KI-Workflow-Builder"
-      },
-      "summary": {
-        "en": "The Canvas allows connecting text, image, and evaluation nodes into multi-step workflows. Transformations can be chained, conditional branches added. Each step executes visibly. Designed for educators who want to build structured AI experiments.",
-        "de": "Das Canvas erlaubt es, Text-, Bild- und Bewertungsknoten zu mehrstufigen Workflows zu verbinden. Transformationen lassen sich verketten, bedingte Verzweigungen einfuegen. Jeder Schritt wird sichtbar ausgefuehrt. Konzipiert fuer PaedagogInnen, die strukturierte KI-Experimente bauen wollen."
+        "en": "The Crossmodal Lab connects image and audio generation. A picture can become the starting point for sound (via CLIP vision features projected into Stable Audio's conditioning space). Generated audio can be loaded as a wavetable in the built-in synthesizer — playable as an instrument with loop, sequencer, and arpeggiator.",
+        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild kann zum Ausgangspunkt fuer Klang werden (ueber CLIP-Vision-Features, projiziert in den Konditionierungsraum von Stable Audio). Generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden — spielbar als Instrument mit Loop, Sequencer und Arpeggiator."
       }
     }
   ]
