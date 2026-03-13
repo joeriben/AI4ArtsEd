@@ -965,7 +965,6 @@ export AWS_DEFAULT_REGION="eu-central-1"
 
 echo "✅ AWS Bedrock environment variables set"
 echo "   Region: $AWS_DEFAULT_REGION"
-echo "   Access Key: ${{AWS_ACCESS_KEY_ID:0:8}}..."
 '''
 
         with open(env_script_path, 'w') as f:
