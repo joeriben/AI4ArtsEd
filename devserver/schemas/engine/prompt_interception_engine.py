@@ -35,8 +35,9 @@ logger = logging.getLogger(__name__)
 # Import centralized model selector
 from .model_selector import model_selector
 
-# Import UI_MODE for adaptive token limits
-from config import UI_MODE, LLM_API_TIMEOUT, DSGVO_ONLY_FALLBACK, DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS
+# Import config module for live UI_MODE access (not cached copy)
+import config as _config
+from config import LLM_API_TIMEOUT, DSGVO_ONLY_FALLBACK, DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS
 
 # UI_MODE-adaptive length guidance (injected into prompt, NOT hard-truncated)
 # The LLM is instructed to stay within this word budget.
@@ -207,14 +208,14 @@ class PromptInterceptionEngine:
             self.ollama_models = self.model_selector.get_ollama_models()
 
             # Inject length guidance into prompt (LLM self-limits instead of hard truncation)
-            word_limit = UI_MODE_WORD_LIMITS.get(UI_MODE)
+            word_limit = UI_MODE_WORD_LIMITS.get(_config.UI_MODE)
             if word_limit:
                 length_instruction = f"\n\nIMPORTANT: Keep your response under {word_limit} words. Be concise."
                 full_prompt = full_prompt + length_instruction
-                logger.info(f"[BACKEND] Length guidance injected: {word_limit} words (UI_MODE={UI_MODE})")
+                logger.info(f"[BACKEND] Length guidance injected: {word_limit} words (UI_MODE={_config.UI_MODE})")
 
             # Safety-net max_tokens (generous, should never truncate)
-            safety_limit = UI_MODE_MAX_TOKENS_SAFETY.get(UI_MODE, 800)
+            safety_limit = UI_MODE_MAX_TOKENS_SAFETY.get(_config.UI_MODE, 800)
             req_params = request.parameters or {}
             if req_params.get("max_tokens", 2048) > safety_limit:
                 req_params["max_tokens"] = safety_limit
