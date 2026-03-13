@@ -8,14 +8,14 @@ Select the 10 most significant **user-relevant** changes from `DEVELOPMENT_LOG.m
 
 ## Who Reads This?
 
-Educators, researchers, students (ages 8-17), workshop instructors. These are NOT customers. They are pedagogues and learners. They deserve **transparency**, not marketing.
+General users of the platform. Assume no insider knowledge — they do not know how the platform is operated, configured, or maintained. They see what the platform does and want to know what is available to them. Write for this audience: professional, precise, general.
 
 ## What Is User-Relevant?
 
 **YES — include these:**
 - New creative tools or inputs (sketch canvas, poetry collision, cross-aesthetic generation)
 - New technical capabilities the user directly interacts with (live denoising view, Wikipedia badges)
-- Model changes — name the model concretely (e.g., "gpt-oss-120b from IONOS, EU datacenter Berlin")
+- Model changes — name the model (e.g., "Claude Sonnet 4.6"), no provider/infrastructure details
 - New languages or accessibility improvements
 - Structural additions (Canvas workflow builder, Crossmodal Lab)
 
@@ -41,8 +41,8 @@ Educators, researchers, students (ages 8-17), workshop instructors. These are NO
 
 **These are PUBLIC-FACING platform news.** Apply Goffman's dramaturgical model:
 
-- **Frontstage** (what users read): What can I do? What changed in my experience? What's the benefit?
-- **Backstage** (NEVER in news): Model names, parameter counts, architecture decisions, provider names, internal metrics, failure rates, implementation methodology, comparisons with previous internal configurations.
+- **Frontstage** (what users read): What can the platform do? Which model runs? What is the capability?
+- **Backstage** (NEVER in news): Parameter counts, architecture decisions (MoE, CLIP, etc.), provider routing details, internal metrics, failure rates, implementation methodology, past system states, incident reports, workshop observations.
 
 **Tone: Professional, concrete, honest.** Describe user-visible capabilities and changes. Not a developer changelog, not a marketing brochure.
 
@@ -54,11 +54,13 @@ Educators, researchers, students (ages 8-17), workshop instructors. These are NO
 - **NEVER claim a problem is solved.** Trade-offs exist. Say what improved and how, not that conflicts are "resolved".
 
 ### No backstage details
-- **NO model names** (no "gpt-oss-120b", "qwen3-vl:2b", "Claude Sonnet 4.6"). Users don't know or care which model runs. Say what the capability IS.
-- **NO parameter counts, architecture names** (no "27B parameters", "Mixture of Experts", "CLIP vision features").
-- **NO provider/infrastructure names** (no "IONOS", "Mammouth AI", "Ollama"). Exception: "EU-based infrastructure" or "GDPR-compliant" when data protection is the point — but without naming providers.
+- **Model names ARE frontstage.** This is an AI education platform — users care which model runs. "Claude Sonnet 4.6", "Stable Diffusion 3.5" — name them. But NO architecture dumps (parameter counts, MoE, CLIP projections, conditioning spaces).
+- **NO provider routing details** (no "routed through Mammouth AI", "via IONOS AI Model Hub"). The model name is relevant, the infrastructure path is not.
 - **NO internal metrics** (no "98 false blocks out of 470 requests").
-- **NO comparisons with previous internal state** (no "replaces the previous mix of X and Y", no "instead of the old system which did Z"). Describe the current state, not the migration history.
+- **NO before/after narratives.** Describe what the platform DOES, not what changed. No "no longer", "instead of", "replaces", "has been refined", "has been replaced". The user does not know what was there before — telling them implies they missed something or that something was broken.
+- **NO incident reports or examples from past failures.** No "a tiger with sharp teeth is no longer rejected" (implies it was). No "construction sites are no longer flagged" (implies they were). These are internal debugging anecdotes, not user information.
+- **DSGVO/GDPR is NEVER news.** The platform has always been GDPR-compliant. Presenting DSGVO as a new feature implies previous non-compliance — this is a PR and legal liability. NEVER write "now runs on EU infrastructure" or "in compliance with GDPR" as if it's new.
+- **NO workshop/instructor context.** Users don't know this is a workshop platform. "In the workshop on 12.03..." is backstage. "The instructor configures..." is backstage. Describe what the user sees and does.
 
 ### No marketing language
 - Words like "exciting", "thrilling", "amazing", "game-changing", "revolutionary" are FORBIDDEN.
@@ -73,17 +75,21 @@ Educators, researchers, students (ages 8-17), workshop instructors. These are NO
 
 **Good examples:**
 - "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt."
-- "Wherever you can upload an image, you can now draw one instead. Pen, eraser, three brush sizes, undo."
+- "Wherever you can upload an image, you can draw one instead. Pen, eraser, three brush sizes, undo."
 - "Your text collides with genuine public-domain poetry from six traditions. The result is deliberately not a smooth synthesis."
-- "Everyday scenes — a construction site, a waterpark — are no longer mistakenly flagged." (States what improved without claiming perfection)
+- "Text-Transformation, Chat-Assistent und Sicherheitspruefungen nutzen Claude Sonnet 4.6 von Anthropic." (Names the model, no infrastructure details)
+- "Generierte Bilder werden vor der Anzeige automatisch auf altersgerechte Inhalte geprueft." (Describes capability, no before/after)
 
 **Bad examples (FORBIDDEN):**
-- "Die Text-Transformation nutzt jetzt gpt-oss-120b vom IONOS AI Model Hub" → Backstage. Users don't need to know which model or provider.
+- "Baustellen und Wasserparks werden nicht mehr blockiert" → Before/after narrative. Implies they WERE blocked. Backstage incident report.
+- "Ein Tiger mit scharfen Zaehnen wird nicht mehr abgelehnt" → Same problem. Specific past failure. Backstage.
 - "98 Fehlblockierungen bei 470 Anfragen" → Internal metrics. Backstage.
 - "Problematische Inhalte werden zuverlaessig erkannt" → False promise. No system does this reliably.
 - "Ersetzt den bisherigen Mix aus X und Y" → Migration history. Backstage. Users don't know what ran before.
+- "Die gesamte Textverarbeitung laeuft jetzt ueber EU-basierte Infrastruktur in Uebereinstimmung mit der DSGVO" → Implies previous non-compliance. DSGVO was always in place. Legal liability.
 - "fail-closed: wenn das Modell keine Sicherheit bestaetigen kann" → Implementation detail. Backstage.
 - "27-Milliarden-Parameter-Modell (zwei 14B-Experten, Mixture-of-Experts-Architektur)" → Architecture dump. Backstage.
+- "Im Workshop am 12.03. verursachte der alte Filter..." → Workshop context + incident report. Backstage.
 
 ## Workflow
 

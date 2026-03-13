@@ -9,12 +9,12 @@
       "session": 260,
       "category": "improvement",
       "title": {
-        "en": "Kids/Youth Safety: Smarter Content Protection",
-        "de": "Kinder-/Jugendsicherheit: Intelligentere Inhaltssicherung"
+        "en": "Kids/Youth Safety: Context-Aware Content Check",
+        "de": "Kinder-/Jugendsicherheit: Kontextbewusste Inhaltspruefung"
       },
       "summary": {
-        "en": "The content safety system now evaluates context instead of blocking individual words. Imaginative descriptions like a tiger with sharp teeth are no longer rejected.",
-        "de": "Das Sicherheitssystem bewertet jetzt Kontext statt einzelne Woerter zu blockieren. Fantasievolle Beschreibungen wie ein Tiger mit scharfen Zaehnen werden nicht mehr abgelehnt."
+        "en": "The content safety system for kids and youth evaluates meaning and context, not individual words. Age-appropriate protection that understands what a text describes.",
+        "de": "Das Sicherheitssystem fuer Kinder und Jugendliche bewertet Bedeutung und Kontext, nicht einzelne Woerter. Altersgerechter Schutz, der versteht, was ein Text beschreibt."
       }
     },
     {
@@ -23,12 +23,12 @@
       "session": 260,
       "category": "improvement",
       "title": {
-        "en": "Image Safety Check: Fewer False Alarms",
-        "de": "Bildsicherheitspruefung: Weniger Fehlalarme"
+        "en": "Automated Image Review",
+        "de": "Automatische Bildpruefung"
       },
       "summary": {
-        "en": "The automated image review has been refined. Everyday scenes — a construction site, a waterpark — are no longer mistakenly flagged.",
-        "de": "Die automatische Bildpruefung wurde verfeinert. Alltagsszenen — eine Baustelle, ein Wasserpark — werden nicht mehr faelschlicherweise beanstandet."
+        "en": "Generated images are automatically reviewed for age-appropriate content before display. The check evaluates specific categories relevant to child and youth protection.",
+        "de": "Generierte Bilder werden vor der Anzeige automatisch auf altersgerechte Inhalte geprueft. Die Pruefung bewertet spezifische Kategorien des Kinder- und Jugendschutzes."
       }
     },
     {
@@ -37,12 +37,12 @@
       "session": 259,
       "category": "improvement",
       "title": {
-        "en": "Text Quality Upgrade with EU Data Protection",
-        "de": "Textqualitaet verbessert — mit EU-Datenschutz"
+        "en": "Claude Sonnet 4.6 for All Text Features",
+        "de": "Claude Sonnet 4.6 fuer alle Textfunktionen"
       },
       "summary": {
-        "en": "The language model behind text transformation, the Traeshy chat assistant, and safety checks has been replaced. All text processing now runs exclusively on EU-based infrastructure in compliance with GDPR.",
-        "de": "Das Sprachmodell hinter Text-Transformation, dem Traeshy-Chat-Assistenten und den Sicherheitspruefungen wurde ausgetauscht. Die gesamte Textverarbeitung laeuft jetzt ausschliesslich ueber EU-basierte Infrastruktur in Uebereinstimmung mit der DSGVO."
+        "en": "Text transformation, the Traeshy chat assistant, and safety checks use Claude Sonnet 4.6 from Anthropic.",
+        "de": "Text-Transformation, der Traeshy-Chat-Assistent und die Sicherheitspruefungen nutzen Claude Sonnet 4.6 von Anthropic."
       }
     },
     {
@@ -83,8 +83,8 @@
         "de": "Text-Transformation: Denkprozess live mitverfolgen"
       },
       "summary": {
-        "en": "When transforming text, you can now follow the reasoning process in real time in the chat overlay — see how the system develops the transformation step by step before the final result appears. All processing runs on EU-based infrastructure.",
-        "de": "Bei der Text-Transformation laesst sich der Denkprozess jetzt in Echtzeit im Chat-Overlay mitverfolgen — Schritt fuer Schritt nachvollziehen, wie das System die Transformation entwickelt, bevor das Endergebnis erscheint. Die gesamte Verarbeitung laeuft auf EU-basierter Infrastruktur."
+        "en": "During text transformation, the reasoning process is visible in real time in the chat overlay — follow step by step how the system develops the transformation before the final result appears.",
+        "de": "Bei der Text-Transformation ist der Denkprozess in Echtzeit im Chat-Overlay sichtbar — Schritt fuer Schritt nachvollziehen, wie das System die Transformation entwickelt, bevor das Endergebnis erscheint."
       }
     },
     {
@@ -97,8 +97,8 @@
         "de": "Live-Vorschau: Bildern beim Entstehen zusehen"
       },
       "summary": {
-        "en": "During image generation, a live thumbnail shows the image taking shape in real time. In expert mode, the waiting screen is replaced by a technical view with generation parameters and energy consumption — making the process transparent and observable.",
-        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt. Im Expert-Modus wird der Wartebildschirm durch eine technische Ansicht mit Generierungsparametern und Energieverbrauch ersetzt — der Prozess wird transparent und beobachtbar."
+        "en": "During image generation, a live thumbnail shows the image taking shape in real time. Expert mode provides a technical view with generation parameters and energy consumption.",
+        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt. Der Expert-Modus bietet eine technische Ansicht mit Generierungsparametern und Energieverbrauch."
       }
     },
     {
