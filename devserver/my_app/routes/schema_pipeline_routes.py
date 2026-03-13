@@ -78,11 +78,32 @@ logger.info(f"[OLLAMA-QUEUE] Initialized with max concurrent requests: {OLLAMA_M
 # Cache for output_config_defaults.json
 _output_config_defaults = None
 
-# Phase 4: Intelligent Seed Logic - Global State
-# Tracks last prompt, seed, and output config for iterative image correction
-_last_prompt = None
-_last_seed = None
-_last_output_config = None
+# Phase 4: Intelligent Seed Logic - Per-Device State (Session 261: fix cross-device bleeding)
+# Tracks last prompt, seed, and output config for iterative image correction PER DEVICE
+import time as _time_module
+_seed_state_lock = threading.Lock()
+_seed_state: dict = {}  # key: device_id → {"prompt", "seed", "output_config", "ts"}
+_SEED_STATE_TTL = 3600  # 1 hour TTL
+
+def _get_seed_state(device_id: str) -> dict:
+    """Get seed state for a specific device, with TTL eviction."""
+    now = _time_module.time()
+    with _seed_state_lock:
+        # Evict stale entries (older than TTL)
+        stale = [k for k, v in _seed_state.items() if now - v.get("ts", 0) > _SEED_STATE_TTL]
+        for k in stale:
+            del _seed_state[k]
+        if device_id not in _seed_state:
+            _seed_state[device_id] = {"prompt": None, "seed": None, "output_config": None, "ts": now}
+        return _seed_state[device_id]
+
+def _update_seed_state(device_id: str, prompt: str, seed: int, output_config: str):
+    """Update seed state for a specific device."""
+    with _seed_state_lock:
+        _seed_state[device_id] = {
+            "prompt": prompt, "seed": seed,
+            "output_config": output_config, "ts": _time_module.time()
+        }
 
 def generate_sse_event(event_type: str, data: dict) -> str:
     """
@@ -1278,6 +1299,7 @@ def execute_stage3_4():
         run_id = data.get('run_id', generate_run_id())
         seed_override = data.get('seed')
         interception_result_param = data.get('interception_result')  # Optional: user's original interception text for T5
+        device_id = data.get('device_id', 'anonymous')  # Session 261: per-device seed isolation
 
         if not stage2_result or not output_config:
             return jsonify({
@@ -1301,29 +1323,27 @@ def execute_stage3_4():
         logger.info(f"[STAGE3-4-ENDPOINT] Stage 2 result (first 100 chars): {stage2_result[:100]}...")
 
         # ====================================================================
-        # PHASE 4: INTELLIGENT SEED LOGIC
+        # PHASE 4: INTELLIGENT SEED LOGIC (per-device, Session 261)
         # ====================================================================
         # Decision happens BEFORE Stage 3 translation, based on Stage 2 result
-        global _last_prompt, _last_seed, _last_output_config
         import random
+        dev_state = _get_seed_state(device_id)
 
-        if stage2_result != _last_prompt or output_config != _last_output_config:
+        if stage2_result != dev_state["prompt"] or output_config != dev_state["output_config"]:
             # Prompt OR model changed → keep same seed (compare effect of change)
-            if _last_seed is not None:
-                calculated_seed = _last_seed
-                logger.info(f"[PHASE4-SEED] Prompt or model CHANGED → reusing seed {calculated_seed}")
+            if dev_state["seed"] is not None:
+                calculated_seed = dev_state["seed"]
+                logger.info(f"[PHASE4-SEED] [{device_id}] Prompt or model CHANGED → reusing seed {calculated_seed}")
             else:
                 calculated_seed = 123456789
-                logger.info(f"[PHASE4-SEED] First run → using standard seed {calculated_seed}")
+                logger.info(f"[PHASE4-SEED] [{device_id}] First run → using standard seed {calculated_seed}")
         else:
             # Prompt AND model unchanged → new random seed (user wants variation)
             calculated_seed = random.randint(0, 2147483647)
-            logger.info(f"[PHASE4-SEED] Prompt+model UNCHANGED (re-run) → new random seed {calculated_seed}")
+            logger.info(f"[PHASE4-SEED] [{device_id}] Prompt+model UNCHANGED (re-run) → new random seed {calculated_seed}")
 
-        # Update global state AFTER decision
-        _last_prompt = stage2_result
-        _last_seed = calculated_seed
-        _last_output_config = output_config
+        # Update per-device state AFTER decision
+        _update_seed_state(device_id, stage2_result, calculated_seed, output_config)
 
         # Override with user-provided seed if specified
         if seed_override is not None:
@@ -4142,8 +4162,6 @@ def legacy_workflow():
 @schema_bp.route('/pipeline/interception', methods=['POST', 'GET'])
 def interception_pipeline():
     """Stage 1 (Safety) + Stage 2 (Interception) - Lab Architecture atomic service"""
-    # Phase 4: Declare global state at function start
-    global _last_prompt, _last_seed, _last_output_config
     import random
 
     try:
@@ -4703,28 +4721,28 @@ def interception_pipeline():
                     media_type = 'image'  # Default fallback
 
                 # ====================================================================
-                # PHASE 4: INTELLIGENT SEED LOGIC (before Stage 3)
+                # PHASE 4: INTELLIGENT SEED LOGIC (per-device, Session 261)
                 # ====================================================================
                 # Decision happens BEFORE Stage 3 translation, based on Stage 2 result
                 stage2_prompt = result.final_output  # Prompt from Stage 2 (before translation)
+                seed_device_id = device_id or 'anonymous'
+                dev_state = _get_seed_state(seed_device_id)
 
-                if stage2_prompt != _last_prompt or output_config_name != _last_output_config:
+                if stage2_prompt != dev_state["prompt"] or output_config_name != dev_state["output_config"]:
                     # Prompt OR model changed → keep same seed (compare effect of change)
-                    if _last_seed is not None:
-                        calculated_seed = _last_seed
-                        logger.info(f"[PHASE4-SEED] Prompt or model CHANGED → reusing seed {calculated_seed}")
+                    if dev_state["seed"] is not None:
+                        calculated_seed = dev_state["seed"]
+                        logger.info(f"[PHASE4-SEED] [{seed_device_id}] Prompt or model CHANGED → reusing seed {calculated_seed}")
                     else:
                         calculated_seed = 123456789
-                        logger.info(f"[PHASE4-SEED] First run → using standard seed {calculated_seed}")
+                        logger.info(f"[PHASE4-SEED] [{seed_device_id}] First run → using standard seed {calculated_seed}")
                 else:
                     # Prompt AND model unchanged → new random seed (user wants variation)
                     calculated_seed = random.randint(0, 2147483647)
-                    logger.info(f"[PHASE4-SEED] Prompt+model UNCHANGED (re-run) → new random seed {calculated_seed}")
+                    logger.info(f"[PHASE4-SEED] [{seed_device_id}] Prompt+model UNCHANGED (re-run) → new random seed {calculated_seed}")
 
-                # Update global state AFTER decision
-                _last_prompt = stage2_prompt
-                _last_seed = calculated_seed
-                _last_output_config = output_config_name
+                # Update per-device state AFTER decision
+                _update_seed_state(seed_device_id, stage2_prompt, calculated_seed, output_config_name)
 
                 # Override with user-provided seed if specified
                 if seed_override is not None:

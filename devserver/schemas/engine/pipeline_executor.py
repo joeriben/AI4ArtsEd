@@ -20,9 +20,18 @@ from .wikipedia_processor import extract_markers, format_wiki_content, remove_ma
 
 logger = logging.getLogger(__name__)
 
-# Global Wikipedia status for real-time UI feedback
+# Wikipedia status for real-time UI feedback, keyed by run_id (Session 261: per-request isolation)
 # Key: run_id, Value: {'status': 'lookup'|'complete'|None, 'terms': [...], 'timestamp': float}
 WIKIPEDIA_STATUS = {}
+
+def _cleanup_wikipedia_status(max_age_seconds: int = 300):
+    """Remove WIKIPEDIA_STATUS entries older than max_age_seconds."""
+    import time
+    now = time.time()
+    stale = [k for k, v in WIKIPEDIA_STATUS.items()
+             if isinstance(v, dict) and now - v.get('timestamp', 0) > max_age_seconds]
+    for k in stale:
+        del WIKIPEDIA_STATUS[k]
 
 class PipelineStatus(Enum):
     """Pipeline execution status"""
@@ -126,6 +135,9 @@ class PipelineExecutor:
             self.config_loader.initialize(self.schemas_path)
             self.backend_router.initialize()
             self._initialized = True
+
+        # Session 261: Clean up stale Wikipedia status entries
+        _cleanup_wikipedia_status()
 
         logger.info(f"[PIPELINE] Executing config '{config_name}'")
 
