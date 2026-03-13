@@ -40,6 +40,43 @@ fi
 cd "$COMFYUI_DIR"
 echo "Working directory: $COMFYUI_DIR"
 
+# === Startup Cleanup (ported from old SwarmUI script) ===
+# DevServer exports to /exports, so ComfyUI output/input are redundant between sessions
+echo "========================================"
+echo "Cleaning up redundant files from previous sessions..."
+echo "========================================"
+
+# ComfyUI output directory (generated images — DevServer already exports its own copies)
+if [ -d "./output" ] && [ "$(ls -A ./output 2>/dev/null)" ]; then
+    count=$(find ./output -type f 2>/dev/null | wc -l)
+    echo "ComfyUI output/: $count files -> Deleted"
+    rm -rf ./output/*
+else
+    echo "ComfyUI output/: empty"
+fi
+
+# ComfyUI input directory (uploaded i2i images from previous sessions)
+if [ -d "./input" ] && [ "$(ls -A ./input 2>/dev/null)" ]; then
+    count=$(find ./input -type f 2>/dev/null | wc -l)
+    echo "ComfyUI input/: $count files -> Deleted"
+    rm -rf ./input/*
+else
+    echo "ComfyUI input/: empty"
+fi
+
+# DevServer uploads_tmp (temporary upload staging area)
+UPLOADS_TMP="$SCRIPT_DIR/exports/uploads_tmp"
+if [ -d "$UPLOADS_TMP" ] && [ "$(ls -A "$UPLOADS_TMP" 2>/dev/null)" ]; then
+    count=$(find "$UPLOADS_TMP" -type f 2>/dev/null | wc -l)
+    echo "exports/uploads_tmp/: $count files -> Deleted"
+    rm -rf "$UPLOADS_TMP"/*
+else
+    echo "exports/uploads_tmp/: empty"
+fi
+
+echo "========================================"
+echo ""
+
 # Activate ComfyUI's own venv
 VENV_DIR="$COMFYUI_DIR/venv"
 if [ -d "$VENV_DIR" ]; then
