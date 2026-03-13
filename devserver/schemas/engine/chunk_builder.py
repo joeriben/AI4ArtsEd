@@ -173,7 +173,8 @@ class ChunkBuilder:
                     resolved_config: Any,  # ResolvedConfig from config_loader
                     context: Dict[str, Any],
                     pipeline: Any = None,
-                    model_override: str = None) -> Dict[str, Any]:
+                    model_override: str = None,
+                    safety_level: str = None) -> Dict[str, Any]:
         """
         Chunk mit Template und resolved config erstellen
 
@@ -183,6 +184,7 @@ class ChunkBuilder:
             context: Execution context (input_text, previous_output, etc.)
             pipeline: Pipeline object (for accessing instruction_type)
             model_override: Optional model name for variant selection
+            safety_level: Safety level ('kids', 'youth', etc.) — injects safety prefix when 'kids'
         """
         # Check if Python chunk exists (new standard for Output-Chunks)
         from pathlib import Path
@@ -229,7 +231,7 @@ class ChunkBuilder:
         instruction_text = resolve_context_language(resolved_config.context)
 
         # INSTRUCTION-TYPE SYSTEM: Get TASK_INSTRUCTION for prompt interception
-        task_instruction = self._get_task_instruction(resolved_config, pipeline)
+        task_instruction = self._get_task_instruction(resolved_config, pipeline, safety_level=safety_level)
 
         # Build context for placeholder replacement
         replacement_context = {
@@ -359,7 +361,7 @@ class ChunkBuilder:
 
         return chunk_request
 
-    def _get_task_instruction(self, resolved_config: Any, pipeline: Any) -> str:
+    def _get_task_instruction(self, resolved_config: Any, pipeline: Any, safety_level: str = None) -> str:
         """
         Get TASK_INSTRUCTION using instruction-type system.
 
@@ -369,6 +371,8 @@ class ChunkBuilder:
             1. Config's custom task_instruction (if provided)
             2. Pipeline's instruction_type (default)
             3. Fallback to "artistic_transformation"
+
+        When safety_level='kids', a safety prefix is prepended to the instruction.
         """
         from .instruction_selector import get_instruction
 
@@ -378,7 +382,7 @@ class ChunkBuilder:
         # Get instruction_type from pipeline
         instruction_type = getattr(pipeline, 'instruction_type', 'artistic_transformation') if pipeline else 'artistic_transformation'
 
-        return get_instruction(instruction_type, custom_instruction)
+        return get_instruction(instruction_type, custom_instruction, safety_level=safety_level)
 
     def _replace_placeholders(self, template: str, replacements: Dict[str, Any]) -> str:
         """Placeholder durch Werte ersetzen"""

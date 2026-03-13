@@ -62,7 +62,17 @@ NO meta-commentary. NO markdown. NO code fences. NO explanation."""
 }
 
 
-def get_instruction(instruction_type: str, custom_override: str = None) -> str:
+KIDS_SAFETY_PREFIX = (
+    'SAFETY (ages 6-12): This output generates images for children.\n'
+    'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
+    '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
+    '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
+    'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
+    'Otherwise, transform normally according to Context rules.\n\n'
+)
+
+
+def get_instruction(instruction_type: str, custom_override: str = None, safety_level: str = None) -> str:
     """
     Get instruction text for a given instruction type.
 
@@ -79,17 +89,23 @@ def get_instruction(instruction_type: str, custom_override: str = None) -> str:
         3. Fallback to "transformation" if type not found
     """
     if custom_override:
-        return custom_override
+        instruction = custom_override
+    else:
+        # Handle legacy alias
+        if instruction_type == "artistic_transformation":
+            instruction_type = "transformation"
 
-    # Handle legacy alias
-    if instruction_type == "artistic_transformation":
-        instruction_type = "transformation"
+        # Handle any unknown type - redirect to transformation
+        if instruction_type not in INSTRUCTION_TYPES or INSTRUCTION_TYPES[instruction_type]["default"] is None:
+            instruction_type = "transformation"
 
-    # Handle any unknown type - redirect to transformation
-    if instruction_type not in INSTRUCTION_TYPES or INSTRUCTION_TYPES[instruction_type]["default"] is None:
-        instruction_type = "transformation"
+        instruction = INSTRUCTION_TYPES[instruction_type]["default"]
 
-    return INSTRUCTION_TYPES[instruction_type]["default"]
+    # Prepend kids safety prefix when safety_level is 'kids'
+    if safety_level == 'kids':
+        instruction = KIDS_SAFETY_PREFIX + instruction
+
+    return instruction
 
 
 def list_instruction_types() -> dict:

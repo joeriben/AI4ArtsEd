@@ -991,6 +991,11 @@ def execute_stage2():
         pipeline_def = pipeline_executor.config_loader.get_pipeline(execution_config.pipeline_name)
         skip_stage2 = pipeline_def.skip_stage2 if pipeline_def and hasattr(pipeline_def, 'skip_stage2') else False
 
+        # Kids: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
+        if skip_stage2 and safety_level == 'kids':
+            logger.info(f"[STAGE2-ENDPOINT] Stage 2: skip_stage2 OVERRIDDEN — mandatory for kids safety")
+            skip_stage2 = False
+
         if skip_stage2:
             logger.info(f"[STAGE2-ENDPOINT] Stage 2: SKIPPED (pipeline '{execution_config.pipeline_name}' has skip_stage2=true)")
             logger.info(f"[STAGE2-ENDPOINT] Stage 2: Passing Stage 1 output directly")
@@ -4492,6 +4497,11 @@ def interception_pipeline():
                 # Check if pipeline has skip_stage2 flag (graceful check)
                 pipeline_def = pipeline_executor.config_loader.get_pipeline(config.pipeline_name)
                 skip_stage2 = pipeline_def.skip_stage2 if pipeline_def and hasattr(pipeline_def, 'skip_stage2') else False
+
+                # Kids: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
+                if skip_stage2 and safety_level == 'kids':
+                    logger.info(f"[4-STAGE] Stage 2: skip_stage2 OVERRIDDEN — mandatory for kids safety")
+                    skip_stage2 = False
 
                 if skip_stage2:
                     logger.info(f"[4-STAGE] Stage 2: SKIPPED (pipeline '{config.pipeline_name}' has skip_stage2=true)")

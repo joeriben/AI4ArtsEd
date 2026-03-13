@@ -162,6 +162,9 @@ class PipelineExecutor:
                 user_input=user_input or input_text
             )
 
+        # Store safety_level for chunk building (kids safety prefix injection)
+        self._safety_level = safety_level
+
         # Phase 4: Add seed_override to context if provided
         if seed_override is not None:
             context.custom_placeholders['seed_override'] = seed_override
@@ -551,7 +554,8 @@ class PipelineExecutor:
             chunk_request = self.chunk_builder.build_chunk(
                 chunk_name=step.chunk_name,
                 resolved_config=self._current_config,
-                context=chunk_context
+                context=chunk_context,
+                safety_level=getattr(self, '_safety_level', None)
             )
 
             # Wikipedia: append instructions + context to prompt if enabled

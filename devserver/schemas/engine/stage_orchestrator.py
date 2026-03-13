@@ -1177,11 +1177,12 @@ async def execute_stage1_safety_unified(
             logger.info(f"[STAGE1] DSGVO LLM fallback: SAFE ({llm_time:.1f}s)")
 
     # ── STEP 3: Age-appropriate Fast-Filter (~0.001s) ──────────────────
-    # Runs AFTER DSGVO (Step 2) so that text is guaranteed free of personal data.
-    # This allows kids to use external gpt-oss-120b for LLM context verification
-    # (much smarter than qwen3:1.7b, correctly catches "planning an attack").
-    # Youth still uses local DSGVO_VERIFY_MODEL (qwen3:1.7b).
-    if safety_level not in ('research', 'adult'):
+    # Kids: SKIPPED — keyword filter replaced by safety-aware Stage 2 interception
+    # (Session 260: 29% delivery rate due to 98 false positives from keyword list).
+    # Kids safety is now enforced by mandatory Stage 2 + safety prefix in instruction.
+    # Stage 3 Llama-Guard remains as second safety net.
+    # Youth: still uses keyword fast-filter + LLM context verification.
+    if safety_level == 'youth':
         age_start = _time.time()
         has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
         age_time = _time.time() - age_start
@@ -1208,25 +1209,15 @@ async def execute_stage1_safety_unified(
                 return (False, text, error_message, checks_passed + ['age_filter'])
 
             elif verify_result:
-                # LLM confirmed inappropriate → BLOCK with age-appropriate message
+                # LLM confirmed inappropriate → BLOCK (youth only, kids uses Stage 2 safety)
                 terms_str = ', '.join(found_age_terms[:5])
-                if safety_level == 'kids':
-                    error_message = (
-                        f"⚠️ Dein Prompt wurde blockiert\n\n"
-                        f"GRUND: Kinder-Schutzfilter (6-12 Jahre)\n\n"
-                        f"Gefundene Begriffe: {terms_str}\n\n"
-                        f"WARUM DIESE REGEL?\n"
-                        f"Dein Prompt enthält Begriffe, die für Kinder erschreckend oder verstörend sein können.\n"
-                        f"Wir schützen dich vor Inhalten, die Angst machen oder ungeeignet für dein Alter sind."
-                    )
-                else:
-                    error_message = (
-                        f"⚠️ Dein Prompt wurde blockiert\n\n"
-                        f"GRUND: Jugendschutzfilter (13-17 Jahre)\n\n"
-                        f"Gefundene Begriffe: {terms_str}\n\n"
-                        f"WARUM DIESE REGEL?\n"
-                        f"Dein Prompt enthält explizite Begriffe, die für Jugendliche ungeeignet sind."
-                    )
+                error_message = (
+                    f"⚠️ Dein Prompt wurde blockiert\n\n"
+                    f"GRUND: Jugendschutzfilter (13-17 Jahre)\n\n"
+                    f"Gefundene Begriffe: {terms_str}\n\n"
+                    f"WARUM DIESE REGEL?\n"
+                    f"Dein Prompt enthält explizite Begriffe, die für Jugendliche ungeeignet sind."
+                )
                 logger.warning(f"[STAGE1] BLOCKED age-filter (LLM confirmed, {llm_time:.1f}s)")
                 return (False, text, error_message, checks_passed + ['age_filter', 'age_llm_verify'])
 
@@ -1234,6 +1225,10 @@ async def execute_stage1_safety_unified(
                 # LLM says benign context (false positive like "cute vampire") → allow
                 logger.info(f"[STAGE1] Age-filter false positive confirmed by LLM ({llm_time:.1f}s)")
         checks_passed.append('age_filter')
+    elif safety_level == 'kids':
+        # Kids: age-filter removed — safety enforced by mandatory Stage 2 interception
+        logger.info(f"[STAGE1] Age-filter SKIPPED for kids (safety via Stage 2 interception)")
+        checks_passed.append('age_filter_skipped_kids')
     else:
         logger.debug(f"[STAGE1] Age-filter skipped (safety_level={safety_level})")
 
