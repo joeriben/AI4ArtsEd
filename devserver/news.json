@@ -9,12 +9,12 @@
       "session": 260,
       "category": "improvement",
       "title": {
-        "en": "Kids/Youth Safety: Keyword Filter Replaced by Context-Aware LLM",
-        "de": "Kinder-/Jugendsicherheit: Wortfilter durch kontextverstehendes Sprachmodell ersetzt"
+        "en": "Kids/Youth Safety: Smarter Content Protection",
+        "de": "Kinder-/Jugendsicherheit: Intelligentere Inhaltssicherung"
       },
       "summary": {
-        "en": "The keyword-based age filter (which blocked harmless words like \"fangs\", \"explosion\", \"claws\") has been removed. Instead, the text transformation itself now receives a safety instruction — the LLM understands context, so \"Tiger mit Zaehnen\" passes while actual threats are refused. In the workshop on 12.03, the old filter caused 98 false blocks out of 470 requests. The new system: 0 false blocks, all genuine threats refused.",
-        "de": "Der wortbasierte Altersfilter (der harmlose Woerter wie \"Reisszaehne\", \"Explosion\", \"Krallen\" blockiert hat) wurde entfernt. Stattdessen erhaelt die Text-Transformation selbst eine Sicherheitsanweisung — das Sprachmodell versteht Kontext, deshalb geht \"Tiger mit Zaehnen\" durch, waehrend echte Bedrohungen abgelehnt werden. Im Workshop am 12.03. verursachte der alte Filter 98 Fehlblockierungen bei 470 Anfragen. Das neue System: 0 Fehlblockierungen, alle echten Bedrohungen abgelehnt."
+        "en": "The content safety system now evaluates context instead of blocking individual words. Imaginative descriptions like a tiger with sharp teeth are no longer rejected.",
+        "de": "Das Sicherheitssystem bewertet jetzt Kontext statt einzelne Woerter zu blockieren. Fantasievolle Beschreibungen wie ein Tiger mit scharfen Zaehnen werden nicht mehr abgelehnt."
       }
     },
     {
@@ -23,12 +23,12 @@
       "session": 260,
       "category": "improvement",
       "title": {
-        "en": "Image Safety Check: Concrete Checklist Instead of Vague Question",
-        "de": "Bildsicherheitspruefung: Konkrete Checkliste statt vager Frage"
+        "en": "Image Safety Check: Fewer False Alarms",
+        "de": "Bildsicherheitspruefung: Weniger Fehlalarme"
       },
       "summary": {
-        "en": "The post-generation image check (qwen3-vl:2b) now asks for specific categories — violence, gore, nudity, hate symbols, self-harm, terrorism — instead of the vague \"Is this safe?\". Construction sites and waterparks are no longer blocked. For kids, scary/unsettling content is additionally checked. The check is fail-closed: if the model cannot confirm safety, the image is blocked.",
-        "de": "Die Bildsicherheitspruefung nach der Generierung (qwen3-vl:2b) fragt jetzt nach konkreten Kategorien — Gewalt, Nacktheit, Hasssymbole, Selbstverletzung, Terrorismus — statt dem vagen \"Ist das sicher?\". Baustellen und Wasserparks werden nicht mehr blockiert. Fuer Kinder wird zusaetzlich auf aengstigende/verstoerende Inhalte geprueft. Die Pruefung ist fail-closed: Wenn das Modell keine Sicherheit bestaetigen kann, wird das Bild blockiert."
+        "en": "The automated image review has been refined. Everyday scenes — a construction site, a waterpark — are no longer mistakenly flagged.",
+        "de": "Die automatische Bildpruefung wurde verfeinert. Alltagsszenen — eine Baustelle, ein Wasserpark — werden nicht mehr faelschlicherweise beanstandet."
       }
     },
     {
@@ -37,12 +37,12 @@
       "session": 259,
       "category": "improvement",
       "title": {
-        "en": "All Text Stages: Claude Sonnet 4.6 via Mammouth AI (EU, DSGVO)",
-        "de": "Alle Text-Stufen: Claude Sonnet 4.6 ueber Mammouth AI (EU, DSGVO)"
+        "en": "Text Quality Upgrade with EU Data Protection",
+        "de": "Textqualitaet verbessert — mit EU-Datenschutz"
       },
       "summary": {
-        "en": "Text transformation, prompt interception, safety checks, and the Traeshy chat assistant all use Claude Sonnet 4.6 from Anthropic, routed through Mammouth AI — an EU-based API aggregator (DSGVO-compliant). This replaces the previous mix of IONOS gpt-oss-120b and local Ollama models for text stages.",
-        "de": "Text-Transformation, Prompt-Interception, Sicherheitspruefungen und der Traeshy-Chat-Assistent nutzen alle Claude Sonnet 4.6 von Anthropic, geroutet ueber Mammouth AI — einen EU-basierten API-Aggregator (DSGVO-konform). Das ersetzt den bisherigen Mix aus IONOS gpt-oss-120b und lokalen Ollama-Modellen fuer Text-Stufen."
+        "en": "The language model behind text transformation, the Traeshy chat assistant, and safety checks has been replaced. All text processing now runs exclusively on EU-based infrastructure in compliance with GDPR.",
+        "de": "Das Sprachmodell hinter Text-Transformation, dem Traeshy-Chat-Assistenten und den Sicherheitspruefungen wurde ausgetauscht. Die gesamte Textverarbeitung laeuft jetzt ausschliesslich ueber EU-basierte Infrastruktur in Uebereinstimmung mit der DSGVO."
       }
     },
     {
@@ -65,12 +65,12 @@
       "session": 247,
       "category": "feature",
       "title": {
-        "en": "Video Generation: Wan 2.2 A14B (10-Second Videos)",
-        "de": "Videogenerierung: Wan 2.2 A14B (10-Sekunden-Videos)"
+        "en": "Video Generation: 10-Second Clips from Text or Image",
+        "de": "Videogenerierung: 10-Sekunden-Clips aus Text oder Bild"
       },
       "summary": {
-        "en": "Video generation uses Wan 2.2 A14B — a 27-billion-parameter model (two 14B experts, Mixture of Experts architecture). It generates 10-second videos from text. Image-to-video is also available: an uploaded or sketched image becomes the starting frame.",
-        "de": "Die Videogenerierung nutzt Wan 2.2 A14B — ein 27-Milliarden-Parameter-Modell (zwei 14B-Experten, Mixture-of-Experts-Architektur). Es erzeugt 10-Sekunden-Videos aus Text. Bild-zu-Video ist ebenfalls verfuegbar: Ein hochgeladenes oder gezeichnetes Bild wird zum Startframe."
+        "en": "The platform now generates short videos. Describe a scene in text, or upload a drawing or photo as a starting frame — the system creates a 10-second video from it. Both text-to-video and image-to-video are available.",
+        "de": "Die Plattform generiert jetzt Kurzvideos. Beschreibe eine Szene als Text, oder lade eine Zeichnung oder ein Foto als Startbild hoch — das System erzeugt daraus ein 10-Sekunden-Video. Sowohl Text-zu-Video als auch Bild-zu-Video sind verfuegbar."
       }
     },
     {
@@ -79,12 +79,12 @@
       "session": 229,
       "category": "improvement",
       "title": {
-        "en": "Text Transformation: gpt-oss-120b (IONOS, EU Datacenter Berlin)",
-        "de": "Text-Transformation: gpt-oss-120b (IONOS, EU-Rechenzentrum Berlin)"
+        "en": "Text Transformation: Live Reasoning View",
+        "de": "Text-Transformation: Denkprozess live mitverfolgen"
       },
       "summary": {
-        "en": "The text transformation uses gpt-oss-120b from the IONOS AI Model Hub (datacenter Berlin). It is a reasoning model (117B total, 5.1B active parameters, Mixture of Experts) — you can follow its thought process live in the chat overlay before the final transformation appears.",
-        "de": "Die Text-Transformation nutzt gpt-oss-120b vom IONOS AI Model Hub (Rechenzentrum Berlin). Es ist ein Reasoning-Modell (117B gesamt, 5.1B aktive Parameter, Mixture of Experts) — du kannst seinen Denkprozess live im Chat-Overlay verfolgen, bevor die finale Transformation erscheint."
+        "en": "When transforming text, you can now follow the reasoning process in real time in the chat overlay — see how the system develops the transformation step by step before the final result appears. All processing runs on EU-based infrastructure.",
+        "de": "Bei der Text-Transformation laesst sich der Denkprozess jetzt in Echtzeit im Chat-Overlay mitverfolgen — Schritt fuer Schritt nachvollziehen, wie das System die Transformation entwickelt, bevor das Endergebnis erscheint. Die gesamte Verarbeitung laeuft auf EU-basierter Infrastruktur."
       }
     },
     {
@@ -93,12 +93,12 @@
       "session": 220,
       "category": "feature",
       "title": {
-        "en": "Real-Time Denoising Preview + Expert View",
-        "de": "Echtzeit-Denoising-Vorschau + Expert-Ansicht"
+        "en": "Live Preview: Watch Images Emerge",
+        "de": "Live-Vorschau: Bildern beim Entstehen zusehen"
       },
       "summary": {
-        "en": "During image generation, a live thumbnail (bottom right) shows the image emerging from noise in real time — driven by actual backend data, not a fake progress bar. In expert mode, the interactive games are replaced by a denoising view with model identity card, GPU load, energy consumption (kWh), seed, and generation parameters.",
-        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail (unten rechts) in Echtzeit, wie das Bild aus Rauschen entsteht — basierend auf echten Backend-Daten, nicht einer gefaelschten Fortschrittsanzeige. Im Expert-Modus werden die interaktiven Spiele durch eine Denoising-Ansicht mit Modell-Steckbrief, GPU-Auslastung, Energieverbrauch (kWh), Seed und Generierungsparametern ersetzt."
+        "en": "During image generation, a live thumbnail shows the image taking shape in real time. In expert mode, the waiting screen is replaced by a technical view with generation parameters and energy consumption — making the process transparent and observable.",
+        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt. Im Expert-Modus wird der Wartebildschirm durch eine technische Ansicht mit Generierungsparametern und Energieverbrauch ersetzt — der Prozess wird transparent und beobachtbar."
       }
     },
     {
@@ -111,8 +111,8 @@
         "de": "Skizzen-Canvas: Zeichnen statt Hochladen"
       },
       "summary": {
-        "en": "A freehand drawing canvas is available wherever images can be uploaded — image transformation, multi-image, and the crossmodal lab. Pen, eraser, 3 brush sizes, undo. The sketch feeds into image-to-image generation identically to a photo upload.",
-        "de": "Ein Freihand-Zeichencanvas steht ueberall zur Verfuegung, wo Bilder hochgeladen werden koennen — Bild-Transformation, Multi-Bild und das Crossmodale Labor. Stift, Radierer, 3 Pinselgroessen, Rueckgaengig. Die Skizze geht identisch wie ein Foto-Upload in die Bild-zu-Bild-Generierung."
+        "en": "Wherever you can upload an image, you can now draw one instead. Pen, eraser, three brush sizes, undo — available in image transformation, multi-image, and the crossmodal lab. Your sketch is used exactly like a photo upload for image-to-image generation.",
+        "de": "Ueberall, wo ein Bild hochgeladen werden kann, laesst sich jetzt auch eines zeichnen. Stift, Radierer, drei Pinselgroessen, Rueckgaengig — verfuegbar in der Bild-Transformation, bei Multi-Bild und im Crossmodalen Labor. Die Skizze wird genauso wie ein Foto-Upload fuer die Bild-zu-Bild-Generierung verwendet."
       }
     },
     {
@@ -125,8 +125,8 @@
         "de": "Poesie-Kollision: 6 Traditionen von Sappho bis Yoruba Oriki"
       },
       "summary": {
-        "en": "The poetry transformation feeds your text together with genuine public-domain poem fragments into a small language model (qwen3:1.7b). Six sources from different traditions: Sappho (Greece), Hoelderlin (Germany), Basho (Japan), Mirabai (India), Yoruba Oriki (West Africa), Nahuatl Xochicuicatl (Mesoamerica). The model is deliberately too small for smooth synthesis — the structural collision between your text and the poem is the point.",
-        "de": "Die Poesie-Transformation speist deinen Text zusammen mit echten gemeinfreien Gedichtfragmenten in ein kleines Sprachmodell (qwen3:1.7b). Sechs Quellen aus verschiedenen Traditionen: Sappho (Griechenland), Hoelderlin (Deutschland), Basho (Japan), Mirabai (Indien), Yoruba Oriki (Westafrika), Nahuatl Xochicuicatl (Mesoamerika). Das Modell ist bewusst zu klein fuer eine glatte Synthese — die strukturelle Kollision zwischen deinem Text und dem Gedicht ist das Ziel."
+        "en": "Your text collides with genuine public-domain poetry from six traditions: Sappho, Hoelderlin, Basho, Mirabai, Yoruba Oriki, and Nahuatl Xochicuicatl. The result is deliberately not a smooth synthesis — the structural friction between your text and the poem fragment is the artistic material.",
+        "de": "Dein Text kollidiert mit echten gemeinfreien Gedichten aus sechs Traditionen: Sappho, Hoelderlin, Basho, Mirabai, Yoruba Oriki und Nahuatl Xochicuicatl. Das Ergebnis ist bewusst keine glatte Synthese — die strukturelle Reibung zwischen deinem Text und dem Gedichtfragment ist das kuenstlerische Material."
       }
     },
     {
@@ -139,8 +139,8 @@
         "de": "9 Sprachen inklusive Arabisch und Hebraeisch (RTL)"
       },
       "summary": {
-        "en": "The interface is available in DE, EN, TR, KO, UK, FR, ES, HE, and AR. Arabic and Hebrew are rendered right-to-left with adapted layout. All translations are maintained via a batch process — English is always the fallback.",
-        "de": "Die Oberflaeche ist verfuegbar in DE, EN, TR, KO, UK, FR, ES, HE und AR. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt. Alle Uebersetzungen werden per Batch-Prozess gepflegt — Englisch ist immer der Fallback."
+        "en": "The interface is available in German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, and Arabic. Arabic and Hebrew are fully rendered right-to-left with adapted layout.",
+        "de": "Die Oberflaeche ist verfuegbar in Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch und Arabisch. Arabisch und Hebraeisch werden vollstaendig rechts-nach-links mit angepasstem Layout dargestellt."
       }
     },
     {
@@ -153,8 +153,8 @@
         "de": "Crossmodales Labor: Bild zu Klang zu Synthesizer"
       },
       "summary": {
-        "en": "The Crossmodal Lab connects image and audio generation. A picture can become the starting point for sound (via CLIP vision features projected into Stable Audio's conditioning space). Generated audio can be loaded as a wavetable in the built-in synthesizer — playable as an instrument with loop, sequencer, and arpeggiator.",
-        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild kann zum Ausgangspunkt fuer Klang werden (ueber CLIP-Vision-Features, projiziert in den Konditionierungsraum von Stable Audio). Generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden — spielbar als Instrument mit Loop, Sequencer und Arpeggiator."
+        "en": "The Crossmodal Lab bridges image and audio generation. A picture — uploaded or drawn — can become the starting point for a sound. Generated audio can be loaded into the built-in synthesizer as a wavetable, playable as an instrument with loop, sequencer, and arpeggiator.",
+        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild — hochgeladen oder gezeichnet — kann zum Ausgangspunkt fuer einen Klang werden. Generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden und als Instrument spielen, mit Loop, Sequencer und Arpeggiator."
       }
     }
   ]
