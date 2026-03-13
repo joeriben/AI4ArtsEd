@@ -1,5 +1,47 @@
 # Development Log
 
+## Session 261 - Fix Cross-Device Prompt/Image Bleeding Under Concurrent Load
+**Date:** 2026-03-13
+**Focus:** Fix critical state isolation bug causing prompt/seed/image leaking between devices during workshops.
+
+### Problem
+Workshop observation: When multiple devices generate simultaneously, outputs bleed between users.
+1. **Context prompt leak**: Context prompt used even when the field was empty on another device.
+2. **Cross-device image leak**: User A uploads a diver image for i2i on iPad → User B generates "wurstwasser trinken" on laptop → gets the diver character from User A's session.
+
+### Root Cause
+Three module-level global variables in `schema_pipeline_routes.py:83-85`:
+```python
+_last_prompt = None      # ← Shared across ALL concurrent requests
+_last_seed = None        # ← Device A's seed reused by Device B
+_last_output_config = None
+```
+These were written by every generation request and read by the next one — regardless of which device originated it. Under concurrent workshop load, Device B inherits Device A's seed state, causing identical or similar outputs.
+
+### Fix
+Replaced globals with **per-device-id dictionary** protected by `threading.Lock()`:
+- `_seed_state: dict` keyed by `device_id` (already present in every request)
+- `_get_seed_state(device_id)` / `_update_seed_state(device_id, ...)` helper functions
+- TTL eviction (1 hour) prevents unbounded memory growth
+- Fallback `device_id='anonymous'` for requests without device_id
+
+Also added `_cleanup_wikipedia_status()` in `pipeline_executor.py` (5-min TTL eviction for `WIKIPEDIA_STATUS` global dict).
+
+### Files Modified
+- `devserver/my_app/routes/schema_pipeline_routes.py` — Seed state isolation (2 call sites)
+- `devserver/schemas/engine/pipeline_executor.py` — Wikipedia status cleanup
+- `devserver/tests/test_seed_state_isolation.py` — New: 19 tests (isolation, concurrency, TTL, workshop scenario)
+
+### Test Results
+All 19 tests pass: basic isolation, seed logic correctness, 20-thread concurrent access, workshop scenario simulation, TTL eviction.
+
+### Known Remaining Issues
+- `_generation_progress` in GPU service is global but cosmetic (generation serialized via `_locked_generate`)
+- `self._current_config` on singleton `PipelineExecutor` — deeper architectural issue, not causing observed bleeding
+- ComfyUI shared input directory may cause i2i image persistence — monitor after this fix
+
+---
+
 ## Session 260 - Kids Safety Redesign: Keyword Filter → Safety-Aware Interception
 **Date:** 2026-03-13
 **Focus:** Replace failed keyword-based kids filter with LLM safety-aware Stage 2 interception.
