@@ -20,8 +20,9 @@ from .wikipedia_processor import extract_markers, format_wiki_content, remove_ma
 
 logger = logging.getLogger(__name__)
 
-# Wikipedia status for real-time UI feedback, keyed by run_id (Session 261: per-request isolation)
-# Key: run_id, Value: {'status': 'lookup'|'complete'|None, 'terms': [...], 'timestamp': float}
+# Wikipedia status for real-time UI feedback, keyed by run_id for per-request isolation.
+# Key: run_id (str), Value: {'status': 'lookup'|'complete'|None, 'terms': [...], 'timestamp': float}
+# Callers without run_id fall back to key 'current' (backward compat).
 WIKIPEDIA_STATUS = {}
 
 def _cleanup_wikipedia_status(max_age_seconds: int = 300):
@@ -120,7 +121,8 @@ class PipelineExecutor:
         input_image1: Optional[str] = None,  # Session 86+: Multi-image support - path to image 1
         input_image2: Optional[str] = None,  # Session 86+: Multi-image support - path to image 2 (optional)
         input_image3: Optional[str] = None,  # Session 86+: Multi-image support - path to image 3 (optional)
-        alpha_factor: Optional[float] = None  # Surrealizer: T5-CLIP fusion alpha factor
+        alpha_factor: Optional[float] = None,  # Surrealizer: T5-CLIP fusion alpha factor
+        run_id: Optional[str] = None  # Per-request key for WIKIPEDIA_STATUS isolation
     ) -> PipelineResult:
         """Execute complete pipeline with 4-Stage Pre-Interception System
 
@@ -200,7 +202,7 @@ class PipelineExecutor:
         # Plan pipeline steps
         steps = self._plan_pipeline_steps(resolved_config)
 
-        result = await self._execute_pipeline_steps(config_name, steps, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
+        result = await self._execute_pipeline_steps(config_name, steps, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id)
 
         logger.info(f"Pipeline for config '{config_name}' completed: {result.status}")
         return result
@@ -233,7 +235,7 @@ class PipelineExecutor:
         })
 
         # Execute pipeline steps with streaming
-        async for event_type, event_data in self._stream_pipeline_steps(config_name, steps, context, resolved_config=resolved_config, safety_level=safety_level):
+        async for event_type, event_data in self._stream_pipeline_steps(config_name, steps, context, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id):
             yield (event_type, event_data)
     
     def _plan_pipeline_steps(self, resolved_config: ResolvedConfig) -> List[PipelineStep]:
@@ -250,12 +252,12 @@ class PipelineExecutor:
         logger.debug(f"Pipeline planned: {len(steps)} steps for config '{resolved_config.name}' (Pipeline: {resolved_config.pipeline_name})")
         return steps
     
-    async def _execute_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> PipelineResult:
+    async def _execute_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None, run_id=None) -> PipelineResult:
         """Execute pipeline steps sequentially (or recursively if pipeline supports it)"""
 
         # Check if this is a recursive pipeline
         if resolved_config and resolved_config.pipeline_name == 'text_transformation_recursive':
-            return await self._execute_recursive_pipeline_steps(config_name, steps, context, tracker, resolved_config=resolved_config, safety_level=safety_level)
+            return await self._execute_recursive_pipeline_steps(config_name, steps, context, tracker, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id)
 
         # Normal sequential execution
         start_time = time.time()
@@ -264,7 +266,7 @@ class PipelineExecutor:
         for step in steps:
             try:
                 step.status = PipelineStatus.RUNNING
-                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
+                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id)
 
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
@@ -332,7 +334,7 @@ class PipelineExecutor:
             metadata=result_metadata
         )
 
-    async def _execute_recursive_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> PipelineResult:
+    async def _execute_recursive_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None, run_id=None) -> PipelineResult:
         """Execute recursive pipeline with internal loop (e.g., Stille Post)"""
         from .random_language_selector import get_random_language, get_language_name
 
@@ -384,7 +386,7 @@ class PipelineExecutor:
 
                 logger.info(f"[RECURSIVE-LOOP] Iteration {i+1}/{iterations}: Translating to {get_language_name(target_lang)} ({target_lang})")
 
-                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level)
+                output = await self._execute_single_step(step, context, tracker=tracker, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id)
 
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
@@ -453,7 +455,7 @@ class PipelineExecutor:
             }
         )
     
-    async def _stream_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, *, resolved_config=None, safety_level=None) -> AsyncGenerator[Tuple[str, Any], None]:
+    async def _stream_pipeline_steps(self, config_name: str, steps: List[PipelineStep], context: PipelineContext, *, resolved_config=None, safety_level=None, run_id=None) -> AsyncGenerator[Tuple[str, Any], None]:
         """Execute pipeline steps with streaming updates"""
         for i, step in enumerate(steps):
             yield ("step_started", {
@@ -464,7 +466,7 @@ class PipelineExecutor:
             
             try:
                 step.status = PipelineStatus.RUNNING
-                output = await self._execute_single_step(step, context, resolved_config=resolved_config, safety_level=safety_level)
+                output = await self._execute_single_step(step, context, resolved_config=resolved_config, safety_level=safety_level, run_id=run_id)
 
                 step.status = PipelineStatus.COMPLETED
                 step.output_data = output
@@ -499,7 +501,7 @@ class PipelineExecutor:
             "total_steps": len(steps)
         })
     
-    async def _execute_single_step(self, step: PipelineStep, context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None) -> str:
+    async def _execute_single_step(self, step: PipelineStep, context: PipelineContext, tracker=None, *, resolved_config=None, safety_level=None, run_id=None) -> str:
         """Execute single pipeline step with optional Wikipedia research capability
 
         Wikipedia Research (opt-in via config meta "wikipedia": true):
@@ -529,6 +531,9 @@ class PipelineExecutor:
         else:
             max_wiki_iterations = 0
             max_lookups = 0
+
+        # Key for WIKIPEDIA_STATUS: use run_id if provided, else 'current' for backward compat
+        wiki_status_key = run_id or 'current'
 
         fallback_language = getattr(config, 'WIKIPEDIA_FALLBACK_LANGUAGE', 'de')
 
@@ -677,7 +682,7 @@ class PipelineExecutor:
                     # Session 136: Include language information for correct links
                     # For "start" status, we don't have real results yet, so use placeholders
                     terms_with_lang = [{'term': t[0], 'lang': t[1], 'title': t[0], 'url': '', 'success': False} for t in lookup_terms]
-                    WIKIPEDIA_STATUS['current'] = {
+                    WIKIPEDIA_STATUS[wiki_status_key] = {
                         'status': 'lookup',
                         'terms': terms_with_lang,
                         'timestamp': time.time()
@@ -727,7 +732,7 @@ class PipelineExecutor:
                         for r in results_with_urls:
                             logger.info(f"  - {r['lang']}: {r['title']} -> {r['url']}")
 
-                        WIKIPEDIA_STATUS['current'] = {
+                        WIKIPEDIA_STATUS[wiki_status_key] = {
                             'status': 'complete',
                             'terms': results_with_urls,  # Real results with URLs!
                             'timestamp': time.time()
@@ -736,7 +741,7 @@ class PipelineExecutor:
 
                     except Exception as e:
                         logger.warning(f"[WIKI-LOOP] Wikipedia lookup failed: {e}")
-                        WIKIPEDIA_STATUS['current'] = {'status': None, 'terms': [], 'timestamp': time.time()}
+                        WIKIPEDIA_STATUS[wiki_status_key] = {'status': None, 'terms': [], 'timestamp': time.time()}
                         context.custom_placeholders['_WIKIPEDIA_STATUS'] = 'error'
                         # Continue without Wikipedia content
 

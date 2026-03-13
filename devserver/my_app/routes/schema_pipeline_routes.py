@@ -1749,17 +1749,18 @@ def execute_pipeline_streaming(data: dict):
                 user_input=input_text,
                 safety_level=safety_level,
                 tracker=tracker,
-                config_override=config
+                config_override=config,
+                run_id=run_id
             ))
 
         # Start pipeline in background thread
         executor = ThreadPoolExecutor(max_workers=1)
         future = executor.submit(run_pipeline)
 
-        # Poll for Wikipedia status while pipeline runs
+        # Poll for Wikipedia status while pipeline runs (keyed by run_id)
         last_wiki_status = None
         while not future.done():
-            current_status = WIKIPEDIA_STATUS.get('current', {})
+            current_status = WIKIPEDIA_STATUS.get(run_id, {})
             if current_status.get('status') != last_wiki_status:
                 last_wiki_status = current_status.get('status')
                 if last_wiki_status == 'lookup':
@@ -1781,8 +1782,8 @@ def execute_pipeline_streaming(data: dict):
         result = result_holder[0]
         executor.shutdown(wait=False)
 
-        # Clear Wikipedia status
-        WIKIPEDIA_STATUS['current'] = {}
+        # Clean up Wikipedia status for this run
+        WIKIPEDIA_STATUS.pop(run_id, None)
 
         accumulated = ""
         chunk_count = 0
