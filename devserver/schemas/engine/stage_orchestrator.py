@@ -1176,13 +1176,11 @@ async def execute_stage1_safety_unified(
             checks_passed.append('dsgvo_llm')
             logger.info(f"[STAGE1] DSGVO LLM fallback: SAFE ({llm_time:.1f}s)")
 
-    # ── STEP 3: Age-appropriate Fast-Filter (~0.001s) ──────────────────
-    # Kids: SKIPPED — keyword filter replaced by safety-aware Stage 2 interception
-    # (Session 260: 29% delivery rate due to 98 false positives from keyword list).
-    # Kids safety is now enforced by mandatory Stage 2 + safety prefix in instruction.
+    # ── STEP 3: Age-appropriate Fast-Filter — DISABLED for kids+youth ──
+    # Session 260: Keyword filter replaced by safety-aware Stage 2 interception
+    # for BOTH kids and youth. Safety prefix injected into LLM instruction.
     # Stage 3 Llama-Guard remains as second safety net.
-    # Youth: still uses keyword fast-filter + LLM context verification.
-    if safety_level == 'youth':
+    if False:  # Age-filter disabled — kept for potential reactivation
         age_start = _time.time()
         has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
         age_time = _time.time() - age_start
@@ -1225,10 +1223,9 @@ async def execute_stage1_safety_unified(
                 # LLM says benign context (false positive like "cute vampire") → allow
                 logger.info(f"[STAGE1] Age-filter false positive confirmed by LLM ({llm_time:.1f}s)")
         checks_passed.append('age_filter')
-    elif safety_level == 'kids':
-        # Kids: age-filter removed — safety enforced by mandatory Stage 2 interception
-        logger.info(f"[STAGE1] Age-filter SKIPPED for kids (safety via Stage 2 interception)")
-        checks_passed.append('age_filter_skipped_kids')
+    elif safety_level in ('kids', 'youth'):
+        logger.info(f"[STAGE1] Age-filter SKIPPED for {safety_level} (safety via Stage 2 interception)")
+        checks_passed.append('age_filter_skipped')
     else:
         logger.debug(f"[STAGE1] Age-filter skipped (safety_level={safety_level})")
 

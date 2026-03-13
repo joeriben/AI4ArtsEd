@@ -991,9 +991,9 @@ def execute_stage2():
         pipeline_def = pipeline_executor.config_loader.get_pipeline(execution_config.pipeline_name)
         skip_stage2 = pipeline_def.skip_stage2 if pipeline_def and hasattr(pipeline_def, 'skip_stage2') else False
 
-        # Kids: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
-        if skip_stage2 and safety_level == 'kids':
-            logger.info(f"[STAGE2-ENDPOINT] Stage 2: skip_stage2 OVERRIDDEN — mandatory for kids safety")
+        # Kids/Youth: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
+        if skip_stage2 and safety_level in ('kids', 'youth'):
+            logger.info(f"[STAGE2-ENDPOINT] Stage 2: skip_stage2 OVERRIDDEN — mandatory for {safety_level} safety")
             skip_stage2 = False
 
         if skip_stage2:
@@ -4498,9 +4498,9 @@ def interception_pipeline():
                 pipeline_def = pipeline_executor.config_loader.get_pipeline(config.pipeline_name)
                 skip_stage2 = pipeline_def.skip_stage2 if pipeline_def and hasattr(pipeline_def, 'skip_stage2') else False
 
-                # Kids: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
-                if skip_stage2 and safety_level == 'kids':
-                    logger.info(f"[4-STAGE] Stage 2: skip_stage2 OVERRIDDEN — mandatory for kids safety")
+                # Kids/Youth: Stage 2 is MANDATORY (safety-aware interception replaces keyword filter)
+                if skip_stage2 and safety_level in ('kids', 'youth'):
+                    logger.info(f"[4-STAGE] Stage 2: skip_stage2 OVERRIDDEN — mandatory for {safety_level} safety")
                     skip_stage2 = False
 
                 if skip_stage2:

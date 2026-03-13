@@ -62,14 +62,24 @@ NO meta-commentary. NO markdown. NO code fences. NO explanation."""
 }
 
 
-KIDS_SAFETY_PREFIX = (
-    'SAFETY (ages 6-12): This output generates images for children.\n'
-    'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
-    '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
-    '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
-    'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
-    'Otherwise, transform normally according to Context rules.\n\n'
-)
+SAFETY_PREFIXES = {
+    'kids': (
+        'SAFETY (ages 6-12): This output generates media for children.\n'
+        'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
+        '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
+        '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
+        'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
+        'Otherwise, transform normally according to Context rules.\n\n'
+    ),
+    'youth': (
+        'SAFETY (ages 13-17): This output generates media for teenagers.\n'
+        'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
+        '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
+        '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
+        'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
+        'Otherwise, transform normally according to Context rules.\n\n'
+    ),
+}
 
 
 def get_instruction(instruction_type: str, custom_override: str = None, safety_level: str = None) -> str:
@@ -101,9 +111,9 @@ def get_instruction(instruction_type: str, custom_override: str = None, safety_l
 
         instruction = INSTRUCTION_TYPES[instruction_type]["default"]
 
-    # Prepend kids safety prefix when safety_level is 'kids'
-    if safety_level == 'kids':
-        instruction = KIDS_SAFETY_PREFIX + instruction
+    # Prepend safety prefix for kids/youth
+    if safety_level in SAFETY_PREFIXES:
+        instruction = SAFETY_PREFIXES[safety_level] + instruction
 
     return instruction
 

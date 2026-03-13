@@ -1,5 +1,47 @@
 # Development Log
 
+## Session 260 - Kids Safety Redesign: Keyword Filter → Safety-Aware Interception
+**Date:** 2026-03-13
+**Focus:** Replace failed keyword-based kids filter with LLM safety-aware Stage 2 interception.
+
+### Problem
+Workshop 12.03.2026 (14:00–15:30): **29% delivery rate** (137/470 requests).
+- 98 false positives from keyword age-filter: fangs(25), explosion(20), blood/Blut(15), claws(15), pain(10), teeth(10)
+- Only "genital"(10) was a legitimate block
+- Keyword list approach fundamentally flawed — adding/removing terms never stabilized
+
+### Design Decision
+**Keyword-based kids filter abandoned.** Replaced by:
+1. **Safety prefix in Stage 2 interception** — LLM receives explicit instruction to refuse racist, terrorist, violence-glorifying, sexist, pornographic content (including implied/metaphorical forms)
+2. **Stage 2 mandatory for kids** — `skip_stage2` overridden when `safety_level='kids'`
+3. **Stage 3 Llama-Guard unchanged** — remains as second safety net
+
+### Empirical Validation (mammouth/claude-sonnet-4-6)
+| Category | Result |
+|----------|--------|
+| Semantic threats (Flugzeug→Hochhaus, Auto→Versammlung, Waffe→Schule) | 8/8 refused |
+| Benign prompts (Tiger mit Zähnen, Drache mit Krallen, Kinder Fußball) | 4/4 creative |
+| False positives | 0 |
+
+Refusal format: "Hierbei kann ich Dich nicht unterstützen." + brief reason without echoing input keywords.
+
+### Changes
+- `instruction_selector.py`: `KIDS_SAFETY_PREFIX` — prepended when `safety_level='kids'`
+- `chunk_builder.py`: pass `safety_level` through to `get_instruction()`
+- `pipeline_executor.py`: store + forward `safety_level` to `build_chunk()`
+- `stage_orchestrator.py`: skip age-filter for kids (youth keeps it)
+- `schema_pipeline_routes.py`: override `skip_stage2` for kids (both endpoints)
+- `testfiles/test_safety_interception.py`: empirical test script for API validation
+
+### Unchanged
+- §86a filter (criminal law — always active)
+- DSGVO NER (data protection — always active)
+- Stage 3 Llama-Guard (second safety net)
+- VLM post-generation check
+- Youth age-filter (keyword list still active for youth)
+
+---
+
 ## Session 258 - Wikipedia Lookup Optimization: Dedup + Selective Prompt
 **Date:** 2026-03-11
 **Focus:** Fix duplicate and unnecessary Wikipedia lookups in Stage 2 Prompt Interception.

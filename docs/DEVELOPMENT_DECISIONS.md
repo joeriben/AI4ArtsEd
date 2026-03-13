@@ -9,6 +9,20 @@
 
 ---
 
+## 2026-03-13: Kids Safety — Keyword Filter → Safety-Aware Interception
+
+**Decision:** Keyword-based age filter for `kids` safety_level removed. Replaced by mandatory Stage 2 interception with safety prefix.
+
+**Reasoning:** Workshop 12.03.2026 showed 29% delivery rate. 98/105 Stage 1 blocks were false positives (fangs, claws, explosion, teeth). The keyword list was fundamentally unstable — every addition created new FPs, every removal opened gaps. An LLM understands intent; a keyword list cannot.
+
+**Mechanism:** `KIDS_SAFETY_PREFIX` in `instruction_selector.py` instructs the interception LLM to refuse racist, terrorist, violence-glorifying, sexist, pornographic content (including implied/metaphorical). Refusal: "Hierbei kann ich Dich nicht unterstützen." + reason without echoing keywords.
+
+**Scope:** Only `kids` safety_level. Youth keeps keyword filter. §86a, DSGVO, Stage 3 Llama-Guard, VLM check all unchanged.
+
+**Affected Files:** `instruction_selector.py`, `chunk_builder.py`, `pipeline_executor.py`, `stage_orchestrator.py`, `schema_pipeline_routes.py`
+
+---
+
 ## 📋 Quick Reference - Current Architecture
 
 **Current System Status (as of 2026-03-06):**
