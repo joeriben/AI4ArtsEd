@@ -652,6 +652,20 @@ onUnmounted(() => {
 .experiment-card.feature-probing { border-inline-start: 3px solid #4CAF50; }
 .experiment-card.concept-algebra { border-inline-start: 3px solid #FF9800; }
 .experiment-card.denoising-archaeology { border-inline-start: 3px solid #FF5722; }
+.experiment-card.repeng { border-inline-start: 3px solid #E91E63; }
+.experiment-card.model-comparison { border-inline-start: 3px solid #00BCD4; }
+.experiment-card.bias-archaeology { border-inline-start: 3px solid #F44336; }
+.experiment-card.latent-audio-synth { border-inline-start: 3px solid #FFC107; }
+.experiment-card.mmaudio { border-inline-start: 3px solid #E040FB; }
+.experiment-card.imagebind-guidance { border-inline-start: 3px solid #7C4DFF; }
+
+.lab-section-heading {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3rem;
+  margin: 2rem 0 0.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
 .experiment-card h3 {
   margin: 0 0 0.5rem 0;

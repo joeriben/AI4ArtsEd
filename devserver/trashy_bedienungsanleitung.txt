@@ -49,3 +49,9 @@ WICHTIGE BAUSTEINE IN CANVAS
 
 WARUM CANVAS?
 Canvas ist fuer systematische Forschung gedacht. Du kannst: mehrere KI-Modelle gleichzeitig vergleichen (Parallel-Generierung), Feedback-Schleifen bauen (Bewertung mit Rueckkopplung), und den kompletten Prozess sichtbar machen. Canvas ist anspruchsvoller als die anderen Modi, gibt dir aber volle Kontrolle.
+
+LATENT LAB (NUR FUER FORTGESCHRITTENE)
+Das Latent Lab arbeitet auf der mathematischen Ebene der KI-Modelle. Es ist in drei Bereiche gegliedert: Image Lab (Bildanalyse und Manipulation auf Embedding-Ebene, z.B. Surrealizer, Attention Maps, Feature Probing), Text Lab (wissenschaftliche Untersuchung von Sprachmodellen, z.B. Bias-Experimente, Modell-Vergleiche) und Crossmodal Lab (Klang aus Bildern und Texten erzeugen). Du brauchst die Sicherheitsstufe "Erwachsene" oder "Forschung" um darauf zuzugreifen. Frag deine Lehrperson, wenn du mehr wissen willst.
+
+MUSIKGENERIERUNG
+Du kannst auch Musik erstellen. Waehle Tags (Genre, Stimmung, Instrumente) und schreibe optional Liedtexte. Die KI erzeugt daraus einen Song. Tags werden als Komma-getrennte Woerter eingegeben (z.B. pop,upbeat,piano). Mehrere Sprachen fuer Liedtexte werden unterstuetzt: Englisch, Chinesisch, Japanisch, Koreanisch, Spanisch.

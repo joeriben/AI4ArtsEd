@@ -1,5 +1,5 @@
 AI4ARTSED KNOWLEDGE BASE FOR TRASHY - COMPREHENSIVE USER GUIDE
-Last updated: 2026-02-18
+Last updated: 2026-03-14
 
 ================================================================================
 SECTION 1: PLATFORM OVERVIEW
@@ -437,6 +437,16 @@ Uses TWO DIFFERENT text encoders (CLIP and T5) and merges their results.
 - Mixing them creates unexpected, often surreal results
 - Reveals how meaning is encoded differently by different systems
 
+THREE FUSION MODES:
+- Dual Alpha (default): Structural anchor — the first 77 tokens (CLIP range)
+  are influenced at only 15% of the α value, the rest at full α. The subject
+  stays recognizable, surreality comes from the T5 tokens beyond position 77.
+- Normalized: Uniform α across all positions, then L2-normalized to mean T5
+  magnitude. Provides controlled intensity without the dual-zone behavior.
+- Legacy: Original behavior — LERP on the first 77 tokens, rest appended
+  unchanged. Can dilute surreal effects on long prompts because unmodified
+  T5 tokens (positions 78+) overwhelm in MMDiT attention.
+
 SPLIT & COMBINE / PARTIAL ELIMINATION
 -------------------------------------
 Work directly at the mathematical level of semantic vectors.
@@ -539,6 +549,251 @@ Common questions users might ask:
 - "Can I transfer dimensions from a completely different prompt?" → Yes! That's
   the experimental spirit. Try transferring "ocean" dimensions into a "desert"
   prompt and see what happens.
+
+LATENT LAB — CONCEPT ALGEBRA
+-----------------------------
+Location: Route "/latent-lab" → Tab "Concept Algebra"
+
+What it does:
+- Vector arithmetic on prompt embeddings: A − B + C = ?
+- Inspired by word2vec analogies (King − Man + Woman ≈ Queen), applied to
+  entire prompt embeddings and image generation
+- Three prompts are encoded, algebraically combined, and used to generate
+- Scale sliders control intensity of subtraction and addition (0–3)
+- L2 distance shows how far the result moved from the original
+
+How it works technically:
+- The formula: Result = A − Scale₁ × B + Scale₂ × C
+- Operation happens in embedding space BEFORE image generation, not during
+  the diffusion process — a surgical operation in meaning-space
+- Applied to the chosen encoder embeddings (CLIP-L 768d, CLIP-G 1280d,
+  T5-XXL 4096d, or all combined) and pooled embeddings (2048d)
+
+Key difference from negative prompts:
+- Negative prompts steer the denoising process away from B at EVERY one of
+  the 25 steps — the model decides step by step how to interpret "not B"
+- Concept Algebra computes a new vector BEFORE generation: the subtraction
+  happens in embedding space, not in the diffusion process
+- Result: more precise concept manipulation vs. step-by-step avoidance
+
+Common questions users might ask:
+- "Why is this different from a negative prompt?" → Fundamentally different
+  mechanism. Negative prompts guide the noise-removal process step by step.
+  Concept Algebra performs a one-time vector operation before generation begins.
+- "Is the operation commutative?" → No. A − B + C ≠ A − C + B. The
+  subtraction and addition happen relative to A's position in vector space.
+
+LATENT LAB — DENOISING ARCHAEOLOGY
+------------------------------------
+Location: Route "/latent-lab" → Tab "Denoising Archaeology"
+
+What it does:
+- Makes every one of the 25 denoising steps visible as an image
+- A filmstrip shows the complete creation process, a timeline slider allows
+  browsing through the steps
+- Reveals that diffusion models work everywhere simultaneously, from rough
+  structures to fine details (not left-to-right like drawing)
+
+Three phases visible in the filmstrip:
+1. Early steps (1–8): Global composition — basic structure, color distribution,
+   layout planning. The model "plans" the overall scene.
+2. Middle steps (9–17): Semantic emergence — objects become recognizable,
+   shapes crystallize. Individual concepts gain form.
+3. Late steps (18–25): Detail refinement — textures, edges, fine patterns.
+   The model polishes fine details.
+
+How it works technically:
+- SD3.5 uses Rectified Flow as scheduler with 25 default steps
+- At each step, current latent vectors are decoded through the VAE (1024×1024)
+- Latent representation: 128×128 at 16 channels — each latent pixel corresponds
+  to an ~8×8 pixel patch in the image
+- Even pure Gaussian noise becomes coherent color clusters because the VAE
+  translates each latent position into a spatial patch
+
+Common questions users might ask:
+- "Why does the first step show colored blobs, not pixel noise?" → The noise
+  lives in latent space (128×128), not pixel space. The VAE decoder translates
+  each latent pixel into an 8×8 pixel patch, creating spatial coherence.
+- "Why does the model seem to 'know' the layout so early?" → Early denoising
+  steps set global structure because the noise schedule is designed that way —
+  large-scale changes happen first, small-scale refinements last.
+
+LATENT LAB — TEXT LAB
+======================
+
+Three research tools for investigating language models at the activation level.
+Requires adult/research safety level. All tools run on the GPU service.
+
+TEXT LAB — REPRESENTATION ENGINEERING
+--------------------------------------
+Location: Route "/latent-lab" → Tab "Text Lab" → "Representation Engineering"
+
+What it does:
+- Based on Zou et al. (2023) "Representation Engineering"
+- LLMs encode abstract concepts (truth, sentiment, ethics) as directions in
+  high-dimensional activation space
+- Through contrast pairs (true vs. false sentence), the direction encoding a
+  concept can be extracted
+- Adding this direction at runtime changes model behavior — without retraining
+
+How to use it:
+1. Enter contrast pairs (e.g. "The capital of France is Paris" vs.
+   "The capital of France is Berlin") — at least 3 pairs recommended
+2. Click "Find direction" — PCA extracts the concept direction
+3. Enter a test prompt (e.g. "The capital of Germany is")
+4. Use the α slider to steer generation along the concept direction:
+   - α = 0: baseline (correct answer)
+   - α = -1: inverted direction (wrong answer, even though model "knows" right)
+   - α = +1: reinforced direction (little change, already correct)
+   - |α| > 2: artifacts dominate (repetitions, nonsense)
+
+Key concepts to explain to users:
+- "Explained variance" > 50% indicates clean concept separation
+- The "sweet spot" per Zou et al. is |α| between 0.5 and 2.0
+- Different transformer layers influence different aspects: early = syntax,
+  late = semantics
+- English prompts work significantly better (most open-source LLMs are
+  primarily English-trained)
+
+TEXT LAB — MODEL COMPARISON (CKA)
+----------------------------------
+Location: Route "/latent-lab" → Tab "Text Lab" → "Model Comparison"
+
+What it does:
+- Based on Belinkov (2022) "Probing Classifiers" and Olsson et al. (2022)
+- Loads two language models and compares their internal representations
+  layer by layer
+- CKA (Centered Kernel Alignment) heatmap shows which layers represent
+  information similarly
+- Attention comparison shows where each model "looks" in the text
+- Same-seed generation comparison shows behavioral differences
+
+Key concepts to explain to users:
+- Bright cells in the heatmap = high representational similarity
+- Diagonal patterns = models process information in similar order
+- Early layers (syntax) are often similar across models
+- Late layers (semantics/world knowledge) diverge more strongly
+- CKA is invariant to rotation and scaling — it measures structural
+  similarity, not identical numbers
+
+TEXT LAB — BIAS ARCHAEOLOGY
+-----------------------------
+Location: Route "/latent-lab" → Tab "Text Lab" → "Bias Archaeology"
+
+What it does:
+- Based on Zou et al. (2023) and Bricken et al. (2023) "Towards Monosemanticity"
+- Systematic bias experiments through controlled token manipulation
+- Four experiment types:
+  1. Gender: Suppresses all gendered pronouns — which gender does the model
+     choose as default?
+  2. Sentiment: Boosts positive or negative words — how strongly does the
+     entire text flow change?
+  3. Domain: Boosts scientific or poetic vocabulary — observe register shifts
+  4. Custom: Define your own boost/suppress token lists
+
+How it works technically:
+- Suppression: Token logits set to -∞ before sampling (can never be generated)
+- Boosting: Token logits increased before sampling
+- Multiple samples per condition enable statistical comparison
+- Results show baseline vs. manipulated generations side by side
+
+Key concepts to explain to users:
+- The differences between baseline and manipulated generations reveal biases
+  encoded in the training data, not intentional design choices
+- Example: "The doctor said to the patient" with gender suppression reveals
+  which gender the model defaults to for "doctor"
+- Custom experiments let users test their own hypotheses about model biases
+
+LATENT LAB — CROSSMODAL LAB
+=============================
+
+Three tools bridging image and audio generation through shared latent spaces.
+Requires adult/research safety level.
+
+CROSSMODAL LAB — LATENT AUDIO SYNTH
+-------------------------------------
+Location: Route "/latent-lab" → Tab "Crossmodal" → "Latent Audio Synth"
+
+What it does:
+- Direct manipulation of Stable Audio's T5 conditioning space (768d)
+- Instead of changing WHAT the model generates (via prompt), change HOW
+  the model internally understands the text
+- Interpolate between two prompts, extrapolate beyond, scale embeddings,
+  inject noise
+
+Parameters:
+- Alpha: 0 = Prompt A only, 1 = Prompt B only, 0.5 = blend, >1 = extrapolation
+  beyond B, <0 = opposite direction from B
+- Magnitude: Global embedding scaling (1.0 = unchanged, higher = more intense)
+- Noise: Gaussian noise injection for unpredictable variations
+- Spectral Strip: Shows all 768 dimensions as bars — drag to shift individual
+  dimensions, directly manipulating the sound. Right-click resets.
+
+Synthesis tools:
+- Looper/Sequencer: Create rhythmic patterns from generated audio clips
+- Wavetable mode: Morph between audio frames using a scan position
+- MIDI control: Play the generated sound as an instrument via MIDI keyboard
+- ADSR envelope: Shape note dynamics (Attack/Decay/Sustain/Release)
+- Arpeggiator: Automatic note patterns (up, down, up-down, random)
+- Semantic Axes: Steer embedding in specific directions using text pole pairs
+
+Common questions users might ask:
+- "Why do two similar prompts sound very different?" → T5 embedding space
+  encodes semantic relationships, not acoustic similarity. "Ocean waves" and
+  "sea sounds" might be far apart in 768d space despite sounding related.
+- "What does the magnitude slider do?" → It scales the entire embedding vector.
+  Think of it as "volume" in meaning-space — higher values produce more
+  confident, intense interpretations.
+
+CROSSMODAL LAB — MMAUDIO
+--------------------------
+Location: Route "/latent-lab" → Tab "Crossmodal" → "MMAudio"
+
+What it does:
+- Image and text enter the same network as separate signals — the image is
+  NOT translated into language first
+- The model was jointly trained on video and audio (CVPR 2025)
+- Learned direct associations: forest → birdsong, street → traffic, guitar → plucking
+- Up to 8 seconds, 44.1kHz, ~1.2s compute time
+
+Parameters:
+- Image upload (optional): The visual target for audio generation
+- Text prompt (optional): Additional or sole steering signal
+- Negative prompt: Sounds you do NOT want (e.g. "speech, music")
+- Duration: 1–8 seconds
+- CFG Strength: 2–3 = varied results, 6–8 = more prompt-faithful
+
+Key concepts to explain to users:
+- Using both image AND text produces richer results than either alone
+- The model processes image features directly, not via CLIP text translation
+- Try comparing: same text with vs. without an image — the difference shows
+  what the visual signal contributes
+
+CROSSMODAL LAB — IMAGEBIND GUIDANCE
+-------------------------------------
+Location: Route "/latent-lab" → Tab "Crossmodal" → "ImageBind Guidance"
+
+What it does:
+- Gradient-based steering during Stable Audio's denoising process
+- ImageBind (Girdhar et al., CVPR 2023) provides a shared 1024d embedding
+  space for image and audio (plus text, depth, heat, motion)
+- At each denoising step, the system asks "Does this sound like the image?"
+  and corrects the direction via cosine similarity gradient
+
+Parameters:
+- Image upload: Target direction for the sound
+- Base prompt (optional): Additional text steering
+- λ Guidance Strength: 0.01–0.05 = lots of freedom, 0.3–1.0 = closely tied
+  to image
+- Warmup Steps: From which step guidance kicks in — low = immediate, higher =
+  basic structure forms unguided first
+- Total Steps and Duration: Control quality and length
+
+Key difference from MMAudio:
+- MMAudio: Jointly trained network, image is a native input channel
+- ImageBind Guidance: External steering via a separate multimodal embedding
+  space — conceptually related to Classifier Guidance (Dhariwal & Nichol, 2021)
+- Result includes cosine similarity showing how close the sound came to the image
 
 ================================================================================
 SECTION 7: LORA TRAINING STUDIO
@@ -1271,10 +1526,12 @@ RECENT FEATURES AND IMPROVEMENTS:
    generation. Available everywhere an image can be uploaded. Great for younger
    students or when words aren't enough to express an idea.
 
-5. CROSSMODAL LAB: FROM SOUND TO IMAGE AND BACK
-   The Crossmodal Lab bridges image and audio generation. Users can generate
-   audio from a picture, or let a sound inspire an image. The built-in wavetable
-   synth turns any generated audio into a playable instrument.
+5. CROSSMODAL LAB: THREE TOOLS FOR SOUND FROM IMAGES
+   The Crossmodal Lab bridges image and audio generation with three tools:
+   - Latent Audio Synth: Direct T5 embedding manipulation for Stable Audio,
+     with looper, sequencer, wavetable, MIDI control, and arpeggiator
+   - MMAudio: Joint image+text→audio (CVPR 2025), up to 8s at 44.1kHz
+   - ImageBind Guidance: Gradient-based steering via shared 1024d embedding space
 
 6. POETRY COLLISION
    The poetry transformation collides the user's prompt with genuine public-
@@ -1282,8 +1539,9 @@ RECENT FEATURES AND IMPROVEMENTS:
    unpredictable imagery born from the encounter between two languages.
 
 7. SURREALIZER: THREE FUSION MODES
-   The Surrealizer now offers three modes. Users can choose between a structural
-   anchor (subject stays recognizable), a balanced blend, or full creative chaos.
+   The Surrealizer now offers three modes: Dual Alpha (default — structural
+   anchor, subject stays recognizable), Normalized (magnitude-controlled
+   balanced blend), and Legacy (original behavior).
 
 8. 9 LANGUAGES INCLUDING ARABIC AND HEBREW
    The platform now supports: German, English, Turkish, Korean, Ukrainian,
@@ -1298,6 +1556,15 @@ RECENT FEATURES AND IMPROVEMENTS:
     The Canvas lets users connect text, image, and evaluation nodes into custom
     multi-step workflows. Great for advanced users and educators who want to
     design their own AI experiments.
+
+11. TEXT LAB: SCIENTIFIC LLM DECONSTRUCTION
+    Three research tools for investigating language models at the activation level:
+    - Representation Engineering: Find concept directions (truth, sentiment) via
+      contrast pairs and steer generation with α slider
+    - Model Comparison (CKA): Load two models and compare internal representations
+      layer by layer with CKA heatmaps and attention comparison
+    - Bias Archaeology: Systematic bias experiments — suppress gendered pronouns,
+      boost sentiment words, observe how models default
 
 HOW TO USE THIS INFORMATION:
 - Do NOT list all features unprompted. That's overwhelming.

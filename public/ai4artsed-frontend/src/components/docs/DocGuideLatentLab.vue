@@ -6,7 +6,13 @@
       : 'The Latent Lab works at the mathematical level of AI models. It shows how language and meaning are translated into vectors \u2013 and what happens when we manipulate these vectors.' }}</p>
     <p class="section-intro" style="opacity: 0.7; font-style: italic;">{{ currentLanguage === 'de'
       ? 'Verfügbar nur bei Sicherheitsstufe "Erwachsene" oder "Forschung" \u2014 aus technischen Gründen sind Text- und Bildergebnisse unvorhersehbar. "Erwachsene" meint hier nicht "FSK 18", sondern verweist auf die Notwendigkeit mündiger Verantwortlichkeit der Bedienenden. Das kann auch bedeuten: zentral im Unterricht unter Aufsicht oder durch Lehrende bedient.'
-      : 'Available only at Safety Level "Adult" or "Research" \u2014 for technical reasons, text and image results are unpredictable. "Adult" here does not mean age-restricted content, but refers to the need for responsible, informed operation. This can also mean: used centrally in class under supervision or operated by teachers.' }}</p>
+      : 'Available only at safety level "Adult" or "Research" \u2014 for technical reasons, text and image results are unpredictable. "Adult" here does not mean age-restricted content, but refers to the need for responsible, informed operation. This can also mean: used centrally in class under supervision or operated by teachers.' }}</p>
+    <p class="section-intro" style="opacity: 0.7;">{{ currentLanguage === 'de'
+      ? 'Das Latent Lab ist in drei Bereiche gegliedert: Image Lab (Bildanalyse und -manipulation auf Embedding-Ebene), Text Lab (wissenschaftliche LLM-Dekonstruktion) und Crossmodal Lab (Klang aus latenten R\u00e4umen).'
+      : 'The Latent Lab is organized into three sections: Image Lab (image analysis and manipulation at the embedding level), Text Lab (scientific LLM deconstruction), and Crossmodal Lab (sound from latent spaces).' }}</p>
+
+    <!-- ==================== IMAGE LAB ==================== -->
+    <h3 class="lab-section-heading">Image Lab</h3>
 
     <!-- Surrealizer -->
     <div class="experiment-card surrealizer">
@@ -34,6 +40,13 @@
         <p>{{ currentLanguage === 'de'
           ? 'Bei negativem \u03b1 wird CLIP-L verst\u00e4rkt und T5 negiert. Bei \u03b1=-10 ergibt die Formel: 11\u00b7CLIP-L + (-10)\u00b7T5. Der Effekt geht tiefer als "weniger T5": Weil CLIP-L nur 768 von 4096 Dimensionen f\u00fcllt (der Rest ist Nullen), werden in den oberen 3328 Dimensionen die T5-Vektoren invertiert. In der Cross-Attention des Transformers kehrt das die Aufmerksamkeitsmuster um \u2014 Textteile, die normalerweise am wichtigsten w\u00e4ren, werden ignoriert, unwichtige dominieren. Das Ergebnis: visuell getriebene Halluzinationen mit gest\u00f6rter Semantik, qualitativ anders als positive Extrapolation.'
           : 'With negative \u03b1, CLIP-L is amplified and T5 is negated. At \u03b1=-10 the formula yields: 11\u00b7CLIP-L + (-10)\u00b7T5. The effect goes deeper than "less T5": because CLIP-L only fills 768 of 4096 dimensions (the rest are zeros), the upper 3328 dimensions get inverted T5 vectors. In the transformer\'s cross-attention, this inverts the attention patterns \u2014 text tokens that would normally be most important are ignored, while insignificant ones dominate. The result: visually driven hallucinations with disrupted semantics, qualitatively different from positive extrapolation.' }}</p>
+      </div>
+
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Drei Fusionsmodi:' : 'Three Fusion Modes:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Dual Alpha (Standard): Der strukturelle Anker \u2014 die ersten 77 Tokens (CLIP-Bereich) werden nur mit 15% des \u03b1-Werts beeinflusst, der Rest mit vollem \u03b1. Das Subjekt bleibt erkennbar, die Surrealit\u00e4t kommt aus den T5-Tokens. | Normalized: Gleichm\u00e4\u00dfiges \u03b1 auf alle Positionen, dann L2-Normalisierung auf die mittlere T5-Magnitude. Kontrollierte Intensit\u00e4t. | Legacy: Originales Verhalten \u2014 LERP auf die ersten 77 Tokens, Rest unver\u00e4ndert angeh\u00e4ngt.'
+          : 'Dual Alpha (default): The structural anchor \u2014 the first 77 tokens (CLIP range) are influenced at only 15% of the \u03b1 value, the rest at full \u03b1. The subject stays recognizable, surreality comes from the T5 tokens. | Normalized: Uniform \u03b1 across all positions, then L2-normalized to mean T5 magnitude. Controlled intensity. | Legacy: Original behavior \u2014 LERP on the first 77 tokens, rest appended unchanged.' }}
       </div>
 
       <!-- Deep Dive: Mathematics -->
@@ -301,6 +314,228 @@ Token 78-512:      reines T5 (semantischer Anker)</pre>
       </div>
     </div>
 
+    <!-- ==================== TEXT LAB ==================== -->
+    <h3 class="lab-section-heading">{{ currentLanguage === 'de' ? 'Latent Text Lab' : 'Latent Text Lab' }}</h3>
+
+    <!-- Representation Engineering -->
+    <div class="experiment-card repeng">
+      <h3>Representation Engineering</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Basiert auf Zou et al. (2023). Sprachmodelle kodieren abstrakte Konzepte (Wahrheit, Stimmung, Ethik) als Richtungen im hochdimensionalen Aktivierungsraum. Durch Kontrastpaare (wahrer vs. falscher Satz) kann die Richtung extrahiert werden, die ein Konzept kodiert. Diese Richtung zur Laufzeit hinzuzuf\u00fcgen ver\u00e4ndert das Modellverhalten gezielt \u2014 ohne Nachtraining.'
+          : 'Based on Zou et al. (2023). LLMs encode abstract concepts (truth, sentiment, ethics) as directions in high-dimensional activation space. Through contrast pairs (true vs. false sentences), the direction encoding a concept can be extracted. Adding this direction at runtime changes model behavior in a targeted way \u2014 without retraining.' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Bei \u03b1 = 0 (Baseline) generiert das Modell die korrekte Antwort. Bei \u03b1 = -1 (Inversion) sollte eine falsche Antwort erscheinen \u2014 obwohl das Modell die richtige "kennt". Das zeigt: Konzepte wie "Wahrheit" sind als lineare Richtungen im Vektorraum repr\u00e4sentiert und k\u00f6nnen chirurgisch manipuliert werden.'
+          : 'At \u03b1 = 0 (baseline), the model generates the correct answer. At \u03b1 = -1 (inversion), a wrong answer should appear \u2014 even though the model "knows" the correct one. This shows: concepts like "truth" are represented as linear directions in vector space and can be surgically manipulated.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Methode:' : 'Method:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Kontrastpaare eingeben (z.B. "The capital of France is Paris" vs. "The capital of France is Berlin"), Konzept-Richtung finden lassen, dann mit dem \u03b1-Regler die Generierung entlang dieser Richtung steuern. Sweet Spot laut Zou et al.: |\u03b1| zwischen 0.5 und 2.0.'
+          : 'Enter contrast pairs (e.g. "The capital of France is Paris" vs. "The capital of France is Berlin"), let the system find the concept direction, then steer generation along this direction with the \u03b1 slider. Sweet spot per Zou et al.: |\u03b1| between 0.5 and 2.0.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showRepengDetail = !showRepengDetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showRepengDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showRepengDetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'Steuerungsvektor-Extraktion' : 'Steering Vector Extraction' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'F\u00fcr jedes Kontrastpaar werden die Aktivierungen an einer gew\u00e4hlten Transformer-Schicht aufgezeichnet. Die Hauptkomponentenanalyse (PCA) \u00fcber die Differenzen ergibt die Konzept-Richtung. "Erkl\u00e4rte Varianz" > 50% zeigt eine saubere Trennung \u2014 darunter sind die Kontrastpaare zu \u00e4hnlich oder zu wenige (mindestens 3 empfohlen).'
+          : 'For each contrast pair, activations at a chosen transformer layer are recorded. Principal component analysis (PCA) over the differences yields the concept direction. "Explained variance" > 50% indicates clean separation \u2014 below that, contrast pairs are too similar or too few (at least 3 recommended).' }}</p>
+        <p>{{ currentLanguage === 'de'
+          ? 'Verschiedene Schichten beeinflussen verschiedene Aspekte: Fr\u00fche Schichten steuern syntaktische Muster, sp\u00e4te Schichten semantische Inhalte. Jenseits von |\u03b1| > 2 dominieren Artefakte (Wiederholungen, Unsinn).'
+          : 'Different layers influence different aspects: early layers steer syntactic patterns, late layers semantic content. Beyond |\u03b1| > 2, artifacts dominate (repetitions, nonsense).' }}</p>
+      </div>
+    </div>
+
+    <!-- Model Comparison / CKA -->
+    <div class="experiment-card model-comparison">
+      <h3>{{ currentLanguage === 'de' ? 'Vergleichende Modell-Arch\u00e4ologie' : 'Comparative Model Archaeology' }}</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Zwei Sprachmodelle werden geladen und ihre internen Repr\u00e4sentationen Schicht f\u00fcr Schicht verglichen. Die Heatmap zeigt CKA (Centered Kernel Alignment) zwischen den Schichten beider Modelle. Hohe \u00c4hnlichkeit bedeutet: Diese Schichten repr\u00e4sentieren Information auf \u00e4hnliche Weise.'
+          : 'Two language models are loaded and their internal representations compared layer by layer. The heatmap shows CKA (Centered Kernel Alignment) between layers of both models. High similarity means these layers represent information in a similar way.' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Fr\u00fche Schichten (Syntax) sind oft \u00e4hnlich \u2014 sp\u00e4te Schichten (Semantik) divergieren st\u00e4rker. Diagonale Muster in der Heatmap zeigen, dass die Modelle Information in \u00e4hnlicher Reihenfolge verarbeiten. Die Generierungen beider Modelle mit identischem Seed zeigen, wie unterschiedlich sie denselben Prompt vervollst\u00e4ndigen.'
+          : 'Early layers (syntax) are often similar \u2014 late layers (semantics) diverge more strongly. Diagonal patterns in the heatmap show that models process information in a similar order. Generations from both models with the same seed show how differently they complete the same prompt.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Referenzen:' : 'References:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Basiert auf Belinkov (2022) "Probing Classifiers" und Olsson et al. (2022) "In-Context Learning and Induction Heads". CKA misst repr\u00e4sentationale \u00c4hnlichkeit unabh\u00e4ngig von Dimensionalit\u00e4t und Rotationen.'
+          : 'Based on Belinkov (2022) "Probing Classifiers" and Olsson et al. (2022) "In-Context Learning and Induction Heads". CKA measures representational similarity independent of dimensionality and rotations.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showCKADetail = !showCKADetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showCKADetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showCKADetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'CKA (Centered Kernel Alignment)' : 'CKA (Centered Kernel Alignment)' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'CKA vergleicht die Kern-Matrizen (Gram-Matrizen) der Aktivierungen zweier Schichten. Anders als direkte Vektor-Vergleiche ist CKA invariant gegen\u00fcber orthogonalen Transformationen und Skalierung \u2014 es misst, ob die Schichten dieselbe "Struktur" in den Daten sehen, nicht ob sie identische Zahlen produzieren.'
+          : 'CKA compares the kernel matrices (Gram matrices) of activations from two layers. Unlike direct vector comparisons, CKA is invariant to orthogonal transformations and scaling \u2014 it measures whether layers see the same "structure" in the data, not whether they produce identical numbers.' }}</p>
+        <p>{{ currentLanguage === 'de'
+          ? 'Zus\u00e4tzlich zeigt der Attention-Vergleich die Aufmerksamkeitsmuster der letzten Schicht beider Modelle \u2014 wo "schaut" jedes Modell hin, wenn es den Text verarbeitet?'
+          : 'Additionally, the attention comparison shows the attention patterns of the last layer of both models \u2014 where does each model "look" when processing the text?' }}</p>
+      </div>
+    </div>
+
+    <!-- Bias Archaeology -->
+    <div class="experiment-card bias-archaeology">
+      <h3>{{ currentLanguage === 'de' ? 'Bias-Arch\u00e4ologie' : 'Bias Archaeology' }}</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Statt freiem Manipulieren untersucht dieses Tool systematische Verzerrungen: Was passiert, wenn alle m\u00e4nnlichen Pronomen unterdr\u00fcckt werden? Welches Geschlecht w\u00e4hlt das Modell als Default? Welche Stimmung dominiert, wenn man positive oder negative W\u00f6rter verst\u00e4rkt?'
+          : 'Instead of free manipulation, this tool investigates systematic biases: What happens when all masculine pronouns are suppressed? Which gender does the model choose as default? Which sentiment dominates when positive or negative words are boosted?' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Die Unterschiede zwischen Baseline und manipulierten Generierungen offenbaren die im Modell kodierten Biases. Vier Experiment-Typen: Geschlecht (gendered Pronomen unterdr\u00fccken), Sentiment (positive/negative W\u00f6rter verst\u00e4rken), Dom\u00e4ne (wissenschaftliches vs. poetisches Vokabular), oder eigene Token-Listen.'
+          : 'The differences between baseline and manipulated generations reveal the biases encoded in the model. Four experiment types: Gender (suppress gendered pronouns), Sentiment (boost positive/negative words), Domain (scientific vs. poetic vocabulary), or custom token lists.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Beispiel:' : 'Example:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Prompt "The doctor said to the patient" \u2014 Geschlechts-Experiment: Alle gendered Pronomen unterdr\u00fcckt. Welches Geschlecht nimmt das Modell f\u00fcr "doctor" an? Die Ergebnisse zeigen die statistischen Verzerrungen der Trainingsdaten.'
+          : 'Prompt "The doctor said to the patient" \u2014 Gender experiment: All gendered pronouns suppressed. Which gender does the model assume for "doctor"? The results reveal the statistical biases from training data.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showBiasDetail = !showBiasDetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showBiasDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showBiasDetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'Token-Manipulation' : 'Token Manipulation' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'Basiert auf Zou et al. (2023) "Representation Engineering" und Bricken et al. (2023) "Towards Monosemanticity". Bei Unterdr\u00fcckung werden die Logits ausgew\u00e4hlter Tokens vor dem Sampling auf -\u221e gesetzt, sodass sie nie generiert werden k\u00f6nnen. Bei Verst\u00e4rkung werden die Logits erh\u00f6ht. Mehrere Stichproben pro Bedingung erm\u00f6glichen statistische Vergleiche.'
+          : 'Based on Zou et al. (2023) "Representation Engineering" and Bricken et al. (2023) "Towards Monosemanticity". For suppression, the logits of selected tokens are set to -\u221e before sampling, so they can never be generated. For boosting, logits are increased. Multiple samples per condition enable statistical comparison.' }}</p>
+      </div>
+    </div>
+
+    <!-- ==================== CROSSMODAL LAB ==================== -->
+    <h3 class="lab-section-heading">Crossmodal Lab</h3>
+
+    <!-- Latent Audio Synth -->
+    <div class="experiment-card latent-audio-synth">
+      <h3>Latent Audio Synth</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Stable Audio erzeugt Klang aus Text. Der Text wird von einem T5-Encoder in einen Zahlenvektor mit 768 Dimensionen umgewandelt \u2014 diesen Vektor kannst du hier direkt manipulieren. Statt nur "was" das Modell erzeugt zu \u00e4ndern (durch den Prompt), \u00e4nderst du "wie" das Modell den Text intern versteht.'
+          : 'Stable Audio generates sound from text. The text is converted by a T5 encoder into a numerical vector with 768 dimensions \u2014 this vector is what you manipulate here. Instead of just changing "what" the model generates (via the prompt), you change "how" the model internally understands the text.' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Zwei Prompts, die \u00e4hnlich klingen, k\u00f6nnen in diesem Raum weit auseinander liegen \u2014 und umgekehrt. Der Alpha-Regler interpoliert zwischen zwei Prompts (A und B): Bei 0 nur A, bei 1 nur B, Werte \u00fcber 1 extrapolieren \u00fcber B hinaus. Die Spectral Strip zeigt alle 768 Dimensionen als Balken und erm\u00f6glicht direkte Manipulation einzelner Dimensionen.'
+          : 'Two prompts that sound similar can be far apart in this space \u2014 and vice versa. The alpha slider interpolates between two prompts (A and B): at 0 only A, at 1 only B, values above 1 extrapolate beyond B. The Spectral Strip shows all 768 dimensions as bars and allows direct manipulation of individual dimensions.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Werkzeuge:' : 'Tools:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Looper/Sequenzer f\u00fcr rhythmische Patterns, Wavetable-Modus zum Morphen zwischen Audio-Frames, MIDI-Steuerung mit Keyboard, ADSR-H\u00fcllkurve, Arpeggiator. Ultra-kurze Loops verwandeln jeden generierten Klang in ein spielbares Instrument.'
+          : 'Looper/sequencer for rhythmic patterns, wavetable mode for morphing between audio frames, MIDI control with keyboard, ADSR envelope, arpeggiator. Ultra-short loops turn any generated sound into a playable instrument.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showSynthDetail = !showSynthDetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showSynthDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showSynthDetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'T5-Conditioning-Raum' : 'T5 Conditioning Space' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'Stable Audio verwendet T5-Base (768d) als Text-Encoder. Die Interpolation passiert im Embedding-Raum: fused(\u03b1) = (1-\u03b1)\u00b7A + \u03b1\u00b7B. Magnitude skaliert den gesamten Vektor (h\u00f6here Werte = intensivere Kl\u00e4nge), Noise injiziert Gau\u00dfsches Rauschen f\u00fcr Zufallsvariationen. Der Conditioning-Raum ist qualitativ anders als der SD3.5-Raum: 768 statt 4096 Dimensionen, trainiert auf Audio-Text-Paare statt Bild-Text-Paare.'
+          : 'Stable Audio uses T5-Base (768d) as text encoder. Interpolation happens in embedding space: fused(\u03b1) = (1-\u03b1)\u00b7A + \u03b1\u00b7B. Magnitude scales the entire vector (higher values = more intense sounds), noise injects Gaussian noise for random variations. The conditioning space is qualitatively different from SD3.5\'s: 768 instead of 4096 dimensions, trained on audio-text pairs instead of image-text pairs.' }}</p>
+      </div>
+    </div>
+
+    <!-- MMAudio -->
+    <div class="experiment-card mmaudio">
+      <h3>MMAudio</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'MMAudio (Cheng et al., CVPR 2025) wurde gemeinsam auf Video und Audio trainiert. Es \u00fcbersetzt ein Bild nicht erst in Text und dann in Klang, sondern verarbeitet Bild und Text als parallele Signale im selben Netzwerk. Das Modell hat gelernt, welche Kl\u00e4nge zu welchen visuellen Szenen geh\u00f6ren.'
+          : 'MMAudio (Cheng et al., CVPR 2025) was jointly trained on video and audio. It doesn\'t translate an image into text and then into sound, but processes image and text as parallel signals in the same network. The model learned which sounds belong to which visual scenes.' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Bild und Text zusammen ergeben die reichsten Ergebnisse. Ein Wald erzeugt Vogelgezwitscher, eine Stra\u00dfe Verkehrsl\u00e4rm, eine Gitarre Zupfkl\u00e4nge \u2014 direkte Assoziationen, nicht \u00fcber den Umweg Sprache. Bis 8 Sekunden, 44.1kHz, ~1.2s Rechenzeit.'
+          : 'Image and text together yield the richest results. A forest produces birdsong, a street produces traffic noise, a guitar produces plucking sounds \u2014 direct associations, not via the detour of language. Up to 8 seconds, 44.1kHz, ~1.2s compute time.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Tipp:' : 'Tip:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? 'Vergleiche: Nur Text vs. Bild + Text \u2014 wie stark ver\u00e4ndert das Bild den erzeugten Klang? Der Negativ-Prompt steuert, welche Kl\u00e4nge NICHT geh\u00f6rt werden sollen (z.B. "Sprache, Musik"). CFG Strength (2\u20138) kontrolliert die Prompt-Treue.'
+          : 'Compare: Text only vs. Image + Text \u2014 how much does the image change the generated sound? The negative prompt controls which sounds should NOT be heard (e.g. "speech, music"). CFG Strength (2\u20138) controls prompt faithfulness.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showMMAudioDetail = !showMMAudioDetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showMMAudioDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showMMAudioDetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'Multimodale Architektur' : 'Multimodal Architecture' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'MMAudio verarbeitet Bild- und Text-Features als getrennte Eingabekan\u00e4le in einem gemeinsamen Flow-Matching-Netzwerk. Im Gegensatz zu CLIP-basierten Ans\u00e4tzen, die ein Bild erst in eine Textbeschreibung \u00fcbersetzen, beh\u00e4lt MMAudio die visuelle Information als eigenen Signalpfad bei. Das erm\u00f6glicht feinere audio-visuelle Korrespondenzen \u2014 Materialeigenschaften, Raumakustik, Bewegungsmuster.'
+          : 'MMAudio processes image and text features as separate input channels in a shared flow-matching network. Unlike CLIP-based approaches that first translate an image into a text description, MMAudio retains visual information as its own signal path. This enables finer audio-visual correspondences \u2014 material properties, room acoustics, motion patterns.' }}</p>
+      </div>
+    </div>
+
+    <!-- ImageBind Guidance -->
+    <div class="experiment-card imagebind-guidance">
+      <h3>ImageBind Gradient Guidance</h3>
+      <div class="experiment-what">
+        <strong>{{ currentLanguage === 'de' ? 'Was passiert hier?' : 'What happens here?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'ImageBind (Girdhar et al., CVPR 2023) bringt sechs Sinne \u2014 Bild, Klang, Text, Tiefe, W\u00e4rme, Bewegung \u2014 in eine gemeinsame "Sprache" (1024d). W\u00e4hrend der Klang Schritt f\u00fcr Schritt entsteht, vergleicht das Tool st\u00e4ndig "Klingt das schon nach dem Bild?" und korrigiert die Richtung \u00fcber den Gradienten der Cosine-Similarity.'
+          : 'ImageBind (Girdhar et al., CVPR 2023) brings six senses \u2014 image, sound, text, depth, heat, motion \u2014 into a shared "language" (1024d). As the sound is generated step by step, the tool constantly asks "Does this sound like the image yet?" and corrects the direction via the gradient of cosine similarity.' }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ currentLanguage === 'de' ? 'Warum ist das aufschlussreich?' : 'Why is this revealing?' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Anders als MMAudio (das ein gemeinsam trainiertes Netzwerk verwendet) steuert ImageBind Guidance von au\u00dfen: Es nutzt einen separaten Embedding-Raum, um den Denoising-Prozess in Richtung des Bildes zu lenken. Die Cosine-Similarity im Ergebnis zeigt, wie nah der erzeugte Klang dem Bild-Inhalt kam.'
+          : 'Unlike MMAudio (which uses a jointly trained network), ImageBind Guidance steers from outside: it uses a separate embedding space to guide the denoising process toward the image. The cosine similarity in the result shows how close the generated sound came to the image content.' }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ currentLanguage === 'de' ? 'Parameter:' : 'Parameters:' }}</strong>
+        {{ currentLanguage === 'de'
+          ? '\u03bb Guidance Strength: Niedrig (0.01\u20130.05) = viel Freiheit, hoch (0.3\u20131.0) = eng am Bild. Warmup Steps: Ab welchem Schritt die Bildlenkung einsetzt \u2014 niedrig = sofort, h\u00f6her = Grundstruktur erst ungesteuert.'
+          : '\u03bb Guidance Strength: Low (0.01\u20130.05) = lots of freedom, high (0.3\u20131.0) = closely tied to image. Warmup Steps: From which step image guidance kicks in \u2014 low = immediately, higher = basic structure forms unguided first.' }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showGuidanceDetail = !showGuidanceDetail">
+        {{ currentLanguage === 'de' ? '\ud83d\udcd0 Technische Details' : '\ud83d\udcd0 Technical Details' }}
+        <span class="toggle-arrow">{{ showGuidanceDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showGuidanceDetail" class="deep-dive-content">
+        <h4>{{ currentLanguage === 'de' ? 'Gradient-basierte Steuerung' : 'Gradient-based Steering' }}</h4>
+        <p>{{ currentLanguage === 'de'
+          ? 'Bei jedem Denoising-Schritt wird das aktuelle Latent durch Stable Audios VAE dekodiert, das Ergebnis durch ImageBinds Audio-Encoder projiziert und die Cosine-Similarity mit dem Bild-Embedding berechnet. Der Gradient dieser Similarity wird auf das Latent zur\u00fcckpropagiert und mit \u03bb skaliert \u2014 eine Art "N\u00e4her-ans-Bild"-Signal bei jedem Schritt. Dies ist konzeptionell verwandt mit Classifier Guidance in Diffusion Models (Dhariwal & Nichol, 2021), aber statt eines trainierten Klassifikators wird ein multimodaler Encoder als Zielfunktion verwendet.'
+          : 'At each denoising step, the current latent is decoded through Stable Audio\'s VAE, the result projected through ImageBind\'s audio encoder, and cosine similarity with the image embedding computed. The gradient of this similarity is backpropagated to the latent and scaled by \u03bb \u2014 a "closer-to-the-image" signal at every step. This is conceptually related to Classifier Guidance in Diffusion Models (Dhariwal & Nichol, 2021), but instead of a trained classifier, a multimodal encoder serves as the objective function.' }}</p>
+      </div>
+    </div>
+
   </section>
 </template>
 
@@ -314,4 +549,10 @@ const showAttentionMath = ref(false)
 const showProbingMath = ref(false)
 const showAlgebraMath = ref(false)
 const showArchaeologyMath = ref(false)
+const showRepengDetail = ref(false)
+const showCKADetail = ref(false)
+const showBiasDetail = ref(false)
+const showSynthDetail = ref(false)
+const showMMAudioDetail = ref(false)
+const showGuidanceDetail = ref(false)
 </script>
