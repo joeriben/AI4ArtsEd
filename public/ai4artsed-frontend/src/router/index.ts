@@ -126,11 +126,26 @@ const router = createRouter({
       component: () => import('../views/RaveTrainingView.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/usage-agreement',
+      name: 'usage-agreement',
+      component: () => import('../views/UsageAgreementView.vue'),
+      meta: { skipAgreementCheck: true },
+    },
   ],
 })
 
-// Check authentication and advanced-mode guards
+// Check usage agreement, authentication, and advanced-mode guards
 router.beforeEach(async (to, from, next) => {
+  // Usage agreement guard: redirect to agreement page if cookie not set
+  if (!to.meta.skipAgreementCheck) {
+    const hasAgreement = document.cookie.split(';').some(c => c.trim().startsWith('usage_agreement_accepted='))
+    if (!hasAgreement) {
+      next({ name: 'usage-agreement', query: { redirect: to.fullPath } })
+      return
+    }
+  }
+
   // Auth guard for settings
   if (to.meta.requiresAuth) {
     try {

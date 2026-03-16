@@ -21,6 +21,22 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-17-usage-agreement
+- **Session**: 263
+- **Scope**: en.ts
+- **Changed keys** (all NEW):
+  - `usageAgreement.title` (NEW)
+  - `usageAgreement.text` (NEW)
+  - `usageAgreement.responsibilities.title` (NEW)
+  - `usageAgreement.responsibilities.supervision` (NEW)
+  - `usageAgreement.responsibilities.ageAppropriate` (NEW)
+  - `usageAgreement.responsibilities.intervention` (NEW)
+  - `usageAgreement.responsibilities.context` (NEW)
+  - `usageAgreement.responsibilities.noGuarantee` (NEW)
+  - `usageAgreement.checkbox` (NEW)
+  - `usageAgreement.acceptButton` (NEW)
+- **Context**: Brief usage agreement shown before platform use (24h cookie). Kids see this on their iPads, so it must NOT enumerate specific harmful content categories. Intro text: AI can produce unexpected results, supervised use required, no technical system is perfect, unexpected outputs as pedagogical opportunity (AI ethics, media literacy). Responsibilities section: 5 bullet points for educators (supervision, age-appropriate settings, intervention, review configs, your judgement is the safeguard). Tone: neutral, non-alarming, age-appropriate.
+
 ### WO-2026-03-12-mammouth-provider
 - **Session**: 259
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
