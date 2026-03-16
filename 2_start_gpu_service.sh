@@ -11,6 +11,9 @@ GPU_PORT=17803
 # Get directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+RECORD_SERVICE_NAME="GPU Service"
+source "$SCRIPT_DIR/_record.sh"
+
 echo "=== AI4ArtsEd GPU Service ==="
 echo ""
 

@@ -10,6 +10,9 @@ BACKEND_PORT=17801
 # Get directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+RECORD_SERVICE_NAME="backend"
+source "$SCRIPT_DIR/_record.sh"
+
 # Safety check: Only run from 'production' directory
 if [[ ! "$SCRIPT_DIR" =~ "production" ]]; then
     echo "❌ ERROR: This production script can only be run from a directory containing 'production' in its path."

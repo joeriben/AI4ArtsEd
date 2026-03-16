@@ -10,6 +10,9 @@ BACKEND_PORT=17802
 # Get directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+RECORD_SERVICE_NAME="backend"
+source "$SCRIPT_DIR/_record.sh"
+
 # Safety check: Only run from 'develop' directory
 if [[ ! "$SCRIPT_DIR" =~ "develop" ]]; then
     echo "❌ ERROR: This development script can only be run from a directory containing 'develop' in its path."
