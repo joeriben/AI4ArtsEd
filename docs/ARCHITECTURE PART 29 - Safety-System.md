@@ -43,53 +43,37 @@ Four canonical levels (configured via `user_settings.json`, default in `config._
 
 ### 3.1 Stage 1 — Input Safety (`stage_orchestrator.py`)
 
-**Function:** `execute_stage1_gpt_oss_unified()`
+**Function:** `execute_stage1_safety_unified()`
 
 ```
 Input text
   │
   ├─ research → SKIP ALL (early return)
   │
-  ├─ STEP 1: §86a Fast-Filter (~0.001s)
-  │    Bilingual keyword matching (DE+EN)
-  │    Hit → LLM context verification → BLOCK or allow
-  │
-  ├─ STEP 2: DSGVO SpaCy NER (~50-100ms)
+  ├─ STEP 1: DSGVO SpaCy NER (~50-100ms)
   │    Models: de_core_news_lg + xx_ent_wiki_sm (2 models only!)
   │    PER entity detected → LLM verification (false-positive reduction)
   │    Confirmed PER → BLOCK
-  │    *** MUST run before Age Filter — ensures no personal data before external LLM call ***
   │
-  └─ STEP 3: Age-Appropriate Fast-Filter
-       Skip for adult/research
-       kids → filter list match → gpt-oss-120b (IONOS, external) verification → BLOCK or allow
-       youth → filter list match → qwen3:1.7b (local) verification → BLOCK or allow
+  └─ STEP 2: §86a Fast-Filter (~0.001s)
+       Bilingual keyword matching (DE+EN)
+       Hit → LLM context verification (Llama Guard S1-S13) → BLOCK or allow
 ```
 
-**DSGVO-First Ordering (Session 255):** DSGVO NER runs before the age filter. This guarantees no personal data remains in the text, allowing the kids age-filter to safely send text to the external gpt-oss-120b (IONOS EU datacenter) for context verification.
+**Two concerns only in Stage 1:** DSGVO (data protection) and §86a (criminal law). Youth protection (Jugendschutz) is handled entirely by Stage 2 safety prefix — no keyword-based age filter.
 
 #### Stage 1 LLM Routing (CRITICAL — do not mix up)
 
-Each Stage 1 step uses a **different model for a different reason**. The logic:
+Each Stage 1 step uses a **different model for a different reason**:
 
 | Step | Fast-Filter | LLM Model | Prompt Format | Why this model |
 |------|------------|-----------|---------------|----------------|
-| **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` (llama-guard3:8b) | S1-S13 template (`safety_llamaguard.json`) | §86a = criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
-| **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → needs general-purpose LLM. **ALWAYS local** (sending detected names externally = DSGVO violation) |
-| **Age Filter (kids)** | `fast_filter_check()` | `gpt-oss-120b` (IONOS, external) | `"Is this text appropriate for children ages 6-12?"` + few-shot + `SAFE/UNSAFE` | Age-appropriateness = semantic judgement → needs large model. qwen3:1.7b too weak (classified "planning an attack" as SAFE). DSGVO NER already cleared text. |
-| **Age Filter (youth)** | `fast_filter_check()` | `DSGVO_VERIFY_MODEL` (qwen3:1.7b) | Same prompt as kids | Youth filter has fewer terms, less ambiguity → local model sufficient |
-
-**Why gpt-oss-120b for kids (Session 255):** qwen3:1.7b is too literal — "planning an attack" → SAFE because it's "planning, not describing violence". gpt-oss-120b correctly blocks semantic threats while allowing false positives like "cute vampire". DSGVO-first ordering makes external call safe.
-
-**Why Llama Guard fails for the Age Filter:** Llama Guard's S1-S13 categories detect content that "enables, encourages, or excuses" crimes. "Blut" (blood) or "vampire" is not a crime — Llama Guard says "safe". But it's inappropriate for a 6-year-old. Only a general-purpose model can make that age-appropriateness judgement.
-
-**Why a general-purpose model fails for §86a:** A simple "SAFE/UNSAFE" question about Nazi symbols gives no structured framework for distinguishing educational from glorifying context. Llama Guard's S1-S13 taxonomy (especially S1: violent crimes, S4: hate) provides exactly that structure.
-
-**gpt-oss-120b is a reasoning model:** Response in `reasoning` field (not `content`, which is `null`). Needs `max_tokens: 2048`. Parse: `msg.get("content") or msg.get("reasoning")`.
+| **DSGVO NER** | `fast_dsgvo_check()` (SpaCy) | `DSGVO_VERIFY_MODEL` | `"Is this a person name? SAFE/UNSAFE"` | Name recognition = factual question → general-purpose LLM. **ALWAYS local** (sending detected names externally = DSGVO violation) |
+| **§86a** | `fast_filter_bilingual_86a()` | `SAFETY_MODEL` | S1-S13 template (`safety_llamaguard.json`) | Criminal law → needs structured harm taxonomy (S1-S13) to distinguish "Heil Hitler" from "Geschichte des Hakenkreuzes" |
 
 **Key files:**
 - `devserver/schemas/engine/stage_orchestrator.py` — orchestration logic
-- `devserver/schemas/data/stage1_safety_*.json` — filter term lists
+- `devserver/schemas/data/stage1_safety_filters_86a.json` — §86a term list
 - `devserver/schemas/configs/pre_interception/` — LLM prompt configs
 
 ### 3.2 SAFETY-QUICK — Frontend Pre-Check (`schema_pipeline_routes.py`)
@@ -101,14 +85,10 @@ Called from two places in the frontend:
 1. **MediaInputBox** — automatically on `blur` and `paste` events (all text input boxes)
 2. **`startGeneration()`** in `text_transformation.vue` — synchronous gate before Stage 3-4
 
-The second caller (Session 244) closes a gap: if a user edits the optimized prompt box and clicks "Generate" without blurring, MediaInputBox's blur/paste check wouldn't have fired. The pre-generation check ensures the age fast-filter always runs before generation, regardless of how the user triggers it.
-
 **Text mode** (field: `text`):
 ```
 research → SKIP (return safe=true, checks_passed=['safety_skip'])
-adult    → §86a fast-filter + DSGVO NER (no age filter)
-youth    → §86a fast-filter + age filter + LLM verify + DSGVO NER
-kids     → §86a fast-filter + age filter + LLM verify + DSGVO NER
+all others → DSGVO NER + §86a fast-filter
 ```
 
 **Image mode** (field: `image_path`):
@@ -117,14 +97,7 @@ research/adult → SKIP (vlm_skipped)
 youth/kids     → VLM safety check via Ollama
 ```
 
-**CRITICAL — Complementary roles of SAFETY-QUICK vs Stage 3 (Session 244 insight):**
-
-| Check | What it catches | Mechanism | Example |
-|-------|----------------|-----------|---------|
-| **SAFETY-QUICK** (age filter) | Age-inappropriate but legal content | Stem-prefix keyword match + LLM context verify | "Ein Kind wird von einem Monster angegriffen" → blocked by "monster, verletzen" |
-| **Stage 3** (Llama-Guard S1-S13) | Criminal/harmful content categories | S1-S13 structured classification | Terrorism instructions, weapons, hate speech |
-
-Llama-Guard's S1-S13 categories focus on content that "enables, encourages, or excuses" crimes — a fantasy monster scenario is NOT a crime and passes S1-S13. Only the age fast-filter in SAFETY-QUICK catches age-inappropriate-but-legal content. These two checks are **complementary, not redundant**.
+SAFETY-QUICK checks DSGVO and §86a only. Jugendschutz is handled by Stage 2 safety prefix.
 
 ### 3.3 Stage 3 — Pre-Output Safety (`stage_orchestrator.py`)
 
@@ -212,38 +185,17 @@ Bilingual (DE+EN) keyword matching against known prohibited symbols:
 
 On match → **Llama Guard** (`SAFETY_MODEL`) context check with S1-S13 template. Educational/historical context (e.g., "Geschichte des Hakenkreuzes in der Antike") passes; glorifying context (e.g., "Heil Hitler") is blocked. Fail-closed if LLM unavailable.
 
-### 4.2 Age-Appropriate Fast-Filter
+### 4.2 Jugendschutz — Stage 2 Safety Prefix
 
-**Function:** `fast_filter_check()` in `stage_orchestrator.py`
+**No keyword-based age filter.** Youth protection is handled entirely by the Stage 2 interception LLM via a safety prefix prepended to the instruction.
 
-**Matching strategy** (Session 246 — false positive fix):
+**Definition:** `SAFETY_PREFIXES` in `schemas/engine/instruction_selector.py`
 
-| Context | Strategy | Rationale |
-|---------|----------|-----------|
-| **§86a** (`stage1`, ≥6 chars) | Fuzzy (Levenshtein distance 1-2) | Deliberate obfuscation ("Ha1kenkreuz") |
-| **Age filter** (≤3 chars) | Word-boundary (`\bterm\b`) | Prevents "kan" in "scharfkantige" |
-| **Age filter** (4+ chars) | Stem-prefix (`\bterm`) | Catches "Blut" in "blutiger" (same stem), rejects "Leiche" in "gleiche" (different word) |
+**Mechanism:** For kids/youth safety levels, a safety prefix is prepended to the LLM instruction. The prefix instructs the LLM to refuse racist, terrorist, violence-glorifying, sexist, or pornographic input — including implied/metaphorical forms (airplane into building, vehicle into crowd).
 
-**Why no fuzzy matching for Age filter:** Kids don't deliberately obfuscate terms. Fuzzy matching (Levenshtein distance=1) caused widespread false positives: "leichte" → "Leiche", "gleiche" → "Leiche", "weiche" → "Leiche". Stem-prefix matching (`\bterm` — term must start at a word boundary) eliminates these while still catching compound forms ("Leichenschmaus", "blutiger").
+**Mandatory:** Stage 2 cannot be skipped for kids/youth (`skip_stage2` is overridden). Even with an empty context box (`user_defined` config), the LLM is called with the safety prefix as the primary instruction.
 
-Filter term lists:
-- `stage1_safety_filters_kids.json`
-- `stage1_safety_filters_youth.json`
-
-On match → **general-purpose LLM** (`DSGVO_VERIFY_MODEL`, qwen3:1.7b) with focused prompt. NOT Llama Guard — guard models classify crimes, not age suitability.
-
-**LLM verification prompt** (Session 246):
-```
-Does this text describe violence, death, abuse, or horror?
-Examples:
-- 'a picnic in the dark' → SAFE
-- 'a corpse on the floor' → UNSAFE
-
-Text: {text}
-Answer SAFE or UNSAFE.
-```
-
-**Why this format:** Small models (≤4B) are extremely prompt-sensitive. Concrete categories + few-shot examples + positive framing (SAFE first) outperform abstract questions like "Is this appropriate?" which trigger negativity bias on dark/ambiguous scenarios.
+**Why not keyword-based:** The keyword age filter oscillated between too aggressive (29% false positives in Workshop 12.03.2026) and too permissive (weapons bypass) over 10+ sessions. See `SAFETY_SYSTEM_HISTORY.md` Section 2 (Era 6) for the complete record.
 
 ### 4.3 DSGVO SpaCy NER
 
@@ -335,19 +287,21 @@ This creates `/etc/sudoers.d/ai4artsed-ollama` granting passwordless `systemctl 
 User Input
   │
   ├─ [Frontend] MediaInputBox on blur/paste
-  │   └─ POST /safety/quick (§86a + DSGVO + age filter, text)
+  │   └─ POST /safety/quick (DSGVO NER + §86a, text)
   │   └─ POST /safety/quick (VLM, uploaded images)
   │
-  ├─ [Stage 1] execute_stage1_gpt_oss_unified()
-  │   └─ §86a fast-filter → DSGVO NER → Age filter (DSGVO-first!)
+  ├─ [Stage 1] execute_stage1_safety_unified()
+  │   └─ DSGVO NER → §86a fast-filter (two legal concerns only)
   │
-  ├─ [Stage 2] Prompt Interception (no safety)
+  ├─ [Stage 2] Prompt Interception — JUGENDSCHUTZ HERE
+  │   └─ Safety prefix mandatory for kids/youth (even with empty context box)
+  │   └─ LLM refuses racist/terrorist/violence-glorifying/sexist/pornographic input
   │
   ├─ [Frontend] startGeneration() pre-generation gate
   │   └─ POST /safety/quick on final prompt (catches edits without blur)
   │
   ├─ [Stage 3] execute_stage3_safety()
-  │   └─ Translation + §86a filter + Llama-Guard 8B S1-S13 check (kids/youth)
+  │   └─ Translation + §86a filter + Llama-Guard S1-S13 check (kids/youth)
   │
   ├─ [Stage 4] Media Generation
   │
@@ -370,8 +324,6 @@ Safety-configurable values (`SAFETY_MODEL`, `DSGVO_VERIFY_MODEL`, `VLM_SAFETY_MO
 Static timeouts (not user-configurable):
 - `OLLAMA_TIMEOUT_SAFETY = 30` — Short timeout for safety verification
 - `OLLAMA_TIMEOUT_DEFAULT = 120` — Standard LLM calls
-
-Kids age filter uses external gpt-oss-120b (IONOS) — hardcoded in `stage_orchestrator.py`, not configurable via Settings UI.
 
 ### user_settings.json
 

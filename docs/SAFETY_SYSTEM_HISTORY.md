@@ -277,38 +277,30 @@ Das am häufigsten wiederkehrende Muster. Mindestens 9 dokumentierte Vorfaelle:
 
 ## 4. Aktueller Zustand (Stand 2026-03-16)
 
-### 4.1 Aktive Checks
+### 4.1 Aktive Checks — Drei-Concerns-Architektur
 
 ```
 User Input
   │
-  ├─ [Frontend] MediaInputBox on blur/paste
-  │   └─ POST /safety/quick
-  │       ├─ research → SKIP
-  │       ├─ §86a fast-filter → LLM verify (Llama Guard 8B)
-  │       ├─ DSGVO SpaCy NER → LLM verify (qwen3:1.7b, LOKAL)
-  │       └─ Age filter (kids/youth) → LLM verify
-  │           kids: gpt-oss-120b (IONOS, extern — DSGVO-safe weil NER vorher lief)
-  │           youth: qwen3:1.7b (lokal)
+  ├─ [DSGVO] SpaCy NER → wenn Trigger → DSGVO-Verifikationsmodell (lokal)
+  │   Durchsetzung: SAFETY-QUICK + Stage 1. Immer, fail-closed.
   │
-  ├─ [Stage 1] execute_stage1_safety_unified()
-  │   └─ §86a → DSGVO NER → Age filter (DSGVO-first!)
+  ├─ [§86a] Keyword-Trigger → Sicherheitsmodell (Llama Guard S1-S13)
+  │   Durchsetzung: SAFETY-QUICK + Stage 1 + Stage 3. Immer, fail-closed.
   │
-  ├─ [Stage 2] Safety-Prefix im Interception-Prompt (kids/youth mandatory)
-  │   └─ LLM weist rassistische/terroristische/... Eingaben ab
-  │
-  ├─ [Frontend] startGeneration() pre-generation gate
-  │   └─ POST /safety/quick (faengt Edits ohne Blur ab)
+  ├─ [Jugendschutz] Safety-Prefix im Interception-Prompt
+  │   Durchsetzung: Stage 2 (mandatory fuer kids/youth, auch bei leerer Context-Box)
+  │   LLM weist rassistische/terroristische/gewaltverherrlichende/sexistische/
+  │   pornographische Eingaben ab — inkl. implizite/metaphorische Formen.
   │
   ├─ [Stage 3] execute_stage3_safety()
-  │   └─ Translation + §86a + Llama-Guard 8B S1-S13
-  │       Blocking: S1,S2,S3,S4,S8,S9,S10,S11
-  │       Ignored: S5,S6,S7,S12,S13 (Chat-spezifisch oder False-Positive-Quelle)
+  │   Translation + §86a + Llama-Guard S1-S13 (kids/youth)
+  │   Blocking: S1,S2,S3,S4,S8,S9,S10,S11
   │
   ├─ [Stage 4] Media Generation
   │
   └─ [Post-Gen] VLM Check (kids/youth, images only)
-      └─ qwen3-vl:2b, Content-Checklist-Prompt, fail-closed
+      Content-Checklist-Prompt, fail-closed
 ```
 
 ### 4.2 Modelle

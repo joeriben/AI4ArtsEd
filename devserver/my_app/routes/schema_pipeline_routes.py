@@ -30,10 +30,8 @@ from schemas.engine.stage_orchestrator import (
     execute_stage3_safety_code,
     build_safety_message,
     fast_filter_bilingual_86a,
-    fast_filter_check,
     fast_dsgvo_check,
     llm_verify_person_name,
-    llm_verify_age_filter_context
 )
 from my_app.utils.circuit_breaker import safety_breaker
 
@@ -1673,43 +1671,7 @@ def execute_pipeline_streaming(data: dict):
                 else:
                     safety_breaker.record_success()
 
-            # Age-appropriate fast-filter (kids/youth only, language-aware)
-            # Fast filter triggers → LLM context check (prevents false positives)
-            # Kids: uses external gpt-oss-120b (DSGVO already cleared text above)
-            # Youth: uses local qwen3:1.7b
-            if safety_level in ('kids', 'youth'):
-                has_age, found_age = fast_filter_check(input_text, safety_level, user_language)
-                if has_age:
-                    filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
-                    logger.info(f"[UNIFIED-STREAMING] {filter_name} hit: {found_age[:3]} → LLM context check")
-                    verify_result, llm_output = llm_verify_age_filter_context(input_text, found_age, safety_level)
-                    if verify_result is None:
-                        safety_breaker.record_failure()
-                        if safety_breaker.is_open():
-                            reason = f'{filter_name}: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
-                            logger.warning(f"[UNIFIED-STREAMING] {reason}")
-                            yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
-                            yield ''
-                            return
-                        logger.warning(f"[UNIFIED-STREAMING] {filter_name} LLM unavailable — circuit breaker recording failure")
-                    elif verify_result:
-                        safety_breaker.record_success()
-                        reason = f'{filter_name}: {", ".join(found_age[:3])}'
-                        logger.warning(f"[UNIFIED-STREAMING] {filter_name} BLOCKED: {reason} | LLM: {llm_output}")
-                        recorder.save_error(stage=1, error_type='safety_blocked', message=reason,
-                            details={'check': 'age_filter', 'safety_level': safety_level, 'found_terms': found_age,
-                                     'llm_output': llm_output, 'filter_name': filter_name, 'input_text': input_text})
-                        yield generate_sse_event('blocked', {
-                            'stage': 'safety',
-                            'reason': reason,
-                            'llm_output': llm_output,
-                            'found_terms': found_age
-                        })
-                        yield ''
-                        return
-                    else:
-                        safety_breaker.record_success()
-                        logger.info(f"[UNIFIED-STREAMING] {filter_name} false positive (LLM rejected): {found_age[:3]}")
+            # Jugendschutz (kids/youth) is handled by Stage 2 safety prefix — not here.
 
         logger.info(f"[UNIFIED-STREAMING] Stage 1: Safety PASSED (fast-filters clear)")
 
@@ -2165,44 +2127,14 @@ def safety_check_quick():
         if spacy_ok:
             checks_passed.append('dsgvo_ner')
 
-        # STEP 3: Age-appropriate fast-filter (kids/youth only, language-aware)
-        # Kids: uses external gpt-oss-120b (DSGVO already cleared text above)
-        # Youth: uses local qwen3:1.7b
-        if safety_level in ('kids', 'youth'):
-            has_age_terms, found_age_terms = fast_filter_check(text, safety_level, user_language)
-            if has_age_terms:
-                filter_name = 'Kids-Filter' if safety_level == 'kids' else 'Youth-Filter'
-                logger.info(f"[SAFETY-QUICK] {filter_name} hit: {found_age_terms[:3]} → LLM context check")
-                verify_result, llm_output = llm_verify_age_filter_context(text, found_age_terms, safety_level)
-                if verify_result is None:
-                    safety_breaker.record_failure()
-                    if safety_breaker.is_open():
-                        logger.warning(f"[SAFETY-QUICK] {filter_name}: Sicherheitsprüfung nicht verfügbar")
-                        return jsonify({
-                            'safe': False,
-                            'checks_passed': checks_passed + ['age_filter'],
-                            'error_message': f'{filter_name}: Sicherheitsprüfung nicht verfügbar'
-                        })
-                    logger.warning(f"[SAFETY-QUICK] {filter_name} LLM unavailable — circuit breaker recording failure")
-                elif verify_result:
-                    safety_breaker.record_success()
-                    logger.warning(f"[SAFETY-QUICK] {filter_name} BLOCKED (LLM confirmed): {found_age_terms[:3]} | LLM: {llm_output}")
-                    return jsonify({
-                        'safe': False,
-                        'checks_passed': checks_passed + ['age_filter', 'age_llm_verify'],
-                        'error_message': f'{filter_name}: {", ".join(found_age_terms[:3])}'
-                    })
-                else:
-                    safety_breaker.record_success()
-                    logger.info(f"[SAFETY-QUICK] {filter_name} false positive (LLM rejected): {found_age_terms[:3]}")
-            checks_passed.append('age_filter')
+        # Jugendschutz (kids/youth) is handled by Stage 2 safety prefix — not here.
 
         return jsonify({'safe': True, 'checks_passed': checks_passed, 'error_message': None})
 
     except Exception as e:
-        logger.error(f"[SAFETY-QUICK] Error: {e}")
-        # Fail-open on error
-        return jsonify({'safe': True, 'checks_passed': [], 'error_message': None})
+        logger.error(f"[SAFETY-QUICK] Error: {e}", exc_info=True)
+        # Fail-closed: §86a and DSGVO are legal obligations — never return safe:true on error
+        return jsonify({'safe': False, 'checks_passed': [], 'error_message': 'Sicherheitssystem-Fehler'})
 
 
 @schema_bp.route('/pipeline/translate', methods=['POST'])
