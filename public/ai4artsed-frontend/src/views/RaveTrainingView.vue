@@ -605,7 +605,7 @@ onUnmounted(() => {
   font-family: monospace;
   background: white;
   color: #000;
-  width: 80px;
+  width: 110px;
 }
 
 .slot-days {
