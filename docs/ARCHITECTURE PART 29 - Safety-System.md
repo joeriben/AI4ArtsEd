@@ -24,7 +24,7 @@ These concerns are **independent and non-redundant**. Each has its own detection
 
 ## 2. Safety Levels
 
-Four canonical levels, defined in `devserver/config.py`:
+Four canonical levels (configured via `user_settings.json`, default in `config._SETTINGS_DEFAULTS`):
 
 | Level | §86a | DSGVO/NER | Age Filter | VLM Image Check | Stage 3 LLM | Use Case |
 |-------|------|-----------|------------|-----------------|-------------|----------|
@@ -192,7 +192,7 @@ VLM → "unsafe" → SSE 'blocked' (stage: 'vlm_safety')
 VLM → error → fail-open → SSE 'complete'
 ```
 
-**Config:** `VLM_SAFETY_MODEL` in `config.py`
+**Config:** `VLM_SAFETY_MODEL` in `user_settings.json` (default in `config._SETTINGS_DEFAULTS`)
 **Technical note:** qwen3-vl uses thinking mode — analysis in `message.thinking`, decision in `message.content`. Both checked. `num_predict: 500` minimum.
 
 ---
@@ -365,27 +365,17 @@ Canvas routes (`/api/canvas/execute`, `/execute-stream`, `/execute-batch`) have 
 
 ### config.py
 
-```python
-DEFAULT_SAFETY_LEVEL = 'kids'          # Default, overridden by user_settings.json
-SAFETY_MODEL = 'llama-guard3:8b'       # Guard model — §86a context check (Stage 1) + pre-generation check (Stage 3)
-DSGVO_VERIFY_MODEL = 'qwen3:1.7b'     # General-purpose model — DSGVO NER verify (Stage 1) + youth age filter (Stage 1)
-VLM_SAFETY_MODEL = 'qwen3-vl:2b'      # Ollama model for image checks
-OLLAMA_TIMEOUT_SAFETY = 30             # Short timeout for safety verification
-OLLAMA_TIMEOUT_DEFAULT = 120           # Standard LLM calls
-# Kids age filter uses external gpt-oss-120b (IONOS) — not configurable via config.py, hardcoded in stage_orchestrator.py
-```
+Safety-configurable values (`SAFETY_MODEL`, `DSGVO_VERIFY_MODEL`, `VLM_SAFETY_MODEL`, `DEFAULT_SAFETY_LEVEL`) are defined in `_SETTINGS_DEFAULTS` as fallback defaults for fresh installations. They are pre-initialized as module globals for import compatibility.
 
-**Session 255 changes:** SAFETY_MODEL upgraded from 1b to 8b (1b too weak for semantic classification). Kids age-filter uses external gpt-oss-120b instead of local DSGVO_VERIFY_MODEL.
+Static timeouts (not user-configurable):
+- `OLLAMA_TIMEOUT_SAFETY = 30` — Short timeout for safety verification
+- `OLLAMA_TIMEOUT_DEFAULT = 120` — Standard LLM calls
+
+Kids age filter uses external gpt-oss-120b (IONOS) — hardcoded in `stage_orchestrator.py`, not configurable via Settings UI.
 
 ### user_settings.json
 
-```json
-{
-  "DEFAULT_SAFETY_LEVEL": "research"
-}
-```
-
-Loaded at startup by `reload_user_settings()` in `my_app/__init__.py`. Legacy `"off"` values are normalized to `"research"`.
+**Source of truth** for all runtime-configurable settings. Loaded at startup by `reload_user_settings()` in `my_app/__init__.py`. Auto-created from `_SETTINGS_DEFAULTS` on first run. Legacy `"off"` values are normalized to `"research"`.
 
 ### Settings UI
 
@@ -408,7 +398,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 
 | File | Role |
 |------|------|
-| `devserver/config.py` | Safety level defaults, VLM model config, timeouts |
+| `devserver/config.py` | `_SETTINGS_DEFAULTS` (fallback defaults), timeouts, static config |
 | `devserver/my_app/__init__.py` | Legacy "off" → "research" normalization |
 | `devserver/schemas/engine/stage_orchestrator.py` | Stage 1 + Stage 3 safety logic |
 | `devserver/my_app/routes/schema_pipeline_routes.py` | SAFETY-QUICK endpoint, VLM post-gen check |

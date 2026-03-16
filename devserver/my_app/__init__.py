@@ -92,8 +92,11 @@ def reload_user_settings():
         settings_file = Path(__file__).parent.parent / "user_settings.json"
 
         if not settings_file.exists():
-            logging.info("[CONFIG] No user_settings.json found, using defaults")
-            return
+            from config import _SETTINGS_DEFAULTS
+            with open(settings_file, 'w') as f:
+                json.dump(_SETTINGS_DEFAULTS, f, indent=2)
+            logging.info(f"[CONFIG] Created {settings_file.name} from _SETTINGS_DEFAULTS")
+            # Fall through to load the just-created file
 
         with open(settings_file) as f:
             data = json.load(f)

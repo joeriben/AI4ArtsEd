@@ -1,7 +1,8 @@
 """
 Central configuration file for the AI4ArtsEd Web Server
 
-ADMIN: Adjust settings in the "MAIN CONFIGURATION" section below!
+Runtime-configurable settings live in _SETTINGS_DEFAULTS (bottom of this section).
+Actual values come from user_settings.json, editable via Settings UI.
 """
 import os
 from pathlib import Path
@@ -11,70 +12,8 @@ _SERVER_BASE = Path(__file__).parent.parent  # devserver parent = ai4artsed_deve
 _AI_TOOLS_BASE = Path(os.environ.get("AI_TOOLS_BASE", str(_SERVER_BASE.parent)))  # overridable for production on separate partition
 
 # ============================================================================
+# SERVER SETTINGS (static — not in Settings UI)
 # ============================================================================
-# MAIN CONFIGURATION - ADMIN: CHANGE THESE SETTINGS
-# ============================================================================
-# ============================================================================
-
-# ----------------------------------------------------------------------------
-# 1. USER INTERFACE MODE
-# ----------------------------------------------------------------------------
-# Controls interface complexity based on target age group:
-#
-# "kids" (ages 8-12):
-#   - Simple, separated phases: Transform → See result → Choose medium → Generate
-#   - Minimal technical details, focus on creative output
-#   - Clear visual feedback: "⚙️ KI arbeitet..."
-#
-# "youth" (ages 13-17):
-#   - Educational flow with pipeline visualization: 💡→📝→🎨→🖼️→✅
-#   - Shows HOW AI processes work (transparency)
-#   - Promotes technical understanding
-#
-# "expert" (teachers/developers):
-#   - Full debug mode with all metadata
-#   - JSON outputs, timing data, error details
-#   - Complete transparency for analysis
-#
-UI_MODE = "youth"  # ADMIN: Change to "kids", "youth", or "expert"
-
-# ----------------------------------------------------------------------------
-# 2. SAFETY LEVEL (Content Filtering)
-# ----------------------------------------------------------------------------
-# Controls what content is blocked in generated images/media
-# This is SEPARATE from UI_MODE (interface complexity)
-#
-# "kids": Maximum filtering (ages 8-12)
-#   - Blocks: violence, horror, scary, sexual, explicit content
-#   - Use for: Elementary school, young children
-#
-# "youth": Moderate filtering (ages 13-17)
-#   - Blocks: explicit sexual, extreme violence, self-harm
-#   - Allows: Mild scary themes, educational anatomy
-#   - Use for: Secondary school, teenagers
-#
-# "adult": Minimal filtering (18+)
-#   - Blocks: Only illegal content (§86a StGB - Nazi symbols, etc.)
-#   - Allows: Artistic nudity, mature themes
-#   - Use for: Art education, professional contexts
-#
-# "research": No content filtering — for research/advanced use (16+)
-#   - No automatic blocking
-#   - Canvas and Latent Lab require this level
-#
-DEFAULT_SAFETY_LEVEL = "youth"  # ADMIN: Change to "kids", "youth", "adult", or "research"
-
-# ----------------------------------------------------------------------------
-# 2b. DEFAULT INTERCEPTION CONFIG
-# ----------------------------------------------------------------------------
-# Default config for Stage 2 Prompt Interception when none is specified
-# "user_defined" = neutral passthrough (empty context = no AI transformation)
-# This allows users to have full control without unexpected transformations
-DEFAULT_INTERCEPTION_CONFIG = "user_defined"  # ADMIN: Change to any interception config name
-
-# ----------------------------------------------------------------------------
-# 3. SERVER SETTINGS
-# ----------------------------------------------------------------------------
 HOST = "0.0.0.0"
 PORT = 17802  # Development: 17802, Production: 17801
 THREADS = 24
@@ -88,64 +27,54 @@ CORS_ALLOWED_ORIGINS = [
     'https://lab.ai4artsed.org',       # Production domain
 ]
 
-# ----------------------------------------------------------------------------
-# 4. LANGUAGE
-# ----------------------------------------------------------------------------
-# Default language for interface (users can change this)
-DEFAULT_LANGUAGE = "de"  # "de" or "en"
-
-# ----------------------------------------------------------------------------
-# 5. MODEL CONFIGURATION (Per-Stage LLM Selection)
-# ----------------------------------------------------------------------------
-# REPLACES: Old execution_mode="eco"/"fast" system (deprecated in Session 55)
-# NEW: Direct per-stage model configuration - admin controls exactly which model each stage uses
+# ============================================================================
+# SETTINGS (user_settings.json is the source of truth)
+# ============================================================================
+# These are FALLBACK values for fresh installations without user_settings.json.
+# Actual values are loaded from user_settings.json at startup via reload_user_settings().
+# Edit via Settings UI — NOT here.
 #
-# Configure which models are used in each pipeline stage.
-# Chunks reference these variables by name (e.g., "model": "STAGE2_MODEL")
+# Provider Prefix Format (for model values):
+#   "local/model-name" → Ollama | "mistral/model-name" → Mistral AI
+#   "ionos/model-name" → IONOS | "openrouter/provider/model" → OpenRouter
 #
-# Provider Prefix Format & DSGVO Compliance:
-#   - "local/model-name" → Ollama (local inference, DSGVO-compliant ✓)
-#   - "mistral/model-name" → Mistral AI API direct (EU-based, DSGVO-compliant ✓)
-#   - "ionos/model-name"   → IONOS AI Model Hub (EU datacenter Berlin, DSGVO-compliant ✓)
-#   - "mammouth/model-name" → Mammouth AI (EU-based, DSGVO-compliant ✓)
-#   - "anthropic/model-name" → Anthropic API direct (NOT DSGVO-compliant ✗)
-#   - "openai/model-name" → OpenAI API direct (US-based, NOT DSGVO-compliant ✗)
-#   - "openrouter/provider/model-name" → OpenRouter aggregator (US proxy, NOT DSGVO-compliant ✗)
-#
-# IMPORTANT: OpenRouter routes through US servers even for EU models!
-# For DSGVO compliance with cloud AI, use Mistral AI (mistral/) or local models.
-#
-# Base Models:
-LOCAL_DEFAULT_MODEL = "local/qwen3:4b"                       # Default local text model
-LOCAL_VISION_MODEL = "local/llama3.2-vision:latest"                # Local vision model
-REMOTE_MULTIMODAL_MODEL = "openrouter/google/gemini-2.5-flash-lite"     # Input Modalitiestext, image, file, audio, video
-REMOTE_SMALL_MODEL = "openrouter/mistralai/mistral-nemo"       # Fast, cheap cloud model
-REMOTE_LIGHT_MODEL = "openrouter/mistralai/mistral-medium-3.1"       # Fast, cheap cloud model
-REMOTE_ADVANCED_MODEL = "mistral/mistral-large-latest"  # Used by optimization chunks (DSGVO ✓, EU-based)
+_SETTINGS_DEFAULTS = {
+    'UI_MODE': 'youth',
+    'DEFAULT_SAFETY_LEVEL': 'kids',
+    'DEFAULT_LANGUAGE': 'de',
+    'DEFAULT_INTERCEPTION_CONFIG': 'user_defined',
+    'STAGE1_TEXT_MODEL': 'local/qwen3:4b',
+    'STAGE1_VISION_MODEL': 'local/llama3.2-vision:latest',
+    'STAGE2_INTERCEPTION_MODEL': 'local/qwen3:4b',
+    'STAGE2_OPTIMIZATION_MODEL': 'local/qwen3:4b',
+    'STAGE3_MODEL': 'local/qwen3:4b',
+    'STAGE4_LEGACY_MODEL': 'local/qwen3:4b',
+    'CHAT_HELPER_MODEL': 'local/qwen3:4b',
+    'CODING_MODEL': 'mistral/codestral-2501',
+    'IMAGE_ANALYSIS_MODEL': 'local/llama3.2-vision:latest',
+    'SAFETY_MODEL': 'llama-guard3:8b',
+    'DSGVO_VERIFY_MODEL': 'qwen3:1.7b',
+    'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
+    'LLM_PROVIDER': 'ollama',
+    'OLLAMA_API_BASE_URL': 'http://localhost:11434',
+    'LMSTUDIO_API_BASE_URL': 'http://localhost:1234',
+    'EXTERNAL_LLM_PROVIDER': 'none',
+    'DSGVO_CONFORMITY': True,
+}
 
-# Stage-Specific Models (Default to LOCAL for 24GB VRAM systems):
-STAGE1_TEXT_MODEL = LOCAL_DEFAULT_MODEL                   # Stage 1: conditional safety checks (simple task)
-STAGE1_VISION_MODEL = LOCAL_VISION_MODEL                  # Stage 1: Image analysis
-STAGE2_INTERCEPTION_MODEL = LOCAL_DEFAULT_MODEL           # Stage 2: Prompt interception (complex task)
-STAGE2_OPTIMIZATION_MODEL = LOCAL_DEFAULT_MODEL           # Stage 2: Prompt optimization (complex task)
-STAGE3_MODEL = LOCAL_DEFAULT_MODEL                        # Stage 3: Translation and final safety check (simple task)
-STAGE4_LEGACY_MODEL = LOCAL_DEFAULT_MODEL                 # For legacy workflow execution
-CHAT_HELPER_MODEL = LOCAL_DEFAULT_MODEL                   # Chat overlay: Interactive help system
-CODING_MODEL = "mistral/codestral-2501"                    # Code generation (Tone.js, p5.js) - pinned, no floating aliases
+# Pre-initialize module globals for imports (overwritten by reload_user_settings at startup)
+for _k, _v in _SETTINGS_DEFAULTS.items():
+    globals()[_k] = _v
+del _k, _v
 
-# Local Safety Model (Ollama only — DSGVO: personal data must never leave local system)
-# Available safety models: llama-guard3:1b, llama-guard3:latest, llama-guard3:8b
-SAFETY_MODEL = "llama-guard3:8b"
-
-# DSGVO NER Verification Model (Ollama only — verifies SpaCy NER hits are actual names)
-# Must be a general-purpose model, NOT a guard model (guard models classify content safety, not names)
-DSGVO_VERIFY_MODEL = "qwen3:1.7b"
-
-# Post-Generation VLM Safety Check (runs after Stage 4, before 'complete' event)
-VLM_SAFETY_MODEL = "qwen3-vl:2b"  # Local VLM for post-generation image safety check
-
-# Stage 5: Image Analysis (Reflexions-Stage) - Post-Generation Analysis
-IMAGE_ANALYSIS_MODEL = "local/llama3.2-vision:latest"  # Reuses existing LLaVA model for pedagogical image analysis
+# Model aliases used by chunk JSON ("model": "REMOTE_ADVANCED_MODEL" → getattr(config, name))
+# These are static references, not user-configurable settings.
+LOCAL_DEFAULT_MODEL = _SETTINGS_DEFAULTS['STAGE1_TEXT_MODEL']
+LOCAL_VISION_MODEL = _SETTINGS_DEFAULTS['STAGE1_VISION_MODEL']
+REMOTE_ADVANCED_MODEL = "mistral/mistral-large-latest"
+REMOTE_MULTIMODAL_MODEL = "openrouter/google/gemini-2.5-flash-lite"
+REMOTE_SMALL_MODEL = "openrouter/mistralai/mistral-nemo"
+REMOTE_LIGHT_MODEL = "openrouter/mistralai/mistral-medium-3.1"
 
 # Stage 5: Image Analysis Prompts (4 Theoretical Frameworks)
 IMAGE_ANALYSIS_PROMPTS = {
@@ -262,12 +191,8 @@ Decolonial & critical media studies"""
     }
 }
 
-# Note: Stage 4 (output generation) models are defined in output configs (SD3.5, FLUX, etc.)
-
 # ============================================================================
-# END OF MAIN CONFIGURATION
-# ============================================================================
-# Technical settings below - only change if you know what you're doing!
+# STATIC CONFIGURATION (not in Settings UI — change only if you know what you're doing)
 # ============================================================================
 
 # Base paths
@@ -278,22 +203,6 @@ PUBLIC_DIR = Path(__file__).parent.parent / "public" / "ai4artsed-frontend" / "d
 EXPORTS_DIR = BASE_DIR / "exports"
 JSON_STORAGE_DIR = EXPORTS_DIR / "json"
 UPLOADS_TMP_DIR = EXPORTS_DIR / "uploads_tmp"  # Temporary image uploads for img2img
-
-# API Configuration
-# LLM Provider: "ollama" or "lmstudio"
-# TODO 2026: Refactor to Option C (Adapter Pattern with LLMProvider base class)
-# NOTE: LM Studio does NOT support model unloading via API - use Ollama for proper VRAM management
-LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "ollama")  # Ollama supports keep_alive for VRAM management
-OLLAMA_API_BASE_URL = os.environ.get("OLLAMA_API_BASE_URL", "http://localhost:11434")
-LMSTUDIO_API_BASE_URL = os.environ.get("LMSTUDIO_API_BASE_URL", "http://localhost:1234")
-
-# External LLM Provider for cloud-based models
-# Options: "none", "openrouter", "anthropic", "openai", "mistral", "ionos", "mammouth"
-EXTERNAL_LLM_PROVIDER = os.environ.get("EXTERNAL_LLM_PROVIDER", "none")
-
-# DSGVO Conformity - determines if cloud services are allowed
-# True = DSGVO-compliant (no cloud services), False = Cloud services allowed
-DSGVO_CONFORMITY = os.environ.get("DSGVO_CONFORMITY", "true").lower() == "true"
 
 # DSGVO-safe provider fallback: if True, fallback only to DSGVO-safe providers.
 # If False (international deployments), fallback may use any provider with credentials.
@@ -646,9 +555,3 @@ LORA_TRIGGERS = [
     # Empty by default - LoRAs are specified per-config in meta.loras
     # Example: {"name": "my_lora.safetensors", "strength": 1.0}
 ]
-
-# ============================================================================
-# USER SETTINGS
-# ============================================================================
-# User settings can be overridden via devserver/user_settings.json
-# Loaded automatically by the Flask app on startup (see my_app/__init__.py)
