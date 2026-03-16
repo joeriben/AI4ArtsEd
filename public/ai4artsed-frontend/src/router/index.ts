@@ -120,6 +120,12 @@ const router = createRouter({
       // Dev tool: visual pixel template editor for Bits & Pixels animation
       component: () => import('../views/PixelTemplateEditorView.vue'),
     },
+    {
+      path: '/rave-training',
+      name: 'rave-training',
+      component: () => import('../views/RaveTrainingView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
