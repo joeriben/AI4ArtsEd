@@ -3,17 +3,26 @@
     <div class="compare-main">
       <!-- Input Section -->
       <div class="input-section">
-        <div class="input-box">
-          <label class="input-label">{{ t('compare.promptLabel') }}</label>
-          <textarea
-            v-model="userPrompt"
-            class="prompt-textarea"
-            :placeholder="t('compare.promptPlaceholder')"
-            rows="3"
-          ></textarea>
-        </div>
+        <MediaInputBox
+          icon="💡"
+          :label="t('compare.promptLabel')"
+          :placeholder="t('compare.promptPlaceholder')"
+          v-model:value="userPrompt"
+          input-type="text"
+          :rows="4"
+          :is-filled="!!userPrompt"
+          @copy="() => navigator.clipboard.writeText(userPrompt)"
+          @paste="async () => { userPrompt = await navigator.clipboard.readText() }"
+          @clear="() => { userPrompt = '' }"
+        />
 
         <LanguageChipSelector v-model="selectedLanguages" :max="4" />
+
+        <!-- Seed display -->
+        <div v-if="currentSeed !== null" class="seed-display">
+          <span class="seed-label">Seed:</span>
+          <span class="seed-value">{{ currentSeed }}</span>
+        </div>
 
         <button
           class="generate-btn"
@@ -54,6 +63,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import MediaInputBox from '@/components/MediaInputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonCard from '@/components/ComparisonCard.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
@@ -64,6 +74,7 @@ const { t } = useI18n()
 const userPrompt = ref('')
 const selectedLanguages = ref<string[]>(['en', 'ar'])
 const isGenerating = ref(false)
+const currentSeed = ref<number | null>(null)
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 
 interface ComparisonSlot {
@@ -167,8 +178,9 @@ async function startComparison() {
 
     comparisonContext.value = buildContext('translations_ready')
 
-    // Step 2: Generate seed (same for all)
+    // Step 2: Generate seed (same for all) — displayed in UI for verification
     const seed = Math.floor(Math.random() * 4294967296)
+    currentSeed.value = seed
 
     chatRef.value?.injectMessage(t('compare.trashyGenerating'))
 
@@ -279,39 +291,25 @@ async function startComparison() {
   margin-bottom: 1.5rem;
 }
 
-.input-box {
-  margin-bottom: 0.75rem;
+.seed-display {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0;
 }
 
-.input-label {
-  display: block;
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 0.3rem;
+.seed-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.prompt-textarea {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  resize: vertical;
-  outline: none;
-  font-family: inherit;
-}
-
-.prompt-textarea:focus {
-  border-color: rgba(76, 175, 80, 0.4);
-}
-
-.prompt-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+.seed-value {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
 .generate-btn {

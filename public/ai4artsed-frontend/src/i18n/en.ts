@@ -1448,7 +1448,7 @@ export const en = {
     promptLabel: 'Your Idea',
     promptPlaceholder: 'Enter a prompt — e.g. "A beautiful garden with flowers"',
     platformLanguages: 'Platform Languages',
-    minorityLanguages: 'Minority Languages',
+    furtherLanguages: 'Further Languages',
     selectHint: '{count} of {max} languages selected',
     generateAll: 'Compare All',
     generatingAll: 'Generating...',
