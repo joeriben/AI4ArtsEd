@@ -11,9 +11,9 @@
           input-type="text"
           :rows="4"
           :is-filled="!!userPrompt"
-          @copy="() => navigator.clipboard.writeText(userPrompt)"
-          @paste="async () => { userPrompt = await navigator.clipboard.readText() }"
-          @clear="() => { userPrompt = '' }"
+          @copy="copyPrompt"
+          @paste="pastePrompt"
+          @clear="clearPrompt"
         />
 
         <LanguageChipSelector v-model="selectedLanguages" :max="4" />
@@ -101,6 +101,18 @@ const canGenerate = computed(() => {
   return userPrompt.value.trim().length > 0 && selectedLanguages.value.length >= 2
 })
 
+function copyPrompt() {
+  window.navigator.clipboard.writeText(userPrompt.value)
+}
+
+async function pastePrompt() {
+  userPrompt.value = await window.navigator.clipboard.readText()
+}
+
+function clearPrompt() {
+  userPrompt.value = ''
+}
+
 // Build context string for Trashy
 const comparisonContext = ref('')
 
@@ -186,13 +198,13 @@ async function startComparison() {
 
     // Step 3: Sequential generation for each language
     for (let i = 0; i < slots.value.length; i++) {
-      const slot = slots.value[i]
+      const slot = slots.value[i]!
       slot.isExecuting = true
       slot.queuePosition = 0
 
       // Update queue positions for remaining slots
       for (let j = i + 1; j < slots.value.length; j++) {
-        slots.value[j].queuePosition = j - i
+        slots.value[j]!.queuePosition = j - i
       }
 
       try {
