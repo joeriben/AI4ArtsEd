@@ -1,7 +1,7 @@
 <template>
   <section class="pipeline-section" ref="sectionRef">
     <!-- Output Frame (Always visible) -->
-    <div class="output-frame" :class="{ empty: !isExecuting && !outputImage, generating: isExecuting && !outputImage }">
+    <div class="output-frame" :class="{ empty: !isExecuting && !outputImage && !meshUrl, generating: isExecuting && !outputImage && !meshUrl }">
       <!-- Generation Progress Animation -->
       <div v-if="isExecuting && !outputImage" class="generation-animation-container">
         <!-- Expert mode: Full denoising view with model Steckbrief -->
@@ -65,7 +65,7 @@
       </div>
 
       <!-- Final Output -->
-      <div v-else-if="outputImage" class="final-output">
+      <div v-else-if="outputImage || meshUrl" class="final-output">
         <!-- Image with Actions -->
         <div v-if="mediaType === 'image'" class="image-with-actions">
           <img
