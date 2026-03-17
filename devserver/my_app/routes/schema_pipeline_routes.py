@@ -2203,6 +2203,119 @@ def translate_text():
         return jsonify({'status': 'error', 'error': str(e)}), 500
 
 
+@schema_bp.route('/compare/translate', methods=['POST'])
+def compare_translate():
+    """
+    Session 265: Multi-language translation for comparison mode.
+
+    Translates a prompt into multiple target languages using the chat helper LLM.
+    Used by /compare page to generate the same prompt in different languages
+    for raw encoding bias comparison.
+
+    Request Body:
+    {
+        "text": "A beautiful garden with flowers",
+        "languages": ["ar", "hsb", "yo"],
+        "source_language": "en"
+    }
+
+    Returns:
+    {
+        "status": "success",
+        "translations": {"ar": "حديقة جميلة...", "hsb": "Rjana zahroda...", "yo": "Ọgba ẹlẹwa..."},
+        "source_language": "en",
+        "duration_ms": 1234
+    }
+    """
+    from my_app.routes.chat_routes import call_chat_helper
+    import time
+
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'error': 'JSON request expected'}), 400
+
+        text = data.get('text', '')
+        languages = data.get('languages', [])
+        source_language = data.get('source_language', 'en')
+
+        if not text:
+            return jsonify({'status': 'error', 'error': 'text is required'}), 400
+        if not languages or not isinstance(languages, list):
+            return jsonify({'status': 'error', 'error': 'languages must be a non-empty list'}), 400
+        if len(languages) > 6:
+            return jsonify({'status': 'error', 'error': 'Maximum 6 target languages'}), 400
+
+        # Language name mapping for the LLM prompt
+        LANGUAGE_NAMES = {
+            'ar': 'Arabic', 'bg': 'Bulgarian', 'de': 'German', 'en': 'English',
+            'es': 'Spanish', 'fr': 'French', 'he': 'Hebrew', 'tr': 'Turkish',
+            'uk': 'Ukrainian', 'ko': 'Korean',
+            'hsb': 'Upper Sorbian', 'dsb': 'Lower Sorbian', 'fry': 'Frisian',
+            'yo': 'Yoruba', 'sw': 'Swahili', 'qu': 'Quechua',
+            'tl': 'Tagalog', 'cy': 'Welsh', 'hi': 'Hindi', 'bn': 'Bengali',
+            'ja': 'Japanese', 'zh': 'Chinese',
+        }
+
+        lang_list = ', '.join(f'{LANGUAGE_NAMES.get(l, l)} ({l})' for l in languages)
+
+        logger.info(f"[COMPARE-TRANSLATE] Translating to {len(languages)} languages: {lang_list}")
+
+        start_time = time.time()
+
+        messages = [
+            {
+                'role': 'system',
+                'content': (
+                    'You are a precise translator. Translate the given text into the requested languages. '
+                    'Output ONLY valid JSON with language codes as keys and translations as values. '
+                    'No markdown, no explanation, no code fences. '
+                    'Preserve the meaning as closely as possible. '
+                    'For minority languages (Sorbian, Frisian, Yoruba, etc.), use the standard written form.'
+                )
+            },
+            {
+                'role': 'user',
+                'content': f'Translate this {LANGUAGE_NAMES.get(source_language, source_language)} text into {lang_list}:\n\n"{text}"'
+            }
+        ]
+
+        result = call_chat_helper(messages, temperature=0.2, max_tokens=2000)
+        content = result.get('content', '').strip()
+
+        # Parse JSON response — handle potential markdown wrapping
+        import json
+        if content.startswith('```'):
+            content = content.split('\n', 1)[-1].rsplit('```', 1)[0].strip()
+        if content.startswith('{'):
+            translations = json.loads(content)
+        else:
+            # Fallback: try to extract JSON from response
+            import re
+            json_match = re.search(r'\{[^}]+\}', content, re.DOTALL)
+            if json_match:
+                translations = json.loads(json_match.group())
+            else:
+                return jsonify({'status': 'error', 'error': f'LLM did not return valid JSON: {content[:200]}'}), 500
+
+        duration_ms = (time.time() - start_time) * 1000
+        logger.info(f"[COMPARE-TRANSLATE] Success in {duration_ms:.0f}ms, {len(translations)} translations")
+
+        return jsonify({
+            'status': 'success',
+            'translations': translations,
+            'source_language': source_language,
+            'duration_ms': duration_ms
+        })
+
+    except json.JSONDecodeError as e:
+        logger.error(f"[COMPARE-TRANSLATE] JSON parse error: {e}")
+        return jsonify({'status': 'error', 'error': f'Translation response not valid JSON: {str(e)}'}), 500
+    except Exception as e:
+        logger.error(f"[COMPARE-TRANSLATE] Error: {e}", exc_info=True)
+        return jsonify({'status': 'error', 'error': str(e)}), 500
+
+
 @schema_bp.route('/pipeline/log-prompt-change', methods=['POST'])
 def log_prompt_change():
     """
@@ -2342,6 +2455,9 @@ def execute_generation_streaming(data: dict):
     scheduler = data.get('scheduler')
     denoise = data.get('denoise')
 
+    # Session 265: Skip-flags for comparison mode (raw encoding bias)
+    skip_stage3_translation = data.get('skip_stage3_translation', False)
+
     # Session 153: Apply same run_id continuity logic as non-streaming mode
     # 1 Run = 1 Media Output - create new run if existing has output
     from config import JSON_STORAGE_DIR
@@ -2403,17 +2519,30 @@ def execute_generation_streaming(data: dict):
             media_type = 'image'
 
         # Execute Stage 3: Translation + Safety
-        safety_result = asyncio.run(execute_stage3_safety(
-            prompt,
-            safety_level,
-            media_type,
-            pipeline_executor,
-            user_language=user_language
-        ))
+        # Session 265: skip_stage3_translation for comparison mode (raw encoding bias)
+        if skip_stage3_translation:
+            logger.info(f"[GENERATION-STREAMING] Stage 3: Translation SKIPPED (comparison mode), safety only")
+            safety_result = asyncio.run(execute_stage3_safety(
+                prompt,
+                safety_level,
+                media_type,
+                pipeline_executor,
+                user_language=user_language
+            ))
+            # Override: use original prompt regardless of translation
+            safety_result['positive_prompt'] = prompt
+        else:
+            safety_result = asyncio.run(execute_stage3_safety(
+                prompt,
+                safety_level,
+                media_type,
+                pipeline_executor,
+                user_language=user_language
+            ))
 
         # Check if translation occurred
         translated_prompt = safety_result.get('positive_prompt', prompt)
-        was_translated = translated_prompt and translated_prompt != prompt
+        was_translated = not skip_stage3_translation and translated_prompt and translated_prompt != prompt
 
         if not safety_result['safe']:
             # BLOCKED by Stage 3
@@ -2703,7 +2832,9 @@ def generation_endpoint():
                 'negative_prompt': request.args.get('negative_prompt'),
                 'sampler_name': request.args.get('sampler_name'),
                 'scheduler': request.args.get('scheduler'),
-                'denoise': request.args.get('denoise', type=float)
+                'denoise': request.args.get('denoise', type=float),
+                # Session 265: Comparison mode skip-flags
+                'skip_stage3_translation': request.args.get('skip_stage3_translation') == 'true'
             }
             # Convert seed to int if present
             if data['seed']:
