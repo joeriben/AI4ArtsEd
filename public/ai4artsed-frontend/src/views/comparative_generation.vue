@@ -234,8 +234,11 @@ async function startComparison() {
         await new Promise<void>((resolve, reject) => {
           eventSource.addEventListener('complete', (event) => {
             const data = JSON.parse(event.data)
-            if (data.media_output) {
-              slot.outputImage = `${baseUrl}${data.media_output}`
+            const output = data.media_output
+            if (output) {
+              // media_output can be a string (legacy) or object with .url
+              const url = typeof output === 'string' ? output : output.url
+              if (url) slot.outputImage = `${baseUrl}${url}`
             }
             slot.isExecuting = false
             eventSource.close()
