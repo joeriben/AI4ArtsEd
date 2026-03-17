@@ -212,7 +212,7 @@ async def execute(
         "mesh_data": base64.b64encode(glb_bytes).decode('utf-8'),
         "mesh_format": "glb",
         "parameters": {
-            "prompt": prompt[:200],
+            "input_image": input_image_path or "(base64)",
             "steps": steps,
             "guidance_scale": cfg,
             "octree_resolution": octree_res,
