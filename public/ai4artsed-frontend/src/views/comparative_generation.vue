@@ -41,14 +41,20 @@
             <span class="slot-lang-code">{{ slot.langCode }}</span>
             <span v-if="slot.queuePosition > 0 && !slot.isExecuting && !slot.outputImage" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
           </div>
-          <MediaOutputBox
-            :output-image="slot.outputImage"
-            media-type="image"
-            :is-executing="slot.isExecuting"
-            :progress="slot.progress"
-            :estimated-seconds="30"
-            ui-mode="youth"
-          />
+          <div class="slot-output" :class="{ generating: slot.isExecuting, complete: !!slot.outputImage }">
+            <!-- Generating -->
+            <template v-if="slot.isExecuting && !slot.outputImage">
+              <div class="slot-progress-track">
+                <div class="slot-progress-fill" :class="{ indeterminate: slot.progress <= 0 }" :style="slot.progress > 0 ? { width: slot.progress + '%' } : {}"></div>
+              </div>
+            </template>
+            <!-- Result -->
+            <img v-if="slot.outputImage" :src="slot.outputImage" alt="" class="slot-image" />
+            <!-- Blocked -->
+            <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
+            <!-- Empty / Waiting -->
+            <div v-if="!slot.outputImage && !slot.isExecuting && !slot.blockedReason" class="slot-empty"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,7 +72,6 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
-import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 
@@ -396,6 +401,72 @@ async function startComparison() {
   background: rgba(255, 183, 77, 0.1);
   padding: 0.1rem 0.4rem;
   border-radius: 8px;
+}
+
+.slot-output {
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 15, 15, 0.5);
+}
+
+.slot-output.generating {
+  border-color: rgba(76, 175, 80, 0.3);
+  border-style: solid;
+}
+
+.slot-output.complete {
+  border-color: rgba(255, 255, 255, 0.12);
+  border-style: solid;
+}
+
+.slot-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.slot-progress-track {
+  width: 60%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.slot-progress-fill {
+  height: 100%;
+  background: rgba(76, 175, 80, 0.6);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.slot-progress-fill.indeterminate {
+  width: 30%;
+  animation: progress-slide 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-slide {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(250%); }
+  100% { transform: translateX(-100%); }
+}
+
+.slot-blocked {
+  font-size: 0.75rem;
+  color: rgba(239, 83, 80, 0.7);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.slot-empty {
+  width: 100%;
+  height: 100%;
 }
 
 /* Mobile */
