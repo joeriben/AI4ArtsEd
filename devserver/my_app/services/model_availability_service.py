@@ -212,7 +212,7 @@ class ModelAvailabilityService:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                     f"{self.comfyui_base_url}/object_info",
-                    timeout=aiohttp.ClientTimeout(total=10)
+                    timeout=aiohttp.ClientTimeout(total=10),
                 ) as response:
                     if response.status != 200:
                         error_text = await response.text()
@@ -267,13 +267,23 @@ class ModelAvailabilityService:
 
                     return models
 
-        except aiohttp.ClientError as e:
+        except (aiohttp.ClientError, Exception) as e:
             logger.error(f"[MODEL_AVAILABILITY] ComfyUI unreachable: {e}")
             self._cache["last_reachable"] = False
-            raise
-        except Exception as e:
-            logger.error(f"[MODEL_AVAILABILITY] Error querying ComfyUI: {e}")
-            self._cache["last_reachable"] = False
+
+            # Trigger auto-start via ComfyUIManager and retry once
+            try:
+                from my_app.services.comfyui_manager import get_comfyui_manager
+                manager = get_comfyui_manager()
+                if manager._auto_start_enabled and not manager.is_starting():
+                    logger.info("[MODEL_AVAILABILITY] Triggering ComfyUI auto-start...")
+                    started = await manager.ensure_comfyui_available()
+                    if started:
+                        logger.info("[MODEL_AVAILABILITY] ComfyUI started, retrying query...")
+                        return await self.get_comfyui_models(force_refresh=True)
+            except Exception as start_err:
+                logger.warning(f"[MODEL_AVAILABILITY] ComfyUI auto-start failed: {start_err}")
+
             raise
 
     def _load_chunk_meta(self, chunk_name: str) -> dict:
