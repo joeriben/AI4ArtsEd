@@ -614,17 +614,17 @@ export const en = {
     }
   },
   usageAgreement: {
-    title: 'Usage Notice',
-    text: 'This platform generates AI-created images, sounds, and texts for use in cultural education. Despite extensive technical safety measures, unforeseen content may occur. The platform is intended exclusively for pedagogically supervised use.',
+    title: 'Usage Agreement',
+    text: 'This platform uses AI to generate images, sounds, and texts for cultural education. Extensive safety measures are built in \u2014 but no technical system can fully prevent unexpected results. Use is therefore subject to the following conditions:',
     responsibilities: {
       title: 'Workshop Leader Responsibilities',
-      supervision: 'Ensure active supervision throughout the entire session.',
+      supervision: 'Actively supervise participants throughout the entire session.',
       ageAppropriate: 'Set the safety level appropriate to the age group.',
       misuse: 'Prevent misuse and deliberate circumvention of safety mechanisms by participants.',
       context: 'Test the platform yourself before using it with groups.',
-      noGuarantee: 'No technical system replaces pedagogical supervision.',
+      noGuarantee: 'No technical system can replace pedagogical supervision.',
     },
-    checkbox: 'As workshop leader, I accept responsibility for the supervised use of this platform.',
+    checkbox: 'I agree to these conditions and accept responsibility as workshop leader for the supervised use of this platform.',
     acceptButton: 'Continue',
   },
   docs: {

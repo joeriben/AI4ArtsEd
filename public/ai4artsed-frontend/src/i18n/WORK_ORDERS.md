@@ -22,20 +22,16 @@ Tags:
 -->
 
 ### WO-2026-03-17-usage-agreement
-- **Session**: 263
-- **Scope**: en.ts
-- **Changed keys** (all NEW):
-  - `usageAgreement.title` (NEW)
-  - `usageAgreement.text` (NEW)
-  - `usageAgreement.responsibilities.title` (NEW)
-  - `usageAgreement.responsibilities.supervision` (NEW)
-  - `usageAgreement.responsibilities.ageAppropriate` (NEW)
-  - `usageAgreement.responsibilities.intervention` (NEW)
-  - `usageAgreement.responsibilities.context` (NEW)
-  - `usageAgreement.responsibilities.noGuarantee` (NEW)
-  - `usageAgreement.checkbox` (NEW)
-  - `usageAgreement.acceptButton` (NEW)
-- **Context**: Brief usage agreement shown before platform use (24h cookie). Kids see this on their iPads, so it must NOT enumerate specific harmful content categories. Intro text: AI can produce unexpected results, supervised use required, no technical system is perfect, unexpected outputs as pedagogical opportunity (AI ethics, media literacy). Responsibilities section: 5 bullet points for educators (supervision, age-appropriate settings, intervention, review configs, your judgement is the safeguard). Tone: neutral, non-alarming, age-appropriate.
+- **Session**: 264
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all MODIFIED — rewritten from Session 263):
+  - `usageAgreement.title` (MODIFIED): "Usage Notice" → "Usage Agreement"
+  - `usageAgreement.text` (MODIFIED): rewritten — now frames as binding conditions, not informational notice
+  - `usageAgreement.responsibilities.supervision` (MODIFIED): "Ensure active supervision..." → "Actively supervise participants..."
+  - `usageAgreement.responsibilities.misuse` (MODIFIED): minor rewording
+  - `usageAgreement.responsibilities.noGuarantee` (MODIFIED): "replaces" → "can replace"
+  - `usageAgreement.checkbox` (MODIFIED): now includes explicit consent ("I agree to these conditions")
+- **Context**: Usage agreement (not notice!) shown before platform access (24h cookie). This is a binding consent page — workshop leaders agree to conditions. Do NOT enumerate harmful content categories. Tone: clear and direct, educator-to-educator, not legal/bureaucratic. Key message: platform is well-protected but no system is perfect, use is tied to these conditions.
 
 ### WO-2026-03-12-mammouth-provider
 - **Session**: 259

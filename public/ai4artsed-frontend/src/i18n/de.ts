@@ -585,17 +585,17 @@ export const de = {
     }
   },
   usageAgreement: {
-    title: 'Nutzungshinweis',
-    text: 'Diese Plattform erzeugt KI-generierte Bilder, Kl\u00e4nge und Texte f\u00fcr den Einsatz in der kulturellen Bildung. Trotz umfangreicher technischer Schutzmechanismen k\u00f6nnen unvorhergesehene Inhalte entstehen. Die Plattform ist ausschlie\u00dflich f\u00fcr den p\u00e4dagogisch begleiteten Einsatz vorgesehen.',
+    title: 'Nutzungsvereinbarung',
+    text: 'Diese Plattform erzeugt mit KI Bilder, Kl\u00e4nge und Texte f\u00fcr die kulturelle Bildung. Sie ist umfangreich gesch\u00fctzt \u2014 aber kein technisches System kann unerwartete Ergebnisse vollst\u00e4ndig ausschlie\u00dfen. Der Einsatz ist deshalb an folgende Bedingungen gekn\u00fcpft:',
     responsibilities: {
       title: 'Verantwortung der Kursleitung',
-      supervision: 'Aktive Aufsicht w\u00e4hrend der gesamten Nutzung sicherstellen.',
-      ageAppropriate: 'Sicherheitsstufe passend zur Altersgruppe einstellen.',
+      supervision: 'Die Nutzung durchgehend aktiv begleiten.',
+      ageAppropriate: 'Die Sicherheitsstufe passend zur Altersgruppe w\u00e4hlen.',
       misuse: 'Missbrauch und gezieltes Umgehen der Schutzmechanismen durch Teilnehmende unterbinden.',
-      context: 'Die Plattform vor dem Einsatz mit Gruppen selbst erproben.',
+      context: 'Die Plattform vor dem Gruppeneinsatz selbst erproben.',
       noGuarantee: 'Kein technisches System ersetzt die p\u00e4dagogische Begleitung.',
     },
-    checkbox: 'Ich \u00fcbernehme als Kursleitung die Verantwortung f\u00fcr den begleiteten Einsatz dieser Plattform.',
+    checkbox: 'Ich stimme diesen Bedingungen zu und \u00fcbernehme als Kursleitung die Verantwortung f\u00fcr den begleiteten Einsatz.',
     acceptButton: 'Weiter',
   },
   docs: {
