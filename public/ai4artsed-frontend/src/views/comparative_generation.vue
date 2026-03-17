@@ -35,19 +35,21 @@
 
       <!-- Comparison Grid -->
       <div class="comparison-grid" :class="'grid-' + slots.length">
-        <ComparisonCard
-          v-for="(slot, idx) in slots"
-          :key="slot.langCode"
-          :language-code="slot.langCode"
-          :language-name="slot.langName"
-          :prompt="slot.translatedPrompt"
-          :output-image="slot.outputImage"
-          :is-executing="slot.isExecuting"
-          :progress="slot.progress"
-          :queue-position="slot.queuePosition"
-          :queue-total="slots.length"
-          :blocked-reason="slot.blockedReason"
-        />
+        <div v-for="slot in slots" :key="slot.langCode" class="comparison-slot">
+          <div class="slot-header">
+            <span class="slot-lang-name">{{ slot.langName }}</span>
+            <span class="slot-lang-code">{{ slot.langCode }}</span>
+            <span v-if="slot.queuePosition > 0 && !slot.isExecuting && !slot.outputImage" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
+          </div>
+          <MediaOutputBox
+            :output-image="slot.outputImage"
+            media-type="image"
+            :is-executing="slot.isExecuting"
+            :progress="slot.progress"
+            :estimated-seconds="30"
+            ui-mode="youth"
+          />
+        </div>
       </div>
     </div>
 
@@ -64,8 +66,8 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
-import ComparisonCard from '@/components/ComparisonCard.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 
 const { t } = useI18n()
@@ -363,6 +365,38 @@ async function startComparison() {
 .grid-2 { grid-template-columns: 1fr 1fr; }
 .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
 .grid-4 { grid-template-columns: 1fr 1fr; }
+
+.comparison-slot {
+  min-width: 0;
+}
+
+.slot-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+}
+
+.slot-lang-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+}
+
+.slot-lang-code {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.slot-queue {
+  font-size: 0.65rem;
+  color: rgba(255, 183, 77, 0.7);
+  background: rgba(255, 183, 77, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 8px;
+}
 
 /* Mobile */
 @media (max-width: 900px) {
