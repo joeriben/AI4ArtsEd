@@ -1450,6 +1450,7 @@ export const en = {
     platformLanguages: 'Platform Languages',
     furtherLanguages: 'Further Languages',
     selectHint: '{count} of {max} languages selected',
+    modelLabel: 'Model',
     generateAll: 'Compare All',
     generatingAll: 'Generating...',
     generating: 'Generating...',

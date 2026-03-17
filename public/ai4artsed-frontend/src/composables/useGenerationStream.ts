@@ -33,6 +33,9 @@ export interface GenerationParams {
   input_image3?: string | null
   alpha_factor?: number | null
 
+  // Session 265: Comparison mode — skip Stage 3 translation (send prompt raw to model)
+  skip_stage3_translation?: boolean
+
   // Session 151: Generation parameters (optional, ignored if config doesn't support them)
   width?: number
   height?: number
@@ -141,6 +144,11 @@ export function useGenerationStream() {
     }
     if (params.alpha_factor !== null && params.alpha_factor !== undefined) {
       queryParams.set('alpha_factor', String(params.alpha_factor))
+    }
+
+    // Session 265: Comparison mode
+    if (params.skip_stage3_translation) {
+      queryParams.set('skip_stage3_translation', 'true')
     }
 
     // Session 151: Generation parameters (optional)
