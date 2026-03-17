@@ -1,13 +1,13 @@
 """
-Output Chunk: Hunyuan3D-2 (Text-to-3D Mesh)
+Output Chunk: Hunyuan3D-2 (Image-to-3D Mesh)
 
-Generates textured 3D meshes from text prompts using Hunyuan3D-2.
+Generates textured 3D meshes from input images using Hunyuan3D-2.
 Two-step process:
-  1. GPU Service: Hunyuan3D-2 generates a textured GLB mesh
+  1. GPU Service: Hunyuan3D-2 generates a textured GLB mesh from an image
   2. Blender Service: Headless Eevee renders a preview PNG thumbnail
 
 Input (from pipeline parameters):
-    - TEXT_1: Text prompt (from Stage 2/3 output)
+    - input_image / image_base64: Base64-encoded image (from previous generation or upload)
     - seed: Seed for reproducibility
 
 Output:
@@ -31,14 +31,10 @@ CHUNK_META = {
     "estimated_duration_seconds": "30-60",
     "requires_gpu": True,
     "gpu_vram_mb": 16000,
+    "img2img": True,
     "optimization_instruction": (
-        "Transform the user's text into a clear 3D object description. "
-        "Describe the object's shape, materials, colors, and surface details. "
-        "Focus on physical properties visible in 3D: geometry, texture, reflectivity, "
-        "transparency. Avoid describing backgrounds, lighting, or camera angles — "
-        "these are handled by the rendering engine. "
-        "Example: 'A polished red ceramic apple with a short brown wooden stem "
-        "and a single green leaf, smooth glossy surface with subtle specular highlights.'"
+        "This chunk converts an input image into a 3D model. "
+        "No text optimization needed — the image IS the input."
     ),
 }
 
@@ -100,10 +96,21 @@ async def execute(
     if not await client.is_available():
         raise Exception("Hunyuan3D backend not available (GPU service unreachable or hy3dgen not installed)")
 
-    # --- Map pipeline parameters ---
-    prompt = TEXT_1 or PREVIOUS_OUTPUT or ""
-    if not prompt:
-        raise ValueError("No prompt provided for 3D generation")
+    # --- Get image input ---
+    # Accept image from: input_image param, image_base64 param, or PREVIOUS_OUTPUT (base64 image data)
+    image_b64 = kwargs.get('input_image') or kwargs.get('image_base64') or None
+
+    # If PREVIOUS_OUTPUT looks like base64 image data, use it
+    if not image_b64 and PREVIOUS_OUTPUT:
+        if PREVIOUS_OUTPUT.startswith('data:image/'):
+            # Strip data URI prefix: "data:image/png;base64,..."
+            image_b64 = PREVIOUS_OUTPUT.split(',', 1)[1] if ',' in PREVIOUS_OUTPUT else PREVIOUS_OUTPUT
+        elif len(PREVIOUS_OUTPUT) > 1000 and not PREVIOUS_OUTPUT.startswith('{'):
+            # Likely raw base64 image data
+            image_b64 = PREVIOUS_OUTPUT
+
+    if not image_b64:
+        raise ValueError("No image provided for 3D generation. Hunyuan3D-2 requires an input image.")
 
     # Seed handling
     actual_seed = seed_override if seed_override is not None else seed
@@ -118,10 +125,10 @@ async def execute(
     octree_res = int(octree_resolution) if octree_resolution is not None else DEFAULTS["octree_resolution"]
 
     # --- Step 1: Generate mesh via GPU service ---
-    logger.info(f"[CHUNK:hunyuan3d] Generating mesh: prompt='{prompt[:100]}...', seed={actual_seed}")
+    logger.info(f"[CHUNK:hunyuan3d] Generating mesh: image={len(image_b64)//1024}KB, seed={actual_seed}")
 
     glb_bytes, actual_seed = await client.generate_mesh(
-        prompt=prompt,
+        image_base64=image_b64,
         seed=actual_seed,
         num_inference_steps=steps,
         guidance_scale=cfg,

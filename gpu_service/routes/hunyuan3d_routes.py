@@ -54,7 +54,7 @@ def generate():
 
     Request JSON:
         {
-            "prompt": "a red apple",
+            "image_base64": "<base64 PNG/JPEG data>",
             "seed": 42,
             "num_inference_steps": 50,
             "guidance_scale": 7.5,
@@ -69,13 +69,13 @@ def generate():
         }
     """
     data = request.get_json()
-    if not data or 'prompt' not in data:
-        return jsonify({"success": False, "error": "prompt required"}), 400
+    if not data or 'image_base64' not in data:
+        return jsonify({"success": False, "error": "image_base64 required"}), 400
 
     try:
         backend = _get_backend()
         glb_bytes, actual_seed = _run_async(backend.generate_mesh(
-            prompt=data['prompt'],
+            image_base64=data['image_base64'],
             seed=data.get('seed', -1),
             num_inference_steps=data.get('num_inference_steps', 50),
             guidance_scale=data.get('guidance_scale', 7.5),

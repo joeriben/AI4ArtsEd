@@ -59,14 +59,14 @@ class Hunyuan3DClient:
 
     async def generate_mesh(
         self,
-        prompt: str,
+        image_base64: str,
         seed: int = -1,
         num_inference_steps: int = 50,
         guidance_scale: float = 7.5,
         octree_resolution: int = 256,
     ) -> tuple:
         """
-        Generate a 3D mesh from text prompt via local GPU service.
+        Generate a 3D mesh from an input image via local GPU service.
 
         Returns:
             Tuple of (GLB bytes, actual_seed) or (None, seed) on failure
@@ -74,7 +74,7 @@ class Hunyuan3DClient:
         import asyncio
 
         result = await asyncio.to_thread(self._post, '/api/hunyuan3d/generate', {
-            'prompt': prompt,
+            'image_base64': image_base64,
             'seed': seed,
             'num_inference_steps': num_inference_steps,
             'guidance_scale': guidance_scale,

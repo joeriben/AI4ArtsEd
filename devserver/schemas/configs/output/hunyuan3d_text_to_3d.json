@@ -1,12 +1,12 @@
 {
   "pipeline": "single_text_media_generation",
   "name": {
-    "en": "Text to 3D (Hunyuan3D-2)",
-    "de": "Text zu 3D (Hunyuan3D-2)"
+    "en": "Image to 3D (Hunyuan3D-2)",
+    "de": "Bild zu 3D (Hunyuan3D-2)"
   },
   "description": {
-    "en": "Generate textured 3D models from text descriptions using Hunyuan3D-2",
-    "de": "Texturierte 3D-Modelle aus Textbeschreibungen generieren mit Hunyuan3D-2"
+    "en": "Generate textured 3D models from images using Hunyuan3D-2",
+    "de": "Texturierte 3D-Modelle aus Bildern generieren mit Hunyuan3D-2"
   },
   "category": {
     "en": "3D Generation",
@@ -45,8 +45,9 @@
     "quantization": "FP16",
     "license": "MIT License",
     "fair_culture": "Training data: Tencent internal 3D dataset (Objaverse-based filtering)",
-    "safety_by_design": "Text-to-3D inherently limited to described objects",
-    "optimization_instruction": "Transform the user's text into a clear 3D object description. Describe the object's shape, materials, colors, and surface details. Focus on physical properties visible in 3D: geometry, texture, reflectivity, transparency. Avoid describing backgrounds, lighting, or camera angles — these are handled by the rendering engine. Keep it concise. Example: 'A polished red ceramic apple with a short brown wooden stem and a single green leaf, smooth glossy surface with subtle specular highlights.'",
+    "img2img": true,
+    "safety_by_design": "Image-to-3D inherently limited to input image content",
+    "optimization_instruction": "This config converts an existing image into a 3D model. The input image should show a clear object with minimal background. No text optimization needed — the image IS the input.",
     "version": "1.0"
   },
 
@@ -59,8 +60,8 @@
   },
 
   "tags": {
-    "en": ["3d", "mesh", "hunyuan3d", "text-to-3d"],
-    "de": ["3d", "mesh", "hunyuan3d", "text-zu-3d"]
+    "en": ["3d", "mesh", "hunyuan3d", "image-to-3d"],
+    "de": ["3d", "mesh", "hunyuan3d", "bild-zu-3d"]
   },
 
   "audience": {

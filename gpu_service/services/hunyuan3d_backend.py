@@ -206,17 +206,20 @@ class Hunyuan3DBackend:
 
     async def generate_mesh(
         self,
-        prompt: str,
+        image_base64: str,
         seed: int = -1,
         num_inference_steps: int = 50,
         guidance_scale: float = 7.5,
         octree_resolution: int = 256,
     ) -> Optional[bytes]:
         """
-        Generate a textured 3D mesh from a text prompt.
+        Generate a textured 3D mesh from an input image.
+
+        Hunyuan3D-2 is Image-to-3D: it takes a reference image and produces
+        a textured 3D mesh. Background removal (rembg) is applied automatically.
 
         Args:
-            prompt: Text description of the 3D object
+            image_base64: Base64-encoded input image (PNG/JPEG)
             seed: Seed for reproducibility (-1 = random)
             num_inference_steps: Number of shape generation steps
             guidance_scale: CFG scale for shape generation
@@ -241,27 +244,43 @@ class Hunyuan3DBackend:
                     seed = random.randint(0, 2**32 - 1)
 
                 logger.info(
-                    f"[HUNYUAN3D] Generating mesh: prompt='{prompt[:80]}...', "
+                    f"[HUNYUAN3D] Generating mesh: image={len(image_base64)//1024}KB, "
                     f"steps={num_inference_steps}, cfg={guidance_scale}, seed={seed}"
                 )
 
                 def _generate():
                     import io
+                    import base64
+                    from PIL import Image
+
+                    # Decode input image
+                    image_bytes = base64.b64decode(image_base64)
+                    image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
+
+                    # Background removal (required by Hunyuan3D-2)
+                    try:
+                        from hy3dgen.rembg import BackgroundRemover
+                        rembg = BackgroundRemover()
+                        image = rembg(image)
+                        logger.info("[HUNYUAN3D] Background removed")
+                    except Exception as e:
+                        logger.warning(f"[HUNYUAN3D] Background removal failed, using original: {e}")
+
                     generator = torch.Generator(device=self.device).manual_seed(seed)
 
                     # Step 1: Shape generation (DiT flow matching)
                     with torch.no_grad():
                         mesh = self._shape_pipeline(
-                            prompt=prompt,
+                            image=image,
                             num_inference_steps=num_inference_steps,
                             guidance_scale=guidance_scale,
                             generator=generator,
                             octree_resolution=octree_resolution,
-                        )
+                        )[0]
 
                     # Step 2: Texture painting
                     with torch.no_grad():
-                        textured_mesh = self._texture_pipeline(mesh, prompt=prompt)
+                        textured_mesh = self._texture_pipeline(mesh, image=image)
 
                     # Step 3: Export to GLB
                     glb_buffer = io.BytesIO()
