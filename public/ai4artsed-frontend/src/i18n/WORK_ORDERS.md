@@ -21,6 +21,25 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-17-comparison-mode
+- **Session**: 265
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.promptLabel` (NEW): "Your Idea"
+  - `compare.promptPlaceholder` (NEW): "Enter a prompt..."
+  - `compare.platformLanguages` (NEW): "Platform Languages"
+  - `compare.minorityLanguages` (NEW): "Minority Languages"
+  - `compare.selectHint` (NEW): "{count} of {max} languages selected"
+  - `compare.generateAll` (NEW): "Compare All"
+  - `compare.generatingAll` (NEW): "Generating..."
+  - `compare.generating` (NEW): "Generating..."
+  - `compare.waiting` (NEW): "Waiting..."
+  - `compare.chatPlaceholder` (NEW): "Ask Trashy..."
+  - `compare.trashyGreeting` (NEW): greeting text for comparison mode
+  - `compare.trashyTranslating` (NEW): "Translating your prompt..."
+  - `compare.trashyGenerating` (NEW): "Now generating images..."
+- **Context**: Language Comparison Mode — shows how the same prompt in different languages produces different images due to CLIP/T5 encoding bias. Trashy is the AI helper bot. The greeting should be inviting and age-appropriate (ages 9-17). Keep translations concise.
+
 ### WO-2026-03-17-model-provenance-card
 - **Session**: 265
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg

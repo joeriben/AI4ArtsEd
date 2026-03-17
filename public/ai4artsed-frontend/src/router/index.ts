@@ -127,6 +127,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/compare',
+      name: 'comparative-generation',
+      // Session 265: Language comparison mode — same prompt in different languages
+      component: () => import('../views/comparative_generation.vue'),
+    },
+    {
       path: '/usage-agreement',
       name: 'usage-agreement',
       component: () => import('../views/UsageAgreementView.vue'),

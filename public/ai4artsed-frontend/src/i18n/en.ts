@@ -1444,6 +1444,21 @@ export const en = {
       }
     }
   },
+  compare: {
+    promptLabel: 'Your Idea',
+    promptPlaceholder: 'Enter a prompt — e.g. "A beautiful garden with flowers"',
+    platformLanguages: 'Platform Languages',
+    minorityLanguages: 'Minority Languages',
+    selectHint: '{count} of {max} languages selected',
+    generateAll: 'Compare All',
+    generatingAll: 'Generating...',
+    generating: 'Generating...',
+    waiting: 'Waiting...',
+    chatPlaceholder: 'Ask Trashy...',
+    trashyGreeting: 'Hi! I can help you explore how different languages produce different images. Enter a prompt and pick at least 2 languages — I\'ll explain what happens.',
+    trashyTranslating: 'Translating your prompt into the selected languages...',
+    trashyGenerating: 'Now generating images — same seed, same model, only the language changes. Watch what happens!',
+  },
   provenance: {
     title: 'About This Model',
     madeBy: 'Made by:',

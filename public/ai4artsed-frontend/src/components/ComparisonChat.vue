@@ -1,0 +1,267 @@
+<template>
+  <div class="comparison-chat">
+    <div class="chat-header">
+      <img :src="trashyIcon" alt="Trashy" class="trashy-icon" />
+      <span class="chat-title">Trashy</span>
+    </div>
+
+    <div class="chat-messages" ref="messagesRef">
+      <div
+        v-for="msg in messages"
+        :key="msg.id"
+        class="chat-bubble"
+        :class="msg.role"
+      >
+        {{ msg.content }}
+      </div>
+      <div v-if="isLoading" class="chat-bubble assistant loading">
+        <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input
+        v-model="userInput"
+        class="chat-input"
+        :placeholder="t('compare.chatPlaceholder')"
+        @keydown.enter="sendMessage"
+        :disabled="isLoading"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, nextTick, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import trashyIcon from '@/assets/trashy-icon.png'
+
+interface ChatMessage {
+  id: number
+  role: 'user' | 'assistant'
+  content: string
+}
+
+interface Props {
+  comparisonContext: string
+}
+
+const props = defineProps<Props>()
+const { t } = useI18n()
+
+const messages = ref<ChatMessage[]>([])
+const userInput = ref('')
+const isLoading = ref(false)
+const messagesRef = ref<HTMLElement | null>(null)
+let nextId = 0
+
+function addMessage(role: 'user' | 'assistant', content: string) {
+  messages.value.push({ id: nextId++, role, content })
+  nextTick(() => {
+    if (messagesRef.value) {
+      messagesRef.value.scrollTop = messagesRef.value.scrollHeight
+    }
+  })
+}
+
+async function sendMessage() {
+  const text = userInput.value.trim()
+  if (!text || isLoading.value) return
+
+  addMessage('user', text)
+  userInput.value = ''
+  isLoading.value = true
+
+  try {
+    const isDev = import.meta.env.DEV
+    const baseUrl = isDev ? 'http://localhost:17802' : ''
+
+    const chatMessages = messages.value.map(m => ({
+      role: m.role,
+      content: m.content
+    }))
+
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: chatMessages,
+        context: { comparison_mode: true },
+        draft_context: props.comparisonContext,
+        temperature: 0.7,
+        max_tokens: 300,
+      })
+    })
+
+    const data = await response.json()
+    if (data.content) {
+      addMessage('assistant', data.content)
+    } else if (data.error) {
+      addMessage('assistant', `[Error: ${data.error}]`)
+    }
+  } catch (e) {
+    addMessage('assistant', '[Connection error]')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+/** Called by parent to inject Trashy messages proactively */
+function injectMessage(content: string) {
+  addMessage('assistant', content)
+}
+
+onMounted(() => {
+  addMessage('assistant', t('compare.trashyGreeting'))
+})
+
+// Watch context changes — Trashy can react
+watch(() => props.comparisonContext, (ctx) => {
+  if (ctx && ctx.includes('generation_complete')) {
+    sendAutoComment(ctx)
+  }
+})
+
+async function sendAutoComment(context: string) {
+  isLoading.value = true
+  try {
+    const isDev = import.meta.env.DEV
+    const baseUrl = isDev ? 'http://localhost:17802' : ''
+
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'user', content: 'The comparison is complete. Comment on what might be different and why.' }
+        ],
+        context: { comparison_mode: true },
+        draft_context: context,
+        temperature: 0.7,
+        max_tokens: 300,
+      })
+    })
+
+    const data = await response.json()
+    if (data.content) {
+      addMessage('assistant', data.content)
+    }
+  } catch {
+    // Silent fail for auto-comments
+  } finally {
+    isLoading.value = false
+  }
+}
+
+defineExpose({ injectMessage })
+</script>
+
+<style scoped>
+.comparison-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.trashy-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.chat-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-bubble {
+  max-width: 90%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.chat-bubble.assistant {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: rgba(76, 175, 80, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.loading {
+  padding: 0.6rem 1rem;
+}
+
+.typing-dots span {
+  animation: typing 1.2s infinite;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; }
+  30% { opacity: 1; }
+}
+
+.chat-input-area {
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.chat-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.chat-input:disabled {
+  opacity: 0.5;
+}
+</style>
