@@ -50,7 +50,24 @@
     "params": "Undisclosed",
     "license": "Commercial API (usage-based)",
     "fair_culture": "Training data undisclosed",
-    "safety_by_design": "Integrated content moderation, C2PA metadata"
+    "safety_by_design": "Integrated content moderation, C2PA metadata",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": ["Completely undisclosed"],
+      "training_data_size": "Undisclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "San Francisco, US",
+      "known_biases": [
+        { "en": "Strong English-language bias in text understanding", "de": "Starker englischsprachiger Bias im Textverständnis" },
+        { "en": "Tendency toward commercially polished, magazine-quality aesthetics", "de": "Tendenz zu kommerziell polierter, Magazin-Qualität-Ästhetik" },
+        { "en": "Aggressive content filtering may suppress legitimate artistic expression", "de": "Aggressive Inhaltsfilterung kann legitimen künstlerischen Ausdruck unterdrücken" }
+      ],
+      "known_gaps": [
+        { "en": "No transparency: training data, model size, and architecture are trade secrets", "de": "Keine Transparenz: Trainingsdaten, Modellgröße und Architektur sind Geschäftsgeheimnisse" },
+        { "en": "Closed-source: no independent audit of biases possible", "de": "Closed-Source: keine unabhängige Prüfung von Biases möglich" },
+        { "en": "US-centric content moderation policies", "de": "US-zentrierte Inhaltsmoderationsrichtlinien" }
+      ]
+    }
   },
 
   "display": {

@@ -52,7 +52,24 @@
     "quantization": "FP32",
     "license": "Stability Community License (<$1M)",
     "fair_culture": "7,300h CC-licensed audio (Freesound + FMA), full attribution published",
-    "safety_by_design": "PANNs + Audible Magic copyright filtering"
+    "safety_by_design": "PANNs + Audible Magic copyright filtering",
+    "provenance": {
+      "training_data_disclosed": true,
+      "training_data_sources": ["Freesound (CC-licensed community uploads)", "Free Music Archive (FMA, CC-licensed)"],
+      "training_data_size": "7,300 hours of CC-licensed audio",
+      "training_data_consent": "partial",
+      "geographic_origin": "London, UK",
+      "known_biases": [
+        { "en": "T5-Base text encoder is English-only (768d) — non-English prompts poorly understood", "de": "T5-Base Textencoder ist nur englischsprachig (768d) — nicht-englische Prompts schlecht verstanden" },
+        { "en": "Freesound skews toward Western sound recording practices and environments", "de": "Freesound tendiert zu westlichen Tonaufnahmepraktiken und -umgebungen" },
+        { "en": "FMA skews toward Western independent/electronic music", "de": "FMA tendiert zu westlicher Independent-/Elektronik-Musik" }
+      ],
+      "known_gaps": [
+        { "en": "Non-Western instruments and vocal traditions are rare in training data", "de": "Nicht-westliche Instrumente und Vokaltraditionen sind selten in den Trainingsdaten" },
+        { "en": "CC license means creators consented to sharing, but not necessarily to AI training", "de": "CC-Lizenz bedeutet Zustimmung zum Teilen, aber nicht unbedingt zum KI-Training" },
+        { "en": "Full attribution list published — this is the most transparent model in our system", "de": "Vollständige Attributionsliste veröffentlicht — das transparenteste Modell in unserem System" }
+      ]
+    }
   },
 
   "display": {
