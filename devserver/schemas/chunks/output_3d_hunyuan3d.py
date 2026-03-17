@@ -97,20 +97,41 @@ async def execute(
         raise Exception("Hunyuan3D backend not available (GPU service unreachable or hy3dgen not installed)")
 
     # --- Get image input ---
-    # Accept image from: input_image param, image_base64 param, or PREVIOUS_OUTPUT (base64 image data)
-    image_b64 = kwargs.get('input_image') or kwargs.get('image_base64') or None
+    # input_image arrives as a server file path (e.g., /uploads/xxx.png)
+    # We need to read it and convert to base64 for the GPU service
+    input_image_path = kwargs.get('input_image') or None
+    image_b64 = kwargs.get('image_base64') or None
 
-    # If PREVIOUS_OUTPUT looks like base64 image data, use it
+    if not image_b64 and input_image_path:
+        # Read image file from server path and encode as base64
+        import os
+        from pathlib import Path
+
+        # Resolve relative paths against the devserver working directory
+        if input_image_path.startswith('/uploads/'):
+            full_path = Path(os.environ.get('DEVSERVER_ROOT', '.')) / input_image_path.lstrip('/')
+        else:
+            full_path = Path(input_image_path)
+
+        if full_path.exists():
+            with open(full_path, 'rb') as f:
+                image_b64 = base64.b64encode(f.read()).decode('utf-8')
+            logger.info(f"[CHUNK:hunyuan3d] Read image from {full_path}: {len(image_b64)//1024}KB base64")
+        else:
+            logger.warning(f"[CHUNK:hunyuan3d] Image path not found: {full_path}")
+
+    # Fallback: PREVIOUS_OUTPUT might be base64 image data
     if not image_b64 and PREVIOUS_OUTPUT:
         if PREVIOUS_OUTPUT.startswith('data:image/'):
-            # Strip data URI prefix: "data:image/png;base64,..."
             image_b64 = PREVIOUS_OUTPUT.split(',', 1)[1] if ',' in PREVIOUS_OUTPUT else PREVIOUS_OUTPUT
         elif len(PREVIOUS_OUTPUT) > 1000 and not PREVIOUS_OUTPUT.startswith('{'):
-            # Likely raw base64 image data
             image_b64 = PREVIOUS_OUTPUT
 
     if not image_b64:
-        raise ValueError("No image provided for 3D generation. Hunyuan3D-2 requires an input image.")
+        raise ValueError(
+            "No image provided for 3D generation. Hunyuan3D-2 requires an input image. "
+            f"input_image={input_image_path}, PREVIOUS_OUTPUT={'set' if PREVIOUS_OUTPUT else 'empty'}"
+        )
 
     # Seed handling
     actual_seed = seed_override if seed_override is not None else seed
