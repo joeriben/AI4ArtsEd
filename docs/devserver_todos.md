@@ -53,24 +53,15 @@ Bestehende `_call_mistral()`, `_call_ollama()`, `_call_openai()`, `_call_anthrop
 ### Hunyuan3D-2 Aktivierung — custom_rasterizer kompilieren
 
 **Datum:** 2026-03-06 (Session 250)
-**Status:** BLOCKED — custom_rasterizer CUDA Extension nicht kompiliert
-**Kontext:** 3D-Pipeline (Text → GLB Mesh) vollständig implementiert, aber Hunyuan3D-2 Texture-Pipeline benötigt `custom_rasterizer` (CUDA C++ Extension). Kompilierung gegen torch 2.11.0.dev+cu130 Nightly zu riskant vor Workshop.
+**Status:** DONE (2026-03-17) — custom_rasterizer kompiliert und Frontend aktiviert
+**Kontext:** 3D-Pipeline (Text → GLB Mesh) vollständig implementiert. `custom_rasterizer` CUDA Extension erfolgreich gegen torch 2.11.0.dev+cu130 + nvcc 13.0.48 kompiliert.
 
-**3D-Kategorie ist derzeit `disabled: true`** in `text_transformation.vue` — ausgegraut, nicht klickbar.
-
-**Schritte zur Aktivierung:**
-1. `custom_rasterizer` kompilieren (aus hy3dgen oder Hunyuan3D-2 Repo, gegen unseren CUDA 13 Nightly Build)
-2. Testen: `python -c "import custom_rasterizer"` im shared venv
-3. GPU Service neu starten, `/api/hunyuan3d/available` muss `true` returnen
-4. `disabled: true` entfernen in `text_transformation.vue:706`
-5. End-to-End Test: Text → 3D → model-viewer im Browser
-
-**Risiko:** CUDA Nightly ABI-Mismatch kann die gesamte venv brechen. **Nur nach Workshop, mit Backup.**
-
-**Betroffene Dateien:**
-- `public/ai4artsed-frontend/src/views/text_transformation.vue:706` — `disabled: true` entfernen
-- `gpu_service/services/hunyuan3d_backend.py` — Pipeline-Loading
-- Shared venv — `custom_rasterizer` Extension
+**Erledigte Schritte:**
+1. ~~`custom_rasterizer` kompilieren~~ — DONE (aus Hunyuan3D-2 Repo, `setup.py install`)
+2. ~~`python -c "import custom_rasterizer"` testen~~ — DONE (import nach `torch` erfolgreich)
+3. GPU Service neu starten, `/api/hunyuan3d/available` testen — **OFFEN (E2E-Test)**
+4. ~~`disabled: true` entfernen in `text_transformation.vue:706`~~ — DONE
+5. End-to-End Test: Text → 3D → model-viewer im Browser — **OFFEN**
 
 ---
 
