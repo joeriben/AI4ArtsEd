@@ -703,7 +703,6 @@ const availableCategories: Category[] = [
   { id: 'image', label: 'Bild', emoji: '🖼️', color: '#4CAF50' },
   { id: 'video', label: 'Video', emoji: '📽️', color: '#9C27B0' },
   { id: 'sound', label: 'Sound', emoji: '🔊', color: '#FF9800' },
-  { id: '3d', label: '3D', emoji: '🧊', color: '#00BCD4' }
 ]
 
 const configsByCategory: Record<string, Config[]> = {
@@ -724,9 +723,6 @@ const configsByCategory: Record<string, Config[]> = {
     { id: 'stableaudio_open', label: 'Stable\nAudio', emoji: '🔊', color: '#00BCD4', description: 'Open-Source Audio-Generierung (max 47s)', logo: '/logos/stableaudio_logo.png', lightBg: false },
     { id: 'tonejs_code', label: 'Tone.js', emoji: '🎹', color: '#FF4081', description: 'Browser-basierte Musiksynthese mit Live-Code' }
   ],
-  '3d': [
-    { id: 'hunyuan3d_text_to_3d', label: 'Hunyuan\n3D', emoji: '🧊', color: '#00BCD4', description: 'Texturierte 3D-Modelle aus Text generieren' }
-  ]
 }
 
 // ============================================================================
