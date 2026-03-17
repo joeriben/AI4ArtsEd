@@ -172,14 +172,18 @@ async function startComparison() {
           source_language: sourceLang,
         })
       })
-      const translateData = await translateRes.json()
-      if (translateData.status === 'success') {
-        translations = { ...translations, ...translateData.translations }
-      } else {
-        chatRef.value?.injectMessage(`Translation error: ${translateData.error}`)
+      if (!translateRes.ok) {
+        chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
         isGenerating.value = false
         return
       }
+      const translateData = await translateRes.json()
+      if (translateData.status !== 'success') {
+        chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
+        isGenerating.value = false
+        return
+      }
+      translations = { ...translations, ...translateData.translations }
     }
 
     // Update slots with translations
@@ -268,7 +272,8 @@ async function startComparison() {
     // All done
     comparisonContext.value = buildContext('generation_complete')
   } catch (e) {
-    chatRef.value?.injectMessage(`Error: ${e}`)
+    console.error('[COMPARE] Generation failed:', e)
+    chatRef.value?.injectMessage(t('compare.trashyError'))
   } finally {
     isGenerating.value = false
   }

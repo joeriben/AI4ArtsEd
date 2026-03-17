@@ -1458,6 +1458,8 @@ export const en = {
     trashyGreeting: 'Hi! I can help you explore how different languages produce different images. Enter a prompt and pick at least 2 languages — I\'ll explain what happens.',
     trashyTranslating: 'Translating your prompt into the selected languages...',
     trashyGenerating: 'Now generating images — same seed, same model, only the language changes. Watch what happens!',
+    trashyTranslateError: 'The translation service is not available right now. The backend server may need to be restarted.',
+    trashyError: 'Something went wrong. Check the browser console for details, or ask the course instructor.',
   },
   provenance: {
     title: 'About This Model',
