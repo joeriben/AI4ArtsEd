@@ -141,6 +141,8 @@
         ref="pipelineSectionRef"
         :output-image="outputImage"
         :media-type="outputMediaType"
+        :mesh-url="outputMeshUrl"
+        :thumbnail-url="outputThumbnailUrl"
         :is-executing="isPipelineExecuting"
         :progress="generationProgress"
         :estimated-seconds="estimatedGenerationSeconds"
@@ -255,6 +257,8 @@ const isPipelineExecuting = ref(false)
 const generationErrorMessage = ref('')
 const outputImage = ref<string | null>(null)
 const outputMediaType = ref<string>('image')
+const outputMeshUrl = ref<string | null>(null)
+const outputThumbnailUrl = ref<string | null>(null)
 const fullscreenImage = ref<string | null>(null)
 
 // Session 148: SSE-based generation with real-time badge updates
@@ -657,6 +661,8 @@ async function startGeneration() {
   resetGenerationStream()  // Session 148: Reset badges via composable
   generationErrorMessage.value = ''
   outputImage.value = null  // Clear previous output
+  outputMeshUrl.value = null
+  outputThumbnailUrl.value = null
 
   // Scroll to output frame
   await nextTick()
@@ -707,7 +713,19 @@ async function startGeneration() {
       if (runId) {
         currentRunId.value = runId
         outputMediaType.value = mediaType
-        outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
+
+        if (mediaType === '3d') {
+          // 3D model: set mesh URL for <model-viewer>, thumbnail as poster
+          const apiBase = import.meta.env.DEV ? 'http://localhost:17802' : ''
+          outputMeshUrl.value = `${apiBase}/api/media/3d/${runId}`
+          outputThumbnailUrl.value = result.media_output.thumbnail_url
+            ? `${apiBase}${result.media_output.thumbnail_url}`
+            : null
+          outputImage.value = outputThumbnailUrl.value  // fallback for non-3d contexts
+        } else {
+          outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
+        }
+
         executionPhase.value = 'generation_done'
       }
     } else if (result.status === 'blocked') {

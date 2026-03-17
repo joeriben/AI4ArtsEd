@@ -3248,28 +3248,19 @@ async def execute_stage4_generation_only(
                 media_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_3d']
                 media_index = len(media_entities) - 1 if media_entities else 0
 
-                # Serve Blender preview as primary output (image), GLB stays in run dir
+                # Serve as 3D with mesh URL + optional Blender thumbnail as poster
+                image_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_image']
+                thumb_index = len(image_entities) - 1 if image_entities else 0
+                media_output = {
+                    'media_type': '3d',
+                    'url': f'/api/media/3d/{run_id}',
+                    'mesh_url': f'/api/media/3d/{run_id}',
+                    'run_id': run_id,
+                    'index': media_index,
+                    'seed': result_seed,
+                }
                 if image_data_b64:
-                    image_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_image']
-                    thumb_index = len(image_entities) - 1 if image_entities else 0
-                    media_output = {
-                        'media_type': 'image',
-                        'url': f'/api/media/image/{run_id}/{thumb_index}',
-                        'mesh_url': f'/api/media/3d/{run_id}',
-                        'run_id': run_id,
-                        'index': thumb_index,
-                        'seed': result_seed,
-                    }
-                else:
-                    # No Blender preview — serve as 3d type (frontend may not display)
-                    media_output = {
-                        'media_type': '3d',
-                        'url': f'/api/media/3d/{run_id}',
-                        'mesh_url': f'/api/media/3d/{run_id}',
-                        'run_id': run_id,
-                        'index': media_index,
-                        'seed': result_seed,
-                    }
+                    media_output['thumbnail_url'] = f'/api/media/image/{run_id}/{thumb_index}'
             else:
                 return {
                     'success': False,
@@ -5052,27 +5043,18 @@ def interception_pipeline():
                                                 }
                                             )
 
-                                        # Serve Blender preview as primary output if available
+                                        media_output_data = {
+                                            'config': output_config_name,
+                                            'status': 'success',
+                                            'media_type': '3d',
+                                            'filename': saved_filename,
+                                            'url': f'/api/media/3d/{run_id}',
+                                            'mesh_url': f'/api/media/3d/{run_id}',
+                                        }
                                         if thumb_b64:
                                             image_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_image']
                                             thumb_idx = len(image_entities) - 1 if image_entities else 0
-                                            media_output_data = {
-                                                'config': output_config_name,
-                                                'status': 'success',
-                                                'media_type': 'image',
-                                                'filename': saved_filename,
-                                                'url': f'/api/media/image/{run_id}/{thumb_idx}',
-                                                'mesh_url': f'/api/media/3d/{run_id}',
-                                            }
-                                        else:
-                                            media_output_data = {
-                                                'config': output_config_name,
-                                                'status': 'success',
-                                                'media_type': '3d',
-                                                'filename': saved_filename,
-                                                'url': f'/api/media/3d/{run_id}',
-                                                'mesh_url': f'/api/media/3d/{run_id}',
-                                            }
+                                            media_output_data['thumbnail_url'] = f'/api/media/image/{run_id}/{thumb_idx}'
 
                                     else:
                                         logger.error(f"[PYTHON-CHUNK-ROUTE] No audio_data, image_data, video_data, or mesh_data in metadata")

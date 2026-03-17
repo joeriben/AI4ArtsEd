@@ -435,6 +435,46 @@ def get_image(run_id: str, index: int = -1):
         return jsonify({"error": str(e)}), 500
 
 
+@media_bp.route('/3d/<run_id>', methods=['GET'])
+def get_3d_mesh(run_id: str):
+    """
+    Serve 3D mesh (GLB) from local storage by run_id.
+
+    Returns:
+        GLB file or 404 error
+    """
+    try:
+        recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
+        if not recorder:
+            return jsonify({"error": f"Run {run_id} not found"}), 404
+
+        mesh_entities = _find_entities_by_type(recorder.metadata.get('entities', []), '3d')
+
+        if not mesh_entities:
+            return jsonify({"error": f"No 3D mesh found for run {run_id}"}), 404
+
+        mesh_entity = mesh_entities[-1]
+        logger.info(f"[MEDIA] Serving 3D mesh for run {run_id}")
+
+        filename = mesh_entity['filename']
+        file_path = recorder.final_folder / filename
+        if not file_path.exists():
+            return jsonify({"error": f"Mesh file not found: {filename}"}), 404
+
+        return send_file(
+            file_path,
+            mimetype='model/gltf-binary',
+            as_attachment=False,
+            download_name=f'{run_id}.glb'
+        )
+
+    except Exception as e:
+        logger.error(f"Error serving 3D mesh for run {run_id}: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
 @media_bp.route('/images/<run_id>', methods=['GET'])
 def get_images(run_id: str):
     """
