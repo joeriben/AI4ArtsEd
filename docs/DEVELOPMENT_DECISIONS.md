@@ -9,6 +9,21 @@
 
 ---
 
+## 2026-03-17: Usage Agreement — Binding Conditions, Not Informational Notice
+
+**Decision:** Usage page reframed from "Nutzungshinweis" (informational) to "Nutzungsvereinbarung" (binding consent). Intro text ends with "...an folgende Bedingungen geknüpft:", checkbox includes explicit "Ich stimme diesen Bedingungen zu".
+
+**Reasoning:** An informational notice ("Hinweis") carries no binding character — workshop leaders read it and click through. A "Vereinbarung" with "Bedingungen" and explicit consent in the checkbox creates accountability. The text must be clear that proceeding means accepting responsibility, not just acknowledging information.
+
+**Design principles:**
+- Educator-to-educator tone, not legal/bureaucratic
+- No enumeration of harmful content categories (kids read this on iPads — listing gives ideas)
+- German is the primary language; English is a faithful translation, not an independent draft
+
+**Affected Files:** `src/i18n/en.ts`, `src/i18n/de.ts`, `src/i18n/WORK_ORDERS.md`
+
+---
+
 ## 2026-03-13: VLM Safety Prompt — Content-Based Instead of Situation-Based
 
 **Decision:** VLM safety prompt rewritten from `"Is this image safe for children?"` to an explicit checklist of harmful content categories.

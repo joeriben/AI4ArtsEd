@@ -1,8 +1,8 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-10 (Session 254)
-**Scope:** Complete safety architecture — levels, filters, enforcement points, legal basis
+**Last Updated:** 2026-03-17 (Session 264)
+**Scope:** Complete safety architecture — levels, filters, enforcement points, usage agreement, legal basis
 
 ---
 
@@ -315,7 +315,40 @@ Canvas routes (`/api/canvas/execute`, `/execute-stream`, `/execute-batch`) have 
 
 ---
 
-## 6. Configuration
+## 6. Usage Agreement (Human Safety Layer)
+
+**Route:** `/usage-agreement` (`UsageAgreementView.vue`)
+
+Before any platform interaction, workshop leaders must accept a binding usage agreement ("Nutzungsvereinbarung"). This is the **human safety layer** — the technical system protects against content; the agreement establishes pedagogical responsibility.
+
+**Mechanism:**
+- Router guard (`beforeEach`) checks for `usage_agreement_accepted` cookie
+- Missing cookie → redirect to `/usage-agreement` (with return URL)
+- Cookie lifetime: 24 hours (re-consent required daily)
+- Route has `skipAgreementCheck` meta (prevents redirect loop)
+
+**Content (binding conditions):**
+1. Actively supervise participants throughout the session
+2. Set safety level appropriate to age group
+3. Prevent misuse and deliberate circumvention of safety mechanisms
+4. Test the platform before using it with groups
+5. No technical system can replace pedagogical supervision
+
+**Design decisions:**
+- Framed as "Nutzungsvereinbarung" (agreement), not "Nutzungshinweis" (notice) — binding character
+- Intro text ends with "...an folgende Bedingungen geknüpft:" — conditions, not suggestions
+- Checkbox includes explicit consent ("Ich stimme diesen Bedingungen zu")
+- No enumeration of harmful content categories (kids read this on iPads)
+- Educator-to-educator tone, not legal/bureaucratic
+
+**Key files:**
+- `public/.../views/UsageAgreementView.vue` — Page
+- `public/.../router/index.ts` — Guard + route definition
+- `public/.../i18n/en.ts` / `de.ts` — Text under `usageAgreement.*`
+
+---
+
+## 7. Configuration
 
 ### config.py
 
@@ -335,7 +368,7 @@ Static timeouts (not user-configurable):
 
 ---
 
-## 7. Legal Integration
+## 8. Legal Integration
 
 The research mode restriction is codified in `LICENSE.md` §3(e):
 - Requires institutional affiliation (university, Forschungseinrichtung)
@@ -346,7 +379,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 
 ---
 
-## 8. Key Files
+## 9. Key Files
 
 | File | Role |
 |------|------|
@@ -363,11 +396,13 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | `0_setup_ollama_watchdog.sh` | Passwordless sudo setup for self-healing |
 | `public/.../views/text_transformation.vue` | Pre-generation `/safety/quick` gate in `startGeneration()` |
 | `public/.../views/SettingsView.vue` | Safety level dropdown UI |
+| `public/.../views/UsageAgreementView.vue` | Usage agreement (human safety layer) |
+| `public/.../router/index.ts` | Usage agreement guard (cookie check) |
 | `LICENSE.md` §3(e) | Research mode legal restrictions |
 
 ---
 
-## 9. Historical Context
+## 10. Historical Context
 
 | Session | Date | Change |
 |---------|------|--------|
@@ -387,10 +422,12 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 246 | 2026-03-04 | Age filter: fuzzy→stem-prefix matching (false positive fix). LLM prompt: concrete categories + few-shot. Stage 3: only image-relevant S-codes block (S7 etc. ignored) |
 | 254 | 2026-03-10 | VLM safety: fail-open → fail-closed. Only explicit SAFE verdict lets images through |
 | 255 | 2026-03-10 | **CRITICAL**: Kids safety bypass fix. EN/DE weapon terms added. Llama-Guard 1b→8b. DSGVO-first ordering. gpt-oss-120b for kids age-filter. S2+S8 added to Stage 3 blocking set |
+| 263 | 2026-03-17 | Usage agreement page: route, guard, 24h cookie, Vue page |
+| 264 | 2026-03-17 | Usage agreement text rewrite: "Nutzungshinweis" → "Nutzungsvereinbarung" (binding conditions) |
 
 ---
 
-## 10. Related Documents
+## 11. Related Documents
 
 - `docs/reference/safety-architecture-matters.md` — Original §86a failure analysis (Session 14)
 - `docs/HANDOVER_SAFETY_REFACTORING.md` — Planned endpoint separation (2026-01-26)

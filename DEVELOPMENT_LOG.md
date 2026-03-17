@@ -1,5 +1,26 @@
 # Development Log
 
+## Session 264 - Rewrite Usage Agreement Text
+**Date:** 2026-03-17
+**Focus:** Rewrite usage agreement from informational notice to binding consent page.
+
+### Problem
+Session 263 built the technical infrastructure (route, guard, 24h cookie, Vue page) but the text was bureaucratic ("Zollamt-Sprache") and framed as informational notice rather than binding conditions.
+
+### Changes
+- **Title**: "Nutzungshinweis" → "Nutzungsvereinbarung" / "Usage Notice" → "Usage Agreement"
+- **Intro text**: Rewritten to end with "Der Einsatz ist deshalb an folgende Bedingungen geknüpft:" — makes clear these are conditions, not suggestions
+- **Bullet points**: Warmer verbs ("begleiten" statt "sicherstellen", "wählen" statt "einstellen"), tighter phrasing
+- **Checkbox**: Now includes explicit consent ("Ich stimme diesen Bedingungen zu")
+- **Work Order**: Updated for 7 remaining languages (MODIFIED, not NEW)
+
+### Files Modified
+- `public/ai4artsed-frontend/src/i18n/de.ts` — German text
+- `public/ai4artsed-frontend/src/i18n/en.ts` — English text
+- `public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md` — Updated WO
+
+---
+
 ## Session 261 - Fix Cross-Device Prompt/Image Bleeding Under Concurrent Load
 **Date:** 2026-03-13
 **Focus:** Fix critical state isolation bug causing prompt/seed/image leaking between devices during workshops.
