@@ -344,6 +344,7 @@ interface Category {
 const availableCategories: Category[] = [
   { id: 'image', label: 'Bild', emoji: '🖼️', color: '#4CAF50' },
   { id: 'video', label: 'Video', emoji: '🎬', color: '#9C27B0' },
+  { id: '3d', label: '3D', emoji: '🧊', color: '#00BCD4' },
   { id: 'sound', label: 'Sound', emoji: '🔊', color: '#FF9800', disabled: true }
 ]
 
@@ -388,6 +389,18 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       color: '#9C27B0',
       logo: '/logos/Qwen_logo.png',
       lightBg: false
+    }
+  ],
+  '3d': [
+    {
+      id: 'hunyuan3d_text_to_3d',
+      label: 'Hunyuan\n3D',
+      emoji: '🧊',
+      name: 'Hunyuan3D-2 Image-to-3D',
+      quality: 4,
+      speed: 2,
+      duration: '60',
+      color: '#00BCD4'
     }
   ],
   sound: []   // Future
