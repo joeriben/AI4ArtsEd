@@ -163,7 +163,7 @@ async function startComparison() {
     let translations: Record<string, string> = { [sourceLang]: userPrompt.value }
 
     if (targetLanguages.length > 0) {
-      const translateRes = await fetch(`${baseUrl}/api/compare/translate`, {
+      const translateRes = await fetch(`${baseUrl}/api/schema/compare/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
