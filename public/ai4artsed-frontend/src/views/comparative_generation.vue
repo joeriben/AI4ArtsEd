@@ -162,28 +162,28 @@ async function startComparison() {
 
     let translations: Record<string, string> = { [sourceLang]: userPrompt.value }
 
-    if (targetLanguages.length > 0) {
-      const translateRes = await fetch(`${baseUrl}/api/schema/compare/translate`, {
+    // Translate to each target language using the same endpoint as MediaInputBox
+    for (const lang of targetLanguages) {
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: userPrompt.value,
-          languages: targetLanguages,
-          source_language: sourceLang,
-        })
+        body: JSON.stringify({ text: userPrompt.value, target_language: lang })
       })
-      if (!translateRes.ok) {
+      if (!res.ok) {
+        console.error(`[COMPARE] Translation to ${lang} failed: HTTP ${res.status}`)
         chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
         isGenerating.value = false
         return
       }
-      const translateData = await translateRes.json()
-      if (translateData.status !== 'success') {
+      const data = await res.json()
+      if (data.status === 'success' && data.translated_text) {
+        translations[lang] = data.translated_text
+      } else {
+        console.error(`[COMPARE] Translation to ${lang} failed:`, data.error)
         chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
         isGenerating.value = false
         return
       }
-      translations = { ...translations, ...translateData.translations }
     }
 
     // Update slots with translations

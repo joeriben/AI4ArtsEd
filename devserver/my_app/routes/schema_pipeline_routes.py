@@ -2162,41 +2162,55 @@ def translate_text():
         if not text:
             return jsonify({'status': 'error', 'error': 'text ist erforderlich'}), 400
 
-        if target_language != 'en':
-            return jsonify({'status': 'error', 'error': 'Nur target_language=en wird unterstützt'}), 400
-
         logger.info(f"[TRANSLATE-ENDPOINT] Translating {len(text)} chars to {target_language}")
 
         if pipeline_executor is None:
             init_schema_engine()
 
-        # Use the existing translation pipeline
         import time
         start_time = time.time()
 
-        result = asyncio.run(pipeline_executor.execute_pipeline(
-            'pre_output/translation_en',
-            text,
-        ))
+        if target_language == 'en':
+            # Original path: use the existing DE→EN translation pipeline
+            result = asyncio.run(pipeline_executor.execute_pipeline(
+                'pre_output/translation_en',
+                text,
+            ))
+            if result.success:
+                translated = result.final_output
+            else:
+                return jsonify({'status': 'error', 'error': result.error or 'Translation failed'}), 500
+        else:
+            # Session 265: Generic translation via LLM (same model as Stage 3)
+            from my_app.routes.chat_routes import call_chat_helper
+            LANG_NAMES = {
+                'ar': 'Arabic', 'bg': 'Bulgarian', 'de': 'German', 'en': 'English',
+                'es': 'Spanish', 'fr': 'French', 'he': 'Hebrew', 'tr': 'Turkish',
+                'uk': 'Ukrainian', 'ko': 'Korean', 'hsb': 'Upper Sorbian',
+                'dsb': 'Lower Sorbian', 'fry': 'Frisian', 'yo': 'Yoruba',
+                'sw': 'Swahili', 'qu': 'Quechua', 'cy': 'Welsh', 'hi': 'Hindi',
+                'ja': 'Japanese', 'zh': 'Chinese',
+            }
+            lang_name = LANG_NAMES.get(target_language, target_language)
+            messages = [
+                {'role': 'system', 'content': f'You are a precise translator. Translate the text into {lang_name}. Output ONLY the translation, nothing else.'},
+                {'role': 'user', 'content': text}
+            ]
+            llm_result = call_chat_helper(messages, temperature=0.2, max_tokens=2048)
+            translated = (llm_result.get('content') or '').strip()
+            if not translated:
+                return jsonify({'status': 'error', 'error': 'Translation returned empty result'}), 500
 
         duration_ms = (time.time() - start_time) * 1000
+        logger.info(f"[TRANSLATE-ENDPOINT] Success in {duration_ms:.0f}ms: {translated[:100]}...")
 
-        if result.success:
-            translated = result.final_output
-            logger.info(f"[TRANSLATE-ENDPOINT] Success in {duration_ms:.0f}ms: {translated[:100]}...")
-
-            return jsonify({
-                'status': 'success',
-                'translated_text': translated,
-                'source_language': 'de',
-                'target_language': target_language,
-                'duration_ms': duration_ms
-            })
-        else:
-            return jsonify({
-                'status': 'error',
-                'error': result.error or 'Translation failed'
-            }), 500
+        return jsonify({
+            'status': 'success',
+            'translated_text': translated,
+            'source_language': data.get('source_language', 'auto'),
+            'target_language': target_language,
+            'duration_ms': duration_ms
+        })
 
     except Exception as e:
         logger.error(f"[TRANSLATE-ENDPOINT] Error: {e}")
