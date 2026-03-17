@@ -708,7 +708,7 @@ async function startGeneration() {
       const mediaType = result.media_output.media_type || 'image'
       const mediaIndex = result.media_output.index ?? 0
 
-      console.log('[Generation] Success, run_id:', runId, 'media_type:', mediaType, 'index:', mediaIndex)
+      console.log('[Generation] Success, run_id:', runId, 'media_type:', mediaType, 'index:', mediaIndex, 'full media_output:', JSON.stringify(result.media_output))
 
       if (runId) {
         currentRunId.value = runId
@@ -716,12 +716,12 @@ async function startGeneration() {
 
         if (mediaType === '3d') {
           // 3D model: set mesh URL for <model-viewer>, thumbnail as poster
-          const apiBase = import.meta.env.DEV ? 'http://localhost:17802' : ''
-          outputMeshUrl.value = `${apiBase}/api/media/3d/${runId}`
-          outputThumbnailUrl.value = result.media_output.thumbnail_url
-            ? `${apiBase}${result.media_output.thumbnail_url}`
-            : null
-          outputImage.value = outputThumbnailUrl.value  // fallback for non-3d contexts
+          const meshUrl = result.media_output.mesh_url || result.media_output.url || `/api/media/3d/${runId}`
+          const thumbUrl = result.media_output.thumbnail_url || null
+          console.log('[3D] meshUrl:', meshUrl, 'thumbnailUrl:', thumbUrl)
+          outputMeshUrl.value = meshUrl
+          outputThumbnailUrl.value = thumbUrl
+          outputImage.value = thumbUrl  // fallback for non-3d contexts
         } else {
           outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
         }

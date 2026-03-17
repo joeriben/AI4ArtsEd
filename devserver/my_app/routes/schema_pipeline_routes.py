@@ -4161,14 +4161,24 @@ def legacy_workflow():
 
         # Determine media_type from workflow metadata (set in backend_router from chunk definition)
         response_media_type = output_result.metadata.get('media_type', 'image') if output_result.metadata else 'image'
+        media_output_dict = {
+            'media_type': response_media_type,
+            'url': f'/api/media/{response_media_type}/{run_id}',
+            'run_id': run_id,
+            'seed': result_seed
+        }
+        # 3D: add mesh_url and thumbnail_url for <model-viewer>
+        if response_media_type == '3d':
+            media_output_dict['mesh_url'] = f'/api/media/3d/{run_id}'
+            # Check if Blender thumbnail was saved
+            if recorder and recorder.metadata:
+                image_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == 'output_image']
+                if image_entities:
+                    thumb_index = len(image_entities) - 1
+                    media_output_dict['thumbnail_url'] = f'/api/media/image/{run_id}/{thumb_index}'
         response_data = {
             'status': 'success',
-            'media_output': {
-                'media_type': response_media_type,
-                'url': f'/api/media/{response_media_type}/{run_id}',
-                'run_id': run_id,
-                'seed': result_seed
-            },
+            'media_output': media_output_dict,
             'run_id': run_id,
             'duration_ms': duration_ms
         }
