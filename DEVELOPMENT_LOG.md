@@ -1,5 +1,43 @@
 # Development Log
 
+## Session 265 - Hunyuan3D-2 Activation + Workshop Performance Report
+**Date:** 2026-03-17
+**Focus:** Workshop 17.03 performance analysis, Hunyuan3D-2 Image-to-3D pipeline end-to-end activation.
+
+### Workshop Performance Report (17.03.2026)
+- **4th workshop with 0% software error rate**, 100% net success
+- 257 images via SD3.5, 11 devices, ~1h 20min active
+- **VLM false-positive rate: 22.8% → 2.4%** (Session 261 prompt fix validated)
+- **ComfyUI not started** (auto-start bug) → 13/32 configs unavailable, no video. Fix already in `80bed1e`
+- 5x Ollama circuit-breaker events (self-healed), GPU Service queue peaked at 82 connections
+- Report: `docs/technical_reports/2026-03-17_workshop_performance.md`
+
+### Hunyuan3D-2 Activation
+**Blocker resolved:** `custom_rasterizer` CUDA extension compiled successfully against torch 2.11.0.dev+cu130 / nvcc 13.0.48 / Python 3.13. The "CUDA nightly ABI risk" from Session 250 turned out to be a non-issue.
+
+**Critical fix:** Hunyuan3D-2 is **Image-to-3D**, not Text-to-3D. The Session 250 implementation incorrectly passed `prompt=` to `shape_pipeline()` which expects `image=`. Fixed entire chain:
+- GPU backend: accepts `image_base64`, decodes to PIL, runs rembg background removal
+- Shape pipeline: `shape_pipeline(image=image)` → mesh
+- Texture pipeline: `texture_pipeline(mesh, image=image)` → textured mesh → GLB export
+- Blender headless Eevee renders preview PNG as poster image
+
+**Pipeline:** User uploads image on i2x page → 3D category → Hunyuan3D-2 → interactive `<model-viewer>` with rotate/zoom.
+
+### Changes
+- `docs/technical_reports/2026-03-17_workshop_performance.md` — NEW: Workshop report
+- `gpu_service/services/hunyuan3d_backend.py` — Image-to-3D with rembg
+- `gpu_service/routes/hunyuan3d_routes.py` — Accept `image_base64`
+- `devserver/my_app/services/hunyuan3d_client.py` — Send `image_base64`
+- `devserver/schemas/chunks/output_3d_hunyuan3d.py` — Read image from server path, convert to base64
+- `devserver/schemas/configs/output/hunyuan3d_text_to_3d.json` — img2img=true, renamed Image-to-3D
+- `devserver/my_app/routes/schema_pipeline_routes.py` — Serve 3D media_type with mesh_url + thumbnail_url
+- `devserver/my_app/routes/media_routes.py` — NEW: `/api/media/3d/<run_id>` serve route for GLB
+- `public/ai4artsed-frontend/src/views/image_transformation.vue` — 3D category + meshUrl/thumbnailUrl props
+- `public/ai4artsed-frontend/src/views/text_transformation.vue` — Removed 3D category (image input required)
+- `docs/devserver_todos.md` — Hunyuan3D TODO marked DONE
+
+---
+
 ## Session 264 - Rewrite Usage Agreement Text
 **Date:** 2026-03-17
 **Focus:** Rewrite usage agreement from informational notice to binding consent page.
