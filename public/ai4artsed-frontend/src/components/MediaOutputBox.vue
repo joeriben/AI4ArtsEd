@@ -279,6 +279,13 @@
         </div>
       </div>
 
+      <!-- Model Provenance Card (all modes, post-generation) -->
+      <ModelProvenanceCard
+        v-if="outputImage && modelMeta"
+        :meta="modelMeta"
+        :safety-level="mapUiModeToSafetyLevel(uiMode ?? 'youth')"
+      />
+
       <!-- Image Analysis Section -->
       <Transition name="analysis-expand">
         <div v-if="showAnalysis && analysisData" class="image-analysis-section">
@@ -314,6 +321,7 @@ import { ref } from 'vue'
 import '@google/model-viewer'
 import RandomEdutainmentAnimation from '@/components/edutainment/RandomEdutainmentAnimation.vue'
 import DenoisingProgressView from '@/components/edutainment/DenoisingProgressView.vue'
+import ModelProvenanceCard from '@/components/ModelProvenanceCard.vue'
 
 // Captured from DenoisingProgressView on unmount
 const generationEnergyWh = ref(0)
@@ -382,6 +390,13 @@ defineEmits<{
   'close-analysis': []
   'toggle-favorite': []
 }>()
+
+/** Map uiMode prop to safety level for provenance card */
+function mapUiModeToSafetyLevel(mode: string): string {
+  if (mode === 'kids') return 'kids'
+  if (mode === 'expert') return 'adult'
+  return 'youth'
+}
 
 /**
  * Resolve a human-readable model name from meta (reads display_name from config)

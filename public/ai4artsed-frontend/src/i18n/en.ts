@@ -1444,6 +1444,30 @@ export const en = {
       }
     }
   },
+  provenance: {
+    title: 'About This Model',
+    madeBy: 'Made by:',
+    learnedFrom: 'Learned from:',
+    howBig: 'How big:',
+    kidsNote: 'Not all creators were asked if the AI could learn from their work.',
+    publisher: 'Publisher',
+    architecture: 'Architecture',
+    parameters: 'Parameters',
+    license: 'License',
+    trainingData: 'Training Data',
+    safetyByDesign: 'Safety by Design',
+    sources: 'Data Sources',
+    consent: 'Creator Consent',
+    consentValues: {
+      none: 'None',
+      partial: 'Partial',
+      full: 'Full',
+      unknown: 'Unknown',
+    },
+    knownBiases: 'Known Biases',
+    knownGaps: 'Known Gaps',
+    youthReflection: 'Every model has a perspective shaped by its training data. What voices might be missing?',
+  },
   edutainment: {
     ui: {
       didYouKnow: '🤔 Did you know?',

@@ -21,6 +21,32 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-17-model-provenance-card
+- **Session**: 265
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `provenance.title` (NEW): "About This Model"
+  - `provenance.madeBy` (NEW): "Made by:"
+  - `provenance.learnedFrom` (NEW): "Learned from:"
+  - `provenance.howBig` (NEW): "How big:"
+  - `provenance.kidsNote` (NEW): "Not all creators were asked if the AI could learn from their work."
+  - `provenance.publisher` (NEW): "Publisher"
+  - `provenance.architecture` (NEW): "Architecture"
+  - `provenance.parameters` (NEW): "Parameters"
+  - `provenance.license` (NEW): "License"
+  - `provenance.trainingData` (NEW): "Training Data"
+  - `provenance.safetyByDesign` (NEW): "Safety by Design"
+  - `provenance.sources` (NEW): "Data Sources"
+  - `provenance.consent` (NEW): "Creator Consent"
+  - `provenance.consentValues.none` (NEW): "None"
+  - `provenance.consentValues.partial` (NEW): "Partial"
+  - `provenance.consentValues.full` (NEW): "Full"
+  - `provenance.consentValues.unknown` (NEW): "Unknown"
+  - `provenance.knownBiases` (NEW): "Known Biases"
+  - `provenance.knownGaps` (NEW): "Known Gaps"
+  - `provenance.youthReflection` (NEW): "Every model has a perspective shaped by its training data. What voices might be missing?"
+- **Context**: Model Provenance Card — shows training data origin, known biases, and known gaps for each AI model. Displayed post-generation under the output image/audio. Kids mode uses simplified language, youth mode adds a reflection question. The `kidsNote` and `youthReflection` are pedagogically important — they should be translated with care for age-appropriate tone.
+
 ### WO-2026-03-17-usage-agreement
 - **Session**: 264
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
