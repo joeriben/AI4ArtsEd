@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 interface ChatMessage {
@@ -48,6 +49,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const { t } = useI18n()
+const userPreferences = useUserPreferencesStore()
 
 const messages = ref<ChatMessage[]>([])
 const userInput = ref('')
@@ -87,7 +89,7 @@ async function sendMessage() {
       body: JSON.stringify({
         messages: chatMessages,
         context: { comparison_mode: true },
-        draft_context: props.comparisonContext,
+        draft_context: `[User language: ${userPreferences.language}]\n${props.comparisonContext}`,
         temperature: 0.7,
         max_tokens: 300,
       })
