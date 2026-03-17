@@ -88,14 +88,28 @@ def _should_train_now(schedule):
 
 
 def _is_training_running():
-    """Check if training process is alive."""
+    """Check if training process is alive via PID file or process scan."""
+    # Try PID file first
     if PID_FILE.exists():
         try:
             pid = int(PID_FILE.read_text().strip())
             os.kill(pid, 0)
             return True, pid
         except (ProcessLookupError, ValueError):
-            return False, None
+            pass
+
+    # Fallback: scan for running rave train process
+    try:
+        result = subprocess.run(
+            ["pgrep", "-f", "rave train.*mini70"],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0:
+            pid = int(result.stdout.strip().split('\n')[0])
+            return True, pid
+    except Exception:
+        pass
+
     return False, None
 
 
