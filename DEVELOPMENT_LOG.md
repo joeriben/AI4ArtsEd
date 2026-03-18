@@ -1,5 +1,53 @@
 # Development Log
 
+## Session 266 - Compare Page Refactor + Trashy System Prompt Rewrite
+**Date:** 2026-03-18
+**Focus:** Compare page architectural cleanup (eliminate parallel code), Trashy tonality/personality rewrite across all system prompts.
+
+### Compare Page Refactor
+**Root problem:** Compare page had a complete parallel structure instead of reusing existing components. Custom progress bar with `setInterval` polling, hand-built SVG action buttons, fake `device_id` per slot, no model loading display.
+
+**Fix:** Replaced everything with `MediaOutputBox` — the same component used by t2x, i2x, surrealizer, etc. Each slot now gets its own `useGenerationStream()` instance with direct reactive binding (no polling). This gives compare page for free: model loading display, denoising preview, edutainment animations, favorites, forward, download, fullscreen zoom.
+
+**Other changes:**
+- Persistent Trashy chat: `resetChat()` → `onNewRun()` with visual separators. Chat accompanies full session.
+- InterceptionPresetOverlay for context enrichment (prompt transformation before comparison)
+- Fullscreen image modal on click (same pattern as t2x)
+- Bildinterpretation button disabled (not yet implemented for compare)
+- `padding-bottom: 80px` for FooterGallery clearance
+- Fixed `device_id`: uses shared `useDeviceId()` instead of per-slot fake IDs
+
+### Trashy System Prompt Rewrite (ALL prompts)
+**Problem:** Trashy simulated emotions ("Jetzt wird's spannend!"), used emojis, gave context-insensitive generic suggestions from a memorized list (wedding, breakfast, hero...) regardless of actual comparison results.
+
+**Fix — three prompts rewritten:**
+1. **GENERAL_SYSTEM_PROMPT**: Added "WHAT YOU ARE" block (honest machine identity), ABSOLUTE RULES (no emojis, no emotion simulation)
+2. **SESSION_SYSTEM_PROMPT_TEMPLATE**: Same identity/rules block, removed "encouraging" instruction
+3. **COMPARISON_SYSTEM_PROMPT_TEMPLATE**: Complete rewrite.
+   - Removed PROACTIVE PROMPT SUGGESTIONS section with generic example lists
+   - Post-comparison: analyze ONLY concrete VLM descriptions, derive follow-ups from observations
+   - ONE well-derived suggestion per run instead of 2-3 generic ones
+   - "Speak factually, clearly, resonantly. A machine that respects its interlocutors."
+
+### Chat max_tokens
+- Increased from 500 to 2048. Opus analysis was being truncated mid-sentence.
+
+### i18n
+- 5 new keys in `compare.*` (favorite, unfavorite, forward, download, analyze)
+- Work order WO-2026-03-18-compare-slot-actions added
+
+### Changes
+- `public/ai4artsed-frontend/src/views/comparative_generation.vue` — Full refactor: MediaOutputBox, fullscreen, persistent chat
+- `public/ai4artsed-frontend/src/components/ComparisonChat.vue` — onNewRun with separators, device_id, updated prompts
+- `devserver/my_app/routes/chat_routes.py` — All 3 system prompts rewritten, max_tokens 500→2048
+- `public/ai4artsed-frontend/src/i18n/en.ts` — 5 new compare action keys
+- `public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md` — WO-2026-03-18
+
+### Ideas (for future session)
+- **Collaborative resource planning**: Workshop groups negotiate which models to load together, supported by Trashy showing VRAM capacity. Could start sessions with a planning preamble (shared Vue across all logged-in devices).
+
+---
+
 ## Session 265 - Hunyuan3D-2 Activation + Workshop Performance Report
 **Date:** 2026-03-17
 **Focus:** Workshop 17.03 performance analysis, Hunyuan3D-2 Image-to-3D pipeline end-to-end activation.
