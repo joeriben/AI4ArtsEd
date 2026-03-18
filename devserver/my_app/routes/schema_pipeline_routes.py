@@ -2350,7 +2350,7 @@ def compare_describe():
         # Find the output image via recorder
         from config import JSON_STORAGE_DIR
         from my_app.services.pipeline_recorder import LivePipelineRecorder
-        recorder = LivePipelineRecorder(run_id=run_id, config_name='compare', base_path=JSON_STORAGE_DIR)
+        recorder = LivePipelineRecorder(run_id=run_id, config_name='compare', safety_level=config.DEFAULT_SAFETY_LEVEL, base_path=JSON_STORAGE_DIR)
         image_path = recorder.get_entity_path('output_image')
         if not image_path or not image_path.exists():
             return jsonify({'status': 'error', 'error': 'No image found for run_id'}), 404
