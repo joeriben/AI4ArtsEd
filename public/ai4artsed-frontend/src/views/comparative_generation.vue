@@ -69,11 +69,12 @@
               :ui-mode="uiModeStore.mode"
               :run-id="slot.runId"
               :is-favorited="slot.isFavorited"
+              :is-analyzing="true"
               forward-button-title="Weiterreichen zu Bild-Transformation"
               @toggle-favorite="toggleSlotFavorite(slot)"
               @forward="forwardToPage(slot)"
               @download="downloadSlotImage(slot)"
-              @analyze="analyzeSlotImage(slot)"
+              @image-click="fullscreenImage = $event"
             />
           </div>
           <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
@@ -95,6 +96,16 @@
       @close="showPresetOverlay = false"
       @preset-selected="handlePresetSelected"
     />
+
+    <!-- Fullscreen image modal (same pattern as t2x) -->
+    <Teleport to="body">
+      <Transition name="modal-fade">
+        <div v-if="fullscreenImage" class="fullscreen-modal" @click="fullscreenImage = null">
+          <img :src="fullscreenImage" alt="" class="fullscreen-image" />
+          <button class="close-fullscreen" @click="fullscreenImage = null">&times;</button>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -130,6 +141,7 @@ const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
 const showPresetOverlay = ref(false)
 const isEnriching = ref(false)
+const fullscreenImage = ref<string | null>(null)
 
 const availableModels = [
   { id: 'sd35_large', label: 'SD 3.5 Large' },
@@ -681,5 +693,50 @@ async function startComparison() {
   .compare-page {
     padding: 0.5rem;
   }
+}
+
+/* Fullscreen image modal (same as t2x) */
+.fullscreen-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.fullscreen-image {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.close-fullscreen {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-fullscreen:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
 }
 </style>
