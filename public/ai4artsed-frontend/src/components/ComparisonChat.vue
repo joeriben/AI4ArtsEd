@@ -78,7 +78,8 @@ async function sendMessage() {
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
 
-    const chatMessages = messages.value.map(m => ({
+    // Build history from prior messages (exclude the just-added user message)
+    const history = messages.value.slice(0, -1).map(m => ({
       role: m.role,
       content: m.content
     }))
@@ -87,17 +88,16 @@ async function sendMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: chatMessages,
+        message: text,
+        history,
         context: { comparison_mode: true, language: userPreferences.language },
         draft_context: props.comparisonContext,
-        temperature: 0.7,
-        max_tokens: 300,
       })
     })
 
     const data = await response.json()
-    if (data.content) {
-      addMessage('assistant', data.content)
+    if (data.reply) {
+      addMessage('assistant', data.reply)
     } else if (data.error) {
       addMessage('assistant', `[Error: ${data.error}]`)
     }
@@ -140,19 +140,15 @@ async function sendAutoComment(context: string) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: [
-          { role: 'user', content: 'The comparison is complete. Comment on what might be different and why.' }
-        ],
-        context: { comparison_mode: true },
+        message: 'The comparison is complete. Comment on visible differences between the language variants and explain why CLIP/T5 encoding causes this.',
+        context: { comparison_mode: true, language: userPreferences.language },
         draft_context: context,
-        temperature: 0.7,
-        max_tokens: 300,
       })
     })
 
     const data = await response.json()
-    if (data.content) {
-      addMessage('assistant', data.content)
+    if (data.reply) {
+      addMessage('assistant', data.reply)
     }
   } catch {
     // Silent fail for auto-comments
