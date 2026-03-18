@@ -67,6 +67,41 @@ def _extract_verdict(text: str) -> str | None:
     return None
 
 
+def vlm_describe_image(image_path: str | Path) -> str:
+    """
+    Describe image content using VLM. Same model and call pattern as vlm_safety_check.
+    Returns description string, or empty string on failure.
+    """
+    try:
+        image_path = Path(image_path)
+        if not image_path.exists():
+            return ''
+
+        img = Image.open(image_path)
+        if max(img.size) > VLM_MAX_SIZE:
+            img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=80)
+        image_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+        from my_app.services.llm_backend import get_llm_backend
+        result = get_llm_backend().chat(
+            model=config.VLM_SAFETY_MODEL,
+            messages=[{'role': 'user', 'content': 'Describe this image in 2-3 sentences. Focus on subject, composition, colors, and style.'}],
+            images=[image_b64],
+            temperature=0.0,
+            enable_thinking=False,
+        )
+        if result is None:
+            return ''
+        content = result.get('content', '').strip()
+        thinking = (result.get('thinking') or '').strip()
+        return thinking or content
+    except Exception as e:
+        logger.error(f"[VLM-DESCRIBE] Failed: {e}")
+        return ''
+
+
 def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, str, str]:
     """
     Check image safety via qwen3-vl. Returns (is_safe, reason, description).

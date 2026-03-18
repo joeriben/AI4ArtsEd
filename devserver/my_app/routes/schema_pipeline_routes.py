@@ -2330,6 +2330,39 @@ def compare_translate():
         return jsonify({'status': 'error', 'error': str(e)}), 500
 
 
+@schema_bp.route('/compare/describe', methods=['POST'])
+def compare_describe():
+    """
+    Session 265: Describe a generated image via VLM.
+    Same model as Stage 4 VLM safety check, same call pattern.
+
+    Request: { "run_id": "run_..." }
+    Response: { "status": "success", "description": "..." }
+    """
+    from my_app.utils.vlm_safety import vlm_describe_image
+
+    try:
+        data = request.get_json()
+        run_id = data.get('run_id')
+        if not run_id:
+            return jsonify({'status': 'error', 'error': 'run_id required'}), 400
+
+        # Find the output image via recorder
+        from config import JSON_STORAGE_DIR
+        from my_app.services.pipeline_recorder import LivePipelineRecorder
+        recorder = LivePipelineRecorder(run_id=run_id, config_name='compare', base_path=JSON_STORAGE_DIR)
+        image_path = recorder.get_entity_path('output_image')
+        if not image_path or not image_path.exists():
+            return jsonify({'status': 'error', 'error': 'No image found for run_id'}), 404
+
+        description = vlm_describe_image(image_path)
+        return jsonify({'status': 'success', 'description': description})
+
+    except Exception as e:
+        logger.error(f"[COMPARE-DESCRIBE] Error: {e}", exc_info=True)
+        return jsonify({'status': 'error', 'error': str(e)}), 500
+
+
 @schema_bp.route('/pipeline/log-prompt-change', methods=['POST'])
 def log_prompt_change():
     """

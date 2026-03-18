@@ -241,30 +241,30 @@ async function startComparison() {
       }
     }
 
-    // Step 4: Analyze generated images and feed to Trashy
+    // Step 4: Describe generated images via VLM and feed to Trashy
     const successfulSlots = slots.value.filter(s => s.runId && s.outputUrl)
     if (successfulSlots.length >= 2) {
-      const analyses: string[] = []
+      const descriptions: string[] = []
       for (const slot of successfulSlots) {
         try {
-          const res = await fetch(`${baseUrl}/api/image/analyze`, {
+          const res = await fetch(`${baseUrl}/api/schema/compare/describe`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ run_id: slot.runId, analysis_type: 'kritisch' })
+            body: JSON.stringify({ run_id: slot.runId })
           })
           if (res.ok) {
             const data = await res.json()
-            if (data.success && data.analysis) {
-              analyses.push(`[${slot.langName} (${slot.langCode})]:\n${data.analysis}`)
+            if (data.status === 'success' && data.description) {
+              descriptions.push(`[${slot.langName} (${slot.langCode})]:\n${data.description}`)
             }
           }
         } catch {
-          // Non-critical — Trashy works without analyses too
+          // Non-critical
         }
       }
 
-      if (analyses.length > 0) {
-        comparisonContext.value = buildContext('generation_complete') + '\n\n--- Image Analyses ---\n' + analyses.join('\n\n')
+      if (descriptions.length > 0) {
+        comparisonContext.value = buildContext('generation_complete') + '\n\n--- VLM Image Descriptions ---\n' + descriptions.join('\n\n')
       } else {
         comparisonContext.value = buildContext('generation_complete')
       }
