@@ -92,11 +92,12 @@ def reload_user_settings():
         settings_file = Path(__file__).parent.parent / "user_settings.json"
 
         if not settings_file.exists():
-            from config import _SETTINGS_DEFAULTS
-            with open(settings_file, 'w') as f:
-                json.dump(_SETTINGS_DEFAULTS, f, indent=2)
-            logging.info(f"[CONFIG] Created {settings_file.name} from _SETTINGS_DEFAULTS")
-            # Fall through to load the just-created file
+            logging.error(
+                f"[CONFIG] FATAL: {settings_file.name} not found. "
+                "This file is required — it contains all model assignments. "
+                "Copy user_settings.json.example or configure via Settings UI."
+            )
+            sys.exit(1)
 
         with open(settings_file) as f:
             data = json.load(f)

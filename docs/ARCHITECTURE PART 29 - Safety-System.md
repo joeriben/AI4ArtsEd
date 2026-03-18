@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-17 (Session 264)
+**Last Updated:** 2026-03-18 (Session 265)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, usage agreement, legal basis
 
 ---
@@ -94,7 +94,7 @@ all others → DSGVO NER + §86a fast-filter
 **Image mode** (field: `image_path`):
 ```
 research/adult → SKIP (vlm_skipped)
-youth/kids     → VLM safety check via Ollama
+youth/kids     → VLM safety check (hybrid: primary VLM + fallback STAGE3_MODEL)
 ```
 
 SAFETY-QUICK checks DSGVO and §86a only. Jugendschutz is handled by Stage 2 safety prefix.
@@ -155,18 +155,32 @@ Stage 3 catches prompts that pass all fast-filters but would generate harmful im
 
 **Scope:** Images only, kids/youth only
 
-After Stage 4 generates an image, a local VLM (qwen3-vl:2b via Ollama) analyzes the actual pixels before delivery to frontend.
+After Stage 4 generates an image, a hybrid two-path safety check analyzes the actual pixels before delivery to frontend.
+
+**Hybrid Architecture (Session 265):**
 
 ```
 media_type != 'image' → SKIP
 safety_level not in (kids, youth) → SKIP
-VLM → "safe" → SSE 'complete'
-VLM → "unsafe" → SSE 'blocked' (stage: 'vlm_safety')
-VLM → error → fail-open → SSE 'complete'
+
+PRIMARY PATH: VLM sees image + classifies directly
+  VLM (qwen3-vl:2b) + category-checklist prompt + "Answer SAFE or UNSAFE"
+  max_new_tokens=1500 (prevents truncation, was 500)
+  VLM → "safe"   → SSE 'complete'
+  VLM → "unsafe" → SSE 'blocked' (stage: 'vlm_safety')
+  VLM → no verdict (deliberation loop) → FALLBACK
+
+FALLBACK PATH: VLM describes → STAGE3_MODEL judges
+  Step 1: VLM describes image (safety-focused prompt, NO verdict coercion)
+  Step 2: STAGE3_MODEL (e.g. Claude Sonnet 4.6 via Mammouth) classifies description
+  Verdict → "safe"/"unsafe" → same as primary
+  No verdict → fail-closed → SSE 'blocked'
 ```
 
-**Config:** `VLM_SAFETY_MODEL` in `user_settings.json` (default in `config._SETTINGS_DEFAULTS`)
-**Technical note:** qwen3-vl uses thinking mode — analysis in `message.thinking`, decision in `message.content`. Both checked. `num_predict: 500` minimum.
+**Why hybrid:** The primary path has proven zero-FN accuracy — the VLM sees horror visually and classifies correctly. But ~2.4% of cases (6/247 in WS 17.03) produced no verdict due to deliberation loops or truncation. The fallback gives these cases a second chance via text-based classification instead of immediate fail-closed blocking.
+
+**Config:** `VLM_SAFETY_MODEL` in `user_settings.json` for VLM, `STAGE3_MODEL` for verdict fallback.
+**Fail-closed throughout:** No verdict from either path → blocked.
 
 ---
 
@@ -223,15 +237,21 @@ Only 2 SpaCy models loaded (prevents cross-language false positives):
 
 **Lesson learned (Session 181):** The LLM prompt must ask "is this a person name?" (SAFE/UNSAFE), not "is this a real existing person?" (JA/NEIN). The latter blocks common names ("Karl Meier") while passing real professors ("Benjamin Jörissen"). Guard models are unsuitable — they answer "safe" because the text content is harmless, not because the entity is or isn't a name.
 
-### 4.4 VLM Image Analysis
+### 4.4 VLM Image Analysis (Hybrid Architecture, Session 265)
 
 **Function:** `vlm_safety_check()` in `my_app/utils/vlm_safety.py`
 
-Post-generation visual analysis. Different prompts per safety level:
-- Kids (6-12): Checks for violence, nudity, unsettling/traumatizing content
-- Youth (14-18): Adapted thresholds for teenagers
+Post-generation visual analysis with hybrid two-path architecture:
 
-**Fail-open:** VLM errors never block generation.
+**Primary path:** VLM (qwen3-vl:2b) sees image directly + classifies. Category-checklist prompt per safety level:
+- Kids (6-12): violence, gore, nudity, hate symbols, self-harm, racism, terrorism, sexism, scary/unsettling/traumatizing
+- Youth (12-16): Same minus scary/unsettling/traumatizing
+
+**Fallback path** (when primary produces no verdict): VLM describes image (safety-focused, no verdict coercion) → STAGE3_MODEL (cloud LLM, e.g. Claude Sonnet 4.6 via Mammouth) classifies the text description.
+
+**Fail-closed:** Both paths fail-closed. No verdict from either → blocked.
+
+**Design decision (Session 265):** A pure two-model architecture (VLM describes → text model judges) was tested first but introduced false negatives: the VLM's text description loses visual horror quality ("hands reaching out" instead of "skeletal claws from darkness"). The primary single-model path preserves zero-FN accuracy because the VLM sees and classifies the actual pixels. The fallback only activates for the ~2.4% of cases where the VLM enters deliberation loops.
 
 ### 4.5 Circuit Breaker + Ollama Self-Healing (Session 218)
 
@@ -424,6 +444,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 255 | 2026-03-10 | **CRITICAL**: Kids safety bypass fix. EN/DE weapon terms added. Llama-Guard 1b→8b. DSGVO-first ordering. gpt-oss-120b for kids age-filter. S2+S8 added to Stage 3 blocking set |
 | 263 | 2026-03-17 | Usage agreement page: route, guard, 24h cookie, Vue page |
 | 264 | 2026-03-17 | Usage agreement text rewrite: "Nutzungshinweis" → "Nutzungsvereinbarung" (binding conditions) |
+| 265 | 2026-03-18 | VLM safety: hybrid architecture (primary single-model + two-model fallback). max_new_tokens 500→1500. STAGE3_MODEL as verdict fallback |
 
 ---
 

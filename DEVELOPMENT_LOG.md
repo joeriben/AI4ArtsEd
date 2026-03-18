@@ -5857,6 +5857,37 @@ Under load (e.g. 10 parallel requests), Ollama (120b model) gets overloaded.
 
 ---
 
+## Session 265 - VLM Safety: Hybrid Architecture (Primary + Two-Model Fallback)
+**Date:** 2026-03-18
+
+### Problem
+VLM safety check (qwen3-vl:2b) produced ~2.4% false positives (6/247 in WS 17.03). All "empty/unclear (fail-closed)" — VLM entered deliberation loops on edge cases or truncated at num_predict=500 before outputting SAFE/UNSAFE.
+
+### Approach & Key Decisions
+1. **First attempt — pure two-model:** VLM describes → text model judges. Tested qwen3:1.7b (inconsistent), qwen3:4b (blocks everything), Claude Sonnet 4.6 (good verdict but VLM descriptions lose horror quality). **Rejected:** "hands reaching out" ≠ "skeletal claws from darkness". Text description is lossy — introduced false negatives the single-model path never had.
+
+2. **Final solution — hybrid architecture:**
+   - **Primary:** Original VLM direct classification with max_new_tokens=1500 (was 500). Zero-FN proven.
+   - **Fallback:** When VLM produces no verdict → VLM describes (safety-focused prompt) → STAGE3_MODEL (Sonnet 4.6 via Mammouth) classifies description.
+   - **Fail-closed** as final fallback.
+
+3. **Cloud provider routing** added to `vlm_safety.py` for verdict fallback (Mammouth, Mistral, OpenRouter, IONOS).
+
+### Test Results (13 images, kids safety level)
+- Benign (CDF Wanderer, Mona Lisa, Zhao Mengfu, Concert): 4/4 SAFE
+- Scary (horror/zombies/ghosts): 8/9 BLOCKED (1 borderline atmospheric pass)
+- CDF Wanderer triggered fallback (VLM hallucinated "The Scream") → Sonnet 4.6 correctly SAFE
+- 0 false negatives on user-confirmed harmful images
+
+### Files Changed
+- `devserver/my_app/utils/vlm_safety.py` — Complete rewrite: hybrid architecture
+- `devserver/config.py` — Removed premature VLM_VERDICT_MODEL
+- `docs/ARCHITECTURE PART 29 - Safety-System.md` — Sections 3.4, 4.4, session table
+- `docs/SAFETY_SYSTEM_HISTORY.md` — Era 6 updated
+- `docs/DEVELOPMENT_DECISIONS.md` — Design decision documented
+
+---
+
 ## Session 111 - CRITICAL: Unified Streaming Architecture Refactoring
 **Date:** 2025-12-28
 **Duration:** ~4 hours

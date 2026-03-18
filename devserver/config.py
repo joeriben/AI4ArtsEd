@@ -39,28 +39,31 @@ CORS_ALLOWED_ORIGINS = [
 #   "ionos/model-name" → IONOS | "openrouter/provider/model" → OpenRouter
 #
 _SETTINGS_DEFAULTS = {
+    # UI & safety defaults (non-model)
     'UI_MODE': 'youth',
     'DEFAULT_SAFETY_LEVEL': 'kids',
     'DEFAULT_LANGUAGE': 'de',
     'DEFAULT_INTERCEPTION_CONFIG': 'user_defined',
-    'STAGE1_TEXT_MODEL': 'local/qwen3:4b',
-    'STAGE1_VISION_MODEL': 'local/llama3.2-vision:latest',
-    'STAGE2_INTERCEPTION_MODEL': 'local/qwen3:4b',
-    'STAGE2_OPTIMIZATION_MODEL': 'local/qwen3:4b',
-    'STAGE3_MODEL': 'local/qwen3:4b',
-    'STAGE4_LEGACY_MODEL': 'local/qwen3:4b',
-    'CHAT_HELPER_MODEL': 'local/qwen3:4b',
-    'CODING_MODEL': 'mistral/codestral-2501',
-    'IMAGE_ANALYSIS_MODEL': 'local/llama3.2-vision:latest',
-    'SAFETY_MODEL': 'llama-guard3:8b',
-    'DSGVO_VERIFY_MODEL': 'qwen3:1.7b',
-    'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
-    'VLM_VERDICT_MODEL': 'qwen3:1.7b',
     'LLM_PROVIDER': 'ollama',
     'OLLAMA_API_BASE_URL': 'http://localhost:11434',
     'LMSTUDIO_API_BASE_URL': 'http://localhost:1234',
     'EXTERNAL_LLM_PROVIDER': 'none',
     'DSGVO_CONFORMITY': True,
+    # Model roles — NO hardcoded model names. Actual values come from user_settings.json.
+    # Empty strings here ensure hasattr() works for import compatibility.
+    # If user_settings.json is missing, server will NOT start (see __init__.py).
+    'STAGE1_TEXT_MODEL': '',
+    'STAGE1_VISION_MODEL': '',
+    'STAGE2_INTERCEPTION_MODEL': '',
+    'STAGE2_OPTIMIZATION_MODEL': '',
+    'STAGE3_MODEL': '',
+    'STAGE4_LEGACY_MODEL': '',
+    'CHAT_HELPER_MODEL': '',
+    'CODING_MODEL': '',
+    'IMAGE_ANALYSIS_MODEL': '',
+    'SAFETY_MODEL': '',
+    'DSGVO_VERIFY_MODEL': '',
+    'VLM_SAFETY_MODEL': '',
 }
 
 # Pre-initialize module globals for imports (overwritten by reload_user_settings at startup)
@@ -68,14 +71,9 @@ for _k, _v in _SETTINGS_DEFAULTS.items():
     globals()[_k] = _v
 del _k, _v
 
-# Model aliases used by chunk JSON ("model": "REMOTE_ADVANCED_MODEL" → getattr(config, name))
-# These are static references, not user-configurable settings.
-LOCAL_DEFAULT_MODEL = _SETTINGS_DEFAULTS['STAGE1_TEXT_MODEL']
-LOCAL_VISION_MODEL = _SETTINGS_DEFAULTS['STAGE1_VISION_MODEL']
+# Model alias used by chunk JSON ("model": "REMOTE_ADVANCED_MODEL" → getattr(config, name))
+# Used by: optimize_t5_prompt*.json chunks. Single static reference, not user-configurable.
 REMOTE_ADVANCED_MODEL = "mistral/mistral-large-latest"
-REMOTE_MULTIMODAL_MODEL = "openrouter/google/gemini-2.5-flash-lite"
-REMOTE_SMALL_MODEL = "openrouter/mistralai/mistral-nemo"
-REMOTE_LIGHT_MODEL = "openrouter/mistralai/mistral-medium-3.1"
 
 # Stage 5: Image Analysis Prompts (4 Theoretical Frameworks)
 IMAGE_ANALYSIS_PROMPTS = {

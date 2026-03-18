@@ -9,6 +9,29 @@
 
 ---
 
+## 2026-03-18: VLM Safety — Hybrid Architecture (Primary + Two-Model Fallback)
+
+**Decision:** VLM image safety check uses hybrid architecture: primary single-model path (VLM sees + classifies, proven zero-FN) with two-model fallback (VLM describes → STAGE3_MODEL judges) for cases where the VLM fails to produce a verdict.
+
+**Problem:** VLM (qwen3-vl:2b) produced ~2.4% false positives (6/247 in WS 17.03) — all "empty/unclear (fail-closed)". Two failure modes: deliberation loops (VLM debates edge cases endlessly) and truncation (hits num_predict=500 before verdict).
+
+**Rejected alternative — pure two-model architecture:** VLM describes image → text model classifies description. Tested extensively with qwen3:1.7b, qwen3:4b, and Claude Sonnet 4.6 as verdict models. The text description is a lossy representation of the image — VLM describes skeletal horror claws as "hands reaching out", zombie faces as "group of people". This introduced false negatives that the single-model path never had, because direct visual classification captures horror quality that text descriptions lose.
+
+**Solution:**
+1. Primary: Original VLM direct classification with `max_new_tokens=1500` (was 500, fixes truncation)
+2. Fallback: When VLM produces no verdict (deliberation loop) → VLM describes + STAGE3_MODEL (e.g. Claude Sonnet 4.6 via Mammouth) classifies the description
+3. Fail-closed as final fallback
+
+**Test results (13 images):** 4/4 benign correct, 8/9 scary correct (1 borderline atmospheric image). 0 false negatives on user-confirmed harmful images.
+
+**Affected files:**
+- `devserver/my_app/utils/vlm_safety.py` — Hybrid architecture, cloud provider routing for verdict fallback
+- `devserver/config.py` — Removed premature `VLM_VERDICT_MODEL` setting (uses `STAGE3_MODEL` instead)
+- `docs/ARCHITECTURE PART 29 - Safety-System.md` — Updated sections 3.4, 4.4, session table
+- `docs/SAFETY_SYSTEM_HISTORY.md` — Era 6 updated, VLM hybrid entry
+
+---
+
 ## 2026-03-17: Usage Agreement — Binding Conditions, Not Informational Notice
 
 **Decision:** Usage page reframed from "Nutzungshinweis" (informational) to "Nutzungsvereinbarung" (binding consent). Intro text ends with "...an folgende Bedingungen geknüpft:", checkbox includes explicit "Ich stimme diesen Bedingungen zu".

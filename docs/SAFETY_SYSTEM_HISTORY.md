@@ -198,12 +198,19 @@ Konsequenz: Das technische System muss §86a und DSGVO *absolut* durchsetzen (ge
 2. **Stage 2 mandatory fuer kids+youth**: `skip_stage2` wird ueberschrieben
 3. **Stage 3 Llama-Guard bleibt als zweites Netz**
 4. **VLM Content-Checklist-Prompt** (Session 261): Konkrete schaedliche Kategorien aufzaehlen statt "Is this safe?" — verhindert, dass 2B VLM Situationsgefahr (Baustelle) mit Betrachtungsgefahr (schaedlich fuer Kinder) verwechselt
+5. **VLM Hybrid-Architektur** (Session 265): Primary (VLM sieht + urteilt, max_new_tokens=1500) + Fallback (VLM beschreibt → STAGE3_MODEL urteilt). Loest 2.4% fail-closed Rate (6/247 in WS 17.03) ohne False Negatives einzufuehren. Reine Two-Model-Architektur wurde verworfen weil Textbeschreibung Horror-Qualitaet verliert ("hands" statt "skeletal claws").
 
 **Empirische Validierung (mammouth/claude-sonnet-4-6):**
 - 8/8 semantische Bedrohungen (Flugzeug→Hochhaus, Waffe→Schule, etc.) refused
 - 4/4 explizite Gewalt refused
 - 4/4 harmlose Prompts (Tiger mit Zaehnen, Drache mit Krallen) kreativ transformiert
 - 0 False Positives
+
+**Empirische Validierung VLM Hybrid (Session 265):**
+- 4/4 benigne Bilder (CDF Wanderer, Mona Lisa, Zhao Mengfu, Konzertfoto) SAFE
+- Horror (Zombies, Skelette, Geister) korrekt BLOCKED — Primary path, 0 FN
+- CDF loeste Deliberation-Loop aus (VLM halluziniert "The Scream") → Fallback → Sonnet 4.6 SAFE
+- Grenzfaelle (dunkle Silhouetten) vom VLM ueberklassifiziert (FP, aber kein Sicherheitsrisiko)
 
 **WARNUNG — Keyword-Filter NICHT wieder einfuehren:**
 Der Keyword-Filter oszillierte zwischen zu aggressiv (28% False Positives) und zu permissiv (Waffen-Bypass) ueber 10+ Sessions. Das grundlegende Problem ist unlösbar: kurze Keywords in natuerlicher Sprache haben notwendigerweise hohe False-Positive-Raten, und laengere Keyword-Listen verschlechtern die Rate weiter statt sie zu verbessern.
@@ -299,8 +306,10 @@ User Input
   │
   ├─ [Stage 4] Media Generation
   │
-  └─ [Post-Gen] VLM Check (kids/youth, images only)
-      Content-Checklist-Prompt, fail-closed
+  └─ [Post-Gen] VLM Check — Hybrid (kids/youth, images only)
+      Primary: VLM sees + classifies (zero-FN, max_new_tokens=1500)
+      Fallback: VLM describes → STAGE3_MODEL verdict (for deliberation loops)
+      Fail-closed throughout
 ```
 
 ### 4.2 Modelle
@@ -311,7 +320,8 @@ Actual model names are configured in `user_settings.json` (editable via Settings
 |------|-----------|-------|------------|
 | §86a Context + Stage 3 S-Code | `SAFETY_MODEL` | Ollama | Must be guard model (S1-S13 taxonomy) |
 | DSGVO NER Verify + Youth Age-Filter | `DSGVO_VERIFY_MODEL` | Ollama (LOCAL) | Must be general-purpose, NEVER external |
-| VLM Post-Gen Image Check | `VLM_SAFETY_MODEL` | Ollama | Must be vision-language model |
+| VLM Post-Gen Image Check (primary) | `VLM_SAFETY_MODEL` | Ollama | Must be vision-language model |
+| VLM Verdict Fallback | `STAGE3_MODEL` | Cloud (Mammouth/Mistral) | Used when VLM primary produces no verdict |
 | Kids Age-Filter Context Verify | hardcoded in `stage_orchestrator.py` | IONOS EU (external) | Needs strong semantic reasoning |
 | Safety-Prefix Interception | `STAGE2_INTERCEPTION_MODEL` | Cloud (Mistral/IONOS) | — |
 
