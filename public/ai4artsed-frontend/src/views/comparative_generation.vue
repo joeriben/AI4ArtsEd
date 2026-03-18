@@ -618,10 +618,38 @@ async function startComparison() {
   overflow: hidden;
 }
 
-/* Override MediaOutputBox section padding for compact grid layout */
+/* Override MediaOutputBox sizing for compact grid layout */
 .slot-output-wrapper :deep(.pipeline-section) {
   margin: 0;
   padding: 0;
+}
+
+.slot-output-wrapper :deep(.output-frame) {
+  height: auto;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.slot-output-wrapper :deep(.output-frame.empty) {
+  padding: 1rem;
+}
+
+.slot-output-wrapper :deep(.output-image) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slot-output-wrapper :deep(.action-toolbar) {
+  gap: 0.15rem;
+}
+
+.slot-output-wrapper :deep(.action-btn) {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
 }
 
 .slot-blocked {
