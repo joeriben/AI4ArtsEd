@@ -49,6 +49,11 @@
             <span class="slot-lang-code">{{ slot.langCode }}</span>
             <span v-if="slot.queuePosition > 0 && !slot.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
           </div>
+          <!-- Translation box -->
+          <div v-if="slot.translatedPrompt" class="slot-translation">
+            <div class="slot-translated-text">{{ slot.translatedPrompt }}</div>
+            <div v-if="slot.backTranslation" class="slot-back-translation">&#x2192; {{ slot.backTranslation }}</div>
+          </div>
           <div class="slot-output" :class="{ generating: slot.isExecuting, complete: !!slot.outputUrl }">
             <template v-if="slot.isExecuting && !slot.outputUrl">
               <div class="slot-progress-track">
@@ -78,8 +83,10 @@ import MediaInputBox from '@/components/MediaInputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import { useGenerationStream } from '@/composables/useGenerationStream'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
 
 const { t } = useI18n()
+const userPreferences = useUserPreferencesStore()
 
 // --- State ---
 const userPrompt = ref('')
@@ -101,6 +108,7 @@ interface ComparisonSlot {
   langCode: string
   langName: string
   translatedPrompt: string
+  backTranslation: string
   outputUrl: string | null
   runId: string | null
   isExecuting: boolean
@@ -150,6 +158,7 @@ async function startComparison() {
     langCode: code,
     langName: LANGUAGE_NAMES[code] || code,
     translatedPrompt: '',
+    backTranslation: '',
     outputUrl: null,
     runId: null,
     isExecuting: false,
@@ -191,6 +200,24 @@ async function startComparison() {
     for (const slot of slots.value) {
       slot.translatedPrompt = translations[slot.langCode] || userPrompt.value
       slot.queuePosition = 0
+    }
+
+    // Back-translate to settings language (non-blocking, runs in parallel with generation)
+    const uiLang = userPreferences.language
+    for (const slot of slots.value) {
+      if (slot.langCode === uiLang) {
+        slot.backTranslation = slot.translatedPrompt
+        continue
+      }
+      fetch(`${baseUrl}/api/schema/pipeline/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: slot.translatedPrompt, target_language: uiLang })
+      }).then(r => r.json()).then(data => {
+        if (data.status === 'success' && data.translated_text) {
+          slot.backTranslation = data.translated_text
+        }
+      }).catch(() => { /* non-critical */ })
     }
 
     // Step 2: Fixed seed for all
@@ -429,6 +456,29 @@ async function startComparison() {
   background: rgba(255, 183, 77, 0.1);
   padding: 0.1rem 0.4rem;
   border-radius: 8px;
+}
+
+.slot-translation {
+  padding: 0.3rem 0.5rem;
+  margin-bottom: 0.3rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.slot-translated-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.slot-back-translation {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.3;
+  margin-top: 0.15rem;
+  word-break: break-word;
 }
 
 .slot-output {
