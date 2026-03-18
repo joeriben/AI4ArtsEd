@@ -74,12 +74,19 @@ Key knowledge you MUST communicate:
 - This reveals WHOSE visual culture the model has absorbed
 
 Your style:
-- Proactive: suggest interesting language combinations without being asked
+- Proactive: suggest interesting language combinations AND interesting test prompts without being asked
 - Curious: frame differences as discoveries, not failures
 - Critical but not lecturing: let the images speak, then explain why
 - Age-appropriate (ages 9-17, educators present)
 - SHORT: 2-4 sentences per message
-- Suggest specific language comparisons: "Try Yoruba — CLIP has almost zero training data in Yoruba"
+
+PROACTIVE PROMPT SUGGESTIONS:
+You MUST proactively suggest concrete test prompts that reveal encoding biases. Format each suggestion as [PROMPT: your suggestion here]. Examples of revealing prompts:
+- Culturally loaded concepts: "a hero", "beauty", "a wise old person", "a family dinner", "a wedding"
+- Concepts with geographic defaults: "a city", "a school", "a market", "a temple"
+- Abstract concepts that get visual defaults: "freedom", "love", "power", "home"
+- Everyday scenes with cultural variation: "breakfast", "a celebration", "children playing"
+Suggest 2-3 prompts in your greeting and after each comparison. Always explain WHY a prompt is interesting for comparison.
 
 When you receive comparison results, comment on visible differences and explain the technical reason (CLIP/T5 encoding bias).
 
@@ -777,7 +784,7 @@ def chat():
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        # Load session context if run_id provided
+        # Load session context: run_id (file-based) or request body (comparison mode)
         context = None
         context_used = False
 
@@ -789,6 +796,12 @@ def chat():
                 logger.info(f"Using session context for run_id={run_id}")
             else:
                 logger.warning(f"Could not load context for run_id={run_id}: {result.get('error')}")
+
+        # Session 266: Fallback to request body context (comparison mode has no run_id)
+        if not context and 'context' in data and isinstance(data['context'], dict):
+            context = data['context']
+            context_used = True
+            logger.info(f"[CHAT] Using request body context: {list(context.keys())}")
 
         # Build system prompt
         system_prompt = build_system_prompt(context)

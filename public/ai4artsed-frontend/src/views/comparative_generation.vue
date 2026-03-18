@@ -72,6 +72,7 @@
       ref="chatRef"
       class="compare-chat-panel"
       :comparison-context="comparisonContext"
+      @use-prompt="useTrashyPrompt"
     />
   </div>
 </template>
@@ -135,6 +136,11 @@ const canGenerate = computed(() => {
 function copyPrompt() { window.navigator.clipboard.writeText(userPrompt.value) }
 async function pastePrompt() { userPrompt.value = await window.navigator.clipboard.readText() }
 function clearPrompt() { userPrompt.value = '' }
+
+// --- Trashy prompt injection ---
+function useTrashyPrompt(prompt: string) {
+  userPrompt.value = prompt
+}
 
 // --- Trashy context ---
 function buildContext(phase: string): string {

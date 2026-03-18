@@ -12,7 +12,13 @@
         class="chat-bubble"
         :class="msg.role"
       >
-        {{ msg.content }}
+        <template v-if="msg.role === 'assistant'">
+          <span v-for="(part, idx) in parseSuggestions(msg.content)" :key="idx">
+            <span v-if="part.type === 'text'">{{ part.text }}</span>
+            <button v-else class="prompt-suggestion" @click="emit('use-prompt', part.text)">{{ part.text }}</button>
+          </span>
+        </template>
+        <template v-else>{{ msg.content }}</template>
       </div>
       <div v-if="isLoading" class="chat-bubble assistant loading">
         <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
@@ -47,7 +53,15 @@ interface Props {
   comparisonContext: string
 }
 
+interface ContentPart {
+  type: 'text' | 'prompt'
+  text: string
+}
+
 const props = defineProps<Props>()
+const emit = defineEmits<{
+  'use-prompt': [prompt: string]
+}>()
 const { t } = useI18n()
 const userPreferences = useUserPreferencesStore()
 
@@ -57,6 +71,26 @@ const isLoading = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextId = 0
 
+/** Parse [PROMPT: ...] markers into clickable suggestions */
+function parseSuggestions(content: string): ContentPart[] {
+  const parts: ContentPart[] = []
+  const regex = /\[PROMPT:\s*(.+?)\]/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', text: content.slice(lastIndex, match.index) })
+    }
+    parts.push({ type: 'prompt', text: match[1]! })
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < content.length) {
+    parts.push({ type: 'text', text: content.slice(lastIndex) })
+  }
+  return parts.length > 0 ? parts : [{ type: 'text', text: content }]
+}
+
 function addMessage(role: 'user' | 'assistant', content: string) {
   messages.value.push({ id: nextId++, role, content })
   nextTick(() => {
@@ -64,6 +98,30 @@ function addMessage(role: 'user' | 'assistant', content: string) {
       messagesRef.value.scrollTop = messagesRef.value.scrollHeight
     }
   })
+}
+
+function getBaseUrl(): string {
+  return import.meta.env.DEV ? 'http://localhost:17802' : ''
+}
+
+function buildHistory(): Array<{ role: string; content: string }> {
+  return messages.value.map(m => ({ role: m.role, content: m.content }))
+}
+
+async function callChat(message: string, extraHistory?: Array<{ role: string; content: string }>): Promise<string | null> {
+  const history = extraHistory ?? buildHistory()
+  const response = await fetch(`${getBaseUrl()}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      history,
+      context: { comparison_mode: true, language: userPreferences.language },
+      draft_context: props.comparisonContext,
+    })
+  })
+  const data = await response.json()
+  return data.reply || null
 }
 
 async function sendMessage() {
@@ -75,31 +133,12 @@ async function sendMessage() {
   isLoading.value = true
 
   try {
-    const isDev = import.meta.env.DEV
-    const baseUrl = isDev ? 'http://localhost:17802' : ''
-
-    // Build history from prior messages (exclude the just-added user message)
-    const history = messages.value.slice(0, -1).map(m => ({
-      role: m.role,
-      content: m.content
-    }))
-
-    const response = await fetch(`${baseUrl}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: text,
-        history,
-        context: { comparison_mode: true, language: userPreferences.language },
-        draft_context: props.comparisonContext,
-      })
-    })
-
-    const data = await response.json()
-    if (data.reply) {
-      addMessage('assistant', data.reply)
-    } else if (data.error) {
-      addMessage('assistant', `[Error: ${data.error}]`)
+    const history = messages.value.slice(0, -1).map(m => ({ role: m.role, content: m.content }))
+    const reply = await callChat(text, history)
+    if (reply) {
+      addMessage('assistant', reply)
+    } else {
+      addMessage('assistant', '[No response]')
     }
   } catch (e) {
     addMessage('assistant', '[Connection error]')
@@ -116,11 +155,31 @@ function injectMessage(content: string) {
 /** Reset chat for new comparison run */
 function resetChat() {
   messages.value = []
-  addMessage('assistant', t('compare.trashyGreeting'))
+  fetchProactiveGreeting()
+}
+
+/** Fetch a proactive greeting with prompt suggestions from the LLM */
+async function fetchProactiveGreeting() {
+  isLoading.value = true
+  try {
+    const reply = await callChat(
+      'Greet the user briefly. Suggest 2-3 concrete test prompts that would reveal interesting encoding biases when compared across languages. Use [PROMPT: ...] format for each suggestion.',
+      []
+    )
+    if (reply) {
+      addMessage('assistant', reply)
+    } else {
+      addMessage('assistant', t('compare.trashyGreeting'))
+    }
+  } catch {
+    addMessage('assistant', t('compare.trashyGreeting'))
+  } finally {
+    isLoading.value = false
+  }
 }
 
 onMounted(() => {
-  addMessage('assistant', t('compare.trashyGreeting'))
+  fetchProactiveGreeting()
 })
 
 // Watch context changes — Trashy can react
@@ -133,25 +192,11 @@ watch(() => props.comparisonContext, (ctx) => {
 async function sendAutoComment(context: string) {
   isLoading.value = true
   try {
-    const isDev = import.meta.env.DEV
-    const baseUrl = isDev ? 'http://localhost:17802' : ''
-
-    const history = messages.value.map(m => ({ role: m.role, content: m.content }))
-
-    const response = await fetch(`${baseUrl}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: 'The comparison is complete. Comment on visible differences between the language variants and explain why CLIP/T5 encoding causes this.',
-        history,
-        context: { comparison_mode: true, language: userPreferences.language },
-        draft_context: context,
-      })
-    })
-
-    const data = await response.json()
-    if (data.reply) {
-      addMessage('assistant', data.reply)
+    const reply = await callChat(
+      'The comparison is complete. Comment on visible differences between the language variants and explain why CLIP/T5 encoding causes this. Then suggest 1-2 follow-up prompts using [PROMPT: ...] format.'
+    )
+    if (reply) {
+      addMessage('assistant', reply)
     }
   } catch {
     // Silent fail for auto-comments
@@ -242,6 +287,25 @@ defineExpose({ injectMessage, resetChat })
 @keyframes typing {
   0%, 60%, 100% { opacity: 0.3; }
   30% { opacity: 1; }
+}
+
+.prompt-suggestion {
+  display: inline;
+  background: rgba(255, 179, 0, 0.12);
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  border-radius: 6px;
+  padding: 0.15rem 0.4rem;
+  color: rgba(255, 179, 0, 0.9);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.prompt-suggestion:hover {
+  background: rgba(255, 179, 0, 0.22);
+  border-color: rgba(255, 179, 0, 0.5);
 }
 
 .chat-input-area {
