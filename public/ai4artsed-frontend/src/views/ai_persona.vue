@@ -481,8 +481,13 @@ function usePrompt(text: string) {
 async function fetchGreeting() {
   isLoading.value = true
   try {
+    const langNames: Record<string, string> = {
+      de: 'German', en: 'English', tr: 'Turkish', ko: 'Korean',
+      uk: 'Ukrainian', fr: 'French', es: 'Spanish', he: 'Hebrew', ar: 'Arabic', bg: 'Bulgarian'
+    }
+    const lang = langNames[userPreferences.language] || 'German'
     const reply = await callChat(
-      'Begin the conversation. Introduce yourself briefly.',
+      `Begin the conversation. Introduce yourself briefly. Speak in ${lang}.`,
       []
     )
     if (reply) {
