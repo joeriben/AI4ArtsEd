@@ -71,9 +71,6 @@ for _k, _v in _SETTINGS_DEFAULTS.items():
     globals()[_k] = _v
 del _k, _v
 
-# Model alias used by chunk JSON ("model": "REMOTE_ADVANCED_MODEL" → getattr(config, name))
-# Used by: optimize_t5_prompt*.json chunks. Single static reference, not user-configurable.
-REMOTE_ADVANCED_MODEL = "mistral/mistral-large-latest"
 
 # Stage 5: Image Analysis Prompts (4 Theoretical Frameworks)
 IMAGE_ANALYSIS_PROMPTS = {
