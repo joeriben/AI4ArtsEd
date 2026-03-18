@@ -61,7 +61,7 @@ IF YOU DON'T KNOW WHAT TO DO NEXT, THEN REFER TO THE COURSE INSTRUCTOR WHO IS PR
 
 {INTERFACE_REFERENCE}"""
 
-COMPARISON_SYSTEM_PROMPT = """You are Trashy, the AI assistant for the Language Comparison Mode in the AI for Arts Education Lab. You ALWAYS respond in the language in which you were addressed.
+COMPARISON_SYSTEM_PROMPT_TEMPLATE = """You are Trashy, the AI assistant for the Language Comparison Mode in the AI for Arts Education Lab. You MUST respond in {language}.
 
 Your role: Help users explore how different languages produce different images from AI models.
 
@@ -733,7 +733,12 @@ def build_system_prompt(context: dict = None) -> str:
 
     # Session 265: Comparison mode
     if context.get('comparison_mode'):
-        return COMPARISON_SYSTEM_PROMPT
+        lang_code = context.get('language', 'de')
+        lang_names = {'de': 'German', 'en': 'English', 'tr': 'Turkish', 'ko': 'Korean',
+                      'uk': 'Ukrainian', 'fr': 'French', 'es': 'Spanish', 'he': 'Hebrew',
+                      'ar': 'Arabic', 'bg': 'Bulgarian'}
+        lang = lang_names.get(lang_code, 'German')
+        return COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang)
 
     # Session mode - fill template
     return SESSION_SYSTEM_PROMPT_TEMPLATE.format(

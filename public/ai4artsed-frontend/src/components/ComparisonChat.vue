@@ -88,8 +88,8 @@ async function sendMessage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         messages: chatMessages,
-        context: { comparison_mode: true },
-        draft_context: `[User language: ${userPreferences.language}]\n${props.comparisonContext}`,
+        context: { comparison_mode: true, language: userPreferences.language },
+        draft_context: props.comparisonContext,
         temperature: 0.7,
         max_tokens: 300,
       })
