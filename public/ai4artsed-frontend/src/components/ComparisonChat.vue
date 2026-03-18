@@ -113,6 +113,12 @@ function injectMessage(content: string) {
   addMessage('assistant', content)
 }
 
+/** Reset chat for new comparison run */
+function resetChat() {
+  messages.value = []
+  addMessage('assistant', t('compare.trashyGreeting'))
+}
+
 onMounted(() => {
   addMessage('assistant', t('compare.trashyGreeting'))
 })
@@ -155,7 +161,7 @@ async function sendAutoComment(context: string) {
   }
 }
 
-defineExpose({ injectMessage })
+defineExpose({ injectMessage, resetChat })
 </script>
 
 <style scoped>

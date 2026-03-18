@@ -102,6 +102,7 @@ interface ComparisonSlot {
   langName: string
   translatedPrompt: string
   outputUrl: string | null
+  runId: string | null
   isExecuting: boolean
   progress: number
   queuePosition: number
@@ -139,6 +140,7 @@ function buildContext(phase: string): string {
 async function startComparison() {
   if (!canGenerate.value || isGenerating.value) return
   isGenerating.value = true
+  chatRef.value?.resetChat()
 
   const isDev = import.meta.env.DEV
   const baseUrl = isDev ? 'http://localhost:17802' : ''
@@ -149,6 +151,7 @@ async function startComparison() {
     langName: LANGUAGE_NAMES[code] || code,
     translatedPrompt: '',
     outputUrl: null,
+    runId: null,
     isExecuting: false,
     progress: 0,
     queuePosition: idx + 1,
@@ -223,6 +226,7 @@ async function startComparison() {
 
         if (result.status === 'success' && result.media_output?.url) {
           slot.outputUrl = `${baseUrl}${result.media_output.url}`
+          slot.runId = result.run_id || null
         } else if (result.status === 'blocked') {
           slot.blockedReason = result.blocked_reason || 'Blocked'
         } else if (result.status === 'error') {
@@ -237,7 +241,36 @@ async function startComparison() {
       }
     }
 
-    comparisonContext.value = buildContext('generation_complete')
+    // Step 4: Analyze generated images and feed to Trashy
+    const successfulSlots = slots.value.filter(s => s.runId && s.outputUrl)
+    if (successfulSlots.length >= 2) {
+      const analyses: string[] = []
+      for (const slot of successfulSlots) {
+        try {
+          const res = await fetch(`${baseUrl}/api/image/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ run_id: slot.runId, analysis_type: 'kritisch' })
+          })
+          if (res.ok) {
+            const data = await res.json()
+            if (data.success && data.analysis) {
+              analyses.push(`[${slot.langName} (${slot.langCode})]:\n${data.analysis}`)
+            }
+          }
+        } catch {
+          // Non-critical — Trashy works without analyses too
+        }
+      }
+
+      if (analyses.length > 0) {
+        comparisonContext.value = buildContext('generation_complete') + '\n\n--- Image Analyses ---\n' + analyses.join('\n\n')
+      } else {
+        comparisonContext.value = buildContext('generation_complete')
+      }
+    } else {
+      comparisonContext.value = buildContext('generation_complete')
+    }
   } catch (e) {
     console.error('[COMPARE] Failed:', e)
     chatRef.value?.injectMessage(t('compare.trashyError'))
