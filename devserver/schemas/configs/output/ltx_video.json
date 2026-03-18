@@ -12,7 +12,6 @@
     "en": "Video Generation",
     "de": "Videogenerierung"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_video_ltx",
     "NEGATIVE_PROMPT": "blurry, distorted, bad quality, watermark, low resolution, flickering",
@@ -24,12 +23,12 @@
     "FPS": 30,
     "seed": "random"
   },
-
   "media_preferences": {
     "default_output": "video",
-    "supported_types": ["video"]
+    "supported_types": [
+      "video"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "ltx-video-2b-v0.9",
@@ -37,7 +36,7 @@
     "backend": "comfyui",
     "backend_type": "comfyui",
     "requires_gpu": true,
-    "gpu_vram_mb": 16000,
+    "gpu_vram_mb": 30000,
     "estimated_duration_seconds": "5-15",
     "recommended_resolution": "1216x704",
     "supported_resolutions": [
@@ -46,11 +45,14 @@
       "1024x576"
     ],
     "recommended_frames": 121,
-    "supported_fps": [24, 30],
+    "supported_fps": [
+      24,
+      30
+    ],
     "notes": "LTX-Video via ComfyUI. Fast video generation optimized for speed. Generates 4-second 30fps videos in ~5-10 seconds on RTX 4090. Best quality at 1216x704 resolution.",
     "version": "1.0",
     "display_name": "LTX Video",
-    "icon": "\u26A1",
+    "icon": "⚡",
     "publisher": "Lightricks (Jerusalem, IL)",
     "architecture": "DiT Video Diffusion (real-time capable)",
     "params": "~2B",
@@ -59,7 +61,6 @@
     "fair_culture": "Training data undisclosed",
     "safety_by_design": "Platform 4-stage safety pipeline"
   },
-
   "display": {
     "icon": "⚡",
     "color": "#9C27B0",
@@ -67,12 +68,22 @@
     "difficulty": 1,
     "order": 20
   },
-
   "tags": {
-    "en": ["video", "ltx", "fast", "comfyui", "local"],
-    "de": ["video", "ltx", "schnell", "comfyui", "lokal"]
+    "en": [
+      "video",
+      "ltx",
+      "fast",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "video",
+      "ltx",
+      "schnell",
+      "comfyui",
+      "lokal"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

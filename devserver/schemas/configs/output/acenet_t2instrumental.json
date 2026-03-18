@@ -12,7 +12,6 @@
     "en": "Music Generation",
     "de": "Musikgenerierung"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_audio_acenet",
     "LYRICS": "[instrumental]",
@@ -25,12 +24,12 @@
     "DENOISE": 0.9,
     "seed": "random"
   },
-
   "media_preferences": {
     "default_output": "audio",
-    "supported_types": ["audio"]
+    "supported_types": [
+      "audio"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "ace-step-v1.3.5b",
@@ -38,10 +37,15 @@
     "backend": "comfyui",
     "backend_type": "comfyui",
     "requires_gpu": true,
-    "gpu_vram_mb": 8000,
+    "gpu_vram_mb": 8500,
     "estimated_duration_seconds": "10-30",
     "recommended_duration": 30,
-    "supported_durations": [15, 30, 45, 60],
+    "supported_durations": [
+      15,
+      30,
+      45,
+      60
+    ],
     "notes": "ACE Step v1.3.5b via ComfyUI. Text-to-audio generation for instrumental music. Generates 30-second instrumental tracks. The 'tags' field describes the musical style, genre, instruments, mood, and tempo.",
     "version": "1.0",
     "display_name": "ACE-Net",
@@ -52,7 +56,6 @@
     "fair_culture": "Training data undisclosed",
     "safety_by_design": "None documented by manufacturer"
   },
-
   "display": {
     "icon": "🎵",
     "color": "#FF5722",
@@ -60,12 +63,24 @@
     "difficulty": 1,
     "order": 30
   },
-
   "tags": {
-    "en": ["music", "audio", "instrumental", "ace", "comfyui", "local"],
-    "de": ["musik", "audio", "instrumental", "ace", "comfyui", "lokal"]
+    "en": [
+      "music",
+      "audio",
+      "instrumental",
+      "ace",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "musik",
+      "audio",
+      "instrumental",
+      "ace",
+      "comfyui",
+      "lokal"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

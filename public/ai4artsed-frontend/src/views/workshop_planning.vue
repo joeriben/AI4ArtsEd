@@ -1,6 +1,8 @@
 <template>
   <div class="workshop-page">
-    <!-- Trashy Chat (central, dominant) -->
+    <h1 class="page-title">{{ $t('workshop.title') }}</h1>
+
+    <!-- Trashy Chat -->
     <div class="trashy-section">
       <div class="chat-header">
         <img :src="trashyIcon" alt="Trashy" class="trashy-icon" />
@@ -25,20 +27,15 @@
         <input
           v-model="userInput"
           class="chat-input"
-            @keydown.enter="sendMessage"
+          @keydown.enter="sendMessage"
           :disabled="isLoading"
         />
       </div>
     </div>
 
-    <!-- Loading indicator -->
-    <div v-if="loadingModelId" class="loading-indicator">
-      Modell wird in den Speicher geladen...
-    </div>
-
-    <!-- Memory Visualization (drop zone) -->
+    <!-- Memory Visualization -->
     <div class="memory-section">
-      <div class="memory-label">Speicher der Grafikkarte</div>
+      <div class="memory-label">{{ $t('workshop.memory.label') }}</div>
       <div
         class="memory-container"
         @dragover.prevent="onDragOver"
@@ -46,65 +43,88 @@
         @drop="onDrop"
         :class="{ 'drag-over': isDragOver }"
       >
-        <!-- Baseline: safety systems, Ollama etc. -->
+        <!-- Loaded models (already on GPU, shown individually) -->
         <div
-          v-if="baselineUsedMb > 0"
-          class="memory-baseline"
-          :style="{ width: cardWidth(baselineUsedMb) + '%' }"
+          v-for="lm in loadedModelSegments"
+          :key="'loaded-' + lm.name"
+          class="memory-segment loaded"
+          :style="{ width: segmentWidth(lm.gb) + '%' }"
         >
-          <span class="card-name">Sicherheitssysteme</span>
+          <span class="segment-label">{{ lm.name }}</span>
         </div>
-        <!-- Workshop models -->
+        <!-- Unaccounted baseline (CUDA caches, safety, misc) -->
         <div
-          v-for="card in activeModels"
-          :key="card.id"
-          class="memory-card"
-          :style="{ width: cardWidth(card.vram_mb) + '%' }"
+          v-if="unaccountedBaselineGb > 1"
+          class="memory-segment safety"
+          :style="{ width: segmentWidth(unaccountedBaselineGb) + '%' }"
+        >
+          <span class="segment-label">{{ $t('workshop.memory.system') }}</span>
+        </div>
+        <!-- Selected models (not yet loaded) -->
+        <div
+          v-for="model in unloadedSelectedModels"
+          :key="model.id"
+          class="memory-segment model"
+          :style="{ width: segmentWidth(model.vram_gb) + '%' }"
           draggable="true"
-          @dragstart="onDragStartFromMemory($event, card)"
+          @dragstart="onDragStartFromMemory($event, model)"
         >
-          <span class="card-name">{{ card.name }} ({{ Math.round(card.vram_mb / 1024) }} GB)</span>
-          <button class="card-remove" @click="removeModel(card.id)" title="Entfernen">&times;</button>
+          <span class="segment-label">{{ model.name }}</span>
+          <button class="segment-remove" @click="removeModel(model.id)">&times;</button>
         </div>
-        <div class="memory-free" :style="{ width: freePercent + '%' }">
-          <span v-if="freePercent > 15" class="free-label">frei</span>
+        <!-- Free space -->
+        <div class="memory-segment free" :style="{ width: freePercent + '%' }">
+          <span v-if="freePercent > 12" class="free-label">{{ $t('workshop.memory.free') }}</span>
         </div>
       </div>
       <div class="memory-stats">
-        {{ Math.round((baselineUsedMb + usedMb) / 1024) }} / {{ totalGb }} Gigabyte belegt
-        <span v-if="baselineUsedMb > 0" class="baseline-note">(davon {{ Math.round(baselineUsedMb / 1024) }} GB fuer Sicherheitssysteme)</span>
+        {{ $t('workshop.memory.used', { used: usedGb, total: totalGb }) }}
+        <span v-if="overBudget" class="over-budget">{{ $t('workshop.memory.overBudget') }}</span>
       </div>
     </div>
 
-    <!-- Available Model Cards -->
+    <!-- Model Cards -->
     <div class="models-section">
-      <div class="models-label">Verfuegbare Modelle — zum Aktivieren in den Speicher ziehen</div>
+      <div class="models-label">{{ $t('workshop.models.label') }}</div>
       <div class="models-grid">
         <div
-          v-for="model in availableModels"
+          v-for="model in physicalModels"
           :key="model.id"
           class="model-card"
           :class="{
-            'is-active': isActive(model.id),
-            'is-loading': isModelLoading(model.id),
+            'is-selected': isSelected(model.id),
             'is-cloud': !model.local,
+            'is-loaded': isAlreadyLoaded(model.id),
           }"
-          :style="{ minHeight: cardHeight(model.vram_mb) + 'px' }"
           draggable="true"
           @dragstart="onDragStart($event, model)"
           @click="toggleModel(model)"
         >
+          <div class="card-header">
+            <span class="card-media-badge" :class="model.media_type">{{ mediaLabel(model.media_type) }}</span>
+          </div>
           <div class="card-title">{{ model.name }}</div>
-          <div class="card-desc">{{ model.description }}</div>
-          <div v-if="!model.local" class="card-cloud-badge">Cloud (DSGVO-konform)</div>
+          <div class="card-facts">
+            <div v-if="model.local" class="card-fact">
+              {{ $t('workshop.models.needsGb', { gb: model.vram_gb }) }}
+              <span v-if="isAlreadyLoaded(model.id)" class="loaded-badge">{{ $t('workshop.models.loaded') }}</span>
+            </div>
+            <div v-else class="card-fact cloud-fact">
+              {{ model.cloud_region === 'EU' ? $t('workshop.models.cloudEu') : $t('workshop.models.cloudUs') }}
+            </div>
+            <div class="card-fact">{{ model.gen_time }}</div>
+          </div>
+          <div class="card-publisher">{{ model.publisher }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Confirm Button -->
-    <div v-if="activeModels.length > 0" class="confirm-section">
-      <button class="confirm-btn" @click="confirmSelection">
-        Einigung sichern
+    <!-- Confirm -->
+    <div v-if="selectedModels.length > 0 || confirmed" class="confirm-section">
+      <div v-if="loadingProgress" class="loading-notice">{{ loadingProgress }}</div>
+      <div v-if="confirmed" class="ready-notice">{{ $t('workshop.confirm.ready') }}</div>
+      <button v-if="!confirmed" class="confirm-btn" :class="{ 'is-loading': isPreloading }" :disabled="isPreloading" @click="confirmSelection">
+        {{ isPreloading ? $t('workshop.confirm.loading') : $t('workshop.confirm.load') }}
       </button>
     </div>
   </div>
@@ -112,79 +132,104 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { useGpuStatus, type ModelCost } from '@/composables/useGpuStatus'
+import { useI18n } from 'vue-i18n'
+import { useGpuStatus, SAFETY_VRAM_GB, type PhysicalModel } from '@/composables/useGpuStatus'
 import trashyIcon from '@/assets/trashy-icon.png'
 
-const { status, metaphors, refresh } = useGpuStatus()
+const { t } = useI18n()
 
-// Baseline: VRAM already used before workshop models (safety systems, Ollama, etc.)
-const baselineUsedMb = ref(0)
+const { status, refresh, metaphors, physicalModels } = useGpuStatus()
 
-// --- Chat State ---
-interface ChatMessage {
-  id: number
-  role: 'user' | 'assistant'
-  content: string
-}
-
-const messages = ref<ChatMessage[]>([])
-const userInput = ref('')
-const isLoading = ref(false)
-const messagesRef = ref<HTMLElement | null>(null)
-let nextId = 0
-
-// --- Active Models (in memory, with measured VRAM) ---
-interface ActiveModel {
-  id: string
-  name: string
-  vram_mb: number  // measured after real loading
-  local: boolean
-}
-
-const activeModels = ref<ActiveModel[]>([])
-const loadingModelId = ref<string | null>(null)
-
-const availableModels = computed(() => {
-  if (!status.value) return []
-  // Show image generation models for the prototype
-  return status.value.modelCosts.filter(m =>
-    m.media_type === 'image' || m.media_type === 'music' || m.media_type === 'video' || m.media_type === 'audio'
-  )
-})
+// --- Selected Models (planning, not actual loading) ---
+const selectedModels = ref<PhysicalModel[]>([])
+const confirmed = ref(false)
+const isPreloading = ref(false)
 
 const totalGb = computed(() => {
   if (!status.value) return 0
   return Math.round(status.value.totalMb / 1024)
 })
 
-const usedMb = computed(() => {
-  return activeModels.value.reduce((sum, m) => sum + m.vram_mb, 0)
+/** Live baseline: whatever is currently on the GPU (safety models, ComfyUI, caches) */
+const baselineGb = computed(() => {
+  if (!status.value || status.value.totalMb === 0) return SAFETY_VRAM_GB
+  return Math.round((status.value.totalMb - status.value.freeMb) / 1024)
 })
 
-const usedGb = computed(() => Math.round(usedMb.value / 1024))
+/** Check if a physical model is already loaded on the GPU */
+const LOADED_MODEL_PATTERNS: Record<string, string> = {
+  sd35_large: 'stable-diffusion-3.5',
+  flux2: 'FLUX.2',
+  heartmula: 'heartmula',
+  stable_audio: 'stable_audio',
+}
+
+function isAlreadyLoaded(id: string): boolean {
+  if (!status.value) return false
+  const pattern = LOADED_MODEL_PATTERNS[id]
+  if (!pattern) return false
+  return status.value.loadedModels.some(
+    m => m.model.includes(pattern) || m.backend.includes(pattern)
+  )
+}
+
+/** Loaded models as named segments for the memory bar */
+const loadedModelSegments = computed(() => {
+  if (!status.value) return []
+  return status.value.loadedModels
+    .filter(m => m.vram_mb > 500) // skip tiny models
+    .map(m => ({
+      name: m.model.split('/').pop()?.replace(/-/g, ' ') || m.backend,
+      gb: Math.round(m.vram_mb / 1024),
+    }))
+})
+
+const loadedModelsVramGb = computed(() =>
+  loadedModelSegments.value.reduce((sum, m) => sum + m.gb, 0)
+)
+
+/** Baseline VRAM not explained by known loaded models (safety, CUDA caches, ComfyUI) */
+const unaccountedBaselineGb = computed(() =>
+  Math.max(0, baselineGb.value - loadedModelsVramGb.value)
+)
+
+/** Selected models that are NOT already on the GPU */
+const unloadedSelectedModels = computed(() =>
+  selectedModels.value.filter(m => m.local && !isAlreadyLoaded(m.id))
+)
+
+const usedGb = computed(() => {
+  const additionalVram = unloadedSelectedModels.value
+    .reduce((sum, m) => sum + m.vram_gb, 0)
+  return baselineGb.value + additionalVram
+})
 
 const freePercent = computed(() => {
-  if (!status.value || status.value.totalMb === 0) return 100
-  return Math.max(0, 100 - (usedMb.value / status.value.totalMb) * 100)
+  if (totalGb.value === 0) return 100
+  const used = usedGb.value / totalGb.value * 100
+  return Math.max(0, 100 - used)
 })
 
-function isActive(id: string) {
-  return activeModels.value.some(m => m.id === id)
+const overBudget = computed(() => usedGb.value > totalGb.value)
+
+function isSelected(id: string) {
+  return selectedModels.value.some(m => m.id === id)
 }
 
-function isModelLoading(id: string) {
-  return loadingModelId.value === id
+function segmentWidth(gb: number) {
+  if (totalGb.value === 0 || gb === 0) return 3
+  return Math.max(3, (gb / totalGb.value) * 100)
 }
 
-function cardWidth(vramMb: number) {
-  if (!status.value || status.value.totalMb === 0 || vramMb === 0) return 5
-  return Math.max(5, (vramMb / status.value.totalMb) * 100)
-}
-
-function cardHeight(vramMb: number) {
-  if (vramMb === 0) return 80 // Cloud models — small
-  // Proportional: 28GB → 140px, 8GB → 80px, 24GB → 120px
-  return Math.max(70, Math.min(160, 50 + vramMb / 300))
+function mediaLabel(type: string): string {
+  const keyMap: Record<string, string> = {
+    image: 'workshop.models.image',
+    video: 'workshop.models.video',
+    music: 'workshop.models.music',
+    sound: 'workshop.models.sound',
+    '3d': 'workshop.models.threeD',
+  }
+  return keyMap[type] ? t(keyMap[type]) : type
 }
 
 // --- Drag & Drop ---
@@ -192,13 +237,13 @@ const isDragOver = ref(false)
 let draggedModelId: string | null = null
 let dragFromMemory = false
 
-function onDragStart(e: DragEvent, model: ModelCost) {
+function onDragStart(e: DragEvent, model: PhysicalModel) {
   draggedModelId = model.id
   dragFromMemory = false
   e.dataTransfer!.effectAllowed = 'move'
 }
 
-function onDragStartFromMemory(e: DragEvent, model: ActiveModel) {
+function onDragStartFromMemory(e: DragEvent, model: PhysicalModel) {
   draggedModelId = model.id
   dragFromMemory = true
   e.dataTransfer!.effectAllowed = 'move'
@@ -213,77 +258,45 @@ function onDragLeave() {
   isDragOver.value = false
 }
 
-function onDrop(e: DragEvent) {
+function onDrop() {
   isDragOver.value = false
   if (!draggedModelId || dragFromMemory) return
   addModel(draggedModelId)
   draggedModelId = null
 }
 
-async function addModel(id: string) {
-  if (isActive(id) || loadingModelId.value) return
-  const model = status.value?.modelCosts.find(m => m.id === id)
+function addModel(id: string) {
+  if (isSelected(id)) return
+  const model = physicalModels.find(m => m.id === id)
   if (!model) return
+  selectedModels.value.push(model)
 
-  // Cloud models: no loading needed
   if (!model.local) {
-    activeModels.value.push({ id, name: model.name, vram_mb: 0, local: false })
+    const region = model.cloud_region === 'EU' ? t('workshop.chat.regionEu') : t('workshop.chat.regionUs')
     addChatMessage('assistant',
-      `${model.name} ist ein Cloud-Modell. Es braucht keinen Platz auf der Grafikkarte, aber eure Texte werden an einen geschuetzten Server in Europa geschickt. Jedes Bild kostet Geld aus dem Projektbudget.`
+      t('workshop.chat.cloudAdded', { name: model.name, publisher: model.publisher, region })
     )
-    return
-  }
-
-  // Local model: trigger REAL loading on GPU
-  loadingModelId.value = id
-  addChatMessage('assistant',
-    `${model.name} wird jetzt in den Speicher der Grafikkarte geladen. Das dauert einen Moment...`
-  )
-
-  try {
-    // Trigger real model load via GPU service (proxied through DevServer)
-    const loadRes = await fetch(`${getBaseUrl()}/api/settings/gpu-preload`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model_id: id }),
-    })
-
-    if (!loadRes.ok) {
-      const err = await loadRes.json().catch(() => ({}))
-      throw new Error(err.error || `HTTP ${loadRes.status}`)
-    }
-
-    // Model loaded — now query real VRAM usage
-    await refresh()
-    const vramAfter = status.value ? status.value.totalMb - status.value.freeMb : 0
-    const vramBefore = usedMb.value
-    const measuredVram = Math.max(0, vramAfter - vramBefore)
-
-    activeModels.value.push({ id, name: model.name, vram_mb: measuredVram, local: true })
-
-    const freeGb = status.value ? Math.round(status.value.freeMb / 1024) : 0
+  } else if (overBudget.value) {
     addChatMessage('assistant',
-      `${model.name} ist geladen und braucht ${Math.round(measuredVram / 1024)} Gigabyte. Noch ${freeGb} Gigabyte frei.`
+      t('workshop.chat.overBudget', { name: model.name, gb: model.vram_gb })
     )
-  } catch (e: any) {
+  } else {
+    const freeGb = totalGb.value - usedGb.value
     addChatMessage('assistant',
-      `${model.name} konnte nicht geladen werden: ${e.message}. Fragt die Kursleitung.`
+      t('workshop.chat.freeSpace', { name: model.name, gb: model.vram_gb, free: freeGb })
     )
-  } finally {
-    loadingModelId.value = null
   }
 }
 
 function removeModel(id: string) {
-  const idx = activeModels.value.findIndex(m => m.id === id)
-  if (idx >= 0) {
-    activeModels.value.splice(idx, 1)
-    // TODO: optionally trigger unload on GPU service
-  }
+  const idx = selectedModels.value.findIndex(m => m.id === id)
+  if (idx >= 0) selectedModels.value.splice(idx, 1)
+  confirmed.value = false
+  loadingProgress.value = ''
 }
 
-function toggleModel(model: ModelCost) {
-  if (isActive(model.id)) {
+function toggleModel(model: PhysicalModel) {
+  if (isSelected(model.id)) {
     removeModel(model.id)
   } else {
     addModel(model.id)
@@ -291,6 +304,18 @@ function toggleModel(model: ModelCost) {
 }
 
 // --- Chat ---
+interface ChatMessage {
+  id: number
+  role: 'user' | 'assistant'
+  content: string
+}
+
+const messages = ref<ChatMessage[]>([])
+const userInput = ref('')
+const isLoading = ref(false)
+const messagesRef = ref<HTMLElement | null>(null)
+let nextId = 0
+
 function getBaseUrl(): string {
   return import.meta.env.DEV ? 'http://localhost:17802' : ''
 }
@@ -329,7 +354,7 @@ async function sendMessage() {
       addChatMessage('assistant', data.reply)
     }
   } catch {
-    addChatMessage('assistant', 'Verbindungsfehler — bitte nochmal versuchen.')
+    addChatMessage('assistant', t('workshop.chat.connectionError'))
   } finally {
     isLoading.value = false
   }
@@ -338,52 +363,94 @@ async function sendMessage() {
 function buildDraftContext(): string {
   const parts: string[] = []
   if (status.value) {
-    parts.push(`GPU: ${status.value.gpuName}, ${totalGb.value} GB total, ${usedGb.value} GB belegt`)
-    parts.push(`Aktive Modelle: ${activeModels.value.map(m => m.name).join(', ') || 'keine'}`)
-    parts.push(`Freier Speicher: ${Math.round((status.value.totalMb - usedMb.value) / 1024)} GB`)
+    parts.push(`Grafikkarte: ${status.value.gpuName}, ${totalGb.value} GB Speicher`)
+    parts.push(`Sicherheitssysteme: ${SAFETY_VRAM_GB} GB (immer geladen)`)
+    parts.push(`Ausgewählte Modelle: ${selectedModels.value.map(m => `${m.name} (${m.vram_gb} GB)`).join(', ') || 'keine'}`)
+    parts.push(`Belegt: ${usedGb.value} GB, Frei: ${totalGb.value - usedGb.value} GB`)
+    if (overBudget.value) parts.push('ACHTUNG: Auswahl übersteigt den verfügbaren Speicher!')
   }
   return parts.join('\n')
 }
 
+const loadingProgress = ref('')
+
 async function confirmSelection() {
-  // TODO: POST to /api/workshop/session with settings password
-  addChatMessage('assistant',
-    `Einigung gesichert: ${activeModels.value.map(m => m.name).join(', ')}. Alle Geraete sehen jetzt diese Auswahl.`
-  )
+  const localModels = selectedModels.value.filter(m => m.local)
+  const modelIds = localModels.map(m => m.id)
+
+  if (modelIds.length === 0) {
+    confirmed.value = true
+    return
+  }
+
+  isPreloading.value = true
+  loadingProgress.value = t('workshop.confirm.loading')
+
+  try {
+    const res = await fetch(`${getBaseUrl()}/api/settings/workshop/preload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ models: modelIds }),
+    })
+    const data = await res.json()
+
+    const parts: string[] = []
+
+    if (data.results) {
+      const loaded: string[] = []
+      const skipped: string[] = []
+      const failed: string[] = []
+
+      for (const [mid, result] of Object.entries(data.results) as [string, any][]) {
+        const model = localModels.find(m => m.id === mid)
+        const name = model?.name || mid
+        if (result.skipped) skipped.push(name)
+        else if (result.success) loaded.push(name)
+        else failed.push(`${name}: ${result.error || 'Fehler'}`)
+      }
+
+      if (loaded.length) parts.push(t('workshop.confirm.resultLoaded', { models: loaded.join(', ') }))
+      if (skipped.length) parts.push(t('workshop.confirm.resultSkipped', { models: skipped.join(', ') }))
+      if (failed.length) parts.push(t('workshop.confirm.resultError', { details: failed.join('; ') }))
+    }
+
+    // Refresh live GPU status — loaded models now show in baseline
+    await refresh()
+
+    // Remove successfully loaded local models from selection
+    // (they're now part of the baseline "bereits belegt")
+    selectedModels.value = selectedModels.value.filter(m => !m.local)
+
+    loadingProgress.value = parts.join('. ') || 'Fertig'
+    confirmed.value = true
+  } catch (e: any) {
+    loadingProgress.value = `Fehler: ${e.message}`
+  } finally {
+    isPreloading.value = false
+  }
 }
 
 // --- Greeting ---
 function buildGreeting(): string {
   const m = metaphors()
   const tgb = totalGb.value
-  // GPU-specific numbers — empty string if not yet available
   const memLine = tgb > 0 && m
-    ? ` Wir haben hier ${tgb} Gigabyte Grafikkartenspeicher zur Verfuegung. Das ist soviel wie ${m.booksCount.toLocaleString()} Buecher — wenn man die aneinanderreiht gibt das eine Buecherschlange von ${m.booksMeters} Metern.`
+    ? t('workshop.greeting.memoryMetaphor', { gb: tgb, books: m.booksCount.toLocaleString(), meters: m.booksMeters })
     : ''
 
-  return `Hallo, ich bin Trashy, das Hilfe-System fuer diese Plattform. Wenn Ihr einen gemeinsamen Workshop oder eine Unterrichtseinheit mit vielen Endgeraeten durchfuehren wollt, dann ist es sinnvoll vorher zu ueberlegen worum es gehen soll.
-
-Mit Kuenstlicher Intelligenz zu arbeiten braucht erstaunlich viele Ressourcen. Es braucht vor allem eine Grafikkarte mit moeglichst viel Speicher.${memLine}
-
-Aber die KI-Modelle die Ihr verwendet sind so riesig, dass selbst dieser grosse Speicher schnell an Grenzen stoesst.
-
-Daher solltet ihr planen und gemeinsam abstimmen was ihr vorhabt, und mit welchen Modellen. Denn wenn der Speicher voll ist und jemand von Euch ein weiteres neues Modell aktiviert, entstehen lange Wartezeiten und manchmal ein Stau. Es dauert zwischen 30 Sekunden und 2 Minuten, nur um ein Modell in den Speicher zu laden. Ist es einmal im Speicher, dann geht alles meistens ganz schnell.
-
-Natuerlich ist es kein Problem wenn Ihr mehr oder andere Modelle verwendet — das kann ich verwalten. Aber dann dauert alles etwas laenger. Und: Es ist immer gut sich vorher zu ueberlegen was man mit welchen Mitteln erreichen will. Wenn Ihr kuenstlerisch arbeiten wollt, geht Ihr schliesslich auch nicht einfach auf die Strasse und greift den ersten Gegenstand auf, um damit etwas zu tun.
-
-Also denkt mal gemeinsam nach. Zieht die Modellkarten unten in den Speicher und schaut, welche Modelle Ihr gut miteinander kombinieren koennt. ODER sagt mir was Ihr gerne tun moechtet, und ich schlage Euch geeignete Modelle vor.`
+  const parts = [
+    t('workshop.greeting.intro'),
+    t('workshop.greeting.resources') + memLine,
+    t('workshop.greeting.limits'),
+    t('workshop.greeting.planning'),
+    t('workshop.greeting.flexibility'),
+    t('workshop.greeting.callToAction'),
+  ]
+  return parts.join('\n\n')
 }
 
 onMounted(() => {
   addChatMessage('assistant', buildGreeting())
-  // Capture baseline VRAM usage (safety models, Ollama, etc.)
-  const captureBaseline = setInterval(() => {
-    if (status.value && status.value.totalMb > 0) {
-      clearInterval(captureBaseline)
-      baselineUsedMb.value = status.value.totalMb - status.value.freeMb
-    }
-  }, 500)
-  setTimeout(() => clearInterval(captureBaseline), 10000)
 })
 </script>
 
@@ -391,11 +458,18 @@ onMounted(() => {
 .workshop-page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 1rem 6rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   min-height: 100vh;
+}
+
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
 }
 
 /* --- Trashy Chat --- */
@@ -429,8 +503,7 @@ onMounted(() => {
 }
 
 .chat-messages {
-  flex: 1;
-  overflow-y: auto;
+  overflow-y: visible;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -498,10 +571,6 @@ onMounted(() => {
   border-color: rgba(76, 175, 80, 0.4);
 }
 
-.chat-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-}
-
 /* --- Memory Visualization --- */
 .memory-section {
   display: flex;
@@ -519,7 +588,7 @@ onMounted(() => {
 .memory-container {
   display: flex;
   align-items: stretch;
-  min-height: 60px;
+  min-height: 52px;
   background: rgba(255, 255, 255, 0.03);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
@@ -532,63 +601,63 @@ onMounted(() => {
   background: rgba(76, 175, 80, 0.05);
 }
 
-.memory-baseline {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  background: rgba(255, 255, 255, 0.06);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  min-width: 0;
-}
-
-.memory-card {
+.memory-segment {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.6rem;
+  min-width: 0;
+  transition: width 0.3s ease;
+}
+
+.memory-segment.loaded {
+  background: rgba(100, 180, 255, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.memory-segment.safety {
+  background: rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.memory-segment.model {
   background: rgba(76, 175, 80, 0.15);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   cursor: grab;
-  transition: background 0.15s ease;
-  min-width: 0;
 }
 
-.memory-card:hover {
+.memory-segment.model:hover {
   background: rgba(76, 175, 80, 0.25);
 }
 
-.card-name {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
+.memory-segment.free {
+  justify-content: center;
+}
+
+.segment-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.card-remove {
+.segment-remove {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0 0.2rem;
   flex-shrink: 0;
 }
 
-.card-remove:hover {
+.segment-remove:hover {
   color: rgba(255, 100, 100, 0.8);
 }
 
-.memory-free {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  transition: width 0.3s ease;
-}
-
 .free-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -600,19 +669,12 @@ onMounted(() => {
   text-align: center;
 }
 
-.loading-indicator {
-  text-align: center;
-  color: rgba(255, 179, 0, 0.8);
-  font-size: 0.9rem;
-  animation: pulse-loading 1.5s ease-in-out infinite;
+.over-budget {
+  color: rgba(255, 80, 80, 0.9);
+  font-weight: 600;
 }
 
-.baseline-note {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.7rem;
-}
-
-/* --- Model Cards Grid --- */
+/* --- Model Cards --- */
 .models-section {
   display: flex;
   flex-direction: column;
@@ -625,23 +687,21 @@ onMounted(() => {
 }
 
 .models-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0.75rem;
 }
 
 .model-card {
-  flex: 1 1 200px;
-  max-width: 250px;
-  padding: 1rem;
+  padding: 0.9rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  cursor: grab;
+  cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .model-card:hover {
@@ -649,45 +709,69 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.model-card.is-active {
+.model-card.is-selected {
   border-color: rgba(76, 175, 80, 0.5);
   background: rgba(76, 175, 80, 0.08);
-  opacity: 0.5;
-  cursor: default;
-  pointer-events: none;
 }
 
-.model-card.is-loading {
-  border-color: rgba(255, 179, 0, 0.5);
-  background: rgba(255, 179, 0, 0.08);
-  animation: pulse-loading 1.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes pulse-loading {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+.model-card.is-loaded {
+  border-color: rgba(100, 180, 255, 0.3);
 }
 
 .model-card.is-cloud {
   border-style: dashed;
 }
 
+.loaded-badge {
+  color: rgba(100, 180, 255, 0.7);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+}
+
+.card-media-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.card-media-badge.image { background: rgba(255, 107, 107, 0.3); }
+.card-media-badge.video { background: rgba(233, 30, 99, 0.3); }
+.card-media-badge.music { background: rgba(156, 39, 176, 0.3); }
+.card-media-badge.sound { background: rgba(255, 152, 0, 0.3); }
+.card-media-badge.\33d { background: rgba(0, 188, 212, 0.3); }
+
 .card-title {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.card-desc {
+.card-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.card-fact {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
 }
 
-.card-cloud-badge {
+.cloud-fact {
+  color: rgba(255, 179, 0, 0.7);
+}
+
+.card-publisher {
   font-size: 0.7rem;
-  color: rgba(100, 180, 255, 0.7);
+  color: rgba(255, 255, 255, 0.3);
   margin-top: auto;
 }
 
@@ -713,5 +797,34 @@ onMounted(() => {
 .confirm-btn:hover {
   background: rgba(76, 175, 80, 0.3);
   border-color: rgba(76, 175, 80, 0.6);
+}
+
+.confirm-btn.is-loading {
+  animation: pulse-btn 1.5s ease-in-out infinite;
+  cursor: wait;
+}
+
+@keyframes pulse-btn {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.loading-notice {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  padding: 0.6rem;
+  line-height: 1.5;
+}
+
+.ready-notice {
+  text-align: center;
+  color: rgba(76, 175, 80, 0.9);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 10px;
+  background: rgba(76, 175, 80, 0.08);
 }
 </style>

@@ -1,8 +1,9 @@
 /**
- * Composable for live GPU/VRAM status.
+ * Composable for workshop resource planning.
  *
- * Fetches from the existing /api/settings/backend-status endpoint
- * and normalizes the data for resource-aware UI components.
+ * Provides:
+ * - Live GPU status (polling /api/settings/backend-status)
+ * - Physical model definitions with measured VRAM values
  */
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -13,17 +14,6 @@ export interface LoadedModel {
   in_use: number
 }
 
-export interface ModelCost {
-  id: string
-  name: string
-  description: string
-  vram_mb: number
-  duration_s: string
-  local: boolean
-  backend_type: string
-  media_type: string
-}
-
 export interface GpuStatus {
   gpuName: string
   totalMb: number
@@ -31,8 +21,126 @@ export interface GpuStatus {
   allocatedMb: number
   tdpWatts: number
   loadedModels: LoadedModel[]
-  modelCosts: ModelCost[]
 }
+
+export interface PhysicalModel {
+  id: string
+  name: string
+  media_type: 'image' | 'video' | 'music' | 'sound' | '3d'
+  vram_gb: number
+  gen_time: string
+  local: boolean
+  publisher: string
+  cloud_region: 'US' | 'EU' | null
+  /** true if the model can be preloaded via /api/settings/workshop/preload */
+  preloadable: boolean
+}
+
+/**
+ * Real VRAM measurements — Session 268 (2026-03-18).
+ * RTX PRO 6000 Blackwell 96 GB, nvidia-smi peak monitoring.
+ * ComfyUI models measured through actual ComfyUI workflows.
+ * Diffusers models measured through GPU service.
+ * Safety models measured via Ollama.
+ */
+export const PHYSICAL_MODELS: PhysicalModel[] = [
+  // --- Bilder ---
+  {
+    id: 'sd35_large',
+    name: 'Stable Diffusion 3.5 Large',
+    media_type: 'image',
+    vram_gb: 30,
+    gen_time: '15\u201360 Sekunden',
+    local: true,
+    publisher: 'Stability AI',
+    cloud_region: null,
+    preloadable: true,
+  },
+  {
+    id: 'flux2',
+    name: 'FLUX.2',
+    media_type: 'image',
+    vram_gb: 53,
+    gen_time: '15\u201330 Sekunden',
+    local: true,
+    publisher: 'Black Forest Labs',
+    cloud_region: null,
+    preloadable: false,
+  },
+  // --- Videos ---
+  {
+    id: 'wan22_video',
+    name: 'Wan 2.2 Video',
+    media_type: 'video',
+    vram_gb: 38,
+    gen_time: '25\u2013120 Sekunden',
+    local: true,
+    publisher: 'Wan-AI / Alibaba',
+    cloud_region: null,
+    preloadable: false,
+  },
+  {
+    id: 'ltx_video',
+    name: 'LTX Video',
+    media_type: 'video',
+    vram_gb: 24,
+    gen_time: '15\u201330 Sekunden',
+    local: true,
+    publisher: 'Lightricks',
+    cloud_region: null,
+    preloadable: false,
+  },
+  // --- Musik ---
+  {
+    id: 'heartmula',
+    name: 'HeartMuLa',
+    media_type: 'music',
+    vram_gb: 12,
+    gen_time: '2\u20135 Minuten',
+    local: true,
+    publisher: 'HeartMuLa Research',
+    cloud_region: null,
+    preloadable: true,
+  },
+  {
+    id: 'acestep',
+    name: 'ACE-Step',
+    media_type: 'music',
+    vram_gb: 8,
+    gen_time: '20\u201360 Sekunden',
+    local: true,
+    publisher: 'StepFun / ACE Studio',
+    cloud_region: null,
+    preloadable: false,
+  },
+  // --- Klaenge ---
+  {
+    id: 'stable_audio',
+    name: 'Stable Audio',
+    media_type: 'sound',
+    vram_gb: 6,
+    gen_time: '5\u201310 Sekunden',
+    local: true,
+    publisher: 'Stability AI',
+    cloud_region: null,
+    preloadable: true,
+  },
+  // --- Cloud ---
+  {
+    id: 'gemini_3_pro',
+    name: 'Gemini 3 Pro',
+    media_type: 'image',
+    vram_gb: 0,
+    gen_time: '5\u201315 Sekunden',
+    local: false,
+    publisher: 'Google',
+    cloud_region: 'US',
+    preloadable: false,
+  },
+]
+
+/** Measured total safety model VRAM (llama-guard3:1b + qwen3:1.7b + qwen3-vl:2b) */
+export const SAFETY_VRAM_GB = 8
 
 const POLL_INTERVAL = 30_000
 
@@ -60,38 +168,12 @@ export function useGpuStatus() {
       const gpuInfo = gpuService.gpu_info || {}
       const coordinator = gpuService.vram_coordinator || {}
 
-      // Extract loaded models from vram_coordinator if available
       const loadedModels: LoadedModel[] = (coordinator.loaded_models || []).map((m: any) => ({
         backend: m.backend || '',
         model: m.model || '',
         vram_mb: m.vram_mb || 0,
         in_use: m.in_use || 0,
       }))
-
-      // Extract model list from output_configs
-      // VRAM values are NOT hardcoded — they come from real GPU measurement after loading
-      // Descriptions: only factual media type, NO qualitative claims
-
-      const CLOUD_BACKENDS = new Set(['openai', 'google'])
-
-      const modelCosts: ModelCost[] = []
-      const byBackend = data.output_configs?.by_backend || {}
-      for (const [backend, configs] of Object.entries(byBackend)) {
-        for (const cfg of configs as any[]) {
-          if (cfg.hidden) continue
-          const isCloud = CLOUD_BACKENDS.has(backend)
-          modelCosts.push({
-            id: cfg.id || '',
-            name: cfg.name || cfg.id || '',
-            description: '', // No invented descriptions — real info comes from output configs or user
-            vram_mb: 0, // Real value comes from GPU measurement after loading
-            duration_s: '',
-            local: !isCloud,
-            backend_type: backend,
-            media_type: cfg.media_type || 'unknown',
-          })
-        }
-      }
 
       const totalMb = Math.round((gpuInfo.total_vram_gb || hw.vram_gb || 0) * 1024)
       const allocatedMb = Math.round((gpuInfo.allocated_gb || 0) * 1024)
@@ -104,7 +186,6 @@ export function useGpuStatus() {
         allocatedMb,
         tdpWatts: hw.tdp_watts || 0,
         loadedModels,
-        modelCosts,
       }
     } catch (e: any) {
       error.value = e.message || 'Failed to fetch GPU status'
@@ -113,12 +194,10 @@ export function useGpuStatus() {
     }
   }
 
-  /** Computed metaphors based on live hardware data */
   function metaphors() {
     if (!status.value) return null
-    const watts = status.value.tdpWatts || 600 // fallback
+    const watts = status.value.tdpWatts || 600
     const totalGb = Math.round(status.value.totalMb / 1024)
-    // 1 GB ≈ 500 books (average ebook ~2MB), 1 book ≈ 2.5cm wide
     const booksCount = totalGb * 500
     const booksMeters = Math.round(booksCount * 0.025)
     return {
@@ -140,5 +219,5 @@ export function useGpuStatus() {
     if (timer) clearInterval(timer)
   })
 
-  return { status, loading, error, refresh, metaphors }
+  return { status, loading, error, refresh, metaphors, physicalModels: PHYSICAL_MODELS }
 }

@@ -34,11 +34,14 @@
     "publisher": "StepFun / ACE Studio (Beijing, CN)",
     "architecture": "Diffusion Transformer (latent audio)",
     "params": "~3.5B",
-    "text_encoders": ["T5-Large (lyrics + tags)"],
+    "text_encoders": [
+      "T5-Large (lyrics + tags)"
+    ],
     "quantization": "FP32",
     "license": "Apache 2.0",
     "fair_culture": "Training data undisclosed",
-    "safety_by_design": "None documented by manufacturer"
+    "safety_by_design": "None documented by manufacturer",
+    "gpu_vram_mb": 8500
   },
   "display": {
     "icon": "🎵",

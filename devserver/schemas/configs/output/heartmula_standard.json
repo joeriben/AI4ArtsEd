@@ -22,40 +22,72 @@
   },
   "media_preferences": {
     "default_output": "music",
-    "supported_types": ["music"]
+    "supported_types": [
+      "music"
+    ]
   },
   "meta": {
     "stage": "output",
     "backend": "heartmula",
     "backend_type": "heartmula",
     "requires_dual_input": true,
-    "supported_languages": ["en", "zh", "ja", "ko", "es"],
+    "supported_languages": [
+      "en",
+      "zh",
+      "ja",
+      "ko",
+      "es"
+    ],
     "display_name": "HeartMuLa",
-    "icon": "\uD83C\uDFB5",
+    "icon": "🎵",
     "publisher": "HeartMuLa Research (CN)",
     "architecture": "Flow Matching + MuLa Codec (Global+Local Transformer)",
     "params": "~3B",
-    "text_encoders": ["Internal tokenizer (lyrics + tags)"],
+    "text_encoders": [
+      "Internal tokenizer (lyrics + tags)"
+    ],
     "quantization": "FP16 / FP32 codec",
     "license": "Apache 2.0",
     "fair_culture": "~600K songs + TTS corpora (song sources undisclosed)",
     "provenance": {
       "training_data_disclosed": false,
-      "training_data_sources": ["~600K songs (sources undisclosed)", "TTS corpora"],
+      "training_data_sources": [
+        "~600K songs (sources undisclosed)",
+        "TTS corpora"
+      ],
       "training_data_size": "~600K songs",
       "training_data_consent": "unknown",
       "geographic_origin": "China",
       "known_biases": [
-        { "en": "Language support limited to EN, ZH, JA, KO, ES — other languages produce unpredictable results", "de": "Sprachunterstützung beschränkt auf EN, ZH, JA, KO, ES — andere Sprachen erzeugen unvorhersagbare Ergebnisse" },
-        { "en": "Training data likely skewed toward commercial pop/electronic genres", "de": "Trainingsdaten wahrscheinlich auf kommerzielle Pop-/Elektronik-Genres verzerrt" },
-        { "en": "Tag system reflects Western genre categories (pop, rock, jazz)", "de": "Tag-System spiegelt westliche Genre-Kategorien wider (Pop, Rock, Jazz)" }
+        {
+          "en": "Language support limited to EN, ZH, JA, KO, ES — other languages produce unpredictable results",
+          "de": "Sprachunterstützung beschränkt auf EN, ZH, JA, KO, ES — andere Sprachen erzeugen unvorhersagbare Ergebnisse"
+        },
+        {
+          "en": "Training data likely skewed toward commercial pop/electronic genres",
+          "de": "Trainingsdaten wahrscheinlich auf kommerzielle Pop-/Elektronik-Genres verzerrt"
+        },
+        {
+          "en": "Tag system reflects Western genre categories (pop, rock, jazz)",
+          "de": "Tag-System spiegelt westliche Genre-Kategorien wider (Pop, Rock, Jazz)"
+        }
       ],
       "known_gaps": [
-        { "en": "Oral and non-notated musical traditions are underrepresented", "de": "Mündliche und nicht-notierte Musiktraditionen sind unterrepräsentiert" },
-        { "en": "Microtonal systems (Arabic maqam, Indian raga) not explicitly supported", "de": "Mikrotonale Systeme (arabischer Maqam, indischer Raga) nicht explizit unterstützt" },
-        { "en": "Song sources undisclosed — consent of original artists unknown", "de": "Songquellen nicht offengelegt — Zustimmung der ursprünglichen Künstler unbekannt" }
+        {
+          "en": "Oral and non-notated musical traditions are underrepresented",
+          "de": "Mündliche und nicht-notierte Musiktraditionen sind unterrepräsentiert"
+        },
+        {
+          "en": "Microtonal systems (Arabic maqam, Indian raga) not explicitly supported",
+          "de": "Mikrotonale Systeme (arabischer Maqam, indischer Raga) nicht explizit unterstützt"
+        },
+        {
+          "en": "Song sources undisclosed — consent of original artists unknown",
+          "de": "Songquellen nicht offengelegt — Zustimmung der ursprünglichen Künstler unbekannt"
+        }
       ]
-    }
+    },
+    "gpu_vram_mb": 12500
   },
   "display": {
     "icon": "music_note",
@@ -65,8 +97,18 @@
     "order": 110
   },
   "tags": {
-    "en": ["music", "lyrics", "multilingual", "AI music"],
-    "de": ["Musik", "Lyrics", "mehrsprachig", "KI-Musik"]
+    "en": [
+      "music",
+      "lyrics",
+      "multilingual",
+      "AI music"
+    ],
+    "de": [
+      "Musik",
+      "Lyrics",
+      "mehrsprachig",
+      "KI-Musik"
+    ]
   },
   "audience": {
     "workshop_suitable": true,

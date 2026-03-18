@@ -5,7 +5,6 @@
   "description": "High-quality image transformation with Flux2 Dev using ReferenceLatent conditioning (20 steps)",
   "category": "image",
   "media_type": "image",
-
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_img2img",
     "steps": 20,
@@ -19,7 +18,6 @@
     "top_p": 0.9,
     "max_tokens": 512
   },
-
   "parameter_ranges": {
     "steps": {
       "min": 15,
@@ -46,7 +44,6 @@
       "description": "Target image size (2.5 MP = ~1600x1600, optimal for Flux2)"
     }
   },
-
   "capabilities": {
     "img2img": true,
     "text2img": false,
@@ -54,7 +51,6 @@
     "outpainting": false,
     "controlnet": false
   },
-
   "requirements": {
     "gpu_vram_mb": 18000,
     "estimated_duration_seconds": "40-50",
@@ -64,15 +60,17 @@
       "flux2-vae.safetensors"
     ]
   },
-
   "ui_config": {
     "icon": "⚡",
     "color": "#FF6B35",
     "badge": "Quality",
-    "recommended_for": ["high_quality_edits", "creative_transformation", "natural_language_editing"],
+    "recommended_for": [
+      "high_quality_edits",
+      "creative_transformation",
+      "natural_language_editing"
+    ],
     "best_for": "Complex image transformations with natural language instructions (style changes, scene modifications, creative edits)"
   },
-
   "meta": {
     "stage": "output",
     "backend_type": "comfyui",
@@ -87,12 +85,14 @@
     "publisher": "Black Forest Labs (Freiburg, DE)",
     "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
     "params": "~56B total (32B DiT + 24B text encoder)",
-    "text_encoders": ["Mistral-Small-3.2-24B (24B)"],
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
     "quantization": "FP8 mixed precision",
     "license": "Non-Commercial (BFL Dev License)",
     "fair_culture": "Training data undisclosed, NSFW-filtered",
     "safety_by_design": "NSFW filter + IWF CSAM filtering",
-    "gpu_vram_mb": 18000,
+    "gpu_vram_mb": 55000,
     "recommended_resolution": "1024x1024"
   }
 }

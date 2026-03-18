@@ -12,7 +12,6 @@
     "en": "Video Generation",
     "de": "Videogenerierung"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_video_wan22_t2v_fast",
     "NEGATIVE_PROMPT": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
@@ -24,12 +23,12 @@
     "FPS": 16,
     "seed": "random"
   },
-
   "media_preferences": {
     "default_output": "video",
-    "supported_types": ["video"]
+    "supported_types": [
+      "video"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "wan2.2-t2v-14b-fp8-lightx2v",
@@ -44,7 +43,7 @@
     "backend": "comfyui",
     "backend_type": "comfyui",
     "requires_gpu": true,
-    "gpu_vram_mb": 24000,
+    "gpu_vram_mb": 39000,
     "estimated_duration_seconds": "30-60",
     "recommended_resolution": "832x480",
     "supported_resolutions": [
@@ -53,7 +52,10 @@
       "480x480"
     ],
     "recommended_frames": 81,
-    "supported_fps": [16, 24],
+    "supported_fps": [
+      16,
+      24
+    ],
     "notes": "Wan 2.2 T2V 14B FP8 with LightX2V LoRA distillation. Two-stage sampling (4 total steps) for ~10x speedup over vanilla 40-step inference. Quality comparable to full inference at fraction of the time.",
     "version": "1.0",
     "display_name": "Wan 2.2 T2V 14B Fast",
@@ -61,13 +63,14 @@
     "publisher": "Wan-AI / Alibaba Group (Hangzhou, CN)",
     "architecture": "Diffusion Transformer (T2V, MoE 14B, LightX2V 4-step distillation)",
     "params": "14B active (FP8 quantized)",
-    "text_encoders": ["uMT5-XXL (multilingual, FP8)"],
+    "text_encoders": [
+      "uMT5-XXL (multilingual, FP8)"
+    ],
     "quantization": "FP8 (scaled)",
     "license": "Apache 2.0",
     "fair_culture": "Trained on ~1.5B videos + 10B images (sources undisclosed)",
     "safety_by_design": "Optional safety checker in pipeline"
   },
-
   "display": {
     "icon": "videocam",
     "color": "#E91E63",
@@ -75,12 +78,26 @@
     "difficulty": 2,
     "order": 20
   },
-
   "tags": {
-    "en": ["video", "wan", "text-to-video", "comfyui", "fast", "14b", "fp8"],
-    "de": ["video", "wan", "text-zu-video", "comfyui", "schnell", "14b", "fp8"]
+    "en": [
+      "video",
+      "wan",
+      "text-to-video",
+      "comfyui",
+      "fast",
+      "14b",
+      "fp8"
+    ],
+    "de": [
+      "video",
+      "wan",
+      "text-zu-video",
+      "comfyui",
+      "schnell",
+      "14b",
+      "fp8"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

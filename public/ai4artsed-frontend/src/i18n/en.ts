@@ -1616,5 +1616,52 @@ export const en = {
     inputPlaceholder: 'Say something...',
     toggleTTS: 'Toggle voice output',
     fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.'
+  },
+  workshop: {
+    title: 'Collaborative Workshop Preparation',
+    memory: {
+      label: 'Graphics Card Memory',
+      system: 'System',
+      free: 'free',
+      used: '{used} / {total} Gigabytes used',
+      overBudget: '— does not fit!',
+    },
+    models: {
+      label: 'Models — drag to memory or click to activate',
+      image: 'Images',
+      video: 'Videos',
+      music: 'Music',
+      sound: 'Sounds',
+      threeD: '3D',
+      needsGb: 'needs {gb} Gigabytes',
+      loaded: '(loaded)',
+      cloudUs: 'Server-based — server in the USA',
+      cloudEu: 'Server-based — server in Europe',
+    },
+    confirm: {
+      load: 'Load models into memory now',
+      loading: 'Loading models...',
+      ready: 'All loaded — ready to go!',
+      resultLoaded: 'Loaded: {models}',
+      resultSkipped: 'On first use: {models}',
+      resultError: 'Error: {details}',
+    },
+    chat: {
+      cloudAdded: '{name} runs on servers by {publisher} in {region}. It does not need space on the graphics card, but your inputs are sent there. Each result costs money from the project budget.',
+      overBudget: '{name} needs {gb} Gigabytes. That does not fit in memory! You need to either remove another model or skip {name}.',
+      freeSpace: '{name} needs {gb} Gigabytes. {free} Gigabytes remaining.',
+      connectionError: 'Connection error — please try again.',
+      regionEu: 'Europe',
+      regionUs: 'the USA',
+    },
+    greeting: {
+      intro: 'Hello, I am Trashy, the help system for this platform. If you want to run a shared workshop or teaching session with many devices, it makes sense to think about what you want to do beforehand.',
+      resources: 'Working with Artificial Intelligence requires surprisingly many resources. It especially needs a graphics card with as much memory as possible.',
+      memoryMetaphor: ' We have {gb} Gigabytes of graphics card memory available here. That is as much as {books} books — if you line them up that makes a book line of {meters} meters.',
+      limits: 'But the AI models you use are so huge that even this large memory quickly reaches its limits.',
+      planning: 'Therefore you should plan and coordinate what you want to do, and with which models. When the memory is full and someone activates another new model, long waiting times and sometimes a jam occur. It takes between 30 seconds and 2 minutes just to load a model into memory. Once it is in memory, everything usually goes very quickly.',
+      flexibility: 'Of course it is no problem if you use more or other models — you can do that at any time without returning to this page. But then everything takes a bit longer. And: It is always good to think beforehand about what you want to achieve with which means. If you want to work artistically, after all you don\'t just go out on the street and grab the first object to do something with it.',
+      callToAction: 'So think together. Drag the model cards below into memory and see which models you can combine well. OR tell me what you would like to do, and I will suggest suitable models.',
+    },
   }
 }

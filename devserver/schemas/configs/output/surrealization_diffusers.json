@@ -13,7 +13,9 @@
   },
   "media_preferences": {
     "default_output": "image",
-    "supported_types": ["image"]
+    "supported_types": [
+      "image"
+    ]
   },
   "meta": {
     "stage": "output",
@@ -21,14 +23,18 @@
     "backend_type": "diffusers",
     "requires_gpu": true,
     "display_name": "Surrealization",
-    "icon": "\uD83C\uDF00",
+    "icon": "🌀",
     "publisher": "AI4ArtsEd (Custom, Erlangen, DE)",
     "architecture": "CLIP-L/T5 Token-Level Extrapolation + SD3.5 MMDiT",
     "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + extrapolation",
-    "text_encoders": ["CLIP-L (768d, 124M)", "T5-XXL (4.7B)"],
+    "text_encoders": [
+      "CLIP-L (768d, 124M)",
+      "T5-XXL (4.7B)"
+    ],
     "quantization": "FP16",
     "license": "Research (SD3.5 Community License)",
     "fair_culture": "Based on SD3.5 training data (see above)",
-    "safety_by_design": "Platform 4-stage safety pipeline"
+    "safety_by_design": "Platform 4-stage safety pipeline",
+    "gpu_vram_mb": 30000
   }
 }

@@ -1793,6 +1793,69 @@ def get_backend_status():
     }), 200
 
 
+# --- Workshop Model Preloading ---
+# Maps physical model IDs to GPU service load endpoints.
+# ComfyUI models load on first generate (no preload API).
+_WORKSHOP_LOAD_MAP = {
+    'sd35_large': {
+        'path': '/api/diffusers/load',
+        'body': {
+            'model_id': 'stabilityai/stable-diffusion-3.5-large',
+            'pipeline_class': 'StableDiffusion3Pipeline',
+        },
+    },
+    'heartmula': {
+        'path': '/api/heartmula/load',
+        'body': {},
+    },
+    'stable_audio': {
+        'path': '/api/stable_audio/load',
+        'body': {},
+    },
+    # ComfyUI models: no preload — they load on first workflow execution
+    # flux2, wan22_video, ltx_video, acestep are managed by ComfyUI
+}
+
+
+@settings_bp.route('/workshop/preload', methods=['POST'])
+def workshop_preload():
+    """
+    Preload selected models into GPU memory for workshop sessions.
+
+    Body: { "models": ["sd35_large", "heartmula", ...] }
+    Returns per-model results: { "results": { "sd35_large": { "success": true }, ... } }
+    """
+    data = request.get_json(silent=True) or {}
+    model_ids = data.get('models', [])
+    if not model_ids:
+        return jsonify({"error": "models list required"}), 400
+
+    results = {}
+    for mid in model_ids:
+        load_info = _WORKSHOP_LOAD_MAP.get(mid)
+        if load_info is None:
+            # ComfyUI or cloud model — skip, note it
+            results[mid] = {"success": True, "skipped": True, "reason": "loads on first use"}
+            continue
+
+        try:
+            resp = requests.post(
+                f"{config.GPU_SERVICE_URL}{load_info['path']}",
+                json=load_info['body'],
+                timeout=180,
+            )
+            if resp.ok:
+                results[mid] = {"success": resp.json().get("success", True)}
+            else:
+                results[mid] = {"success": False, "error": f"HTTP {resp.status_code}"}
+        except requests.Timeout:
+            results[mid] = {"success": False, "error": "timeout (180s)"}
+        except Exception as e:
+            results[mid] = {"success": False, "error": str(e)}
+
+    return jsonify({"results": results})
+
+
 @settings_bp.route('/ollama-models', methods=['GET'])
 def get_ollama_models():
     """

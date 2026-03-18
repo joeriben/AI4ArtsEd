@@ -12,7 +12,6 @@
     "en": "Audio Generation",
     "de": "Audiogenerierung"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_audio_stableaudio_diffusers",
     "NEGATIVE_PROMPT": "",
@@ -23,12 +22,12 @@
     "SCHEDULER": "exponential",
     "seed": "random"
   },
-
   "media_preferences": {
     "default_output": "audio",
-    "supported_types": ["audio"]
+    "supported_types": [
+      "audio"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "media_model": "stable-audio-open-1.0",
@@ -36,7 +35,7 @@
     "backend": "stable_audio",
     "backend_type": "stable_audio",
     "requires_gpu": true,
-    "gpu_vram_mb": 15000,
+    "gpu_vram_mb": 4000,
     "estimated_duration_seconds": "20-60",
     "recommended_duration": 30,
     "max_duration": 47,
@@ -44,34 +43,56 @@
     "notes": "Stable Audio Open 1.0 via ComfyUI. Text-to-audio generation for sound effects and ambient audio. Max 47 seconds output. Download model from Hugging Face: https://huggingface.co/stabilityai/stable-audio-open-1.0",
     "version": "1.0",
     "display_name": "Stable Audio Open",
-    "icon": "\uD83D\uDD0A",
+    "icon": "🔊",
     "publisher": "Stability AI (London, UK)",
     "architecture": "Latent Diffusion + DiT (Audio, 44.1kHz stereo)",
     "params": "~1.2B",
-    "text_encoders": ["T5-Base (768d, 220M)"],
+    "text_encoders": [
+      "T5-Base (768d, 220M)"
+    ],
     "quantization": "FP32",
     "license": "Stability Community License (<$1M)",
     "fair_culture": "7,300h CC-licensed audio (Freesound + FMA), full attribution published",
     "safety_by_design": "PANNs + Audible Magic copyright filtering",
     "provenance": {
       "training_data_disclosed": true,
-      "training_data_sources": ["Freesound (CC-licensed community uploads)", "Free Music Archive (FMA, CC-licensed)"],
+      "training_data_sources": [
+        "Freesound (CC-licensed community uploads)",
+        "Free Music Archive (FMA, CC-licensed)"
+      ],
       "training_data_size": "7,300 hours of CC-licensed audio",
       "training_data_consent": "partial",
       "geographic_origin": "London, UK",
       "known_biases": [
-        { "en": "T5-Base text encoder is English-only (768d) — non-English prompts poorly understood", "de": "T5-Base Textencoder ist nur englischsprachig (768d) — nicht-englische Prompts schlecht verstanden" },
-        { "en": "Freesound skews toward Western sound recording practices and environments", "de": "Freesound tendiert zu westlichen Tonaufnahmepraktiken und -umgebungen" },
-        { "en": "FMA skews toward Western independent/electronic music", "de": "FMA tendiert zu westlicher Independent-/Elektronik-Musik" }
+        {
+          "en": "T5-Base text encoder is English-only (768d) — non-English prompts poorly understood",
+          "de": "T5-Base Textencoder ist nur englischsprachig (768d) — nicht-englische Prompts schlecht verstanden"
+        },
+        {
+          "en": "Freesound skews toward Western sound recording practices and environments",
+          "de": "Freesound tendiert zu westlichen Tonaufnahmepraktiken und -umgebungen"
+        },
+        {
+          "en": "FMA skews toward Western independent/electronic music",
+          "de": "FMA tendiert zu westlicher Independent-/Elektronik-Musik"
+        }
       ],
       "known_gaps": [
-        { "en": "Non-Western instruments and vocal traditions are rare in training data", "de": "Nicht-westliche Instrumente und Vokaltraditionen sind selten in den Trainingsdaten" },
-        { "en": "CC license means creators consented to sharing, but not necessarily to AI training", "de": "CC-Lizenz bedeutet Zustimmung zum Teilen, aber nicht unbedingt zum KI-Training" },
-        { "en": "Full attribution list published — this is the most transparent model in our system", "de": "Vollständige Attributionsliste veröffentlicht — das transparenteste Modell in unserem System" }
+        {
+          "en": "Non-Western instruments and vocal traditions are rare in training data",
+          "de": "Nicht-westliche Instrumente und Vokaltraditionen sind selten in den Trainingsdaten"
+        },
+        {
+          "en": "CC license means creators consented to sharing, but not necessarily to AI training",
+          "de": "CC-Lizenz bedeutet Zustimmung zum Teilen, aber nicht unbedingt zum KI-Training"
+        },
+        {
+          "en": "Full attribution list published — this is the most transparent model in our system",
+          "de": "Vollständige Attributionsliste veröffentlicht — das transparenteste Modell in unserem System"
+        }
       ]
     }
   },
-
   "display": {
     "icon": "🔊",
     "color": "#00BCD4",
@@ -79,12 +100,26 @@
     "difficulty": 2,
     "order": 31
   },
-
   "tags": {
-    "en": ["audio", "sound", "ambient", "stable-audio", "comfyui", "local", "open-source"],
-    "de": ["audio", "sound", "ambient", "stable-audio", "comfyui", "lokal", "open-source"]
+    "en": [
+      "audio",
+      "sound",
+      "ambient",
+      "stable-audio",
+      "comfyui",
+      "local",
+      "open-source"
+    ],
+    "de": [
+      "audio",
+      "sound",
+      "ambient",
+      "stable-audio",
+      "comfyui",
+      "lokal",
+      "open-source"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

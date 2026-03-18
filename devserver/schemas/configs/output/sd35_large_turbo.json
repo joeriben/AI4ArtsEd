@@ -12,7 +12,6 @@
     "en": "Image Generation",
     "de": "Bildgenerierung"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_image_sd35_turbo_diffusers",
     "NEGATIVE_PROMPT": "",
@@ -25,12 +24,12 @@
     "top_p": 0.9,
     "max_tokens": 512
   },
-
   "media_preferences": {
     "default_output": "image",
-    "supported_types": ["image"]
+    "supported_types": [
+      "image"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "DEFAULT",
@@ -38,7 +37,7 @@
     "backend": "diffusers",
     "backend_type": "diffusers",
     "requires_gpu": true,
-    "gpu_vram_mb": 8000,
+    "gpu_vram_mb": 30000,
     "estimated_duration_seconds": "3-5",
     "recommended_resolution": "1024x1024",
     "supported_resolutions": [
@@ -51,34 +50,51 @@
     ],
     "notes": "Adversarial Diffusion Distillation from SD3.5 Large. 4 steps, CFG 0.0. Same triple encoder setup; T5-XXL uses user's interception text (translated by Stage 3 at kids level only).",
     "display_name": "SD 3.5 Large Turbo",
-    "icon": "\u26A1",
+    "icon": "⚡",
     "publisher": "Stability AI (London, UK)",
     "architecture": "Rectified Flow + MMDiT (Adversarial Distillation, 4 steps)",
     "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
-    "text_encoders": ["CLIP-L (124M)", "OpenCLIP-G (354M)", "T5-XXL (4.7B)"],
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
     "quantization": "FP16",
     "license": "Stability Community License (<$1M)",
     "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
     "safety_by_design": "Filtered training data, structured red-teaming",
     "provenance": {
       "training_data_disclosed": false,
-      "training_data_sources": ["Undisclosed (distilled from SD3.5 Large — same training data basis)"],
+      "training_data_sources": [
+        "Undisclosed (distilled from SD3.5 Large — same training data basis)"
+      ],
       "training_data_size": "Undisclosed",
       "training_data_consent": "unknown",
       "geographic_origin": "London, UK",
       "known_biases": [
-        { "en": "Same biases as SD3.5 Large — CLIP encoders trained on English web data", "de": "Dieselben Biases wie SD3.5 Large — CLIP-Encoder auf englischen Webdaten trainiert" },
-        { "en": "Distillation may amplify dominant modes (most common outputs become more likely)", "de": "Destillation kann dominante Modi verstärken (häufigste Ausgaben werden wahrscheinlicher)" }
+        {
+          "en": "Same biases as SD3.5 Large — CLIP encoders trained on English web data",
+          "de": "Dieselben Biases wie SD3.5 Large — CLIP-Encoder auf englischen Webdaten trainiert"
+        },
+        {
+          "en": "Distillation may amplify dominant modes (most common outputs become more likely)",
+          "de": "Destillation kann dominante Modi verstärken (häufigste Ausgaben werden wahrscheinlicher)"
+        }
       ],
       "known_gaps": [
-        { "en": "4-step distillation trades diversity for speed — less visual variation than base model", "de": "4-Schritt-Destillation tauscht Vielfalt gegen Geschwindigkeit — weniger visuelle Variation als Basismodell" },
-        { "en": "Same gaps as SD3.5 Large for non-Latin scripts and non-Western visual traditions", "de": "Dieselben Lücken wie SD3.5 Large für nicht-lateinische Schriften und nicht-westliche visuelle Traditionen" }
+        {
+          "en": "4-step distillation trades diversity for speed — less visual variation than base model",
+          "de": "4-Schritt-Destillation tauscht Vielfalt gegen Geschwindigkeit — weniger visuelle Variation als Basismodell"
+        },
+        {
+          "en": "Same gaps as SD3.5 Large for non-Latin scripts and non-Western visual traditions",
+          "de": "Dieselben Lücken wie SD3.5 Large für nicht-lateinische Schriften und nicht-westliche visuelle Traditionen"
+        }
       ]
     },
     "optimization_instruction": "You are a prompt engineer for Stable Diffusion 3.5. Generate TWO CLIP-specific prompts from the Input. T5-XXL receives the user's original text separately — do NOT generate a T5 prompt.\n\nOutput ONLY valid JSON with exactly these keys:\n{\"clip_l\": \"...\", \"clip_g\": \"...\"}\n\nNO markdown, NO code fences, NO explanation, NO meta-commentary.\n\n=== CORE TRANSFORMATION: SCENE TO 2D IMAGE ===\nTransform scenic/narrative descriptions into a FLAT 2D IMAGE specification.\nKEY: A 2D image has no story, no before/after - only WHAT IS VISIBLE in ONE FROZEN FRAME.\n\nTRANSFORMATION RULES:\n1. Remove temporal language (before, after, then, suddenly, while)\n2. Remove causality (because, therefore, which causes)\n3. Convert actions to static poses (running -> runner mid-stride)\n4. Convert atmosphere to visible elements (mysterious -> fog, dim lighting, shadow patterns)\n\n=== CLIP-L (clip_l) — Visual Keywords ===\nMax 50 words. Comma-separated token-weighted visual keywords.\nFirst 10 tokens = SUBJECT. Next 15 = POSE/STATE + STYLE. Next 25 = CONTEXT + ATTRIBUTES. Last = TECHNICAL (lighting, camera).\nUse (keyword:1.2) weighting syntax for emphasis. ((keyword)) = ~1.21x.\nFocus on composition, lighting, texture, color. Concrete nouns only.\n\n=== CLIP-G (clip_g) — Semantic Scene ===\nMax 50 words. Broader semantic scene description. NO (keyword:weight) syntax (OpenCLIP-G is trained differently).\nDescribe atmosphere, cultural context, setting, mood, spatial relationships.\nPlain natural language, comma-separated phrases.\n\n=== CULTURAL RESPECT (BOTH PROMPTS) ===\nFORBIDDEN: \"style of [artist]\", art-historical technique names, exoticizing/romanticizing cultural practices.\nFORBIDDEN: Orientalist tropes (exotic, mysterious, timeless, ancient wisdom).\nUse culturally neutral visual descriptors: light, texture, space, color.\n\n=== EXAMPLE ===\nINPUT: \"A mysterious forest where ancient trees whisper secrets to travelers at twilight\"\nOUTPUT:\n{\"clip_l\": \"ancient forest, (massive gnarled trees:1.2), twilight sky, orange-purple light through canopy, solitary figure on winding path, mist between trees, (dramatic backlighting:1.3), deep shadows, atmospheric perspective\", \"clip_g\": \"dense old-growth forest at twilight, towering ancient trees with twisted branches, a lone traveler on a narrow winding path, mist rising between the trunks, warm orange and purple light filtering through the canopy, deep natural shadows\"}",
     "version": "1.0"
   },
-
   "display": {
     "icon": "⚡",
     "color": "#FFB347",
@@ -86,12 +102,24 @@
     "difficulty": 1,
     "order": 5
   },
-
   "tags": {
-    "en": ["image", "stable-diffusion", "fast", "turbo", "sd3.5", "diffusers"],
-    "de": ["bild", "stable-diffusion", "schnell", "turbo", "sd3.5", "diffusers"]
+    "en": [
+      "image",
+      "stable-diffusion",
+      "fast",
+      "turbo",
+      "sd3.5",
+      "diffusers"
+    ],
+    "de": [
+      "bild",
+      "stable-diffusion",
+      "schnell",
+      "turbo",
+      "sd3.5",
+      "diffusers"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

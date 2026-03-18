@@ -12,7 +12,6 @@
     "en": "Image Transformation",
     "de": "Bildtransformation"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_img2img_diffusers",
     "NEGATIVE_PROMPT": "text, watermark",
@@ -22,24 +21,23 @@
     "CFG": 1,
     "seed": "random"
   },
-
   "capabilities": {
     "img2img": true,
     "text2img": false
   },
-
   "media_preferences": {
     "default_output": "image",
-    "supported_types": ["image"]
+    "supported_types": [
+      "image"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "DEFAULT",
     "backend": "diffusers",
     "backend_type": "diffusers",
     "requires_gpu": true,
-    "gpu_vram_mb": 24000,
+    "gpu_vram_mb": 55000,
     "estimated_duration_seconds": "30-45",
     "recommended_resolution": "1024x1024",
     "supported_resolutions": [
@@ -56,14 +54,15 @@
     "publisher": "Black Forest Labs (Freiburg, DE)",
     "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
     "params": "~56B total (32B DiT + 24B Mistral text encoder)",
-    "text_encoders": ["Mistral-Small-3.2-24B (24B)"],
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
     "quantization": "FP8 (transformer) + INT8 (text encoder) + BF16 (VAE)",
     "license": "Non-Commercial (BFL Dev License)",
     "fair_culture": "Training data undisclosed, NSFW-filtered",
     "safety_by_design": "NSFW filter + IWF CSAM filtering",
     "version": "1.0"
   },
-
   "display": {
     "icon": "flash_on",
     "color": "#FF6B35",
@@ -71,12 +70,24 @@
     "difficulty": 2,
     "order": 25
   },
-
   "tags": {
-    "en": ["image", "flux", "flux2", "diffusers", "img2img", "visual-conditioning"],
-    "de": ["bild", "flux", "flux2", "diffusers", "img2img", "visuelle-konditionierung"]
+    "en": [
+      "image",
+      "flux",
+      "flux2",
+      "diffusers",
+      "img2img",
+      "visual-conditioning"
+    ],
+    "de": [
+      "bild",
+      "flux",
+      "flux2",
+      "diffusers",
+      "img2img",
+      "visuelle-konditionierung"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 10,

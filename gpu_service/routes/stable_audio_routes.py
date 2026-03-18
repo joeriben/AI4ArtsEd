@@ -46,6 +46,18 @@ def available():
         return jsonify({"available": False, "reason": str(e)})
 
 
+@stable_audio_bp.route('/api/stable_audio/load', methods=['POST'])
+def load():
+    """Preload Stable Audio pipeline into GPU memory without generating."""
+    try:
+        backend = _get_backend()
+        result = _run_async(backend._load_pipeline())
+        return jsonify({"success": result})
+    except Exception as e:
+        logger.error(f"[STABLE-AUDIO] Preload failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @stable_audio_bp.route('/api/stable_audio/unload', methods=['POST'])
 def unload():
     """Unload Stable Audio pipeline from GPU."""

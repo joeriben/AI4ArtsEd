@@ -42,6 +42,18 @@ def available():
         return jsonify({"available": False, "reason": str(e)})
 
 
+@heartmula_bp.route('/api/heartmula/load', methods=['POST'])
+def load():
+    """Preload HeartMuLa pipeline into GPU memory without generating."""
+    try:
+        backend = _get_backend()
+        result = _run_async(backend._load_pipeline())
+        return jsonify({"success": result})
+    except Exception as e:
+        logger.error(f"[HEARTMULA] Preload failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @heartmula_bp.route('/api/heartmula/unload', methods=['POST'])
 def unload():
     """Unload HeartMuLa pipeline from GPU."""

@@ -153,6 +153,47 @@ Tags:
   - `edutainment.denoising.cloudProcessing` (NEW)
 - **Context**: Loading label shown during cloud/API image generation (e.g. Gemini 3 Pro via OpenRouter, GPT Image 1). Replaces misleading "Loading model into GPU memory..." for models that don't use local GPU. Short status message.
 
+### WO-2026-03-19-workshop-planning-page
+- **Session**: 268
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `workshop.title` (NEW): "Collaborative Workshop Preparation"
+  - `workshop.memory.label` (NEW): "Graphics Card Memory"
+  - `workshop.memory.system` (NEW): "System"
+  - `workshop.memory.free` (NEW): "free"
+  - `workshop.memory.used` (NEW): "{used} / {total} Gigabytes used"
+  - `workshop.memory.overBudget` (NEW): "— does not fit!"
+  - `workshop.models.label` (NEW): "Models — drag to memory or click to activate"
+  - `workshop.models.image` (NEW): "Images"
+  - `workshop.models.video` (NEW): "Videos"
+  - `workshop.models.music` (NEW): "Music"
+  - `workshop.models.sound` (NEW): "Sounds"
+  - `workshop.models.threeD` (NEW): "3D"
+  - `workshop.models.needsGb` (NEW): "needs {gb} Gigabytes"
+  - `workshop.models.loaded` (NEW): "(loaded)"
+  - `workshop.models.cloudUs` (NEW): "Server-based — server in the USA"
+  - `workshop.models.cloudEu` (NEW): "Server-based — server in Europe"
+  - `workshop.confirm.load` (NEW): "Load models into memory now"
+  - `workshop.confirm.loading` (NEW): "Loading models..."
+  - `workshop.confirm.ready` (NEW): "All loaded — ready to go!"
+  - `workshop.confirm.resultLoaded` (NEW): "Loaded: {models}"
+  - `workshop.confirm.resultSkipped` (NEW): "On first use: {models}"
+  - `workshop.confirm.resultError` (NEW): "Error: {details}"
+  - `workshop.chat.cloudAdded` (NEW): cloud model explanation with {name}, {publisher}, {region} params
+  - `workshop.chat.overBudget` (NEW): over-budget warning with {name}, {gb} params
+  - `workshop.chat.freeSpace` (NEW): space remaining with {name}, {gb}, {free} params
+  - `workshop.chat.connectionError` (NEW): "Connection error — please try again."
+  - `workshop.chat.regionEu` (NEW): "Europe"
+  - `workshop.chat.regionUs` (NEW): "the USA"
+  - `workshop.greeting.intro` (NEW): Trashy greeting intro
+  - `workshop.greeting.resources` (NEW): resource explanation
+  - `workshop.greeting.memoryMetaphor` (NEW): book metaphor with {gb}, {books}, {meters} params
+  - `workshop.greeting.limits` (NEW): memory limits note
+  - `workshop.greeting.planning` (NEW): planning rationale
+  - `workshop.greeting.flexibility` (NEW): flexibility reassurance
+  - `workshop.greeting.callToAction` (NEW): call to action
+- **Context**: Workshop planning page where groups collaboratively select AI models for a session. The tone is friendly, addressing a group of students/participants ("you" plural). Memory/VRAM is called "Speicher der Grafikkarte" (graphics card memory) — NO technical jargon (no VRAM, GPU, RAM). The greeting is from "Trashy", the platform's help mascot.
+
 ## Completed
 
 ### WO-2026-03-03-comfyui-label-cleanup

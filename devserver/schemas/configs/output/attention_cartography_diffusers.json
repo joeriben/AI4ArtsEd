@@ -13,7 +13,9 @@
   },
   "media_preferences": {
     "default_output": "image",
-    "supported_types": ["image"]
+    "supported_types": [
+      "image"
+    ]
   },
   "meta": {
     "stage": "output",
@@ -24,12 +26,16 @@
     "publisher": "Stability AI (London, UK)",
     "architecture": "Rectified Flow + MMDiT (triple text encoder)",
     "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
-    "text_encoders": ["CLIP-L (124M)", "OpenCLIP-G (354M)", "T5-XXL (4.7B)"],
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
     "quantization": "FP16",
     "license": "Stability Community License (<$1M)",
     "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
     "safety_by_design": "Filtered training data, structured red-teaming",
-    "gpu_vram_mb": 12000,
+    "gpu_vram_mb": 30000,
     "recommended_resolution": "1024x1024"
   }
 }

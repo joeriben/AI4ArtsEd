@@ -12,7 +12,6 @@
     "en": "Image-to-Video",
     "de": "Bild-zu-Video"
   },
-
   "parameters": {
     "OUTPUT_CHUNK": "output_video_wan22_i2v",
     "NEGATIVE_PROMPT": "overly saturated colors,overexposed, static, blurry and unclear details, subtitles, style, work, painting, image, still, overall grayish, worst quality, low quality, JPEG compression artifacts, ugly, mutilated, extra fingers, badly drawn hands, badly drawn faces, deformed, disfigured, limbs with deformed shapes, fused fingers, motionless frame, cluttered background, three legs, many people in the background, walking backwards",
@@ -25,12 +24,12 @@
     "seed": "random",
     "INPUT_IMAGE": "{{UPLOADED_IMAGE_PATH}}"
   },
-
   "media_preferences": {
     "default_output": "video",
-    "supported_types": ["video"]
+    "supported_types": [
+      "video"
+    ]
   },
-
   "meta": {
     "stage": "output",
     "model": "wan2.2-i2v-14b",
@@ -45,26 +44,34 @@
     "backend": "comfyui",
     "backend_type": "comfyui",
     "requires_gpu": true,
-    "gpu_vram_mb": 24000,
+    "gpu_vram_mb": 39000,
     "estimated_duration_seconds": "30-45",
     "recommended_resolution": "640x640",
-    "supported_resolutions": ["640x640", "512x512", "768x768"],
+    "supported_resolutions": [
+      "640x640",
+      "512x512",
+      "768x768"
+    ],
     "recommended_frames": 81,
-    "supported_fps": [16, 24],
+    "supported_fps": [
+      16,
+      24
+    ],
     "notes": "WAN 2.2 14B i2v uses two-stage sampling (high noise → low noise) with 4 total steps and LoRA adapters. Generates ~5 second videos at 16fps. Requires input image. English negative prompt.",
     "version": "1.0",
     "display_name": "Wan 2.2 I2V 14B",
-    "icon": "\uD83C\uDFAC",
+    "icon": "🎬",
     "publisher": "Wan-AI / Alibaba Group (Hangzhou, CN)",
     "architecture": "Diffusion Transformer (I2V, MoE, two-stage sampling)",
     "params": "~27B total / 14B active (MoE)",
-    "text_encoders": ["uMT5-XXL (multilingual, FP8)"],
+    "text_encoders": [
+      "uMT5-XXL (multilingual, FP8)"
+    ],
     "quantization": "FP8 (+ LightX2V LoRA adapters)",
     "license": "Apache 2.0",
     "fair_culture": "Trained on ~1.5B videos + 10B images (sources undisclosed)",
     "safety_by_design": "Optional safety checker in pipeline"
   },
-
   "display": {
     "icon": "🎬",
     "color": "#9C27B0",
@@ -72,12 +79,24 @@
     "difficulty": 2,
     "order": 22
   },
-
   "tags": {
-    "en": ["video", "image-to-video", "wan", "i2v", "comfyui", "local"],
-    "de": ["video", "bild-zu-video", "wan", "i2v", "comfyui", "lokal"]
+    "en": [
+      "video",
+      "image-to-video",
+      "wan",
+      "i2v",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "video",
+      "bild-zu-video",
+      "wan",
+      "i2v",
+      "comfyui",
+      "lokal"
+    ]
   },
-
   "audience": {
     "workshop_suitable": true,
     "min_age": 12,

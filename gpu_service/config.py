@@ -37,21 +37,21 @@ LORA_DIR = Path(os.environ.get("LORA_DIR", str(_SERVER_BASE / "dlbackend" / "Com
 DIFFUSERS_FLUX2_QUANTIZE = os.environ.get("DIFFUSERS_FLUX2_QUANTIZE", "fp8")  # bf16 or fp8
 DIFFUSERS_WAN22_QUANTIZE = os.environ.get("DIFFUSERS_WAN22_QUANTIZE", "bf16")  # bf16 or fp8
 
-# Peak VRAM estimates (MB) during inference — used by coordinator for eviction decisions.
-# CPU-offloaded models report ~0 via torch.cuda.memory_allocated() measurement,
-# so we use static estimates of peak usage (includes activations/intermediates).
+# Peak VRAM (MB) during inference — measured Session 268 (2026-03-18) on RTX PRO 6000
+# Blackwell 96GB via nvidia-smi peak monitoring. CPU-offloaded models report ~0 via
+# torch.cuda.memory_allocated(), so these static values are used by the coordinator.
 MODEL_PEAK_VRAM_MB = {
-    "sd35_large_fp16": 28_000,
-    "sd35_large_bf16": 28_000,
-    "flux2_bf16": 26_000,
-    "flux2_fp8": 18_000,
-    "wan22_t2v_bf16": 20_000,
-    "wan22_t2v_fp8": 14_000,
-    "wan22_t2v_moe_bf16": 40_000,
+    "sd35_large_fp16": 30_000,    # measured: 30253 MiB
+    "sd35_large_bf16": 30_000,
+    "flux2_bf16": 55_000,         # measured via ComfyUI: 54712 MiB peak
+    "flux2_fp8": 33_000,          # measured via Diffusers FP8: 32055 MiB (gen failed, min peak)
+    "wan22_t2v_bf16": 39_000,     # measured via ComfyUI: 39290 MiB peak
+    "wan22_t2v_fp8": 20_000,
+    "wan22_t2v_moe_bf16": 39_000, # measured via ComfyUI (A14B MoE): 39290 MiB peak
     "wan22_t2v_moe_fp8": 22_000,
-    "wan22_i2v_bf16": 22_000,
-    "wan22_i2v_fp8": 16_000,
-    "wan22_i2v_moe_bf16": 42_000,
+    "wan22_i2v_bf16": 39_000,     # estimated same arch as T2V
+    "wan22_i2v_fp8": 20_000,
+    "wan22_i2v_moe_bf16": 39_000,
     "wan22_i2v_moe_fp8": 24_000,
 }
 
