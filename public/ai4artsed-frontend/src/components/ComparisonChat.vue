@@ -197,7 +197,7 @@ async function fetchProactiveGreeting() {
   isLoading.value = true
   try {
     const reply = await callChat(
-      'Greet the user briefly. Suggest 2-3 concrete test prompts that would reveal interesting encoding biases when compared across languages. Use [PROMPT: ...] format for each suggestion.',
+      'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.',
       []
     )
     if (reply) {
@@ -227,12 +227,10 @@ async function sendAutoComment(_context: string) {
   isLoading.value = true
   try {
     const reply = await callChat(
-      'The comparison run just completed. You have the VLM image descriptions in your context. '
-      + 'Analyze the visible differences between language variants. '
-      + 'If you see large divergences or if a language produced something unexpected, suggest an INQUIRY: '
-      + 'propose specific follow-up prompts that test what the model DOES understand vs. what cultural knowledge it lacks. '
-      + 'For example: if Arabic produced a generic result, suggest testing specific Arabic cultural concepts one by one to find the boundary. '
-      + 'Use [PROMPT: ...] format for suggestions. Be curious and specific, not generic.'
+      'The comparison run just completed. Analyze the VLM image descriptions in your context. '
+      + 'State factually what differs between the language variants and why (grounded in the specific descriptions, not generic CLIP bias). '
+      + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
+      + 'Do not suggest prompts from a generic list. Do not simulate excitement.'
     )
     if (reply) {
       addMessage('assistant', reply)
