@@ -136,11 +136,14 @@ async function sendAutoComment(context: string) {
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
 
+    const history = messages.value.map(m => ({ role: m.role, content: m.content }))
+
     const response = await fetch(`${baseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: 'The comparison is complete. Comment on visible differences between the language variants and explain why CLIP/T5 encoding causes this.',
+        history,
         context: { comparison_mode: true, language: userPreferences.language },
         draft_context: context,
       })

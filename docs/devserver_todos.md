@@ -177,6 +177,45 @@ Bei Festnetz-Verbindung:
 
 ---
 
+## 🟡 Kritische KI-Literalitaet — Neue Features (Session 266)
+
+### 1. Dialogische KI-Persona Page — PLANNED
+
+**Datum:** 2026-03-18
+**Paedagogisches Ziel:** Umkehrung der Mensch-bestellt-KI-liefert-Dynamik. KI als aesthetischer Gespraechspartner.
+
+Vue page mit zentralem Dialog-Fenster:
+- AI gibt sich bei Start selbst eine Persoenlichkeit (freundlich, aesthetisch fragend, kritisch/widerstaendig)
+- Generiert erst, wenn der Dialog plausibel erscheint
+- Entscheidet selbst: welches Medium, welches Modell
+- Generierte Outputs in floating Boxen um den Dialog herum (mit Standard-Weiterbearbeitungsfunktionen)
+
+### 2. Compare-Seite: Uebersetzungs-Transparenz — PLANNED
+
+**Datum:** 2026-03-18
+**Paedagogisches Ziel:** Sichtbar machen was bei Uebersetzung verloren geht.
+
+Bestehende `/compare`-Seite ergaenzen:
+- Einfache Boxen mit den Uebersetzungen (sichtbar)
+- Darunter klein: Rueckuebersetzungen in die Settings-Sprache
+- Macht semantische Verschiebung durch Uebersetzung transparent
+
+### 3. Compare-Variationen: LLM-Dekonstruktion — PLANNED
+
+**Datum:** 2026-03-18
+**Paedagogisches Ziel:** Natuerliche Logik von LLMs dekonstruieren und erfahrbar machen.
+
+Weitere Compare-Modi:
+- **Sprachmodell-Vergleich**: Gleicher Prompt an verschiedene LLMs, mit Seed-Kontrolle (Transformers, nicht API) und Temperature-Kontrolle
+- **System-Prompt-Vergleich**: Auswechselbare Systemprompts zeigen wie stark Kontext das Verhalten steuert
+- **Interception-Vergleich**: Gleicher User-Prompt + gleicher Kontext (Default: Planetarizer), aber verschiedene LLMs fuehren die Stage 2 Interception aus. Zeigt: Mistral Large produziert Kitsch, waehrend z.B. ein kleineres Modell (Mistral Nemo) oder ein hochwertigeres oft bessere/andere aesthetische Entscheidungen trifft. Kontext auswaehlbar (alle Interception-Configs).
+- **Bias-Probes**: Gezielte Prompts die systematische Verzerrungen in Modellen sichtbar machen (kulturelle Defaults, Gender-Bias, geographische Vorurteile)
+- **Visueller Kontext-Prompt**: Einfluss von Kontext auf Generierung
+- Immer mit Trashy-Interpretation
+- Auch mit kleinen lokalen Modellen moeglich, aber AUCH grosse Cloud-Modelle (v.a. fuer Interception-Vergleich — Qualitaetsunterschiede sind dort am kraessesten)
+
+---
+
 ## 📋 LOW / PLANNED / DEFERRED
 
 ### ~~Blender Headless Integration~~ — ERLEDIGT (Session 250)
