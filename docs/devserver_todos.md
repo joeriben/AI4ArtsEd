@@ -190,14 +190,16 @@ Vue page mit zentralem Dialog-Fenster:
 - Entscheidet selbst: welches Medium, welches Modell
 - Generierte Outputs in floating Boxen um den Dialog herum (mit Standard-Weiterbearbeitungsfunktionen)
 
-### 2. Compare-Seite: Uebersetzungs-Transparenz — IN PROGRESS
+### 2. Compare-Seite: Uebersetzungs-Transparenz — DONE
 
 **Datum:** 2026-03-18
-**Status:** Grundversion implementiert (Session 266), Context-Enrichment ausstehend
+**Status:** Komplett (Session 265-266)
 
 Bestehende `/compare`-Seite:
-- ✅ Uebersetzungsboxen mit Rueckuebersetzungen (implementiert)
-- [ ] Context-Enrichment-Button auf MediaInputBox (destruktiv, wie → en, nutzt Interception-Configs)
+- ✅ Uebersetzungsboxen mit Rueckuebersetzungen (Session 265)
+- ✅ Context-Enrichment via InterceptionPresetOverlay (Session 266)
+- ✅ MediaOutputBox statt Parallelcode (Session 266)
+- ✅ Persistenter Trashy-Chat mit Inquiry-Paedagogik (Session 266)
 
 ### 3. Compare-Variationen: LLM-Dekonstruktion — PLANNED
 
