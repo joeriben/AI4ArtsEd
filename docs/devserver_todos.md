@@ -222,7 +222,18 @@ Weitere Compare-Modi:
 - Pruefen ob Ueberschneidungen zwischen Latent Lab und Compare bestehen (vermutlich nein — Latent Lab = Vektor-Manipulation, Compare = sprachliche/modell-uebergreifende Transparenz)
 - Pruefen ob Latent Lab safety-faehig gemacht werden kann (Compare ging auch)
 
-### 5. Compare: Dekonstruktive Bias-Probes fuer Bildmodelle — PLANNED
+### 5. Erheblicher Ausbau additiver Technologien (p5.js) — PLANNED
+
+**Datum:** 2026-03-18
+**Paedagogisches Ziel:** Generativen Code als eigenstaendiges kreatives Medium staerken.
+
+- p5.js ist bisher als Output-Typ vorhanden, aber unterentwickelt
+- Erheblicher Ausbau: mehr Interception-Configs fuer Code-Generierung, bessere Vorschau, iteratives Arbeiten
+- Additive Technologien (Code, der sichtbar aufbaut) als Gegenpol zu diffusionsbasierten (subtraktiven) Verfahren
+- **Referenzrahmen: "Computerkunst" — Frieder Nake, Georg Nees, Vera Molnar u.a.** Algorithmische Aesthetik, regelbasierte Generierung, Zufall als Gestaltungsmittel. p5.js als zeitgenoessische Fortsetzung dieser Tradition.
+- Potential: Live-Preview, Parameter-Manipulation, Export, Remix
+
+### 6. Compare: Dekonstruktive Bias-Probes fuer Bildmodelle — PLANNED
 
 **Datum:** 2026-03-18
 **Paedagogisches Ziel:** Herausfinden was fuer verschiedene Modelle "Schoenheit", "Helden", "Alter" sind.

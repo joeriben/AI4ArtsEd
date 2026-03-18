@@ -55,6 +55,7 @@ _SETTINGS_DEFAULTS = {
     'SAFETY_MODEL': 'llama-guard3:8b',
     'DSGVO_VERIFY_MODEL': 'qwen3:1.7b',
     'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
+    'VLM_VERDICT_MODEL': 'qwen3:1.7b',
     'LLM_PROVIDER': 'ollama',
     'OLLAMA_API_BASE_URL': 'http://localhost:11434',
     'LMSTUDIO_API_BASE_URL': 'http://localhost:1234',
