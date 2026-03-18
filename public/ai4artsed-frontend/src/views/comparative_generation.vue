@@ -49,7 +49,7 @@
           <div class="slot-header">
             <span class="slot-lang-name">{{ slot.langName }}</span>
             <span class="slot-lang-code">{{ slot.langCode }}</span>
-            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting.value && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
+            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
           </div>
           <!-- Translation box -->
           <div v-if="slot.translatedPrompt" class="slot-translation">
@@ -61,11 +61,11 @@
             <MediaOutputBox
               :output-image="slot.outputUrl"
               media-type="image"
-              :is-executing="slotStreams[idx]?.isExecuting.value ?? false"
-              :progress="slotStreams[idx]?.generationProgress.value ?? 0"
-              :preview-image="slotStreams[idx]?.previewImage.value ?? null"
-              :model-meta="slotStreams[idx]?.modelMeta.value ?? null"
-              :stage4-duration-ms="slotStreams[idx]?.stage4DurationMs.value ?? 0"
+              :is-executing="slotStreams[idx]?.isExecuting ?? false"
+              :progress="slotStreams[idx]?.generationProgress ?? 0"
+              :preview-image="slotStreams[idx]?.previewImage ?? null"
+              :model-meta="slotStreams[idx]?.modelMeta ?? null"
+              :stage4-duration-ms="slotStreams[idx]?.stage4DurationMs ?? 0"
               :ui-mode="uiModeStore.mode"
               :run-id="slot.runId"
               :is-favorited="slot.isFavorited"
