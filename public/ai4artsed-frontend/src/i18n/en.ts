@@ -1461,6 +1461,11 @@ export const en = {
     trashyGenerating: 'Now generating images — same seed, same model, only the language changes. Watch what happens!',
     trashyTranslateError: 'The translation service is not available right now. The backend server may need to be restarted.',
     trashyError: 'Something went wrong. Check the browser console for details, or ask the course instructor.',
+    favorite: 'Add to favorites',
+    unfavorite: 'Remove from favorites',
+    forward: 'Forward to image transformation',
+    download: 'Download image',
+    analyze: 'Analyze image',
   },
   provenance: {
     title: 'About This Model',

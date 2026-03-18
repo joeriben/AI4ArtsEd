@@ -11,9 +11,11 @@
           input-type="text"
           :rows="4"
           :is-filled="!!userPrompt"
+          :show-preset-button="true"
           @copy="copyPrompt"
           @paste="pastePrompt"
           @clear="clearPrompt"
+          @open-preset-selector="showPresetOverlay = true"
         />
 
         <LanguageChipSelector v-model="selectedLanguages" :max="4" />
@@ -63,6 +65,37 @@
             <img v-if="slot.outputUrl" :src="slot.outputUrl" alt="" class="slot-image" />
             <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
           </div>
+          <!-- Action bar under each slot -->
+          <div v-if="slot.outputUrl" class="slot-actions">
+            <button
+              class="slot-action-btn"
+              :class="{ favorited: slot.isFavorited }"
+              @click="toggleSlotFavorite(slot)"
+              :title="slot.isFavorited ? t('compare.unfavorite') : t('compare.favorite')"
+            >
+              <svg v-if="slot.isFavorited" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+              </svg>
+            </button>
+            <button class="slot-action-btn" @click="forwardToPage(slot)" :title="t('compare.forward')">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm480-280v-167l-64 63-56-56 160-160 160 160-56 56-64-63v167h-80Z"/>
+              </svg>
+            </button>
+            <button class="slot-action-btn" @click="downloadSlotImage(slot)" :title="t('compare.download')">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
+              </svg>
+            </button>
+            <button class="slot-action-btn" @click="analyzeSlotImage(slot)" :title="t('compare.analyze')">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                <path d="M440-240q116 0 198-81.5T720-520q0-116-82-198t-198-82q-117 0-198.5 82T160-520q0 117 81.5 198.5T440-240Zm0-280Zm0 160q-83 0-147.5-44.5T200-520q28-70 92.5-115T440-680q82 0 146.5 45T680-520q-29 71-93.5 115.5T440-360Zm0-60q55 0 101-26.5t72-73.5q-26-46-72-73t-101-27q-56 0-102 27t-72 73q26 47 72 73.5T440-420Zm0-40q25 0 42.5-17t17.5-43q0-25-17.5-42.5T440-580q-26 0-43 17.5T380-520q0 26 17 43t43 17Zm0 300q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T80-520q0-74 28.5-139.5t77-114.5q48.5-49 114-77.5T440-880q74 0 139.5 28.5T694-774q49 49 77.5 114.5T800-520q0 64-21 121t-58 104l159 159-57 56-159-158q-47 37-104 57.5T440-160Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -74,20 +107,34 @@
       :comparison-context="comparisonContext"
       @use-prompt="useTrashyPrompt"
     />
+
+    <!-- Interception Preset Overlay -->
+    <InterceptionPresetOverlay
+      :visible="showPresetOverlay"
+      @close="showPresetOverlay = false"
+      @preset-selected="handlePresetSelected"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
+import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useFavoritesStore } from '@/stores/favorites'
+import { useDeviceId } from '@/composables/useDeviceId'
 
 const { t } = useI18n()
+const router = useRouter()
 const userPreferences = useUserPreferencesStore()
+const favoritesStore = useFavoritesStore()
+const deviceId = useDeviceId()
 
 // --- State ---
 const userPrompt = ref('')
@@ -97,6 +144,8 @@ const isGenerating = ref(false)
 const currentSeed = ref<number | null>(null)
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
+const showPresetOverlay = ref(false)
+const isEnriching = ref(false)
 
 const availableModels = [
   { id: 'sd35_large', label: 'SD 3.5 Large' },
@@ -116,6 +165,7 @@ interface ComparisonSlot {
   progress: number
   queuePosition: number
   blockedReason: string | null
+  isFavorited: boolean
 }
 
 const slots = ref<ComparisonSlot[]>([])
@@ -142,6 +192,104 @@ function useTrashyPrompt(prompt: string) {
   userPrompt.value = prompt
 }
 
+// --- Slot actions ---
+async function toggleSlotFavorite(slot: ComparisonSlot) {
+  if (!slot.runId) return
+  const success = await favoritesStore.toggleFavorite(slot.runId, 'image', deviceId, 'anonymous', 'compare')
+  if (success) {
+    slot.isFavorited = !slot.isFavorited
+  }
+}
+
+function forwardToPage(slot: ComparisonSlot) {
+  if (!slot.outputUrl) return
+  const runIdMatch = slot.outputUrl.match(/\/api\/.*\/(.+)$/)
+  const runId = runIdMatch ? runIdMatch[1] : null
+  const transferData = {
+    imageUrl: slot.outputUrl,
+    runId: runId,
+    timestamp: Date.now()
+  }
+  localStorage.setItem('i2i_transfer_data', JSON.stringify(transferData))
+  router.push('/image-transformation')
+}
+
+async function downloadSlotImage(slot: ComparisonSlot) {
+  if (!slot.outputUrl) return
+  try {
+    const runIdMatch = slot.outputUrl.match(/\/api\/.*\/(.+)$/)
+    const runId = runIdMatch ? runIdMatch[1] : 'media'
+    const filename = `ai4artsed_compare_${slot.langCode}_${runId}.png`
+    const response = await fetch(slot.outputUrl)
+    if (!response.ok) throw new Error(`Download failed: ${response.status}`)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.click()
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('[COMPARE] Download error:', error)
+  }
+}
+
+async function analyzeSlotImage(slot: ComparisonSlot) {
+  if (!slot.runId) return
+  const isDev = import.meta.env.DEV
+  const baseUrl = isDev ? 'http://localhost:17802' : ''
+  try {
+    const res = await fetch(`${baseUrl}/api/schema/compare/describe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ run_id: slot.runId })
+    })
+    if (res.ok) {
+      const data = await res.json()
+      if (data.status === 'success' && data.description) {
+        chatRef.value?.injectMessage(`[${slot.langName}] ${data.description}`)
+      }
+    }
+  } catch {
+    // Non-critical
+  }
+}
+
+// --- Context Enrichment: Interception Preset ---
+async function handlePresetSelected(payload: { configId: string; context: string; configName: string }) {
+  showPresetOverlay.value = false
+  if (!userPrompt.value.trim()) return
+
+  isEnriching.value = true
+  const isDev = import.meta.env.DEV
+  const baseUrl = isDev ? 'http://localhost:17802' : ''
+
+  try {
+    const res = await fetch(`${baseUrl}/api/schema/pipeline/interception`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        schema: payload.configId,
+        input_text: userPrompt.value,
+        device_id: deviceId,
+      })
+    })
+    if (res.ok) {
+      const data = await res.json()
+      if (data.status === 'success' && data.final_output) {
+        userPrompt.value = typeof data.final_output === 'string'
+          ? data.final_output
+          : JSON.stringify(data.final_output)
+        console.log(`[COMPARE] Prompt enriched via ${payload.configName} (${payload.configId})`)
+      }
+    }
+  } catch (error) {
+    console.error('[COMPARE] Interception failed:', error)
+  } finally {
+    isEnriching.value = false
+  }
+}
+
 // --- Trashy context ---
 function buildContext(phase: string): string {
   const langList = slots.value.map(s => `${s.langName} (${s.langCode})`).join(', ')
@@ -154,7 +302,7 @@ function buildContext(phase: string): string {
 async function startComparison() {
   if (!canGenerate.value || isGenerating.value) return
   isGenerating.value = true
-  chatRef.value?.resetChat()
+  chatRef.value?.onNewRun()
 
   const isDev = import.meta.env.DEV
   const baseUrl = isDev ? 'http://localhost:17802' : ''
@@ -171,6 +319,7 @@ async function startComparison() {
     progress: 0,
     queuePosition: idx + 1,
     blockedReason: null,
+    isFavorited: false,
   }))
 
   chatRef.value?.injectMessage(t('compare.trashyTranslating'))
@@ -326,6 +475,7 @@ async function startComparison() {
 .compare-main {
   flex: 1;
   min-width: 0;
+  padding-bottom: 80px;
 }
 
 .compare-chat-panel {
@@ -546,6 +696,45 @@ async function startComparison() {
   color: rgba(239, 83, 80, 0.7);
   text-align: center;
   padding: 0.5rem;
+}
+
+/* Slot Action Bar */
+.slot-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0;
+  margin-top: 0.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 0 10px 10px;
+}
+
+.slot-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slot-action-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.slot-action-btn.favorited {
+  color: rgba(239, 83, 80, 0.9);
+}
+
+.slot-action-btn.favorited:hover {
+  color: rgba(239, 83, 80, 1);
+  background: rgba(239, 83, 80, 0.1);
 }
 
 /* Mobile */

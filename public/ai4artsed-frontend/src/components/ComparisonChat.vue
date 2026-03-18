@@ -10,9 +10,14 @@
         v-for="msg in messages"
         :key="msg.id"
         class="chat-bubble"
-        :class="msg.role"
+        :class="[msg.role, { separator: msg.isSeparator }]"
       >
-        <template v-if="msg.role === 'assistant'">
+        <template v-if="msg.isSeparator">
+          <span class="separator-line"></span>
+          <span class="separator-label">{{ msg.content }}</span>
+          <span class="separator-line"></span>
+        </template>
+        <template v-else-if="msg.role === 'assistant'">
           <span v-for="(part, idx) in parseSuggestions(msg.content)" :key="idx">
             <span v-if="part.type === 'text'">{{ part.text }}</span>
             <button v-else class="prompt-suggestion" @click="emit('use-prompt', part.text)">{{ part.text }}</button>
@@ -41,12 +46,14 @@
 import { ref, watch, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useDeviceId } from '@/composables/useDeviceId'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 interface ChatMessage {
   id: number
-  role: 'user' | 'assistant'
+  role: 'user' | 'assistant' | 'system'
   content: string
+  isSeparator?: boolean
 }
 
 interface Props {
@@ -64,12 +71,14 @@ const emit = defineEmits<{
 }>()
 const { t } = useI18n()
 const userPreferences = useUserPreferencesStore()
+const deviceId = useDeviceId()
 
 const messages = ref<ChatMessage[]>([])
 const userInput = ref('')
 const isLoading = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextId = 0
+let runCounter = 0
 
 /** Parse [PROMPT: ...] markers into clickable suggestions */
 function parseSuggestions(content: string): ContentPart[] {
@@ -93,6 +102,15 @@ function parseSuggestions(content: string): ContentPart[] {
 
 function addMessage(role: 'user' | 'assistant', content: string) {
   messages.value.push({ id: nextId++, role, content })
+  scrollToBottom()
+}
+
+function addSeparator(label: string) {
+  messages.value.push({ id: nextId++, role: 'system', content: label, isSeparator: true })
+  scrollToBottom()
+}
+
+function scrollToBottom() {
   nextTick(() => {
     if (messagesRef.value) {
       messagesRef.value.scrollTop = messagesRef.value.scrollHeight
@@ -104,8 +122,11 @@ function getBaseUrl(): string {
   return import.meta.env.DEV ? 'http://localhost:17802' : ''
 }
 
+/** Build history for the LLM — excludes separators, keeps conversation flow */
 function buildHistory(): Array<{ role: string; content: string }> {
-  return messages.value.map(m => ({ role: m.role, content: m.content }))
+  return messages.value
+    .filter(m => !m.isSeparator)
+    .map(m => ({ role: m.role, content: m.content }))
 }
 
 async function callChat(message: string, extraHistory?: Array<{ role: string; content: string }>): Promise<string | null> {
@@ -116,7 +137,11 @@ async function callChat(message: string, extraHistory?: Array<{ role: string; co
     body: JSON.stringify({
       message,
       history,
-      context: { comparison_mode: true, language: userPreferences.language },
+      context: {
+        comparison_mode: true,
+        language: userPreferences.language,
+        device_id: deviceId,
+      },
       draft_context: props.comparisonContext,
     })
   })
@@ -133,7 +158,10 @@ async function sendMessage() {
   isLoading.value = true
 
   try {
-    const history = messages.value.slice(0, -1).map(m => ({ role: m.role, content: m.content }))
+    const history = messages.value
+      .filter(m => !m.isSeparator)
+      .slice(0, -1)
+      .map(m => ({ role: m.role, content: m.content }))
     const reply = await callChat(text, history)
     if (reply) {
       addMessage('assistant', reply)
@@ -152,10 +180,16 @@ function injectMessage(content: string) {
   addMessage('assistant', content)
 }
 
-/** Reset chat for new comparison run */
-function resetChat() {
-  messages.value = []
-  fetchProactiveGreeting()
+/**
+ * Called by parent when a new comparison run starts.
+ * Adds a visual separator instead of clearing the chat,
+ * so the conversation history accompanies the full session.
+ */
+function onNewRun() {
+  runCounter++
+  if (messages.value.length > 0) {
+    addSeparator(`Run ${runCounter}`)
+  }
 }
 
 /** Fetch a proactive greeting with prompt suggestions from the LLM */
@@ -182,18 +216,23 @@ onMounted(() => {
   fetchProactiveGreeting()
 })
 
-// Watch context changes — Trashy can react
+// Watch context changes — Trashy reacts to completed comparisons
 watch(() => props.comparisonContext, (ctx) => {
   if (ctx && ctx.includes('generation_complete')) {
     sendAutoComment(ctx)
   }
 })
 
-async function sendAutoComment(context: string) {
+async function sendAutoComment(_context: string) {
   isLoading.value = true
   try {
     const reply = await callChat(
-      'The comparison is complete. Comment on visible differences between the language variants and explain why CLIP/T5 encoding causes this. Then suggest 1-2 follow-up prompts using [PROMPT: ...] format.'
+      'The comparison run just completed. You have the VLM image descriptions in your context. '
+      + 'Analyze the visible differences between language variants. '
+      + 'If you see large divergences or if a language produced something unexpected, suggest an INQUIRY: '
+      + 'propose specific follow-up prompts that test what the model DOES understand vs. what cultural knowledge it lacks. '
+      + 'For example: if Arabic produced a generic result, suggest testing specific Arabic cultural concepts one by one to find the boundary. '
+      + 'Use [PROMPT: ...] format for suggestions. Be curious and specific, not generic.'
     )
     if (reply) {
       addMessage('assistant', reply)
@@ -205,7 +244,7 @@ async function sendAutoComment(context: string) {
   }
 }
 
-defineExpose({ injectMessage, resetChat })
+defineExpose({ injectMessage, onNewRun })
 </script>
 
 <style scoped>
@@ -269,6 +308,31 @@ defineExpose({ injectMessage, resetChat })
   background: rgba(76, 175, 80, 0.15);
   color: rgba(255, 255, 255, 0.9);
   border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.separator {
+  align-self: center;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  background: none;
+  border-radius: 0;
+}
+
+.separator-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.separator-label {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .chat-bubble.loading {

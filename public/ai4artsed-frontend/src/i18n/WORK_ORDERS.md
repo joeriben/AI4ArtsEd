@@ -21,6 +21,16 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-18-compare-slot-actions
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.favorite` (NEW): "Add to favorites"
+  - `compare.unfavorite` (NEW): "Remove from favorites"
+  - `compare.forward` (NEW): "Forward to image transformation"
+  - `compare.download` (NEW): "Download image"
+  - `compare.analyze` (NEW): "Analyze image"
+- **Context**: Action buttons under each generated image in the Language Comparison page. Favorite = heart icon toggle, Forward = send image to image transformation page, Download = save image locally, Analyze = describe via VLM and inject into Trashy chat. Keep translations short (button tooltips).
+
 ### WO-2026-03-17-comparison-mode
 - **Session**: 265
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
