@@ -1,5 +1,60 @@
 # Development Log
 
+## Session 269 - Workshop Planning: Real VRAM Measurements + Complete Rebuild
+**Date:** 2026-03-19
+**Focus:** Session 267's workshop planning prototype was fundamentally broken. Complete rebuild with real measurements, correct model grouping, and actual preloading.
+
+### Problem (Session 267 Handover)
+1. **Model cards showed 32 output configs as "models"** — Split and Combine (a pipeline) was listed as a model. Research configs (attention_cartography, concept_algebra) appeared as workshop-selectable models.
+2. **VRAM values were fiction** — FLUX.2 config said 24 GB, real measurement: 53 GB. Most configs had no gpu_vram_mb at all.
+3. **"Cloud (DSGVO-konform)"** stamped on GPT-Image-1 (OpenAI) — factually wrong, OpenAI is US-hosted and not DSGVO-compliant.
+4. **Model loading was broken** — config_id → model_id mapping missing entirely.
+
+### Real VRAM Measurements (nvidia-smi peak, RTX PRO 6000 Blackwell 96GB)
+Measured each model individually: cold load → generate → peak monitoring → unload → restart.
+- **FLUX.2 (ComfyUI)**: 53 GB peak (config said 24 GB — 2.2x off)
+- **Wan 2.2 T2V (ComfyUI)**: 38 GB (config said 24 GB)
+- **SD3.5 Large (Diffusers)**: 30 GB (config said 28 GB — only accurate one)
+- **LTX Video (ComfyUI)**: 24 GB (config said 16 GB)
+- **HeartMuLa**: 12 GB
+- **ACE-Step (ComfyUI)**: 8 GB
+- **Stable Audio (ComfyUI)**: 6 GB
+- **Safety models (Ollama)**: 8 GB total (llama-guard3:1b + qwen3:1.7b + qwen3-vl:2b)
+
+Critical finding: ComfyUI keeps models fully on GPU (no CPU offload). Diffusers with `enable_model_cpu_offload()` shows ~0 VRAM at rest, peak only during generation. **ComfyUI measurements are the ground truth for workshop planning.**
+
+### Rebuild
+- **Physical model cards** (9 models) replace output config cards (32 configs)
+- **Memory bar**: Shows individually named loaded models (blue) + system baseline (grey) + planned models (green)
+- **No double-counting**: `isAlreadyLoaded()` checks vram_coordinator loaded_models
+- **Preload endpoint**: POST /api/settings/workshop/preload orchestrates loading across backends
+- **New GPU service endpoints**: /api/heartmula/load, /api/stable_audio/load
+- **ComfyUI models**: Noted as "loads on first use" (no preload API)
+- **DSGVO lie removed** → factual "Server in den USA" / "Server in Europa"
+- **GPT-Image-1 removed** (deprecated)
+- **Full i18n**: 35 keys under `workshop.*`, work order filed
+- **Header**: Workshop icon (diversity_3) + Compare icon (compare_arrows) added to nav
+
+### Corrected 22 Output Configs
+Updated `gpu_vram_mb` in all active output config JSONs and `MODEL_PEAK_VRAM_MB` in gpu_service/config.py.
+
+### Trashy Interface Reference
+Updated `trashy_interface_reference.txt`: expanded from "FOUR MODES" to "MODES AND PAGES" covering all 10 platform pages including Workshop Planning, Persona, Compare, Music, Latent Lab, LoRA Training.
+
+### Files Changed
+- `public/ai4artsed-frontend/src/composables/useGpuStatus.ts` — Complete rewrite: PhysicalModel type, measured VRAM
+- `public/ai4artsed-frontend/src/views/workshop_planning.vue` — Complete rewrite
+- `public/ai4artsed-frontend/src/App.vue` — Workshop + Compare icons in header
+- `public/ai4artsed-frontend/src/i18n/en.ts` — 35 new workshop.* keys
+- `devserver/my_app/routes/settings_routes.py` — /api/settings/workshop/preload endpoint
+- `devserver/trashy_interface_reference.txt` — All pages documented
+- `gpu_service/config.py` — MODEL_PEAK_VRAM_MB corrected
+- `gpu_service/routes/heartmula_routes.py` — /api/heartmula/load
+- `gpu_service/routes/stable_audio_routes.py` — /api/stable_audio/load
+- 22 output config JSONs — gpu_vram_mb corrected
+
+---
+
 ## Session 268 - Dialogic AI Persona Page
 **Date:** 2026-03-18
 **Focus:** New pedagogical mode: resistant, aesthetically opinionated AI that decides autonomously whether and what to generate.
