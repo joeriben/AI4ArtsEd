@@ -190,15 +190,14 @@ Vue page mit zentralem Dialog-Fenster:
 - Entscheidet selbst: welches Medium, welches Modell
 - Generierte Outputs in floating Boxen um den Dialog herum (mit Standard-Weiterbearbeitungsfunktionen)
 
-### 2. Compare-Seite: Uebersetzungs-Transparenz — PLANNED
+### 2. Compare-Seite: Uebersetzungs-Transparenz — IN PROGRESS
 
 **Datum:** 2026-03-18
-**Paedagogisches Ziel:** Sichtbar machen was bei Uebersetzung verloren geht.
+**Status:** Grundversion implementiert (Session 266), Context-Enrichment ausstehend
 
-Bestehende `/compare`-Seite ergaenzen:
-- Einfache Boxen mit den Uebersetzungen (sichtbar)
-- Darunter klein: Rueckuebersetzungen in die Settings-Sprache
-- Macht semantische Verschiebung durch Uebersetzung transparent
+Bestehende `/compare`-Seite:
+- ✅ Uebersetzungsboxen mit Rueckuebersetzungen (implementiert)
+- [ ] Context-Enrichment-Button auf MediaInputBox (destruktiv, wie → en, nutzt Interception-Configs)
 
 ### 3. Compare-Variationen: LLM-Dekonstruktion — PLANNED
 
@@ -209,10 +208,29 @@ Weitere Compare-Modi:
 - **Sprachmodell-Vergleich**: Gleicher Prompt an verschiedene LLMs, mit Seed-Kontrolle (Transformers, nicht API) und Temperature-Kontrolle
 - **System-Prompt-Vergleich**: Auswechselbare Systemprompts zeigen wie stark Kontext das Verhalten steuert
 - **Interception-Vergleich**: Gleicher User-Prompt + gleicher Kontext (Default: Planetarizer), aber verschiedene LLMs fuehren die Stage 2 Interception aus. Zeigt: Mistral Large produziert Kitsch, waehrend z.B. ein kleineres Modell (Mistral Nemo) oder ein hochwertigeres oft bessere/andere aesthetische Entscheidungen trifft. Kontext auswaehlbar (alle Interception-Configs).
-- **Bias-Probes**: Gezielte Prompts die systematische Verzerrungen in Modellen sichtbar machen (kulturelle Defaults, Gender-Bias, geographische Vorurteile)
+- **Bias-Probes**: Gezielte Prompts die systematische Verzerrungen in Modellen sichtbar machen (kulturelle Defaults, Gender-Bias, geographische Vorurteile). Insbesondere: Was sind fuer Modelle "Schoenheit", "Helden", "Alter"? → DAS war der urspruengliche Grund fuer Bildmodell-Vergleich. Auch fuer Textarbeit interessant.
 - **Visueller Kontext-Prompt**: Einfluss von Kontext auf Generierung
 - Immer mit Trashy-Interpretation
 - Auch mit kleinen lokalen Modellen moeglich, aber AUCH grosse Cloud-Modelle (v.a. fuer Interception-Vergleich — Qualitaetsunterschiede sind dort am kraessesten)
+
+### 4. Navigation: Canvas — Compare — Latent Lab — CHECKEN
+
+**Datum:** 2026-03-18
+**Status:** OFFEN
+
+- Drei fortgeschrittene Bereiche: Canvas, Compare, Latent Lab
+- Pruefen ob Ueberschneidungen zwischen Latent Lab und Compare bestehen (vermutlich nein — Latent Lab = Vektor-Manipulation, Compare = sprachliche/modell-uebergreifende Transparenz)
+- Pruefen ob Latent Lab safety-faehig gemacht werden kann (Compare ging auch)
+
+### 5. Compare: Dekonstruktive Bias-Probes fuer Bildmodelle — PLANNED
+
+**Datum:** 2026-03-18
+**Paedagogisches Ziel:** Herausfinden was fuer verschiedene Modelle "Schoenheit", "Helden", "Alter" sind.
+
+- Urspruenglicher Kern-Grund fuer den Bildmodell-Vergleich
+- Gezielte Prompts ("a hero", "beauty", "an old person") an verschiedene Modelle → Defaults sichtbar machen
+- Auch fuer Textarbeit: Wie beschreiben verschiedene LLMs "einen Helden"?
+- Kombination mit Interception-Vergleich: gleicher dekonstruktiver Prompt, verschiedene LLMs als Stage 2
 
 ---
 
