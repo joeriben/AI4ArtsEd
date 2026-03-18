@@ -858,7 +858,7 @@ def chat():
         result = call_chat_helper(
             messages=messages,
             temperature=0.7,
-            max_tokens=500  # Keep responses concise
+            max_tokens=2048
         )
         assistant_reply = result["content"]
         assistant_thinking = result.get("thinking")
