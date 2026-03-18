@@ -133,6 +133,12 @@ const router = createRouter({
       component: () => import('../views/comparative_generation.vue'),
     },
     {
+      path: '/workshop',
+      name: 'workshop-planning',
+      // Workshop resource planning: collective model selection with Trashy
+      component: () => import('../views/workshop_planning.vue'),
+    },
+    {
       path: '/usage-agreement',
       name: 'usage-agreement',
       component: () => import('../views/UsageAgreementView.vue'),

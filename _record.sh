@@ -8,16 +8,12 @@
 #   source "$SCRIPT_DIR/_record.sh"
 #
 # Environment:
-#   RECORD=1              - Enable recording (default: ON for production, OFF for dev)
+#   RECORD=1              - Enable recording (default: ON always, RECORD=0 to disable)
 #   RECORD_MODE=prod|dev  - Force protocol directory (default: auto-detect from SCRIPT_DIR)
 #   RECORD_SERVICE_NAME   - Service name for filename (REQUIRED if RECORD=1)
 
 _setup_recording() {
-    # Auto-detect default: production records by default, dev is opt-in
-    local default="0"
-    if [[ "${SCRIPT_DIR:-}" =~ production ]]; then
-        default="1"
-    fi
+    local default="1"
 
     if [[ "${RECORD:-$default}" != "1" ]]; then
         return

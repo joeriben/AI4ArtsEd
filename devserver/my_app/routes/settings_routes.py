@@ -1872,3 +1872,53 @@ def get_ollama_models():
             "error": str(e),
             "models": []
         }), 200
+
+
+@settings_bp.route('/gpu-preload', methods=['POST'])
+def gpu_preload_model():
+    """
+    Proxy to GPU service: preload a model into VRAM.
+
+    Used by workshop planning page to trigger real model loading
+    so VRAM usage can be measured afterwards.
+
+    Body: { "model_id": "sd35_large", "pipeline_class": "StableDiffusion3Pipeline" }
+    """
+    data = request.get_json(silent=True) or {}
+    model_id = data.get('model_id')
+    if not model_id:
+        return jsonify({"success": False, "error": "model_id required"}), 400
+
+    try:
+        resp = requests.post(
+            f"{config.GPU_SERVICE_URL}/api/diffusers/load",
+            json=data,
+            timeout=180,  # Model loading can take up to 2 minutes
+        )
+        return jsonify(resp.json()), resp.status_code
+    except requests.ConnectionError:
+        return jsonify({"success": False, "error": "GPU service unreachable"}), 503
+    except requests.Timeout:
+        return jsonify({"success": False, "error": "Model loading timed out"}), 504
+    except Exception as e:
+        logger.error(f"[GPU-PRELOAD] Error: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@settings_bp.route('/gpu-vram', methods=['GET'])
+def gpu_vram_status():
+    """
+    Proxy to GPU service: get detailed VRAM status.
+
+    Returns loaded models, foreign processes, free/total memory.
+    """
+    try:
+        resp = requests.get(
+            f"{config.GPU_SERVICE_URL}/api/health/vram",
+            timeout=10,
+        )
+        return jsonify(resp.json()), resp.status_code
+    except requests.ConnectionError:
+        return jsonify({"error": "GPU service unreachable"}), 503
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

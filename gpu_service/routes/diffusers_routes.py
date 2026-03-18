@@ -58,6 +58,28 @@ def gpu_info():
     return jsonify(info)
 
 
+@diffusers_bp.route('/api/diffusers/load', methods=['POST'])
+def load():
+    """Preload a model into GPU memory without generating.
+
+    Used by workshop planning to measure real VRAM cost.
+    Body: { "model_id": "sd35_large", "pipeline_class": "StableDiffusion3Pipeline" }
+    Returns: { "success": true/false, "model_id": "...", "error": "..." }
+    """
+    data = request.get_json(silent=True) or {}
+    model_id = data.get('model_id')
+    pipeline_class = data.get('pipeline_class', 'StableDiffusion3Pipeline')
+    if not model_id:
+        return jsonify({"success": False, "error": "model_id required"}), 400
+    try:
+        backend = _get_backend()
+        result = _run_async(backend.load_model(model_id, pipeline_class))
+        return jsonify({"success": result, "model_id": model_id})
+    except Exception as e:
+        logger.error(f"[DIFFUSERS] Preload failed for {model_id}: {e}")
+        return jsonify({"success": False, "model_id": model_id, "error": str(e)}), 500
+
+
 @diffusers_bp.route('/api/diffusers/unload', methods=['POST'])
 def unload():
     """Unload a model from GPU."""
