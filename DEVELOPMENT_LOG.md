@@ -1,5 +1,37 @@
 # Development Log
 
+## Session 268 - Dialogic AI Persona Page
+**Date:** 2026-03-18
+**Focus:** New pedagogical mode: resistant, aesthetically opinionated AI that decides autonomously whether and what to generate.
+
+### Core Concept
+Reversal of the "user orders, machine delivers" dynamic. Instead of typing a prompt and getting output, the user enters a dialogue with a machine that has its own aesthetic position. The machine generates only when the conversation convinces it — not on command.
+
+### Implementation
+- **`/persona` route** with central chat + floating draggable MediaOutputBoxes
+- **Backend**: New `AI_PERSONA_SYSTEM_PROMPT` in `chat_routes.py`, routed via `context.persona_mode`
+- **Generation trigger**: Bot includes `[GENERATE: config_id | prompt]` markers in responses; frontend parses and spawns generations automatically
+- **No new endpoint**: Uses existing `/api/chat` + `/api/schema/pipeline/generation` (useGenerationStream)
+- **Browser TTS**: `speechSynthesis` API for bot voice output (toggleable), markers stripped before speaking
+- **Floating boxes**: `shallowRef<MediaBox[]>` + `triggerRef` pattern (avoids Vue deep-unwrapping of stream refs)
+- **Expert mode**: `ui-mode="expert"` suppresses edutainment animations in floating boxes
+
+### MediaOutputBox Actions
+All actions wired: click-zoom (fullscreen modal), favorites (via favoritesStore), download (blob fetch), forward to i2i (localStorage transfer), print (window.open).
+
+### Architectural Pattern
+The persona page proves that the chat + generation architecture composes well: a new pedagogical mode was built entirely from existing infrastructure (chat endpoint, generation streaming, MediaOutputBox) with zero new backend endpoints.
+
+### Changes
+- `src/views/ai_persona.vue` — New page (chat, floating boxes, TTS, fullscreen)
+- `src/router/index.ts` — `/persona` route
+- `devserver/my_app/routes/chat_routes.py` — `AI_PERSONA_SYSTEM_PROMPT` + persona_mode routing
+- `src/assets/icons/volume_up_*.svg`, `volume_off_*.svg` — TTS toggle icons
+- `src/i18n/en.ts` — 4 new persona keys
+- `src/i18n/WORK_ORDERS.md` — WO-2026-03-18-ai-persona-page
+
+---
+
 ## Session 266 - Compare Page Refactor + Trashy System Prompt Rewrite
 **Date:** 2026-03-18
 **Focus:** Compare page architectural cleanup (eliminate parallel code), Trashy tonality/personality rewrite across all system prompts.

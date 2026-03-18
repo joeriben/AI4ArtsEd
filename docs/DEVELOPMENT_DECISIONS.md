@@ -9,6 +9,35 @@
 
 ---
 
+## 2026-03-18: Dialogic AI Persona — Bot-Triggered Generation via Chat Markers
+
+**Decision:** New `/persona` page where the AI decides autonomously whether and what to generate. Generation is triggered by `[GENERATE: config_id | prompt]` markers in the bot's chat response, parsed by the frontend.
+
+**Pedagogical rationale:** Reversal of the "user orders, machine delivers" dynamic. In art education workshops, the default pattern (type prompt, get image) reinforces consumption rather than reflection. The resistant persona forces participants to articulate, argue, and reflect — the machine generates only when convinced, and chooses medium and model itself.
+
+**Technical approach — no new endpoints:**
+- Chat: existing `/api/chat` with `context.persona_mode = true` routes to `AI_PERSONA_SYSTEM_PROMPT`
+- Generation: existing `/api/schema/pipeline/generation` via `useGenerationStream`
+- Marker parsing: regex extraction of `[GENERATE: config_id | prompt]` from bot response → `spawnGeneration()`
+- Available configs injected via `draft_context` so the LLM knows what it can generate
+
+**Why markers instead of structured JSON response:**
+- Chat endpoint returns plain text (no structured output mode)
+- Markers are human-readable in the chat history
+- Same pattern as existing `[PROMPT: ...]` suggestions — proven, consistent
+- Frontend can strip markers from TTS output cleanly
+
+**Floating MediaOutputBox pattern:**
+- `shallowRef<MediaBox[]>` avoids Vue's deep `UnwrapRef` unwrapping stream refs (each box holds a `useGenerationStream()` instance)
+- `triggerRef()` for in-place mutations (drag position, favorite toggle, generation complete)
+- Grid-based placement algorithm, viewport-clamped dragging
+
+**Affected files:**
+- `src/views/ai_persona.vue` — New page
+- `devserver/my_app/routes/chat_routes.py` — New system prompt + routing
+
+---
+
 ## 2026-03-18: VLM Safety — Hybrid Architecture (Primary + Two-Model Fallback)
 
 **Decision:** VLM image safety check uses hybrid architecture: primary single-model path (VLM sees + classifies, proven zero-FN) with two-model fallback (VLM describes → STAGE3_MODEL judges) for cases where the VLM fails to produce a verdict.

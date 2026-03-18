@@ -19,9 +19,24 @@
         :is-favorited="box.isFavorited"
         :model-meta="box.stream.modelMeta.value"
         :stage4-duration-ms="box.stream.stage4DurationMs.value"
+        ui-mode="expert"
         @toggle-favorite="toggleFavorite(box.id)"
+        @image-click="fullscreenImage = $event"
+        @download="downloadBoxMedia(box)"
+        @forward="forwardToI2I(box)"
+        @print="printMedia(box)"
       />
     </div>
+
+    <!-- Fullscreen image modal -->
+    <Teleport to="body">
+      <Transition name="modal-fade">
+        <div v-if="fullscreenImage" class="fullscreen-modal" @click="fullscreenImage = null">
+          <img :src="fullscreenImage" alt="" class="fullscreen-image" />
+          <button class="close-fullscreen" @click.stop="fullscreenImage = null">&times;</button>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Central chat -->
     <div class="chat-container">
@@ -75,7 +90,9 @@
 <script setup lang="ts">
 import { ref, shallowRef, triggerRef, nextTick, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useFavoritesStore } from '@/stores/favorites'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
@@ -84,8 +101,14 @@ import volumeOnIcon from '@/assets/icons/volume_up_24dp_E3E3E3_FILL0_wght400_GRA
 import volumeOffIcon from '@/assets/icons/volume_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg'
 
 const { t } = useI18n()
+const router = useRouter()
 const userPreferences = useUserPreferencesStore()
+const favoritesStore = useFavoritesStore()
 const deviceId = useDeviceId()
+
+// ---------- Fullscreen ----------
+
+const fullscreenImage = ref<string | null>(null)
 
 // ---------- Chat state ----------
 
@@ -206,11 +229,63 @@ function removeBox(id: string) {
   mediaBoxes.value = mediaBoxes.value.filter(b => b.id !== id)
 }
 
-function toggleFavorite(id: string) {
+async function toggleFavorite(id: string) {
   const box = mediaBoxes.value.find(b => b.id === id)
-  if (box) {
+  if (!box?.runId) return
+  const success = await favoritesStore.toggleFavorite(
+    box.runId,
+    box.mediaType as 'image' | 'video' | 'audio' | 'music',
+    deviceId,
+    'anonymous',
+    'persona'
+  )
+  if (success) {
     box.isFavorited = !box.isFavorited
     triggerRef(mediaBoxes)
+  }
+}
+
+async function downloadBoxMedia(box: MediaBox) {
+  if (!box.outputUrl) return
+  try {
+    const runIdMatch = box.outputUrl.match(/\/api\/media\/\w+\/(.+)$/)
+    const runId = runIdMatch ? runIdMatch[1] : 'media'
+    const extensions: Record<string, string> = {
+      image: 'png', audio: 'mp3', video: 'mp4', music: 'mp3', code: 'js', '3d': 'glb'
+    }
+    const ext = extensions[box.mediaType] || 'bin'
+    const filename = `ai4artsed_${runId}.${ext}`
+
+    const response = await fetch(box.outputUrl)
+    if (!response.ok) throw new Error(`Download failed: ${response.status}`)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.click()
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('[PERSONA] Download error:', error)
+  }
+}
+
+function forwardToI2I(box: MediaBox) {
+  if (!box.outputUrl || box.mediaType !== 'image') return
+  const runIdMatch = box.outputUrl.match(/\/api\/media\/image\/(.+)$/)
+  localStorage.setItem('i2i_transfer_data', JSON.stringify({
+    imageUrl: box.outputUrl,
+    runId: runIdMatch ? runIdMatch[1] : null,
+    timestamp: Date.now()
+  }))
+  router.push('/image-transformation')
+}
+
+function printMedia(box: MediaBox) {
+  if (!box.outputUrl) return
+  const printWindow = window.open(box.outputUrl, '_blank')
+  if (printWindow) {
+    printWindow.onload = () => printWindow.print()
   }
 }
 
@@ -493,6 +568,19 @@ onMounted(() => {
   display: none;
 }
 
+/* Audio/music boxes need less height */
+.floating-media-box :deep(.audio-with-actions) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.floating-media-box :deep(.output-audio) {
+  width: 90%;
+}
+
 /* ---------- Central chat ---------- */
 
 .chat-container {
@@ -661,5 +749,50 @@ onMounted(() => {
 
 .chat-input:disabled {
   opacity: 0.5;
+}
+
+/* ---------- Fullscreen modal ---------- */
+
+.fullscreen-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.fullscreen-image {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+}
+
+.close-fullscreen {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-fullscreen:hover {
+  color: white;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
 }
 </style>
