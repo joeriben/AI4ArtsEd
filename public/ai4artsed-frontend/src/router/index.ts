@@ -139,6 +139,12 @@ const router = createRouter({
       component: () => import('../views/workshop_planning.vue'),
     },
     {
+      path: '/persona',
+      name: 'ai-persona',
+      // Dialogic AI persona: resistant machine that decides what to generate
+      component: () => import('../views/ai_persona.vue'),
+    },
+    {
       path: '/usage-agreement',
       name: 'usage-agreement',
       component: () => import('../views/UsageAgreementView.vue'),

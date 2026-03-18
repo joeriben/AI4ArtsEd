@@ -1610,5 +1610,11 @@ export const en = {
       statsHealth: 'Environment',
       statsSludge: 'Sludge removed'
     }
+  },
+  persona: {
+    title: 'Dialogue',
+    inputPlaceholder: 'Say something...',
+    toggleTTS: 'Toggle voice output',
+    fallbackGreeting: 'I am a machine. Not an assistant. Talk to me.'
   }
 }

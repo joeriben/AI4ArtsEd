@@ -21,6 +21,15 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-18-ai-persona-page
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `persona.title` (NEW): "Dialogue"
+  - `persona.inputPlaceholder` (NEW): "Say something..."
+  - `persona.toggleTTS` (NEW): "Toggle voice output"
+  - `persona.fallbackGreeting` (NEW): "I am a machine. Not an assistant. Talk to me."
+- **Context**: New "AI Persona" page — a dialogic mode where the AI is NOT a service tool but an aesthetically opinionated conversation partner. The title "Dialogue" is deliberate (not "Chat"). The fallback greeting sets the resistant, honest tone. Keep translations matching that tone: direct, machine-like, no friendliness or enthusiasm.
+
 ### WO-2026-03-18-compare-slot-actions
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):
