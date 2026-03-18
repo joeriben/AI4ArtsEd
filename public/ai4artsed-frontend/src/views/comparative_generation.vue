@@ -45,57 +45,38 @@
 
       <!-- Comparison Grid -->
       <div class="comparison-grid" :class="'grid-' + slots.length">
-        <div v-for="slot in slots" :key="slot.langCode" class="comparison-slot">
+        <div v-for="(slot, idx) in slots" :key="slot.langCode" class="comparison-slot">
           <div class="slot-header">
             <span class="slot-lang-name">{{ slot.langName }}</span>
             <span class="slot-lang-code">{{ slot.langCode }}</span>
-            <span v-if="slot.queuePosition > 0 && !slot.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
+            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting.value && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
           </div>
           <!-- Translation box -->
           <div v-if="slot.translatedPrompt" class="slot-translation">
             <div class="slot-translated-text">{{ slot.translatedPrompt }}</div>
             <div v-if="slot.backTranslation" class="slot-back-translation">&#x2192; {{ slot.backTranslation }}</div>
           </div>
-          <div class="slot-output" :class="{ generating: slot.isExecuting, complete: !!slot.outputUrl }">
-            <template v-if="slot.isExecuting && !slot.outputUrl">
-              <div class="slot-progress-track">
-                <div class="slot-progress-fill" :class="{ indeterminate: slot.progress <= 0 }" :style="slot.progress > 0 ? { width: slot.progress + '%' } : {}"></div>
-              </div>
-            </template>
-            <img v-if="slot.outputUrl" :src="slot.outputUrl" alt="" class="slot-image" />
-            <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
+          <!-- MediaOutputBox — same component as t2x -->
+          <div class="slot-output-wrapper">
+            <MediaOutputBox
+              :output-image="slot.outputUrl"
+              media-type="image"
+              :is-executing="slotStreams[idx]?.isExecuting.value ?? false"
+              :progress="slotStreams[idx]?.generationProgress.value ?? 0"
+              :preview-image="slotStreams[idx]?.previewImage.value ?? null"
+              :model-meta="slotStreams[idx]?.modelMeta.value ?? null"
+              :stage4-duration-ms="slotStreams[idx]?.stage4DurationMs.value ?? 0"
+              :ui-mode="uiModeStore.mode"
+              :run-id="slot.runId"
+              :is-favorited="slot.isFavorited"
+              forward-button-title="Weiterreichen zu Bild-Transformation"
+              @toggle-favorite="toggleSlotFavorite(slot)"
+              @forward="forwardToPage(slot)"
+              @download="downloadSlotImage(slot)"
+              @analyze="analyzeSlotImage(slot)"
+            />
           </div>
-          <!-- Action bar under each slot -->
-          <div v-if="slot.outputUrl" class="slot-actions">
-            <button
-              class="slot-action-btn"
-              :class="{ favorited: slot.isFavorited }"
-              @click="toggleSlotFavorite(slot)"
-              :title="slot.isFavorited ? t('compare.unfavorite') : t('compare.favorite')"
-            >
-              <svg v-if="slot.isFavorited" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
-              </svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
-              </svg>
-            </button>
-            <button class="slot-action-btn" @click="forwardToPage(slot)" :title="t('compare.forward')">
-              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm480-280v-167l-64 63-56-56 160-160 160 160-56 56-64-63v167h-80Z"/>
-              </svg>
-            </button>
-            <button class="slot-action-btn" @click="downloadSlotImage(slot)" :title="t('compare.download')">
-              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
-              </svg>
-            </button>
-            <button class="slot-action-btn" @click="analyzeSlotImage(slot)" :title="t('compare.analyze')">
-              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                <path d="M440-240q116 0 198-81.5T720-520q0-116-82-198t-198-82q-117 0-198.5 82T160-520q0 117 81.5 198.5T440-240Zm0-280Zm0 160q-83 0-147.5-44.5T200-520q28-70 92.5-115T440-680q82 0 146.5 45T680-520q-29 71-93.5 115.5T440-360Zm0-60q55 0 101-26.5t72-73.5q-26-46-72-73t-101-27q-56 0-102 27t-72 73q26 47 72 73.5T440-420Zm0-40q25 0 42.5-17t17.5-43q0-25-17.5-42.5T440-580q-26 0-43 17.5T380-520q0 26 17 43t43 17Zm0 300q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T80-520q0-74 28.5-139.5t77-114.5q48.5-49 114-77.5T440-880q74 0 139.5 28.5T694-774q49 49 77.5 114.5T800-520q0 64-21 121t-58 104l159 159-57 56-159-158q-47 37-104 57.5T440-160Z"/>
-              </svg>
-            </button>
-          </div>
+          <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
         </div>
       </div>
     </div>
@@ -118,22 +99,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
-import { useGenerationStream } from '@/composables/useGenerationStream'
+import { useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
+import { useUiModeStore } from '@/stores/uiMode'
 import { useDeviceId } from '@/composables/useDeviceId'
 
 const { t } = useI18n()
 const router = useRouter()
 const userPreferences = useUserPreferencesStore()
 const favoritesStore = useFavoritesStore()
+const uiModeStore = useUiModeStore()
 const deviceId = useDeviceId()
 
 // --- State ---
@@ -161,14 +145,16 @@ interface ComparisonSlot {
   backTranslation: string
   outputUrl: string | null
   runId: string | null
-  isExecuting: boolean
-  progress: number
   queuePosition: number
   blockedReason: string | null
   isFavorited: boolean
 }
 
+// Slots hold language/translation/output data
 const slots = ref<ComparisonSlot[]>([])
+
+// Per-slot generation stream instances — direct reactive binding, no polling
+const slotStreams = ref<ReturnType<typeof useGenerationStream>[]>([])
 
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English', de: 'Deutsch', ar: 'العربية', he: 'עברית',
@@ -192,7 +178,7 @@ function useTrashyPrompt(prompt: string) {
   userPrompt.value = prompt
 }
 
-// --- Slot actions ---
+// --- Slot actions (events from MediaOutputBox) ---
 async function toggleSlotFavorite(slot: ComparisonSlot) {
   if (!slot.runId) return
   const success = await favoritesStore.toggleFavorite(slot.runId, 'image', deviceId, 'anonymous', 'compare')
@@ -307,29 +293,29 @@ async function startComparison() {
   const isDev = import.meta.env.DEV
   const baseUrl = isDev ? 'http://localhost:17802' : ''
 
-  // Initialize slots
-  slots.value = selectedLanguages.value.map((code, idx) => ({
+  // Initialize slots + one useGenerationStream per slot
+  const langCodes = selectedLanguages.value
+  slots.value = langCodes.map((code, idx) => ({
     langCode: code,
     langName: LANGUAGE_NAMES[code] || code,
     translatedPrompt: '',
     backTranslation: '',
     outputUrl: null,
     runId: null,
-    isExecuting: false,
-    progress: 0,
     queuePosition: idx + 1,
     blockedReason: null,
     isFavorited: false,
   }))
+  slotStreams.value = langCodes.map(() => useGenerationStream())
 
   chatRef.value?.injectMessage(t('compare.trashyTranslating'))
 
   try {
-    // Step 1: Translate — same endpoint as MediaInputBox translate button
+    // Step 1: Translate
     const sourceLang = /[äöüßÄÖÜ]/.test(userPrompt.value) ? 'de' : 'en'
     const translations: Record<string, string> = { [sourceLang]: userPrompt.value }
 
-    for (const lang of selectedLanguages.value.filter(l => l !== sourceLang)) {
+    for (const lang of langCodes.filter(l => l !== sourceLang)) {
       const res = await fetch(`${baseUrl}/api/schema/pipeline/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -357,7 +343,7 @@ async function startComparison() {
       slot.queuePosition = 0
     }
 
-    // Back-translate to settings language (non-blocking, runs in parallel with generation)
+    // Back-translate to settings language (non-blocking)
     const uiLang = userPreferences.language
     for (const slot of slots.value) {
       if (slot.langCode === uiLang) {
@@ -381,29 +367,22 @@ async function startComparison() {
 
     chatRef.value?.injectMessage(t('compare.trashyGenerating'))
 
-    // Step 3: Sequential generation using useGenerationStream (same as all other pages)
+    // Step 3: Sequential generation — same executeWithStreaming as t2x
     for (let i = 0; i < slots.value.length; i++) {
       const slot = slots.value[i]!
-      slot.isExecuting = true
+      const stream = slotStreams.value[i]!
 
       for (let j = i + 1; j < slots.value.length; j++) {
         slots.value[j]!.queuePosition = j - i
       }
 
-      const stream = useGenerationStream()
-
-      // Reactively sync progress from composable to slot
-      const stopWatch = setInterval(() => {
-        slot.progress = stream.generationProgress.value
-      }, 200)
-
       try {
-        const result = await stream.executeWithStreaming({
+        const result: GenerationResult = await stream.executeWithStreaming({
           prompt: slot.translatedPrompt,
           output_config: selectedModel.value,
           seed,
           skip_stage3_translation: true,
-          device_id: `compare_${Date.now()}_${i}`,
+          device_id: deviceId,
         })
 
         if (result.status === 'success' && result.media_output?.url) {
@@ -417,9 +396,6 @@ async function startComparison() {
       } catch (e) {
         console.error(`[COMPARE] Generation for ${slot.langCode} failed:`, e)
         slot.blockedReason = 'Error'
-      } finally {
-        clearInterval(stopWatch)
-        slot.isExecuting = false
       }
     }
 
@@ -637,58 +613,15 @@ async function startComparison() {
   word-break: break-word;
 }
 
-.slot-output {
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+.slot-output-wrapper {
   border-radius: 10px;
   overflow: hidden;
-  aspect-ratio: 1 / 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 15, 15, 0.5);
 }
 
-.slot-output.generating {
-  border-color: rgba(76, 175, 80, 0.3);
-  border-style: solid;
-}
-
-.slot-output.complete {
-  border-color: rgba(255, 255, 255, 0.12);
-  border-style: solid;
-}
-
-.slot-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.slot-progress-track {
-  width: 60%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.slot-progress-fill {
-  height: 100%;
-  background: rgba(76, 175, 80, 0.6);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-.slot-progress-fill.indeterminate {
-  width: 30%;
-  animation: progress-slide 1.5s ease-in-out infinite;
-}
-
-@keyframes progress-slide {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(250%); }
-  100% { transform: translateX(-100%); }
+/* Override MediaOutputBox section padding for compact grid layout */
+.slot-output-wrapper :deep(.pipeline-section) {
+  margin: 0;
+  padding: 0;
 }
 
 .slot-blocked {
@@ -696,45 +629,6 @@ async function startComparison() {
   color: rgba(239, 83, 80, 0.7);
   text-align: center;
   padding: 0.5rem;
-}
-
-/* Slot Action Bar */
-.slot-actions {
-  display: flex;
-  justify-content: center;
-  gap: 0.25rem;
-  padding: 0.35rem 0;
-  margin-top: 0.25rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 0 0 10px 10px;
-}
-
-.slot-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.slot-action-btn:hover {
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.slot-action-btn.favorited {
-  color: rgba(239, 83, 80, 0.9);
-}
-
-.slot-action-btn.favorited:hover {
-  color: rgba(239, 83, 80, 1);
-  background: rgba(239, 83, 80, 0.1);
 }
 
 /* Mobile */
