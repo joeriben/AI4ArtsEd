@@ -1612,9 +1612,9 @@ export const en = {
     }
   },
   persona: {
-    title: 'Dialogue',
+    title: 'Persona',
     inputPlaceholder: 'Say something...',
     toggleTTS: 'Toggle voice output',
-    fallbackGreeting: 'I am a machine. Not an assistant. Talk to me.'
+    fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.'
   }
 }
