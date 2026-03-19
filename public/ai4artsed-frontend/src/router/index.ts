@@ -54,7 +54,6 @@ const router = createRouter({
       name: 'settings',
       // Configuration settings page
       component: () => import('../views/SettingsView.vue'),
-      meta: { requiresAuth: true }
     },
     {
       path: '/impressum',
@@ -124,7 +123,6 @@ const router = createRouter({
       path: '/rave-training',
       name: 'rave-training',
       component: () => import('../views/RaveTrainingView.vue'),
-      meta: { requiresAuth: true },
     },
     {
       path: '/compare',
@@ -162,27 +160,6 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'usage-agreement', query: { redirect: to.fullPath } })
       return
     }
-  }
-
-  // Auth guard for settings
-  if (to.meta.requiresAuth) {
-    try {
-      const response = await fetch('/api/settings/check-auth', {
-        credentials: 'include'
-      })
-      const data = await response.json()
-
-      if (data.authenticated) {
-        next()
-      } else {
-        // Redirect to home with auth requirement query param
-        next({ name: 'landing', query: { authRequired: 'settings' } })
-      }
-    } catch (e) {
-      console.error('Auth check failed:', e)
-      next({ name: 'landing' })
-    }
-    return
   }
 
   // Advanced-mode guard for Canvas and Latent Lab (prevents direct URL access at kids/youth)

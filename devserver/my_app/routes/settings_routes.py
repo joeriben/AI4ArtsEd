@@ -354,6 +354,8 @@ HARDWARE_MATRIX = get_hardware_matrix()
 # Localhost detection for auto-login
 def is_localhost_request():
     """Check if request comes from localhost (for auto-login in development)"""
+    if request.headers.get('CF-Connecting-IP'):
+        return False
     remote_addr = request.remote_addr
     host = request.host.split(':')[0]  # Remove port
     return remote_addr in ('127.0.0.1', '::1') or host in ('localhost', '127.0.0.1')
