@@ -1,118 +1,62 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-13T14:00:00Z",
-  "source_session": 261,
+  "generated_at": "2026-03-19T15:00:00Z",
+  "source_session": 269,
   "items": [
     {
-      "id": "news-2026-03-13-safety-interception",
-      "date": "2026-03-13",
-      "session": 260,
-      "category": "improvement",
+      "id": "news-2026-03-19-workshop-planning",
+      "date": "2026-03-19",
+      "session": 269,
+      "category": "feature",
       "title": {
-        "en": "Kids/Youth Safety: Context-Aware Content Check",
-        "de": "Kinder-/Jugendsicherheit: Kontextbewusste Inhaltspruefung"
+        "en": "Collaborative Workshop Preparation",
+        "de": "Gemeinsame Workshop-Vorbereitung"
       },
       "summary": {
-        "en": "The content safety system for kids and youth evaluates meaning and context, not individual words. Age-appropriate protection that understands what a text describes.",
-        "de": "Das Sicherheitssystem fuer Kinder und Jugendliche bewertet Bedeutung und Kontext, nicht einzelne Woerter. Altersgerechter Schutz, der versteht, was ein Text beschreibt."
+        "en": "A planning page for group sessions: model cards can be dragged into a memory bar that shows how much graphics card capacity each AI model requires. Trashy helps coordinate the selection and explains what fits together.",
+        "de": "Eine Planungsseite fuer Gruppensitzungen: Modellkarten lassen sich in einen Speicherbalken ziehen, der zeigt, wie viel Grafikkartenkapazitaet jedes KI-Modell benoetigt. Trashy hilft bei der Auswahl und erklaert, was zusammen passt."
       }
     },
     {
-      "id": "news-2026-03-13-vlm-checklist",
-      "date": "2026-03-13",
-      "session": 260,
-      "category": "improvement",
+      "id": "news-2026-03-18-persona",
+      "date": "2026-03-18",
+      "session": 268,
+      "category": "feature",
       "title": {
-        "en": "Automated Image Review",
-        "de": "Automatische Bildpruefung"
+        "en": "Persona: Dialogic AI with Its Own Aesthetic Position",
+        "de": "Persona: Dialogische KI mit eigener aesthetischer Position"
       },
       "summary": {
-        "en": "Generated images are automatically reviewed for age-appropriate content before display. The check evaluates specific categories relevant to child and youth protection.",
-        "de": "Generierte Bilder werden vor der Anzeige automatisch auf altersgerechte Inhalte geprueft. Die Pruefung bewertet spezifische Kategorien des Kinder- und Jugendschutzes."
+        "en": "A new mode where the AI has an aesthetic opinion and decides independently whether and what to generate. Instead of entering a prompt and receiving a result, you have a conversation — and the machine generates only when the dialogue leads there.",
+        "de": "Ein neuer Modus, in dem die KI eine aesthetische Haltung hat und eigenstaendig entscheidet, ob und was sie generiert. Statt einen Prompt einzugeben und ein Ergebnis zu erhalten, fuehrst du ein Gespraech — und die Maschine generiert erst, wenn der Dialog dorthin fuehrt."
       }
     },
     {
-      "id": "news-2026-03-12-mammouth-claude",
-      "date": "2026-03-12",
-      "session": 259,
-      "category": "improvement",
+      "id": "news-2026-03-17-image-to-3d",
+      "date": "2026-03-17",
+      "session": 265,
+      "category": "feature",
       "title": {
-        "en": "Claude Sonnet 4.6 for All Text Features",
-        "de": "Claude Sonnet 4.6 fuer alle Textfunktionen"
+        "en": "Image to 3D Model",
+        "de": "Bild zu 3D-Modell"
       },
       "summary": {
-        "en": "Text transformation, the Traeshy chat assistant, and safety checks use Claude Sonnet 4.6 from Anthropic.",
-        "de": "Text-Transformation, der Traeshy-Chat-Assistent und die Sicherheitspruefungen nutzen Claude Sonnet 4.6 von Anthropic."
+        "en": "Upload a photo or drawing to generate a textured 3D model from it. The result can be rotated and zoomed directly in the browser.",
+        "de": "Lade ein Foto oder eine Zeichnung hoch, um daraus ein texturiertes 3D-Modell zu erzeugen. Das Ergebnis laesst sich direkt im Browser drehen und zoomen."
       }
     },
     {
-      "id": "news-2026-03-11-canvas-zoom",
-      "date": "2026-03-11",
-      "session": 257,
-      "category": "improvement",
-      "title": {
-        "en": "Canvas: Pan/Zoom and Output Drawer",
-        "de": "Canvas: Verschieben/Zoomen und Ergebnis-Schublade"
-      },
-      "summary": {
-        "en": "The Canvas Workflow Builder now supports pan (middle mouse) and zoom (Ctrl+Wheel, 0.25x-2x). Generated outputs appear in a bottom drawer with preview cards — click a card to jump to its node on the canvas. Each card shows the config name and seed used.",
-        "de": "Der Canvas Workflow Builder unterstuetzt jetzt Verschieben (mittlere Maustaste) und Zoomen (Strg+Mausrad, 0.25x-2x). Generierte Ergebnisse erscheinen in einer Schublade am unteren Rand mit Vorschau-Karten — Klick auf eine Karte springt zum zugehoerigen Knoten. Jede Karte zeigt den Konfig-Namen und den verwendeten Seed."
-      }
-    },
-    {
-      "id": "news-2026-03-05-video-wan22",
+      "id": "news-2026-03-05-video",
       "date": "2026-03-05",
       "session": 247,
       "category": "feature",
       "title": {
-        "en": "Video Generation: 10-Second Clips from Text or Image",
-        "de": "Videogenerierung: 10-Sekunden-Clips aus Text oder Bild"
+        "en": "Video Generation from Text or Image",
+        "de": "Videogenerierung aus Text oder Bild"
       },
       "summary": {
-        "en": "The platform now generates short videos. Describe a scene in text, or upload a drawing or photo as a starting frame — the system creates a 10-second video from it. Both text-to-video and image-to-video are available.",
-        "de": "Die Plattform generiert jetzt Kurzvideos. Beschreibe eine Szene als Text, oder lade eine Zeichnung oder ein Foto als Startbild hoch — das System erzeugt daraus ein 10-Sekunden-Video. Sowohl Text-zu-Video als auch Bild-zu-Video sind verfuegbar."
-      }
-    },
-    {
-      "id": "news-2026-03-01-ionos",
-      "date": "2026-03-01",
-      "session": 229,
-      "category": "improvement",
-      "title": {
-        "en": "Text Transformation: Live Reasoning View",
-        "de": "Text-Transformation: Denkprozess live mitverfolgen"
-      },
-      "summary": {
-        "en": "During text transformation, the reasoning process is visible in real time in the chat overlay — follow step by step how the system develops the transformation before the final result appears.",
-        "de": "Bei der Text-Transformation ist der Denkprozess in Echtzeit im Chat-Overlay sichtbar — Schritt fuer Schritt nachvollziehen, wie das System die Transformation entwickelt, bevor das Endergebnis erscheint."
-      }
-    },
-    {
-      "id": "news-2026-02-27-denoising",
-      "date": "2026-02-27",
-      "session": 220,
-      "category": "feature",
-      "title": {
-        "en": "Live Preview: Watch Images Emerge",
-        "de": "Live-Vorschau: Bildern beim Entstehen zusehen"
-      },
-      "summary": {
-        "en": "During image generation, a live thumbnail shows the image taking shape in real time. Expert mode provides a technical view with generation parameters and energy consumption.",
-        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt. Der Expert-Modus bietet eine technische Ansicht mit Generierungsparametern und Energieverbrauch."
-      }
-    },
-    {
-      "id": "news-2026-02-26-sketch",
-      "date": "2026-02-26",
-      "session": 212,
-      "category": "feature",
-      "title": {
-        "en": "Sketch Canvas: Draw Instead of Upload",
-        "de": "Skizzen-Canvas: Zeichnen statt Hochladen"
-      },
-      "summary": {
-        "en": "Wherever you can upload an image, you can now draw one instead. Pen, eraser, three brush sizes, undo — available in image transformation, multi-image, and the crossmodal lab. Your sketch is used exactly like a photo upload for image-to-image generation.",
-        "de": "Ueberall, wo ein Bild hochgeladen werden kann, laesst sich jetzt auch eines zeichnen. Stift, Radierer, drei Pinselgroessen, Rueckgaengig — verfuegbar in der Bild-Transformation, bei Multi-Bild und im Crossmodalen Labor. Die Skizze wird genauso wie ein Foto-Upload fuer die Bild-zu-Bild-Generierung verwendet."
+        "en": "Describe a scene in text, or upload a drawing or photo as a starting frame — the platform generates a short video from it. Both text-to-video and image-to-video are available.",
+        "de": "Beschreibe eine Szene als Text, oder lade eine Zeichnung oder ein Foto als Startbild hoch — die Plattform erzeugt daraus ein Kurzvideo. Sowohl Text-zu-Video als auch Bild-zu-Video sind verfuegbar."
       }
     },
     {
@@ -130,17 +74,17 @@
       }
     },
     {
-      "id": "news-2026-02-01-languages",
-      "date": "2026-02-01",
-      "session": 201,
+      "id": "news-2026-02-26-sketch",
+      "date": "2026-02-26",
+      "session": 212,
       "category": "feature",
       "title": {
-        "en": "9 Languages Including Arabic and Hebrew (RTL)",
-        "de": "9 Sprachen inklusive Arabisch und Hebraeisch (RTL)"
+        "en": "Sketch Canvas: Draw Instead of Upload",
+        "de": "Skizzen-Canvas: Zeichnen statt Hochladen"
       },
       "summary": {
-        "en": "The interface is available in German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, and Arabic. Arabic and Hebrew are fully rendered right-to-left with adapted layout.",
-        "de": "Die Oberflaeche ist verfuegbar in Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch und Arabisch. Arabisch und Hebraeisch werden vollstaendig rechts-nach-links mit angepasstem Layout dargestellt."
+        "en": "Wherever you can upload an image, you can draw one instead. Pen, eraser, three brush sizes, undo — your sketch is used exactly like a photo upload for image-to-image generation.",
+        "de": "Ueberall, wo ein Bild hochgeladen werden kann, laesst sich auch eines zeichnen. Stift, Radierer, drei Pinselgroessen, Rueckgaengig — die Skizze wird genauso wie ein Foto-Upload fuer die Bild-zu-Bild-Generierung verwendet."
       }
     },
     {
@@ -155,6 +99,48 @@
       "summary": {
         "en": "The Crossmodal Lab bridges image and audio generation. A picture — uploaded or drawn — can become the starting point for a sound. Generated audio can be loaded into the built-in synthesizer as a wavetable, playable as an instrument with loop, sequencer, and arpeggiator.",
         "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild — hochgeladen oder gezeichnet — kann zum Ausgangspunkt fuer einen Klang werden. Generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden und als Instrument spielen, mit Loop, Sequencer und Arpeggiator."
+      }
+    },
+    {
+      "id": "news-2026-02-05-music",
+      "date": "2026-02-05",
+      "session": 157,
+      "category": "feature",
+      "title": {
+        "en": "Music Generation from Lyrics and Style Tags",
+        "de": "Musikgenerierung aus Liedtext und Stil-Tags"
+      },
+      "summary": {
+        "en": "Write lyrics with structure markers (verse, chorus, bridge) and combine them with style tags for genre, mood, instruments, and tempo. The AI generates a complete piece of music from this.",
+        "de": "Schreibe Liedtexte mit Strukturmarkierungen (Strophe, Refrain, Bridge) und kombiniere sie mit Stil-Tags fuer Genre, Stimmung, Instrumente und Tempo. Die KI generiert daraus ein vollstaendiges Musikstueck."
+      }
+    },
+    {
+      "id": "news-2026-02-01-languages",
+      "date": "2026-02-01",
+      "session": 201,
+      "category": "feature",
+      "title": {
+        "en": "10 Languages Including Arabic and Hebrew (RTL)",
+        "de": "10 Sprachen inklusive Arabisch und Hebraeisch (RTL)"
+      },
+      "summary": {
+        "en": "The interface is available in German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, Arabic, and Bulgarian. Arabic and Hebrew are rendered right-to-left with adapted layout.",
+        "de": "Die Oberflaeche ist verfuegbar in Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch, Arabisch und Bulgarisch. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt."
+      }
+    },
+    {
+      "id": "news-2026-01-31-edutainment",
+      "date": "2026-01-31",
+      "session": 151,
+      "category": "feature",
+      "title": {
+        "en": "Environmental Impact Visualization During Generation",
+        "de": "Umweltauswirkungen sichtbar waehrend der Generierung"
+      },
+      "summary": {
+        "en": "While the AI generates, interactive visualizations show the energy consumption in tangible comparisons: cubic centimeters of melted Arctic ice, equivalent smartphone standby time, or a mini-game where you plant trees against the energy use of the graphics card.",
+        "de": "Waehrend die KI generiert, zeigen interaktive Visualisierungen den Energieverbrauch in greifbaren Vergleichen: Kubikzentimeter geschmolzenes Arktis-Eis, aequivalente Smartphone-Standby-Zeit, oder ein Minispiel, in dem du Baeume gegen den Energieverbrauch der Grafikkarte pflanzt."
       }
     }
   ]
