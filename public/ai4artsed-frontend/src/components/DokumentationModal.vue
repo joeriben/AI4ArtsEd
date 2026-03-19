@@ -29,6 +29,12 @@
 
           <div class="modal-body">
             <component :is="activeTabComponent" :current-language="currentLanguage" />
+
+            <div class="disclaimer">
+              <p>{{ currentLanguage === 'de'
+                ? 'Die Inhalte dieser Seiten wurden mit Unterstützung von KI erstellt und redaktionell überarbeitet.'
+                : 'The content of these pages was created with the assistance of AI and editorially reviewed.' }}</p>
+            </div>
           </div>
 
         </div>
@@ -43,10 +49,14 @@ import { useI18n } from 'vue-i18n'
 
 import DocPrinciples from './docs/DocPrinciples.vue'
 import DocWelcome from './docs/DocWelcome.vue'
+import DocNews from './docs/DocNews.vue'
 import DocGuideText from './docs/DocGuideText.vue'
 import DocGuideImage from './docs/DocGuideImage.vue'
 import DocGuideMulti from './docs/DocGuideMulti.vue'
 import DocGuideMusic from './docs/DocGuideMusic.vue'
+import DocGuideCompare from './docs/DocGuideCompare.vue'
+import DocGuidePersona from './docs/DocGuidePersona.vue'
+import DocGuideWorkshopPlanning from './docs/DocGuideWorkshopPlanning.vue'
 import DocGuideCanvas from './docs/DocGuideCanvas.vue'
 import DocGuideLatentLab from './docs/DocGuideLatentLab.vue'
 import DocGuideTraining from './docs/DocGuideTraining.vue'
@@ -98,6 +108,7 @@ const activeTab = ref('welcome')
 
 const tabs: DocTab[] = [
   { type: 'text', id: 'welcome', labelDe: 'Über', labelEn: 'About' },
+  { type: 'text', id: 'news', labelDe: 'News', labelEn: 'News' },
   { type: 'text', id: 'principles', labelDe: 'Prinzipien', labelEn: 'Principles' },
   { type: 'icon', id: 'guide-text', tooltipDe: 'Text-Transformation', tooltipEn: 'Text Transformation',
     color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 -960 960 960',
@@ -111,6 +122,15 @@ const tabs: DocTab[] = [
   { type: 'icon', id: 'guide-music', tooltipDe: 'Musikgenerierung', tooltipEn: 'Music Generation',
     color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 -960 960 960',
     svgPath: 'M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-422h240v160H560v400q0 66-47 113t-113 47Z' },
+  { type: 'icon', id: 'guide-compare', tooltipDe: 'Sprachvergleich', tooltipEn: 'Language Comparison',
+    color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 -960 960 960',
+    svgPath: 'm320-160-56-57 103-103H80v-80h287L264-503l56-57 200 200-200 200Zm320-240L440-600l200-200 56 57-103 103h287v80H593l103 103-56 57Z' },
+  { type: 'icon', id: 'guide-persona', tooltipDe: 'KI-Persona', tooltipEn: 'AI Persona',
+    color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 -960 960 960',
+    svgPath: 'M160-360q-50 0-85-35t-35-85q0-50 35-85t85-35v-80q0-33 23.5-56.5T240-760h120q0-50 35-85t85-35q50 0 85 35t35 85h120q33 0 56.5 23.5T800-680v80q50 0 85 35t35 85q0 50-35 85t-85 35v160q0 33-23.5 56.5T720-120H240q-33 0-56.5-23.5T160-200v-160Zm200-80q25 0 42.5-17.5T420-500q0-25-17.5-42.5T360-560q-25 0-42.5 17.5T300-500q0 25 17.5 42.5T360-440Zm240 0q25 0 42.5-17.5T660-500q0-25-17.5-42.5T600-560q-25 0-42.5 17.5T540-500q0 25 17.5 42.5T600-440ZM320-280h320v-80H320v80Zm-80 80h480v-480H240v480Zm240-240Z' },
+  { type: 'icon', id: 'guide-workshop-planning', tooltipDe: 'Workshop-Planung', tooltipEn: 'Workshop Planning',
+    color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 -960 960 960',
+    svgPath: 'M40-160v-160q0-34 23.5-57t56.5-23h131q20 0 38 10t29 27q29 39 71.5 61t90.5 22q49 0 91.5-22t70.5-61q13-17 30.5-27t36.5-10h131q34 0 57 23t23 57v160H640v-91q-35 25-75.5 38T480-200q-43 0-84-13.5T320-252v92H40Zm440-160q-38 0-72-17.5T351-386q-17-25-42.5-39.5T253-440q22-37 93-58.5T480-520q63 0 134 21.5t93 58.5q-29 0-55 14.5T609-386q-22 32-56 49t-73 17ZM160-440q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T280-560q0 50-34.5 85T160-440Zm640 0q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T920-560q0 50-34.5 85T800-440ZM480-560q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-680q0 50-34.5 85T480-560Z' },
   { type: 'icon', id: 'guide-canvas', tooltipDe: 'Canvas Workflow', tooltipEn: 'Canvas Workflow',
     color: 'rgba(255, 255, 255, 0.7)', svgViewBox: '0 0 24 24',
     svgPath: 'M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z' },
@@ -124,12 +144,16 @@ const tabs: DocTab[] = [
 ]
 
 const tabComponents: Record<string, Component> = {
-  'principles': DocPrinciples,
   'welcome': DocWelcome,
+  'news': DocNews,
+  'principles': DocPrinciples,
   'guide-text': DocGuideText,
   'guide-image': DocGuideImage,
   'guide-multi': DocGuideMulti,
   'guide-music': DocGuideMusic,
+  'guide-compare': DocGuideCompare,
+  'guide-persona': DocGuidePersona,
+  'guide-workshop-planning': DocGuideWorkshopPlanning,
   'guide-canvas': DocGuideCanvas,
   'guide-latentlab': DocGuideLatentLab,
   'guide-training': DocGuideTraining,

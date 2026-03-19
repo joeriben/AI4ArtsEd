@@ -94,11 +94,6 @@
 
         <div class="header-right">
           <nav class="header-nav-links">
-            <button @click="openAbout" class="nav-link" :title="$t('nav.about')">
-              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-                <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
             <button @click="openDokumentation" class="nav-link" :title="$t('nav.docs')">
               <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
                 <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
@@ -125,8 +120,15 @@
                 </button>
               </div>
             </div>
-            <button @click="openImpressum" class="nav-link nav-link-text">{{ $t('nav.impressum') }}</button>
-            <button @click="openDatenschutz" class="nav-link nav-link-text">{{ $t('nav.privacy') }}</button>
+            <div class="legal-dropdown" ref="legalDropdownRef">
+              <button @click="legalMenuOpen = !legalMenuOpen" class="nav-link nav-link-text" :title="$t('nav.impressum')">
+                §
+              </button>
+              <div v-if="legalMenuOpen" class="legal-menu">
+                <button class="legal-option" @click="openImpressum">{{ $t('nav.impressum') }}</button>
+                <button class="legal-option" @click="openDatenschutz">{{ $t('nav.privacy') }}</button>
+              </div>
+            </div>
           </nav>
         </div>
       </div>
@@ -140,11 +142,9 @@
     <FooterGallery />
 
     <!-- Modals -->
-    <AboutModal v-model="showAbout" />
     <DokumentationModal v-model="showDokumentation" />
     <ImpressumModal v-model="showImpressum" />
     <DatenschutzModal v-model="showDatenschutz" />
-    <SettingsAuthModal v-model="showSettingsAuth" @authenticated="onSettingsAuthenticated" />
   </div>
 </template>
 
@@ -160,16 +160,14 @@
  * Session 82: Added ChatOverlay global component for interactive LLM help
  * Session 86: Integrated return button into global header (always visible)
  */
-import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import ChatOverlay from './components/ChatOverlay.vue'
 import FooterGallery from './components/FooterGallery.vue'
-import AboutModal from './components/AboutModal.vue'
 import DokumentationModal from './components/DokumentationModal.vue'
 import ImpressumModal from './components/ImpressumModal.vue'
 import DatenschutzModal from './components/DatenschutzModal.vue'
-import SettingsAuthModal from './components/SettingsAuthModal.vue'
 import { useUserPreferencesStore } from './stores/userPreferences'
 import { useSafetyLevelStore } from './stores/safetyLevel'
 import { useUiModeStore } from './stores/uiMode'
@@ -181,18 +179,19 @@ if (!safetyStore.loaded) safetyStore.fetchLevel()
 const uiModeStore = useUiModeStore()
 if (!uiModeStore.loaded) uiModeStore.fetchMode()
 const route = useRoute()
-const router = useRouter()
 const userPreferences = useUserPreferencesStore()
 const currentLanguage = computed(() => locale.value)
-const showAbout = ref(false)
 const showDokumentation = ref(false)
 const showImpressum = ref(false)
 const showDatenschutz = ref(false)
-const showSettingsAuth = ref(false)
 
 // Language dropdown
 const langMenuOpen = ref(false)
 const langDropdownRef = ref<HTMLElement | null>(null)
+
+// Legal dropdown
+const legalMenuOpen = ref(false)
+const legalDropdownRef = ref<HTMLElement | null>(null)
 
 function selectLanguage(code: SupportedLanguage) {
   userPreferences.setLanguage(code)
@@ -203,14 +202,13 @@ function handleClickOutside(e: MouseEvent) {
   if (langDropdownRef.value && !langDropdownRef.value.contains(e.target as Node)) {
     langMenuOpen.value = false
   }
+  if (legalDropdownRef.value && !legalDropdownRef.value.contains(e.target as Node)) {
+    legalMenuOpen.value = false
+  }
 }
 
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onUnmounted(() => document.removeEventListener('click', handleClickOutside))
-
-function openAbout() {
-  showAbout.value = true
-}
 
 function openDokumentation() {
   showDokumentation.value = true
@@ -218,10 +216,12 @@ function openDokumentation() {
 
 function openImpressum() {
   showImpressum.value = true
+  legalMenuOpen.value = false
 }
 
 function openDatenschutz() {
   showDatenschutz.value = true
+  legalMenuOpen.value = false
 }
 
 // Prevent navigation to advanced-only routes in kids/youth mode
@@ -231,17 +231,6 @@ function guardAdvanced(e: Event) {
   }
 }
 
-// Watch for auth requirement from router guard
-watch(() => route.query.authRequired, (authRequired) => {
-  if (authRequired === 'settings') {
-    showSettingsAuth.value = true
-  }
-})
-
-// Handle successful authentication
-function onSettingsAuthenticated() {
-  router.push('/settings')
-}
 </script>
 
 <style>
@@ -490,10 +479,43 @@ html, body {
 }
 
 .nav-link-text {
-  min-width: 90px;
   padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
   text-align: center;
+}
+
+.legal-dropdown {
+  position: relative;
+}
+
+.legal-menu {
+  position: absolute;
+  top: 100%;
+  inset-inline-end: 0;
+  margin-top: 0.25rem;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 1001;
+  min-width: 140px;
+}
+
+.legal-option {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.legal-option:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Content Area */

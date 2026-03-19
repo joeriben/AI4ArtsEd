@@ -20,32 +20,57 @@
       : 'A central project goal is the critical exploration of generative AI as an actor in cultural, artistic, and societal contexts. Generative models are not neutral – they carry cultural, social, gender-related, and ethnic biases inherited from their training data. These distortions must be made visible and critically examined in order to understand what kind of actor generative AI actually is.' }}</p>
   </section>
 
-  <!-- News Section -->
-  <section v-if="newsItems.length > 0" class="info-section">
-    <h3>{{ currentLanguage === 'de' ? 'Neuigkeiten' : 'News' }}</h3>
-    <div class="news-list">
-      <div v-for="item in visibleNews" :key="item.id" class="news-item">
-        <div class="news-item-header">
-          <span class="news-date">{{ item.date }}</span>
-          <span :class="['news-badge', `news-badge--${item.category}`]">
-            {{ categoryLabel(item.category) }}
-          </span>
-        </div>
-        <strong class="news-title">{{ localized(item.title) }}</strong>
-        <p class="news-summary">{{ localized(item.summary) }}</p>
-      </div>
+  <!-- Project Information (merged from AboutModal) -->
+  <section class="info-section">
+    <h3>{{ currentLanguage === 'de' ? 'Das Projekt' : 'The Project' }}</h3>
+    <p>{{ currentLanguage === 'de'
+      ? 'KI verändert Gesellschaft und Arbeitswelt; sie wird zunehmend Thema der Bildung. Das Projekt sondiert Chancen, Bedingungen und Grenzen des pädagogischen Einsatzes künstlicher Intelligenz (KI) in kulturell diversitätssensiblen Settings der Kulturellen Bildung (KuBi).'
+      : 'AI is transforming society and the world of work; it is increasingly becoming a subject of education. The project explores opportunities, conditions, and limits of the pedagogical use of artificial intelligence (AI) in culturally diversity-sensitive settings of cultural education.' }}</p>
+    <p>{{ currentLanguage === 'de'
+      ? 'Aus einem insgesamt ca. zweijährigen partizipativen Designprozess soll eine Opensource-KI-Technologie hervorgehen, die auslotet, inwieweit KI-Systeme unter günstigen Realbedingungen bereits auf ihrer Strukturebene künstlerisch-pädagogische Maßgaben einbeziehen können.'
+      : 'A participatory design process spanning approximately two years aims to produce an open-source AI technology that explores the extent to which AI systems can already incorporate artistic-pedagogical principles at their structural level under favorable real-world conditions.' }}</p>
+    <p>
+      {{ currentLanguage === 'de' ? 'Weitere Informationen: ' : 'More information: ' }}
+      <a href="https://kubi-meta.de/ai4artsed" target="_blank" rel="noopener noreferrer">kubi-meta.de/ai4artsed</a>
+    </p>
+  </section>
+
+  <section class="info-section">
+    <h3>{{ currentLanguage === 'de' ? 'Team' : 'Team' }}</h3>
+    <div class="team-member">
+      <div class="team-role">{{ currentLanguage === 'de' ? 'Projektleitung' : 'Project Lead' }}</div>
+      <strong>Prof. Dr. Benjamin Jörissen</strong>
+      <p>{{ currentLanguage === 'de' ? 'Institut für Pädagogik' : 'Institute of Education' }}<br>
+      {{ currentLanguage === 'de' ? 'Lehrstuhl für Pädagogik mit dem Schwerpunkt Kultur und ästhetische Bildung' : 'Chair of Education with Focus on Culture and Aesthetic Education' }}<br>
+      UNESCO Chair in Digital Culture and Arts in Education</p>
+      <p>E-Mail: <a href="mailto:benjamin.joerissen@fau.de">benjamin.joerissen@fau.de</a></p>
     </div>
-    <button
-      v-if="newsItems.length > pageSize"
-      class="news-toggle"
-      @click="toggleNews"
-    >
-      {{ visibleCount >= newsItems.length
-        ? (currentLanguage === 'de' ? 'Weniger anzeigen' : 'Show less')
-        : (currentLanguage === 'de'
-          ? `Mehr anzeigen (${newsItems.length - visibleCount} weitere)`
-          : `Show more (${newsItems.length - visibleCount} remaining)`) }}
-    </button>
+    <div class="team-member">
+      <div class="team-role">{{ currentLanguage === 'de' ? 'Wissenschaftliche Mitarbeiterin' : 'Research Associate' }}</div>
+      <strong>Vanessa Baumann</strong>
+      <p>{{ currentLanguage === 'de' ? 'Institut für Pädagogik' : 'Institute of Education' }}<br>
+      {{ currentLanguage === 'de' ? 'Lehrstuhl für Pädagogik mit dem Schwerpunkt Kultur und ästhetische Bildung' : 'Chair of Education with Focus on Culture and Aesthetic Education' }}<br>
+      UNESCO Chair in Digital Culture and Arts in Education</p>
+      <p>E-Mail: <a href="mailto:ucdcae@fau.de">ucdcae@fau.de</a></p>
+    </div>
+  </section>
+
+  <section class="info-section funding-section">
+    <h3>{{ currentLanguage === 'de' ? 'Gefördert vom' : 'Funded by' }}</h3>
+    <div class="funding-logo">
+      <a href="https://www.bmfsfj.de/" target="_blank" rel="noopener noreferrer">
+        <img src="/logos/BMBFSFJ_logo.png" alt="BMBFSFJ" />
+      </a>
+    </div>
+    <div class="project-logos">
+      <a href="https://kubi-meta.de/ai4artsed" target="_blank" rel="noopener noreferrer" class="project-logo-link">
+        <img src="/logos/ai4artsed_wordmark.png" alt="AI4ArtsEd" class="project-wordmark-img" />
+        <img src="/logos/ai4artsed_logo.jpg" alt="" class="project-logo-img" />
+      </a>
+      <a href="https://comearts.eu" target="_blank" rel="noopener noreferrer">
+        <img src="/logos/comearts_logo.jpg" alt="COMeARTS" class="project-logo-img" />
+      </a>
+    </div>
   </section>
 
   <section class="info-section contact-welcome">
@@ -57,155 +82,79 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-
-const props = defineProps<{ currentLanguage: string }>()
-
-interface LocalizedString {
-  en: string
-  [key: string]: string
-}
-
-interface NewsItem {
-  id: string
-  date: string
-  category: string
-  title: LocalizedString
-  summary: LocalizedString
-}
-
-const newsItems = ref<NewsItem[]>([])
-const pageSize = 5
-const visibleCount = ref(pageSize)
-
-const visibleNews = computed(() =>
-  newsItems.value.slice(0, visibleCount.value)
-)
-
-function toggleNews() {
-  if (visibleCount.value >= newsItems.value.length) {
-    visibleCount.value = pageSize
-  } else {
-    visibleCount.value = Math.min(visibleCount.value + pageSize, newsItems.value.length)
-  }
-}
-
-const categoryLabels: Record<string, { de: string; en: string }> = {
-  feature: { de: 'Neu', en: 'New' },
-  improvement: { de: 'Verbessert', en: 'Improved' },
-  content: { de: 'Inhalt', en: 'Content' },
-  research: { de: 'Forschung', en: 'Research' },
-}
-
-function localized(obj: LocalizedString): string {
-  return obj[props.currentLanguage] || obj.en
-}
-
-function categoryLabel(category: string): string {
-  const labels = categoryLabels[category]
-  if (!labels) return category
-  return props.currentLanguage === 'de' ? labels.de : labels.en
-}
-
-onMounted(async () => {
-  try {
-    const base = import.meta.env.DEV ? 'http://localhost:17802' : ''
-    const res = await fetch(`${base}/api/news`)
-    if (res.ok) {
-      const data = await res.json()
-      newsItems.value = data.items || []
-    }
-  } catch {
-    // fail-silent: news section stays hidden
-  }
-})
+defineProps<{ currentLanguage: string }>()
 </script>
 
-<style>
-/* News Items */
-.news-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.news-item {
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
+<style scoped>
+.team-member {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  border-inline-start: 3px solid rgba(76, 175, 80, 0.4);
 }
 
-.news-item-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.news-date {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.news-badge {
-  font-size: 0.7rem;
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.news-badge--feature {
-  background: rgba(76, 175, 80, 0.2);
+.team-role {
+  font-size: 0.85rem;
   color: #4CAF50;
-}
-
-.news-badge--improvement {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196F3;
-}
-
-.news-badge--content {
-  background: rgba(255, 152, 0, 0.2);
-  color: #FF9800;
-}
-
-.news-badge--research {
-  background: rgba(156, 39, 176, 0.2);
-  color: #9C27B0;
-}
-
-.news-title {
-  display: block;
-  color: #ffffff;
-  font-size: 0.95rem;
+  font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
-.news-summary {
-  margin: 0;
-  font-size: 0.9rem;
+.team-member strong {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.team-member p {
+  margin: 0.25rem 0;
   color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 
-.news-toggle {
-  display: block;
-  margin-top: 0.75rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.funding-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.news-toggle:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.8);
+.funding-logo {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.funding-logo img {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.project-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.project-logo-img {
+  max-height: 50px;
+  width: auto;
+}
+
+.project-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0;
+}
+
+.project-wordmark-img {
+  max-height: 50px;
+  width: auto;
 }
 </style>
