@@ -278,7 +278,6 @@ async function startComparison() {
           prompt: userPrompt.value,
           output_config: slot.configId,
           seed,
-          skip_stage3_translation: true,
           device_id: deviceId,
         })
 
