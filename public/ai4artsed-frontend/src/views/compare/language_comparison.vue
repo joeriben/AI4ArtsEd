@@ -325,8 +325,8 @@ async function startComparison() {
   chatRef.value?.injectMessage(t('compare.trashyTranslating'))
 
   try {
-    // Step 1: Translate
-    const sourceLang = /[äöüßÄÖÜ]/.test(userPrompt.value) ? 'de' : 'en'
+    // Step 1: Translate — use UI language as source (regex detection too fragile)
+    const sourceLang = userPreferences.language || 'en'
     const translations: Record<string, string> = { [sourceLang]: userPrompt.value }
 
     for (const lang of langCodes.filter(l => l !== sourceLang)) {
