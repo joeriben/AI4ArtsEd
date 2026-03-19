@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-19-model-comparison-tab
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.tabs.model` (NEW): "Model Comparison"
+- **Context**: Third tab in Compare Hub — compares same prompt across 3 image generation models (SD 3.5 Turbo, SD 3.5 Large, Flux 2). Tab label alongside "Language Comparison" and "Temperature Comparison".
+
 ### WO-2026-03-19-temperature-model-label
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):

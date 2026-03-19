@@ -1464,6 +1464,7 @@ export const en = {
     tabs: {
       language: 'Language Comparison',
       temperature: 'Temperature Comparison',
+      model: 'Model Comparison',
     },
     temperature: {
       inputPlaceholder: 'Type a message to send at all three temperatures...',

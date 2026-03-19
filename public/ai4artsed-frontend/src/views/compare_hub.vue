@@ -16,6 +16,7 @@
 
     <LanguageComparison v-if="activeTab === 'language'" />
     <TemperatureComparison v-else-if="activeTab === 'temperature'" />
+    <ModelComparison v-else-if="activeTab === 'model'" />
   </div>
 </template>
 
@@ -24,16 +25,18 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageComparison from './compare/language_comparison.vue'
 import TemperatureComparison from './compare/temperature_comparison.vue'
+import ModelComparison from './compare/model_comparison.vue'
 
 const { t } = useI18n()
 
-type TabId = 'language' | 'temperature'
+type TabId = 'language' | 'temperature' | 'model'
 
 const STORAGE_KEY = 'compare_hub_tab'
 
 const tabs: { id: TabId }[] = [
   { id: 'language' },
   { id: 'temperature' },
+  { id: 'model' },
 ]
 
 const activeTab = ref<TabId>('language')

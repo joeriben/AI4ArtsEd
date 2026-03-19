@@ -18,16 +18,6 @@
           @open-preset-selector="showPresetOverlay = true"
         />
 
-        <LanguageChipSelector v-model="selectedLanguages" :max="4" />
-
-        <!-- Model selection -->
-        <div class="model-select-row">
-          <label class="model-label">{{ t('compare.modelLabel') }}</label>
-          <select v-model="selectedModel" class="model-select">
-            <option v-for="m in availableModels" :key="m.id" :value="m.id">{{ m.label }}</option>
-          </select>
-        </div>
-
         <!-- Seed display -->
         <div v-if="currentSeed !== null" class="seed-display">
           <span class="seed-label">Seed:</span>
@@ -36,27 +26,20 @@
 
         <button
           class="generate-btn"
-          :disabled="!canGenerate || isGenerating"
+          :disabled="!userPrompt.trim() || isGenerating"
           @click="startComparison"
         >
           {{ isGenerating ? t('compare.generatingAll') : t('compare.generateAll') }}
         </button>
       </div>
 
-      <!-- Comparison Grid -->
-      <div class="comparison-grid" :class="'grid-' + slots.length">
-        <div v-for="(slot, idx) in slots" :key="slot.langCode" class="comparison-slot">
+      <!-- 3-Column Grid -->
+      <div class="comparison-grid">
+        <div v-for="(slot, idx) in slots" :key="slot.configId" class="comparison-slot">
           <div class="slot-header">
-            <span class="slot-lang-name">{{ slot.langName }}</span>
-            <span class="slot-lang-code">{{ slot.langCode }}</span>
-            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ slots.length }}</span>
+            <span class="slot-model-name">{{ slot.label }}</span>
+            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ MODELS.length }}</span>
           </div>
-          <!-- Translation box -->
-          <div v-if="slot.translatedPrompt" class="slot-translation">
-            <div class="slot-translated-text">{{ slot.translatedPrompt }}</div>
-            <div v-if="slot.backTranslation" class="slot-back-translation">&#x2192; {{ slot.backTranslation }}</div>
-          </div>
-          <!-- MediaOutputBox — same component as t2x -->
           <div class="slot-output-wrapper">
             <MediaOutputBox
               :output-image="slot.outputUrl"
@@ -70,7 +53,6 @@
               :run-id="slot.runId"
               :is-favorited="slot.isFavorited"
               :is-analyzing="true"
-              forward-button-title="Weiterreichen zu Bild-Transformation"
               @toggle-favorite="toggleSlotFavorite(slot)"
               @forward="forwardToPage(slot)"
               @download="downloadSlotImage(slot)"
@@ -97,7 +79,7 @@
       @preset-selected="handlePresetSelected"
     />
 
-    <!-- Fullscreen image modal (same pattern as t2x) -->
+    <!-- Fullscreen image modal -->
     <Teleport to="body">
       <Transition name="modal-fade">
         <div v-if="fullscreenImage" class="fullscreen-modal" @click="fullscreenImage = null">
@@ -110,31 +92,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
-import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
-import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useUiModeStore } from '@/stores/uiMode'
 import { useDeviceId } from '@/composables/useDeviceId'
 
 const { t } = useI18n()
 const router = useRouter()
-const userPreferences = useUserPreferencesStore()
 const favoritesStore = useFavoritesStore()
 const uiModeStore = useUiModeStore()
 const deviceId = useDeviceId()
 
+// --- Fixed models ---
+const MODELS = [
+  { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo' },
+  { id: 'sd35_large', label: 'SD 3.5 Large' },
+  { id: 'flux2', label: 'Flux 2' },
+]
+
 // --- State ---
 const userPrompt = ref('')
-const selectedLanguages = ref<string[]>(['en', 'ar'])
-const selectedModel = ref('sd35_large')
 const isGenerating = ref(false)
 const currentSeed = ref<number | null>(null)
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
@@ -143,18 +127,9 @@ const showPresetOverlay = ref(false)
 const isEnriching = ref(false)
 const fullscreenImage = ref<string | null>(null)
 
-const availableModels = [
-  { id: 'sd35_large', label: 'SD 3.5 Large' },
-  { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo (fast)' },
-  { id: 'flux2', label: 'Flux 2' },
-  { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro (EU)' },
-]
-
-interface ComparisonSlot {
-  langCode: string
-  langName: string
-  translatedPrompt: string
-  backTranslation: string
+interface ModelSlot {
+  configId: string
+  label: string
   outputUrl: string | null
   runId: string | null
   queuePosition: number
@@ -162,23 +137,8 @@ interface ComparisonSlot {
   isFavorited: boolean
 }
 
-// Slots hold language/translation/output data
-const slots = ref<ComparisonSlot[]>([])
-
-// Per-slot generation stream instances — direct reactive binding, no polling
+const slots = ref<ModelSlot[]>([])
 const slotStreams = ref<ReturnType<typeof useGenerationStream>[]>([])
-
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English', de: 'Deutsch', ar: 'العربية', he: 'עברית',
-  tr: 'Türkçe', ko: '한국어', uk: 'Українська', fr: 'Français',
-  es: 'Español', bg: 'Български', hsb: 'Hornjoserbšćina',
-  dsb: 'Dolnoserbšćina', fry: 'Frysk', yo: 'Yorùbá', sw: 'Kiswahili',
-  cy: 'Cymraeg', qu: 'Runasimi', hi: 'हिन्दी', ja: '日本語', zh: '中文',
-}
-
-const canGenerate = computed(() => {
-  return userPrompt.value.trim().length > 0 && selectedLanguages.value.length >= 2
-})
 
 // --- Clipboard ---
 function copyPrompt() { window.navigator.clipboard.writeText(userPrompt.value) }
@@ -190,8 +150,8 @@ function useTrashyPrompt(prompt: string) {
   userPrompt.value = prompt
 }
 
-// --- Slot actions (events from MediaOutputBox) ---
-async function toggleSlotFavorite(slot: ComparisonSlot) {
+// --- Slot actions ---
+async function toggleSlotFavorite(slot: ModelSlot) {
   if (!slot.runId) return
   const success = await favoritesStore.toggleFavorite(slot.runId, 'image', deviceId, 'anonymous', 'compare')
   if (success) {
@@ -199,7 +159,7 @@ async function toggleSlotFavorite(slot: ComparisonSlot) {
   }
 }
 
-function forwardToPage(slot: ComparisonSlot) {
+function forwardToPage(slot: ModelSlot) {
   if (!slot.outputUrl) return
   const runIdMatch = slot.outputUrl.match(/\/api\/.*\/(.+)$/)
   const runId = runIdMatch ? runIdMatch[1] : null
@@ -212,12 +172,12 @@ function forwardToPage(slot: ComparisonSlot) {
   router.push('/image-transformation')
 }
 
-async function downloadSlotImage(slot: ComparisonSlot) {
+async function downloadSlotImage(slot: ModelSlot) {
   if (!slot.outputUrl) return
   try {
     const runIdMatch = slot.outputUrl.match(/\/api\/.*\/(.+)$/)
     const runId = runIdMatch ? runIdMatch[1] : 'media'
-    const filename = `ai4artsed_compare_${slot.langCode}_${runId}.png`
+    const filename = `ai4artsed_model_${slot.configId}_${runId}.png`
     const response = await fetch(slot.outputUrl)
     if (!response.ok) throw new Error(`Download failed: ${response.status}`)
     const blob = await response.blob()
@@ -228,28 +188,7 @@ async function downloadSlotImage(slot: ComparisonSlot) {
     link.click()
     URL.revokeObjectURL(url)
   } catch (error) {
-    console.error('[COMPARE] Download error:', error)
-  }
-}
-
-async function analyzeSlotImage(slot: ComparisonSlot) {
-  if (!slot.runId) return
-  const isDev = import.meta.env.DEV
-  const baseUrl = isDev ? 'http://localhost:17802' : ''
-  try {
-    const res = await fetch(`${baseUrl}/api/schema/compare/describe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ run_id: slot.runId })
-    })
-    if (res.ok) {
-      const data = await res.json()
-      if (data.status === 'success' && data.description) {
-        chatRef.value?.injectMessage(`[${slot.langName}] ${data.description}`)
-      }
-    }
-  } catch {
-    // Non-critical
+    console.error('[MODEL-COMPARE] Download error:', error)
   }
 }
 
@@ -274,114 +213,58 @@ async function handlePresetSelected(payload: { configId: string; context: string
     })
     if (res.ok) {
       const data = await res.json()
-      // Prefer pure interception_result (no optimization) over stage2_result
       const result = data.interception_result || data.stage2_result
       if (data.success && result) {
         userPrompt.value = typeof result === 'string'
           ? result
           : JSON.stringify(result)
-        console.log(`[COMPARE] Prompt enriched via ${payload.configName} (${payload.configId})`)
+        console.log(`[MODEL-COMPARE] Prompt enriched via ${payload.configName} (${payload.configId})`)
       }
     }
   } catch (error) {
-    console.error('[COMPARE] Interception failed:', error)
+    console.error('[MODEL-COMPARE] Interception failed:', error)
   } finally {
     isEnriching.value = false
   }
 }
 
 // --- Trashy context ---
-function buildContext(phase: string): string {
-  const langList = slots.value.map(s => `${s.langName} (${s.langCode})`).join(', ')
+function buildContext(): string {
+  const modelList = slots.value.map(s => s.label).join(', ')
   const results = slots.value.filter(s => s.outputUrl).length
-  const blocked = slots.value.filter(s => s.blockedReason).map(s => s.langName).join(', ')
-  return `[Language Comparison — ${phase}]\nPrompt: "${userPrompt.value}"\nLanguages: ${langList}\nModel: ${selectedModel.value}\nSeed: ${currentSeed.value}\nImages generated: ${results}/${slots.value.length}${blocked ? `\nBlocked: ${blocked}` : ''}`
+  const blocked = slots.value.filter(s => s.blockedReason).map(s => s.label).join(', ')
+  return `[Model Comparison]\nPrompt: "${userPrompt.value}"\nModels: ${modelList}\nSeed: ${currentSeed.value}\nImages generated: ${results}/${slots.value.length}${blocked ? `\nBlocked: ${blocked}` : ''}`
 }
 
 // --- Main generation flow ---
 async function startComparison() {
-  if (!canGenerate.value || isGenerating.value) return
+  if (!userPrompt.value.trim() || isGenerating.value) return
   isGenerating.value = true
   chatRef.value?.onNewRun()
 
   const isDev = import.meta.env.DEV
   const baseUrl = isDev ? 'http://localhost:17802' : ''
 
-  // Initialize slots + one useGenerationStream per slot
-  const langCodes = selectedLanguages.value
-  slots.value = langCodes.map((code, idx) => ({
-    langCode: code,
-    langName: LANGUAGE_NAMES[code] || code,
-    translatedPrompt: '',
-    backTranslation: '',
+  // Initialize slots + streams
+  slots.value = MODELS.map((m, idx) => ({
+    configId: m.id,
+    label: m.label,
     outputUrl: null,
     runId: null,
     queuePosition: idx + 1,
     blockedReason: null,
     isFavorited: false,
   }))
-  slotStreams.value = langCodes.map(() => useGenerationStream())
+  slotStreams.value = MODELS.map(() => useGenerationStream())
 
-  chatRef.value?.injectMessage(t('compare.trashyTranslating'))
+  // Fixed seed for all
+  const seed = Math.floor(Math.random() * 4294967296)
+  currentSeed.value = seed
+
+  chatRef.value?.injectMessage(t('compare.trashyGenerating'))
 
   try {
-    // Step 1: Translate to ALL selected languages (no source detection —
-    // user may type in any language; LLM auto-detects source)
-    const translations: Record<string, string> = {}
-
-    for (const lang of langCodes) {
-      const res = await fetch(`${baseUrl}/api/schema/pipeline/translate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: userPrompt.value, target_language: lang })
-      })
-      if (!res.ok) {
-        console.error(`[COMPARE] Translation to ${lang} failed: HTTP ${res.status}`)
-        chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
-        isGenerating.value = false
-        return
-      }
-      const data = await res.json()
-      if (data.status === 'success' && data.translated_text) {
-        translations[lang] = data.translated_text
-      } else {
-        console.error(`[COMPARE] Translation to ${lang} failed:`, data.error)
-        chatRef.value?.injectMessage(t('compare.trashyTranslateError'))
-        isGenerating.value = false
-        return
-      }
-    }
-
-    for (const slot of slots.value) {
-      slot.translatedPrompt = translations[slot.langCode] || userPrompt.value
-      slot.queuePosition = 0
-    }
-
-    // Back-translate to settings language (non-blocking)
-    const uiLang = userPreferences.language
-    for (const slot of slots.value) {
-      if (slot.langCode === uiLang) {
-        slot.backTranslation = slot.translatedPrompt
-        continue
-      }
-      fetch(`${baseUrl}/api/schema/pipeline/translate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: slot.translatedPrompt, target_language: uiLang })
-      }).then(r => r.json()).then(data => {
-        if (data.status === 'success' && data.translated_text) {
-          slot.backTranslation = data.translated_text
-        }
-      }).catch(() => { /* non-critical */ })
-    }
-
-    // Step 2: Fixed seed for all
-    const seed = Math.floor(Math.random() * 4294967296)
-    currentSeed.value = seed
-
-    chatRef.value?.injectMessage(t('compare.trashyGenerating'))
-
-    // Step 3: Sequential generation — same executeWithStreaming as t2x
+    // Sequential generation — one model at a time
     for (let i = 0; i < slots.value.length; i++) {
       const slot = slots.value[i]!
       const stream = slotStreams.value[i]!
@@ -392,8 +275,8 @@ async function startComparison() {
 
       try {
         const result: GenerationResult = await stream.executeWithStreaming({
-          prompt: slot.translatedPrompt,
-          output_config: selectedModel.value,
+          prompt: userPrompt.value,
+          output_config: slot.configId,
           seed,
           skip_stage3_translation: true,
           device_id: deviceId,
@@ -408,12 +291,12 @@ async function startComparison() {
           slot.blockedReason = result.error || 'Error'
         }
       } catch (e) {
-        console.error(`[COMPARE] Generation for ${slot.langCode} failed:`, e)
+        console.error(`[MODEL-COMPARE] Generation for ${slot.configId} failed:`, e)
         slot.blockedReason = 'Error'
       }
     }
 
-    // Step 4: Describe generated images via VLM and feed to Trashy
+    // Describe generated images via VLM and feed to Trashy
     const successfulSlots = slots.value.filter(s => s.runId && s.outputUrl)
     if (successfulSlots.length >= 2) {
       const descriptions: string[] = []
@@ -427,7 +310,7 @@ async function startComparison() {
           if (res.ok) {
             const data = await res.json()
             if (data.status === 'success' && data.description) {
-              descriptions.push(`[${slot.langName} (${slot.langCode})]:\n${data.description}`)
+              descriptions.push(`[${slot.label}]:\n${data.description}`)
             }
           }
         } catch {
@@ -436,15 +319,15 @@ async function startComparison() {
       }
 
       if (descriptions.length > 0) {
-        comparisonContext.value = buildContext('generation_complete') + '\n\n--- VLM Image Descriptions ---\n' + descriptions.join('\n\n')
+        comparisonContext.value = buildContext() + '\n\n--- VLM Image Descriptions ---\n' + descriptions.join('\n\n')
       } else {
-        comparisonContext.value = buildContext('generation_complete')
+        comparisonContext.value = buildContext()
       }
     } else {
-      comparisonContext.value = buildContext('generation_complete')
+      comparisonContext.value = buildContext()
     }
   } catch (e) {
-    console.error('[COMPARE] Failed:', e)
+    console.error('[MODEL-COMPARE] Failed:', e)
     chatRef.value?.injectMessage(t('compare.trashyError'))
   } finally {
     isGenerating.value = false
@@ -465,7 +348,7 @@ async function startComparison() {
 .compare-main {
   flex: 1;
   min-width: 0;
-  padding-bottom: 200px; /* Space for expanded FooterGallery (36px toggle + 140px content) */
+  padding-bottom: 200px;
 }
 
 .compare-chat-panel {
@@ -479,41 +362,6 @@ async function startComparison() {
 /* Input Section */
 .input-section {
   margin-bottom: 1.5rem;
-}
-
-.model-select-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.model-label {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.4);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-}
-
-.model-select {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  padding: 0.4rem 0.6rem;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.8rem;
-  outline: none;
-}
-
-.model-select:focus {
-  border-color: rgba(76, 175, 80, 0.4);
-}
-
-.model-select option {
-  background: #1a1a1a;
-  color: rgba(255, 255, 255, 0.85);
 }
 
 .seed-display {
@@ -562,15 +410,12 @@ async function startComparison() {
   cursor: not-allowed;
 }
 
-/* Comparison Grid */
+/* Comparison Grid — always 3 columns */
 .comparison-grid {
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
 }
-
-.grid-2 { grid-template-columns: 1fr 1fr; }
-.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-.grid-4 { grid-template-columns: 1fr 1fr; }
 
 .comparison-slot {
   min-width: 0;
@@ -583,17 +428,11 @@ async function startComparison() {
   padding: 0.4rem 0;
 }
 
-.slot-lang-name {
+.slot-model-name {
   font-size: 0.85rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   flex: 1;
-}
-
-.slot-lang-code {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
-  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
 .slot-queue {
@@ -602,29 +441,6 @@ async function startComparison() {
   background: rgba(255, 183, 77, 0.1);
   padding: 0.1rem 0.4rem;
   border-radius: 8px;
-}
-
-.slot-translation {
-  padding: 0.3rem 0.5rem;
-  margin-bottom: 0.3rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.slot-translated-text {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.3;
-  word-break: break-word;
-}
-
-.slot-back-translation {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.3);
-  line-height: 1.3;
-  margin-top: 0.15rem;
-  word-break: break-word;
 }
 
 .slot-output-wrapper {
@@ -697,7 +513,7 @@ async function startComparison() {
   }
 }
 
-/* Fullscreen image modal (same as t2x) */
+/* Fullscreen image modal */
 .fullscreen-modal {
   position: fixed;
   inset: 0;
