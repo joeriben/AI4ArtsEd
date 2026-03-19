@@ -1,13 +1,16 @@
 <template>
   <section class="info-section">
-    <h3>{{ currentLanguage === 'de' ? 'Sprachvergleich: Dasselbe Bild in verschiedenen Sprachen' : 'Language Comparison: The Same Image in Different Languages' }}</h3>
+    <h3>{{ currentLanguage === 'de' ? 'Vergleichsmodi: Dieselbe Idee unter verschiedenen Bedingungen' : 'Comparison Modes: The Same Idea Under Different Conditions' }}</h3>
     <p>{{ currentLanguage === 'de'
-      ? 'Generiere dasselbe Bild mit demselben Prompt in verschiedenen Sprachen — und sieh, was sich verändert. Bildgenerierungsmodelle reagieren unterschiedlich auf Prompts in verschiedenen Sprachen, weil ihre Trainingsdaten kulturell und sprachlich nicht gleichmäßig verteilt sind.'
-      : 'Generate the same image with the same prompt in different languages — and see what changes. Image generation models respond differently to prompts in different languages because their training data is not evenly distributed across cultures and languages.' }}</p>
+      ? 'Generiere dasselbe Bild unter kontrollierten Variationen — und sieh, was sich verändert. Der Vergleichsmodus isoliert einzelne Variablen (Sprache, Temperatur), damit Unterschiede sichtbar und analysierbar werden.'
+      : 'Generate the same image under controlled variations — and see what changes. Comparison mode isolates individual variables (language, temperature) so that differences become visible and analyzable.' }}</p>
   </section>
 
   <section class="info-section">
-    <h3>{{ currentLanguage === 'de' ? 'Was wird sichtbar?' : 'What becomes visible?' }}</h3>
+    <h3>{{ currentLanguage === 'de' ? 'Sprachvergleich' : 'Language Comparison' }}</h3>
+    <p>{{ currentLanguage === 'de'
+      ? 'Derselbe Prompt in verschiedenen Sprachen — mit identischem Seed, damit die Unterschiede allein aus der Sprache resultieren. Bildgenerierungsmodelle reagieren unterschiedlich auf Sprachen, weil ihre Trainingsdaten kulturell und sprachlich nicht gleichmäßig verteilt sind.'
+      : 'The same prompt in different languages — with identical seed, so differences result solely from the language. Image generation models respond differently to languages because their training data is not evenly distributed across cultures and languages.' }}</p>
     <div class="insight-list">
       <div class="insight-item">
         <strong>{{ currentLanguage === 'de' ? 'Sprachliche Biases' : 'Linguistic biases' }}</strong>
@@ -21,20 +24,22 @@
           ? 'Sprache trägt kulturelle Bedeutungsschichten. Ein Wort, das sich übersetzen lässt, transportiert in verschiedenen Sprachen verschiedene Assoziationen — und das Modell bildet diese Unterschiede ab.'
           : 'Language carries cultural layers of meaning. A word that can be translated carries different associations in different languages — and the model reflects these differences.' }}</p>
       </div>
-      <div class="insight-item">
-        <strong>{{ currentLanguage === 'de' ? 'Trainingsdaten-Ungleichgewicht' : 'Training data imbalance' }}</strong>
-        <p>{{ currentLanguage === 'de'
-          ? 'Seltener vertretene Sprachen erzeugen oft generischere oder stereotypere Bilder. Das ist kein Fehler der Sprache, sondern ein Spiegel der Datenlage.'
-          : 'Less represented languages often produce more generic or stereotypical images. This is not a fault of the language but a mirror of the data landscape.' }}</p>
-      </div>
     </div>
   </section>
 
   <section class="info-section">
-    <h3>{{ currentLanguage === 'de' ? 'So gehst du vor' : 'How to use it' }}</h3>
+    <h3>{{ currentLanguage === 'de' ? 'Temperaturvergleich' : 'Temperature Comparison' }}</h3>
     <p>{{ currentLanguage === 'de'
-      ? 'Schreibe einen Prompt, wähle mehrere Sprachen aus, und starte die Generierung. Alle Varianten verwenden denselben Seed, damit die Unterschiede allein aus der Sprache resultieren. Die Ergebnisse werden nebeneinander angezeigt.'
-      : 'Write a prompt, select multiple languages, and start generation. All variants use the same seed so that differences result solely from the language. Results are displayed side by side.' }}</p>
+      ? 'Derselbe Prompt bei verschiedenen Temperatur-Einstellungen des Sprachmodells. Die Temperatur steuert, wie frei das LLM bei der Prompt-Interception interpretiert: niedrige Werte erzeugen vorhersagbarere, höhere Werte überraschendere Ergebnisse.'
+      : 'The same prompt at different temperature settings of the language model. Temperature controls how freely the LLM interprets during prompt interception: lower values produce more predictable, higher values more surprising results.' }}</p>
+    <div class="insight-list">
+      <div class="insight-item">
+        <strong>{{ currentLanguage === 'de' ? 'Kreativität sichtbar machen' : 'Making creativity visible' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Der Vergleich zeigt, wie stark die Interpretationsfreiheit des Modells das Endergebnis beeinflusst — und wo die Grenze zwischen produktiver Überraschung und Beliebigkeit liegt.'
+          : 'The comparison shows how much the model\'s interpretive freedom influences the final result — and where the boundary between productive surprise and arbitrariness lies.' }}</p>
+      </div>
+    </div>
   </section>
 </template>
 
