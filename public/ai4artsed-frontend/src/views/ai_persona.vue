@@ -345,8 +345,7 @@ function buildAvailableConfigs(): string {
   return [
     'sd35_large — Stable Diffusion 3.5 Large (image)',
     'flux2_diffusers — FLUX.2 (image)',
-    'gemini_3_pro_image — Gemini image generation (cloud, image)',
-    'gpt_image_1 — GPT image generation (cloud, image)',
+    'gemini_3_pro_image — Gemini 3 Pro image generation (cloud, EU, DSGVO via Mammouth)',
     'stableaudio — Stable Audio (audio/sound)',
     'heartmula_standard — HeartMuLa (music)',
     'p5js_code — p5.js generative code (code)',

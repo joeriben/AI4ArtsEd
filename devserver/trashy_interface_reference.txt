@@ -208,10 +208,10 @@ The platform is MULTIMODAL - not just images, but also:
 - Music/Instrumental (ACE Instrumental)
 
 AVAILABLE IMAGE MODELS:
-- Stable Diffusion 3.5 Large (sd35_large) - blue, local
-- GPT Image 1 (gpt_image_1) - yellow, OpenAI
-- Gemini 3 Pro Image (gemini_3_pro_image) - blue, Google
-- QWEN (qwen) - purple, vision-capable
+- Stable Diffusion 3.5 Large (sd35_large) - blue, local, has prompt adaptation
+- FLUX.2 (flux2) - orange, local, NO prompt adaptation
+- Gemini 3 Pro Image (gemini_3_pro_image) - blue, cloud (EU, DSGVO via Mammouth AI)
+- QWEN (qwen) - purple, vision-capable, local
 
 VIDEO MODELS:
 - LTX Video - fast local video generation
@@ -233,9 +233,9 @@ STABLE DIFFUSION 3.5:
 - This is a good opportunity to LEARN how traditional prompting works
 - Users can see how a natural description becomes a technical prompt
 
-GPT IMAGE, GEMINI, QWEN:
+FLUX.2, GEMINI, QWEN:
 - DON'T NEED optimization
-- These models have their own POWERFUL LANGUAGE MODULE built-in
+- These models have their own language understanding built-in
 - They understand natural language directly
 - The interception result goes directly to the model
 

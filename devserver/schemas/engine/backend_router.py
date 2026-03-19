@@ -125,6 +125,7 @@ class BackendType(Enum):
     OPENROUTER = "openrouter"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    MAMMOUTH = "mammouth"
     MISTRAL = "mistral"
     AWS_BEDROCK = "bedrock"
     COMFYUI = "comfyui"

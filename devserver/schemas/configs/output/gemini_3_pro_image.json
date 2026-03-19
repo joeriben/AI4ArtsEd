@@ -5,8 +5,8 @@
     "de": "Gemini 3 Pro Image"
   },
   "description": {
-    "en": "Cloud-based image generation using Google Gemini 3 Pro via OpenRouter (multimodal chat model)",
-    "de": "Cloud-basierte Bildgenerierung mit Google Gemini 3 Pro via OpenRouter (multimodales Chat-Modell)"
+    "en": "Cloud-based image generation using Google Gemini 3 Pro via Mammouth AI (EU) (multimodal chat model)",
+    "de": "Cloud-basierte Bildgenerierung mit Google Gemini 3 Pro via Mammouth AI (EU) (multimodales Chat-Modell)"
   },
   "category": {
     "en": "Image Generation (Cloud)",
@@ -28,8 +28,8 @@
     "model": "gemini-3-pro-image",
     "model_id": "google/gemini-3-pro-image-preview",
     "provider_model_id": "gemini-3-pro-image-preview",
-    "backend": "openrouter",
-    "backend_type": "openrouter",
+    "backend": "mammouth",
+    "backend_type": "mammouth",
     "requires_gpu": false,
     "requires_api_key": "OPENROUTER_API_KEY",
     "estimated_duration_seconds": "10-20",
@@ -38,14 +38,14 @@
     "context_length": 1000000,
     "modalities": ["image", "text"],
     "features": ["multimodal", "text_rendering", "long_context"],
-    "notes": "Google Gemini 3 Pro Image via OpenRouter. Multimodal chat model with image generation. Requires OPENROUTER_API_KEY.",
+    "notes": "Google Gemini 3 Pro Image via Mammouth AI (EU). Multimodal chat model with image generation. Requires OPENROUTER_API_KEY.",
     "version": "1.0",
     "display_name": "Gemini 3 Pro Image",
     "icon": "\uD83D\uDD37",
     "publisher": "Google DeepMind (Mountain View, US)",
     "architecture": "Multimodal Transformer (Gemini)",
     "params": "Undisclosed",
-    "license": "Commercial API (usage-based via OpenRouter)",
+    "license": "Commercial API (usage-based via Mammouth AI (EU))",
     "fair_culture": "Training data undisclosed",
     "safety_by_design": "Google Safety Filters, OpenRouter content policy"
   },

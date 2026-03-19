@@ -710,9 +710,7 @@ const configsByCategory: Record<string, Config[]> = {
     { id: 'sd35_large', label: 'Stable\nDiffusion', emoji: '🎨', color: '#2196F3', description: 'Klassische Bildgenerierung', logo: '/logos/logo_stable_diffusion.png', lightBg: false },
     { id: 'qwen', label: 'Qwen', emoji: '🌸', color: '#9C27B0', description: 'Qwen Vision Model', logo: '/logos/Qwen_logo.png', lightBg: false },
     { id: 'flux2', label: 'Flux 2', emoji: '⚡', color: '#FF6B35', description: 'Hochwertige Bildgenerierung mit Flux 2 Dev', logo: '/logos/flux2_logo.png', lightBg: false },
-    { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro', emoji: '🔷', color: '#4285F4', description: 'Google Gemini Bildgenerierung', logo: '/logos/gemini_logo.png', lightBg: false },
-    { id: 'nano_banana', label: 'Nano\nBanana', emoji: '🔷', color: '#FFD700', description: 'Bildgenerierung via Mammouth AI (EU)', lightBg: false },
-    { id: 'gpt_image_15', label: 'GPT Image\n1.5', emoji: '🔷', color: '#10A37F', description: 'GPT-Image-1.5 via Mammouth AI (EU)', logo: '/logos/ChatGPT-Logo.png', lightBg: true },
+    { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro', emoji: '🔷', color: '#4285F4', description: 'Google Gemini 3 Pro via Mammouth AI (EU)', logo: '/logos/gemini_logo.png', lightBg: false },
     { id: 'p5js_code', label: 'P5.js', emoji: '💻', color: '#ED225D', description: 'Generative Computergrafik mit P5.js Code', logo: '/logos/p5js_logo.png', lightBg: false }
   ],
   video: [
@@ -742,8 +740,6 @@ const configIdToChunkName: Record<string, string> = {
   'qwen': 'qwen',
   'flux2': 'flux2_diffusers',
   'gemini_3_pro_image': 'gemini_3_pro',
-  'nano_banana': 'nano_banana',
-  'gpt_image_15': 'gpt_image_15',
   'p5js_code': 'p5js',
   'tonejs_code': 'tonejs',
   'ltx_video': 'ltx',
@@ -852,8 +848,6 @@ const modelFullNames: Record<string, string> = {
   qwen: 'Qwen 2.5 Vision',
   flux2: 'Flux 2 Dev',
   gemini_3_pro_image: 'Gemini 3 Pro',
-  nano_banana: 'Nano Banana',
-  gpt_image_15: 'GPT-Image-1.5',
   p5js_code: 'p5.js Code Generation',
   tonejs_code: 'Tone.js Music Generation',
   ltx_video: 'LTX Video',

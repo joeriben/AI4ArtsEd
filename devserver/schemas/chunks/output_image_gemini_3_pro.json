@@ -1,14 +1,14 @@
 {
   "name": "output_image_gemini_3_pro",
   "type": "api_output_chunk",
-  "backend_type": "openrouter",
+  "backend_type": "mammouth",
   "media_type": "image",
-  "description": "Google Gemini 3 Pro Image - Multimodal chat model with image generation via OpenRouter",
+  "description": "Google Gemini 3 Pro Image via Mammouth AI (EU, DSGVO-compliant)",
 
   "api_config": {
-    "provider": "openrouter",
+    "provider": "mammouth",
     "model": "google/gemini-3-pro-image-preview",
-    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "endpoint": "https://api.mammouth.ai/v1/chat/completions",
     "method": "POST",
     "headers": {
       "Content-Type": "application/json",
@@ -56,7 +56,7 @@
     "estimated_duration_seconds": "25-50",
     "quality_rating": 5,
     "requires_gpu": false,
-    "api_provider": "openrouter",
+    "api_provider": "mammouth",
     "model_id": "google/gemini-3-pro-image-preview",
     "provider_model_id": "gemini-3-pro-image-preview",
     "cost_per_image": "Variable (OpenRouter pricing)",
@@ -73,6 +73,6 @@
       "Multimodal understanding",
       "Long context support"
     ],
-    "notes": "Google Gemini 3 Pro Image via OpenRouter. Chat completion model with image generation capabilities. Requires OPENROUTER_API_KEY environment variable."
+    "notes": "Google Gemini 3 Pro Image via Mammouth AI (EU). Chat completion model with image generation capabilities. Requires mammouth.key."
   }
 }
