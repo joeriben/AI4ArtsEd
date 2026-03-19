@@ -1684,7 +1684,7 @@ export const en = {
     placeholder: 'How can I help you?',
     greeting: 'Hello! I am your AI helper. Ask me questions about AI4ArtsEd or let me advise you on your prompt.',
     noResponse: 'No response received.',
-    thinking: 'Thinking...',
+    thinking: 'One moment...',
     sendError: 'Sorry, there was an error sending the message. Please try again.',
     sendTooltip: 'Send message (Enter)',
     openTooltip: 'Open AI helper (Trashy) — drag to move, double-click to reset',

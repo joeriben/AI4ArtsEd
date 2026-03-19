@@ -140,6 +140,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useGpuStatus, SAFETY_VRAM_GB, SAFETY_MODELS, COMFYUI_OVERHEAD_GB, type PhysicalModel } from '@/composables/useGpuStatus'
+import { SUPPORTED_LANGUAGES } from '@/i18n'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 const { t, locale } = useI18n()
@@ -381,8 +382,8 @@ function buildDraftContext(): string {
 }
 
 
-// --- Greeting ---
-function buildGreeting(): string {
+// --- Greeting (LLM-generated in user's language) ---
+function buildGreetingTemplate(): string {
   const m = metaphors()
   const tgb = totalGb.value
   const memLine = tgb > 0 && m
@@ -400,8 +401,41 @@ function buildGreeting(): string {
   return parts.join('\n\n')
 }
 
+const langLabel = computed(() => {
+  const entry = SUPPORTED_LANGUAGES.find(l => l.code === locale.value)
+  return entry?.label ?? 'Deutsch'
+})
+
+async function fetchGreeting() {
+  const template = buildGreetingTemplate()
+  addChatMessage('assistant', t('trashy.thinking'))
+  const placeholderId = nextId - 1
+
+  try {
+    const res = await fetch(`${getBaseUrl()}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Greet the workshop participants in ${langLabel.value}. Help them plan which AI models to use. Your greeting should cover these points (adapt freely, do not translate literally):\n\n${template}`,
+        history: [],
+        context: { workshop_planning: true },
+        draft_context: buildDraftContext(),
+        language: locale.value,
+      })
+    })
+    const data = await res.json()
+    const msg = messages.value.find(m => m.id === placeholderId)
+    if (msg) msg.content = data.reply || template
+    else addChatMessage('assistant', data.reply || template)
+  } catch {
+    const msg = messages.value.find(m => m.id === placeholderId)
+    if (msg) msg.content = template
+    else addChatMessage('assistant', template)
+  }
+}
+
 onMounted(() => {
-  addChatMessage('assistant', buildGreeting())
+  fetchGreeting()
 })
 </script>
 
