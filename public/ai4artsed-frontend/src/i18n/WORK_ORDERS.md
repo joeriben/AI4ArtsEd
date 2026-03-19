@@ -21,6 +21,46 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-19-workshop-title-rename
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (MODIFIED):
+  - `workshop.title` (MODIFIED): "Collaborative Workshop Preparation" → "Workshop Planning"
+- **Context**: Page renamed from "Collaborative Workshop Preparation" to "Workshop Planning" — simpler, clearer. German: "Workshop-Planung".
+
+### WO-2026-03-19-trashy-overlay-i18n
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `trashy.placeholder` (NEW): "How can I help you?"
+  - `trashy.greeting` (NEW): "Hello! I am your AI helper. Ask me questions about AI4ArtsEd or let me advise you on your prompt."
+  - `trashy.noResponse` (NEW): "No response received."
+  - `trashy.thinking` (NEW): "Thinking..."
+  - `trashy.sendError` (NEW): "Sorry, there was an error sending the message. Please try again."
+  - `trashy.sendTooltip` (NEW): "Send message (Enter)"
+  - `trashy.openTooltip` (NEW): "Open AI helper (Trashy) — drag to move, double-click to reset"
+  - `trashy.closeTooltip` (NEW): "Close"
+- **Context**: Global Trashy chat overlay (ChatOverlay.vue). Previously all strings were hardcoded in German. The placeholder is the most visible — it should be warm and inviting, using plural "you" (formal/group address in languages that have it). German: "Wie kann ich Euch weiterhelfen?" (not "dir", use "Euch").
+
+### WO-2026-03-19-backend-status-loaded-models
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `settings.backendStatus.model` (NEW): "Model"
+  - `settings.backendStatus.loadedModels` (NEW): "Loaded Models"
+  - `settings.backendStatus.foreignProcesses` (NEW): "Other GPU Processes"
+  - `settings.backendStatus.noModelsLoaded` (NEW): "No models currently loaded"
+  - `settings.backendStatus.vramUsage` (NEW): "VRAM"
+  - `settings.backendStatus.inUse` (NEW): "In Use"
+  - `settings.backendStatus.idle` (NEW): "Idle"
+  - `settings.backendStatus.lastUsed` (NEW): "Last Used"
+  - `settings.backendStatus.command` (NEW): "Command"
+  - `settings.backendStatus.foreignVram` (NEW): "External VRAM usage"
+  - `settings.backendStatus.showLoadedModels` (NEW): "Show loaded models"
+  - `settings.backendStatus.hideLoadedModels` (NEW): "Hide loaded models"
+  - `settings.backendStatus.showProcesses` (NEW): "Show processes"
+  - `settings.backendStatus.hideProcesses` (NEW): "Hide processes"
+  - `settings.backendStatus.ownModels` (NEW): "Own Models"
+  - `settings.backendStatus.pid` (NEW): "PID"
+- **Context**: Backend Status dashboard now shows which AI models are currently loaded in GPU memory and foreign GPU processes (Ollama, etc.). Technical page for workshop leaders — short, precise labels.
+
 ### WO-2026-03-18-ai-persona-page
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):

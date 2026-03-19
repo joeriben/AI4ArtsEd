@@ -860,45 +860,50 @@ def save_chat_history(run_id: str, history: list):
         logger.error(f"Error saving chat history: {e}")
 
 
-def build_system_prompt(context: dict = None) -> str:
+LANG_NAMES = {
+    'de': 'German', 'en': 'English', 'tr': 'Turkish', 'ko': 'Korean',
+    'uk': 'Ukrainian', 'fr': 'French', 'es': 'Spanish', 'he': 'Hebrew',
+    'ar': 'Arabic', 'bg': 'Bulgarian',
+}
+
+
+def build_system_prompt(context: dict = None, language: str = None) -> str:
     """
-    Build system prompt based on available context
+    Build system prompt based on available context.
 
     Args:
         context: Session context dict (or None for general mode)
+        language: ISO language code from frontend settings (e.g. 'de', 'en', 'tr')
 
     Returns:
         System prompt string
     """
+    # Resolve language: explicit param > context field > default
+    lang_code = language or (context.get('language') if context else None) or 'de'
+    lang_name = LANG_NAMES.get(lang_code, 'German')
+
     if context is None:
-        return GENERAL_SYSTEM_PROMPT
+        base = GENERAL_SYSTEM_PROMPT
+    elif context.get('persona_mode'):
+        base = AI_PERSONA_SYSTEM_PROMPT
+    elif context.get('workshop_planning'):
+        base = WORKSHOP_PLANNING_SYSTEM_PROMPT
+    elif context.get('comparison_mode'):
+        return COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang_name)
+    else:
+        # Session mode - fill template
+        base = SESSION_SYSTEM_PROMPT_TEMPLATE.format(
+            media_type=context.get('media_type', 'unbekannt'),
+            config_name=context.get('config_name', 'unbekannt'),
+            safety_level=context.get('safety_level', 'unbekannt'),
+            input_text=context.get('input_text', '[noch nicht eingegeben]'),
+            interception_text=context.get('interception_text', '[noch nicht transformiert]'),
+            current_stage=context.get('current_stage', 'unbekannt')
+        )
 
-    # AI Persona mode
-    if context.get('persona_mode'):
-        return AI_PERSONA_SYSTEM_PROMPT
-
-    # Workshop planning mode
-    if context.get('workshop_planning'):
-        return WORKSHOP_PLANNING_SYSTEM_PROMPT
-
-    # Session 265: Comparison mode
-    if context.get('comparison_mode'):
-        lang_code = context.get('language', 'de')
-        lang_names = {'de': 'German', 'en': 'English', 'tr': 'Turkish', 'ko': 'Korean',
-                      'uk': 'Ukrainian', 'fr': 'French', 'es': 'Spanish', 'he': 'Hebrew',
-                      'ar': 'Arabic', 'bg': 'Bulgarian'}
-        lang = lang_names.get(lang_code, 'German')
-        return COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang)
-
-    # Session mode - fill template
-    return SESSION_SYSTEM_PROMPT_TEMPLATE.format(
-        media_type=context.get('media_type', 'unbekannt'),
-        config_name=context.get('config_name', 'unbekannt'),
-        safety_level=context.get('safety_level', 'unbekannt'),
-        input_text=context.get('input_text', '[noch nicht eingegeben]'),
-        interception_text=context.get('interception_text', '[noch nicht transformiert]'),
-        current_stage=context.get('current_stage', 'unbekannt')
-    )
+    # Append explicit language instruction to ALL prompts
+    base += f"\n\nCRITICAL: You MUST respond in {lang_name}. Every word of your response must be in {lang_name}."
+    return base
 
 
 @chat_bp.route('', methods=['POST'])
@@ -923,6 +928,7 @@ def chat():
         user_message = data.get('message', '').strip()
         run_id = data.get('run_id')
         draft_context = data.get('draft_context')  # Current page state (transient, not saved)
+        language = data.get('language')  # ISO code from frontend settings (e.g. 'de', 'en')
 
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
@@ -947,7 +953,7 @@ def chat():
             logger.info(f"[CHAT] Using request body context: {list(context.keys())}")
 
         # Build system prompt
-        system_prompt = build_system_prompt(context)
+        system_prompt = build_system_prompt(context, language=language)
 
         # Add draft context if provided (NOT saved to exports/, only for this request)
         if draft_context:

@@ -139,8 +139,23 @@ export const PHYSICAL_MODELS: PhysicalModel[] = [
   },
 ]
 
-/** Measured total safety model VRAM (llama-guard3:1b + qwen3:1.7b + qwen3-vl:2b) */
-export const SAFETY_VRAM_GB = 8
+/**
+ * Measured safety model VRAM — Session 268 (2026-03-18), nvidia-smi peak.
+ * These are ALWAYS loaded via Ollama when the platform runs.
+ */
+export const SAFETY_MODELS = [
+  { name: 'Llama Guard', vram_gb: 1.6 },
+  { name: 'Safety LLM', vram_gb: 1.4 },
+  { name: 'Safety VLM', vram_gb: 1.9 },
+] as const
+
+/** ComfyUI baseline overhead (~600 MB measured, always present when ComfyUI runs) */
+export const COMFYUI_OVERHEAD_GB = 0.6
+
+/** Total safety baseline = safety models + ComfyUI overhead + CUDA caches (~2.5 GB) */
+export const SAFETY_VRAM_GB = Math.ceil(
+  SAFETY_MODELS.reduce((sum, m) => sum + m.vram_gb, 0) + COMFYUI_OVERHEAD_GB + 2.5
+)
 
 const POLL_INTERVAL = 30_000
 

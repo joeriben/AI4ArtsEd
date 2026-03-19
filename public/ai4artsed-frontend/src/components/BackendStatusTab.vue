@@ -85,6 +85,91 @@
               / {{ gpuService.gpu_info.total_vram_gb?.toFixed(1) }} GB total
             </span>
           </div>
+
+          <!-- VRAM Bar -->
+          <div v-if="vramCoordinator && gpuService.gpu_info?.total_vram_gb" class="vram-bar-container" dir="ltr">
+            <div class="vram-bar">
+              <div
+                class="vram-segment vram-own"
+                :style="{ width: ownVramPercent + '%' }"
+                :title="$t('settings.backendStatus.ownModels') + ': ' + ownVramGb.toFixed(1) + ' GB'"
+              ></div>
+              <div
+                v-if="foreignVramGb > 0"
+                class="vram-segment vram-foreign"
+                :style="{ width: foreignVramPercent + '%' }"
+                :title="$t('settings.backendStatus.foreignProcesses') + ': ' + foreignVramGb.toFixed(1) + ' GB'"
+              ></div>
+            </div>
+            <div class="vram-bar-legend">
+              <span class="legend-item"><span class="legend-dot vram-own-dot"></span> {{ $t('settings.backendStatus.ownModels') }} ({{ ownVramGb.toFixed(1) }} GB)</span>
+              <span v-if="foreignVramGb > 0" class="legend-item"><span class="legend-dot vram-foreign-dot"></span> {{ $t('settings.backendStatus.foreignProcesses') }} ({{ foreignVramGb.toFixed(1) }} GB)</span>
+              <span class="legend-item"><span class="legend-dot vram-free-dot"></span> Free ({{ gpuService.gpu_info.free_gb.toFixed(1) }} GB)</span>
+            </div>
+          </div>
+
+          <!-- Loaded Models (collapsible) -->
+          <template v-if="vramCoordinator">
+            <button class="toggle-btn" @click="showLoadedModels = !showLoadedModels">
+              {{ showLoadedModels ? $t('settings.backendStatus.hideLoadedModels') : $t('settings.backendStatus.showLoadedModels') }}
+              ({{ loadedModels.length }})
+            </button>
+            <div v-if="showLoadedModels" class="model-details" dir="ltr">
+              <div v-if="loadedModels.length === 0" class="no-models">
+                {{ $t('settings.backendStatus.noModelsLoaded') }}
+              </div>
+              <table v-else class="status-table">
+                <thead>
+                  <tr>
+                    <th class="label-cell">{{ $t('settings.backendStatus.subBackend') }}</th>
+                    <th class="value-cell">{{ $t('settings.backendStatus.model') }}</th>
+                    <th class="value-cell">{{ $t('settings.backendStatus.vramUsage') }}</th>
+                    <th class="value-cell">{{ $t('settings.backendStatus.status') }}</th>
+                    <th class="value-cell">{{ $t('settings.backendStatus.lastUsed') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="model in loadedModels" :key="model.backend + model.model">
+                    <td class="label-cell mono">{{ formatBackendName(model.backend) }}</td>
+                    <td class="value-cell mono">{{ formatModelName(model.model) }}</td>
+                    <td class="value-cell mono">{{ (model.vram_mb / 1024).toFixed(1) }} GB</td>
+                    <td class="value-cell">
+                      <span :class="['status-badge', model.in_use > 0 ? 'status-in-use' : 'status-idle']">
+                        {{ model.in_use > 0 ? $t('settings.backendStatus.inUse') : $t('settings.backendStatus.idle') }}
+                      </span>
+                    </td>
+                    <td class="value-cell mono">{{ formatRelativeTime(model.last_used) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Foreign GPU Processes (collapsible) -->
+            <template v-if="foreignProcesses.length > 0">
+              <button class="toggle-btn" @click="showForeignProcesses = !showForeignProcesses">
+                {{ showForeignProcesses ? $t('settings.backendStatus.hideProcesses') : $t('settings.backendStatus.showProcesses') }}
+                ({{ foreignProcesses.length }})
+              </button>
+              <div v-if="showForeignProcesses" class="model-details" dir="ltr">
+                <table class="status-table">
+                  <thead>
+                    <tr>
+                      <th class="label-cell">{{ $t('settings.backendStatus.pid') }}</th>
+                      <th class="value-cell">{{ $t('settings.backendStatus.command') }}</th>
+                      <th class="value-cell">{{ $t('settings.backendStatus.vramUsage') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="proc in foreignProcesses" :key="proc.pid">
+                      <td class="label-cell mono">{{ proc.pid }}</td>
+                      <td class="value-cell mono">{{ proc.cmdline }}</td>
+                      <td class="value-cell mono">{{ (proc.vram_mb / 1024).toFixed(1) }} GB</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </template>
+          </template>
         </div>
 
         <!-- ComfyUI / SwarmUI -->
@@ -224,6 +309,8 @@ const data = ref<any>(null)
 // Collapsible sections
 const showComfyuiModels = ref(false)
 const showOllamaModels = ref(false)
+const showLoadedModels = ref(true)
+const showForeignProcesses = ref(false)
 
 // --- Computed accessors ---
 const gpuHardware = computed(() => data.value?.local_infrastructure?.gpu_hardware ?? { detected: false })
@@ -232,6 +319,39 @@ const comfyui = computed(() => data.value?.local_infrastructure?.comfyui ?? { re
 const ollama = computed(() => data.value?.local_infrastructure?.ollama ?? { reachable: false, models: [] })
 const cloudApis = computed(() => data.value?.cloud_apis ?? {})
 const configsByBackend = computed(() => data.value?.output_configs?.by_backend ?? {})
+
+// VRAM coordinator data
+const vramCoordinator = computed(() => gpuService.value?.vram_coordinator ?? null)
+
+const loadedModels = computed(() => {
+  return vramCoordinator.value?.loaded_models ?? []
+})
+
+const foreignProcesses = computed(() => {
+  const procs = vramCoordinator.value?.gpu_processes ?? []
+  return procs.filter((p: any) => p.foreign)
+})
+
+const ownVramGb = computed(() => {
+  const models = loadedModels.value
+  const totalMb = models.reduce((sum: number, m: any) => sum + (m.vram_mb || 0), 0)
+  return totalMb / 1024
+})
+
+const foreignVramGb = computed(() => {
+  const mb = vramCoordinator.value?.foreign_vram_mb ?? 0
+  return mb / 1024
+})
+
+const ownVramPercent = computed(() => {
+  const total = gpuService.value?.gpu_info?.total_vram_gb ?? 1
+  return Math.min(100, (ownVramGb.value / total) * 100)
+})
+
+const foreignVramPercent = computed(() => {
+  const total = gpuService.value?.gpu_info?.total_vram_gb ?? 1
+  return Math.min(100, (foreignVramGb.value / total) * 100)
+})
 
 const comfyuiPort = computed(() => {
   const url = comfyui.value?.url ?? ''
@@ -274,6 +394,23 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   anthropic: 'Anthropic',
   mistral: 'Mistral AI',
   aws_bedrock: 'AWS Bedrock',
+}
+
+function formatModelName(modelId: string): string {
+  // Shorten common model ID prefixes for display
+  return modelId
+    .replace('stabilityai/', '')
+    .replace('black-forest-labs/', '')
+    .replace('Wan-AI/', '')
+}
+
+function formatRelativeTime(timestamp: number): string {
+  if (!timestamp) return '—'
+  const seconds = Math.floor(Date.now() / 1000 - timestamp)
+  if (seconds < 60) return `${seconds}s ago`
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`
+  return `${Math.floor(seconds / 86400)}d ago`
 }
 
 function formatProviderName(name: string): string {
@@ -606,5 +743,86 @@ onMounted(() => fetchStatus())
   background: #f0f0f0;
   color: #666;
   border: 1px solid #ddd;
+}
+
+/* VRAM Bar */
+.vram-bar-container {
+  margin-top: 8px;
+}
+
+.vram-bar {
+  height: 16px;
+  background: #e0e0e0;
+  border: 1px solid #999;
+  border-radius: 3px;
+  display: flex;
+  overflow: hidden;
+}
+
+.vram-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.vram-own {
+  background: #4CAF50;
+}
+
+.vram-foreign {
+  background: #FF9800;
+}
+
+.vram-bar-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #555;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.vram-own-dot {
+  background: #4CAF50;
+}
+
+.vram-foreign-dot {
+  background: #FF9800;
+}
+
+.vram-free-dot {
+  background: #e0e0e0;
+  border: 1px solid #999;
+}
+
+/* In-use / Idle badges */
+.status-in-use {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #42a5f5;
+}
+
+.status-idle {
+  background: #f5f5f5;
+  color: #757575;
+  border: 1px solid #bdbdbd;
+}
+
+.no-models {
+  font-size: 12px;
+  color: #888;
+  padding: 6px 0;
+  font-style: italic;
 }
 </style>

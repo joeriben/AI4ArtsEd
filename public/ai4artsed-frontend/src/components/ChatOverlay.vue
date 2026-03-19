@@ -8,7 +8,7 @@
       @mousedown="startDrag"
       @click="onIconClick"
       @dblclick="resetPosition"
-      title="KI-Helfer öffnen (Träshy) – Ziehen zum Verschieben, Doppelklick zum Zurücksetzen"
+      :title="t('trashy.openTooltip')"
     >
       <img :src="trashyIcon" alt="Träshy" class="chat-icon-img" />
     </button>
@@ -20,7 +20,7 @@
         <span class="chat-title">Träshy</span>
         <img :src="trashyIcon" alt="Träshy" class="header-trashy-icon" />
         <div class="header-right">
-          <button class="close-button" @click="collapse" title="Schließen">×</button>
+          <button class="close-button" @click="collapse" :title="t('trashy.closeTooltip')">×</button>
         </div>
       </div>
 
@@ -29,7 +29,7 @@
         <!-- Initial greeting (only if no messages) -->
         <div v-if="messages.length === 0" class="message assistant greeting">
           <div class="message-content">
-            Hallo! Ich bin dein KI-Helfer. Stelle mir Fragen über AI4ArtsEd oder lass dich bei deinem Prompt beraten.
+            {{ t('trashy.greeting') }}
           </div>
         </div>
 
@@ -41,7 +41,7 @@
         >
           <div class="message-content">
             <div v-if="msg.content">{{ msg.content }}</div>
-            <div v-else-if="msg.thinking" class="thinking-no-answer">Keine Antwort erhalten.</div>
+            <div v-else-if="msg.thinking" class="thinking-no-answer">{{ t('trashy.noResponse') }}</div>
             <div v-if="msg.thinking" class="thinking-toggle" @click="toggleThinking(msg.id)">
               <span class="thinking-arrow">{{ expandedThinking.has(msg.id) ? '\u25BE' : '\u25B8' }}</span>
               <span class="thinking-label">Thinking</span>
@@ -54,7 +54,7 @@
         <div v-if="isLoading" class="message assistant loading">
           <div class="message-content">
             <span class="spinner"></span>
-            <span class="loading-text">Denkt nach...</span>
+            <span class="loading-text">{{ t('trashy.thinking') }}</span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
       <div class="chat-input-container">
         <textarea
           v-model="inputMessage"
-          placeholder="Stelle eine Frage..."
+          :placeholder="t('trashy.placeholder')"
           @keydown.enter.exact.prevent="sendMessage"
           @keydown.shift.enter="inputMessage += '\n'"
           :disabled="isLoading"
@@ -74,7 +74,7 @@
           class="send-button"
           @click="sendMessage"
           :disabled="!canSend"
-          title="Nachricht senden (Enter)"
+          :title="t('trashy.sendTooltip')"
         >
           ➤
         </button>
@@ -101,7 +101,7 @@ interface Message {
   thinking?: string | null
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 // State
 const isExpanded = ref(false)
@@ -428,7 +428,8 @@ async function sendMessage() {
       message: userMessage,  // Original message without context prefix
       run_id: currentSession.value.runId || undefined,
       draft_context: draftContextString.value || undefined,  // Always send current page state
-      history: historyForBackend
+      history: historyForBackend,
+      language: locale.value,
     })
 
     const assistantReply = response.data.reply
@@ -454,7 +455,7 @@ async function sendMessage() {
     messages.value.push({
       id: messageIdCounter++,
       role: 'assistant',
-      content: 'Entschuldigung, es gab einen Fehler beim Senden der Nachricht. Bitte versuche es erneut.'
+      content: t('trashy.sendError')
     })
 
     await nextTick()

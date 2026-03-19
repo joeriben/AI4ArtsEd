@@ -27,6 +27,7 @@
         <input
           v-model="userInput"
           class="chat-input"
+          :placeholder="t('trashy.placeholder')"
           @keydown.enter="sendMessage"
           :disabled="isLoading"
         />
@@ -52,11 +53,20 @@
         >
           <span class="segment-label">{{ lm.name }}</span>
         </div>
-        <!-- Unaccounted baseline (CUDA caches, safety, misc) -->
+        <!-- Safety models (individually labeled) -->
         <div
-          v-if="unaccountedBaselineGb > 1"
+          v-for="sm in safetyModelSegments"
+          :key="'safety-' + sm.name"
           class="memory-segment safety"
-          :style="{ width: segmentWidth(unaccountedBaselineGb) + '%' }"
+          :style="{ width: segmentWidth(sm.vram_gb) + '%' }"
+        >
+          <span class="segment-label">{{ sm.name }}</span>
+        </div>
+        <!-- Remaining system overhead (CUDA caches, ComfyUI, misc) -->
+        <div
+          v-if="systemOverheadGb > 0.5"
+          class="memory-segment system-overhead"
+          :style="{ width: segmentWidth(systemOverheadGb) + '%' }"
         >
           <span class="segment-label">{{ $t('workshop.memory.system') }}</span>
         </div>
@@ -119,13 +129,9 @@
       </div>
     </div>
 
-    <!-- Confirm -->
-    <div v-if="selectedModels.length > 0 || confirmed" class="confirm-section">
-      <div v-if="loadingProgress" class="loading-notice">{{ loadingProgress }}</div>
-      <div v-if="confirmed" class="ready-notice">{{ $t('workshop.confirm.ready') }}</div>
-      <button v-if="!confirmed" class="confirm-btn" :class="{ 'is-loading': isPreloading }" :disabled="isPreloading" @click="confirmSelection">
-        {{ isPreloading ? $t('workshop.confirm.loading') : $t('workshop.confirm.load') }}
-      </button>
+    <!-- Planning summary -->
+    <div v-if="selectedModels.length > 0" class="planning-summary">
+      <div v-if="overBudget" class="over-budget-notice">{{ $t('workshop.memory.overBudget') }}</div>
     </div>
   </div>
 </template>
@@ -133,28 +139,24 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useGpuStatus, SAFETY_VRAM_GB, type PhysicalModel } from '@/composables/useGpuStatus'
+import { useGpuStatus, SAFETY_VRAM_GB, SAFETY_MODELS, COMFYUI_OVERHEAD_GB, type PhysicalModel } from '@/composables/useGpuStatus'
 import trashyIcon from '@/assets/trashy-icon.png'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const { status, refresh, metaphors, physicalModels } = useGpuStatus()
 
-// --- Selected Models (planning, not actual loading) ---
+// --- Selected Models (planning only — models load on first generate) ---
 const selectedModels = ref<PhysicalModel[]>([])
-const confirmed = ref(false)
-const isPreloading = ref(false)
+
 
 const totalGb = computed(() => {
   if (!status.value) return 0
   return Math.round(status.value.totalMb / 1024)
 })
 
-/** Live baseline: whatever is currently on the GPU (safety models, ComfyUI, caches) */
-const baselineGb = computed(() => {
-  if (!status.value || status.value.totalMb === 0) return SAFETY_VRAM_GB
-  return Math.round((status.value.totalMb - status.value.freeMb) / 1024)
-})
+/** Baseline = safety models + overhead (known constants, not live PyTorch data) */
+const baselineGb = computed(() => SAFETY_VRAM_GB)
 
 /** Check if a physical model is already loaded on the GPU */
 const LOADED_MODEL_PATTERNS: Record<string, string> = {
@@ -188,9 +190,16 @@ const loadedModelsVramGb = computed(() =>
   loadedModelSegments.value.reduce((sum, m) => sum + m.gb, 0)
 )
 
-/** Baseline VRAM not explained by known loaded models (safety, CUDA caches, ComfyUI) */
-const unaccountedBaselineGb = computed(() =>
-  Math.max(0, baselineGb.value - loadedModelsVramGb.value)
+/** Safety model segments for the memory bar */
+const safetyModelSegments = computed(() => [...SAFETY_MODELS])
+
+const safetyModelsVramGb = computed(() =>
+  SAFETY_MODELS.reduce((sum, m) => sum + m.vram_gb, 0)
+)
+
+/** Remaining system overhead not explained by loaded models or safety models */
+const systemOverheadGb = computed(() =>
+  Math.max(0, baselineGb.value - loadedModelsVramGb.value - safetyModelsVramGb.value)
 )
 
 /** Selected models that are NOT already on the GPU */
@@ -291,8 +300,6 @@ function addModel(id: string) {
 function removeModel(id: string) {
   const idx = selectedModels.value.findIndex(m => m.id === id)
   if (idx >= 0) selectedModels.value.splice(idx, 1)
-  confirmed.value = false
-  loadingProgress.value = ''
 }
 
 function toggleModel(model: PhysicalModel) {
@@ -347,6 +354,7 @@ async function sendMessage() {
         history: history.slice(0, -1),
         context: { workshop_planning: true },
         draft_context: buildDraftContext(),
+        language: locale.value,
       })
     })
     const data = await res.json()
@@ -372,63 +380,6 @@ function buildDraftContext(): string {
   return parts.join('\n')
 }
 
-const loadingProgress = ref('')
-
-async function confirmSelection() {
-  const localModels = selectedModels.value.filter(m => m.local)
-  const modelIds = localModels.map(m => m.id)
-
-  if (modelIds.length === 0) {
-    confirmed.value = true
-    return
-  }
-
-  isPreloading.value = true
-  loadingProgress.value = t('workshop.confirm.loading')
-
-  try {
-    const res = await fetch(`${getBaseUrl()}/api/settings/workshop/preload`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ models: modelIds }),
-    })
-    const data = await res.json()
-
-    const parts: string[] = []
-
-    if (data.results) {
-      const loaded: string[] = []
-      const skipped: string[] = []
-      const failed: string[] = []
-
-      for (const [mid, result] of Object.entries(data.results) as [string, any][]) {
-        const model = localModels.find(m => m.id === mid)
-        const name = model?.name || mid
-        if (result.skipped) skipped.push(name)
-        else if (result.success) loaded.push(name)
-        else failed.push(`${name}: ${result.error || 'Fehler'}`)
-      }
-
-      if (loaded.length) parts.push(t('workshop.confirm.resultLoaded', { models: loaded.join(', ') }))
-      if (skipped.length) parts.push(t('workshop.confirm.resultSkipped', { models: skipped.join(', ') }))
-      if (failed.length) parts.push(t('workshop.confirm.resultError', { details: failed.join('; ') }))
-    }
-
-    // Refresh live GPU status — loaded models now show in baseline
-    await refresh()
-
-    // Remove successfully loaded local models from selection
-    // (they're now part of the baseline "bereits belegt")
-    selectedModels.value = selectedModels.value.filter(m => !m.local)
-
-    loadingProgress.value = parts.join('. ') || 'Fertig'
-    confirmed.value = true
-  } catch (e: any) {
-    loadingProgress.value = `Fehler: ${e.message}`
-  } finally {
-    isPreloading.value = false
-  }
-}
 
 // --- Greeting ---
 function buildGreeting(): string {
@@ -616,6 +567,11 @@ onMounted(() => {
 }
 
 .memory-segment.safety {
+  background: rgba(255, 170, 60, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.memory-segment.system-overhead {
   background: rgba(255, 255, 255, 0.06);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -775,56 +731,19 @@ onMounted(() => {
   margin-top: auto;
 }
 
-/* --- Confirm --- */
-.confirm-section {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
-}
-
-.confirm-btn {
-  background: rgba(76, 175, 80, 0.2);
-  border: 1px solid rgba(76, 175, 80, 0.4);
-  color: rgba(76, 175, 80, 0.9);
-  padding: 0.75rem 2rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.confirm-btn:hover {
-  background: rgba(76, 175, 80, 0.3);
-  border-color: rgba(76, 175, 80, 0.6);
-}
-
-.confirm-btn.is-loading {
-  animation: pulse-btn 1.5s ease-in-out infinite;
-  cursor: wait;
-}
-
-@keyframes pulse-btn {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-.loading-notice {
+/* --- Planning Summary --- */
+.planning-summary {
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.85rem;
-  padding: 0.6rem;
-  line-height: 1.5;
+  padding: 0.5rem 0;
 }
 
-.ready-notice {
-  text-align: center;
-  color: rgba(76, 175, 80, 0.9);
-  font-size: 1rem;
+.over-budget-notice {
+  color: rgba(255, 80, 80, 0.9);
   font-weight: 600;
+  font-size: 0.95rem;
   padding: 0.75rem;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  border: 1px solid rgba(255, 80, 80, 0.3);
   border-radius: 10px;
-  background: rgba(76, 175, 80, 0.08);
+  background: rgba(255, 80, 80, 0.08);
 }
 </style>

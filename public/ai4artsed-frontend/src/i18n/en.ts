@@ -305,7 +305,23 @@ export const en = {
       dsgvoCompliant: 'Compliant',
       dsgvoNotCompliant: 'Not Compliant',
       configsAvailable: '{available} of {total} configs available',
-      hidden: 'hidden'
+      hidden: 'hidden',
+      model: 'Model',
+      loadedModels: 'Loaded Models',
+      foreignProcesses: 'Other GPU Processes',
+      noModelsLoaded: 'No models currently loaded',
+      vramUsage: 'VRAM',
+      inUse: 'In Use',
+      idle: 'Idle',
+      lastUsed: 'Last Used',
+      command: 'Command',
+      foreignVram: 'External VRAM usage',
+      showLoadedModels: 'Show loaded models',
+      hideLoadedModels: 'Hide loaded models',
+      showProcesses: 'Show processes',
+      hideProcesses: 'Hide processes',
+      ownModels: 'Own Models',
+      pid: 'PID',
     }
   },
   pipeline: {
@@ -1618,9 +1634,9 @@ export const en = {
     fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.'
   },
   workshop: {
-    title: 'Collaborative Workshop Preparation',
+    title: 'Workshop Planning',
     memory: {
-      label: 'Graphics Card Memory',
+      label: 'Graphics Card Memory (VRAM)',
       system: 'System',
       free: 'free',
       used: '{used} / {total} Gigabytes used',
@@ -1635,8 +1651,8 @@ export const en = {
       threeD: '3D',
       needsGb: 'needs {gb} Gigabytes',
       loaded: '(loaded)',
-      cloudUs: 'Server-based — server in the USA',
-      cloudEu: 'Server-based — server in Europe',
+      cloudUs: 'Server-based — not loaded into VRAM',
+      cloudEu: 'Server-based — not loaded into VRAM',
     },
     confirm: {
       load: 'Load models into memory now',
@@ -1663,5 +1679,15 @@ export const en = {
       flexibility: 'Of course it is no problem if you use more or other models — you can do that at any time without returning to this page. But then everything takes a bit longer. And: It is always good to think beforehand about what you want to achieve with which means. If you want to work artistically, after all you don\'t just go out on the street and grab the first object to do something with it.',
       callToAction: 'So think together. Drag the model cards below into memory and see which models you can combine well. OR tell me what you would like to do, and I will suggest suitable models.',
     },
+  },
+  trashy: {
+    placeholder: 'How can I help you?',
+    greeting: 'Hello! I am your AI helper. Ask me questions about AI4ArtsEd or let me advise you on your prompt.',
+    noResponse: 'No response received.',
+    thinking: 'Thinking...',
+    sendError: 'Sorry, there was an error sending the message. Please try again.',
+    sendTooltip: 'Send message (Enter)',
+    openTooltip: 'Open AI helper (Trashy) — drag to move, double-click to reset',
+    closeTooltip: 'Close',
   }
 }
