@@ -112,9 +112,9 @@ const deviceId = useDeviceId()
 
 // --- Fixed models ---
 const MODELS = [
-  { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo' },
   { id: 'sd35_large', label: 'SD 3.5 Large' },
   { id: 'flux2', label: 'Flux 2' },
+  { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro' },
 ]
 
 // --- State ---
