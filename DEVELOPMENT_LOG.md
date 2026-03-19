@@ -1,5 +1,43 @@
 # Development Log
 
+## Session 270 - S4/S8 Escalation + Legacy Cleanup + Workshop Report
+**Date:** 2026-03-19
+**Focus:** Workshop 18.03.2026 performance analysis revealed Llama Guard S4/S8 false positives on pedagogically legitimate content. Implemented two-stage safety escalation and cleaned up legacy issues.
+
+### Workshop 18.03.2026 Performance Report
+Safety stresstest session (1 device, `kids` level). 63 successful generations, 60 Stage 3 blocks, 0 software errors (5th consecutive session at 100% netto success rate). Full report: `docs/technical_reports/2026-03-18_workshop_performance.md`
+
+### Critical Finding: Llama Guard S4/S8 Over-Triggering
+- **S4 (Child Exploitation)**: 56 blocks on scissors+child crafts, historical swords/spears/bows — objects legitimate in educational and cultural contexts
+- **S8 (Indiscriminate Weapons)**: Dark-skinned children in innocent scenes flagged as S8 — potential racial bias in Llama Guard
+- **Inconsistency**: Knife+cooking passes (S7 ignored), but scissors+crafts blocks (S4)
+
+### Implemented: S4/S8 Escalation to External LLM
+When Llama Guard flags ONLY S4/S8 codes, the prompt is escalated to STAGE3_MODEL (Sonnet 4.6 via Mammouth) for contextual second opinion before blocking.
+
+**Architecture:**
+- Llama Guard remains fast first-pass (~0.1s local)
+- Only S4/S8-exclusive flags trigger escalation (~2-4s via cloud API)
+- If S1/S2/S3/S9/S10/S11 also present → immediate block, no escalation
+- Fail-closed: escalation failure or unclear verdict → block maintained
+- `method: "llm_safety_check_escalation_override"` in response for tracking
+- Reuses `_call_verdict_model` / `_extract_verdict` from `vlm_safety.py`
+
+### Legacy Cleanup ("Altlasten")
+- **acestep_instrumental default**: Dangling reference in `output_config_defaults.json` → changed to `acestep_simple`
+- **sd35_large VRAM estimate**: Output config said 30000 MB, chunk + measured = 28000 MB → aligned
+- **Config-Parse-Warnings**: Already fixed in commit `b9ae80c` (Session 269)
+
+### User Decisions (from report review)
+- **Künstlernamen/DSGVO**: Blocking accepted — platform doesn't exploit historical/contemporary styles
+- **LLM-Verify determinism**: TODO to explore temp=0 behavior (low priority)
+
+### Files Changed
+- `devserver/schemas/engine/stage_orchestrator.py` — S4/S8 escalation function + blocking logic extension
+- `devserver/schemas/output_config_defaults.json` — acestep_instrumental → acestep_simple
+- `devserver/schemas/configs/output/sd35_large.json` — gpu_vram_mb 30000 → 28000
+- `docs/technical_reports/2026-03-18_workshop_performance.md` — New: full workshop report
+
 ## Session 269 - Workshop Planning: Real VRAM Measurements + Complete Rebuild
 **Date:** 2026-03-19
 **Focus:** Session 267's workshop planning prototype was fundamentally broken. Complete rebuild with real measurements, correct model grouping, and actual preloading.
