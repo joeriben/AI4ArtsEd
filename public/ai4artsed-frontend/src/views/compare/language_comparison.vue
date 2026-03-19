@@ -325,11 +325,11 @@ async function startComparison() {
   chatRef.value?.injectMessage(t('compare.trashyTranslating'))
 
   try {
-    // Step 1: Translate — use UI language as source (regex detection too fragile)
-    const sourceLang = userPreferences.language || 'en'
-    const translations: Record<string, string> = { [sourceLang]: userPrompt.value }
+    // Step 1: Translate to ALL selected languages (no source detection —
+    // user may type in any language; LLM auto-detects source)
+    const translations: Record<string, string> = {}
 
-    for (const lang of langCodes.filter(l => l !== sourceLang)) {
+    for (const lang of langCodes) {
       const res = await fetch(`${baseUrl}/api/schema/pipeline/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -2140,15 +2140,12 @@ def safety_check_quick():
 @schema_bp.route('/pipeline/translate', methods=['POST'])
 def translate_text():
     """
-    Translation endpoint - atomic service for German→English translation.
-
-    Lab Architecture: Translates interception result to English for media generation.
-    Used in Stage 3 before passing prompt to image/video/audio models.
+    Translation endpoint — auto-detects source language, translates to target.
 
     Request Body:
     {
-        "text": "German text to translate",
-        "target_language": "en"  # Currently only 'en' supported
+        "text": "Text in any language",
+        "target_language": "en"  # Any supported language code
     }
     """
     try:
@@ -2164,42 +2161,31 @@ def translate_text():
 
         logger.info(f"[TRANSLATE-ENDPOINT] Translating {len(text)} chars to {target_language}")
 
-        if pipeline_executor is None:
-            init_schema_engine()
-
         import time
         start_time = time.time()
 
-        if target_language == 'en':
-            # Original path: use the existing DE→EN translation pipeline
-            result = asyncio.run(pipeline_executor.execute_pipeline(
-                'pre_output/translation_en',
-                text,
-            ))
-            if result.success:
-                translated = result.final_output
-            else:
-                return jsonify({'status': 'error', 'error': result.error or 'Translation failed'}), 500
-        else:
-            # Session 265: Generic translation via LLM (same model as Stage 3)
-            from my_app.routes.chat_routes import call_chat_helper
-            LANG_NAMES = {
-                'ar': 'Arabic', 'bg': 'Bulgarian', 'de': 'German', 'en': 'English',
-                'es': 'Spanish', 'fr': 'French', 'he': 'Hebrew', 'tr': 'Turkish',
-                'uk': 'Ukrainian', 'ko': 'Korean', 'hsb': 'Upper Sorbian',
-                'dsb': 'Lower Sorbian', 'fry': 'Frisian', 'yo': 'Yoruba',
-                'sw': 'Swahili', 'qu': 'Quechua', 'cy': 'Welsh', 'hi': 'Hindi',
-                'ja': 'Japanese', 'zh': 'Chinese',
-            }
-            lang_name = LANG_NAMES.get(target_language, target_language)
-            messages = [
-                {'role': 'system', 'content': f'You are a precise translator. Translate the text into {lang_name}. Output ONLY the translation, nothing else.'},
-                {'role': 'user', 'content': text}
-            ]
-            llm_result = call_chat_helper(messages, temperature=0.2, max_tokens=2048)
-            translated = (llm_result.get('content') or '').strip()
-            if not translated:
-                return jsonify({'status': 'error', 'error': 'Translation returned empty result'}), 500
+        from my_app.routes.chat_routes import call_chat_helper
+        LANG_NAMES = {
+            'ar': 'Arabic', 'bg': 'Bulgarian', 'de': 'German', 'en': 'English',
+            'es': 'Spanish', 'fr': 'French', 'he': 'Hebrew', 'tr': 'Turkish',
+            'uk': 'Ukrainian', 'ko': 'Korean', 'hsb': 'Upper Sorbian',
+            'dsb': 'Lower Sorbian', 'fry': 'Frisian', 'yo': 'Yoruba',
+            'sw': 'Swahili', 'qu': 'Quechua', 'cy': 'Welsh', 'hi': 'Hindi',
+            'ja': 'Japanese', 'zh': 'Chinese',
+        }
+        lang_name = LANG_NAMES.get(target_language, target_language)
+        messages = [
+            {'role': 'system', 'content': (
+                f'You are a precise translator. Auto-detect the source language and translate the text into {lang_name}. '
+                f'If the text is already in {lang_name}, return it unchanged. '
+                f'Output ONLY the translation, nothing else. No explanations, no reasoning.'
+            )},
+            {'role': 'user', 'content': text}
+        ]
+        llm_result = call_chat_helper(messages, temperature=0.2, max_tokens=2048, enable_thinking=False)
+        translated = (llm_result.get('content') or '').strip()
+        if not translated:
+            return jsonify({'status': 'error', 'error': 'Translation returned empty result'}), 500
 
         duration_ms = (time.time() - start_time) * 1000
         logger.info(f"[TRANSLATE-ENDPOINT] Success in {duration_ms:.0f}ms: {translated[:100]}...")
