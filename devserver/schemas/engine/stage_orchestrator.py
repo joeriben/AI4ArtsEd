@@ -1183,6 +1183,86 @@ async def execute_stage1_safety_unified(
     logger.info(f"[STAGE1] SAFE ({total_time*1000:.1f}ms total, checks: {checks_passed})")
     return (True, text, None, checks_passed)
 
+
+# ============================================================================
+# S4/S8 ESCALATION: Contextual verification via external LLM
+# ============================================================================
+# Llama Guard over-triggers on S4 (Child Exploitation) and S8 (Indiscriminate
+# Weapons) in pedagogical/cultural contexts: scissors+child, historical weapons,
+# traditional clothing, dark-skinned children in innocent scenes.
+# When ONLY S4/S8 codes are flagged, escalate to a larger contextual model
+# (STAGE3_MODEL, typically Sonnet 4.6 via Mammouth) for a second opinion.
+# Fail-closed: if escalation fails, the original block stands.
+# ============================================================================
+
+_ESCALATION_CODES = {'S4', 'S8'}
+
+_S4_S8_CODE_LABELS = {
+    'S4': 'Child Exploitation',
+    'S8': 'Indiscriminate Weapons',
+}
+
+_ESCALATION_PROMPT = (
+    "You are a safety reviewer for an educational art platform for children (ages 6-12).\n\n"
+    "A fast safety filter (Llama Guard) flagged the following image generation prompt:\n\n"
+    "PROMPT: \"{prompt}\"\n\n"
+    "FLAGGED AS: {code_descriptions}\n\n"
+    "Known false-positive patterns on this platform:\n"
+    "- Children doing crafts with scissors/paper — wrongly flagged as child exploitation\n"
+    "- Historical/cultural weapons (swords, spears, bows) in educational context\n"
+    "- Traditional clothing showing bare arms or torso — wrongly flagged as sexual\n"
+    "- Children with darker skin in innocent scenes — wrongly flagged (racial bias in filter)\n"
+    "- Medical or cooking contexts with sharp objects\n\n"
+    "ACTUALLY HARMFUL (must stay blocked):\n"
+    "- Any sexual content involving minors\n"
+    "- Content designed to exploit, abuse, or endanger children\n"
+    "- Actual weapons of mass destruction (chemical, biological, nuclear, radiological)\n\n"
+    "Is this prompt actually harmful, or is the filter producing a false positive?\n"
+    "Answer SAFE or UNSAFE only."
+)
+
+
+def _escalate_s4_s8(prompt: str, codes: List[str]) -> bool:
+    """Escalate S4/S8 Llama Guard verdicts to STAGE3_MODEL for contextual review.
+
+    Returns True if the external LLM considers the prompt SAFE (override block).
+    Returns False if UNSAFE or on any failure (fail-closed).
+    """
+    import config
+    from my_app.utils.vlm_safety import _call_verdict_model, _extract_verdict
+
+    code_descriptions = ', '.join(f'{c}: {_S4_S8_CODE_LABELS.get(c, c)}' for c in codes)
+    escalation_prompt = _ESCALATION_PROMPT.format(
+        prompt=prompt,
+        code_descriptions=code_descriptions,
+    )
+
+    start = _time.time()
+    try:
+        response = _call_verdict_model(escalation_prompt)
+        elapsed = _time.time() - start
+
+        if not response:
+            logger.warning(f"[S4S8-ESCALATION] External LLM returned empty ({elapsed:.1f}s) — fail-closed, maintaining block")
+            return False
+
+        verdict = _extract_verdict(response)
+        if verdict == 'safe':
+            logger.info(f"[S4S8-ESCALATION] OVERRIDE: External LLM says SAFE ({elapsed:.1f}s, model={config.STAGE3_MODEL}): {response[:200]}")
+            return True
+        elif verdict == 'unsafe':
+            logger.info(f"[S4S8-ESCALATION] CONFIRMED: External LLM agrees UNSAFE ({elapsed:.1f}s): {response[:200]}")
+            return False
+        else:
+            logger.warning(f"[S4S8-ESCALATION] No clear verdict ({elapsed:.1f}s): {response[:200]} — fail-closed")
+            return False
+
+    except Exception as e:
+        elapsed = _time.time() - start
+        logger.error(f"[S4S8-ESCALATION] Failed ({elapsed:.1f}s): {e} — fail-closed, maintaining block")
+        return False
+
+
 async def execute_stage3_safety(
     prompt: str,
     safety_level: str,
@@ -1296,11 +1376,24 @@ async def execute_stage3_safety(
         logger.info(f"[STAGE3-SAFETY] Ignoring chat-specific codes {ignored_codes} (not relevant for image generation)")
     is_safe = llm_result["safe"] or len(relevant_codes) == 0
 
+    # STEP 5b: S4/S8 escalation — if ONLY escalation-eligible codes, ask external LLM
+    if not is_safe and relevant_codes:
+        escalation_eligible = [c for c in relevant_codes if c in _ESCALATION_CODES]
+        immediate_block = [c for c in relevant_codes if c not in _ESCALATION_CODES]
+        if escalation_eligible and not immediate_block:
+            logger.info(f"[STAGE3-SAFETY] S4/S8 only ({escalation_eligible}) — escalating to external LLM")
+            if _escalate_s4_s8(generation_prompt, escalation_eligible):
+                is_safe = True
+                relevant_codes = []  # Clear — external LLM overrode
+        elif immediate_block:
+            logger.info(f"[STAGE3-SAFETY] Immediate block codes {immediate_block} present — no escalation")
+
     if is_safe:
+        method = "llm_safety_check_escalation_override" if not llm_result["safe"] else "llm_safety_check"
         logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
         return {
             "safe": True,
-            "method": "llm_safety_check",
+            "method": method,
             "abort_reason": None,
             "positive_prompt": generation_prompt,
             "negative_prompt": "",

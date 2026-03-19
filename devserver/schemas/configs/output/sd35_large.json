@@ -43,7 +43,7 @@
       "t5xxl_enconly.safetensors"
     ],
     "requires_gpu": true,
-    "gpu_vram_mb": 30000,
+    "gpu_vram_mb": 28000,
     "estimated_duration_seconds": "20-60",
     "recommended_resolution": "1024x1024",
     "supported_resolutions": [
