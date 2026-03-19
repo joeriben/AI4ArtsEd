@@ -8,71 +8,45 @@
   "api_config": {
     "provider": "mammouth",
     "model": "gemini-3-pro-image-preview",
-    "endpoint": "https://api.mammouth.ai/v1/chat/completions",
+    "endpoint": "https://api.mammouth.ai/v1/images/generations",
     "method": "POST",
     "headers": {
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://ai4artsed.com",
-      "X-Title": "AI4ArtsEd DevServer"
+      "Content-Type": "application/json"
     },
     "request_body": {
       "model": "gemini-3-pro-image-preview",
-      "messages": [
-        {
-          "role": "system",
-          "content": "You are an AI assistant that generates images. When asked to create an image, generate it directly without additional commentary."
-        },
-        {
-          "role": "user",
-          "content": "{{PROMPT}}"
-        }
-      ],
-      "max_tokens": 4096
+      "prompt": "{{PROMPT}}",
+      "n": 1,
+      "size": "1024x1024"
     }
   },
 
   "input_mappings": {
     "prompt": {
-      "field": "request_body.messages[1].content",
+      "field": "request_body.prompt",
       "source": "{{PREVIOUS_OUTPUT}}",
-      "description": "Image generation prompt (as chat message)"
+      "description": "Image generation prompt"
     },
-    "max_tokens": {
-      "field": "request_body.max_tokens",
-      "default": 4096,
-      "description": "Maximum completion tokens"
+    "size": {
+      "field": "request_body.size",
+      "default": "1024x1024",
+      "description": "Image dimensions"
     }
   },
 
   "output_mapping": {
-    "type": "chat_completion_with_image",
-    "format": "multimodal",
-    "extract_path": "choices[0].message.content",
-    "extract_logic": "Find first content item with type='image_url', extract image_url.url",
-    "description": "Extract image URL from multimodal chat completion response"
+    "type": "images_api_base64",
+    "format": "base64",
+    "extract_path": "data[0].b64_json",
+    "description": "Extract base64 image data from OpenAI-compatible Images API response"
   },
 
   "meta": {
-    "estimated_duration_seconds": "25-50",
+    "estimated_duration_seconds": "10-30",
     "quality_rating": 5,
     "requires_gpu": false,
     "api_provider": "mammouth",
     "model_id": "gemini-3-pro-image-preview",
-    "provider_model_id": "gemini-3-pro-image-preview",
-    "cost_per_image": "Variable (OpenRouter pricing)",
-    "context_length": 1000000,
-    "max_prompt_tokens": 800000,
-    "max_completion_tokens": 200000,
-    "modalities": {
-      "input": ["image", "text", "file"],
-      "output": ["image", "text"]
-    },
-    "features": [
-      "High-quality image generation",
-      "Advanced text rendering",
-      "Multimodal understanding",
-      "Long context support"
-    ],
-    "notes": "Google Gemini 3 Pro Image via Mammouth AI (EU). Chat completion model with image generation capabilities. Requires mammouth.key."
+    "notes": "Google Gemini 3 Pro Image via Mammouth AI (EU). OpenAI-compatible images/generations endpoint."
   }
 }
