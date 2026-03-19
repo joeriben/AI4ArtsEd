@@ -1630,7 +1630,6 @@ export const en = {
   persona: {
     title: 'Persona',
     inputPlaceholder: 'Say something...',
-    toggleTTS: 'Toggle voice output',
     fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.'
   },
   workshop: {

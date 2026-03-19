@@ -9,6 +9,18 @@
 
 ---
 
+## 2026-03-19: Persona — TTS/Speech Output Removed (Design Decision)
+
+**Decision:** TTS (text-to-speech) feature removed from Persona page. No speech output, no speaker icon.
+
+**Reasoning:** Browser-based Web Speech API quality is unacceptable. Local TTS models (XTTS v2, F5-TTS, Chatterbox, etc.) were evaluated but none cover all 9 platform languages (DE, EN, TR, KO, UK, FR, ES, HE, AR) — Ukrainian is unsupported across all open-source TTS. Adding a partial-language TTS would create an inconsistent experience where some users get speech and others don't, which is incompatible with the platform's multilingual commitment.
+
+**Affected files:**
+- `src/views/ai_persona.vue` — Removed TTS button, `speak()`, `ttsEnabled`, `stripMarkers()`, `speechSynthesis` calls, volume icon imports, CSS
+- `src/i18n/en.ts` — Removed `persona.toggleTTS` key
+
+---
+
 ## 2026-03-18: Dialogic AI Persona — Bot-Triggered Generation via Chat Markers
 
 **Decision:** New `/persona` page where the AI decides autonomously whether and what to generate. Generation is triggered by `[GENERATE: config_id | prompt]` markers in the bot's chat response, parsed by the frontend.
@@ -25,7 +37,7 @@
 - Chat endpoint returns plain text (no structured output mode)
 - Markers are human-readable in the chat history
 - Same pattern as existing `[PROMPT: ...]` suggestions — proven, consistent
-- Frontend can strip markers from TTS output cleanly
+- Frontend can strip markers from display cleanly
 
 **Floating MediaOutputBox pattern:**
 - `shallowRef<MediaBox[]>` avoids Vue's deep `UnwrapRef` unwrapping stream refs (each box holds a `useGenerationStream()` instance)

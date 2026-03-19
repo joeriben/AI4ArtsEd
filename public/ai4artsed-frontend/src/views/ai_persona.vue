@@ -44,14 +44,6 @@
         <img :src="trashyIcon" alt="" class="trashy-icon" />
         <span class="chat-title">{{ t('persona.title') }}</span>
         <div class="header-spacer"></div>
-        <button
-          class="tts-toggle"
-          :class="{ active: ttsEnabled }"
-          @click="ttsEnabled = !ttsEnabled"
-          :title="t('persona.toggleTTS')"
-        >
-          <img :src="ttsEnabled ? volumeOnIcon : volumeOffIcon" alt="" class="tts-icon" />
-        </button>
       </div>
 
       <div class="chat-messages" ref="messagesRef">
@@ -97,8 +89,6 @@ import { useDeviceId } from '@/composables/useDeviceId'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import trashyIcon from '@/assets/trashy-icon.png'
-import volumeOnIcon from '@/assets/icons/volume_up_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg'
-import volumeOffIcon from '@/assets/icons/volume_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -129,27 +119,6 @@ const userInput = ref('')
 const isLoading = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextMsgId = 0
-
-// ---------- TTS ----------
-
-const ttsEnabled = ref(false)
-
-function speak(text: string) {
-  if (!ttsEnabled.value || !('speechSynthesis' in window)) return
-  speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = userPreferences.language === 'de' ? 'de-DE' : 'en-US'
-  utterance.rate = 0.9
-  speechSynthesis.speak(utterance)
-}
-
-function stripMarkers(text: string): string {
-  return text
-    .replace(/\[GENERATE:\s*[^\]]+\]/g, '')
-    .replace(/\[PROMPT:\s*[^\]]+\]/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim()
-}
 
 // ---------- Floating media boxes ----------
 
@@ -331,7 +300,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mouseup', onMouseUp)
-  speechSynthesis.cancel()
 })
 
 // ---------- Chat logic ----------
@@ -434,10 +402,6 @@ async function callChat(message: string, history: Array<{ role: string; content:
 
 function handleBotResponse(reply: string) {
   addMessage('assistant', reply)
-
-  // Speak the text (without markers)
-  const spokenText = stripMarkers(reply)
-  if (spokenText) speak(spokenText)
 
   // Trigger generations
   const markers = extractGenerateMarkers(reply)
@@ -625,36 +589,6 @@ onMounted(() => {
 
 .header-spacer {
   flex: 1;
-}
-
-.tts-toggle {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 4px 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-}
-
-.tts-toggle.active {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: rgba(76, 175, 80, 0.4);
-}
-
-.tts-toggle:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.tts-icon {
-  width: 18px;
-  height: 18px;
-  opacity: 0.6;
-}
-
-.tts-toggle.active .tts-icon {
-  opacity: 0.9;
 }
 
 .chat-messages {
