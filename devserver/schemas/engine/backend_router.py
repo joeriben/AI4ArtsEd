@@ -1272,6 +1272,11 @@ class BackendRouter:
                             )
                     else:
                         error_text = await response.text()
+                        # Truncate HTML error pages (e.g. Cloudflare 504) to avoid log spam
+                        if '<html' in error_text.lower():
+                            error_text = f"[HTML error page truncated] Status {response.status}"
+                        elif len(error_text) > 500:
+                            error_text = error_text[:500] + '...'
                         logger.error(f"API error {response.status}: {error_text}")
                         return BackendResponse(success=False, content="", error=f"API error: {response.status}")
 
