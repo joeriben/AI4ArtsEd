@@ -1,0 +1,49 @@
+{
+  "name": "output_image_nano_banana",
+  "type": "api_output_chunk",
+  "backend_type": "mammouth",
+  "media_type": "image",
+  "description": "Nano Banana image generation via Mammouth AI (EU, DSGVO-compliant)",
+
+  "api_config": {
+    "provider": "mammouth",
+    "model": "nano-banana",
+    "endpoint": "https://api.mammouth.ai/v1/images/generations",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "request_body": {
+      "model": "nano-banana",
+      "prompt": "{{PROMPT}}",
+      "n": 1,
+      "size": "1024x1024"
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "field": "request_body.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Image generation prompt"
+    },
+    "size": {
+      "field": "request_body.size",
+      "default": "1024x1024",
+      "description": "Image dimensions"
+    }
+  },
+
+  "output_mapping": {
+    "type": "images_api_base64",
+    "format": "base64",
+    "extract_path": "data[0].b64_json",
+    "description": "Extract base64 image data from OpenAI-compatible Images API response"
+  },
+
+  "meta": {
+    "requires_gpu": false,
+    "api_provider": "mammouth",
+    "model_id": "nano-banana"
+  }
+}

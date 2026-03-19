@@ -1150,6 +1150,9 @@ class BackendRouter:
             elif provider == 'anthropic':
                 key_file = 'anthropic.key'
                 key_name = 'Anthropic'
+            elif provider == 'mammouth':
+                key_file = 'mammouth.key'
+                key_name = 'Mammouth'
             else:
                 key_file = 'openrouter.key'
                 key_name = 'OpenRouter'

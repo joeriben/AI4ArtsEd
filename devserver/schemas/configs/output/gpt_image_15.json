@@ -1,0 +1,65 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "GPT-Image-1.5",
+    "de": "GPT-Image-1.5"
+  },
+  "description": {
+    "en": "OpenAI's GPT-Image-1.5 model via Mammouth AI (EU server, DSGVO-compliant)",
+    "de": "OpenAIs GPT-Image-1.5 Modell über Mammouth AI (EU-Server, DSGVO-konform)"
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_gpt_image_15",
+    "QUALITY": "high",
+    "SIZE": "1024x1024"
+  },
+
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "gpt-image-1.5",
+    "backend": "mammouth",
+    "backend_type": "mammouth",
+    "requires_gpu": false,
+    "api_provider": "mammouth",
+    "version": "1.0",
+    "display_name": "GPT-Image-1.5",
+    "publisher": "OpenAI via Mammouth AI (EU)",
+    "architecture": "Autoregressive + Diffusion",
+    "params": "Undisclosed",
+    "license": "Commercial API (usage-based)",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": ["Undisclosed"],
+      "training_data_consent": "unknown",
+      "geographic_origin": "San Francisco, US (served via EU)"
+    }
+  },
+
+  "display": {
+    "color": "#10A37F",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 14
+  },
+
+  "tags": {
+    "en": ["image", "gpt", "cloud", "eu", "dsgvo", "high-quality"],
+    "de": ["bild", "gpt", "cloud", "eu", "dsgvo", "hohe-qualität"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

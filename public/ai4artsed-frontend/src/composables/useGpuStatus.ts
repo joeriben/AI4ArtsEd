@@ -125,7 +125,30 @@ export const PHYSICAL_MODELS: PhysicalModel[] = [
     cloud_region: null,
     preloadable: true,
   },
-  // --- Cloud ---
+  // --- Cloud (Mammouth AI — EU, DSGVO) ---
+  {
+    id: 'nano_banana',
+    name: 'Nano Banana',
+    media_type: 'image',
+    vram_gb: 0,
+    gen_time: '5\u201315 Sekunden',
+    local: false,
+    publisher: 'Mammouth AI',
+    cloud_region: 'EU',
+    preloadable: false,
+  },
+  {
+    id: 'gpt_image_15',
+    name: 'GPT-Image-1.5',
+    media_type: 'image',
+    vram_gb: 0,
+    gen_time: '10\u201330 Sekunden',
+    local: false,
+    publisher: 'OpenAI via Mammouth AI',
+    cloud_region: 'EU',
+    preloadable: false,
+  },
+  // --- Cloud (OpenRouter — Fallback) ---
   {
     id: 'gemini_3_pro',
     name: 'Gemini 3 Pro',
@@ -133,7 +156,7 @@ export const PHYSICAL_MODELS: PhysicalModel[] = [
     vram_gb: 0,
     gen_time: '5\u201315 Sekunden',
     local: false,
-    publisher: 'Google',
+    publisher: 'Google via OpenRouter',
     cloud_region: 'US',
     preloadable: false,
   },

@@ -1,0 +1,55 @@
+{
+  "name": "output_image_gpt_image_15",
+  "type": "api_output_chunk",
+  "backend_type": "mammouth",
+  "media_type": "image",
+  "description": "GPT-Image-1.5 via Mammouth AI (EU, DSGVO-compliant, OpenAI-compatible API)",
+
+  "api_config": {
+    "provider": "mammouth",
+    "model": "gpt-image-1.5",
+    "endpoint": "https://api.mammouth.ai/v1/images/generations",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "request_body": {
+      "model": "gpt-image-1.5",
+      "prompt": "{{PROMPT}}",
+      "n": 1,
+      "size": "1024x1024",
+      "quality": "high"
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "field": "request_body.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Image generation prompt"
+    },
+    "quality": {
+      "field": "request_body.quality",
+      "default": "high",
+      "description": "Image quality"
+    },
+    "size": {
+      "field": "request_body.size",
+      "default": "1024x1024",
+      "description": "Image dimensions"
+    }
+  },
+
+  "output_mapping": {
+    "type": "images_api_base64",
+    "format": "base64",
+    "extract_path": "data[0].b64_json",
+    "description": "Extract base64 image data from OpenAI-compatible Images API response"
+  },
+
+  "meta": {
+    "requires_gpu": false,
+    "api_provider": "mammouth",
+    "model_id": "gpt-image-1.5"
+  }
+}

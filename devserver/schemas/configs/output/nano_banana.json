@@ -1,0 +1,62 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Nano Banana",
+    "de": "Nano Banana"
+  },
+  "description": {
+    "en": "Fast image generation model via Mammouth AI (EU server, DSGVO-compliant)",
+    "de": "Schnelles Bildgenerierungsmodell über Mammouth AI (EU-Server, DSGVO-konform)"
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_nano_banana",
+    "SIZE": "1024x1024"
+  },
+
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "nano-banana",
+    "backend": "mammouth",
+    "backend_type": "mammouth",
+    "requires_gpu": false,
+    "api_provider": "mammouth",
+    "version": "1.0",
+    "display_name": "Nano Banana",
+    "publisher": "Mammouth AI (EU)",
+    "license": "Commercial API (usage-based)",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": ["Undisclosed"],
+      "training_data_consent": "unknown",
+      "geographic_origin": "EU"
+    }
+  },
+
+  "display": {
+    "color": "#FFD700",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 16
+  },
+
+  "tags": {
+    "en": ["image", "cloud", "eu", "dsgvo", "fast"],
+    "de": ["bild", "cloud", "eu", "dsgvo", "schnell"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 8,
+    "complexity": "beginner"
+  }
+}
