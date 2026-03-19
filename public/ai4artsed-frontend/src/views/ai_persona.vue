@@ -44,6 +44,14 @@
         <img :src="trashyIcon" alt="" class="trashy-icon" />
         <span class="chat-title">{{ t('persona.title') }}</span>
         <div class="header-spacer"></div>
+        <button
+          v-if="personaChat.hasConversation"
+          class="new-dialog-btn"
+          :title="t('persona.newDialog')"
+          @click="startNewDialog"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </button>
       </div>
 
       <div class="chat-messages" ref="messagesRef">
@@ -83,8 +91,10 @@
 import { ref, shallowRef, triggerRef, nextTick, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
+import { usePersonaChatStore } from '@/stores/personaChat'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
@@ -94,6 +104,7 @@ const { t } = useI18n()
 const router = useRouter()
 const userPreferences = useUserPreferencesStore()
 const favoritesStore = useFavoritesStore()
+const personaChat = usePersonaChatStore()
 const deviceId = useDeviceId()
 
 // ---------- Fullscreen ----------
@@ -102,23 +113,16 @@ const fullscreenImage = ref<string | null>(null)
 
 // ---------- Chat state ----------
 
-interface ChatMessage {
-  id: number
-  role: 'user' | 'assistant'
-  content: string
-}
-
 interface ContentPart {
   type: 'text' | 'prompt' | 'generate'
   text: string
   configId?: string
 }
 
-const messages = ref<ChatMessage[]>([])
+const { messages } = storeToRefs(personaChat)
 const userInput = ref('')
 const isLoading = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
-let nextMsgId = 0
 
 // ---------- Floating media boxes ----------
 
@@ -188,14 +192,24 @@ async function spawnGeneration(configId: string, prompt: string) {
       box.mediaType = result.media_output.media_type
       box.runId = result.run_id || null
       triggerRef(mediaBoxes)
+      syncBoxToStore(box)
     }
   } catch (e) {
     console.error('[PERSONA] Generation failed:', e)
   }
 }
 
+function syncBoxToStore(box: MediaBox) {
+  personaChat.saveMediaBox({
+    id: box.id, x: box.x, y: box.y,
+    outputUrl: box.outputUrl, mediaType: box.mediaType,
+    runId: box.runId, isFavorited: box.isFavorited,
+  })
+}
+
 function removeBox(id: string) {
   mediaBoxes.value = mediaBoxes.value.filter(b => b.id !== id)
+  personaChat.removeMediaBox(id)
 }
 
 async function toggleFavorite(id: string) {
@@ -211,6 +225,7 @@ async function toggleFavorite(id: string) {
   if (success) {
     box.isFavorited = !box.isFavorited
     triggerRef(mediaBoxes)
+    syncBoxToStore(box)
   }
 }
 
@@ -289,6 +304,10 @@ function onMouseMove(e: MouseEvent) {
 }
 
 function onMouseUp() {
+  if (dragState) {
+    const box = mediaBoxes.value.find(b => b.id === dragState!.boxId)
+    if (box?.outputUrl) syncBoxToStore(box)
+  }
   dragState = null
 }
 
@@ -377,7 +396,7 @@ function scrollToBottom() {
 }
 
 function addMessage(role: 'user' | 'assistant', content: string) {
-  messages.value.push({ id: nextMsgId++, role, content })
+  personaChat.addMessage(role, content)
   scrollToBottom()
 }
 
@@ -463,8 +482,31 @@ async function fetchGreeting() {
   }
 }
 
-onMounted(() => {
+function startNewDialog() {
+  personaChat.clearConversation()
+  mediaBoxes.value = []
   fetchGreeting()
+}
+
+function restoreMediaBoxes() {
+  const restored: MediaBox[] = personaChat.mediaBoxes
+    .filter(stored => stored.outputUrl)
+    .map(stored => ({
+      ...stored,
+      stream: useGenerationStream(),
+    }))
+  if (restored.length) {
+    mediaBoxes.value = restored
+  }
+}
+
+onMounted(() => {
+  restoreMediaBoxes()
+  if (personaChat.hasConversation) {
+    scrollToBottom()
+  } else {
+    fetchGreeting()
+  }
 })
 </script>
 
@@ -589,6 +631,26 @@ onMounted(() => {
 
 .header-spacer {
   flex: 1;
+}
+
+.new-dialog-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.new-dialog-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .chat-messages {

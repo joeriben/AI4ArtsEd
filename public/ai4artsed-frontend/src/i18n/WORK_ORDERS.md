@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-19-persona-new-dialog
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `persona.newDialog` (NEW): "New dialog"
+- **Context**: Button in persona chat header to start a fresh conversation. Keep short — used as button tooltip. Same resistant, machine-like tone as other persona strings.
+
 ### WO-2026-03-19-workshop-title-rename
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (MODIFIED):

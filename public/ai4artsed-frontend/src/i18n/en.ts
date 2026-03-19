@@ -1630,7 +1630,8 @@ export const en = {
   persona: {
     title: 'Persona',
     inputPlaceholder: 'Say something...',
-    fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.'
+    fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.',
+    newDialog: 'New dialog'
   },
   workshop: {
     title: 'Workshop Planning',
