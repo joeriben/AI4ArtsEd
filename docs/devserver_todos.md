@@ -201,6 +201,11 @@ Bestehende `/compare`-Seite:
 - ✅ MediaOutputBox statt Parallelcode (Session 266)
 - ✅ Persistenter Trashy-Chat mit Inquiry-Paedagogik (Session 266)
 
+### 2b. Persona: ModelCard skaliert nicht in kleinen MediaBoxen — BUG
+
+**Datum:** 2026-03-19
+Die Floating-MediaBoxen in der Persona-Seite haben die richtige Groesse (320px), Output-Bilder/Audio passen gut. Aber die ModelCard (Provenance-Karte) skaliert nicht auf diese Groesse herunter — Layout bricht, wird messy. ModelCard muss responsive auf kleine Container reagieren.
+
 ### 3. Compare-Variationen: LLM-Dekonstruktion — PLANNED
 
 **Datum:** 2026-03-18
@@ -209,6 +214,8 @@ Bestehende `/compare`-Seite:
 Weitere Compare-Modi:
 - **Sprachmodell-Vergleich**: Gleicher Prompt an verschiedene LLMs, mit Seed-Kontrolle (Transformers, nicht API) und Temperature-Kontrolle
 - **System-Prompt-Vergleich**: Auswechselbare Systemprompts zeigen wie stark Kontext das Verhalten steuert
+  - **Mammouth-Idee**: Mammouth leitet keine Sysprompts weiter → Sonnet 4.6 via Mammouth in 3 Varianten: a) Original-Sysprompt (direkte API), b) ohne Sysprompt (Mammouth-Default), c) eigener Sysprompt. Temperature steuerbar, aber kein Seed (Claude hat kein deterministic sampling).
+- **Temperature-Vergleich (3-Spalten-Chat)**: Gleiches LLM (z.B. Sonnet) bei Temperature 0 / 0.5 / 1 parallel. User schickt einen Prompt → 3 Antworten nebeneinander. Gespraechsverlauf wird pro Spalte weitergefuehrt (3 divergierende Konversationen). Macht Stochastizitaet und deren Einfluss auf Kreativitaet/Praezision direkt erfahrbar.
 - **Interception-Vergleich**: Gleicher User-Prompt + gleicher Kontext (Default: Planetarizer), aber verschiedene LLMs fuehren die Stage 2 Interception aus. Zeigt: Mistral Large produziert Kitsch, waehrend z.B. ein kleineres Modell (Mistral Nemo) oder ein hochwertigeres oft bessere/andere aesthetische Entscheidungen trifft. Kontext auswaehlbar (alle Interception-Configs).
 - **Bias-Probes**: Gezielte Prompts die systematische Verzerrungen in Modellen sichtbar machen (kulturelle Defaults, Gender-Bias, geographische Vorurteile). Insbesondere: Was sind fuer Modelle "Schoenheit", "Helden", "Alter"? → DAS war der urspruengliche Grund fuer Bildmodell-Vergleich. Auch fuer Textarbeit interessant.
 - **Visueller Kontext-Prompt**: Einfluss von Kontext auf Generierung

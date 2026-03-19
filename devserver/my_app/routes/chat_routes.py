@@ -884,6 +884,9 @@ def build_system_prompt(context: dict = None, language: str = None) -> str:
 
     if context is None:
         base = GENERAL_SYSTEM_PROMPT
+    elif context.get('temperature_compare_mode'):
+        base = f"You are a helpful assistant. Respond naturally to the user. Respond in {lang_name}."
+        return base
     elif context.get('persona_mode'):
         base = AI_PERSONA_SYSTEM_PROMPT
     elif context.get('workshop_planning'):
@@ -929,6 +932,9 @@ def chat():
         run_id = data.get('run_id')
         draft_context = data.get('draft_context')  # Current page state (transient, not saved)
         language = data.get('language')  # ISO code from frontend settings (e.g. 'de', 'en')
+        temperature = data.get('temperature')  # Optional override (default 0.7)
+        if temperature is not None:
+            temperature = max(0.0, min(2.0, float(temperature)))
 
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
@@ -986,7 +992,7 @@ def chat():
 
         result = call_chat_helper(
             messages=messages,
-            temperature=0.7,
+            temperature=temperature if temperature is not None else 0.7,
             max_tokens=2048
         )
         assistant_reply = result["content"]

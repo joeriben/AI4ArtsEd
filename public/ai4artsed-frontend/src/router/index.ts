@@ -126,9 +126,9 @@ const router = createRouter({
     },
     {
       path: '/compare',
-      name: 'comparative-generation',
-      // Session 265: Language comparison mode — same prompt in different languages
-      component: () => import('../views/comparative_generation.vue'),
+      name: 'compare-hub',
+      // Compare Hub: Language comparison, Temperature comparison, etc.
+      component: () => import('../views/compare_hub.vue'),
     },
     {
       path: '/workshop',

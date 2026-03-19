@@ -21,6 +21,23 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-19-compare-hub-temperature
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.tabs.language` (NEW): "Language Comparison"
+  - `compare.tabs.temperature` (NEW): "Temperature Comparison"
+  - `compare.temperature.inputPlaceholder` (NEW): "Type a message to send at all three temperatures..."
+  - `compare.temperature.sendAll` (NEW): "Send to All"
+  - `compare.temperature.sending` (NEW): "Sending..."
+  - `compare.temperature.cold` (NEW): "Deterministic"
+  - `compare.temperature.warm` (NEW): "Balanced"
+  - `compare.temperature.hot` (NEW): "Creative"
+  - `compare.temperature.newConversation` (NEW): "New conversation"
+  - `compare.temperature.noResponse` (NEW): "No response received"
+  - `compare.temperature.error` (NEW): "Connection error"
+  - `compare.temperature.subtitle` (NEW): "See how randomness changes what the AI says"
+- **Context**: Compare Hub with tab navigation (Language Comparison / Temperature Comparison). Temperature mode sends the same chat message at 3 different AI "temperatures" (0=deterministic, 0.5=balanced, 1.0=creative) and shows 3 parallel diverging conversations. Educational tool showing how randomness affects AI behavior. "Deterministic/Balanced/Creative" are the column labels for the 3 temperature levels.
+
 ### WO-2026-03-19-persona-new-dialog
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):

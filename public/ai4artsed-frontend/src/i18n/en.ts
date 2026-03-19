@@ -1461,6 +1461,22 @@ export const en = {
     }
   },
   compare: {
+    tabs: {
+      language: 'Language Comparison',
+      temperature: 'Temperature Comparison',
+    },
+    temperature: {
+      inputPlaceholder: 'Type a message to send at all three temperatures...',
+      sendAll: 'Send to All',
+      sending: 'Sending...',
+      cold: 'Deterministic',
+      warm: 'Balanced',
+      hot: 'Creative',
+      newConversation: 'New conversation',
+      noResponse: 'No response received',
+      error: 'Connection error',
+      subtitle: 'See how randomness changes what the AI says',
+    },
     promptLabel: 'Your Idea',
     promptPlaceholder: 'Enter a prompt — e.g. "A beautiful garden with flowers"',
     platformLanguages: 'Platform Languages',
