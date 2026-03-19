@@ -1,11 +1,17 @@
 {
-  "name": "qwen_2511_multi",
   "pipeline": "single_text_media_generation",
-  "display_name": "QWEN 2511 Multi-Image Fusion",
-  "description": "Combine up to 3 images with AI-guided fusion (multi-person, style transfer, compositing)",
-  "category": "image",
-  "media_type": "image",
-
+  "name": {
+    "en": "Qwen 2511 Multi-Image Fusion",
+    "de": "Qwen 2511 Multi-Bild-Fusion"
+  },
+  "description": {
+    "en": "Combine up to 3 images with AI-guided fusion (multi-person, style transfer, compositing)",
+    "de": "Kombiniere bis zu 3 Bilder mit KI-gesteuerter Fusion (Multi-Person, Stiltransfer, Compositing)"
+  },
+  "category": {
+    "en": "Image Editing",
+    "de": "Bildbearbeitung"
+  },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_qwen_2511_multi",
     "steps": 4,
@@ -19,7 +25,6 @@
     "top_p": 0.9,
     "max_tokens": 512
   },
-
   "parameter_ranges": {
     "steps": {
       "min": 4,
@@ -46,41 +51,12 @@
       "description": "Target image size (1.7 MP = ~1300x1300, optimal for QWEN)"
     }
   },
-
-  "capabilities": {
-    "img2img": true,
-    "multi_image": true,
-    "max_images": 3,
-    "text2img": false,
-    "inpainting": false,
-    "outpainting": false,
-    "controlnet": false
-  },
-
-  "requirements": {
-    "gpu_vram_mb": 12000,
-    "estimated_duration_seconds": "8-15",
-    "requires_models": [
-      "qwen_image_edit_2511_fp8mixed.safetensors",
-      "qwen_2.5_vl_7b_fp8_scaled.safetensors",
-      "qwen_image_vae.safetensors",
-      "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors"
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
     ]
   },
-
-  "ui_config": {
-    "icon": "🎨",
-    "color": "#9B59B6",
-    "badge": "Multi",
-    "recommended_for": [
-      "multi_person_fusion",
-      "style_transfer",
-      "object_compositing",
-      "reference_editing"
-    ],
-    "best_for": "Combine multiple images: merge portraits, transfer styles, composite objects, or use reference images for precise editing"
-  },
-
   "meta": {
     "stage": "output",
     "backend_type": "comfyui",
@@ -96,12 +72,48 @@
     "publisher": "Alibaba Qwen Team (Hangzhou, CN)",
     "architecture": "MMDiT (Multimodal Diffusion Transformer)",
     "params": "~20B",
-    "text_encoders": ["Qwen 2.5 VL 7B (multimodal)"],
+    "text_encoders": [
+      "Qwen 2.5 VL 7B (multimodal)"
+    ],
     "quantization": "FP8 (e4m3fn)",
     "license": "Apache 2.0",
     "fair_culture": "Training data undisclosed",
     "safety_by_design": "Platform 4-stage safety pipeline",
     "gpu_vram_mb": 12000,
     "recommended_resolution": "1328x1328"
+  },
+  "display": {
+    "icon": "🎨",
+    "color": "#9B59B6",
+    "category": "image_editing",
+    "difficulty": 3,
+    "order": 55
+  },
+  "tags": {
+    "en": [
+      "image",
+      "multi-image",
+      "fusion",
+      "qwen",
+      "style-transfer",
+      "compositing",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "Bild",
+      "Multi-Bild",
+      "Fusion",
+      "Qwen",
+      "Stiltransfer",
+      "Compositing",
+      "ComfyUI",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
   }
 }

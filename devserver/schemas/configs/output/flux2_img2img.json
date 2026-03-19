@@ -1,10 +1,17 @@
 {
-  "name": "flux2_img2img",
   "pipeline": "single_text_media_generation",
-  "display_name": "Flux2 Dev IMG2IMG (20-step Quality)",
-  "description": "High-quality image transformation with Flux2 Dev using ReferenceLatent conditioning (20 steps)",
-  "category": "image",
-  "media_type": "image",
+  "name": {
+    "en": "FLUX.2 [dev] img2img",
+    "de": "FLUX.2 [dev] img2img"
+  },
+  "description": {
+    "en": "High-quality image transformation with Flux2 Dev using ReferenceLatent conditioning (20 steps)",
+    "de": "Hochwertige Bildtransformation mit Flux2 Dev mittels ReferenceLatent-Konditionierung (20 Schritte)"
+  },
+  "category": {
+    "en": "Image Editing",
+    "de": "Bildbearbeitung"
+  },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_img2img",
     "steps": 20,
@@ -44,32 +51,11 @@
       "description": "Target image size (2.5 MP = ~1600x1600, optimal for Flux2)"
     }
   },
-  "capabilities": {
-    "img2img": true,
-    "text2img": false,
-    "inpainting": false,
-    "outpainting": false,
-    "controlnet": false
-  },
-  "requirements": {
-    "gpu_vram_mb": 18000,
-    "estimated_duration_seconds": "40-50",
-    "requires_models": [
-      "flux2_dev_fp8mixed.safetensors",
-      "mistral_3_small_flux2_fp8.safetensors",
-      "flux2-vae.safetensors"
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
     ]
-  },
-  "ui_config": {
-    "icon": "⚡",
-    "color": "#FF6B35",
-    "badge": "Quality",
-    "recommended_for": [
-      "high_quality_edits",
-      "creative_transformation",
-      "natural_language_editing"
-    ],
-    "best_for": "Complex image transformations with natural language instructions (style changes, scene modifications, creative edits)"
   },
   "meta": {
     "stage": "output",
@@ -94,5 +80,35 @@
     "safety_by_design": "NSFW filter + IWF CSAM filtering",
     "gpu_vram_mb": 55000,
     "recommended_resolution": "1024x1024"
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF6B35",
+    "category": "image_editing",
+    "difficulty": 2,
+    "order": 50
+  },
+  "tags": {
+    "en": [
+      "image",
+      "img2img",
+      "flux2",
+      "transformation",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "Bild",
+      "img2img",
+      "Flux2",
+      "Transformation",
+      "ComfyUI",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
   }
 }
