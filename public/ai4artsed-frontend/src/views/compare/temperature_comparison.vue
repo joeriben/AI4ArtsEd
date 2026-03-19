@@ -3,6 +3,12 @@
     <div class="temp-main">
       <!-- Shared input -->
       <div class="temp-input-area">
+        <div class="model-select-row">
+          <label class="model-label">{{ t('compare.temperature.modelLabel') }}</label>
+          <select v-model="selectedModel" class="model-select">
+            <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
+          </select>
+        </div>
         <div class="input-row">
           <input
             v-model="userInput"
@@ -130,8 +136,22 @@ function scrollAllColumns() {
 // ---------- Column state ----------
 
 const userInput = ref('')
+const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
+
+const chatModels = [
+  { id: '', label: 'Default (Settings)' },
+  // Local (Ollama)
+  { id: 'local/qwen3:32b', label: 'Qwen 3 32B (local)' },
+  { id: 'local/qwen3:4b', label: 'Qwen 3 4B (local, fast)' },
+  { id: 'local/deepseek-r1:32b', label: 'DeepSeek R1 32B (local)' },
+  { id: 'local/mistral-small:24b', label: 'Mistral Small 24B (local)' },
+  // Cloud (OpenRouter)
+  { id: 'openrouter/deepseek/deepseek-chat', label: 'DeepSeek V3 (cloud)' },
+  { id: 'openrouter/moonshotai/kimi-k2', label: 'Kimi K2 (cloud)' },
+  { id: 'openrouter/x-ai/grok-3-mini', label: 'Grok 3 Mini (cloud)' },
+]
 
 const canSend = computed(() => userInput.value.trim().length > 0 && !isSending.value)
 
@@ -164,6 +184,7 @@ async function callChatWithTemp(
       message,
       history,
       temperature,
+      ...(selectedModel.value ? { model: selectedModel.value } : {}),
       context: {
         temperature_compare_mode: true,
         language: userPreferences.language,
@@ -391,6 +412,41 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.model-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.model-select {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.model-select:focus {
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.model-select option {
+  background: #1a1a1a;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .input-row {

@@ -647,7 +647,7 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
         raise
 
 
-def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True):
     """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
     try:
         from my_app.services.llm_backend import get_llm_backend
@@ -656,6 +656,7 @@ def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens
             messages=messages,
             temperature=temperature,
             max_new_tokens=max_tokens,
+            enable_thinking=enable_thinking,
         )
 
         if result is None:
@@ -708,16 +709,17 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
         raise
 
 
-def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500) -> dict:
+def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500, enable_thinking: bool = True, model_override: str = None) -> dict:
     """
     Call the configured chat helper model based on provider prefix.
 
     Model is loaded from user_settings.json with fallback to CHAT_HELPER_MODEL from config.py.
     This allows runtime configuration via Settings UI.
+    model_override: if provided, use this model string instead of the configured default.
 
     Returns dict: {"content": str, "thinking": str|None}
     """
-    model_string = get_user_setting("CHAT_HELPER_MODEL", default=CHAT_HELPER_MODEL)
+    model_string = model_override or get_user_setting("CHAT_HELPER_MODEL", default=CHAT_HELPER_MODEL)
     logger.info(f"[CHAT] Using model: {model_string}")
 
     if model_string.startswith("bedrock/"):
@@ -759,7 +761,7 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
     elif model_string.startswith("local/"):
         model = model_string[len("local/"):]
         logger.info(f"[CHAT] Calling Ollama with model: {model}")
-        result = _call_ollama_chat(messages, model, temperature, max_tokens)
+        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking)
 
     else:
         raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, mammouth/, anthropic/, openai/, openrouter/")
@@ -933,6 +935,7 @@ def chat():
         draft_context = data.get('draft_context')  # Current page state (transient, not saved)
         language = data.get('language')  # ISO code from frontend settings (e.g. 'de', 'en')
         temperature = data.get('temperature')  # Optional override (default 0.7)
+        model_override = data.get('model') or None  # Optional: override CHAT_HELPER_MODEL for this request
         if temperature is not None:
             temperature = max(0.0, min(2.0, float(temperature)))
 
@@ -990,10 +993,17 @@ def chat():
         # Session 133 DEBUG: Log user message to see if draft context is prepended
         logger.info(f"[CHAT-DEBUG] User message preview: {user_message[:200]}..." if len(user_message) > 200 else f"[CHAT-DEBUG] User message: {user_message}")
 
+        # Temperature comparison mode: disable thinking so model is actually
+        # sensitive to temperature differences (thinking models produce near-identical
+        # outputs at different temperatures because the thinking phase constrains output)
+        is_temp_compare = context and context.get('temperature_compare_mode')
+
         result = call_chat_helper(
             messages=messages,
             temperature=temperature if temperature is not None else 0.7,
-            max_tokens=2048
+            max_tokens=2048,
+            enable_thinking=not is_temp_compare,
+            model_override=model_override
         )
         assistant_reply = result["content"]
         assistant_thinking = result.get("thinking")

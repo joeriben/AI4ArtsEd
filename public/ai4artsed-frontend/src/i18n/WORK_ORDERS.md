@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-19-temperature-model-label
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.temperature.modelLabel` (NEW): "Model"
+- **Context**: Label for model selector dropdown in Temperature Comparison page. Same semantics as `compare.modelLabel` (already exists for Language Comparison). Short label.
+
 ### WO-2026-03-19-compare-hub-temperature
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):

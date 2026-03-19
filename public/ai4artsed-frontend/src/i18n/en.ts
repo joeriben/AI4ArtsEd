@@ -1476,6 +1476,7 @@ export const en = {
       noResponse: 'No response received',
       error: 'Connection error',
       subtitle: 'See how randomness changes what the AI says',
+      modelLabel: 'Model',
     },
     promptLabel: 'Your Idea',
     promptPlaceholder: 'Enter a prompt — e.g. "A beautiful garden with flowers"',

@@ -263,7 +263,7 @@ async function handlePresetSelected(payload: { configId: string; context: string
   const baseUrl = isDev ? 'http://localhost:17802' : ''
 
   try {
-    const res = await fetch(`${baseUrl}/api/schema/pipeline/interception`, {
+    const res = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -274,10 +274,12 @@ async function handlePresetSelected(payload: { configId: string; context: string
     })
     if (res.ok) {
       const data = await res.json()
-      if (data.status === 'success' && data.final_output) {
-        userPrompt.value = typeof data.final_output === 'string'
-          ? data.final_output
-          : JSON.stringify(data.final_output)
+      // Prefer pure interception_result (no optimization) over stage2_result
+      const result = data.interception_result || data.stage2_result
+      if (data.success && result) {
+        userPrompt.value = typeof result === 'string'
+          ? result
+          : JSON.stringify(result)
         console.log(`[COMPARE] Prompt enriched via ${payload.configName} (${payload.configId})`)
       }
     }
