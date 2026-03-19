@@ -1531,5 +1531,15 @@ export const de = {
       statsHealth: 'Umwelt',
       statsSludge: 'Schlamm entfernt'
     }
+  },
+  trashy: {
+    placeholder: 'Wie kann ich Euch weiterhelfen?',
+    greeting: 'Hallo! Ich bin euer KI-Helfer. Stellt mir Fragen über AI4ArtsEd oder lasst euch bei eurem Prompt beraten.',
+    noResponse: 'Keine Antwort erhalten.',
+    thinking: 'Denkt nach...',
+    sendError: 'Entschuldigung, es gab einen Fehler beim Senden der Nachricht. Bitte versucht es erneut.',
+    sendTooltip: 'Nachricht senden (Enter)',
+    openTooltip: 'KI-Helfer öffnen (Träshy) — Ziehen zum Verschieben, Doppelklick zum Zurücksetzen',
+    closeTooltip: 'Schließen',
   }
 }
