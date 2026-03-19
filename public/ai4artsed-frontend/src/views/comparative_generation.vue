@@ -146,7 +146,7 @@ const fullscreenImage = ref<string | null>(null)
 const availableModels = [
   { id: 'sd35_large', label: 'SD 3.5 Large' },
   { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo (fast)' },
-  { id: 'flux2_diffusers', label: 'Flux 2' },
+  { id: 'flux2', label: 'Flux 2' },
   { id: 'gpt_image_1', label: 'GPT-Image-1' },
 ]
 
