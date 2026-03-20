@@ -3,6 +3,20 @@
     <div class="compare-main">
       <!-- Input Section -->
       <div class="input-section">
+        <!-- Preset toggle -->
+        <div class="preset-toggle">
+          <button
+            v-for="(preset, key) in PRESETS"
+            :key="key"
+            class="preset-btn"
+            :class="{ active: activePreset === key }"
+            :disabled="isGenerating"
+            @click="activePreset = key as PresetKey"
+          >
+            {{ preset.label }}
+          </button>
+        </div>
+
         <MediaInputBox
           icon="💡"
           :label="t('compare.promptLabel')"
@@ -92,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
@@ -110,14 +124,31 @@ const favoritesStore = useFavoritesStore()
 const uiModeStore = useUiModeStore()
 const deviceId = useDeviceId()
 
-// --- Fixed models ---
-const MODELS = [
-  { id: 'sd35_large', label: 'SD 3.5 Large' },
-  { id: 'flux2', label: 'Flux 2' },
-  { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro' },
-]
+// --- Model presets ---
+const PRESETS = {
+  current: {
+    label: 'Current Top Models',
+    models: [
+      { id: 'sd35_large', label: 'SD 3.5 Large' },
+      { id: 'flux2', label: 'Flux 2' },
+      { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro' },
+    ],
+  },
+  history: {
+    label: 'SD History',
+    models: [
+      { id: 'sd15', label: 'SD 1.5 (2022)' },
+      { id: 'sdxl', label: 'SDXL (2023)' },
+      { id: 'sd35_large', label: 'SD 3.5 Large (2024)' },
+    ],
+  },
+} as const
+
+type PresetKey = keyof typeof PRESETS
 
 // --- State ---
+const activePreset = ref<PresetKey>('current')
+const MODELS = computed(() => PRESETS[activePreset.value].models)
 const userPrompt = ref('')
 const isGenerating = ref(false)
 const currentSeed = ref<number | null>(null)
@@ -356,6 +387,45 @@ async function startComparison() {
   position: sticky;
   top: 80px;
   max-height: calc(100vh - 120px);
+}
+
+/* Preset toggle */
+.preset-toggle {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 0.75rem;
+}
+
+.preset-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.preset-btn:hover:not(.active):not(:disabled) {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preset-btn.active {
+  background: rgba(76, 175, 80, 0.2);
+  color: rgba(76, 175, 80, 0.9);
+}
+
+.preset-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Input Section */
