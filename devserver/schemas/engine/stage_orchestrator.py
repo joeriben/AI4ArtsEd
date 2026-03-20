@@ -193,6 +193,13 @@ def fast_dsgvo_check(text: str) -> Tuple[bool, List[str], bool]:
     return (len(entity_list) > 0, entity_list, True)
 
 
+# Short-lived cache for DSGVO LLM-Verify results.
+# Prevents redundant Ollama calls when multiple concurrent pipeline runs
+# trigger NER on the same entity set (e.g. workshop burst generation).
+_dsgvo_verify_cache: Dict[tuple, tuple] = {}  # (sorted entities) → (result, timestamp)
+_DSGVO_VERIFY_CACHE_TTL = 60  # seconds
+
+
 def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
     """
     LLM verification for SpaCy NER PER-entity hits.
@@ -220,6 +227,15 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
     # Extract just the name parts from "Name: ..." format
     names = [e.replace("Name: ", "") for e in ner_entities]
     names_str = ", ".join(names)
+
+    # Check short-lived cache (deduplicates burst workshop traffic)
+    cache_key = tuple(sorted(names))
+    now = _time.time()
+    if cache_key in _dsgvo_verify_cache:
+        cached_result, cached_ts = _dsgvo_verify_cache[cache_key]
+        if now - cached_ts < _DSGVO_VERIFY_CACHE_TTL:
+            logger.info(f"[DSGVO-LLM-VERIFY] Cache hit for {names_str} → {'UNSAFE' if cached_result else 'SAFE'}")
+            return cached_result
 
     # Resolve local Ollama model for DSGVO NER verification.
     # DSGVO: personal names must NEVER leave the local system — Ollama only.
@@ -288,6 +304,8 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
             f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM={result!r} → "
             f"{'UNSAFE — real person identified' if is_real_name else 'SAFE'} ({duration_ms:.0f}ms)"
         )
+        # Cache result for burst deduplication (SAFE and UNSAFE both cached)
+        _dsgvo_verify_cache[cache_key] = (is_real_name, _time.time())
         return is_real_name
 
     except Exception as e:
