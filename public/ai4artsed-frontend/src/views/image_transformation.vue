@@ -235,7 +235,7 @@ const hoveredConfigId = ref<string | null>(null)  // For hover cards
 // Estimated generation duration from selected config
 const estimatedGenerationSeconds = computed(() => {
   if (!selectedConfig.value || !selectedCategory.value) return 30
-  const configs = configsByCategory[selectedCategory.value] || []
+  const configs = configsByCategory.value[selectedCategory.value] || []
   const config = configs.find(c => c.id === selectedConfig.value)
   return parseInt(config?.duration || '30') || 30
 })
@@ -345,12 +345,12 @@ interface Category {
   disabled?: boolean
 }
 
-const availableCategories: Category[] = [
-  { id: 'image', label: 'Bild', emoji: '🖼️', color: '#4CAF50' },
-  { id: 'video', label: 'Video', emoji: '🎬', color: '#9C27B0' },
-  { id: '3d', label: '3D', emoji: '🧊', color: '#00BCD4' },
-  { id: 'sound', label: 'Sound', emoji: '🔊', color: '#FF9800', disabled: true }
-]
+const availableCategories = computed<Category[]>(() => [
+  { id: 'image', label: t('imageTransform.categories.image'), emoji: '🖼️', color: '#4CAF50' },
+  { id: 'video', label: t('imageTransform.categories.video'), emoji: '🎬', color: '#9C27B0' },
+  { id: '3d', label: t('imageTransform.categories.threeD'), emoji: '🧊', color: '#00BCD4' },
+  { id: 'sound', label: t('imageTransform.categories.sound'), emoji: '🔊', color: '#FF9800', disabled: true }
+])
 
 // Available IMG2IMG Models (copied structure from text_transformation.vue)
 interface ModelConfig {
@@ -366,13 +366,13 @@ interface ModelConfig {
   lightBg?: boolean
 }
 
-const configsByCategory: Record<string, ModelConfig[]> = {
+const configsByCategory = computed<Record<string, ModelConfig[]>>(() => ({
   image: [
     {
       id: 'qwen_img2img',
       label: 'Qwen',
       emoji: '🌸',
-      name: 'QWEN Image Edit',
+      name: t('imageTransform.configs.qwenImg2img.name'),
       quality: 3,
       speed: 5,
       duration: '23',
@@ -386,7 +386,7 @@ const configsByCategory: Record<string, ModelConfig[]> = {
       id: 'wan22_i2v_video',
       label: 'WAN 2.2',
       emoji: '🎬',
-      name: 'WAN 2.2 Image-to-Video (14B)',
+      name: t('imageTransform.configs.wan22I2v.name'),
       quality: 4,
       speed: 3,
       duration: '35',
@@ -398,9 +398,9 @@ const configsByCategory: Record<string, ModelConfig[]> = {
   '3d': [
     {
       id: 'hunyuan3d_text_to_3d',
-      label: 'Hunyuan\n3D',
+      label: t('imageTransform.configs.hunyuan3d.label'),
       emoji: '🧊',
-      name: 'Hunyuan3D-2 Image-to-3D',
+      name: t('imageTransform.configs.hunyuan3d.name'),
       quality: 4,
       speed: 2,
       duration: '60',
@@ -408,7 +408,7 @@ const configsByCategory: Record<string, ModelConfig[]> = {
     }
   ],
   sound: []   // Future
-}
+}))
 
 // ============================================================================
 // COMPUTED
@@ -417,7 +417,7 @@ const configsByCategory: Record<string, ModelConfig[]> = {
 const configsForCategory = computed(() => {
   if (!selectedCategory.value) return []
 
-  const categoryConfigs = configsByCategory[selectedCategory.value] || []
+  const categoryConfigs = configsByCategory.value[selectedCategory.value] || []
 
   // Filter out unavailable configs (Session 91+)
   if (Object.keys(modelAvailability.value).length > 0) {

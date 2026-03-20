@@ -21,6 +21,21 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-20-i2x-3d-category-labels
+- **Session**: 265
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `imageTransform.selectModel` (NEW): "Select a model"
+  - `imageTransform.categories.image` (NEW): "Image"
+  - `imageTransform.categories.video` (NEW): "Video"
+  - `imageTransform.categories.threeD` (NEW): "3D"
+  - `imageTransform.categories.sound` (NEW): "Sound"
+  - `imageTransform.configs.qwenImg2img.name` (NEW): "QWEN Image Edit"
+  - `imageTransform.configs.wan22I2v.name` (NEW): "WAN 2.2 Image-to-Video (14B)"
+  - `imageTransform.configs.hunyuan3d.label` (NEW): "Hunyuan\n3D"
+  - `imageTransform.configs.hunyuan3d.name` (NEW): "Hunyuan3D-2 Image-to-3D"
+- **Context**: Category labels and model config names for the image transformation (i2x) page. Categories are media types (Image, Video, 3D, Sound). Config names are AI model display names — keep brand names untranslated (Qwen, WAN, Hunyuan3D). The `\n` in hunyuan3d.label is a line break for UI layout, preserve it.
+
 ### WO-2026-03-20-workshop-preload-unload
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):

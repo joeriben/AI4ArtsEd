@@ -698,7 +698,26 @@ export const en = {
     contextLabel: 'Describe what you want to change in the image',
     contextPlaceholder: 'e.g. Transform it into an oil painting... Make it more colorful... Add a sunset...',
     uploadMode: 'Upload',
-    sketchMode: 'Sketch'
+    sketchMode: 'Sketch',
+    selectModel: 'Select a model',
+    categories: {
+      image: 'Image',
+      video: 'Video',
+      threeD: '3D',
+      sound: 'Sound'
+    },
+    configs: {
+      qwenImg2img: {
+        name: 'QWEN Image Edit'
+      },
+      wan22I2v: {
+        name: 'WAN 2.2 Image-to-Video (14B)'
+      },
+      hunyuan3d: {
+        label: 'Hunyuan\n3D',
+        name: 'Hunyuan3D-2 Image-to-3D'
+      }
+    }
   },
   textTransform: {
     inputLabel: 'Your Idea = WHAT?',
