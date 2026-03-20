@@ -1796,10 +1796,29 @@ def get_backend_status():
 
 
 # --- Workshop Model Preloading ---
-# Maps physical model IDs to GPU service load endpoints.
-# ComfyUI models load on first generate (no preload API).
+# Maps physical model IDs to load mechanisms.
+# type: 'gpu_service' → POST to GPU service load endpoint
+# type: 'comfyui'     → fake-run: build minimal workflow from chunk, submit to ComfyUI
+
+# Human-readable names for Trashy chat
+_MODEL_NAMES = {
+    'sd35_large': 'Stable Diffusion 3.5 Large',
+    'flux2': 'FLUX.2',
+    'wan22_t2v': 'Wan 2.2 Text→Video',
+    'wan22_i2v': 'Wan 2.2 Image→Video',
+    'ltx_video': 'LTX Video',
+    'acestep': 'ACE-Step',
+    'qwen_t2i': 'Qwen Image',
+    'qwen_i2i': 'Qwen Image Edit',
+    'qwen_multi': 'Qwen Multi-Image',
+    'heartmula': 'HeartMuLa',
+    'stable_audio': 'Stable Audio',
+}
+
 _WORKSHOP_LOAD_MAP = {
+    # GPU Service (existing load endpoints)
     'sd35_large': {
+        'type': 'gpu_service',
         'path': '/api/diffusers/load',
         'body': {
             'model_id': 'stabilityai/stable-diffusion-3.5-large',
@@ -1807,55 +1826,387 @@ _WORKSHOP_LOAD_MAP = {
         },
     },
     'heartmula': {
+        'type': 'gpu_service',
         'path': '/api/heartmula/load',
         'body': {},
     },
     'stable_audio': {
+        'type': 'gpu_service',
         'path': '/api/stable_audio/load',
         'body': {},
     },
-    # ComfyUI models: no preload — they load on first workflow execution
-    # flux2, wan22_video, ltx_video, acestep are managed by ComfyUI
+    # ComfyUI fake-runs (load models via tiny generation)
+    'flux2':      {'type': 'comfyui', 'chunk': 'output_image_flux2'},
+    'wan22_t2v':  {'type': 'comfyui', 'chunk': 'output_video_wan22_t2v_fast'},
+    'wan22_i2v':  {'type': 'comfyui', 'chunk': 'output_video_wan22_i2v'},
+    'ltx_video':  {'type': 'comfyui', 'chunk': 'output_video_ltx'},
+    'acestep':    {'type': 'comfyui', 'chunk': 'output_audio_acenet'},
+    'qwen_t2i':   {'type': 'comfyui', 'chunk': 'output_image_qwen'},
+    'qwen_i2i':   {'type': 'comfyui', 'chunk': 'output_image_qwen_img2img'},
+    'qwen_multi': {'type': 'comfyui', 'chunk': 'output_image_qwen_2511_multi'},
 }
+
+# Unload routing
+_WORKSHOP_UNLOAD_MAP = {
+    # GPU Service models — individual unload endpoints
+    'sd35_large':   {'type': 'gpu_service', 'path': '/api/diffusers/unload', 'body': {'model_id': 'stabilityai/stable-diffusion-3.5-large'}},
+    'heartmula':    {'type': 'gpu_service', 'path': '/api/heartmula/unload'},
+    'stable_audio': {'type': 'gpu_service', 'path': '/api/stable_audio/unload'},
+    # ComfyUI models — only global /free (limitation)
+    'flux2':        {'type': 'comfyui'},
+    'wan22_t2v':    {'type': 'comfyui'},
+    'wan22_i2v':    {'type': 'comfyui'},
+    'ltx_video':    {'type': 'comfyui'},
+    'acestep':      {'type': 'comfyui'},
+    'qwen_t2i':     {'type': 'comfyui'},
+    'qwen_i2i':     {'type': 'comfyui'},
+    'qwen_multi':   {'type': 'comfyui'},
+}
+
+# Chunks directory
+_CHUNKS_DIR = Path(__file__).parent.parent.parent / "schemas" / "chunks"
+
+# 1x1 white PNG (base64) for LoadImage dummy — uploaded to ComfyUI on first use
+_DUMMY_IMAGE_UPLOADED = False
+_DUMMY_IMAGE_NAME = "preload_dummy.png"
+
+
+def _ensure_dummy_image_uploaded():
+    """Upload a 1x1 dummy PNG to ComfyUI input/ folder (once per session)."""
+    global _DUMMY_IMAGE_UPLOADED
+    if _DUMMY_IMAGE_UPLOADED:
+        return True
+    try:
+        import base64
+        # 1x1 white PNG
+        png_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        png_data = base64.b64decode(png_b64)
+        comfyui_url = f"http://127.0.0.1:{config.COMFYUI_PORT}"
+        resp = requests.post(
+            f"{comfyui_url}/upload/image",
+            files={"image": (_DUMMY_IMAGE_NAME, png_data, "image/png")},
+            data={"overwrite": "true"},
+            timeout=10,
+        )
+        _DUMMY_IMAGE_UPLOADED = resp.ok
+        return resp.ok
+    except Exception as e:
+        logger.warning(f"[WORKSHOP] Failed to upload dummy image: {e}")
+        return False
+
+
+def _build_comfyui_preload_workflow(chunk_name: str) -> Optional[dict]:
+    """
+    Load chunk JSON and build a minimal-cost workflow for model preloading.
+
+    Deep-copies the workflow, then applies overrides to minimize generation cost:
+    - Tiny resolution (128x128), 1 step, short prompts
+    - LoadImage nodes get a 1x1 dummy PNG
+    - Full graph stays intact (ComfyUI requires output nodes)
+    """
+    import copy
+
+    chunk_path = _CHUNKS_DIR / f"{chunk_name}.json"
+    if not chunk_path.exists():
+        logger.error(f"[WORKSHOP] Chunk not found: {chunk_path}")
+        return None
+
+    try:
+        with open(chunk_path) as f:
+            chunk = json.load(f)
+    except Exception as e:
+        logger.error(f"[WORKSHOP] Failed to load chunk {chunk_name}: {e}")
+        return None
+
+    workflow = copy.deepcopy(chunk.get("workflow", {}))
+    if not workflow:
+        return None
+
+    # Ensure dummy image is available for LoadImage nodes
+    _ensure_dummy_image_uploaded()
+
+    for _node_id, node in workflow.items():
+        ct = node.get("class_type", "")
+        inputs = node.get("inputs", {})
+
+        if ct == "EmptyLatentImage":
+            inputs["width"] = 128
+            inputs["height"] = 128
+            inputs["batch_size"] = 1
+
+        elif ct == "EmptySD3LatentImage":
+            inputs["width"] = 128
+            inputs["height"] = 128
+            inputs["batch_size"] = 1
+
+        elif ct in ("Wan22ImageToVideoLatent", "WanImageToVideo"):
+            if "width" in inputs:
+                inputs["width"] = 128
+            if "height" in inputs:
+                inputs["height"] = 128
+            if "length" in inputs:
+                inputs["length"] = 1
+
+        elif ct == "EmptyLTXVLatentVideo":
+            inputs["width"] = 128
+            inputs["height"] = 128
+            inputs["length"] = 1
+
+        elif ct == "EmptyAceStepLatentAudio":
+            inputs["seconds"] = 1
+
+        elif ct == "KSampler":
+            inputs["steps"] = 1
+
+        elif ct == "KSamplerAdvanced":
+            inputs["steps"] = 1
+            inputs["end_at_step"] = 1
+
+        elif ct == "LTXVScheduler":
+            inputs["steps"] = 1
+
+        elif ct == "SamplerCustom":
+            # SamplerCustom doesn't have 'steps' directly; handled by LTXVScheduler
+            pass
+
+        elif ct == "CLIPTextEncode":
+            # Only override if text is a plain string (not a node reference)
+            if isinstance(inputs.get("text"), str):
+                inputs["text"] = "preload"
+
+        elif ct == "TextEncodeAceStepAudio":
+            inputs["tags"] = "ambient"
+            inputs["lyrics"] = "[instrumental]"
+
+        elif ct in ("TextEncodeQwenImageEdit", "TextEncodeQwenImageEditPlus"):
+            if isinstance(inputs.get("text"), str):
+                inputs["text"] = "preload"
+
+        elif ct == "PrimitiveStringMultiline":
+            inputs["value"] = "preload"
+
+        elif ct == "PrimitiveString":
+            # Only override if value is a plain string
+            if isinstance(inputs.get("value"), str):
+                inputs["value"] = "preload"
+
+        elif ct == "LoadImage":
+            inputs["image"] = _DUMMY_IMAGE_NAME
+
+        elif ct == "ImageScaleToTotalPixels":
+            inputs["megapixels"] = 0.01  # tiny
+
+    return workflow
+
+
+def _generate_sse_event(event_type: str, data: dict) -> str:
+    """Generate SSE formatted event."""
+    return f"event: {event_type}\ndata: {json.dumps(data)}\n\n"
 
 
 @settings_bp.route('/workshop/preload', methods=['POST'])
 def workshop_preload():
     """
-    Preload selected models into GPU memory for workshop sessions.
+    Preload selected models into GPU memory via SSE streaming.
 
-    Body: { "models": ["sd35_large", "heartmula", ...] }
-    Returns per-model results: { "results": { "sd35_large": { "success": true }, ... } }
+    Body: { "models": ["sd35_large", "heartmula", "flux2", ...] }
+    Returns: SSE stream with events: model_start, model_complete, model_error, done
     """
+    from flask import Response
+    from my_app.services.comfyui_service import ComfyUIService
+
     data = request.get_json(silent=True) or {}
     model_ids = data.get('models', [])
     if not model_ids:
         return jsonify({"error": "models list required"}), 400
 
-    results = {}
-    for mid in model_ids:
-        load_info = _WORKSHOP_LOAD_MAP.get(mid)
-        if load_info is None:
-            # ComfyUI or cloud model — skip, note it
-            results[mid] = {"success": True, "skipped": True, "reason": "loads on first use"}
-            continue
+    def generate():
+        comfyui = ComfyUIService()
 
-        try:
+        for mid in model_ids:
+            load_info = _WORKSHOP_LOAD_MAP.get(mid)
+            name = _MODEL_NAMES.get(mid, mid)
+
+            if load_info is None:
+                # Cloud model — skip
+                yield _generate_sse_event('model_complete', {
+                    'model_id': mid, 'name': name, 'skipped': True,
+                })
+                continue
+
+            yield _generate_sse_event('model_start', {'model_id': mid, 'name': name})
+
+            load_type = load_info.get('type', 'gpu_service')
+
+            if load_type == 'gpu_service':
+                try:
+                    resp = requests.post(
+                        f"{config.GPU_SERVICE_URL}{load_info['path']}",
+                        json=load_info.get('body', {}),
+                        timeout=180,
+                    )
+                    if resp.ok:
+                        yield _generate_sse_event('model_complete', {
+                            'model_id': mid, 'name': name,
+                        })
+                    else:
+                        yield _generate_sse_event('model_error', {
+                            'model_id': mid, 'name': name,
+                            'error': f"HTTP {resp.status_code}",
+                        })
+                except requests.Timeout:
+                    yield _generate_sse_event('model_error', {
+                        'model_id': mid, 'name': name, 'error': 'timeout (180s)',
+                    })
+                except Exception as e:
+                    yield _generate_sse_event('model_error', {
+                        'model_id': mid, 'name': name, 'error': str(e),
+                    })
+
+            elif load_type == 'comfyui':
+                chunk_name = load_info.get('chunk', '')
+                workflow = _build_comfyui_preload_workflow(chunk_name)
+                if not workflow:
+                    yield _generate_sse_event('model_error', {
+                        'model_id': mid, 'name': name,
+                        'error': f'chunk {chunk_name} not found',
+                    })
+                    continue
+
+                prompt_id = comfyui.submit_workflow(workflow)
+                if not prompt_id:
+                    yield _generate_sse_event('model_error', {
+                        'model_id': mid, 'name': name,
+                        'error': 'ComfyUI rejected workflow',
+                    })
+                    continue
+
+                # Poll history until complete (2s interval, 180s timeout)
+                poll_start = time.time()
+                success = False
+                while time.time() - poll_start < 180:
+                    time.sleep(2)
+                    history = comfyui.get_history(prompt_id)
+                    if history and prompt_id in history:
+                        entry = history[prompt_id]
+                        status_info = entry.get("status", {})
+                        if status_info.get("completed", False) or status_info.get("status_str") == "success":
+                            success = True
+                            break
+                        if status_info.get("status_str") == "error":
+                            yield _generate_sse_event('model_error', {
+                                'model_id': mid, 'name': name,
+                                'error': 'ComfyUI execution error',
+                            })
+                            break
+
+                if success:
+                    yield _generate_sse_event('model_complete', {
+                        'model_id': mid, 'name': name,
+                    })
+                elif time.time() - poll_start >= 180:
+                    yield _generate_sse_event('model_error', {
+                        'model_id': mid, 'name': name,
+                        'error': 'ComfyUI timeout (180s)',
+                    })
+
+        yield _generate_sse_event('done', {'total': len(model_ids)})
+
+    response = Response(generate(), mimetype='text/event-stream')
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['X-Accel-Buffering'] = 'no'
+    return response
+
+
+@settings_bp.route('/workshop/unload', methods=['POST'])
+def workshop_unload():
+    """
+    Unload a specific model from GPU memory.
+
+    Body: { "model_name": "...", "backend": "...", "model": "..." }
+    Routes to GPU service unload or ComfyUI /free based on backend field.
+    """
+    data = request.get_json(silent=True) or {}
+    backend = data.get('backend', '').lower()
+    model_name = data.get('model_name', '')
+
+    try:
+        if 'comfyui' in backend:
+            # ComfyUI: interrupt + free all (no per-model unload)
+            comfyui_url = f"http://127.0.0.1:{config.COMFYUI_PORT}"
+            requests.post(f"{comfyui_url}/interrupt", timeout=5)
             resp = requests.post(
-                f"{config.GPU_SERVICE_URL}{load_info['path']}",
-                json=load_info['body'],
-                timeout=180,
+                f"{comfyui_url}/free",
+                json={"unload_models": True, "free_memory": True},
+                timeout=10,
             )
-            if resp.ok:
-                results[mid] = {"success": resp.json().get("success", True)}
-            else:
-                results[mid] = {"success": False, "error": f"HTTP {resp.status_code}"}
-        except requests.Timeout:
-            results[mid] = {"success": False, "error": "timeout (180s)"}
-        except Exception as e:
-            results[mid] = {"success": False, "error": str(e)}
+            success = resp.ok
+        else:
+            # GPU service: try to match to a known unload endpoint
+            matched = False
+            for mid, info in _WORKSHOP_UNLOAD_MAP.items():
+                if info.get('type') != 'gpu_service':
+                    continue
+                name = _MODEL_NAMES.get(mid, mid)
+                # Match by name similarity
+                if model_name and (name.lower() in model_name.lower() or model_name.lower() in name.lower()):
+                    resp = requests.post(
+                        f"{config.GPU_SERVICE_URL}{info['path']}",
+                        json=info.get('body', {}),
+                        timeout=30,
+                    )
+                    success = resp.ok
+                    matched = True
+                    break
 
-    return jsonify({"results": results})
+            if not matched:
+                # Fallback: try diffusers unload with the model field
+                model_field = data.get('model', '')
+                resp = requests.post(
+                    f"{config.GPU_SERVICE_URL}/api/diffusers/unload",
+                    json={"model_id": model_field} if model_field else {},
+                    timeout=30,
+                )
+                success = resp.ok
+
+        logger.info(f"[WORKSHOP] Unload '{model_name}': {'success' if success else 'failed'}")
+        return jsonify({"success": success})
+
+    except Exception as e:
+        logger.error(f"[WORKSHOP] Unload error: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@settings_bp.route('/workshop/clear-all', methods=['POST'])
+def workshop_clear_all():
+    """
+    Clear ALL GPU memory: unload all GPU service models + free ComfyUI.
+    """
+    errors = []
+
+    # 1. GPU service — unload all backends
+    for path in ['/api/diffusers/unload', '/api/heartmula/unload', '/api/stable_audio/unload']:
+        try:
+            requests.post(f"{config.GPU_SERVICE_URL}{path}", json={}, timeout=15)
+        except Exception as e:
+            errors.append(f"GPU service {path}: {e}")
+
+    # 2. ComfyUI — interrupt + free
+    try:
+        comfyui_url = f"http://127.0.0.1:{config.COMFYUI_PORT}"
+        requests.post(f"{comfyui_url}/interrupt", timeout=5)
+        requests.post(
+            f"{comfyui_url}/free",
+            json={"unload_models": True, "free_memory": True},
+            timeout=10,
+        )
+    except Exception as e:
+        errors.append(f"ComfyUI: {e}")
+
+    if errors:
+        logger.warning(f"[WORKSHOP] Clear-all partial errors: {errors}")
+
+    return jsonify({"success": len(errors) == 0, "errors": errors})
 
 
 @settings_bp.route('/ollama-models', methods=['GET'])

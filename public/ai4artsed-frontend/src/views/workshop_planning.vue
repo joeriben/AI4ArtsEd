@@ -52,6 +52,7 @@
           :style="{ width: segmentWidth(lm.gb) + '%' }"
         >
           <span class="segment-label">{{ lm.name }}</span>
+          <button class="segment-remove" @click="confirmUnload(lm)">&times;</button>
         </div>
         <!-- Safety models (individually labeled) -->
         <div
@@ -91,6 +92,24 @@
         {{ $t('workshop.memory.used', { used: usedGb, total: totalGb }) }}
         <span v-if="overBudget" class="over-budget">{{ $t('workshop.memory.overBudget') }}</span>
       </div>
+      <div class="memory-actions">
+        <button
+          v-if="preloadableSelected.length > 0"
+          class="action-btn load-btn"
+          :disabled="isPreloading"
+          @click="preloadModels"
+        >
+          {{ isPreloading ? $t('workshop.confirm.loading') : $t('workshop.confirm.load') }}
+        </button>
+        <button
+          v-if="loadedModelSegments.length > 0"
+          class="action-btn clear-btn"
+          :disabled="isPreloading"
+          @click="confirmClearAll"
+        >
+          {{ $t('workshop.actions.clearAll') }}
+        </button>
+      </div>
     </div>
 
     <!-- Model Cards -->
@@ -124,6 +143,7 @@
             </div>
             <div class="card-fact">{{ model.gen_time }}</div>
           </div>
+          <div v-if="model.note" class="card-note">{{ model.note }}</div>
           <div class="card-publisher">{{ model.publisher }}</div>
         </div>
       </div>
@@ -160,19 +180,26 @@ const totalGb = computed(() => {
 const baselineGb = computed(() => SAFETY_VRAM_GB)
 
 /** Check if a physical model is already loaded on the GPU */
-const LOADED_MODEL_PATTERNS: Record<string, string> = {
-  sd35_large: 'stable-diffusion-3.5',
-  flux2: 'FLUX.2',
-  heartmula: 'heartmula',
-  stable_audio: 'stable_audio',
+const LOADED_MODEL_PATTERNS: Record<string, string[]> = {
+  sd35_large: ['stable-diffusion-3.5', 'sd3.5'],
+  flux2: ['FLUX.2', 'flux2', 'flux1'],
+  qwen_t2i: ['qwen', 'Qwen2.5-VL'],
+  qwen_i2i: ['qwen', 'Qwen2.5-VL'],
+  qwen_multi: ['qwen', 'Qwen2.5-VL'],
+  wan22_t2v: ['wan', 'Wan2.1', 'umt5'],
+  wan22_i2v: ['wan', 'Wan2.1', 'umt5'],
+  ltx_video: ['ltx', 'LTX'],
+  heartmula: ['heartmula', 'HeartMuLa'],
+  acestep: ['ace', 'ACE-Step'],
+  stable_audio: ['stable_audio', 'stable-audio'],
 }
 
 function isAlreadyLoaded(id: string): boolean {
   if (!status.value) return false
-  const pattern = LOADED_MODEL_PATTERNS[id]
-  if (!pattern) return false
+  const patterns = LOADED_MODEL_PATTERNS[id]
+  if (!patterns) return false
   return status.value.loadedModels.some(
-    m => m.model.includes(pattern) || m.backend.includes(pattern)
+    m => patterns.some(p => m.model.includes(p) || m.backend.includes(p))
   )
 }
 
@@ -184,6 +211,8 @@ const loadedModelSegments = computed(() => {
     .map(m => ({
       name: m.model.split('/').pop()?.replace(/-/g, ' ') || m.backend,
       gb: Math.round(m.vram_mb / 1024),
+      backend: m.backend,
+      model: m.model,
     }))
 })
 
@@ -381,6 +410,156 @@ function buildDraftContext(): string {
   return parts.join('\n')
 }
 
+
+// --- Preloading & Unloading ---
+const isPreloading = ref(false)
+
+/** Selected models that can actually be preloaded */
+const preloadableSelected = computed(() =>
+  selectedModels.value.filter(m => m.preloadable && !isAlreadyLoaded(m.id))
+)
+
+async function preloadModels() {
+  const models = preloadableSelected.value
+  if (models.length === 0 || isPreloading.value) return
+
+  isPreloading.value = true
+  addChatMessage('assistant', t('workshop.chat.preloadStart', { count: models.length }))
+
+  try {
+    const ids = models.map(m => m.id)
+    const res = await fetch(`${getBaseUrl()}/api/settings/workshop/preload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ models: ids }),
+    })
+
+    if (!res.ok || !res.headers.get('content-type')?.includes('text/event-stream')) {
+      // Fallback: non-SSE response (old endpoint format)
+      const data = await res.json()
+      const loaded: string[] = []
+      const skipped: string[] = []
+      const errors: string[] = []
+      for (const [mid, result] of Object.entries(data.results || {})) {
+        const r = result as { success: boolean; skipped?: boolean; error?: string }
+        const name = models.find(m => m.id === mid)?.name || mid
+        if (r.skipped) skipped.push(name)
+        else if (r.success) loaded.push(name)
+        else errors.push(`${name}: ${r.error}`)
+      }
+      if (loaded.length) addChatMessage('assistant', t('workshop.confirm.resultLoaded', { models: loaded.join(', ') }))
+      if (skipped.length) addChatMessage('assistant', t('workshop.confirm.resultSkipped', { models: skipped.join(', ') }))
+      if (errors.length) addChatMessage('assistant', t('workshop.confirm.resultError', { details: errors.join('; ') }))
+      await refresh()
+      isPreloading.value = false
+      return
+    }
+
+    // SSE streaming response
+    const reader = res.body!.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+      let eventType = ''
+      for (const line of lines) {
+        if (line.startsWith('event: ')) {
+          eventType = line.slice(7).trim()
+        } else if (line.startsWith('data: ') && eventType) {
+          try {
+            const data = JSON.parse(line.slice(6))
+            if (eventType === 'model_start') {
+              addChatMessage('assistant', t('workshop.chat.preloadModel', { name: data.name || data.model_id }))
+            } else if (eventType === 'model_complete') {
+              addChatMessage('assistant', t('workshop.chat.preloadDone', { name: data.name || data.model_id }))
+              await refresh()
+            } else if (eventType === 'model_error') {
+              addChatMessage('assistant', t('workshop.confirm.resultError', { details: `${data.name || data.model_id}: ${data.error}` }))
+            } else if (eventType === 'done') {
+              addChatMessage('assistant', t('workshop.confirm.ready'))
+            }
+          } catch { /* skip malformed */ }
+          eventType = ''
+        }
+      }
+    }
+    await refresh()
+  } catch {
+    addChatMessage('assistant', t('workshop.chat.connectionError'))
+  } finally {
+    isPreloading.value = false
+  }
+}
+
+interface LoadedSegment {
+  name: string
+  gb: number
+  backend?: string
+  model?: string
+}
+
+function confirmUnload(lm: LoadedSegment) {
+  // Determine if this is a ComfyUI model (heuristic: backend contains comfyui or model loaded via ComfyUI)
+  const isComfyUI = (lm.backend || '').toLowerCase().includes('comfyui')
+
+  const message = isComfyUI
+    ? t('workshop.actions.confirmUnloadComfyui', { name: lm.name })
+    : t('workshop.actions.confirmUnload', { name: lm.name })
+
+  if (!window.confirm(message)) return
+  unloadModel(lm)
+}
+
+async function unloadModel(lm: LoadedSegment) {
+  addChatMessage('assistant', t('workshop.chat.unloading', { name: lm.name }))
+  try {
+    const res = await fetch(`${getBaseUrl()}/api/settings/workshop/unload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model_name: lm.name,
+        backend: lm.backend || '',
+        model: lm.model || '',
+      }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      addChatMessage('assistant', t('workshop.chat.unloaded', { name: lm.name }))
+    } else {
+      addChatMessage('assistant', t('workshop.confirm.resultError', { details: data.error || 'unknown' }))
+    }
+    await refresh()
+  } catch {
+    addChatMessage('assistant', t('workshop.chat.connectionError'))
+  }
+}
+
+function confirmClearAll() {
+  if (!window.confirm(t('workshop.actions.confirmClearAll'))) return
+  clearAllGpuMemory()
+}
+
+async function clearAllGpuMemory() {
+  addChatMessage('assistant', t('workshop.chat.clearingAll'))
+  try {
+    const res = await fetch(`${getBaseUrl()}/api/settings/workshop/clear-all`, {
+      method: 'POST',
+    })
+    const data = await res.json()
+    if (data.success) {
+      addChatMessage('assistant', t('workshop.chat.clearedAll'))
+    } else {
+      addChatMessage('assistant', t('workshop.confirm.resultError', { details: data.error || 'unknown' }))
+    }
+    await refresh()
+  } catch {
+    addChatMessage('assistant', t('workshop.chat.connectionError'))
+  }
+}
 
 // --- Greeting (LLM-generated in user's language) ---
 function buildGreetingTemplate(): string {
@@ -662,6 +841,60 @@ onMounted(() => {
 .over-budget {
   color: rgba(255, 80, 80, 0.9);
   font-weight: 600;
+}
+
+/* --- Memory Actions --- */
+.memory-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.load-btn {
+  border-color: rgba(76, 175, 80, 0.4);
+  color: rgba(76, 175, 80, 0.9);
+}
+
+.load-btn:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: rgba(76, 175, 80, 0.6);
+}
+
+.clear-btn {
+  border-color: rgba(255, 100, 100, 0.3);
+  color: rgba(255, 100, 100, 0.7);
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: rgba(255, 100, 100, 0.08);
+  border-color: rgba(255, 100, 100, 0.5);
+}
+
+.card-note {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
 }
 
 /* --- Model Cards --- */

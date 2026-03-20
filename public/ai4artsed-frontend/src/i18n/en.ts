@@ -1680,6 +1680,12 @@ export const en = {
       resultSkipped: 'On first use: {models}',
       resultError: 'Error: {details}',
     },
+    actions: {
+      clearAll: 'Clear all GPU memory',
+      confirmUnload: 'Unload {name}? This will abort any running generation using this model.',
+      confirmUnloadComfyui: 'Unloading {name} will free ALL ComfyUI models from memory (ComfyUI does not support per-model unloading). Continue?',
+      confirmClearAll: 'This will abort all running processes and unload ALL models from memory. Continue?',
+    },
     chat: {
       cloudAdded: '{name} runs on servers by {publisher} in {region}. It does not need space on the graphics card, but your inputs are sent there. Each result costs money from the project budget.',
       overBudget: '{name} needs {gb} Gigabytes. That does not fit in memory! You need to either remove another model or skip {name}.',
@@ -1687,6 +1693,13 @@ export const en = {
       connectionError: 'Connection error — please try again.',
       regionEu: 'Europe',
       regionUs: 'the USA',
+      preloadStart: 'Loading {count} model(s) into memory. This may take a few minutes — each model needs 30 seconds to 2 minutes.',
+      preloadModel: 'Loading {name}...',
+      preloadDone: '{name} loaded.',
+      unloading: 'Unloading {name}...',
+      unloaded: '{name} unloaded.',
+      clearingAll: 'Clearing all GPU memory...',
+      clearedAll: 'All models unloaded. GPU memory is free.',
     },
     greeting: {
       intro: 'Hello, I am Trashy, the help system for this platform. If you want to run a shared workshop or teaching session with many devices, it makes sense to think about what you want to do beforehand.',

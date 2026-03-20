@@ -21,6 +21,22 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-20-workshop-preload-unload
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `workshop.actions.clearAll` (NEW): "Clear all GPU memory"
+  - `workshop.actions.confirmUnload` (NEW): "Unload {name}? This will abort any running generation using this model."
+  - `workshop.actions.confirmUnloadComfyui` (NEW): "Unloading {name} will free ALL ComfyUI models from memory (ComfyUI does not support per-model unloading). Continue?"
+  - `workshop.actions.confirmClearAll` (NEW): "This will abort all running processes and unload ALL models from memory. Continue?"
+  - `workshop.chat.preloadStart` (NEW): "Loading {count} model(s) into memory. This may take a few minutes — each model needs 30 seconds to 2 minutes."
+  - `workshop.chat.preloadModel` (NEW): "Loading {name}..."
+  - `workshop.chat.preloadDone` (NEW): "{name} loaded."
+  - `workshop.chat.unloading` (NEW): "Unloading {name}..."
+  - `workshop.chat.unloaded` (NEW): "{name} unloaded."
+  - `workshop.chat.clearingAll` (NEW): "Clearing all GPU memory..."
+  - `workshop.chat.clearedAll` (NEW): "All models unloaded. GPU memory is free."
+- **Context**: Workshop planning page — preloading models into GPU, unloading models, clearing all GPU memory. Trashy chat messages shown during preload/unload operations. Confirmation dialogs for destructive actions. Keep placeholders ({name}, {count}) as-is.
+
 ### WO-2026-03-19-model-comparison-tab
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys** (all NEW):
