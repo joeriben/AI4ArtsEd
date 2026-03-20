@@ -345,6 +345,32 @@ Tags:
   - `workshop.greeting.callToAction` (NEW): call to action
 - **Context**: Workshop planning page where groups collaboratively select AI models for a session. The tone is friendly, addressing a group of students/participants ("you" plural). Memory/VRAM is called "Speicher der Grafikkarte" (graphics card memory) — NO technical jargon (no VRAM, GPU, RAM). The greeting is from "Trashy", the platform's help mascot.
 
+### WO-2026-03-21-system-prompt-comparison-tab
+- **Session**: System Prompt Comparison implementation
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `compare.tabs.systemprompt` (NEW): "System Prompt"
+  - `compare.systemprompt.inputPlaceholder` (NEW): "Type a message to send with all three system prompts..."
+  - `compare.systemprompt.sendAll` (NEW): "Send to All"
+  - `compare.systemprompt.sending` (NEW): "Sending..."
+  - `compare.systemprompt.newConversation` (NEW): "New conversation"
+  - `compare.systemprompt.noResponse` (NEW): "No response received"
+  - `compare.systemprompt.error` (NEW): "Connection error"
+  - `compare.systemprompt.subtitle` (NEW): "See how invisible instructions control AI behavior"
+  - `compare.systemprompt.modelLabel` (NEW): "Model"
+  - `compare.systemprompt.presetLabel` (NEW): "Preset"
+  - `compare.systemprompt.promptLabel` (NEW): "System Prompt"
+  - `compare.systemprompt.emptyPrompt` (NEW): "(no system prompt)"
+  - `compare.systemprompt.custom` (NEW): "Custom"
+  - `compare.systemprompt.presets.none` (NEW): "No system prompt"
+  - `compare.systemprompt.presets.helpful` (NEW): "Helpful assistant"
+  - `compare.systemprompt.presets.disagree` (NEW): "Always disagree"
+  - `compare.systemprompt.presets.pirate` (NEW): "Pirate"
+  - `compare.systemprompt.presets.poet` (NEW): "Poet"
+  - `compare.systemprompt.presets.fiveyearold` (NEW): "Five-year-old"
+  - `compare.systemprompt.presets.factsonly` (NEW): "Only facts"
+- **Context**: New tab in the Compare Hub for system prompt comparison. Users send the same message to an AI with 3 different system prompts to see how invisible instructions control behavior. Preset names are UI labels for dropdown menus — translate naturally (e.g. "Pirat" in DE, not literal). The subtitle is a pedagogical tagline. "System Prompt" as a tab label may be kept in English in some languages where it's a recognized technical term, or translated if the language has a natural equivalent.
+
 ## Completed
 
 ### WO-2026-03-03-comfyui-label-cleanup

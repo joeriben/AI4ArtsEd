@@ -1,5 +1,55 @@
 # Development Log
 
+## Session 273 - System Prompt Comparison Tab + Todos Cleanup
+**Date:** 2026-03-21
+**Focus:** New Compare Hub tab making system prompt steering visible. Todos consolidation.
+
+### System Prompt Comparison — New Compare Tab
+**Pedagogical goal:** Make visible how *invisible* system prompts control LLM behavior. Same message + 3 different system prompts = 3 different responses.
+
+**Backend (`chat_routes.py`):**
+- `system_prompt_compare_mode` branch in `build_system_prompt()` — passes custom system prompt as-is (or empty string)
+- Empty system prompt = no `{"role": "system"}` message sent to LLM (true "raw" model behavior)
+- Thinking disabled (same rationale as temperature comparison — thinking normalizes outputs)
+- `SYSPROMPT_COMPARISON_SYSTEM_PROMPT_TEMPLATE` for Trashy analysis (routed via `compare_type == 'systemprompt'`)
+
+**Pinia Store (`systemPromptCompare.ts`):**
+- `SysPromptColumn { systemPrompt, presetId, messages }`
+- 3 columns with defaults: none (empty), helpful assistant, pirate
+
+**Vue Component (`system_prompt_comparison.vue`):**
+- Adapted from `temperature_comparison.vue` (same layout, same Trashy sidebar pattern)
+- Each column: preset `<select>` + editable monospace `<textarea>` (max-height 120px)
+- 7 presets: No prompt, Helpful, Always disagree, Pirate, Poet, Five-year-old, Facts only
+- Preset prompts are English-only (meta-prompts, not i18n scope). Only dropdown labels are i18n'd.
+- Manual edit switches dropdown to "Custom"
+- 3 subtle column tints: purple (#ab82ff), green (#82c8a0), orange (#ffa064)
+- Trashy auto-analyzes after each round (tone/content/compliance differences)
+
+**Hub Integration (`compare_hub.vue`):**
+- `TabId` extended with `'systemprompt'`
+- 4th tab: "System Prompt"
+
+**i18n:** 20 new keys in `en.ts`, work order `WO-2026-03-21-system-prompt-comparison-tab`
+
+### Todos Cleanup (`devserver_todos.md`)
+- Removed "Interception-Vergleich" (too abstract for users)
+- Removed "Visueller Kontext-Prompt" (vague idea)
+- Reformulated "Bias-Probes" as enhancement of existing Model Comparison (preset prompts, not new tab)
+- Marked "System-Prompt-Vergleich" as DONE
+- Removed standalone Section 6 (Bias-Probes for Bildmodelle) — folded into Section 3
+
+### Files Changed
+- `devserver/my_app/routes/chat_routes.py` — system_prompt_compare_mode + Trashy template
+- `public/ai4artsed-frontend/src/stores/systemPromptCompare.ts` — **NEW**
+- `public/ai4artsed-frontend/src/views/compare/system_prompt_comparison.vue` — **NEW**
+- `public/ai4artsed-frontend/src/views/compare_hub.vue` — 4th tab
+- `public/ai4artsed-frontend/src/i18n/en.ts` — 20 new keys
+- `public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md` — work order
+- `docs/devserver_todos.md` — cleanup
+
+---
+
 ## Session 272 - Workshop Model Preloading, Variant Cards, Selective Unloading (2026-03-20)
 **Date:** 2026-03-20
 **Focus:** Expanded model cards with variant support, ComfyUI fake-run preloading via SSE, selective per-model unloading, refined VRAM bar UI.

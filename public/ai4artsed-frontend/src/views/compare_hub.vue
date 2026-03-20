@@ -17,6 +17,7 @@
     <LanguageComparison v-if="activeTab === 'language'" />
     <TemperatureComparison v-else-if="activeTab === 'temperature'" />
     <ModelComparison v-else-if="activeTab === 'model'" />
+    <SystemPromptComparison v-else-if="activeTab === 'systemprompt'" />
   </div>
 </template>
 
@@ -26,10 +27,11 @@ import { useI18n } from 'vue-i18n'
 import LanguageComparison from './compare/language_comparison.vue'
 import TemperatureComparison from './compare/temperature_comparison.vue'
 import ModelComparison from './compare/model_comparison.vue'
+import SystemPromptComparison from './compare/system_prompt_comparison.vue'
 
 const { t } = useI18n()
 
-type TabId = 'language' | 'temperature' | 'model'
+type TabId = 'language' | 'temperature' | 'model' | 'systemprompt'
 
 const STORAGE_KEY = 'compare_hub_tab'
 
@@ -37,6 +39,7 @@ const tabs: { id: TabId }[] = [
   { id: 'language' },
   { id: 'model' },
   { id: 'temperature' },
+  { id: 'systemprompt' },
 ]
 
 const activeTab = ref<TabId>('language')

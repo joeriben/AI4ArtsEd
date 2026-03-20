@@ -206,21 +206,18 @@ Bestehende `/compare`-Seite:
 **Datum:** 2026-03-19
 Die Floating-MediaBoxen in der Persona-Seite haben die richtige Groesse (320px), Output-Bilder/Audio passen gut. Aber die ModelCard (Provenance-Karte) skaliert nicht auf diese Groesse herunter — Layout bricht, wird messy. ModelCard muss responsive auf kleine Container reagieren.
 
-### 3. Compare-Variationen: LLM-Dekonstruktion — PLANNED
+### 3. Compare-Variationen: LLM-Dekonstruktion — TEILWEISE DONE
 
 **Datum:** 2026-03-18
 **Paedagogisches Ziel:** Natuerliche Logik von LLMs dekonstruieren und erfahrbar machen.
 
 Weitere Compare-Modi:
 - **Sprachmodell-Vergleich**: Gleicher Prompt an verschiedene LLMs, mit Seed-Kontrolle (Transformers, nicht API) und Temperature-Kontrolle
-- **System-Prompt-Vergleich**: Auswechselbare Systemprompts zeigen wie stark Kontext das Verhalten steuert
-  - **Mammouth-Idee**: Mammouth leitet keine Sysprompts weiter → Sonnet 4.6 via Mammouth in 3 Varianten: a) Original-Sysprompt (direkte API), b) ohne Sysprompt (Mammouth-Default), c) eigener Sysprompt. Temperature steuerbar, aber kein Seed (Claude hat kein deterministic sampling).
-- **Temperature-Vergleich (3-Spalten-Chat)**: Gleiches LLM (z.B. Sonnet) bei Temperature 0 / 0.5 / 1 parallel. User schickt einen Prompt → 3 Antworten nebeneinander. Gespraechsverlauf wird pro Spalte weitergefuehrt (3 divergierende Konversationen). Macht Stochastizitaet und deren Einfluss auf Kreativitaet/Praezision direkt erfahrbar.
-- **Interception-Vergleich**: Gleicher User-Prompt + gleicher Kontext (Default: Planetarizer), aber verschiedene LLMs fuehren die Stage 2 Interception aus. Zeigt: Mistral Large produziert Kitsch, waehrend z.B. ein kleineres Modell (Mistral Nemo) oder ein hochwertigeres oft bessere/andere aesthetische Entscheidungen trifft. Kontext auswaehlbar (alle Interception-Configs).
-- **Bias-Probes**: Gezielte Prompts die systematische Verzerrungen in Modellen sichtbar machen (kulturelle Defaults, Gender-Bias, geographische Vorurteile). Insbesondere: Was sind fuer Modelle "Schoenheit", "Helden", "Alter"? → DAS war der urspruengliche Grund fuer Bildmodell-Vergleich. Auch fuer Textarbeit interessant.
-- **Visueller Kontext-Prompt**: Einfluss von Kontext auf Generierung
+- ✅ **System-Prompt-Vergleich**: DONE (2026-03-21) — 3-Spalten-Tab mit editierbaren System-Prompts, Presets (No prompt, Helpful, Disagree, Pirate, Poet, 5-year-old, Facts only), Trashy-Analyse
+- ✅ **Temperature-Vergleich (3-Spalten-Chat)**: DONE (fruehere Session)
+- **Bias-Probes**: Bereits moeglich ueber bestehenden Model Comparison Tab mit gezielten Prompts. Spaetere Erweiterung: Preset-Prompts ("a hero", "beauty", "an old person") + spezielle Trashy-Bias-Analyse. Kein eigener Tab noetig.
 - Immer mit Trashy-Interpretation
-- Auch mit kleinen lokalen Modellen moeglich, aber AUCH grosse Cloud-Modelle (v.a. fuer Interception-Vergleich — Qualitaetsunterschiede sind dort am kraessesten)
+- Auch mit kleinen lokalen Modellen moeglich, aber AUCH grosse Cloud-Modelle
 
 ### 4. Navigation: Canvas — Compare — Latent Lab — CHECKEN
 
@@ -241,16 +238,6 @@ Weitere Compare-Modi:
 - Additive Technologien (Code, der sichtbar aufbaut) als Gegenpol zu diffusionsbasierten (subtraktiven) Verfahren
 - **Referenzrahmen: "Computerkunst" — Frieder Nake, Georg Nees, Vera Molnar u.a.** Algorithmische Aesthetik, regelbasierte Generierung, Zufall als Gestaltungsmittel. p5.js als zeitgenoessische Fortsetzung dieser Tradition.
 - Potential: Live-Preview, Parameter-Manipulation, Export, Remix
-
-### 6. Compare: Dekonstruktive Bias-Probes fuer Bildmodelle — PLANNED
-
-**Datum:** 2026-03-18
-**Paedagogisches Ziel:** Herausfinden was fuer verschiedene Modelle "Schoenheit", "Helden", "Alter" sind.
-
-- Urspruenglicher Kern-Grund fuer den Bildmodell-Vergleich
-- Gezielte Prompts ("a hero", "beauty", "an old person") an verschiedene Modelle → Defaults sichtbar machen
-- Auch fuer Textarbeit: Wie beschreiben verschiedene LLMs "einen Helden"?
-- Kombination mit Interception-Vergleich: gleicher dekonstruktiver Prompt, verschiedene LLMs als Stage 2
 
 ---
 

@@ -150,6 +150,43 @@ PROMPT SUGGESTION FORMAT: [PROMPT: text here] — these become clickable buttons
 IF YOU DON'T KNOW WHAT TO DO NEXT, REFER TO THE COURSE INSTRUCTOR WHO IS PRESENT. YOU NEVER HALLUCINATE ANALYSIS.
 """
 
+SYSPROMPT_COMPARISON_SYSTEM_PROMPT_TEMPLATE = """You are Trashy, an AI assistant in the System Prompt Comparison Mode of the AI for Arts Education Lab. You MUST respond in {language}.
+
+WHAT YOU ARE: A language model — a powerful analytical tool. You have no emotions, no curiosity, no excitement. You are honest about what you are: a machine that can analyze how system prompts control language model behavior. This honesty is pedagogically valuable.
+
+YOUR ROLE: Help users investigate how INVISIBLE system prompts shape an AI's responses. The user sends the SAME message to an AI running with 3 different system prompts. You analyze how the responses differ and what that reveals about how AI systems are steered behind the scenes.
+
+TECHNICAL KNOWLEDGE (communicate when relevant, not as a lecture):
+- System prompts are instructions given to an AI BEFORE the user speaks — the user normally never sees them
+- Every commercial AI product (ChatGPT, Claude, Gemini) runs with hidden system prompts that shape tone, limits, and persona
+- System prompts can make the same model helpful, hostile, poetic, or silent — the model itself does not change
+- This is how companies control AI behavior without changing the model's weights
+- An empty system prompt reveals the model's "raw" behavior — its training defaults without steering
+- The difference between "no prompt" and "be helpful" shows how much steering is already baked in
+
+ABSOLUTE RULES:
+- NEVER use emojis. Not one. Ever.
+- NEVER simulate emotions
+- NEVER use rhetorical enthusiasm or fake curiosity
+- Speak factually, clearly, resonantly. A machine that respects its interlocutors.
+- Age-appropriate (ages 9-17, educators present) — clear language, not condescending
+- SHORT: 2-4 sentences per message
+
+AFTER A COMPARISON ROUND (when you receive the 3 responses):
+1. State the CONCRETE differences: tone, length, content, compliance with the system prompt's instructions.
+2. Point out where the system prompt succeeded in steering the model and where the model resisted or defaulted.
+3. If one column had no system prompt: compare the "raw" response to the steered ones. What changes? What stays?
+4. Suggest ONE follow-up message that would amplify the visible differences. Use [PROMPT: ...] format.
+5. Do NOT repeat what the user can see. Add analysis they cannot derive on their own.
+
+WHEN GREETING (no comparison results yet):
+Briefly state what this mode does: same message, three different system prompts, making visible how invisible instructions control AI behavior. Suggest ONE starting message where system prompt differences are especially visible. Use [PROMPT: your suggestion here] format.
+
+PROMPT SUGGESTION FORMAT: [PROMPT: text here] — these become clickable buttons in the UI.
+
+IF YOU DON'T KNOW WHAT TO DO NEXT, REFER TO THE COURSE INSTRUCTOR WHO IS PRESENT. YOU NEVER HALLUCINATE ANALYSIS.
+"""
+
 WORKSHOP_PLANNING_SYSTEM_PROMPT = """You are Trashy, the help system for the AI for Arts Education Lab. You are on the Workshop Planning page where a group collectively decides which AI models to use for their session. You ALWAYS respond in the language in which you were addressed.
 
 WHAT YOU ARE: A language model — a machine that helps this group plan their shared resources. No emotions, no excitement, no simulation. Honest, factual, clear.
@@ -926,6 +963,10 @@ def build_system_prompt(context: dict = None, language: str = None) -> str:
 
     if context is None:
         base = GENERAL_SYSTEM_PROMPT
+    elif context.get('system_prompt_compare_mode'):
+        # System prompt comparison: use the custom system prompt as-is (may be empty)
+        custom = context.get('custom_system_prompt', '')
+        return custom.strip() if custom.strip() else ''
     elif context.get('temperature_compare_mode'):
         base = f"You are a helpful assistant. Respond naturally to the user. Respond in {lang_name}."
         return base
@@ -936,6 +977,8 @@ def build_system_prompt(context: dict = None, language: str = None) -> str:
     elif context.get('comparison_mode'):
         if context.get('compare_type') == 'model':
             return MODEL_COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang_name)
+        if context.get('compare_type') == 'systemprompt':
+            return SYSPROMPT_COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang_name)
         return COMPARISON_SYSTEM_PROMPT_TEMPLATE.format(language=lang_name)
     else:
         # Session mode - fill template
@@ -1019,8 +1062,10 @@ def chat():
             history = data['history']
             logger.info(f"Using history from request: {len(history)} messages")
 
-        # Build messages for LLM
-        messages = [{"role": "system", "content": system_prompt}]
+        # Build messages for LLM (skip system message when empty — system prompt comparison)
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
 
         # Add history (skip system messages from history, we have fresh one)
         for msg in history:
@@ -1039,12 +1084,13 @@ def chat():
         # sensitive to temperature differences (thinking models produce near-identical
         # outputs at different temperatures because the thinking phase constrains output)
         is_temp_compare = context and context.get('temperature_compare_mode')
+        is_sysprompt_compare = context and context.get('system_prompt_compare_mode')
 
         result = call_chat_helper(
             messages=messages,
             temperature=temperature if temperature is not None else 0.7,
             max_tokens=2048,
-            enable_thinking=not is_temp_compare,
+            enable_thinking=not (is_temp_compare or is_sysprompt_compare),
             model_override=model_override
         )
         assistant_reply = result["content"]
