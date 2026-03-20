@@ -47,16 +47,16 @@
         </button>
       </div>
 
-      <!-- 3-Column Grid -->
+      <!-- 3-Column Grid — always visible for flow transparency -->
       <div class="comparison-grid">
-        <div v-for="(slot, idx) in slots" :key="slot.configId" class="comparison-slot">
+        <div v-for="(model, idx) in MODELS.value" :key="model.id" class="comparison-slot">
           <div class="slot-header">
-            <span class="slot-model-name">{{ slot.label }}</span>
-            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ MODELS.value.length }}</span>
+            <span class="slot-model-name">{{ model.label }}</span>
+            <span v-if="slots[idx]?.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slots[idx]?.outputUrl" class="slot-queue">{{ slots[idx]?.queuePosition }}/{{ MODELS.value.length }}</span>
           </div>
           <div class="slot-output-wrapper">
             <MediaOutputBox
-              :output-image="slot.outputUrl"
+              :output-image="slots[idx]?.outputUrl ?? null"
               media-type="image"
               :is-executing="slotStreams[idx]?.isExecuting ?? false"
               :progress="slotStreams[idx]?.generationProgress ?? 0"
@@ -64,16 +64,16 @@
               :model-meta="slotStreams[idx]?.modelMeta ?? null"
               :stage4-duration-ms="slotStreams[idx]?.stage4DurationMs ?? 0"
               :ui-mode="uiModeStore.mode"
-              :run-id="slot.runId"
-              :is-favorited="slot.isFavorited"
+              :run-id="slots[idx]?.runId ?? null"
+              :is-favorited="slots[idx]?.isFavorited ?? false"
               :is-analyzing="true"
-              @toggle-favorite="toggleSlotFavorite(slot)"
-              @forward="forwardToPage(slot)"
-              @download="downloadSlotImage(slot)"
+              @toggle-favorite="slots[idx] && toggleSlotFavorite(slots[idx]!)"
+              @forward="slots[idx] && forwardToPage(slots[idx]!)"
+              @download="slots[idx] && downloadSlotImage(slots[idx]!)"
               @image-click="fullscreenImage = $event"
             />
           </div>
-          <div v-if="slot.blockedReason" class="slot-blocked">{{ slot.blockedReason }}</div>
+          <div v-if="slots[idx]?.blockedReason" class="slot-blocked">{{ slots[idx]!.blockedReason }}</div>
         </div>
       </div>
     </div>
