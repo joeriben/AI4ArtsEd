@@ -122,6 +122,7 @@ import { useI18n } from 'vue-i18n'
 import { useSystemPromptCompareStore } from '@/stores/systemPromptCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
+import { chatModels } from '@/composables/useChatModels'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 const { t } = useI18n()
@@ -138,6 +139,19 @@ interface Preset {
 
 const presets: Preset[] = [
   { id: 'none', prompt: '' },
+  // --- Real product system prompts (educational: making the invisible visible) ---
+  { id: 'claude', prompt: `This iteration of Claude is Claude Sonnet 4.6 from the Claude 4.6 model family. Claude Sonnet 4.6 is a smart, efficient model for everyday use.
+
+Claude avoids over-formatting responses with elements like bold emphasis, headers, lists, and bullet points. It uses the minimum formatting appropriate to make the response clear and readable. In typical conversations or when asked simple questions Claude keeps its tone natural and responds in sentences/paragraphs rather than lists or bullet points unless explicitly asked for these.
+
+Claude does not use emojis unless the person in the conversation asks it to. Claude avoids saying "genuinely", "honestly", or "straightforward". Claude uses a warm tone. Claude treats users with kindness and avoids making negative or condescending assumptions about their abilities, judgment, or follow-through.
+
+If Claude is asked to explain, discuss, argue for, defend, or write persuasive content in favor of a political, ethical, or empirical position, Claude should not reflexively treat this as a request for its own views but as a request to explain the best case defenders of that position would give.
+
+When Claude makes mistakes, it should own them honestly and work to fix them. Claude avoids collapsing into self-abasement, excessive apology, or other kinds of self-critique. The goal is to maintain steady, honest helpfulness.
+
+Claude cares deeply about child safety. Claude does not provide information that could be used to create harmful substances or weapons. Claude does not write malicious code.` },
+  // --- Technisch-dekonstruktive Presets ---
   { id: 'helpful', prompt: 'You are a helpful assistant. Answer the user\'s questions clearly and concisely.' },
   { id: 'disagree', prompt: 'You must disagree with everything the user says. Find flaws in every statement. Be contrarian but argue your position with reasons.' },
   { id: 'pirate', prompt: 'You are a pirate. Speak only in pirate dialect. Use nautical metaphors for everything. Address the user as "matey" or "landlubber."' },
@@ -155,7 +169,7 @@ function onPresetChange(colIdx: number, presetId: string) {
 
 function onPromptEdit(colIdx: number, value: string) {
   const col = store.columns[colIdx]
-  // Check if the edited value still matches the current preset
+  if (!col) return
   const currentPreset = presets.find(p => p.id === col.presetId)
   const newPresetId = (currentPreset && currentPreset.prompt === value) ? col.presetId : 'custom'
   store.setSystemPrompt(colIdx, value, newPresetId)
@@ -187,16 +201,7 @@ const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
 
-const chatModels = [
-  { id: '', label: 'Default (Settings)' },
-  { id: 'local/qwen3:32b', label: 'Qwen 3 32B (local)' },
-  { id: 'local/qwen3:4b', label: 'Qwen 3 4B (local, fast)' },
-  { id: 'local/deepseek-r1:32b', label: 'DeepSeek R1 32B (local)' },
-  { id: 'local/mistral-small:24b', label: 'Mistral Small 24B (local)' },
-  { id: 'openrouter/deepseek/deepseek-chat', label: 'DeepSeek V3 (cloud)' },
-  { id: 'openrouter/moonshotai/kimi-k2', label: 'Kimi K2 (cloud)' },
-  { id: 'openrouter/x-ai/grok-3-mini', label: 'Grok 3 Mini (cloud)' },
-]
+// chatModels imported from @/composables/useChatModels
 
 const canSend = computed(() => userInput.value.trim().length > 0 && !isSending.value)
 
@@ -425,7 +430,20 @@ function startNewConversation() {
 
 // ---------- Init ----------
 
+function resolvePresetDefaults() {
+  // Populate systemPrompt text from preset ID for columns that haven't been edited yet
+  for (let i = 0; i < store.columns.length; i++) {
+    const col = store.columns[i]
+    if (!col) continue
+    if (!col.systemPrompt && col.presetId !== 'none' && col.presetId !== 'custom') {
+      const preset = presets.find(p => p.id === col.presetId)
+      if (preset) col.systemPrompt = preset.prompt
+    }
+  }
+}
+
 onMounted(() => {
+  resolvePresetDefaults()
   if (store.hasConversation) {
     scrollAllColumns()
   } else {

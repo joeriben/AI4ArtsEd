@@ -11,10 +11,12 @@ export interface SysPromptColumn {
 export const useSystemPromptCompareStore = defineStore('systemPromptCompare', () => {
   let nextMsgId = 0
 
+  // Default presets are resolved from the component's preset list on mount.
+  // Store only holds presetId; systemPrompt gets populated by the component.
   const columns = ref<SysPromptColumn[]>([
     { systemPrompt: '', presetId: 'none', messages: [] },
-    { systemPrompt: 'You are a helpful assistant. Answer the user\'s questions clearly and concisely.', presetId: 'helpful', messages: [] },
-    { systemPrompt: 'You are a pirate. Speak only in pirate dialect. Use nautical metaphors for everything. Address the user as "matey" or "landlubber."', presetId: 'pirate', messages: [] },
+    { systemPrompt: '', presetId: 'claude', messages: [] },
+    { systemPrompt: '', presetId: 'pirate', messages: [] },
   ])
 
   const hasConversation = computed(() =>

@@ -1545,6 +1545,7 @@ export const en = {
       custom: 'Custom',
       presets: {
         none: 'No system prompt',
+        claude: 'Claude (real product prompt)',
         helpful: 'Helpful assistant',
         disagree: 'Always disagree',
         pirate: 'Pirate',

@@ -107,6 +107,7 @@ import { useI18n } from 'vue-i18n'
 import { useTemperatureCompareStore } from '@/stores/temperatureCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
+import { chatModels } from '@/composables/useChatModels'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 const { t } = useI18n()
@@ -140,18 +141,7 @@ const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
 
-const chatModels = [
-  { id: '', label: 'Default (Settings)' },
-  // Local (Ollama)
-  { id: 'local/qwen3:32b', label: 'Qwen 3 32B (local)' },
-  { id: 'local/qwen3:4b', label: 'Qwen 3 4B (local, fast)' },
-  { id: 'local/deepseek-r1:32b', label: 'DeepSeek R1 32B (local)' },
-  { id: 'local/mistral-small:24b', label: 'Mistral Small 24B (local)' },
-  // Cloud (OpenRouter)
-  { id: 'openrouter/deepseek/deepseek-chat', label: 'DeepSeek V3 (cloud)' },
-  { id: 'openrouter/moonshotai/kimi-k2', label: 'Kimi K2 (cloud)' },
-  { id: 'openrouter/x-ai/grok-3-mini', label: 'Grok 3 Mini (cloud)' },
-]
+// chatModels imported from @/composables/useChatModels
 
 const canSend = computed(() => userInput.value.trim().length > 0 && !isSending.value)
 
