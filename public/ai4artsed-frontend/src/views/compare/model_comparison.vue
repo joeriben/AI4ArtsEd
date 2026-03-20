@@ -83,6 +83,7 @@
       ref="chatRef"
       class="compare-chat-panel"
       :comparison-context="comparisonContext"
+      compare-type="model"
       @use-prompt="useTrashyPrompt"
     />
 

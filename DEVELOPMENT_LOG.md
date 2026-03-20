@@ -1,5 +1,38 @@
 # Development Log
 
+## Session 271 - Compare Hub: Bug Fixes + Model Comparison + SD History
+**Date:** 2026-03-20
+**Focus:** Fix critical bugs in Language Comparison, add Model Comparison tab with SD History mode, mode-aware Trashy prompts.
+
+### Bug Fixes — Language Comparison
+- **Wrong route**: Preset selection called `/pipeline/interception` (full Stage 1-4 with media generation) instead of `/pipeline/stage2` (interception text only)
+- **Source language detection**: Umlaut regex (`/[äöüßÄÖÜ]/`) failed on German text without umlauts AND couldn't handle arbitrary input languages (Quechua, Arabic, etc.). Removed source language detection entirely — translate to ALL selected languages, LLM auto-detects source
+- **Translate endpoint**: Removed dead DE→EN pipeline branch from `/pipeline/translate`. Single LLM path handles any source→target pair with `enable_thinking=False` to prevent reasoning leak
+- **Bottom padding**: Increased to 200px to prevent FooterGallery overlap
+
+### Bug Fixes — Temperature Comparison
+- **Thinking override**: Thinking models (Qwen3 etc.) produce near-identical outputs at different temperatures because thinking constrains the response. Added `enable_thinking=False` for `temperature_compare_mode` through full chain: `chat()` → `call_chat_helper()` → `_call_ollama_chat()` → `LLMClient.chat()`
+- **Model selector**: Added dropdown with local Ollama models (qwen3:32b, qwen3:4b, deepseek-r1:32b, mistral-small:24b) and cloud models (DeepSeek V3, Kimi K2, Grok 3 Mini). Backend accepts `model` override in `/api/chat` request via `model_override` parameter in `call_chat_helper()`
+
+### New Feature — Model Comparison Tab
+- **Third tab** in Compare Hub: same prompt + seed across multiple image generation models
+- **Two switchable presets**: "Current Top Models" (SD 3.5 Large, Flux 2, Gemini 3 Pro) and "SD History" (SD 1.5, SDXL, SD 3.5 Large — three generations side by side)
+- **New output configs**: `sd15.json` + `sdxl.json` with ComfyUI chunks (`output_image_sd15`, `output_image_sdxl`). Checkpoints copied to SwarmUI
+- **Safety**: Stage 3 Llama Guard runs for all models; VLM post-gen check for kids/youth. Older models (SD 1.5, SDXL) have no built-in safety but platform safety wraps around them
+- **Tab order**: Language | Model | Temperature
+
+### Trashy — Mode-Aware System Prompts
+- **ComparisonChat** now accepts `compare-type` prop (`'language'` | `'model'`)
+- **Backend routing**: `context.compare_type == 'model'` → `MODEL_COMPARISON_SYSTEM_PROMPT_TEMPLATE`; default → `COMPARISON_SYSTEM_PROMPT_TEMPLATE` (language)
+- **Model comparison prompt**: Technical knowledge about SD 1.5/SDXL/SD 3.5/Flux 2 architectures, parameter counts, training data, characteristic artifacts. Frames SD History mode as technological evolution
+- **Language comparison prompt**: Unchanged (CLIP/T5 encoding bias focus)
+
+### Architecture Changes
+- `call_chat_helper()`: New parameters `enable_thinking` (bool) and `model_override` (str)
+- `/api/chat`: Extracts `model` and passes as `model_override`; detects `temperature_compare_mode` for thinking suppression
+- `/pipeline/translate`: Simplified to single LLM path, no more DE→EN pipeline branch
+- `/pipeline/stage2`: Now used by Language Comparison preset selection (was incorrectly using full pipeline)
+
 ## Session 270 - S4/S8 Escalation + Legacy Cleanup + Workshop Report
 **Date:** 2026-03-19
 **Focus:** Workshop 18.03.2026 performance analysis revealed Llama Guard S4/S8 false positives on pedagogically legitimate content. Implemented two-stage safety escalation and cleaned up legacy issues.

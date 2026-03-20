@@ -58,6 +58,7 @@ interface ChatMessage {
 
 interface Props {
   comparisonContext: string
+  compareType?: 'language' | 'model'
 }
 
 interface ContentPart {
@@ -139,6 +140,7 @@ async function callChat(message: string, extraHistory?: Array<{ role: string; co
       history,
       context: {
         comparison_mode: true,
+        compare_type: props.compareType || 'language',
         language: userPreferences.language,
         device_id: deviceId,
       },

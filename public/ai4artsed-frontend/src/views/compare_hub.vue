@@ -35,8 +35,8 @@ const STORAGE_KEY = 'compare_hub_tab'
 
 const tabs: { id: TabId }[] = [
   { id: 'language' },
-  { id: 'temperature' },
   { id: 'model' },
+  { id: 'temperature' },
 ]
 
 const activeTab = ref<TabId>('language')
