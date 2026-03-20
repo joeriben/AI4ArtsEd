@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type Ref } from 'vue'
+import { ref, computed, onBeforeUnmount, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
@@ -294,6 +294,9 @@ async function startComparison() {
   const seed = Math.floor(Math.random() * 4294967296)
   currentSeed.value = seed
 
+  // Session 273: Comparison group ID for linking runs
+  const groupId = `cmp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
+
   chatRef.value?.injectMessage(t('compare.trashyGenerating'))
 
   try {
@@ -312,6 +315,9 @@ async function startComparison() {
           output_config: slot.configId,
           seed,
           device_id: deviceId,
+          source_view: 'compare',
+          comparison_group_id: groupId,
+          comparison_original_prompt: userPrompt.value,
         })
 
         if (result.status === 'success' && result.media_output?.url) {
@@ -358,6 +364,36 @@ async function startComparison() {
     } else {
       comparisonContext.value = buildContext()
     }
+
+    // Session 273: POST comparison context + trashy chat to each successful run
+    for (const slot of successfulSlots) {
+      if (!slot.runId) continue
+      fetch(`${baseUrl}/api/schema/pipeline/run/${slot.runId}/context`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          comparison_context: {
+            original_prompt: userPrompt.value,
+            models: slots.value.map(s => s.configId),
+            seed,
+            this_model: slot.configId,
+          }
+        })
+      }).catch(() => { /* fire-and-forget */ })
+    }
+    // POST trashy analysis to first successful run
+    if (successfulSlots.length > 0 && successfulSlots[0]!.runId && chatRef.value) {
+      const trashyMessages = chatRef.value.getMessages()
+      if (trashyMessages.length > 0) {
+        fetch(`${baseUrl}/api/schema/pipeline/run/${successfulSlots[0]!.runId}/context`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trashy_analysis: { messages: trashyMessages }
+          })
+        }).catch(() => { /* fire-and-forget */ })
+      }
+    }
   } catch (e) {
     console.error('[MODEL-COMPARE] Failed:', e)
     chatRef.value?.injectMessage(t('compare.trashyError'))
@@ -365,6 +401,28 @@ async function startComparison() {
     isGenerating.value = false
   }
 }
+
+// Session 273: Save trashy chat on page leave
+function getFirstSuccessfulRunId(): string | null {
+  return slots.value.find(s => s.runId)?.runId || null
+}
+
+onBeforeUnmount(() => {
+  const runId = getFirstSuccessfulRunId()
+  if (runId && chatRef.value) {
+    const trashyMessages = chatRef.value.getMessages()
+    if (trashyMessages.length > 0) {
+      const baseUrl = import.meta.env.DEV ? 'http://localhost:17802' : ''
+      fetch(`${baseUrl}/api/schema/pipeline/run/${runId}/context`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trashy_analysis: { messages: trashyMessages }
+        })
+      }).catch(() => { /* fire-and-forget */ })
+    }
+  }
+})
 </script>
 
 <style scoped>

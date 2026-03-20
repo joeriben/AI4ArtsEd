@@ -23,6 +23,9 @@ export const usePersonaChatStore = defineStore('personaChat', () => {
 
   const mediaBoxes = ref<StoredMediaBox[]>([])
 
+  // Session 273: Track session run ID for context persistence
+  const sessionRunId = ref<string | null>(null)
+
   const hasConversation = computed(() => messages.value.length > 0)
 
   function addMessage(role: 'user' | 'assistant', content: string) {
@@ -33,6 +36,7 @@ export const usePersonaChatStore = defineStore('personaChat', () => {
     messages.value = []
     nextMsgId = 0
     mediaBoxes.value = []
+    sessionRunId.value = null
   }
 
   function saveMediaBox(box: StoredMediaBox) {
@@ -51,6 +55,7 @@ export const usePersonaChatStore = defineStore('personaChat', () => {
   return {
     messages,
     mediaBoxes,
+    sessionRunId,
     hasConversation,
     addMessage,
     clearConversation,

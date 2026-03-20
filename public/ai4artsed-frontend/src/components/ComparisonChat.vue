@@ -244,7 +244,14 @@ async function sendAutoComment(_context: string) {
   }
 }
 
-defineExpose({ injectMessage, onNewRun })
+/** Session 273: Return chat messages for context persistence */
+function getMessages(): Array<{ role: string; content: string }> {
+  return messages.value
+    .filter(m => !m.isSeparator)
+    .map(m => ({ role: m.role, content: m.content }))
+}
+
+defineExpose({ injectMessage, onNewRun, getMessages })
 </script>
 
 <style scoped>

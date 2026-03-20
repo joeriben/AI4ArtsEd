@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, triggerRef, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, shallowRef, triggerRef, nextTick, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -186,6 +186,7 @@ async function spawnGeneration(configId: string, prompt: string) {
       prompt,
       output_config: configId,
       device_id: deviceId,
+      source_view: 'persona',
     })
     if (result.status === 'success' && result.media_output) {
       box.outputUrl = result.media_output.url
@@ -193,6 +194,10 @@ async function spawnGeneration(configId: string, prompt: string) {
       box.runId = result.run_id || null
       triggerRef(mediaBoxes)
       syncBoxToStore(box)
+      // Session 273: POST dialogue snapshot to this generation's run
+      if (result.run_id) {
+        postDialogueToRun(result.run_id)
+      }
     }
   } catch (e) {
     console.error('[PERSONA] Generation failed:', e)
@@ -325,6 +330,51 @@ onUnmounted(() => {
 
 function getBaseUrl(): string {
   return import.meta.env.DEV ? 'http://localhost:17802' : ''
+}
+
+// ---------- Session 273: Context persistence ----------
+
+/** POST dialogue snapshot to an existing run */
+function postDialogueToRun(runId: string) {
+  if (!messages.value.length) return
+  const baseUrl = getBaseUrl()
+  fetch(`${baseUrl}/api/schema/pipeline/run/${runId}/context`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      dialogue: {
+        messages: messages.value.map(m => ({ role: m.role, content: m.content })),
+      }
+    })
+  }).catch(() => { /* fire-and-forget */ })
+}
+
+/** Save dialogue to persona session run (lazy-init) */
+async function savePersonaSession() {
+  if (!messages.value.length) return
+  const baseUrl = getBaseUrl()
+  if (!personaChat.sessionRunId) {
+    try {
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/run/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          config_name: 'persona_session',
+          source_view: 'persona',
+          device_id: deviceId,
+        })
+      })
+      const data = await res.json()
+      if (data.status === 'success' && data.run_id) {
+        personaChat.sessionRunId = data.run_id
+      }
+    } catch {
+      return // Can't persist — acceptable
+    }
+  }
+  if (personaChat.sessionRunId) {
+    postDialogueToRun(personaChat.sessionRunId)
+  }
 }
 
 function buildAvailableConfigs(): string {
@@ -483,6 +533,8 @@ async function fetchGreeting() {
 }
 
 function startNewDialog() {
+  // Session 273: Save dialogue before clearing
+  savePersonaSession()
   personaChat.clearConversation()
   mediaBoxes.value = []
   fetchGreeting()
@@ -507,6 +559,11 @@ onMounted(() => {
   } else {
     fetchGreeting()
   }
+})
+
+// Session 273: Save dialogue on page leave
+onBeforeUnmount(() => {
+  savePersonaSession()
 })
 </script>
 

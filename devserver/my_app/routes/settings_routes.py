@@ -1058,6 +1058,7 @@ def get_sessions():
         config_filter = request.args.get('config_name', None)
         safety_filter = request.args.get('safety_level', None)
         search_filter = request.args.get('search', None)
+        source_view_filter = request.args.get('source_view', None)  # Session 273
         sort_field = request.args.get('sort', 'timestamp')
         sort_order = request.args.get('order', 'desc')
 
@@ -1179,6 +1180,10 @@ def get_sessions():
                 if search_filter and search_filter.lower() not in metadata.get('run_id', '').lower():
                     continue
 
+                # Session 273: Apply source_view filter
+                if source_view_filter and metadata.get('source_view') != source_view_filter:
+                    continue
+
                 # Count media files and find first media for thumbnail
                 media_count = 0
                 thumbnail_path = None
@@ -1220,7 +1225,8 @@ def get_sessions():
                     'media_count': media_count,
                     'session_dir': metadata_info.relative_path,
                     'thumbnail': thumbnail_path,
-                    'thumbnail_type': thumbnail_type
+                    'thumbnail_type': thumbnail_type,
+                    'source_view': metadata.get('source_view'),  # Session 273
                 }
 
                 all_sessions.append(session_summary)
@@ -1245,6 +1251,7 @@ def get_sessions():
         unique_devices = sorted(set(s['device_id'] for s in all_sessions if s.get('device_id')))
         unique_configs = sorted(set(s['config_name'] for s in all_sessions if s.get('config_name')))
         unique_safety_levels = sorted(set(s['safety_level'] for s in all_sessions if s.get('safety_level')))
+        unique_source_views = sorted(set(s['source_view'] for s in all_sessions if s.get('source_view')))  # Session 273
 
         return jsonify({
             "sessions": paginated_sessions,
@@ -1255,7 +1262,8 @@ def get_sessions():
             "filters": {
                 "devices": unique_devices,
                 "configs": unique_configs,
-                "safety_levels": unique_safety_levels
+                "safety_levels": unique_safety_levels,
+                "source_views": unique_source_views
             }
         }), 200
 

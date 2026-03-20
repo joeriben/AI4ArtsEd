@@ -4,6 +4,7 @@ Schema Pipeline Routes - API für Schema-basierte Pipeline-Execution
 
 from flask import Blueprint, request, jsonify, Response, stream_with_context
 from pathlib import Path
+from datetime import datetime
 import logging
 import asyncio
 import threading
@@ -2492,6 +2493,12 @@ def execute_generation_streaming(data: dict):
     # Session 265: Skip-flags for comparison mode (raw encoding bias)
     skip_stage3_translation = data.get('skip_stage3_translation', False)
 
+    # Session 273: Source tagging + comparison group linking
+    source_view = data.get('source_view')
+    comparison_group_id = data.get('comparison_group_id')
+    comparison_language = data.get('comparison_language')
+    comparison_original_prompt = data.get('comparison_original_prompt')
+
     # Session 153: Apply same run_id continuity logic as non-streaming mode
     # 1 Run = 1 Media Output - create new run if existing has output
     from config import JSON_STORAGE_DIR
@@ -2663,6 +2670,19 @@ def execute_generation_streaming(data: dict):
                 device_id=device_id,
                 base_path=JSON_STORAGE_DIR
             )
+
+        # Session 273: Inject source tagging + comparison group into metadata
+        if source_view:
+            recorder.metadata['source_view'] = source_view
+        if comparison_group_id:
+            recorder.metadata['comparison_group'] = {
+                'group_id': comparison_group_id,
+                'seed': seed,
+                'language': comparison_language,
+                'original_prompt': comparison_original_prompt,
+            }
+        if source_view or comparison_group_id:
+            recorder._save_metadata()
 
         # Save translation info
         if was_translated:
@@ -2868,7 +2888,12 @@ def generation_endpoint():
                 'scheduler': request.args.get('scheduler'),
                 'denoise': request.args.get('denoise', type=float),
                 # Session 265: Comparison mode skip-flags
-                'skip_stage3_translation': request.args.get('skip_stage3_translation') == 'true'
+                'skip_stage3_translation': request.args.get('skip_stage3_translation') == 'true',
+                # Session 273: Source tagging + comparison group linking
+                'source_view': request.args.get('source_view'),
+                'comparison_group_id': request.args.get('comparison_group_id'),
+                'comparison_language': request.args.get('comparison_language'),
+                'comparison_original_prompt': request.args.get('comparison_original_prompt'),
             }
             # Convert seed to int if present
             if data['seed']:
@@ -2998,6 +3023,121 @@ def generation_endpoint():
         logger.error(f"[GENERATION-ENDPOINT] Error: {e}")
         import traceback
         traceback.print_exc()
+        return jsonify({'status': 'error', 'error': str(e)}), 500
+
+
+# =============================================================================
+# Session 273: Context Persistence Endpoints
+# =============================================================================
+
+@schema_bp.route('/pipeline/run/<run_id>/context', methods=['POST'])
+def save_run_context(run_id):
+    """
+    Append contextual data to an existing run (dialogue, comparison context, trashy analysis).
+
+    Session 273: Fire-and-forget from frontend — non-critical, best-effort.
+    Each POST creates a new entity file (append-only, no overwrite).
+
+    Request Body (all optional):
+        dialogue: {messages: [{role, content}...]}
+        comparison_context: {original_prompt, languages, seed, ...}
+        trashy_analysis: {messages: [{role, content}...]}
+    """
+    from config import JSON_STORAGE_DIR
+
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'error': 'JSON body required'}), 400
+
+        recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
+        if not recorder:
+            return jsonify({'status': 'error', 'error': f'Run {run_id} not found'}), 404
+
+        saved = []
+
+        # Dialogue (persona conversations)
+        if 'dialogue' in data:
+            dialogue = data['dialogue']
+            # Ensure dict wrapping (save_entity needs dict for JSON output)
+            if isinstance(dialogue, list):
+                dialogue = {'messages': dialogue, 'timestamp': datetime.now().isoformat()}
+            elif isinstance(dialogue, dict) and 'timestamp' not in dialogue:
+                dialogue['timestamp'] = datetime.now().isoformat()
+            recorder.save_entity('dialogue', dialogue)
+            saved.append('dialogue')
+
+        # Comparison context (translations, back-translations, VLM descriptions)
+        if 'comparison_context' in data:
+            ctx = data['comparison_context']
+            if isinstance(ctx, list):
+                ctx = {'data': ctx, 'timestamp': datetime.now().isoformat()}
+            elif isinstance(ctx, dict) and 'timestamp' not in ctx:
+                ctx['timestamp'] = datetime.now().isoformat()
+            recorder.save_entity('comparison_context', ctx)
+            saved.append('comparison_context')
+
+        # Trashy analysis chat
+        if 'trashy_analysis' in data:
+            analysis = data['trashy_analysis']
+            if isinstance(analysis, list):
+                analysis = {'messages': analysis, 'timestamp': datetime.now().isoformat()}
+            elif isinstance(analysis, dict) and 'timestamp' not in analysis:
+                analysis['timestamp'] = datetime.now().isoformat()
+            recorder.save_entity('trashy_analysis', analysis)
+            saved.append('trashy_analysis')
+
+        logger.info(f"[CONTEXT] Saved {saved} to run {run_id}")
+        return jsonify({'status': 'success', 'saved': saved}), 200
+
+    except Exception as e:
+        logger.error(f"[CONTEXT] Error saving context for {run_id}: {e}")
+        return jsonify({'status': 'error', 'error': str(e)}), 500
+
+
+@schema_bp.route('/pipeline/run/init', methods=['POST'])
+def init_empty_run():
+    """
+    Create an empty run folder for session-level context (no generation).
+
+    Session 273: Used for Persona sessions without generation and
+    Compare sessions without generation (e.g., only translated).
+
+    Request Body:
+        config_name: str (e.g., 'persona_session', 'compare_session')
+        source_view: str (e.g., 'persona', 'compare')
+        device_id: str (optional)
+    """
+    from config import JSON_STORAGE_DIR
+
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'error': 'JSON body required'}), 400
+
+        config_name = data.get('config_name', 'session')
+        source_view = data.get('source_view')
+        device_id = data.get('device_id') or f"api_{uuid.uuid4().hex[:12]}"
+        safety_level = config.DEFAULT_SAFETY_LEVEL
+
+        run_id = generate_run_id()
+        recorder = get_recorder(
+            run_id=run_id,
+            config_name=config_name,
+            safety_level=safety_level,
+            device_id=device_id,
+            base_path=JSON_STORAGE_DIR
+        )
+
+        if source_view:
+            recorder.metadata['source_view'] = source_view
+            recorder._save_metadata()
+
+        logger.info(f"[CONTEXT] Initialized empty run {run_id} (source={source_view})")
+        return jsonify({'status': 'success', 'run_id': run_id}), 200
+
+    except Exception as e:
+        logger.error(f"[CONTEXT] Error initializing empty run: {e}")
         return jsonify({'status': 'error', 'error': str(e)}), 500
 
 

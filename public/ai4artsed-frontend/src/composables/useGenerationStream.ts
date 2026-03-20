@@ -36,6 +36,12 @@ export interface GenerationParams {
   // Session 265: Comparison mode — skip Stage 3 translation (send prompt raw to model)
   skip_stage3_translation?: boolean
 
+  // Session 273: Source tagging + comparison group linking
+  source_view?: string
+  comparison_group_id?: string
+  comparison_language?: string
+  comparison_original_prompt?: string
+
   // Session 151: Generation parameters (optional, ignored if config doesn't support them)
   width?: number
   height?: number
@@ -149,6 +155,20 @@ export function useGenerationStream() {
     // Session 265: Comparison mode
     if (params.skip_stage3_translation) {
       queryParams.set('skip_stage3_translation', 'true')
+    }
+
+    // Session 273: Source tagging + comparison group linking
+    if (params.source_view) {
+      queryParams.set('source_view', params.source_view)
+    }
+    if (params.comparison_group_id) {
+      queryParams.set('comparison_group_id', params.comparison_group_id)
+    }
+    if (params.comparison_language) {
+      queryParams.set('comparison_language', params.comparison_language)
+    }
+    if (params.comparison_original_prompt) {
+      queryParams.set('comparison_original_prompt', params.comparison_original_prompt)
     }
 
     // Session 151: Generation parameters (optional)

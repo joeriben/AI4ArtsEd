@@ -112,6 +112,16 @@
         </div>
 
         <div class="filter-group">
+          <label>Source</label>
+          <select v-model="filters.source_view" @change="applyFilters">
+            <option value="">All Sources</option>
+            <option v-for="sv in availableFilters.source_views" :key="sv" :value="sv">
+              {{ sv }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
           <label>Search</label>
           <input
             type="text"
@@ -199,6 +209,7 @@
               Stage2-Config
               <span v-if="sortField === 'config_name'">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
             </th>
+            <th>Source</th>
             <th>Modus</th>
             <th>Safety Level</th>
             <th>Stage</th>
@@ -225,6 +236,10 @@
             <td>{{ formatTimestamp(session.timestamp) }}</td>
             <td>{{ session.device_id ? session.device_id.substring(0, 8) + '...' : 'N/A' }}</td>
             <td><span class="config-badge">{{ session.config_name }}</span></td>
+            <td>
+              <span v-if="session.source_view" class="source-badge" :class="`source-${session.source_view}`">{{ session.source_view }}</span>
+              <span v-else class="source-badge source-default">direct</span>
+            </td>
             <td><span class="mode-badge">{{ session.output_mode || 'N/A' }}</span></td>
             <td><span class="safety-badge" :class="`safety-${session.safety_level}`">{{ session.safety_level }}</span></td>
             <td>{{ session.stage }} / {{ session.step }}</td>
@@ -283,6 +298,14 @@
                   <td><strong>Safety Level:</strong></td>
                   <td>{{ selectedSession.safety_level }}</td>
                 </tr>
+                <tr v-if="selectedSession.source_view">
+                  <td><strong>Source:</strong></td>
+                  <td><span class="source-badge" :class="`source-${selectedSession.source_view}`">{{ selectedSession.source_view }}</span></td>
+                </tr>
+                <tr v-if="selectedSession.comparison_group">
+                  <td><strong>Comparison Group:</strong></td>
+                  <td><code>{{ selectedSession.comparison_group.group_id }}</code></td>
+                </tr>
                 <tr>
                   <td><strong>Stage:</strong></td>
                   <td>{{ selectedSession.current_state?.stage }} / {{ selectedSession.current_state?.step }}</td>
@@ -338,6 +361,7 @@ const filters = ref({
   device_id: '',
   config_name: '',
   safety_level: '',
+  source_view: '',
   search: ''
 })
 
@@ -347,7 +371,8 @@ const showAllDates = ref(false)
 const availableFilters = ref({
   devices: [],
   configs: [],
-  safety_levels: []
+  safety_levels: [],
+  source_views: []
 })
 
 const stats = ref({
@@ -432,6 +457,7 @@ async function loadSessions() {
       ...(filters.value.device_id && { device_id: filters.value.device_id }),
       ...(filters.value.config_name && { config_name: filters.value.config_name }),
       ...(filters.value.safety_level && { safety_level: filters.value.safety_level }),
+      ...(filters.value.source_view && { source_view: filters.value.source_view }),
       ...(filters.value.search && { search: filters.value.search })
     })
 
@@ -481,6 +507,7 @@ function clearFilters() {
     device_id: '',
     config_name: '',
     safety_level: '',
+    source_view: '',
     search: ''
   }
   applyFilters()
@@ -1606,6 +1633,29 @@ onMounted(() => {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.source-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.source-persona {
+  background: #e8daef;
+  color: #6c3483;
+}
+
+.source-compare {
+  background: #d4efdf;
+  color: #1e8449;
+}
+
+.source-default {
+  background: #eaecee;
+  color: #566573;
 }
 
 .safety-kids {
