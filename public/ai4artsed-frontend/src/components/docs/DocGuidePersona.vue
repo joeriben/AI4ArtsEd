@@ -42,8 +42,8 @@
   <section class="info-section">
     <h3>{{ currentLanguage === 'de' ? 'Warum Widerständigkeit?' : 'Why resistance?' }}</h3>
     <p>{{ currentLanguage === 'de'
-      ? 'Konventionelle KI-Bildgenerierung folgt dem Muster: "Ich sage, was ich will, die Maschine liefert." Die Persona bricht dieses Muster bewusst auf. Sie macht sichtbar, dass Bildgenerierung immer Interpretation ist — und dass der interessanteste kreative Raum dort entsteht, wo man nicht die volle Kontrolle hat.'
-      : 'Conventional AI image generation follows the pattern: "I say what I want, the machine delivers." The persona deliberately breaks this pattern. It makes visible that image generation is always interpretation — and that the most interesting creative space emerges where one does not have full control.' }}</p>
+      ? 'Konventionelle KI-Bildgenerierung folgt dem Muster: "Ich sage, was ich will, die Maschine liefert." Die Persona bricht dieses Muster bewusst auf. Sie stellt sich gegen die Illusion des Nutzers als Kontroll-Subjekt über den Prozess und erinnert daran, dass viele Entscheidungen nicht auf der Seite derer stehen, die prompten.'
+      : 'Conventional AI image generation follows the pattern: "I say what I want, the machine delivers." The persona deliberately breaks this pattern. It challenges the user\'s illusion of being the controlling subject of the process and reminds us that many decisions do not rest with those who prompt.' }}</p>
   </section>
 </template>
 

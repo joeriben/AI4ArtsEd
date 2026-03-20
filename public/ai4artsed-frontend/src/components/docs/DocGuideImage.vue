@@ -3,10 +3,10 @@
     <h2>{{ currentLanguage === 'de' ? 'Bild-Transformation' : 'Image Transformation' }}</h2>
 
     <div class="concept-card highlight">
-      <h3>{{ currentLanguage === 'de' ? 'Bilder statt Text' : 'Images Instead of Text' }}</h3>
+      <h3>{{ currentLanguage === 'de' ? 'Teil eines größeren Prozesses' : 'Part of a Larger Process' }}</h3>
       <p>{{ currentLanguage === 'de'
-        ? 'Im Bild-Modus ersetzt ein hochgeladenes Bild den Text-Prompt. Die KI analysiert das Bild und verarbeitet es zusammen mit deinen Regeln — genau wie im Text-Modus, nur dass der Ausgangspunkt visuell statt sprachlich ist.'
-        : 'In Image Mode, an uploaded image replaces the text prompt. The AI analyzes the image and processes it together with your rules — just like in Text Mode, but with a visual instead of a textual starting point.' }}</p>
+        ? 'Im Bild-Modus wird die Plattform Teil eines größeren material-räumlichen Prozesses: Sie steht nicht im Zentrum, sondern ordnet sich ein. Kollektive Workshop-Prozesse, fotografische Raumerkundungen mit mobilen Geräten, eigene Skizzen — all das kann hier eingespeist und mit KI-Werkzeugen weiterverarbeitet werden, etwa in andere Kontexte gesetzt oder transformiert. Die integrierte Skizzenfunktion ermöglicht es, Ideen direkt in der Plattform visuell festzuhalten und als Ausgangspunkt zu verwenden.'
+        : 'In Image Mode, the platform becomes part of a larger material-spatial process: it is not the center but integrates itself. Collective workshop processes, photographic space explorations with mobile devices, your own sketches — all of this can be fed in and further processed with AI tools, for example placed in different contexts or transformed. The integrated sketch function allows you to capture ideas visually right within the platform and use them as a starting point.' }}</p>
     </div>
 
     <div class="step-card">
