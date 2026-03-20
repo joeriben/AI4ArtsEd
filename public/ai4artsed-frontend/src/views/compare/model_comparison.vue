@@ -49,10 +49,10 @@
 
       <!-- 3-Column Grid — always visible for flow transparency -->
       <div class="comparison-grid">
-        <div v-for="(model, idx) in MODELS.value" :key="model.id" class="comparison-slot">
+        <div v-for="(model, idx) in MODELS" :key="model.id" class="comparison-slot">
           <div class="slot-header">
             <span class="slot-model-name">{{ model.label }}</span>
-            <span v-if="slots[idx]?.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slots[idx]?.outputUrl" class="slot-queue">{{ slots[idx]?.queuePosition }}/{{ MODELS.value.length }}</span>
+            <span v-if="slots[idx] && slots[idx].queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slots[idx]?.outputUrl" class="slot-queue">{{ slots[idx]?.queuePosition }}/{{ MODELS.length }}</span>
           </div>
           <div class="slot-output-wrapper">
             <MediaOutputBox
