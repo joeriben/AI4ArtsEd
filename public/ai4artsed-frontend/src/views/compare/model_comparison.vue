@@ -262,11 +262,11 @@ async function handlePresetSelected(payload: { configId: string; context: string
 }
 
 // --- Trashy context ---
-function buildContext(): string {
+function buildContext(phase: string): string {
   const modelList = slots.value.map(s => s.label).join(', ')
   const results = slots.value.filter(s => s.outputUrl).length
   const blocked = slots.value.filter(s => s.blockedReason).map(s => s.label).join(', ')
-  return `[Model Comparison]\nPrompt: "${userPrompt.value}"\nModels: ${modelList}\nSeed: ${currentSeed.value}\nImages generated: ${results}/${slots.value.length}${blocked ? `\nBlocked: ${blocked}` : ''}`
+  return `[Model Comparison — ${phase}]\nPrompt: "${userPrompt.value}"\nModels: ${modelList}\nSeed: ${currentSeed.value}\nImages generated: ${results}/${slots.value.length}${blocked ? `\nBlocked: ${blocked}` : ''}`
 }
 
 // --- Main generation flow ---
@@ -357,12 +357,12 @@ async function startComparison() {
       }
 
       if (descriptions.length > 0) {
-        comparisonContext.value = buildContext() + '\n\n--- VLM Image Descriptions ---\n' + descriptions.join('\n\n')
+        comparisonContext.value = buildContext('generation_complete') + '\n\n--- VLM Image Descriptions ---\n' + descriptions.join('\n\n')
       } else {
-        comparisonContext.value = buildContext()
+        comparisonContext.value = buildContext('generation_complete')
       }
     } else {
-      comparisonContext.value = buildContext()
+      comparisonContext.value = buildContext('generation_complete')
     }
 
     // Session 273: POST comparison context + trashy chat to each successful run
