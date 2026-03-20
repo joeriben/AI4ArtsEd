@@ -52,7 +52,7 @@
         <div v-for="(slot, idx) in slots" :key="slot.configId" class="comparison-slot">
           <div class="slot-header">
             <span class="slot-model-name">{{ slot.label }}</span>
-            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ MODELS.length }}</span>
+            <span v-if="slot.queuePosition > 0 && !slotStreams[idx]?.isExecuting && !slot.outputUrl" class="slot-queue">{{ slot.queuePosition }}/{{ MODELS.value.length }}</span>
           </div>
           <div class="slot-output-wrapper">
             <MediaOutputBox
@@ -277,7 +277,7 @@ async function startComparison() {
   const baseUrl = isDev ? 'http://localhost:17802' : ''
 
   // Initialize slots + streams
-  slots.value = MODELS.map((m, idx) => ({
+  slots.value = MODELS.value.map((m, idx) => ({
     configId: m.id,
     label: m.label,
     outputUrl: null,
@@ -286,7 +286,7 @@ async function startComparison() {
     blockedReason: null,
     isFavorited: false,
   }))
-  slotStreams.value = MODELS.map(() => useGenerationStream())
+  slotStreams.value = MODELS.value.map(() => useGenerationStream())
 
   // Fixed seed for all
   const seed = Math.floor(Math.random() * 4294967296)
