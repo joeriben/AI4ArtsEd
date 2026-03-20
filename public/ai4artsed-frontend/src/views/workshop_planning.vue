@@ -133,6 +133,7 @@
             <span class="card-media-badge" :class="model.media_type">{{ mediaLabel(model.media_type) }}</span>
           </div>
           <div class="card-title">{{ model.name }}</div>
+          <div v-if="model.note" class="card-note">{{ model.note }}</div>
           <div class="card-facts">
             <div v-if="model.local" class="card-fact">
               {{ $t('workshop.models.needsGb', { gb: model.vram_gb }) }}
@@ -141,9 +142,7 @@
             <div v-else class="card-fact cloud-fact">
               {{ model.cloud_region === 'EU' ? $t('workshop.models.cloudEu') : $t('workshop.models.cloudUs') }}
             </div>
-            <div class="card-fact">{{ model.gen_time }}</div>
           </div>
-          <div v-if="model.note" class="card-note">{{ model.note }}</div>
           <div class="card-publisher">{{ model.publisher }}</div>
         </div>
       </div>
