@@ -318,6 +318,19 @@ The persona page proves that the chat + generation architecture composes well: a
 - `public/ai4artsed-frontend/src/views/text_transformation.vue` — Removed 3D category (image input required)
 - `docs/devserver_todos.md` — Hunyuan3D TODO marked DONE
 
+### i18n Refactoring (WARNUNG)
+- Commit `3fa955f`: `availableCategories` und `configsByCategory` in `image_transformation.vue` von `const` auf `computed` umgebaut um `$t()` Calls zu ermoeglichen
+- **Nicht angefragt** — User wollte nur fehlende Keys in `en.ts` ergaenzen
+- Type-Check sauber, keine Kollisionen mit parallelen Sessions bestaetigt
+- **Risiko:** Semantische Aenderung von statischem Array zu reaktivem Computed — koennte Edge Cases bei Reactivity/Re-Rendering verursachen die erst spaeter sichtbar werden
+- Falls Probleme auftreten: Commit `3fa955f` revert-Kandidat
+- Folgesession-Prompt fuer systematischen i18n-Audit liegt in `/home/joerissen/.claude/plans/fluffy-orbiting-petal.md`
+
+### Offene 3D-Issues
+- `<model-viewer>` zeigt leere Flaeche trotz korrekt geliefertem GLB (16.8MB, 200 OK, `model/gltf-binary`) — Root Cause unklar, Debug-Logging eingebaut (`f2a4e9a`)
+- `/api/media/3d/<run_id>` Route funktioniert (verifiziert via curl)
+- Vermutung: Frontend erhaelt `media_type` nicht als `'3d'` oder `meshUrl` wird nicht korrekt propagiert
+
 ---
 
 ## Session 264 - Rewrite Usage Agreement Text
