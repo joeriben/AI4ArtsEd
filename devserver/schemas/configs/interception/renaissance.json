@@ -28,7 +28,12 @@
     "en": "Art History",
     "he": "היסטוריית האמנות",
     "ar": "تاريخ الفن",
-    "bg": "История на изкуството"
+    "bg": "История на изкуството",
+    "tr": "Sanat Tarihi",
+    "ko": "미술사",
+    "uk": "Історія мистецтва",
+    "fr": "Histoire de l'art",
+    "es": "Historia del Arte"
   },
   "properties": [
     "arts"

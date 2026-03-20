@@ -21,6 +21,51 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-20-interception-config-description-tr-ko
+- **Session**: i18n audit
+- **Scope**: 32 JSON files in `devserver/schemas/configs/interception/` → add `tr` and `ko` to `description` field
+- **Affected files** (all missing `tr` + `ko` in `description`):
+  - analog_photography_1870s.json, analog_photography_1970s.json, analogue_copy.json, bauhaus.json, clichéfilter_v2.json, confucianliterati.json, cooked_negatives.json, digital_photography.json, forceful.json, heartmula.json, hunkydoryharmonizer.json, image_transformation.json, jugendsprache.json, latent_lab.json, mad_world.json, multi_image_transformation.json, one_world.json, overdrive.json, p5js_simplifier.json, partial_elimination.json, piglatin.json, planetarizer.json, renaissance.json, sensitive.json, split_and_combine.json, stillepost.json, surrealizer.json, technicaldrawing.json, tellastory.json, theopposite.json, tonejs_composer.json, user_defined.json
+- **What to do**: For each file, translate the `description.en` value into Turkish (`tr`) and Korean (`ko`). Add the translations as new keys in the `description` object alongside the existing languages.
+- **Context**: These are interception config descriptions shown to users in the preset selector. They describe artistic/pedagogical transformation perspectives. Translate the `en` text — do NOT translate from `de` (some `de` descriptions are abbreviated/different). Keep technical terms (CLIP, T5, MMDiT, ComfyUI, etc.) in English. Keep the pedagogical/artistic tone of the original.
+- **Note**: `category` field was already fixed in this session (all 10 categories now have all 9 languages). Only `description` remains.
+
+### WO-2026-03-20-i18n-audit-vue-hardcoded
+- **Session**: i18n audit
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW):
+  - `mediaOutput.print` (NEW): "Print"
+  - `mediaOutput.analyze` (NEW): "Image Analysis"
+  - `mediaOutput.analyzing` (NEW): "Analyzing..."
+  - `mediaOutput.generatedImage` (NEW): "Generated image"
+  - `mediaOutput.mediaCreated` (NEW): "Media file created"
+  - `mediaOutput.analysisTitle` (NEW): "Image Analysis"
+  - `mediaOutput.close` (NEW): "Close"
+  - `mediaOutput.saveSoon` (NEW): "Save (Coming Soon)"
+  - `mediaOutput.trashyReflection` (NEW): "Talk to Trashy about:"
+  - `mediaOutput.forwardToImageTransform` (NEW): "Forward to Image Transformation"
+  - `imageTransform.yourImage` (NEW): "Your image"
+  - `imageTransform.printTitle` (NEW): "Print: Transformed Image"
+  - `imageTransform.downloadError` (NEW): "Download failed"
+  - `imageTransform.analysisFailed` (NEW): "Image analysis failed"
+  - `imageTransform.analysisError` (NEW): "Error during image analysis"
+  - `textTransform.selectMedium` (NEW): "Choose a medium"
+  - `textTransform.selectModel` (NEW): "Select a model"
+  - `textTransform.runCode` (NEW): "Run code"
+  - `textTransform.p5jsCode` (NEW): "P5.js Code"
+  - `textTransform.livePreview` (NEW): "Live Preview"
+  - `textTransform.tonejsCode` (NEW): "Tone.js Code"
+  - `textTransform.audioPlayer` (NEW): "Audio Player"
+  - `textTransform.forwardToImage` (NEW): "Forward to Image Transformation"
+  - `textTransform.yourImage` (NEW): "Your image"
+  - `textTransform.pleaseSelectModel` (NEW): "Please select a model"
+  - `textTransform.saveSoon` (NEW): "Save feature coming soon!"
+  - `textTransform.categories.image` (NEW): "Image"
+  - `textTransform.categories.video` (NEW): "Video"
+  - `textTransform.categories.sound` (NEW): "Sound"
+  - `persona.toggleTTS` (NEW): "Toggle voice output"
+- **Context**: Systematic i18n audit of Vue hardcoded strings. These keys were added to en.ts in preparation for wiring them into the Vue components (separate task). MediaOutput keys are button tooltips (Download, Print, Analyze), section headers, and alt text. ImageTransform keys are error messages (alerts) and print window title. TextTransform keys are section headings, category labels for media types (Image/Video/Sound), code editor labels, and alert messages. `persona.toggleTTS` was missing from a prior work order. "P5.js Code", "Tone.js Code", "Live Preview" are technical labels — keep English-based where natural, translate where the target language has a common equivalent. "Save (Coming Soon)" = placeholder for a not-yet-implemented bookmark feature.
+
 ### WO-2026-03-20-i2x-3d-category-labels
 - **Session**: 265
 - **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg

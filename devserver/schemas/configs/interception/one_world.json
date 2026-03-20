@@ -28,7 +28,12 @@
     "en": "Critical Thinking",
     "he": "חשיבה ביקורתית",
     "ar": "التفكير النقدي",
-    "bg": "Критическо мислене"
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
   },
   "properties": [
     "critical_analysis"

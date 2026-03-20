@@ -2,16 +2,16 @@
   "pipeline": "text_transformation",
   "instruction_type": "artistic_transformation",
   "name": {
-    "en": "rationa",
+    "en": "Bauhaus",
     "de": "Bauhaus",
-    "tr": "rationa",
-    "ko": "rationa",
+    "tr": "Bauhaus",
+    "ko": "바우하우스",
     "uk": "Баухаус",
-    "fr": "rationa",
-    "es": "rationa",
+    "fr": "Bauhaus",
+    "es": "Bauhaus",
     "he": "באוהאוס",
     "ar": "الباوهاوس",
-    "bg": "rationa"
+    "bg": "Баухаус"
   },
   "description": {
     "en": "Reduces everything to basic geometric shapes and primary colors. Focuses on function and clear structure, stripping away decoration.",
@@ -28,7 +28,12 @@
     "en": "Art History",
     "he": "היסטוריית האמנות",
     "ar": "تاريخ الفن",
-    "bg": "История на изкуството"
+    "bg": "История на изкуството",
+    "tr": "Sanat Tarihi",
+    "ko": "미술사",
+    "uk": "Історія мистецтва",
+    "fr": "Histoire de l'art",
+    "es": "Historia del Arte"
   },
   "properties": [
     "arts"

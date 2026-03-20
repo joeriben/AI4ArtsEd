@@ -28,7 +28,12 @@
     "en": "Research",
     "he": "מחקר",
     "ar": "البحث",
-    "bg": "Изследвания"
+    "bg": "Изследвания",
+    "tr": "Araştırma",
+    "ko": "연구",
+    "uk": "Дослідження",
+    "fr": "Recherche",
+    "es": "Investigación"
   },
   "properties": [
     "research"

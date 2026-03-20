@@ -28,7 +28,12 @@
     "en": "System",
     "he": "מערכת",
     "ar": "النظام",
-    "bg": "Система"
+    "bg": "Система",
+    "tr": "Sistem",
+    "ko": "시스템",
+    "uk": "Система",
+    "fr": "Système",
+    "es": "Sistema"
   },
   "properties": [],
   "context": {},

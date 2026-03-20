@@ -28,7 +28,12 @@
     "en": "Attitudes",
     "he": "עמדות",
     "ar": "المواقف",
-    "bg": "Нагласи"
+    "bg": "Нагласи",
+    "tr": "Tutumlar",
+    "ko": "태도",
+    "uk": "Ставлення",
+    "fr": "Attitudes",
+    "es": "Actitudes"
   },
   "properties": [
     "attitudes"

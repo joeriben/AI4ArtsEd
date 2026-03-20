@@ -147,6 +147,16 @@ export const en = {
     model3dReady: '3D model generated',
     model3dInteractive: 'Rotate and zoom the 3D model with touch or mouse',
     downloadGlb: 'Download 3D Model (GLB)',
+    print: 'Print',
+    analyze: 'Image Analysis',
+    analyzing: 'Analyzing...',
+    generatedImage: 'Generated image',
+    mediaCreated: 'Media file created',
+    analysisTitle: 'Image Analysis',
+    close: 'Close',
+    saveSoon: 'Save (Coming Soon)',
+    trashyReflection: 'Talk to Trashy about:',
+    forwardToImageTransform: 'Forward to Image Transformation',
   },
   settings: {
     authRequired: 'Authentication Required',
@@ -717,7 +727,12 @@ export const en = {
         label: 'Hunyuan\n3D',
         name: 'Hunyuan3D-2 Image-to-3D'
       }
-    }
+    },
+    yourImage: 'Your image',
+    printTitle: 'Print: Transformed Image',
+    downloadError: 'Download failed',
+    analysisFailed: 'Image analysis failed',
+    analysisError: 'Error during image analysis',
   },
   textTransform: {
     inputLabel: 'Your Idea = WHAT?',
@@ -732,7 +747,23 @@ export const en = {
     optimizedPlaceholder: 'The optimized prompt will appear after model selection.',
     loadingDefault: 'Your prompt is being adapted for the selected model. Each model understands descriptions differently — the AI optimizes the text for best results.',
     loadingSd35: 'SD3.5 has three text encoders. CLIP-L and CLIP-G are being optimized for visual precision — T5-XXL receives your original text directly, preserving your creative intent.',
-    loadingTranslateHint: 'If your text is not in English, use the translate button first — the model works best with English input.'
+    loadingTranslateHint: 'If your text is not in English, use the translate button first — the model works best with English input.',
+    selectMedium: 'Choose a medium',
+    selectModel: 'Select a model',
+    runCode: 'Run code',
+    p5jsCode: 'P5.js Code',
+    livePreview: 'Live Preview',
+    tonejsCode: 'Tone.js Code',
+    audioPlayer: 'Audio Player',
+    forwardToImage: 'Forward to Image Transformation',
+    yourImage: 'Your image',
+    pleaseSelectModel: 'Please select a model',
+    saveSoon: 'Save feature coming soon!',
+    categories: {
+      image: 'Image',
+      video: 'Video',
+      sound: 'Sound',
+    },
   },
   training: {
     info: {
@@ -1667,6 +1698,7 @@ export const en = {
   persona: {
     title: 'Persona',
     inputPlaceholder: 'Say something...',
+    toggleTTS: 'Toggle voice output',
     fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.',
     newDialog: 'New dialog'
   },

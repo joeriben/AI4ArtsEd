@@ -28,7 +28,12 @@
     "en": "Photography & Media",
     "he": "צילום ומדיה",
     "ar": "التصوير والإعلام",
-    "bg": "Фотография и медии"
+    "bg": "Фотография и медии",
+    "tr": "Fotoğraf & Medya",
+    "ko": "사진 & 미디어",
+    "uk": "Фотографія та медіа",
+    "fr": "Photographie & Médias",
+    "es": "Fotografía & Medios"
   },
   "properties": [
     "technical_imaging"

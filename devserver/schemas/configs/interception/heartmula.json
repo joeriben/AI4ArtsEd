@@ -28,7 +28,12 @@
     "en": "Sound",
     "he": "צליל",
     "ar": "الصوت",
-    "bg": "Звук"
+    "bg": "Звук",
+    "tr": "Ses",
+    "ko": "사운드",
+    "uk": "Звук",
+    "fr": "Son",
+    "es": "Sonido"
   },
   "properties": [
     "sound"

@@ -28,7 +28,12 @@
     "en": "Art & Culture",
     "he": "אמנות ותרבות",
     "ar": "الفن والثقافة",
-    "bg": "Изкуство и култура"
+    "bg": "Изкуство и култура",
+    "tr": "Sanat ve Kültür",
+    "ko": "예술과 문화",
+    "uk": "Мистецтво та культура",
+    "fr": "Art et Culture",
+    "es": "Arte y Cultura"
   },
   "properties": [
     "freestyle"
