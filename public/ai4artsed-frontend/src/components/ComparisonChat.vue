@@ -227,13 +227,17 @@ watch(() => props.comparisonContext, (ctx) => {
 
 async function sendAutoComment(_context: string) {
   isLoading.value = true
-  try {
-    const reply = await callChat(
-      'The comparison run just completed. Analyze the VLM image descriptions in your context. '
+  const autoPrompt = props.compareType === 'model'
+    ? 'The model comparison run just completed. Analyze the VLM image descriptions in your context. '
+      + 'State factually what differs between the models and why (grounded in the specific descriptions — architecture differences, text rendering capability, detail fidelity, composition). '
+      + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
+      + 'Do not suggest prompts from a generic list. Do not simulate excitement.'
+    : 'The language comparison run just completed. Analyze the VLM image descriptions in your context. '
       + 'State factually what differs between the language variants and why (grounded in the specific descriptions, not generic CLIP bias). '
       + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
       + 'Do not suggest prompts from a generic list. Do not simulate excitement.'
-    )
+  try {
+    const reply = await callChat(autoPrompt)
     if (reply) {
       addMessage('assistant', reply)
     }
