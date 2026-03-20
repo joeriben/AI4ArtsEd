@@ -395,7 +395,8 @@ onMounted(() => {
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  min-height: calc(100vh - 60px);
+  padding-bottom: calc(1rem + var(--footer-collapsed-height, 36px));
+  min-height: calc(100vh - 60px - var(--footer-collapsed-height, 36px));
 }
 
 .temp-main {
@@ -591,7 +592,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 0.5rem;
   min-height: 200px;
-  max-height: calc(100vh - 280px);
+  max-height: calc(100vh - 360px);
 }
 
 /* ---------- Chat bubbles (shared) ---------- */
@@ -662,7 +663,7 @@ onMounted(() => {
   flex-shrink: 0;
   position: sticky;
   top: 80px;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 120px - var(--footer-collapsed-height, 36px));
   display: flex;
   flex-direction: column;
   background: rgba(15, 15, 15, 0.8);
