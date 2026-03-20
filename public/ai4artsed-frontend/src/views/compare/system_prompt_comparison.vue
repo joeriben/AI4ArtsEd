@@ -404,9 +404,14 @@ async function fetchGreeting() {
       uk: 'Ukrainian', fr: 'French', es: 'Spanish', he: 'Hebrew', ar: 'Arabic', bg: 'Bulgarian'
     }
     const lang = langNames[userPreferences.language] || 'English'
+    const presetDescriptions = presets.map(p => {
+      if (p.id === 'none') return '"none" — no system prompt (raw model behavior)'
+      const summary = p.prompt.length > 80 ? p.prompt.slice(0, 80) + '...' : p.prompt
+      return `"${p.id}" — ${summary}`
+    }).join('; ')
     const reply = await callTrashy(
-      `Greet the user briefly. Explain that this mode sends the same message to an AI running with three different system prompts — invisible instructions that control how the AI behaves. `
-      + `The three default presets are: no system prompt (raw model), a helpful assistant prompt, and a pirate prompt. Users can change these or write their own. `
+      `Greet the user briefly. Explain that this mode sends the same message to an AI running with three different system prompts — invisible instructions that control how the AI behaves before the user says anything. `
+      + `Each of the three columns can use a different preset or a fully custom prompt. Available presets: ${presetDescriptions}. `
       + `Suggest ONE starting message where system prompt differences become especially visible. Use [PROMPT: ...] format. Speak in ${lang}.`
     )
     if (reply) {
