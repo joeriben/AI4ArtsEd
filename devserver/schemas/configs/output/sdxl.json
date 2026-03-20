@@ -1,0 +1,67 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Stable Diffusion XL",
+    "de": "Stable Diffusion XL"
+  },
+  "description": {
+    "en": "The quality leap to 1024px with dual CLIP encoding (2023). Dramatically better composition and detail.",
+    "de": "Der Qualitaetssprung auf 1024px mit dualem CLIP-Encoding (2023). Deutlich bessere Komposition und Details."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sdxl",
+    "NEGATIVE_PROMPT": "ugly, blurry, deformed, watermark, text, low quality",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 30,
+    "CFG": 7,
+    "SAMPLER": "euler_ancestral",
+    "SCHEDULER": "normal",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sdxl_base.safetensors",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "estimated_duration_seconds": "15-40",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": ["1024x1024", "1024x768", "768x1024", "1152x896", "896x1152"],
+    "version": "1.0",
+    "display_name": "SDXL",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "UNet + VAE (Latent Diffusion, larger)",
+    "params": "~3.5B (UNet) + ~800M (refiner, not used here)",
+    "text_encoders": ["CLIP ViT-L/14 (123M)", "OpenCLIP ViT-bigG/14 (695M)"],
+    "quantization": "FP16",
+    "license": "CreativeML Open RAIL++-M",
+    "fair_culture": "Trained on internal dataset (filtered LAION derivative, no creator consent documented)",
+    "safety_by_design": "Basic NSFW classifier (removable)"
+  },
+  "display": {
+    "color": "#5C6BC0",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 45
+  },
+  "tags": {
+    "en": ["image", "sdxl", "stable-diffusion", "comfyui", "historical"],
+    "de": ["bild", "sdxl", "stable-diffusion", "comfyui", "historisch"]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Stable Diffusion 1.5",
+    "de": "Stable Diffusion 1.5"
+  },
+  "description": {
+    "en": "The model that started the open-source AI image revolution (2022). 512px, single CLIP encoder.",
+    "de": "Das Modell, das die Open-Source-KI-Bildrevolution startete (2022). 512px, einzelner CLIP-Encoder."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sd15",
+    "NEGATIVE_PROMPT": "ugly, blurry, deformed, watermark, text",
+    "WIDTH": 512,
+    "HEIGHT": 512,
+    "STEPS": 25,
+    "CFG": 7.5,
+    "SAMPLER": "euler_ancestral",
+    "SCHEDULER": "normal",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sd15.safetensors",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 4000,
+    "estimated_duration_seconds": "5-15",
+    "recommended_resolution": "512x512",
+    "supported_resolutions": ["512x512", "512x768", "768x512"],
+    "version": "1.0",
+    "display_name": "SD 1.5",
+    "publisher": "Stability AI / RunwayML (London, UK)",
+    "architecture": "UNet + VAE (Latent Diffusion)",
+    "params": "~860M (UNet)",
+    "text_encoders": ["CLIP ViT-L/14 (123M)"],
+    "quantization": "FP16",
+    "license": "CreativeML Open RAIL-M",
+    "fair_culture": "Trained on LAION-5B subset (~2B image-text pairs, web-scraped, no creator consent)",
+    "safety_by_design": "None built-in"
+  },
+  "display": {
+    "color": "#78909C",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 50
+  },
+  "tags": {
+    "en": ["image", "sd15", "stable-diffusion", "comfyui", "historical"],
+    "de": ["bild", "sd15", "stable-diffusion", "comfyui", "historisch"]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

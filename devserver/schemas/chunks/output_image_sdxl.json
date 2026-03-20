@@ -1,0 +1,142 @@
+{
+  "name": "output_image_sdxl",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "requires_workflow": true,
+  "description": "Stable Diffusion XL — the quality leap to 1024px with dual CLIP encoding (2023)",
+
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 0,
+        "steps": 30,
+        "cfg": 7,
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "denoise": 1,
+        "model": ["4", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["5", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": { "title": "KSampler" }
+    },
+    "4": {
+      "inputs": {
+        "ckpt_name": "OfficialStableDiffusion/sdxl_base.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": { "title": "Load SDXL Checkpoint" }
+    },
+    "5": {
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": { "title": "Empty Latent Image" }
+    },
+    "6": {
+      "inputs": {
+        "text": "",
+        "clip": ["4", 1]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Positive Prompt)" }
+    },
+    "7": {
+      "inputs": {
+        "text": "ugly, blurry, deformed, watermark, text, low quality",
+        "clip": ["4", 1]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Negative Prompt)" }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["3", 0],
+        "vae": ["4", 2]
+      },
+      "class_type": "VAEDecode",
+      "_meta": { "title": "VAE Decode" }
+    },
+    "9": {
+      "inputs": {
+        "filename_prefix": "ai4artsed_sdxl",
+        "images": ["8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": { "title": "Save Image" }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "6",
+      "field": "inputs.text",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Main prompt"
+    },
+    "negative_prompt": {
+      "node_id": "7",
+      "field": "inputs.text",
+      "default": "ugly, blurry, deformed, watermark, text, low quality",
+      "description": "Negative prompt"
+    },
+    "width": {
+      "node_id": "5",
+      "field": "inputs.width",
+      "default": 1024
+    },
+    "height": {
+      "node_id": "5",
+      "field": "inputs.height",
+      "default": 1024
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 30
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 7
+    },
+    "sampler_name": {
+      "node_id": "3",
+      "field": "inputs.sampler_name",
+      "default": "euler_ancestral"
+    },
+    "scheduler": {
+      "node_id": "3",
+      "field": "inputs.scheduler",
+      "default": "normal"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 0
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "9",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "15-40",
+    "quality_rating": 3,
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "model_file": "sdxl_base.safetensors",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": ["1024x1024", "1024x768", "768x1024", "1152x896", "896x1152"]
+  }
+}

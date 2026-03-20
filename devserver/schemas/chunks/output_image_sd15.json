@@ -1,0 +1,142 @@
+{
+  "name": "output_image_sd15",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "requires_workflow": true,
+  "description": "Stable Diffusion 1.5 — the model that started the open-source AI image revolution (2022)",
+
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 0,
+        "steps": 25,
+        "cfg": 7.5,
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "denoise": 1,
+        "model": ["4", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["5", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": { "title": "KSampler" }
+    },
+    "4": {
+      "inputs": {
+        "ckpt_name": "OfficialStableDiffusion/sd15.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": { "title": "Load SD 1.5 Checkpoint" }
+    },
+    "5": {
+      "inputs": {
+        "width": 512,
+        "height": 512,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": { "title": "Empty Latent Image" }
+    },
+    "6": {
+      "inputs": {
+        "text": "",
+        "clip": ["4", 1]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Positive Prompt)" }
+    },
+    "7": {
+      "inputs": {
+        "text": "ugly, blurry, deformed, watermark, text",
+        "clip": ["4", 1]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Negative Prompt)" }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["3", 0],
+        "vae": ["4", 2]
+      },
+      "class_type": "VAEDecode",
+      "_meta": { "title": "VAE Decode" }
+    },
+    "9": {
+      "inputs": {
+        "filename_prefix": "ai4artsed_sd15",
+        "images": ["8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": { "title": "Save Image" }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "6",
+      "field": "inputs.text",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Main prompt"
+    },
+    "negative_prompt": {
+      "node_id": "7",
+      "field": "inputs.text",
+      "default": "ugly, blurry, deformed, watermark, text",
+      "description": "Negative prompt"
+    },
+    "width": {
+      "node_id": "5",
+      "field": "inputs.width",
+      "default": 512
+    },
+    "height": {
+      "node_id": "5",
+      "field": "inputs.height",
+      "default": 512
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 25
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 7.5
+    },
+    "sampler_name": {
+      "node_id": "3",
+      "field": "inputs.sampler_name",
+      "default": "euler_ancestral"
+    },
+    "scheduler": {
+      "node_id": "3",
+      "field": "inputs.scheduler",
+      "default": "normal"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 0
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "9",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "5-15",
+    "quality_rating": 2,
+    "requires_gpu": true,
+    "gpu_vram_mb": 4000,
+    "model_file": "sd15.safetensors",
+    "recommended_resolution": "512x512",
+    "supported_resolutions": ["512x512", "512x768", "768x512"]
+  }
+}
