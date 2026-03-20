@@ -3,20 +3,6 @@
     <div class="compare-main">
       <!-- Input Section -->
       <div class="input-section">
-        <!-- Preset toggle -->
-        <div class="preset-toggle">
-          <button
-            v-for="(preset, key) in PRESETS"
-            :key="key"
-            class="preset-btn"
-            :class="{ active: activePreset === key }"
-            :disabled="isGenerating"
-            @click="activePreset = key as PresetKey"
-          >
-            {{ preset.label }}
-          </button>
-        </div>
-
         <MediaInputBox
           icon="💡"
           :label="t('compare.promptLabel')"
@@ -44,6 +30,20 @@
           @click="startComparison"
         >
           {{ isGenerating ? t('compare.generatingAll') : t('compare.generateAll') }}
+        </button>
+      </div>
+
+      <!-- Preset selector — directly above grid, model names as labels -->
+      <div class="preset-selector">
+        <button
+          v-for="(preset, key) in PRESETS"
+          :key="key"
+          class="preset-card"
+          :class="{ active: activePreset === key }"
+          :disabled="isGenerating"
+          @click="activePreset = key as PresetKey"
+        >
+          <span class="preset-models">{{ preset.models.map(m => m.label).join(' · ') }}</span>
         </button>
       </div>
 
@@ -390,43 +390,49 @@ async function startComparison() {
   max-height: calc(100vh - 120px);
 }
 
-/* Preset toggle */
-.preset-toggle {
-  display: inline-flex;
-  gap: 0.2rem;
-  padding: 0.2rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 0.75rem;
+/* Preset selector — above grid, visually distinct from tabs */
+.preset-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.preset-btn {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.4);
+.preset-card {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  text-align: center;
 }
 
-.preset-btn:hover:not(.active):not(:disabled) {
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.05);
+.preset-card:hover:not(.active):not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.preset-btn.active {
-  background: rgba(76, 175, 80, 0.2);
-  color: rgba(76, 175, 80, 0.9);
+.preset-card.active {
+  border-color: rgba(76, 175, 80, 0.4);
+  background: rgba(76, 175, 80, 0.08);
 }
 
-.preset-btn:disabled {
+.preset-card:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.preset-models {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.3px;
+}
+
+.preset-card.active .preset-models {
+  color: rgba(76, 175, 80, 0.9);
 }
 
 /* Input Section */
