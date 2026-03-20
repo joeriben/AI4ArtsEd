@@ -9,6 +9,55 @@
 
 ---
 
+## 2026-03-20: Workshop Model Preloading — Three Key Design Decisions
+
+### 1. ComfyUI Fake-Run Preloading (No Native Preload API)
+
+**Decision:** ComfyUI models are preloaded by submitting minimal "fake workflow" (128×128px, 1 step, dummy LoadImage) instead of implementing a custom preload endpoint.
+
+**Reasoning:** ComfyUI has no `/preload` or `/load-model` REST API. The only reliable way to force a model into GPU memory is to submit a complete workflow and let the execution engine load all dependencies. Using a minimal workflow (not a full 2048×2048 generation):
+- Forces the model to load (satisfies the goal)
+- Completes in 1–2 minutes per model (acceptable in workshop setup)
+- Avoids implementing custom ComfyUI node plugins (maintenance burden)
+- Respects ComfyUI's design constraint that all workflows need output nodes
+
+**Tradeoff:** Generates a tiny 128×128 output image that is immediately discarded. This is acceptable because preloading only happens during workshop setup (explicit user action), not during normal operation.
+
+**Alternative rejected:** Custom ComfyUI node to bind models without execution. Would require:
+- Compiling Python extensions in ComfyUI environment (dependency mess)
+- Separate node distribution and versioning
+- Support burden across multiple ComfyUI versions
+
+---
+
+### 2. Sequential (Not Parallel) Model Loading
+
+**Decision:** Models load one at a time, not in parallel. Each model waits for the previous one to complete before starting.
+
+**Reasoning:** RTX 6000 Blackwell has 96 GB VRAM. Loading multiple huge models simultaneously (Flux 2: 18GB, Wan 2.2: 16GB, SD 3.5: 9GB) would exceed VRAM and trigger OOM errors that leave the system in a corrupted state. Sequential loading guarantees:
+- Each model loads into available VRAM without contention
+- If one model fails, subsequent models still attempt to load
+- User sees clear per-model progress via SSE events (not a silent waiting period)
+
+**Acceptable slowness:** Full workshop preload (9 models) takes ~10–15 minutes. This is acceptable because it happens once at workshop start, before students arrive.
+
+---
+
+### 3. Per-Model Unload UI vs. ComfyUI Limitation
+
+**Decision:** UI offers per-model unload buttons, but ComfyUI unload frees ALL models (not just one). User is warned in the confirmation dialog.
+
+**Reasoning:** GPU service models (Diffusers backend) support per-model unload via Ollama or direct service calls. ComfyUI, however, has only `POST /interrupt` (cancels current execution) and `POST /free` (globally frees all loaded models). There is no `POST /free/model/{name}` endpoint.
+
+**Options considered:**
+1. Hide ComfyUI models from the unload UI (users can't free VRAM) — too restrictive
+2. Add × buttons but silently do nothing (breaks user expectation) — confusing
+3. Add × buttons + clear warning (chosen) — transparent about the limitation, empowers user to decide
+
+**Future:** Implement ComfyUI REST API extension with per-model unload. For now, accept the limitation and document it.
+
+---
+
 ## 2026-03-19: Persona — TTS/Speech Output Removed (Design Decision)
 
 **Decision:** TTS (text-to-speech) feature removed from Persona page. No speech output, no speaker icon.

@@ -1,5 +1,81 @@
 # Development Log
 
+## Session 272 - Workshop Model Preloading, Variant Cards, Selective Unloading (2026-03-20)
+**Date:** 2026-03-20
+**Focus:** Expanded model cards with variant support, ComfyUI fake-run preloading via SSE, selective per-model unloading, refined VRAM bar UI.
+
+### Part 1 — Expanded Model Cards with Variants
+**File:** `public/ai4artsed-frontend/src/composables/useGpuStatus.ts`
+
+- Split monolithic model cards into usage-specific variants:
+  - `wan22_video` → `wan22_t2v` + `wan22_i2v` (with `shared_with: 'wan22_t2v'` on i2v to avoid double-counting shared CLIP/VAE ~10GB)
+  - `qwen_text_to_image` → `qwen_t2i` + `qwen_i2i` + `qwen_multi` (separate UNETs, different VRAM/quality profiles)
+- All local models now `preloadable: true` (enables "Load Now" button in UI)
+- Added `note` field to `PhysicalModel` type for consistent card layout: "Title → Note (italic, usage type) → GB → Publisher"
+- Removed `gen_time` field (values were inaccurate/randomly generated)
+- Removed GPT Image 1 (unavailable via Mammouth cloud API)
+- Detection patterns expanded from `string` to `string[]` arrays (e.g. `['flux', 'flux2']`)
+
+**Card Layout Decision:**
+- Usage type always as **italic note**, never in title. E.g. "Wan 2.2" with note "text-to-video" instead of "Wan 2.2 Text→Video"
+- SD 3.5 Large corrected: note = "text-to-image" only (no i2i implementation exists)
+- Qwen variants share title "Qwen Image", differentiated by note ("text-to-image" / "image editing" / "multi-image fusion")
+
+### Part 2 — ComfyUI Fake-Run Preloading with SSE Streaming
+**Files:** `devserver/my_app/routes/settings_routes.py`
+
+New endpoint `POST /api/settings/workshop/preload` — models are loaded via minimal "fake runs" since ComfyUI has no preload API:
+
+**Mechanism:**
+1. `_build_comfyui_preload_workflow()` — deep-copies chunk JSON, overrides to 128×128px, 1 step, dummy LoadImage node
+2. Submits full workflow (graph stays intact; ComfyUI requires output nodes) to ComfyUI `/prompt`
+3. Sequential loading (not parallel) — VRAM constraints prevent simultaneous loading of multiple huge models
+
+**SSE Streaming Events:**
+- `model_start` — Loading "Flux 2" (30s–2min per model)
+- `model_complete` — Flux 2 loaded (GPU memory now committed)
+- `model_error` — Failed to load (backend error, timeout, OOM)
+- `done` — All requested models complete
+
+**`_WORKSHOP_LOAD_MAP` Extended:**
+- GPU service models: `sd35_large`, `heartmula`, `stable_audio`
+- ComfyUI fake-runs: `flux2`, `wan22_t2v`, `wan22_i2v`, `ltx_video`, `acestep`, `qwen_t2i`, `qwen_i2i`, `qwen_multi`
+
+**Dummy Image Handling:**
+- 1×1 white PNG auto-generated and uploaded to ComfyUI (satisfies LoadImage nodes)
+
+### Part 3 — Selective Model Unloading
+**Files:** `devserver/my_app/routes/settings_routes.py`, `public/ai4artsed-frontend/src/views/workshop_planning.vue`
+
+**Two endpoints:**
+1. `POST /api/settings/workshop/unload` — Routes to GPU service individual unload OR ComfyUI `/interrupt` + `/free`
+2. `POST /api/settings/workshop/clear-all` — Unloads all GPU service backends + ComfyUI global free
+
+**ComfyUI Limitation:**
+- ComfyUI has no per-model unload API, only global `/free` — user warned in confirmation dialog
+- Clicking × on a ComfyUI model in VRAM bar unloads ALL ComfyUI models (clear communication in UI)
+
+**UI Changes:**
+- × buttons on loaded model segments in VRAM bar (click to unload individual models)
+- "Load Now" and "Clear All" buttons below memory bar
+- Trashy chat messages for all preload/unload operations (e.g. "Flux 2 loaded successfully (15.2 GB)")
+
+### Design Decisions
+1. **ComfyUI Fake Runs** — No preload API exists, so submit minimal workflow that forces model loading. Full graph stays intact (ComfyUI requirement for output nodes).
+2. **Sequential Loading** — VRAM constraints; loading multiple huge models simultaneously would OOM. User sees per-model progress via SSE.
+3. **SSE Streaming** — Each model takes 30s–2min to load; user needs real-time per-model feedback, not a silent blocking wait.
+4. **ComfyUI Unload Limitation** — Accepted and communicated. ComfyUI's architecture doesn't support per-model eviction. Future work: ComfyUI REST API cross-process eviction backend.
+5. **Shared VRAM Tracking** — `shared_with` / `shared_vram_gb` on `PhysicalModel` prevents double-counting shared components (e.g. Wan t2v + i2v both need CLIP ~10GB, but only count once).
+
+### Files Modified
+- `public/ai4artsed-frontend/src/composables/useGpuStatus.ts` — Model card expansion, variant split
+- `public/ai4artsed-frontend/src/views/workshop_planning.vue` — Unload buttons, "Load Now" / "Clear All" UI
+- `devserver/my_app/routes/settings_routes.py` — Preload/unload endpoints, fake-run workflow builder, SSE streaming
+- `public/ai4artsed-frontend/src/i18n/en.ts` — New i18n keys for preload/unload messages
+- `public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md` — Translation work orders for all new strings
+
+---
+
 ## Session 271 - Compare Hub: Bug Fixes + Model Comparison + SD History
 **Date:** 2026-03-20
 **Focus:** Fix critical bugs in Language Comparison, add Model Comparison tab with SD History mode, mode-aware Trashy prompts.
