@@ -3,6 +3,20 @@
     <div class="compare-main">
       <!-- Input Section -->
       <div class="input-section">
+        <!-- Preset selector -->
+        <div class="preset-selector">
+          <button
+            v-for="(preset, key) in PRESETS"
+            :key="key"
+            class="preset-card"
+            :class="{ active: activePreset === key }"
+            :disabled="isGenerating"
+            @click="activePreset = key as PresetKey"
+          >
+            <span class="preset-models">{{ preset.models.map(m => m.label).join(' · ') }}</span>
+          </button>
+        </div>
+
         <MediaInputBox
           icon="💡"
           :label="t('compare.promptLabel')"
@@ -24,27 +38,13 @@
           <span class="seed-value">{{ currentSeed }}</span>
         </div>
 
-        <button
-          class="generate-btn"
-          :disabled="!userPrompt.trim() || isGenerating"
+        <GenerationButton
+          :disabled="!userPrompt.trim()"
+          :executing="isGenerating"
+          :label="t('compare.generateAll')"
+          :executing-label="t('compare.generatingAll')"
           @click="startComparison"
-        >
-          {{ isGenerating ? t('compare.generatingAll') : t('compare.generateAll') }}
-        </button>
-      </div>
-
-      <!-- Preset selector — directly above grid, model names as labels -->
-      <div class="preset-selector">
-        <button
-          v-for="(preset, key) in PRESETS"
-          :key="key"
-          class="preset-card"
-          :class="{ active: activePreset === key }"
-          :disabled="isGenerating"
-          @click="activePreset = key as PresetKey"
-        >
-          <span class="preset-models">{{ preset.models.map(m => m.label).join(' · ') }}</span>
-        </button>
+        />
       </div>
 
       <!-- 3-Column Grid — always visible for flow transparency -->
@@ -112,6 +112,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
@@ -461,30 +462,6 @@ async function startComparison() {
   font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-.generate-btn {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.75rem;
-  background: rgba(76, 175, 80, 0.15);
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  border-radius: 10px;
-  color: rgba(76, 175, 80, 0.9);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.generate-btn:hover:not(:disabled) {
-  background: rgba(76, 175, 80, 0.25);
-  border-color: rgba(76, 175, 80, 0.5);
-}
-
-.generate-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
 
 /* Comparison Grid — always 3 columns */
 .comparison-grid {

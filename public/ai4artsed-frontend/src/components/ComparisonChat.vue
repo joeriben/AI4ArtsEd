@@ -197,11 +197,11 @@ function onNewRun() {
 /** Fetch a proactive greeting with prompt suggestions from the LLM */
 async function fetchProactiveGreeting() {
   isLoading.value = true
+  const greetingPrompt = props.compareType === 'model'
+    ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt. There are two presets — one with current top models (SD 3.5, Flux 2, Gemini), one showing the evolution from SD 1.5 (2022) through SDXL (2023) to SD 3.5 (2024). Suggest ONE starting prompt where model differences are especially visible (spatial complexity, fine detail, or text rendering). Use [PROMPT: ...] format.'
+    : 'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.'
   try {
-    const reply = await callChat(
-      'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.',
-      []
-    )
+    const reply = await callChat(greetingPrompt, [])
     if (reply) {
       addMessage('assistant', reply)
     } else {
