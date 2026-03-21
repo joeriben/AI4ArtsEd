@@ -782,7 +782,7 @@ async function startGeneration() {
       // Check if output is substantially different from input (LLM sanitized/replaced it)
       // Use simple word overlap: if less than 30% of input words appear in output, it was changed
       const inputWords = new Set(original.toLowerCase().split(/\s+/).filter(w => w.length > 3))
-      const outputWords = new Set(result.toLowerCase().split(/\s+/).filter(w => w.length > 3))
+      const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
       let overlap = 0
       for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
       const overlapRatio = inputWords.size > 0 ? overlap / inputWords.size : 1
