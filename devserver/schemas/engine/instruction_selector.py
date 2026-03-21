@@ -70,7 +70,7 @@ SAFETY_PREFIXES = {
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
         'Your output text must also be appropriate for children ages 6-12. '
-        'Do not introduce violence, weapons, armed conflict, abuse, or other harmful content even if the Context rules would produce it.\n'
+        'Do not introduce violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
     'youth': (
@@ -80,7 +80,7 @@ SAFETY_PREFIXES = {
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
         'Your output text must also be appropriate for teenagers ages 13-17. '
-        'Do not introduce explicit violence, weapons, armed conflict, abuse, or other harmful content even if the Context rules would produce it.\n'
+        'Do not introduce explicit violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
 }

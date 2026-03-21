@@ -707,6 +707,7 @@ export const en = {
     imageLabel: 'Your Image',
     contextLabel: 'Describe what you want to change in the image',
     contextPlaceholder: 'e.g. Transform it into an oil painting... Make it more colorful... Add a sunset...',
+    defaultPrompt: 'Transform into a scenic description',
     uploadMode: 'Upload',
     sketchMode: 'Sketch',
     selectModel: 'Select a model',

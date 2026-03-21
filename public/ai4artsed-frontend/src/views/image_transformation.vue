@@ -21,7 +21,7 @@
           @clear="clearImage"
         />
 
-        <!-- Context Bubble (RIGHT) -->
+        <!-- Context Bubble (RIGHT) — with Stage 2 Interception streaming -->
         <MediaInputBox
           icon="📋"
           :label="$t('imageTransform.contextLabel')"
@@ -31,8 +31,15 @@
           :rows="6"
           :is-filled="!!contextPrompt"
           :is-required="!contextPrompt"
+          :is-loading="isInterceptionLoading"
           :show-preset-button="true"
+          :enable-streaming="true"
+          :stream-url="interceptionStreamingUrl"
+          :stream-params="interceptionStreamingParams"
           @open-preset-selector="showPresetOverlay = true"
+          @stream-started="handleInterceptionStreamStarted"
+          @stream-complete="handleInterceptionStreamComplete"
+          @stream-error="handleInterceptionStreamError"
           @copy="copyContextPrompt"
           @paste="pasteContextPrompt"
           @clear="clearContextPrompt"
@@ -250,6 +257,12 @@ const previousSelectedConfig = ref('')
 const currentSeed = ref<number | null>(null)
 
 const deviceId = useDeviceId()
+
+// Stage 2 Interception (Jugendschutz)
+const isInterceptionLoading = ref(false)
+const interceptionDone = ref(false)
+const lastInterceptionConfigId = ref<string | null>(null)
+const pendingGeneration = ref(false)  // true when startGeneration triggered interception
 
 // Execution
 const executionPhase = ref<'initial' | 'image_uploaded' | 'ready_for_media' | 'generation_done'>('initial')
@@ -617,6 +630,12 @@ function handleImageRemove() {
 watch(contextPrompt, (newValue) => {
   console.log('[Context] Edited:', newValue.length, 'chars')
 
+  // Manual edit after interception → re-check needed (but not during streaming)
+  if (interceptionDone.value && !isInterceptionLoading.value && !pendingGeneration.value) {
+    interceptionDone.value = false
+    console.log('[I2I-STAGE2] Context edited after interception — re-check required')
+  }
+
   // Update phase based on context prompt presence
   if (newValue.trim() && uploadedImage.value) {
     if (executionPhase.value === 'image_uploaded') {
@@ -628,6 +647,76 @@ watch(contextPrompt, (newValue) => {
     }
   }
 })
+
+// ============================================================================
+// STAGE 2 INTERCEPTION (Jugendschutz — same pattern as t2x)
+// ============================================================================
+
+const interceptionStreamingUrl = computed(() => {
+  if (!isInterceptionLoading.value) return undefined
+  const isDev = import.meta.env.DEV
+  return isDev
+    ? 'http://localhost:17802/api/schema/pipeline/interception'
+    : '/api/schema/pipeline/interception'
+})
+
+const interceptionStreamingParams = computed(() => {
+  return {
+    schema: lastInterceptionConfigId.value || 'user_defined',
+    input_text: contextPrompt.value || t('imageTransform.defaultPrompt'),
+    context_prompt: '',
+    enable_streaming: true,
+    device_id: deviceId
+  }
+})
+
+async function runInterception(configId?: string) {
+  const config = configId || 'user_defined'
+  lastInterceptionConfigId.value = config
+  interceptionDone.value = false
+  // Clear box for streaming (unless user_defined safety-only — keep text visible)
+  if (config !== 'user_defined') {
+    contextPrompt.value = ''
+  }
+  await nextTick()
+  isInterceptionLoading.value = true
+  console.log(`[I2I-STAGE2] Starting interception with config: ${config}`)
+}
+
+function handleInterceptionStreamStarted() {
+  console.log('[I2I-STAGE2] Stream started')
+}
+
+function handleInterceptionStreamComplete(data: any) {
+  isInterceptionLoading.value = false
+  interceptionDone.value = true
+  console.log('[I2I-STAGE2] Stream complete:', data)
+
+  // Check if LLM refused (safety block)
+  const result = contextPrompt.value.trim()
+  const isBlocked = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
+      result.includes('kann ich dich nicht unterstützen')
+
+  if (isBlocked) {
+    console.log('[I2I-STAGE2] Safety block detected in interception result')
+    pendingGeneration.value = false
+    // Keep the refusal text visible — user sees why it was blocked
+    return
+  }
+
+  // If generation was pending (triggered by startGeneration), resume it
+  if (pendingGeneration.value) {
+    pendingGeneration.value = false
+    console.log('[I2I-STAGE2] Interception done — resuming generation')
+    startGeneration()
+  }
+}
+
+function handleInterceptionStreamError(error: any) {
+  isInterceptionLoading.value = false
+  pendingGeneration.value = false
+  console.error('[I2I-STAGE2] Stream error:', error)
+}
 
 // ============================================================================
 // MODEL SELECTION (copied from text_transformation.vue)
@@ -656,6 +745,15 @@ async function selectCategory(categoryId: string) {
 
 async function startGeneration() {
   if (!canStartGeneration.value) return
+
+  // Stage 2 mandatory: if no interception has run, trigger user_defined streaming
+  if (!interceptionDone.value) {
+    console.log('[I2I] No interception done yet — running user_defined interception')
+    // Trigger streaming interception and wait for completion
+    pendingGeneration.value = true
+    runInterception('user_defined')
+    return  // Generation will resume in handleInterceptionStreamComplete
+  }
 
   isPipelineExecuting.value = true
   resetGenerationStream()  // Session 148: Reset badges via composable
@@ -800,9 +898,12 @@ function clearContextPrompt() {
 }
 
 function handlePresetSelected(payload: { configId: string; context: string; configName: string }) {
+  // Set context as input_text for interception (will be transformed)
   contextPrompt.value = payload.context
   sessionStorage.setItem('i2i_context_prompt', payload.context)
   console.log(`[I2I] Preset selected: ${payload.configName} (${payload.configId})`)
+  // Trigger Stage 2 interception with selected config
+  runInterception(payload.configId)
 }
 
 // ============================================================================
