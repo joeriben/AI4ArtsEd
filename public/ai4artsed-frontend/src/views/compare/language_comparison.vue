@@ -34,13 +34,13 @@
           <span class="seed-value">{{ currentSeed }}</span>
         </div>
 
-        <button
-          class="generate-btn"
-          :disabled="!canGenerate || isGenerating"
+        <GenerationButton
+          :disabled="!canGenerate"
+          :executing="isGenerating"
+          :label="t('compare.generateAll')"
+          :executing-label="t('compare.generatingAll')"
           @click="startComparison"
-        >
-          {{ isGenerating ? t('compare.generatingAll') : t('compare.generateAll') }}
-        </button>
+        />
         <div v-if="safetyError" class="safety-error">{{ safetyError }}</div>
       </div>
 
@@ -119,6 +119,7 @@ import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 import { useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
@@ -591,6 +592,10 @@ onBeforeUnmount(() => {
   margin-bottom: 1.5rem;
 }
 
+.input-section :deep(.generation-button-container) {
+  justify-content: flex-start;
+}
+
 .model-select-row {
   display: flex;
   align-items: center;
@@ -647,30 +652,6 @@ onBeforeUnmount(() => {
   font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-.generate-btn {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.75rem;
-  background: rgba(76, 175, 80, 0.15);
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  border-radius: 10px;
-  color: rgba(76, 175, 80, 0.9);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.generate-btn:hover:not(:disabled) {
-  background: rgba(76, 175, 80, 0.25);
-  border-color: rgba(76, 175, 80, 0.5);
-}
-
-.generate-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
 
 /* Comparison Grid */
 .comparison-grid {

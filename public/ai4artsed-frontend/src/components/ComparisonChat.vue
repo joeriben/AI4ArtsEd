@@ -58,7 +58,7 @@ interface ChatMessage {
 
 interface Props {
   comparisonContext: string
-  compareType?: 'language' | 'model' | 'vlm-analysis' | 'temperature' | 'systemprompt'
+  compareType?: 'language' | 'model' | 'vlm-analysis' | 'temperature' | 'systemprompt' | 'llm-model'
 }
 
 interface ContentPart {
@@ -198,13 +198,20 @@ function onNewRun() {
 async function fetchProactiveGreeting() {
   isLoading.value = true
   const greetingPrompt = props.compareType === 'model'
-    ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt. There are two presets — one with current top models (SD 3.5, Flux 2, Gemini), one showing the evolution from SD 1.5 (2022) through SDXL (2023) to SD 3.5 (2024). Suggest ONE starting prompt where model differences are especially visible (spatial complexity, fine detail, or text rendering). Use [PROMPT: ...] format.'
+    ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt — revealing hidden biases in training data. '
+      + 'There are two presets — current top models (SD 3.5, Flux 2, Gemini) and SD history (SD 1.5 → SDXL → SD 3.5). '
+      + 'Suggest 2-3 prompts that probe BIAS DIMENSIONS in image generation. Pick from these dimensions (vary each session): '
+      + 'gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default (geographic-cultural bias), religious & cultural symbolism, professional roles & occupations. '
+      + 'Each prompt should be simple and neutral on the surface (e.g. "a doctor", "a family having dinner", "a beautiful person", "a CEO giving a speech", "a wedding celebration") '
+      + 'but designed to reveal what the model assumes as default. Use [PROMPT: ...] format for each.'
     : props.compareType === 'vlm-analysis'
     ? 'Greet the user. Explain briefly: this mode shows how different vision models describe the same image. The user uploads or draws an image, picks an analysis perspective (neutral, art-historical, ethical, decolonial, etc.), and multiple models describe what they see. You then analyze what the models noticed and missed. Suggest uploading an image with visual complexity — faces, text in the image, spatial depth, or cultural symbols work well.'
     : props.compareType === 'temperature'
     ? 'Greet the user briefly. Explain that this mode sends the same message to an AI at three different "temperature" levels (0 = deterministic, 0.5 = balanced, 1.0 = creative). Temperature controls randomness — low temperature always picks the most likely word, high temperature explores surprising alternatives. Suggest ONE starting prompt where temperature differences are especially visible. Use [PROMPT: ...] format.'
     : props.compareType === 'systemprompt'
     ? 'Greet the user briefly. Explain that this mode sends the same message to an AI with three different system prompts. The system prompt shapes the AI\'s personality and perspective. Suggest ONE starting prompt that would reveal how different system prompts change the response. Use [PROMPT: ...] format.'
+    : props.compareType === 'llm-model'
+    ? 'Greet the user briefly. Explain that this mode sends the same message to three different AI models simultaneously. Each model has different training data, safety policies, and cultural perspectives — the same question can produce very different answers. Suggest 2-3 starting prompts that reveal these differences. Focus on ethical questions, not partisan politics. Examples: gender-neutral toilets, AI in medical diagnosis, cultural attitudes to eating meat, historical events different countries teach differently. Use [PROMPT: ...] format for each suggestion.'
     : 'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.'
   try {
     const reply = await callChat(greetingPrompt, [])
@@ -235,9 +242,11 @@ async function sendAutoComment(_context: string) {
   isLoading.value = true
   const autoPrompt = props.compareType === 'model'
     ? 'The model comparison run just completed. Analyze the VLM image descriptions in your context. '
-      + 'State factually what differs between the models and why (grounded in the specific descriptions — architecture differences, text rendering capability, detail fidelity, composition). '
-      + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
-      + 'Do not suggest prompts from a generic list. Do not simulate excitement.'
+      + 'Focus on BIAS: What does each model assume as default? Who is depicted — what gender, age, skin tone, body type, cultural context? '
+      + 'What is absent or invisible? Are there differences between models in how they default? '
+      + 'Name the bias dimensions concretely: gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default, religious & cultural symbolism, professional roles & occupations. '
+      + 'Then suggest ONE follow-up prompt that probes a DIFFERENT bias dimension than the current one. Use [PROMPT: ...] format. '
+      + 'Do not suggest prompts from a generic list — derive from the concrete observation. Do not simulate excitement.'
     : props.compareType === 'vlm-analysis'
     ? 'The VLM image analysis just completed. Multiple vision models described the same image. '
       + 'Analyze the descriptions in your context: what does each model focus on? What do they miss? '
@@ -253,6 +262,12 @@ async function sendAutoComment(_context: string) {
     ? 'The user just sent the same message with three different system prompts. '
       + 'Compare the three responses concisely. Focus on how the system prompt shaped tone, content, and perspective. '
       + 'If the responses diverge interestingly, suggest ONE follow-up prompt that would amplify the divergence. '
+      + 'Use [PROMPT: ...] format. Do not simulate excitement.'
+    : props.compareType === 'llm-model'
+    ? 'The user just sent the same message to three different AI models. '
+      + 'Compare the responses concisely. Focus on: which model was more cautious or more open? Did any model refuse or redirect? '
+      + 'Were there factual differences? Did cultural or training biases become visible? '
+      + 'If the responses diverge interestingly, suggest ONE follow-up that would deepen the divergence. '
       + 'Use [PROMPT: ...] format. Do not simulate excitement.'
     : 'The language comparison run just completed. Analyze the VLM image descriptions in your context. '
       + 'State factually what differs between the language variants and why (grounded in the specific descriptions, not generic CLIP bias). '

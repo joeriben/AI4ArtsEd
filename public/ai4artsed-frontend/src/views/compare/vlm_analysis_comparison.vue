@@ -59,13 +59,13 @@
           </div>
         </div>
 
-        <button
-          class="analyze-btn"
-          :disabled="!canAnalyze || isAnalyzing"
+        <GenerationButton
+          :disabled="!canAnalyze"
+          :executing="isAnalyzing"
+          :label="t('compare.vlmAnalysis.analyzeBtn')"
+          :executing-label="t('compare.vlmAnalysis.analyzing')"
           @click="startAnalysis"
-        >
-          {{ isAnalyzing ? t('compare.vlmAnalysis.analyzing') : t('compare.vlmAnalysis.analyzeBtn') }}
-        </button>
+        />
       </div>
 
       <!-- Results Grid -->
@@ -110,6 +110,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 
 const { t } = useI18n()
 
@@ -442,29 +443,9 @@ async function startAnalysis() {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Analyze Button */
-.analyze-btn {
-  margin-top: 0.75rem;
-  width: 100%;
-  padding: 0.6rem 1rem;
-  background: rgba(76, 175, 80, 0.2);
-  border: 1px solid rgba(76, 175, 80, 0.4);
-  border-radius: 10px;
-  color: #4CAF50;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.analyze-btn:hover:not(:disabled) {
-  background: rgba(76, 175, 80, 0.3);
-}
-
-.analyze-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+/* Generation Button — left-align in input section */
+:deep(.generation-button-container) {
+  justify-content: flex-start;
 }
 
 /* Results Grid — columns set dynamically via :style binding */

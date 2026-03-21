@@ -9,16 +9,25 @@
           :class="{ active: activeTab === tab.id }"
           @click="setTab(tab.id)"
         >
+          <svg v-if="IMAGE_TABS.has(tab.id)" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor" class="tab-icon">
+            <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor" class="tab-icon">
+            <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/>
+          </svg>
           {{ t(`compare.tabs.${tab.id}`) }}
         </button>
       </div>
     </div>
 
-    <LanguageComparison v-if="activeTab === 'language'" />
-    <TemperatureComparison v-else-if="activeTab === 'temperature'" />
-    <ModelComparison v-else-if="activeTab === 'model'" />
-    <SystemPromptComparison v-else-if="activeTab === 'systemprompt'" />
-    <VlmAnalysisComparison v-else-if="activeTab === 'vlm-analysis'" />
+    <KeepAlive>
+      <LanguageComparison v-if="activeTab === 'language'" />
+      <TemperatureComparison v-else-if="activeTab === 'temperature'" />
+      <ModelComparison v-else-if="activeTab === 'model'" />
+      <SystemPromptComparison v-else-if="activeTab === 'systemprompt'" />
+      <VlmAnalysisComparison v-else-if="activeTab === 'vlm-analysis'" />
+      <LlmModelComparison v-else-if="activeTab === 'llm-model'" />
+    </KeepAlive>
   </div>
 </template>
 
@@ -30,19 +39,25 @@ import TemperatureComparison from './compare/temperature_comparison.vue'
 import ModelComparison from './compare/model_comparison.vue'
 import SystemPromptComparison from './compare/system_prompt_comparison.vue'
 import VlmAnalysisComparison from './compare/vlm_analysis_comparison.vue'
+import LlmModelComparison from './compare/llm_model_comparison.vue'
 
 const { t } = useI18n()
 
-type TabId = 'language' | 'temperature' | 'model' | 'systemprompt' | 'vlm-analysis'
+type TabId = 'language' | 'temperature' | 'model' | 'systemprompt' | 'vlm-analysis' | 'llm-model'
 
 const STORAGE_KEY = 'compare_hub_tab'
 
+const IMAGE_TABS = new Set<TabId>(['model', 'language', 'vlm-analysis'])
+
 const tabs: { id: TabId }[] = [
-  { id: 'language' },
+  // Image comparisons
   { id: 'model' },
+  { id: 'language' },
   { id: 'vlm-analysis' },
-  { id: 'temperature' },
+  // Text comparisons
+  { id: 'llm-model' },
   { id: 'systemprompt' },
+  { id: 'temperature' },
 ]
 
 const activeTab = ref<TabId>('language')
@@ -88,6 +103,9 @@ onMounted(() => {
 }
 
 .tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -99,6 +117,11 @@ onMounted(() => {
   transition: all 0.2s ease;
   font-family: inherit;
   white-space: nowrap;
+}
+
+.tab-icon {
+  opacity: 0.6;
+  flex-shrink: 0;
 }
 
 .tab-btn:hover:not(.active) {

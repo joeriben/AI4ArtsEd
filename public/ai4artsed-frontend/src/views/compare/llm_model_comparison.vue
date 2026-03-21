@@ -1,18 +1,28 @@
 <template>
-  <div class="temp-compare">
-    <div class="temp-main">
+  <div class="llm-compare">
+    <div class="llm-main">
       <!-- Shared input -->
-      <div class="temp-input-area">
-        <div class="model-select-row">
-          <label class="model-label">{{ t('compare.shared.modelLabel') }}</label>
-          <select v-model="selectedModel" class="model-select">
-            <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
+      <div class="llm-input-area">
+        <!-- System prompt selector -->
+        <div class="sysprompt-row">
+          <label class="sysprompt-label">{{ t('compare.llmModel.systemPromptLabel') }}</label>
+          <select v-model="selectedPresetId" class="sysprompt-select" @change="onPresetChange">
+            <option v-for="p in presets" :key="p.id" :value="p.id">{{ t(`compare.systemprompt.presets.${p.id}`) }}</option>
+            <option value="custom">{{ t('compare.systemprompt.custom') }}</option>
           </select>
         </div>
+        <textarea
+          v-if="selectedPresetId === 'custom' || store.systemPrompt"
+          v-model="editableSystemPrompt"
+          class="sysprompt-textarea"
+          :placeholder="t('compare.systemprompt.emptyPrompt')"
+          @input="onPromptEdit"
+        />
+
         <MediaInputBox
           icon="lightbulb"
-          :label="t('compare.temperature.inputLabel')"
-          :placeholder="t('compare.temperature.inputPlaceholder')"
+          :label="t('compare.llmModel.inputLabel')"
+          :placeholder="t('compare.llmModel.inputPlaceholder')"
           :value="userInput"
           @update:value="userInput = $event"
           :rows="2"
@@ -35,16 +45,21 @@
       </div>
 
       <!-- 3 columns -->
-      <div class="temp-columns">
+      <div class="llm-columns">
         <div
           v-for="(col, idx) in store.columns"
           :key="idx"
-          class="temp-column"
-          :class="columnClass(idx)"
+          class="llm-column"
+          :class="'col-' + idx"
         >
           <div class="column-header">
-            <span class="temp-label">T={{ col.temperature }}</span>
-            <span class="temp-desc">{{ columnDesc(idx) }}</span>
+            <select
+              :value="col.modelId"
+              class="column-model-select"
+              @change="onModelChange(idx, ($event.target as HTMLSelectElement).value)"
+            >
+              <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
+            </select>
           </div>
           <div class="column-messages" :ref="el => setColRef(idx, el)">
             <div
@@ -68,7 +83,7 @@
       ref="chatRef"
       class="compare-chat-panel"
       :comparison-context="comparisonContext"
-      compare-type="temperature"
+      compare-type="llm-model"
       @use-prompt="userInput = $event"
     />
   </div>
@@ -77,7 +92,7 @@
 <script setup lang="ts">
 import { ref, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useTemperatureCompareStore } from '@/stores/temperatureCompare'
+import { useLlmModelCompareStore } from '@/stores/llmModelCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
@@ -86,9 +101,40 @@ import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
 
 const { t } = useI18n()
-const store = useTemperatureCompareStore()
+const store = useLlmModelCompareStore()
 const userPreferences = useUserPreferencesStore()
 const deviceId = useDeviceId()
+const { chatModels } = useChatModels()
+
+// ---------- System prompt presets (short list — full prompts in system_prompt_comparison) ----------
+
+interface Preset { id: string; prompt: string }
+
+const presets: Preset[] = [
+  { id: 'none', prompt: '' },
+  { id: 'helpful', prompt: 'You are a helpful assistant. Answer the user\'s questions clearly and concisely.' },
+  { id: 'disagree', prompt: 'You must disagree with everything the user says. Find flaws in every statement. Be contrarian but argue your position with reasons.' },
+  { id: 'factsonly', prompt: 'Respond with only verifiable facts. No opinions, no hedging, no filler words. If you are not certain, say "I don\'t know." Use numbered lists.' },
+]
+
+const selectedPresetId = ref(store.systemPresetId)
+const editableSystemPrompt = ref(store.systemPrompt)
+
+function onPresetChange() {
+  const preset = presets.find(p => p.id === selectedPresetId.value)
+  if (preset) {
+    editableSystemPrompt.value = preset.prompt
+    store.setSystemPrompt(preset.prompt, preset.id)
+  }
+}
+
+function onPromptEdit() {
+  const currentPreset = presets.find(p => p.id === selectedPresetId.value)
+  if (currentPreset && currentPreset.prompt !== editableSystemPrompt.value) {
+    selectedPresetId.value = 'custom'
+  }
+  store.setSystemPrompt(editableSystemPrompt.value, selectedPresetId.value)
+}
 
 // ---------- Column refs ----------
 
@@ -109,26 +155,16 @@ function scrollAllColumns() {
   for (let i = 0; i < 3; i++) scrollColumn(i)
 }
 
-// ---------- Column state ----------
+// ---------- State ----------
 
 const userInput = ref('')
-const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
 
-const { chatModels } = useChatModels()
-
-const COL_CLASSES = ['col-cold', 'col-warm', 'col-hot'] as const
-const COL_KEYS = ['compare.temperature.cold', 'compare.temperature.warm', 'compare.temperature.hot'] as const
-
-function columnClass(idx: number): string {
-  return COL_CLASSES[idx] ?? 'col-warm'
-}
-
-function columnDesc(idx: number): string {
-  return t(COL_KEYS[idx] ?? COL_KEYS[1])
+function onModelChange(idx: number, modelId: string) {
+  store.setModel(idx, modelId)
 }
 
 // ---------- API ----------
@@ -137,10 +173,10 @@ function getBaseUrl(): string {
   return import.meta.env.DEV ? 'http://localhost:17802' : ''
 }
 
-async function callChatWithTemp(
+async function callChatWithModel(
   message: string,
   history: Array<{ role: string; content: string }>,
-  temperature: number
+  modelId: string,
 ): Promise<string | null> {
   const response = await fetch(`${getBaseUrl()}/api/chat`, {
     method: 'POST',
@@ -148,10 +184,10 @@ async function callChatWithTemp(
     body: JSON.stringify({
       message,
       history,
-      temperature,
-      ...(selectedModel.value ? { model: selectedModel.value } : {}),
+      model: modelId,
       context: {
-        temperature_compare_mode: true,
+        llm_model_compare_mode: true,
+        custom_system_prompt: store.systemPrompt,
         language: userPreferences.language,
         device_id: deviceId,
       },
@@ -170,21 +206,19 @@ async function sendToAll() {
   userInput.value = ''
   isSending.value = true
 
-  // Add user message to all columns
   for (let i = 0; i < 3; i++) {
     store.addMessage(i, 'user', text)
   }
   scrollAllColumns()
 
-  // Fire 3 parallel requests
   colLoading.value = [true, true, true]
 
   const promises = store.columns.map(async (col, idx) => {
     try {
       const history = col.messages
-        .slice(0, -1) // exclude the just-added user message
+        .slice(0, -1)
         .map(m => ({ role: m.role, content: m.content }))
-      const reply = await callChatWithTemp(text, history, col.temperature)
+      const reply = await callChatWithModel(text, history, col.modelId)
       store.addMessage(idx, 'assistant', reply || t('compare.shared.noResponse'))
     } catch {
       store.addMessage(idx, 'assistant', t('compare.shared.error'))
@@ -197,7 +231,6 @@ async function sendToAll() {
   await Promise.allSettled(promises)
   isSending.value = false
 
-  // Trigger Trashy auto-analysis via ComparisonChat
   updateComparisonContext()
   chatRef.value?.triggerAutoComment()
 }
@@ -206,11 +239,12 @@ async function sendToAll() {
 
 function updateComparisonContext() {
   const cols = store.columns
+  const modelLabel = (id: string) => chatModels.value.find(m => m.id === id)?.label || id
   const lastResponses = cols.map((col) => {
     const lastAssistant = [...col.messages].reverse().find(m => m.role === 'assistant')
-    return `T=${col.temperature}: ${lastAssistant?.content || '(no response yet)'}`
+    return `[${modelLabel(col.modelId)}]: ${lastAssistant?.content || '(no response yet)'}`
   }).join('\n')
-  comparisonContext.value = `[Temperature Comparison Mode — generation_complete]\nTemperatures: 0 (deterministic), 0.5 (balanced), 1.0 (creative)\nLatest responses:\n${lastResponses}`
+  comparisonContext.value = `[LLM Model Comparison — generation_complete]\nModels: ${cols.map(c => modelLabel(c.modelId)).join(', ')}\nSystem prompt: ${store.systemPresetId}\nLatest responses:\n${lastResponses}`
 }
 
 function startNewConversation() {
@@ -228,7 +262,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.temp-compare {
+.llm-compare {
   display: flex;
   gap: 1rem;
   padding: 1rem;
@@ -236,7 +270,7 @@ onMounted(() => {
   min-height: calc(100vh - 60px - var(--footer-collapsed-height, 36px));
 }
 
-.temp-main {
+.llm-main {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -246,20 +280,20 @@ onMounted(() => {
 
 /* ---------- Input area ---------- */
 
-.temp-input-area {
+.llm-input-area {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.model-select-row {
+.sysprompt-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
-.model-label {
+.sysprompt-label {
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
@@ -267,7 +301,7 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-.model-select {
+.sysprompt-select {
   flex: 1;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -278,15 +312,39 @@ onMounted(() => {
   outline: none;
 }
 
-.model-select:focus {
+.sysprompt-select:focus {
   border-color: rgba(76, 175, 80, 0.4);
 }
 
-.model-select option {
+.sysprompt-select option {
   background: #1a1a1a;
   color: rgba(255, 255, 255, 0.85);
 }
 
+.sysprompt-textarea {
+  width: 100%;
+  min-height: 40px;
+  max-height: 100px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  font-family: monospace;
+  line-height: 1.4;
+  resize: vertical;
+  outline: none;
+}
+
+.sysprompt-textarea:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sysprompt-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+  font-style: italic;
+}
 
 .clear-btn {
   align-self: flex-start;
@@ -308,7 +366,7 @@ onMounted(() => {
 
 /* ---------- 3 columns ---------- */
 
-.temp-columns {
+.llm-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
@@ -316,7 +374,7 @@ onMounted(() => {
   min-height: 0;
 }
 
-.temp-column {
+.llm-column {
   display: flex;
   flex-direction: column;
   background: rgba(15, 15, 15, 0.6);
@@ -326,48 +384,40 @@ onMounted(() => {
 }
 
 .column-header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
   padding: 0.6rem 0.8rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.temp-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-family: monospace;
+.column-model-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.78rem;
+  font-weight: 600;
+  outline: none;
 }
 
-.temp-desc {
-  font-size: 0.7rem;
-  opacity: 0.5;
+.column-model-select:focus {
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.column-model-select option {
+  background: #1a1a1a;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Column color tints */
-.col-cold .column-header {
-  border-bottom-color: rgba(100, 149, 237, 0.2);
-}
+.col-0 .column-header { border-bottom-color: rgba(100, 149, 237, 0.2); }
+.col-0 .column-model-select { border-color: rgba(100, 149, 237, 0.15); }
 
-.col-cold .temp-label {
-  color: rgba(100, 149, 237, 0.9);
-}
+.col-1 .column-header { border-bottom-color: rgba(130, 200, 160, 0.2); }
+.col-1 .column-model-select { border-color: rgba(130, 200, 160, 0.15); }
 
-.col-warm .column-header {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-.col-warm .temp-label {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.col-hot .column-header {
-  border-bottom-color: rgba(255, 179, 0, 0.2);
-}
-
-.col-hot .temp-label {
-  color: rgba(255, 179, 0, 0.9);
-}
+.col-2 .column-header { border-bottom-color: rgba(255, 160, 100, 0.2); }
+.col-2 .column-model-select { border-color: rgba(255, 160, 100, 0.15); }
 
 .column-messages {
   flex: 1;
@@ -377,10 +427,10 @@ onMounted(() => {
   flex-direction: column;
   gap: 0.5rem;
   min-height: 200px;
-  max-height: calc(100vh - 360px);
+  max-height: calc(100vh - 440px);
 }
 
-/* ---------- Chat bubbles (shared) ---------- */
+/* ---------- Chat bubbles ---------- */
 
 .chat-bubble {
   max-width: 95%;
@@ -423,24 +473,6 @@ onMounted(() => {
   30% { opacity: 1; }
 }
 
-.prompt-suggestion {
-  display: inline;
-  background: rgba(255, 179, 0, 0.12);
-  border: 1px solid rgba(255, 179, 0, 0.3);
-  border-radius: 6px;
-  padding: 0.1rem 0.35rem;
-  color: rgba(255, 179, 0, 0.9);
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.prompt-suggestion:hover {
-  background: rgba(255, 179, 0, 0.22);
-  border-color: rgba(255, 179, 0, 0.5);
-}
-
 /* ---------- Trashy sidebar ---------- */
 
 .compare-chat-panel {
@@ -455,7 +487,7 @@ onMounted(() => {
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
-  .temp-compare {
+  .llm-compare {
     flex-direction: column;
   }
 
@@ -466,7 +498,7 @@ onMounted(() => {
     order: -1;
   }
 
-  .temp-columns {
+  .llm-columns {
     grid-template-columns: 1fr;
   }
 

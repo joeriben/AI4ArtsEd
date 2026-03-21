@@ -541,6 +541,10 @@ onBeforeUnmount(() => {
   margin-bottom: 1.5rem;
 }
 
+.input-section :deep(.generation-button-container) {
+  justify-content: flex-start;
+}
+
 .seed-display {
   display: flex;
   align-items: center;

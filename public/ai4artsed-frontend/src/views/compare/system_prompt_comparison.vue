@@ -9,27 +9,22 @@
             <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
           </select>
         </div>
-        <div class="input-row">
-          <MediaInputBox
-            icon="lightbulb"
-            :label="t('compare.systemprompt.inputLabel')"
-            :placeholder="t('compare.systemprompt.inputPlaceholder')"
-            :value="userInput"
-            @update:value="userInput = $event"
-            :rows="2"
-            :show-translate="false"
-            :show-preset-button="false"
-            :disabled="isSending"
-            class="compare-input-box"
-          />
-          <button
-            class="send-btn"
-            :disabled="!canSend"
-            @click="sendToAll"
-          >
-            {{ isSending ? t('compare.shared.sending') : t('compare.shared.sendAll') }}
-          </button>
-        </div>
+        <MediaInputBox
+          icon="lightbulb"
+          :label="t('compare.systemprompt.inputLabel')"
+          :placeholder="t('compare.systemprompt.inputPlaceholder')"
+          :value="userInput"
+          @update:value="userInput = $event"
+          :rows="2"
+          :disabled="isSending"
+        />
+        <GenerationButton
+          :disabled="!userInput.trim()"
+          :executing="isSending"
+          :label="t('compare.shared.sendAll')"
+          :executing-label="t('compare.shared.sending')"
+          @click="sendToAll"
+        />
         <button
           v-if="store.hasConversation"
           class="clear-btn"
@@ -95,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSystemPromptCompareStore } from '@/stores/systemPromptCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
@@ -103,6 +98,7 @@ import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import GenerationButton from '@/components/GenerationButton.vue'
 
 const { t } = useI18n()
 const store = useSystemPromptCompareStore()
@@ -391,8 +387,6 @@ const comparisonContext = ref('')
 
 const { chatModels } = useChatModels()
 
-const canSend = computed(() => userInput.value.trim().length > 0 && !isSending.value)
-
 const COL_CLASSES = ['col-a', 'col-b', 'col-c'] as const
 
 function columnClass(idx: number): string {
@@ -567,39 +561,6 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.85);
 }
 
-.input-row {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-end;
-}
-
-.compare-input-box {
-  flex: 1;
-}
-
-.send-btn {
-  padding: 0.7rem 1.5rem;
-  background: rgba(76, 175, 80, 0.15);
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  border-radius: 10px;
-  color: rgba(76, 175, 80, 0.9);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  font-family: inherit;
-}
-
-.send-btn:hover:not(:disabled) {
-  background: rgba(76, 175, 80, 0.25);
-  border-color: rgba(76, 175, 80, 0.5);
-}
-
-.send-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
 
 .clear-btn {
   align-self: flex-start;

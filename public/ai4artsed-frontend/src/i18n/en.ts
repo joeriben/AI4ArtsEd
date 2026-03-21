@@ -1514,11 +1514,12 @@ export const en = {
   },
   compare: {
     tabs: {
-      language: 'Language Comparison',
-      temperature: 'Temperature Comparison',
-      model: 'Model Comparison',
-      systemprompt: 'System Prompt',
-      'vlm-analysis': 'Image Analysis',
+      model: 'Model Bias',
+      language: 'Culture Bias',
+      'vlm-analysis': 'Image Understanding',
+      'llm-model': 'Model Bias',
+      systemprompt: 'System Prompts',
+      temperature: 'Hot & Cool',
     },
     shared: {
       sendAll: 'Send to All',
@@ -1556,6 +1557,11 @@ export const en = {
         fiveyearold: 'Five-year-old',
         factsonly: 'Only facts',
       },
+    },
+    llmModel: {
+      inputLabel: 'Your Message',
+      inputPlaceholder: 'Type a message to send to all three models...',
+      systemPromptLabel: 'SYSTEM PROMPT',
     },
     vlmAnalysis: {
       imageLabel: 'Your Image',

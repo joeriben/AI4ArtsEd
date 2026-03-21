@@ -1019,6 +1019,8 @@ def _should_use_tools(context: dict = None) -> bool:
         return False
     if context.get('system_prompt_compare_mode'):
         return False
+    if context.get('llm_model_compare_mode'):
+        return False
     # Workshop planning and session mode: tools enabled
     return True
 
@@ -1040,8 +1042,8 @@ def build_system_prompt(context: dict = None, language: str = None) -> str:
 
     if context is None:
         base = GENERAL_SYSTEM_PROMPT
-    elif context.get('system_prompt_compare_mode'):
-        # System prompt comparison: use the custom system prompt as-is (may be empty)
+    elif context.get('system_prompt_compare_mode') or context.get('llm_model_compare_mode'):
+        # System prompt / LLM model comparison: use the custom system prompt as-is (may be empty)
         custom = context.get('custom_system_prompt', '')
         return custom.strip() if custom.strip() else ''
     elif context.get('temperature_compare_mode'):
@@ -1171,6 +1173,7 @@ def chat():
         # outputs at different temperatures because the thinking phase constrains output)
         is_temp_compare = context and context.get('temperature_compare_mode')
         is_sysprompt_compare = context and context.get('system_prompt_compare_mode')
+        is_llm_compare = context and context.get('llm_model_compare_mode')
 
         # Tool use: provide tools for modes that formerly had INTERFACE_REFERENCE
         tools = None
@@ -1187,7 +1190,7 @@ def chat():
                 messages=messages,
                 temperature=temperature if temperature is not None else 0.7,
                 max_tokens=2048,
-                enable_thinking=not (is_temp_compare or is_sysprompt_compare),
+                enable_thinking=not (is_temp_compare or is_sysprompt_compare or is_llm_compare),
                 model_override=model_override,
                 tools=tools,
             )
