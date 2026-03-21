@@ -661,15 +661,11 @@ const interceptionStreamingUrl = computed(() => {
 })
 
 const interceptionStreamingParams = computed(() => {
-  const isUserDefined = !lastInterceptionConfigId.value || lastInterceptionConfigId.value === 'user_defined'
   return {
     schema: lastInterceptionConfigId.value || 'user_defined',
     input_text: contextPrompt.value || t('imageTransform.defaultPrompt'),
-    // Safety-only (user_defined): instruct LLM to pass through unchanged
-    // With config: empty context_prompt lets the config's context apply
-    context_prompt: isUserDefined
-      ? 'Output the input exactly as provided, applying it to this image. Do not change or rephrase the text.'
-      : '',
+    // Config-based interception: remind LLM that output will be applied to an input image
+    context_prompt: 'IMPORTANT: The output text will be used as an instruction to transform an input image. Always reference "this image" or "the image" in your output. The user has uploaded a photo that the model will modify based on your text.',
     enable_streaming: true,
     device_id: deviceId
   }
@@ -751,13 +747,41 @@ async function selectCategory(categoryId: string) {
 async function startGeneration() {
   if (!canStartGeneration.value) return
 
-  // Stage 2 mandatory: if no interception has run, trigger user_defined streaming
+  // Stage 2 mandatory: if no config-based interception has run, do a non-destructive
+  // safety check via the interception endpoint. The original text stays unchanged.
   if (!interceptionDone.value) {
-    console.log('[I2I] No interception done yet — running user_defined interception')
-    // Trigger streaming interception and wait for completion
-    pendingGeneration.value = true
-    runInterception('user_defined')
-    return  // Generation will resume in handleInterceptionStreamComplete
+    console.log('[I2I] No interception done — running non-destructive safety check')
+    const isDev = import.meta.env.DEV
+    const baseUrl = isDev ? 'http://localhost:17802' : ''
+    try {
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/interception`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          schema: 'user_defined',
+          input_text: contextPrompt.value,
+          context_prompt: 'Output the input exactly as provided. Do not change or rephrase.',
+          enable_streaming: false,
+          device_id: deviceId
+        })
+      })
+      const data = await res.json()
+      const result = data.final_output || ''
+      if (result.includes('Hierbei kann ich Dich nicht unterstützen') ||
+          result.includes('kann ich dich nicht unterstützen') ||
+          result.toLowerCase().includes('cannot support you')) {
+        generationErrorMessage.value = result
+        console.log('[I2I-STAGE2] Safety blocked:', result)
+        return
+      }
+      interceptionDone.value = true
+      console.log('[I2I-STAGE2] Safety check passed — text unchanged')
+    } catch (e) {
+      console.error('[I2I-STAGE2] Safety check error:', e)
+      // Fail-closed: don't proceed if safety check fails
+      generationErrorMessage.value = 'Safety check unavailable'
+      return
+    }
   }
 
   isPipelineExecuting.value = true
