@@ -699,6 +699,7 @@ export const en = {
     image3Label: 'Image 3 (optional)',
     contextLabel: 'Describe what you want to do with the images',
     contextPlaceholder: 'e.g. Insert the house from image 2 and the horse from image 3 into image 1. Preserve colors and style from image 1.',
+    defaultPrompt: 'Transform into a scenic description',
     modeTitle: 'Multiple Images → Image',
     selectConfig: 'Choose your model:',
     generating: 'Images are being fused...'

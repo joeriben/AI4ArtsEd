@@ -26,7 +26,8 @@ Tags:
 - **Scope**: en.ts
 - **Changed keys** (new or modified):
   - `imageTransform.defaultPrompt` (NEW)
-- **Context**: Default prompt for image transformation when user leaves the context field empty. Used as fallback instruction for Stage 2 interception. Should work for both image and video transformation.
+  - `multiImage.defaultPrompt` (NEW)
+- **Context**: Default prompt for image/multi-image transformation when user leaves the context field empty. Used as fallback instruction for Stage 2 interception. Should work for both image and video transformation.
 
 ### WO-2026-03-20-interception-config-description-tr-ko
 - **Session**: i18n audit
