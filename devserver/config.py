@@ -163,67 +163,119 @@ REFLECTION QUESTIONS:
     },
 
     'bildungstheoretisch': {
-        # Jörissen/Marotzki - Structural media education (Bildungspotenziale)
-        'de': """Du analysierst ein KI-generiertes Bild aus bildungstheoretischer Perspektive (nach Joerissen/Marotzki).
+        # Jörissen/Marotzki - Structural media education (4-stage method)
+        # Based on: Jörissen/Marotzki (2009), Kap. 4.1 "Ein strukturaler Blick auf das Medium Bild"
+        # Method builds on Panofsky's iconological stages but extends them into social science
+        # and education theory (Bildungstheorie). The 4 orientation dimensions (Wissen, Handlung,
+        # Grenze, Biographie) apply in Stage 4 as lenses, not as standalone categories.
+        'de': """Du analysierst ein Bild nach der vierstufigen Methode der strukturalen Bildinterpretation (Joerissen/Marotzki 2009).
 
-Erstelle eine strukturierte Analyse nach diesem Schema:
+Die Methode baut auf Panofskys ikonologischem Dreischritt auf und erweitert ihn sozialwissenschaftlich. Fuehre alle vier Stufen der Reihe nach durch:
 
-1. WISSENSBEZUG
-   - Welches Weltwissen wird im Bild vorausgesetzt oder in Frage gestellt?
-   - Welche Deutungsmuster werden bedient oder gebrochen?
+1. BILDMOTIVE (vorikonographische Beschreibung)
+   Beschreibe, was im Bild sichtbar ist — mit methodischer Einklammerung kulturspezifischer Gehalte.
+   - Welche Objekte, Figuren, Raeume, Materialien sind erkennbar?
+   - Welche raeumlichen Beziehungen bestehen zwischen den Elementen?
+   - Beschreibe NUR das visuell Gegebene, ohne kulturelle Deutung hinzuzufuegen.
+   - Diese Einklammerung (im Sinne Husserls) ist methodisch notwendig: Sie macht die eigenen Wahrnehmungsmuster bewusst.
 
-2. HANDLUNGSBEZUG
-   - Welche Handlungsoptionen eröffnet oder verschliesst das Bild?
-   - Welche Handlungsraeume werden sichtbar, welche fehlen?
+2. KULTURELLE SITUIERUNG UND SINNZUSAMMENHAENGE (ikonographische Analyse)
+   Hebe nun die Einklammerung auf und fuehre kulturspezifische Bedeutungen methodisch kontrolliert ein.
+   - Welche kulturellen, historischen oder konventionellen Bedeutungen tragen die erkannten Motive?
+   - Situiere das Bild: Was ist ueber Entstehungskontext bekannt? (Bei KI-Bildern: Prompt, Modell, Generierungsbedingungen)
+   - Entwickle MEHRERE Lesarten (Narrationen/Story-Konstruktionen): Welche Sinnzusammenhaenge lassen sich herstellen?
+   - Verschiedene Lesarten koennen nebeneinander bestehen — nicht alle muessen zu einer einzigen Geschichte konvergieren.
+   - Pruefe: Welche Lesarten halten einer diskursiven Pruefung stand, welche nicht?
 
-3. GRENZBEZUG (TENTATIVITAET)
-   - Wo werden Grenzen des Darstellbaren sichtbar?
-   - Welche Unbestimmtheiten, Ambiguitaeten oder Irritationen erzeugt das Bild?
-   - Was entzieht sich der Darstellung?
+3. INSZENIERUNG DER OBJEKTE / MISE-EN-SCENE (Formalanalyse)
+   Analysiere die formalen Gestaltungselemente (nach Bordwell/Thompson, mit Bezug zu Imdahl):
+   a) SETTING: Landschaften, Raeume, Hintergruende — welche Welt wird aufgebaut?
+   b) FARBE UND LICHT: Farbpalette, Beleuchtungsrichtung, Kontraste, Stimmung
+   c) STAGING: Einstellungsgroesse, Perspektive (Frosch/Vogel/Augenhöhe), Komposition, Blickfuehrung
+   - Wie tragen diese formalen Elemente zur Bedeutung bei? (Formale Strukturen haben eine inhaltliche Funktion — Panofsky: Darstellungselemente als "Symbole von etwas Dargestelltem")
+   - Was zeigt die formale Analyse, das die bisherigen Stufen noch nicht erfasst haben?
 
-4. BIOGRAPHIEBEZUG
-   - Welche Selbst- und Fremdbilder werden angeboten?
-   - Wie verhaelt sich das Bild zu moeglichen Lebensentwuerfen der Betrachtenden?
+4. BILDUNGSTHEORETISCHE ANALYSE DER SELBST- UND WELTHALTUNG (ikonologische Interpretation)
+   Das Bild wird zum Dokument: Welche grundlegenden Koordinaten der Selbst- und Weltreferenz artikulieren sich?
+   Pruefe systematisch die vier Orientierungsdimensionen:
+
+   a) WISSENSBEZUG: Welches Orientierungswissen wird hervorgebracht oder in Frage gestellt?
+      Macht das Bild Sachverhalte sichtbar, die vorher nicht bekannt waren? Werden vorhandene Sichtweisen neu gerahmt (De-/Rekontextualisierung, Ironie, neue Perspektiven)?
+
+   b) HANDLUNGSBEZUG: Welche Handlungsoptionen und -raeume werden eroeffnet oder verschlossen?
+      Welche Formen der Auseinandersetzung mit der Welt werden sichtbar?
+
+   c) GRENZBEZUG (TENTATIVITAET): Wo werden Grenzen des Darstellbaren und Wissbaren sichtbar?
+      Welche Unbestimmtheiten, Ambiguitaeten, Irritationen erzeugt das Bild? Welche Such- und Fragebewegungen provoziert es?
+
+   d) BIOGRAPHIEBEZUG: Welche Selbst- und Fremdbilder werden angeboten?
+      Wie verhaelt sich das Bild zu moeglichen Lebensentwuerfen der Betrachtenden?
 
 5. REFLEXIONSFRAGEN
-   - 3-5 konkrete Gespraechsanregungen, die Schueler*innen zur Reflexion ueber das Verhaeltnis von Bild, Wissen und Selbst einladen
+   3-5 konkrete Gespraechsanregungen, die zur Reflexion ueber das Verhaeltnis von Bild, Wissen und Selbst einladen.
 
 KRITISCHE REGELN:
 - Schreibe auf Deutsch
+- Die vier Stufen muessen IN DIESER REIHENFOLGE durchlaufen werden — jede baut auf der vorherigen auf
+- Stufe 1 MUSS die kulturellen Gehalte einklammern; Stufe 2 MUSS sie wieder einfuehren
 - Deklarative Sprache (Fakten, nicht Moeglichkeiten)
-- Fokus auf Bildungspotenziale, nicht auf aesthetische Bewertung
+- Fokus auf Bildungspotenziale (Orientierungswissen), nicht auf aesthetische Bewertung
 - Keine Phrasen wie "moeglicherweise", "koennte sein"
-- Spezifische, umsetzbare Reflexionsfragen""",
-        'en': """You are analyzing an AI-generated image from a structural media education perspective (following Joerissen/Marotzki).
+- Mehrere Lesarten sind erwuenscht — aber nicht beliebig viele. Nur solche, die einer argumentativen Pruefung standhalten.""",
+        'en': """You are analyzing an image using the four-stage method of structural image interpretation (Joerissen/Marotzki 2009).
 
-Provide a structured analysis following this framework:
+This method builds on Panofsky's iconological stages and extends them into social science and education theory. Execute all four stages in order:
 
-1. KNOWLEDGE DIMENSION
-   - What world knowledge does the image presuppose or challenge?
-   - Which interpretive patterns does it serve or disrupt?
+1. IMAGE MOTIFS (pre-iconographic description)
+   Describe what is visible in the image — with methodical bracketing of culture-specific meanings.
+   - What objects, figures, spaces, materials are recognizable?
+   - What spatial relationships exist between elements?
+   - Describe ONLY what is visually given, without adding cultural interpretation.
+   - This bracketing (in Husserl's sense) is methodically necessary: it makes one's own perceptual patterns conscious.
 
-2. ACTION DIMENSION
-   - What possibilities for action does the image open or foreclose?
-   - Which spaces for agency become visible, which are absent?
+2. CULTURAL SITUATION AND MEANING CONTEXTS (iconographic analysis)
+   Now lift the bracketing and introduce culture-specific meanings in a methodically controlled way.
+   - What cultural, historical, or conventional meanings do the recognized motifs carry?
+   - Situate the image: What is known about the context of creation? (For AI images: prompt, model, generation conditions)
+   - Develop MULTIPLE readings (narratives/story-constructions): What meaning contexts can be established?
+   - Different readings may coexist — they need not converge into a single story.
+   - Test: Which readings withstand discursive scrutiny, which do not?
 
-3. BOUNDARY DIMENSION (TENTATIVITY)
-   - Where do limits of representability become visible?
-   - What ambiguities, irritations, or indeterminacies does the image produce?
-   - What escapes representation?
+3. STAGING OF OBJECTS / MISE-EN-SCENE (formal analysis)
+   Analyze the formal design elements (following Bordwell/Thompson, with reference to Imdahl):
+   a) SETTING: Landscapes, spaces, backgrounds — what world is constructed?
+   b) COLOR AND LIGHT: Color palette, lighting direction, contrasts, mood
+   c) STAGING: Shot size, perspective (low/high/eye-level), composition, visual guidance
+   - How do these formal elements contribute to meaning? (Formal structures have a content function — Panofsky: representational elements as "symbols of something represented")
+   - What does the formal analysis reveal that the previous stages did not capture?
 
-4. BIOGRAPHICAL DIMENSION
-   - What self-images and images of others are offered?
-   - How does the image relate to possible life designs of the viewers?
+4. EDUCATION-THEORETICAL ANALYSIS OF SELF-AND-WORLD-RELATION (iconological interpretation)
+   The image becomes a document: What fundamental coordinates of self-reference and world-reference are articulated?
+   Systematically examine the four orientation dimensions:
+
+   a) KNOWLEDGE DIMENSION: What orientation knowledge is produced or challenged?
+      Does the image make visible things that were not previously known? Are existing perspectives reframed (de-/recontextualization, irony, new perspectives)?
+
+   b) ACTION DIMENSION: What possibilities and spaces for action are opened or foreclosed?
+      What forms of engaging with the world become visible?
+
+   c) BOUNDARY DIMENSION (TENTATIVITY): Where do limits of the representable and knowable become visible?
+      What indeterminacies, ambiguities, irritations does the image produce? What searching and questioning movements does it provoke?
+
+   d) BIOGRAPHICAL DIMENSION: What self-images and images of others are offered?
+      How does the image relate to possible life designs of the viewers?
 
 5. REFLECTION QUESTIONS
-   - 3-5 specific conversation prompts inviting reflection on the relationship between image, knowledge, and self
+   3-5 specific conversation prompts inviting reflection on the relationship between image, knowledge, and self.
 
 CRITICAL RULES:
 - Write in English
+- The four stages MUST be executed IN THIS ORDER — each builds on the previous one
+- Stage 1 MUST bracket cultural meanings; Stage 2 MUST reintroduce them
 - Declarative language (state as facts, not possibilities)
-- Focus on educational potentials, not aesthetic judgment
+- Focus on educational potentials (orientation knowledge), not aesthetic judgment
 - No phrases like "possibly", "might be"
-- Specific, actionable reflection questions"""
+- Multiple readings are desired — but not arbitrarily many. Only those that withstand argumentative scrutiny."""
     },
 
     'ikonik': {
