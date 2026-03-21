@@ -455,11 +455,11 @@ class ModelSelector:
         """
         Find fallback for Ollama model (when model unavailable/fails)
         Transferred from prompt_interception_engine
-        
+
         Args:
             failed_model: The model that failed
             debug: Enable debug logging
-            
+
         Returns:
             Fallback model name or None if no models available
         """
@@ -468,19 +468,24 @@ class ModelSelector:
             logger.error("[FALLBACK] No Ollama models available")
             return None
 
-        # Preferred fallbacks in order (mistral-nemo is faster than gemma2:9b)
-        preferred = ["mistral-nemo", "llama3.2:1b", "llama3.1:8b"]
-        for pref in preferred:
-            if pref in available_models and pref != failed_model:
+        # Preferred fallbacks: small, fast models (prefix-matched to handle :latest/:8b etc.)
+        preferred_prefixes = ["qwen3:4b", "qwen3:1.7b", "mistral-nemo", "llama3.2:1b", "llama3.1:8b"]
+        for pref in preferred_prefixes:
+            for model in available_models:
+                if model.startswith(pref) and model != failed_model:
+                    if debug:
+                        logger.info(f"[FALLBACK] Ollama: {failed_model} → {model}")
+                    return model
+
+        # Ultimate fallback: any model that isn't the one that just failed
+        for model in available_models:
+            if model != failed_model:
                 if debug:
-                    logger.info(f"[FALLBACK] Ollama: {failed_model} → {pref}")
-                return pref
-        
-        # First available model as ultimate fallback
-        fallback = available_models[0] if available_models else None
-        if debug and fallback:
-            logger.warning(f"[FALLBACK] Using first available Ollama model: {fallback}")
-        return fallback
+                    logger.warning(f"[FALLBACK] Using available Ollama model: {model}")
+                return model
+
+        logger.error(f"[FALLBACK] No alternative Ollama model found (only {failed_model} available)")
+        return None
     
     def extract_model_name(self, full_model_string: str) -> str:
         """
