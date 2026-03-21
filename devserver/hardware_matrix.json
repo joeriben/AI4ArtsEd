@@ -31,6 +31,7 @@
         "STAGE3_MODEL": "mistral/mistral-large-2512",
         "STAGE4_LEGACY_MODEL": "mistral/mistral-large-2512",
         "CHAT_HELPER_MODEL": "mistral/mistral-large-2512",
+        "PERSONA_MODEL": "mistral/mistral-large-2512",
         "CODING_MODEL": "mistral/codestral-2501"
       }
     },
@@ -39,13 +40,14 @@
       "EXTERNAL_LLM_PROVIDER": "anthropic",
       "DSGVO_CONFORMITY": false,
       "models": {
-        "STAGE1_TEXT_MODEL": "anthropic/claude-haiku-4-5",
-        "STAGE2_INTERCEPTION_MODEL": "anthropic/claude-sonnet-4-5",
-        "STAGE2_OPTIMIZATION_MODEL": "anthropic/claude-haiku-4-5",
-        "STAGE3_MODEL": "anthropic/claude-haiku-4-5",
-        "STAGE4_LEGACY_MODEL": "anthropic/claude-haiku-4-5",
-        "CHAT_HELPER_MODEL": "anthropic/claude-haiku-4-5",
-        "CODING_MODEL": "anthropic/claude-sonnet-4-5"
+        "STAGE1_TEXT_MODEL": "anthropic/claude-sonnet-4-6",
+        "STAGE2_INTERCEPTION_MODEL": "anthropic/claude-sonnet-4-6",
+        "STAGE2_OPTIMIZATION_MODEL": "anthropic/claude-sonnet-4-6",
+        "STAGE3_MODEL": "anthropic/claude-sonnet-4-6",
+        "STAGE4_LEGACY_MODEL": "anthropic/claude-sonnet-4-6",
+        "CHAT_HELPER_MODEL": "anthropic/claude-sonnet-4-6",
+        "PERSONA_MODEL": "anthropic/claude-opus-4-6",
+        "CODING_MODEL": "anthropic/claude-sonnet-4-6"
       }
     },
     "openai": {
@@ -59,6 +61,7 @@
         "STAGE3_MODEL": "openai/gpt-OSS:120b",
         "STAGE4_LEGACY_MODEL": "openai/gpt-OSS:120b",
         "CHAT_HELPER_MODEL": "openai/gpt-OSS:120b",
+        "PERSONA_MODEL": "openai/gpt-OSS:120b",
         "CODING_MODEL": "openai/gpt-OSS:120b"
       }
     },
@@ -73,6 +76,7 @@
         "STAGE3_MODEL": "ionos/openai/gpt-oss-120b",
         "STAGE4_LEGACY_MODEL": "ionos/openai/gpt-oss-120b",
         "CHAT_HELPER_MODEL": "ionos/openai/gpt-oss-120b",
+        "PERSONA_MODEL": "ionos/openai/gpt-oss-120b",
         "CODING_MODEL": "ionos/openai/gpt-oss-120b"
       }
     },
@@ -81,14 +85,14 @@
       "EXTERNAL_LLM_PROVIDER": "mammouth",
       "DSGVO_CONFORMITY": true,
       "models": {
-        "STAGE1_TEXT_MODEL": "mammouth/claude-sonnet-4-6",
-        "STAGE2_INTERCEPTION_MODEL": "mammouth/claude-sonnet-4-6",
-        "STAGE2_OPTIMIZATION_MODEL": "mammouth/claude-sonnet-4-6",
-        "STAGE3_MODEL": "mammouth/claude-sonnet-4-6",
-        "STAGE4_LEGACY_MODEL": "mammouth/claude-sonnet-4-6",
+        "STAGE1_TEXT_MODEL": "mammouth/gemini-3-flash-preview",
+        "STAGE2_INTERCEPTION_MODEL": "mammouth/gemini-3-flash-preview",
+        "STAGE2_OPTIMIZATION_MODEL": "mammouth/gemini-3-flash-preview",
+        "STAGE3_MODEL": "mammouth/gemini-3-flash-preview",
+        "STAGE4_LEGACY_MODEL": "mammouth/gemini-3-flash-preview",
         "CHAT_HELPER_MODEL": "mammouth/claude-sonnet-4-6",
         "PERSONA_MODEL": "mammouth/claude-opus-4-6",
-        "CODING_MODEL": "mammouth/claude-sonnet-4-6"
+        "CODING_MODEL": "mammouth/qwen3-coder"
       }
     },
     "openrouter": {
@@ -96,13 +100,14 @@
       "EXTERNAL_LLM_PROVIDER": "openrouter",
       "DSGVO_CONFORMITY": false,
       "models": {
-        "STAGE1_TEXT_MODEL": "openrouter/anthropic/claude-haiku-4.5",
-        "STAGE2_INTERCEPTION_MODEL": "openrouter/anthropic/claude-sonnet-4.5",
-        "STAGE2_OPTIMIZATION_MODEL": "openrouter/anthropic/claude-haiku-4.5",
-        "STAGE3_MODEL": "openrouter/anthropic/claude-haiku-4.5",
-        "STAGE4_LEGACY_MODEL": "openrouter/anthropic/claude-haiku-4.5",
-        "CHAT_HELPER_MODEL": "openrouter/anthropic/claude-haiku-4.5",
-        "CODING_MODEL": "openrouter/mistralai/codestral-2501"
+        "STAGE1_TEXT_MODEL": "openrouter/google/gemini-3-flash-preview",
+        "STAGE2_INTERCEPTION_MODEL": "openrouter/google/gemini-3-flash-preview",
+        "STAGE2_OPTIMIZATION_MODEL": "openrouter/google/gemini-3-flash-preview",
+        "STAGE3_MODEL": "openrouter/google/gemini-3-flash-preview",
+        "STAGE4_LEGACY_MODEL": "openrouter/google/gemini-3-flash-preview",
+        "CHAT_HELPER_MODEL": "openrouter/anthropic/claude-sonnet-4-6",
+        "PERSONA_MODEL": "openrouter/anthropic/claude-opus-4-6",
+        "CODING_MODEL": "openrouter/qwen/qwen3-coder"
       }
     }
   },
@@ -118,6 +123,7 @@
         "STAGE3_MODEL": "local/qwen3:32b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:32b",
         "CHAT_HELPER_MODEL": "local/qwen3:32b",
+        "PERSONA_MODEL": "local/qwen3:32b",
         "CODING_MODEL": "local/codestral:latest"
       }
     },
@@ -132,6 +138,7 @@
         "STAGE3_MODEL": "local/qwen3:32b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:32b",
         "CHAT_HELPER_MODEL": "local/qwen3:32b",
+        "PERSONA_MODEL": "local/qwen3:32b",
         "CODING_MODEL": "local/codestral:latest"
       }
     },
@@ -146,6 +153,7 @@
         "STAGE3_MODEL": "local/qwen3:32b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:32b",
         "CHAT_HELPER_MODEL": "local/qwen3:32b",
+        "PERSONA_MODEL": "local/qwen3:32b",
         "CODING_MODEL": "local/codestral:latest"
       }
     },
@@ -160,6 +168,7 @@
         "STAGE3_MODEL": "local/qwen3:14b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:14b",
         "CHAT_HELPER_MODEL": "local/qwen3:14b",
+        "PERSONA_MODEL": "local/qwen3:14b",
         "CODING_MODEL": "local/codestral:latest"
       }
     },
@@ -174,6 +183,7 @@
         "STAGE3_MODEL": "local/qwen3:8b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:8b",
         "CHAT_HELPER_MODEL": "local/qwen3:8b",
+        "PERSONA_MODEL": "local/qwen3:8b",
         "CODING_MODEL": "local/codestral:latest"
       }
     },
@@ -188,6 +198,7 @@
         "STAGE3_MODEL": "local/qwen3:4b",
         "STAGE4_LEGACY_MODEL": "local/qwen3:4b",
         "CHAT_HELPER_MODEL": "local/qwen3:4b",
+        "PERSONA_MODEL": "local/qwen3:4b",
         "CODING_MODEL": "local/codestral:latest"
       }
     }
