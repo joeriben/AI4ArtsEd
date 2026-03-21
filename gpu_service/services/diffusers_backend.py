@@ -184,7 +184,10 @@ class DiffusersImageGenerator:
             moe = "_moe" if "A14B" in model_id else ""
             return f"wan22_{kind}{moe}_{quant}"
         elif "stable-diffusion-3.5" in model_id:
-            return f"sd35_large_{self.torch_dtype_str}"
+            # Normalize dtype name to match MODEL_PEAK_VRAM_MB keys (fp16, bf16)
+            _dtype_short = {"float16": "fp16", "bfloat16": "bf16", "float32": "fp32"}
+            short = _dtype_short.get(self.torch_dtype_str, self.torch_dtype_str)
+            return f"sd35_large_{short}"
         else:
             return f"unknown_{pipeline_class}"
 

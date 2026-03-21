@@ -110,11 +110,14 @@ class Hunyuan3DBackend:
         """Check if Hunyuan3D-2 dependencies are available."""
         if not self.enabled:
             return False
+        if hasattr(self, '_import_failed'):
+            return False
         try:
             import hy3dgen  # noqa: F401
             return True
         except ImportError:
-            logger.error("[HUNYUAN3D] hy3dgen not installed")
+            self._import_failed = True
+            logger.error("[HUNYUAN3D] hy3dgen not installed (will not retry)")
             return False
 
     async def _load_pipeline(self) -> bool:

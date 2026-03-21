@@ -16,8 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RECORD_SERVICE_NAME="ComfyUI"
 source "$SCRIPT_DIR/_record.sh"
 
-# ComfyUI location (standalone installation)
-COMFYUI_DIR="$SCRIPT_DIR/dlbackend/ComfyUI"
+# ComfyUI location (standalone installation, overridable via env)
+COMFYUI_DIR="${COMFYUI_DIR:-$SCRIPT_DIR/dlbackend/ComfyUI}"
 
 # Check if port is in use and terminate any process using it
 echo "Checking port ${COMFYUI_PORT}..."
@@ -42,6 +42,15 @@ fi
 
 cd "$COMFYUI_DIR"
 echo "Working directory: $COMFYUI_DIR"
+
+# Verify main.py exists (newer ComfyUI versions may have different entry points)
+if [ ! -f "main.py" ]; then
+    echo "❌ ERROR: main.py not found in $COMFYUI_DIR"
+    echo ""
+    echo "Directory contents: $(ls -1 | head -10)"
+    echo "If ComfyUI is installed elsewhere, set COMFYUI_DIR env variable."
+    exit 1
+fi
 
 # === Startup Cleanup (ported from old SwarmUI script) ===
 # DevServer exports to /exports, so ComfyUI output/input are redundant between sessions

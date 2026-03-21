@@ -52,6 +52,11 @@ lxml>=5.1.0          # XML processing and parsing
 # These are NOT listed below because they require a special --index-url.
 
 # ============================================================================
+# GPU Monitoring (VRAM Coordinator)
+# ============================================================================
+nvidia-ml-py>=12.0.0  # NVML bindings — enables VRAM visibility across all GPU processes
+
+# ============================================================================
 # Diffusers Backend (Image Generation)
 # ============================================================================
 diffusers>=0.32.0    # HuggingFace Diffusers (SD3.5, Flux2, Stable Audio)
