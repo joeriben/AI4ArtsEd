@@ -38,13 +38,30 @@ Safety audit revealed that i2x and multi-i2x views had no Jugendschutz enforceme
 
 ### Changes
 1. **Safety Prefix Fix** (`instruction_selector.py`): Added "nudity, sexual, or pornographic content" to the Context-rules clause in both kids and youth prefixes. Previously, only "violence, weapons, armed conflict, abuse" were guarded against malicious context_prompt injection.
-2. **i2x Stage 2 Interception** (`image_transformation.vue`): Replicated the t2x Stage 2 pattern — config selection triggers streaming interception into the context box (destructive), mandatory `user_defined` interception on Generate if no config was selected. Refusal detection for "Hierbei kann ich Dich nicht unterstützen".
+2. **i2x Stage 2 Interception** (`image_transformation.vue`): Config selection triggers streaming interception into the context box (destructive transformation with safety). Without config selection, `startGeneration()` runs a non-destructive safety check before proceeding.
 3. **multi-i2x Stage 2 Interception** (`multi_image_transformation.vue`): Same pattern.
+4. **Image reference in interception context**: When a config is selected, the interception context_prompt now instructs the LLM to reference "this image" / "these images", so generated prompts apply to the uploaded photo instead of describing a new scene.
+
+### Non-destructive Safety Check (no config selected)
+
+When the user types a prompt and clicks Generate **without** selecting an interception config, the system runs a background safety check that does **not** modify the user's text:
+
+1. Send prompt to `/api/schema/pipeline/interception` with `user_defined` config (empty context) and `enable_streaming: false`
+2. The Stage 2 Safety Prefix (kids/youth) causes the LLM to either pass the text through or refuse/sanitize it
+3. **Refusal detection via word-overlap**: Compare input words with output words. If less than 30% of significant input words (>3 chars) appear in the output, the LLM substantially changed the content → block. This catches all forms of refusal (explicit "Hierbei kann ich Dich nicht unterstützen", empty output, "refusal message" placeholders, sanitized replacements).
+4. If safe: original text stays in the box unchanged, generation proceeds
+5. If blocked: error message shown, generation aborted
+
+**Why word-overlap instead of exact phrase matching:** LLMs express refusal in many ways. The initial approach checked only for "Hierbei kann ich Dich nicht unterstützen" — but the LLM sometimes responds with empty CLIP prompts, "refusal message" placeholders, or completely rewritten content. The word-overlap metric catches all these patterns with a single check.
+
+**Test results:**
+- "unbekleideten Clown" → LLM output: "refusal message, content warning..." → overlap 0% → **blocked**
+- "Clown" (safe) → LLM output: "clown costume, beard visible, glasses..." → overlap high → **passed**
 
 ### Architecture Impact
 - Stage 2 is now mandatory for ALL user-facing generation paths at kids/youth (t2x, i2x, multi-i2x)
 - No backend changes required — existing `/api/schema/pipeline/interception` endpoint and `user_defined.json` config reused
-- Frontend-only changes: streaming MediaInputBox props + interception flow logic
+- Frontend-only changes: streaming MediaInputBox props + interception flow logic + non-destructive safety gate
 
 ---
 
