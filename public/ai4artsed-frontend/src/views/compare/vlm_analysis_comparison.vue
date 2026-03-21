@@ -218,7 +218,7 @@ async function startAnalysis() {
 
   // Sequential execution — Ollama must swap VLMs one at a time (VRAM)
   for (let idx = 0; idx < selectedModels.value.length; idx++) {
-    const model = selectedModels.value[idx]
+    const model = selectedModels.value[idx]!
     try {
       const resp = await fetch(`${getBaseUrl()}/api/schema/compare/analyze-image`, {
         method: 'POST',
