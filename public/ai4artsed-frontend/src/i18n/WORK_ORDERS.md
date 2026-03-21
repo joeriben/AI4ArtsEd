@@ -21,6 +21,16 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-21-compare-consistency
+- **Session**: 277
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `compare.temperature.inputLabel` (NEW): "Your Message"
+  - `compare.systemprompt.inputLabel` (NEW): "Your Message"
+  - `compare.systemprompt.presets.gpt4_2023` (NEW): "GPT-4 (2023)"
+  - `compare.systemprompt.presets.claude` (MODIFIED): "Claude (real product prompt)" -> "Claude Sonnet 4.6 (2025)"
+- **Context**: Temperature and System Prompt comparison views now use MediaInputBox (needs label). GPT-4 2023 preset added to system prompt comparison. Claude preset label updated to include model version and year. The preset labels are short display names shown in a dropdown selector.
+
 ### WO-2026-03-21-vlm-analysis-comparison
 - **Session**: 277
 - **Scope**: en.ts
