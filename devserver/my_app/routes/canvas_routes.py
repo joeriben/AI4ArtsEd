@@ -296,7 +296,25 @@ def get_llm_models():
             'isDefault': model['id'] == default_model_id
         })
 
-    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({ollama_count} Ollama + {len(models) - ollama_count} curated)")
+    # 3. Ensure the configured default model is always present in the list.
+    # Works for ANY provider — no brand names hardcoded.
+    default_found = any(m['isDefault'] for m in models)
+    if not default_found and default_model_id:
+        parts = default_model_id.split('/', 1)
+        provider_prefix = parts[0] if len(parts) == 2 else 'unknown'
+        model_name = parts[1] if len(parts) == 2 else default_model_id
+        dsgvo_providers = {p[0] for p in config.DSGVO_SAFE_PROVIDERS}
+        models.append({
+            'id': default_model_id,
+            'name': f"{model_name} ({provider_prefix.title()})",
+            'provider': provider_prefix,
+            'tier': 'configured',
+            'dsgvoCompliant': provider_prefix in dsgvo_providers or provider_prefix == 'local',
+            'isDefault': True
+        })
+        logger.info(f"[Canvas LLM] Injected configured default: {default_model_id}")
+
+    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({ollama_count} Ollama + {len(models) - ollama_count} curated/configured)")
 
     return jsonify({
         'status': 'success',

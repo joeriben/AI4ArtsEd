@@ -305,7 +305,7 @@ export const useCanvasStore = defineStore('canvas', () => {
     // Set default LLM for LLM-based nodes
     const llmNodeTypes: StageType[] = ['random_prompt', 'interception', 'translation', 'evaluation', 'comparison_evaluator']
     if (llmNodeTypes.includes(type)) {
-      const defaultModel = llmModels.value.find(m => m.isDefault)
+      const defaultModel = llmModels.value.find(m => m.isDefault) || llmModels.value[0]
       if (defaultModel) {
         if (type === 'random_prompt') {
           node.randomPromptModel = defaultModel.id
