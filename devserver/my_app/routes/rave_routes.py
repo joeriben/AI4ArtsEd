@@ -2,6 +2,7 @@
 RAVE Training Controller Routes
 
 Manages RAVE model training via subprocess calls to rave.sh.
+Supports v1 and v2 runs via ?run=v1|v2 query parameter.
 """
 
 import logging
@@ -19,11 +20,15 @@ rave_bp = Blueprint('rave', __name__)
 
 RAVE_DIR = Path.home() / "ai" / "rave_research"
 RAVE_SH = RAVE_DIR / "rave.sh"
-PID_FILE = RAVE_DIR / ".rave_training.pid"
-LOG_FILE = RAVE_DIR / "training.log"
 TEST_OUTPUT = RAVE_DIR / "test_output"
 RUNS_DIR = RAVE_DIR / "runs"
 SCHEDULE_FILE = RAVE_DIR / ".rave_schedule.json"
+EVAL_LOG = RAVE_DIR / "eval_logs" / "eval_log.csv"
+
+RUN_CONFIGS = {
+    "v1": {"pattern": "mini70_v1_*", "name": "mini70_v1"},
+    "v2": {"pattern": "mini70_v2_*", "name": "mini70_v2"},
+}
 
 DEFAULT_SLOT = {
     "start": "00:00", "stop": "00:00",
@@ -33,12 +38,32 @@ DEFAULT_SLOT = {
 DEFAULT_SCHEDULE = {
     "enabled": False,
     "manual_override": False,
+    "run_version": "v2",
     "slots": [
         {"start": "22:00", "stop": "07:00", "days": {"mon": True, "tue": True, "wed": True, "thu": True, "fri": True, "sat": True, "sun": True}},
         DEFAULT_SLOT.copy(),
         DEFAULT_SLOT.copy(),
     ],
 }
+
+
+def _get_run_version():
+    """Get run version from query parameter, default v2."""
+    return request.args.get("run", "v2")
+
+
+def _pid_file(version):
+    return RAVE_DIR / f".rave_training_{version}.pid"
+
+
+def _log_file(version):
+    return RAVE_DIR / f"training_{version}.log"
+
+
+def _rave_env(version):
+    """Build environment with RUN= set for rave.sh."""
+    env = {**os.environ, "TORCH_FLOAT32_MATMUL_PRECISION": "high", "RUN": version}
+    return env
 
 
 def _load_schedule():
@@ -65,7 +90,7 @@ def _slot_active_now(slot):
     start = slot.get("start", "00:00")
     stop = slot.get("stop", "00:00")
     if start == stop:
-        return False  # Slot not configured
+        return False
 
     sh, sm = int(start.split(":")[0]), int(start.split(":")[1])
     eh, em = int(stop.split(":")[0]), int(stop.split(":")[1])
@@ -87,21 +112,21 @@ def _should_train_now(schedule):
     return any(_slot_active_now(slot) for slot in schedule.get("slots", []))
 
 
-def _is_training_running():
+def _is_training_running(version):
     """Check if training process is alive via PID file or process scan."""
-    # Try PID file first
-    if PID_FILE.exists():
+    pid_file = _pid_file(version)
+    if pid_file.exists():
         try:
-            pid = int(PID_FILE.read_text().strip())
+            pid = int(pid_file.read_text().strip())
             os.kill(pid, 0)
             return True, pid
         except (ProcessLookupError, ValueError):
             pass
 
-    # Fallback: scan for running rave train process
+    config = RUN_CONFIGS.get(version, RUN_CONFIGS["v2"])
     try:
         result = subprocess.run(
-            ["pgrep", "-f", "rave train.*mini70"],
+            ["pgrep", "-f", f"rave train.*{config['name']}"],
             capture_output=True, text=True, timeout=5
         )
         if result.returncode == 0:
@@ -113,12 +138,13 @@ def _is_training_running():
     return False, None
 
 
-def _find_run_dir():
-    """Find the training run directory."""
+def _find_run_dir(version):
+    """Find the training run directory for given version."""
     if not RUNS_DIR.exists():
         return None
-    for d in RUNS_DIR.iterdir():
-        if d.is_dir() and d.name.startswith("mini70_v1_"):
+    config = RUN_CONFIGS.get(version, RUN_CONFIGS["v2"])
+    for d in sorted(RUNS_DIR.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+        if d.is_dir() and d.name.startswith(config["name"] + "_"):
             return d
     return None
 
@@ -143,15 +169,15 @@ def _find_exported_model(run_dir):
     return str(models[0]) if models else None
 
 
-def _parse_log_tail(n=10):
+def _parse_log_tail(version, n=10):
     """Read last N lines of training log and extract epoch/step info."""
-    if not LOG_FILE.exists():
+    log_file = _log_file(version)
+    if not log_file.exists():
         return [], None, None
 
-    lines = LOG_FILE.read_text().strip().split('\n')
+    lines = log_file.read_text().strip().split('\n')
     tail = lines[-n:] if len(lines) >= n else lines
 
-    # Parse epoch and step from progress bar lines like "Epoch 180: 100%|..."
     epoch = None
     step = None
     for line in reversed(lines):
@@ -169,7 +195,7 @@ def _parse_log_tail(n=10):
     return tail, epoch, step
 
 
-def _run_rave_command(command, timeout=300):
+def _run_rave_command(command, version, timeout=300):
     """Run a rave.sh subcommand and return output."""
     try:
         result = subprocess.run(
@@ -178,7 +204,7 @@ def _run_rave_command(command, timeout=300):
             text=True,
             timeout=timeout,
             cwd=str(RAVE_DIR),
-            env={**os.environ, "TORCH_FLOAT32_MATMUL_PRECISION": "high"}
+            env=_rave_env(version),
         )
         return {
             "success": result.returncode == 0,
@@ -194,20 +220,25 @@ def _run_rave_command(command, timeout=300):
 @rave_bp.route('/api/rave/status', methods=['GET'])
 def rave_status():
     """Get current training status."""
-    running, pid = _is_training_running()
-    run_dir = _find_run_dir()
+    version = _get_run_version()
+    running, pid = _is_training_running(version)
+    run_dir = _find_run_dir(version)
     checkpoint = _find_latest_checkpoint(run_dir)
     exported_model = _find_exported_model(run_dir) if run_dir else None
-    log_tail, epoch, step = _parse_log_tail(15)
+    log_tail, epoch, step = _parse_log_tail(version, 15)
 
-    # List test output files
     test_files = []
     if TEST_OUTPUT.exists():
         test_files = sorted([f.name for f in TEST_OUTPUT.glob("*.wav")])
 
     total_steps = (epoch * 6250 + (step or 0)) if epoch is not None else None
 
+    # Check if other version is also running
+    other_version = "v1" if version == "v2" else "v2"
+    other_running, _ = _is_training_running(other_version)
+
     return jsonify({
+        "run_version": version,
         "running": running,
         "pid": pid,
         "epoch": epoch,
@@ -219,26 +250,28 @@ def rave_status():
         "run_dir": str(run_dir) if run_dir else None,
         "log_tail": log_tail,
         "test_files": test_files,
+        "other_version_running": other_running,
     })
 
 
 @rave_bp.route('/api/rave/start', methods=['POST'])
 def rave_start():
     """Start fresh training."""
-    running, _ = _is_training_running()
+    version = _get_run_version()
+    running, _ = _is_training_running(version)
     if running:
         return jsonify({"success": False, "error": "Training already running"}), 409
 
+    log_file = _log_file(version)
     try:
         proc = subprocess.Popen(
             [str(RAVE_SH), "start"],
             cwd=str(RAVE_DIR),
-            stdout=open(str(LOG_FILE), 'w'),
+            stdout=open(str(log_file), 'w'),
             stderr=subprocess.STDOUT,
-            env={**os.environ, "TORCH_FLOAT32_MATMUL_PRECISION": "high"},
+            env=_rave_env(version),
         )
-        # rave.sh writes its own PID file — don't write it here
-        logger.info(f"[RAVE] Training started (PID {proc.pid})")
+        logger.info(f"[RAVE] {version} training started (PID {proc.pid})")
         return jsonify({"success": True, "pid": proc.pid})
     except Exception as e:
         logger.error(f"[RAVE] Start failed: {e}")
@@ -248,25 +281,26 @@ def rave_start():
 @rave_bp.route('/api/rave/resume', methods=['POST'])
 def rave_resume():
     """Resume training from latest checkpoint."""
-    running, _ = _is_training_running()
+    version = _get_run_version()
+    running, _ = _is_training_running(version)
     if running:
         return jsonify({"success": False, "error": "Training already running"}), 409
 
-    run_dir = _find_run_dir()
+    run_dir = _find_run_dir(version)
     checkpoint = _find_latest_checkpoint(run_dir)
     if not checkpoint:
         return jsonify({"success": False, "error": "No checkpoint found"}), 404
 
+    log_file = _log_file(version)
     try:
         proc = subprocess.Popen(
             [str(RAVE_SH), "resume"],
             cwd=str(RAVE_DIR),
-            stdout=open(str(LOG_FILE), 'a'),
+            stdout=open(str(log_file), 'a'),
             stderr=subprocess.STDOUT,
-            env={**os.environ, "TORCH_FLOAT32_MATMUL_PRECISION": "high"},
+            env=_rave_env(version),
         )
-        # rave.sh writes its own PID file — don't write it here
-        logger.info(f"[RAVE] Training resumed from {checkpoint} (PID {proc.pid})")
+        logger.info(f"[RAVE] {version} training resumed from {checkpoint} (PID {proc.pid})")
         return jsonify({"success": True, "pid": proc.pid, "checkpoint": checkpoint})
     except Exception as e:
         logger.error(f"[RAVE] Resume failed: {e}")
@@ -276,38 +310,76 @@ def rave_resume():
 @rave_bp.route('/api/rave/stop', methods=['POST'])
 def rave_stop():
     """Stop running training."""
-    running, pid = _is_training_running()
+    version = _get_run_version()
+    running, pid = _is_training_running(version)
     if not running:
         return jsonify({"success": True, "message": "Not running"})
 
-    result = _run_rave_command("stop", timeout=60)
-    logger.info(f"[RAVE] Training stopped")
+    result = _run_rave_command("stop", version, timeout=60)
+    logger.info(f"[RAVE] {version} training stopped")
     return jsonify(result)
 
 
 @rave_bp.route('/api/rave/export', methods=['POST'])
 def rave_export():
     """Export trained model."""
-    result = _run_rave_command("export", timeout=120)
+    version = _get_run_version()
+    result = _run_rave_command("export", version, timeout=120)
     if result["success"]:
-        logger.info("[RAVE] Model exported")
+        logger.info(f"[RAVE] {version} model exported")
     return jsonify(result)
 
 
 @rave_bp.route('/api/rave/test', methods=['POST'])
 def rave_test():
-    """Generate test reconstructions."""
-    result = _run_rave_command("test", timeout=120)
+    """Export latest checkpoint, then generate test reconstructions."""
+    version = _get_run_version()
+    result = _run_rave_command("test", version, timeout=300)
     if result["success"]:
         test_files = sorted([f.name for f in TEST_OUTPUT.glob("*.wav")]) if TEST_OUTPUT.exists() else []
         result["test_files"] = test_files
     return jsonify(result)
 
 
+@rave_bp.route('/api/rave/eval', methods=['POST'])
+def rave_eval():
+    """Run auto-evaluation (export + reconstruct + SNR measurement)."""
+    version = _get_run_version()
+    result = _run_rave_command("eval", version, timeout=600)
+    return jsonify(result)
+
+
+@rave_bp.route('/api/rave/eval-log', methods=['GET'])
+def rave_eval_log():
+    """Get evaluation log entries."""
+    version = _get_run_version()
+    if not EVAL_LOG.exists():
+        return jsonify({"entries": []})
+
+    import csv
+    entries = []
+    with open(EVAL_LOG, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row.get("run", "").startswith(RUN_CONFIGS.get(version, {}).get("name", "")):
+                entries.append(row)
+
+    return jsonify({"entries": entries[-100:]})  # Last 100 entries
+
+
 @rave_bp.route('/api/rave/test-audio/<filename>', methods=['GET'])
 def rave_test_audio(filename):
     """Serve a test reconstruction WAV file."""
     filepath = TEST_OUTPUT / filename
+    if not filepath.exists() or not filepath.suffix == '.wav':
+        return jsonify({"error": "File not found"}), 404
+    return send_file(str(filepath), mimetype='audio/wav')
+
+
+@rave_bp.route('/api/rave/original-audio/<filename>', methods=['GET'])
+def rave_original_audio(filename):
+    """Serve an original dataset WAV file for A/B comparison."""
+    filepath = RAVE_DIR / "dataset" / "audio" / filename
     if not filepath.exists() or not filepath.suffix == '.wav':
         return jsonify({"error": "File not found"}), 404
     return send_file(str(filepath), mimetype='audio/wav')
@@ -328,11 +400,11 @@ def rave_schedule_set():
     if not data:
         return jsonify({"error": "No data"}), 400
     schedule = _load_schedule()
-    for key in ["enabled", "slots", "manual_override"]:
+    for key in ["enabled", "slots", "manual_override", "run_version"]:
         if key in data:
             schedule[key] = data[key]
     _save_schedule(schedule)
-    logger.info(f"[RAVE] Schedule updated: enabled={schedule['enabled']}, {schedule['start_time']}-{schedule['stop_time']}")
+    logger.info(f"[RAVE] Schedule updated: enabled={schedule['enabled']}, run={schedule.get('run_version', 'v2')}")
     return jsonify({"success": True, "schedule": schedule})
 
 
@@ -344,32 +416,32 @@ def rave_schedule_tick():
     if not schedule.get("enabled") or schedule.get("manual_override"):
         return jsonify({"action": "none", "reason": "disabled" if not schedule.get("enabled") else "manual_override"})
 
+    version = schedule.get("run_version", "v2")
     should = _should_train_now(schedule)
-    running, pid = _is_training_running()
+    running, pid = _is_training_running(version)
 
     if should and not running:
-        # Should be training but isn't — resume
-        run_dir = _find_run_dir()
+        run_dir = _find_run_dir(version)
         checkpoint = _find_latest_checkpoint(run_dir)
         if checkpoint:
+            log_file = _log_file(version)
             try:
                 proc = subprocess.Popen(
                     [str(RAVE_SH), "resume"],
                     cwd=str(RAVE_DIR),
-                    stdout=open(str(LOG_FILE), 'a'),
+                    stdout=open(str(log_file), 'a'),
                     stderr=subprocess.STDOUT,
-                    env={**os.environ, "TORCH_FLOAT32_MATMUL_PRECISION": "high"},
+                    env=_rave_env(version),
                 )
-                logger.info(f"[RAVE-SCHEDULE] Auto-resumed training (PID {proc.pid})")
+                logger.info(f"[RAVE-SCHEDULE] Auto-resumed {version} training (PID {proc.pid})")
                 return jsonify({"action": "resumed", "pid": proc.pid})
             except Exception as e:
                 logger.error(f"[RAVE-SCHEDULE] Auto-resume failed: {e}")
                 return jsonify({"action": "error", "error": str(e)})
 
     elif not should and running:
-        # Shouldn't be training but is — stop
-        _run_rave_command("stop", timeout=60)
-        logger.info("[RAVE-SCHEDULE] Auto-stopped training")
+        _run_rave_command("stop", version, timeout=60)
+        logger.info(f"[RAVE-SCHEDULE] Auto-stopped {version} training")
         return jsonify({"action": "stopped"})
 
     return jsonify({"action": "none", "running": running, "should": should})
@@ -378,11 +450,11 @@ def rave_schedule_tick():
 @rave_bp.route('/api/rave/metrics', methods=['GET'])
 def rave_metrics():
     """Get training metrics from TensorBoard event logs."""
-    run_dir = _find_run_dir()
+    version = _get_run_version()
+    run_dir = _find_run_dir(version)
     if not run_dir:
         return jsonify({"error": "No run found"}), 404
 
-    # Find latest version directory with events
     version_dirs = sorted(run_dir.glob("version_*"), key=lambda p: p.stat().st_mtime)
     if not version_dirs:
         return jsonify({"error": "No training versions found"}), 404
@@ -395,7 +467,6 @@ def rave_metrics():
         if df.empty:
             return jsonify({"metrics": {}})
 
-        # Key metrics to display — downsample to max 200 points per metric
         key_tags = [
             'fullband_spectral_distance',
             'multiband_spectral_distance',
@@ -410,7 +481,6 @@ def rave_metrics():
             sub = df[df['tag'] == tag]
             if sub.empty:
                 continue
-            # Downsample: take every Nth point to keep ~200 points
             n = max(1, len(sub) // 200)
             sampled = sub.iloc[::n]
             metrics[tag] = {

@@ -2,8 +2,21 @@
   <div class="rave-container">
     <div class="rave-header">
       <h1>RAVE Training — mini70</h1>
+      <div class="run-toggle">
+        <button
+          :class="['run-btn', { active: runVersion === 'v1' }]"
+          @click="switchRun('v1')"
+        >v1 (baseline)</button>
+        <button
+          :class="['run-btn', { active: runVersion === 'v2' }]"
+          @click="switchRun('v2')"
+        >v2 (wasserstein)</button>
+      </div>
       <div class="status-badge" :class="status.running ? 'running' : 'stopped'">
         {{ status.running ? 'TRAINING' : 'STOPPED' }}
+      </div>
+      <div v-if="status.other_version_running" class="other-running-badge">
+        {{ otherVersion }} also running
       </div>
     </div>
 
@@ -12,6 +25,10 @@
       <h2>Status</h2>
       <table class="info-table">
         <tbody>
+          <tr>
+            <td class="label-cell">Run</td>
+            <td class="value-cell">{{ runVersion }} — {{ runVersion === 'v2' ? 'wasserstein + augment' : 'baseline v2 config' }}</td>
+          </tr>
           <tr>
             <td class="label-cell">State</td>
             <td class="value-cell">
@@ -86,6 +103,12 @@
         >Test Reconstruction</button>
 
         <button
+          class="action-btn eval"
+          @click="doAction('eval')"
+          :disabled="actionInProgress"
+        >Eval (SNR)</button>
+
+        <button
           class="action-btn"
           @click="fetchMetrics"
           :disabled="metricsLoading"
@@ -100,17 +123,25 @@
     <div class="section">
       <h2>Schedule</h2>
       <div class="schedule-top-row">
-        <label class="toggle-label">
-          <input type="checkbox" v-model="schedule.enabled" @change="saveSchedule" />
-          Enabled
-        </label>
-        <label class="toggle-label">
-          <input type="checkbox" v-model="schedule.manual_override" @change="saveSchedule" />
-          Manual override
-        </label>
+        <div class="schedule-toggle">
+          <button
+            :class="['toggle-btn', { active: !schedule.enabled }]"
+            @click="schedule.enabled = false; schedule.manual_override = false; saveSchedule()"
+          >Manual</button>
+          <button
+            :class="['toggle-btn', { active: schedule.enabled }]"
+            @click="schedule.enabled = true; schedule.manual_override = false; saveSchedule()"
+          >Schedule</button>
+        </div>
+        <div v-if="schedule.enabled" class="schedule-run-select">
+          Schedule trains:
+          <select v-model="schedule.run_version" @change="saveSchedule">
+            <option value="v1">v1</option>
+            <option value="v2">v2</option>
+          </select>
+        </div>
         <div class="schedule-status-inline">
-          <span v-if="!schedule.enabled" style="color: #999;">Off</span>
-          <span v-else-if="schedule.manual_override" style="color: #ffa726;">Paused</span>
+          <span v-if="!schedule.enabled" style="color: #999;">Manual control</span>
           <span v-else-if="scheduleShould === true" style="color: #4CAF50;">Active</span>
           <span v-else-if="scheduleShould === false" style="color: #999;">Outside hours</span>
         </div>
@@ -136,6 +167,29 @@
       </div>
     </div>
 
+    <!-- Eval Log -->
+    <div v-if="evalEntries.length > 0" class="section">
+      <h2>Evaluation History</h2>
+      <table class="info-table eval-table">
+        <thead>
+          <tr>
+            <td class="label-cell">Timestamp</td>
+            <td class="label-cell">Step</td>
+            <td class="label-cell">Sample</td>
+            <td class="label-cell">SNR (dB)</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(e, i) in evalEntries" :key="i" :class="{ 'mean-row': e.sample === 'MEAN' }">
+            <td class="value-cell mono">{{ e.timestamp }}</td>
+            <td class="value-cell">{{ formatNumber(parseInt(e.step)) }}</td>
+            <td class="value-cell">{{ e.sample }}</td>
+            <td class="value-cell" :class="snrClass(e.snr_db)">{{ e.snr_db }} dB</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- Metrics Charts -->
     <div v-if="Object.keys(metrics).length > 0" class="section">
       <h2>Training Metrics</h2>
@@ -147,11 +201,9 @@
             @ step {{ formatNumber(data.steps[data.steps.length - 1]) }}
           </div>
           <svg :viewBox="`0 0 600 200`" class="chart-svg" preserveAspectRatio="none">
-            <!-- Grid lines -->
             <line x1="0" y1="50" x2="600" y2="50" stroke="#333" stroke-width="0.5" />
             <line x1="0" y1="100" x2="600" y2="100" stroke="#333" stroke-width="0.5" />
             <line x1="0" y1="150" x2="600" y2="150" stroke="#333" stroke-width="0.5" />
-            <!-- Data line -->
             <polyline
               :points="chartPoints(data)"
               fill="none"
@@ -164,13 +216,22 @@
       </div>
     </div>
 
-    <!-- Test Reconstructions -->
+    <!-- Test Reconstructions — A/B Comparison -->
     <div v-if="status.test_files && status.test_files.length > 0" class="section">
-      <h2>Test Reconstructions</h2>
-      <div class="audio-grid">
-        <div v-for="file in status.test_files" :key="file" class="audio-card">
-          <div class="audio-label">{{ file }}</div>
-          <audio controls :src="'/api/rave/test-audio/' + file" preload="none"></audio>
+      <h2>A/B Comparison — Original vs Reconstruction</h2>
+      <div class="ab-grid">
+        <div v-for="file in status.test_files" :key="file" class="ab-card">
+          <div class="audio-label">{{ originalName(file) }}</div>
+          <div class="ab-row">
+            <div class="ab-col">
+              <div class="ab-tag original">Original</div>
+              <audio controls :src="'/api/rave/original-audio/' + originalName(file) + '.wav'" preload="none"></audio>
+            </div>
+            <div class="ab-col">
+              <div class="ab-tag recon">Reconstruction</div>
+              <audio controls :src="'/api/rave/test-audio/' + file + '?t=' + audioCacheBust" preload="none"></audio>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -186,6 +247,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
+const runVersion = ref('v2')
+
 const status = ref({
   running: false,
   pid: null,
@@ -197,6 +260,7 @@ const status = ref({
   exported_model: null,
   log_tail: [],
   test_files: [],
+  other_version_running: false,
 })
 
 const metrics = ref({})
@@ -204,13 +268,11 @@ const metricsLoading = ref(false)
 const actionInProgress = ref(false)
 const actionMessage = ref('')
 const actionSuccess = ref(true)
-const defaultSlot = () => ({
-  start: '00:00', stop: '00:00',
-  days: { mon: true, tue: true, wed: true, thu: true, fri: true, sat: true, sun: true },
-})
+const evalEntries = ref([])
 const schedule = ref({
   enabled: false,
   manual_override: false,
+  run_version: 'v2',
   slots: [
     { start: '22:00', stop: '07:00', days: { mon: true, tue: true, wed: true, thu: true, fri: true, sat: true, sun: true } },
     { start: '00:00', stop: '00:00', days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false } },
@@ -218,9 +280,12 @@ const schedule = ref({
   ],
 })
 const scheduleShould = ref(null)
+const audioCacheBust = ref(Date.now())
 const dayLabels = { mon: 'Mo', tue: 'Tu', wed: 'We', thu: 'Th', fri: 'Fr', sat: 'Sa', sun: 'Su' }
 let pollInterval = null
 let scheduleInterval = null
+
+const otherVersion = computed(() => runVersion.value === 'v2' ? 'v1' : 'v2')
 
 const progressPercent = computed(() => {
   if (!status.value.total_steps || !status.value.max_steps) return 0
@@ -236,8 +301,13 @@ const TAG_COLORS = {
   validation: '#ffa726',
 }
 
+function apiUrl(path) {
+  const sep = path.includes('?') ? '&' : '?'
+  return `${path}${sep}run=${runVersion.value}`
+}
+
 function formatNumber(n) {
-  if (n === null || n === undefined) return '—'
+  if (n === null || n === undefined || isNaN(n)) return '—'
   return n.toLocaleString()
 }
 
@@ -250,6 +320,10 @@ function shortPath(p) {
   const parts = p.split('/')
   const idx = parts.indexOf('runs')
   return idx >= 0 ? parts.slice(idx).join('/') : parts.slice(-3).join('/')
+}
+
+function originalName(reconFile) {
+  return reconFile.replace('recon_', '').replace('.wav', '')
 }
 
 function chartColor(tag) {
@@ -273,9 +347,23 @@ function chartPoints(data) {
   }).join(' ')
 }
 
+function snrClass(snr) {
+  const v = parseFloat(snr)
+  if (v >= 15) return 'snr-good'
+  if (v >= 8) return 'snr-ok'
+  return 'snr-bad'
+}
+
+function switchRun(version) {
+  runVersion.value = version
+  fetchStatus()
+  fetchMetrics()
+  fetchEvalLog()
+}
+
 async function fetchStatus() {
   try {
-    const res = await fetch('/api/rave/status', { credentials: 'include' })
+    const res = await fetch(apiUrl('/api/rave/status'), { credentials: 'include' })
     if (res.ok) {
       status.value = await res.json()
     }
@@ -326,7 +414,7 @@ async function scheduleTick() {
 async function fetchMetrics() {
   metricsLoading.value = true
   try {
-    const res = await fetch('/api/rave/metrics', { credentials: 'include' })
+    const res = await fetch(apiUrl('/api/rave/metrics'), { credentials: 'include' })
     if (res.ok) {
       const data = await res.json()
       if (data.metrics) {
@@ -340,13 +428,25 @@ async function fetchMetrics() {
   }
 }
 
+async function fetchEvalLog() {
+  try {
+    const res = await fetch(apiUrl('/api/rave/eval-log'), { credentials: 'include' })
+    if (res.ok) {
+      const data = await res.json()
+      evalEntries.value = data.entries || []
+    }
+  } catch (e) {
+    console.warn('[RAVE] Eval log fetch failed:', e)
+  }
+}
+
 async function doAction(action) {
   actionInProgress.value = true
   actionMessage.value = `Running ${action}...`
   actionSuccess.value = true
 
   try {
-    const res = await fetch(`/api/rave/${action}`, {
+    const res = await fetch(apiUrl(`/api/rave/${action}`), {
       method: 'POST',
       credentials: 'include',
     })
@@ -355,6 +455,8 @@ async function doAction(action) {
     if (data.success) {
       actionMessage.value = `${action} completed.`
       actionSuccess.value = true
+      if (action === 'test') audioCacheBust.value = Date.now()
+      if (action === 'eval') fetchEvalLog()
     } else {
       actionMessage.value = data.error || data.stderr || `${action} failed`
       actionSuccess.value = false
@@ -374,6 +476,7 @@ onMounted(() => {
   fetchStatus()
   fetchMetrics()
   fetchSchedule()
+  fetchEvalLog()
   pollInterval = setInterval(fetchStatus, 5000)
   scheduleInterval = setInterval(scheduleTick, 30000)
 })
@@ -411,6 +514,31 @@ onUnmounted(() => {
   color: #333;
 }
 
+.run-toggle {
+  display: flex;
+  gap: 0;
+}
+
+.run-btn {
+  padding: 5px 14px;
+  border: 1px solid #ccc;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.run-btn:first-child { border-radius: 3px 0 0 3px; }
+.run-btn:last-child { border-radius: 0 3px 3px 0; border-left: none; }
+.run-btn:hover { background: #d0d0d0; }
+
+.run-btn.active {
+  background: #0d47a1;
+  color: #fff;
+  border-color: #42a5f5;
+}
+
 .status-badge {
   padding: 4px 12px;
   font-size: 12px;
@@ -418,6 +546,7 @@ onUnmounted(() => {
   text-transform: uppercase;
   letter-spacing: 1px;
   border-radius: 3px;
+  margin-left: auto;
 }
 
 .status-badge.running {
@@ -430,6 +559,16 @@ onUnmounted(() => {
   background: #333;
   color: #999;
   border: 1px solid #666;
+}
+
+.other-running-badge {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #1a237e;
+  color: #90caf9;
+  border: 1px solid #42a5f5;
+  border-radius: 3px;
 }
 
 .section {
@@ -521,6 +660,8 @@ onUnmounted(() => {
 .action-btn.resume:hover:not(:disabled) { background: #1565c0; }
 .action-btn.stop { background: #b71c1c; border-color: #ef5350; }
 .action-btn.stop:hover:not(:disabled) { background: #c62828; }
+.action-btn.eval { background: #4a148c; border-color: #ab47bc; }
+.action-btn.eval:hover:not(:disabled) { background: #6a1b9a; }
 
 .action-message {
   margin-top: 10px;
@@ -544,18 +685,46 @@ onUnmounted(() => {
   gap: 20px;
 }
 
-.toggle-label {
+.schedule-toggle {
+  display: flex;
+  gap: 0;
+}
+
+.schedule-run-select {
+  font-size: 13px;
+  color: #333;
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.schedule-run-select select {
+  padding: 3px 8px;
+  border: 1px solid #ccc;
   font-size: 13px;
-  color: #333;
+  background: white;
+  color: #000;
+}
+
+.toggle-btn {
+  padding: 6px 16px;
+  border: 1px solid #ccc;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.toggle-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+.toggle-btn:first-child { border-radius: 3px 0 0 3px; }
+.toggle-btn:last-child { border-radius: 0 3px 3px 0; }
+.toggle-btn:not(:first-child) { border-left: none; }
+.toggle-btn:hover { background: #d0d0d0; }
+
+.toggle-btn.active {
+  background: #1b5e20;
+  color: #fff;
+  border-color: #4CAF50;
 }
 
 .schedule-status-inline {
@@ -631,6 +800,14 @@ onUnmounted(() => {
 
 .day-btn:hover { opacity: 0.8; }
 
+/* Eval table */
+.eval-table thead td { font-weight: 700; }
+.mean-row { background: #e3f2fd !important; }
+.mean-row td { font-weight: 600; }
+.snr-good { color: #2e7d32; font-weight: 600; }
+.snr-ok { color: #f57f17; }
+.snr-bad { color: #c62828; }
+
 /* Charts */
 .charts-grid {
   display: grid;
@@ -665,14 +842,14 @@ onUnmounted(() => {
   border: 1px solid #222;
 }
 
-/* Audio */
-.audio-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+/* A/B Comparison */
+.ab-grid {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
-.audio-card {
+.ab-card {
   background: #f5f5f5;
   border: 1px solid #ddd;
   padding: 10px;
@@ -682,11 +859,40 @@ onUnmounted(() => {
   font-family: 'Courier New', monospace;
   font-size: 12px;
   color: #333;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
-.audio-card audio {
+.ab-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ab-col audio {
   width: 100%;
+}
+
+.ab-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  padding: 2px 8px;
+  display: inline-block;
+}
+
+.ab-tag.original {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.ab-tag.recon {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
 }
 
 .log-output {
