@@ -4,7 +4,7 @@
       <!-- Shared input -->
       <div class="temp-input-area">
         <div class="model-select-row">
-          <label class="model-label">{{ t('compare.temperature.modelLabel') }}</label>
+          <label class="model-label">{{ t('compare.shared.modelLabel') }}</label>
           <select v-model="selectedModel" class="model-select">
             <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
           </select>
@@ -22,7 +22,7 @@
             :disabled="!canSend"
             @click="sendToAll"
           >
-            {{ isSending ? t('compare.temperature.sending') : t('compare.temperature.sendAll') }}
+            {{ isSending ? t('compare.shared.sending') : t('compare.shared.sendAll') }}
           </button>
         </div>
         <button
@@ -30,7 +30,7 @@
           class="clear-btn"
           @click="startNewConversation"
         >
-          {{ t('compare.temperature.newConversation') }}
+          {{ t('compare.shared.newConversation') }}
         </button>
       </div>
 
@@ -107,7 +107,7 @@ import { useI18n } from 'vue-i18n'
 import { useTemperatureCompareStore } from '@/stores/temperatureCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
-import { chatModels } from '@/composables/useChatModels'
+import { useChatModels } from '@/composables/useChatModels'
 import trashyIcon from '@/assets/trashy-icon.png'
 
 const { t } = useI18n()
@@ -141,7 +141,7 @@ const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
 
-// chatModels imported from @/composables/useChatModels
+const { chatModels } = useChatModels()
 
 const canSend = computed(() => userInput.value.trim().length > 0 && !isSending.value)
 
@@ -210,9 +210,9 @@ async function sendToAll() {
         .slice(0, -1) // exclude the just-added user message
         .map(m => ({ role: m.role, content: m.content }))
       const reply = await callChatWithTemp(text, history, col.temperature)
-      store.addMessage(idx, 'assistant', reply || t('compare.temperature.noResponse'))
+      store.addMessage(idx, 'assistant', reply || t('compare.shared.noResponse'))
     } catch {
-      store.addMessage(idx, 'assistant', t('compare.temperature.error'))
+      store.addMessage(idx, 'assistant', t('compare.shared.error'))
     } finally {
       colLoading.value[idx] = false
       scrollColumn(idx)
@@ -307,9 +307,9 @@ async function sendToTrashy() {
 
   try {
     const reply = await callTrashy(text)
-    addTrashyMessage('assistant', reply || '[No response]')
+    addTrashyMessage('assistant', reply || t('compare.shared.noResponse'))
   } catch {
-    addTrashyMessage('assistant', '[Connection error]')
+    addTrashyMessage('assistant', t('compare.shared.error'))
   } finally {
     trashyLoading.value = false
   }

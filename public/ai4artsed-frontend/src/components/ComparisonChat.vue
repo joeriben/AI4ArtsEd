@@ -168,10 +168,10 @@ async function sendMessage() {
     if (reply) {
       addMessage('assistant', reply)
     } else {
-      addMessage('assistant', '[No response]')
+      addMessage('assistant', t('compare.shared.noResponse'))
     }
   } catch (e) {
-    addMessage('assistant', '[Connection error]')
+    addMessage('assistant', t('compare.shared.error'))
   } finally {
     isLoading.value = false
   }

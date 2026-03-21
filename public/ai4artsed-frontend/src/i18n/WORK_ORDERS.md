@@ -370,6 +370,23 @@ Tags:
   - `compare.systemprompt.presets.fiveyearold` (NEW): "Five-year-old"
   - `compare.systemprompt.presets.factsonly` (NEW): "Only facts"
 - **Context**: New tab in the Compare Hub for system prompt comparison. Users send the same message to an AI with 3 different system prompts to see how invisible instructions control behavior. Preset names are UI labels for dropdown menus — translate naturally (e.g. "Pirat" in DE, not literal). The subtitle is a pedagogical tagline. "System Prompt" as a tab label may be kept in English in some languages where it's a recognized technical term, or translated if the language has a natural equivalent.
+- **NOTE**: Keys `compare.systemprompt.sendAll`, `.sending`, `.newConversation`, `.noResponse`, `.error`, `.modelLabel` were MOVED to `compare.shared.*` (see WO below). Update your translations accordingly — delete the old per-mode keys and use the shared ones.
+
+### WO-2026-03-21-compare-shared-keys
+- **Session**: i18n deduplication
+- **Scope**: en.ts → de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all NEW — shared across Temperature + System Prompt tabs):
+  - `compare.shared.sendAll` (NEW): "Send to All"
+  - `compare.shared.sending` (NEW): "Sending..."
+  - `compare.shared.newConversation` (NEW): "New conversation"
+  - `compare.shared.noResponse` (NEW): "No response received"
+  - `compare.shared.error` (NEW): "Connection error"
+  - `compare.shared.modelLabel` (NEW): "Model"
+  - `compare.shared.defaultModel` (NEW): "Default (Settings)"
+- **REMOVED keys** (moved to shared, delete from all language files):
+  - `compare.temperature.sendAll`, `.sending`, `.newConversation`, `.noResponse`, `.error`, `.modelLabel`
+  - `compare.systemprompt.sendAll`, `.sending`, `.newConversation`, `.noResponse`, `.error`, `.modelLabel`
+- **Context**: Deduplication — these strings were identical across Temperature and System Prompt comparison tabs. Now shared. "Default (Settings)" is the label for the default model option in the model selector dropdown.
 
 ## Completed
 
