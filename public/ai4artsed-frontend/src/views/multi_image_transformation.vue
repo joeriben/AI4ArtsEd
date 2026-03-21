@@ -969,7 +969,8 @@ async function startGeneration() {
         return
       }
 
-      const result = (data.stage2_result || '').trim()
+      // Use interception_result (pre-optimization, same language) for refusal check
+      const result = (data.interception_result || data.stage2_result || '').trim()
       const original = contextPrompt.value.trim()
 
       const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
