@@ -328,11 +328,15 @@ async function startAnalysis() {
   margin-bottom: 1.5rem;
 }
 
+.input-section :deep(.generation-button-container) {
+  margin-top: 1.5rem;
+}
+
 .perspective-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .perspective-label {
@@ -390,7 +394,7 @@ async function startAnalysis() {
 
 /* VLM Selector */
 .vlm-selector {
-  margin-top: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .vlm-selector-label {
@@ -443,11 +447,6 @@ async function startAnalysis() {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Generation Button — left-align in input section */
-:deep(.generation-button-container) {
-  justify-content: flex-start;
-  margin-top: 0.75rem;
-}
 
 /* Results Grid — columns set dynamically via :style binding */
 .results-grid {

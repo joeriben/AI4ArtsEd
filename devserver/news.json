@@ -1,20 +1,62 @@
 {
   "version": "1.0",
-  "generated_at": "2026-03-19T15:00:00Z",
-  "source_session": 269,
+  "generated_at": "2026-03-21T14:30:00Z",
+  "source_session": 277,
   "items": [
     {
-      "id": "news-2026-03-19-workshop-planning",
-      "date": "2026-03-19",
-      "session": 269,
+      "id": "news-2026-03-21-compare-hub-llm",
+      "date": "2026-03-21",
+      "session": 277,
       "category": "feature",
       "title": {
-        "en": "Collaborative Workshop Preparation",
-        "de": "Gemeinsame Workshop-Vorbereitung"
+        "en": "Compare Hub: 6 Comparison Modes for AI Output Analysis",
+        "de": "Compare Hub: 6 Vergleichsmodi zur Analyse von KI-Ausgaben"
       },
       "summary": {
-        "en": "A planning page for group sessions: model cards can be dragged into a memory bar that shows how much graphics card capacity each AI model requires. Trashy helps coordinate the selection and explains what fits together.",
-        "de": "Eine Planungsseite fuer Gruppensitzungen: Modellkarten lassen sich in einen Speicherbalken ziehen, der zeigt, wie viel Grafikkartenkapazitaet jedes KI-Modell benoetigt. Trashy hilft bei der Auswahl und erklaert, was zusammen passt."
+        "en": "Send the same input to multiple models or configurations and compare results side by side. Six modes available: compare image models (SD 3.5, Flux 2, Gemini), language variants, system prompts, temperatures, VLM image analysis, and LLM model outputs. Each slot shows live generation progress and Trashy comments on the differences.",
+        "de": "Schicke denselben Input an mehrere Modelle oder Konfigurationen und vergleiche die Ergebnisse nebeneinander. Sechs Modi verfuegbar: Bildmodelle vergleichen (SD 3.5, Flux 2, Gemini), Sprachvarianten, System-Prompts, Temperaturen, VLM-Bildanalyse und LLM-Modellausgaben. Jeder Slot zeigt den Generierungsfortschritt live, und Trashy kommentiert die Unterschiede."
+      }
+    },
+    {
+      "id": "news-2026-03-21-llm-model-comparison",
+      "date": "2026-03-21",
+      "session": 277,
+      "category": "feature",
+      "title": {
+        "en": "LLM Model Comparison Tab: See How Models Differ",
+        "de": "LLM-Modell-Vergleich Tab: Unterschiede zwischen Modellen sehen"
+      },
+      "summary": {
+        "en": "Compare three language models side by side with the same system prompt and question. Choose any combination of available LLMs and observe how they interpret the same request differently. A pedagogical tool for understanding model bias and reasoning style.",
+        "de": "Vergleiche drei Sprachmodelle nebeneinander mit demselben System-Prompt und der gleichen Frage. Waehle beliebige Kombinationen verfuegbarer LLMs und beobachte, wie sie dieselbe Anfrage unterschiedlich interpretieren. Ein paedagogisches Werkzeug zum Verstehen von Modellverzerrung und Argumentationsstil."
+      }
+    },
+    {
+      "id": "news-2026-03-21-system-prompt-comparison",
+      "date": "2026-03-21",
+      "session": 273,
+      "category": "feature",
+      "title": {
+        "en": "System Prompt Comparison: See Invisible Instructions Shape Outputs",
+        "de": "System-Prompt-Vergleich: Sehen, wie unsichtbare Anweisungen Ausgaben praegen"
+      },
+      "summary": {
+        "en": "Send the same text to a language model with three different system prompts: none, helpful assistant, and a custom prompt you define. Observe how invisible instructions completely reshape the model's response. Demonstrates that system prompts are the hidden architecture behind every LLM interaction.",
+        "de": "Schicke denselben Text an ein Sprachmodell mit drei verschiedenen System-Prompts: keiner, hilfreicher Assistent und ein von dir definierter Custom-Prompt. Beobachte, wie unsichtbare Anweisungen die Modell-Antwort komplett umgestalten. Demonstriert, dass System-Prompts die verborgene Architektur hinter jeder LLM-Interaktion sind."
+      }
+    },
+    {
+      "id": "news-2026-03-20-workshop-planning",
+      "date": "2026-03-20",
+      "session": 272,
+      "category": "feature",
+      "title": {
+        "en": "Workshop Planning: Collaborative Model Selection with VRAM Coordination",
+        "de": "Workshop-Planung: Gemeinsame Modellauswahl mit VRAM-Koordination"
+      },
+      "summary": {
+        "en": "A planning page for group sessions where instructors preview available models, their memory requirements, and can preload them in advance. A memory bar visualizes how much graphics card capacity each model requires. Trashy assists with resource coordination recommendations for group-sized cohorts.",
+        "de": "Eine Planungsseite fuer Gruppensitzungen, auf der Instruktoren verfuegbare Modelle, ihre Speicheranforderungen sehen und diese voraus laden koennen. Ein Speicherbalken visualisiert, wie viel Grafikkartenkapazitaet jedes Modell benoetigt. Trashy hilft bei Empfehlungen zur Ressourcenkoordination fuer gruppengroesse Kohorten."
       }
     },
     {
@@ -27,22 +69,8 @@
         "de": "Persona: Dialogische KI mit eigener aesthetischer Position"
       },
       "summary": {
-        "en": "A new mode where the AI has an aesthetic opinion and decides independently whether and what to generate. Instead of entering a prompt and receiving a result, you have a conversation — and the machine generates only when the dialogue leads there.",
-        "de": "Ein neuer Modus, in dem die KI eine aesthetische Haltung hat und eigenstaendig entscheidet, ob und was sie generiert. Statt einen Prompt einzugeben und ein Ergebnis zu erhalten, fuehrst du ein Gespraech — und die Maschine generiert erst, wenn der Dialog dorthin fuehrt."
-      }
-    },
-    {
-      "id": "news-2026-03-18-compare",
-      "date": "2026-03-18",
-      "session": 266,
-      "category": "feature",
-      "title": {
-        "en": "Compare: Same Prompt, Multiple AI Models Side by Side",
-        "de": "Vergleich: Gleicher Prompt, mehrere KI-Modelle nebeneinander"
-      },
-      "summary": {
-        "en": "Send the same text to multiple image generation models at once and compare the results side by side. Each slot shows live generation progress, and Trashy comments on the differences between the outputs.",
-        "de": "Schicke denselben Text an mehrere Bildgenerierungsmodelle gleichzeitig und vergleiche die Ergebnisse nebeneinander. Jeder Slot zeigt den Generierungsfortschritt live, und Trashy kommentiert die Unterschiede zwischen den Ergebnissen."
+        "en": "A new mode where the AI has an aesthetic opinion and decides independently whether and what to generate. Instead of entering a prompt and receiving a result, you have a conversation — and the machine generates only when the dialogue leads there. Reverses the traditional user-orders-machine-delivers dynamic.",
+        "de": "Ein neuer Modus, in dem die KI eine aesthetische Haltung hat und eigenstaendig entscheidet, ob und was sie generiert. Statt einen Prompt einzugeben und ein Ergebnis zu erhalten, fuehrst du ein Gespraech — und die Maschine generiert erst, wenn der Dialog dorthin fuehrt. Kehrt die traditionelle Benutzerbefehls-Maschinen-Liefert-Dynamik um."
       }
     },
     {
@@ -51,72 +79,16 @@
       "session": 265,
       "category": "feature",
       "title": {
-        "en": "Image to 3D Model",
-        "de": "Bild zu 3D-Modell"
+        "en": "Image to 3D: Generate Textured 3D Models from Photos and Drawings",
+        "de": "Bild zu 3D: Texturierte 3D-Modelle aus Fotos und Zeichnungen generieren"
       },
       "summary": {
-        "en": "Upload a photo or drawing to generate a textured 3D model from it. The result can be rotated and zoomed directly in the browser.",
-        "de": "Lade ein Foto oder eine Zeichnung hoch, um daraus ein texturiertes 3D-Modell zu erzeugen. Das Ergebnis laesst sich direkt im Browser drehen und zoomen."
+        "en": "Upload a photograph, drawing, or sketch to generate a full textured 3D model from it. The result is a navigable mesh that can be rotated, zoomed, and inspected from all angles directly in the browser.",
+        "de": "Lade ein Foto, eine Zeichnung oder Skizze hoch, um daraus ein vollstaendig texturiertes 3D-Modell zu generieren. Das Ergebnis ist ein navigierbares Mesh, das direkt im Browser gedreht, gezoomt und von allen Seiten inspiziert werden kann."
       }
     },
     {
-      "id": "news-2026-03-13-safety-interception",
-      "date": "2026-03-13",
-      "session": 260,
-      "category": "improvement",
-      "title": {
-        "en": "Kids/Youth Safety: Context-Aware Content Check",
-        "de": "Kinder-/Jugendsicherheit: Kontextbewusste Inhaltspruefung"
-      },
-      "summary": {
-        "en": "The content safety system for kids and youth evaluates meaning and context, not individual words. Age-appropriate protection that understands what a text describes.",
-        "de": "Das Sicherheitssystem fuer Kinder und Jugendliche bewertet Bedeutung und Kontext, nicht einzelne Woerter. Altersgerechter Schutz, der versteht, was ein Text beschreibt."
-      }
-    },
-    {
-      "id": "news-2026-03-13-vlm-checklist",
-      "date": "2026-03-13",
-      "session": 260,
-      "category": "improvement",
-      "title": {
-        "en": "Automated Image Review",
-        "de": "Automatische Bildpruefung"
-      },
-      "summary": {
-        "en": "Generated images are automatically reviewed for age-appropriate content before display. The check evaluates specific categories relevant to child and youth protection.",
-        "de": "Generierte Bilder werden vor der Anzeige automatisch auf altersgerechte Inhalte geprueft. Die Pruefung bewertet spezifische Kategorien des Kinder- und Jugendschutzes."
-      }
-    },
-    {
-      "id": "news-2026-03-12-mammouth-claude",
-      "date": "2026-03-12",
-      "session": 259,
-      "category": "improvement",
-      "title": {
-        "en": "Claude Sonnet 4.6 for All Text Features",
-        "de": "Claude Sonnet 4.6 fuer alle Textfunktionen"
-      },
-      "summary": {
-        "en": "Text transformation, the Traeshy chat assistant, and safety checks use Claude Sonnet 4.6 from Anthropic.",
-        "de": "Text-Transformation, der Traeshy-Chat-Assistent und die Sicherheitspruefungen nutzen Claude Sonnet 4.6 von Anthropic."
-      }
-    },
-    {
-      "id": "news-2026-03-11-canvas-zoom",
-      "date": "2026-03-11",
-      "session": 257,
-      "category": "improvement",
-      "title": {
-        "en": "Canvas: Pan/Zoom and Output Drawer",
-        "de": "Canvas: Verschieben/Zoomen und Ergebnis-Schublade"
-      },
-      "summary": {
-        "en": "The Canvas Workflow Builder now supports pan (middle mouse) and zoom (Ctrl+Wheel, 0.25x-2x). Generated outputs appear in a bottom drawer with preview cards — click a card to jump to its node on the canvas. Each card shows the config name and seed used.",
-        "de": "Der Canvas Workflow Builder unterstuetzt jetzt Verschieben (mittlere Maustaste) und Zoomen (Strg+Mausrad, 0.25x-2x). Generierte Ergebnisse erscheinen in einer Schublade am unteren Rand mit Vorschau-Karten — Klick auf eine Karte springt zum zugehoerigen Knoten. Jede Karte zeigt den Konfig-Namen und den verwendeten Seed."
-      }
-    },
-    {
-      "id": "news-2026-03-05-video-wan22",
+      "id": "news-2026-03-05-video-generation",
       "date": "2026-03-05",
       "session": 247,
       "category": "feature",
@@ -125,92 +97,50 @@
         "de": "Videogenerierung: 10-Sekunden-Clips aus Text oder Bild"
       },
       "summary": {
-        "en": "The platform now generates short videos. Describe a scene in text, or upload a drawing or photo as a starting frame — the system creates a 10-second video from it. Both text-to-video and image-to-video are available.",
-        "de": "Die Plattform generiert jetzt Kurzvideos. Beschreibe eine Szene als Text, oder lade eine Zeichnung oder ein Foto als Startbild hoch — das System erzeugt daraus ein 10-Sekunden-Video. Sowohl Text-zu-Video als auch Bild-zu-Video sind verfuegbar."
+        "en": "Describe a scene as text or upload a drawing/photo as a starting frame — the system generates a 10-second video from it. Both text-to-video and image-to-video modes are available. Videos can be downloaded and used in downstream editing.",
+        "de": "Beschreibe eine Szene als Text oder lade eine Zeichnung/ein Foto als Startbild hoch — das System erzeugt daraus ein 10-Sekunden-Video. Sowohl Text-zu-Video als auch Bild-zu-Video-Modi sind verfuegbar. Videos koennen heruntergeladen und in weiterer Bearbeitung verwendet werden."
       }
     },
     {
-      "id": "news-2026-03-01-ionos",
-      "date": "2026-03-01",
-      "session": 229,
+      "id": "news-2026-03-13-kids-youth-safety",
+      "date": "2026-03-13",
+      "session": 260,
       "category": "improvement",
       "title": {
-        "en": "Text Transformation: Live Reasoning View",
-        "de": "Text-Transformation: Denkprozess live mitverfolgen"
+        "en": "Kids & Youth Safety: Context-Aware Content Filtering",
+        "de": "Kinder- und Jugendschutz: Kontextbewusste Inhaltsfilterung"
       },
       "summary": {
-        "en": "During text transformation, the reasoning process is visible in real time in the chat overlay — follow step by step how the system develops the transformation before the final result appears.",
-        "de": "Bei der Text-Transformation ist der Denkprozess in Echtzeit im Chat-Overlay sichtbar — Schritt fuer Schritt nachvollziehen, wie das System die Transformation entwickelt, bevor das Endergebnis erscheint."
+        "en": "The content safety system for kids and youth evaluates meaning and context instead of individual words. Age-appropriate protection that understands intention, not just keywords. Generated images are automatically reviewed for age-appropriate content before display.",
+        "de": "Das Sicherheitssystem fuer Kinder und Jugendliche bewertet Bedeutung und Kontext statt einzelner Woerter. Altersgerechter Schutz, der Absicht versteht, nicht nur Schluesselwoerter. Generierte Bilder werden vor der Anzeige automatisch auf altersgerechte Inhalte geprueft."
       }
     },
     {
-      "id": "news-2026-02-27-denoising",
+      "id": "news-2026-03-11-canvas-workflow",
+      "date": "2026-03-11",
+      "session": 257,
+      "category": "improvement",
+      "title": {
+        "en": "Canvas: Pan/Zoom and Output Drawer for Workflow Building",
+        "de": "Canvas: Verschieben/Zoomen und Ergebnis-Schublade fuer Workflow-Bau"
+      },
+      "summary": {
+        "en": "The Canvas Workflow Builder now supports pan (middle mouse drag) and zoom (Ctrl+Wheel, 0.25x–2x scale). Generated outputs appear in a bottom drawer with preview cards. Click any card to jump to its source node on the canvas. Each card shows the configuration name and seed used for reproducibility.",
+        "de": "Der Canvas Workflow Builder unterstuetzt jetzt Verschieben (mittlere Maustaste) und Zoomen (Strg+Mausrad, 0.25x–2x Skalierung). Generierte Ergebnisse erscheinen in einer Schublade am unteren Rand mit Vorschau-Karten. Klick auf eine Karte springt zum Quell-Knoten auf dem Canvas. Jede Karte zeigt den Konfigurationsnamen und den verwendeten Seed fuer Reproduzierbarkeit."
+      }
+    },
+    {
+      "id": "news-2026-02-27-live-preview",
       "date": "2026-02-27",
       "session": 220,
       "category": "feature",
       "title": {
-        "en": "Live Preview: Watch Images Emerge",
+        "en": "Live Preview: Watch Images Emerge During Generation",
         "de": "Live-Vorschau: Bildern beim Entstehen zusehen"
       },
       "summary": {
-        "en": "During image generation, a live thumbnail shows the image taking shape in real time. Expert mode provides a technical view with generation parameters and energy consumption.",
-        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit Gestalt annimmt. Der Expert-Modus bietet eine technische Ansicht mit Generierungsparametern und Energieverbrauch."
-      }
-    },
-    {
-      "id": "news-2026-02-26-sketch",
-      "date": "2026-02-26",
-      "session": 212,
-      "category": "feature",
-      "title": {
-        "en": "Sketch Canvas: Draw Instead of Upload",
-        "de": "Skizzen-Canvas: Zeichnen statt Hochladen"
-      },
-      "summary": {
-        "en": "Wherever you can upload an image, you can now draw one instead. Pen, eraser, three brush sizes, undo — available in image transformation, multi-image, and the crossmodal lab. Your sketch is used exactly like a photo upload for image-to-image generation.",
-        "de": "Ueberall, wo ein Bild hochgeladen werden kann, laesst sich jetzt auch eines zeichnen. Stift, Radierer, drei Pinselgroessen, Rueckgaengig — verfuegbar in der Bild-Transformation, bei Multi-Bild und im Crossmodalen Labor. Die Skizze wird genauso wie ein Foto-Upload fuer die Bild-zu-Bild-Generierung verwendet."
-      }
-    },
-    {
-      "id": "news-2026-02-24-poetry",
-      "date": "2026-02-24",
-      "session": 225,
-      "category": "content",
-      "title": {
-        "en": "Poetry Collision: 6 Traditions from Sappho to Yoruba Oriki",
-        "de": "Poesie-Kollision: 6 Traditionen von Sappho bis Yoruba Oriki"
-      },
-      "summary": {
-        "en": "Your text collides with genuine public-domain poetry from six traditions: Sappho, Hoelderlin, Basho, Mirabai, Yoruba Oriki, and Nahuatl Xochicuicatl. The result is deliberately not a smooth synthesis — the structural friction between your text and the poem fragment is the artistic material.",
-        "de": "Dein Text kollidiert mit echten gemeinfreien Gedichten aus sechs Traditionen: Sappho, Hoelderlin, Basho, Mirabai, Yoruba Oriki und Nahuatl Xochicuicatl. Das Ergebnis ist bewusst keine glatte Synthese — die strukturelle Reibung zwischen deinem Text und dem Gedichtfragment ist das kuenstlerische Material."
-      }
-    },
-    {
-      "id": "news-2026-02-10-crossmodal",
-      "date": "2026-02-10",
-      "session": 193,
-      "category": "feature",
-      "title": {
-        "en": "Crossmodal Lab: Image to Sound to Synthesizer",
-        "de": "Crossmodales Labor: Bild zu Klang zu Synthesizer"
-      },
-      "summary": {
-        "en": "The Crossmodal Lab bridges image and audio generation. A picture — uploaded or drawn — can become the starting point for a sound. Generated audio can be loaded into the built-in synthesizer as a wavetable, playable as an instrument with loop, sequencer, and arpeggiator.",
-        "de": "Das Crossmodale Labor verbindet Bild- und Audiogenerierung. Ein Bild — hochgeladen oder gezeichnet — kann zum Ausgangspunkt fuer einen Klang werden. Generiertes Audio laesst sich als Wavetable in den eingebauten Synthesizer laden und als Instrument spielen, mit Loop, Sequencer und Arpeggiator."
-      }
-    },
-    {
-      "id": "news-2026-02-01-languages",
-      "date": "2026-02-01",
-      "session": 201,
-      "category": "feature",
-      "title": {
-        "en": "10 Languages Including Arabic and Hebrew (RTL)",
-        "de": "10 Sprachen inklusive Arabisch und Hebraeisch (RTL)"
-      },
-      "summary": {
-        "en": "The interface is available in German, English, Turkish, Korean, Ukrainian, French, Spanish, Hebrew, Arabic, and Bulgarian. Arabic and Hebrew are rendered right-to-left with adapted layout.",
-        "de": "Die Oberflaeche ist verfuegbar in Deutsch, Englisch, Tuerkisch, Koreanisch, Ukrainisch, Franzoesisch, Spanisch, Hebraeisch, Arabisch und Bulgarisch. Arabisch und Hebraeisch werden rechts-nach-links mit angepasstem Layout dargestellt."
+        "en": "During image generation, a live thumbnail shows the image taking shape in real time from noise to final result. Expert mode provides a technical view with live generation parameters, energy consumption, and step-by-step denoising progress.",
+        "de": "Waehrend der Bilderzeugung zeigt ein Live-Thumbnail, wie das Bild in Echtzeit vom Rauschen zum Endergebnis Gestalt annimmt. Der Expert-Modus bietet eine technische Ansicht mit Live-Generierungsparametern, Energieverbrauch und Schritt-fuer-Schritt-Denoisierungsfortschritt."
       }
     }
   ]
