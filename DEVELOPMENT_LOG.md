@@ -1,5 +1,44 @@
 # Development Log
 
+## Session 278 - Safety Pre-Check: Broken Word-Overlap Heuristic Fix
+**Date:** 2026-03-22
+**Focus:** False positive "Content blocked by safety check" on harmless prompts at research safety level. Root cause: word-overlap heuristic from Session 277.
+
+### Bug
+"a beautiful person. photorealistic, real life" blocked in Compare view (historical tab) at `research` safety level. Also affected: language comparison, image transformation, multi-image transformation — 4 views total.
+
+### Root Cause Analysis
+Session 277 (commit c292b59) added a word-overlap heuristic to the pre-check in 4 views. The heuristic computed word overlap between the original prompt and the Stage 2 interception result. If < 30% of input words survived in the output, it blocked as "Content blocked by safety check."
+
+**Why this is structurally broken:** The heuristic conflates two different LLM behaviors:
+1. **Silent sanitization** (LLM removes unsafe content without explicit refusal) → low overlap → should block
+2. **Normal pedagogical interception** (LLM rewrites prompt into artistic description) → low overlap → should NOT block
+
+Both produce low word overlap. The heuristic cannot distinguish them. Result: false positives on virtually every short prompt at every safety level.
+
+**Additional waste:** The pre-check also ran CLIP optimization (`execute_optimization()`) via `execute_stage2_with_optimization()`, generating `{clip_l, clip_g}` prompts that were never used — pure waste of API calls.
+
+### Fix
+1. **Removed** word-overlap heuristic from all 4 views
+2. **Kept** `!data.success` (Stage 1 block) + `isRefusal` (explicit LLM refusal phrases) — these are the correct safety mechanisms from the existing Stage 1/2 architecture
+3. **Added** `skip_optimization` parameter to Stage 2 backend endpoint — when true, calls `execute_stage2_interception()` directly, skipping CLIP optimization
+4. **Unified** refusal detection: all 4 views now check identical refusal phrases including `result === ''` and `'i cannot'` (previously inconsistent)
+
+### Known Remaining Gap
+If the Stage 2 LLM silently sanitizes (e.g., removes "unbekleideten" from "unbekleideten Clown" without explicit refusal), `isRefusal` does not detect it. This gap also exists in the normal t2x flow (benign there because the sanitized result goes to generation). Both Llama Guard (Stage 3) and VLM (Stage 4) have been observed to miss this specific case. The correct architectural fix is improving the SAFETY_PREFIX prompt to enforce explicit refusal, not a frontend word-counting heuristic.
+
+### Files Changed
+- `devserver/my_app/routes/schema_pipeline_routes.py` — `skip_optimization` parameter, `execute_stage2_interception()` branch
+- `src/views/compare/model_comparison.vue` — overlap removed, skip_optimization added
+- `src/views/compare/language_comparison.vue` — identical
+- `src/views/image_transformation.vue` — identical
+- `src/views/multi_image_transformation.vue` — identical
+
+### Architecture Documentation
+Updated `docs/ARCHITECTURE PART 29 - Safety-System.md`: new §3.3 "Pre-Check Safety Gate" documenting the pre-check flow, the overlap heuristic history, and the known gap.
+
+---
+
 ## Session 277 - Compare Hub Redesign: 6 Tabs, Bias Pedagogy, Consistency
 **Date:** 2026-03-21
 **Focus:** Expand Compare Hub from 4 to 6 tabs, add LLM Model Comparison, unify all views to use standard components, tune Trashy for bias pedagogy.

@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-21 (Session 275)
+**Last Updated:** 2026-03-22 (Session 278)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, usage agreement, legal basis
 
 ---
@@ -99,7 +99,48 @@ youth/kids     → VLM safety check (hybrid: primary VLM + fallback STAGE3_MODEL
 
 SAFETY-QUICK checks DSGVO and §86a only. Jugendschutz is handled by Stage 2 safety prefix.
 
-### 3.3 Stage 3 — Pre-Output Safety (`stage_orchestrator.py`)
+### 3.3 Pre-Check Safety Gate — Compare + i2x Views
+
+**Context:** Four views use a safety pre-check before generation without prior interception: `model_comparison.vue`, `language_comparison.vue`, `image_transformation.vue` (when no config selected), `multi_image_transformation.vue` (when no config selected).
+
+**Mechanism:** These views call `POST /api/schema/pipeline/stage2` with `schema: 'user_defined'` and `skip_optimization: true`. The backend runs:
+
+1. **Stage 1** (`execute_stage1_safety_unified`): DSGVO NER + §86a fast-filter. At `research` level: skipped entirely (early return).
+2. **Stage 2** (`execute_stage2_interception`): Runs the interception LLM with SAFETY_PREFIX for kids/youth. No CLIP optimization (skipped by `skip_optimization` flag).
+
+The frontend checks two conditions:
+- `!data.success` — Stage 1 blocked (DSGVO/§86a)
+- `isRefusal` — Stage 2 LLM explicitly refused (refusal phrases or empty result)
+
+If neither triggers, the pre-check passes and generation proceeds with the **raw user prompt** (not the interception result).
+
+**Refusal detection** (frontend, identical in all 4 views):
+```
+"Hierbei kann ich Dich nicht unterstützen"
+"kann ich dich nicht unterstützen"
+"cannot support you"
+"i can't help"
+"i cannot"
+result === ''  (empty = refused)
+```
+
+**Why `skip_optimization`:** The pre-check only needs the LLM's safety verdict (refusal or not). CLIP optimization (`execute_optimization()`) generates `{clip_l, clip_g}` prompts that the pre-check never uses — pure waste of API calls.
+
+#### History: Word-Overlap Heuristic (Session 277 → removed Session 278)
+
+Session 277 (commit c292b59, 2026-03-21) introduced a word-overlap heuristic to detect "silent sanitization" — when the LLM removes unsafe content without using explicit refusal phrases. The heuristic compared word overlap between the original prompt and the interception result; if < 30% of input words survived in the output, it blocked as "Content blocked by safety check."
+
+**Why it failed:** The heuristic conflated two structurally different LLM behaviors:
+1. **Silent sanitization** (safety signal): LLM removes "unbekleideten" from "unbekleideten Clown" → low overlap → should block
+2. **Normal pedagogical interception** (expected behavior): LLM rewrites "a beautiful person" into a detailed artistic description → low overlap → should NOT block
+
+Both produce low word overlap. The heuristic **cannot distinguish** them because overlap measures lexical similarity, not semantic intent. Result: false positives on virtually every short prompt at every safety level, including `research` (where no safety prefix exists and the LLM never refuses).
+
+**Known remaining gap:** If the Stage 2 LLM silently sanitizes instead of explicitly refusing (e.g., removes "unbekleideten" but continues normally), the `isRefusal` check does not detect it. This same gap exists in the normal t2x flow — there it is benign because the sanitized result goes to generation. In compare mode (which uses the raw prompt for generation), the unsanitized prompt reaches Stage 3 (Llama Guard). **Llama Guard and VLM have been observed to miss "unbekleideten Clown"** — this is a known architectural gap in the multi-layer safety system, not introduced by the removal of the overlap heuristic.
+
+**Mitigation:** The SAFETY_PREFIX explicitly instructs the LLM to refuse with the exact phrase "Hierbei kann ich Dich nicht unterstützen." Improving prompt compliance (making the LLM always refuse explicitly rather than silently sanitize) is the correct architectural fix for this gap, not a frontend word-counting heuristic.
+
+### 3.4 Stage 3 — Pre-Output Safety (`stage_orchestrator.py`)
 
 **Function:** `execute_stage3_safety()`
 
@@ -151,7 +192,7 @@ Stage 3 catches prompts that pass all fast-filters but would generate harmful im
 
 **Code safety:** `execute_stage3_safety_code()` — same skip logic for generated code (JavaScript, Ruby, etc.)
 
-### 3.4 Post-Generation VLM Check (`schema_pipeline_routes.py`)
+### 3.5 Post-Generation VLM Check (`schema_pipeline_routes.py`)
 
 **Scope:** Images only, kids/youth only
 
@@ -451,6 +492,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 264 | 2026-03-17 | Usage agreement text rewrite: "Nutzungshinweis" → "Nutzungsvereinbarung" (binding conditions) |
 | 265 | 2026-03-18 | VLM safety: hybrid architecture (primary single-model + two-model fallback). max_new_tokens 500→1500. STAGE3_MODEL as verdict fallback |
 | 275 | 2026-03-21 | **CRITICAL**: Stage 2 Jugendschutz for i2x/multi-i2x. Safety Prefix: nudity/sexual added to Context-rules clause. i2x/multi-i2x now mandatory Stage 2 interception before generation |
+| 278 | 2026-03-22 | **FIX**: Broken word-overlap heuristic removed from 4 pre-check views. `skip_optimization` parameter added to Stage 2 endpoint. See §3.5 |
 
 ---
 
