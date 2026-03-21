@@ -1555,6 +1555,7 @@ export const en = {
       },
     },
     vlmAnalysis: {
+      imageLabel: 'Your Image',
       perspectiveLabel: 'Perspective',
       modelsLabel: 'Vision Models',
       analyzeBtn: 'Analyze Image',

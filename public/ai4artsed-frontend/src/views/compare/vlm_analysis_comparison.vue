@@ -3,9 +3,19 @@
     <div class="compare-main">
       <!-- Image Input Section -->
       <div class="input-section">
-        <ImageUploadWidget
+        <MediaInputBox
+          icon="💡"
+          :label="t('compare.vlmAnalysis.imageLabel')"
+          :value="uploadedImage ?? ''"
+          @update:value="(val: string) => uploadedImage = val || undefined"
+          input-type="image"
+          :allow-sketch="true"
+          :initial-image="uploadedImage"
           @image-uploaded="onImageUploaded"
           @image-removed="onImageRemoved"
+          @copy="() => {}"
+          @paste="() => {}"
+          @clear="onImageRemoved"
         />
 
         <!-- Perspective selector -->
@@ -87,7 +97,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import ImageUploadWidget from '@/components/ImageUploadWidget.vue'
+import MediaInputBox from '@/components/MediaInputBox.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 
 const { t } = useI18n()
@@ -119,6 +129,7 @@ const PERSPECTIVE_PROMPTS: Record<string, string> = {
 }
 
 // --- State ---
+const uploadedImage = ref<string | undefined>(undefined)
 const imagePath = ref<string | null>(null)
 const selectedPerspective = ref('neutral')
 const freePrompt = ref('')
@@ -152,12 +163,14 @@ function getBaseUrl(): string {
   return import.meta.env.DEV ? 'http://localhost:17802' : ''
 }
 
-function onImageUploaded(data: { image_path: string }) {
+function onImageUploaded(data: { image_path: string; preview_url: string }) {
   imagePath.value = data.image_path
+  uploadedImage.value = data.preview_url
 }
 
 function onImageRemoved() {
   imagePath.value = null
+  uploadedImage.value = undefined
 }
 
 async function getAnalysisPrompt(): Promise<string> {
