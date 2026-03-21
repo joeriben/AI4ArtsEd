@@ -945,37 +945,40 @@ async function selectCategory(categoryId: string) {
 async function startGeneration() {
   if (!canStartGeneration.value) return
 
-  // Stage 2 mandatory: if no config-based interception has run, do a non-destructive
-  // safety check. Send the prompt through interception with safety prefix — if the LLM
-  // refuses or substantially changes it, block. Original text stays in the box.
+  // Stage 2 Jugendschutz gate (no config selected):
+  // Uses /pipeline/stage2 endpoint — runs ONLY Stage 1 + Stage 2, no image generation.
+  // See image_transformation.vue for detailed comments on the word-overlap approach.
   if (!interceptionDone.value) {
-    console.log('[MultiI2I] No interception done — running non-destructive safety check')
+    console.log('[MultiI2I] No interception done — running Stage 2 safety check')
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
     try {
-      const res = await fetch(`${baseUrl}/api/schema/pipeline/interception`, {
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           schema: 'user_defined',
-          input_text: contextPrompt.value,
-          context_prompt: '',
-          enable_streaming: false,
-          device_id: deviceId
+          input_text: contextPrompt.value
         })
       })
       const data = await res.json()
-      const result = (data.final_output || '').trim()
+
+      if (!data.success) {
+        generationErrorMessage.value = data.error || 'Safety check failed'
+        console.log('[MultiI2I-STAGE2] Blocked by Stage 1:', data.error)
+        return
+      }
+
+      const result = (data.stage2_result || '').trim()
       const original = contextPrompt.value.trim()
 
       const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
           result.includes('kann ich dich nicht unterstützen') ||
           result.toLowerCase().includes('cannot support you') ||
-          result.toLowerCase().includes('not able to support') ||
           result.toLowerCase().includes('i cannot') ||
           result === ''
 
-      const inputWords = new Set(original.toLowerCase().split(/\s+/).filter(w => w.length > 3))
+      const inputWords = new Set(original.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
       const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
       let overlap = 0
       for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
@@ -983,12 +986,12 @@ async function startGeneration() {
       const wasSubstantiallyChanged = overlapRatio < 0.3 && result.length > 0
 
       if (isRefusal || wasSubstantiallyChanged) {
-        generationErrorMessage.value = isRefusal ? result : t('multiImage.safetyBlocked', 'Content blocked by safety check')
-        console.log(`[MultiI2I-STAGE2] Safety blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
+        generationErrorMessage.value = isRefusal && result ? result : 'Content blocked by safety check'
+        console.log(`[MultiI2I-STAGE2] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
         return
       }
       interceptionDone.value = true
-      console.log(`[MultiI2I-STAGE2] Safety check passed (overlap=${overlapRatio.toFixed(2)}) — text unchanged`)
+      console.log(`[MultiI2I-STAGE2] Safety passed (overlap=${overlapRatio.toFixed(2)}) — text unchanged`)
     } catch (e) {
       console.error('[MultiI2I-STAGE2] Safety check error:', e)
       generationErrorMessage.value = 'Safety check unavailable'

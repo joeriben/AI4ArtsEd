@@ -747,41 +747,45 @@ async function selectCategory(categoryId: string) {
 async function startGeneration() {
   if (!canStartGeneration.value) return
 
-  // Stage 2 mandatory: if no config-based interception has run, do a non-destructive
-  // safety check. Send the prompt through interception with safety prefix — if the LLM
-  // refuses or substantially changes it, block. Original text stays in the box.
+  // Stage 2 Jugendschutz gate (no config selected):
+  // Uses /pipeline/stage2 endpoint which runs ONLY Stage 1 (§86a+DSGVO) + Stage 2
+  // (interception with safety prefix). No optimization, no Stage 3-4, no image generation.
+  // The LLM either passes the text through or refuses — we check the result but do NOT
+  // modify the user's original text in the box.
   if (!interceptionDone.value) {
-    console.log('[I2I] No interception done — running non-destructive safety check')
+    console.log('[I2I] No interception done — running Stage 2 safety check')
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
     try {
-      const res = await fetch(`${baseUrl}/api/schema/pipeline/interception`, {
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           schema: 'user_defined',
-          input_text: contextPrompt.value,
-          context_prompt: '',
-          enable_streaming: false,
-          device_id: deviceId
+          input_text: contextPrompt.value
         })
       })
       const data = await res.json()
-      const result = (data.final_output || '').trim()
+
+      // Stage 1 blocked (§86a or DSGVO)
+      if (!data.success) {
+        generationErrorMessage.value = data.error || 'Safety check failed'
+        console.log('[I2I-STAGE2] Blocked by Stage 1:', data.error)
+        return
+      }
+
+      // Stage 2 result: check if LLM refused (safety prefix triggered)
+      const result = (data.stage2_result || '').trim()
       const original = contextPrompt.value.trim()
 
-      // Detect refusal: explicit refusal text, or output substantially different from input
-      // (safety prefix causes LLM to either refuse or sanitize the prompt)
       const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
           result.includes('kann ich dich nicht unterstützen') ||
           result.toLowerCase().includes('cannot support you') ||
-          result.toLowerCase().includes('not able to support') ||
           result.toLowerCase().includes('i cannot') ||
           result === ''
 
-      // Check if output is substantially different from input (LLM sanitized/replaced it)
-      // Use simple word overlap: if less than 30% of input words appear in output, it was changed
-      const inputWords = new Set(original.toLowerCase().split(/\s+/).filter(w => w.length > 3))
+      // Word-overlap check: if LLM substantially changed the text, it sanitized/refused
+      const inputWords = new Set(original.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
       const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
       let overlap = 0
       for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
@@ -789,12 +793,12 @@ async function startGeneration() {
       const wasSubstantiallyChanged = overlapRatio < 0.3 && result.length > 0
 
       if (isRefusal || wasSubstantiallyChanged) {
-        generationErrorMessage.value = isRefusal ? result : t('imageTransform.safetyBlocked', 'Content blocked by safety check')
-        console.log(`[I2I-STAGE2] Safety blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
+        generationErrorMessage.value = isRefusal && result ? result : 'Content blocked by safety check'
+        console.log(`[I2I-STAGE2] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
         return
       }
       interceptionDone.value = true
-      console.log(`[I2I-STAGE2] Safety check passed (overlap=${overlapRatio.toFixed(2)}) — text unchanged`)
+      console.log(`[I2I-STAGE2] Safety passed (overlap=${overlapRatio.toFixed(2)}) — text unchanged`)
     } catch (e) {
       console.error('[I2I-STAGE2] Safety check error:', e)
       generationErrorMessage.value = 'Safety check unavailable'
