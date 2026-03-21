@@ -2392,9 +2392,10 @@ def compare_analyze_image():
     import time
     import io
     import base64
+    import requests as http_requests
     from pathlib import Path as _Path
     from PIL import Image
-    from my_app.services.llm_backend import get_llm_backend
+    from config import GPU_SERVICE_URL
 
     try:
         data = request.get_json()
@@ -2420,24 +2421,30 @@ def compare_analyze_image():
         # Strip 'local/' prefix if present
         clean_model = model.replace('local/', '') if model.startswith('local/') else model
 
+        # Route through GPU service VLM proxy (VRAM-coordinated)
         start = time.monotonic()
-        result = get_llm_backend().chat(
-            model=clean_model,
-            messages=[{'role': 'user', 'content': prompt}],
-            images=[image_b64],
-            temperature=0.7,
-            max_new_tokens=2000,
-            enable_thinking=False,
+        gpu_resp = http_requests.post(
+            f"{GPU_SERVICE_URL}/api/vlm/chat",
+            json={
+                'model': clean_model,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'images': [image_b64],
+                'temperature': 0.7,
+                'max_new_tokens': 2000,
+                'enable_thinking': False,
+            },
+            timeout=200,
         )
         latency = time.monotonic() - start
 
-        if result is None:
-            return jsonify({'status': 'error', 'error': 'VLM returned no response', 'model': model}), 500
+        gpu_data = gpu_resp.json()
+        if gpu_data.get('status') != 'success':
+            return jsonify({'status': 'error', 'error': gpu_data.get('error', 'GPU service error'), 'model': model}), 500
 
-        description = result.get('content', '').strip()
+        description = gpu_data.get('content', '').strip()
         if not description:
             # Fallback: check thinking field (qwen3-vl quirk)
-            description = (result.get('thinking') or '').strip()
+            description = (gpu_data.get('thinking') or '').strip()
 
         return jsonify({
             'status': 'success',

@@ -216,8 +216,9 @@ async function startAnalysis() {
     error: null,
   }))
 
-  // Send all requests in parallel
-  const promises = selectedModels.value.map(async (model, idx) => {
+  // Sequential execution — Ollama must swap VLMs one at a time (VRAM)
+  for (let idx = 0; idx < selectedModels.value.length; idx++) {
+    const model = selectedModels.value[idx]
     try {
       const resp = await fetch(`${getBaseUrl()}/api/schema/compare/analyze-image`, {
         method: 'POST',
@@ -255,9 +256,7 @@ async function startAnalysis() {
         error: e.message || 'Connection error',
       }
     }
-  })
-
-  await Promise.all(promises)
+  }
   isAnalyzing.value = false
 
   // Build comparison context for Trashy
