@@ -1547,7 +1547,8 @@ export const en = {
       custom: 'Custom',
       presets: {
         none: 'No system prompt',
-        claude: 'Claude (real product prompt)',
+        claude: 'Claude Sonnet 4.6 (2025)',
+        gpt4_2023: 'GPT-4 (2023)',
         helpful: 'Helpful assistant',
         disagree: 'Always disagree',
         pirate: 'Pirate',
