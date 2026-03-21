@@ -946,8 +946,7 @@ async function startGeneration() {
   if (!canStartGeneration.value) return
 
   // Stage 2 Jugendschutz gate (no config selected):
-  // Uses /pipeline/stage2 endpoint — runs ONLY Stage 1 + Stage 2, no image generation.
-  // See image_transformation.vue for detailed comments on the word-overlap approach.
+  // Uses /pipeline/stage2 endpoint — runs Stage 1 (DSGVO/§86a) + Stage 2 interception (safety via SAFETY_PREFIX).
   if (!interceptionDone.value) {
     console.log('[MultiI2I] No interception done — running Stage 2 safety check')
     isPipelineExecuting.value = true
@@ -960,7 +959,8 @@ async function startGeneration() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           schema: 'user_defined',
-          input_text: contextPrompt.value
+          input_text: contextPrompt.value,
+          skip_optimization: true
         })
       })
       const data = await res.json()
@@ -972,31 +972,23 @@ async function startGeneration() {
         return
       }
 
-      // Use interception_result (pre-optimization, same language) for refusal check
+      // Stage 2 refusal check — LLM handles safety via SAFETY_PREFIX
       const result = (data.interception_result || data.stage2_result || '').trim()
-      const original = contextPrompt.value.trim()
-
       const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
           result.includes('kann ich dich nicht unterstützen') ||
           result.toLowerCase().includes('cannot support you') ||
+          result.toLowerCase().includes('i can\'t help') ||
           result.toLowerCase().includes('i cannot') ||
           result === ''
 
-      const inputWords = new Set(original.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
-      const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
-      let overlap = 0
-      for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
-      const overlapRatio = inputWords.size > 0 ? overlap / inputWords.size : 1
-      const wasSubstantiallyChanged = overlapRatio < 0.3 && result.length > 0
-
-      if (isRefusal || wasSubstantiallyChanged) {
-        generationErrorMessage.value = isRefusal && result ? result : 'Content blocked by safety check'
+      if (isRefusal) {
+        generationErrorMessage.value = result || 'Content blocked by safety check'
         isPipelineExecuting.value = false
-        console.log(`[MultiI2I-STAGE2] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
+        console.log(`[MultiI2I-STAGE2] Blocked by LLM refusal`)
         return
       }
       interceptionDone.value = true
-      console.log(`[MultiI2I-STAGE2] Safety passed (overlap=${overlapRatio.toFixed(2)}) — text unchanged`)
+      console.log(`[MultiI2I-STAGE2] Safety passed`)
     } catch (e) {
       console.error('[MultiI2I-STAGE2] Safety check error:', e)
       generationErrorMessage.value = 'Safety check unavailable'

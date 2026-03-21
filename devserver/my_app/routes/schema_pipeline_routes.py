@@ -896,6 +896,7 @@ def execute_stage2():
         safety_level = _default_safety
         output_config = data.get('output_config')  # Optional
         user_language = data.get('user_language', 'en')
+        skip_optimization = data.get('skip_optimization', False)  # Pre-checks: skip CLIP optimization
 
         # CRITICAL: Check if frontend provides interception_result
         # If provided, Stage 2 was already executed - DO NOT run Call 1 again!
@@ -1031,6 +1032,15 @@ def execute_stage2():
                     self.execution_time = 0
 
             result = MockResult(checked_text)
+        elif skip_optimization:
+            # Pre-check mode: run interception only (safety via SAFETY_PREFIX), skip CLIP optimization
+            logger.info(f"[STAGE2-ENDPOINT] Stage 2: Interception only (skip_optimization=true)")
+            result = asyncio.run(execute_stage2_interception(
+                schema_name=schema_name,
+                input_text=checked_text,
+                config=execution_config,
+                safety_level=safety_level,
+            ))
         else:
             media_preferences = execution_config.media_preferences if hasattr(execution_config, 'media_preferences') else None
 

@@ -286,7 +286,7 @@ async function startComparison() {
     const safetyRes = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ schema: 'user_defined', input_text: userPrompt.value })
+      body: JSON.stringify({ schema: 'user_defined', input_text: userPrompt.value, skip_optimization: true })
     })
     const safetyData = await safetyRes.json()
     if (!safetyData.success) {
@@ -294,25 +294,21 @@ async function startComparison() {
       isGenerating.value = false
       return
     }
+    // Stage 2 refusal check — LLM handles safety via SAFETY_PREFIX
     const result = (safetyData.interception_result || safetyData.stage2_result || '').trim()
-    const original = userPrompt.value.trim()
     const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
         result.includes('kann ich dich nicht unterstützen') ||
         result.toLowerCase().includes('cannot support you') ||
-        result.toLowerCase().includes('i can\'t help')
-    const inputWords = new Set(original.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
-    const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
-    let overlap = 0
-    for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
-    const overlapRatio = inputWords.size > 0 ? overlap / inputWords.size : 1
-    const wasSubstantiallyChanged = overlapRatio < 0.3 && result.length > 0
-    if (isRefusal || wasSubstantiallyChanged) {
-      safetyError.value = isRefusal && result ? result : 'Content blocked by safety check'
+        result.toLowerCase().includes('i can\'t help') ||
+        result.toLowerCase().includes('i cannot') ||
+        result === ''
+    if (isRefusal) {
+      safetyError.value = result || 'Content blocked by safety check'
       isGenerating.value = false
-      console.log(`[MODEL-COMPARE] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
+      console.log(`[MODEL-COMPARE] Blocked by LLM refusal`)
       return
     }
-    console.log(`[MODEL-COMPARE] Safety passed (overlap=${overlapRatio.toFixed(2)})`)
+    console.log(`[MODEL-COMPARE] Safety passed`)
   } catch (e) {
     console.error('[MODEL-COMPARE] Safety check error:', e)
     safetyError.value = 'Safety check unavailable'
