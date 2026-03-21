@@ -65,20 +65,11 @@ Bestehende `_call_mistral()`, `_call_ollama()`, `_call_openai()`, `_call_anthrop
 
 ---
 
-### Canvas Execution Feedback
+### ~~Canvas Execution Feedback~~ — DONE (Session 141)
 
 **Datum:** 2026-01-26 (Session 136)
 
-User starren 5+ Minuten auf den Bildschirm ohne Feedback. Minimum: Spinner/"Generating..." während Execution. Ideal: SSE-Stream mit Live-Updates (Node X von Y, aktueller Stage).
-
-**Technische Optionen:**
-- **Option A: Polling** — Frontend pollt `/api/canvas/status/{run_id}` alle 2s
-- **Option B: SSE Stream** — Backend sendet `node_started`, `node_completed`, `error` Events
-
-**Betroffene Dateien:**
-- `devserver/my_app/routes/canvas_routes.py`
-- `public/ai4artsed-frontend/src/stores/canvas.ts`
-- `public/ai4artsed-frontend/src/views/canvas_workflow.vue`
+~~User starren 5+ Minuten auf den Bildschirm ohne Feedback.~~ Implementiert via SSE Stream (Option B): Spinner-Overlay mit Live-Updates (Node X von Y, aktueller Stage-Message) in `canvas_routes.py`, `canvas.ts`, `canvas_workflow.vue`.
 
 ### Safety-Architektur Refactoring
 
