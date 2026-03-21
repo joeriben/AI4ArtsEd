@@ -1118,6 +1118,13 @@ def chat():
         # Session 133 DEBUG: Log user message to see if draft context is prepended
         logger.info(f"[CHAT-DEBUG] User message preview: {user_message[:200]}..." if len(user_message) > 200 else f"[CHAT-DEBUG] User message: {user_message}")
 
+        # Persona mode: use PERSONA_MODEL (Opus) unless frontend sent explicit override
+        if not model_override and context and context.get('persona_mode'):
+            persona_model = get_user_setting("PERSONA_MODEL", default="")
+            if persona_model:
+                model_override = persona_model
+                logger.info(f"[CHAT] Persona mode → using PERSONA_MODEL: {persona_model}")
+
         # Temperature comparison mode: disable thinking so model is actually
         # sensitive to temperature differences (thinking models produce near-identical
         # outputs at different temperatures because the thinking phase constrains output)

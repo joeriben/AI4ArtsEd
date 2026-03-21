@@ -59,6 +59,7 @@ _SETTINGS_DEFAULTS = {
     'STAGE3_MODEL': '',
     'STAGE4_LEGACY_MODEL': '',
     'CHAT_HELPER_MODEL': '',
+    'PERSONA_MODEL': '',
     'CODING_MODEL': '',
     'IMAGE_ANALYSIS_MODEL': '',
     'SAFETY_MODEL': '',

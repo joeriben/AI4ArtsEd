@@ -93,6 +93,7 @@
         "STAGE3_MODEL": "mammouth/claude-sonnet-4-6",
         "STAGE4_LEGACY_MODEL": "mammouth/claude-sonnet-4-6",
         "CHAT_HELPER_MODEL": "mammouth/claude-sonnet-4-6",
+        "PERSONA_MODEL": "mammouth/claude-opus-4-6",
         "CODING_MODEL": "mammouth/claude-sonnet-4-6"
       }
     },
