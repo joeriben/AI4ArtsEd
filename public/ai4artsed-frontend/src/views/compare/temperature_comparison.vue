@@ -64,40 +64,13 @@
     </div>
 
     <!-- Trashy sidebar -->
-    <div class="trashy-panel">
-      <div class="trashy-header">
-        <img :src="trashyIcon" alt="" class="trashy-icon" />
-        <span class="trashy-title">Trashy</span>
-      </div>
-      <div class="trashy-messages" ref="trashyMessagesRef">
-        <div
-          v-for="msg in trashyMessages"
-          :key="msg.id"
-          class="chat-bubble"
-          :class="msg.role"
-        >
-          <template v-if="msg.role === 'assistant'">
-            <span v-for="(part, pidx) in parseSuggestions(msg.content)" :key="pidx">
-              <span v-if="part.type === 'text'">{{ part.text }}</span>
-              <button v-else class="prompt-suggestion" @click="userInput = part.text">{{ part.text }}</button>
-            </span>
-          </template>
-          <template v-else>{{ msg.content }}</template>
-        </div>
-        <div v-if="trashyLoading" class="chat-bubble assistant loading">
-          <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-        </div>
-      </div>
-      <div class="trashy-input-area">
-        <input
-          v-model="trashyInput"
-          class="trashy-input"
-          :placeholder="t('compare.chatPlaceholder')"
-          @keydown.enter="sendToTrashy"
-          :disabled="trashyLoading"
-        />
-      </div>
-    </div>
+    <ComparisonChat
+      ref="chatRef"
+      class="compare-chat-panel"
+      :comparison-context="comparisonContext"
+      compare-type="temperature"
+      @use-prompt="userInput = $event"
+    />
   </div>
 </template>
 
@@ -108,7 +81,7 @@ import { useTemperatureCompareStore } from '@/stores/temperatureCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
-import trashyIcon from '@/assets/trashy-icon.png'
+import ComparisonChat from '@/components/ComparisonChat.vue'
 
 const { t } = useI18n()
 const store = useTemperatureCompareStore()
@@ -140,6 +113,8 @@ const userInput = ref('')
 const selectedModel = ref('')
 const isSending = ref(false)
 const colLoading = ref([false, false, false])
+const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
+const comparisonContext = ref('')
 
 const { chatModels } = useChatModels()
 
@@ -222,151 +197,25 @@ async function sendToAll() {
   await Promise.allSettled(promises)
   isSending.value = false
 
-  // Trigger Trashy auto-analysis
-  autoAnalyze()
+  // Trigger Trashy auto-analysis via ComparisonChat
+  updateComparisonContext()
+  chatRef.value?.triggerAutoComment()
 }
 
-// ---------- Trashy sidebar ----------
+// ---------- Trashy context ----------
 
-interface TrashyMessage {
-  id: number
-  role: 'user' | 'assistant'
-  content: string
-}
-
-const trashyMessages = ref<TrashyMessage[]>([])
-const trashyInput = ref('')
-const trashyLoading = ref(false)
-const trashyMessagesRef = ref<HTMLElement | null>(null)
-let trashyNextId = 0
-
-function addTrashyMessage(role: 'user' | 'assistant', content: string) {
-  trashyMessages.value.push({ id: trashyNextId++, role, content })
-  nextTick(() => {
-    if (trashyMessagesRef.value) {
-      trashyMessagesRef.value.scrollTop = trashyMessagesRef.value.scrollHeight
-    }
-  })
-}
-
-function parseSuggestions(content: string): Array<{ type: 'text' | 'prompt'; text: string }> {
-  const parts: Array<{ type: 'text' | 'prompt'; text: string }> = []
-  const regex = /\[PROMPT:\s*(.+?)\]/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-  while ((match = regex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', text: content.slice(lastIndex, match.index) })
-    }
-    parts.push({ type: 'prompt', text: match[1]! })
-    lastIndex = regex.lastIndex
-  }
-  if (lastIndex < content.length) {
-    parts.push({ type: 'text', text: content.slice(lastIndex) })
-  }
-  return parts.length > 0 ? parts : [{ type: 'text', text: content }]
-}
-
-function buildTrashyContext(): string {
+function updateComparisonContext() {
   const cols = store.columns
-  const lastResponses = cols.map((col, i) => {
+  const lastResponses = cols.map((col) => {
     const lastAssistant = [...col.messages].reverse().find(m => m.role === 'assistant')
     return `T=${col.temperature}: ${lastAssistant?.content || '(no response yet)'}`
   }).join('\n')
-
-  return `[Temperature Comparison Mode]\nTemperatures: 0 (deterministic), 0.5 (balanced), 1.0 (creative)\nLatest responses:\n${lastResponses}`
-}
-
-async function callTrashy(message: string): Promise<string | null> {
-  const history = trashyMessages.value.map(m => ({ role: m.role, content: m.content }))
-  const response = await fetch(`${getBaseUrl()}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message,
-      history,
-      context: {
-        comparison_mode: true,
-        language: userPreferences.language,
-        device_id: deviceId,
-      },
-      draft_context: buildTrashyContext(),
-    })
-  })
-  const data = await response.json()
-  return data.reply || null
-}
-
-async function sendToTrashy() {
-  const text = trashyInput.value.trim()
-  if (!text || trashyLoading.value) return
-
-  addTrashyMessage('user', text)
-  trashyInput.value = ''
-  trashyLoading.value = true
-
-  try {
-    const reply = await callTrashy(text)
-    addTrashyMessage('assistant', reply || t('compare.shared.noResponse'))
-  } catch {
-    addTrashyMessage('assistant', t('compare.shared.error'))
-  } finally {
-    trashyLoading.value = false
-  }
-}
-
-async function autoAnalyze() {
-  // Only auto-analyze if there's at least one complete round
-  if (!store.hasConversation) return
-
-  trashyLoading.value = true
-  try {
-    const reply = await callTrashy(
-      'The user just sent the same message at three different temperatures (0, 0.5, 1.0). '
-      + 'Compare the three responses concisely. Focus on concrete differences in content, style, and creativity. '
-      + 'If the responses diverge interestingly, suggest ONE follow-up prompt that would amplify the divergence. '
-      + 'Use [PROMPT: ...] format. Do not simulate excitement.'
-    )
-    if (reply) {
-      addTrashyMessage('assistant', reply)
-    }
-  } catch {
-    // Silent fail for auto-analysis
-  } finally {
-    trashyLoading.value = false
-  }
-}
-
-async function fetchGreeting() {
-  trashyLoading.value = true
-  try {
-    const langNames: Record<string, string> = {
-      de: 'German', en: 'English', tr: 'Turkish', ko: 'Korean',
-      uk: 'Ukrainian', fr: 'French', es: 'Spanish', he: 'Hebrew', ar: 'Arabic', bg: 'Bulgarian'
-    }
-    const lang = langNames[userPreferences.language] || 'English'
-    const reply = await callTrashy(
-      `Greet the user briefly. Explain that this mode sends the same message to an AI at three different "temperature" levels (0 = deterministic, 0.5 = balanced, 1.0 = creative). `
-      + `Temperature controls randomness — low temperature always picks the most likely word, high temperature explores surprising alternatives. `
-      + `Suggest ONE starting prompt where temperature differences are especially visible. Use [PROMPT: ...] format. Speak in ${lang}.`
-    )
-    if (reply) {
-      addTrashyMessage('assistant', reply)
-    } else {
-      addTrashyMessage('assistant', t('compare.temperature.subtitle'))
-    }
-  } catch {
-    addTrashyMessage('assistant', t('compare.temperature.subtitle'))
-  } finally {
-    trashyLoading.value = false
-  }
+  comparisonContext.value = `[Temperature Comparison Mode — generation_complete]\nTemperatures: 0 (deterministic), 0.5 (balanced), 1.0 (creative)\nLatest responses:\n${lastResponses}`
 }
 
 function startNewConversation() {
   store.clearAll()
-  trashyMessages.value = []
-  trashyNextId = 0
-  fetchGreeting()
+  chatRef.value?.clearMessages()
 }
 
 // ---------- Init ----------
@@ -374,8 +223,6 @@ function startNewConversation() {
 onMounted(() => {
   if (store.hasConversation) {
     scrollAllColumns()
-  } else {
-    fetchGreeting()
   }
 })
 </script>
@@ -648,71 +495,12 @@ onMounted(() => {
 
 /* ---------- Trashy sidebar ---------- */
 
-.trashy-panel {
+.compare-chat-panel {
   width: 300px;
   flex-shrink: 0;
   position: sticky;
   top: 80px;
   max-height: calc(100vh - 120px - var(--footer-collapsed-height, 36px));
-  display: flex;
-  flex-direction: column;
-  background: rgba(15, 15, 15, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.trashy-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 0.8rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.trashy-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.trashy-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.trashy-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.trashy-input-area {
-  padding: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.trashy-input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 0.5rem 0.7rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.8rem;
-  outline: none;
-}
-
-.trashy-input:focus {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.trashy-input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
 }
 
 /* ---------- Responsive ---------- */
@@ -722,7 +510,7 @@ onMounted(() => {
     flex-direction: column;
   }
 
-  .trashy-panel {
+  .compare-chat-panel {
     width: 100%;
     position: static;
     max-height: 300px;

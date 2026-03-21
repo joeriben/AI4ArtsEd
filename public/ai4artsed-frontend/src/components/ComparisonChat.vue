@@ -58,7 +58,7 @@ interface ChatMessage {
 
 interface Props {
   comparisonContext: string
-  compareType?: 'language' | 'model' | 'vlm-analysis'
+  compareType?: 'language' | 'model' | 'vlm-analysis' | 'temperature' | 'systemprompt'
 }
 
 interface ContentPart {
@@ -201,6 +201,10 @@ async function fetchProactiveGreeting() {
     ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt. There are two presets — one with current top models (SD 3.5, Flux 2, Gemini), one showing the evolution from SD 1.5 (2022) through SDXL (2023) to SD 3.5 (2024). Suggest ONE starting prompt where model differences are especially visible (spatial complexity, fine detail, or text rendering). Use [PROMPT: ...] format.'
     : props.compareType === 'vlm-analysis'
     ? 'Greet the user. Explain briefly: this mode shows how different vision models describe the same image. The user uploads or draws an image, picks an analysis perspective (neutral, art-historical, ethical, decolonial, etc.), and multiple models describe what they see. You then analyze what the models noticed and missed. Suggest uploading an image with visual complexity — faces, text in the image, spatial depth, or cultural symbols work well.'
+    : props.compareType === 'temperature'
+    ? 'Greet the user briefly. Explain that this mode sends the same message to an AI at three different "temperature" levels (0 = deterministic, 0.5 = balanced, 1.0 = creative). Temperature controls randomness — low temperature always picks the most likely word, high temperature explores surprising alternatives. Suggest ONE starting prompt where temperature differences are especially visible. Use [PROMPT: ...] format.'
+    : props.compareType === 'systemprompt'
+    ? 'Greet the user briefly. Explain that this mode sends the same message to an AI with three different system prompts. The system prompt shapes the AI\'s personality and perspective. Suggest ONE starting prompt that would reveal how different system prompts change the response. Use [PROMPT: ...] format.'
     : 'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.'
   try {
     const reply = await callChat(greetingPrompt, [])
@@ -240,6 +244,16 @@ async function sendAutoComment(_context: string) {
       + 'Where does model size make a visible difference in detail or nuance? '
       + 'If one model mentions something no other does, highlight it. '
       + 'Do not use technical jargon. Do not simulate excitement.'
+    : props.compareType === 'temperature'
+    ? 'The user just sent the same message at three different temperatures (0, 0.5, 1.0). '
+      + 'Compare the three responses concisely. Focus on concrete differences in content, style, and creativity. '
+      + 'If the responses diverge interestingly, suggest ONE follow-up prompt that would amplify the divergence. '
+      + 'Use [PROMPT: ...] format. Do not simulate excitement.'
+    : props.compareType === 'systemprompt'
+    ? 'The user just sent the same message with three different system prompts. '
+      + 'Compare the three responses concisely. Focus on how the system prompt shaped tone, content, and perspective. '
+      + 'If the responses diverge interestingly, suggest ONE follow-up prompt that would amplify the divergence. '
+      + 'Use [PROMPT: ...] format. Do not simulate excitement.'
     : 'The language comparison run just completed. Analyze the VLM image descriptions in your context. '
       + 'State factually what differs between the language variants and why (grounded in the specific descriptions, not generic CLIP bias). '
       + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
@@ -263,7 +277,20 @@ function getMessages(): Array<{ role: string; content: string }> {
     .map(m => ({ role: m.role, content: m.content }))
 }
 
-defineExpose({ injectMessage, onNewRun, getMessages })
+/** Clear all messages and re-greet */
+function clearMessages() {
+  messages.value = []
+  nextId = 0
+  runCounter = 0
+  fetchProactiveGreeting()
+}
+
+/** Trigger auto-comment programmatically (for text compare views) */
+function triggerAutoComment() {
+  sendAutoComment(props.comparisonContext)
+}
+
+defineExpose({ injectMessage, onNewRun, getMessages, clearMessages, triggerAutoComment })
 </script>
 
 <style scoped>

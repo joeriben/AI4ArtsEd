@@ -41,6 +41,7 @@
         >
           {{ isGenerating ? t('compare.generatingAll') : t('compare.generateAll') }}
         </button>
+        <div v-if="safetyError" class="safety-error">{{ safetyError }}</div>
       </div>
 
       <!-- Comparison Grid -->
@@ -141,6 +142,7 @@ const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
 const showPresetOverlay = ref(false)
 const isEnriching = ref(false)
+const safetyError = ref('')
 const fullscreenImage = ref<string | null>(null)
 
 const availableModels = [
@@ -302,10 +304,50 @@ function buildContext(phase: string): string {
 async function startComparison() {
   if (!canGenerate.value || isGenerating.value) return
   isGenerating.value = true
+  safetyError.value = ''
   chatRef.value?.onNewRun()
 
   const isDev = import.meta.env.DEV
   const baseUrl = isDev ? 'http://localhost:17802' : ''
+
+  // Stage 2 Jugendschutz gate — check original prompt before translation/generation
+  try {
+    const safetyRes = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schema: 'user_defined', input_text: userPrompt.value })
+    })
+    const safetyData = await safetyRes.json()
+    if (!safetyData.success) {
+      safetyError.value = safetyData.error || 'Blocked by safety check'
+      isGenerating.value = false
+      return
+    }
+    const result = (safetyData.interception_result || safetyData.stage2_result || '').trim()
+    const original = userPrompt.value.trim()
+    const isRefusal = result.includes('Hierbei kann ich Dich nicht unterstützen') ||
+        result.includes('kann ich dich nicht unterstützen') ||
+        result.toLowerCase().includes('cannot support you') ||
+        result.toLowerCase().includes('i can\'t help')
+    const inputWords = new Set(original.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
+    const outputWords = new Set(result.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3))
+    let overlap = 0
+    for (const w of inputWords) { if (outputWords.has(w)) overlap++ }
+    const overlapRatio = inputWords.size > 0 ? overlap / inputWords.size : 1
+    const wasSubstantiallyChanged = overlapRatio < 0.3 && result.length > 0
+    if (isRefusal || wasSubstantiallyChanged) {
+      safetyError.value = isRefusal && result ? result : 'Content blocked by safety check'
+      isGenerating.value = false
+      console.log(`[LANG-COMPARE] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
+      return
+    }
+    console.log(`[LANG-COMPARE] Safety passed (overlap=${overlapRatio.toFixed(2)})`)
+  } catch (e) {
+    console.error('[LANG-COMPARE] Safety check error:', e)
+    safetyError.value = 'Safety check unavailable'
+    isGenerating.value = false
+    return
+  }
 
   // Initialize slots + one useGenerationStream per slot
   const langCodes = selectedLanguages.value
@@ -739,6 +781,16 @@ onBeforeUnmount(() => {
   color: rgba(239, 83, 80, 0.7);
   text-align: center;
   padding: 0.5rem;
+}
+
+.safety-error {
+  font-size: 0.85rem;
+  color: rgba(239, 83, 80, 0.9);
+  text-align: center;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: 8px;
 }
 
 /* Mobile */
