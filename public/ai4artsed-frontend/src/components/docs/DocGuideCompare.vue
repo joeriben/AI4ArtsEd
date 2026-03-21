@@ -64,10 +64,31 @@
   </section>
 
   <section class="info-section">
+    <h3>{{ currentLanguage === 'de' ? 'System-Prompt-Vergleich' : 'System Prompt Comparison' }}</h3>
+    <p>{{ currentLanguage === 'de'
+      ? 'Dieselbe Nachricht wird gleichzeitig an dasselbe Sprachmodell geschickt — aber mit drei verschiedenen System-Prompts. System-Prompts sind unsichtbare Anweisungen, die dem Modell gegeben werden, bevor der Nutzer spricht. Jedes kommerzielle KI-Produkt (ChatGPT, Claude, Gemini) läuft mit solchen versteckten Instruktionen. Dieser Modus macht sie sichtbar und editierbar.'
+      : 'The same message is sent simultaneously to the same language model — but with three different system prompts. System prompts are invisible instructions given to the model before the user speaks. Every commercial AI product (ChatGPT, Claude, Gemini) runs with such hidden instructions. This mode makes them visible and editable.' }}</p>
+    <div class="insight-list">
+      <div class="insight-item">
+        <strong>{{ currentLanguage === 'de' ? 'Das Unsichtbare sichtbar machen' : 'Making the invisible visible' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Voreinstellungen umfassen den echten Produkt-Prompt von Claude, pädagogische Prompts (Pirat, Dichter, Fünfjähriger) und einen leeren Prompt, der das "rohe" Verhalten des Modells ohne jede Steuerung zeigt. Alle Prompts sind direkt editierbar.'
+          : 'Presets include Claude\'s real product prompt, pedagogical prompts (pirate, poet, five-year-old), and an empty prompt that shows the model\'s "raw" behavior without any steering. All prompts are directly editable.' }}</p>
+      </div>
+      <div class="insight-item">
+        <strong>{{ currentLanguage === 'de' ? 'Identität durch Instruktion' : 'Identity through instruction' }}</strong>
+        <p>{{ currentLanguage === 'de'
+          ? 'Dasselbe Modell wird hilfreich, widersprüchlich, poetisch oder kindlich — allein durch seinen System-Prompt. Das Modell selbst verändert sich nicht, nur die Steuerung. Das zeigt: Die "Persönlichkeit" einer KI ist kein Wesenszug, sondern eine Konfiguration.'
+          : 'The same model becomes helpful, contrarian, poetic, or childlike — solely through its system prompt. The model itself does not change, only the steering. This demonstrates: an AI\'s "personality" is not a trait, but a configuration.' }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-section">
     <h3>{{ currentLanguage === 'de' ? 'KI-gestützte Auswertung' : 'AI-Assisted Analysis' }}</h3>
     <p>{{ currentLanguage === 'de'
-      ? 'Nach der Generierung kann die KI (Trashy) helfen, die Vergleichsergebnisse zu analysieren und zu interpretieren. Im Sprach- und Modellvergleich steht ein Chat-Panel zur Verfügung, in dem Trashy die generierten Bilder kommentiert, auf Unterschiede hinweist und Fragen stellen kann, die den Vergleich pädagogisch produktiv machen.'
-      : 'After generation, the AI (Trashy) can help analyze and interpret the comparison results. In the language and model comparison, a chat panel is available where Trashy comments on the generated images, points out differences, and can ask questions that make the comparison pedagogically productive.' }}</p>
+      ? 'In allen vier Vergleichsmodi steht Trashy als Analyse-Begleitung zur Verfügung. Trashy kommentiert die Ergebnisse, weist auf Unterschiede hin und stellt Fragen, die den Vergleich pädagogisch produktiv machen.'
+      : 'In all four comparison modes, Trashy is available as an analysis companion. Trashy comments on the results, points out differences, and asks questions that make the comparison pedagogically productive.' }}</p>
     <div class="insight-list">
       <div class="insight-item">
         <strong>{{ currentLanguage === 'de' ? 'Nicht nur sehen, sondern verstehen' : 'Not just seeing, but understanding' }}</strong>
