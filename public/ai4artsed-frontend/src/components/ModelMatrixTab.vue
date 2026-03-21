@@ -235,7 +235,6 @@ function getVisionModel(): string {
 // Row definitions
 const matrixRows: MatrixRow[] = [
   { field: 'STAGE1_TEXT_MODEL', label: 'Translation', stage: 'T' },
-  { field: 'STAGE1_VISION_MODEL', label: 'Image Recognition', stage: 'V' },
   { field: 'STAGE2_INTERCEPTION_MODEL', label: 'Transformation', stage: 'T' },
   { field: 'STAGE2_OPTIMIZATION_MODEL', label: 'Optimization', stage: 'T' },
   { field: 'STAGE3_MODEL', label: 'Safety', stage: 'S' },

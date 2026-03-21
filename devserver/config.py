@@ -53,7 +53,6 @@ _SETTINGS_DEFAULTS = {
     # Empty strings here ensure hasattr() works for import compatibility.
     # If user_settings.json is missing, server will NOT start (see __init__.py).
     'STAGE1_TEXT_MODEL': '',
-    'STAGE1_VISION_MODEL': '',
     'STAGE2_INTERCEPTION_MODEL': '',
     'STAGE2_OPTIMIZATION_MODEL': '',
     'STAGE3_MODEL': '',

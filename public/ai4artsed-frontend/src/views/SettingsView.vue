@@ -474,7 +474,6 @@ const ollamaModels = ref([])  // Session 133: Ollama model dropdown
 
 const modelLabelKeys = {
   'STAGE1_TEXT_MODEL': 'settings.models.stage1Text',
-  'STAGE1_VISION_MODEL': 'settings.models.stage1Vision',
   'STAGE2_INTERCEPTION_MODEL': 'settings.models.stage2Interception',
   'STAGE2_OPTIMIZATION_MODEL': 'settings.models.stage2Optimization',
   'STAGE3_MODEL': 'settings.models.stage3',

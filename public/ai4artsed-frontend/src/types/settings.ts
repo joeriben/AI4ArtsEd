@@ -10,7 +10,6 @@
 /** Model field identifiers - the 9 application areas */
 export type ModelField =
   | 'STAGE1_TEXT_MODEL'
-  | 'STAGE1_VISION_MODEL'
   | 'STAGE2_INTERCEPTION_MODEL'
   | 'STAGE2_OPTIMIZATION_MODEL'
   | 'STAGE3_MODEL'
@@ -21,7 +20,7 @@ export type ModelField =
   | 'CODING_MODEL'
 
 /** Vision model fields (always local) */
-export type VisionModelField = 'STAGE1_VISION_MODEL' | 'IMAGE_ANALYSIS_MODEL'
+export type VisionModelField = 'IMAGE_ANALYSIS_MODEL'
 
 /** LLM model fields (can be local or cloud) */
 export type LLMModelField = Exclude<ModelField, VisionModelField>
@@ -41,7 +40,6 @@ export interface MatrixRow {
 
 /** Vision preset - VRAM-dependent vision models */
 export interface VisionPreset {
-  STAGE1_VISION_MODEL: string
   IMAGE_ANALYSIS_MODEL: string
 }
 

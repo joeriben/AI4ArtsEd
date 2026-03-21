@@ -1,27 +1,21 @@
 {
   "vision_presets": {
     "vram_96": {
-      "STAGE1_VISION_MODEL": "local/qwen3-vl:32b",
       "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:32b"
     },
     "vram_48": {
-      "STAGE1_VISION_MODEL": "local/qwen3-vl:32b",
       "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:32b"
     },
     "vram_32": {
-      "STAGE1_VISION_MODEL": "local/qwen3-vl:32b",
       "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:32b"
     },
     "vram_24": {
-      "STAGE1_VISION_MODEL": "local/llama3.2-vision:11b",
       "IMAGE_ANALYSIS_MODEL": "local/llama3.2-vision:11b"
     },
     "vram_16": {
-      "STAGE1_VISION_MODEL": "local/llama3.2-vision:11b",
       "IMAGE_ANALYSIS_MODEL": "local/llama3.2-vision:11b"
     },
     "vram_8": {
-      "STAGE1_VISION_MODEL": "local/llama3.2-vision:latest",
       "IMAGE_ANALYSIS_MODEL": "local/llama3.2-vision:latest"
     }
   },

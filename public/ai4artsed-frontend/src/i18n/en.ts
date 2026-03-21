@@ -239,7 +239,6 @@ export const en = {
       matrixAdvised: 'Use of Model Matrix is advised. However, you may configure your settings here freely.',
       ollamaAvailable: '{count} Ollama models available (type or select from dropdown)',
       stage1Text: 'Translation Model',
-      stage1Vision: 'Image Recognition Model',
       stage2Interception: 'Transformation Model',
       stage2Optimization: 'Prompt Optimization Model',
       stage3: 'Safety Model',

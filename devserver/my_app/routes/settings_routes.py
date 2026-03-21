@@ -626,7 +626,6 @@ def get_settings():
 
             # Model Configuration
             "STAGE1_TEXT_MODEL": config.STAGE1_TEXT_MODEL,
-            "STAGE1_VISION_MODEL": config.STAGE1_VISION_MODEL,
             "STAGE2_INTERCEPTION_MODEL": config.STAGE2_INTERCEPTION_MODEL,
             "STAGE2_OPTIMIZATION_MODEL": config.STAGE2_OPTIMIZATION_MODEL,
             "STAGE3_MODEL": config.STAGE3_MODEL,
