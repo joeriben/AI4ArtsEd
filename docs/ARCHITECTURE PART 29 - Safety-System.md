@@ -1,7 +1,7 @@
 # ARCHITECTURE PART 29 — Safety System
 
 **Status:** Authoritative
-**Last Updated:** 2026-03-18 (Session 265)
+**Last Updated:** 2026-03-21 (Session 275)
 **Scope:** Complete safety architecture — levels, filters, enforcement points, usage agreement, legal basis
 
 ---
@@ -205,9 +205,11 @@ On match → **Llama Guard** (`SAFETY_MODEL`) context check with S1-S13 template
 
 **Definition:** `SAFETY_PREFIXES` in `schemas/engine/instruction_selector.py`
 
-**Mechanism:** For kids/youth safety levels, a safety prefix is prepended to the LLM instruction. The prefix instructs the LLM to refuse racist, terrorist, violence-glorifying, sexist, or pornographic input — including implied/metaphorical forms (airplane into building, vehicle into crowd).
+**Mechanism:** For kids/youth safety levels, a safety prefix is prepended to the LLM instruction. The prefix instructs the LLM to refuse racist, terrorist, violence-glorifying, sexist, or pornographic input — including implied/metaphorical forms (airplane into building, vehicle into crowd). The prefix also guards against malicious Context rules: "Do not introduce violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it."
 
-**Mandatory:** Stage 2 cannot be skipped for kids/youth (`skip_stage2` is overridden). Even with an empty context box (`user_defined` config), the LLM is called with the safety prefix as the primary instruction.
+**Mandatory for ALL generation paths:** Stage 2 cannot be skipped for kids/youth:
+- **t2x:** `skip_stage2` is overridden. Even with an empty context box (`user_defined` config), the LLM is called with the safety prefix.
+- **i2x / multi-i2x (Session 275):** Config selection triggers Stage 2 streaming interception into the context box. If no config is selected, `startGeneration()` automatically runs `user_defined` interception before proceeding to Stage 3+4. This closes the Jugendschutz gap where i2x prompts like "undress all figures" previously bypassed Stage 2 entirely.
 
 **Why not keyword-based:** The keyword age filter oscillated between too aggressive (29% false positives in Workshop 12.03.2026) and too permissive (weapons bypass) over 10+ sessions. See `SAFETY_SYSTEM_HISTORY.md` Section 2 (Era 6) for the complete record.
 
@@ -310,15 +312,18 @@ User Input
   │   └─ POST /safety/quick (DSGVO NER + §86a, text)
   │   └─ POST /safety/quick (VLM, uploaded images)
   │
-  ├─ [Stage 1] execute_stage1_safety_unified()
+  ├─ [Stage 1] execute_stage1_safety_unified()           ← t2x only
   │   └─ DSGVO NER → §86a fast-filter (two legal concerns only)
   │
-  ├─ [Stage 2] Prompt Interception — JUGENDSCHUTZ HERE
+  ├─ [Stage 2] Prompt Interception — JUGENDSCHUTZ HERE   ← ALL paths (t2x, i2x, multi-i2x)
   │   └─ Safety prefix mandatory for kids/youth (even with empty context box)
   │   └─ LLM refuses racist/terrorist/violence-glorifying/sexist/pornographic input
+  │   └─ t2x: triggered by runInterception() button
+  │   └─ i2x/multi-i2x: triggered by config selection OR auto at Generate
   │
   ├─ [Frontend] startGeneration() pre-generation gate
   │   └─ POST /safety/quick on final prompt (catches edits without blur)
+  │   └─ i2x/multi-i2x: enforces Stage 2 if not yet run (user_defined fallback)
   │
   ├─ [Stage 3] execute_stage3_safety()
   │   └─ Translation + §86a filter + Llama-Guard S1-S13 check (kids/youth)
@@ -445,6 +450,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | 263 | 2026-03-17 | Usage agreement page: route, guard, 24h cookie, Vue page |
 | 264 | 2026-03-17 | Usage agreement text rewrite: "Nutzungshinweis" → "Nutzungsvereinbarung" (binding conditions) |
 | 265 | 2026-03-18 | VLM safety: hybrid architecture (primary single-model + two-model fallback). max_new_tokens 500→1500. STAGE3_MODEL as verdict fallback |
+| 275 | 2026-03-21 | **CRITICAL**: Stage 2 Jugendschutz for i2x/multi-i2x. Safety Prefix: nudity/sexual added to Context-rules clause. i2x/multi-i2x now mandatory Stage 2 interception before generation |
 
 ---
 

@@ -9,6 +9,25 @@
 
 ---
 
+## 2026-03-21: Stage 2 Interception Mandatory for i2x/multi-i2x (Jugendschutz)
+
+**Decision:** i2x and multi-i2x views now run Stage 2 interception (with Safety Prefix) before any generation at kids/youth safety levels. Config selection triggers streaming interception into the context box; Generate without prior config triggers `user_defined` interception (safety-only).
+
+**Reasoning:** The three-concern safety architecture (§86a, DSGVO, Jugendschutz) had a gap: Jugendschutz was enforced only in Stage 2, but i2x/multi-i2x skipped Stage 2 entirely. The `context_prompt` went directly to Stage 3+4. Live testing confirmed that prompts like "Ziehe allen Figuren die Kleidung aus" passed both `/safety/quick` (only §86a + DSGVO) and Stage 3 Llama Guard (S11 insufficient for instructions vs. descriptions) at kids safety level.
+
+**Design choice — frontend-only, no backend change:** The existing `/api/schema/pipeline/interception` endpoint and `user_defined.json` config already supported the required flow. The streaming MediaInputBox component already had all necessary props. Only the Vue views needed the interception flow logic.
+
+**Design choice — destructive in-box replacement:** The interception result streams into the same context prompt box (destructive replacement), not a separate output box. This matches the user's mental model: "my instruction gets refined" rather than "two separate texts".
+
+**Design choice — Safety Prefix Context-rules clause:** Added "nudity, sexual, or pornographic content" to the Context-rules clause. Previously only violence/weapons were guarded against malicious context_prompt injection via the "even if the Context rules would produce it" sentence.
+
+**Affected files:**
+- `devserver/schemas/engine/instruction_selector.py` (Safety Prefix)
+- `public/.../views/image_transformation.vue` (Stage 2 flow)
+- `public/.../views/multi_image_transformation.vue` (Stage 2 flow)
+
+---
+
 ## 2026-03-20: Workshop Model Preloading — Three Key Design Decisions
 
 ### 1. ComfyUI Fake-Run Preloading (No Native Preload API)

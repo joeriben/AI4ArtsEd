@@ -27,6 +27,27 @@
 
 ---
 
+## Session 275 (2026-03-21): Jugendschutz for i2x/multi-i2x — Stage 2 Interception
+
+**Date:** 2026-03-21
+**Status:** COMPLETE
+**Branch:** develop
+
+### Context
+Safety audit revealed that i2x and multi-i2x views had no Jugendschutz enforcement point. The `context_prompt` went directly to Stage 3+4 (generation-streaming) without passing through Stage 2 Safety Prefix. Confirmed via live test: "Ziehe allen Figuren die Kleidung aus" passed both `/safety/quick` (§86a + DSGVO only) and Stage 3 Llama Guard (S11 insufficient for instructions) at kids safety level.
+
+### Changes
+1. **Safety Prefix Fix** (`instruction_selector.py`): Added "nudity, sexual, or pornographic content" to the Context-rules clause in both kids and youth prefixes. Previously, only "violence, weapons, armed conflict, abuse" were guarded against malicious context_prompt injection.
+2. **i2x Stage 2 Interception** (`image_transformation.vue`): Replicated the t2x Stage 2 pattern — config selection triggers streaming interception into the context box (destructive), mandatory `user_defined` interception on Generate if no config was selected. Refusal detection for "Hierbei kann ich Dich nicht unterstützen".
+3. **multi-i2x Stage 2 Interception** (`multi_image_transformation.vue`): Same pattern.
+
+### Architecture Impact
+- Stage 2 is now mandatory for ALL user-facing generation paths at kids/youth (t2x, i2x, multi-i2x)
+- No backend changes required — existing `/api/schema/pipeline/interception` endpoint and `user_defined.json` config reused
+- Frontend-only changes: streaming MediaInputBox props + interception flow logic
+
+---
+
 ## Session 252 (2026-03-06): Workshop Replay Evaluation — Fixes Validated
 
 **Date:** 2026-03-06

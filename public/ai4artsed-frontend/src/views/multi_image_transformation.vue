@@ -864,10 +864,13 @@ const interceptionStreamingUrl = computed(() => {
 })
 
 const interceptionStreamingParams = computed(() => {
+  const isUserDefined = !lastInterceptionConfigId.value || lastInterceptionConfigId.value === 'user_defined'
   return {
     schema: lastInterceptionConfigId.value || 'user_defined',
     input_text: contextPrompt.value || t('multiImage.defaultPrompt'),
-    context_prompt: '',
+    context_prompt: isUserDefined
+      ? 'Output the input exactly as provided, applying it to these images. Do not change or rephrase the text.'
+      : '',
     enable_streaming: true,
     device_id: deviceId
   }

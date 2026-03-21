@@ -661,10 +661,15 @@ const interceptionStreamingUrl = computed(() => {
 })
 
 const interceptionStreamingParams = computed(() => {
+  const isUserDefined = !lastInterceptionConfigId.value || lastInterceptionConfigId.value === 'user_defined'
   return {
     schema: lastInterceptionConfigId.value || 'user_defined',
     input_text: contextPrompt.value || t('imageTransform.defaultPrompt'),
-    context_prompt: '',
+    // Safety-only (user_defined): instruct LLM to pass through unchanged
+    // With config: empty context_prompt lets the config's context apply
+    context_prompt: isUserDefined
+      ? 'Output the input exactly as provided, applying it to this image. Do not change or rephrase the text.'
+      : '',
     enable_streaming: true,
     device_id: deviceId
   }
