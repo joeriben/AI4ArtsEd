@@ -203,7 +203,7 @@ const cloudColumns: CloudColumn[] = [
 ]
 
 // Vision fields that are always local
-const visionFields: ModelField[] = ['STAGE1_VISION_MODEL', 'IMAGE_ANALYSIS_MODEL']
+const visionFields: ModelField[] = ['IMAGE_ANALYSIS_MODEL']
 
 function isVisionField(field: ModelField): boolean {
   return visionFields.includes(field)
