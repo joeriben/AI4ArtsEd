@@ -69,7 +69,7 @@
       </div>
 
       <!-- Results Grid -->
-      <div v-if="results.length > 0" class="results-grid">
+      <div v-if="results.length > 0" class="results-grid" :style="{ gridTemplateColumns: gridColumns }">
         <div v-for="result in results" :key="result.model" class="result-card">
           <div class="result-header">
             <span class="result-model">{{ getModelLabel(result.model) }}</span>
@@ -147,6 +147,14 @@ interface AnalysisResult {
 }
 
 const results = ref<AnalysisResult[]>([])
+
+const gridColumns = computed(() => {
+  const n = results.value.length || selectedModels.value.length
+  if (n <= 1) return '1fr'
+  if (n === 2) return 'repeat(2, 1fr)'
+  if (n === 3) return 'repeat(3, 1fr)'
+  return 'repeat(2, 1fr)' // 4+ → 2 columns, cards wrap
+})
 
 const canAnalyze = computed(() => {
   if (!imagePath.value) return false
@@ -438,10 +446,9 @@ async function startAnalysis() {
   cursor: not-allowed;
 }
 
-/* Results Grid */
+/* Results Grid — columns set dynamically via :style binding */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 0.75rem;
   margin-top: 1rem;
 }
@@ -524,12 +531,12 @@ async function startAnalysis() {
 }
 
 @media (max-width: 600px) {
-  .compare-page {
-    padding: 0.5rem;
+  .results-grid {
+    grid-template-columns: 1fr !important;
   }
 
-  .results-grid {
-    grid-template-columns: 1fr;
+  .compare-page {
+    padding: 0.5rem;
   }
 }
 </style>
