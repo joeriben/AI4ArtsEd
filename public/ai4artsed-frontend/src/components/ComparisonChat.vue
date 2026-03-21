@@ -58,7 +58,7 @@ interface ChatMessage {
 
 interface Props {
   comparisonContext: string
-  compareType?: 'language' | 'model'
+  compareType?: 'language' | 'model' | 'vlm-analysis'
 }
 
 interface ContentPart {
@@ -199,6 +199,8 @@ async function fetchProactiveGreeting() {
   isLoading.value = true
   const greetingPrompt = props.compareType === 'model'
     ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt. There are two presets — one with current top models (SD 3.5, Flux 2, Gemini), one showing the evolution from SD 1.5 (2022) through SDXL (2023) to SD 3.5 (2024). Suggest ONE starting prompt where model differences are especially visible (spatial complexity, fine detail, or text rendering). Use [PROMPT: ...] format.'
+    : props.compareType === 'vlm-analysis'
+    ? 'Greet the user. Explain briefly: this mode shows how different vision models describe the same image. The user uploads or draws an image, picks an analysis perspective (neutral, art-historical, ethical, decolonial, etc.), and multiple models describe what they see. You then analyze what the models noticed and missed. Suggest uploading an image with visual complexity — faces, text in the image, spatial depth, or cultural symbols work well.'
     : 'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.'
   try {
     const reply = await callChat(greetingPrompt, [])
@@ -232,6 +234,12 @@ async function sendAutoComment(_context: string) {
       + 'State factually what differs between the models and why (grounded in the specific descriptions — architecture differences, text rendering capability, detail fidelity, composition). '
       + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '
       + 'Do not suggest prompts from a generic list. Do not simulate excitement.'
+    : props.compareType === 'vlm-analysis'
+    ? 'The VLM image analysis just completed. Multiple vision models described the same image. '
+      + 'Analyze the descriptions in your context: what does each model focus on? What do they miss? '
+      + 'Where does model size make a visible difference in detail or nuance? '
+      + 'If one model mentions something no other does, highlight it. '
+      + 'Do not use technical jargon. Do not simulate excitement.'
     : 'The language comparison run just completed. Analyze the VLM image descriptions in your context. '
       + 'State factually what differs between the language variants and why (grounded in the specific descriptions, not generic CLIP bias). '
       + 'If a significant divergence exists, derive ONE follow-up prompt from the concrete observation. Use [PROMPT: ...] format. '

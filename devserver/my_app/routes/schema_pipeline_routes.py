@@ -2351,6 +2351,106 @@ def compare_describe():
         return jsonify({'status': 'error', 'error': str(e)}), 500
 
 
+@schema_bp.route('/compare/analysis-prompt', methods=['GET'])
+def compare_analysis_prompt():
+    """
+    Return the analysis prompt for a given perspective.
+    Uses IMAGE_ANALYSIS_PROMPTS from config.py with language fallback.
+    """
+    from config import IMAGE_ANALYSIS_PROMPTS, DEFAULT_LANGUAGE
+
+    perspective = request.args.get('perspective', 'bildwissenschaftlich')
+    prompts = IMAGE_ANALYSIS_PROMPTS.get(perspective)
+    if not prompts:
+        return jsonify({'status': 'error', 'error': f'Unknown perspective: {perspective}'}), 404
+
+    # Try user's language, fallback to 'en'
+    lang = request.args.get('lang', DEFAULT_LANGUAGE)
+    prompt = prompts.get(lang) or prompts.get('en', 'Analyze this image thoroughly.')
+
+    return jsonify({'status': 'success', 'prompt': prompt})
+
+
+@schema_bp.route('/compare/analyze-image', methods=['POST'])
+def compare_analyze_image():
+    """
+    VLM Image Analysis comparison endpoint.
+    Sends an image to a specific VLM with a specific prompt.
+
+    Request: {
+        "image_path": "/path/to/image.png",
+        "model": "qwen3-vl:2b",
+        "prompt": "Describe this image..."
+    }
+    Response: {
+        "status": "success",
+        "description": "...",
+        "model": "qwen3-vl:2b",
+        "latency_s": 2.3
+    }
+    """
+    import time
+    import io
+    import base64
+    from pathlib import Path as _Path
+    from PIL import Image
+    from my_app.services.llm_backend import get_llm_backend
+
+    try:
+        data = request.get_json()
+        image_path = data.get('image_path')
+        model = data.get('model')
+        prompt = data.get('prompt')
+
+        if not image_path or not model or not prompt:
+            return jsonify({'status': 'error', 'error': 'image_path, model, and prompt required'}), 400
+
+        # Load and resize image (same pattern as vlm_safety.py)
+        img_path = _Path(image_path)
+        if not img_path.exists():
+            return jsonify({'status': 'error', 'error': f'Image not found: {image_path}'}), 404
+
+        img = Image.open(img_path)
+        if max(img.size) > 768:
+            img.thumbnail((768, 768), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=80)
+        image_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+        # Strip 'local/' prefix if present
+        clean_model = model.replace('local/', '') if model.startswith('local/') else model
+
+        start = time.monotonic()
+        result = get_llm_backend().chat(
+            model=clean_model,
+            messages=[{'role': 'user', 'content': prompt}],
+            images=[image_b64],
+            temperature=0.7,
+            max_new_tokens=2000,
+            enable_thinking=False,
+        )
+        latency = time.monotonic() - start
+
+        if result is None:
+            return jsonify({'status': 'error', 'error': 'VLM returned no response', 'model': model}), 500
+
+        description = result.get('content', '').strip()
+        if not description:
+            # Fallback: check thinking field (qwen3-vl quirk)
+            description = (result.get('thinking') or '').strip()
+
+        return jsonify({
+            'status': 'success',
+            'description': description,
+            'model': model,
+            'latency_s': round(latency, 2),
+        })
+
+    except Exception as e:
+        logger.error(f"[COMPARE-ANALYZE-IMAGE] Error: {e}", exc_info=True)
+        return jsonify({'status': 'error', 'error': str(e)}), 500
+
+
 @schema_bp.route('/pipeline/log-prompt-change', methods=['POST'])
 def log_prompt_change():
     """

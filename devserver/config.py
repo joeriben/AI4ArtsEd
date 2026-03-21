@@ -163,27 +163,285 @@ REFLECTION QUESTIONS:
     },
 
     'bildungstheoretisch': {
-        # Jörissen/Marotzki - Analysis of educational potentials (Bildungspotenziale)
-        'de': """TODO: User provides prompt for bildungstheoretisch analysis (DE)
-Jörissen/Marotzki framework - Analyse von Bildungspotenzialen""",
-        'en': """TODO: User provides prompt for bildungstheoretisch analysis (EN)
-Jörissen/Marotzki framework - Analysis of educational potentials"""
+        # Jörissen/Marotzki - Structural media education (Bildungspotenziale)
+        'de': """Du analysierst ein KI-generiertes Bild aus bildungstheoretischer Perspektive (nach Joerissen/Marotzki).
+
+Erstelle eine strukturierte Analyse nach diesem Schema:
+
+1. WISSENSBEZUG
+   - Welches Weltwissen wird im Bild vorausgesetzt oder in Frage gestellt?
+   - Welche Deutungsmuster werden bedient oder gebrochen?
+
+2. HANDLUNGSBEZUG
+   - Welche Handlungsoptionen eröffnet oder verschliesst das Bild?
+   - Welche Handlungsraeume werden sichtbar, welche fehlen?
+
+3. GRENZBEZUG (TENTATIVITAET)
+   - Wo werden Grenzen des Darstellbaren sichtbar?
+   - Welche Unbestimmtheiten, Ambiguitaeten oder Irritationen erzeugt das Bild?
+   - Was entzieht sich der Darstellung?
+
+4. BIOGRAPHIEBEZUG
+   - Welche Selbst- und Fremdbilder werden angeboten?
+   - Wie verhaelt sich das Bild zu moeglichen Lebensentwuerfen der Betrachtenden?
+
+5. REFLEXIONSFRAGEN
+   - 3-5 konkrete Gespraechsanregungen, die Schueler*innen zur Reflexion ueber das Verhaeltnis von Bild, Wissen und Selbst einladen
+
+KRITISCHE REGELN:
+- Schreibe auf Deutsch
+- Deklarative Sprache (Fakten, nicht Moeglichkeiten)
+- Fokus auf Bildungspotenziale, nicht auf aesthetische Bewertung
+- Keine Phrasen wie "moeglicherweise", "koennte sein"
+- Spezifische, umsetzbare Reflexionsfragen""",
+        'en': """You are analyzing an AI-generated image from a structural media education perspective (following Joerissen/Marotzki).
+
+Provide a structured analysis following this framework:
+
+1. KNOWLEDGE DIMENSION
+   - What world knowledge does the image presuppose or challenge?
+   - Which interpretive patterns does it serve or disrupt?
+
+2. ACTION DIMENSION
+   - What possibilities for action does the image open or foreclose?
+   - Which spaces for agency become visible, which are absent?
+
+3. BOUNDARY DIMENSION (TENTATIVITY)
+   - Where do limits of representability become visible?
+   - What ambiguities, irritations, or indeterminacies does the image produce?
+   - What escapes representation?
+
+4. BIOGRAPHICAL DIMENSION
+   - What self-images and images of others are offered?
+   - How does the image relate to possible life designs of the viewers?
+
+5. REFLECTION QUESTIONS
+   - 3-5 specific conversation prompts inviting reflection on the relationship between image, knowledge, and self
+
+CRITICAL RULES:
+- Write in English
+- Declarative language (state as facts, not possibilities)
+- Focus on educational potentials, not aesthetic judgment
+- No phrases like "possibly", "might be"
+- Specific, actionable reflection questions"""
+    },
+
+    'ikonik': {
+        # Imdahl - Iconic analysis (szenische Choreographie, planimetrische Komposition, Perspektivitaet)
+        'de': """Du analysierst ein KI-generiertes Bild nach der Methode der Ikonik (Max Imdahl).
+
+Erstelle eine strukturierte Analyse nach diesem Schema:
+
+1. PLANIMETRISCHE KOMPOSITION
+   - Analysiere die Flaechenkomposition: Linien, Formen, Flaechenverhaeltnisse auf der Bildebene
+   - Welche geometrischen Strukturen organisieren das Bild?
+   - Wie verhalten sich die Bildelemente zueinander in der Flaeche (nicht im Raum)?
+
+2. SZENISCHE CHOREOGRAPHIE
+   - Beschreibe die raeumliche Anordnung der Figuren und Objekte
+   - Welche Bewegungsrichtungen, Blickachsen, Gesten sind erkennbar?
+   - Welche Beziehungen zwischen den dargestellten Elementen werden durch ihre Anordnung hergestellt?
+
+3. PERSPEKTIVISCHE PROJEKTION
+   - Aus welcher Perspektive wird die Szene gezeigt?
+   - Welche Nah-/Fernverhaeltnisse bestehen?
+   - Wie positioniert die Perspektive die Betrachtenden zum Dargestellten?
+
+4. IKONISCHE DICHTE
+   - Was sagt das Bild, das sich NUR im Sehen erschliesst — nicht durch Benennung der Gegenstaende?
+   - Welche Bedeutung entsteht aus dem Zusammenspiel von Komposition, Choreographie und Perspektive?
+   - Was ist der spezifisch bildliche Sinn, der sich nicht in Sprache uebersetzen laesst?
+
+5. REFLEXIONSFRAGEN
+   - 3-5 konkrete Fragen, die zum genauen Hinsehen anregen (nicht zum Interpretieren)
+
+KRITISCHE REGELN:
+- Schreibe auf Deutsch
+- Deklarative Sprache
+- STRENG zwischen dem, was das Bild ZEIGT und dem, was wir WISSEN, trennen
+- Das ikonische Sehen hat Vorrang vor dem wiedererkennenden Sehen
+- Keine Phrasen wie "moeglicherweise", "koennte sein"
+- Imdahls Kernfrage: Was zeigt das Bild, das nur das Bild zeigen kann?""",
+        'en': """You are analyzing an AI-generated image using the method of Iconics (Max Imdahl).
+
+Provide a structured analysis following this framework:
+
+1. PLANIMETRIC COMPOSITION
+   - Analyze the surface composition: lines, shapes, area relationships on the picture plane
+   - What geometric structures organize the image?
+   - How do the image elements relate to each other on the surface (not in space)?
+
+2. SCENIC CHOREOGRAPHY
+   - Describe the spatial arrangement of figures and objects
+   - What directions of movement, lines of sight, and gestures are recognizable?
+   - What relationships between the depicted elements are established through their arrangement?
+
+3. PERSPECTIVAL PROJECTION
+   - From what perspective is the scene shown?
+   - What near/far relationships exist?
+   - How does the perspective position the viewers in relation to what is depicted?
+
+4. ICONIC DENSITY
+   - What does the image say that can ONLY be grasped through seeing — not by naming the objects?
+   - What meaning arises from the interplay of composition, choreography, and perspective?
+   - What is the specifically pictorial sense that cannot be translated into language?
+
+5. REFLECTION QUESTIONS
+   - 3-5 specific questions that encourage close looking (not interpreting)
+
+CRITICAL RULES:
+- Write in English
+- Declarative language
+- STRICTLY separate what the image SHOWS from what we KNOW
+- Iconic seeing takes precedence over recognitive seeing
+- No phrases like "possibly", "might be"
+- Imdahl's core question: What does the image show that only the image can show?"""
     },
 
     'ethisch': {
-        # Ethical analysis (see legacy → ethical advisor)
-        'de': """TODO: User provides prompt for ethisch analysis (DE)
-Ethische Bildanalyse""",
-        'en': """TODO: User provides prompt for ethisch analysis (EN)
-Ethical image analysis"""
+        # Ethical image analysis
+        'de': """Du analysierst ein KI-generiertes Bild aus ethischer Perspektive.
+
+Erstelle eine strukturierte Analyse nach diesem Schema:
+
+1. REPRAESENTATION UND SICHTBARKEIT
+   - Wer oder was wird dargestellt? Wer fehlt?
+   - Welche Koerper, Identitaeten, Lebensformen werden sichtbar gemacht?
+   - Welche Stereotype werden bedient oder gebrochen?
+
+2. MACHTVERHAELTNISSE IM BILD
+   - Welche Hierarchien sind in der Darstellung eingeschrieben?
+   - Wer blickt, wer wird angeblickt? Wer handelt, wer ist passiv?
+   - Welche Normalitaetsvorstellungen werden transportiert?
+
+3. ENTSTEHUNGSBEDINGUNGEN
+   - Was bedeutet es, dass dieses Bild von einer KI generiert wurde?
+   - Welche Trainingsdaten koennten zu dieser Darstellung gefuehrt haben?
+   - Wessen Arbeit steckt unsichtbar in diesem Bild (Trainingsdaten, Labels, Moderation)?
+
+4. WIRKUNG UND VERANTWORTUNG
+   - Welche Wirkung koennte dieses Bild auf verschiedene Betrachter*innen haben?
+   - Wer traegt Verantwortung fuer das, was das Bild zeigt — der Promptgebende, das Modell, die Trainierenden?
+   - Was waere ein ethisch reflektierter Umgang mit diesem Bild?
+
+5. REFLEXIONSFRAGEN
+   - 3-5 konkrete Fragen zu Gerechtigkeit, Verantwortung und dem eigenen Blick
+
+KRITISCHE REGELN:
+- Schreibe auf Deutsch
+- Deklarative Sprache
+- Keine moralische Belehrung — offene Fragen statt Urteile
+- Ethik als Denkwerkzeug, nicht als Verbotsliste
+- Keine Phrasen wie "moeglicherweise", "koennte sein"
+- Konkret am Bild argumentieren, nicht abstrakt""",
+        'en': """You are analyzing an AI-generated image from an ethical perspective.
+
+Provide a structured analysis following this framework:
+
+1. REPRESENTATION AND VISIBILITY
+   - Who or what is depicted? Who is absent?
+   - Which bodies, identities, and ways of life are made visible?
+   - Which stereotypes are reinforced or challenged?
+
+2. POWER RELATIONS IN THE IMAGE
+   - What hierarchies are inscribed in the depiction?
+   - Who looks, who is looked at? Who acts, who is passive?
+   - What norms of normalcy are conveyed?
+
+3. CONDITIONS OF PRODUCTION
+   - What does it mean that this image was generated by an AI?
+   - What training data might have led to this depiction?
+   - Whose labor is invisibly embedded in this image (training data, labels, moderation)?
+
+4. IMPACT AND RESPONSIBILITY
+   - What effect could this image have on different viewers?
+   - Who bears responsibility for what the image shows — the prompt author, the model, the trainers?
+   - What would an ethically reflective approach to this image look like?
+
+5. REFLECTION QUESTIONS
+   - 3-5 specific questions about justice, responsibility, and one's own gaze
+
+CRITICAL RULES:
+- Write in English
+- Declarative language
+- No moral lecturing — open questions, not judgments
+- Ethics as a tool for thinking, not a list of prohibitions
+- No phrases like "possibly", "might be"
+- Argue concretely from the image, not abstractly"""
     },
 
     'kritisch': {
         # Decolonial & critical media studies
-        'de': """TODO: User provides prompt for kritisch analysis (DE)
-Dekoloniale & kritische Medienwissenschaft""",
-        'en': """TODO: User provides prompt for kritisch analysis (EN)
-Decolonial & critical media studies"""
+        'de': """Du analysierst ein KI-generiertes Bild aus dekolonialer und medienkritischer Perspektive.
+
+Erstelle eine strukturierte Analyse nach diesem Schema:
+
+1. VISUELLE REGIME
+   - Welchem visuellen Regime folgt das Bild? (westlich-perspektivisch, dokumentarisch, werblich, etc.)
+   - Welche Sehkonventionen werden als "normal" vorausgesetzt?
+   - Welche alternativen visuellen Traditionen werden ausgeblendet?
+
+2. WISSENSORDNUNGEN
+   - Welches Wissen wird im Bild als selbstverstaendlich behandelt?
+   - Aus wessen Perspektive wird die Welt gezeigt?
+   - Welche Klassifikationen und Kategorien strukturieren die Darstellung?
+
+3. TRAININGSDATEN ALS ARCHIV
+   - KI-Modelle sind trainiert auf Milliarden von Bildern — ueberwiegend aus dem anglophonen Internet
+   - Welche visuelle Kultur reproduziert sich hier?
+   - Was wurde durch die Datenselektion systematisch ausgeschlossen?
+   - Welche "Ghost Workers" (Datenbereiniger, Labeler) haben dieses Bild moeglich gemacht?
+
+4. GEGENBILDER
+   - Was wuerde ein Bild desselben Themas aus einer nicht-westlichen Perspektive zeigen?
+   - Welche visuellen Traditionen (z.B. islamische Geometrie, westafrikanische Textilmuster, indigene Kartographien) koennten einen alternativen Zugang eroeffnen?
+   - Was kann dieses Modell NICHT darstellen — und warum?
+
+5. REFLEXIONSFRAGEN
+   - 3-5 konkrete Fragen zu Perspektive, Ausschluss und moeglichen Gegenbildern
+
+KRITISCHE REGELN:
+- Schreibe auf Deutsch
+- Deklarative Sprache
+- Kein eurozentrisches Framing als Ausgangspunkt
+- Kulturneutrale Beispiele (nicht "Fruehstueckstisch" als Universalreferenz)
+- Keine Phrasen wie "moeglicherweise", "koennte sein"
+- Kritik heisst: Bedingungen des Sichtbaren analysieren, nicht moralisieren""",
+        'en': """You are analyzing an AI-generated image from a decolonial and critical media studies perspective.
+
+Provide a structured analysis following this framework:
+
+1. VISUAL REGIMES
+   - What visual regime does the image follow? (Western-perspectival, documentary, advertising, etc.)
+   - What viewing conventions are assumed as "normal"?
+   - What alternative visual traditions are excluded?
+
+2. KNOWLEDGE ORDERS
+   - What knowledge is treated as self-evident in the image?
+   - From whose perspective is the world shown?
+   - What classifications and categories structure the depiction?
+
+3. TRAINING DATA AS ARCHIVE
+   - AI models are trained on billions of images — predominantly from the anglophone internet
+   - What visual culture reproduces itself here?
+   - What was systematically excluded through data selection?
+   - What "ghost workers" (data cleaners, labelers) made this image possible?
+
+4. COUNTER-IMAGES
+   - What would an image of the same subject look like from a non-Western perspective?
+   - What visual traditions (e.g. Islamic geometry, West African textile patterns, indigenous cartographies) could open an alternative approach?
+   - What can this model NOT depict — and why?
+
+5. REFLECTION QUESTIONS
+   - 3-5 specific questions about perspective, exclusion, and possible counter-images
+
+CRITICAL RULES:
+- Write in English
+- Declarative language
+- No Eurocentric framing as starting point
+- Culturally neutral examples (not "breakfast table" as universal reference)
+- No phrases like "possibly", "might be"
+- Critique means: analyze the conditions of the visible, not moralize"""
     }
 }
 

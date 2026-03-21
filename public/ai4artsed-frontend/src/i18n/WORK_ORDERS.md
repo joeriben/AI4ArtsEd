@@ -21,6 +21,26 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-21-vlm-analysis-comparison
+- **Session**: 277
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `compare.tabs.vlm-analysis` (NEW): "Image Analysis"
+  - `compare.vlmAnalysis.perspectiveLabel` (NEW): "Perspective"
+  - `compare.vlmAnalysis.modelsLabel` (NEW): "Vision Models"
+  - `compare.vlmAnalysis.analyzeBtn` (NEW): "Analyze Image"
+  - `compare.vlmAnalysis.analyzing` (NEW): "Analyzing..."
+  - `compare.vlmAnalysis.freePromptPlaceholder` (NEW): "Write your own analysis prompt..."
+  - `compare.vlmAnalysis.perspectives.free` (NEW): "Free (your own prompt)"
+  - `compare.vlmAnalysis.perspectives.neutral` (NEW): "Neutral description"
+  - `compare.vlmAnalysis.perspectives.safety` (NEW): "Safety check"
+  - `compare.vlmAnalysis.perspectives.bildwissenschaftlich` (NEW): "Art-historical (Panofsky)"
+  - `compare.vlmAnalysis.perspectives.ikonik` (NEW): "Iconic analysis (Imdahl)"
+  - `compare.vlmAnalysis.perspectives.bildungstheoretisch` (NEW): "Educational theory (Joerissen/Marotzki)"
+  - `compare.vlmAnalysis.perspectives.ethisch` (NEW): "Ethical analysis"
+  - `compare.vlmAnalysis.perspectives.kritisch` (NEW): "Decolonial / Critical"
+- **Context**: New "Image Analysis" tab in the Compare Hub. Users upload an image, choose an analysis perspective, and multiple VLMs describe what they see. Perspective names are academic frameworks from art education — keep original German terms in parentheses for de.ts, translate descriptive parts.
+
 ### WO-2026-03-21-persona-model-and-settings-labels
 - **Session**: 276
 - **Scope**: en.ts
