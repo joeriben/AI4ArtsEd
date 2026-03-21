@@ -167,7 +167,7 @@ async function getAnalysisPrompt(): Promise<string> {
 
   // Check local mapping first (neutral, safety)
   if (PERSPECTIVE_PROMPTS[selectedPerspective.value]) {
-    return PERSPECTIVE_PROMPTS[selectedPerspective.value]
+    return PERSPECTIVE_PROMPTS[selectedPerspective.value]!
   }
 
   // For structured perspectives (bildwissenschaftlich, ikonik, etc.),
