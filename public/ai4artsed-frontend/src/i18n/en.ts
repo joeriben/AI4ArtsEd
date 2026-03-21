@@ -1560,6 +1560,7 @@ export const en = {
       modelsLabel: 'Vision Models',
       analyzeBtn: 'Analyze Image',
       analyzing: 'Analyzing...',
+      waiting: 'waiting',
       freePromptPlaceholder: 'Write your own analysis prompt...',
       perspectives: {
         free: 'Free (your own prompt)',

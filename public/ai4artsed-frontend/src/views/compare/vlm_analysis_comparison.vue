@@ -70,13 +70,24 @@
 
       <!-- Results Grid -->
       <div v-if="results.length > 0" class="results-grid" :style="{ gridTemplateColumns: gridColumns }">
-        <div v-for="result in results" :key="result.model" class="result-card">
+        <div
+          v-for="(result, idx) in results"
+          :key="result.model"
+          class="result-card"
+          :class="{
+            'is-active': result.loading && idx === activeModelIdx,
+            'is-waiting': result.loading && idx !== activeModelIdx,
+            'is-done': !result.loading && !result.error,
+            'is-error': !!result.error,
+          }"
+        >
           <div class="result-header">
             <span class="result-model">{{ getModelLabel(result.model) }}</span>
-            <span v-if="result.latency_s" class="result-latency">{{ result.latency_s }}s</span>
-            <span v-if="result.loading" class="result-loading">
+            <span v-if="result.latency_s != null" class="result-latency">{{ result.latency_s }}s</span>
+            <span v-if="result.loading && idx === activeModelIdx" class="result-status active">
               <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
             </span>
+            <span v-else-if="result.loading" class="result-status waiting">{{ t('compare.vlmAnalysis.waiting') }}</span>
           </div>
           <div v-if="result.error" class="result-error">{{ result.error }}</div>
           <div v-else-if="result.description" class="result-text">{{ result.description }}</div>
@@ -135,6 +146,7 @@ const selectedPerspective = ref('neutral')
 const freePrompt = ref('')
 const selectedModels = ref<string[]>(['qwen3-vl:2b', 'qwen3-vl:4b', 'qwen3-vl:32b', 'llama3.2-vision:latest'])
 const isAnalyzing = ref(false)
+const activeModelIdx = ref(-1)
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
 
@@ -211,12 +223,14 @@ async function startAnalysis() {
   if (!canAnalyze.value || isAnalyzing.value) return
 
   isAnalyzing.value = true
+  comparisonContext.value = ''  // Reset — prevents stale context triggering Trashy
   chatRef.value?.onNewRun()
 
   const prompt = await getAnalysisPrompt()
+  const models = [...selectedModels.value]  // Snapshot — won't change mid-loop
 
   // Initialize result cards with loading state
-  results.value = selectedModels.value.map(model => ({
+  results.value = models.map(model => ({
     model,
     description: '',
     latency_s: null,
@@ -225,8 +239,9 @@ async function startAnalysis() {
   }))
 
   // Sequential execution — Ollama must swap VLMs one at a time (VRAM)
-  for (let idx = 0; idx < selectedModels.value.length; idx++) {
-    const model = selectedModels.value[idx]!
+  for (let idx = 0; idx < models.length; idx++) {
+    const model = models[idx]!
+    activeModelIdx.value = idx
     try {
       const resp = await fetch(`${getBaseUrl()}/api/schema/compare/analyze-image`, {
         method: 'POST',
@@ -266,14 +281,20 @@ async function startAnalysis() {
     }
   }
   isAnalyzing.value = false
+  activeModelIdx.value = -1
 
-  // Build comparison context for Trashy
-  const descriptions = results.value
-    .filter(r => r.description)
-    .map(r => `[${getModelLabel(r.model)} (${r.latency_s}s)]\n${r.description}`)
-    .join('\n\n')
-
-  comparisonContext.value = `generation_complete\n\nPerspective: ${selectedPerspective.value}\n\n${descriptions}`
+  // Build comparison context for Trashy — only if >= 2 models succeeded
+  const successful = results.value.filter(r => r.description)
+  if (successful.length >= 2) {
+    const descriptions = successful
+      .map(r => `[${getModelLabel(r.model)} (${r.latency_s}s)]\n${r.description}`)
+      .join('\n\n')
+    const failed = results.value.filter(r => r.error)
+    const failNote = failed.length > 0
+      ? `\n\nFailed models: ${failed.map(r => getModelLabel(r.model)).join(', ')}`
+      : ''
+    comparisonContext.value = `generation_complete\n\nPerspective: ${selectedPerspective.value}\n\n${descriptions}${failNote}`
+  }
 }
 </script>
 
@@ -461,6 +482,18 @@ async function startAnalysis() {
   transition: border-color 0.2s ease;
 }
 
+.result-card.is-active {
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.result-card.is-waiting {
+  opacity: 0.4;
+}
+
+.result-card.is-error {
+  border-color: rgba(244, 67, 54, 0.2);
+}
+
 .result-card:hover {
   border-color: rgba(255, 255, 255, 0.15);
 }
@@ -487,8 +520,15 @@ async function startAnalysis() {
   font-variant-numeric: tabular-nums;
 }
 
-.result-loading {
+.result-status {
   margin-left: auto;
+}
+
+.result-status.waiting {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .typing-dots span {
