@@ -3,6 +3,7 @@ RAVE Training Controller Routes
 
 Manages RAVE model training via subprocess calls to rave.sh.
 Supports v1 and v2 runs via ?run=v1|v2 query parameter.
+Includes dataset pipeline (normalize, preprocess) management.
 """
 
 import logging
@@ -10,6 +11,7 @@ import os
 import subprocess
 import json
 import re
+import threading
 from datetime import datetime
 from pathlib import Path
 from flask import Blueprint, jsonify, request, send_file
@@ -20,10 +22,19 @@ rave_bp = Blueprint('rave', __name__)
 
 RAVE_DIR = Path.home() / "ai" / "rave_research"
 RAVE_SH = RAVE_DIR / "rave.sh"
+PYTHON = RAVE_DIR / "venv" / "bin" / "python"
+RAVE_BIN = RAVE_DIR / "venv" / "bin" / "rave"
 TEST_OUTPUT = RAVE_DIR / "test_output"
 RUNS_DIR = RAVE_DIR / "runs"
 SCHEDULE_FILE = RAVE_DIR / ".rave_schedule.json"
 EVAL_LOG = RAVE_DIR / "eval_logs" / "eval_log.csv"
+
+AUDIO_DIR = RAVE_DIR / "dataset" / "audio"
+AUDIO_NORMALIZED_DIR = RAVE_DIR / "dataset" / "audio_normalized"
+PREPROCESSED_V2_DIR = RAVE_DIR / "dataset" / "preprocessed_v2"
+PIPELINE_PID_FILE = RAVE_DIR / ".rave_pipeline.pid"
+PIPELINE_LOG_FILE = RAVE_DIR / "pipeline.log"
+PIPELINE_STATE_FILE = RAVE_DIR / ".rave_pipeline_state.json"
 
 RUN_CONFIGS = {
     "v1": {"pattern": "mini70_v1_*", "name": "mini70_v1"},
@@ -445,6 +456,160 @@ def rave_schedule_tick():
         return jsonify({"action": "stopped"})
 
     return jsonify({"action": "none", "running": running, "should": should})
+
+
+# --- Pipeline (Normalize / Preprocess) ---
+
+def _pipeline_is_running():
+    """Check if a pipeline step is running."""
+    if PIPELINE_PID_FILE.exists():
+        try:
+            pid = int(PIPELINE_PID_FILE.read_text().strip())
+            os.kill(pid, 0)
+            return True, pid
+        except (ProcessLookupError, ValueError):
+            PIPELINE_PID_FILE.unlink(missing_ok=True)
+    return False, None
+
+
+def _pipeline_state():
+    """Read pipeline state file."""
+    if PIPELINE_STATE_FILE.exists():
+        try:
+            return json.loads(PIPELINE_STATE_FILE.read_text())
+        except (json.JSONDecodeError, OSError):
+            pass
+    return {}
+
+
+def _set_pipeline_state(step, status, **extra):
+    """Write pipeline state."""
+    state = _pipeline_state()
+    state[step] = {"status": status, "timestamp": datetime.now().isoformat(), **extra}
+    PIPELINE_STATE_FILE.write_text(json.dumps(state, indent=2))
+
+
+def _count_wavs(directory):
+    """Count WAV files in a directory."""
+    if not directory.exists():
+        return 0
+    return sum(1 for _ in directory.glob("*.wav"))
+
+
+def _run_pipeline_step(cmd, step_name):
+    """Run a pipeline command in background thread, tracking PID and log."""
+    running, _ = _pipeline_is_running()
+    if running:
+        return jsonify({"success": False, "error": "Pipeline step already running"}), 409
+
+    _set_pipeline_state(step_name, "running")
+
+    def _run():
+        try:
+            log_fh = open(str(PIPELINE_LOG_FILE), 'w')
+            proc = subprocess.Popen(
+                cmd,
+                cwd=str(RAVE_DIR),
+                stdout=log_fh,
+                stderr=subprocess.STDOUT,
+                env={**os.environ, "PYTHONUNBUFFERED": "1"},
+            )
+            PIPELINE_PID_FILE.write_text(str(proc.pid))
+            proc.wait()
+            log_fh.close()
+            PIPELINE_PID_FILE.unlink(missing_ok=True)
+            if proc.returncode == 0:
+                _set_pipeline_state(step_name, "done")
+                logger.info(f"[RAVE-PIPELINE] {step_name} completed")
+            else:
+                _set_pipeline_state(step_name, "error", returncode=proc.returncode)
+                logger.error(f"[RAVE-PIPELINE] {step_name} failed (rc={proc.returncode})")
+        except Exception as e:
+            PIPELINE_PID_FILE.unlink(missing_ok=True)
+            _set_pipeline_state(step_name, "error", error=str(e))
+            logger.error(f"[RAVE-PIPELINE] {step_name} error: {e}")
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    return jsonify({"success": True, "step": step_name})
+
+
+@rave_bp.route('/api/rave/pipeline/status', methods=['GET'])
+def rave_pipeline_status():
+    """Get pipeline step statuses based on filesystem + state file."""
+    running, pid = _pipeline_is_running()
+    state = _pipeline_state()
+
+    audio_count = _count_wavs(AUDIO_DIR)
+    normalized_count = _count_wavs(AUDIO_NORMALIZED_DIR)
+    preprocessed_exists = PREPROCESSED_V2_DIR.exists() and any(PREPROCESSED_V2_DIR.iterdir()) if PREPROCESSED_V2_DIR.exists() else False
+
+    # Determine step statuses
+    normalize_status = "pending"
+    if state.get("normalize", {}).get("status") == "running" and running:
+        normalize_status = "running"
+    elif normalized_count > 0 and normalized_count >= audio_count * 0.95:
+        normalize_status = "done"
+    elif state.get("normalize", {}).get("status") == "error":
+        normalize_status = "error"
+    elif normalized_count > 0:
+        normalize_status = "partial"
+
+    preprocess_status = "pending"
+    if state.get("preprocess", {}).get("status") == "running" and running:
+        preprocess_status = "running"
+    elif preprocessed_exists:
+        preprocess_status = "done"
+    elif state.get("preprocess", {}).get("status") == "error":
+        preprocess_status = "error"
+
+    return jsonify({
+        "running": running,
+        "pid": pid,
+        "steps": {
+            "normalize": {
+                "status": normalize_status,
+                "audio_count": audio_count,
+                "normalized_count": normalized_count,
+            },
+            "preprocess": {
+                "status": preprocess_status,
+                "ready": normalize_status in ("done", "partial"),
+            },
+        },
+    })
+
+
+@rave_bp.route('/api/rave/pipeline/normalize', methods=['POST'])
+def rave_pipeline_normalize():
+    """Start dataset normalization."""
+    return _run_pipeline_step(
+        [str(PYTHON), str(RAVE_DIR / "scripts" / "normalize_dataset.py")],
+        "normalize",
+    )
+
+
+@rave_bp.route('/api/rave/pipeline/preprocess', methods=['POST'])
+def rave_pipeline_preprocess():
+    """Start RAVE preprocessing on normalized dataset."""
+    if not AUDIO_NORMALIZED_DIR.exists() or _count_wavs(AUDIO_NORMALIZED_DIR) == 0:
+        return jsonify({"success": False, "error": "Normalize dataset first"}), 400
+
+    return _run_pipeline_step(
+        [str(RAVE_BIN), "preprocess",
+         "--input_path", str(AUDIO_NORMALIZED_DIR),
+         "--output_path", str(PREPROCESSED_V2_DIR)],
+        "preprocess",
+    )
+
+
+@rave_bp.route('/api/rave/pipeline/log', methods=['GET'])
+def rave_pipeline_log():
+    """Get pipeline log tail."""
+    if not PIPELINE_LOG_FILE.exists():
+        return jsonify({"lines": []})
+    lines = PIPELINE_LOG_FILE.read_text().strip().split('\n')
+    return jsonify({"lines": lines[-20:]})
 
 
 @rave_bp.route('/api/rave/metrics', methods=['GET'])

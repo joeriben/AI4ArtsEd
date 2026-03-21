@@ -64,6 +64,71 @@
       </table>
     </div>
 
+    <!-- Dataset Pipeline -->
+    <div v-if="runVersion === 'v2'" class="section">
+      <h2>Dataset Pipeline</h2>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-info">
+              <div class="step-title">Normalize Audio</div>
+              <div class="step-desc">Peak-normalize to -1 dBFS</div>
+            </div>
+            <div class="step-status-badge" :class="pipeline.steps?.normalize?.status || 'pending'">
+              {{ pipelineLabel(pipeline.steps?.normalize?.status) }}
+            </div>
+          </div>
+          <div v-if="pipeline.steps?.normalize" class="step-detail">
+            {{ pipeline.steps.normalize.normalized_count || 0 }} / {{ pipeline.steps.normalize.audio_count || 0 }} files
+          </div>
+          <button
+            class="action-btn pipeline-btn"
+            @click="doPipelineAction('normalize')"
+            :disabled="pipeline.running || (pipeline.steps?.normalize?.status === 'done')"
+          >{{ pipeline.steps?.normalize?.status === 'done' ? 'Done' : pipeline.steps?.normalize?.status === 'running' ? 'Running...' : 'Normalize' }}</button>
+        </div>
+
+        <div class="pipeline-arrow">&#8594;</div>
+
+        <div class="pipeline-step">
+          <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-info">
+              <div class="step-title">Preprocess</div>
+              <div class="step-desc">RAVE dataset format</div>
+            </div>
+            <div class="step-status-badge" :class="pipeline.steps?.preprocess?.status || 'pending'">
+              {{ pipelineLabel(pipeline.steps?.preprocess?.status) }}
+            </div>
+          </div>
+          <button
+            class="action-btn pipeline-btn"
+            @click="doPipelineAction('preprocess')"
+            :disabled="pipeline.running || !pipeline.steps?.preprocess?.ready || (pipeline.steps?.preprocess?.status === 'done')"
+          >{{ pipeline.steps?.preprocess?.status === 'done' ? 'Done' : pipeline.steps?.preprocess?.status === 'running' ? 'Running...' : 'Preprocess' }}</button>
+        </div>
+
+        <div class="pipeline-arrow">&#8594;</div>
+
+        <div class="pipeline-step">
+          <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-info">
+              <div class="step-title">Train</div>
+              <div class="step-desc">wasserstein + augment</div>
+            </div>
+            <div class="step-status-badge" :class="status.running ? 'running' : (status.checkpoint ? 'done' : 'pending')">
+              {{ status.running ? 'Running' : (status.checkpoint ? 'Ready' : 'Pending') }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="pipelineLog.length > 0" class="pipeline-log">
+        <pre class="log-output">{{ pipelineLog.join('\n') }}</pre>
+      </div>
+    </div>
+
     <!-- Controls -->
     <div class="section">
       <h2>Controls</h2>
@@ -263,6 +328,8 @@ const status = ref({
   other_version_running: false,
 })
 
+const pipeline = ref({ running: false, pid: null, steps: {} })
+const pipelineLog = ref([])
 const metrics = ref({})
 const metricsLoading = ref(false)
 const actionInProgress = ref(false)
@@ -354,11 +421,55 @@ function snrClass(snr) {
   return 'snr-bad'
 }
 
+function pipelineLabel(status) {
+  const labels = { pending: 'Pending', running: 'Running', done: 'Done', error: 'Error', partial: 'Partial' }
+  return labels[status] || 'Pending'
+}
+
+async function fetchPipelineStatus() {
+  try {
+    const res = await fetch('/api/rave/pipeline/status', { credentials: 'include' })
+    if (res.ok) pipeline.value = await res.json()
+  } catch (e) {
+    console.warn('[RAVE] Pipeline status fetch failed:', e)
+  }
+}
+
+async function fetchPipelineLog() {
+  try {
+    const res = await fetch('/api/rave/pipeline/log', { credentials: 'include' })
+    if (res.ok) {
+      const data = await res.json()
+      pipelineLog.value = data.lines || []
+    }
+  } catch (e) { /* silent */ }
+}
+
+async function doPipelineAction(step) {
+  try {
+    const res = await fetch(`/api/rave/pipeline/${step}`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    const data = await res.json()
+    if (!data.success) {
+      actionMessage.value = data.error || `${step} failed`
+      actionSuccess.value = false
+      setTimeout(() => { actionMessage.value = '' }, 5000)
+    }
+    setTimeout(fetchPipelineStatus, 1000)
+  } catch (e) {
+    actionMessage.value = `Error: ${e.message}`
+    actionSuccess.value = false
+  }
+}
+
 function switchRun(version) {
   runVersion.value = version
   fetchStatus()
   fetchMetrics()
   fetchEvalLog()
+  fetchPipelineStatus()
 }
 
 async function fetchStatus() {
@@ -472,18 +583,26 @@ async function doAction(action) {
   }
 }
 
+let pipelineInterval = null
+
 onMounted(() => {
   fetchStatus()
   fetchMetrics()
   fetchSchedule()
   fetchEvalLog()
+  fetchPipelineStatus()
   pollInterval = setInterval(fetchStatus, 5000)
   scheduleInterval = setInterval(scheduleTick, 30000)
+  pipelineInterval = setInterval(() => {
+    fetchPipelineStatus()
+    if (pipeline.value.running) fetchPipelineLog()
+  }, 3000)
 })
 
 onUnmounted(() => {
   if (pollInterval) clearInterval(pollInterval)
   if (scheduleInterval) clearInterval(scheduleInterval)
+  if (pipelineInterval) clearInterval(pipelineInterval)
 })
 </script>
 
@@ -799,6 +918,94 @@ onUnmounted(() => {
 }
 
 .day-btn:hover { opacity: 0.8; }
+
+/* Pipeline */
+.pipeline-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pipeline-step {
+  flex: 1;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.pipeline-arrow {
+  font-size: 24px;
+  color: #999;
+  align-self: center;
+  padding-top: 10px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-info { flex: 1; }
+
+.step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.step-desc {
+  font-size: 11px;
+  color: #999;
+}
+
+.step-detail {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+  font-family: 'Courier New', monospace;
+}
+
+.step-status-badge {
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.step-status-badge.pending { background: #e0e0e0; color: #999; }
+.step-status-badge.running { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+.step-status-badge.done { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.step-status-badge.error { background: #ffebee; color: #c62828; border: 1px solid #ef5350; }
+.step-status-badge.partial { background: #fff3e0; color: #e65100; border: 1px solid #ffb74d; }
+
+.pipeline-btn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.pipeline-log {
+  margin-top: 12px;
+}
 
 /* Eval table */
 .eval-table thead td { font-weight: 700; }
