@@ -279,6 +279,18 @@ Alle kritischen Bugs der vorherigen Workshops bleiben behoben. Keine neuen kriti
 | **VLM Blocks** | 2 | 0 | 1 | Normal |
 | **Provider Stage 2** | Mistral | Mistral | Mammouth (Sonnet 4.6) | Gewechselt |
 
+### Anmerkung: Einfluss des Safety-Level-Wechsels (kids → youth) auf die Erfolgsrate
+
+Der Wechsel von `kids` auf `youth` ist **nicht** die Ursache fuer die Verbesserung von 76% auf 97%. Die Fehlerquellen vom 06.03. sind safety-level-unabhaengig:
+
+| Fehlerquelle 06.03. | Anzahl | Safety-Level-abhaengig? |
+|---|---|---|
+| Mistral API 503 | 10 (6.4%) | **Nein** — Provider-Wechsel auf Mammouth |
+| Ollama Timeout | 11 (7%) | **Marginal** — kids hat 1 Extra-Ollama-Call (Translation), war aber nicht der Bottleneck |
+| Llama-Guard S7 Blocks | ~12 (7.7%) | **Nein** — S7-Ignoring-Code wurde danach eingebaut, gilt fuer kids UND youth identisch |
+
+Technische Fakten: `_IMAGE_RELEVANT_CODES` ist identisch fuer kids und youth. VLM Post-Gen laeuft bei beiden. Der einzige Unterschied ist der Stage-3-Translation-Step (kids → auto-translate, youth → Originalsprache), der ~1 Ollama-Call pro Run spart. Geschaetzter Beitrag des Safety-Level-Wechsels zur Erfolgsrate: **0-2 Prozentpunkte**. Die restlichen ~19pp Verbesserung stammen aus Code-Fixes (Mammouth, S7-Ignoring, Ollama-Stabilitaet, T5/ComfyUI-Fixes).
+
 ---
 
 ## 10. Gesamtfazit
