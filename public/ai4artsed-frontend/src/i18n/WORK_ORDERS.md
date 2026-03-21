@@ -25,11 +25,20 @@ Tags:
 - **Session**: 277
 - **Scope**: en.ts
 - **Changed keys** (new or modified):
+  - `compare.tabs.model` (MODIFIED): "Model Comparison" -> "Model Bias"
+  - `compare.tabs.language` (MODIFIED): "Language Comparison" -> "Culture Bias"
+  - `compare.tabs.vlm-analysis` (MODIFIED): "Image Analysis" -> "Image Understanding"
+  - `compare.tabs.llm-model` (NEW): "Model Bias"
+  - `compare.tabs.systemprompt` (MODIFIED): "System Prompt" -> "System Prompts"
+  - `compare.tabs.temperature` (MODIFIED): "Temperature Comparison" -> "Hot & Cool"
+  - `compare.llmModel.inputLabel` (NEW): "Your Message"
+  - `compare.llmModel.inputPlaceholder` (NEW): "Type a message to send to all three models..."
+  - `compare.llmModel.systemPromptLabel` (NEW): "SYSTEM PROMPT"
   - `compare.temperature.inputLabel` (NEW): "Your Message"
   - `compare.systemprompt.inputLabel` (NEW): "Your Message"
   - `compare.systemprompt.presets.gpt4_2023` (NEW): "GPT-4 (2023)"
   - `compare.systemprompt.presets.claude` (MODIFIED): "Claude (real product prompt)" -> "Claude Sonnet 4.6 (2025)"
-- **Context**: Temperature and System Prompt comparison views now use MediaInputBox (needs label). GPT-4 2023 preset added to system prompt comparison. Claude preset label updated to include model version and year. The preset labels are short display names shown in a dropdown selector.
+- **Context**: Compare Hub redesigned from 4 to 6 tabs (3 image + 3 text). New LLM Model Comparison tab. Tab labels renamed to pedagogical focus (bias, understanding). Preset labels are short display names in dropdown selectors.
 
 ### WO-2026-03-21-vlm-analysis-comparison
 - **Session**: 277

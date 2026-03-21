@@ -446,6 +446,7 @@ async function startAnalysis() {
 /* Generation Button — left-align in input section */
 :deep(.generation-button-container) {
   justify-content: flex-start;
+  margin-top: 0.75rem;
 }
 
 /* Results Grid — columns set dynamically via :style binding */

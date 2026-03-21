@@ -543,6 +543,7 @@ onBeforeUnmount(() => {
 
 .input-section :deep(.generation-button-container) {
   justify-content: flex-start;
+  margin-top: 0.75rem;
 }
 
 .seed-display {

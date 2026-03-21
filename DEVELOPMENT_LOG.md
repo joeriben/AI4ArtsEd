@@ -1,5 +1,54 @@
 # Development Log
 
+## Session 277 - Compare Hub Redesign: 6 Tabs, Bias Pedagogy, Consistency
+**Date:** 2026-03-21
+**Focus:** Expand Compare Hub from 4 to 6 tabs, add LLM Model Comparison, unify all views to use standard components, tune Trashy for bias pedagogy.
+
+### New: LLM Model Comparison Tab
+- 3 LLM models side-by-side (selectable per column) with shared system prompt
+- Backend: `llm_model_compare_mode` context flag in `chat_routes.py`
+- Store: `llmModelCompare.ts` (per-column model + shared system prompt)
+- Trashy suggests ethical trigger questions (not partisan politics)
+
+### Tab Redesign
+- **6 tabs**: 3 image (Model Bias, Culture Bias, Image Understanding) + 3 text (Model Bias, System Prompts, Hot & Cool)
+- Tab icons: image (photo) for image tabs, document for text tabs
+- `KeepAlive` wrapper preserves all tab state across switches
+
+### Consistency Fixes
+- **Stage-2 Jugendschutz gate**: Word-overlap refusal detection added to `model_comparison.vue` + `language_comparison.vue`
+- **Trashy unified**: Inline Trashy panels in temperature + system_prompt replaced with `ComparisonChat` component (~475 lines removed)
+- **MediaInputBox**: Replaced naked `<input>` in temperature + system_prompt views
+- **GenerationButton**: All 6 views now use standard `GenerationButton` (removed 3 custom buttons)
+- **ComparisonChat**: Extended with `temperature`, `systemprompt`, `llm-model` types + `clearMessages()`, `triggerAutoComment()`
+
+### System Prompt Presets
+- Claude preset: replaced truncated 6-sentence summary with full original system prompt (all sections)
+- GPT-4 (2023) preset: full original system prompt including content policy, taxonomy, tools
+
+### Bias Pedagogy (Image Model Bias)
+- Trashy greeting probes 12 bias dimensions: gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default, religious & cultural symbolism, professional roles & occupations
+- Auto-comment analyzes generated images explicitly against these dimensions
+- Neutral-sounding prompts ("a doctor", "a family having dinner") designed to reveal default assumptions
+
+### Files Created
+- `src/stores/llmModelCompare.ts`
+- `src/views/compare/llm_model_comparison.vue`
+
+### Files Modified
+- `src/components/ComparisonChat.vue` — 3 new compare types + exposed methods
+- `src/views/compare_hub.vue` — 6 tabs, icons, KeepAlive
+- `src/views/compare/model_comparison.vue` — safety gate, GenerationButton, bias Trashy
+- `src/views/compare/language_comparison.vue` — safety gate, GenerationButton
+- `src/views/compare/temperature_comparison.vue` — MediaInputBox, ComparisonChat, GenerationButton
+- `src/views/compare/system_prompt_comparison.vue` — MediaInputBox, ComparisonChat, GenerationButton, full presets
+- `src/views/compare/vlm_analysis_comparison.vue` — GenerationButton
+- `devserver/my_app/routes/chat_routes.py` — `llm_model_compare_mode`
+- `devserver/trashy_interface_reference.txt` — updated Compare Hub section (4→6 tabs)
+- `src/i18n/en.ts` — new keys for tabs, LLM model comparison, preset labels
+
+---
+
 ## Session 274 - Trashy Tool Use + Compare Bugfixes
 **Date:** 2026-03-21
 **Focus:** Replace 70KB system prompt injection with on-demand tool use. Fix Trashy context bugs in comparison modes.

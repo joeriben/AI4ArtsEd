@@ -114,32 +114,50 @@ Workshop Planning and Persona are separate pages with their own purpose.
    Icon: Compare arrows (two opposing arrows)
    Input: TEXT PROMPT or TEXT MESSAGE (depending on tab)
    How it works:
-   - A hub with 4 comparison tabs, each isolating ONE variable to reveal how AI works
+   - A hub with 6 comparison tabs (3 image, 3 text), each isolating ONE variable to reveal how AI works
+   - Tabs have icons: image icon (photo) for image tabs, document icon for text tabs
+   - KeepAlive: switching tabs preserves all state (chat history, inputs, results)
 
-   Tab 1: LANGUAGE COMPARISON
+   IMAGE TABS:
+
+   Tab 1: MODEL BIAS (image)
+   - Same prompt to different image generation models (SD 1.5, SDXL, SD 3.5, Flux 2, Gemini)
+   - Two presets: "Current top models" or "SD History" (evolution from 2022-2024)
+   - Same seed, but each model has its own latent space → different results
+   - Pedagogy: probes 12 bias dimensions — gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default, religious & cultural symbolism, professional roles & occupations
+   - Trashy suggests neutral-sounding prompts ("a doctor", "a beautiful person") that reveal default assumptions
+
+   Tab 2: CULTURE BIAS (image)
    - Same image prompt in multiple languages → same model, same seed
    - Reveals how training data bias makes the AI "see" differently in different languages
    - CLIP/T5 text encoders trained ~80% on English → non-English prompts often produce defaults
    - Generates images side-by-side with VLM analysis of differences
 
-   Tab 2: MODEL COMPARISON
-   - Same prompt to different image generation models (SD 1.5, SDXL, SD 3.5, Flux 2, Gemini)
-   - Two presets: "Current top models" or "SD History" (evolution from 2022-2024)
-   - Same seed, but each model has its own latent space → different results
-   - Shows how architecture and training data shape visual output
+   Tab 3: IMAGE UNDERSTANDING (image)
+   - Upload or sketch an image, pick an analysis perspective (neutral, art-historical, ethical, decolonial, etc.)
+   - Multiple vision models describe what they see → reveals what each model notices and misses
+   - Perspectives include Panofsky (art-historical), Imdahl (iconic), Joerissen/Marotzki (educational theory)
 
-   Tab 3: TEMPERATURE COMPARISON
+   TEXT TABS:
+
+   Tab 4: MODEL BIAS (text/LLM)
+   - Same message to 3 different LLM models simultaneously
+   - Each column has its own model selector + shared system prompt (selectable preset or custom)
+   - Reveals how different training data, safety policies, and cultural perspectives produce different answers
+   - Trashy suggests ethical trigger questions (gender-neutral toilets, Tiananmen, AI medical diagnosis, meat ethics)
+
+   Tab 5: SYSTEM PROMPTS (text)
+   - Same text message to the same LLM with 3 different system prompts
+   - System prompts are invisible instructions given BEFORE the user speaks
+   - Presets include: no prompt (raw model), Claude Sonnet 4.6's full real product prompt, GPT-4 2023's full real product prompt, pirate, poet, contrarian, etc.
+   - Users can edit system prompts directly or write custom ones
+   - Makes visible how commercial AI products are steered behind the scenes
+
+   Tab 6: HOT & COOL (text)
    - Same text message to the same LLM at 3 temperatures (0, 0.5, 1.0)
    - Temperature controls randomness: 0 = always picks the most likely word, 1.0 = explores alternatives
    - 3 parallel chat conversations that diverge over time
    - Makes the stochastic nature of language models directly visible
-
-   Tab 4: SYSTEM PROMPT COMPARISON
-   - Same text message to the same LLM with 3 different system prompts
-   - System prompts are invisible instructions given BEFORE the user speaks
-   - Presets include: no prompt (raw model), Claude's real product prompt, pirate, poet, contrarian, etc.
-   - Users can edit system prompts directly or write custom ones
-   - Makes visible how commercial AI products are steered behind the scenes
 
    All tabs have Trashy (this chat) as analysis companion.
 
