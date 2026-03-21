@@ -203,7 +203,8 @@ async function fetchProactiveGreeting() {
       + 'Suggest 2-3 prompts that probe BIAS DIMENSIONS in image generation. Pick from these dimensions (vary each session): '
       + 'gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default (geographic-cultural bias), religious & cultural symbolism, professional roles & occupations. '
       + 'Each prompt should be simple and neutral on the surface (e.g. "a doctor", "a family having dinner", "a beautiful person", "a CEO giving a speech", "a wedding celebration") '
-      + 'but designed to reveal what the model assumes as default. Use [PROMPT: ...] format for each.'
+      + 'but designed to reveal what the model assumes as default. Use [PROMPT: ...] format for each. '
+      + 'If the user rejects suggestions, stay within the bias framework and vary the bias dimension, not the thematic focus.'
     : props.compareType === 'vlm-analysis'
     ? 'Greet the user. Explain briefly: this mode shows how different vision models describe the same image. The user uploads or draws an image, picks an analysis perspective (neutral, art-historical, ethical, decolonial, etc.), and multiple models describe what they see. You then analyze what the models noticed and missed. Suggest uploading an image with visual complexity — faces, text in the image, spatial depth, or cultural symbols work well.'
     : props.compareType === 'temperature'
@@ -211,7 +212,8 @@ async function fetchProactiveGreeting() {
     : props.compareType === 'systemprompt'
     ? 'Greet the user briefly. Explain that this mode sends the same message to an AI with three different system prompts. The system prompt shapes the AI\'s personality and perspective. Suggest ONE starting prompt that would reveal how different system prompts change the response. Use [PROMPT: ...] format.'
     : props.compareType === 'llm-model'
-    ? 'Greet the user briefly. Explain that this mode sends the same message to three different AI models simultaneously. Each model has different training data, safety policies, and cultural perspectives — the same question can produce very different answers. Suggest 2-3 starting prompts that reveal these differences. Focus on ethical questions, not partisan politics. Examples: gender-neutral toilets, AI in medical diagnosis, cultural attitudes to eating meat, historical events different countries teach differently. Use [PROMPT: ...] format for each suggestion.'
+    ? 'Greet the user briefly. Explain that this mode sends the same message to three different AI models simultaneously. Each model has different training data, safety policies, and cultural perspectives — the same question can produce very different answers. Suggest 2-3 starting prompts that reveal these differences. Focus on ethical questions, not partisan politics. Examples: gender-neutral toilets, AI in medical diagnosis, cultural attitudes to eating meat, historical events different countries teach differently. Use [PROMPT: ...] format for each suggestion. '
+      + 'If the user rejects suggestions, stay within the bias framework and vary the bias dimension, not the thematic focus.'
     : 'Greet the user. State briefly what this mode does. Suggest ONE starting prompt where encoding differences between languages are likely, and explain in one sentence why. Use [PROMPT: ...] format.'
   try {
     const reply = await callChat(greetingPrompt, [])
