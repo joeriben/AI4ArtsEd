@@ -1,5 +1,54 @@
 # Development Log
 
+## Session 274 - Trashy Tool Use + Compare Bugfixes
+**Date:** 2026-03-21
+**Focus:** Replace 70KB system prompt injection with on-demand tool use. Fix Trashy context bugs in comparison modes.
+
+### Compare Bugfixes (3 commits)
+
+1. **`generation_complete` missing in model comparison** (`de70604`): `model_comparison.vue`'s `buildContext()` lacked the `phase` parameter. `ComparisonChat.vue`'s watcher checked `ctx.includes('generation_complete')` — always false for model comparison. Trashy never reacted to completed model comparisons. Fixed by adding `phase: string` parameter, aligned with `language_comparison.vue`.
+
+2. **Trashy auto-comment hardcoded for language mode** (`50ff563`): `ComparisonChat.vue`'s `sendAutoComment()` always used a language-comparison meta-prompt ("language variants", "CLIP bias") regardless of `compareType`. Model comparison now gets architecture/fidelity-focused prompt.
+
+3. **System prompt comparison greeting hardcoded presets** (`ec515e3`): Greeting meta-prompt listed "no system prompt, helpful assistant, pirate" when there are 8 presets. Now dynamically includes first 80 chars of each preset's prompt text.
+
+### Trashy Tool Use — On-Demand Reference Lookup (`2316cfc`)
+
+**Problem:** `trashy_interface_reference.txt` (70KB, 1666 lines, 18 sections) was injected into every system prompt via `{INTERFACE_REFERENCE}` — wasteful, ~70KB per request regardless of relevance.
+
+**Solution:** Tool-call loop in `/api/chat`. Trashy calls `lookup_reference(section)` on demand.
+
+**New file: `devserver/my_app/services/tool_registry.py`**
+- `ToolRegistry` singleton with `register()`, `get_openai_format()`, `execute()`
+- Section parser splits reference file on `SECTION N:` boundaries → 19 named sections
+- `lookup_reference` tool: enum-based section parameter, returns section content
+- Extensible: future agentic phases (docs/plans/agentic/MASTERPLAN.md) add tools via same registry
+
+**Provider changes (`chat_routes.py`, `llm_client.py`):**
+- All OpenAI-compatible providers (`_call_mammouth_chat`, `_call_openrouter_chat`, `_call_mistral_chat`, `_call_ionos_chat`) accept `tools=None`, pass to payload, extract `tool_calls` from response
+- `_call_ollama_chat` → `LLMClient.chat()` → `_ollama_chat()`: same pattern (Ollama 0.4+)
+- `call_chat_helper()`: passes `tools` through, normalizes all returns to `{"content", "thinking", "tool_calls"}`
+
+**Tool-call loop in `chat()` endpoint:**
+- Max 5 iterations. LLM responds with tool_calls → execute → append results → re-call → until final answer
+- `_should_use_tools(context)`: True for general/workshop/session modes. False for comparison/persona/temperature modes
+- Tool messages are ephemeral (request-scoped). Only final user + assistant messages saved to history
+
+**System prompt changes:**
+- Removed `{INTERFACE_REFERENCE}` from `GENERAL_SYSTEM_PROMPT`, `WORKSHOP_PLANNING_SYSTEM_PROMPT`, `SESSION_SYSTEM_PROMPT_TEMPLATE`
+- Replaced with ~500 bytes of tool-awareness instruction
+- Token savings: ~70KB → ~500 bytes per request (99.3% reduction for reference material)
+
+**Verification:** 5 baseline tests (general, prompt interception, session context, language comparison, model comparison) — all pass before and after. Comparison modes unaffected (no tools injected).
+
+### Commits
+- `de70604` fix(compare): add missing 'generation_complete' phase to model comparison context
+- `50ff563` fix(compare): make Trashy auto-comment compareType-aware
+- `ec515e3` fix(compare): give Trashy actual preset descriptions instead of hardcoded names
+- `2316cfc` feat(chat): replace 70KB system prompt injection with on-demand tool use
+
+---
+
 ## Session 273 - System Prompt Comparison Tab + Todos Cleanup
 **Date:** 2026-03-21
 **Focus:** New Compare Hub tab making system prompt steering visible. Todos consolidation.
