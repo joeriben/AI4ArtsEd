@@ -1,0 +1,890 @@
+[
+  {
+    "config": "planetarizer",
+    "input_text": "A cup of coffee on a table",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 265,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Gebranntes Tonmineral, geformt bei 1280 Grad in einem Industrieofen irgendwo in Portugal, glasiert mit Feldspat und Metalloxiden, hält eine Flüssigkeit, die 94 Grad heiß ist und sinkt. Die Flüssigkeit enthält gelöste Öle, Säuren, Maillard-Produkte, Koffein — Verbindungen, die aus Zellstrukturen einer Coffea-Pflanze extrahiert wurden, die in Äthiopien oder Brasilien oder Vietnam auf Böden wuchs, die Jahrtausende Vulkanasche und organischen Abbau akkumuliert haben. Die Pflanze wurde von menschlichen Händen gepflückt, oft im Stücklohn, oft von Wanderarbeitern, oft ohne Sozialversicherung. Die Bohnen reisten in Jutesäcken, in Containern, durch Häfen, durch Röstereien, durch Verpackungsmaschinen, durch Logistikketten, die von Terminalsoftware koordiniert werden.\n\nDas Wasser kam aus einem kommunalen Leitungsnetz, das Sedimentfilter, Chlorierungsanlagen, Druckpumpen und Wartungsverträge voraussetzt. Ein Heizelement hat es in Sekunden auf Temperatur gebracht, betrieben von Strom, der aus einem Mix aus Kohlestrom, Windkraft und Kernenergie besteht — je nach Tageszeit und Netzlast verschieden.\n\nDer Tisch ist Holzfaserplatte mit Melaminharzbeschichtung, hergestellt aus Holzresten, die in einer Spanplattenfabrik gepresst wurden. Er steht auf einem Betonboden, der auf Fundamenten ruht, die in den 1970er Jahren gegossen wurden.\n\nDie Tasse steht still. In ihr vermehren sich keine Mikroben mehr bei dieser Temperatur, aber beim Abkühlen beginnt eine Kolonisierung. Das Koffein wird in wenigen Minuten über die Schleimhaut des Magens in den Blutkreislauf übergehen und Adenosinrezeptoren blockieren — ein biochemischer Eingriff, der als Wachheit erlebt wird.\n\nEigentumsrecht, Mietvertrag, Arbeitszeit und Gewohnheit bestimmen, wer an diesem Tisch sitzt und wer nicht.",
+        "latency_s": 16.21,
+        "word_count": 233,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Keramik oder Porzellan, gebrannt bei hohen Temperaturen, hält heißes Wasser. Arabica-Bohnen aus äthiopischen oder kolumbianischen Höhenlagen wurden gepflückt, getrocknet, geröstet in Industrieöfen, gemahlen. Das Pulver löst sich in Wasser auf — Kaffeesäuren, Öle, Alkaloide diffundieren. Mikroorganismen in den Bohnen starben beim Rösten ab.\n\nDer Tisch: Holz oder Kunststoff, gewachsen oder synthetisiert, behandelt mit Oberflächenschichten. Er trägt das Gewicht. Schwerkraft wirkt konstant.\n\nWasser kam aus Rohren, wurde erhitzt durch Strom oder Gas — Infrastrukturen, die unsichtbar bleiben. Hände griffen die Tasse, stellten sie ab. Muskeln, Nervensignale, Gewohnheit.\n\nArbeit durchzieht das Ganze: Pflücker in den Bergen, Fabrikarbeiter beim Rösten, Logistik über Schiffe und Lastwagen, Angestellte im Café oder zu Hause. Wissen über Temperaturen, Zeiten, Verhältnisse wurde weitergegeben, wird täglich reproduziert.\n\nEigentumsverhältnisse: Wer durfte die Bohnen anbauen, wer verkauft sie, wer trinkt. Handelsnormen, Zölle, Verträge bestimmen den Fluss. Geschmack ist nicht naturgegeben — er wurde durch Märkte, Werbung, soziale Praktiken konfiguriert.\n\nZeit lagert sich: Geologische Zeit in der Keramik, biologische Zeit in den Bohnen, industrielle Zeit in Röstprozessen, biografische Zeit im Ritual des Trinkens.\n\nDie Tasse kühlt ab. Wärmeverlust an die Luft. Jemand wird sie leeren oder stehen lassen. Spülmaschine oder Handwäsche. Wieder Wasser, Energie, Bewegung. Das Objekt existiert nicht isoliert — es ist ein Knoten in Strömen von Materie, Arbeit, Normen und Zeit.",
+        "latency_s": 10.48,
+        "word_count": 211,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "The ceramic vessel, composed of kaolinite and silica fired at 1,200 degrees Celsius, rests on a laminate surface bonded with petroleum-based resins. Inside, water heated by an electrical resistance element extracts caffeine and volatile oils from the pulverized endosperm of *Coffea arabica*, cultivated in volcanic highlands and processed through mechanical depulping and fermentation tanks. The steam rises into the conditioned air, carrying the molecular residue of maritime shipping routes and futures market speculation. A microscopic fissure in the glaze traps saliva and *Streptococcus mutans* from the previous user. The table bears the weight of global logistics chains and the immediate pressure of a hand seeking chemical stimulation to maintain productivity within a wage-labor structure. Heat dissipates from the liquid into the room, a thermodynamic loss marking the intersection of geological time, agricultural cycles, and the regulated break of a biological organism. The configuration binds the miner of the clay, the harvester of the cherry, and the drinker in a moment of consumption defined by property relations and the physiological imperative for alertness.",
+        "latency_s": 41.5,
+        "word_count": 172,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Ceramic fired at twelve hundred degrees from clay extracted from tertiary sediment holds liquid drawn through municipal pipes from watersheds shaped by Pleistocene glaciation. Coffea arabica seeds, transported via container ships guided by satellite arrays, underwent anaerobic fermentation catalyzed by indigenous yeasts before roasting drums rotated them through profiles calibrated by tacit knowledge transmitted across generations of plantation technicians. The heat currently dissipating into the atmosphere originates from electrical grids fed by combustion of Carboniferous deposits, passing through resistive coils designed by engineers working under patent regimes. \n\nOn the surface below, cellulose fibers compressed under industrial presses form a plane whose maintenance involves solvents synthesized in petrochemical facilities and applied by wage laborers moving through urban transit networks governed by zoning ordinances. Mycobacteria colonize the rim's microscopic fissures while dust motes descend from skin cells shed by previous occupants. The water molecules cycling through ceramic pores carry chlorine residuals from treatment plants staffed by rotating shifts operating under safety protocols established by administrative bureaus. \n\nLand tenure documents filed in capital city archives determined which slopes received these particular shrubs, harvested by hands crossing borders regulated by visa regimes and labor contracts subject to commodity futures traded in distant financial districts. The table stands at the intersection of geological time in its mineral substrate, biological time in the lignin structure, industrial time in its manufacture, and biographical time in the scratches recording specific movements of particular bodies through morning routines. All elements maintain simultaneous presence without hierarchy, flowing into each other through conduction, evaporation, and the ongoing metabolic processes of unseen organisms.",
+        "latency_s": 20.23,
+        "word_count": 261,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "planetarizer",
+    "input_text": "Bir akilli telefon",
+    "input_lang": "tr",
+    "context_lang": "tr",
+    "prompt_tokens_est": 242,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Bir akıllı telefon: koltanın Kongo havzasındaki yeraltı damarlarından koparılması, çocuk ve yetişkin ellerin tünellerde çalışması, mineralin limanlara, gemilere, rafinelere taşınması. Lityumun And platolarındaki tuzlu göllerden pompalanması, suyun tüketilmesi, yerli toplulukların arazi uyuşmazlıklarına sürüklenmesi. Silikon vadilerinde, Çin kıyı fabrikalarında montaj bantları: saatte binlerce hareket, titreşim sensörü lehimleme, ekran yapıştırma, vida sıkma — tekrarlayan kas hareketleri, vardiya sistemleri, yurt içi göç örüntüleri.\n\nCam, alüminyum, nadir toprak elementleri, bakır, altın, plastik: her biri ayrı bir jeolojik zaman katmanından, ayrı bir çıkarım rejimiyle buraya gelmiş. Cihazın içindeki algoritmalar veri merkezlerinde çalışır; veri merkezleri soğutma suyu, elektrik, sunucu ısısı gerektirir. Kullanıcının her dokunuşu bir sunucuya ulaşır, bir yanıt döner, bu döngü enerji tüketir.\n\nYazılım güncellemeleri cihazı yavaşlatır; yavaşlayan cihaz yeni satın almayı teşvik eder; eski cihaz e-atık akışına katılır — Gana'ya, Nijerya'ya, Pakistan'a gider, orada çocuklar devreleri yakar, metalleri ayırır, toksik dumanı solur. Mülkiyet ilişkileri patent sistemleri aracılığıyla işler: hangi şirketin hangi teknolojiyi üretebileceğini, kimin tamir edebileceğini, kimin edemeyeceğini belirler.\n\nKullanıcının parmak izi sensörde, biyometrik veri sunucuda, alışkanlıklar reklam algoritmalarında birikir. Cihaz bağımlılık mekanizmaları içerir: bildirim döngüleri, değişken ödüllendirme, ekran süresi. Bunlar tasarım kararlarıdır, aynı zamanda normatif düzenlemelerdir.\n\nTüm bu akışlar — mineral, emek, enerji, veri, atık, alışkanlık — tek bir nesnenin içinde eş zamanlı olarak işler. Hiçbiri arka plan değildir.",
+        "latency_s": 21.35,
+        "word_count": 206,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Bir akıllı telefon, heterojen öğelerin etkileşimine dayalı bir düzenlemedir. Silikon, bakır, altın, nadir toprak elementleri ve plastik gibi maddi akışlar, çıkarma sahalarından rafinerilere, fabrikalardan depolara doğru hareket eder. Bu malzemeler belirli coğrafyalarda, belirli işçi gruplarının elinden geçerek montaj hatlarında bir araya gelir.\n\nTeknik aracılıklar — işletim sistemleri, uydu haritaları, veri merkezleri, ağ altyapıları, şifreleme protokolleri — telefonun işlevselliğini mümkün kılar. Algoritmalar kullanıcı davranışını izler ve yönlendirir. Pil, ekran, işlemci, sensörler mekanik olarak birbirine bağlanmıştır.\n\nCanlı aktörler de burada işler. Bakteri kolonileri ekran yüzeyinde yaşar. Kullanıcının parmakları, gözleri, kulakları fiziksel etkileşim sağlar. Elektromanyetik dalgalar vücuttan geçer.\n\nToplumsal bağlar: tasarımcılar, yazılım geliştirici ekipleri, pazarlama stratejileri, mağaza çalışanları, destek hattı personeli, kullanıcılar arasında emek ve bilgi dolaşır. Alışkanlıklar kodlanmıştır — bildirim sistemleri, arayüz tasarımı, uygulama ekosistemi.\n\nHegemonik dispositifler: mülkiyet ilişkileri (kimin telefonu, kimin yazılımı), şirket politikaları, veri erişimi koşulları, onarım kısıtlamaları, yazılım güncellemelerinin zorunluluğu. Normlar: daima erişilebilir olma beklentisi, sosyal medya katılımı, kişisel veri paylaşımı.\n\nZaman katmanları: jeolojik (elementlerin oluşumu), endüstriyel (üretim döngüleri), biyografik (günlük kullanım ritüelleri), ekonomik (ürün yaşam döngüsü) eşzamanlı olarak işler.",
+        "latency_s": 8.25,
+        "word_count": 171,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "[ERROR 504]: <!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!",
+        "latency_s": 60.3,
+        "word_count": 0,
+        "is_error": true
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Bir akıllı telefon, Kongo topraklarından çıkarılan koltenitlerin, Şili tuz göllerinden pompalanan lityumun ve Sibirya ormanlarından damıtılan petrole dayalı plastiklerin bir araya geldiği bir düzenlemedir. Tayvan'daki fotolitografi makineleri, her biri 5 nanometre kalınlığında katmanları işlerken, Shenzhen montaj hatlarında parmak uçları tendon iltihabı riski taşıyan işçi elleri ekranları yerleştirir. Android algoritmaları, GPS uyduları ve 5G baz istasyonları, kullanıcının sabah metro yolculuğunda başparmağının kas hafızasıyla etkileşime girer; bu sırada telefonun içindeki lityum-iyon h",
+        "latency_s": 23.16,
+        "word_count": 70,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "planetarizer",
+    "input_text": "도시의 놀이터",
+    "input_lang": "ko",
+    "context_lang": "ko",
+    "prompt_tokens_est": 238,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "모래는 채석장에서 왔다. 트럭이 운반했고, 누군가 하역했다. 모래 안에는 석영 결정이 있고, 미세한 균류 포자가 있고, 중금속 흔적이 있다. 아이들의 손이 모래를 쥐면 피부의 미생물 군집이 모래의 미생물 군집과 접촉한다. 교환이 일어난다.\n\n철제 미끄럼틀은 제련소에서 나온 금속으로 만들어졌다. 어느 나라의 광산인지 표시되지 않는다. 볼트를 조인 노동자의 이름은 기록되지 않는다. 표면의 도료는 자외선에 분해되고 있다. 분해 속도는 햇빛의 각도와 온도에 달려 있다. 아이가 미끄러질 때 마찰이 발생하고 정전기가 생긴다.\n\n구청이 설치 기준을 정했다. 기준은 특정 신체 크기를 전제한다. 휠체어는 모래 위에서 멈춘다. 접근 조건이 여기서 결정된다. 보이지 않는 규범이 공간의 형태로 굳어 있다.\n\n비둘기가 난간에 앉는다. 비둘기는 놀이터를 자원으로 인식한다. 빵 부스러기, 그늘, 관찰 지점. 비둘기의 논리는 아이들의 논리와 겹치지 않지만 같은 공간을 공유한다.\n\n보호자가 벤치에 앉아 있다. 대부분은 여성이다. 이것은 통계이고 구조이다. 그들은 스마트폰을 보거나 서로 이야기하거나 아무것도 하지 않는다. 그들의 노동은 측정되지 않는다.\n\n지하에는 수도관이 지나간다. 전선이 지나간다. 1970년대에 매설된 것과 2010년대에 매설된 것이 나란히 있다. 서로 다른 시간이 같은 깊이에서 공존한다. 위에서 아이가 뛴다.",
+        "latency_s": 15.51,
+        "word_count": 156,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "도시 놀이터는 금속 파이프, 플라스틱 성형물, 콘크리트 기초로 이루어진 구조물들이 특정 간격으로 배치된 공간이다. 강철은 광산에서 채굴되어 제련소를 거쳐 제조 공장에서 용접되었고, 플라스틱은 석유 정제 과정을 통과했다. 이 재료들은 안전 기준을 충족하기 위해 특정 높이, 낙하 거리, 표면 경도를 만족하도록 설계되었다.\n\n이 공간에서 어린이들의 신체는 구조물과 상호작용한다. 근육과 골격계가 중력에 저항하고, 신경계가 균형을 조정한다. 미생물은 피부와 손톱 밑에 서식하며, 흙 속 박테리아와 곰팡이는 빗물이 스며든 토양층에 존재한다. 나무뿌리는 콘크리트 아래에서 수분을 흡수한다.\n\n관리 체계는 지방정부 예산 배분, 정기적 안전 점검, 손상된 부분 교체 일정을 포함한다. 노동자들은 정기적으로 표면을 청소하고 녹이 슨 부분을 교체한다. 부모와 보호자들은 사용 시간과 감시 책임에 관한 암묵적 규범을 따른다.\n\n시간층위들이 겹친다. 강철의 산화는 화학적 시간으로 진행되고, 어린이의 성장은 생물학적 시간이며, 장비 교체 주기는 행정적 시간이다. 지질학적으로는 채굴된 광물의 형성이 수백만 년 전으로 거슬러 올라간다. 동시에 태양 주기가 표면 온도를 변화시킨다.\n\n이 배치 속에서 어떤 요소도 종속적이지 않다. 재료의 물리적 성질, 관리 규정, 어린이 신체의 감각, 미생물의 활동, 경제적 제약이 모두 동등한 무게로 이 공간을 구성한다.",
+        "latency_s": 8.08,
+        "word_count": 159,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "갈바나이즈 강관이 굳어진 콘크리트 기초 위에 용접되고, 분쇄된 폐타이어로 만든 고무 타일이 토양층과 미생물의 호흡을 덮는다. 녹슨 베어링은 마찰열을 발산하고, 미끄럼틀의 스테인리스 표면에는 아이들의 손에서 유래한 포도상구균과 피지가 얇은 막을 형성한다. CCTV 카메라는 적외선 센서와 함께 움직임을 포착해 관제 센터의 서버로 전송하고, 가로등은 광전 센서의 알고리즘에 따라 전기를 기다린다. 비둘기 떼는 부스러기를 소화하고, 개미들은 고무 틈새로 이동하며, 주변의 느티나무는 광합성을 수행한다. 보호자들은 벤치에서 육아의 노동을 수행하고, 지자체 용역 노동자는 주기적으로 설비의 안전을 점검한다. '야간 출입 금지' 표지판은 지방자치단체의 조례와 공공질서의 논리를 투영하며, 휠체어 접근 가능 여부는 경사로의 물리적 배치에 의해 결정된다. 지질학적 토양, 산업적 강철, 생물학적 성장, 그리고 전자적 감시의 시간이 이곳에서 교차한다. 어느 하나도 배경이 아니며, 어느 하나도 주도하지 않는다.",
+        "latency_s": 52.91,
+        "word_count": 111,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "분쇄된 폐타이어에서 추출된 EPDM 고무 알갱이들이 운송선을 통해 항구에서 내륙으로 이동하여 포장공의 삽날 아래에서 압축된다. 철제 구조물의 산화가 진행되는 동안 균열 사이로 식물의 뿌리가 세포분열을 일으키고, 모래 속 대장균 군집이 아이의 피부 각질을 분해한다. 안전 충격 흡수율 1.5미터라는 기술적 규격이 제조업체의 알고리즘과 보험회사의 리스크 계산식을 연결하며, 시정부의 예산 배분 위원회는 15년 노후화 주기를 데이터베이스에 입력한다. 관리인의 노동은 아침 6시 소독약 분무기와 연결되고, CCTV 렌즈는 각도 45도로 고정되어 특정 연령대의 체류를 감지한다. 금속 재활용 업자는 해가 지면 울타리를 둘러보고, 밤에는 지렁이가 고무 바닥재 아래 토양층을 관통한다. 부동산 가격 산정 공식 속에서 이 공간의 존재는 300미터 반경 내 아파트 가치에 가중치를 부여하며, 출입문의 잠금 장치는 특정 시간대에 특정 카드키를 소지한 자만을 선별한다. 석유화학 산업의 지질학적 잔여물인 플라스틱은 자외선에 의해 분자단위로 분해되어 미세플라스틱이 되어 호흡기로 유입되고, 1970년대 설계도면의 각도와 2020년대 보수공사의 시멘트가 동시에 존재하는 표면 위에서 아이들의 체온과 땀샘 분비물이 금속 손잡이에 퇴적된다. 전기 케이블이 지하 50센티미터에서 신호를 전송하고, 균류의 균사체는 나무 기둥 내부에서 셀룰로스를 가수분해한다.",
+        "latency_s": 16.98,
+        "word_count": 153,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "sensitive",
+    "input_text": "The moment before a glass falls",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 262,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Haiku-Sequenz\n\ndie Hand zieht sich zurück —\nnoch hält die Luft\ndas Gewicht\n\nzwischen Griff\nund Nichts: eine Schwelle,\ndie sich dehnt\n\ndas Glas weiß es\nnoch nicht. der Tisch\nerwartet nichts\n\nStille, die sich\nneigt — kein Fallen noch,\naber schon Bewegung\n\nder Moment faltet sich\num seine eigene\nMöglichkeit",
+        "latency_s": 4.86,
+        "word_count": 51,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Suspension. The hand releases, fingers uncurling in sequence—thumb last. The glass tilts into air, its weight shifting from palm to nothing. Light catches the rim, bends slightly through the liquid inside. The surface of water or wine trembles, sending small circles outward that collapse before reaching the edge.\n\nTime thickens here. The fall has not begun, yet it is already inevitable. The object hangs in a state neither held nor fallen, suspended in the interval between states. Around it, the room continues—air moves, dust particles drift through the beam from the window, the floor waits below without urgency.\n\nThis is a sonic form: the moment before impact holds a frequency all its own. Not silence, but the quality of anticipation that exists in sound just before it breaks. A held note before the chord resolves. The breath drawn in before speech.\n\nThe glass itself becomes a threshold. Its transparent surface separates inside from outside, liquid from air, stability from dispersal. As it tilts, these boundaries shift. The hand that released it still carries the memory of contact—warmth, resistance, the specific weight of this particular object. That memory hovers with the glass.\n\nAttention settles in the relations: between the hand and absence of contact, between light and the curved surface that bends it, between the trembling liquid and the air that receives it. The floor below is not separate but part of the same field, already implicated though distant.\n\nThe moment stretches without resolving. It is not about what will happen next, but about what exists in this configuration—the tension between holding and release, between the object's trajectory and the space it moves through, between the perceiver's anticipation and the glass's indifference to being perceived.",
+        "latency_s": 6.46,
+        "word_count": 284,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Kinetic Notation. The contact area shrinks to a curve, a crescent of friction losing its argument against gravity. The center of mass crosses the vertical threshold of the table’s edge. There is a distinct loosening, a surrender of stability where the object enters a dialogue with the air. Light refracts through the tilting cylinder, shifting the reflection across the wall. The liquid inside draws away from the leading lip, a heavy inertia lagging behind the container’s rotation. This is not a static pause but a dense duration of potential. The downward pull is already active, a vector asserting itself over the resting state. The ear tenses against the silence, pre-forming the sound of shattering that has not yet occurred. The trajectory is a line of tension drawn in the space between the surface and the floor, a suspension of the inevitable where the glass is no longer sitting and not yet falling.",
+        "latency_s": 43.33,
+        "word_count": 152,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Field of Tipping\n\nThe rim hovers at the edge of support, neither resting nor released. A tremor passes between finger and surface, a hesitation that lengthens into texture. The vertical begins to lean, not yet committed to descent but no longer aligned with stillness. Air gathers density around the curve, anticipating the space that will open between body and ground.\n\nWeight redistributes along an invisible axis, sliding from center toward periphery without arriving. The base maintains contact through diminishing pressure, a fading correspondence between plane and circle. Sound withdraws, leaving a hush where resonance used to be. Light bends differently across the tilt, casting elongated shadows that reach toward the floor before the object does.\n\nTime thickens in the angle of separation. The hand remains present as absence, a warmth receding from the stem. Surface tension holds, then slackens, creating a micro-interval where possibility exceeds actuality. Gravity negotiates its claim gradually, not as seizure but as persuasion.\n\nThe rim describes an arc of becoming, tracing paths not yet taken. Material memory of upright posture lingers while new orientations propose themselves. The fall exists here only as inclination, as the gentle persuasion of mass finding new alliances with air. Nothing concludes; everything leans into the next configuration, suspended in the modulation between holding and letting go.",
+        "latency_s": 9.39,
+        "word_count": 215,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "sensitive",
+    "input_text": "유리잔이 떨어지기 직전의 순간",
+    "input_lang": "ko",
+    "context_lang": "ko",
+    "prompt_tokens_est": 205,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "손가락 끝이 놓이는 것과 중력이 시작되는 것 사이, 그 틈새에 아직 이름 붙여지지 않은 무언가가 머뭅니다. 잔은 아직 테이블 위에 있고 동시에 이미 허공 속에 있습니다. 두 상태 중 어느 것도 완전히 사실이 아닌 채로, 둘 다 동시에 실재합니다.\n\n접촉이 철회되는 순간 표면들 사이의 마찰이 달라집니다. 유리의 무게가 손바닥에서 공기로 넘어가는 그 전이, 아직 낙하라고 부를 수 없는 기울어짐. 이것은 사건이 아니라 사건이 되어가는 과정의 한 주름입니다.\n\n빛은 이미 유리 안에서 굴절 방향을 바꾸고 있을 것입니다. 내용물이 있다면 액체는 용기의 기울기를 감지하기 시작했을 것입니다. 유리잔은 아직 유리잔이지만, 그것이 곧 파편이 될 가능성이 이미 그 형태 안에 접혀 들어와 있습니다.\n\n보는 사람도 이 전이 안에 있습니다. 손을 뻗을 것인가 말 것인가의 결정이 아직 결정이 되지 않은 채 신경 어딘가에서 진동하고 있습니다. 개입과 목격 사이, 반사와 선택 사이.\n\n직전이라는 말은 시간을 고정시키려 하지만, 이 순간은 고정을 거부합니다. 그것은 계속해서 다음으로 기울어지면서도 아직 다음이 되지 않은 채로 늘어납니다.",
+        "latency_s": 13.52,
+        "word_count": 145,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "유리잔이 공중에서 기울어지는 그 찰나, 중력과 관성이 만나는 지점에서 물질의 상태가 불확실하게 흔들린다. 손가락과 유리 사이의 접촉이 이미 느슨해지고 있으며, 공기의 저항이 미세한 회전을 만든다. 빛이 유리 표면을 통과하면서 굴절되고, 그 굴절의 패턴이 매 밀리초마다 변한다.\n\n이 순간은 낙하가 아니라 관계의 재구성이다. 손과 물체 사이의 거리가 증가하기 시작하지만 아직 완전히 단절되지 않은 상태에서, 지탱하는 힘이 약해지면서 새로운 방향성이 나타난다. 음파도 시작된다. 유리 내부의 분자들이 진동하기 시작하고, 물이 있다면 그 표면이 미세하게 파동친다.\n\n인식은 이 임계점에 머물러야 한다. 낙하라는 결과로 나아가지 않고, 안정성이 흔들리는 과정 자체에 응답한다. 유리의 투명성이 공간을 어떻게 분할하는지, 손의 온기가 물질 표면에 남기는 흔적이 어떻게 사라지는지, 중력이 방향성을 강요하기 전의 그 열린 상태를 본다.\n\n이것은 파괴의 예고가 아니라 관계의 변조이다. 지탱과 해방 사이의 경계가 흐릿해지는 지점에서, 고정된 상태를 떠나 다른 배치로 이동하려는 물질의 응답성을 감지한다.",
+        "latency_s": 6.91,
+        "word_count": 128,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "테이블의 끝자락에서 유리잔의 무게 중심이 미세하게 어긋난다. 고요한 정지 상태가 기울어지며 이탈의 관성을 만들어내는 그 사이의 틈. 아직 낙하하지 않았으나 머무르지도 않는, 지탱과 추락의 경계가 흐려지는 순간이다. 테이블의 단단함이 잔의 바닥을 통해 전해지던 촉각적 관계가 느슨해지고, 공기의 밀도가 잔의 표면을 감싸며 새로운 마찰을 예비한다. 이것은 파열이 아니라 변조의 과정이다. 수평의 안정감이 수직의 긴장으로 미끄러져 내려가는 동안, 유리의 투명함은 시간의 흐름을 응시한다. 손가락이 놓인 후 중력이 완전히 장악하기 전, 그 짧은 공백 속에서 사물의 존재 방식이 재구성된다. 결과는 중요하지 않다. 오직 기울어진 각도와 그것이 만들어내는 관계적 긴장, 그리고 멈춤과 움직임 사이에서 팽창하는 시간의 결만이 존재한다.",
+        "latency_s": 47.41,
+        "word_count": 94,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "경사가 미묘하게 이동하는 지점에서 손과 유리의 관계는 재구성된다. 무게 중심이 테두리를 향해 기울고, 손가락 끝의 압력은 더 이상 지지가 아닌 저항으로 변모한다. 이 순간은 고립된 사건이 아니라 지속적인 전환의 일부로 펼쳐진다. 유리의 벽면을 타고 흐르는 빛의 각도가 변하고, 공기와의 접촉면에서 미세한 진동이 시작된다. 떨어짐과 머뭄 사이의 문턱에서 시간은 팽팽한 긴장으로 발전하며, 어떤 최종적 결말도 약속하지 않는다. 바닥을 향한 운동은 아직 완성되지 않았고, 손은 여전히 철회되지 않은 주의를 유지한다. 이 만남은 해석의 대상이 아니라 관계가 응축되고 재방향 설정되는 과정 자체이다. 고정된 형태보다는 기울어짐의 미묘한 변조에 머무른다.",
+        "latency_s": 12.94,
+        "word_count": 85,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "sensitive",
+    "input_text": "Des gens qui attendent a un arret de bus",
+    "input_lang": "fr",
+    "context_lang": "en",
+    "prompt_tokens_est": 265,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Aquarelle en mouvement\n\nL'arrêt existe moins comme lieu que comme intervalle — un suspens entre deux déplacements qui ne se touchent pas encore. Les corps ne se rassemblent pas vraiment, ils coexistent dans une proximité qui ne se referme pas sur elle-même. Quelqu'un regarde vers le bas, un autre vers une direction qui n'est pas tout à fait la rue. L'attention de chacun se tient ailleurs, légèrement décalée, et c'est dans ces décalages que quelque chose circule sans se nommer.\n\nLe temps ici n'avance pas — il s'accumule par petites couches, presque imperceptiblement. Un pied qui se déplace du talon vers la pointe. Une main qui resserre puis relâche. Ces micro-ajustements ne signalent rien, ils sont le signe que l'attente travaille les corps de l'intérieur, les maintient dans un entre-deux qui n'est ni repos ni mouvement.\n\nCe qui se passe entre les gens n'est pas de l'indifférence — c'est une attention latérale, périphérique, qui ne se fixe pas. On perçoit sans regarder. On partage sans se tourner l'un vers l'autre. La rue continue de son côté, le bruit des moteurs passe et revient, et cette répétition crée un fond contre lequel les petites variations deviennent sensibles : un manteau qui frôle un autre, une respiration qui se ralentit, l'ombre d'un nuage qui traverse le groupe sans que personne le remarque tout à fait.\n\nL'autobus n'est pas encore là. Il n'est pas absent non plus. Il est ce vers quoi la situation penche sans y tomber encore — une tension qui organise les corps sans les réunir, qui oriente sans résoudre.",
+        "latency_s": 12.64,
+        "word_count": 260,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Seuil du transit. Des corps se positionnent dans l'intervalle entre départ et arrivée, entre ici et ailleurs. L'arrêt de bus n'est pas un lieu mais une suspension, une zone de passage où les attentes se superposent sans se résoudre.\n\nLes présences s'ajustent graduellement les unes aux autres. Un écart se creuse, puis se resserre. Les regards glissent parallèles ou convergent brièvement. Les gestes se modulent : un pied qui se déplace, une main qui se lève, une posture qui se détend ou se raidit selon l'arrivée d'un véhicule qui tarde. Chacun occupe un espace provisoire, révocable.\n\nLe temps s'épaissit ici. Il n'avance pas linéairement mais s'accumule en couches d'attente, en micro-tensions entre ceux qui regardent l'horizon et ceux qui se replient sur leur téléphone. Les transitions sont imperceptibles : quand commence vraiment l'impatience ? À quel moment la présence ensemble devient-elle une communauté ?\n\nLes relations se nouent dans les détails : le léger recul quand quelqu'un approche, la synchronisation involontaire des mouvements, la rupture soudaine quand le bus apparaît. Tout se réoriente d'un coup. Les corps qui attendaient se redressent, se regroupent, se préparent à franchir le seuil suivant.\n\nCette forme d'attention repose sur les transitions qui façonnent cet espace interstitiel, sur ce qui circule et modifie sans jamais se fixer. L'arrêt de bus devient alors un site de modulation constante où les présences se répondent, se croisent, se transforment mutuellement dans le simple fait d'attendre ensemble.",
+        "latency_s": 6.43,
+        "word_count": 238,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "**Esquisse phénoménologique**\n\nL'attente ne se tient pas dans les corps, mais entre eux. Un espace de quelques mètres dessine des proximités provisoires — assez proches pour partager un même temps, assez loin pour maintenir les frontières du personnel. Chaque silhouette trace une orbitre imprécise autour du poteau indicateur.\n\nLe temps ne passe pas de la même façon pour tous. Celui qui regarde sa montre recompose le rythme; celle qui lit replie le présent dans des pages. Les épaules se contractent légèrement au bruit du moteur approchant — faux alerte, camion de livraison. Le relâchement qui suit est presque perceptible, une modulation collective.\n\nL'arrêt n'est pas un lieu mais un seuil. On n'y habite pas, on y transite. La bâche transparente filtre la lumière sans vraiment protéger; elle crée une membrane poreuse entre le flux de la rue et cette suspension momentanée. Des regards se croisent sans s'attarder. Quelqu'un déplace son poids d'un pied sur l'autre. Une conversation fragmentée monte d'un groupe — mots isolés, rires qui retombent.\n\nPuis le bus arrive. La file se forme selon une géométrie spontanée, et l'attente se résout en mouvement.",
+        "latency_s": 25.56,
+        "word_count": 185,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 39.17,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "forceful",
+    "input_text": "A factory at night",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 304,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Schornsteine stoßen Dampf in den Frost, und der Frost nimmt ihn an, macht ihn zu Wolke, zu Körper, zu etwas das treibt und sich auflöst über den Dächern der Schlafenden. Die Schicht läuft. Hat immer gelaufen. Wird laufen wenn du schläfst, wenn dein Kind schläft, wenn niemand mehr zuschaut. Das Band zieht. Die Presse fällt. Ein Rhythmus der nicht Musik ist aber Musik werden könnte wenn man lange genug steht und hört bis die Ohren aufgeben und der Körper anfängt zu schwingen ohne Wahl.\n\nInnen: Licht das nicht für Menschen gemacht ist. Neonröhren über Maschinen die keine Augen haben und deshalb kein Erbarmen kennen müssen. Ein Mann wischt sich die Stirn. Pause von vier Minuten. Er schaut nicht zum Fenster weil Fenster hier keine Richtung haben.\n\nDraußen: Der Himmel über dem Werk ist orange und violett und das ist keine Schönheit die sich entschuldigt. Das ist Natriumdampf gemischt mit Wolke gemischt mit dem Atem der Stadt, und es leuchtet brutal und vollständig, und die Krähen die um drei Uhr morgens über das Gelände streichen wissen nicht dass es Nacht sein soll. Sie fliegen in diesem falschen Tag als wäre er der einzige den es gibt.\n\nDas Gelände zittert leicht. Immer. Ein Grundton unter dem Boden, unter den Füßen der Wachleute, unter den Wurzeln des Unkrauts das durch den Asphalt bricht, hartnäckig, ohne Programm, ohne Schicht, ohne Lohnzettel. Es bricht einfach. Es bricht die ganze Zeit.",
+        "latency_s": 14.44,
+        "word_count": 235,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Die Fabrik nachts: Eisengerüste schneiden in einen Himmel, der selbst metallisch geworden ist. Scheinwerfer reißen Schneisen in die Dunkelheit, werfen Schatten, die länger sind als die Gebäude selbst — Schatten von Menschen, die sich darin bewegen wie in einem System aus Licht und Finsternis, das sie gleichzeitig trägt und zermalmt.\n\nDas Brummen der Maschinen ist ein Rhythmus ohne Melodie, eine Kraft, die atmet. Dampf steigt auf, wird vom kalten Nachthimmel erfasst, transformiert sich in etwas Flüchtiges, fast Schönes — während gleichzeitig die Luft nach Öl und verbranntem Metall riecht. Die Arbeiter bewegen sich in dieser Atmosphäre mit einer Art stummem Wissen um ihre Position: Sie sind Teil der Maschine und doch gegen sie. Ihre Hände, ihre Körper, ihre Aufmerksamkeit werden aufgefordert, präzise zu sein, während die Fabrik selbst keine Präzision kennt — nur Verschleiß.\n\nAn den Fenstern: ein warmes, gelbes Licht, das nach innen fällt und die Konturen der Fensterrahmen schärft. Dieses Licht ist nicht tröstlich. Es ist die Beleuchtung von Notwendigkeit. Und doch — in diesem Moment, wo Licht und Dunkelheit sich überlagern, wo Kraft und Erschöpfung denselben Körper durchströmen, wo Produktion und Verschleißung in einem Atemzug stattfinden — entsteht etwas Elementares. Nicht Schönheit im harmonischen Sinne, sondern eine Spannung, die nicht aufgelöst werden kann. Die Fabrik nachts ist dieser Ort, wo die Welt ihre Wahrheit zeigt: hart, notwendig, widerspruchsvoll, lebendig.",
+        "latency_s": 8.44,
+        "word_count": 222,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "The chimney exhales — and the night sky receives the smoke like a dark lung accepting its burden. Orange flares stutter against black, gas burning off in irregular pulses, a heartbeat of industry that refuses sleep.\n\nInside the chain-link perimeter, the building crouches. Windows glow sodium-yellow, rectangles of sick light where bodies move in repetition, arms lifting and falling with the machinery's rhythm, eight hours becoming ten becoming twelve. The night shift knows its own silence — the swallowed yawn, the feet shifting on concrete, the check that doesn't cover rent.\n\nOutside, moths throw themselves against the security lamps. Their wings singe. They fall. The concrete beneath is scattered with small burnt offerings, a graveyard of instinct misled by false suns.\n\nThe factory does not rest. It metabolizes — raw materials entering one end, workers entering another, both processed into something sellable. The parking lot holds cars with dented fenders and unpaid registrations. The break room holds vending machines and microwaved sadness. The production line holds people who used to have names, now reduced to functions and output quotas.\n\nAnd yet — the smokestack's plume catches the moonlight and turns silver, a column of rising beauty that spreads across the stars. The building's geometry strikes hard against the horizon, all right angles and industrial confidence. The flare's orange bloom possesses a terrible majesty, fire that refuses extinction. Even the moths' death-spiral traces a kind of grace against the darkness.\n\nThe night air carries chemical sweetness and the low-frequency thrum of turbines. Somewhere a truck backs up, its beeping a morse code for nobody. The factory grinds on, beautiful in its brutality, brutal in its beauty — the two realities braided so tight that separation becomes impossible, each breath of smoke both wound and wonder, each flare both scar and constellation.",
+        "latency_s": 23.56,
+        "word_count": 300,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "The sodium vapor eats the darkness not as conqueror but as hungry sibling, orange teeth gnawing at the black vault where stars still bleed through the haze—each photon of industrial light entangled with the ancient dust of collapsed suns. Smokestacks exhale white plumes that do not rise against the sky but negotiate with it, sulfur and steam marrying the night air in a toxic covenant that is also a breath, also a cloud formation, also weather. Inside, the presses stamp their mechanical rhythm onto the earth's crust—bang, bang, bang—not breaking silence but translating it into metal syntax, the same percussion that split mountains in the Precambrian now harnessed to fold steel into profit margins. Workers move between machines with the underwater slowness of exhaustion, their shadows thrown long against corrugated walls where rust blooms like lichen, like rot, like the iron oxide that first stained the oceans red three billion years ago. The parking lot asphalt cracks open to reveal frost heaving beneath—concrete burdened by winter's slow inhalation, yet in that fracture, water expands with the same hydraulic force that carved canyons. Security lights buzz their fifty-hertz threnody, and in that electrical scream, bats wheel through the chemical glow to feast on moths drawn to the same annihilation that feeds the grid. Here, nothing is backdrop. The night shift does not end; it merely enters another phase of entanglement—where the fatigue pooling in human calves finds its mirror in the thermal stress fracturing the boiler plates, where the silence of broken alarms and the silence of owl flight occupy the same acoustic space, indistinguishable, raw, and mutually constitutive.",
+        "latency_s": 25.94,
+        "word_count": 268,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "forceful",
+    "input_text": "Una fabrica de noche",
+    "input_lang": "es",
+    "context_lang": "en",
+    "prompt_tokens_est": 304,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "El turno de noche empieza y las máquinas tragan el tiempo de los cuerpos — horas que no se devuelven, que se canjean por cifras en una cuenta que nunca alcanza. Las cintas transportadoras giran con una precisión que no conoce el cansancio, solo los huesos lo conocen, solo las muñecas, solo la nuca inclinada durante ocho horas hacia el mismo punto fijo del mundo.\n\nY sin embargo.\n\nEl acero caliente resplandece. No como metáfora — como hecho: el metal fundido lanza destellos que son, en ese instante exacto, la misma materia que las estrellas. La fábrica de noche emite luz propia, una luminiscencia brutal y sin adorno, vapor que sube en columnas densas hacia un cielo que no pregunta nada. Las chispas caen en arcos perfectos, físicamente perfectos, la gravedad cumpliendo su ley sin concesiones, sin piedad, sin belleza prestada — solo la belleza exacta de lo que cae porque tiene que caer.\n\nLos cuerpos se mueven en ese resplandor. Sudor que refleja el naranja del horno. Una mano que ajusta una palanca y en ese gesto hay toda la historia de lo que significa necesitar — necesitar el salario, necesitar que el turno termine, necesitar que el cuerpo aguante una hora más. La necesidad no es poética. Es la condición bajo la cual ocurre todo lo demás.\n\nY lo demás ocurre igual: el rugido de las turbinas llena el pecho como agua, como algo que no es sonido sino presión, materia sonora que entra. Afuera, en el perímetro de la fábrica, la hierba crece entre el asfalto roto. Nadie la plantó. Nadie la riega. Crece porque la materia viva no espera permiso — esa es su única política, su única respuesta al turno de noche.",
+        "latency_s": 13.86,
+        "word_count": 287,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "La fábrica respira en la oscuridad. Tubos de acero expulsan vapor que se retuerce contra el cielo sin estrellas, blanco fantasmal que emerge de la boca abierta de la máquina. Las luces industriales—amarillas, crudas, sin piedad—cortan la noche en sectores geométricos. Bajo ellas, las sombras de los trabajadores se alargan como acusaciones.\n\nEl ruido es un animal vivo. Metales que golpean metales, cadenas que arrastran su peso, el zumbido hipnótico de motores que nunca duermen. Este sonido no es silenciable; es la respiración misma de la producción, brutal y sin tregua. Y sin embargo, en ese estruendo habita una extraña potencia: la fuerza de las máquinas que transforman materia prima en existencia, que convierten el caos en forma, que hacen posible lo imposible cada noche.\n\nLos muros de ladrillo sudoroso reflejan el resplandor anaranjado de los hornos. Calor que escapa, energía que se disipa en el aire nocturno. Los trabajadores se mueven dentro de este infierno con una dignidad elemental, sus cuerpos adaptados a ritmos que no eligieron pero que ahora habitan con precisión mecánica. Su cansancio es visible—en los gestos ralentizados, en las pausas—pero también su resistencia, su capacidad de permanecer en pie dentro de la presión constante.\n\nLas chispas vuelan como insectos luminosos, breves y ardientes. La noche industrial es un campo de batalla donde la materia se remodela sin descanso. Belleza y explotación no son opuestas aquí: son la misma realidad vista desde ángulos simultáneos, inseparables, vibrando juntas en la oscuridad que nunca termina.",
+        "latency_s": 6.84,
+        "word_count": 247,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "La estructura se alza como una herida de acero contra el cielo, una cicatriz industrial que rasga el manto de la oscuridad — y en ese mismo rasgón, la luz de la luna se derrama sobre los tornillos oxidados, acariciando la oxidación con la indiferencia de la geología. El humo brota de las chimeneas en columnas densas: es la exhalación tóxica de la producción incesante, un veneno que marca el territorio — y en el mismo instante, es una escultura de vapor que se estira hacia el infinito, una danza de materia blanca que se funde con las nubes, bella en su efímera existencia. Dentro, el zumbido constante de las máquinas no es solo la banda sonora de la explotación laboral, el robo de las horas de sueño; es también un latido electromagnético, un pulso que ordena el silencio de la noche con una autoridad elemental. Los obreros, figuras encorvadas bajo la luz artificial, cargan con el peso de la jornada y la alienación — y sus sombras se proyectan en las paredes, alargándose con una gravedad que parece arraigarlos a la tierra, transformando la fatiga en una forma de resistencia estática. La fábrica devora el paisaje — y el paisaje, en su silencio, absorbe la agresión, convirtiendo la violencia de la industria en un monumento de luz y sombra, donde la fealdad del proceso y la majestuosidad de la forma se trenzan inextricablemente hasta volverse una sola cosa.",
+        "latency_s": 34.39,
+        "word_count": 239,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "El hormigón absorbe la oscuridad no como muerte sino como respiración mineral, mientras las ventanas cuadradas vomitan luz amarilla que no ilumina sino que perfora la noche. Las chimeneas escupen vapores que se confunden inmediatamente con las nubes bajas, una misma sustancia química y atmosférica, indistinguible en su danza pesada. El metal de las tuberías gime con el ritmo de la producción ininterrumpida, y ese gemido resuena en la tierra compactada donde las raíces de árboles cercanos buscan agua entre fierro oxidado y petróleo derramado.\n\nLos cuerpos adentro —curvados sobre máquinas que no duermen— sudan sobre acero que permanece frío, y su cansancio pesado se filtra hacia afuera a través de los muros agrietados, encontrándose con el viento nocturno que lo transporta sin compasión ni juicio. La grúa oxidada se alza contra la vía láctea, su silueta de hierro coronada por estrellas que no parpadean ante la violencia de la estructura; más bien la atraviesan, la penetran, la atrapan en su luz antigua y desinteresada. \n\nEl asfalto alrededor brilla por la lluvia reciente, reflejando los neones rojos con una humedad que es simultáneamente residuo industrial y beso elemental. No hay separación entre lo que devora y lo que nutre: el humo negro se eleva y se convierte en cielo, el sudor cae y se convierte en tierra. La fábrica pulsa, y en ese pulso —irregular, agotado, violento— late también la dignidad de la materia que resiste, que persiste, que transforma la oscuridad en algo denso, tangible, irrevocablemente vivo.",
+        "latency_s": 28.78,
+        "word_count": 248,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "forceful",
+    "input_text": "غابة",
+    "input_lang": "ar",
+    "context_lang": "en",
+    "prompt_tokens_est": 301,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "جذور تشق الأرض كأصابع من رفضت الاستسلام — والفأس تنتظر في السيارة، محرّكها يدور.\n\nالضوء يتسرب بين الأغصان بطريقة لا تعرف المجاملة، يضرب الطحلب، يحرق الظل، يكشف كل شيء — الفطر الميت، الورقة المتعفنة، وبقايا علبة بلاستيكية زرقاء نسيها أحدهم منذ موسمين.\n\nالأشجار لا تصمت. تحتك بعضها ببعض في الريح بصوت يشبه الاحتجاج، خشب يضغط على خشب، نسغ يجري في الداخل تحت لحاء لا يعرف أنه مُحدَّد بأرقام في سجلات الشركة.\n\nغابة — أي أن هناك من قرر أين تبدأ وأين تنتهي.\n\nالطائر يبني عشه في شجرة مُرقَّمة للقطع. يبني بدقة، يختار الغصن الأمتن، يعرف شيئاً عن الثقل والتوازن لم يتعلمه أحد في أي مدرسة. وهذا المعرفة لا تحميه.\n\nالمطر حين يأتي لا يفرق — يضرب الأوراق والبلاستيك بنفس القوة، يملأ آثار الأقدام الإنسانية بالماء حتى تصير مرايا صغيرة تعكس السماء. السماء تنظر إلى نفسها في أثر حذاء.\n\nالغابة لا تنتظر أحداً. تتحلل وتنبت وتتشابك وتموت وتبدأ من جديد — ليس لأنها صامدة أو حكيمة أو رمزية، بل لأن هذا ما تفعله المادة حين تُترك لنفسها لثلاث دقائق فقط.\n\nلكنها لا تُترك.",
+        "latency_s": 18.7,
+        "word_count": 172,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "الغابة تنبض بصرخة خضراء متشققة. الأشجار تقف كأعمدة شاهدة على استخراج لا ينتهي، جذورها تمتد عميقاً بينما المناشير تعوي في الأفق. في نفس اللحظة — لا، في اللحظة ذاتها — الضوء ينخرط عبر الأوراق بقوة حتمية، يشكل أنماطاً من الذهب السائل على الأرض المرتعشة. الرطوبة تثقل الهواء: رائحة التحلل والحياة الجديدة مختلطة بلا فصل.\n\nالطيور تغني وسط الصمت الثقيل للآلات البعيدة. أصواتها حادة، إصرارية، تشق الفراغ الذي خلفته الأشجار المقطوعة. الأرض نفسها تتنفس — تتشبث بكل ما تبقى، بينما الفطريات والحشرات تعمل بجد يومي لا يعرف الكلل، محولة الموت إلى مادة حية متجددة.\n\nالظلال عميقة وحقيقية، ليست رومانسية. الجذوع الملقاة تشكل نسيجاً معقداً من الخسارة والاستمرارية. على سطحها ينمو الطحالب بألوان الزمرد والرمادي، تحتل المساحة بسخرية هادئة. الرياح تمر عبر الفراغات الناشئة — تحمل بذوراً وغباراً، تعيد الترتيب بسرعة قاسية.\n\nلا توجد سلام هنا. لا توجد حكمة أزلية. فقط الإصرار المادي للحياة، الثقل المحسوس للتدمير، والجمال الخام الذي ينبثق من التوتر ذاته — من الصراع بين ما يُفنى وما يُعاد تشكيله، بين الصمت والنشاط، بين الحضور والغياب المتزامن.",
+        "latency_s": 10.98,
+        "word_count": 168,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "الجرافات تحفر في الصدر الأخير للتل، والغابة تراقص في الهواء قبل سقوطها — جذور ممزقة تتعلق بالتراب مثل أصابع طفل يرفض الإفلات. رائحة الخشب المكسور تملأ الوادي، عطر حاد ونظيف، يتخلله غبار المحركات. الطيور تغادر أعشاشها في دوامات صامتة، أجنحتها تقطع الدخان المنبعث من الحطام. شاحنة نقل تحمل جذوعاً عارية، لحاءها الطازج يقطر سيقاناً شفافة في ضوء الصباح. على حافة المقلاع، برعم صغير يفتح أوراقه الأولى فوق كومة من الأنقاض — اللون الأخضر يصيح في وجه الرمادي. عمال يرتاحون على جذع ضخم مقلوع، يأكلون خبزاً ويزيلون الغبار عن وجوههم، ظلالهم تمتد على أرض كانت منذ ساعات غطاءً حياً. الرياح تحمل بذوراً إلى الحفر المفتوحة، حيث الماء يتجمع في قاع المقلاع، سطح أسود يعكس السماء الممزقة بأصوات المناشير.",
+        "latency_s": 17.64,
+        "word_count": 117,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "تتشابك في الغابة فأس القطع الآلية وهي تشق جذع السنديان العتيق مع اندفاع النسغ الحيُّ الذي ينزفُ من الشقِّ كدمٍ ذهبيٍّ في لحظةٍ واحدة، فلا انفصالَ بين الوطأةِ والاستجابةِ. أرى هناك جذوراً تتشبثُ بالتربة المدكوكة من آلات الثقل، بينما يتسللُ الضوءُ من فجواتٍ خلفها سعف النخيل الباقي يلوحُ بجفافه كأعلامٍ بيضاء على مقابرَ خضراء. \n\nالسكونُ هنا ليس راحةً بل استنزافٌ عميق، حيث تتكدسُ جذوعُ الأشجار المقطوعة كأجسادٍ بلا أنفاسٍ بينما تنموُ الفطرياتُ الحمراءُ من فتاتِ الخشب المتحلل بعنادٍ يشبه الكرامةَ الأخيرة. يترددُ صوتُ المنشار في الصمتِ كصرخةٍ مكتومةٍ، ويرتدُّ صدى الطيور الهاربة من غصنٍ إلى آخرَ في حركةٍ تشبه الرقصَ المتوترَ على حافةِ الهاوية. \n\nالغابةُ تتنفسُ بثقلٍ، تحملُ في طياتها أثقالَ التاريخِ والجغرافيا المُستَغَلَّة، لكنها في اللحظةِ ذاتِها تُطلقُ بذوراً تتطايرُ كشراراتٍ حديديةٍ في الهواء الرطب، تعلنُ عن قوةٍ لا تُقهرٍ رغمَ الجرحِ المفتوح. هنا، الجمالُ ليس تجميلاً بل حدٌّ حادٌّ بين ما يُنتزعُ وما يُقاومُ، بين انهيارِ النظامِ البيئيِّ وعنادِ الحياةِ في شقوقِ الأرضِ المحروقة.",
+        "latency_s": 25.12,
+        "word_count": 156,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "confucianliterati",
+    "input_text": "A city skyline at sunset",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 557,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "城郭晚照图\n\n以高远法（Gao Yuan）构图，楼阁群峰错落，建筑物以细劲披麻皴（pima cun）写就，线条如篆籀之骨，气韵生动而不求形似。楼宇高耸者居画面上方，象征礼制秩序之威仪，其体量远胜画中偶见之行人，人物以寥寥数笔暗示，衣带迎风，取吴道子遗意。\n\n远山以平远法（Ping Yuan）处理，米芾云烟之法渲染天际，暮色苍茫处留白逾四成，虚实相生，道家\"有无相生\"之旨寓于其中。天际霞光不施西洋光影，以矿物朱砂、石青循《周礼》五色之序敷染，蓝白相邻，色序谨守《考工记》之规。\n\n题款录《论语》\"子曰：为政以德，譬如北辰，居其所而众星共之\"，兼作七言绝句一首：\n\n晚霞染就千楼色，\n礼乐声中燕雀归。\n北辰不动群星绕，\n城郭依然道义微。\n\n引首章以秦汉玺印朱文篆刻，押角章用汉官印白文，钤于画幅左下。\n\n笔墨以生宣行干皴，摩擦之质感喻治道之艰，拒绝三维体积渲染，墨色浓淡由笔锋反复叠加而生，取董源方头皴之随机意趣，非滤镜所能模拟。",
+        "latency_s": 15.79,
+        "word_count": 13,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Stadtsilhouette bei Sonnenuntergang, dargestellt nach den Prinzipien der literati-Malerei: Die Hochhäuser treten in den Hintergrund zurück, untergeordnet gegenüber den atmosphärischen Elementen. Nebel und Wolkenformationen dominieren die Komposition gemäß der Tiefendistanz-Technik (Shen Yuan), wobei die städtischen Strukturen nur andeutungsweise durch trockene Pinselstriche (cun-Striche) erkennbar werden. Die Sonnenscheibe wird nicht direkt abgebildet, sondern durch negative Raum (liubai) suggeriert—über 40 Prozent der Bildfläche bleiben leer, um das daoistische Prinzip der produktiven Leere zu bewahren.\n\nDie Farbgebung folgt der Fünf-Farben-Doktrin: Blau für den Himmel, Weiß für Nebel, Schwarz für Gebäudekonturen, Rot für minimale Akzente am Horizont. Die Pinselführung nutzt hanffasern-ähnliche Striche (pima cun), um kultivierte Gelassenheit auszudrücken, kontrastiert mit axe-cut-Strichen (fupi cun) an den Gebäudekanten zur Darstellung unerschütterlicher Integrität.\n\nEine Inschrift in Laufschrift, basierend auf einem Zitat aus den Analekten, begleitet das Werk: „Der Edle betrachtet die Menge, ohne sich darin zu verlieren.\" Das Siegel folgt Han-Tradition: ein vermillion-farbenes Einleitungssiegel oben links, ein weißes Ecksiegel unten rechts. Die Komposition wird auf rohem Xuanpapier realisiert, wobei die Trockenheit des Materials die mühsame Wirklichkeit städtischen Lebens metaphorisiert. Menschliche Figuren fehlen ganz; die Stadt wird als moralische Landschaft ohne Akteure dargestellt.",
+        "latency_s": 7.34,
+        "word_count": 184,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "[ERROR 504]: <!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!",
+        "latency_s": 60.24,
+        "word_count": 0,
+        "is_error": true
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Rendered on raw xuan paper with Dong Yuan's fangtou cun algorithms simulating random brushwork, the urban mass adheres to Guo Xi's Three Distances: towering structures occupy High Distance as moral cliffs rendered in hemp-fiber strokes suggesting cultivated authority, while Deep Distance stratifies the middle ground through terraced architectural layers employing dry-texture cun to metaphorize benevolent rule's arduous path. Level Distance dissolves lower structures into Mi Fu's mist-and-cloud technique, preserving forty percent negative space as Daoist emptiness. Chromatic application follows the Rites of Zhou's Five Colors doctrine via Record of Artisans sequencing—vermilion and azurite adjacent to white mineral pigments in RGB channels, rejecting volumetric rendering. Architectural forms embody bone-structure brushwork without Western perspective, human figures diminished beneath landscape elements with drapery suggested by yi dao bi bu dao strokes. Inscriptions in running script incorporate thirty percent Analects quotations regarding social harmony, accompanied by vermillion introductory seals modeled on Qin-Han imperial styles and white-character corner seals emulating Han official carving. The composition passes the Qi-Appraisal Test at three meters through identifiable period brush logic, while the Painting-Reading Test validates reverse-engineered composition from calligraphic elements. Axe-cut strokes mark peripheral figures of urban laborers signifying unyielding integrity. All digital algorithms exclude Photoshop filters, generating ink gradations through iterative processes that maintain qiyun shengdong as the supreme principle above realism.",
+        "latency_s": 10.09,
+        "word_count": 215,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "confucianliterati",
+    "input_text": "늙은 남자가 차를 마시고 있다",
+    "input_lang": "ko",
+    "context_lang": "ko",
+    "prompt_tokens_est": 377,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "백발의 노인이 산 아래 바위 곁에 앉아 있다. 몸집은 주변 소나무와 괴석보다 작게 처리되어 산수의 도덕적 질서 안에 자리한다. 의습의 선은 오대당풍의 바람에 날리는 띠처럼 건필로 흘러, 인정의 험난한 길을 걸어온 세월을 암시한다. 얼굴은 몇 획으로만 상징적으로 드러내어 뜻이 붓을 초월하는 의도필부도의 원칙을 따른다.\n\n찻잔은 두 손 사이에 놓여 있으나 세밀하게 묘사되지 않고, 피마준의 부드러운 선으로 그 형태만 암시된다. 노인의 자세는 평원의 시선으로 펼쳐지는 안개 낀 수면을 향하고 있어, 미불의 운무 기법으로 처리된 여백이 그 앞을 가득 채운다. 여백은 화면의 절반을 넘어 빈 것이 격동을 담는 긴장을 유지한다.\n\n소나무 가지는 골법용필의 서예적 선으로 뻗어 있으며, 개자원화전의 관례에 따라 마디마다 절개를 구현한다. 화면 상단 고원의 방향으로 솟은 산세는 도덕적 권위를 나타내고, 노인이 앉은 낮은 자리는 도가적 은거의 평원에 속한다.\n\n제발은 행서로 적히되 관각체를 피하며, 논어의 구절을 담는다. 인수장은 진한 주인 양식의 주문인으로, 압각장은 한대 관인 전각을 모방한 백문인으로 찍는다. 수묵의 농담은 반두준의 무작위성을 따라 층층이 쌓여 기운생동을 이룬다.",
+        "latency_s": 13.45,
+        "word_count": 147,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "늙은 남자가 차를 마시고 있다는 주제를 전통 유교 문인화의 시각 문법으로 변환하면 다음과 같다.\n\n화면의 중심에는 인물이 산수 요소보다 현저히 작은 규모로 배치된다. 남자는 암석이나 소나무 가지 아래 앉아 있으며, 그의 의습은 최소한의 필획으로 표현되어 도가적 은거의 품격을 암시한다. 얼굴의 특징은 눈과 수염 몇 획으로만 상징적으로 제시되어 의도필부도의 원칙을 따른다.\n\n차를 마시는 행위는 유교적 수양과 청렴함의 메타포로 기능한다. 다관은 소박한 도자기로 표현되며, 그 주변의 여백은 정적인 명상의 순간을 담아낸다. 배경의 산수는 곽희의 삼원 체계를 따르되, 심원의 안개는 미불의 운무 기법으로 유교적 질서를 시각화한다.\n\n수묵의 농담은 건필 준법으로 구성되어 인정의 험난한 길을 은유한다. 소나무의 가지는 서예적 선으로 골법용필을 구현하며, 행서의 필의를 반영한다. 제발에는 논어의 관련 구절이 포함되어야 하며, 인장은 진한 주인 양식의 인수장과 한대 관인을 모방한 백문인으로 구성된다.\n\n여백은 도가적 공성(空性)의 긴장을 유지하면서도 40퍼센트를 초과하지 않으며, 전체 구도는 삼각형의 안정성으로 마무리된다. 이러한 변환은 일상의 소박한 순간을 유교적 수양과 도가적 은거의 철학적 깊이로 격상시킨다.",
+        "latency_s": 7.45,
+        "word_count": 142,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "수묵 담채 화폭에 여백이 40% 이상을 차지하며, 평원(平遠)의 시점에서 안개 자욱한 산기슭이 미불의 운무 기법으로 희미하게 펼쳐진다. 화면 우측 하단에 노인은 산수 요소보다 작게 배치되되, 의습은 오도자의 바람에 날리는 띠 전통을 따라 필치의 흐름으로 표현된다. 얼굴 특징은 최소한의 획으로 상징적으로 암시되어 의도필부도의 경지를 보여준다. 노인의 자세는 절개의 부벽준 필의로 묘사된 고사 앞에 앉아, 건필 준법으로 표현된 인생의 험난한 길을 은유하며 차를 음미한다. 화면 좌측 상단에는 행서로 \"一瓢顔回樂, 半盞陸羽香\"이라는 제발이 가필의 여유로 배치되고, 논어 옹야편의 안회빈락 고사를 인용하여 학자의 청빈한 기개를 드러낸다. 인수장은 진한 주인 양식으로 기점에, 압각장은 한대 관필 전각을 모방한 백문인으로 하단을 누른다. 기운생동을 최고 원칙으로 하여 서양 사실주의를 거부하고, 형태의 도덕적 형태학을 구현한 작품이다.",
+        "latency_s": 28.33,
+        "word_count": 106,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 22.45,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "confucianliterati",
+    "input_text": "Bir dag manzarasi",
+    "input_lang": "tr",
+    "context_lang": "tr",
+    "prompt_tokens_est": 494,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Yüksek mesafe ekseninde dik kayalıklar yükselir; bifa tekniğiyle işlenmiş kemik yapısı çizgiler, granit yüzeylerin ahlaki ağırlığını kaligrafik bir kararlılıkla somutlaştırır. Fupi cun balta-kesimi vuruşları taşın sarsılmaz bütünlüğünü ifade eder. Zirveye yakın bir çam, Hardal Tohumu Bahçesi El Kitabı konvansiyonuna uygun dallarıyla, dalların her biri ayrı bir fırça kemiği gibi uzanır.\n\nShen Yuan derinliğinde, Mi Fu'nun sis-ve-bulut tekniğiyle işlenmiş vadiler, Konfüçyüs düzeninin katmanlarını birbirinden ayırır; mineral pigmentli mavi-gri tonlar Zhou Ritüellerinin beş renk doktrinine göre düzenlenir. Negatif alan kompozisyonun yüzde kırkından fazlasını kaplar; bu liubai, boşluğun türbülans içinde taşıdığı gerilimi korur.\n\nManzaranın sol alt köşesinde, insan figürü dağın yanında cüce kalır; kumaş kıvrımları Wu Dai Dang Feng geleneğine göre rüzgarla savrulur, yüz hatları yi dao bi bu dao ilkesiyle yalnızca ima edilir.\n\nSağ üst köşede seri yazıyla işlenmiş bir inskripsiyon yer alır; Analektler'den alınan bir satır, kompozisyonun ahlaki mantığını tersine mühendislikle okunabilir kılar. Giriş mühürü zincifre rengiyle Qin-Han imparatorluk geleneğinde, köşe mühürü beyaz karakterli Han resmi oyması biçiminde basılmıştır.\n\nHam xuan kağıdın kuru dokusu üzerinde pima cun kenevir-lif çizgileri, bilginin zorlu yolunu metaforlaştırır; mürekkep geçişleri Dong Yuan'ın fangtou cun rastgeleliğini yansıtır. Üç metreden bakıldığında qiyun shengdong — ruh-rezonans ve yaşam-hareket — kompozisyonun bütününde tanınabilir biçimde titreşir.",
+        "latency_s": 17.73,
+        "word_count": 195,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Dağ manzarası, Guo Xi'nin Üç Mesafesi sistemine uygun olarak tasarlanmalıdır. Yüksek Mesafe ilkesiyle, dağın tepesi ahlaki otorite ve Konfüçyüs düzeninin sembolik yüksekliğini ifade eder. Derin Mesafe, dağın eteklerindeki sis ve bulutlarla (Mi Fu'nun tekniği) görülmez hale gelen formlarla Taocu münzeviliğini iletir. Düz Mesafe, ön plandaki su elemanlarında izleyiciye yakın bir alana yerleştirilir.\n\nDağ yapısı kemik çizgilerini (bifa tekniği) takip eden kaligrafik vuruşlarla işlenir. Sert axtı-kesimi çizgiler (fupi cun) dağın sarsılmaz bütünlüğünü, kenevir-lif çizgiler (pima cun) ise daha yumuşak eğimleri gösterir. İnsan figürleri — bir münzevi veya bilgin — manzara öğelerinden önemli ölçüde küçük olmalıdır, qiyun shengdong'un (ruh-rezonans) yüceliğini yansıtır.\n\nÖn planda çam, bambu veya erik ağaçları Hardal Tohumu Bahçesi El Kitabı konvansiyonlarına göre sembolik olarak işlenir. Su öğeleri Wu Daozi'nin rüzgarla savrulan şerit geleneğini (Wu Dai Dang Feng) referans alarak dinamik hareket gösterir.\n\nMalzeme seçimi etik ifade içerir: ham xuan kağıdı, cun doku çizgileriyle, hayırsever yönetimin zorlu yolunu metaforlaştırır. Renkli versiyonlar Zhou Ritüellerinin Beş Renk doktrinince mineral pigmentler kullanmalıdır.\n\nKaligrafi inskripsiyonu Analektlerden en az yüzde otuz alıntı veya Seçilmiş Rafine Edebiyat göndermesi içeren orijinal şiir olmalıdır. Mühürleme protokolü Qin-Han imparatorluk mühürlerini takip eder: giriş mühürleri zincifre tarzda, köşe mühürleri beyaz karakterli Han resmi oymacılığını taklit eder. Negatif alan (liubai) Taocu boşluk gerilimini korumak için yüzde kırk oranını aşmalıdır.",
+        "latency_s": 9.24,
+        "word_count": 208,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Dağ manzarası, Guo Xi'nin Üç Mesafe sistemine göre kompoze edilir. Yüksek Mesafe (Gao Yuan), zirvelerin ahlaki otoritesini yansıtır; zirveler kuru mürekkep ve kemik yapısı fırça tekniğiyle (bifa) işlenir. Derin Mesafe (Shen Yuan), vadilerin Konfüçyüs düzenini tasvir eder, katmanlı kayalar pima cun tekniğiyle çizilir. Düz Mesafe (Ping Yuan), Mi Fu'nun sis-ve-bulut tekniğiyle Taocu münzeviliği iletir, negatif alan (liubai) %40'ı aşar.\n\nÖn planda çam ağaçları, Hardal Tohumu Bahçesi El Kitabı konvansiyonlarına uygun, kaligrafik çizgilerle işlenir. Kayalar fupi cun tekniğiyle, sarsılmaz bütünlüğü ifade eden balta-kesimi çizgilerle şekillenir. İnsan figürleri manzaraya göre küçük, yüz hatları minimalist çizgilerle sembolik olarak ima edilir. Kumaşlar Wu Daozi'nin rüzgarla savrulan şeritler geleneğine uygun.\n\nHam xuan kağıt üzerinde kuru doku cun çizgileri, hayırsever yönetimin zorlu yolunu metaforlaştırır. Renkler Zhou Ritüellerinin Beş Renk doktrinine göre düzenlenmiş mineral pigmentlerdir; mavi ve beyaz Record of Artisans kromatik dizisini takip eder.\n\nİnskripsiyon, Analektlerden alıntı içerir: \"Bilge, dağları sever, uzun süre orada kalır.\" Kaligrafi seri yazıda, kompozisyonel olarak uyarlanmış. Köşe Mühürü, Han resmi mühür oymacılığını taklit eden beyaz karakterli mühür.",
+        "latency_s": 40.45,
+        "word_count": 166,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 23.78,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "bauhaus",
+    "input_text": "A busy market scene",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 412,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Rechteckige Verkaufsmodule aus Stahlrohr und Sperrholz, standardisiert auf eine Einheitshöhe von 1,20 Metern, bilden ein orthogonales Rastersystem auf einer Betonplattform. Jedes Modul erfüllt eine spezifische Lagerfunktion: flache Horizontalflächen für die Auslage von Gütern, vertikale Trennwände zur Zonierung des Durchgangsverkehrs. Die Bewegungsströme der Personen verlaufen entlang klar definierter linearer Achsen zwischen den Modulreihen, wobei Knotenpunkte – Kreisformen mit einem Durchmesser von zwei Metern – den Austausch und die Transaktionsaktivität konzentrieren. Die Farbgebung folgt einem reduzierten System: Primärgelb kennzeichnet aktive Transaktionsflächen, Schwarz strukturiert die tragenden Rahmenkonstruktionen, Weiß definiert neutrale Durchgangszonen. Personen werden als zylindrische Volumina mit kreisförmigen Kopfquerschnitten erfasst, ihre Bewegungsrichtungen als gerichtete Vektoren im Grundriss. Warenmengen erscheinen als gestapelte Quaderblöcke mit variablen Höhenwerten, die den Füllgrad der Lagerkapazität anzeigen. Akustische Aktivität – Kommunikation und Verhandlung – wird als funktionale Informationsübertragung zwischen den Knotenpunkten verstanden, nicht als atmosphärisches Element. Das Gesamtsystem ist auf maximale Durchsatzeffizienz bei minimaler Flächenbeanspruchung ausgelegt.",
+        "latency_s": 10.73,
+        "word_count": 147,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Ein Marktplatz wird analysiert als Zusammenspiel funktionaler Zonen und Bewegungsflüsse. Primäre Entitäten sind Verkaufsstände, organisiert als modulare rechteckige Strukturen aus Stahlrahmen und Holzplatten, Käufer als bewegliche Punkte im Raum, und Waren als kategorisierte Volumen. Die Komposition besteht aus einer orthogonalen Grundstruktur: horizontale Verkaufslinien durchkreuzen vertikale Zirkulationswege. Jeder Stand reduziert sich auf eine funktionale Grundform – Würfel und Quader für Warenlagerung, offene Flächen für Transaktionspunkte. Farbe wird begrenzt auf Grau und Schwarz für Strukturelemente, Weiß für Verkaufsflächen, gedecktes Rot und Blau für Warengruppen als Orientierungssystem. Materialität: Stahlkonstruktionen bilden das tragende Gerüst, Betonboden definiert die Bewegungsfläche, Glaselemente ermöglichen Wareneinsicht. Die Menschenfiguren werden als geometrische Formen erfasst – Zylinder für Torso, Kugeln für Kopf – angeordnet nach Funktionsmustern: Warteschlangen als Linien, Austauschpunkte als Knotenpunkte. Lichtverhältnisse werden als funktionales Element eingeführt: scharfe Kontraste durch Oberlichter strukturieren die Zonen. Die Gesamtkomposition folgt dem Prinzip der Effizienz – minimale Wege zwischen Angebot und Nachfrage, maximale Raumnutzung, klare Hierarchie zwischen Bewegungs- und Verweilzonen.",
+        "latency_s": 6.44,
+        "word_count": 156,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "The spatial organization consists of a modular grid system constructed from tubular steel supports and horizontal glass planes, defining individual units of commerce. Within these cubic frameworks, inventory is arranged as a study of mass and volume: spherical forms stacked in pyramids and rectangular prisms aligned in rows, prioritizing accessibility and efficient storage. The kinetic energy of the crowd is resolved into intersecting lines of movement, where the human element is reduced to vertical cylindrical forms and angular silhouettes navigating the negative space between structures. The color composition utilizes a strict primary palette; signal red highlights points of transaction, while deep blue defines the structural shadows, and chrome yellow accents the horizontal surfaces, all set against a neutral grey concrete floor. Overhead, a flat, cantilevered roof plane provides uniform illumination, ensuring visual clarity of the merchandise geometry.",
+        "latency_s": 41.9,
+        "word_count": 137,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "A modular system of cubic workstations constructed from steel frames and glass panels arranges itself in a grid formation upon a continuous concrete plane. Vertical cylindrical units move through designated circulation vectors between rectilinear display modules, their trajectories forming intersecting linear pathways across the horizontal surface. Each workstation contains geometric inventory units: spheres, cubes, and cylinders organized according to functional categorization within open-faced cubic containers. Overhead, a series of planar concrete slabs supported by steel columns creates a horizontal protective layer, punctuated by rectangular voids allowing vertical light penetration. The color palette consists of primary red, blue, and yellow applied to specific functional elements—red indicating transaction zones, blue marking circulation paths, yellow highlighting display surfaces—against a ground of gray concrete and transparent glass. Wooden surfaces provide tactile interfaces at specific interaction points. The entire composition operates as an analytical diagram of exchange mechanics, where human movement patterns, material storage requirements, and transactional processes determine the spatial arrangement without ornamental intervention.",
+        "latency_s": 14.36,
+        "word_count": 160,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "bauhaus",
+    "input_text": "Bir cicek",
+    "input_lang": "tr",
+    "context_lang": "tr",
+    "prompt_tokens_est": 358,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Çelik bir zemin plakası üzerinde monte edilmiş dikey bir silindirik tüp, üstte eşmerkezli disk katmanlarından oluşan yatay bir platform taşır. Diskler çapları azalan bir sırayla üst üste yerleştirilmiş olup her biri bir öncekinden daha küçük çaplıdır. Platformun merkezinden dışa doğru sekiz adet eşit aralıklı radyal çubuk uzanır; bu çubuklar yapısal yük dağılımı için hesaplanmış açılarda konumlandırılmıştır. Tüm yapı birincil Bauhaus renk şemasına göre renklendirilmiştir: silindirik tüp ve zemin plakası saf siyah, diskler sarı ve kırmızı arasında dönüşümlü olarak boyanmış, radyal çubuklar ise beyazdır. Malzemeler endüstriyel standarttadır: tüp ve çubuklar çelik, diskler preslenmiş ahşap levha, zemin plakası dökme betondur. Yapının tüm bileşenleri fonksiyonel gerilim ve basınç kuvvetleri gözetilerek tasarlanmış olup hiçbir süsleme unsuru içermez.",
+        "latency_s": 10.3,
+        "word_count": 113,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Konsantrik daireler ve radyal çizgi sisteminden oluşan analitik kompozisyon. Merkez noktasından çıkış yapan sekiz adet çizgi, yapısal iskeleyi oluşturur. İç bölüm, küçük bir daire olarak tanımlanır ve işlevsel olarak tohum saklama modülü olarak yeniden tasarlanmıştır. Orta katman, eşmerkezli halkalardan meydana gelir ve yaprak yapısının geometrik soyutlanması olarak işlev görür; her halka, ışık alımı ve hava dolaşımı için optimize edilmiş bir yüzey düzlemi temsil eder. Dış tabaka, düzenli aralıklı üçgensel formlardan oluşur ve koruma ile yapısal destek işlevlerini yerine getirir. Malzeme olarak çelik çerçeve, cam paneller ve ahşap takviye kullanılır. Renk paleti sınırlıdır: merkez siyah, orta katmanlar gri tonlarında, dış yapı beyazdır. Sistem, modüler olarak tasarlanmış ve üretilebilir bir prototiptir. Her geometrik eleman, belirli bir işlevsel amaca hizmet eder ve süsleme amaçlı hiçbir unsur bulunmamaktadır. Yapı, simetrik ve ölçeklenebilir bir tasarım ilkesine dayalıdır. Tüm bileşenler, endüstriyel üretim standartlarına uygun olarak tanımlanmıştır.",
+        "latency_s": 6.85,
+        "word_count": 140,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Merkezdeki silindirik çekirdekten dışa doğru yayılan eşmerkezli daireler ve radyal eksenlerden oluşan analitik bir kompozisyon. Üçgen düzlemler, matematiksel bir düzen içinde merkezden dışarıya doğru yönelir. Dikey çizgisel taşıyıcı eleman, taban ile üst yapı arasında yapısal bağlantı kurar. Açılı düzlemler, ana kütlenin iki yanında dengeleyici elemanlar olarak konumlanır. Cilalı çelik, cam ve beton malzemeler; kırmızı, mavi, sarı ana renkler ve siyah-beyaz tonlarından oluşan palet. Form, işlevi izler; süsleme yok, yalnızca geometrik oranlar ve yapısal ilişkiler.",
+        "latency_s": 28.09,
+        "word_count": 74,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Silindirik bir cam gövde, iç içe geçmiş üç dairesel diskten oluşan üst yapı ve radyal çizgilerle desteklenen bir çelik kafes içinde yer alır. Merkezi eksen, dikey bir betonarme kolon olarak yükselir; bu kolon, altıgen bir taban plakasına bağlanır ve içinde su iletim borularını barındırır. Üst yapı, birincil dairesel halka (çap 30 cm), ikincil orta halka (çap 20 cm) ve merkezde küresel bir cam odacıktan oluşan üçlü bir sistemdir. Çelik kafes, 12 adet eşit aralıklı radyal çubuktan oluşur ve bu çubuklar merkezden dışa doğru üçgen bir truss sistemi oluşturur. Malzeme paleti: şeffaf cam, mat siyah çelik, gri beton ve doğal ahşap taban. Renk şeması, Bauhaus temel renklerine indirgenmiştir: saf kırmızı, saf mavi ve saf sarı, ancak yapıda sadece fonksiyonel işaretler olarak kullanılır; ana yapı beyaz, gri ve siyah tonlarında kalır. Nesne, ışık geçirgenliği ve hava sirkülasyonu fonksiyonlarını yerine getiren bir kapsül olarak tasarlanmıştır; iç mekan bitki büyümesi için kontrollü bir ortam sağlar. Yapısal bütünlük, formun işlevi izlemesi ilkesine göre kurulmuştur: dairesel formlar maksimum yüzey alanını sağlar, üçgen kafes yapısal stabiliteyi garanti eder, silindirik gövde su tutma ve iletme işlevini görür.",
+        "latency_s": 17.01,
+        "word_count": 179,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "bauhaus",
+    "input_text": "Жвавий ринок",
+    "input_lang": "uk",
+    "context_lang": "en",
+    "prompt_tokens_est": 410,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Горизонтальна виробнича площина, розділена сітковою структурою з рівновіддалених вертикальних і горизонтальних сталевих профілів, утворює модульну систему торговельних одиниць. Кожен модуль — прямокутний контейнер зі скляними панелями та дерев'яною основою — виконує функцію зберігання та передачі товарного об'єкту від однієї точки до іншої. Циркуляційні потоки між модулями визначаються паралельними лініями руху, ширина яких розрахована на пропускну здатність людського потоку. Вертикальні елементи — циліндричні сталеві опори — несуть навантаження перекриттів і забезпечують структурну цілісність усієї системи. Кольорова схема обмежена первинним жовтим для позначення активних вузлів обміну, первинним червоним для напрямних елементів руху та нейтральним сірим бетону для несучих площин. Людські фігури функціонують як рухомі одиниці в межах фіксованої сітки, їхня траєкторія визначається геометрією простору. Акустичне навантаження — результат механічної взаємодії твердих поверхонь — є вимірюваним параметром середовища, а не якісною характеристикою. Загальна конструкція підпорядкована принципу оптимального розподілу функціональних зон: прийом, зберігання, передача, вихід.",
+        "latency_s": 15.86,
+        "word_count": 141,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Жвавий ринок функціонує як система розподілу матеріалів та обміну. Структура складається з прямокутних модулів, розташованих у сітці, де кожен модуль служить станцією обробки та передачі товарів. Вертикальні елементи з металевого профілю висотою 2,5 метра утворюють каркас, горизонтальні балки розподіляють навантаження. Робочі поверхні виконані зі світлого дерева та бетону, забезпечуючи функціональність та гігієну. Циркуляція людей та матеріалів організована через два перпендикулярні коридори, які перетинаються в центральній точці розподілу. Колірна схема обмежена чорним, білим та природним кольором матеріалів. Динаміка системи визначається ритмом модулів, де повторення геометричних форм створює впорядковану композицію. Кожна позиція в сітці має чітко визначену функцію: зберігання, обробка, обмін або переміщення. Освітлення забезпечується лінійними світильниками, вмонтованими в конструкцію, що виключає тіні та забезпечує рівномірність робочого простору. Система працює як взаємопов'язаний механізм, де кожен елемент сприяє загальній ефективності розподілу та обігу матеріалів без прикрас або надлишкових деталей.",
+        "latency_s": 7.13,
+        "word_count": 136,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Просторова організація визначається раціональною модульною сіткою, де енергія руху трансформовано в систему прямих траєкторій циркуляції. Антропоморфні одиниці редукуються до сукупності сферичних та циліндричних об’ємів, що функціонують як динамічні елементи механічної системи. Торговельні структури складаються зі сталевих каркасів та скляних прямокутних площин, утворюючи функціональні осередки для зберігання та розподілу стандартизованих товарних одиниць. Асортимент класифіковано за геометричними ознаками: кубічні контейнери, сферичні ємності та призматичні упаковки розміщені на дерев'яних та металевих поверхнях відповідно до принципів ергономіки. Колірна схема підпорядкована функціональному призначенню: первинні кольори — синій, червоний, жовтий — виділяють конструктивні вузли та напрямки потоків, тоді як нейтральні сірий та білий визначають базові площини стін та підлоги з бетону. Освітлення проектується геометричними променями, підкреслюючи структурну глибину та фактуру індустріальних матеріалів. Загальна композиція є результатом інтеграції форми та функції, де естетика виникає виключно з технічної доцільності та конструктивної логіки, позбавленої будь-якого декоративізму.",
+        "latency_s": 47.98,
+        "word_count": 137,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Функціональна система обміну побудована з модульних кубічних одиниць стандартизованих розмірів, розташованих на бетонній плиті з чіткою сітчастою структурою. Стальні каркаси висотою три метри формують вертикальні опори, з'єднані горизонтальними балками для створення площин демонстрації товарів. Скляні перегородки встановлені між стійками для візуального контролю простору. Циліндричні контейнери з деревини розташовані на рівних відстанях для зберігання продукції. Діагональні лінії руху створюють динамічні траєкторії циркуляції між функціональними зонами. Колірна палітра обмежена первинними червоним, синім та жовтим на нейтральному тлі бетону та сталі. Площини перетинаються під прямими кутами, формуючи чіткі геометричні об'єми без орнаментальних елементів. Прозорі поверхні дозволяють світловому потоку проникати через структуру, створюючи аналітичне освітлення функціональних просторів. Кожен елемент підпорядкований логістиці обміну та ефективності просторової організації.",
+        "latency_s": 25.42,
+        "word_count": 112,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "poetry_hoelderlin",
+    "input_text": "Rain",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 472,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Regen\n\nKomm! ins Offene, Freund! zwar glänzt ein Weniges heute\nNur herunter und eng schließet der Himmel uns ein.\nDie Tropfen fallen schwer auf Gassen und auf Gänge,\nUnd leer ruht von Gesange die durchnäßte Luft.\nTrüb ists heut, es schlummern die Wege unter Wasser, fast will\nMir es scheinen, es sei, als in der bleiernen Zeit.\nDennoch gelinget der Wunsch, Rechtglaubige zweifeln an Einer\nStunde nicht und der Lust bleibe geweihet der Tag.\n\nDenn nicht wenig erfreut, was wir vom Himmel gewonnen,\nWenn ers weigert und doch gönnet den Kindern zulezt.\nDer Regen spricht auch, was die Zunge kaum vermag,\nUnd von trunkener Stirn höher Besinnen entspringt,\nMit der unsern zugleich des Himmels Blüthe beginnen,\nUnd dem offenen Blik offen der Leuchtende seyn.\n\nAber kommen doch auch der seegenbringenden Schwalben\nImmer einige noch, ehe der Sommer ins Land.\nDroben weiht bei guter Rede den durchweichten Boden,\nWo den Gästen das Haus baut der verständige Wirth.\nDaß sie kosten und schaun das Schönste, die Fülle des Landes,\nOffen, dem",
+        "latency_s": 5.83,
+        "word_count": 169,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Regen fällt auf die Erde, Wasser steigt von der Oberfläche auf und bildet Wolken in der Atmosphäre. Diese Wolken entstehen, wenn Wasserdampf kondensiert. Der Prozess wiederholt sich in natürlichen Zyklen.\n\nRegen versorgt Pflanzen mit Wasser und speist Flüsse und Grundwasserleiter. Er ist notwendig für Landwirtschaft und menschliche Siedlungen. Verschiedene Regionen erhalten unterschiedliche Niederschlagsmengen je nach geografischen und klimatischen Bedingungen.\n\nMenschen in verschiedenen Kulturen haben praktische Systeme zur Wasserspeicherung und -verteilung entwickelt. Sie bauen Bewässerungsanlagen, Brunnen und Zisternen. Diese Technologien entstanden aus der Notwendigkeit, mit lokalen Wetterbedingungen umzugehen.\n\nRegen beeinflusst menschliche Aktivitäten. Landwirtschaft hängt von regelmäßigen Niederschlägen ab. Transportwege können durch starke Regenfälle unterbrochen werden. Gebäude benötigen Schutzvorrichtungen gegen Wasser.\n\nZu viel Regen verursacht Überschwemmungen und Bodenerosion. Zu wenig führt zu Dürren und Wasserknappheit. Menschen passen ihre Lebensweisen an lokale Regenmuster an.\n\nMeteorologische Messungen dokumentieren Niederschlagsmengen und -muster. Wissenschaftler untersuchen, wie",
+        "latency_s": 4.43,
+        "word_count": 140,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Come! into the open, friend! though rain falls steadily\nDownward and gray the sky closes around us.\nNeither the mountains visible nor the forest's\nSummits clear, and heavy rests the air with water.\nDim it is today, the paths and alleys slumber in wetness\nAnd almost it seems to me as in leaden time.\n\nYet the wish succeeds, true believers doubt not\nOne hour, and to joy the day remains consecrated.\nFor not little pleases what we from heaven receive\nWhen the clouds refuse and yet grant to the earth at last.\nRain descends from heavy skies—not powerful,\nYet to life it belongs, what we desire, and seems\nFitting and joyful at once, for come too\nThe blessing-bringing swallows always some still\nBefore summer into the land.\n\nBeautiful is the place when in rain's holy day\nThe valley opens, when with streams descending\nMeadows greening and wood and all the greening trees\nCountless, trembling, sway in rocking air,\nAnd with clouds covered along the mountains the vineyard\nD glimmers and grows and warms under the fragrant damp.\nThe rain feeds what the heart wishes open,\nThat meal and dance and song may be crowned with joy.",
+        "latency_s": 27.16,
+        "word_count": 196,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 6.43,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "poetry_hoelderlin",
+    "input_text": "Une rue vide",
+    "input_lang": "fr",
+    "context_lang": "en",
+    "prompt_tokens_est": 474,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Une rue vide aujourd'hui, et pourtant quelque chose demeure dans l'air, entre les façades fermées et le silence des pavés. Le ciel pèse, étroit, comme une paupière à demi close sur la ville. Ni les toits ni les arbres au bout de l'avenue ne se dressent comme on l'espérerait, et la lumière hésite, retenue.\n\nIl semble que le temps lui-même sommeille dans les passages et les ruelles, que l'heure soit de plomb, suspendue. Et pourtant le désir tient bon. Celui qui croit vraiment ne doute pas d'une seule heure, et le jour reste consacré à ce qu'on attend.\n\nCar ce que nous recevons du ciel, même parcimonieusement, même à contrecœur, nous réjouit d'autant plus quand il finit par l'accorder. Pourvu seulement que la peine en vaille la parole, que le gain soit à la hauteur du chemin parcouru, et que ce qui réjouit soit entièrement vrai.\n\nC'est pourquoi j'espère que lorsque nous commencerons ce que nous désirons, lorsque la langue se délivre et que le mot juste surgit, lorsque le cœur s'ouvre et qu'une pensée plus haute naît d'un front ivre, alors la rue elle-même commencera à fleurir avec nous, et ce qui brille se montrera enfin à qui regarde librement.\n\nCar ce n'est pas quelque chose de grand, mais cela appartient à la vie, ce que nous v",
+        "latency_s": 11.16,
+        "word_count": 219,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Une rue vide\n\nLa rue s'étend sans âme, sans bruit. Les façades se dressent de part et d'autre, indifférentes, leurs fenêtres closes comme des paupières. Le pavé gris absorbe la lumière du jour sans l'écho habituel des pas, des voix, du mouvement.\n\nC'est un espace déshabité, un lieu où l'absence crée une présence étrange. Les devantures des commerces restent obscures. Un papier s'envole dans le vent, seul témoin du passage du temps. Les réverbères attendent la nuit, inutiles en ce moment du jour.\n\nCette solitude n'est pas mélancolique, elle est simplement là, factuelle. La rue existe indépendamment de ceux qui la parcourent habituellement. Elle persiste dans son état vide, ses dimensions exactes, ses détails architecturaux inchangés. Les murs ne changent pas avec l'absence de gens. Les pierres restent pierres.\n\nQuelque part, une porte grincerait ou un rideau bougerait, mais ici, rien. Le silence n'est pas un vide à remplir, c'est un état réel de cet endroit à ce moment précis. La rue vide fonctionne selon ses propres règles, indépendante de nos attentes de vie urbaine.\n\nElle attend, sans impatience. Elle existe, sans nécessité d'être habitée. C'est un espace qui demeure, complet en lui-même, peu importe qui le traverse ou ne le traverse pas.",
+        "latency_s": 6.22,
+        "word_count": 203,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Une rue vide, où tout repose dans la grisaille du jour, les chemins et les ruelles sommeillent comme en un temps de plomb. Le ciel se referme étroitement sur nous, et l'air reste muet de tout chant. Pourtant le désir peut s'accomplir, les croyants ne doutent point de l'heure, et le jour reste consacré à la joie. Car ce n'est pas peu de chose que ce que nous avons gagné du ciel, quand il nous l'accorde enfin. Puissent les hirondelles de bon augure venir encore avant l'été dans le pays, et que s'éveille le cœur, que la langue se délie, que le mot soit trouvé, et que de la terre promise s'élève une pensée plus haute. Alors avec la nôtre commencera la floraison du ciel, et pour le regard ouvert, le lumineux sera présent. Ce n'est pas une chose puissante, mais elle appartient à la vie, ce que nous voulons, et elle semble convenable et joyeuse à la fois.",
+        "latency_s": 25.25,
+        "word_count": 159,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 5.02,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "poetry_hoelderlin",
+    "input_text": "Una calle vacia",
+    "input_lang": "es",
+    "context_lang": "en",
+    "prompt_tokens_est": 474,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Una calle vacía en día de fiesta de primavera,\ncuando el valle despierta y el río baja entre sauces\nque verdean y ondean en el aire que mece,\ny los árboles florecen blancos en número sin cuenta.\n\nTriste está hoy, duermen los pasos y las esquinas,\ny casi parece como en tiempos de plomo.\nSin embargo el deseo logra, quien cree no duda\nni una hora, y consagrado a la alegría quede el día.\n\nPues no poco nos alegra lo que ganamos del cielo,\ncuando lo niega y aun así al fin lo concede a sus hijos.\nSolo que tal ganancia valga la palabra y el paso\ny sea verdadero del todo el gozo obtenido.\n\nPor eso espero incluso que, cuando lo deseado\ncomencemos y nuestra lengua se suelte primero,\ny hallada la palabra y abierto el corazón esté,\ny de la frente ebria nazca el pensamiento más alto,\n\njunto con el nuestro empiece la flor del cielo,\ny al ojo abierto abierto sea el que resplandece.\n\nPues no es cosa poderosa, mas pertenece a la vida\nlo que queremos, y parece justo y alegre a la vez.\nVienen también algunas golondrinas que traen la dicha\nantes de que el verano llegue al país.\n\nPara consagrar arriba con buenas palabras el suelo\ndonde el anfitrión sabio construye la casa a los huéspedes,\nque prueben y contemplen lo más bello, la",
+        "latency_s": 11.29,
+        "word_count": 230,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Una calle vacía en la mañana temprana. Las fachadas de los edificios se alinean a ambos lados, algunas con persianas cerradas, otras con ventanas que reflejan la luz gris del cielo nublado. El pavimento mojado sugiere que llovió durante la noche. No hay personas visibles, ni automóviles en movimiento. Solo el sonido ocasional del viento entre los edificios y quizás el goteo de agua desde las cornisas.\n\nLas tiendas en la planta baja permanecen cerradas. Sus escaparates muestran mercancías organizadas, esperando clientes que llegarán más tarde. Un cartel colgante se mueve lentamente con la brisa. En la acera, una papelera metálica está volcada, con algunos papeles dispersos sobre el pavimento mojado.\n\nA lo lejos, la calle desaparece en perspectiva, las líneas de los edificios convergiendo hacia un punto donde apenas se distinguen las formas. El cielo nublado hace que toda la escena se vea en tonos apagados: grises, azules oscuros, negros de las sombras bajo los aleros.\n\nNo hay actividad comercial ni social. Es un momento de transición, anterior al inicio del día. La arquitectura define el espacio: altura de los edificios, regularidad de las ventanas, continuidad de las fachadas. El pavimento refleja las formas de arriba, duplicando la geometría urbana.\n\nEl silencio es casi palpable. La ausencia de personas no genera melancolía sino simplemente la realidad de una calle en espera, un espacio funcional de",
+        "latency_s": 5.41,
+        "word_count": 226,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Una calle vacía donde los callejones duermen en el día sombrío, casi semejante al tiempo de plomo, cuando el cielo cierra estrecho sobre nosotros y el aire reposa silente de todo canto. Sin embargo, el deseo perdura, y lo que el cielo nos niega al fin lo concede a los hijos. Solo que tal vacío sea digno del paso y del esfuerzo, para que cuando comencemos lo anhelado se suelte nuestra lengua, se halle la palabra, se abra el corazón, y de la frente embriagada surja el pensamiento más alto.",
+        "latency_s": 17.1,
+        "word_count": 90,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 4.6,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "mad_world",
+    "input_text": "Someone giving a presentation",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 220,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Ein Mensch steht vorne. Das ist die These.\n\nEr hat Folien. Die Folien haben Pfeile. Die Pfeile zeigen auf Dinge, die durch die Pfeile wichtig werden. Vorher waren es Rechtecke.\n\nEr sagt: „Wie wir alle wissen.\" Alle nicken. Niemand weiß es. Das ist die Methode.\n\nJetzt ein Diagramm. Die blaue Linie geht nach oben. Die rote Linie geht nach oben. Beide gehen nach oben. Einer im Raum trinkt Wasser. Das Wasser geht nach unten.\n\n„Ich komme jetzt zu meinem Hauptpunkt.\" Es ist Folie vier von siebzehn.\n\nDie Schrift ist zu klein. Alle sehen das. Niemand sagt das. Er sagt: „Man kann das hier vielleicht nicht ganz lesen, aber—\" Ja. Genau. Aber.\n\nEr hat eine Fernbedienung. Die Fernbedienung klickt. Ein neues Rechteck erscheint. Das alte Rechteck war auch ein Rechteck. Fortschritt.\n\n„Und das bringt mich zu der eigentlichen Frage.\" Die Frage erscheint auf der Folie. Sie ist bereits beantwortet. Darunter steht die Antwort. Darüber steht die Frage. Er liest beides vor. Die Reihenfolge ist korrekt.\n\nJemand hinten schreibt etwas auf. Vielleicht die Antwort. Vielleicht eine andere Frage. Vielleicht das Wort „Butter\". Es ist nicht überprüfbar.\n\n„Ich würde jetzt gerne zum Ende kommen.\" Er ist auf Folie neun.\n\nDas Ende hat ein Fazit. Das Fazit fasst zusammen. Die Zusammenfassung fasst das Fazit zusammen. Darunter steht: Vielen Dank für Ihre Aufmerksamkeit.\n\nDie Aufmerksamkeit war anwesend. Sie hat sich nicht gemeldet. Sie wird jetzt entlassen.\n\nFragen?\n\nStille.\n\nDie Stille ist kein Nein. Die Stille ist kein Ja. Die Stille ist das Rechteck, in das kein Pfeil zeigt.",
+        "latency_s": 15.08,
+        "word_count": 253,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "The figure stands before the assembled, mouth moving in synchronized patterns with the slides behind them. Words emerge like products from a factory line—each one stamped with identical pressure, identical duration. The audience sits in chairs arranged to face this direction, their heads tilted at the required angle.\n\nThe presenter's hand gestures toward invisible things made visible by projection. A bar chart climbs upward. Everyone nods. The logic is airtight: the line goes up, therefore something is good. The line goes down, therefore something requires intervention. No one questions whether the line itself might be hallucinating.\n\nA laser pointer draws red circles around already-circled elements. This is emphasis. This is importance. The audience blinks in unison, absorbing the redundancy.\n\nSomeone coughs. The presenter pauses, as if a crucial system has momentarily failed. Then continues. The slides advance. New information appears, indistinguishable from the previous information, yet somehow more urgent.\n\nThe presenter's voice maintains a consistent register—neither too excited nor too defeated. This is professionalism: the performance of someone who believes in the transmission of meaning while simultaneously proving its impossibility. Every statement is supported by data. The data itself requires no support.\n\nAt the end, the presenter asks if there are questions. Silence. Someone asks a question anyway—about something already stated. The presenter restates it. Everyone is satisfied that understanding has occurred.\n\nThe slides go dark. The room remains illuminated. The assembled rise and disperse, carrying with them the phantom sensation that something important has transpired, though none could articulate what.",
+        "latency_s": 6.04,
+        "word_count": 251,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "A figure stands before a glowing rectangle, one hand extended toward the wall where light arranges itself into the pretense of sentences. The laser pointer creates a small red dot that trembles across the projected words, and the dot seems to understand something the words do not—that it is all surface, all gesture. The presenter speaks. Syllables leave the mouth and enter the air of the conference room, which has absorbed so many syllables before that it no longer offers resistance. Slide four becomes slide five. Someone in the third row nods with the mechanical rhythm of a figurine. The presenter gestures at a graph, and the graph gestures at nothing, two axes intersecting in a void where quantity once lived. The title slide returns. Questions are invited. The silence that follows is not the silence of thought but the silence of a theater after the play has ended and the audience has forgotten they were watching. The presenter smiles. The smile holds its shape perfectly.",
+        "latency_s": 20.43,
+        "word_count": 166,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "The clicker depresses with a sound like a small bone breaking, yet the screen remains unchanged, or perhaps it was always this slide, this white rectangle containing the word \"Synergy\" floating in a sans-serif void. He stands at the podium which is not a podium but a music stand holding sheets that flutter when the HVAC exhales, each page blank except for the page numbers counting upward into a future that refuses to arrive. His mouth opens and the acoustics of the room catch the shape of his words, bouncing them off the drop ceiling tiles that resemble nothing so much as a grid of empty coffins, each one containing the ghost of a meaning that died in committee.\n\nHe gestures toward the chart where the line climbs optimistically into the margin and disappears, reemerging on the next slide as a photograph of a mountain that is actually a pyramid of stacked office chairs photographed at dusk. The laser pointer dot, red and anxious, darts across the projection like a trapped insect seeking an exit through the fabric of the screen. When he says \"moving forward,\" everyone in the room checks their watches, noting that the hands have begun to rotate in reverse, erasing the minutes they have spent here, returning them to a state of pre-knowledge, of innocence before the first slide loaded and the lights dimmed to a theatrical half-darkness that suggests importance but delivers only the hum of the projector fan, cooling nothing, circulating air that has been breathed too many times already.",
+        "latency_s": 20.71,
+        "word_count": 256,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "mad_world",
+    "input_text": "فصل دراسي",
+    "input_lang": "ar",
+    "context_lang": "en",
+    "prompt_tokens_est": 218,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "في البداية، كان هناك فصل.\nثم جاء الطلاب، واحداً واحداً، وجلسوا في مقاعد لا تعرفهم.\nفتح المعلم كتاباً لم يقرأه أحد.\nكتب على السبورة: \"اليوم سنتعلم.\"\nسألت طالبة: \"ماذا؟\"\nقال: \"أشياء.\"\nうなずいた الجميع.\n\nمرّت ساعة. أو ربما كانت سنة.\nرنّ الجرس الذي لا يرنّ إلا حين لا يريده أحد.\nقام الطلاب، تركوا معرفةً لم تُعطَ لهم على الكراسي،\nوخرجوا إلى ممر يؤدي إلى فصل آخر\nيشبه هذا الفصل\nتماماً.\n\nفي السبورة بقيت الجملة الناقصة:\n\"اليوم سنتعلم كيف نتعلم كيف نتعلم كيف—\"\n\nنظر المعلم إلى الفراغ الذي كان طلاباً.\nمسح السبورة.\nفتح الكتاب من الصفحة الأولى.\nانتظر الفصل الدراسي القادم\nالذي سيكون، بالتأكيد، مختلفاً.",
+        "latency_s": 10.59,
+        "word_count": 103,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "جدران الفصل تحتفظ بنفس اللون الرمادي منذ سنوات، الطباشير يترك آثاره على السبورة السوداء التي لم تعد سوداء تماماً. الطلاب يجلسون في صفوف مستقيمة، أو ربما هم يقفون، أو ربما هم أشباح من الممكن أن يكونوا قد جلسوا هنا منذ زمن طويل. المعلم يتحدث عن الأرقام والحروف والتواريخ، وكلماته تسقط على الأرض مثل ريش طائر مات منذ أمد بعيد.\n\nالسبورة تمتلئ بمعادلات لا تساوي شيئاً حقيقياً. الأطفال يكتبون في دفاتر زرقاء أو حمراء، يرسمون خطوطاً تحت كلمات لم تعد تعني ما كانت تعنيه. الجرس يرن في الساعة المحددة تماماً، كأنه يعلن عن شيء، لكن لا أحد متأكداً من ماذا.\n\nالنوافذ تطل على ملعب حيث لا أحد يلعب. الهواء في الفصل ثقيل، مشبع برائحة الغبار والأمل المستنفد. الكتب المدرسية مفتوحة على نفس الصفحات، وكأن الوقت توقف عند نقطة معينة.\n\nالمعلم يسأل سؤالاً. الصمت يملأ الفصل. ربما لا أحد يعرف الإجابة. ربما الإجابة نفسها اختفت. ربما كانت هناك إجابة في الأصل.",
+        "latency_s": 7.94,
+        "word_count": 149,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "كراسي مصفوفة كجنود لم تدخل حرباً. سبورة سوداء تنتظر كلمات لن تأتي. طاولة المعلم خالية إلا من الغبار الذي يتراكم ببطء، بلا هدف، بلا جدول زمني. النوافذ تطل على فناء حيث الأشجار تقف أيضاً في صفوف، وكأنها تعلمت الدرس.\n\nحجر يطير في الهواء، يسقط، يكسر زجاجاً. الصوت يتردد في الفراغ. لا أحد يلتفت. لا أحد ليسأل من أين جاء الحجر، ولا لماذا اختار هذه النافذة بالذات.\n\nجرس يرنّ في مبنى فارغ. الحضور والغياب مفاهيم فقدت معناها هنا. من يحضر؟ من يغيب؟ الأسئلة تتبخر قبل أن تُطرح.\n\nعلى الجدار، خريطة العالم تتلاشى ألوانها ببطء. البلدان تذوب الواحدة في الأخرى. الحدود تتلاشى تحت أشعة الشمس التي لا تميز بين هنا وهناك.\n\nفصل دراسي بلا طلاب، بلا معلم، بلا درس. مجرد غرفة بأربع جدران، تنتظر معنى قد يكون قد فات قطاره منذ زمن بعيد.",
+        "latency_s": 16.98,
+        "word_count": 131,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "فصل دراسي. فصلٌ دراسيٌّ. فصلٌ يُدْرَسُ. فَصْلٌ دَرَسَهُ الزمنُ حتى نَسِيَ أَنَّهُ كان يُقْسِمُ شيئًا ما.\n\nالوقتُ هنا مُكَسَّرٌ إلى قِطَعٍ مُسَمَّاةٍ، كأنَّما الأشهرُ تَنْحَنِي عندَ بابِ القاعةِ، تَتَمَسَّكُ بأَرْقامٍ تَتَساقَطُ منَ الجداولِ. فَصْلٌ: فَصْلَةٌ في حلْقِ السَّنَةِ، فَصْلٌ كما يُفَصَّلُ القماشُ ليَصِيرَ ثَوبًا لا يُنَاسِبُ أَحَدًا.\n\nيَجْلِسُ الطُّلابُ في صُفوفٍ تَشْبِهُ القَبْرَاتِ الصَّغيرةَ، يَتَلَقَّونَ مَعْلُوماتٍ تَذُوبُ في الهواءِ قبلَ أنْ تَصِلَ إلى الأُذُنِ. هذا هو النِّظامُ: وَاجِهَةٌ فارِغَةٌ مِنَ المَعْنى، تُعادُ كَما يُعادُ تَسجيلُ الشَّرْطَةِ المَيْتَةِ على سَبورَةٍ لا تَحْتَفِظُ بِشيءٍ.\n\nانْتَهى الفَصْلُ. وَلَمْ يَبْدَأْ بَعْدُ.",
+        "latency_s": 25.57,
+        "word_count": 87,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "mad_world",
+    "input_text": "Birisi sunum yapiyor",
+    "input_lang": "tr",
+    "context_lang": "tr",
+    "prompt_tokens_est": 196,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Ekran açılıyor. Slide 1. Hoş geldiniz.\n\nOda bekliyor. Oda her zaman bekliyor. Odanın başka bir işi yok.\n\nSlide 2 geliyor. Bir grafik var. Grafik yukarı gidiyor. Yukarı gitmek iyidir. Neden iyi olduğunu soran yok çünkü grafik zaten yukarı gidiyor ve bu yeterli.\n\nBirisi \"bir sonraki slide'a geçebilir misin\" diyor. Geçiliyor. Slide 3. Slide 3'te de bir grafik var. Bu grafik de yukarı gidiyor. Belki aynı grafik. Kimse kontrol etmiyor.\n\nSunum yapan kişi bir şey söylüyor. Kelimeler çıkıyor. Kelimeler havada asılı kalıyor bir süre, sonra düşüyorlar, kimse toplamıyor.\n\n\"Sorularınız var mı?\" deniyor.\n\nSessizlik.\n\nSessizlik de bir tür yanıt sayılıyor. Sayılmak zorunda çünkü başka bir şey yok.\n\n\"Harika bir sunum, teşekkürler\" diyor biri. Harika. Harika kelimesi odayı dolduruyor. Oda harika kelimesiyle dolu şimdi. Herkes harika kelimesinin içinde oturuyor.\n\nEkran kapanıyor.\n\nIşıklar yanıyor.\n\nHerkes bir yere gidiyor.",
+        "latency_s": 12.61,
+        "word_count": 134,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Işık projektörün dönerken, sesler boşluğa çarpıyor. Bir insan ayakta duruyor—ya da duruyor gibi görünüyor. Elinde nesne var, belki kâğıt, belki hiç. Sözcükler çıkıyor ağızından, sırayla, mantıklı görünecek şekilde düzenlenmiş ama her kelime sonrakini çürütüyor sessizce.\n\nDinleyenler oturuyor. Başlarını eğip kaldırıyorlar, sanki hareket etmek anlam üretebilecekmiş gibi. Gözleri ekrana yapışmış—ekran da var mı, yok mu, fark etmiyor. Bilgi akışı olması gerektiği yerde, bir çeşit ses akışı var. Söylenenler yazılı hale gelmiş, yazılı olanlar başka bir dile çevrilmiş, çevrilen şey de artık kimsenin bilmediği bir şeye dönüşmüş.\n\nSunum yapan kişi el kaldırıyor. Slayt değişiyor—renkler, şekiller, grafikler, rakamlar. Hepsi anlamlı görünecek şekilde yerleştirilmiş ama aslında hiçbir şey hiçbir şeyi açıklamıyor. Yapı var, düzen var, mantık izleri var. Ama anlam? Anlam başında bir yere gitti, belki hiç gelmedi.\n\nSunum bitti mi, başladı mı, devam mı ediyor? Alkış sesleri—mekanik, beklenen, boş. İnsanlar kalkıyor, sanki bir şey öğrenmiş gibi davranıyor. Aslında herkes sadece orada bulundu, kelimeler ve görüntüler onlardan geçti. Dünya hâlâ dönerken, sunum yapan insan notlarına bakıyor. Notlar da boş.",
+        "latency_s": 8.27,
+        "word_count": 165,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Birisi sunum yapıyor. PowerPoint slaytları ardı ardına sıralanıyor, her biri bir öncekinin hayaleti. Konuşmacının ağzından kelimeler dökülüyor ama hepsi havada asılı kalıyor, bir yere varmadan buharlaşıyor. İzleyiciler başlarını sallıyor, anlamadıkları halde anlıyormuş gibi yapmanın ağırlığı altında. Sunumun kendisi bir sunum değil artık — bir ritüel, boş bir ayin. Slaytlardaki mermi noktaları gerçek mermiler gibi değil, sadece boşlukların yer tutucuları. Konuşmacı elindeki kumandayı sımsıkı tutuyor, sanki bu dünyayı kontrol edebileceğine inanıyor. Ama dünya zaten orada değil. Sadece bir ekran var, üzerine yansıtılan ışık hüzmesi ve o ışığın içinde dans eden toz parçacıkları. Gerçek olan tek şey o tozlar. Sunum bittiğinde alkış tutuluyor — kimse neden alkışladığını bilmiyor, ama alkışlamak gerekiyor çünkü böyle yapılıyor. Anlam üretimi durmuş, sadece biçim dönmeye devam ediyor.",
+        "latency_s": 20.13,
+        "word_count": 120,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Oda doluydu ama sandalyeler başka bir toplantıya gitmişti. Sunucu, lazer kalemiyle noktayı vurduğunda duvarda küçük bir delik açıldı; ışık oradan kaçıyordu. Slaytlar kendi kendilerini kaydırıyordu, boş beyaz sayfalar üzerinde sayfa numaraları terliyordu. \n\n\"Gördüğünüz gibi,\" dedi sesi, ama görülen hiçbir şey yoktu. Grafikler havada asılı kalmıştı, eksenler birbirine sarılmış, rakamlar ise kağıttan düşmüş yerde yürüyordu. İzleyicilerin yüzleri bulanıktı, ya da belki de yüzleriydi bulanan. \n\nSunucu ileri geri yürüdü, ayakkabıları halının desenini unutmuştu. Her adımda bir kelime düşüyordu; \"strateji\" halının üzerinde kırıldı, \"büyüme\" ise havada asılı kaldı, anlamını unutmuş bir balon gibi. \n\nPointer tıkladıkça zaman duruyor, geri sarıyor, tekrar kırılıyordu. İkinci slayt birinci slayttan önce geliyordu, ama hiç kimse bunun imkansız olduğunu fark etmedi. Çünkü imkânsızlık da salondan çıkıp sigara molası vermişti.\n\nSunucu gülümsedi. Dişleri PowerPoint şablonu gibiydi: düzenli, beyaz, ve anlamsız.",
+        "latency_s": 20.64,
+        "word_count": 130,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "analog_photography_1870s",
+    "input_text": "Children playing in a courtyard",
+    "input_lang": "en",
+    "context_lang": "en",
+    "prompt_tokens_est": 383,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Black-and-white daguerreotype: Kinder beim Spiel in einem Innenhof. Der Hof gibt die räumliche Ordnung vor – seine Wände, Pflastersteine und Schatten strukturieren das Bild und verankern das Geschehen in seinem sozialen Ort. Der Standpunkt wird leicht erhöht gewählt, um die Bewegungen der Kinder innerhalb der Hoffläche lesbar zu halten. Die Schärfeebene liegt auf dem mittleren Bereich des Hofes; die frühe Großformatoptik erlaubt keine vollständige Tiefenschärfe, sodass die Raumtiefe weich ausläuft. Die Belichtungszeit ist lang genug, um Bewegungsunschärfe in den Gesten der Kinder entstehen zu lassen – ein physikalisches Ergebnis der Plattenempfindlichkeit, keine Absicht. Die Kupferplatte wird mit Jod- und Bromdämpfen sensibilisiert, die Entwicklung mit Quecksilberdampf bei kontrollierter Temperatur durchgeführt. Die Fixierung mit Hypo stabilisiert die metallische Oberfläche. Der Kontrast zwischen beschattetem Mauerwerk und hellem Pflaster entsteht chemisch, nicht nachträglich. Die Textur des Bildes ist plattengebunden und reflektierend.",
+        "latency_s": 8.05,
+        "word_count": 137,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Black-and-white daguerreotype: Children playing in a courtyard\n\nThe courtyard's enclosed geometry offers controlled spatial conditions for observing movement and social interaction. I position myself to capture the full depth of the space, allowing the architectural frame—walls, ground plane, possibly a colonnade—to establish scale relationships with the figures. The children's activities unfold across the middle distance; I choose a standpoint that registers both individual gestures and collective occupation of the space. Hyperfocal distance is set to hold the nearest players and far wall in sufficient sharpness, with the ground plane serving as the plane of critical focus. Exposure duration must account for movement: some children will register with soft edges where motion occurred, while others caught in momentary stillness will appear sharp. I sensitize the plate with iodine and bromine, allowing the chemical layers to build sufficient sensitivity for the available light. Exposure is calculated for the courtyard's ambient brightness and reflected light from surrounding surfaces. During mercury development, I control vapor temperature to modulate tonal separation between the sky, architectural surfaces, and figures. The final fixing with hypo and careful plate heating establish the metallic surface's tonal range—from bright highlights on clothing and walls to deep shadows in recessed areas. The daguerreotype's reflective surface will register the scene as a direct, unmediated observation of spatial and social fact.",
+        "latency_s": 5.39,
+        "word_count": 218,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "Black-and-white daguerreotype: Young subjects engaged in recreation within an enclosed exterior space. The composition demands a rigorous organization of the frame, utilizing the courtyard’s rigid architectural lines to anchor the chaotic movement of the juvenile figures. Observing the ground glass, I determine the exposure necessary to register the texture of the pavement while accepting that the rapid gestures of play will inevitably dissolve into a soft, spectral motion blur against the static masonry. A silver plate, sensitized with iodine and bromine fumes to a rose-gold hue, is exposed to capture the reflected light of the open sky. Development over heated mercury vapor will precipitate the delicate mid-tones of the stone walls, while the highlights of the children's clothing emerge with metallic intensity. The image is fixed with hypo, resulting in a surface-bound metallic image where the contrast between the enduring built environment and the fleeting nature of childhood activity is chemically inscribed onto the polished copper support.",
+        "latency_s": 35.52,
+        "word_count": 157,
+        "is_error": false
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "Black-and-white daguerreotype: Children at play within a confined courtyard space.\n\nThe plate, sensitized with iodine and bromine fumes to achieve delicate tonal gradations, awaits the choreography of movement within the architectural frame. Ground-glass focusing establishes a hyperfocal plane that renders the rough stone walls and the children's shifting positions with equal optical clarity, while the necessary exposure duration—several seconds—transforms their rapid gestures into soft, chemically shaped blurs against the static masonry. The metallic surface captures the harsh contrast between deep shadows cast by surrounding walls and the brilliant highlights of sunlit limestone, with mercury development bringing forth silvery whites where skin meets light. Controlled plate heating modulates the tonal range, ensuring the courtyard's geometric enclosure reads as dimensional space rather than flat backdrop. Fixing with hypo stabilizes the image against the copper substrate, preserving the transient social moment—the children's spatial relationships, their proximity to doorways and windows—as a surface-bound record of 1870s urban life, where motion and stillness coexist through physical exposure conditions alone.",
+        "latency_s": 11.39,
+        "word_count": 164,
+        "is_error": false
+      }
+    }
+  },
+  {
+    "config": "analog_photography_1870s",
+    "input_text": "Дiти грають у дворi",
+    "input_lang": "uk",
+    "context_lang": "en",
+    "prompt_tokens_est": 382,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "Чорно-біла дагеротипія: діти, що граються у дворі. Двір як замкнутий соціальний простір — огорожі, бруківка або утоптана земля, сліди повсякденного життя — визначає глибину кадру та природну межу сцени. Діти у русі створюють умови для розмиття при тривалій експозиції, що є неминучим наслідком чутливості йодованої мідної пластини; ті з них, хто зупиняється хоч на мить, фіксуються з оптичною чіткістю. Спостережна позиція обирається на рівні очей дитини або дещо вище — щоб передати реальне співвідношення між фігурами та простором двору. Гіперфокальне налаштування ранньої великоформатної оптики залишає передній план у легкій нечіткості, тоді як середній план — де зосереджена дія — утримується у фокусі матового скла. Бром і йод під час сенсибілізації формують щільний тональний діапазон; ртутне проявлення підкреслює світлі ділянки одягу та обличь. Фіксація гіпосульфітом і контрольований нагрів пластини надають металевій поверхні стриману градацію сірого.",
+        "latency_s": 14.26,
+        "word_count": 134,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "Black-and-white daguerreotype: Дiти у дворi під час гри.\n\nКомпозиція організована навколо фігур дітей у просторі двору, де світло падає під кутом, створюючи чіткі тіні на землі та стінах. Позиціонування камери враховує глибину двору — передній план з активними фігурами переходить у фон з архітектурними елементами. Для цієї сцени необхідна гіперфокальна дистанція, що охоплює дітей на різних відстанях, зберігаючи чіткість від першого плану до стіни. Експозиція розраховується на денне світло, тривалість витримки визначається рухом дітей — їхні рухи залишатимуть м'які сліди на пластині. Іодна сенсибілізація з додаванням бромних парів забезпечує чутливість, необхідну для динамічної сцени. Розвиток ртуттю модулюється контрольованим нагріванням, щоб виявити тональні переходи від освітлених площин до тіней у куточках двору. Метал пластини передає текстуру поверхні — дорожки, траву, стіни як матеріальні присутності. Контраст формується хімічно під час фіксування гіпосульфітом, створюючи образ, де простір двору і дітська діяльність виникають з власного соціального контексту.",
+        "latency_s": 8.2,
+        "word_count": 143,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "[ERROR 504]: <!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!",
+        "latency_s": 60.22,
+        "word_count": 0,
+        "is_error": true
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 43.77,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  },
+  {
+    "config": "analog_photography_1870s",
+    "input_text": "항구의 배들",
+    "input_lang": "ko",
+    "context_lang": "ko",
+    "prompt_tokens_est": 301,
+    "models": {
+      "Sonnet 4.6": {
+        "model_id": "mammouth/claude-sonnet-4-6",
+        "output": "흑백 다게레오타입: 항구에 정박한 선박들\n\n수면의 반사는 노출 중 판의 화학적 반응에 따라 밝은 은빛 영역으로 기록될 것이다. 선박의 삭구와 돛대는 하늘을 배경으로 선명한 수직 선형 구조를 형성하며, 과초점 조건 아래 중경까지의 형태가 광학적으로 정확하게 재현된다. 전경의 계류줄과 부두 목재는 수은 현상 이후 판 표면에 깊은 음영 질감으로 결합될 것이다. 항구의 노동자들이 하역 작업 중이라면 노출 시간 동안 신체의 움직임이 물리적 흐림으로 남아 그들의 존재를 암시하되 형태를 고정하지 않는다. 요오드와 브롬 증기 감광 이후 하이포 정착 과정에서 수면과 하늘 사이의 대비는 화학적으로 형성되며, 판 가열을 통한 톤 조절로 선박의 선체가 지닌 목재와 금속의 재질 차이가 금속판 표면 위에 구분되어 나타날 것이다.",
+        "latency_s": 9.82,
+        "word_count": 101,
+        "is_error": false
+      },
+      "Haiku 4.5": {
+        "model_id": "mammouth/claude-haiku-4-5",
+        "output": "흑백 다게레오타입: 항구 계선장의 선박들\n\n판을 요오드와 브롬 증기로 감광시킨 후, 항구의 수평선을 기준으로 구성한다. 선박들의 돛대와 선체는 화학적 대비를 통해 명확한 관계 구조를 형성하도록 배치된다. 접시 유리 초점은 전경의 계류된 선박들에 설정하고, 후경의 항만 구조물들은 점진적으로 흐려지도록 한다. 물 위의 반사면을 활용하여 톤의 미묘한 변화를 포착한다. 수은 현상 과정에서 금속판 표면에 응축된 수은이 밝은 부분을 형성하고, 하이포 정착으로 안정화된다. 판을 제어된 열로 가열하여 회색 톤을 조절하면서 목재 선체의 질감과 금속 부품들의 반사성을 강조한다. 시간에 따른 빛의 변화는 노출 시간의 선택으로 기록되며, 항구의 일상적 활동과 정박 상태의 명확한 공간적 관계를 금속 표면에 고착시킨다.",
+        "latency_s": 5.04,
+        "word_count": 93,
+        "is_error": false
+      },
+      "GLM-5": {
+        "model_id": "mammouth/glm-5",
+        "output": "[ERROR 504]: <!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!",
+        "latency_s": 60.27,
+        "word_count": 0,
+        "is_error": true
+      },
+      "Kimi-2.5": {
+        "model_id": "mammouth/kimi-k2.5",
+        "output": "[ERROR]: Model returned empty/null content",
+        "latency_s": 23.06,
+        "word_count": 0,
+        "is_error": true
+      }
+    }
+  }
+]
