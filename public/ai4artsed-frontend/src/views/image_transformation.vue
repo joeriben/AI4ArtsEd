@@ -754,6 +754,8 @@ async function startGeneration() {
   // modify the user's original text in the box.
   if (!interceptionDone.value) {
     console.log('[I2I] No interception done — running Stage 2 safety check')
+    isPipelineExecuting.value = true  // Show loading state on button
+    generationErrorMessage.value = ''
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
     try {
@@ -770,6 +772,7 @@ async function startGeneration() {
       // Stage 1 blocked (§86a or DSGVO)
       if (!data.success) {
         generationErrorMessage.value = data.error || 'Safety check failed'
+        isPipelineExecuting.value = false
         console.log('[I2I-STAGE2] Blocked by Stage 1:', data.error)
         return
       }
@@ -795,6 +798,7 @@ async function startGeneration() {
 
       if (isRefusal || wasSubstantiallyChanged) {
         generationErrorMessage.value = isRefusal && result ? result : 'Content blocked by safety check'
+        isPipelineExecuting.value = false
         console.log(`[I2I-STAGE2] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
         return
       }
@@ -803,6 +807,7 @@ async function startGeneration() {
     } catch (e) {
       console.error('[I2I-STAGE2] Safety check error:', e)
       generationErrorMessage.value = 'Safety check unavailable'
+      isPipelineExecuting.value = false
       return
     }
   }

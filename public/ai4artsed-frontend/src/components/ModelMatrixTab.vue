@@ -234,15 +234,16 @@ function getVisionModel(): string {
 
 // Row definitions
 const matrixRows: MatrixRow[] = [
-  { field: 'STAGE1_TEXT_MODEL', label: 'Text Model', stage: 'S1' },
-  { field: 'STAGE1_VISION_MODEL', label: 'Vision Model', stage: 'S1' },
-  { field: 'STAGE2_INTERCEPTION_MODEL', label: 'Interception', stage: 'S2' },
-  { field: 'STAGE2_OPTIMIZATION_MODEL', label: 'Optimization', stage: 'S2' },
-  { field: 'STAGE3_MODEL', label: 'Translation/Safety', stage: 'S3' },
-  { field: 'STAGE4_LEGACY_MODEL', label: 'Legacy Model', stage: 'S4' },
-  { field: 'CHAT_HELPER_MODEL', label: 'Chat Helper', stage: 'H' },
-  { field: 'IMAGE_ANALYSIS_MODEL', label: 'Image Analysis', stage: 'H' },
-  { field: 'CODING_MODEL', label: 'Coding', stage: 'H' },
+  { field: 'STAGE1_TEXT_MODEL', label: 'Translation', stage: 'T' },
+  { field: 'STAGE1_VISION_MODEL', label: 'Image Recognition', stage: 'V' },
+  { field: 'STAGE2_INTERCEPTION_MODEL', label: 'Transformation', stage: 'T' },
+  { field: 'STAGE2_OPTIMIZATION_MODEL', label: 'Optimization', stage: 'T' },
+  { field: 'STAGE3_MODEL', label: 'Safety', stage: 'S' },
+  { field: 'STAGE4_LEGACY_MODEL', label: 'Legacy', stage: 'L' },
+  { field: 'CHAT_HELPER_MODEL', label: 'Chat', stage: 'C' },
+  { field: 'PERSONA_MODEL', label: 'Persona', stage: 'C' },
+  { field: 'IMAGE_ANALYSIS_MODEL', label: 'Image Analysis', stage: 'V' },
+  { field: 'CODING_MODEL', label: 'Code Generation', stage: 'C' },
 ]
 
 // Get local model (from local_llm_presets + vision_presets)

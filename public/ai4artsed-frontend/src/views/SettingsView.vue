@@ -480,6 +480,7 @@ const modelLabelKeys = {
   'STAGE3_MODEL': 'settings.models.stage3',
   'STAGE4_LEGACY_MODEL': 'settings.models.stage4Legacy',
   'CHAT_HELPER_MODEL': 'settings.models.chatHelper',
+  'PERSONA_MODEL': 'settings.models.persona',
   'IMAGE_ANALYSIS_MODEL': 'settings.models.imageAnalysis',
   'CODING_MODEL': 'settings.models.coding'
 }

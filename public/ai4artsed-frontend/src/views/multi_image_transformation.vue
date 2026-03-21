@@ -950,6 +950,8 @@ async function startGeneration() {
   // See image_transformation.vue for detailed comments on the word-overlap approach.
   if (!interceptionDone.value) {
     console.log('[MultiI2I] No interception done — running Stage 2 safety check')
+    isPipelineExecuting.value = true
+    generationErrorMessage.value = ''
     const isDev = import.meta.env.DEV
     const baseUrl = isDev ? 'http://localhost:17802' : ''
     try {
@@ -965,6 +967,7 @@ async function startGeneration() {
 
       if (!data.success) {
         generationErrorMessage.value = data.error || 'Safety check failed'
+        isPipelineExecuting.value = false
         console.log('[MultiI2I-STAGE2] Blocked by Stage 1:', data.error)
         return
       }
@@ -988,6 +991,7 @@ async function startGeneration() {
 
       if (isRefusal || wasSubstantiallyChanged) {
         generationErrorMessage.value = isRefusal && result ? result : 'Content blocked by safety check'
+        isPipelineExecuting.value = false
         console.log(`[MultiI2I-STAGE2] Blocked (refusal=${isRefusal}, changed=${wasSubstantiallyChanged}, overlap=${overlapRatio.toFixed(2)})`)
         return
       }
@@ -996,6 +1000,7 @@ async function startGeneration() {
     } catch (e) {
       console.error('[MultiI2I-STAGE2] Safety check error:', e)
       generationErrorMessage.value = 'Safety check unavailable'
+      isPipelineExecuting.value = false
       return
     }
   }

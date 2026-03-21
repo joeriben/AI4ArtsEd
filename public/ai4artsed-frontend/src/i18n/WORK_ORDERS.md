@@ -21,6 +21,21 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-21-persona-model-and-settings-labels
+- **Session**: 276
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `settings.models.persona` (NEW): "Persona Model"
+  - `settings.models.stage1Text` (MODIFIED): "Stage 1 - Text Model" -> "Translation Model"
+  - `settings.models.stage1Vision` (MODIFIED): "Stage 1 - Vision Model" -> "Image Recognition Model"
+  - `settings.models.stage2Interception` (MODIFIED): "Stage 2 - Interception Model" -> "Transformation Model"
+  - `settings.models.stage2Optimization` (MODIFIED): "Stage 2 - Optimization Model" -> "Prompt Optimization Model"
+  - `settings.models.stage3` (MODIFIED): "Stage 3 - Translation/Safety Model" -> "Safety Model"
+  - `settings.models.stage4Legacy` (MODIFIED): "Stage 4 - Legacy Model" -> "Legacy Model"
+  - `settings.models.chatHelper` (MODIFIED): "Chat Helper Model" -> "Chat Model"
+  - `settings.models.coding` (MODIFIED): "Code Generation (Tone.js, p5.js)" -> "Code Generation Model"
+- **Context**: Settings page model labels. Removed internal pipeline stage numbering (Stage 1/2/3/4) in favor of functional descriptions that make sense to users. Added new PERSONA_MODEL field for Trashy's character mode (uses Opus, while regular chat uses Sonnet).
+
 ### WO-2026-03-21-i2x-default-prompt
 - **Session**: 275
 - **Scope**: en.ts

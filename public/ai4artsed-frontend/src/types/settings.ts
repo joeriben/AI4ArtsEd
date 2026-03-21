@@ -16,6 +16,7 @@ export type ModelField =
   | 'STAGE3_MODEL'
   | 'STAGE4_LEGACY_MODEL'
   | 'CHAT_HELPER_MODEL'
+  | 'PERSONA_MODEL'
   | 'IMAGE_ANALYSIS_MODEL'
   | 'CODING_MODEL'
 
