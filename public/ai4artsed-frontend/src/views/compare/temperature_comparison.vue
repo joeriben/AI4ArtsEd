@@ -10,12 +10,17 @@
           </select>
         </div>
         <div class="input-row">
-          <input
-            v-model="userInput"
-            class="temp-input"
+          <MediaInputBox
+            icon="lightbulb"
+            :label="t('compare.temperature.inputLabel')"
             :placeholder="t('compare.temperature.inputPlaceholder')"
-            @keydown.enter="sendToAll"
+            :value="userInput"
+            @update:value="userInput = $event"
+            :rows="2"
+            :show-translate="false"
+            :show-preset-button="false"
             :disabled="isSending"
+            class="compare-input-box"
           />
           <button
             class="send-btn"
@@ -82,6 +87,7 @@ import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
 import ComparisonChat from '@/components/ComparisonChat.vue'
+import MediaInputBox from '@/components/MediaInputBox.vue'
 
 const { t } = useI18n()
 const store = useTemperatureCompareStore()
@@ -290,30 +296,11 @@ onMounted(() => {
 .input-row {
   display: flex;
   gap: 0.5rem;
+  align-items: flex-end;
 }
 
-.temp-input {
+.compare-input-box {
   flex: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 0.7rem 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.temp-input:focus {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.temp-input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-.temp-input:disabled {
-  opacity: 0.5;
 }
 
 .send-btn {
@@ -500,6 +487,7 @@ onMounted(() => {
   flex-shrink: 0;
   position: sticky;
   top: 80px;
+  height: calc(100vh - 120px - var(--footer-collapsed-height, 36px));
   max-height: calc(100vh - 120px - var(--footer-collapsed-height, 36px));
 }
 

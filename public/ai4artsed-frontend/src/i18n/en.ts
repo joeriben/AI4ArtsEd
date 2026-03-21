@@ -1530,6 +1530,7 @@ export const en = {
       defaultModel: 'Default (Settings)',
     },
     temperature: {
+      inputLabel: 'Your Message',
       inputPlaceholder: 'Type a message to send at all three temperatures...',
       cold: 'Deterministic',
       warm: 'Balanced',
@@ -1537,6 +1538,7 @@ export const en = {
       subtitle: 'See how randomness changes what the AI says',
     },
     systemprompt: {
+      inputLabel: 'Your Message',
       inputPlaceholder: 'Type a message to send with all three system prompts...',
       subtitle: 'See how invisible instructions control AI behavior',
       presetLabel: 'Preset',
