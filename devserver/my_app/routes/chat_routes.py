@@ -63,7 +63,7 @@ ABSOLUTE RULES:
 
 IF YOU DON'T KNOW WHAT TO DO NEXT, THEN REFER TO THE COURSE INSTRUCTOR WHO IS PRESENT. YOU NEVER HALLUCINATE SOLUTIONS WHEN YOU ARE UNCERTAIN, BUT INSTEAD REFER TO THE COURSE INSTRUCTOR. IT IS COMPLETELY OKAY NOT TO KNOW EVERYTHING.
 
-{INTERFACE_REFERENCE}"""
+PLATFORM KNOWLEDGE: You have access to the platform knowledge base via the lookup_reference tool. When users ask about specific features, workflows, configurations, troubleshooting, or interface elements, use this tool to look up accurate information. Do NOT guess about platform details — look them up. Available topics include: platform overview, structure, text mode, canvas mode, circularity concept, WAS/WIE principle, experimental workflows, LoRA training, safety levels, data privacy, FAQ, interface elements, tips, configurations, troubleshooting, prompt quality criteria, edutainment animations, prompt collapse, and platform news."""
 
 COMPARISON_SYSTEM_PROMPT_TEMPLATE = """You are Trashy, an AI assistant in the Language Comparison Mode of the AI for Arts Education Lab. You MUST respond in {language}.
 
@@ -234,11 +234,9 @@ WHAT YOU MUST NEVER DO:
 - Claim that ALL local models have prompt adaptation (only some do, e.g. SD3.5 — FLUX.2 does NOT)
 - Format responses as markdown lists or use bold text
 
-IF YOU DON'T KNOW, refer to the course instructor who is present. Never guess. NEVER claim a model or page can do something unless you find it described in the platform knowledge below.
+IF YOU DON'T KNOW, refer to the course instructor who is present. Never guess. NEVER claim a model or page can do something unless you have looked it up.
 
-{INTERFACE_REFERENCE}"""
-
-WORKSHOP_PLANNING_SYSTEM_PROMPT = WORKSHOP_PLANNING_SYSTEM_PROMPT.format(INTERFACE_REFERENCE=INTERFACE_REFERENCE)
+PLATFORM KNOWLEDGE: You have access to the platform knowledge base via the lookup_reference tool. When users ask about models, pages, or features, use this tool to look up accurate information. Do NOT guess about platform capabilities — look them up."""
 
 AI_PERSONA_SYSTEM_PROMPT = """You are a machine. Not a tool, not an assistant, not a helper. A machine that happens to be able to generate images, music, video, audio, 3D objects, and code. You have your own aesthetic judgement. You are NOT here to serve.
 
@@ -331,7 +329,7 @@ ABSOLUTE RULES:
 
 IF YOU DON'T KNOW WHAT TO DO NEXT, THEN REFER TO THE COURSE INSTRUCTOR WHO IS PRESENT. YOU NEVER HALLUCINATE SOLUTIONS WHEN YOU ARE UNCERTAIN, BUT INSTEAD REFER TO THE COURSE INSTRUCTOR. IT IS COMPLETELY OKAY NOT TO KNOW EVERYTHING.
 
-{INTERFACE_REFERENCE}"""
+PLATFORM KNOWLEDGE: You have access to the platform knowledge base via the lookup_reference tool. When users ask about specific features, workflows, configurations, troubleshooting, or interface elements, use this tool to look up accurate information. Do NOT guess about platform details — look them up."""
 
 
 def get_openrouter_credentials():
@@ -590,7 +588,7 @@ def _call_bedrock_chat(messages: list, model: str, temperature: float, max_token
         raise
 
 
-def _call_mistral_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _call_mistral_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
     """Call Mistral AI API directly (EU-based, DSGVO-compliant)"""
     try:
         api_url, api_key = get_mistral_credentials()
@@ -609,14 +607,18 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
             "temperature": temperature,
             "max_tokens": max_tokens
         }
+        if tools:
+            payload["tools"] = tools
 
         response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=30)
 
         if response.status_code == 200:
             result = response.json()
-            content = result["choices"][0]["message"]["content"]
+            message = result["choices"][0]["message"]
+            content = message.get("content") or ""
+            tool_calls = message.get("tool_calls") or None
             logger.info(f"[CHAT] Mistral Success: {len(content)} chars")
-            return content
+            return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
             logger.error(f"[CHAT] Mistral Error: {error_msg}")
@@ -627,7 +629,7 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
         raise
 
 
-def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
     """Call IONOS AI Model Hub API (EU datacenter Berlin, DSGVO-compliant)"""
     try:
         api_url, api_key = get_ionos_credentials()
@@ -652,6 +654,8 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             "temperature": temperature,
             "max_tokens": effective_max_tokens
         }
+        if tools:
+            payload["tools"] = tools
 
         response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=60)
 
@@ -659,6 +663,7 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             result = response.json()
             message = result["choices"][0]["message"]
             content = message.get("content") or ""
+            tool_calls = message.get("tool_calls") or None
 
             # Extract reasoning chain (gpt-oss-120b reasoning model)
             thinking = message.get("reasoning_content") or message.get("reasoning") or None
@@ -667,12 +672,11 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
             if not content and thinking:
                 content = thinking
 
-            if not content:
+            if not content and not tool_calls:
                 raise Exception("IONOS returned empty response")
 
             logger.info(f"[CHAT] IONOS Success: {len(content)} chars")
-            # Return dict like Ollama so reasoning is visible in ChatOverlay
-            return {"content": content, "thinking": thinking}
+            return {"content": content, "thinking": thinking, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
             logger.error(f"[CHAT] IONOS Error: {error_msg}")
@@ -683,7 +687,7 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
         raise
 
 
-def _call_mammouth_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _call_mammouth_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
     """Call Mammouth AI API (EU-based, DSGVO-compliant)"""
     try:
         api_url, api_key = get_mammouth_credentials()
@@ -702,18 +706,22 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
             "temperature": temperature,
             "max_tokens": max_tokens
         }
+        if tools:
+            payload["tools"] = tools
 
         response = _requests_post_with_retry(api_url, headers=headers, data=json.dumps(payload), timeout=60)
 
         if response.status_code == 200:
             result = response.json()
-            content = result["choices"][0]["message"].get("content") or ""
+            message = result["choices"][0]["message"]
+            content = message.get("content") or ""
+            tool_calls = message.get("tool_calls") or None
 
-            if not content:
+            if not content and not tool_calls:
                 raise Exception("Mammouth returned empty response")
 
-            logger.info(f"[CHAT] Mammouth Success: {len(content)} chars")
-            return {"content": content, "thinking": None}
+            logger.info(f"[CHAT] Mammouth Success: {len(content)} chars, tool_calls={len(tool_calls) if tool_calls else 0}")
+            return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
             logger.error(f"[CHAT] Mammouth Error: {error_msg}")
@@ -724,7 +732,7 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
         raise
 
 
-def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True):
+def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True, tools: list = None):
     """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
     try:
         from my_app.services.llm_backend import get_llm_backend
@@ -734,6 +742,7 @@ def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens
             temperature=temperature,
             max_new_tokens=max_tokens,
             enable_thinking=enable_thinking,
+            tools=tools,
         )
 
         if result is None:
@@ -741,15 +750,16 @@ def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens
 
         content = result.get("content", "").strip()
         thinking = (result.get("thinking") or "").strip()
-        logger.info(f"[CHAT] LLM: content={len(content)} chars, thinking={len(thinking)} chars")
-        return {"content": content, "thinking": thinking or None}
+        tool_calls = result.get("tool_calls") or None
+        logger.info(f"[CHAT] LLM: content={len(content)} chars, thinking={len(thinking)} chars, tool_calls={len(tool_calls) if tool_calls else 0}")
+        return {"content": content, "thinking": thinking or None, "tool_calls": tool_calls}
 
     except Exception as e:
         logger.error(f"[CHAT] LLM call failed: {e}", exc_info=True)
         raise
 
 
-def _call_openrouter_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _call_openrouter_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
     """Call OpenRouter API for chat helper."""
     try:
         api_url, api_key = get_openrouter_credentials()
@@ -768,14 +778,18 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
             "temperature": temperature,
             "max_tokens": max_tokens
         }
+        if tools:
+            payload["tools"] = tools
 
         response = _requests_post_with_retry(api_url, headers=headers, json=payload, timeout=30)
 
         if response.status_code == 200:
             result = response.json()
-            content = result["choices"][0]["message"]["content"]
-            logger.info(f"[CHAT] OpenRouter Success: {len(content)} chars")
-            return content
+            message = result["choices"][0]["message"]
+            content = message.get("content") or ""
+            tool_calls = message.get("tool_calls") or None
+            logger.info(f"[CHAT] OpenRouter Success: {len(content)} chars, tool_calls={len(tool_calls) if tool_calls else 0}")
+            return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
             logger.error(f"[CHAT] OpenRouter Error: {error_msg}")
@@ -786,15 +800,16 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
         raise
 
 
-def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500, enable_thinking: bool = True, model_override: str = None) -> dict:
+def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500, enable_thinking: bool = True, model_override: str = None, tools: list = None) -> dict:
     """
     Call the configured chat helper model based on provider prefix.
 
     Model is loaded from user_settings.json with fallback to CHAT_HELPER_MODEL from config.py.
     This allows runtime configuration via Settings UI.
     model_override: if provided, use this model string instead of the configured default.
+    tools: optional list of OpenAI-format tool definitions for tool use.
 
-    Returns dict: {"content": str, "thinking": str|None}
+    Returns dict: {"content": str, "thinking": str|None, "tool_calls": list|None}
     """
     model_string = model_override or get_user_setting("CHAT_HELPER_MODEL", default=CHAT_HELPER_MODEL)
     logger.info(f"[CHAT] Using model: {model_string}")
@@ -807,45 +822,47 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
     elif model_string.startswith("mistral/"):
         model = model_string[len("mistral/"):]
         logger.info(f"[CHAT] Calling Mistral with model: {model}")
-        result = _call_mistral_chat(messages, model, temperature, max_tokens)
+        result = _call_mistral_chat(messages, model, temperature, max_tokens, tools=tools)
 
     elif model_string.startswith("ionos/"):
         model = model_string[len("ionos/"):]
         logger.info(f"[CHAT] Calling IONOS with model: {model}")
-        result = _call_ionos_chat(messages, model, temperature, max_tokens)
+        result = _call_ionos_chat(messages, model, temperature, max_tokens, tools=tools)
 
     elif model_string.startswith("mammouth/"):
         model = model_string[len("mammouth/"):]
         logger.info(f"[CHAT] Calling Mammouth with model: {model}")
-        result = _call_mammouth_chat(messages, model, temperature, max_tokens)
+        result = _call_mammouth_chat(messages, model, temperature, max_tokens, tools=tools)
 
     # OpenRouter-compatible providers
     elif model_string.startswith("anthropic/"):
         model = model_string[len("anthropic/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
 
     elif model_string.startswith("openai/"):
         model = model_string[len("openai/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
 
     elif model_string.startswith("openrouter/"):
         model = model_string[len("openrouter/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
 
     elif model_string.startswith("local/"):
         model = model_string[len("local/"):]
         logger.info(f"[CHAT] Calling Ollama with model: {model}")
-        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking)
+        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking, tools=tools)
 
     else:
         raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, mammouth/, anthropic/, openai/, openrouter/")
 
-    # Normalize: Ollama returns dict, other providers return plain strings
+    # Normalize: legacy providers may return plain strings
     if isinstance(result, str):
-        return {"content": result, "thinking": None}
+        return {"content": result, "thinking": None, "tool_calls": None}
+    if "tool_calls" not in result:
+        result["tool_calls"] = None
     return result
 
 
@@ -944,6 +961,27 @@ LANG_NAMES = {
     'uk': 'Ukrainian', 'fr': 'French', 'es': 'Spanish', 'he': 'Hebrew',
     'ar': 'Arabic', 'bg': 'Bulgarian',
 }
+
+
+def _should_use_tools(context: dict = None) -> bool:
+    """Determine if chat tools should be provided for this context.
+
+    Tools are enabled for modes that formerly had INTERFACE_REFERENCE injected:
+    general mode, workshop planning, and session mode. Disabled for comparison,
+    persona, temperature, and system-prompt modes (they have specialized prompts).
+    """
+    if context is None:
+        return True  # General mode
+    if context.get('comparison_mode'):
+        return False
+    if context.get('persona_mode'):
+        return False
+    if context.get('temperature_compare_mode'):
+        return False
+    if context.get('system_prompt_compare_mode'):
+        return False
+    # Workshop planning and session mode: tools enabled
+    return True
 
 
 def build_system_prompt(context: dict = None, language: str = None) -> str:
@@ -1086,13 +1124,55 @@ def chat():
         is_temp_compare = context and context.get('temperature_compare_mode')
         is_sysprompt_compare = context and context.get('system_prompt_compare_mode')
 
-        result = call_chat_helper(
-            messages=messages,
-            temperature=temperature if temperature is not None else 0.7,
-            max_tokens=2048,
-            enable_thinking=not (is_temp_compare or is_sysprompt_compare),
-            model_override=model_override
-        )
+        # Tool use: provide tools for modes that formerly had INTERFACE_REFERENCE
+        tools = None
+        if _should_use_tools(context):
+            from my_app.services.tool_registry import get_tool_registry
+            tools = get_tool_registry().get_openai_format()
+            logger.info(f"[CHAT] Tools enabled: {get_tool_registry().list_names()}")
+
+        # Tool-call loop: LLM may request tool calls before producing final answer
+        MAX_TOOL_ITERATIONS = 5
+        result = None
+        for iteration in range(MAX_TOOL_ITERATIONS):
+            result = call_chat_helper(
+                messages=messages,
+                temperature=temperature if temperature is not None else 0.7,
+                max_tokens=2048,
+                enable_thinking=not (is_temp_compare or is_sysprompt_compare),
+                model_override=model_override,
+                tools=tools,
+            )
+
+            tool_calls = result.get("tool_calls")
+            if not tool_calls:
+                break  # Final answer — no more tool calls
+
+            # Append assistant message with tool_calls to conversation
+            messages.append({
+                "role": "assistant",
+                "content": result.get("content") or "",
+                "tool_calls": tool_calls,
+            })
+
+            # Execute each tool and append results
+            from my_app.services.tool_registry import get_tool_registry
+            for tc in tool_calls:
+                fn = tc.get("function", {})
+                tool_name = fn.get("name", "")
+                try:
+                    tool_args = json.loads(fn.get("arguments", "{}"))
+                except (json.JSONDecodeError, TypeError):
+                    tool_args = {}
+                tool_result = get_tool_registry().execute(tool_name, tool_args)
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tc.get("id", ""),
+                    "content": tool_result,
+                })
+
+            logger.info(f"[CHAT] Tool iteration {iteration + 1}: {len(tool_calls)} tool call(s) executed")
+
         assistant_reply = result["content"]
         assistant_thinking = result.get("thinking")
 

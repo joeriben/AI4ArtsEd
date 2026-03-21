@@ -24,7 +24,8 @@ class LLMClient:
                      keep_alive: str = "10m",
                      repetition_penalty: Optional[float] = None,
                      enable_thinking: bool = True,
-                     timeout: int = 120) -> Optional[Dict[str, Any]]:
+                     timeout: int = 120,
+                     tools: Optional[list] = None) -> Optional[Dict[str, Any]]:
         """Ollama chat endpoint."""
         import requests
 
@@ -55,6 +56,10 @@ class LLMClient:
             payload["think"] = False
             logger.debug(f"[LLM-CLIENT] Thinking disabled for {ollama_model}, payload has think={payload.get('think')}")
 
+        # Tool use support (Ollama 0.4+)
+        if tools:
+            payload["tools"] = tools
+
         try:
             resp = requests.post(f"{self.ollama_url}/api/chat", json=payload, timeout=timeout)
             resp.raise_for_status()
@@ -62,6 +67,7 @@ class LLMClient:
             return {
                 "content": msg.get("content", "").strip(),
                 "thinking": msg.get("thinking", "").strip() or None,
+                "tool_calls": msg.get("tool_calls") or None,
             }
         except Exception as e:
             logger.error(f"[LLM-CLIENT] Ollama chat failed ({ollama_model}): {e}")
@@ -112,13 +118,15 @@ class LLMClient:
              keep_alive: str = "10m",
              repetition_penalty: Optional[float] = None,
              enable_thinking: bool = True,
-             timeout: int = 120) -> Optional[Dict[str, Any]]:
+             timeout: int = 120,
+             tools: Optional[list] = None) -> Optional[Dict[str, Any]]:
         """Messages-based chat via Ollama.
 
-        Returns {"content": str, "thinking": str|None} or None on failure.
+        Returns {"content": str, "thinking": str|None, "tool_calls": list|None} or None on failure.
         """
         return self._ollama_chat(model, messages, images, temperature, max_new_tokens,
-                                 keep_alive, repetition_penalty, enable_thinking, timeout)
+                                 keep_alive, repetition_penalty, enable_thinking, timeout,
+                                 tools=tools)
 
     def generate(self, model: str, prompt: str,
                  temperature: float = 0.7, max_new_tokens: int = 500,
