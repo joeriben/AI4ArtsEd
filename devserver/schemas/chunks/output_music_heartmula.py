@@ -83,6 +83,19 @@ async def execute(
     if not tags and TEXT_2 is not None:
         tags = TEXT_2
 
+    # Single-input mode (Persona, API): split "lyrics || tags" into parts
+    # If TEXT_2 was not provided, check if lyrics contains the separator
+    if not tags and lyrics and ' || ' in lyrics:
+        parts = lyrics.split(' || ', 1)
+        lyrics = parts[0].strip()
+        tags = parts[1].strip()
+        logger.info(f"[CHUNK:heartmula] Split single input: lyrics={len(lyrics)} chars, tags='{tags}'")
+    elif not tags and lyrics:
+        # No separator found: treat entire input as tags (instrumental, no lyrics)
+        tags = lyrics
+        lyrics = ""
+        logger.info(f"[CHUNK:heartmula] No separator found, instrumental mode: tags='{tags}'")
+
     # Apply defaults
     temperature = temperature if temperature is not None else DEFAULTS["temperature"]
     topk = topk if topk is not None else DEFAULTS["topk"]
@@ -93,7 +106,7 @@ async def execute(
     if seed is None or seed == "random":
         seed = random.randint(0, 2**32 - 1)
 
-    logger.info(f"[CHUNK:heartmula] Executing with lyrics={len(lyrics)} chars")
+    logger.info(f"[CHUNK:heartmula] Executing with lyrics={len(lyrics) if lyrics else 0} chars")
     logger.info(f"[CHUNK:heartmula] Tags (full): '{tags}'")
     logger.info(f"[CHUNK:heartmula] Parameters: temp={temperature}, topk={topk}, cfg={cfg_scale}, max_ms={max_audio_length_ms}, seed={seed}")
 
@@ -110,10 +123,10 @@ async def execute(
         logger.error("[CHUNK:heartmula] Backend not available")
         raise Exception("HeartMuLa not available. Check heartlib installation and model files.")
 
-    # Validate input
-    if not lyrics or not lyrics.strip():
-        logger.error("[CHUNK:heartmula] No lyrics provided")
-        raise ValueError("No lyrics provided for music generation")
+    # Validate input: either lyrics or tags must be present
+    if (not lyrics or not lyrics.strip()) and (not tags or not tags.strip()):
+        logger.error("[CHUNK:heartmula] No lyrics and no tags provided")
+        raise ValueError("No input provided for music generation (need lyrics, tags, or both)")
 
     # Validate lyrics length (HeartMuLa has token limits)
     MAX_LYRICS_CHARS = 2000  # Conservative limit
