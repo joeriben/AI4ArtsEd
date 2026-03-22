@@ -25,29 +25,40 @@ import config
 
 logger = logging.getLogger(__name__)
 
-# ============================================================================
-# CURATED LLM MODELS - Top-tier models only (5-10 max)
-# ============================================================================
-# Session 147: Simplified to only high-performance models
-# DSGVO: Mistral (EU-based), Local (Ollama)
-# ============================================================================
+def _load_cloud_models_from_matrix():
+    """
+    Load cloud LLM models from hardware_matrix.json (single source of truth).
+    Returns deduplicated list of model dicts with id, name, provider, dsgvo.
+    """
+    import os
+    matrix_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'hardware_matrix.json')
+    try:
+        import json
+        with open(matrix_path) as f:
+            matrix = json.load(f)
+    except Exception as e:
+        logger.warning(f"[Canvas LLM] Failed to load hardware_matrix.json: {e}")
+        return []
 
-CURATED_TOP_MODELS = [
-    # Anthropic Claude 4.5 Series - via OpenRouter (requires openrouter.key)
-    {'id': 'openrouter/anthropic/claude-opus-4.5', 'name': 'Claude Opus 4.5 (OpenRouter)', 'provider': 'openrouter', 'dsgvo': False},
-    {'id': 'openrouter/anthropic/claude-sonnet-4.5', 'name': 'Claude Sonnet 4.5 (OpenRouter)', 'provider': 'openrouter', 'dsgvo': False},
-    {'id': 'openrouter/anthropic/claude-haiku-4.5', 'name': 'Claude Haiku 4.5 (OpenRouter)', 'provider': 'openrouter', 'dsgvo': False},
-    # Anthropic Claude 4.5 Series - direct API (requires anthropic.key)
-    {'id': 'anthropic/claude-opus-4.5', 'name': 'Claude Opus 4.5 (Anthropic)', 'provider': 'anthropic', 'dsgvo': False},
-    {'id': 'anthropic/claude-sonnet-4.5', 'name': 'Claude Sonnet 4.5 (Anthropic)', 'provider': 'anthropic', 'dsgvo': False},
-    {'id': 'anthropic/claude-haiku-4.5', 'name': 'Claude Haiku 4.5 (Anthropic)', 'provider': 'anthropic', 'dsgvo': False},
-    # Google
-    {'id': 'google/gemini-3-pro', 'name': 'Gemini 3 Pro', 'provider': 'google', 'dsgvo': False},
-    # Mistral (DSGVO-compliant - EU-based)
-    {'id': 'mistral/mistral-large-2512', 'name': 'Mistral Large 3', 'provider': 'mistral', 'dsgvo': True},
-    # Meta
-    {'id': 'meta/llama-4-maverick', 'name': 'Llama 4 Maverick', 'provider': 'meta', 'dsgvo': False},
-]
+    seen_ids = set()
+    cloud_models = []
+    for _provider_key, preset in matrix.get('llm_presets', {}).items():
+        label = preset.get('label', _provider_key.title())
+        provider = preset.get('EXTERNAL_LLM_PROVIDER', _provider_key)
+        dsgvo = preset.get('DSGVO_CONFORMITY', False)
+        for _role, model_id in preset.get('models', {}).items():
+            if model_id and model_id not in seen_ids:
+                seen_ids.add(model_id)
+                # Derive display name from model_id (provider/model-name → model-name (Label))
+                parts = model_id.split('/', 1)
+                display_name = parts[1] if len(parts) == 2 else model_id
+                cloud_models.append({
+                    'id': model_id,
+                    'name': f"{display_name} ({label})",
+                    'provider': provider,
+                    'dsgvo': dsgvo
+                })
+    return cloud_models
 
 # ============================================================================
 # RANDOM PROMPT PRESETS (Session 140)
@@ -239,25 +250,12 @@ def _load_config_summaries(config_type: str) -> list:
 @canvas_bp.route('/api/canvas/llm-models', methods=['GET'])
 def get_llm_models():
     """
-    Get curated LLM models + dynamic Ollama models for Canvas nodes
+    Get available LLM models for Canvas nodes.
 
-    Session 133: Replaced hardcoded config.py values with:
-    1. Dynamic Ollama models (via ModelSelector.get_ollama_models())
-    2. Curated models per provider (small/medium/top tiers)
-
-    Provider prefixes:
-    - local/ → Ollama / local models (DSGVO-compliant ✓)
-    - anthropic/ → Anthropic Claude (NOT DSGVO-compliant ✗)
-    - mistral/ → Mistral AI EU (DSGVO-compliant ✓)
-    - google/ → Google AI (NOT DSGVO-compliant ✗)
-    - meta/ → Meta AI (NOT DSGVO-compliant ✗)
-
-    Returns:
-        {
-            "models": [...],
-            "count": N,
-            "ollamaCount": M  # Number of dynamic Ollama models
-        }
+    Sources (all dynamic, no hardcoded model lists):
+    1. Ollama models (local, queried live)
+    2. Cloud models from hardware_matrix.json (single source of truth)
+    3. Configured default model (injected if not already in list)
     """
     selector = ModelSelector()
     models = []
@@ -285,21 +283,25 @@ def get_llm_models():
     except Exception as e:
         logger.warning(f"[Canvas LLM] Failed to load Ollama models: {e}")
 
-    # 2. Curated top-tier models (Session 147: simplified to 5-10 models)
-    for model in CURATED_TOP_MODELS:
-        models.append({
-            'id': model['id'],
-            'name': model['name'],
-            'provider': model['provider'],
-            'tier': 'top',
-            'dsgvoCompliant': model['dsgvo'],
-            'isDefault': model['id'] == default_model_id
-        })
+    # 2. Cloud models from hardware_matrix.json (single source of truth)
+    cloud_models = _load_cloud_models_from_matrix()
+    seen_ids = {m['id'] for m in models}  # skip Ollama duplicates
+    cloud_count = 0
+    for cm in cloud_models:
+        if cm['id'] not in seen_ids:
+            seen_ids.add(cm['id'])
+            models.append({
+                'id': cm['id'],
+                'name': cm['name'],
+                'provider': cm['provider'],
+                'tier': 'cloud',
+                'dsgvoCompliant': cm['dsgvo'],
+                'isDefault': cm['id'] == default_model_id
+            })
+            cloud_count += 1
 
-    # 3. Ensure the configured default model is always present in the list.
-    # Works for ANY provider — no brand names hardcoded.
-    default_found = any(m['isDefault'] for m in models)
-    if not default_found and default_model_id:
+    # 3. Ensure the configured default is always present (even if not in matrix)
+    if default_model_id and not any(m['isDefault'] for m in models):
         parts = default_model_id.split('/', 1)
         provider_prefix = parts[0] if len(parts) == 2 else 'unknown'
         model_name = parts[1] if len(parts) == 2 else default_model_id
@@ -314,7 +316,7 @@ def get_llm_models():
         })
         logger.info(f"[Canvas LLM] Injected configured default: {default_model_id}")
 
-    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({ollama_count} Ollama + {len(models) - ollama_count} curated/configured)")
+    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({ollama_count} Ollama + {cloud_count} cloud)")
 
     return jsonify({
         'status': 'success',
