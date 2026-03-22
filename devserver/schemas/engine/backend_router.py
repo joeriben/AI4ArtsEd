@@ -414,7 +414,7 @@ class BackendRouter:
             schema_output = request.prompt
 
             # Check if we have an output_chunk specified
-            output_chunk_name = request.parameters.get('output_chunk')
+            output_chunk_name = request.parameters.get('output_chunk') or request.parameters.get('OUTPUT_CHUNK')
 
             if output_chunk_name:
                 # Python chunks (new standard) bypass JSON type-routing
