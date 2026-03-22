@@ -37,6 +37,12 @@
         >
           {{ $t('settings.tabs.status') }}
         </button>
+        <button
+          :class="['tab-btn', { active: activeTab === 'api' }]"
+          @click="activeTab = 'api'"
+        >
+          {{ $t('settings.tabs.api') }}
+        </button>
       </div>
     </div>
 
@@ -48,6 +54,11 @@
     <!-- Backend Status Tab -->
     <div v-if="activeTab === 'status'">
       <BackendStatusTab />
+    </div>
+
+    <!-- API Management Tab -->
+    <div v-if="activeTab === 'api'">
+      <ApiManagementTab />
     </div>
 
     <!-- Configuration Tab -->
@@ -439,6 +450,7 @@ import SessionExportView from '../components/SessionExportView.vue'
 import SettingsAuthModal from '../components/SettingsAuthModal.vue'
 import ModelMatrixTab from '../components/ModelMatrixTab.vue'
 import BackendStatusTab from '../components/BackendStatusTab.vue'
+import ApiManagementTab from '../components/ApiManagementTab.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 

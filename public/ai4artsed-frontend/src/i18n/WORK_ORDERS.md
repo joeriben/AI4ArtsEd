@@ -21,6 +21,47 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-22-api-management-tab
+- **Session**: 280
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `settings.tabs.api` (NEW): "API Management"
+  - `settings.apiManagement.loading` (NEW): "Loading API usage data..."
+  - `settings.apiManagement.refresh` (NEW): "Refresh"
+  - `settings.apiManagement.refreshing` (NEW): "Refreshing..."
+  - `settings.apiManagement.activeProvider` (NEW): "Active Cloud Provider"
+  - `settings.apiManagement.noProvider` (NEW): "No cloud provider configured (local only)"
+  - `settings.apiManagement.accountOverview` (NEW): "Account Overview"
+  - `settings.apiManagement.currentSpend` (NEW): "Current Spend"
+  - `settings.apiManagement.budgetLimit` (NEW): "Budget Limit"
+  - `settings.apiManagement.remaining` (NEW): "Remaining"
+  - `settings.apiManagement.unlimited` (NEW): "Unlimited"
+  - `settings.apiManagement.resetDate` (NEW): "Budget Reset"
+  - `settings.apiManagement.rateLimit` (NEW): "Rate Limit"
+  - `settings.apiManagement.billingError` (NEW): "Could not fetch billing data"
+  - `settings.apiManagement.localUsage` (NEW): "Local Usage Tracking"
+  - `settings.apiManagement.noUsageData` (NEW): "No usage data recorded yet..."
+  - `settings.apiManagement.calls` (NEW): "Calls"
+  - `settings.apiManagement.inputTokens` (NEW): "Input Tokens"
+  - `settings.apiManagement.outputTokens` (NEW): "Output Tokens"
+  - `settings.apiManagement.byModel` (NEW): "By Model"
+  - `settings.apiManagement.byStage` (NEW): "By Stage"
+  - `settings.apiManagement.byDate` (NEW): "By Date"
+  - `settings.apiManagement.stage` (NEW): "Stage"
+  - `settings.apiManagement.model` (NEW): "Model"
+  - `settings.apiManagement.date` (NEW): "Date"
+  - `settings.apiManagement.showAll` (NEW): "Show all"
+  - `settings.apiManagement.showLess` (NEW): "Show less"
+  - `settings.apiManagement.providerStatus` (NEW): "Provider Status"
+  - `settings.apiManagement.provider` (NEW): "Provider"
+  - `settings.apiManagement.apiKey` (NEW): "API Key"
+  - `settings.apiManagement.region` (NEW): "Region"
+  - `settings.apiManagement.configured` (NEW): "Configured"
+  - `settings.apiManagement.notConfigured` (NEW): "Not Configured"
+  - `settings.apiManagement.modelAssignments` (NEW): "Model Assignments"
+  - `settings.apiManagement.function` (NEW): "Function"
+- **Context**: New Settings tab for API cost management. Shows Mammouth billing (spend/budget/remaining), local token usage tracking per model and pipeline stage, provider status, and model assignments. Admin-facing, technical tone.
+
 ### WO-2026-03-22-queue-transparency-device-lock
 - **Session**: 279
 - **Scope**: en.ts

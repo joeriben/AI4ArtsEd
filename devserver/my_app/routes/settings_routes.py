@@ -2345,3 +2345,119 @@ def gpu_vram_status():
         return jsonify({"error": "GPU service unreachable"}), 503
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ============================================================================
+# API Usage & Billing
+# ============================================================================
+
+def _read_key_value(key_file: Path) -> str:
+    """Read API key from .key file, skipping comment lines."""
+    if not key_file.exists():
+        return ""
+    try:
+        with open(key_file) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and not line.startswith('/'):
+                    return line
+    except Exception:
+        pass
+    return ""
+
+
+def _fetch_mammouth_billing(api_key: str) -> dict:
+    """Query Mammouth LiteLLM /key/info for spend/budget data."""
+    try:
+        resp = requests.get(
+            f"https://api.mammouth.ai/key/info",
+            params={"key": api_key},
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=10,
+        )
+        if resp.status_code != 200:
+            return {"error": f"HTTP {resp.status_code}"}
+
+        data = resp.json()
+        info = data.get("info", data)
+        spend = info.get("spend", 0) or 0
+        max_budget = info.get("max_budget")
+        remaining = (max_budget - spend) if max_budget else None
+        return {
+            "spend": round(spend, 4),
+            "max_budget": max_budget,
+            "remaining": round(remaining, 4) if remaining is not None else None,
+            "budget_reset_at": info.get("budget_reset_at"),
+            "budget_duration": info.get("budget_duration"),
+            "rpm_limit": info.get("rpm_limit"),
+            "tpm_limit": info.get("tpm_limit"),
+            "error": None,
+        }
+    except requests.Timeout:
+        return {"error": "Mammouth API timeout"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@settings_bp.route('/api-usage', methods=['GET'])
+@require_settings_auth
+def api_usage():
+    """Return API usage data: Mammouth billing + local token tracking."""
+    from my_app.services.usage_tracker import get_usage_tracker
+
+    days = request.args.get('days', 30, type=int)
+
+    # --- Mammouth billing ---
+    mammouth_key = _read_key_value(MAMMOUTH_KEY_FILE)
+    mammouth_billing = None
+    if mammouth_key:
+        mammouth_billing = _fetch_mammouth_billing(mammouth_key)
+
+    # --- Local usage tracking ---
+    local_usage = get_usage_tracker().get_aggregated(days=days)
+
+    # --- Provider key status ---
+    providers = {
+        "mammouth":   {"key_configured": bool(mammouth_key), "dsgvo": True, "region": "EU"},
+        "openrouter": {"key_configured": OPENROUTER_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
+        "anthropic":  {"key_configured": ANTHROPIC_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
+        "openai":     {"key_configured": OPENAI_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
+        "mistral":    {"key_configured": MISTRAL_KEY_FILE.exists(), "dsgvo": True, "region": "EU"},
+        "ionos":      {"key_configured": IONOS_KEY_FILE.exists(), "dsgvo": True, "region": "EU Berlin"},
+    }
+
+    # --- Active provider + model assignments ---
+    settings = {}
+    if SETTINGS_FILE.exists():
+        try:
+            with open(SETTINGS_FILE) as f:
+                settings = json.load(f)
+        except Exception:
+            pass
+
+    active_provider = settings.get("EXTERNAL_LLM_PROVIDER", "none")
+
+    model_fields = {
+        "Translation": "STAGE1_TEXT_MODEL",
+        "Transformation": "STAGE2_INTERCEPTION_MODEL",
+        "Optimization": "STAGE2_OPTIMIZATION_MODEL",
+        "Safety": "STAGE3_MODEL",
+        "Legacy": "STAGE4_LEGACY_MODEL",
+        "Chat": "CHAT_HELPER_MODEL",
+        "Persona": "PERSONA_MODEL",
+        "Image Analysis": "IMAGE_ANALYSIS_MODEL",
+        "Coding": "CODING_MODEL",
+    }
+    model_assignments = {}
+    for label, key in model_fields.items():
+        val = settings.get(key, "") or getattr(config, key, "")
+        if val:
+            model_assignments[label] = val
+
+    return jsonify({
+        "mammouth_billing": mammouth_billing,
+        "local_usage": local_usage,
+        "providers": providers,
+        "active_provider": active_provider,
+        "model_assignments": model_assignments,
+    })

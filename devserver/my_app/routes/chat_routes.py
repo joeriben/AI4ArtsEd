@@ -22,6 +22,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from config import JSON_STORAGE_DIR, CHAT_HELPER_MODEL
 from my_app.services.pipeline_recorder import load_recorder
+from my_app.services.usage_tracker import get_usage_tracker, extract_usage
 
 logger = logging.getLogger(__name__)
 
@@ -657,6 +658,12 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
             content = message.get("content") or ""
             tool_calls = message.get("tool_calls") or None
             logger.info(f"[CHAT] Mistral Success: {len(content)} chars")
+
+            inp, out = extract_usage(result, "mistral")
+            if inp or out:
+                get_usage_tracker().log(model=model, provider="mistral",
+                                        stage="chat", input_tokens=inp, output_tokens=out)
+
             return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
@@ -715,6 +722,12 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
                 raise Exception("IONOS returned empty response")
 
             logger.info(f"[CHAT] IONOS Success: {len(content)} chars")
+
+            inp, out = extract_usage(result, "ionos")
+            if inp or out:
+                get_usage_tracker().log(model=model, provider="ionos",
+                                        stage="chat", input_tokens=inp, output_tokens=out)
+
             return {"content": content, "thinking": thinking, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
@@ -760,6 +773,12 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
                 raise Exception("Mammouth returned empty response")
 
             logger.info(f"[CHAT] Mammouth Success: {len(content)} chars, tool_calls={len(tool_calls) if tool_calls else 0}")
+
+            inp, out = extract_usage(result, "mammouth")
+            if inp or out:
+                get_usage_tracker().log(model=model, provider="mammouth",
+                                        stage="chat", input_tokens=inp, output_tokens=out)
+
             return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"
@@ -828,6 +847,12 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
             content = message.get("content") or ""
             tool_calls = message.get("tool_calls") or None
             logger.info(f"[CHAT] OpenRouter Success: {len(content)} chars, tool_calls={len(tool_calls) if tool_calls else 0}")
+
+            inp, out = extract_usage(result, "openrouter")
+            if inp or out:
+                get_usage_tracker().log(model=model, provider="openrouter",
+                                        stage="chat", input_tokens=inp, output_tokens=out)
+
             return {"content": content, "thinking": None, "tool_calls": tool_calls}
         else:
             error_msg = f"API Error: {response.status_code}\n{response.text}"

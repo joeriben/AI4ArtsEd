@@ -18,6 +18,7 @@ from typing import Optional
 
 import requests
 from PIL import Image
+from my_app.services.usage_tracker import get_usage_tracker, extract_usage
 
 import config
 
@@ -176,6 +177,12 @@ def _call_verdict_model(prompt: str) -> Optional[str]:
                 logger.error(f"[VLM-SAFETY] {provider} API error: {response.status_code} {response.text[:200]}")
                 return None
             result = response.json()
+
+            inp, out = extract_usage(result, provider)
+            if inp or out:
+                get_usage_tracker().log(model=model, provider=provider,
+                                        stage="stage3", input_tokens=inp, output_tokens=out)
+
             return result['choices'][0]['message']['content'].strip()
         except Exception as e:
             logger.error(f"[VLM-SAFETY] {provider} API call failed: {e}")

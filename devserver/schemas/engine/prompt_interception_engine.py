@@ -38,6 +38,7 @@ from .model_selector import model_selector
 # Import config module for live UI_MODE access (not cached copy)
 import config as _config
 from config import LLM_API_TIMEOUT, DSGVO_ONLY_FALLBACK, DSGVO_SAFE_PROVIDERS, ALL_CLOUD_PROVIDERS
+from my_app.services.usage_tracker import get_usage_tracker, extract_usage
 
 # UI_MODE-adaptive length guidance (injected into prompt, NOT hard-truncated)
 # The LLM is instructed to stay within this word budget.
@@ -104,6 +105,8 @@ class PromptInterceptionEngine:
         self.model_selector = model_selector
         self.openrouter_models = self.model_selector.get_openrouter_models()
         self.ollama_models = self.model_selector.get_ollama_models()
+        # Set by stage orchestrator before calling process_request()
+        self._current_stage: str = "stage2"
 
     @staticmethod
     def _requests_post_with_retry(url, max_retries=3, retry_on=(429, 502, 503, 504), **kwargs):
@@ -344,6 +347,11 @@ class PromptInterceptionEngine:
                 output_text = result["choices"][0]["message"]["content"]
                 logger.info(f"[BACKEND] ✅ OpenRouter Success: {model} ({len(output_text)} chars)")
 
+                inp, out = extract_usage(result, "openrouter")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="openrouter",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
+
                 if debug:
                     self._log_debug("OpenRouter", model, prompt, output_text)
 
@@ -354,7 +362,7 @@ class PromptInterceptionEngine:
         except Exception as e:
             if debug:
                 logger.error(f"OpenRouter Modell {model} fehlgeschlagen: {e}")
-            
+
             # Fallback versuchen
             fallback_model = self._find_openrouter_fallback(model, debug)
             if fallback_model != model:
@@ -447,6 +455,11 @@ class PromptInterceptionEngine:
                 output_text = result["content"][0]["text"]
                 logger.info(f"[BACKEND] ✅ Anthropic Success: {model} ({len(output_text)} chars)")
 
+                inp, out = extract_usage(result, "anthropic")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="anthropic",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
+
                 if debug:
                     self._log_debug("Anthropic", model, prompt, output_text)
 
@@ -491,6 +504,11 @@ class PromptInterceptionEngine:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
                 logger.info(f"[BACKEND] ✅ OpenAI Success: {model} ({len(output_text)} chars)")
+
+                inp, out = extract_usage(result, "openai")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="openai",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
 
                 if debug:
                     self._log_debug("OpenAI", model, prompt, output_text)
@@ -541,6 +559,11 @@ class PromptInterceptionEngine:
                 result = response.json()
                 output_text = result["choices"][0]["message"]["content"]
                 logger.info(f"[BACKEND] ✅ Mistral Success: {model} ({len(output_text)} chars)")
+
+                inp, out = extract_usage(result, "mistral")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="mistral",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
 
                 if debug:
                     self._log_debug("Mistral", model, prompt, output_text)
@@ -616,6 +639,11 @@ class PromptInterceptionEngine:
 
                 logger.info(f"[BACKEND] ✅ IONOS Success: {model} ({len(output_text)} chars)")
 
+                inp, out = extract_usage(result, "ionos")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="ionos",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
+
                 if debug:
                     self._log_debug("IONOS", model, prompt, output_text)
 
@@ -668,6 +696,11 @@ class PromptInterceptionEngine:
                     raise Exception("Mammouth returned empty response")
 
                 logger.info(f"[BACKEND] ✅ Mammouth Success: {model} ({len(output_text)} chars)")
+
+                inp, out = extract_usage(result, "mammouth")
+                if inp or out:
+                    get_usage_tracker().log(model=model, provider="mammouth",
+                                            stage=self._current_stage, input_tokens=inp, output_tokens=out)
 
                 if debug:
                     self._log_debug("Mammouth", model, prompt, output_text)
@@ -859,6 +892,11 @@ class PromptInterceptionEngine:
             output_text = response_body['content'][0]['text']
 
             logger.info(f"[BACKEND] ✅ AWS Bedrock Success: {model} ({len(output_text)} chars)")
+
+            inp, out = extract_usage(response_body, "bedrock")
+            if inp or out:
+                get_usage_tracker().log(model=model, provider="bedrock",
+                                        stage=self._current_stage, input_tokens=inp, output_tokens=out)
 
             if debug:
                 self._log_debug("AWS Bedrock", model, prompt, output_text)
