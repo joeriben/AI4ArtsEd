@@ -1442,7 +1442,7 @@ def execute_stage3_4():
         # Determine media type from output config
         if 'image' in output_config.lower() or 'sd' in output_config.lower() or 'flux' in output_config.lower() or 'gpt' in output_config.lower():
             media_type = 'image'
-        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
+        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower() or 'heartmula' in output_config.lower():
             media_type = 'audio'
         elif 'video' in output_config.lower():
             media_type = 'video'
@@ -2744,7 +2744,7 @@ def execute_generation_streaming(data: dict):
             media_type = 'code'
         elif 'video' in output_config.lower():
             media_type = 'video'
-        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
+        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower() or 'heartmula' in output_config.lower():
             media_type = 'audio'
         elif '3d' in output_config.lower():
             media_type = '3d'
@@ -3556,7 +3556,7 @@ async def execute_stage4_generation_only(
             media_type = 'code'
         elif 'video' in output_config.lower():
             media_type = 'video'
-        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
+        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower() or 'heartmula' in output_config.lower():
             media_type = 'audio'
         elif '3d' in output_config.lower():
             media_type = '3d'
@@ -4101,7 +4101,7 @@ async def execute_generation_stage4(
             media_type = 'code'
         elif 'video' in output_config.lower():
             media_type = 'video'
-        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower():
+        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower() or 'heartmula' in output_config.lower():
             media_type = 'audio'
         elif '3d' in output_config.lower():
             media_type = '3d'
@@ -5287,7 +5287,7 @@ def interception_pipeline():
                     media_type = 'image'
                 elif 'audio' in output_config_name.lower():
                     media_type = 'audio'
-                elif 'music' in output_config_name.lower() or 'ace' in output_config_name.lower():
+                elif 'music' in output_config_name.lower() or 'ace' in output_config_name.lower() or 'heartmula' in output_config_name.lower():
                     media_type = 'music'
                 elif 'video' in output_config_name.lower():
                     media_type = 'video'

@@ -385,9 +385,7 @@ function buildAvailableConfigs(): string {
     'gemini_3_pro_image — Gemini 3 Pro image generation (cloud, EU, DSGVO via Mammouth)',
     'stableaudio — Stable Audio (audio/sound)',
     'heartmula_standard — HeartMuLa (music, dual input: lyrics || tags, e.g. [GENERATE: heartmula_standard | [Verse] Hello world... || pop,upbeat,piano])',
-    'p5js_code — p5.js generative code (code)',
-    'tonejs_code — Tone.js audio code (code)',
-    'wan22_t2v_video_fast — Wan 2.2 video (video)',
+'wan22_t2v_video_fast — Wan 2.2 video (video)',
     'ltx_video — LTX Video (video)',
     'hunyuan3d_text_to_3d — Hunyuan3D (3D object)',
   ].join('\n')
