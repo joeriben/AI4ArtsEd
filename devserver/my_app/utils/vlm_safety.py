@@ -23,6 +23,10 @@ import config
 
 # Max dimension for VLM input — safety classification doesn't need full resolution
 VLM_MAX_SIZE = 768
+# Min dimension — Ollama qwen3-vl panics on images < 32px (SmartResize factor=32).
+# A panic kills the runner process, causing ALL subsequent VLM requests to 500
+# until Ollama is restarted. Discovered 2026-03-22 in production.
+VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
@@ -232,6 +236,11 @@ def vlm_describe_image(image_path: str | Path) -> str:
             return ''
 
         img = Image.open(image_path)
+        if min(img.size) < VLM_MIN_SIZE:
+            scale = VLM_MIN_SIZE / min(img.size)
+            new_size = (max(VLM_MIN_SIZE, int(img.width * scale)), max(VLM_MIN_SIZE, int(img.height * scale)))
+            img = img.resize(new_size, Image.LANCZOS)
+            logger.warning(f"[VLM-DESCRIBE] Upscaled undersized image {image_path.name}: {img.size}")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
         buf = io.BytesIO()
@@ -288,6 +297,11 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         # --- Prepare image ---
         img = Image.open(image_path)
         original_size = img.size
+        if min(img.size) < VLM_MIN_SIZE:
+            scale = VLM_MIN_SIZE / min(img.size)
+            new_size = (max(VLM_MIN_SIZE, int(img.width * scale)), max(VLM_MIN_SIZE, int(img.height * scale)))
+            img = img.resize(new_size, Image.LANCZOS)
+            logger.warning(f"[VLM-SAFETY] Upscaled undersized image {original_size} -> {img.size} (min {VLM_MIN_SIZE}px)")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
         buf = io.BytesIO()

@@ -1,5 +1,39 @@
 # Development Log
 
+## Session 279 - Workshop 19.03 Performance Report + Replay Test + VLM Crash Fix
+**Date:** 2026-03-22
+**Focus:** Logfile-Analyse des groessten Workshops (19.03., 12 Devices, 253 Runs, 41% Erfolg), Replay-Test des 260306-Loads gegen devserver, Entdeckung und Fix eines Ollama VLM-Crash-Bugs.
+
+### Workshop 19.03 Analyse (Production-Logfiles)
+- **12 Devices**, Safety Level `kids`, 253 unique Pipeline-Runs in 48min Hauptburst
+- **41% Erfolgsrate** (104/253) — schlechteste aller Workshops
+- Root Cause: GPU OOM-Kaskade (Diffusers 66GB + ComfyUI 20GB + Ollama 5GB = 96GB voll bei 14:03)
+- 129 Ollama-Failures (Connection Aborted, Timeouts, Connection Refused)
+- DSGVO LLM-Verify inkonsistent unter Last ("Ben kuessen" 2x SAFE, 1x UNSAFE)
+- Report: `docs/technical_reports/2026-03-19_workshop_performance.md`
+
+### Replay-Test 260306 gegen devserver (17802)
+- 119 Requests, bewaehertes Skript, echtes Bild fuer img2img
+- **82% Erfolgsrate** (vs. 76% Original-Production am 06.03.)
+- Alle unkontrollierten Fehler eliminiert (0 Mistral 503, 0 Ollama Timeout, 0 Crashes)
+- Verbleibende 21 Fehler = kontrollierte "Queue Full" (physikalische Durchsatzgrenze ComfyUI)
+- Software ausoptimiert; verbleibende Grenzen sind Hardware-Throughput
+
+### Bug entdeckt + gefixt: Ollama qwen3-vl Crash bei Bildern <32px
+- Ollama's qwen3-vl ImageProcessor panicked bei `width < 32 || height < 32`
+- Ein einziger zu kleiner Input killt den VLM-Runner → alle nachfolgenden VLM-Safety-Checks 500er
+- Entdeckt beim Testen auf Production (alle SD3.5-Bilder korrekt generiert aber VLM-blocked)
+- Fix: Minimum-Size-Guard (VLM_MIN_SIZE=64) in `vlm_safety.py`, upscaled automatisch
+
+### Files Changed
+- `devserver/my_app/utils/vlm_safety.py` — VLM_MIN_SIZE guard in vlm_safety_check() und vlm_describe_image()
+- `devserver/testfiles/simulate_workshop_260319.py` — neues Replay-Skript (nicht verwendet fuer den Test)
+- `docs/technical_reports/2026-03-19_workshop_performance.md` — Workshop-Report + Replay-Ergebnisse
+
+### Open Items (Prompts fuer separate Sessions)
+1. **Queue-Anzeige**: SSE-Event "queue_position" fuer User-Transparenz bei Wartezeiten
+2. **Per-Device Concurrent Lock**: Server-seitige Sperre max 1 aktive Generierung pro device_id
+
 ## Session 278 - Safety Pre-Check: Broken Word-Overlap Heuristic Fix
 **Date:** 2026-03-22
 **Focus:** False positive "Content blocked by safety check" on harmless prompts at research safety level. Root cause: word-overlap heuristic from Session 277.
