@@ -1,5 +1,66 @@
 # Development Log
 
+## Session 281 - API Management Tab: Usage Tracking, Cost Estimation, Provider Credits
+**Date:** 2026-03-22
+**Focus:** Neuer Settings-Tab "API Management" mit Mammouth-Billing, lokalem Token-Tracking, Kostenabschaetzung pro Model/Stage/Zeitraum, und Provider-Credit-Abfrage.
+
+### Problem
+Mammouth (primaerer Cloud-Provider, LiteLLM-basiert) bietet nur Aggregat-Spend ueber `/key/info` — keine Per-Model-Aufschluesselung, kein Filtering nach LLM, nur 1 API Key pro Account. Kein Ueberblick welche Pipeline-Stage welches Model wie viel kostet.
+
+### Loesung: Zwei-Ebenen-Ansatz
+
+**Ebene 1 — Provider-Billing (extern):**
+- Mammouth: `GET /key/info` → spend, max_budget, remaining, budget_reset_at, RPM/TPM limits
+- OpenRouter: `GET /api/v1/credits` → total_credits, total_usage, remaining
+- Parallel via ThreadPoolExecutor, 10s Timeout pro Provider
+
+**Ebene 2 — Lokales Token-Tracking:**
+- `UsageTracker` Service (Singleton, thread-safe) loggt jeden Cloud-API-Call in `devserver/data/api_usage.jsonl`
+- Record: `{ts, model, provider, stage, input_tokens, output_tokens}`
+- 12 API-Call-Stellen instrumentiert: 7x prompt_interception_engine, 4x chat_routes, 1x vlm_safety
+- Provider-Prefix wird beim Loggen gestrippt (`mammouth/claude-sonnet-4-6` → `claude-sonnet-4-6`)
+- Aggregation: by_model, by_stage (mit Kostenabschaetzung)
+
+**Kostenabschaetzung:**
+- Pricing-Tabelle: `devserver/data/pricing_mammouth.json` (29 Modelle, $/M tokens)
+- Auto-Discovery: `pricing_*.json` mit mtime-Cache → neue Provider = neues JSON daneben legen
+- Kosten pro Aufruf: `(input_tokens * input_rate + output_tokens * output_rate) / 1M`
+
+**Frontend (ApiManagementTab.vue):**
+- Mammouth Account-Uebersicht: Spend/Budget/Remaining mit Budget-Bar (blau, gelb >75%, rot >90%)
+- Periodenfilter: Today/Week/Month/Year/All Quick-Buttons + freie From/To Datumswahl
+- By Model Tabelle: Calls, Input/Output Tokens, Est. Cost
+- By Stage Tabelle: Translation/Transformation/Safety/Chat mit Kosten
+- Provider Status: Key-Status + live Credits (Mammouth, OpenRouter)
+- Model Assignments: Aktuelle Modell-Zuordnung pro Funktion
+
+**Tab-Reihenfolge bereinigt:** Config > Matrix > API > Status > Export > Demos
+
+### Bugfix
+- `PERSONA_MODEL` fehlte in `get_settings()` Response — Feld war leer im Config-Tab trotz korrekter Konfiguration in user_settings.json
+
+### Files Changed
+- `devserver/my_app/services/usage_tracker.py` — **Neu**: JSONL-Tracker + Pricing + Aggregation
+- `devserver/data/pricing_mammouth.json` — **Neu**: 29 Modelle mit Input/Output-Preisen
+- `devserver/schemas/engine/prompt_interception_engine.py` — Usage-Extraction in 7 `_call_*()` Methoden + `_current_stage`
+- `devserver/my_app/routes/chat_routes.py` — Usage-Extraction in 4 Chat-Methoden
+- `devserver/my_app/utils/vlm_safety.py` — Usage-Extraction in `_call_verdict_model()`
+- `devserver/my_app/routes/settings_routes.py` — `GET /api/settings/api-usage` Endpoint + PERSONA_MODEL Fix
+- `public/.../src/components/ApiManagementTab.vue` — **Neu**: Kompletter Tab
+- `public/.../src/views/SettingsView.vue` — Tab-Button + Import + Reihenfolge
+- `public/.../src/i18n/en.ts` — 35+ neue Keys
+- `public/.../src/i18n/WORK_ORDERS.md` — WO-2026-03-22-api-management-tab
+
+### Commits
+- `60dde4d` feat(settings): add API Management tab with usage tracking + Mammouth billing
+- `887a3ab` feat(settings): add credits column to provider table + fix budget bar color
+- `5e3a963` fix(settings): use OpenRouter /api/v1/credits for actual balance
+- `c8ceabd` feat(settings): add cost estimation to API usage tracking
+- `eb26c99` feat(settings): reorder tabs, add period selector, strip model prefix
+- `d477d61` fix(settings): include PERSONA_MODEL in settings GET response
+
+---
+
 ## Session 280 - Generation Tracker: Queue Transparency, Per-Device Lock, Cancel, Navigation Lock
 **Date:** 2026-03-22
 **Focus:** Server-seitiges Tracking aktiver Stage-4-Generierungen. Queue-Transparenz (SSE), Per-Device Lock (max 1 Generation), Cancel (inkl. ComfyUI interrupt), Navigation-Lock (Mode-Buttons disabled waehrend Generation).
