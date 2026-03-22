@@ -1,0 +1,23 @@
+# AI4ArtsEd — Git-Based Packages (Editable Installs)
+# Generated from dev venv: 2026-03-22
+#
+# These packages are installed from git repos, either because they're not
+# on PyPI or because we need specific commits.
+#
+# INSTALL AFTER requirements.txt!
+#
+# Usage:
+#   pip install -r deployment/requirements-git.txt
+
+# HeartMuLa music generation library
+# --no-deps because heartlib pins its own torch version which conflicts with nightly
+-e git+https://github.com/HeartMuLa/heartlib.git@ef0c33b8143680f70c78ec148fbceeec53d6151e#egg=heartlib --no-deps
+
+# MMAudio — audio generation
+-e git+https://github.com/hkchengrex/MMAudio@8e060ccf1f4171ca58ffed549975ea92d7b80165#egg=mmaudio
+
+# ImageBind — multimodal embeddings (cross-aesthetic generation)
+-e git+https://github.com/facebookresearch/ImageBind@53680b02d7e37b19b124fa37bae4b6c98c38f5be#egg=imagebind
+
+# PyTorchVideo — video understanding (ImageBind dependency)
+git+https://github.com/facebookresearch/pytorchvideo.git@6cdc929315aab1b5674b6dcf73b16ec99147735f

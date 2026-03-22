@@ -1,0 +1,19 @@
+# AI4ArtsEd — PyTorch Nightly Stack (CUDA 13.0 / Blackwell)
+# Generated from dev venv: 2026-03-22
+#
+# INSTALL FIRST, before requirements.txt!
+#
+# CRITICAL: All torch packages must be from the SAME nightly date.
+# Even 1 day difference can cause CUDA crashes on Blackwell GPUs (sm_120).
+#
+# Usage:
+#   pip install -r deployment/requirements-torch.txt --extra-index-url https://download.pytorch.org/whl/nightly/cu130
+#
+# For non-Blackwell GPUs (Ampere/Ada Lovelace), use cu121 or cu124 instead.
+
+--extra-index-url https://download.pytorch.org/whl/nightly/cu130
+
+torch==2.11.0.dev20260203+cu130
+torchaudio==2.11.0.dev20260203+cu130
+torchvision==0.25.0.dev20260203+cu130
+torchao==0.15.0

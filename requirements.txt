@@ -1,102 +1,96 @@
-# AI4ArtsEd Web Server Requirements
-# Python 3.11+ required
+# AI4ArtsEd DevServer — Direct Dependencies (Pinned)
+# Generated: 2026-03-22 | Python 3.13 | CUDA 13.0
 #
-# Installation:
-#   python3 -m venv venv
-#   source venv/bin/activate
-#   pip install -r requirements.txt
+# This file lists ONLY packages directly imported by devserver/ and gpu_service/.
+# Transitive dependencies (e.g. safetensors, accelerate, tokenizers) are resolved
+# automatically by pip from these direct deps.
 #
-# System dependencies (Ubuntu/Debian):
-#   sudo apt install libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev libgirepository1.0-dev
+# INSTALLATION ORDER:
+#   1. Create venv: python3.13 -m venv venv && source venv/bin/activate
+#   2. PyTorch stack: pip install -r deployment/requirements-torch.txt
+#   3. This file: pip install -r requirements.txt
+#   4. Git packages: pip install -r deployment/requirements-git.txt
+#   5. SpaCy models: pip install -r deployment/requirements-spacy.txt
+#   6. custom_rasterizer: see deployment/INSTALL_GUIDE.md (Phase 4)
+#
+# Full guide: deployment/INSTALL_GUIDE.md
 
 # ============================================================================
-# Web Framework
+# Web Framework & Server
 # ============================================================================
-Flask==3.0.0         # Web application framework
-Flask-CORS==4.0.0    # Cross-Origin Resource Sharing support
-flask-compress==1.17 # gzip/brotli response compression
-
-# ============================================================================
-# HTTP Server (Production)
-# ============================================================================
-waitress==2.1.2      # Production WSGI server (alternative to gunicorn)
+Flask==3.1.1
+flask-cors==6.0.1
+Flask-Compress==1.17
+waitress==3.0.2
 
 # ============================================================================
 # HTTP Clients
 # ============================================================================
-requests==2.31.0     # Synchronous HTTP client (for OpenRouter, Ollama)
-aiohttp==3.13.2      # Async HTTP client (required by comfyui_client.py and swarmui_client.py)
+requests==2.32.4
+aiohttp==3.12.13
 
 # ============================================================================
-# Configuration & Environment
+# HuggingFace ML Stack
 # ============================================================================
-python-dotenv==1.0.0 # Load environment variables from .env file
-toml>=0.10.2         # Kohya dataset config files (training_service)
+diffusers==0.36.0
+transformers==4.57.0
+huggingface_hub==0.36.1
 
 # ============================================================================
-# Export Functionality
+# 3D Generation (Hunyuan3D-2)
 # ============================================================================
-weasyprint==60.2     # PDF generation (requires cairo, pango system libs)
-python-docx==1.1.0   # DOCX (Word document) generation
-lxml>=5.1.0          # XML processing and parsing
+hy3dgen==2.0.2
+# Pulls in: trimesh, pygltflib, pymeshlab, xatlas, rembg, onnxruntime,
+#           opencv-python, accelerate, peft, ninja, pybind11, numpy
+# custom_rasterizer — compiled CUDA extension, see INSTALL_GUIDE.md
 
 # ============================================================================
-# PyTorch (GPU Backend)
+# HeartMuLa Runtime Deps (heartlib installed with --no-deps, these won't resolve)
 # ============================================================================
-# IMPORTANT: PyTorch must be installed BEFORE this file, with correct CUDA version:
-#   # For Blackwell GPUs (sm_120) - CUDA 13.0 nightly required:
-#   pip install --pre torch torchaudio torchvision --index-url https://download.pytorch.org/whl/nightly/cu130
-#   # For older GPUs (Ampere/Ada) - CUDA 12.1:
-#   pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu121
-#
-# These are NOT listed below because they require a special --index-url.
+vector-quantize-pytorch==1.27.20    # HeartCodec audio codec
+bitsandbytes==0.49.1                # Quantization support
+modelscope==1.34.0                  # Model hub
+torchtune==0.6.1                    # Fine-tuning utilities
+# einops — already pulled by MMAudio/ImageBind
 
 # ============================================================================
-# GPU Monitoring (VRAM Coordinator)
+# Audio Processing
 # ============================================================================
-nvidia-ml-py>=12.0.0  # NVML bindings — enables VRAM visibility across all GPU processes
+soundfile==0.13.1
+pydub==0.25.1
+scipy==1.16.0
 
 # ============================================================================
-# Diffusers Backend (Image Generation)
+# NLP / Safety (DSGVO NER)
 # ============================================================================
-diffusers>=0.32.0    # HuggingFace Diffusers (SD3.5, Flux2, Stable Audio)
-peft>=0.12.0         # Parameter-Efficient Fine-Tuning (LoRA support for Diffusers)
-scipy>=1.12.0        # WAV audio file I/O (Stable Audio backend)
-transformers>=4.45.0 # HuggingFace Transformers (text encoders)
-accelerate>=0.34.0   # HuggingFace Accelerate (device management)
-safetensors>=0.4.0   # Safe model loading format
-sentencepiece>=0.2.0 # T5 tokenizer dependency
+spacy==3.8.11
+# Models installed separately via deployment/requirements-spacy.txt
 
 # ============================================================================
-# HeartMuLa Backend (Music Generation)
+# Image Processing
 # ============================================================================
-# heartlib is installed separately in editable mode:
-#   pip install --no-deps -e /path/to/heartlib
-#
-# These are heartlib's runtime dependencies (installed here to avoid
-# heartlib's pinned versions conflicting with our torch nightly):
-vector-quantize-pytorch>=1.27.0  # HeartCodec audio codec
-soundfile                        # Audio file I/O
-bitsandbytes>=0.49.0             # Quantization support
-einops>=0.8.0                    # Tensor operations
-modelscope>=1.33.0               # Model hub
-torchtune>=0.4.0                 # Fine-tuning utilities
-torchao>=0.9.0                   # Torch AO (quantization)
+pillow==11.3.0
+numpy==2.3.1
 
 # ============================================================================
-# NLP / Safety (DSGVO NER Check)
+# Export (PDF, DOCX)
 # ============================================================================
-spacy>=3.8.0             # NLP framework for named entity recognition (DSGVO check)
-# Required NER models (installed separately, NOT via pip):
-#   python -m spacy download de_core_news_lg    # German text (platform language)
-#   python -m spacy download xx_ent_wiki_sm     # Multilingual (names from any language in German text)
-# These 2 models cover the use case. Adding more (e.g. en_core_web_lg) causes
-# cross-language false positives — en model flags "Der Eiffelturm" as PERSON.
+weasyprint==65.1
+python-docx==1.2.0
 
 # ============================================================================
-# Optional: Development/Testing
+# GPU Monitoring
 # ============================================================================
-# Uncomment for development:
-# flask-debugtoolbar==0.13.1  # Debug toolbar for Flask
-# pytest==7.4.3               # Testing framework
-# pytest-flask==1.3.0         # Flask testing utilities
+nvidia-ml-py==13.590.48
+psutil==7.0.0
+
+# ============================================================================
+# Configuration
+# ============================================================================
+toml==0.10.2
+
+# ============================================================================
+# Optional — Lazy-loaded, not required for core functionality
+# ============================================================================
+# boto3                  # AWS Bedrock LLM calls (only if using AWS)
+# tritonclient[http]     # Triton Inference Server (only if using Triton)
