@@ -365,6 +365,33 @@ def _load_optimization_instruction(output_config_name: str):
     return None
 
 
+def _load_optimization_model(output_config_name: str) -> str | None:
+    """Load optimization_model override from output config meta.
+
+    If the output config specifies optimization_model (e.g., "CODING_MODEL"),
+    resolve it to the actual model name from config.py. Returns None if no
+    override is specified (caller should use STAGE2_INTERCEPTION_MODEL).
+    """
+    try:
+        if pipeline_executor is None:
+            init_schema_engine()
+
+        output_config_obj = pipeline_executor.config_loader.get_config(output_config_name)
+        if output_config_obj and hasattr(output_config_obj, 'meta'):
+            model_ref = output_config_obj.meta.get('optimization_model')
+            if model_ref:
+                # Resolve config.py constants (e.g., "CODING_MODEL" → actual model name)
+                resolved = getattr(config, model_ref, None)
+                if resolved:
+                    logger.info(f"[LOAD-OPT-MODEL] '{output_config_name}' uses {model_ref} = {resolved}")
+                    return resolved
+                else:
+                    logger.warning(f"[LOAD-OPT-MODEL] '{model_ref}' not found in config.py")
+    except Exception as e:
+        logger.warning(f"[LOAD-OPT-MODEL] Failed for '{output_config_name}': {e}")
+    return None
+
+
 def _parse_triple_prompt(text: str) -> dict | None:
     """Parse CLIP-prompt JSON from optimization output.
 
@@ -586,6 +613,8 @@ def _build_stage2_result(interception_result: str, optimized_prompt: str, result
 async def execute_optimization(
     input_text: str,
     optimization_instruction: str,
+    model_override: str | None = None,
+    extra_params: dict | None = None,
 ):
     """
     Optimization: Transform text using manipulate chunk + optimization_instruction
@@ -598,23 +627,27 @@ async def execute_optimization(
     Args:
         input_text: Text to optimize (typically interception_result)
         optimization_instruction: Specific transformation rules from output chunk
+        model_override: Optional model to use instead of STAGE2_INTERCEPTION_MODEL
+                        (e.g., CODING_MODEL for p5.js code generation)
 
     Returns:
         Optimized text, or input_text on failure
     """
-    logger.info(f"[OPTIMIZATION] Starting with instruction length: {len(optimization_instruction)}")
-    logger.info(f"[OPTIMIZATION] Input text: '{input_text[:200]}...'")
-    logger.info(f"[OPTIMIZATION] Using manipulate chunk with optimization_instruction as CONTEXT")
-
-    # TODO [ARCHITECTURE VIOLATION]: This bypasses ChunkBuilder pipeline.
-    # Should use: ChunkBuilder.build_chunk("manipulate", config, input_text)
-    # Then: BackendRouter.route(chunk)
-    # See: docs/ARCHITECTURE_VIOLATION_PromptInterceptionEngine.md
     from schemas.engine.prompt_interception_engine import (
         PromptInterceptionEngine,
         PromptInterceptionRequest
     )
     from config import STAGE2_INTERCEPTION_MODEL
+
+    model = model_override or STAGE2_INTERCEPTION_MODEL
+    logger.info(f"[OPTIMIZATION] Starting with instruction length: {len(optimization_instruction)}")
+    logger.info(f"[OPTIMIZATION] Input text: '{input_text[:200]}...'")
+    logger.info(f"[OPTIMIZATION] Model: {model}" + (" (override)" if model_override else " (default)"))
+
+    # TODO [ARCHITECTURE VIOLATION]: This bypasses ChunkBuilder pipeline.
+    # Should use: ChunkBuilder.build_chunk("manipulate", config, input_text)
+    # Then: BackendRouter.route(chunk)
+    # See: docs/ARCHITECTURE_VIOLATION_PromptInterceptionEngine.md
 
     # Initialize PromptInterceptionEngine
     interception_engine = PromptInterceptionEngine()
@@ -627,10 +660,14 @@ async def execute_optimization(
         input_context='',
         style_prompt=optimization_instruction,  # Style-specific rules
         task_instruction=get_instruction("prompt_optimization"),  # Meta-instruction
-        model=STAGE2_INTERCEPTION_MODEL,
+        model=model,
         debug=False,
-        parameters={"enable_thinking": False}  # Structured JSON output, no reasoning
+        parameters={"enable_thinking": False}
     )
+
+    # Apply max_tokens from caller if provided (e.g., p5js needs 4096, CLIP opt needs far less)
+    if extra_params:
+        request.parameters.update(extra_params)
 
     try:
         # Execute Prompt Interception with the manipulate chunk
@@ -1290,11 +1327,29 @@ def optimize_prompt():
             })
 
         # Call execute_optimization() - only Call 2, NO Call 1
-        logger.info(f"[OPTIMIZE-ENDPOINT] Applying optimization (instruction length: {len(optimization_instruction)})")
+        # Check if output config specifies a dedicated model (e.g., CODING_MODEL for p5.js)
+        opt_model = _load_optimization_model(output_config)
+
+        # Load max_tokens from output config parameters (code generation needs more than prompt optimization)
+        extra_params = None
+        try:
+            if pipeline_executor is None:
+                init_schema_engine()
+            oc = pipeline_executor.config_loader.get_config(output_config)
+            if oc and hasattr(oc, 'parameters'):
+                mt = oc.parameters.get('max_tokens')
+                if mt:
+                    extra_params = {"max_tokens": mt}
+        except Exception:
+            pass
+
+        logger.info(f"[OPTIMIZE-ENDPOINT] Applying optimization (instruction length: {len(optimization_instruction)}, model: {opt_model or 'default'}, max_tokens: {extra_params.get('max_tokens') if extra_params else 'default'})")
 
         optimized = asyncio.run(execute_optimization(
             input_text=input_text,
             optimization_instruction=optimization_instruction,
+            model_override=opt_model,
+            extra_params=extra_params,
         ))
 
         execution_time = int((time.time() - start_time) * 1000)
