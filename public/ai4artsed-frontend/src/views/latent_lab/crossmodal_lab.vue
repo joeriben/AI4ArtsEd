@@ -361,15 +361,47 @@
         </div>
         <div v-if="wavetableOn" class="wavetable-controls">
           <div class="wavetable-mode-row">
-            <label class="inline-toggle" :class="{ active: true }">
-              <input type="radio" value="static" checked disabled />
-              {{ t('latentLab.crossmodal.synth.wavetableStatic') }}
+            <label class="inline-toggle" :class="{ active: wtMode === 'extract' }" @click="wtMode = 'extract'">
+              <input type="radio" value="extract" :checked="wtMode === 'extract'" />
+              {{ t('latentLab.crossmodal.synth.wavetableExtract') }}
             </label>
-            <label class="inline-toggle disabled">
-              <input type="radio" value="dynamic" disabled />
-              {{ t('latentLab.crossmodal.synth.wavetableDynamic') }}
+            <label class="inline-toggle" :class="{ active: wtMode === 'semantic' }" @click="wtMode = 'semantic'">
+              <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
+              {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
             </label>
           </div>
+
+          <!-- Semantic Wavetable Builder -->
+          <div v-if="wtMode === 'semantic'" class="wt-build-section">
+            <div class="wt-build-row">
+              <select v-model="wtBuildAxis" class="wt-axis-select">
+                <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
+                <option v-for="ax in availableAxes" :key="ax.name" :value="ax.name">
+                  {{ ax.pole_a }} — {{ ax.pole_b }}
+                </option>
+              </select>
+              <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
+                <option :value="8">8</option>
+                <option :value="16">16</option>
+                <option :value="32">32</option>
+              </select>
+              <button
+                class="wt-build-btn"
+                :disabled="!wtBuildAxis || wtBuilding"
+                @click="buildSemanticWavetable"
+              >
+                {{ wtBuilding ? t('latentLab.crossmodal.synth.wtBuilding') : t('latentLab.crossmodal.synth.wtBuild') }}
+              </button>
+            </div>
+            <div v-if="wtBuilding" class="wt-progress">
+              <div class="wt-progress-bar" :style="{ width: `${wtBuildProgress}%` }" />
+              <span class="wt-progress-label">{{ wtBuildProgressCurrent }}/{{ wtBuildFrameCount }}</span>
+            </div>
+            <span v-if="wtBuildAxis" class="slider-hint">
+              {{ t('latentLab.crossmodal.synth.wtBuildHint') }}
+            </span>
+          </div>
+
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
             <span class="slider-value">{{ wavetableScan.toFixed(2) }}</span>
@@ -956,6 +988,13 @@ const wavetableOn = ref(false)
 const sequencerOn = ref(false)
 const pingPongOn = ref(false)
 const wavetableScan = ref(0)
+type WtMode = 'extract' | 'semantic'
+const wtMode = ref<WtMode>('extract')
+const wtBuildAxis = ref('')
+const wtBuildFrameCount = ref(16)
+const wtBuilding = ref(false)
+const wtBuildProgress = ref(0)
+const wtBuildProgressCurrent = ref(0)
 
 // ===== Step Sequencer =====
 const sequencer = useStepSequencer()
@@ -1614,6 +1653,81 @@ function toggleWavetable(on: boolean) {
       looper.replay()
       if (!envelope.isNeutral.value && envelopeWired) envelope.triggerAttack(1)
     }
+  }
+}
+
+/**
+ * Build a semantic wavetable by generating N ultra-short samples along a
+ * semantic axis. Each sample produces one single-cycle frame. The axis
+ * position becomes the wavetable scan position.
+ */
+async function buildSemanticWavetable() {
+  if (!wtBuildAxis.value || wtBuilding.value) return
+
+  const axisName = wtBuildAxis.value
+  const n = wtBuildFrameCount.value
+  wtBuilding.value = true
+  wtBuildProgress.value = 0
+  wtBuildProgressCurrent.value = 0
+
+  const rawFrames: Float32Array[] = []
+  const axisMeta = getAxisMeta(axisName)
+
+  try {
+    for (let i = 0; i < n; i++) {
+      // Sweep axis from -1 to +1
+      const t = n === 1 ? 0 : (i / (n - 1)) * 2 - 1
+
+      const body: Record<string, unknown> = {
+        prompt_a: 'sound',
+        alpha: 0.5,
+        magnitude: 1.0,
+        noise_sigma: 0.0,
+        duration_seconds: 0.1,
+        start_position: 0.0,
+        steps: 20,
+        cfg_scale: synth.cfg,
+        seed: 42 + i, // Deterministic but varied per frame
+        axes: { [axisName]: t },
+      }
+
+      const result = await apiPost('/api/cross_aesthetic/synth', body)
+
+      if (result.success && result.audio_base64) {
+        // Decode WAV → AudioBuffer → extract one cycle
+        const wavBytes = Uint8Array.from(atob(result.audio_base64), c => c.charCodeAt(0))
+        const ac = looper.getContext()
+        const audioBuffer = await ac.decodeAudioData(wavBytes.buffer.slice(0))
+        const mono = audioBuffer.getChannelData(0)
+
+        // Take a single cycle from the middle of the sample (avoids edge artifacts)
+        const mid = Math.floor(mono.length / 2)
+        const cycleLen = Math.min(2048, Math.floor(mono.length / 2))
+        const start = Math.max(0, mid - Math.floor(cycleLen / 2))
+        const frame = mono.slice(start, start + cycleLen)
+        rawFrames.push(frame)
+      }
+
+      wtBuildProgressCurrent.value = i + 1
+      wtBuildProgress.value = Math.round(((i + 1) / n) * 100)
+    }
+
+    if (rawFrames.length > 0) {
+      wavetableOsc.loadRawFrames(rawFrames)
+
+      // Auto-switch to wavetable engine
+      if (!wavetableOn.value) toggleWavetable(true)
+      else if (!wavetableOsc.isPlaying.value) {
+        const ac = looper.getContext()
+        wavetableOsc.setContext(ac)
+        if (!envelopeWired) wireEnvelope()
+        wavetableOsc.start()
+      }
+    }
+  } catch (e) {
+    error.value = `Wavetable build failed: ${e}`
+  } finally {
+    wtBuilding.value = false
   }
 }
 
@@ -2960,6 +3074,81 @@ onUnmounted(() => {
 .wavetable-controls input[type="range"] {
   width: 100%;
   accent-color: #4CAF50;
+}
+
+/* Semantic wavetable builder */
+.wt-build-section {
+  margin: 0.5rem 0;
+}
+
+.wt-build-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.wt-axis-select,
+.wt-frame-select {
+  padding: 0.35rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.wt-axis-select {
+  flex: 1;
+}
+
+.wt-frame-select {
+  width: 60px;
+}
+
+.wt-build-btn {
+  padding: 0.35rem 0.8rem;
+  background: rgba(156, 39, 176, 0.2);
+  border: 1px solid rgba(156, 39, 176, 0.4);
+  border-radius: 4px;
+  color: #CE93D8;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wt-build-btn:hover:not(:disabled) {
+  background: rgba(156, 39, 176, 0.35);
+}
+
+.wt-build-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.wt-progress {
+  margin-top: 0.4rem;
+  position: relative;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wt-progress-bar {
+  height: 100%;
+  background: rgba(156, 39, 176, 0.4);
+  transition: width 0.2s;
+}
+
+.wt-progress-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .arp-pattern-select {

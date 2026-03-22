@@ -225,6 +225,43 @@ export function useWavetableOsc() {
     }
   }
 
+  /**
+   * Load pre-extracted frames directly (e.g. from semantic wavetable builder).
+   * Each frame should be a single-cycle waveform. Frames are resampled to
+   * FRAME_SIZE and Hann-windowed if not already the correct length.
+   */
+  function loadRawFrames(rawFrames: Float32Array[]): void {
+    if (rawFrames.length === 0) return
+
+    // Pre-compute Hann window
+    const hann = new Float32Array(FRAME_SIZE)
+    for (let i = 0; i < FRAME_SIZE; i++) {
+      hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / FRAME_SIZE))
+    }
+
+    frames = rawFrames.map(f => {
+      // Resample to FRAME_SIZE if needed
+      const resampled = f.length === FRAME_SIZE ? new Float32Array(f) : sincResample(f, FRAME_SIZE)
+      // Apply Hann window
+      for (let i = 0; i < FRAME_SIZE; i++) {
+        resampled[i]! *= hann[i]!
+      }
+      return resampled
+    })
+
+    // Pad to MIN_FRAMES if needed
+    while (frames.length < MIN_FRAMES) {
+      frames.push(new Float32Array(frames[frames.length - 1]!))
+    }
+
+    frameCount.value = frames.length
+    hasFrames.value = true
+
+    if (workletNode) {
+      workletNode.port.postMessage({ frames })
+    }
+  }
+
   async function start(): Promise<void> {
     if (isPlaying.value) return
     const ac = ensureContext()
@@ -310,6 +347,7 @@ export function useWavetableOsc() {
     currentFrequency: readonly(currentFrequency),
 
     loadFrames,
+    loadRawFrames,
     start,
     stop,
     setContext,

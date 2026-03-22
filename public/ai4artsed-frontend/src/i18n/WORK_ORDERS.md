@@ -21,6 +21,20 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-23-semantic-wavetable
+- **Session**: 282
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `latentLab.crossmodal.synth.wavetableExtract` (NEW): "From Sample"
+  - `latentLab.crossmodal.synth.wavetableSemantic` (NEW): "From Axis"
+  - `latentLab.crossmodal.synth.wtSelectAxis` (NEW): "— select axis —"
+  - `latentLab.crossmodal.synth.wtBuild` (NEW): "Build"
+  - `latentLab.crossmodal.synth.wtBuilding` (NEW): "Building..."
+  - `latentLab.crossmodal.synth.wtBuildHint` (NEW): "Generates short samples along the axis to create a semantically ordered wavetable"
+  - `latentLab.crossmodal.synth.wavetableStatic` (REMOVED)
+  - `latentLab.crossmodal.synth.wavetableDynamic` (REMOVED)
+- **Context**: Semantic wavetable builder for Latent Audio Synth. Instead of extracting frames from one audio sample, generates N ultra-short samples along a semantic axis (e.g. tonal→noisy). Each axis position becomes a wavetable frame. Scanning = sweeping through semantic space. Technical but concise tone.
+
 ### WO-2026-03-22-latent-synth-start-position
 - **Session**: 282
 - **Scope**: en.ts
