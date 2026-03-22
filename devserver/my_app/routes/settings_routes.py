@@ -2400,23 +2400,22 @@ def _fetch_mammouth_billing(api_key: str) -> dict:
 
 
 def _fetch_openrouter_credits(api_key: str) -> dict:
-    """Query OpenRouter /api/v1/auth/key for usage data."""
+    """Query OpenRouter /api/v1/credits for actual credit balance."""
     try:
         resp = requests.get(
-            "https://openrouter.ai/api/v1/auth/key",
+            "https://openrouter.ai/api/v1/credits",
             headers={"Authorization": f"Bearer {api_key}"},
             timeout=10,
         )
         if resp.status_code != 200:
             return None
         info = resp.json().get("data", {})
-        usage = info.get("usage", 0) or 0
-        limit = info.get("limit")
-        remaining = (limit - usage) if limit else None
+        total_credits = info.get("total_credits", 0) or 0
+        total_usage = info.get("total_usage", 0) or 0
+        remaining = total_credits - total_usage
         return {
-            "spend": round(usage, 4),
-            "limit": limit,
-            "remaining": round(remaining, 4) if remaining is not None else None,
+            "spend": round(total_usage, 2),
+            "remaining": round(remaining, 2),
         }
     except Exception:
         return None
