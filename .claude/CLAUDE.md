@@ -89,3 +89,8 @@ Frontend visualisiert, was die Pipeline strukturiert.
    - The `i18n-translator` agent handles all non-English translations in batch.
    - Fallback to English works at runtime, so English-only keys are immediately functional.
 10. **CONCURRENT SESSION AWARENESS**: Before committing, check `git status` and `git log` for changes from other sessions running in parallel. NEVER stage or commit files you didn't modify. If you see unexpected changes (from another Claude session or the user), ASK before including them in your commit.
+11. **WORKSHOP REPLAY SCRIPTS** (in `devserver/testfiles/simulate_workshop_*.py`):
+    - **ORIGINAL PROMPTS ONLY**: Extract REAL prompts from the backend log (`[CHUNK-CONTEXT] input_text:` for pre-interception German, `[STAGE4-GEN]` for passthrough configs). NEVER invent synthetic prompts.
+    - **CHECK EVERY CONFIG'S INPUT REQUIREMENTS**: Image-to-image (`qwen_img2img`) AND image-to-video (`wan22_i2v_video`) BOTH need `input_image`. Read the output config JSON and chunk to understand what parameters each config needs. Don't assume text-only.
+    - **VERIFY ALL BACKENDS BEFORE RUNNING**: Check ComfyUI (`127.0.0.1:17804/system_stats`), GPU Service (`localhost:17803`), and DevServer are running. DevServer has COMFYUI-MANAGER auto-start but verify anyway.
+    - **Template**: Follow `simulate_workshop_260306.py` structure exactly.

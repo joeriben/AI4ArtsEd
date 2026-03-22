@@ -323,3 +323,64 @@ Technische Fakten: `_IMAGE_RELEVANT_CODES` ist identisch fuer kids und youth. VL
 
 **Lyrics Refinement** (17:54): "6 7 on a merrry rizzmas" — Gen-Z Slang, System produziert stilkonsistente Verfeinerung. Zeigt Plattform-Vielseitigkeit ueber Bildgenerierung hinaus.
 
+---
+
+## 11. Replay-Test (2026-03-22)
+
+### Setup
+- **Skript**: `devserver/testfiles/simulate_workshop_260320.py`
+- **Prompts**: Original-User-Eingaben aus dem Backend-Log (KEINE synthetischen Prompts)
+- **Ziel**: DevServer Development (Port 17802)
+- **GPU**: NVIDIA RTX PRO 6000 Blackwell 96GB
+- **Device-Pool**: 7 simulierte Devices mit Per-Device Concurrency Lock (1 Run pro Device, wie echte iPads)
+- **Timing**: `--max-gap 15 --drain-threshold 60` (kurze Pausen gecappt, lange Pausen → Queue leerlaufen lassen → sofort weiter)
+- **Img2img/I2V**: Test-Bild aus `Flux2_randomPrompt_ClaudeSonnet4.5/`
+- **104 Requests** mit exakter Config-Verteilung des Workshops
+
+### Ergebnis
+
+| Metrik | Workshop (20.03.) | Replay (22.03.) |
+|--------|-------------------|-----------------|
+| **Erfolgsrate** | 97% | **99%** |
+| **Technische Fehler** | 0 | **0** |
+| **Safety Blocks** | 3 (2.8%) | 1 (1%) |
+| **Timeouts** | 0 | **0** |
+| **Queue Rejected** | — | **0** |
+| **Wall Time** | 2h 40min | 24min |
+
+### Per-Config Ergebnis
+
+| Config | Gesendet | Erfolg | Avg Latenz |
+|--------|----------|--------|------------|
+| sd35_large | 45 | **45/45** (100%) | 30.3s |
+| qwen_img2img | 47 | **46/47** (98%) | 77.4s |
+| qwen_2511_multi | 7 | **7/7** (100%) | 123.2s |
+| wan22_i2v_video | 3 | **3/3** (100%) | 95.8s |
+| gemini_3_pro_image | 2 | **2/2** (100%) | 26.2s |
+
+### Latenz-Statistik (103 erfolgreiche Requests)
+- **Min**: 11.0s
+- **Median**: 48.3s
+- **Max**: 242.1s
+- **Avg**: 59.5s
+
+### Fehleranalyse
+
+**1 Safety Block** (qwen_img2img): Erwartbar — originaler Workshop-Prompt wurde korrekt durch Safety-System gefangen. Kein technischer Fehler.
+
+**0 technische Fehler**: Alle 5 Backends (GPU Service, ComfyUI img2img, ComfyUI i2v video, ComfyUI multi, Cloud API) fehlerfrei.
+
+### Drain-Point-Mechanismus
+
+12 Drain Points erkannt (originale Pausen >60s). Statt kuenstlich zu warten, laeuft die Queue leer und die Simulation faehrt sofort fort. Groesste Drains:
+- 3760s Originalpause (1h Phase-1→Phase-2): 17 pending → 168s Drain
+- 1639s Originalpause (Phase-2 Start → img2img): 3 pending → 32s Drain
+- 78s Originalpause: 43 pending → 514s Drain (sd35_large Burst-Phase)
+
+### Bewertung
+
+- **99% Erfolgsrate** — besser als Workshop (97%), da synthetische Device-Zuweisung keine User-Fehler reproduziert
+- **0 technische Fehler** in allen 5 Backend-Pfaden — Plattform-Stabilitaet vollstaendig reproduziert
+- **Device-Pool funktioniert**: Per-Device Concurrency Lock verhindert "previous generation still running" Fehler (fruehere Version ohne Pool: 28 Fehler)
+- **wan22_i2v_video 3/3**: Image-to-Video Pfad ueber ComfyUI stabil (fruehere Version hatte 0/3 wegen fehlendem input_image Parameter)
+- **Drain-Mechanismus**: Reduziert 2h40min auf 24min ohne kuenstliche Wartezeiten
