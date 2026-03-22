@@ -1,5 +1,27 @@
 # Development Log
 
+## Session 282 - Persona Output Box Audit: HeartMuLa Fix + Code Config Cleanup
+**Date:** 2026-03-22
+**Focus:** Persona generiert HeartMuLa-Audio und P5.js/Tone.js-Code, aber die Output-Boxen stellen beides nicht korrekt dar.
+
+### Problem
+1. **HeartMuLa**: Config-Name `heartmula_standard` enthaelt weder `music` noch `audio` → media_type-Erkennung per Substring faellt auf `image` Fallback → MediaOutputBox rendert `<img>` fuer eine Audio-URL
+2. **P5.js/Tone.js**: MediaOutputBox hat keinen `code`-Rendering-Case (nur image/video/audio/music/3d). Code-Output faellt auf "Mediendatei erstellt" Fallback
+
+### Loesung
+1. **HeartMuLa Fix**: `'heartmula'` zu allen 5 media_type-Substring-Checks in `schema_pipeline_routes.py` hinzugefuegt
+2. **Code-Configs entfernt**: `p5js_code` und `tonejs_code` aus Persona `buildAvailableConfigs()` entfernt — `text_transformation` Seite hat das volle Code-Rendering (Editor + iframe + Live Preview) und ist der richtige Ort dafuer
+
+### Design Decision
+Substring-basierte media_type-Erkennung ist fragil (jeder neue Config-Name ohne erwartetes Keyword bricht). Saubere Loesung: `media_type` aus Config-JSON `media_preferences.default_output` lesen. Als Tech-Debt dokumentiert.
+
+### Files Changed
+- `devserver/my_app/routes/schema_pipeline_routes.py` — 5 media_type detection sites: added 'heartmula'
+- `public/.../views/ai_persona.vue` — Removed p5js_code, tonejs_code from available configs
+- `docs/DEVELOPMENT_DECISIONS.md` — Design decision documented
+
+---
+
 ## Session 281 - API Management Tab: Usage Tracking, Cost Estimation, Provider Credits
 **Date:** 2026-03-22
 **Focus:** Neuer Settings-Tab "API Management" mit Mammouth-Billing, lokalem Token-Tracking, Kostenabschaetzung pro Model/Stage/Zeitraum, und Provider-Credit-Abfrage.

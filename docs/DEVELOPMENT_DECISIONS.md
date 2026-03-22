@@ -9,6 +9,22 @@
 
 ---
 
+## 2026-03-22: media_type Detection Must Use Config Metadata, Not Name Substrings
+
+**Decision:** Added `'heartmula'` to all 5 media_type substring-detection sites in `schema_pipeline_routes.py` to fix HeartMuLa being misclassified as `image`. Removed `p5js_code` and `tonejs_code` from Persona's available config list.
+
+**Root cause:** media_type detection relies on substring matching against `output_config` names (e.g. `'music' in name`). The config `heartmula_standard` contains neither `music` nor `audio` → fell through to `image` fallback. This caused MediaOutputBox to render a `<img>` tag for an audio URL.
+
+**Why not fix the detection properly?** The substring approach is fragile (any new config name that doesn't contain the expected keyword will break), but a proper fix (reading `media_type` from the config JSON's `media_preferences.default_output`) would touch the orchestration pipeline across 5 code paths. Documented as tech debt.
+
+**P5.js/Tone.js in Persona:** Removed because MediaOutputBox has no `code` rendering (needs editor + sandboxed iframe). The `text_transformation` page is the proper venue for code generation — it has the full editor + live preview setup. Adding code rendering to MediaOutputBox would be over-engineering for a chat interface with small draggable boxes.
+
+**Affected files:**
+- `devserver/my_app/routes/schema_pipeline_routes.py` (5 media_type detection sites)
+- `public/.../views/ai_persona.vue` (removed p5js_code, tonejs_code from config list)
+
+---
+
 ## 2026-03-21: Stage 2 Interception Mandatory for i2x/multi-i2x (Jugendschutz)
 
 **Decision:** i2x and multi-i2x views now run Stage 2 interception (with Safety Prefix) before any generation at kids/youth safety levels. Config selection triggers streaming interception into the context box; Generate without prior config triggers `user_defined` interception (safety-only).
