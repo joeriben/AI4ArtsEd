@@ -2429,6 +2429,8 @@ def api_usage():
     from concurrent.futures import ThreadPoolExecutor
 
     days = request.args.get('days', 30, type=int)
+    date_from = request.args.get('from')  # ISO date string YYYY-MM-DD
+    date_to = request.args.get('to')      # ISO date string YYYY-MM-DD
 
     # --- Mammouth billing ---
     mammouth_key = _read_key_value(MAMMOUTH_KEY_FILE)
@@ -2448,7 +2450,7 @@ def api_usage():
             openrouter_credits = openrouter_future.result()
 
     # --- Local usage tracking ---
-    local_usage = get_usage_tracker().get_aggregated(days=days)
+    local_usage = get_usage_tracker().get_aggregated(days=days, date_from=date_from, date_to=date_to)
 
     # --- Provider key status + credits ---
     providers = {

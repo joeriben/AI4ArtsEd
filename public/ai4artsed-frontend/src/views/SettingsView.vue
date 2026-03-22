@@ -20,16 +20,10 @@
           {{ $t('settings.tabs.matrix') }}
         </button>
         <button
-          :class="['tab-btn', { active: activeTab === 'demos' }]"
-          @click="activeTab = 'demos'"
+          :class="['tab-btn', { active: activeTab === 'api' }]"
+          @click="activeTab = 'api'"
         >
-          {{ $t('settings.tabs.demos') }}
-        </button>
-        <button
-          :class="['tab-btn', { active: activeTab === 'export' }]"
-          @click="activeTab = 'export'"
-        >
-          {{ $t('settings.tabs.export') }}
+          {{ $t('settings.tabs.api') }}
         </button>
         <button
           :class="['tab-btn', { active: activeTab === 'status' }]"
@@ -38,17 +32,23 @@
           {{ $t('settings.tabs.status') }}
         </button>
         <button
-          :class="['tab-btn', { active: activeTab === 'api' }]"
-          @click="activeTab = 'api'"
+          :class="['tab-btn', { active: activeTab === 'export' }]"
+          @click="activeTab = 'export'"
         >
-          {{ $t('settings.tabs.api') }}
+          {{ $t('settings.tabs.export') }}
+        </button>
+        <button
+          :class="['tab-btn', { active: activeTab === 'demos' }]"
+          @click="activeTab = 'demos'"
+        >
+          {{ $t('settings.tabs.demos') }}
         </button>
       </div>
     </div>
 
-    <!-- Session Export Tab -->
-    <div v-if="activeTab === 'export'">
-      <SessionExportView />
+    <!-- API Management Tab -->
+    <div v-if="activeTab === 'api'">
+      <ApiManagementTab />
     </div>
 
     <!-- Backend Status Tab -->
@@ -56,9 +56,9 @@
       <BackendStatusTab />
     </div>
 
-    <!-- API Management Tab -->
-    <div v-if="activeTab === 'api'">
-      <ApiManagementTab />
+    <!-- Session Export Tab -->
+    <div v-if="activeTab === 'export'">
+      <SessionExportView />
     </div>
 
     <!-- Configuration Tab -->

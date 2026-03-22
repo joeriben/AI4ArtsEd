@@ -69,7 +69,24 @@
 
       <!-- ==================== Section 2: Local Usage Tracking ==================== -->
       <div class="section">
-        <h2>{{ $t('settings.apiManagement.localUsage') }} ({{ data.local_usage?.period_days ?? 30 }}d)</h2>
+        <h2>{{ $t('settings.apiManagement.localUsage') }}</h2>
+
+        <!-- Period selector -->
+        <div class="period-selector" dir="ltr">
+          <div class="period-presets">
+            <button v-for="p in periodPresets" :key="p.key"
+                    :class="['preset-btn', { active: activePeriod === p.key }]"
+                    @click="selectPeriod(p.key)">
+              {{ p.label }}
+            </button>
+          </div>
+          <div class="period-custom">
+            <label>{{ $t('settings.apiManagement.from') }}</label>
+            <input type="date" v-model="customFrom" @change="selectPeriod('custom')" />
+            <label>{{ $t('settings.apiManagement.to') }}</label>
+            <input type="date" v-model="customTo" @change="selectPeriod('custom')" />
+          </div>
+        </div>
 
         <div v-if="!data.local_usage || data.local_usage.total_calls === 0" class="empty-state">
           {{ $t('settings.apiManagement.noUsageData') }}
@@ -127,37 +144,6 @@
               <tbody>
                 <tr v-for="(stats, stage) in data.local_usage.by_stage" :key="String(stage)">
                   <td>{{ stageLabel(String(stage)) }}</td>
-                  <td class="mono right">{{ stats.calls }}</td>
-                  <td class="mono right">{{ formatTokens(stats.input_tokens) }}</td>
-                  <td class="mono right">{{ formatTokens(stats.output_tokens) }}</td>
-                  <td class="mono right cost-cell">{{ formatCost(stats.cost) }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- By Date (last 7 visible, expandable) -->
-          <div class="subsection">
-            <h3>
-              {{ $t('settings.apiManagement.byDate') }}
-              <button v-if="Object.keys(data.local_usage.by_date).length > 7"
-                      class="toggle-btn" @click="showAllDates = !showAllDates">
-                {{ showAllDates ? $t('settings.apiManagement.showLess') : $t('settings.apiManagement.showAll') }}
-              </button>
-            </h3>
-            <table class="status-table" dir="ltr">
-              <thead>
-                <tr>
-                  <th>{{ $t('settings.apiManagement.date') }}</th>
-                  <th>{{ $t('settings.apiManagement.calls') }}</th>
-                  <th>{{ $t('settings.apiManagement.inputTokens') }}</th>
-                  <th>{{ $t('settings.apiManagement.outputTokens') }}</th>
-                  <th>{{ $t('settings.apiManagement.estCost') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(stats, dateStr) in visibleDates" :key="String(dateStr)">
-                  <td class="mono">{{ dateStr }}</td>
                   <td class="mono right">{{ stats.calls }}</td>
                   <td class="mono right">{{ formatTokens(stats.input_tokens) }}</td>
                   <td class="mono right">{{ formatTokens(stats.output_tokens) }}</td>
@@ -243,7 +229,28 @@ const loading = ref(true)
 const refreshing = ref(false)
 const error = ref<string | null>(null)
 const data = ref<any>(null)
-const showAllDates = ref(false)
+
+// --- Period selection ---
+const activePeriod = ref('month')
+const customFrom = ref('')
+const customTo = ref('')
+
+const periodPresets = [
+  { key: 'today', label: 'Today', days: 1 },
+  { key: 'week', label: 'Week', days: 7 },
+  { key: 'month', label: 'Month', days: 30 },
+  { key: 'year', label: 'Year', days: 365 },
+  { key: 'all', label: 'All', days: 0 },
+]
+
+function selectPeriod(key: string) {
+  activePeriod.value = key
+  if (key !== 'custom') {
+    customFrom.value = ''
+    customTo.value = ''
+  }
+  fetchData(true)
+}
 
 // --- Computed ---
 
@@ -266,13 +273,6 @@ const remainingClass = computed(() => {
   if (pct >= 80) return 'text-critical'
   if (pct >= 50) return 'text-warning'
   return ''
-})
-
-const visibleDates = computed(() => {
-  const dates = data.value?.local_usage?.by_date ?? {}
-  if (showAllDates.value) return dates
-  const entries = Object.entries(dates).slice(0, 7)
-  return Object.fromEntries(entries)
 })
 
 // --- Helpers ---
@@ -336,7 +336,16 @@ async function fetchData(forceRefresh = false) {
     error.value = null
 
     const baseUrl = import.meta.env.DEV ? 'http://localhost:17802' : ''
-    const resp = await fetch(`${baseUrl}/api/settings/api-usage`, { credentials: 'include' })
+    const params = new URLSearchParams()
+    if (activePeriod.value === 'custom') {
+      if (customFrom.value) params.set('from', customFrom.value)
+      if (customTo.value) params.set('to', customTo.value)
+    } else {
+      const preset = periodPresets.find(p => p.key === activePeriod.value)
+      if (preset) params.set('days', String(preset.days))
+    }
+    const qs = params.toString() ? `?${params.toString()}` : ''
+    const resp = await fetch(`${baseUrl}/api/settings/api-usage${qs}`, { credentials: 'include' })
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
     data.value = await resp.json()
   } catch (e: any) {
@@ -565,6 +574,53 @@ onMounted(() => fetchData())
   font-size: 11px;
 }
 .toggle-btn:hover { color: #ccc; border-color: #666; }
+
+/* Period selector */
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.period-presets {
+  display: flex;
+  gap: 4px;
+}
+.preset-btn {
+  padding: 5px 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  font-size: 12px;
+}
+.preset-btn:hover { color: #ccc; border-color: #555; }
+.preset-btn.active {
+  background: #2a2a2a;
+  border-color: #64b5f6;
+  color: #64b5f6;
+}
+.period-custom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #888;
+}
+.period-custom input[type="date"] {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #ccc;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.period-custom input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+}
 
 .cost-cell {
   color: #64b5f6;
