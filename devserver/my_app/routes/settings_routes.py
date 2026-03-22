@@ -631,6 +631,7 @@ def get_settings():
             "STAGE3_MODEL": config.STAGE3_MODEL,
             "STAGE4_LEGACY_MODEL": config.STAGE4_LEGACY_MODEL,
             "CHAT_HELPER_MODEL": config.CHAT_HELPER_MODEL,
+            "PERSONA_MODEL": config.PERSONA_MODEL,
             "IMAGE_ANALYSIS_MODEL": config.IMAGE_ANALYSIS_MODEL,
             "CODING_MODEL": config.CODING_MODEL,
             "SAFETY_MODEL": config.SAFETY_MODEL,
