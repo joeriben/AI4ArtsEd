@@ -122,4 +122,4 @@ research/t5_interpretability/data/
 # -------------------------------------
 # Standalone ComfyUI backend (large, cloned separately)
 dlbackend/
-devserver/data/
+devserver/data/*.jsonl

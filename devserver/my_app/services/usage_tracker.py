@@ -20,6 +20,35 @@ DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 USAGE_FILE = DATA_DIR / "api_usage.jsonl"
 
 
+def _load_pricing() -> dict:
+    """Load all pricing files from data/pricing_*.json. Returns {provider: {model: {input, output}}}."""
+    pricing = {}
+    for f in DATA_DIR.glob("pricing_*.json"):
+        provider = f.stem.replace("pricing_", "")
+        try:
+            with open(f, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+                # Strip _comment key
+                pricing[provider] = {k: v for k, v in data.items() if not k.startswith("_")}
+        except Exception as e:
+            logger.error(f"Failed to load pricing {f}: {e}")
+    return pricing
+
+
+def _calc_cost(model: str, provider: str, input_tokens: int, output_tokens: int,
+               pricing: dict) -> float:
+    """Calculate estimated cost in USD. Returns 0 if no pricing data."""
+    prov_pricing = pricing.get(provider, {})
+    if not prov_pricing:
+        return 0.0
+    # Strip provider prefix from model name (e.g. "mammouth/claude-sonnet-4-6" -> "claude-sonnet-4-6")
+    bare_model = model.split("/", 1)[-1] if "/" in model else model
+    rates = prov_pricing.get(bare_model)
+    if not rates:
+        return 0.0
+    return (input_tokens * rates["input"] + output_tokens * rates["output"]) / 1_000_000
+
+
 class UsageTracker:
     """Thread-safe, append-only JSONL usage logger with in-memory aggregation."""
 
@@ -30,7 +59,23 @@ class UsageTracker:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._file_lock = threading.Lock()
+            cls._instance._pricing_cache = None
+            cls._instance._pricing_mtime = 0.0
         return cls._instance
+
+    def _get_pricing(self) -> dict:
+        """Load pricing with simple mtime-based cache."""
+        try:
+            latest_mtime = max(
+                (f.stat().st_mtime for f in DATA_DIR.glob("pricing_*.json")),
+                default=0.0
+            )
+        except Exception:
+            latest_mtime = 0.0
+        if self._pricing_cache is None or latest_mtime > self._pricing_mtime:
+            self._pricing_cache = _load_pricing()
+            self._pricing_mtime = latest_mtime
+        return self._pricing_cache
 
     def log(self, model: str, provider: str, stage: str,
             input_tokens: int, output_tokens: int) -> None:
@@ -76,8 +121,9 @@ class UsageTracker:
         return records
 
     def get_aggregated(self, days: int = 30) -> dict:
-        """Aggregate usage by model, stage, and date."""
+        """Aggregate usage by model, stage, and date — with cost estimates."""
         records = self.get_usage(days)
+        pricing = self._get_pricing()
 
         by_model: dict = {}
         by_stage: dict = {}
@@ -85,38 +131,38 @@ class UsageTracker:
         total_input = 0
         total_output = 0
         total_calls = 0
+        total_cost = 0.0
+
+        def _bucket(d: dict, key: str) -> dict:
+            if key not in d:
+                d[key] = {"input_tokens": 0, "output_tokens": 0, "calls": 0, "cost": 0.0}
+            return d[key]
 
         for rec in records:
             model = rec.get("model", "unknown")
+            provider = rec.get("provider", "unknown")
             stage = rec.get("stage", "unknown")
             inp = rec.get("input_tokens", 0)
             out = rec.get("output_tokens", 0)
-            date_str = rec.get("ts", "")[:10]  # YYYY-MM-DD
+            date_str = rec.get("ts", "")[:10]
+            cost = _calc_cost(model, provider, inp, out, pricing)
 
             total_input += inp
             total_output += out
             total_calls += 1
+            total_cost += cost
 
-            # By model
-            if model not in by_model:
-                by_model[model] = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
-            by_model[model]["input_tokens"] += inp
-            by_model[model]["output_tokens"] += out
-            by_model[model]["calls"] += 1
+            for bucket, key in [(by_model, model), (by_stage, stage), (by_date, date_str)]:
+                b = _bucket(bucket, key)
+                b["input_tokens"] += inp
+                b["output_tokens"] += out
+                b["calls"] += 1
+                b["cost"] += cost
 
-            # By stage
-            if stage not in by_stage:
-                by_stage[stage] = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
-            by_stage[stage]["input_tokens"] += inp
-            by_stage[stage]["output_tokens"] += out
-            by_stage[stage]["calls"] += 1
-
-            # By date
-            if date_str not in by_date:
-                by_date[date_str] = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
-            by_date[date_str]["input_tokens"] += inp
-            by_date[date_str]["output_tokens"] += out
-            by_date[date_str]["calls"] += 1
+        # Round cost values
+        for d in (by_model, by_stage, by_date):
+            for v in d.values():
+                v["cost"] = round(v["cost"], 4)
 
         return {
             "by_model": by_model,
@@ -126,6 +172,7 @@ class UsageTracker:
             "total_calls": total_calls,
             "total_input_tokens": total_input,
             "total_output_tokens": total_output,
+            "total_cost": round(total_cost, 4),
         }
 
 

@@ -81,6 +81,9 @@
             <span>{{ data.local_usage.total_calls }} {{ $t('settings.apiManagement.calls') }}</span>
             <span>{{ formatTokens(data.local_usage.total_input_tokens) }} in</span>
             <span>{{ formatTokens(data.local_usage.total_output_tokens) }} out</span>
+            <span v-if="data.local_usage.total_cost" class="cost-total">
+              ~${{ data.local_usage.total_cost.toFixed(2) }}
+            </span>
           </div>
 
           <!-- By Model -->
@@ -93,6 +96,7 @@
                   <th>{{ $t('settings.apiManagement.calls') }}</th>
                   <th>{{ $t('settings.apiManagement.inputTokens') }}</th>
                   <th>{{ $t('settings.apiManagement.outputTokens') }}</th>
+                  <th>{{ $t('settings.apiManagement.estCost') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,6 +105,7 @@
                   <td class="mono right">{{ stats.calls }}</td>
                   <td class="mono right">{{ formatTokens(stats.input_tokens) }}</td>
                   <td class="mono right">{{ formatTokens(stats.output_tokens) }}</td>
+                  <td class="mono right cost-cell">{{ formatCost(stats.cost) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -116,6 +121,7 @@
                   <th>{{ $t('settings.apiManagement.calls') }}</th>
                   <th>{{ $t('settings.apiManagement.inputTokens') }}</th>
                   <th>{{ $t('settings.apiManagement.outputTokens') }}</th>
+                  <th>{{ $t('settings.apiManagement.estCost') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -124,6 +130,7 @@
                   <td class="mono right">{{ stats.calls }}</td>
                   <td class="mono right">{{ formatTokens(stats.input_tokens) }}</td>
                   <td class="mono right">{{ formatTokens(stats.output_tokens) }}</td>
+                  <td class="mono right cost-cell">{{ formatCost(stats.cost) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -145,6 +152,7 @@
                   <th>{{ $t('settings.apiManagement.calls') }}</th>
                   <th>{{ $t('settings.apiManagement.inputTokens') }}</th>
                   <th>{{ $t('settings.apiManagement.outputTokens') }}</th>
+                  <th>{{ $t('settings.apiManagement.estCost') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -153,6 +161,7 @@
                   <td class="mono right">{{ stats.calls }}</td>
                   <td class="mono right">{{ formatTokens(stats.input_tokens) }}</td>
                   <td class="mono right">{{ formatTokens(stats.output_tokens) }}</td>
+                  <td class="mono right cost-cell">{{ formatCost(stats.cost) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -298,6 +307,12 @@ function formatTokens(n: number | undefined): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
   if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K'
   return n.toString()
+}
+
+function formatCost(cost: number | undefined): string {
+  if (!cost || cost === 0) return '—'
+  if (cost < 0.01) return '<$0.01'
+  return `$${cost.toFixed(2)}`
 }
 
 function formatDate(dateStr: string): string {
@@ -550,6 +565,14 @@ onMounted(() => fetchData())
   font-size: 11px;
 }
 .toggle-btn:hover { color: #ccc; border-color: #666; }
+
+.cost-cell {
+  color: #64b5f6;
+}
+.cost-total {
+  color: #64b5f6;
+  font-weight: 600;
+}
 
 .credits-remaining {
   color: #888;

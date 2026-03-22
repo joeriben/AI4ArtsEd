@@ -353,6 +353,7 @@ export const en = {
       calls: 'Calls',
       inputTokens: 'Input Tokens',
       outputTokens: 'Output Tokens',
+      estCost: 'Est. Cost',
       byModel: 'By Model',
       byStage: 'By Stage',
       byDate: 'By Date',
