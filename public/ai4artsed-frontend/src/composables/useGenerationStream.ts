@@ -16,8 +16,9 @@
  * - error: Error occurred
  */
 
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { useGenerationLockStore } from '@/stores/generationLock'
 
 export interface GenerationParams {
   prompt: string
@@ -89,6 +90,7 @@ function classifyError(message: string): GenerationErrorType {
 
 export function useGenerationStream() {
   const safetyStore = useSafetyEventStore()
+  const generationLock = useGenerationLockStore()
 
   // Badge states
   // TODO: showSafetyApprovedStamp and showTranslatedStamp are deprecated — kept for backward compat, unused in templates
@@ -109,6 +111,15 @@ export function useGenerationStream() {
   const queuePosition = ref(0)
   const deviceBusy = ref(false)
   const preChecking = ref(false)
+  let _busyPollInterval: ReturnType<typeof setInterval> | null = null
+
+  // Clean up polling on component unmount
+  onUnmounted(() => {
+    if (_busyPollInterval) {
+      clearInterval(_busyPollInterval)
+      _busyPollInterval = null
+    }
+  })
 
   /**
    * Build SSE URL with query parameters
@@ -221,6 +232,7 @@ export function useGenerationStream() {
     console.log('[GENERATION-STREAM] Starting SSE connection:', url.substring(0, 100) + '...')
 
     isExecuting.value = true
+    generationLock.lock()
     currentStage.value = 'stage3'
     generationProgress.value = 0
     previewImage.value = null
@@ -265,6 +277,7 @@ export function useGenerationStream() {
         safetyStore.reportBlock(data.stage || 3, data.reason || 'Inhalt blockiert', data.found_terms || [], data.vlm_description)
         eventSource.close()
         isExecuting.value = false
+        generationLock.unlock()
         currentStage.value = 'idle'
         resolve({
           status: 'blocked',
@@ -304,6 +317,7 @@ export function useGenerationStream() {
         console.log('[GENERATION-STREAM] Cancelled:', data)
         eventSource.close()
         isExecuting.value = false
+        generationLock.unlock()
         currentStage.value = 'idle'
         resolve({ status: 'cancelled' })
       })
@@ -313,6 +327,7 @@ export function useGenerationStream() {
         console.log('[GENERATION-STREAM] Complete:', data)
         eventSource.close()
         isExecuting.value = false
+        generationLock.unlock()
         currentStage.value = 'complete'
         generationProgress.value = 100
         stage4DurationMs.value = _stage4StartTime ? Date.now() - _stage4StartTime : 0
@@ -332,6 +347,7 @@ export function useGenerationStream() {
           console.error('[GENERATION-STREAM] Error event:', data)
           eventSource.close()
           isExecuting.value = false
+        generationLock.unlock()
           currentStage.value = 'idle'
           const errorMsg = data.message || 'Unknown error'
           resolve({
@@ -344,6 +360,7 @@ export function useGenerationStream() {
           console.error('[GENERATION-STREAM] Connection error')
           eventSource.close()
           isExecuting.value = false
+        generationLock.unlock()
           currentStage.value = 'idle'
           reject(new Error('SSE connection failed'))
         }
@@ -358,6 +375,7 @@ export function useGenerationStream() {
         console.error('[GENERATION-STREAM] EventSource error')
         eventSource.close()
         isExecuting.value = false
+        generationLock.unlock()
         currentStage.value = 'idle'
         reject(new Error('SSE connection error'))
       }
@@ -376,6 +394,24 @@ export function useGenerationStream() {
       const data = await res.json()
       deviceBusy.value = data.active
       queuePosition.value = data.queue_total || 0
+
+      // Poll while busy — auto-clears when generation finishes
+      if (data.active && !_busyPollInterval) {
+        _busyPollInterval = setInterval(async () => {
+          try {
+            const r = await fetch(`${baseUrl}/api/schema/pipeline/generation-active?device_id=${encodeURIComponent(deviceId)}`)
+            const d = await r.json()
+            deviceBusy.value = d.active
+            if (!d.active && _busyPollInterval) {
+              clearInterval(_busyPollInterval)
+              _busyPollInterval = null
+            }
+          } catch { /* ignore polling errors */ }
+        }, 3000)
+      } else if (!data.active && _busyPollInterval) {
+        clearInterval(_busyPollInterval)
+        _busyPollInterval = null
+      }
     } catch (e) {
       console.error('[GENERATION-STREAM] Pre-check failed:', e)
       deviceBusy.value = false

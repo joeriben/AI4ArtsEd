@@ -168,6 +168,15 @@ def _is_cancelled(device_id: str) -> bool:
         return device_id in _cancelled_generations
 
 
+def _set_comfyui_prompt_id(device_id: str, prompt_id: str):
+    """Store ComfyUI prompt_id for cancel support."""
+    with _generation_tracker_lock:
+        entry = _active_generations.get(device_id)
+        if entry:
+            entry['comfyui_prompt_id'] = prompt_id
+            logger.info(f"[GEN-TRACKER] Stored ComfyUI prompt_id={prompt_id} for device={device_id}")
+
+
 def generate_sse_event(event_type: str, data: dict) -> str:
     """
     Generate Server-Sent Events (SSE) formatted message
@@ -2971,6 +2980,10 @@ def execute_generation_streaming(data: dict):
                     continue
                 if item is SENTINEL:
                     break
+                # Catch ComfyUI prompt_id for cancel support
+                if hasattr(item, 'event_type') and item.event_type == 'submitted':
+                    _set_comfyui_prompt_id(device_id, item.prompt_id)
+                    continue
                 yield generate_sse_event('generation_progress', {
                     'percent': round(item.overall_percent * 100),
                     'preview': f'data:image/jpeg;base64,{item.preview_base64}' if item.preview_base64 else None,
@@ -3123,12 +3136,28 @@ def generation_cancel_endpoint():
     device_id = data.get('device_id', '')
     if not device_id:
         return jsonify({'cancelled': False, 'reason': 'no_device_id'}), 400
+    comfyui_prompt_id = None
     with _generation_tracker_lock:
         if device_id in _active_generations:
+            entry = _active_generations[device_id]
             _cancelled_generations.add(device_id)
+            comfyui_prompt_id = entry.get('comfyui_prompt_id')
             logger.info(f"[GEN-TRACKER] Cancel requested for device={device_id}")
-            return jsonify({'cancelled': True})
-        return jsonify({'cancelled': False, 'reason': 'no_active_generation'})
+        else:
+            return jsonify({'cancelled': False, 'reason': 'no_active_generation'})
+
+    # ComfyUI: actually cancel the job (outside lock to avoid holding it during I/O)
+    if comfyui_prompt_id:
+        try:
+            import asyncio
+            from my_app.services.comfyui_ws_client import get_comfyui_ws_client
+            client = get_comfyui_ws_client()
+            asyncio.run(client.cancel_job(comfyui_prompt_id))
+            logger.info(f"[GEN-TRACKER] ComfyUI job cancelled: {comfyui_prompt_id}")
+        except Exception as e:
+            logger.warning(f"[GEN-TRACKER] ComfyUI cancel failed: {e}")
+
+    return jsonify({'cancelled': True})
 
 
 @schema_bp.route('/pipeline/generation', methods=['POST', 'GET'])

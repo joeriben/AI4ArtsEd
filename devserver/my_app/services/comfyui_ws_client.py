@@ -176,6 +176,22 @@ class ComfyUIWebSocketClient:
 
         logger.info(f"[COMFYUI-WS] Workflow submitted: {prompt_id}")
 
+        # Notify callback of prompt_id for cancel support
+        if on_progress:
+            try:
+                # Send a special "submitted" event with prompt_id
+                from dataclasses import dataclass as _dc
+                @_dc
+                class _SubmittedEvent:
+                    event_type: str = 'submitted'
+                    prompt_id: str = prompt_id
+                    overall_percent: float = 0.0
+                    preview_base64: str = ''
+                    current_node: str = ''
+                on_progress(_SubmittedEvent())
+            except Exception:
+                pass  # Non-critical
+
         # 2. Calculate total nodes for progress
         total_nodes = len(workflow)
 

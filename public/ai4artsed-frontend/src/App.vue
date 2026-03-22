@@ -12,70 +12,70 @@
 
         <div class="header-center">
           <div class="mode-selector">
-            <router-link to="/" class="mode-button" active-class="active">
+            <router-link to="/" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/workshop" class="mode-button" active-class="active" title="Workshop">
+            <router-link to="/workshop" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" title="Workshop" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M40-160v-160q0-34 23.5-57t56.5-23h131q20 0 38 10t29 27q29 39 71.5 61t90.5 22q49 0 91.5-22t70.5-61q13-17 30.5-27t36.5-10h131q34 0 57 23t23 57v160H640v-91q-35 25-75.5 38T480-200q-43 0-84-13.5T320-252v92H40Zm440-160q-38 0-72-17.5T351-386q-17-25-42.5-39.5T253-440q22-37 93-58.5T480-520q63 0 134 21.5t93 58.5q-29 0-55 14.5T609-386q-22 32-56 49t-73 17ZM160-440q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T280-560q0 50-34.5 85T160-440Zm640 0q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T920-560q0 50-34.5 85T800-440ZM480-560q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-680q0 50-34.5 85T480-560Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/persona" class="mode-button" active-class="active" :title="$t('persona.title')">
+            <router-link to="/persona" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" :title="$t('persona.title')" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M160-360q-50 0-85-35t-35-85q0-50 35-85t85-35v-80q0-33 23.5-56.5T240-760h120q0-50 35-85t85-35q50 0 85 35t35 85h120q33 0 56.5 23.5T800-680v80q50 0 85 35t35 85q0 50-35 85t-85 35v160q0 33-23.5 56.5T720-120H240q-33 0-56.5-23.5T160-200v-160Zm200-80q25 0 42.5-17.5T420-500q0-25-17.5-42.5T360-560q-25 0-42.5 17.5T300-500q0 25 17.5 42.5T360-440Zm240 0q25 0 42.5-17.5T660-500q0-25-17.5-42.5T600-560q-25 0-42.5 17.5T540-500q0 25 17.5 42.5T600-440ZM320-280h320v-80H320v80Zm-80 80h480v-480H240v480Zm240-240Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/text-transformation" class="mode-button" active-class="active">
+            <router-link to="/text-transformation" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M160-200v-80h528l-42-42 56-56 138 138-138 138-56-56 42-42H160Zm116-200 164-440h80l164 440h-76l-38-112H392l-40 112h-76Zm138-176h132l-64-182h-4l-64 182Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/image-transformation" class="mode-button" active-class="active">
+            <router-link to="/image-transformation" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/multi-image-transformation" class="mode-button" active-class="active">
+            <router-link to="/multi-image-transformation" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M120-840h320v320H120v-320Zm80 80v160-160Zm320-80h320v320H520v-320Zm80 80v160-160ZM120-440h320v320H120v-320Zm80 80v160-160Zm440-80h80v120h120v80H720v120h-80v-120H520v-80h120v-120Zm-40-320v160h160v-160H600Zm-400 0v160h160v-160H200Zm0 400v160h160v-160H200Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/music-generation" class="mode-button" active-class="active" title="Music Generation">
+            <router-link to="/music-generation" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" title="Music Generation" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-422h240v160H560v400q0 66-47 113t-113 47Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/compare" class="mode-button" active-class="active" title="Compare">
+            <router-link to="/compare" class="mode-button" :class="{ locked: generationLock.isGenerating }" active-class="active" title="Compare" @click="guardGenerating">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="m320-160-56-57 103-103H80v-80h287L264-503l56-57 200 200-200 200Zm320-240L440-600l200-200 56 57-103 103h287v80H593l103 103-56 57Z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/canvas" class="mode-button" :class="{ locked: !safetyStore.isAdvancedMode }" active-class="active" title="Canvas Workflow" @click="guardAdvanced">
+            <router-link to="/canvas" class="mode-button" :class="{ locked: !safetyStore.isAdvancedMode || generationLock.isGenerating }" active-class="active" title="Canvas Workflow" @click="guardAdvanced($event); guardGenerating($event)">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
                   <path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z"/>
                 </svg>
               </span>
             </router-link>
-            <router-link to="/latent-lab" class="mode-button" :class="{ locked: !safetyStore.isAdvancedMode, active: $route.path === '/latent-lab' || $route.path === '/surrealizer' || $route.path === '/direct' }" title="Latent Lab" @click="guardAdvanced">
+            <router-link to="/latent-lab" class="mode-button" :class="{ locked: !safetyStore.isAdvancedMode || generationLock.isGenerating, active: $route.path === '/latent-lab' || $route.path === '/surrealizer' || $route.path === '/direct' }" title="Latent Lab" @click="guardAdvanced($event); guardGenerating($event)">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
                   <path d="M200-120v-80h200v-80q-83 0-141.5-58.5T200-480q0-61 33.5-111t90.5-73q8-34 35.5-55t62.5-21l-22-62 38-14-14-36 76-28 12 38 38-14 110 300-38 14 14 38-76 28-12-38-38 14-24-66q-15 14-34.5 21t-39.5 5q-22-2-41-13.5T338-582q-27 16-42.5 43T280-480q0 50 35 85t85 35h320v80H520v80h240v80H200Zm346-458 36-14-68-188-38 14 70 188Zm-126-22q17 0 28.5-11.5T460-640q0-17-11.5-28.5T420-680q-17 0-28.5 11.5T380-640q0 17 11.5 28.5T420-600Zm126 22Zm-126-62Zm0 0Z"/>
@@ -171,11 +171,13 @@ import DatenschutzModal from './components/DatenschutzModal.vue'
 import { useUserPreferencesStore } from './stores/userPreferences'
 import { useSafetyLevelStore } from './stores/safetyLevel'
 import { useUiModeStore } from './stores/uiMode'
+import { useGenerationLockStore } from './stores/generationLock'
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './i18n'
 
 const { locale, t } = useI18n()
 const safetyStore = useSafetyLevelStore()
 if (!safetyStore.loaded) safetyStore.fetchLevel()
+const generationLock = useGenerationLockStore()
 const uiModeStore = useUiModeStore()
 if (!uiModeStore.loaded) uiModeStore.fetchMode()
 const route = useRoute()
@@ -227,6 +229,13 @@ function openDatenschutz() {
 // Prevent navigation to advanced-only routes in kids/youth mode
 function guardAdvanced(e: Event) {
   if (!safetyStore.isAdvancedMode) {
+    e.preventDefault()
+  }
+}
+
+// Prevent navigation while a generation is running
+function guardGenerating(e: Event) {
+  if (generationLock.isGenerating) {
     e.preventDefault()
   }
 }
