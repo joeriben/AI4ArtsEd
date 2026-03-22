@@ -168,6 +168,7 @@
             <tr>
               <th>{{ $t('settings.apiManagement.provider') }}</th>
               <th>{{ $t('settings.apiManagement.apiKey') }}</th>
+              <th>{{ $t('settings.apiManagement.credits') }}</th>
               <th>DSGVO</th>
               <th>{{ $t('settings.apiManagement.region') }}</th>
             </tr>
@@ -179,6 +180,16 @@
                 <span :class="['status-badge', info.key_configured ? 'status-available' : 'status-unavailable']">
                   {{ info.key_configured ? $t('settings.apiManagement.configured') : $t('settings.apiManagement.notConfigured') }}
                 </span>
+              </td>
+              <td class="mono">
+                <template v-if="info.credits != null">
+                  ${{ info.credits.spend != null ? info.credits.spend.toFixed(2) : '—' }}
+                  <span v-if="info.credits.remaining != null" class="credits-remaining">
+                    / ${{ info.credits.remaining.toFixed(2) }} {{ $t('settings.apiManagement.remaining') }}
+                  </span>
+                </template>
+                <span v-else-if="!info.key_configured" class="text-muted">—</span>
+                <span v-else class="text-muted">—</span>
               </td>
               <td>
                 <span :class="info.dsgvo ? 'dsgvo-ok' : 'dsgvo-warn'">
@@ -235,9 +246,9 @@ const budgetPercent = computed(() => {
 
 const budgetBarClass = computed(() => {
   const pct = budgetPercent.value
-  if (pct >= 80) return 'budget-critical'
-  if (pct >= 50) return 'budget-warning'
-  return 'budget-ok'
+  if (pct >= 90) return 'budget-critical'
+  if (pct >= 75) return 'budget-warning'
+  return 'budget-spend'
 })
 
 const remainingClass = computed(() => {
@@ -445,7 +456,7 @@ onMounted(() => fetchData())
   border-radius: 4px;
   transition: width 0.3s ease;
 }
-.budget-ok { background: #4caf50; }
+.budget-spend { background: #64b5f6; }
 .budget-warning { background: #ffb74d; }
 .budget-critical { background: #ff6b6b; }
 .budget-percent {
@@ -539,4 +550,12 @@ onMounted(() => fetchData())
   font-size: 11px;
 }
 .toggle-btn:hover { color: #ccc; border-color: #666; }
+
+.credits-remaining {
+  color: #888;
+  font-size: 11px;
+}
+.text-muted {
+  color: #555;
+}
 </style>

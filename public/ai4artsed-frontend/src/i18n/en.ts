@@ -364,6 +364,7 @@ export const en = {
       providerStatus: 'Provider Status',
       provider: 'Provider',
       apiKey: 'API Key',
+      credits: 'Credits',
       region: 'Region',
       configured: 'Configured',
       notConfigured: 'Not Configured',

@@ -2399,31 +2399,85 @@ def _fetch_mammouth_billing(api_key: str) -> dict:
         return {"error": str(e)}
 
 
+def _fetch_openrouter_credits(api_key: str) -> dict:
+    """Query OpenRouter /api/v1/auth/key for usage data."""
+    try:
+        resp = requests.get(
+            "https://openrouter.ai/api/v1/auth/key",
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=10,
+        )
+        if resp.status_code != 200:
+            return None
+        info = resp.json().get("data", {})
+        usage = info.get("usage", 0) or 0
+        limit = info.get("limit")
+        remaining = (limit - usage) if limit else None
+        return {
+            "spend": round(usage, 4),
+            "limit": limit,
+            "remaining": round(remaining, 4) if remaining is not None else None,
+        }
+    except Exception:
+        return None
+
+
 @settings_bp.route('/api-usage', methods=['GET'])
 @require_settings_auth
 def api_usage():
-    """Return API usage data: Mammouth billing + local token tracking."""
+    """Return API usage data: Mammouth billing + local token tracking + provider credits."""
     from my_app.services.usage_tracker import get_usage_tracker
+    from concurrent.futures import ThreadPoolExecutor
 
     days = request.args.get('days', 30, type=int)
 
     # --- Mammouth billing ---
     mammouth_key = _read_key_value(MAMMOUTH_KEY_FILE)
     mammouth_billing = None
-    if mammouth_key:
-        mammouth_billing = _fetch_mammouth_billing(mammouth_key)
+
+    # --- Fetch provider credits in parallel ---
+    openrouter_key = _read_key_value(OPENROUTER_KEY_FILE)
+    openrouter_credits = None
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        mammouth_future = pool.submit(_fetch_mammouth_billing, mammouth_key) if mammouth_key else None
+        openrouter_future = pool.submit(_fetch_openrouter_credits, openrouter_key) if openrouter_key else None
+
+        if mammouth_future:
+            mammouth_billing = mammouth_future.result()
+        if openrouter_future:
+            openrouter_credits = openrouter_future.result()
 
     # --- Local usage tracking ---
     local_usage = get_usage_tracker().get_aggregated(days=days)
 
-    # --- Provider key status ---
+    # --- Provider key status + credits ---
     providers = {
-        "mammouth":   {"key_configured": bool(mammouth_key), "dsgvo": True, "region": "EU"},
-        "openrouter": {"key_configured": OPENROUTER_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
-        "anthropic":  {"key_configured": ANTHROPIC_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
-        "openai":     {"key_configured": OPENAI_KEY_FILE.exists(), "dsgvo": False, "region": "US"},
-        "mistral":    {"key_configured": MISTRAL_KEY_FILE.exists(), "dsgvo": True, "region": "EU"},
-        "ionos":      {"key_configured": IONOS_KEY_FILE.exists(), "dsgvo": True, "region": "EU Berlin"},
+        "mammouth": {
+            "key_configured": bool(mammouth_key), "dsgvo": True, "region": "EU",
+            "credits": {"spend": mammouth_billing["spend"], "remaining": mammouth_billing.get("remaining")}
+            if mammouth_billing and not mammouth_billing.get("error") else None,
+        },
+        "openrouter": {
+            "key_configured": bool(openrouter_key), "dsgvo": False, "region": "US",
+            "credits": openrouter_credits,
+        },
+        "anthropic": {
+            "key_configured": ANTHROPIC_KEY_FILE.exists(), "dsgvo": False, "region": "US",
+            "credits": None,
+        },
+        "openai": {
+            "key_configured": OPENAI_KEY_FILE.exists(), "dsgvo": False, "region": "US",
+            "credits": None,
+        },
+        "mistral": {
+            "key_configured": MISTRAL_KEY_FILE.exists(), "dsgvo": True, "region": "EU",
+            "credits": None,
+        },
+        "ionos": {
+            "key_configured": IONOS_KEY_FILE.exists(), "dsgvo": True, "region": "EU Berlin",
+            "credits": None,
+        },
     }
 
     # --- Active provider + model assignments ---
