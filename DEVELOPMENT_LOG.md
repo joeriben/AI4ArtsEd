@@ -1,5 +1,71 @@
 # Development Log
 
+## Session 280 - Generation Tracker: Queue Transparency, Per-Device Lock, Cancel, Navigation Lock
+**Date:** 2026-03-22
+**Focus:** Server-seitiges Tracking aktiver Stage-4-Generierungen. Queue-Transparenz (SSE), Per-Device Lock (max 1 Generation), Cancel (inkl. ComfyUI interrupt), Navigation-Lock (Mode-Buttons disabled waehrend Generation).
+
+### Problem
+Workshop 19.03 (12 Devices, 253 Runs): User hatten keine Sichtbarkeit auf parallele Generierungen, kein Schutz gegen Multi-Tab-Doppelstarts, keine Cancel-Moeglichkeit. Navigation weg von einer laufenden Generation verlor den Frontend-Kontext, waehrend der Backend-Prozess weiterlief.
+
+### Loesung: Drei-Schichten-Schutz
+
+**Schicht 1 — GenerationButton** (Frontend, same-tab):
+- Button disabled waehrend `executing` — verhindert Doppelklick in gleicher View.
+
+**Schicht 2 — Navigation-Lock** (Frontend, cross-view):
+- Neuer `generationLockStore` (Pinia). Alle Mode-Selector-Links in App.vue erhalten `locked` class + `guardGenerating` click handler waehrend Generation laeuft.
+- Folgt bestehendem Pattern (canvas/latent-lab lock fuer kids mode).
+- User ist locked-in im aktuellen Modus bis Generation fertig oder Cancel.
+
+**Schicht 3 — Server-Side Lock** (Backend, multi-tab):
+- `_active_generations` Dict (device_id → run_id/ts/output_config/comfyui_prompt_id) mit `_generation_tracker_lock` (threading.Lock).
+- `_try_acquire_generation()` / `_release_generation()` — Vorlage: bestehendes `_seed_state` Pattern.
+- TTL 1800s (30min, wegen GPU_SERVICE_TIMEOUT_VIDEO=1500s).
+- `generation_acquired` Flag verhindert Lock-Release auf nicht-acquired Pfad (kritischer Bug vermieden).
+
+**Pre-Check REST Endpoint:**
+- `GET /pipeline/generation-active?device_id=X` — Button prueft on mount, zeigt pulsierendes `. . .` waehrend Check, "Cancel previous generation" wenn busy.
+- 3s Polling waehrend `deviceBusy=true` — auto-clears wenn Generation fertig.
+
+**Cancel:**
+- `POST /pipeline/generation-cancel` — setzt Cancel-Flag + ruft ComfyUI `cancel_job(prompt_id)` auf.
+- Cancel-Checks an 3 Stellen: pre-generation, during progress loop, post-generation (spart VLM-Call).
+- ComfyUI: tatsaechlicher GPU-Stop via `cancel_job()`. prompt_id durchgereicht via "submitted" Callback-Event.
+- Diffusers/HeartMuLa: CUDA nicht unterbrechbar, Progress-Loop stoppt, Daemon-Thread finishes silently.
+
+**Queue-Transparenz:**
+- SSE-Event `queue_position` zeigt Position im Generation-Stream.
+- Updates alle ~5s in allen Progress-Loops (ComfyUI/Diffusers/Heartbeat).
+
+**Compare-Views + ai_persona:**
+- Per-Slot device_id Suffix (`_cmp0`, `_persona...`) — erlaubt intentionale parallele Generierungen.
+
+### Risiko-Analyse (verifiziert im Plan)
+1. TTL zu kurz → Fix: 1800s (30min, > GPU_SERVICE_TIMEOUT_VIDEO)
+2. Lock-Release auf nicht-acquired Pfad → Fix: `generation_acquired` Flag
+3. Non-Streaming Pfad → Fix: acquire/release auch dort
+4. Cancel fremder Devices → Fix: Flag keyed by device_id
+5. Cancel waehrend CUDA → Fix: Loop stoppt, GPU finishes silently
+
+### Files Changed
+- `devserver/my_app/routes/schema_pipeline_routes.py` — Generation-Tracker, 2 neue Endpoints, Cancel-Checks, SSE-Events
+- `devserver/my_app/services/comfyui_ws_client.py` — "submitted" Callback-Event mit prompt_id
+- `public/ai4artsed-frontend/src/composables/useGenerationStream.ts` — queue_position/cancelled Listener, Pre-Check, Cancel, Lock-Integration
+- `public/ai4artsed-frontend/src/components/GenerationButton.vue` — 3 neue Props, Cancel-Emit, Pulse-Animation
+- `public/ai4artsed-frontend/src/assets/generation-button.css` — pre-checking, device-busy, queue-info Styles
+- `public/ai4artsed-frontend/src/stores/generationLock.ts` — Neuer Pinia Store
+- `public/ai4artsed-frontend/src/App.vue` — Navigation-Lock auf alle Mode-Buttons
+- `public/ai4artsed-frontend/src/i18n/en.ts` — 4 neue Keys (queueAhead, deviceBusy, cancelPrevious, generationCancelled)
+- `public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md` — WO-2026-03-22
+- Views: text_transformation, image_transformation, multi_image_transformation (Pre-Check + Cancel-Handler)
+- Compare-Views + ai_persona: Per-Slot device_id Suffix
+
+### Commits
+- `22de6fe` feat(queue): add generation tracker with queue transparency, per-device lock, and cancel
+- `f32e5e7` feat(queue): add navigation lock, ComfyUI cancel, deviceBusy auto-clear
+
+---
+
 ## Session 279 - Workshop 19.03 Performance Report + Replay Test + VLM Crash Fix
 **Date:** 2026-03-22
 **Focus:** Logfile-Analyse des groessten Workshops (19.03., 12 Devices, 253 Runs, 41% Erfolg), Replay-Test des 260306-Loads gegen devserver, Entdeckung und Fix eines Ollama VLM-Crash-Bugs.

@@ -5331,3 +5331,45 @@ Jeder Satz muss mindestens ein Wort aus dem Gedicht und eins aus dem Prompt enth
 - "Does Prompt Formatting Have Any Impact?" (arXiv 2411.10541)
 - "Gatsby without the 'E'" (arXiv 2505.20501) — Oulipo + LLM Constraints
 
+---
+
+## Session 280: Generation Tracker — Drei-Schichten-Schutz + Navigation Lock
+
+### Entscheidung
+
+Stage-4-Generierungen werden server-seitig getrackt. Drei Schichten verhindern Mehrfachgenerierung:
+
+1. **GenerationButton** (Frontend, same-tab): Button disabled waehrend Execution.
+2. **Navigation-Lock** (Frontend, cross-view): Pinia Store `generationLockStore` deaktiviert alle Mode-Selector-Links in App.vue waehrend einer Generation laeuft. User ist locked-in im aktuellen Modus. Folgt bestehendem `locked`-Pattern (canvas/latent-lab bei kids).
+3. **Server-Side Lock** (Backend, multi-tab): `_active_generations` Dict mit `threading.Lock()`, keyed by `device_id`. Folgt bestehendem `_seed_state`-Pattern. Max 1 aktive Generation pro Device.
+
+### Warum Navigation-Lock statt View-unabhaengiger Generierung?
+
+Bei Tab-Wechsel in der Vue SPA unmountet die View, aber der Server-Prozess laeuft weiter. Der Frontend-Kontext (Progress, Preview, Ergebnis) geht verloren. Drei Optionen wurden evaluiert:
+
+- **Unabhaengige Views** (jede View trackt eigenen State): Komplex, erfordert globalen SSE-Reconnect.
+- **Auto-Cancel bei Tab-Wechsel**: Einfach, verhindert aber Nutzung von Wartezeiten.
+- **Navigation-Lock** (gewaehlt): Konsequente Userfuehrung, einfachste Implementierung, verhindert State-Verlust.
+
+### Cancel-Strategie
+
+- **ComfyUI**: Tatsaechlicher GPU-Stop via `cancel_job(prompt_id)`. prompt_id wird beim Submit via Callback-Event an den Generation-Tracker durchgereicht.
+- **Diffusers/HeartMuLa**: CUDA-Kernels nicht unterbrechbar. Cancel setzt Flag → Progress-Loop stoppt → Lock freigegeben. GPU-Thread (Daemon) finishes silently.
+- **Cancel-Checks an 3 Stellen**: (1) Vor GPU-Start (verhindert Generation komplett), (2) In Progress-Loop, (3) Nach GPU-Result vor VLM-Check.
+
+### Pre-Check REST
+
+`GET /pipeline/generation-active?device_id=X` — GenerationButton prueft on mount ob Device bereits generiert. Zeigt pulsierendes `. . .` waehrend Check, "Cancel previous generation" wenn busy. 3s Polling waehrend busy → auto-clears.
+
+### Kritischer Bug vermieden
+
+`generation_acquired` Flag verhindert, dass der `finally`-Block den Lock der LAUFENDEN Generation freigibt, wenn ein Request mit `device_busy` abgelehnt wird (der `finally`-Block laeuft trotzdem bei `return` aus dem Generator).
+
+### TTL = 1800s
+
+`GPU_SERVICE_TIMEOUT_VIDEO = 1500s` (25 min). TTL von 10min haette aktive Video-Locks evicted. 30min gibt genuegend Puffer.
+
+### Compare-Views: Per-Slot device_id
+
+Compare-Views feuern intentional parallele Generierungen. Per-Slot Suffix (`${deviceId}_cmp${i}`) gibt jedem Slot einen eigenen Lock. ai_persona analog (`${deviceId}_persona${Date.now()}`).
+
