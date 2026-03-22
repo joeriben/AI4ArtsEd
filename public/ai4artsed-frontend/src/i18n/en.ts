@@ -413,7 +413,11 @@ export const en = {
     delete: 'Delete',
     loading: 'Loading...',
     contentBlocked: 'Content blocked',
-    t5UsesYourText: 'T5-XXL uses your original text directly'
+    t5UsesYourText: 'T5-XXL uses your original text directly',
+    queueAhead: '{count} generation ahead of you | {count} generations ahead of you',
+    deviceBusy: 'A generation is already running on this device.',
+    cancelPrevious: 'Cancel previous generation',
+    generationCancelled: 'Generation cancelled.'
   },
   nav: {
     about: 'About',

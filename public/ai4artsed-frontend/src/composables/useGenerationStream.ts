@@ -9,7 +9,9 @@
  * - stage3_start: Translation + Safety check starting
  * - stage3_complete: {safe, was_translated} - triggers badges
  * - blocked: Content blocked by safety (aborts)
+ * - queue_position: {position, active} - queue transparency
  * - stage4_start: Media generation starting
+ * - cancelled: Generation was cancelled (from another tab)
  * - complete: {media_output, run_id, loras, was_translated}
  * - error: Error occurred
  */
@@ -56,7 +58,7 @@ export interface GenerationParams {
 export type GenerationErrorType = 'busy' | 'offline' | 'unknown'
 
 export interface GenerationResult {
-  status: 'success' | 'blocked' | 'error'
+  status: 'success' | 'blocked' | 'error' | 'cancelled'
   media_output?: {
     media_type: string
     url: string
@@ -80,7 +82,7 @@ export interface GenerationResult {
  * Classify backend error messages into typed categories for i18n display.
  */
 function classifyError(message: string): GenerationErrorType {
-  if (/queue full/i.test(message)) return 'busy'
+  if (/queue full|device.busy|previous.*generation.*running/i.test(message)) return 'busy'
   if (/not available|not reachable|connection refused|timeout/i.test(message)) return 'offline'
   return 'unknown'
 }
@@ -102,6 +104,11 @@ export function useGenerationStream() {
   const modelMeta = ref<Record<string, any> | null>(null)
   const stage4DurationMs = ref(0)
   let _stage4StartTime = 0
+
+  // Queue transparency + per-device lock
+  const queuePosition = ref(0)
+  const deviceBusy = ref(false)
+  const preChecking = ref(false)
 
   /**
    * Build SSE URL with query parameters
@@ -218,6 +225,7 @@ export function useGenerationStream() {
     generationProgress.value = 0
     previewImage.value = null
     modelMeta.value = null
+    queuePosition.value = 0
 
     return new Promise((resolve, reject) => {
       const eventSource = new EventSource(url)
@@ -265,6 +273,13 @@ export function useGenerationStream() {
         })
       })
 
+      // Queue transparency: how many generations are ahead
+      eventSource.addEventListener('queue_position', (e: MessageEvent) => {
+        const data = JSON.parse(e.data)
+        console.log('[GENERATION-STREAM] Queue position:', data)
+        queuePosition.value = data.position
+      })
+
       eventSource.addEventListener('stage4_start', (e: MessageEvent) => {
         const data = JSON.parse(e.data)
         console.log('[GENERATION-STREAM] Stage 4 started (Media Generation)')
@@ -281,6 +296,16 @@ export function useGenerationStream() {
         if (data.preview) {
           previewImage.value = data.preview
         }
+      })
+
+      // Cancelled: generation was cancelled (from another tab or cancel button)
+      eventSource.addEventListener('cancelled', (e: MessageEvent) => {
+        const data = JSON.parse(e.data)
+        console.log('[GENERATION-STREAM] Cancelled:', data)
+        eventSource.close()
+        isExecuting.value = false
+        currentStage.value = 'idle'
+        resolve({ status: 'cancelled' })
       })
 
       eventSource.addEventListener('complete', (e: MessageEvent) => {
@@ -340,6 +365,49 @@ export function useGenerationStream() {
   }
 
   /**
+   * Pre-check: is this device currently generating? (REST call)
+   */
+  async function checkDeviceActive(deviceId: string): Promise<void> {
+    preChecking.value = true
+    try {
+      const isDev = import.meta.env.DEV
+      const baseUrl = isDev ? 'http://localhost:17802' : ''
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/generation-active?device_id=${encodeURIComponent(deviceId)}`)
+      const data = await res.json()
+      deviceBusy.value = data.active
+      queuePosition.value = data.queue_total || 0
+    } catch (e) {
+      console.error('[GENERATION-STREAM] Pre-check failed:', e)
+      deviceBusy.value = false
+    } finally {
+      preChecking.value = false
+    }
+  }
+
+  /**
+   * Cancel a running generation for this device (REST call)
+   */
+  async function cancelGeneration(deviceId: string): Promise<boolean> {
+    try {
+      const isDev = import.meta.env.DEV
+      const baseUrl = isDev ? 'http://localhost:17802' : ''
+      const res = await fetch(`${baseUrl}/api/schema/pipeline/generation-cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: deviceId })
+      })
+      const data = await res.json()
+      if (data.cancelled) {
+        deviceBusy.value = false
+      }
+      return data.cancelled
+    } catch (e) {
+      console.error('[GENERATION-STREAM] Cancel failed:', e)
+      return false
+    }
+  }
+
+  /**
    * Reset all states for new generation
    */
   function reset() {
@@ -353,6 +421,7 @@ export function useGenerationStream() {
     modelMeta.value = null
     stage4DurationMs.value = 0
     _stage4StartTime = 0
+    queuePosition.value = 0
   }
 
   return {
@@ -369,8 +438,15 @@ export function useGenerationStream() {
     modelMeta,
     stage4DurationMs,
 
+    // Queue transparency + per-device lock
+    queuePosition,
+    deviceBusy,
+    preChecking,
+
     // Methods
     executeWithStreaming,
+    checkDeviceActive,
+    cancelGeneration,
     reset
   }
 }

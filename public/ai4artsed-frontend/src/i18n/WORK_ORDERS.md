@@ -21,6 +21,16 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-22-queue-transparency-device-lock
+- **Session**: 279
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `mediaInput.queueAhead` (NEW): "{count} generation ahead of you | {count} generations ahead of you"
+  - `mediaInput.deviceBusy` (NEW): "A generation is already running on this device."
+  - `mediaInput.cancelPrevious` (NEW): "Cancel previous generation"
+  - `mediaInput.generationCancelled` (NEW): "Generation cancelled."
+- **Context**: Queue transparency for workshops (12+ devices). Shows how many generations are ahead. Per-device lock prevents duplicate generations from multi-tab. Cancel button lets user abort from another tab. User-facing, kid-friendly tone.
+
 ### WO-2026-03-21-compare-consistency
 - **Session**: 277
 - **Scope**: en.ts

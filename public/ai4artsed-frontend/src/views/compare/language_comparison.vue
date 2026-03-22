@@ -438,7 +438,7 @@ async function startComparison() {
           output_config: selectedModel.value,
           seed,
           skip_stage3_translation: true,
-          device_id: deviceId,
+          device_id: `${deviceId}_cmp${i}`,
           source_view: 'compare',
           comparison_group_id: groupId,
           comparison_language: slot.langCode,

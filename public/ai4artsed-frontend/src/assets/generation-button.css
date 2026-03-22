@@ -146,3 +146,64 @@
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Pre-checking state: pulsing dots while REST pre-check runs */
+.generation-button.pre-checking,
+.generation-button.pre-checking:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  box-shadow: none;
+  text-shadow: none;
+  animation: pre-check-pulse 1s ease-in-out infinite;
+}
+
+.generation-button.pre-checking .button-arrows {
+  display: none;
+}
+
+@keyframes pre-check-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Device busy state: clickable cancel button with red accent */
+.generation-button.device-busy {
+  opacity: 0.8;
+  cursor: pointer;
+  pointer-events: auto;
+  border-color: #f44336;
+  color: #f44336;
+  box-shadow: 0 0 15px rgba(244, 67, 54, 0.3);
+  text-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
+}
+
+.generation-button.device-busy:hover {
+  border-color: #ff5252;
+  box-shadow: 0 0 25px rgba(244, 67, 54, 0.5);
+  transform: scale(1.03);
+}
+
+.generation-button.device-busy .button-arrows {
+  animation: none;
+  opacity: 0.5;
+}
+
+/* Queue info text below button */
+.queue-info {
+  font-size: 0.85rem;
+  color: #FFB300;
+  text-align: center;
+  opacity: 0.8;
+  animation: generation-error-appear 0.3s ease-out forwards;
+}
+
+/* Device busy info text below button */
+.device-busy-info {
+  font-size: 0.85rem;
+  color: #f44336;
+  text-align: center;
+  opacity: 0.8;
+  animation: generation-error-appear 0.3s ease-out forwards;
+}

@@ -335,7 +335,11 @@
           :label="$t('common.start')"
           :executing-label="$t('common.generating')"
           :error-message="generationErrorMessage"
+          :queue-position="queuePosition"
+          :device-busy="deviceBusy"
+          :pre-checking="preChecking"
           @click="startGeneration()"
+          @cancel="handleCancelGeneration()"
         >
           <!-- Stage 3+4 Safety Badges (generation path) -->
           <SafetyBadges v-if="safetyChecks.length > 0" :checks="safetyChecks" />
@@ -587,7 +591,12 @@ const {
   modelMeta,
   stage4DurationMs,
   executeWithStreaming,
-  reset: resetGenerationStream
+  reset: resetGenerationStream,
+  queuePosition,
+  deviceBusy,
+  preChecking,
+  checkDeviceActive,
+  cancelGeneration
 } = useGenerationStream()
 
 const { t, locale } = useI18n()
@@ -769,8 +778,15 @@ function calculateSpeedFromDuration(durationStr: string | number): number {
   return speed
 }
 
+async function handleCancelGeneration() {
+  await cancelGeneration(deviceId)
+  await checkDeviceActive(deviceId)
+}
+
 // Load ALL metadata from chunks (Q, Spd auto-calculated, Duration, VRAM)
 onMounted(async () => {
+  // Pre-check: is this device already generating?
+  checkDeviceActive(deviceId)
   try {
     const response = await fetch('/api/schema/chunk-metadata')
     const chunks = await response.json()

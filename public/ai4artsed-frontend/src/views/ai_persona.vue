@@ -185,7 +185,7 @@ async function spawnGeneration(configId: string, prompt: string) {
     const result = await stream.executeWithStreaming({
       prompt,
       output_config: configId,
-      device_id: deviceId,
+      device_id: `${deviceId}_persona${Date.now()}`,
       source_view: 'persona',
     })
     if (result.status === 'success' && result.media_output) {

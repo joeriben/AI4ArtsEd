@@ -192,7 +192,11 @@
         :label="$t('common.start')"
         :executing-label="$t('common.generating')"
         :error-message="generationErrorMessage"
+        :queue-position="queuePosition"
+        :device-busy="deviceBusy"
+        :pre-checking="preChecking"
         @click="startGeneration"
+        @cancel="handleCancelGeneration"
       >
         <SafetyBadges v-if="safetyChecks.length > 0" :checks="safetyChecks" />
       </GenerationButton>
@@ -332,7 +336,12 @@ const {
   modelMeta,
   stage4DurationMs,
   executeWithStreaming,
-  reset: resetGenerationStream
+  reset: resetGenerationStream,
+  queuePosition,
+  deviceBusy,
+  preChecking,
+  checkDeviceActive,
+  cancelGeneration
 } = useGenerationStream()
 
 const { t, locale } = useI18n()
@@ -1241,10 +1250,17 @@ async function analyzeImage() {
 }
 
 // ============================================================================
+async function handleCancelGeneration() {
+  await cancelGeneration(deviceId)
+  await checkDeviceActive(deviceId)
+}
+
 // Lifecycle - sessionStorage persistence + Phase1 config loading
 // ============================================================================
 
 onMounted(async () => {
+  // Pre-check: is this device already generating?
+  checkDeviceActive(deviceId)
   // UNIFIED PATTERN: Always restore ALL boxes from storage first
   const savedContext = sessionStorage.getItem('i2i_context_prompt')
   if (savedContext) {

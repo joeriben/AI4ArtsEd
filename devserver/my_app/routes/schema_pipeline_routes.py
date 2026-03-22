@@ -104,6 +104,70 @@ def _update_seed_state(device_id: str, prompt: str, seed: int, output_config: st
             "output_config": output_config, "ts": _time_module.time()
         }
 
+# ============================================================================
+# Stage 4 Generation Tracking — queue transparency + per-device lock + cancel
+# ============================================================================
+_generation_tracker_lock = threading.Lock()
+_active_generations: dict = {}      # device_id → {"run_id": str, "ts": float, "output_config": str}
+_cancelled_generations: set = set()  # device_ids with pending cancel request
+_GENERATION_TRACKER_TTL = 1800      # 30min safety timeout (video: GPU_SERVICE_TIMEOUT_VIDEO=1500s)
+
+
+def _evict_stale_generations():
+    """Remove stale entries older than TTL. Caller must hold _generation_tracker_lock."""
+    now = _time_module.time()
+    stale = [k for k, v in _active_generations.items()
+             if now - v.get("ts", 0) > _GENERATION_TRACKER_TTL]
+    for k in stale:
+        del _active_generations[k]
+        _cancelled_generations.discard(k)
+        logger.warning(f"[GEN-TRACKER] Evicted stale generation for device {k}")
+
+
+def _try_acquire_generation(device_id: str, run_id: str, output_config: str) -> tuple:
+    """Try to acquire a generation slot for this device.
+
+    Returns (success: bool, queue_ahead: int).
+    - success=False if device already has an active generation.
+    - queue_ahead = number of other active generations at time of acquisition.
+    """
+    with _generation_tracker_lock:
+        _evict_stale_generations()
+        if device_id in _active_generations:
+            existing = _active_generations[device_id]
+            logger.info(f"[GEN-TRACKER] Device {device_id} busy (run {existing['run_id']})")
+            return (False, 0)
+        ahead = len(_active_generations)
+        _active_generations[device_id] = {
+            "run_id": run_id,
+            "ts": _time_module.time(),
+            "output_config": output_config
+        }
+        logger.info(f"[GEN-TRACKER] Acquired: device={device_id}, run={run_id}, ahead={ahead}, total={ahead + 1}")
+        return (True, ahead)
+
+
+def _release_generation(device_id: str):
+    """Release the generation slot for this device. Idempotent."""
+    with _generation_tracker_lock:
+        removed = _active_generations.pop(device_id, None)
+        _cancelled_generations.discard(device_id)
+        if removed:
+            logger.info(f"[GEN-TRACKER] Released: device={device_id}, run={removed['run_id']}, remaining={len(_active_generations)}")
+
+
+def _get_active_count() -> int:
+    """Get the number of currently active generations."""
+    with _generation_tracker_lock:
+        return len(_active_generations)
+
+
+def _is_cancelled(device_id: str) -> bool:
+    """Check if a cancel request is pending for this device."""
+    with _generation_tracker_lock:
+        return device_id in _cancelled_generations
+
+
 def generate_sse_event(event_type: str, data: dict) -> str:
     """
     Generate Server-Sent Events (SSE) formatted message
@@ -2642,6 +2706,8 @@ def execute_generation_streaming(data: dict):
 
     logger.info(f"[GENERATION-STREAMING] Starting for config '{output_config}', run {run_id}")
 
+    generation_acquired = False
+
     try:
         if pipeline_executor is None:
             init_schema_engine()
@@ -2744,6 +2810,30 @@ def execute_generation_streaming(data: dict):
         # ====================================================================
         # STAGE 4: MEDIA GENERATION
         # ====================================================================
+
+        # Per-device lock: max 1 active generation per device
+        success, ahead = _try_acquire_generation(device_id, run_id, output_config)
+        if not success:
+            yield generate_sse_event('error', {
+                'message': 'Your previous generation is still running',
+                'code': 'device_busy',
+                'run_id': run_id
+            })
+            yield ''
+            return
+        generation_acquired = True
+
+        # Cancel check 1: before GPU starts (prevents generation entirely)
+        if _is_cancelled(device_id):
+            logger.info(f"[GENERATION-STREAMING] Cancelled before Stage 4 for {run_id}")
+            yield generate_sse_event('cancelled', {'run_id': run_id, 'stage': 'pre_generation'})
+            yield ''
+            return
+
+        # Queue transparency: tell client how many generations are ahead
+        if ahead > 0:
+            yield generate_sse_event('queue_position', {'position': ahead, 'active': ahead + 1})
+            yield ''
 
         # Determine backend type + model meta BEFORE emitting stage4_start
         import contextvars
@@ -2857,12 +2947,26 @@ def execute_generation_streaming(data: dict):
         thread.start()
 
         # ── SSE progress event loop (backend-dependent) ──
+        _last_queue_count = ahead + 1  # Track for queue_position updates
+
         if backend_type == 'comfyui':
             # ComfyUI: push-based via WS callback → queue
             while True:
+                # Cancel check 2: during generation
+                if _is_cancelled(device_id):
+                    logger.info(f"[GENERATION-STREAMING] Cancelled during ComfyUI generation for {run_id}")
+                    yield generate_sse_event('cancelled', {'run_id': run_id, 'stage': 'during_generation'})
+                    yield ''
+                    return
                 try:
                     item = progress_queue.get(timeout=2.0)
                 except queue_mod.Empty:
+                    # Queue position update on heartbeat
+                    _current_count = _get_active_count()
+                    if _current_count != _last_queue_count:
+                        _last_queue_count = _current_count
+                        yield generate_sse_event('queue_position', {'position': max(0, _current_count - 1), 'active': _current_count})
+                        yield ''
                     yield ': heartbeat\n\n'
                     continue
                 if item is SENTINEL:
@@ -2878,7 +2982,14 @@ def execute_generation_streaming(data: dict):
             # Diffusers: poll GPU service progress endpoint
             gpu_progress_url = f"{config.GPU_SERVICE_URL}/api/diffusers/progress"
             last_step = -1
+            _poll_count = 0
             while thread.is_alive():
+                # Cancel check 2: during generation
+                if _is_cancelled(device_id):
+                    logger.info(f"[GENERATION-STREAMING] Cancelled during Diffusers generation for {run_id}")
+                    yield generate_sse_event('cancelled', {'run_id': run_id, 'stage': 'during_generation'})
+                    yield ''
+                    return
                 try:
                     resp = requests.get(gpu_progress_url, timeout=1).json()
                     if resp.get('active') and resp.get('step', 0) != last_step:
@@ -2892,12 +3003,35 @@ def execute_generation_streaming(data: dict):
                         yield ''
                 except Exception:
                     pass
+                # Queue position update every ~5 polls (5 seconds)
+                _poll_count += 1
+                if _poll_count % 5 == 0:
+                    _current_count = _get_active_count()
+                    if _current_count != _last_queue_count:
+                        _last_queue_count = _current_count
+                        yield generate_sse_event('queue_position', {'position': max(0, _current_count - 1), 'active': _current_count})
+                        yield ''
                 time.sleep(1.0)
 
         else:
             # Other backends (heartmula, stable_audio, openai, etc.): heartbeat only
+            _hb_count = 0
             while thread.is_alive():
+                # Cancel check 2: during generation
+                if _is_cancelled(device_id):
+                    logger.info(f"[GENERATION-STREAMING] Cancelled during generation for {run_id}")
+                    yield generate_sse_event('cancelled', {'run_id': run_id, 'stage': 'during_generation'})
+                    yield ''
+                    return
                 yield ': heartbeat\n\n'
+                # Queue position update every ~3 heartbeats (6 seconds)
+                _hb_count += 1
+                if _hb_count % 3 == 0:
+                    _current_count = _get_active_count()
+                    if _current_count != _last_queue_count:
+                        _last_queue_count = _current_count
+                        yield generate_sse_event('queue_position', {'position': max(0, _current_count - 1), 'active': _current_count})
+                        yield ''
                 time.sleep(2.0)
 
         # ── Join thread + error handling ──
@@ -2914,6 +3048,13 @@ def execute_generation_streaming(data: dict):
             raise Exception(result.get('error', 'Generation failed') if result else 'Generation returned no result')
 
         logger.info(f"[GENERATION-STREAMING] Stage 4 complete: {result['media_output']}")
+
+        # Cancel check 3: after GPU result, before VLM (saves VLM call)
+        if _is_cancelled(device_id):
+            logger.info(f"[GENERATION-STREAMING] Cancelled post-generation for {run_id}")
+            yield generate_sse_event('cancelled', {'run_id': run_id, 'stage': 'post_generation'})
+            yield ''
+            return
 
         # POST-GENERATION VLM SAFETY CHECK (images only, kids/youth only)
         if media_type == 'image' and safety_level in ('kids', 'youth'):
@@ -2956,7 +3097,38 @@ def execute_generation_streaming(data: dict):
         yield ''
 
     finally:
+        if generation_acquired:
+            _release_generation(device_id)
         logger.info(f"[GENERATION-STREAMING] Cleanup complete for run: {run_id}")
+
+
+@schema_bp.route('/pipeline/generation-active', methods=['GET'])
+def generation_active_endpoint():
+    """Pre-check: is this device currently generating?"""
+    device_id = request.args.get('device_id', '')
+    with _generation_tracker_lock:
+        _evict_stale_generations()
+        entry = _active_generations.get(device_id)
+        return jsonify({
+            'active': entry is not None,
+            'output_config': entry['output_config'] if entry else None,
+            'queue_total': len(_active_generations)
+        })
+
+
+@schema_bp.route('/pipeline/generation-cancel', methods=['POST'])
+def generation_cancel_endpoint():
+    """Cancel a running generation for this device."""
+    data = request.get_json() or {}
+    device_id = data.get('device_id', '')
+    if not device_id:
+        return jsonify({'cancelled': False, 'reason': 'no_device_id'}), 400
+    with _generation_tracker_lock:
+        if device_id in _active_generations:
+            _cancelled_generations.add(device_id)
+            logger.info(f"[GEN-TRACKER] Cancel requested for device={device_id}")
+            return jsonify({'cancelled': True})
+        return jsonify({'cancelled': False, 'reason': 'no_active_generation'})
 
 
 @schema_bp.route('/pipeline/generation', methods=['POST', 'GET'])
@@ -3084,31 +3256,43 @@ def generation_endpoint():
                     recorder = existing_recorder
                     logger.info(f"[GENERATION-ENDPOINT] Continuing existing run: {run_id}")
 
-        # Call helper function for generation
-        result = asyncio.run(execute_generation_stage4(
-            prompt=prompt,
-            output_config=output_config,
-            safety_level=safety_level,
-            seed=seed,
-            recorder=recorder,
-            run_id=run_id,
-            device_id=device_id,
-            input_text=input_text,
-            context_prompt=context_prompt,
-            interception_result=interception_result,
-            interception_config=interception_config,
-            input_image=input_image,
-            input_image1=input_image1,
-            input_image2=input_image2,
-            input_image3=input_image3,
-            alpha_factor=alpha_factor,
-            user_language=user_language,
-            # Session 155: Parameter Injection (replicate seed pattern)
-            width=data.get('width'),
-            height=data.get('height'),
-            steps=data.get('steps'),
-            cfg=data.get('cfg')
-        ))
+        # Per-device lock (non-streaming path)
+        success, _ahead = _try_acquire_generation(device_id, run_id or 'pending', output_config)
+        if not success:
+            return jsonify({
+                'status': 'error',
+                'error': 'Your previous generation is still running',
+                'code': 'device_busy'
+            }), 429
+
+        try:
+            # Call helper function for generation
+            result = asyncio.run(execute_generation_stage4(
+                prompt=prompt,
+                output_config=output_config,
+                safety_level=safety_level,
+                seed=seed,
+                recorder=recorder,
+                run_id=run_id,
+                device_id=device_id,
+                input_text=input_text,
+                context_prompt=context_prompt,
+                interception_result=interception_result,
+                interception_config=interception_config,
+                input_image=input_image,
+                input_image1=input_image1,
+                input_image2=input_image2,
+                input_image3=input_image3,
+                alpha_factor=alpha_factor,
+                user_language=user_language,
+                # Session 155: Parameter Injection (replicate seed pattern)
+                width=data.get('width'),
+                height=data.get('height'),
+                steps=data.get('steps'),
+                cfg=data.get('cfg')
+            ))
+        finally:
+            _release_generation(device_id)
 
         # Handle result
         if not result['success']:

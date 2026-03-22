@@ -352,7 +352,7 @@ async function startComparison() {
           prompt: userPrompt.value,
           output_config: slot.configId,
           seed,
-          device_id: deviceId,
+          device_id: `${deviceId}_cmp${i}`,
           source_view: 'compare',
           comparison_group_id: groupId,
           comparison_original_prompt: userPrompt.value,
