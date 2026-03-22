@@ -118,14 +118,25 @@
 
       <!-- Params row -->
       <div class="params-row">
-        <div class="param">
-          <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
-          <input v-model.number="synth.duration" type="number" min="0.1" max="5" step="0.1" />
+        <div class="param param-wide">
+          <div class="slider-header">
+            <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
+            <span class="slider-value">{{ synth.duration.toFixed(1) }}s</span>
+          </div>
+          <input type="range" v-model.number="synth.duration" min="0.1" max="5" step="0.1" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.durationHint') }}</span>
+        </div>
+        <div class="param param-wide">
+          <div class="slider-header">
+            <label>{{ t('latentLab.crossmodal.synth.startPosition') }}</label>
+            <span class="slider-value">{{ Math.round(synth.startPosition * 100) }}%</span>
+          </div>
+          <input type="range" v-model.number="synth.startPosition" min="0" max="0.95" step="0.05" />
+          <span class="param-hint">{{ t('latentLab.crossmodal.synth.startPositionHint') }}</span>
         </div>
         <div class="param">
           <label>{{ t('latentLab.crossmodal.synth.steps') }}</label>
-          <input v-model.number="synth.steps" type="number" min="10" max="100" step="5" />
+          <input v-model.number="synth.steps" type="number" min="5" max="100" step="5" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.stepsHint') }}</span>
         </div>
         <div class="param">
@@ -1065,7 +1076,8 @@ const synth = reactive({
   alpha: 0.5,
   magnitude: 1.0,
   noise: 0.0,
-  duration: 3.0,
+  duration: 1.0,
+  startPosition: 0.0,
   steps: 100,
   cfg: 7.0,
   seed: -1,
@@ -1428,7 +1440,7 @@ watch(embeddingStats, () => {
 function synthFingerprint(): string {
   return JSON.stringify([
     synth.promptA, synth.promptB, synth.alpha, synth.magnitude,
-    synth.noise, synth.duration, synth.steps, synth.cfg, synth.seed,
+    synth.noise, synth.duration, synth.startPosition, synth.steps, synth.cfg, synth.seed,
     axisSlots.map(s => [s.axis, s.value]),
     dimensionOffsets,
   ])
@@ -1833,6 +1845,7 @@ async function runSynth() {
       magnitude: synth.magnitude,
       noise_sigma: synth.noise,
       duration_seconds: synth.duration,
+      start_position: synth.startPosition,
       steps: synth.steps,
       cfg_scale: synth.cfg,
       seed: synth.seed,
@@ -1901,7 +1914,7 @@ async function runSynth() {
           tab: 'synth', prompt_a: synth.promptA, prompt_b: synth.promptB,
           alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise,
           ...(Object.keys(activeAxes).length > 0 ? { axes: activeAxes } : {}),
-          duration: synth.duration, steps: synth.steps, cfg: synth.cfg, seed: synth.seed,
+          duration: synth.duration, start_position: synth.startPosition, steps: synth.steps, cfg: synth.cfg, seed: synth.seed,
         },
         results: { seed: result.seed, generation_time_ms: result.generation_time_ms },
         outputs: [{ type: 'audio', format: 'wav', dataBase64: result.audio_base64 }],
@@ -2235,6 +2248,11 @@ onUnmounted(() => {
   min-width: 100px;
 }
 
+.param-wide {
+  flex: 2;
+  min-width: 160px;
+}
+
 .param label {
   display: block;
   font-size: 0.75rem;
@@ -2242,7 +2260,7 @@ onUnmounted(() => {
   margin-bottom: 0.3rem;
 }
 
-.param input,
+.param input:not([type="range"]),
 .param select {
   width: 100%;
   padding: 0.5rem;
@@ -2254,7 +2272,11 @@ onUnmounted(() => {
   box-sizing: border-box;
 }
 
-.param input:focus,
+.param input[type="range"] {
+  width: 100%;
+}
+
+.param input:not([type="range"]):focus,
 .param select:focus {
   outline: none;
   border-color: rgba(76, 175, 80, 0.5);

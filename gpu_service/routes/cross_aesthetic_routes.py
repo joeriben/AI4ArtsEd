@@ -56,7 +56,8 @@ def synth():
         magnitude: float (default 1.0) - Global embedding scale (0.1-5.0)
         noise_sigma: float (default 0.0) - Noise injection strength (0-1.0)
         dimension_offsets: dict (optional) - {dim_idx: offset_value}
-        duration_seconds: float (default 1.0) - Audio duration (0.5-5.0)
+        duration_seconds: float (default 1.0) - Audio duration (0.1-47.0)
+        start_position: float (default 0.0) - Position in virtual sound (0.0-1.0)
         steps: int (default 20) - Inference steps
         cfg_scale: float (default 3.5) - CFG scale
         seed: int (default -1) - Random seed
@@ -79,6 +80,7 @@ def synth():
         dimension_offsets=data.get('dimension_offsets'),
         axes=data.get('axes'),
         duration_seconds=float(data.get('duration_seconds', 1.0)),
+        start_position=float(data.get('start_position', 0.0)),
         steps=int(data.get('steps', 20)),
         cfg_scale=float(data.get('cfg_scale', 3.5)),
         seed=int(data.get('seed', -1)),
@@ -133,6 +135,7 @@ def multi_axis_synth():
         base_prompt=data.get('base_prompt'),
         dimension_offsets=data.get('dimension_offsets'),
         duration_seconds=float(data.get('duration_seconds', 1.0)),
+        start_position=float(data.get('start_position', 0.0)),
         steps=int(data.get('steps', 20)),
         cfg_scale=float(data.get('cfg_scale', 3.5)),
         seed=int(data.get('seed', -1)),

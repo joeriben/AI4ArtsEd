@@ -21,6 +21,15 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-22-latent-synth-start-position
+- **Session**: 282
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `latentLab.crossmodal.synth.startPosition` (NEW): "Start Position"
+  - `latentLab.crossmodal.synth.startPositionHint` (NEW): "0% = attack/onset, higher = sustained/stationary material"
+  - `latentLab.crossmodal.synth.durationHint` (MODIFIED): "Length of the generated audio clip in seconds" -> "Length of the generated audio clip in seconds (0.1–5.0)"
+- **Context**: Latent Audio Synth parameters. Start position controls where in a virtual sound the generation window sits — 0% produces attack/transient material, higher values produce sustained/stationary material for better looping. Technical but accessible tone.
+
 ### WO-2026-03-22-api-management-tab
 - **Session**: 280
 - **Scope**: en.ts

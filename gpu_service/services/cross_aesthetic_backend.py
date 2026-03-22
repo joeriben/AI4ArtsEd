@@ -83,6 +83,7 @@ class CrossmodalLabBackend:
         dimension_offsets: Optional[Dict[int, float]] = None,
         axes: Optional[Dict[str, float]] = None,
         duration_seconds: float = 1.0,
+        start_position: float = 0.0,
         steps: int = 20,
         cfg_scale: float = 3.5,
         seed: int = -1,
@@ -106,6 +107,9 @@ class CrossmodalLabBackend:
             dimension_offsets: Per-dimension offset values {dim_idx: offset}
             axes: Semantic axes {axis_name: -1.0 to 1.0}, 0 = no effect
             duration_seconds: Audio duration
+            start_position: Position within a virtual sound (0.0-1.0). Controls
+                seconds_start/seconds_total conditioning to suppress attack transients.
+                0.0 = beginning (default), 0.5 = middle (sustained material).
             steps: Inference steps
             cfg_scale: Classifier-free guidance scale
             seed: Random seed (-1 = random)
@@ -163,7 +167,20 @@ class CrossmodalLabBackend:
             stats = self._compute_stats(result_emb, emb_a, emb_b)
 
             # Step 6: Generate audio
-            duration_seconds = max(0.5, min(duration_seconds, 47.0))
+            duration_seconds = max(0.1, min(duration_seconds, 47.0))
+            start_position = max(0.0, min(start_position, 1.0))
+
+            # Compute conditioning: virtual sound length = duration / (1 - start_position)
+            # so that the generated window starts at the requested position.
+            # At start_position=0: seconds_start=0, seconds_end=duration (normal)
+            # At start_position=0.5: model thinks it's in the middle → sustained material
+            if start_position > 0.0 and start_position < 1.0:
+                virtual_total = duration_seconds / (1.0 - start_position)
+                seconds_start = start_position * virtual_total
+                seconds_end = seconds_start + duration_seconds
+            else:
+                seconds_start = 0.0
+                seconds_end = duration_seconds
 
             if seed == -1:
                 seed = random_mod.randint(0, 2**32 - 1)
@@ -171,8 +188,8 @@ class CrossmodalLabBackend:
             audio_bytes = await stable_audio.generate_from_embeddings(
                 prompt_embeds=result_emb,
                 attention_mask=result_mask,
-                seconds_start=0.0,
-                seconds_end=duration_seconds,
+                seconds_start=seconds_start,
+                seconds_end=seconds_end,
                 steps=steps,
                 cfg_scale=cfg_scale,
                 seed=seed,
@@ -186,7 +203,7 @@ class CrossmodalLabBackend:
             logger.info(
                 f"[CROSSMODAL] Synth complete: alpha={alpha}, magnitude={magnitude}, "
                 f"noise={noise_sigma}, axes={len(axes) if axes else 0}, "
-                f"duration={duration_seconds}s, time={elapsed_ms}ms"
+                f"duration={duration_seconds}s, start_pos={start_position:.0%}, time={elapsed_ms}ms"
             )
 
             return {
@@ -320,6 +337,7 @@ class CrossmodalLabBackend:
         base_prompt: Optional[str] = None,
         dimension_offsets: Optional[Dict[int, float]] = None,
         duration_seconds: float = 1.0,
+        start_position: float = 0.0,
         steps: int = 20,
         cfg_scale: float = 3.5,
         seed: int = -1,
@@ -336,6 +354,7 @@ class CrossmodalLabBackend:
             base_prompt: Optional text prompt as starting point (if None, uses neutral "sound")
             dimension_offsets: Per-dimension offset values {dim_idx: offset}
             duration_seconds: Audio duration
+            start_position: Position within a virtual sound (0.0-1.0). Suppresses attack transients.
             steps: Inference steps
             cfg_scale: CFG scale
             seed: Random seed (-1 = random)
@@ -412,15 +431,25 @@ class CrossmodalLabBackend:
             stats = self._compute_stats(result)
 
             # Generate audio
-            duration_seconds = max(0.5, min(duration_seconds, 47.0))
+            duration_seconds = max(0.1, min(duration_seconds, 47.0))
+            start_position = max(0.0, min(start_position, 1.0))
+
+            if start_position > 0.0 and start_position < 1.0:
+                virtual_total = duration_seconds / (1.0 - start_position)
+                seconds_start = start_position * virtual_total
+                seconds_end = seconds_start + duration_seconds
+            else:
+                seconds_start = 0.0
+                seconds_end = duration_seconds
+
             if seed == -1:
                 seed = random_mod.randint(0, 2**32 - 1)
 
             audio_bytes = await stable_audio.generate_from_embeddings(
                 prompt_embeds=result,
                 attention_mask=result_mask,
-                seconds_start=0.0,
-                seconds_end=duration_seconds,
+                seconds_start=seconds_start,
+                seconds_end=seconds_end,
                 steps=steps,
                 cfg_scale=cfg_scale,
                 seed=seed,
