@@ -1319,9 +1319,9 @@ interface AxisSlot {
   value: number
 }
 const axisSlots = reactive<AxisSlot[]>([
-  { axis: 'tonal_noisy', value: 0 },
-  { axis: 'rhythmic_sustained', value: 0 },
   { axis: 'acoustic_electronic', value: 0 },
+  { axis: 'music_noise', value: 0 },
+  { axis: 'vocal_instrumental', value: 0 },
 ])
 
 const axisColors = ['#e91e63', '#2196f3', '#4caf50']

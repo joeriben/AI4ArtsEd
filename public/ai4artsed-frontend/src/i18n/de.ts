@@ -1370,7 +1370,7 @@ export const de = {
         },
         semanticAxes: {
           modeToggle: 'Semantische Achsen',
-          info: 'Semantische Achsen lenken das Prompt-Embedding in bestimmte Richtungen. Jeder Regler interpoliert zwischen zwei Text-Polen im T5-Raum. Mehr aktive Achsen = schwächerer Effekt pro Achse. Empfohlen: 3–5 Achsen.',
+          info: 'Semantische Achsen lenken das Prompt-Embedding in bestimmte Richtungen. Jeder Regler interpoliert zwischen zwei Text-Polen im T5-Raum. Mehr aktive Achsen = schwächerer Effekt pro Achse. Empfohlen: 1–3 Achsen.',
           slotNone: '— keine —',
           resetAll: 'Alle auf Mitte zurücksetzen',
           experimental: 'experimentell'
