@@ -134,17 +134,17 @@
           <input type="range" v-model.number="synth.startPosition" min="0" max="0.95" step="0.05" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.startPositionHint') }}</span>
         </div>
-        <div class="param">
+        <div class="param param-narrow">
           <label>{{ t('latentLab.crossmodal.synth.steps') }}</label>
           <input v-model.number="synth.steps" type="number" min="5" max="100" step="5" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.stepsHint') }}</span>
         </div>
-        <div class="param">
+        <div class="param param-narrow">
           <label>{{ t('latentLab.crossmodal.synth.cfg') }}</label>
           <input v-model.number="synth.cfg" type="number" min="1" max="15" step="0.5" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.cfgHint') }}</span>
         </div>
-        <div class="param">
+        <div class="param param-wide">
           <label>{{ t('latentLab.crossmodal.seed') }}</label>
           <input v-model.number="synth.seed" type="number" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.seedHint') }}</span>
@@ -1142,16 +1142,16 @@ midi.onNote((note, velocity, on) => {
 
 // Synth params
 const synth = reactive({
-  promptA: 'minimoog sawtooth wave, c3',
-  promptB: 'prophet5 PWM chord, c minor7',
+  promptA: 'a steady clean saw wave, c3',
+  promptB: 'glass breaking',
   alpha: 0.5,
   magnitude: 1.0,
   noise: 0.0,
-  duration: 1.0,
+  duration: 3.0,
   startPosition: 0.0,
   steps: 20,
   cfg: 7.0,
-  seed: -1,
+  seed: 123456789,
   loop: true,
 })
 
@@ -2412,6 +2412,11 @@ onUnmounted(() => {
 .param {
   flex: 1;
   min-width: 100px;
+}
+
+.param-narrow {
+  flex: 0.7;
+  min-width: 70px;
 }
 
 .param-wide {
