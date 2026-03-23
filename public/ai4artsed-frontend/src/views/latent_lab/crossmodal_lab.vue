@@ -427,9 +427,21 @@
             </span>
           </div>
 
+          <!-- Scan range clamp -->
+          <div class="wt-range-row">
+            <span class="wt-range-label">{{ t('latentLab.crossmodal.synth.wtRange') }}</span>
+            <input type="range" v-model.number="wtRangeStart" min="0" :max="wtRangeEnd - 1" step="1" class="wt-range-slider" />
+            <span class="wt-range-value">{{ wtRangeStart + 1 }}</span>
+            <span class="wt-range-sep">–</span>
+            <input type="range" v-model.number="wtRangeEnd" :min="wtRangeStart + 1" :max="wavetableOsc.frameCount.value" step="1" class="wt-range-slider" />
+            <span class="wt-range-value">{{ wtRangeEnd }}</span>
+            <span class="wt-range-total">/ {{ wavetableOsc.frameCount.value }}</span>
+          </div>
+
+          <!-- Scan position (mapped to clamped range) -->
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
-            <span class="slider-value">{{ wavetableScan.toFixed(2) }}</span>
+            <span class="slider-value">{{ scanDisplayFrame }}</span>
           </div>
           <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
           <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
@@ -1043,6 +1055,17 @@ const wtInterpolate = ref(true)
 const wtScanAttack = ref(500)
 const wtScanDecay = ref(1000)
 const wtScanRelease = ref(300)
+const wtRangeStart = ref(0)   // 0-based frame index
+const wtRangeEnd = ref(16)    // exclusive end, updated when frames loaded
+
+/** Display: current frame number within the clamped range */
+const scanDisplayFrame = computed(() => {
+  const total = wavetableOsc.frameCount.value
+  if (total === 0) return '—'
+  const rangeSize = wtRangeEnd.value - wtRangeStart.value
+  const frame = wtRangeStart.value + Math.round(wavetableScan.value * Math.max(rangeSize - 1, 0))
+  return `${frame + 1}`
+})
 
 // ===== Step Sequencer =====
 const sequencer = useStepSequencer()
@@ -1058,7 +1081,7 @@ type LoopMode = 'oneshot' | 'loop' | 'pingpong'
 
 const transport = ref<TransportState>('idle')
 const engineMode = ref<EngineMode>('looper')
-const loopMode = ref<LoopMode>('loop')
+const loopMode = ref<LoopMode>('oneshot')
 const sequencerEnabled = ref(false)
 let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
 
@@ -1867,6 +1890,8 @@ async function buildSemanticWavetable() {
 
     if (rawFrames.length > 0) {
       wavetableOsc.loadRawFrames(rawFrames)
+      wtRangeStart.value = 0
+      wtRangeEnd.value = wavetableOsc.frameCount.value
 
       // Auto-switch to wavetable engine and start playing
       if (engineMode.value !== 'wavetable') setEngineMode('wavetable')
@@ -1881,14 +1906,23 @@ async function buildSemanticWavetable() {
 
 // toggleSequencerSection replaced by setSequencerEnabled above
 
+/** Map user scan (0–1) to actual scanPosition within clamped range. */
+function mappedScanPosition(userScan: number): number {
+  const total = wavetableOsc.frameCount.value
+  if (total <= 1) return 0
+  const startFrac = wtRangeStart.value / total
+  const endFrac = (wtRangeEnd.value - 1) / total
+  return startFrac + userScan * (endFrac - startFrac)
+}
+
 function onScanInput(event: Event) {
   const val = parseFloat((event.target as HTMLInputElement).value)
   wavetableScan.value = val
-  wavetableOsc.setScanPosition(val)
+  wavetableOsc.setScanPosition(mappedScanPosition(val))
 }
 
 watch(wavetableScan, (v) => {
-  wavetableOsc.setScanPosition(v)
+  wavetableOsc.setScanPosition(mappedScanPosition(v))
 })
 
 function onWtInterpolateChange(event: Event) {
@@ -2140,7 +2174,11 @@ async function runSynth() {
 
       // Extract wavetable frames from the new buffer
       const buf = looper.getOriginalBuffer()
-      if (buf) await wavetableOsc.loadFrames(buf)
+      if (buf) {
+        await wavetableOsc.loadFrames(buf)
+        wtRangeStart.value = 0
+        wtRangeEnd.value = wavetableOsc.frameCount.value
+      }
 
       // Enforce correct engine mode
       if (engineMode.value === 'wavetable') {
@@ -3393,6 +3431,43 @@ onUnmounted(() => {
   background: rgba(76, 175, 80, 0.15);
   color: #4CAF50;
   font-weight: 600;
+}
+
+/* Wavetable range clamp */
+.wt-range-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.wt-range-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 38px;
+}
+
+.wt-range-slider {
+  flex: 1;
+  accent-color: #CE93D8;
+}
+
+.wt-range-value {
+  font-size: 0.7rem;
+  color: #CE93D8;
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.wt-range-sep {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+}
+
+.wt-range-total {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.65rem;
 }
 
 /* Wavetable options row */

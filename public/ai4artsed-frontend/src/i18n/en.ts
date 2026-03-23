@@ -1466,6 +1466,7 @@ export const en = {
         modePitch: 'Pitch (OLA)',
         wavetableScan: 'Scan Position',
         wavetableScanHint: 'Morph between frames (0 = start, 1 = end)',
+        wtRange: 'Range',
         wtInterpolate: 'Interpolate',
         wtScanEnvelope: 'Scan AD',
         wavetableFrames: '{count} frames',
