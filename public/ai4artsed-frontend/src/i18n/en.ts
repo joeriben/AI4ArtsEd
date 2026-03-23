@@ -1423,6 +1423,7 @@ export const en = {
         cfgHint: 'Classifier-Free Guidance for audio generation',
         seedHint: '-1 = random, fixed value = reproducible result',
         loop: 'Loop playback',
+        loopOff: 'One-shot',
         loopToggle: 'Loop',
         stop: 'Stop',
         looping: 'Looping',

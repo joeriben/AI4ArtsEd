@@ -77,10 +77,10 @@
           <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
             {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
           </button>
-          <button v-if="isEngineActive" class="stop-btn" @click="synthEngine === 'direct' ? looper.stop() : wavetableOsc.stop()">
+          <button v-if="showStopButton" class="stop-btn" @click="transportStop">
             {{ t('latentLab.crossmodal.synth.stop') }}
           </button>
-          <button v-if="!isEngineActive && hasEngineAudio" class="play-btn" @click="synthEngine === 'direct' ? looper.replay() : wavetableOsc.start()">
+          <button v-if="showPlayButton" class="play-btn" @click="transportPlay">
             {{ t('latentLab.crossmodal.synth.play') }}
           </button>
         </div>
@@ -176,7 +176,7 @@
                     :key="ax.name"
                     :value="ax.name"
                   >
-                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
                     <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
                     <template v-if="ax.level === 'experimental'"> *</template>
                   </option>
@@ -187,7 +187,7 @@
                     :key="ax.name"
                     :value="ax.name"
                   >
-                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
                   </option>
                 </optgroup>
               </select>
@@ -290,22 +290,22 @@
                :class="{ disabled: !looper.hasAudio.value }">
         <summary>{{ t('latentLab.crossmodal.synth.looperSection') }}</summary>
         <div class="looper-status">
-          <span class="looper-indicator" :class="{ pulsing: isEngineActive }" />
+          <span class="looper-indicator" :class="{ pulsing: transport === 'playing' }" />
           <span class="looper-label">
-            {{ isEngineActive
-              ? (synthEngine === 'wavetable'
+            {{ transport === 'playing'
+              ? (engineMode === 'wavetable'
                 ? t('latentLab.crossmodal.synth.oscillating')
                 : (sequencer.isPlaying.value
                   ? t('latentLab.crossmodal.synth.sequencing')
-                  : (looper.isLooping.value ? t('latentLab.crossmodal.synth.looping') : t('latentLab.crossmodal.synth.playing'))))
-              : t('latentLab.crossmodal.synth.stopped') }}
+                  : (loopMode !== 'oneshot' ? t('latentLab.crossmodal.synth.looping') : t('latentLab.crossmodal.synth.playing'))))
+              : (transport === 'generating' ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.synth.stopped')) }}
           </span>
           <span v-if="looper.bufferDuration.value > 0" class="looper-duration">
             {{ looper.bufferDuration.value.toFixed(2) }}s
           </span>
         </div>
         <!-- Waveform + loop region (always visible when audio loaded) -->
-        <div v-if="synthEngine === 'direct'" class="loop-interval">
+        <div v-if="engineMode === 'looper'" class="loop-interval">
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.loopInterval') }}</label>
             <span class="slider-value">
@@ -340,21 +340,25 @@
           </div>
         </div>
 
-        <!-- ===== Loop Section ===== -->
-        <div class="section-toggle">
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="loopOn" @change="toggleLoopSection(($event.target as HTMLInputElement).checked)" />
+        <!-- ===== Loop Mode ===== -->
+        <div class="section-toggle loop-mode-row">
+          <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
+            <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
+            {{ t('latentLab.crossmodal.synth.loopOff') }}
+          </label>
+          <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
+            <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
             {{ t('latentLab.crossmodal.synth.loopToggle') }}
           </label>
+          <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
+            <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
+            {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+          </label>
         </div>
-        <div v-if="loopOn" class="loop-options">
+        <div v-if="loopMode !== 'oneshot'" class="loop-options">
           <label class="inline-toggle">
             <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
             {{ t('latentLab.crossmodal.synth.loopOptimize') }}
-          </label>
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="pingPongOn" :disabled="!looper.hasAudio.value" @change="onPingPongChange" />
-            {{ t('latentLab.crossmodal.synth.loopPingPong') }}
           </label>
           <span v-if="looper.loopOptimize.value" class="optimized-hint">
             → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
@@ -365,7 +369,7 @@
         <!-- ===== Wavetable Section ===== -->
         <div class="section-toggle">
           <label class="inline-toggle">
-            <input type="checkbox" :checked="wavetableOn" :disabled="!wavetableOsc.hasFrames.value" @change="toggleWavetable(($event.target as HTMLInputElement).checked)" />
+            <input type="checkbox" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode(($event.target as HTMLInputElement).checked ? 'wavetable' : 'looper')" />
             {{ t('latentLab.crossmodal.synth.wavetableToggle') }}
             <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
           </label>
@@ -389,12 +393,12 @@
                 <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
                 <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
                   <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
-                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
                   </option>
                 </optgroup>
                 <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
                   <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
-                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
                   </option>
                 </optgroup>
               </select>
@@ -431,11 +435,11 @@
         <!-- ===== Sequencer Section ===== -->
         <div class="section-toggle">
           <label class="inline-toggle">
-            <input type="checkbox" :checked="sequencerOn" @change="toggleSequencerSection(($event.target as HTMLInputElement).checked)" />
+            <input type="checkbox" :checked="sequencerEnabled" @change="setSequencerEnabled(($event.target as HTMLInputElement).checked)" />
             {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
           </label>
         </div>
-        <div v-if="sequencerOn" class="sequencer-controls">
+        <div v-if="sequencerEnabled" class="sequencer-controls">
           <div class="sequencer-transport">
             <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
               {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
@@ -553,7 +557,7 @@
           <span class="transpose-value">{{ formatTranspose(looper.transposeSemitones.value) }}</span>
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.transposeHint') }}</span>
         </div>
-        <div v-if="synthEngine === 'direct' && !sequencerOn" class="transpose-mode-row">
+        <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-mode-row">
           <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
             <input
               type="radio"
@@ -576,7 +580,7 @@
           </label>
         </div>
         <!-- Crossfade duration -->
-        <div v-if="synthEngine === 'direct' && !sequencerOn" class="transpose-row">
+        <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-row">
           <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
           <input
             type="range"
@@ -633,7 +637,7 @@
           <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
             {{ t('latentLab.crossmodal.synth.saveRaw') }}
           </button>
-          <button v-if="synthEngine === 'direct' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+          <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
             {{ t('latentLab.crossmodal.synth.saveLoop') }}
           </button>
         </div>
@@ -998,13 +1002,6 @@ function drawWaveform() {
 
 // ===== Wavetable Oscillator =====
 const wavetableOsc = useWavetableOsc()
-type SynthEngine = 'direct' | 'wavetable'
-const synthEngine = ref<SynthEngine>('direct')
-// Independent toggle states (UI-facing)
-const loopOn = ref(false)
-const wavetableOn = ref(false)
-const sequencerOn = ref(false)
-const pingPongOn = ref(false)
 const wavetableScan = ref(0)
 type WtMode = 'extract' | 'semantic'
 const wtMode = ref<WtMode>('extract')
@@ -1020,13 +1017,30 @@ const sequencer = useStepSequencer()
 // ===== Arpeggiator =====
 const arpeggiator = useArpeggiator(sequencer.bpm)
 
-// ===== Computed helpers (engine-agnostic) =====
-const isEngineActive = computed(() =>
-  synthEngine.value === 'direct' ? looper.isPlaying.value : wavetableOsc.isPlaying.value
+// ===== Transport State Machine =====
+// Single source of truth for UI — decoupled from low-level engine playback events.
+type TransportState = 'idle' | 'playing' | 'paused' | 'generating'
+type EngineMode = 'looper' | 'wavetable'
+type LoopMode = 'oneshot' | 'loop' | 'pingpong'
+
+const transport = ref<TransportState>('idle')
+const engineMode = ref<EngineMode>('looper')
+const loopMode = ref<LoopMode>('loop')
+const sequencerEnabled = ref(false)
+let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
+
+// Derived state for template — NEVER flickers during MIDI/retrigger
+const generating = computed(() => transport.value === 'generating')
+const showStopButton = computed(() => transport.value === 'playing')
+const showPlayButton = computed(() =>
+  transport.value === 'paused' && hasLoadedAudio.value
 )
-const hasEngineAudio = computed(() =>
-  synthEngine.value === 'direct' ? looper.hasAudio.value : wavetableOsc.hasFrames.value
+const hasLoadedAudio = computed(() =>
+  engineMode.value === 'looper' ? looper.hasAudio.value : wavetableOsc.hasFrames.value
 )
+// Compat aliases for code that still references old names
+const wavetableOn = computed(() => engineMode.value === 'wavetable')
+const sequencerOn = computed(() => sequencerEnabled.value)
 
 // ===== ADSR Envelope =====
 const envelope = useEnvelope()
@@ -1065,7 +1079,7 @@ midi.mapCC(2, (v) => { synth.magnitude = 0.1 + v * 4.9 })
 // CC3 → Noise (0 to 1)
 midi.mapCC(3, (v) => { synth.noise = v })
 // CC64 → Loop toggle (sustain pedal: >0.5 = on)
-midi.mapCC(64, (v) => { looper.setLoop(v > 0.5) })
+midi.mapCC(64, (v) => { setLoopMode(v > 0.5 ? 'loop' : 'oneshot') })
 // CC5 → Wavetable scan position
 midi.mapCC(5, (v) => { wavetableScan.value = v; wavetableOsc.setScanPosition(v) })
 
@@ -1075,7 +1089,7 @@ midi.onClock(sequencer.handleMidiClock)
 // MIDI Note → Monophonic synth with ADSR envelope (NEVER triggers generation)
 // In sequencer mode, MIDI notes are ignored (sequencer drives the engine)
 midi.onNote((note, velocity, on) => {
-  if (sequencerOn.value) return
+  if (sequencerEnabled.value) return
   if (on) {
     wireEnvelope()
     const wasEmpty = heldNotes.length === 0
@@ -1094,7 +1108,7 @@ midi.onNote((note, velocity, on) => {
     } else {
       // Legato: just transpose, envelope continues at sustain
       const semitones = note - MIDI_REF_NOTE
-      if (synthEngine.value === 'direct') {
+      if (engineMode.value === 'looper') {
         looper.setTranspose(semitones)
       } else {
         wavetableOsc.setFrequencyFromNote(note)
@@ -1110,14 +1124,14 @@ midi.onNote((note, velocity, on) => {
       arpeggiator.stop()
       envelope.triggerRelease(() => {
         if (heldNotes.length === 0) {
-          if (synthEngine.value === 'direct') looper.stop()
+          if (engineMode.value === 'looper') looper.stop()
           else wavetableOsc.stop()
         }
       })
     } else {
       // Notes remaining: switch pitch to last held note
       const lastNote = heldNotes[heldNotes.length - 1]!
-      if (synthEngine.value === 'direct') {
+      if (engineMode.value === 'looper') {
         looper.setTranspose(lastNote - MIDI_REF_NOTE)
       } else {
         wavetableOsc.setFrequencyFromNote(lastNote)
@@ -1623,16 +1637,90 @@ function onNormalizeChange(event: Event) {
 function onOptimizeChange(event: Event) {
   looper.setLoopOptimize((event.target as HTMLInputElement).checked)
 }
-function onPingPongChange(event: Event) {
-  pingPongOn.value = (event.target as HTMLInputElement).checked
-  looper.setLoopPingPong(pingPongOn.value)
+// ===== Transport State Machine Actions =====
+
+/** Start audio output with the active engine. */
+function transportPlay() {
+  if (!hasLoadedAudio.value) return
+  if (engineMode.value === 'looper') {
+    looper.setLoop(loopMode.value !== 'oneshot')
+    looper.setLoopPingPong(loopMode.value === 'pingpong')
+    looper.replay()
+  } else {
+    if (wavetableOsc.hasFrames.value) wavetableOsc.start()
+  }
+  if (sequencerEnabled.value && !sequencer.isPlaying.value) {
+    wireEnvelope()
+    wireSequencerCallbacks()
+    const ac = looper.getContext()
+    sequencer.start(ac)
+  }
+  transport.value = 'playing'
 }
 
-/** Trigger the active synthesis engine for a given note + velocity. */
+/** Pause audio output (keeps audio loaded). */
+function transportStop() {
+  sequencer.stop()
+  arpeggiator.stop()
+  if (engineMode.value === 'looper') looper.stop()
+  else wavetableOsc.stop()
+  transport.value = 'paused'
+}
+
+/** Switch engine mode with mutual exclusion. */
+function setEngineMode(mode: EngineMode) {
+  if (mode === engineMode.value) return
+  const wasPlaying = transport.value === 'playing'
+
+  // Stop current engine
+  sequencer.stop()
+  arpeggiator.stop()
+  looper.stop()
+  wavetableOsc.stop()
+
+  engineMode.value = mode
+
+  if (mode === 'wavetable') {
+    const ac = looper.getContext()
+    wavetableOsc.setContext(ac)
+    if (!envelopeWired) wireEnvelope()
+  }
+
+  // Resume if was playing and new engine has audio
+  if (wasPlaying && hasLoadedAudio.value) {
+    transportPlay()
+  } else {
+    transport.value = hasLoadedAudio.value ? 'paused' : 'idle'
+  }
+}
+
+/** Set loop mode (oneshot/loop/pingpong). */
+function setLoopMode(mode: LoopMode) {
+  loopMode.value = mode
+  looper.setLoop(mode !== 'oneshot')
+  looper.setLoopPingPong(mode === 'pingpong')
+}
+
+/** Toggle sequencer section visibility. */
+function setSequencerEnabled(on: boolean) {
+  sequencerEnabled.value = on
+  if (!on && sequencer.isPlaying.value) {
+    sequencer.stop()
+    arpeggiator.stop()
+  }
+  if (on && transport.value === 'playing') {
+    wireEnvelope()
+    wireSequencerCallbacks()
+    const ac = looper.getContext()
+    sequencer.start(ac)
+  }
+}
+
+/** Trigger the active synthesis engine for a given note + velocity (MIDI/sequencer). */
 function triggerEngine(note: number, velocity: number) {
   wireEnvelope()
   const semitones = note - MIDI_REF_NOTE
-  if (synthEngine.value === 'direct') {
+  if (engineMode.value === 'looper') {
     looper.setTranspose(semitones)
     if (looper.hasAudio.value) looper.retrigger()
   } else {
@@ -1640,41 +1728,6 @@ function triggerEngine(note: number, velocity: number) {
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) wavetableOsc.start()
   }
   envelope.triggerAttack(velocity)
-}
-
-/** Toggle the Loop section on/off. */
-function toggleLoopSection(on: boolean) {
-  loopOn.value = on
-  looper.setLoop(on)
-  if (on) {
-    looper.setLoopPingPong(pingPongOn.value)
-  }
-}
-
-/** Toggle wavetable engine on/off. */
-function toggleWavetable(on: boolean) {
-  wavetableOn.value = on
-  if (on) {
-    // Switch to wavetable engine
-    looper.stop()
-    synthEngine.value = 'wavetable'
-    const ac = looper.getContext()
-    wavetableOsc.setContext(ac)
-    if (!envelopeWired) wireEnvelope()
-    if (wavetableOsc.hasFrames.value && !sequencerOn.value) {
-      wavetableOsc.start()
-      if (!envelope.isNeutral.value && envelopeWired) envelope.triggerAttack(1)
-    }
-  } else {
-    // Switch back to direct (looper) engine
-    wavetableOsc.stop()
-    synthEngine.value = 'direct'
-    if (looper.hasAudio.value && !sequencerOn.value) {
-      looper.setLoopPingPong(pingPongOn.value)
-      looper.replay()
-      if (!envelope.isNeutral.value && envelopeWired) envelope.triggerAttack(1)
-    }
-  }
 }
 
 /**
@@ -1736,14 +1789,9 @@ async function buildSemanticWavetable() {
     if (rawFrames.length > 0) {
       wavetableOsc.loadRawFrames(rawFrames)
 
-      // Auto-switch to wavetable engine
-      if (!wavetableOn.value) toggleWavetable(true)
-      else if (!wavetableOsc.isPlaying.value) {
-        const ac = looper.getContext()
-        wavetableOsc.setContext(ac)
-        if (!envelopeWired) wireEnvelope()
-        wavetableOsc.start()
-      }
+      // Auto-switch to wavetable engine and start playing
+      if (engineMode.value !== 'wavetable') setEngineMode('wavetable')
+      if (transport.value !== 'playing') transportPlay()
     }
   } catch (e) {
     error.value = `Wavetable build failed: ${e}`
@@ -1752,33 +1800,7 @@ async function buildSemanticWavetable() {
   }
 }
 
-/** Toggle sequencer section on/off. */
-function toggleSequencerSection(on: boolean) {
-  sequencerOn.value = on
-  if (on) {
-    // Wire envelope if ADSR is non-neutral
-    if (!envelope.isNeutral.value) wireEnvelope()
-    if (envelopeWired && envelope.isNeutral.value) envelope.bypass()
-  } else {
-    // Stop sequencer when toggled off
-    if (sequencer.isPlaying.value) {
-      sequencer.stop()
-      arpeggiator.stop()
-    }
-    // Resume continuous playback with active engine
-    if (!envelope.isNeutral.value) wireEnvelope()
-    if (envelopeWired) {
-      if (envelope.isNeutral.value) envelope.bypass()
-      else envelope.triggerAttack(1)
-    }
-    if (synthEngine.value === 'direct') {
-      looper.setLoopPingPong(pingPongOn.value)
-      if (looper.hasAudio.value) looper.replay()
-    } else if (wavetableOsc.hasFrames.value) {
-      wavetableOsc.start()
-    }
-  }
-}
+// toggleSequencerSection replaced by setSequencerEnabled above
 
 function onScanInput(event: Event) {
   const val = parseFloat((event.target as HTMLInputElement).value)
@@ -1844,7 +1866,8 @@ function onStepVelocityInput(idx: number, event: Event) {
 // Stop engines + sequencer when navigating away from synth tab
 watch(activeTab, (tab) => {
   if (tab !== 'synth') {
-    if (sequencer.isPlaying.value) sequencer.stop()
+    transport.value = 'idle'
+    sequencer.stop()
     arpeggiator.stop()
     looper.stop()
     wavetableOsc.stop()
@@ -1855,7 +1878,7 @@ watch(activeTab, (tab) => {
 watch(
   [envelope.attackMs, envelope.decayMs, envelope.sustain, envelope.releaseMs],
   () => {
-    const playing = looper.isPlaying.value || wavetableOsc.isPlaying.value || sequencer.isPlaying.value
+    const playing = transport.value === 'playing'
     if (!playing) return
     if (envelope.isNeutral.value) {
       if (envelopeWired) envelope.bypass()
@@ -1966,12 +1989,15 @@ async function runSynth() {
       envelope.triggerAttack(1)
     }
   }
-  // Don't clear looper state — keep playing during generation
+  // Track pre-generation state to restore after completion
+  preGenTransport = transport.value === 'generating'
+    ? preGenTransport
+    : (transport.value === 'playing' ? 'playing' : 'idle')
   error.value = ''
   resultSeed.value = null
   generationTimeMs.value = null
   embeddingStats.value = null
-  generating.value = true
+  transport.value = 'generating'
   try {
     // Build request body — always /synth, axes included when active
     const body: Record<string, unknown> = {
@@ -2023,7 +2049,7 @@ async function runSynth() {
       generationTimeMs.value = result.generation_time_ms
       embeddingStats.value = result.embedding_stats
 
-      // Feed into looper (crossfades if already playing)
+      // Load audio into looper (always, for buffer access)
       await looper.play(result.audio_base64)
       nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
@@ -2032,15 +2058,23 @@ async function runSynth() {
       const buf = looper.getOriginalBuffer()
       if (buf) await wavetableOsc.loadFrames(buf)
 
-      // If wavetable engine active, switch playback
-      if (synthEngine.value === 'wavetable') {
+      // Enforce correct engine mode
+      if (engineMode.value === 'wavetable') {
         looper.stop()
         const ac = looper.getContext()
         wavetableOsc.setContext(ac)
         if (!envelopeWired) wireEnvelope()
-        if (wavetableOsc.hasFrames.value && !sequencerOn.value) {
-          await wavetableOsc.start()
-        }
+        if (wavetableOsc.hasFrames.value) await wavetableOsc.start()
+      }
+
+      // Restore transport: play if was playing or first generation
+      if (preGenTransport === 'playing' || preGenTransport === 'idle') {
+        transport.value = 'playing'
+      } else {
+        // User had paused — load but don't play
+        if (engineMode.value === 'looper') looper.stop()
+        else wavetableOsc.stop()
+        transport.value = 'paused'
       }
 
       // Record for research export
@@ -2054,16 +2088,13 @@ async function runSynth() {
         results: { seed: result.seed, generation_time_ms: result.generation_time_ms },
         outputs: [{ type: 'audio', format: 'wav', dataBase64: result.audio_base64 }],
       })
-
-      // In sequencer mode, don't auto-start looper (sequencer drives it)
-      // Looper.play() above already loaded the buffer; sequencer will retrigger
     } else {
       error.value = result.error || 'Synth generation failed'
+      transport.value = preGenTransport === 'playing' ? 'playing' : 'idle'
     }
   } catch (e) {
     error.value = String(e)
-  } finally {
-    generating.value = false
+    transport.value = preGenTransport === 'playing' ? 'playing' : 'idle'
   }
 }
 
