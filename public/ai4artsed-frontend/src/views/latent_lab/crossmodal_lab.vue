@@ -2057,20 +2057,7 @@ watch(activeTab, (tab) => {
   }
 })
 
-// Re-apply envelope when ADSR values change during playback
-watch(
-  [envelope.attackMs, envelope.decayMs, envelope.sustain, envelope.releaseMs],
-  () => {
-    const playing = transport.value === 'playing'
-    if (!playing) return
-    if (envelope.isNeutral.value) {
-      if (envelopeWired) envelope.bypass()
-    } else {
-      wireEnvelope()
-      envelope.triggerAttack(1)
-    }
-  },
-)
+// ADSR values take effect on next note-on (no mid-note re-trigger — causes clicks)
 
 function onMidiInputChange(event: Event) {
   const val = (event.target as HTMLSelectElement).value
