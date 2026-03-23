@@ -574,20 +574,18 @@
             <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
           </select>
         </div>
-        <!-- Transpose -->
-        <div class="transpose-row">
-          <label>{{ t('latentLab.crossmodal.synth.transpose') }}</label>
-          <input
-            type="range"
-            :value="looper.transposeSemitones.value"
-            min="-24"
-            max="24"
-            step="1"
-            :disabled="!looper.hasAudio.value"
-            @input="onTransposeInput"
-          />
-          <span class="transpose-value">{{ formatTranspose(looper.transposeSemitones.value) }}</span>
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.transposeHint') }}</span>
+        <!-- Keyboard: 12 note buttons (C to B), triggers engine + transposes sequencer -->
+        <div class="keyboard-row">
+          <button
+            v-for="(note, idx) in keyboardNotes"
+            :key="idx"
+            class="key-btn"
+            :class="{ black: note.black, active: activeKeyNote === note.midi }"
+            :disabled="!hasLoadedAudio"
+            @pointerdown="onKeyDown_key(note.midi)"
+            @pointerup="onKeyUp_key"
+            @pointerleave="onKeyUp_key"
+          >{{ note.label }}</button>
         </div>
         <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-mode-row">
           <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
@@ -1099,6 +1097,33 @@ const midi = useWebMidi()
 
 // MIDI reference note for transpose (C3 = 60)
 const MIDI_REF_NOTE = 60
+
+// ===== On-screen Keyboard =====
+const keyboardNotes = [
+  { label: 'C',  midi: 60, black: false },
+  { label: 'C#', midi: 61, black: true },
+  { label: 'D',  midi: 62, black: false },
+  { label: 'D#', midi: 63, black: true },
+  { label: 'E',  midi: 64, black: false },
+  { label: 'F',  midi: 65, black: false },
+  { label: 'F#', midi: 66, black: true },
+  { label: 'G',  midi: 67, black: false },
+  { label: 'G#', midi: 68, black: true },
+  { label: 'A',  midi: 69, black: false },
+  { label: 'A#', midi: 70, black: true },
+  { label: 'B',  midi: 71, black: false },
+]
+const activeKeyNote = ref<number | null>(null)
+
+function onKeyDown_key(midi: number) {
+  activeKeyNote.value = midi
+  triggerEngine(midi, 0.9)
+}
+
+function onKeyUp_key() {
+  activeKeyNote.value = null
+  envelope.triggerRelease()
+}
 
 // Monophonic note stack for last-note priority
 const heldNotes: number[] = []
@@ -3470,6 +3495,44 @@ onUnmounted(() => {
 }
 
 /* Step Grid */
+/* On-screen keyboard */
+.keyboard-row {
+  display: flex;
+  gap: 2px;
+  margin: 0.5rem 0;
+}
+
+.key-btn {
+  flex: 1;
+  padding: 0.5rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.1s;
+  user-select: none;
+  touch-action: none;
+}
+
+.key-btn.black {
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.key-btn.active {
+  background: rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.key-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .seq-grid {
   display: grid;
   gap: 2px;
