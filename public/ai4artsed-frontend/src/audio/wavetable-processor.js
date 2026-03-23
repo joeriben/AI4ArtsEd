@@ -2,8 +2,8 @@
  * AudioWorklet processor for wavetable synthesis.
  *
  * Phase-accumulator reads single-cycle frames at a controlled frequency.
- * Bilinear interpolation between adjacent samples and adjacent frames
- * provides smooth timbral morphing via the scanPosition parameter.
+ * Catmull-Rom cubic interpolation between frames provides smooth timbral
+ * morphing via the scanPosition parameter.
  *
  * Frame size: 2048 samples (~21.5 Hz fundamental at 44.1 kHz).
  */
@@ -71,7 +71,6 @@ class WavetableProcessor extends AudioWorkletProcessor {
         const f2 = this.frames[i2]
         const f3 = this.frames[i3]
 
-        // Sample each frame at current phase (linear within-frame)
         const s0 = f0[idx0] + (f0[idx1] - f0[idx0]) * phaseFrac
         const s1 = f1[idx0] + (f1[idx1] - f1[idx0]) * phaseFrac
         const s2 = f2[idx0] + (f2[idx1] - f2[idx0]) * phaseFrac

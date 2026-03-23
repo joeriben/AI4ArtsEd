@@ -1682,7 +1682,13 @@ function transportPlay() {
     looper.setLoopPingPong(loopMode.value === 'pingpong')
     looper.replay()
   } else {
-    if (wavetableOsc.hasFrames.value) wavetableOsc.start()
+    if (wavetableOsc.hasFrames.value) {
+      wavetableOsc.start()
+      // Trigger one-shot scan sweep if ADR configured
+      if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
+        wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
+      }
+    }
   }
   if (sequencerEnabled.value && !sequencer.isPlaying.value) {
     wireEnvelope()
@@ -1697,8 +1703,12 @@ function transportPlay() {
 function transportStop() {
   sequencer.stop()
   arpeggiator.stop()
-  if (engineMode.value === 'looper') looper.stop()
-  else wavetableOsc.stop()
+  if (engineMode.value === 'looper') {
+    looper.stop()
+  } else {
+    wavetableOsc.stopScanEnvelope(wtScanRelease.value)
+    wavetableOsc.stop()
+  }
   transport.value = 'paused'
 }
 
@@ -1761,10 +1771,7 @@ function triggerEngine(note: number, velocity: number) {
   } else {
     wavetableOsc.setFrequencyFromNote(note)
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) wavetableOsc.start()
-    // Trigger scan AD envelope if configured
-    if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
-      wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
-    }
+    // Scan envelope is triggered once via transportPlay, not per note
   }
   envelope.triggerAttack(velocity)
 }
