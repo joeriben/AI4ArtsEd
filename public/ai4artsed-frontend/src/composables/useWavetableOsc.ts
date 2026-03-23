@@ -363,14 +363,14 @@ export function useWavetableOsc() {
     const dSec = decayMs / 1000
 
     param.cancelScheduledValues(now)
-    param.setValueAtTime(0, now)
+    param.setValueAtTime(0.001, now) // exponential needs non-zero start
     if (aSec > 0) {
-      param.linearRampToValueAtTime(1, now + aSec)
+      param.exponentialRampToValueAtTime(1, now + aSec)
     } else {
       param.setValueAtTime(1, now)
     }
     if (dSec > 0) {
-      param.linearRampToValueAtTime(0, now + aSec + dSec)
+      param.exponentialRampToValueAtTime(0.001, now + aSec + dSec)
     }
   }
 
@@ -384,12 +384,12 @@ export function useWavetableOsc() {
     const rSec = releaseMs / 1000
 
     param.cancelScheduledValues(now)
-    // setValueAtTime to "capture" current value before ramping
-    param.setValueAtTime(param.value, now)
+    // Capture current value before ramping (exponential needs non-zero)
+    param.setValueAtTime(Math.max(0.001, param.value), now)
     if (rSec > 0) {
-      param.linearRampToValueAtTime(0, now + rSec)
+      param.exponentialRampToValueAtTime(0.001, now + rSec)
     } else {
-      param.setValueAtTime(0, now)
+      param.setValueAtTime(0.001, now)
     }
   }
 
