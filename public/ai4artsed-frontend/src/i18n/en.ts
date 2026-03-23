@@ -619,6 +619,10 @@ export const en = {
       researcherChair: 'Chair of Education with Focus on Culture and Aesthetic Education',
       researcherUnesco: 'UNESCO Chair in Digital Culture and Arts in Education'
     },
+    credits: {
+      title: 'Credits',
+      emt140: 'Plate reverb impulse responses: EMT-140 by Greg Hopkins / Hopkins Media Services (CC-BY)'
+    },
     funding: {
       title: 'Funded by'
     }

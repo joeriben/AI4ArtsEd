@@ -46,6 +46,13 @@
         </div>
       </section>
 
+      <section>
+        <h2>{{ $t('about.credits.title') }}</h2>
+        <ul class="credits-list">
+          <li>{{ $t('about.credits.emt140') }}</li>
+        </ul>
+      </section>
+
       <section class="funding">
         <h2>{{ $t('about.funding.title') }}</h2>
         <div class="funding-logo">
