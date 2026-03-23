@@ -935,7 +935,6 @@ const tabs: { id: TabId }[] = [
 ]
 
 const activeTab = ref<TabId>('synth')
-const generating = ref(false)
 const error = ref('')
 const resultAudio = ref('')
 const resultSeed = ref<number | null>(null)
