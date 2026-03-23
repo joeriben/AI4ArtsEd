@@ -29,6 +29,14 @@ Tags:
   - `trashy.analysisReflectionError` (NEW): "I could not generate a reflection right now. You can still read the analysis above."
 - **Context**: Trashy chat assistant auto-activates after image analysis completes (user clicks analyze button). Shows a loading message, then a process-oriented reflection. Warm/curious tone, not technical.
 
+### WO-2026-03-23-pca-axes
+- **Session**: 282
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.semanticAxes.groupSemantic` (NEW): "Semantic (text poles)"
+  - `latentLab.crossmodal.synth.semanticAxes.groupPCA` (NEW): "PCA (data-driven)"
+- **Context**: Axis dropdowns now group semantic (hand-crafted text-pole pairs) and PCA (data-driven principal component) axes into separate optgroups for clarity.
+
 ### WO-2026-03-23-semantic-wavetable
 - **Session**: 282
 - **Scope**: en.ts

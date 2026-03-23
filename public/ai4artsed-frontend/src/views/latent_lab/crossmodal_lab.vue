@@ -170,15 +170,26 @@
                 @change="onAxisSelectChange(idx, ($event.target as HTMLSelectElement).value)"
               >
                 <option value="">{{ t('latentLab.crossmodal.synth.semanticAxes.slotNone') }}</option>
-                <option
-                  v-for="ax in availableAxes"
-                  :key="ax.name"
-                  :value="ax.name"
-                >
-                  {{ ax.pole_a }} — {{ ax.pole_b }}
-                  <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
-                  <template v-if="ax.level === 'experimental'"> *</template>
-                </option>
+                <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
+                  <option
+                    v-for="ax in semanticAxisList"
+                    :key="ax.name"
+                    :value="ax.name"
+                  >
+                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                    <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
+                    <template v-if="ax.level === 'experimental'"> *</template>
+                  </option>
+                </optgroup>
+                <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
+                  <option
+                    v-for="ax in pcaAxisList"
+                    :key="ax.name"
+                    :value="ax.name"
+                  >
+                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                  </option>
+                </optgroup>
               </select>
               <div v-if="slot.axis" class="axis-slider-row">
                 <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
@@ -376,9 +387,16 @@
             <div class="wt-build-row">
               <select v-model="wtBuildAxis" class="wt-axis-select">
                 <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
-                <option v-for="ax in availableAxes" :key="ax.name" :value="ax.name">
-                  {{ ax.pole_a }} — {{ ax.pole_b }}
-                </option>
+                <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
+                  <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
+                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                  </option>
+                </optgroup>
+                <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
+                  <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
+                    {{ ax.pole_a }} — {{ ax.pole_b }}
+                  </option>
+                </optgroup>
               </select>
               <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
                 <option :value="8">8</option>
@@ -1117,7 +1135,7 @@ const synth = reactive({
   noise: 0.0,
   duration: 1.0,
   startPosition: 0.0,
-  steps: 100,
+  steps: 20,
   cfg: 7.0,
   seed: -1,
   loop: true,
@@ -1132,8 +1150,11 @@ interface AxisDef {
   pole_b: string
   level: string
   d: number | null
+  type?: 'semantic' | 'pca'
 }
 const availableAxes = ref<AxisDef[]>([])
+const semanticAxisList = computed(() => availableAxes.value.filter(a => a.type !== 'pca'))
+const pcaAxisList = computed(() => availableAxes.value.filter(a => a.type === 'pca'))
 
 interface AxisSlot {
   axis: string

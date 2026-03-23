@@ -22,9 +22,32 @@ Usage:
 
 import logging
 import time
+from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple
 
 logger = logging.getLogger(__name__)
+
+# =============================================================================
+# PCA Axes — data-driven directions of maximum variance in T5 conditioning space
+# Fitted on 392K prompt embeddings. Each component = 768d unit direction.
+# =============================================================================
+
+PCA_AXES_PATH = Path(__file__).resolve().parent.parent / "data" / "pca_components.pt"
+_pca_components = None  # Lazy-loaded [N, 768] tensor
+
+
+def _get_pca_components():
+    """Lazy-load PCA component vectors."""
+    global _pca_components
+    if _pca_components is None:
+        if PCA_AXES_PATH.exists():
+            import torch
+            _pca_components = torch.load(PCA_AXES_PATH, map_location="cpu")
+            logger.info(f"[CROSSMODAL] Loaded PCA components: {_pca_components.shape}")
+        else:
+            logger.warning(f"[CROSSMODAL] PCA components not found at {PCA_AXES_PATH}")
+    return _pca_components
+
 
 # =============================================================================
 # Semantic Axes — 21 validated + 1 experimental
@@ -226,17 +249,33 @@ class CrossmodalLabBackend:
         result_mask,
         axes: Dict[str, float],
     ) -> Tuple[Any, List[Dict[str, Any]], Any]:
-        """Apply semantic axis deltas on top of an existing embedding."""
+        """Apply semantic or PCA axis deltas on top of an existing embedding.
+
+        Axes prefixed 'pc' (e.g. 'pc1', 'pc12') are PCA axes — direct 768d
+        directions from the fitted principal components. All others are
+        semantic axes with text-pole encoding.
+        """
         import torch
 
-        await self._ensure_neutral_cached()
-        for axis_name in axes:
-            await self._ensure_axis_cached(axis_name)
+        # Split axes into semantic and PCA
+        semantic_axes = {}
+        pca_axes = {}
+        for name, t in axes.items():
+            if name.startswith("pc") and name[2:].isdigit():
+                pca_axes[name] = t
+            else:
+                semantic_axes[name] = t
 
-        neutral_emb, _ = self._neutral_cache
+        # Handle semantic axes (requires neutral + pole caching)
+        if semantic_axes:
+            await self._ensure_neutral_cached()
+            for axis_name in semantic_axes:
+                await self._ensure_axis_cached(axis_name)
+
+        neutral_emb, _ = self._neutral_cache if self._neutral_cache else (None, None)
         axis_deltas: Dict[str, Any] = {}
 
-        for axis_name, t in axes.items():
+        for axis_name, t in semantic_axes.items():
             cache = self._axis_cache[axis_name]
             dir_a = cache['emb_a'] - neutral_emb
             dir_b = cache['emb_b'] - neutral_emb
@@ -251,6 +290,19 @@ class CrossmodalLabBackend:
             axis_deltas[axis_name] = delta.detach().squeeze(0).mean(dim=0)
             result_mask = torch.maximum(result_mask, cache['mask_a'])
             result_mask = torch.maximum(result_mask, cache['mask_b'])
+
+        # Handle PCA axes (direct direction vectors, no encoding needed)
+        pca = _get_pca_components()
+        if pca is not None and pca_axes:
+            pca_device = result_emb.device
+            for axis_name, t in pca_axes.items():
+                idx = int(axis_name[2:]) - 1  # "pc1" → index 0
+                if 0 <= idx < pca.shape[0]:
+                    direction = pca[idx].to(pca_device)  # [768]
+                    # Scale: t * direction broadcast across all sequence positions
+                    delta = t * direction.unsqueeze(0).unsqueeze(0)  # [1, 1, 768]
+                    result_emb = result_emb + delta
+                    axis_deltas[axis_name] = (t * direction)
 
         return result_emb, self._compute_axis_contributions(axis_deltas), result_mask
 
@@ -371,9 +423,18 @@ class CrossmodalLabBackend:
             from services.stable_audio_backend import get_stable_audio_backend
             stable_audio = get_stable_audio_backend()
 
-            # Cache neutral (always needed for axis direction computation) + requested axes
+            # Split axes into semantic and PCA
+            semantic_axes = {}
+            pca_axes_local = {}
+            for name, t in axes.items():
+                if name.startswith("pc") and name[2:].isdigit():
+                    pca_axes_local[name] = t
+                else:
+                    semantic_axes[name] = t
+
+            # Cache neutral + requested semantic axes
             await self._ensure_neutral_cached()
-            for axis_name in axes:
+            for axis_name in semantic_axes:
                 await self._ensure_axis_cached(axis_name)
 
             neutral_emb, neutral_mask = self._neutral_cache
@@ -391,31 +452,37 @@ class CrossmodalLabBackend:
                 result_mask = neutral_mask.clone()
 
             # Track per-dimension contributions for drawbar coloring
-            # axis_deltas[axis_name] = [768] tensor of that axis's contribution
             axis_deltas: Dict[str, Any] = {}
 
-            for axis_name, t in axes.items():
+            # Apply semantic axes
+            for axis_name, t in semantic_axes.items():
                 cache = self._axis_cache[axis_name]
-                emb_a = cache['emb_a']  # pole_a embedding
-                emb_b = cache['emb_b']  # pole_b embedding
+                emb_a = cache['emb_a']
+                emb_b = cache['emb_b']
 
-                # Direction vectors from neutral
-                dir_a = emb_a - neutral_emb  # towards pole_a
-                dir_b = emb_b - neutral_emb  # towards pole_b
+                dir_a = emb_a - neutral_emb
+                dir_b = emb_b - neutral_emb
 
-                # t in [-1, 1]: 0 = no effect, +1 = full pole_a, -1 = full pole_b
                 if t >= 0:
                     delta = t * dir_a
                 else:
                     delta = (-t) * dir_b
                 result = result + delta
 
-                # Store mean delta per dimension for contribution tracking
-                axis_deltas[axis_name] = delta.detach().squeeze(0).mean(dim=0)  # [768]
-
-                # Combine masks
+                axis_deltas[axis_name] = delta.detach().squeeze(0).mean(dim=0)
                 result_mask = torch.maximum(result_mask, cache['mask_a'])
                 result_mask = torch.maximum(result_mask, cache['mask_b'])
+
+            # Apply PCA axes
+            pca = _get_pca_components()
+            if pca is not None and pca_axes_local:
+                for axis_name, t in pca_axes_local.items():
+                    idx = int(axis_name[2:]) - 1
+                    if 0 <= idx < pca.shape[0]:
+                        direction = pca[idx].to(result.device)
+                        delta = t * direction.unsqueeze(0).unsqueeze(0)
+                        result = result + delta
+                        axis_deltas[axis_name] = (t * direction)
 
             # Apply dimension offsets on top
             if dimension_offsets:
@@ -520,16 +587,32 @@ class CrossmodalLabBackend:
 
     def get_available_axes(self) -> List[Dict[str, Any]]:
         """Return axis metadata for frontend dropdown population."""
-        return [
+        result = [
             {
                 "name": name,
                 "pole_a": axis["pole_a"],
                 "pole_b": axis["pole_b"],
                 "level": axis["level"],
                 "d": axis["d"],
+                "type": "semantic",
             }
             for name, axis in SEMANTIC_AXES.items()
         ]
+
+        # Add PCA axes if available
+        pca = _get_pca_components()
+        if pca is not None:
+            for i in range(pca.shape[0]):
+                result.append({
+                    "name": f"pc{i + 1}",
+                    "pole_a": f"PC{i + 1}+",
+                    "pole_b": f"PC{i + 1}−",
+                    "level": "pca",
+                    "d": None,
+                    "type": "pca",
+                })
+
+        return result
 
     def _compute_stats(self, embedding, emb_a=None, emb_b=None) -> Dict[str, Any]:
         """Compute embedding statistics for frontend visualization.
