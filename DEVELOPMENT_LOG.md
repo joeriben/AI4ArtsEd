@@ -1,5 +1,93 @@
 # Development Log
 
+## Session 283 - Latent Audio Synth: Envelope Fixes, Effects, Arpeggiator, UI Overhaul
+**Date:** 2026-03-23
+**Focus:** Fundamentale Bugs in ADSR/Scan-Envelopes gefixt, Delay+Reverb-Effekte hinzugefuegt, Arpeggiator erweitert, Synth-UI komplett reorganisiert.
+
+### Envelope Fixes (Kernproblem)
+1. **Async Race Condition (ADR Scan Envelope)**: `start()` ist async (wegen `await ensureWorklet()`), aber `triggerScanEnvelope()` wurde synchron danach aufgerufen → `workletNode` war noch `null` → Envelope feuerte NIE. Fix: Deferred-Scan-Pattern (`pendingScan`), wird nach Worklet-Erstellung in `start()` angewandt.
+2. **`cancelAndHoldAtTime` unzuverlaessig**: Browser-Implementierungen weichen ab, Decay lief trotz Note-Off bis zum Ende durch. Fix: `cancelScheduledValues` + `.value` lesen (fastidious-envelope-generator-Technik). Release startet korrekt vom aktuellen Pegel.
+3. **Note-Off funktionierte nicht**: `onKeyUp_key` hatte keinen Engine-Stop. Fix: Direkter `setTimeout`-Stop nach Release-Zeit, unabhaengig vom Envelope-Callback.
+4. **ADSR-Watcher verursachte Verzerrung**: Watcher rief `triggerAttack(1)` bei JEDER Slider-Bewegung auf (60x/sec Gain-Reset → Clicks). Entfernt — ADSR-Werte wirken ab naechstem Note-On.
+5. **Volume-Spike bei Generation**: `runSynth()` rief `triggerAttack`/`bypass` vor Generierung auf → Gain-Sprung waehrend Live-Playback. Entfernt.
+6. **Looper isLooping Default**: War `true`, aber UI-Default war `oneshot`. Fix: `ref(false)` + explizites `setLoop()` vor `play()`.
+
+### Effects (Delay + Reverb)
+- **Architektur**: Send-Bus mit nativen Web Audio Nodes (kein AudioWorklet — iPad-safe)
+- **Delay**: `DelayNode` + `GainNode` Feedback-Loop. Parameter: Time (1-2000ms), Feedback (0-0.95), Mix. BPM-Sync-Funktion vorhanden.
+- **Reverb**: `ConvolverNode` mit EMT-140 Plate IRs (CC-BY, Greg Hopkins). 3 Varianten: bright/medium/dark. IR-Dateien via `new URL(import.meta.url)` geladen (funktioniert ohne Vite Dev Server).
+- **Signal-Routing**: Engines → Envelope → Effects Input → Dry/Delay/Reverb → Destination
+- **UI**: Eigene Box "Effects" zwischen Envelopes und Seq/Arp
+
+### Arpeggiator
+- **Musikalische Rate-Divisions**: 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T (relativ zu BPM)
+- **MIDI-Clock-aware**: Verwendet `effectiveBpm` (MIDI-Clock wenn aktiv, sonst manueller BPM)
+- **Octave Range**: 1-4 Oktaven (Akkord-Intervalle expandieren ueber Oktaven)
+- **UI**: 3 Selects (Pattern, Rate, Octave) in einer Zeile
+
+### Sequencer-Erweiterungen
+- **Gate-Slider**: Globaler Note-On-Dauer-Regler (10-100% der Step-Laenge)
+- **Octave-Shift**: -1/0/+1 Buttons (±12 Halbtöne auf alle Steps)
+- **Key-Transpose**: Gehaltene Keyboard-Note wird als Basis-Pitch addiert
+
+### Keyboard
+- **Hold-Button**: 13. Taste, orange wenn aktiv. Note sustaint unbegrenzt, naechste Taste wechselt die gehaltene Note.
+- **Sequencer-Integration**: Gehaltene Note transponiert den Sequencer (D# → +3 auf alle Steps)
+
+### OLA/WSOLA entfernt
+- ~320 Zeilen DSP-Code (WSOLA pitch shift, Lanczos sinc resample, Pitch-Cache) entfernt — produzierte unbrauchbare Artefakte
+- Transpose ausschliesslich via `playbackRate`
+
+### UI-Reorganisation
+- **4-Box-Layout**: Engine | Envelopes (mit Target-Badges VCA/WT) | Effects | Seq/Arp
+- **Scan-Range**: Draggbare Brackets auf dem Scan-Slider (statt 2 separate Slider)
+- **Roter STOP-Button entfernt** (Transport via Looper)
+- **Keyboard ueber Sequencer** (nicht mehr im Arpeggiator-Bereich)
+- **Input-Box-Hoehe reduziert** (min-height 44-56px statt 80-100px)
+
+### Semantische Achsen
+- Empfehlung "3-5" → "1-3" (nur 3 Slots)
+- Defaults: acoustic_electronic, music_noise, vocal_instrumental
+- Non-linearer Slider (kubisch, feiner nahe Mitte)
+- Pole-Labels: feste Breite (6rem), Tooltip fuer lange Texte
+- Verwirrende "A"/"B"-Endpoint-Labels entfernt
+- Info-Paragraph entfernt (Platz sparen)
+
+### Alpha-Slider
+- Range -1 bis +1 (0 = Mitte/50:50), vorher -2 bis 3 (0.5 = Mitte)
+- Backend-Konvertierung: `(ui + 1) / 2`
+- Label: Α (griechischer Grossbuchstabe) + "(Interpolation zwischen Prompt A- und B-Embeddings)"
+- Erklaerungstext aktualisiert (semantische Achsen erwaehnt)
+
+### Dimensions Explorer
+- **Pointer-Lock**: Mousedown erfasst Dimension, Drag aendert nur diese (kein Cross-Painting)
+- **requestAnimationFrame**: Canvas-Redraws auf 1/Frame begrenzt (keine Audio-Clicks mehr)
+- **Buttons immer sichtbar**: "Anwenden und generieren" + "Zuruecksetzen" nutzen `:disabled` statt `v-if`
+
+### Sonstige Fixes
+- Prompt B Icon: 💡 (war ➕, jetzt wie Prompt A)
+- Duration-Slider: Max 30s, quadratisch nicht-linear (feiner bei kurzen Zeiten)
+
+### Bekannte offene Punkte
+- Dimensions Explorer Relative/Absolute Mode Redesign (#7)
+- MIDI-Dropdown-Interferenz (Sequencer/ext. MIDI Note-On stoert offene Dropdowns)
+- Reverb: Keine Reverb-Zeit-Kontrolle (ConvolverNode-Limitation, fixe IR-Laenge)
+
+### Files Changed
+- `src/composables/useWavetableOsc.ts` — Deferred scan envelope, exponential ramps, cancelScheduledValues
+- `src/composables/useEnvelope.ts` — cancelAndHoldAtTime → cancelScheduledValues + .value
+- `src/composables/useAudioLooper.ts` — isLooping default false, OLA/WSOLA komplett entfernt (~320 LOC)
+- `src/composables/useArpeggiator.ts` — Rate-Divisions, Octave Range, MIDI-Clock-aware
+- `src/composables/useEffects.ts` — NEU: Delay + ConvolverNode Reverb Send-Bus
+- `src/composables/useStepSequencer.ts` — setAllGates()
+- `src/views/latent_lab/crossmodal_lab.vue` — UI-Reorganisation, Hold-Button, Gate-Slider, Octave-Shift, Alpha-Remapping, Dim-Explorer-Fixes
+- `src/audio/ir/*.wav` — NEU: 3 EMT-140 Plate IRs (CC-BY Greg Hopkins)
+- `src/i18n/en.ts`, `src/i18n/de.ts` — Alpha-Label, Achsen-Hint, Erklaerungstexte
+- `src/components/MediaInputBox.vue` — min-height reduziert
+- `docs/LATENT_AUDIO_SYNTH_MANUAL.md` — User-Edits (Loop-and-Swap, PCA-Achsen)
+
+---
+
 ## Session 282 - Persona Output Box Audit: HeartMuLa Fix + Code Config Cleanup
 **Date:** 2026-03-22
 **Focus:** Persona generiert HeartMuLa-Audio und P5.js/Tone.js-Code, aber die Output-Boxen stellen beides nicht korrekt dar.
