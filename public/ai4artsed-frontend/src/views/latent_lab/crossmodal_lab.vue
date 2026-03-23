@@ -257,12 +257,11 @@
             </span>
           </div>
 
-          <!-- Controls Row -->
+          <!-- Controls Row (always visible, disabled when inactive) -->
           <div class="section-action-bar">
             <button
-              v-if="activeOffsetCount > 0"
               class="dim-btn dim-btn-generate"
-              :disabled="generating"
+              :disabled="generating || activeOffsetCount === 0"
               @click="runSynth"
             >
               {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
@@ -276,7 +275,7 @@
             <span v-if="activeOffsetCount > 0" class="dim-offset-status">
               {{ t('latentLab.crossmodal.synth.dimensions.activeOffsets', { count: activeOffsetCount }) }}
             </span>
-            <button v-if="activeOffsetCount > 0" class="dim-btn dim-btn-reset" @click="resetAllOffsets">
+            <button class="dim-btn dim-btn-reset" :disabled="activeOffsetCount === 0" @click="resetAllOffsets">
               {{ t('latentLab.crossmodal.synth.dimensions.resetAll') }}
             </button>
           </div>
@@ -1443,6 +1442,8 @@ const dimensionOffsets = reactive<Record<number, number>>({})
 const spectralCanvasRef = ref<HTMLCanvasElement | null>(null)
 const hoveredDim = ref<{ dim: number; activation: number; offset: number } | null>(null)
 let isDragging = false
+let lockedDim: number | null = null // pointer-captured dimension (prevents cross-dim painting)
+let rafPending = false // coalesce draw calls via requestAnimationFrame
 
 // Undo/Redo history (snapshot per paint stroke)
 const MAX_HISTORY = 50
@@ -1601,6 +1602,16 @@ function offsetAtY(canvas: HTMLCanvasElement, clientY: number): number {
   return Math.max(-range, Math.min(range, normalized * range))
 }
 
+/** Coalesce canvas redraws to once per animation frame (prevents main-thread blocking → audio clicks) */
+function scheduleRedraw() {
+  if (rafPending) return
+  rafPending = true
+  requestAnimationFrame(() => {
+    rafPending = false
+    drawSpectralStrip()
+  })
+}
+
 function onSpectralMouseDown(e: MouseEvent) {
   if (e.button === 2) return // right-click handled by contextmenu
   const canvas = spectralCanvasRef.value
@@ -1609,9 +1620,10 @@ function onSpectralMouseDown(e: MouseEvent) {
   isDragging = true
   const dim = dimAtX(canvas, e.clientX)
   if (dim !== null) {
+    lockedDim = dim // lock to this dimension — no cross-painting
     const off = offsetAtY(canvas, e.clientY)
     dimensionOffsets[dim] = off
-    drawSpectralStrip()
+    scheduleRedraw()
   }
 }
 
@@ -1638,19 +1650,17 @@ function onSpectralMouseMove(e: MouseEvent) {
     hoveredDim.value = null
   }
 
-  // Paint while dragging
-  if (isDragging) {
-    const dim = dimAtX(canvas, e.clientX)
-    if (dim !== null) {
-      const off = offsetAtY(canvas, e.clientY)
-      dimensionOffsets[dim] = off
-      drawSpectralStrip()
-    }
+  // Adjust locked dimension only (no cross-painting)
+  if (isDragging && lockedDim !== null) {
+    const off = offsetAtY(canvas, e.clientY)
+    dimensionOffsets[lockedDim] = off
+    scheduleRedraw()
   }
 }
 
 function onSpectralMouseUp() {
   isDragging = false
+  lockedDim = null
   hoveredDim.value = null
 }
 
@@ -1675,8 +1685,9 @@ function onSpectralTouchStart(e: TouchEvent) {
   if (!canvas) return
   const dim = dimAtX(canvas, touch.clientX)
   if (dim !== null) {
+    lockedDim = dim
     dimensionOffsets[dim] = offsetAtY(canvas, touch.clientY)
-    drawSpectralStrip()
+    scheduleRedraw()
   }
 }
 
@@ -1686,15 +1697,15 @@ function onSpectralTouchMove(e: TouchEvent) {
   e.preventDefault()
   const canvas = spectralCanvasRef.value
   if (!canvas) return
-  const dim = dimAtX(canvas, touch.clientX)
-  if (dim !== null) {
-    dimensionOffsets[dim] = offsetAtY(canvas, touch.clientY)
-    drawSpectralStrip()
+  if (lockedDim !== null) {
+    dimensionOffsets[lockedDim] = offsetAtY(canvas, touch.clientY)
+    scheduleRedraw()
   }
 }
 
 function onSpectralTouchEnd() {
   isDragging = false
+  lockedDim = null
 }
 
 function resetAllOffsets() {
