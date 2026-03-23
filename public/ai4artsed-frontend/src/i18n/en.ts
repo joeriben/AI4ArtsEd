@@ -1514,9 +1514,13 @@ export const en = {
         dimensions: {
           section: 'Dimension Explorer',
           hint: 'Drag on bars = set offset. Paint horizontally = multiple dimensions.',
+          hintRelative: 'Drag up = toward Prompt A, drag down = toward Prompt B. Each bar mixes between the two prompts per dimension.',
+          modeRelative: 'Relative',
+          modeAbsolute: 'Absolute',
           resetAll: 'Reset all',
           hoverActivation: 'Activation',
           hoverOffset: 'Offset',
+          hoverMix: 'Mix',
           rightClickReset: 'Right-click = reset',
           sortDiff: 'Sorted by prompt difference',
           sortMagnitude: 'Sorted by activation',

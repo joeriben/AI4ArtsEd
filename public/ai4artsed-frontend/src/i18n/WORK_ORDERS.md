@@ -21,6 +21,16 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-23-dim-explorer-modes
+- **Session**: 284
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.dimensions.hintRelative` (NEW): "Drag up = toward Prompt A, drag down = toward Prompt B. Each bar mixes between the two prompts per dimension."
+  - `latentLab.crossmodal.synth.dimensions.modeRelative` (NEW): "Relative"
+  - `latentLab.crossmodal.synth.dimensions.modeAbsolute` (NEW): "Absolute"
+  - `latentLab.crossmodal.synth.dimensions.hoverMix` (NEW): "Mix"
+- **Context**: Dimension Explorer now has two modes. Relative = per-dimension A/B interpolation (up=A, down=B). Absolute = direct activation offset (existing behavior). Toggle between them like the engine switch (Looper/Wavetable).
+
 ### WO-2026-03-23-trashy-analysis-reflection
 - **Session**: 283
 - **Scope**: en.ts

@@ -671,7 +671,7 @@ class CrossmodalLabBackend:
             for idx in sort_order.tolist()
         ]
 
-        return {
+        result = {
             "mean": round(mean_val, 4),
             "std": round(std_val, 4),
             "top_dimensions": [
@@ -681,6 +681,22 @@ class CrossmodalLabBackend:
             "all_activations": all_activations,
             "sort_mode": sort_mode,
         }
+
+        # Per-dimension A/B reference values for relative mode in Dimension Explorer
+        if emb_a is not None:
+            a_means = emb_a.detach().squeeze(0).mean(dim=0)  # [768]
+            result["emb_a_values"] = {
+                int(idx): round(float(a_means[idx].item()), 4)
+                for idx in sort_order.tolist()
+            }
+        if emb_b is not None:
+            b_means = emb_b.detach().squeeze(0).mean(dim=0)  # [768]
+            result["emb_b_values"] = {
+                int(idx): round(float(b_means[idx].item()), 4)
+                for idx in sort_order.tolist()
+            }
+
+        return result
 
 
 # =============================================================================

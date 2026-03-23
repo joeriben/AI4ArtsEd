@@ -215,7 +215,20 @@
       <details class="dim-explorer-section lab-section" :open="dimExplorerOpen" @toggle="onDimExplorerToggle">
         <summary>{{ t('latentLab.crossmodal.synth.dimensions.section') }}</summary>
         <div class="dim-explorer-content">
-          <p class="dim-hint">{{ t('latentLab.crossmodal.synth.dimensions.hint') }}</p>
+          <!-- Mode toggle: Relative / Absolute -->
+          <div class="section-toggle dim-mode-toggle">
+            <label class="inline-toggle" :class="{ active: spectralMode === 'relative' }">
+              <input type="radio" value="relative" :checked="spectralMode === 'relative'" @change="onSpectralModeChange('relative')" :disabled="!hasABReference" />
+              {{ t('latentLab.crossmodal.synth.dimensions.modeRelative') }}
+            </label>
+            <label class="inline-toggle" :class="{ active: spectralMode === 'absolute' }">
+              <input type="radio" value="absolute" :checked="spectralMode === 'absolute'" @change="onSpectralModeChange('absolute')" />
+              {{ t('latentLab.crossmodal.synth.dimensions.modeAbsolute') }}
+            </label>
+          </div>
+          <p class="dim-hint">{{ spectralMode === 'relative' && hasABReference
+            ? t('latentLab.crossmodal.synth.dimensions.hintRelative')
+            : t('latentLab.crossmodal.synth.dimensions.hint') }}</p>
 
           <!-- Spectral Strip Canvas -->
           <div class="spectral-strip-container">
@@ -241,7 +254,12 @@
             <span v-if="hoveredDim" class="dim-hover-info">
               d{{ hoveredDim.dim }}:
               {{ t('latentLab.crossmodal.synth.dimensions.hoverActivation') }}={{ hoveredDim.activation.toFixed(4) }}
-              {{ t('latentLab.crossmodal.synth.dimensions.hoverOffset') }}={{ hoveredDim.offset.toFixed(2) }}
+              <template v-if="spectralMode === 'relative' && hasABReference">
+                {{ t('latentLab.crossmodal.synth.dimensions.hoverMix') }}={{ (hoveredDim.offset * 100).toFixed(0) }}%
+              </template>
+              <template v-else>
+                {{ t('latentLab.crossmodal.synth.dimensions.hoverOffset') }}={{ hoveredDim.offset.toFixed(2) }}
+              </template>
             </span>
             <span v-if="embeddingStats?.sort_mode" class="dim-sort-mode">
               {{ embeddingStats.sort_mode === 'diff'
@@ -983,6 +1001,8 @@ interface EmbeddingStats {
   top_dimensions: Array<{ dim: number; value: number }>
   all_activations?: Array<{ dim: number; value: number }>
   sort_mode?: string
+  emb_a_values?: Record<number, number>
+  emb_b_values?: Record<number, number>
 }
 const embeddingStats = ref<EmbeddingStats | null>(null)
 
@@ -1431,7 +1451,11 @@ const guidance = reactive({
 })
 
 // ===== Dimension Explorer =====
+type SpectralMode = 'relative' | 'absolute'
+const spectralMode = ref<SpectralMode>('relative')
 const dimensionOffsets = reactive<Record<number, number>>({})
+// In relative mode, dimensionOffsets stores mix factors per dimension: -1 = pure B, 0 = current blend, +1 = pure A
+// In absolute mode, dimensionOffsets stores direct activation offsets (existing behavior)
 const spectralCanvasRef = ref<HTMLCanvasElement | null>(null)
 const hoveredDim = ref<{ dim: number; activation: number; offset: number } | null>(null)
 let isDragging = false
@@ -1483,6 +1507,11 @@ const activeOffsetCount = computed(() =>
   Object.values(dimensionOffsets).filter(v => v !== 0).length
 )
 
+/** Relative mode requires both A and B reference embeddings */
+const hasABReference = computed(() =>
+  !!(embeddingStats.value?.emb_a_values && embeddingStats.value?.emb_b_values)
+)
+
 const maxActivation = computed(() => {
   const acts = embeddingStats.value?.all_activations
   if (!acts?.length) return 1
@@ -1508,6 +1537,7 @@ function drawSpectralStrip() {
   const centerY = h / 2
   const barW = w / acts.length
   const maxAct = maxActivation.value
+  const halfH = centerY - 2
 
   // Clear
   ctx.clearRect(0, 0, w, h)
@@ -1521,7 +1551,6 @@ function drawSpectralStrip() {
   ctx.stroke()
 
   // Build axis color lookup for semantic mode
-  // Maps axis_name → color string
   const axisColorMap: Record<string, string> = {}
   if (axisContributions.value.length > 0) {
     for (let si = 0; si < axisSlots.length; si++) {
@@ -1532,43 +1561,130 @@ function drawSpectralStrip() {
     }
   }
 
+  const isRelative = spectralMode.value === 'relative' && hasABReference.value
+  const embAVals = embeddingStats.value?.emb_a_values
+  const embBVals = embeddingStats.value?.emb_b_values
+
+  // In ABSOLUTE mode with A/B reference: draw idealized A/B corridor lines
+  if (spectralMode.value === 'absolute' && embAVals && embBVals) {
+    // Collect A and B y-positions for the corridor envelope
+    const aPoints: Array<{ x: number; y: number }> = []
+    const bPoints: Array<{ x: number; y: number }> = []
+    for (let i = 0; i < acts.length; i++) {
+      const dim = acts[i]!.dim
+      const aVal = embAVals[dim] ?? 0
+      const bVal = embBVals[dim] ?? 0
+      const x = i * barW + barW / 2
+      aPoints.push({ x, y: centerY - (aVal / maxAct) * halfH })
+      bPoints.push({ x, y: centerY - (bVal / maxAct) * halfH })
+    }
+
+    // Draw A corridor line (warm orange, dashed)
+    ctx.strokeStyle = 'rgba(255, 152, 0, 0.5)'
+    ctx.lineWidth = 1
+    ctx.setLineDash([3, 3])
+    ctx.beginPath()
+    for (let i = 0; i < aPoints.length; i++) {
+      const p = aPoints[i]!
+      if (i === 0) ctx.moveTo(p.x, p.y)
+      else ctx.lineTo(p.x, p.y)
+    }
+    ctx.stroke()
+
+    // Draw B corridor line (cool blue, dashed)
+    ctx.strokeStyle = 'rgba(66, 165, 245, 0.5)'
+    ctx.beginPath()
+    for (let i = 0; i < bPoints.length; i++) {
+      const p = bPoints[i]!
+      if (i === 0) ctx.moveTo(p.x, p.y)
+      else ctx.lineTo(p.x, p.y)
+    }
+    ctx.stroke()
+    ctx.setLineDash([])
+  }
+
   // Draw bars
   for (let i = 0; i < acts.length; i++) {
     const entry = acts[i]!
     const dim = entry.dim
-    const val = entry.value
     const x = i * barW
-    const barH = (Math.abs(val) / maxAct) * (centerY - 2)
 
-    // Determine bar color: axis-colored in semantic mode, muted green in free prompt mode
-    let barColor = 'rgba(76, 175, 80, 0.35)'
-    if (axisContributions.value.length > 0) {
-      const contrib = axisContributions.value.find(c => c.dim === dim)
-      if (contrib && contrib.top_axis && axisColorMap[contrib.top_axis]) {
-        barColor = hexToRgba(axisColorMap[contrib.top_axis]!, 0.45)
-      }
-    }
+    if (isRelative) {
+      // RELATIVE MODE: bar shows current mix position between A and B
+      // Full canvas height represents A (top) to B (bottom)
+      // Center = current blend (alpha), offset pulls toward A (+1) or B (-1)
+      const aVal = embAVals![dim] ?? 0
+      const bVal = embBVals![dim] ?? 0
+      const mixFactor = dimensionOffsets[dim] ?? 0 // -1..+1, 0 = no change
 
-    ctx.fillStyle = barColor
-    if (val >= 0) {
-      ctx.fillRect(x, centerY - barH, Math.max(barW - 0.5, 0.5), barH)
-    } else {
-      ctx.fillRect(x, centerY, Math.max(barW - 0.5, 0.5), barH)
-    }
+      // Draw A/B reference markers (thin horizontal ticks)
+      const aY = centerY - (aVal / maxAct) * halfH
+      const bY = centerY - (bVal / maxAct) * halfH
+      ctx.fillStyle = 'rgba(255, 152, 0, 0.3)'
+      ctx.fillRect(x, aY - 0.5, Math.max(barW - 0.5, 0.5), 1)
+      ctx.fillStyle = 'rgba(66, 165, 245, 0.3)'
+      ctx.fillRect(x, bY - 0.5, Math.max(barW - 0.5, 0.5), 1)
 
-    // Offset overlay (bright green)
-    const offset = dimensionOffsets[dim]
-    if (offset !== undefined && offset !== 0) {
-      const offsetH = (Math.abs(offset) / maxAct) * (centerY - 2)
-      ctx.fillStyle = 'rgba(102, 187, 106, 0.8)'
-      if (offset > 0) {
-        // Positive offset: draw upward from activation endpoint
-        const startY = val >= 0 ? centerY - barH : centerY
-        ctx.fillRect(x, startY - offsetH, Math.max(barW - 0.5, 0.5), offsetH)
+      // Current activation bar (muted)
+      const val = entry.value
+      const barH = (Math.abs(val) / maxAct) * halfH
+      ctx.fillStyle = 'rgba(76, 175, 80, 0.2)'
+      if (val >= 0) {
+        ctx.fillRect(x, centerY - barH, Math.max(barW - 0.5, 0.5), barH)
       } else {
-        // Negative offset: draw downward from activation endpoint
-        const startY = val >= 0 ? centerY : centerY + barH
-        ctx.fillRect(x, startY, Math.max(barW - 0.5, 0.5), offsetH)
+        ctx.fillRect(x, centerY, Math.max(barW - 0.5, 0.5), barH)
+      }
+
+      // Mix overlay: interpolate between current activation and target (A or B)
+      if (mixFactor !== 0) {
+        // mixFactor > 0 = toward A, < 0 = toward B
+        const targetVal = mixFactor > 0
+          ? val + Math.abs(mixFactor) * (aVal - val)
+          : val + Math.abs(mixFactor) * (bVal - val)
+        const targetY = centerY - (targetVal / maxAct) * halfH
+        const currentY = centerY - (val / maxAct) * halfH
+
+        // Draw line from current to target
+        const segTop = Math.min(currentY, targetY)
+        const segH = Math.abs(targetY - currentY)
+        ctx.fillStyle = mixFactor > 0
+          ? 'rgba(255, 152, 0, 0.7)' // toward A: warm
+          : 'rgba(66, 165, 245, 0.7)' // toward B: cool
+        ctx.fillRect(x, segTop, Math.max(barW - 0.5, 0.5), Math.max(segH, 1))
+      }
+    } else {
+      // ABSOLUTE MODE: existing behavior
+      const val = entry.value
+      const barH = (Math.abs(val) / maxAct) * halfH
+
+      // Determine bar color
+      let barColor = 'rgba(76, 175, 80, 0.35)'
+      if (axisContributions.value.length > 0) {
+        const contrib = axisContributions.value.find(c => c.dim === dim)
+        if (contrib && contrib.top_axis && axisColorMap[contrib.top_axis]) {
+          barColor = hexToRgba(axisColorMap[contrib.top_axis]!, 0.45)
+        }
+      }
+
+      ctx.fillStyle = barColor
+      if (val >= 0) {
+        ctx.fillRect(x, centerY - barH, Math.max(barW - 0.5, 0.5), barH)
+      } else {
+        ctx.fillRect(x, centerY, Math.max(barW - 0.5, 0.5), barH)
+      }
+
+      // Offset overlay (bright green)
+      const offset = dimensionOffsets[dim]
+      if (offset !== undefined && offset !== 0) {
+        const offsetH = (Math.abs(offset) / maxAct) * halfH
+        ctx.fillStyle = 'rgba(102, 187, 106, 0.8)'
+        if (offset > 0) {
+          const startY = val >= 0 ? centerY - barH : centerY
+          ctx.fillRect(x, startY - offsetH, Math.max(barW - 0.5, 0.5), offsetH)
+        } else {
+          const startY = val >= 0 ? centerY : centerY + barH
+          ctx.fillRect(x, startY, Math.max(barW - 0.5, 0.5), offsetH)
+        }
       }
     }
   }
@@ -1588,9 +1704,16 @@ function offsetAtY(canvas: HTMLCanvasElement, clientY: number): number {
   const rect = canvas.getBoundingClientRect()
   const centerY = rect.height / 2
   const y = clientY - rect.top
-  // Drag up (above center) = positive offset, drag down = negative offset
+
+  if (spectralMode.value === 'relative' && hasABReference.value) {
+    // Relative mode: map y to mix factor [-1, +1]
+    // Top = +1 (toward A), Center = 0 (no change), Bottom = -1 (toward B)
+    const normalized = (centerY - y) / centerY
+    return Math.max(-1, Math.min(1, normalized))
+  }
+
+  // Absolute mode: map y to offset on activation scale
   const normalized = (centerY - y) / centerY
-  // Use maxActivation as range so offsets are on the same scale as activation bars
   const range = maxActivation.value
   return Math.max(-range, Math.min(range, normalized * range))
 }
@@ -1701,6 +1824,15 @@ function onSpectralTouchEnd() {
   lockedDim = null
 }
 
+function onSpectralModeChange(mode: SpectralMode) {
+  if (mode === spectralMode.value) return
+  // Clear offsets when switching modes — values have different semantics
+  pushUndo()
+  Object.keys(dimensionOffsets).forEach(k => delete dimensionOffsets[Number(k)])
+  spectralMode.value = mode
+  drawSpectralStrip()
+}
+
 function resetAllOffsets() {
   pushUndo()
   Object.keys(dimensionOffsets).forEach(k => delete dimensionOffsets[Number(k)])
@@ -1713,12 +1845,17 @@ watch(embeddingStats, () => {
   nextTick(drawSpectralStrip)
 })
 
+watch(spectralMode, () => {
+  nextTick(drawSpectralStrip)
+})
+
 /** Deterministic fingerprint of all generation-affecting synth params */
 function synthFingerprint(): string {
   return JSON.stringify([
     synth.promptA, synth.promptB, synth.alpha, synth.magnitude,
     synth.noise, synth.duration, synth.startPosition, synth.steps, synth.cfg, synth.seed,
     axisSlots.map(s => [s.axis, s.value]),
+    spectralMode.value,
     dimensionOffsets,
   ])
 }
@@ -2216,6 +2353,9 @@ async function runSynth() {
   error.value = ''
   resultSeed.value = null
   generationTimeMs.value = null
+
+  // Snapshot A/B reference values before clearing stats (needed for relative→offset conversion)
+  const prevStats = embeddingStats.value
   embeddingStats.value = null
   transport.value = 'generating'
   try {
@@ -2235,10 +2375,31 @@ async function runSynth() {
       body.prompt_b = synth.promptB
     }
 
-    // Collect non-zero dimension offsets
+    // Collect non-zero dimension offsets, converting from relative mix factors if needed
     const nonZeroOffsets: Record<string, number> = {}
+    const isRelative = spectralMode.value === 'relative'
+      && !!(prevStats?.emb_a_values && prevStats?.emb_b_values)
+    const embAVals = prevStats?.emb_a_values
+    const embBVals = prevStats?.emb_b_values
+    const acts = prevStats?.all_activations
+
     for (const [k, v] of Object.entries(dimensionOffsets)) {
-      if (v !== 0) nonZeroOffsets[k] = v
+      if (v === 0) continue
+      if (isRelative && embAVals && embBVals && acts) {
+        // Convert mix factor to actual offset: delta needed to move activation toward A or B
+        const dim = Number(k)
+        const actEntry = acts.find(a => a.dim === dim)
+        const currentVal = actEntry?.value ?? 0
+        const aVal = embAVals[dim] ?? 0
+        const bVal = embBVals[dim] ?? 0
+        const targetVal = v > 0
+          ? currentVal + Math.abs(v) * (aVal - currentVal)
+          : currentVal + Math.abs(v) * (bVal - currentVal)
+        const offset = targetVal - currentVal
+        if (Math.abs(offset) > 0.0001) nonZeroOffsets[k] = offset
+      } else {
+        nonZeroOffsets[k] = v
+      }
     }
     if (Object.keys(nonZeroOffsets).length > 0) {
       body.dimension_offsets = nonZeroOffsets
@@ -3176,6 +3337,11 @@ onUnmounted(() => {
 
 .dim-explorer-content {
   margin-top: 0.6rem;
+}
+
+.dim-mode-toggle {
+  border-top: none;
+  padding: 0.3rem 0 0;
 }
 
 .dim-hint {
