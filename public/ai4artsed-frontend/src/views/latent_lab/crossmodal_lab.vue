@@ -186,18 +186,22 @@
                 </optgroup>
               </select>
               <div v-if="slot.axis" class="axis-slider-row">
-                <span class="axis-pole-label pole-b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
-                <input
-                  type="range"
-                  :value="slot.value"
-                  min="-2"
-                  max="2"
-                  step="0.01"
-                  class="axis-range"
-                  :style="{ accentColor: axisColors[idx] }"
-                  @input="slot.value = parseFloat(($event.target as HTMLInputElement).value)"
-                />
-                <span class="axis-pole-label pole-a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
+                <span class="axis-pole-label pole-b" :title="getAxisMeta(slot.axis)?.pole_b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
+                <div class="axis-slider-wrap">
+                  <span class="axis-endpoint">A</span>
+                  <input
+                    type="range"
+                    :value="axisValueToSlider(slot.value)"
+                    min="0"
+                    max="1"
+                    step="0.002"
+                    class="axis-range"
+                    :style="{ accentColor: axisColors[idx] }"
+                    @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
+                  />
+                  <span class="axis-endpoint">B</span>
+                </div>
+                <span class="axis-pole-label pole-a" :title="getAxisMeta(slot.axis)?.pole_a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
                 <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
               </div>
             </div>
@@ -1334,6 +1338,18 @@ function sliderToDuration(t: number): number {
 }
 function durationToSlider(d: number): number {
   return Math.sqrt(Math.max(0, (d - DURATION_MIN) / (DURATION_MAX - DURATION_MIN)))
+}
+
+// Non-linear axis mapping: cubic scale, symmetric around center.
+// Slider 0–1 (center=0.5) → value -2 to +2, finer control near 0.
+const AXIS_MAX = 2
+function sliderToAxisValue(t: number): number {
+  const centered = (t - 0.5) * 2 // -1 to +1
+  return Math.sign(centered) * Math.pow(Math.abs(centered), 2) * AXIS_MAX
+}
+function axisValueToSlider(v: number): number {
+  const norm = Math.sign(v) * Math.sqrt(Math.abs(v) / AXIS_MAX) // -1 to +1
+  return norm / 2 + 0.5
 }
 
 interface AxisContribution {
@@ -3892,7 +3908,7 @@ onUnmounted(() => {
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.4);
   flex-shrink: 0;
-  max-width: 7rem;
+  width: 6rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3900,6 +3916,20 @@ onUnmounted(() => {
 
 .axis-pole-label.pole-a {
   text-align: right;
+}
+
+.axis-slider-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.axis-endpoint {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
 }
 
 .axis-range {
