@@ -35,6 +35,21 @@ logger = logging.getLogger(__name__)
 PCA_AXES_PATH = Path(__file__).resolve().parent.parent / "data" / "pca_components.pt"
 _pca_components = None  # Lazy-loaded [N, 768] tensor
 
+# Interpretive labels derived from corpus projection analysis (392K prompts).
+# Each label pair names what the positive/negative pole of the PC represents.
+PCA_LABELS: List[Dict[str, str]] = [
+    {"pole_a": "Natural",       "pole_b": "Synthetic"},       # PC1: birds/wind vs plugins/devices
+    {"pole_a": "Sonic",         "pole_b": "Physical"},         # PC2: metallic/synth vs boats/bags
+    {"pole_a": "Musical",       "pole_b": "Elemental"},        # PC3: modular synth/kabuki vs wind/water
+    {"pole_a": "Textured",      "pole_b": "Tonal"},            # PC4: crinkling/sanding vs bells/chants
+    {"pole_a": "Social",        "pole_b": "Mechanical"},       # PC5: people/park vs engines/hinges
+    {"pole_a": "Vocal",         "pole_b": "Atmospheric"},      # PC6: speech/voice vs wind/rain
+    {"pole_a": "Machine",       "pole_b": "Biological"},       # PC7: motors/vehicles vs owls/birds
+    {"pole_a": "Intimate",      "pole_b": "Crowd"},            # PC8: scratching/contact vs applause
+    {"pole_a": "Material",      "pole_b": "Abstract"},         # PC9: wood/dice/chisel vs noise/tone
+    {"pole_a": "Motion",        "pole_b": "Expression"},       # PC10: vehicles/speed vs shouts/applause
+]
+
 
 def _get_pca_components():
     """Lazy-load PCA component vectors."""
@@ -603,10 +618,17 @@ class CrossmodalLabBackend:
         pca = _get_pca_components()
         if pca is not None:
             for i in range(pca.shape[0]):
+                if i < len(PCA_LABELS):
+                    label = PCA_LABELS[i]
+                    pole_a = label["pole_a"]
+                    pole_b = label["pole_b"]
+                else:
+                    pole_a = f"PC{i + 1}+"
+                    pole_b = f"PC{i + 1}−"
                 result.append({
                     "name": f"pc{i + 1}",
-                    "pole_a": f"PC{i + 1}+",
-                    "pole_b": f"PC{i + 1}−",
+                    "pole_a": pole_a,
+                    "pole_b": pole_b,
                     "level": "pca",
                     "d": None,
                     "type": "pca",
