@@ -2100,7 +2100,7 @@ async function runSynth() {
 // ===== MMAudio =====
 async function runMMAudio() {
   clearResults()
-  generating.value = true
+  transport.value = 'generating'
   try {
     const body: Record<string, unknown> = {
       prompt: mmaudio.prompt,
@@ -2133,14 +2133,14 @@ async function runMMAudio() {
   } catch (e) {
     error.value = String(e)
   } finally {
-    generating.value = false
+    transport.value = 'idle'
   }
 }
 
 // ===== ImageBind Guidance =====
 async function runGuidance() {
   clearResults()
-  generating.value = true
+  transport.value = 'generating'
   try {
     const result = await apiPost('/api/cross_aesthetic/image_guided_audio', {
       image_path: imagePath.value,
@@ -2173,7 +2173,7 @@ async function runGuidance() {
   } catch (e) {
     error.value = String(e)
   } finally {
-    generating.value = false
+    transport.value = 'idle'
   }
 }
 
