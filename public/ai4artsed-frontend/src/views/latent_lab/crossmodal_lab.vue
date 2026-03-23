@@ -1143,7 +1143,7 @@ midi.onNote((note, velocity, on) => {
 const synth = reactive({
   promptA: 'a steady clean saw wave, c3',
   promptB: 'glass breaking',
-  alpha: 0.5,
+  alpha: 0.42,
   magnitude: 1.0,
   noise: 0.0,
   duration: 3.0,
