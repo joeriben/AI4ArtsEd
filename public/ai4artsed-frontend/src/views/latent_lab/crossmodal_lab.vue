@@ -81,14 +81,13 @@
       </div>
 
       <!-- Sliders -->
-      <div class="slider-group">
+      <div class="slider-group synth-slider-group">
         <div class="slider-item">
           <div class="slider-header">
             <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
             <span class="slider-value">{{ synth.alpha.toFixed(2) }}</span>
           </div>
-          <input type="range" v-model.number="synth.alpha" min="-2" max="3" step="0.01" />
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.alphaHint') }}</span>
+          <input type="range" v-model.number="synth.alpha" min="-1" max="1" step="0.01" />
         </div>
 
         <div class="slider-item">
@@ -149,8 +148,6 @@
       <details v-if="availableAxes.length > 0" class="semantic-axes-section lab-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggle">
         <summary>{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</summary>
         <div class="semantic-axes-content">
-          <p class="semantic-axes-info">{{ t('latentLab.crossmodal.synth.semanticAxes.info') }}</p>
-
           <div class="semantic-axes-slots">
             <div
               v-for="(slot, idx) in axisSlots"
@@ -187,20 +184,16 @@
               </select>
               <div v-if="slot.axis" class="axis-slider-row">
                 <span class="axis-pole-label pole-b" :title="getAxisMeta(slot.axis)?.pole_b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
-                <div class="axis-slider-wrap">
-                  <span class="axis-endpoint">A</span>
-                  <input
-                    type="range"
-                    :value="axisValueToSlider(slot.value)"
-                    min="0"
-                    max="1"
-                    step="0.002"
-                    class="axis-range"
-                    :style="{ accentColor: axisColors[idx] }"
-                    @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
-                  />
-                  <span class="axis-endpoint">B</span>
-                </div>
+                <input
+                  type="range"
+                  :value="axisValueToSlider(slot.value)"
+                  min="0"
+                  max="1"
+                  step="0.002"
+                  class="axis-range"
+                  :style="{ accentColor: axisColors[idx] }"
+                  @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
+                />
                 <span class="axis-pole-label pole-a" :title="getAxisMeta(slot.axis)?.pole_a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
                 <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
               </div>
@@ -1245,8 +1238,8 @@ const heldNotes: number[] = []
 midi.init()
 
 // MIDI CC mappings
-// CC1 → Alpha (-2 to 3)
-midi.mapCC(1, (v) => { synth.alpha = -2 + v * 5 })
+// CC1 → Alpha (-1 to +1, center = 0)
+midi.mapCC(1, (v) => { synth.alpha = v * 2 - 1 })
 // CC2 → Magnitude (0.1 to 5)
 midi.mapCC(2, (v) => { synth.magnitude = 0.1 + v * 4.9 })
 // CC3 → Noise (0 to 1)
@@ -1320,7 +1313,7 @@ midi.onNote((note, velocity, on) => {
 const synth = reactive({
   promptA: 'a steady clean saw wave, c3',
   promptB: 'glass breaking',
-  alpha: 0.42,
+  alpha: 0,
   magnitude: 1.0,
   noise: 0.0,
   duration: 3.0,
@@ -2229,7 +2222,7 @@ async function runSynth() {
     // Build request body — always /synth, axes included when active
     const body: Record<string, unknown> = {
       prompt_a: synth.promptA,
-      alpha: synth.alpha,
+      alpha: synth.alpha / 2 + 0.5,
       magnitude: synth.magnitude,
       noise_sigma: synth.noise,
       duration_seconds: synth.duration,
@@ -2313,7 +2306,7 @@ async function runSynth() {
       labRecord({
         parameters: {
           tab: 'synth', prompt_a: synth.promptA, prompt_b: synth.promptB,
-          alpha: synth.alpha, magnitude: synth.magnitude, noise_sigma: synth.noise,
+          alpha: synth.alpha / 2 + 0.5, magnitude: synth.magnitude, noise_sigma: synth.noise,
           ...(Object.keys(activeAxes).length > 0 ? { axes: activeAxes } : {}),
           duration: synth.duration, start_position: synth.startPosition, steps: synth.steps, cfg: synth.cfg, seed: synth.seed,
         },
@@ -2597,6 +2590,10 @@ onUnmounted(() => {
 /* Slider groups */
 .slider-group {
   margin-bottom: 1rem;
+}
+
+.synth-slider-group {
+  margin-top: 1rem;
 }
 
 .slider-item {
@@ -3968,20 +3965,6 @@ onUnmounted(() => {
 
 .axis-pole-label.pole-a {
   text-align: right;
-}
-
-.axis-slider-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.axis-endpoint {
-  font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.25);
-  flex-shrink: 0;
 }
 
 .axis-range {
