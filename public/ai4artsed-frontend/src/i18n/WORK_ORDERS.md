@@ -21,6 +21,14 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-23-trashy-analysis-reflection
+- **Session**: 283
+- **Scope**: en.ts
+- **Changed keys** (new or modified):
+  - `trashy.analysisReflectionLoading` (NEW): "Looking at the analysis..."
+  - `trashy.analysisReflectionError` (NEW): "I could not generate a reflection right now. You can still read the analysis above."
+- **Context**: Trashy chat assistant auto-activates after image analysis completes (user clicks analyze button). Shows a loading message, then a process-oriented reflection. Warm/curious tone, not technical.
+
 ### WO-2026-03-23-semantic-wavetable
 - **Session**: 282
 - **Scope**: en.ts

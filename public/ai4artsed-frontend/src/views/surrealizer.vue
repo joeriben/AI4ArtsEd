@@ -192,6 +192,7 @@ import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useFavoritesStore } from '@/stores/favorites'
+import { useAnalysisEventStore } from '@/stores/analysisEvent'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 
 // ============================================================================
@@ -307,6 +308,7 @@ watch([alphaFaktor, negativePrompt, cfgScale, expandPrompt, fusionStrategy, seed
 
 // Page Context for Träshy (Session 133)
 const pageContextStore = usePageContextStore()
+const analysisEventStore = useAnalysisEventStore()
 
 const trashyFocusHint = computed<FocusHint>(() => {
   // During/after execution: bottom-right
@@ -320,7 +322,8 @@ const trashyFocusHint = computed<FocusHint>(() => {
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'surrealizer',
   pageContent: {
-    inputText: inputText.value
+    inputText: inputText.value,
+    imageAnalysisResult: imageAnalysis.value?.analysis
   },
   focusHint: trashyFocusHint.value
 }))
@@ -747,6 +750,9 @@ async function analyzeImage() {
       }
       showAnalysis.value = true
       console.log('[Stage 5] Analysis complete')
+
+      // Trigger Trashy reflection
+      analysisEventStore.requestReflection(data.analysis, inputText.value, 'surrealizer')
     } else {
       throw new Error(data.error || 'Unknown error')
     }

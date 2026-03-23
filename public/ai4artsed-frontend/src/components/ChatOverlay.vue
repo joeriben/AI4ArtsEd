@@ -90,6 +90,7 @@ import axios from 'axios'
 import { useCurrentSession } from '../composables/useCurrentSession'
 import { usePageContextStore } from '../stores/pageContext'
 import { useSafetyEventStore } from '../stores/safetyEvent'
+import { useAnalysisEventStore } from '../stores/analysisEvent'
 import { DEFAULT_FOCUS_HINT } from '../composables/usePageContext'
 import { useI18n } from 'vue-i18n'
 import trashyIcon from '../assets/trashy-icon.png'
@@ -171,6 +172,9 @@ const route = useRoute()
 
 // Safety event store — auto-expand Träshy when safety blocks occur
 const safetyStore = useSafetyEventStore()
+
+// Analysis event store — expand Träshy with reflection when image analysis completes
+const analysisEventStore = useAnalysisEventStore()
 
 // Build draft context string for LLM
 const draftContextString = computed(() => {
@@ -627,6 +631,82 @@ watch(
     }
   }
 )
+
+// Watch for image analysis events — expand Träshy and provide process-oriented reflection
+watch(
+  () => analysisEventStore.pendingReflection,
+  async (pending) => {
+    if (!pending) return
+
+    const event = analysisEventStore.consume()
+    if (!event) return
+
+    console.log('[ChatOverlay] Image analysis reflection requested:', event.viewType)
+
+    // Auto-expand Träshy
+    if (!isExpanded.value) {
+      isExpanded.value = true
+      await nextTick()
+    }
+
+    await generateAnalysisReflection(event.analysisText, event.userPrompt)
+  }
+)
+
+/**
+ * Generate a process-oriented reflection via LLM after image analysis completes.
+ * Same two-step pattern as generateSafetySuggestion: loading message → LLM response.
+ */
+async function generateAnalysisReflection(analysisText: string, userPrompt: string) {
+  // Step 1: Show loading message
+  const loadingId = messageIdCounter++
+  messages.value.push({
+    id: loadingId,
+    role: 'assistant',
+    content: t('trashy.analysisReflectionLoading')
+  })
+
+  await nextTick()
+  scrollToBottom()
+
+  try {
+    // Step 2: Call /api/chat without run_id (one-off reflection, not persisted)
+    const reflectionPrompt = `The user created an image with this prompt: "${userPrompt}"
+
+An image analysis was performed:
+---
+${analysisText}
+---
+
+Provide a brief process-oriented reflection (2-3 sentences):
+1. What aspects of the user's intention are visible in the result?
+2. What unexpected qualities emerged that might open new perspectives?
+3. Suggest one specific next step to explore.
+Be warm and curious, not lecturing. Respond in the language the user used for their prompt.`
+
+    const response = await axios.post('/api/chat', {
+      message: reflectionPrompt,
+      draft_context: draftContextString.value || undefined,
+      language: locale.value,
+    })
+
+    // Replace loading message in-place
+    const msg = messages.value.find(m => m.id === loadingId)
+    if (msg) {
+      msg.content = response.data.reply
+    }
+  } catch (error) {
+    console.error('[ChatOverlay] Error generating analysis reflection:', error)
+
+    const msg = messages.value.find(m => m.id === loadingId)
+    if (msg) {
+      msg.content = t('trashy.analysisReflectionError')
+    }
+  }
+
+  await nextTick()
+  scrollToBottom()
+}
 </script>
 
 <style scoped>

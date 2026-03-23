@@ -165,6 +165,7 @@ import SpriteProgressAnimation from '@/components/SpriteProgressAnimation.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { usePageContextStore } from '@/stores/pageContext'
+import { useAnalysisEventStore } from '@/stores/analysisEvent'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 
 // ============================================================================
@@ -219,6 +220,7 @@ const showAnalysis = ref(false)
 
 // Page Context for Träshy (Session 133)
 const pageContextStore = usePageContextStore()
+const analysisEventStore = useAnalysisEventStore()
 
 const trashyFocusHint = computed<FocusHint>(() => {
   // During/after execution: bottom-right
@@ -233,7 +235,8 @@ const pageContext = computed<PageContext>(() => ({
   activeViewType: 'direct',
   pageContent: {
     inputText: inputText.value,
-    selectedConfig: selectedOutputConfig.value
+    selectedConfig: selectedOutputConfig.value,
+    imageAnalysisResult: imageAnalysis.value?.analysis
   },
   focusHint: trashyFocusHint.value
 }))
@@ -618,6 +621,9 @@ async function analyzeImage() {
       }
       showAnalysis.value = true
       console.log('[Stage 5] Analysis complete')
+
+      // Trigger Trashy reflection
+      analysisEventStore.requestReflection(data.analysis, inputText.value, 'direct')
     } else {
       throw new Error(data.error || 'Unknown error')
     }

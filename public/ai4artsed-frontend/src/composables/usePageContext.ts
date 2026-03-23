@@ -26,6 +26,9 @@ export interface PageContent {
   // Image transformation fields
   uploadedImage?: string | null
 
+  // Image analysis result (persists for ongoing Trashy context)
+  imageAnalysisResult?: string
+
   // Canvas workflow fields
   workflowName?: string
   workflowNodes?: Array<{
@@ -112,6 +115,12 @@ export function formatPageContextForLLM(context: PageContext | null, routePath: 
     }
     if (pc.selectedConfig) {
       parts.push(`Modell/Config: ${pc.selectedConfig}`)
+    }
+
+    // Image analysis result
+    if (pc.imageAnalysisResult) {
+      const truncated = pc.imageAnalysisResult.length > 300 ? pc.imageAnalysisResult.substring(0, 300) + '...' : pc.imageAnalysisResult
+      parts.push(`Bildanalyse: "${truncated}"`)
     }
 
     // Image-related fields

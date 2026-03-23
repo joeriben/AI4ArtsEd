@@ -216,6 +216,7 @@ import { useDeviceId } from '@/composables/useDeviceId'
 import { getModelAvailability, type ModelAvailability } from '@/services/api'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useUiModeStore } from '@/stores/uiMode'
+import { useAnalysisEventStore } from '@/stores/analysisEvent'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import { useI18n } from 'vue-i18n'
 import type { SupportedLanguage } from '@/i18n'
@@ -318,6 +319,7 @@ const pipelineSectionRef = ref<any>(null) // MediaOutputBox component instance
 // Page Context for Träshy (Session 133)
 // ============================================================================
 const pageContextStore = usePageContextStore()
+const analysisEventStore = useAnalysisEventStore()
 
 const trashyFocusHint = computed<FocusHint>(() => {
   // During/after generation: bottom-right near output
@@ -342,7 +344,8 @@ const pageContext = computed<PageContext>(() => ({
     uploadedImage: uploadedImage.value ? '[Bild hochgeladen]' : null,
     contextPrompt: contextPrompt.value,
     selectedCategory: selectedCategory.value,
-    selectedConfig: selectedConfig.value
+    selectedConfig: selectedConfig.value,
+    imageAnalysisResult: imageAnalysis.value?.analysis
   },
   focusHint: trashyFocusHint.value
 }))
@@ -1073,6 +1076,9 @@ async function analyzeImage() {
       }
       showAnalysis.value = true
       console.log('[I2I Analysis] Success:', data)
+
+      // Trigger Trashy reflection
+      analysisEventStore.requestReflection(data.analysis || '', contextPrompt.value, 'image_transformation')
     } else {
       console.error('[I2I Analysis] Failed:', data.error)
       alert('Bildanalyse fehlgeschlagen')

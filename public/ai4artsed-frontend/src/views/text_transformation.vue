@@ -451,6 +451,7 @@ import { useUiModeStore } from '@/stores/uiMode'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { getModelAvailability, type ModelAvailability } from '@/services/api'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { useAnalysisEventStore } from '@/stores/analysisEvent'
 
 // Import styles (Phase 1 refactoring: extracted from inline <style scoped>)
 import '@/assets/animations.css'
@@ -628,6 +629,7 @@ const optimizationSectionRef = ref<HTMLElement | null>(null)
 // Using Pinia store instead of provide/inject for cross-component communication
 // ============================================================================
 const pageContextStore = usePageContextStore()
+const analysisEventStore = useAnalysisEventStore()
 
 // Helper: Get element's vertical center as viewport percentage
 function getElementY(el: HTMLElement | null): number {
@@ -689,7 +691,8 @@ const pageContext = computed<PageContext>(() => ({
     interceptionResult: interceptionResult.value,
     optimizedPrompt: optimizedPrompt.value,
     selectedCategory: selectedCategory.value,
-    selectedConfig: selectedConfig.value
+    selectedConfig: selectedConfig.value,
+    imageAnalysisResult: imageAnalysis.value?.analysis
   },
   focusHint: trashyFocusHint.value
 }))
@@ -2103,6 +2106,9 @@ async function analyzeImage() {
       }
       showAnalysis.value = true
       console.log('[Stage 5] Analysis complete')
+
+      // Trigger Trashy reflection
+      analysisEventStore.requestReflection(data.analysis, inputText.value, 'text_transformation')
     } else {
       throw new Error(data.error || 'Unknown error')
     }

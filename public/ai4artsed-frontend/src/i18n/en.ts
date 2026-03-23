@@ -1871,5 +1871,7 @@ export const en = {
     sendTooltip: 'Send message (Enter)',
     openTooltip: 'Open AI helper (Trashy) — drag to move, double-click to reset',
     closeTooltip: 'Close',
+    analysisReflectionLoading: 'Looking at the analysis...',
+    analysisReflectionError: 'I could not generate a reflection right now. You can still read the analysis above.',
   }
 }
