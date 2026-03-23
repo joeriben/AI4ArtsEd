@@ -80,9 +80,6 @@
           <button v-if="showStopButton" class="stop-btn" @click="transportStop">
             {{ t('latentLab.crossmodal.synth.stop') }}
           </button>
-          <button v-if="showPlayButton" class="play-btn" @click="transportPlay">
-            {{ t('latentLab.crossmodal.synth.play') }}
-          </button>
         </div>
       </div>
 
