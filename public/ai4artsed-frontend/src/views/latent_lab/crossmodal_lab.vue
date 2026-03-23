@@ -477,6 +477,14 @@
             <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
               {{ t('latentLab.crossmodal.synth.saveLoop') }}
             </button>
+            <span class="save-separator" />
+            <button class="save-btn" @click="exportPreset">
+              {{ t('latentLab.crossmodal.synth.preset.export') }}
+            </button>
+            <button class="save-btn" @click="() => presetFileInput?.click()">
+              {{ t('latentLab.crossmodal.synth.preset.import') }}
+            </button>
+            <input ref="presetFileInput" type="file" accept=".json" style="display:none" @change="importPreset" />
           </div>
         </div>
 
@@ -961,7 +969,7 @@ import { useEnvelope } from '@/composables/useEnvelope'
 import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
-import { useEffects } from '@/composables/useEffects'
+import { useEffects, type PlateVariant } from '@/composables/useEffects'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -1457,6 +1465,7 @@ const dimensionOffsets = reactive<Record<number, number>>({})
 // In relative mode, dimensionOffsets stores mix factors per dimension: -1 = pure B, 0 = current blend, +1 = pure A
 // In absolute mode, dimensionOffsets stores direct activation offsets (existing behavior)
 const spectralCanvasRef = ref<HTMLCanvasElement | null>(null)
+const presetFileInput = ref<HTMLInputElement | null>(null)
 const hoveredDim = ref<{ dim: number; activation: number; offset: number } | null>(null)
 let isDragging = false
 let lockedDim: number | null = null // pointer-captured dimension (prevents cross-dim painting)
@@ -2322,6 +2331,256 @@ function saveLoop() {
   reader.readAsArrayBuffer(blob)
 }
 
+// ===== Preset Export/Import =====
+
+const PRESET_VERSION = 1
+
+interface SynthPreset {
+  version: number
+  name: string
+  timestamp: string
+  synth: {
+    promptA: string
+    promptB: string
+    alpha: number
+    magnitude: number
+    noise: number
+    duration: number
+    startPosition: number
+    steps: number
+    cfg: number
+    seed: number
+  }
+  dimExplorer: {
+    spectralMode: SpectralMode
+    offsets: Record<string, number>
+  }
+  axes: Array<{ axis: string; value: number }>
+  engine: {
+    mode: EngineMode
+    loopMode: LoopMode
+    loopStartFrac: number
+    loopEndFrac: number
+    loopOptimize: boolean
+    crossfadeMs: number
+  }
+  envelope: {
+    attackMs: number
+    decayMs: number
+    sustain: number
+    releaseMs: number
+  }
+  effects: {
+    delayEnabled: boolean
+    delayTimeMs: number
+    delayFeedback: number
+    delayMix: number
+    reverbEnabled: boolean
+    reverbMix: number
+    reverbVariant: string
+  }
+  sequencer: {
+    enabled: boolean
+    bpm: number
+    stepCount: number
+    division: string
+    steps: Array<{ active: boolean; semitone: number; velocity: number; gate: number }>
+  }
+  arpeggiator: {
+    enabled: boolean
+    pattern: string
+    rate: string
+    octaveRange: number
+  }
+}
+
+function exportPreset() {
+  const preset: SynthPreset = {
+    version: PRESET_VERSION,
+    name: `${synth.promptA.slice(0, 30)}`,
+    timestamp: new Date().toISOString(),
+    synth: {
+      promptA: synth.promptA,
+      promptB: synth.promptB,
+      alpha: synth.alpha,
+      magnitude: synth.magnitude,
+      noise: synth.noise,
+      duration: synth.duration,
+      startPosition: synth.startPosition,
+      steps: synth.steps,
+      cfg: synth.cfg,
+      seed: synth.seed,
+    },
+    dimExplorer: {
+      spectralMode: spectralMode.value,
+      offsets: { ...dimensionOffsets },
+    },
+    axes: axisSlots.map(s => ({ axis: s.axis, value: s.value })),
+    engine: {
+      mode: engineMode.value,
+      loopMode: loopMode.value,
+      loopStartFrac: looper.loopStartFrac.value,
+      loopEndFrac: looper.loopEndFrac.value,
+      loopOptimize: looper.loopOptimize.value,
+      crossfadeMs: looper.crossfadeMs.value,
+    },
+    envelope: {
+      attackMs: envelope.attackMs.value,
+      decayMs: envelope.decayMs.value,
+      sustain: envelope.sustain.value,
+      releaseMs: envelope.releaseMs.value,
+    },
+    effects: {
+      delayEnabled: effects.delayEnabled.value,
+      delayTimeMs: effects.delayTimeMs.value,
+      delayFeedback: effects.delayFeedback.value,
+      delayMix: effects.delayMix.value,
+      reverbEnabled: effects.reverbEnabled.value,
+      reverbMix: effects.reverbMix.value,
+      reverbVariant: effects.reverbVariant.value,
+    },
+    sequencer: {
+      enabled: sequencerEnabled.value,
+      bpm: sequencer.bpm.value,
+      stepCount: sequencer.stepCount.value,
+      division: sequencer.division.value,
+      steps: sequencer.steps.map(s => ({
+        active: s.active, semitone: s.semitone, velocity: s.velocity, gate: s.gate,
+      })),
+    },
+    arpeggiator: {
+      enabled: arpeggiator.enabled.value,
+      pattern: arpeggiator.pattern.value,
+      rate: arpeggiator.rate.value,
+      octaveRange: arpeggiator.octaveRange.value,
+    },
+  }
+
+  const json = JSON.stringify(preset, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const safeName = synth.promptA.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40)
+  downloadBlob(blob, `synth_preset_${safeName}.json`)
+}
+
+async function importPreset(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  input.value = '' // allow re-import of same file
+
+  try {
+    const text = await file.text()
+    const preset: SynthPreset = JSON.parse(text)
+
+    if (!preset.version || !preset.synth?.promptA) {
+      error.value = 'Invalid preset file'
+      return
+    }
+
+    // Restore synth params
+    synth.promptA = preset.synth.promptA
+    synth.promptB = preset.synth.promptB ?? ''
+    synth.alpha = preset.synth.alpha ?? 0
+    synth.magnitude = preset.synth.magnitude ?? 1
+    synth.noise = preset.synth.noise ?? 0
+    synth.duration = preset.synth.duration ?? 3
+    synth.startPosition = preset.synth.startPosition ?? 0
+    synth.steps = preset.synth.steps ?? 20
+    synth.cfg = preset.synth.cfg ?? 7
+    synth.seed = preset.synth.seed ?? -1
+
+    // Restore dimension explorer
+    if (preset.dimExplorer) {
+      spectralMode.value = preset.dimExplorer.spectralMode ?? 'relative'
+      Object.keys(dimensionOffsets).forEach(k => delete dimensionOffsets[Number(k)])
+      if (preset.dimExplorer.offsets) {
+        for (const [k, v] of Object.entries(preset.dimExplorer.offsets)) {
+          dimensionOffsets[Number(k)] = v
+        }
+      }
+    }
+
+    // Restore axes
+    if (preset.axes) {
+      for (let i = 0; i < axisSlots.length; i++) {
+        const saved = preset.axes[i]
+        if (saved) {
+          axisSlots[i]!.axis = saved.axis
+          axisSlots[i]!.value = saved.value
+        } else {
+          axisSlots[i]!.axis = ''
+          axisSlots[i]!.value = 0
+        }
+      }
+    }
+
+    // Restore engine settings
+    if (preset.engine) {
+      loopMode.value = preset.engine.loopMode ?? 'oneshot'
+      looper.setLoopStart(preset.engine.loopStartFrac ?? 0)
+      looper.setLoopEnd(preset.engine.loopEndFrac ?? 1)
+      looper.setLoopOptimize(preset.engine.loopOptimize ?? false)
+      looper.setCrossfade(preset.engine.crossfadeMs ?? 150)
+    }
+
+    // Restore envelope
+    if (preset.envelope) {
+      envelope.attackMs.value = preset.envelope.attackMs ?? 0
+      envelope.decayMs.value = preset.envelope.decayMs ?? 0
+      envelope.sustain.value = preset.envelope.sustain ?? 1
+      envelope.releaseMs.value = preset.envelope.releaseMs ?? 0
+    }
+
+    // Restore effects
+    if (preset.effects) {
+      effects.setDelayEnabled(preset.effects.delayEnabled ?? false)
+      effects.setDelayTime(preset.effects.delayTimeMs ?? 250)
+      effects.setDelayFeedback(preset.effects.delayFeedback ?? 0.3)
+      effects.setDelayMix(preset.effects.delayMix ?? 0.3)
+      effects.setReverbEnabled(preset.effects.reverbEnabled ?? false)
+      effects.setReverbMix(preset.effects.reverbMix ?? 0.3)
+      if (preset.effects.reverbVariant) {
+        effects.setReverbVariant(preset.effects.reverbVariant as PlateVariant)
+      }
+    }
+
+    // Restore sequencer
+    if (preset.sequencer) {
+      sequencerEnabled.value = preset.sequencer.enabled ?? false
+      sequencer.setBpm(preset.sequencer.bpm ?? 120)
+      sequencer.setStepCount(preset.sequencer.stepCount as any ?? 8)
+      sequencer.setDivision(preset.sequencer.division as any ?? '1/8')
+      if (preset.sequencer.steps) {
+        for (let i = 0; i < preset.sequencer.steps.length && i < sequencer.steps.length; i++) {
+          const s = preset.sequencer.steps[i]!
+          sequencer.setStepActive(i, s.active)
+          sequencer.setStepSemitone(i, s.semitone)
+          sequencer.setStepVelocity(i, s.velocity)
+          sequencer.setStepGate(i, s.gate)
+        }
+      }
+    }
+
+    // Restore arpeggiator
+    if (preset.arpeggiator) {
+      arpeggiator.setEnabled(preset.arpeggiator.enabled ?? false)
+      arpeggiator.setPattern(preset.arpeggiator.pattern as any ?? 'up')
+      arpeggiator.setRate(preset.arpeggiator.rate as any ?? '1/8')
+      arpeggiator.setOctaveRange(preset.arpeggiator.octaveRange ?? 2)
+    }
+
+    // Regenerate audio with restored params
+    await runSynth()
+
+    // Restore engine mode after generation (wavetable needs frames)
+    if (preset.engine?.mode === 'wavetable' && wavetableOsc.hasFrames.value) {
+      setEngineMode('wavetable')
+    }
+  } catch (e) {
+    error.value = `Preset import failed: ${(e as Error).message}`
+  }
+}
+
 /** Encode AudioBuffer region as WAV Blob (16-bit PCM). */
 function audioBufferToWav(buffer: AudioBuffer, startSample: number, endSample: number): Blob {
   const nc = buffer.numberOfChannels, sr = buffer.sampleRate
@@ -3118,8 +3377,15 @@ onUnmounted(() => {
 /* Save buttons */
 .save-row {
   display: flex;
+  align-items: center;
   gap: 0.6rem;
   margin-top: 0.8rem;
+}
+
+.save-separator {
+  width: 1px;
+  height: 1.2rem;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .save-btn {

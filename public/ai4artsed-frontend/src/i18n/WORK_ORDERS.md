@@ -21,6 +21,14 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-24-synth-presets
+- **Session**: 284
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.preset.export` (NEW): "Export preset"
+  - `latentLab.crossmodal.synth.preset.import` (NEW): "Import preset"
+- **Context**: Synth state (prompts, params, offsets, axes, envelope, effects, sequencer, arpeggiator) can now be exported as JSON and reimported. Buttons in the save row next to Save raw/Save loop.
+
 ### WO-2026-03-23-dim-explorer-modes
 - **Session**: 284
 - **Scope**: en.ts

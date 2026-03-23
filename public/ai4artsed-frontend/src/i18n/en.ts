@@ -1510,6 +1510,10 @@ export const en = {
         normalizeHint: 'Normalizes volume to maximum amplitude',
         saveRaw: 'Save raw',
         saveLoop: 'Save loop',
+        preset: {
+          export: 'Export preset',
+          import: 'Import preset',
+        },
         embeddingStats: 'Embedding statistics',
         dimensions: {
           section: 'Dimension Explorer',
