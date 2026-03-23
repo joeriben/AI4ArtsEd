@@ -117,7 +117,7 @@
             <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
             <span class="slider-value">{{ synth.duration.toFixed(1) }}s</span>
           </div>
-          <input type="range" v-model.number="synth.duration" min="0.1" max="5" step="0.1" />
+          <input type="range" :value="durationToSlider(synth.duration)" min="0" max="1" step="0.002" @input="synth.duration = sliderToDuration(Number(($event.target as HTMLInputElement).value))" />
           <span class="param-hint">{{ t('latentLab.crossmodal.synth.durationHint') }}</span>
         </div>
         <div class="param param-wide">
@@ -1325,6 +1325,16 @@ const axisSlots = reactive<AxisSlot[]>([
 ])
 
 const axisColors = ['#e91e63', '#2196f3', '#4caf50']
+
+// Non-linear duration mapping: quadratic scale (finer control at short durations)
+const DURATION_MIN = 0.1
+const DURATION_MAX = 30
+function sliderToDuration(t: number): number {
+  return DURATION_MIN + t * t * (DURATION_MAX - DURATION_MIN)
+}
+function durationToSlider(d: number): number {
+  return Math.sqrt(Math.max(0, (d - DURATION_MIN) / (DURATION_MAX - DURATION_MIN)))
+}
 
 interface AxisContribution {
   dim: number
