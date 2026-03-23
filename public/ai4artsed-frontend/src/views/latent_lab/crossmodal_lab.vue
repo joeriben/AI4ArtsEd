@@ -2444,6 +2444,15 @@ onUnmounted(() => {
   color: #ffffff;
 }
 
+/* Dark dropdown options (browser renders native popups white by default) */
+.crossmodal-lab select,
+.crossmodal-lab option,
+.crossmodal-lab optgroup {
+  background: #1a1a1a;
+  color: #ffffff;
+  color-scheme: dark;
+}
+
 .page-header {
   margin-bottom: 2rem;
 }
