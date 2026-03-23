@@ -15,10 +15,11 @@ import { ref, readonly } from 'vue'
 
 export type PlateVariant = 'bright' | 'medium' | 'dark'
 
-const IR_PATHS: Record<PlateVariant, string> = {
-  bright: '/audio/ir/emt_140_plate_bright.wav',
-  medium: '/audio/ir/emt_140_plate_medium.wav',
-  dark:   '/audio/ir/emt_140_plate_dark.wav',
+/** Resolve IR paths via import.meta.url — works in both Vite dev and built dist */
+const IR_URLS: Record<PlateVariant, string> = {
+  bright: new URL('../audio/ir/emt_140_plate_bright.wav', import.meta.url).href,
+  medium: new URL('../audio/ir/emt_140_plate_medium.wav', import.meta.url).href,
+  dark:   new URL('../audio/ir/emt_140_plate_dark.wav', import.meta.url).href,
 }
 
 export function useEffects() {
@@ -163,16 +164,16 @@ export function useEffects() {
     if (!ctx || !convolver) return
     if (loadedVariant === variant && reverbLoaded.value) return
 
-    const path = IR_PATHS[variant]
+    const url = IR_URLS[variant]
     try {
-      const resp = await fetch(path)
+      const resp = await fetch(url)
       const arrayBuf = await resp.arrayBuffer()
       const audioBuf = await ctx.decodeAudioData(arrayBuf)
       convolver.buffer = audioBuf
       loadedVariant = variant
       reverbLoaded.value = true
     } catch (e) {
-      console.warn(`Failed to load IR ${path}:`, e)
+      console.warn(`Failed to load IR ${url}:`, e)
       reverbLoaded.value = false
     }
   }
