@@ -28,7 +28,7 @@ export function useEnvelope() {
     return gainNode
   }
 
-  /** Note-on: ramp current → peak (velocity) → sustain level. */
+  /** Note-on: ramp 0 → peak (velocity) → sustain level. */
   function triggerAttack(velocity = 1): void {
     if (!gainNode) return
     const now = gainNode.context.currentTime
@@ -38,19 +38,11 @@ export function useEnvelope() {
 
     if (releaseTimer) { clearTimeout(releaseTimer); releaseTimer = null }
 
-    // cancelAndHoldAtTime freezes at the current interpolated value —
-    // no jump if re-triggering during sustain or release phase.
-    gainNode.gain.cancelAndHoldAtTime(now)
-    if (atk > 0) {
-      gainNode.gain.linearRampToValueAtTime(velocity, now + atk)
-    } else {
-      gainNode.gain.setValueAtTime(velocity, now)
-    }
-    if (dec > 0) {
-      gainNode.gain.linearRampToValueAtTime(sus, now + atk + dec)
-    } else {
-      gainNode.gain.setValueAtTime(sus, now + atk)
-    }
+    // Cancel any in-progress automation, start clean from 0
+    gainNode.gain.cancelScheduledValues(now)
+    gainNode.gain.setValueAtTime(0, now)
+    gainNode.gain.linearRampToValueAtTime(velocity, now + Math.max(atk, 0.002))
+    gainNode.gain.linearRampToValueAtTime(sus, now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
   }
 
   /**
