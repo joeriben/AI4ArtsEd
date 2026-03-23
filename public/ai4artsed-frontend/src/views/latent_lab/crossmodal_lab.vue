@@ -337,39 +337,45 @@
           </div>
         </div>
 
-        <!-- ===== Loop Mode ===== -->
-        <div class="section-toggle loop-mode-row">
-          <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
-            <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
-            {{ t('latentLab.crossmodal.synth.loopOff') }}
+        <!-- ===== Engine Switch: Looper vs Wavetable ===== -->
+        <div class="section-toggle engine-switch-row">
+          <label class="inline-toggle" :class="{ active: engineMode === 'looper' }">
+            <input type="radio" value="looper" :checked="engineMode === 'looper'" @change="setEngineMode('looper')" />
+            {{ t('latentLab.crossmodal.synth.engineLooper') }}
           </label>
-          <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
-            <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
-            {{ t('latentLab.crossmodal.synth.loopToggle') }}
-          </label>
-          <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
-            <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
-            {{ t('latentLab.crossmodal.synth.loopPingPong') }}
-          </label>
-        </div>
-        <div v-if="loopMode !== 'oneshot'" class="loop-options">
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
-            {{ t('latentLab.crossmodal.synth.loopOptimize') }}
-          </label>
-          <span v-if="looper.loopOptimize.value" class="optimized-hint">
-            → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
-          </span>
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
-        </div>
-
-        <!-- ===== Wavetable Section ===== -->
-        <div class="section-toggle">
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode(($event.target as HTMLInputElement).checked ? 'wavetable' : 'looper')" />
-            {{ t('latentLab.crossmodal.synth.wavetableToggle') }}
+          <label class="inline-toggle" :class="{ active: engineMode === 'wavetable' }" :title="!wavetableOsc.hasFrames.value ? 'Generate first' : ''">
+            <input type="radio" value="wavetable" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode('wavetable')" />
+            {{ t('latentLab.crossmodal.synth.engineWavetable') }}
             <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
           </label>
+        </div>
+
+        <!-- Looper options (only when looper engine active) -->
+        <div v-if="engineMode === 'looper'" class="looper-options">
+          <div class="loop-mode-row">
+            <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
+              <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
+              {{ t('latentLab.crossmodal.synth.loopOff') }}
+            </label>
+            <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
+              <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
+              {{ t('latentLab.crossmodal.synth.loopToggle') }}
+            </label>
+            <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
+              <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
+              {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+            </label>
+          </div>
+          <div v-if="loopMode !== 'oneshot'" class="loop-options">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
+              {{ t('latentLab.crossmodal.synth.loopOptimize') }}
+            </label>
+            <span v-if="looper.loopOptimize.value" class="optimized-hint">
+              → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
+            </span>
+            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
+          </div>
         </div>
         <div v-if="wavetableOn" class="wavetable-controls">
           <div class="wavetable-mode-row">
