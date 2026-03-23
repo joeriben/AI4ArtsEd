@@ -604,6 +604,9 @@
               <div class="seq-division">
                 <button v-for="div in sequencer.noteDivisions" :key="div" class="division-btn" :class="{ active: sequencer.division.value === div }" @click="sequencer.setDivision(div)">{{ div }}</button>
               </div>
+              <div class="seq-division">
+                <button v-for="oct in [-1, 0, 1]" :key="oct" class="division-btn" :class="{ active: seqOctave === oct }" @click="seqOctave = oct">{{ oct > 0 ? `+${oct}` : oct }}</button>
+              </div>
               <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
                 {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
                 <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
@@ -1118,6 +1121,7 @@ const transport = ref<TransportState>('idle')
 const engineMode = ref<EngineMode>('looper')
 const loopMode = ref<LoopMode>('oneshot')
 const sequencerEnabled = ref(false)
+const seqOctave = ref(0) // -1, 0, +1
 let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
 
 // Derived state for template — NEVER flickers during MIDI/retrigger
@@ -1995,7 +1999,8 @@ function wireSequencerCallbacks() {
   sequencer.setCallbacks(
     // noteOn: retrigger active engine at new pitch, through arpeggiator
     (note, velocity) => {
-      arpeggiator.processNote(note, velocity, (n, v) => {
+      const octNote = note + seqOctave.value * 12
+      arpeggiator.processNote(octNote, velocity, (n, v) => {
         triggerEngine(n, v)
       }, () => {
         envelope.triggerRelease()
