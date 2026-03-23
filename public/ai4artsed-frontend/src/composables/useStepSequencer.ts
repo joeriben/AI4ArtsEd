@@ -322,6 +322,12 @@ export function useStepSequencer() {
     if (steps[idx]) { steps[idx].gate = Math.max(0.1, Math.min(1, gate)); presetIndex.value = -1 }
   }
 
+  /** Set gate for all steps at once */
+  function setAllGates(gate: number) {
+    const g = Math.max(0.1, Math.min(1, gate))
+    for (const step of steps) step.gate = g
+  }
+
   function handleMidiClock(type: MidiClockType) {
     const now = performance.now()
     if (type === 'start') {
@@ -402,6 +408,7 @@ export function useStepSequencer() {
     setStepSemitone,
     setStepVelocity,
     setStepGate,
+    setAllGates,
     setCallbacks,
     handleMidiClock,
     dispose,

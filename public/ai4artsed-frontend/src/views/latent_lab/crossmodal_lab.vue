@@ -634,6 +634,11 @@
                 <input type="range" :value="sequencer.bpm.value" min="60" max="200" step="1" :disabled="sequencer.midiClockActive.value" @input="onBpmInput" />
                 <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
               </div>
+              <div class="sequencer-gate">
+                <label>Gate</label>
+                <input type="range" :value="sequencer.steps[0]?.gate ?? 0.8" min="0.1" max="1" step="0.05" @input="sequencer.setAllGates(Number(($event.target as HTMLInputElement).value))" />
+                <span class="seq-bpm-value">{{ Math.round((sequencer.steps[0]?.gate ?? 0.8) * 100) }}%</span>
+              </div>
             </div>
             <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
               <div v-for="(step, idx) in sequencer.steps" :key="idx" class="seq-step" :class="{ active: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx, muted: !step.active }">
