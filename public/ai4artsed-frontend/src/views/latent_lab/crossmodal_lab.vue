@@ -2150,15 +2150,6 @@ function audioBufferToWav(buffer: AudioBuffer, startSample: number, endSample: n
 
 // ===== Synth =====
 async function runSynth() {
-  // Wire envelope if ADSR is non-neutral (so it shapes playback)
-  if (!envelope.isNeutral.value) wireEnvelope()
-  if (envelopeWired) {
-    if (envelope.isNeutral.value) {
-      envelope.bypass()
-    } else {
-      envelope.triggerAttack(1)
-    }
-  }
   // Track pre-generation state to restore after completion
   preGenTransport = transport.value === 'generating'
     ? preGenTransport
