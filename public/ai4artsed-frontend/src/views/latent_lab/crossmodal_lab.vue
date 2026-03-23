@@ -588,6 +588,12 @@
               @pointerup="onKeyUp_key"
               @pointerleave="onKeyUp_key"
             >{{ note.label }}</button>
+            <button
+              class="key-btn hold-btn"
+              :class="{ active: holdActive }"
+              :disabled="!hasLoadedAudio"
+              @click="toggleHold"
+            >Hold</button>
           </div>
 
           <!-- Sequencer -->
@@ -1189,22 +1195,45 @@ const keyboardNotes = [
   { label: 'B',  midi: 71, black: false },
 ]
 const activeKeyNote = ref<number | null>(null)
+const holdActive = ref(false)
+const heldKeyNote = ref<number | null>(null)
+
+/** Sequencer base transpose: semitone offset from C3 when a key is held */
+const seqKeyTranspose = computed(() =>
+  heldKeyNote.value !== null ? heldKeyNote.value - MIDI_REF_NOTE : 0
+)
 
 function onKeyDown_key(midi: number) {
   activeKeyNote.value = midi
+  if (holdActive.value) {
+    heldKeyNote.value = midi
+  }
   triggerEngine(midi, 0.9)
 }
 
 function onKeyUp_key() {
+  if (holdActive.value) return // Hold mode: note sustains
+  releaseCurrentNote()
+}
+
+function toggleHold() {
+  holdActive.value = !holdActive.value
+  if (!holdActive.value) {
+    // Turning hold off: release the sustained note
+    heldKeyNote.value = null
+    releaseCurrentNote()
+  }
+}
+
+function releaseCurrentNote() {
   activeKeyNote.value = null
   if (engineMode.value === 'wavetable') {
     wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
   }
   envelope.triggerRelease()
-  // Stop engine after ADSR release completes (or immediately if release = 0)
   const stopDelay = envelope.releaseMs.value + 50
   setTimeout(() => {
-    if (activeKeyNote.value !== null) return // new note pressed during release
+    if (activeKeyNote.value !== null) return
     if (engineMode.value === 'looper') looper.stop()
     else wavetableOsc.stop()
   }, stopDelay)
@@ -2025,7 +2054,7 @@ function wireSequencerCallbacks() {
   sequencer.setCallbacks(
     // noteOn: retrigger active engine at new pitch, through arpeggiator
     (note, velocity) => {
-      const octNote = note + seqOctave.value * 12
+      const octNote = note + seqOctave.value * 12 + seqKeyTranspose.value
       arpeggiator.processNote(octNote, velocity, (n, v) => {
         triggerEngine(n, v)
       }, () => {
@@ -3679,6 +3708,18 @@ onUnmounted(() => {
   background: rgba(76, 175, 80, 0.3);
   color: #4CAF50;
   border-color: rgba(76, 175, 80, 0.5);
+}
+
+.hold-btn {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hold-btn.active {
+  background: rgba(255, 152, 0, 0.3);
+  color: #FF9800;
+  border-color: rgba(255, 152, 0, 0.5);
 }
 
 .key-btn:disabled {
