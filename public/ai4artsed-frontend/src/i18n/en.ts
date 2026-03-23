@@ -1468,7 +1468,9 @@ export const en = {
         wavetableScanHint: 'Morph between frames (0 = start, 1 = end)',
         wtRange: 'Range',
         wtInterpolate: 'Interpolate',
-        wtScanEnvelope: 'Scan AD',
+        wtScanEnvelope: 'Scan',
+        wtSweep: 'Sweep',
+        wtReturn: 'Return',
         wavetableFrames: '{count} frames',
         midiScan: 'Scan Position',
         sequencer: {

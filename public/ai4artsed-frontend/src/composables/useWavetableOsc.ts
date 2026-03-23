@@ -350,8 +350,8 @@ export function useWavetableOsc() {
   }
 
   /**
-   * Trigger scan envelope (ADR) using AudioParam automation for sample-accurate timing.
-   * Attack: 0→1, Decay: 1→0, Release: current→0 (on stopScanEnvelope).
+   * Trigger scan envelope (ADR): sweep 0→1 (Attack), then 1→0 (Decay).
+   * Call stopScanEnvelope() on note-off to interrupt A or D and ramp to 0 (Release).
    */
   function triggerScanEnvelope(attackMs: number, decayMs: number): void {
     if (!workletNode) return
@@ -363,7 +363,7 @@ export function useWavetableOsc() {
     const dSec = decayMs / 1000
 
     param.cancelScheduledValues(now)
-    param.setValueAtTime(0.001, now) // exponential needs non-zero start
+    param.setValueAtTime(0.001, now)
     if (aSec > 0) {
       param.exponentialRampToValueAtTime(1, now + aSec)
     } else {

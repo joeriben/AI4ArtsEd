@@ -455,14 +455,14 @@
             <div class="wt-scan-env">
               <span class="wt-env-title">{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }}</span>
               <span class="wt-env-label">A</span>
-              <input type="range" v-model.number="wtScanAttack" min="0" max="3000" step="10" class="wt-env-slider" />
-              <span class="wt-env-value">{{ wtScanAttack }}</span>
+              <input type="range" v-model.number="wtScanAttack" min="0" max="10000" step="50" class="wt-env-slider" />
+              <span class="wt-env-value">{{ (wtScanAttack / 1000).toFixed(1) }}s</span>
               <span class="wt-env-label">D</span>
-              <input type="range" v-model.number="wtScanDecay" min="0" max="3000" step="10" class="wt-env-slider" />
-              <span class="wt-env-value">{{ wtScanDecay }}</span>
+              <input type="range" v-model.number="wtScanDecay" min="0" max="10000" step="50" class="wt-env-slider" />
+              <span class="wt-env-value">{{ (wtScanDecay / 1000).toFixed(1) }}s</span>
               <span class="wt-env-label">R</span>
-              <input type="range" v-model.number="wtScanRelease" min="0" max="3000" step="10" class="wt-env-slider" />
-              <span class="wt-env-value">{{ wtScanRelease }}</span>
+              <input type="range" v-model.number="wtScanRelease" min="0" max="10000" step="50" class="wt-env-slider" />
+              <span class="wt-env-value">{{ (wtScanRelease / 1000).toFixed(1) }}s</span>
             </div>
           </div>
         </div>
