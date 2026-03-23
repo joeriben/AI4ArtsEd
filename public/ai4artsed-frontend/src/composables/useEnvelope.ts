@@ -28,7 +28,7 @@ export function useEnvelope() {
     return gainNode
   }
 
-  /** Note-on: ramp 0 -> peak (velocity) -> sustain level. */
+  /** Note-on: ramp current → peak (velocity) → sustain level. */
   function triggerAttack(velocity = 1): void {
     if (!gainNode) return
     const now = gainNode.context.currentTime
@@ -38,21 +38,38 @@ export function useEnvelope() {
 
     if (releaseTimer) { clearTimeout(releaseTimer); releaseTimer = null }
 
-    gainNode.gain.cancelScheduledValues(now)
-    gainNode.gain.setValueAtTime(0, now)
-    gainNode.gain.linearRampToValueAtTime(velocity, now + atk)
-    gainNode.gain.linearRampToValueAtTime(sus, now + atk + dec)
+    // cancelAndHoldAtTime freezes at the current interpolated value —
+    // no jump if re-triggering during sustain or release phase.
+    gainNode.gain.cancelAndHoldAtTime(now)
+    if (atk > 0) {
+      gainNode.gain.linearRampToValueAtTime(velocity, now + atk)
+    } else {
+      gainNode.gain.setValueAtTime(velocity, now)
+    }
+    if (dec > 0) {
+      gainNode.gain.linearRampToValueAtTime(sus, now + atk + dec)
+    } else {
+      gainNode.gain.setValueAtTime(sus, now + atk)
+    }
   }
 
-  /** Note-off: ramp current level -> 0. Optional callback when release completes. */
+  /**
+   * Note-off: ramp from current interpolated level → 0.
+   * Uses cancelAndHoldAtTime to capture the true current value,
+   * then ramps to zero. No echo/click from stale .value reads.
+   */
   function triggerRelease(onComplete?: () => void): void {
     if (!gainNode) return
     const now = gainNode.context.currentTime
     const rel = releaseMs.value / 1000
 
-    gainNode.gain.cancelScheduledValues(now)
-    gainNode.gain.setValueAtTime(gainNode.gain.value, now)
-    gainNode.gain.linearRampToValueAtTime(0, now + rel)
+    // Freeze at current interpolated value, then ramp to 0
+    gainNode.gain.cancelAndHoldAtTime(now)
+    if (rel > 0) {
+      gainNode.gain.linearRampToValueAtTime(0, now + rel)
+    } else {
+      gainNode.gain.setValueAtTime(0, now)
+    }
 
     if (onComplete) {
       if (releaseTimer) clearTimeout(releaseTimer)

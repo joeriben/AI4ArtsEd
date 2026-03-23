@@ -383,9 +383,8 @@ export function useWavetableOsc() {
     const now = (ctx ?? ensureContext()).currentTime
     const rSec = releaseMs / 1000
 
-    param.cancelScheduledValues(now)
-    // Capture current value before ramping (exponential needs non-zero)
-    param.setValueAtTime(Math.max(0.001, param.value), now)
+    // Freeze at current interpolated scan position, then ramp to 0
+    param.cancelAndHoldAtTime(now)
     if (rSec > 0) {
       param.exponentialRampToValueAtTime(0.001, now + rSec)
     } else {
