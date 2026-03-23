@@ -1407,7 +1407,7 @@ export const en = {
         promptAPlaceholder: 'e.g. ocean waves',
         promptB: 'Prompt B (Optional, for interpolation)',
         promptBPlaceholder: 'e.g. piano melody',
-        alpha: 'Alpha (Interpolation)',
+        alpha: '\u0391 (Interpolation between Prompt A and Prompt B embeddings)',
         alphaHint: '0 = A only, 1 = B only, between = blend, >1 or <0 = extrapolation',
         magnitude: 'Magnitude (Scaling)',
         magnitudeHint: 'Global embedding scaling (1.0 = unchanged)',

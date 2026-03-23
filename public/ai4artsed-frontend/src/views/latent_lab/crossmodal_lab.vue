@@ -60,7 +60,7 @@
 
         <!-- Prompt B (optional) -->
         <MediaInputBox
-          icon="➕"
+          icon="💡"
           :label="t('latentLab.crossmodal.synth.promptB')"
           :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
           :value="synth.promptB"
