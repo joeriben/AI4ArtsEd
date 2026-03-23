@@ -793,19 +793,19 @@ onUnmounted(() => {
 /* Resize Types */
 .standard-resize-textarea {
   resize: vertical;
-  min-height: clamp(80px, 10vh, 100px);
+  min-height: clamp(44px, 6vh, 56px);
 }
 
 .auto-resize-textarea {
   resize: vertical;
   overflow-y: auto;
-  min-height: clamp(80px, 10vh, 100px);
+  min-height: clamp(44px, 6vh, 56px);
   max-height: clamp(150px, 20vh, 250px);
 }
 
 .no-resize-textarea {
   resize: none;
-  min-height: clamp(80px, 10vh, 100px);
+  min-height: clamp(44px, 6vh, 56px);
 }
 
 /* Upload / Sketch Toggle */
