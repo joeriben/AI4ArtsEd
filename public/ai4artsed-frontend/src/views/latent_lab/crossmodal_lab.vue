@@ -1798,8 +1798,13 @@ function triggerEngine(note: number, velocity: number) {
     if (looper.hasAudio.value) looper.retrigger()
   } else {
     wavetableOsc.setFrequencyFromNote(note)
-    if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) wavetableOsc.start()
-    // Scan envelope is triggered once via transportPlay, not per note
+    if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) {
+      wavetableOsc.start()
+      // Trigger one-shot scan sweep on first start
+      if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
+        wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
+      }
+    }
   }
   envelope.triggerAttack(velocity)
 }
