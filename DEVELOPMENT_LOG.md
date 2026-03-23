@@ -1,5 +1,23 @@
 # Development Log
 
+## Session 284 - Dimension Explorer: Relative/Absolute Modes + Alpha Extrapolation
+**Date:** 2026-03-24
+**Focus:** Dimension Explorer bekommt zwei Modi (Relativ/Absolut) fuer intuitivere per-Dimension A/B-Kontrolle. Alpha-Slider fuer Extrapolation geoeffnet mit automatischer Magnitude-Renormalisierung.
+
+### Changes
+1. **Dimension Explorer — Relative Mode** (Default): Per-Dimension Mix zwischen Prompt A (oben, orange) und Prompt B (unten, blau). Wert -1..+1 = Mix-Faktor, wird vor API-Call in tatsaechliche Offsets konvertiert. A/B-Referenz-Ticks pro Balken.
+2. **Dimension Explorer — Absolute Mode**: Bestehende Funktionalitaet (direkte Offsets). Neu: gestrichelte A/B-Korridorlinien (orange/blau) wenn beide Prompts vorhanden.
+3. **Mode Toggle**: Radio-Buttons wie Engine Switch (Looper/Wavetable). Wechsel loescht Offsets (mit Undo). Relative Mode disabled ohne Prompt B.
+4. **Alpha Extrapolation**: Slider-Range von ±1 auf ±2 erweitert. Backend renormalisiert nach Extrapolation (alpha ausserhalb [0,1]) automatisch auf Midpoint-L2-Norm. Magnitude-Slider bleibt orthogonal — Richtung vs. Skalierung sind getrennte Konzepte.
+5. **Backend**: `_compute_stats()` liefert `emb_a_values` und `emb_b_values` (per-Dimension Referenzwerte).
+6. **i18n**: 4 neue Keys in en.ts, Work Order fuer Translator.
+
+### Technical Notes
+- Renormalisierung: `result * (midpoint_norm / result_norm)` — nur bei Extrapolation, vor Magnitude-Scaling
+- MIDI CC1 Range entsprechend auf ±2 angepasst
+- `synthFingerprint()` enthaelt jetzt `spectralMode` — Modus-Wechsel triggert Regeneration bei MIDI-Note
+- `prevStats` Snapshot vor `embeddingStats = null` — verhindert Race Condition bei Relative→Offset-Konvertierung
+
 ## Session 283 - Latent Audio Synth: Envelope Fixes, Effects, Arpeggiator, UI Overhaul
 **Date:** 2026-03-23
 **Focus:** Fundamentale Bugs in ADSR/Scan-Envelopes gefixt, Delay+Reverb-Effekte hinzugefuegt, Arpeggiator erweitert, Synth-UI komplett reorganisiert.
