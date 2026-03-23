@@ -337,6 +337,16 @@ class CrossmodalLabBackend:
         # Interpolation / extrapolation
         if emb_b is not None:
             result = (1.0 - alpha) * emb_a + alpha * emb_b
+
+            # Renormalize after extrapolation: preserve direction, clamp magnitude
+            # to midpoint norm so the model stays in-distribution.
+            # Only activates when alpha is outside [0, 1].
+            if alpha < 0.0 or alpha > 1.0:
+                midpoint = 0.5 * emb_a + 0.5 * emb_b
+                ref_norm = midpoint.norm()
+                result_norm = result.norm()
+                if result_norm > 1e-8:
+                    result = result * (ref_norm / result_norm)
         else:
             result = emb_a.clone()
 

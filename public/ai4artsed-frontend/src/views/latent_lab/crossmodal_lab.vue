@@ -87,7 +87,7 @@
             <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
             <span class="slider-value">{{ synth.alpha.toFixed(2) }}</span>
           </div>
-          <input type="range" v-model.number="synth.alpha" min="-1" max="1" step="0.01" />
+          <input type="range" v-model.number="synth.alpha" min="-2" max="2" step="0.01" />
         </div>
 
         <div class="slider-item">
@@ -1258,8 +1258,8 @@ const heldNotes: number[] = []
 midi.init()
 
 // MIDI CC mappings
-// CC1 → Alpha (-1 to +1, center = 0)
-midi.mapCC(1, (v) => { synth.alpha = v * 2 - 1 })
+// CC1 → Alpha (-2 to +2, center = 0, beyond ±1 = extrapolation)
+midi.mapCC(1, (v) => { synth.alpha = v * 4 - 2 })
 // CC2 → Magnitude (0.1 to 5)
 midi.mapCC(2, (v) => { synth.magnitude = 0.1 + v * 4.9 })
 // CC3 → Noise (0 to 1)
