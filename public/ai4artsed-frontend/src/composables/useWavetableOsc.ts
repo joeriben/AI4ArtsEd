@@ -24,6 +24,7 @@ export function useWavetableOsc() {
   let workletReady = false
   let frames: Float32Array[] = []
   let destinationNode: AudioNode | null = null
+  let pendingScan: { attack: number; decay: number; start: number; end: number } | null = null
 
   const hasFrames = ref(false)
   const isPlaying = ref(false)
@@ -307,9 +308,18 @@ export function useWavetableOsc() {
     if (freqParam) freqParam.value = currentFrequency.value
 
     isPlaying.value = true
+
+    // Apply deferred scan envelope (fixes async race: triggerScanEnvelope
+    // may have been called before the worklet node was created)
+    if (pendingScan) {
+      const { attack, decay, start: s, end: e } = pendingScan
+      pendingScan = null
+      scheduleScanRamp(attack, decay, s, e)
+    }
   }
 
   function stop(): void {
+    pendingScan = null
     if (workletNode) {
       workletNode.disconnect()
       workletNode = null
@@ -337,7 +347,10 @@ export function useWavetableOsc() {
     const clamped = Math.max(0, Math.min(1, pos))
     if (workletNode) {
       const param = workletNode.parameters.get('scanPosition')
-      if (param) param.value = clamped
+      if (param) {
+        param.cancelScheduledValues(0)
+        param.value = clamped
+      }
     }
   }
 
@@ -350,10 +363,11 @@ export function useWavetableOsc() {
   }
 
   /**
-   * Trigger scan envelope (ADR): sweep 0→1 (Attack), then 1→0 (Decay).
-   * Call stopScanEnvelope() on note-off to interrupt A or D and ramp to 0 (Release).
+   * Schedule the ADR scan ramp on the worklet's scanPosition AudioParam.
+   * Exponential ramps (RC-curve): A sweeps scanStart→scanEnd, D sweeps scanEnd→scanStart.
+   * Floor at 0.001 because exponentialRamp requires values > 0.
    */
-  function triggerScanEnvelope(attackMs: number, decayMs: number): void {
+  function scheduleScanRamp(attackMs: number, decayMs: number, scanStart: number, scanEnd: number): void {
     if (!workletNode) return
     const param = workletNode.parameters.get('scanPosition')
     if (!param) return
@@ -361,34 +375,57 @@ export function useWavetableOsc() {
     const now = (ctx ?? ensureContext()).currentTime
     const aSec = attackMs / 1000
     const dSec = decayMs / 1000
+    const lo = Math.max(0.001, scanStart)
+    const hi = Math.max(0.001, scanEnd)
 
     param.cancelScheduledValues(now)
-    param.setValueAtTime(0.001, now)
+    param.setValueAtTime(lo, now)
     if (aSec > 0) {
-      param.exponentialRampToValueAtTime(1, now + aSec)
+      param.exponentialRampToValueAtTime(hi, now + aSec)
     } else {
-      param.setValueAtTime(1, now)
+      param.setValueAtTime(hi, now)
     }
     if (dSec > 0) {
-      param.exponentialRampToValueAtTime(0.001, now + aSec + dSec)
+      param.exponentialRampToValueAtTime(lo, now + aSec + dSec)
     }
   }
 
-  /** Release: ramp scan position from current value to 0. */
-  function stopScanEnvelope(releaseMs: number = 200): void {
+  /**
+   * Trigger scan envelope (ADR): sweep scanStart→scanEnd (Attack), then back (Decay).
+   * If the worklet is not yet ready (async start), the envelope is deferred
+   * and applied automatically once start() completes.
+   */
+  function triggerScanEnvelope(attackMs: number, decayMs: number, scanStart = 0, scanEnd = 1): void {
+    pendingScan = { attack: attackMs, decay: decayMs, start: scanStart, end: scanEnd }
+    if (workletNode) {
+      const { attack, decay, start: s, end: e } = pendingScan
+      pendingScan = null
+      scheduleScanRamp(attack, decay, s, e)
+    }
+  }
+
+  /**
+   * Release: read current scan position, cancel automation,
+   * then exponential ramp to scanTarget. Starts from wherever
+   * the scan is — whether in A or D phase (ADSR principle).
+   * Avoids cancelAndHoldAtTime (unreliable across browsers).
+   */
+  function stopScanEnvelope(releaseMs: number = 200, scanTarget = 0): void {
     if (!workletNode) return
     const param = workletNode.parameters.get('scanPosition')
     if (!param) return
 
     const now = (ctx ?? ensureContext()).currentTime
     const rSec = releaseMs / 1000
+    const current = Math.max(0.001, param.value)
+    const target = Math.max(0.001, scanTarget)
 
-    // Freeze at current interpolated scan position, then ramp to 0
-    param.cancelAndHoldAtTime(now)
+    param.cancelScheduledValues(now)
+    param.setValueAtTime(current, now)
     if (rSec > 0) {
-      param.exponentialRampToValueAtTime(0.001, now + rSec)
+      param.exponentialRampToValueAtTime(target, now + rSec)
     } else {
-      param.setValueAtTime(0.001, now)
+      param.setValueAtTime(target, now)
     }
   }
 

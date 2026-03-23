@@ -4,7 +4,7 @@
 
 Der Latent Audio Synth erzeugt Klänge aus Textbeschreibungen. Er nutzt Stable Audio Open als Klangerzeugungsbackend, arbeitet aber nicht wie ein klassischer Text-to-Audio-Generator: Statt einfach "erzeuge diesen Sound" zu sagen, manipuliert er den **Raum zwischen den Wörtern und dem Klang** — den sogenannten T5-Conditioning-Space (768 Dimensionen).
 
-Das bedeutet: Du kannst zwei Klangbeschreibungen mischen, den Klang entlang akustischer Achsen verschieben, und direkt in den 768 Dimensionen des Sprachmodells malen. Das Ergebnis wird in einer Schleife abgespielt und bei jeder neuen Generierung nahtlos eingewechselt (Loop-and-Swap).
+Das bedeutet: Du kannst zwei Klangbeschreibungen mischen, den Klang entlang akustischer Achsen verschieben, und direkt in den 768 Dimensionen des Sprachmodells malen. Das Ergebnis wird bei jeder neuen Generierung mit einer von den Einstellungen (Länge, Steps) abhängigen Latenz nahtlos eingewechselt (Loop-and-Swap).
 
 ---
 
@@ -14,7 +14,7 @@ Das bedeutet: Du kannst zwei Klangbeschreibungen mischen, den Klang entlang akus
 2. Das Sprachmodell (T5) wandelt diese Texte in 768-dimensionale Vektoren um
 3. Du mischst, skalierst und verschiebst diese Vektoren mit den Reglern
 4. Stable Audio erzeugt daraus einen Klang (Diffusionsprozess)
-5. Der Klang wird geloopt — neue Generierungen ersetzen den laufenden Loop
+5. Der Klang wird verwendet (MIDI, Sequencer ...) — neue Generierungen ersetzen den laufenden Loop
 
 **Latenz:** Je nach Dauer und Steps zwischen 1 und 10 Sekunden pro Generierung. Das ist kein Echtzeit-Synthesizer, sondern ein **Loop-and-Swap-Instrument**.
 
@@ -100,6 +100,9 @@ Semantische Achsen verschieben den Klang entlang **benannter Gegensatzpaare**. J
 
 Hinter jeder Achse stehen zwei Textprompts (z.B. "sound tonal" und "sound noisy"). Das System berechnet den Unterschied zwischen diesen beiden Vektoren im 768d-Raum. Wenn du den Regler bewegst, wird dieser Unterschied auf dein aktuelles Embedding addiert oder subtrahiert.
 
+*****
+Dieses Feature ist sehr experimentell. Mal reagieren die Slider halbwegs nach ihren Bezeichnungen, mal weniger. Datenbasierte PCA-Achsen reagieren ggf. zuverlässiger als die semantisch basiderten Achsen.
+
 **Regler links** = Richtung Pol B, **Regler rechts** = Richtung Pol A.
 
 ### Verfügbare Achsen (Auswahl)
@@ -130,7 +133,7 @@ Hinter jeder Achse stehen zwei Textprompts (z.B. "sound tonal" und "sound noisy"
 
 ### Tipps
 
-- 3–5 gleichzeitig aktive Achsen sind ein guter Ausgangspunkt
+- 1–3 gleichzeitig aktive Achsen sind ein guter Ausgangspunkt
 - Mehr Achsen = schwächerer Effekt pro Achse (die Effekte addieren sich und können sich gegenseitig verwässern)
 - Der **d-Wert** in der Dropdown-Liste zeigt die Distanz zwischen den Polen — höher = stärkerer Effekt
 

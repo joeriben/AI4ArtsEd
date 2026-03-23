@@ -1,27 +1,36 @@
 /**
- * Arpeggiator composable — a note transformer that sits between note sources
- * (sequencer steps, MIDI keys) and the synthesis engine.
+ * Arpeggiator composable — note transformer between note sources
+ * (sequencer steps, MIDI keys, on-screen keyboard) and synthesis engine.
  *
  * When disabled: passes notes straight through (transparent).
- * When enabled: takes a base note, builds a chord pattern, and fires rapid
- * noteOn callbacks at an arp rate derived from BPM.
+ * When enabled: builds a chord pattern across octaves, fires noteOn
+ * callbacks at a musically-quantized rate derived from BPM.
  *
- * 4 patterns (intervals relative to input note):
- *   up:     +0, +4, +7, +12     (major triad + octave, ascending)
- *   down:   +12, +7, +4, +0     (descending)
- *   updown: +0, +4, +7, +12, +7, +4  (bounce)
- *   random: shuffled {+0, +4, +7, +12}
+ * Rate divisions relative to quarter note (MIDI-clock aware via bpmRef):
+ *   1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T (T = triplet)
+ *
+ * Octave range: 1–4 octaves. Chord intervals repeat per octave.
+ *
+ * 4 patterns: up, down, updown, random
  */
 import { ref, readonly, type Ref } from 'vue'
 
 export type ArpPattern = 'up' | 'down' | 'updown' | 'random'
+export type ArpRate = '1/4' | '1/8' | '1/16' | '1/32' | '1/4T' | '1/8T' | '1/16T'
 
-const ARP_INTERVALS: Record<ArpPattern, number[]> = {
-  up: [0, 4, 7, 12],
-  down: [12, 7, 4, 0],
-  updown: [0, 4, 7, 12, 7, 4],
-  random: [0, 4, 7, 12], // shuffled at runtime
+/** Factor relative to a quarter note duration */
+const RATE_FACTORS: Record<ArpRate, number> = {
+  '1/4':  1,
+  '1/8':  0.5,
+  '1/16': 0.25,
+  '1/32': 0.125,
+  '1/4T': 2 / 3,
+  '1/8T': 1 / 3,
+  '1/16T': 1 / 6,
 }
+
+/** Base chord intervals (major triad — no octave duplicate) */
+const CHORD_INTERVALS = [0, 4, 7]
 
 function shuffle(arr: number[]): number[] {
   const a = [...arr]
@@ -35,6 +44,8 @@ function shuffle(arr: number[]): number[] {
 export function useArpeggiator(bpmRef: Readonly<Ref<number>>) {
   const enabled = ref(false)
   const pattern = ref<ArpPattern>('up')
+  const rate = ref<ArpRate>('1/16')
+  const octaveRange = ref(1)
 
   let arpTimer: ReturnType<typeof setTimeout> | null = null
   let arpStepIndex = 0
@@ -45,15 +56,31 @@ export function useArpeggiator(bpmRef: Readonly<Ref<number>>) {
   let currentVelocity = 0.8
 
   function getArpRateMs(): number {
-    // One arp step = one 16th note at current BPM
     const bpm = bpmRef.value || 120
-    return (60 / bpm) / 4 * 1000
+    const quarterNoteMs = (60 / bpm) * 1000
+    return quarterNoteMs * RATE_FACTORS[rate.value]
   }
 
+  /** Build interval sequence across octaves, then apply pattern ordering */
   function buildIntervals(): number[] {
+    // Expand chord across octave range
+    const expanded: number[] = []
+    for (let oct = 0; oct < octaveRange.value; oct++) {
+      for (const interval of CHORD_INTERVALS) {
+        expanded.push(interval + oct * 12)
+      }
+    }
+
     const p = pattern.value
-    if (p === 'random') return shuffle(ARP_INTERVALS.random)
-    return ARP_INTERVALS[p]
+    if (p === 'up') return expanded
+    if (p === 'down') return [...expanded].reverse()
+    if (p === 'updown') {
+      if (expanded.length <= 1) return expanded
+      // Up then down, omitting duplicates at peaks
+      return [...expanded, ...expanded.slice(1, -1).reverse()]
+    }
+    // random
+    return shuffle(expanded)
   }
 
   function scheduleNextArpStep() {
@@ -69,7 +96,7 @@ export function useArpeggiator(bpmRef: Readonly<Ref<number>>) {
 
     // Rebuild intervals on each cycle for random pattern freshness
     if (arpStepIndex % intervals.length === 0 && pattern.value === 'random') {
-      currentIntervals = shuffle(ARP_INTERVALS.random)
+      currentIntervals = shuffle(buildIntervals())
     }
 
     arpTimer = setTimeout(scheduleNextArpStep, getArpRateMs())
@@ -127,7 +154,17 @@ export function useArpeggiator(bpmRef: Readonly<Ref<number>>) {
 
   function setPattern(p: ArpPattern): void {
     pattern.value = p
-    // If arp is running, rebuild intervals for next cycle
+    if (enabled.value) {
+      currentIntervals = buildIntervals()
+    }
+  }
+
+  function setRate(r: ArpRate): void {
+    rate.value = r
+  }
+
+  function setOctaveRange(oct: number): void {
+    octaveRange.value = Math.max(1, Math.min(4, oct))
     if (enabled.value) {
       currentIntervals = buildIntervals()
     }
@@ -142,8 +179,12 @@ export function useArpeggiator(bpmRef: Readonly<Ref<number>>) {
   return {
     enabled: readonly(enabled),
     pattern: readonly(pattern),
+    rate: readonly(rate),
+    octaveRange: readonly(octaveRange),
     setEnabled,
     setPattern,
+    setRate,
+    setOctaveRange,
     processNote,
     stop,
     dispose,

@@ -77,9 +77,6 @@
           <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
             {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
           </button>
-          <button v-if="showStopButton" class="stop-btn" @click="transportStop">
-            {{ t('latentLab.crossmodal.synth.stop') }}
-          </button>
         </div>
       </div>
 
@@ -337,351 +334,347 @@
           </div>
         </div>
 
-        <!-- ===== Engine Switch: Looper vs Wavetable ===== -->
-        <div class="section-toggle engine-switch-row">
-          <label class="inline-toggle" :class="{ active: engineMode === 'looper' }">
-            <input type="radio" value="looper" :checked="engineMode === 'looper'" @change="setEngineMode('looper')" />
-            {{ t('latentLab.crossmodal.synth.engineLooper') }}
-          </label>
-          <label class="inline-toggle" :class="{ active: engineMode === 'wavetable' }" :title="!wavetableOsc.hasFrames.value ? 'Generate first' : ''">
-            <input type="radio" value="wavetable" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode('wavetable')" />
-            {{ t('latentLab.crossmodal.synth.engineWavetable') }}
-            <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
-          </label>
-        </div>
-
-        <!-- Looper options (only when looper engine active) -->
-        <div v-if="engineMode === 'looper'" class="looper-options">
-          <div class="loop-mode-row">
-            <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
-              <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
-              {{ t('latentLab.crossmodal.synth.loopOff') }}
+        <!-- ═══════ BOX 1: ENGINE ═══════ -->
+        <div class="synth-box">
+          <!-- Engine Switch: Looper vs Wavetable -->
+          <div class="section-toggle engine-switch-row">
+            <label class="inline-toggle" :class="{ active: engineMode === 'looper' }">
+              <input type="radio" value="looper" :checked="engineMode === 'looper'" @change="setEngineMode('looper')" />
+              {{ t('latentLab.crossmodal.synth.engineLooper') }}
             </label>
-            <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
-              <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
-              {{ t('latentLab.crossmodal.synth.loopToggle') }}
-            </label>
-            <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
-              <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
-              {{ t('latentLab.crossmodal.synth.loopPingPong') }}
-            </label>
-          </div>
-          <div v-if="loopMode !== 'oneshot'" class="loop-options">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
-              {{ t('latentLab.crossmodal.synth.loopOptimize') }}
-            </label>
-            <span v-if="looper.loopOptimize.value" class="optimized-hint">
-              → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
-            </span>
-            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
-          </div>
-        </div>
-        <div v-if="wavetableOn" class="wavetable-controls">
-          <div class="wavetable-mode-row">
-            <label class="inline-toggle" :class="{ active: wtMode === 'extract' }" @click="wtMode = 'extract'">
-              <input type="radio" value="extract" :checked="wtMode === 'extract'" />
-              {{ t('latentLab.crossmodal.synth.wavetableExtract') }}
-            </label>
-            <label class="inline-toggle" :class="{ active: wtMode === 'semantic' }" @click="wtMode = 'semantic'">
-              <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
-              {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
+            <label class="inline-toggle" :class="{ active: engineMode === 'wavetable' }" :title="!wavetableOsc.hasFrames.value ? 'Generate first' : ''">
+              <input type="radio" value="wavetable" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode('wavetable')" />
+              {{ t('latentLab.crossmodal.synth.engineWavetable') }}
+              <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
             </label>
           </div>
 
-          <!-- Semantic Wavetable Builder -->
-          <div v-if="wtMode === 'semantic'" class="wt-build-section">
-            <div class="wt-build-row">
-              <select v-model="wtBuildAxis" class="wt-axis-select">
-                <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
-                <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
-                  <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
-                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                  </option>
-                </optgroup>
-                <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
-                  <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
-                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                  </option>
-                </optgroup>
-              </select>
-              <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
-                <option :value="8">8</option>
-                <option :value="16">16</option>
-                <option :value="32">32</option>
-              </select>
-              <button
-                class="wt-build-btn"
-                :disabled="!wtBuildAxis || wtBuilding"
-                @click="buildSemanticWavetable"
-              >
-                {{ wtBuilding ? t('latentLab.crossmodal.synth.wtBuilding') : t('latentLab.crossmodal.synth.wtBuild') }}
-              </button>
+          <!-- Looper options -->
+          <div v-if="engineMode === 'looper'" class="looper-options">
+            <div class="loop-mode-row">
+              <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
+                <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
+                {{ t('latentLab.crossmodal.synth.loopOff') }}
+              </label>
+              <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
+                <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
+                {{ t('latentLab.crossmodal.synth.loopToggle') }}
+              </label>
+              <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
+                <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
+                {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+              </label>
             </div>
-            <div v-if="wtBuilding" class="wt-progress">
-              <div class="wt-progress-bar" :style="{ width: `${wtBuildProgress}%` }" />
-              <span class="wt-progress-label">{{ wtBuildProgressCurrent }}/{{ wtBuildFrameCount }}</span>
+            <div v-if="loopMode !== 'oneshot'" class="loop-options">
+              <label class="inline-toggle">
+                <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
+                {{ t('latentLab.crossmodal.synth.loopOptimize') }}
+              </label>
+              <span v-if="looper.loopOptimize.value" class="optimized-hint">
+                → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
+              </span>
+              <span class="slider-hint">{{ t('latentLab.crossmodal.synth.loopIntervalHint') }}</span>
             </div>
-            <span v-if="wtBuildAxis" class="slider-hint">
-              {{ t('latentLab.crossmodal.synth.wtBuildHint') }}
-            </span>
+            <!-- Crossfade -->
+            <div v-if="!sequencerOn" class="transpose-row">
+              <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
+              <input type="range" :value="looper.crossfadeMs.value" min="0" max="500" step="10" :disabled="!looper.hasAudio.value" @input="onCrossfadeInput" />
+              <span class="transpose-value">{{ looper.crossfadeMs.value }}ms</span>
+              <span class="param-hint">{{ t('latentLab.crossmodal.synth.crossfadeHint') }}</span>
+            </div>
           </div>
 
-          <!-- Scan range clamp -->
-          <div class="wt-range-row">
-            <span class="wt-range-label">{{ t('latentLab.crossmodal.synth.wtRange') }}</span>
-            <input type="range" v-model.number="wtRangeStart" min="0" :max="wtRangeEnd - 1" step="1" class="wt-range-slider" />
-            <span class="wt-range-value">{{ wtRangeStart + 1 }}</span>
-            <span class="wt-range-sep">–</span>
-            <input type="range" v-model.number="wtRangeEnd" :min="wtRangeStart + 1" :max="wavetableOsc.frameCount.value" step="1" class="wt-range-slider" />
-            <span class="wt-range-value">{{ wtRangeEnd }}</span>
-            <span class="wt-range-total">/ {{ wavetableOsc.frameCount.value }}</span>
-          </div>
-
-          <!-- Scan position (mapped to clamped range) -->
-          <div class="slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
-            <span class="slider-value">{{ scanDisplayFrame }}</span>
-          </div>
-          <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
-
-          <!-- Interpolation + Scan Envelope -->
-          <div class="wt-options-row">
+          <!-- Wavetable controls -->
+          <div v-if="wavetableOn" class="wavetable-controls">
+            <div class="wavetable-mode-row">
+              <label class="inline-toggle" :class="{ active: wtMode === 'extract' }" @click="wtMode = 'extract'">
+                <input type="radio" value="extract" :checked="wtMode === 'extract'" />
+                {{ t('latentLab.crossmodal.synth.wavetableExtract') }}
+              </label>
+              <label class="inline-toggle" :class="{ active: wtMode === 'semantic' }" @click="wtMode = 'semantic'">
+                <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
+                {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
+              </label>
+            </div>
+            <div v-if="wtMode === 'semantic'" class="wt-build-section">
+              <div class="wt-build-row">
+                <select v-model="wtBuildAxis" class="wt-axis-select">
+                  <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
+                  <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
+                    <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
+                      {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                    </option>
+                  </optgroup>
+                  <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
+                    <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
+                      {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                    </option>
+                  </optgroup>
+                </select>
+                <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
+                  <option :value="8">8</option>
+                  <option :value="16">16</option>
+                  <option :value="32">32</option>
+                </select>
+                <button class="wt-build-btn" :disabled="!wtBuildAxis || wtBuilding" @click="buildSemanticWavetable">
+                  {{ wtBuilding ? t('latentLab.crossmodal.synth.wtBuilding') : t('latentLab.crossmodal.synth.wtBuild') }}
+                </button>
+              </div>
+              <div v-if="wtBuilding" class="wt-progress">
+                <div class="wt-progress-bar" :style="{ width: `${wtBuildProgress}%` }" />
+                <span class="wt-progress-label">{{ wtBuildProgressCurrent }}/{{ wtBuildFrameCount }}</span>
+              </div>
+              <span v-if="wtBuildAxis" class="slider-hint">{{ t('latentLab.crossmodal.synth.wtBuildHint') }}</span>
+            </div>
+            <!-- Scan position with range brackets -->
+            <div class="slider-header">
+              <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
+              <span class="slider-value">{{ scanDisplayFrame }} / {{ wavetableOsc.frameCount.value }}</span>
+            </div>
+            <div class="wt-scan-track" ref="scanTrackEl">
+              <div class="wt-range-band" :style="rangeBandStyle" />
+              <div class="wt-bracket wt-bracket-start" :style="{ left: `${rangeStartPct}%` }" @pointerdown.prevent="startBracketDrag('start', $event)" />
+              <div class="wt-bracket wt-bracket-end" :style="{ left: `${rangeEndPct}%` }" @pointerdown.prevent="startBracketDrag('end', $event)" />
+              <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
+            </div>
+            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
             <label class="inline-toggle" :class="{ active: wtInterpolate }">
               <input type="checkbox" :checked="wtInterpolate" @change="onWtInterpolateChange" />
               {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
             </label>
-            <div class="wt-scan-env">
-              <span class="wt-env-title">{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }}</span>
-              <span class="wt-env-label">A</span>
-              <input type="range" v-model.number="wtScanAttack" min="0" max="10000" step="50" class="wt-env-slider" />
-              <span class="wt-env-value">{{ (wtScanAttack / 1000).toFixed(1) }}s</span>
-              <span class="wt-env-label">D</span>
-              <input type="range" v-model.number="wtScanDecay" min="0" max="10000" step="50" class="wt-env-slider" />
-              <span class="wt-env-value">{{ (wtScanDecay / 1000).toFixed(1) }}s</span>
-              <span class="wt-env-label">R</span>
-              <input type="range" v-model.number="wtScanRelease" min="0" max="10000" step="50" class="wt-env-slider" />
-              <span class="wt-env-value">{{ (wtScanRelease / 1000).toFixed(1) }}s</span>
-            </div>
           </div>
-        </div>
 
-        <!-- ===== Sequencer Section ===== -->
-        <div class="section-toggle">
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="sequencerEnabled" @change="setSequencerEnabled(($event.target as HTMLInputElement).checked)" />
-            {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
-          </label>
-        </div>
-        <div v-if="sequencerEnabled" class="sequencer-controls">
-          <div class="sequencer-transport">
-            <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
-              {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
-            </button>
-            <div class="seq-step-count">
-              <button
-                v-for="opt in sequencer.stepCountOptions"
-                :key="opt"
-                class="step-count-btn"
-                :class="{ active: sequencer.stepCount.value === opt }"
-                @click="sequencer.setStepCount(opt)"
-              >{{ opt }}</button>
-            </div>
-            <div class="seq-division">
-              <button
-                v-for="div in sequencer.noteDivisions"
-                :key="div"
-                class="division-btn"
-                :class="{ active: sequencer.division.value === div }"
-                @click="sequencer.setDivision(div)"
-              >{{ div }}</button>
-            </div>
-            <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
-              {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
-              <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
+          <!-- Normalize + Peak -->
+          <div class="normalize-row">
+            <label class="normalize-toggle">
+              <input type="checkbox" :checked="looper.normalizeOn.value" :disabled="!looper.hasAudio.value" @change="onNormalizeChange" />
+              {{ t('latentLab.crossmodal.synth.normalize') }}
+            </label>
+            <span class="param-hint">{{ t('latentLab.crossmodal.synth.normalizeHint') }}</span>
+            <span v-if="looper.peakAmplitude.value > 0" class="peak-display">
+              {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
             </span>
           </div>
-          <div class="sequencer-settings-row">
-            <div class="sequencer-preset">
-              <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
-              <select :value="sequencer.presetIndex.value" @change="onPresetChange">
-                <option :value="-1">—</option>
-                <option v-for="(p, idx) in sequencer.presets" :key="idx" :value="idx">
-                  {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
-                </option>
-              </select>
-            </div>
-            <div class="sequencer-bpm">
-              <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
-              <input
-                type="range"
-                :value="sequencer.bpm.value"
-                min="60"
-                max="200"
-                step="1"
-                :disabled="sequencer.midiClockActive.value"
-                @input="onBpmInput"
-              />
-              <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
-            </div>
+          <!-- Save -->
+          <div class="save-row">
+            <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
+              {{ t('latentLab.crossmodal.synth.saveRaw') }}
+            </button>
+            <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+              {{ t('latentLab.crossmodal.synth.saveLoop') }}
+            </button>
           </div>
-          <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
-            <div
-              v-for="(step, idx) in sequencer.steps"
-              :key="idx"
-              class="seq-step"
-              :class="{
-                active: step.active,
-                playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx,
-                muted: !step.active,
-              }"
-            >
-              <span class="seq-step-num">{{ idx + 1 }}</span>
-              <input
-                type="range"
-                class="seq-semitone-slider"
-                :value="step.semitone"
-                min="-24"
-                max="24"
-                step="1"
-                orient="vertical"
-                @input="onStepSemitoneInput(idx, $event)"
-              />
-              <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
-              <button
-                class="seq-step-toggle"
-                :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }"
-                @click="sequencer.setStepActive(idx, !step.active)"
-              />
-              <input
-                type="range"
-                class="seq-velocity-slider"
-                :value="step.velocity"
-                min="0"
-                max="1"
-                step="0.05"
-                @input="onStepVelocityInput(idx, $event)"
-              />
-            </div>
-          </div>
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.sequencer.gridHint') }}</span>
         </div>
 
-        <!-- ===== Arpeggiator Section (independent, after sequencer) ===== -->
-        <div class="section-toggle">
-          <label class="inline-toggle">
-            <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
-            {{ t('latentLab.crossmodal.synth.arpeggiator') }}
-          </label>
-          <select
-            v-if="arpeggiator.enabled.value"
-            class="arp-pattern-select"
-            :value="arpeggiator.pattern.value"
-            @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')"
-          >
-            <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
-            <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
-            <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
-            <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
-          </select>
-        </div>
-        <!-- Keyboard: 12 note buttons (C to B), triggers engine + transposes sequencer -->
-        <div class="keyboard-row">
-          <button
-            v-for="(note, idx) in keyboardNotes"
-            :key="idx"
-            class="key-btn"
-            :class="{ black: note.black, active: activeKeyNote === note.midi }"
-            :disabled="!hasLoadedAudio"
-            @pointerdown="onKeyDown_key(note.midi)"
-            @pointerup="onKeyUp_key"
-            @pointerleave="onKeyUp_key"
-          >{{ note.label }}</button>
-        </div>
-        <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-mode-row">
-          <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
-            <input
-              type="radio"
-              value="rate"
-              :checked="looper.transposeMode.value === 'rate'"
-              :disabled="!looper.hasAudio.value"
-              @change="looper.setTransposeMode('rate')"
-            />
-            {{ t('latentLab.crossmodal.synth.modeRate') }}
-          </label>
-          <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'pitch' }">
-            <input
-              type="radio"
-              value="pitch"
-              :checked="looper.transposeMode.value === 'pitch'"
-              :disabled="!looper.hasAudio.value"
-              @change="looper.setTransposeMode('pitch')"
-            />
-            {{ t('latentLab.crossmodal.synth.modePitch') }}
-          </label>
-        </div>
-        <!-- Crossfade duration -->
-        <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-row">
-          <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
-          <input
-            type="range"
-            :value="looper.crossfadeMs.value"
-            min="0"
-            max="500"
-            step="10"
-            :disabled="!looper.hasAudio.value"
-            @input="onCrossfadeInput"
-          />
-          <span class="transpose-value">{{ looper.crossfadeMs.value }}ms</span>
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.crossfadeHint') }}</span>
-        </div>
-        <!-- Normalize + Peak -->
-        <div class="normalize-row">
-          <label class="normalize-toggle">
-            <input type="checkbox" :checked="looper.normalizeOn.value" :disabled="!looper.hasAudio.value" @change="onNormalizeChange" />
-            {{ t('latentLab.crossmodal.synth.normalize') }}
-          </label>
-          <span class="param-hint">{{ t('latentLab.crossmodal.synth.normalizeHint') }}</span>
-          <span v-if="looper.peakAmplitude.value > 0" class="peak-display">
-            {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
-          </span>
-        </div>
-        <!-- ADSR Envelope -->
-        <div class="adsr-section">
-          <h5>{{ t('latentLab.crossmodal.synth.adsrTitle') }}</h5>
-          <span class="slider-hint">{{ t('latentLab.crossmodal.synth.adsrHint') }}</span>
-          <div class="adsr-grid">
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.adsrAttack') }}</label>
-              <input type="range" v-model.number="envelope.attackMs.value" min="0" max="1000" step="1" />
-              <span class="adsr-value">{{ envelope.attackMs.value }}ms</span>
+        <!-- ═══════ BOX 2: ENVELOPES ═══════ -->
+        <div class="synth-box">
+          <!-- ADSR → VCA -->
+          <div class="adsr-section">
+            <h5>{{ t('latentLab.crossmodal.synth.adsrTitle') }} <span class="env-target">VCA</span></h5>
+            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.adsrHint') }}</span>
+            <div class="adsr-grid">
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.adsrAttack') }}</label>
+                <input type="range" v-model.number="envelope.attackMs.value" min="0" max="1000" step="1" />
+                <span class="adsr-value">{{ envelope.attackMs.value }}ms</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.adsrDecay') }}</label>
+                <input type="range" v-model.number="envelope.decayMs.value" min="0" max="2000" step="1" />
+                <span class="adsr-value">{{ envelope.decayMs.value }}ms</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.adsrSustain') }}</label>
+                <input type="range" v-model.number="envelope.sustain.value" min="0" max="1" step="0.01" />
+                <span class="adsr-value">{{ envelope.sustain.value.toFixed(2) }}</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.adsrRelease') }}</label>
+                <input type="range" v-model.number="envelope.releaseMs.value" min="0" max="3000" step="1" />
+                <span class="adsr-value">{{ envelope.releaseMs.value }}ms</span>
+              </div>
             </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.adsrDecay') }}</label>
-              <input type="range" v-model.number="envelope.decayMs.value" min="0" max="2000" step="1" />
-              <span class="adsr-value">{{ envelope.decayMs.value }}ms</span>
-            </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.adsrSustain') }}</label>
-              <input type="range" v-model.number="envelope.sustain.value" min="0" max="1" step="0.01" />
-              <span class="adsr-value">{{ envelope.sustain.value.toFixed(2) }}</span>
-            </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.adsrRelease') }}</label>
-              <input type="range" v-model.number="envelope.releaseMs.value" min="0" max="3000" step="1" />
-              <span class="adsr-value">{{ envelope.releaseMs.value }}ms</span>
+          </div>
+          <!-- ADR → WT Scan -->
+          <div v-if="wavetableOn" class="adsr-section">
+            <h5>{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }} <span class="env-target">WT Scan</span></h5>
+            <div class="adsr-grid">
+              <div class="adsr-slider">
+                <label>A</label>
+                <input type="range" v-model.number="wtScanAttack" min="0" max="10000" step="50" />
+                <span class="adsr-value">{{ (wtScanAttack / 1000).toFixed(1) }}s</span>
+              </div>
+              <div class="adsr-slider">
+                <label>D</label>
+                <input type="range" v-model.number="wtScanDecay" min="0" max="10000" step="50" />
+                <span class="adsr-value">{{ (wtScanDecay / 1000).toFixed(1) }}s</span>
+              </div>
+              <div class="adsr-slider">
+                <label>R</label>
+                <input type="range" v-model.number="wtScanRelease" min="0" max="10000" step="50" />
+                <span class="adsr-value">{{ (wtScanRelease / 1000).toFixed(1) }}s</span>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Save buttons -->
-        <div class="save-row">
-          <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
-            {{ t('latentLab.crossmodal.synth.saveRaw') }}
-          </button>
-          <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
-            {{ t('latentLab.crossmodal.synth.saveLoop') }}
-          </button>
+
+        <!-- ═══════ BOX 3: EFFECTS (Delay + Reverb) ═══════ -->
+        <div class="synth-box">
+          <!-- Delay -->
+          <div class="section-toggle">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="effects.delayEnabled.value" @change="effects.setDelayEnabled(($event.target as HTMLInputElement).checked)" />
+              Delay
+            </label>
+          </div>
+          <div v-if="effects.delayEnabled.value" class="effects-params">
+            <div class="adsr-slider">
+              <label>Time</label>
+              <input type="range" :value="effects.delayTimeMs.value" min="1" max="2000" step="1" @input="effects.setDelayTime(Number(($event.target as HTMLInputElement).value))" />
+              <span class="adsr-value">{{ effects.delayTimeMs.value }}ms</span>
+            </div>
+            <div class="adsr-slider">
+              <label>Feedback</label>
+              <input type="range" :value="effects.delayFeedback.value" min="0" max="0.95" step="0.01" @input="effects.setDelayFeedback(Number(($event.target as HTMLInputElement).value))" />
+              <span class="adsr-value">{{ effects.delayFeedback.value.toFixed(2) }}</span>
+            </div>
+            <div class="adsr-slider">
+              <label>Mix</label>
+              <input type="range" :value="effects.delayMix.value" min="0" max="1" step="0.01" @input="effects.setDelayMix(Number(($event.target as HTMLInputElement).value))" />
+              <span class="adsr-value">{{ effects.delayMix.value.toFixed(2) }}</span>
+            </div>
+          </div>
+          <!-- Reverb -->
+          <div class="section-toggle">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="effects.reverbEnabled.value" @change="effects.setReverbEnabled(($event.target as HTMLInputElement).checked)" />
+              Reverb
+            </label>
+            <select
+              v-if="effects.reverbEnabled.value"
+              class="arp-select"
+              :value="effects.reverbVariant.value"
+              @change="effects.setReverbVariant(($event.target as HTMLSelectElement).value as any)"
+            >
+              <option value="bright">Bright</option>
+              <option value="medium">Medium</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div v-if="effects.reverbEnabled.value" class="effects-params">
+            <div class="adsr-slider">
+              <label>Mix</label>
+              <input type="range" :value="effects.reverbMix.value" min="0" max="1" step="0.01" @input="effects.setReverbMix(Number(($event.target as HTMLInputElement).value))" />
+              <span class="adsr-value">{{ effects.reverbMix.value.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════ BOX 4: SEQUENCER / ARPEGGIATOR ═══════ -->
+        <div class="synth-box">
+          <!-- Keyboard -->
+          <div class="keyboard-row">
+            <button
+              v-for="(note, idx) in keyboardNotes"
+              :key="idx"
+              class="key-btn"
+              :class="{ black: note.black, active: activeKeyNote === note.midi }"
+              :disabled="!hasLoadedAudio"
+              @pointerdown="onKeyDown_key(note.midi)"
+              @pointerup="onKeyUp_key"
+              @pointerleave="onKeyUp_key"
+            >{{ note.label }}</button>
+          </div>
+          <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-mode-row">
+            <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
+              <input type="radio" value="rate" :checked="looper.transposeMode.value === 'rate'" :disabled="!looper.hasAudio.value" @change="looper.setTransposeMode('rate')" />
+              {{ t('latentLab.crossmodal.synth.modeRate') }}
+            </label>
+            <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'pitch' }">
+              <input type="radio" value="pitch" :checked="looper.transposeMode.value === 'pitch'" :disabled="!looper.hasAudio.value" @change="looper.setTransposeMode('pitch')" />
+              {{ t('latentLab.crossmodal.synth.modePitch') }}
+            </label>
+          </div>
+
+          <!-- Sequencer -->
+          <div class="section-toggle">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="sequencerEnabled" @change="setSequencerEnabled(($event.target as HTMLInputElement).checked)" />
+              {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
+            </label>
+          </div>
+          <div v-if="sequencerEnabled" class="sequencer-controls">
+            <div class="sequencer-transport">
+              <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
+                {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
+              </button>
+              <div class="seq-step-count">
+                <button v-for="opt in sequencer.stepCountOptions" :key="opt" class="step-count-btn" :class="{ active: sequencer.stepCount.value === opt }" @click="sequencer.setStepCount(opt)">{{ opt }}</button>
+              </div>
+              <div class="seq-division">
+                <button v-for="div in sequencer.noteDivisions" :key="div" class="division-btn" :class="{ active: sequencer.division.value === div }" @click="sequencer.setDivision(div)">{{ div }}</button>
+              </div>
+              <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
+                {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
+                <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
+              </span>
+            </div>
+            <div class="sequencer-settings-row">
+              <div class="sequencer-preset">
+                <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
+                <select :value="sequencer.presetIndex.value" @change="onPresetChange">
+                  <option :value="-1">—</option>
+                  <option v-for="(p, idx) in sequencer.presets" :key="idx" :value="idx">
+                    {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
+                  </option>
+                </select>
+              </div>
+              <div class="sequencer-bpm">
+                <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
+                <input type="range" :value="sequencer.bpm.value" min="60" max="200" step="1" :disabled="sequencer.midiClockActive.value" @input="onBpmInput" />
+                <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
+              </div>
+            </div>
+            <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
+              <div v-for="(step, idx) in sequencer.steps" :key="idx" class="seq-step" :class="{ active: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx, muted: !step.active }">
+                <span class="seq-step-num">{{ idx + 1 }}</span>
+                <input type="range" class="seq-semitone-slider" :value="step.semitone" min="-24" max="24" step="1" orient="vertical" @input="onStepSemitoneInput(idx, $event)" />
+                <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
+                <button class="seq-step-toggle" :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }" @click="sequencer.setStepActive(idx, !step.active)" />
+                <input type="range" class="seq-velocity-slider" :value="step.velocity" min="0" max="1" step="0.05" @input="onStepVelocityInput(idx, $event)" />
+              </div>
+            </div>
+            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.sequencer.gridHint') }}</span>
+          </div>
+
+          <!-- Arpeggiator -->
+          <div class="section-toggle">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
+              {{ t('latentLab.crossmodal.synth.arpeggiator') }}
+            </label>
+            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.pattern.value" @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')">
+              <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
+              <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
+              <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
+              <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
+            </select>
+            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.rate.value" @change="arpeggiator.setRate(($event.target as HTMLSelectElement).value as any)">
+              <option value="1/4">1/4</option>
+              <option value="1/8">1/8</option>
+              <option value="1/16">1/16</option>
+              <option value="1/32">1/32</option>
+              <option value="1/4T">1/4T</option>
+              <option value="1/8T">1/8T</option>
+              <option value="1/16T">1/16T</option>
+            </select>
+            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.octaveRange.value" @change="arpeggiator.setOctaveRange(Number(($event.target as HTMLSelectElement).value))">
+              <option :value="1">1 Oct</option>
+              <option :value="2">2 Oct</option>
+              <option :value="3">3 Oct</option>
+              <option :value="4">4 Oct</option>
+            </select>
+          </div>
         </div>
       </details>
 
@@ -950,6 +943,7 @@ import { useEnvelope } from '@/composables/useEnvelope'
 import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
+import { useEffects } from '@/composables/useEffects'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -1057,6 +1051,7 @@ const wtScanDecay = ref(1000)
 const wtScanRelease = ref(300)
 const wtRangeStart = ref(0)   // 0-based frame index
 const wtRangeEnd = ref(16)    // exclusive end, updated when frames loaded
+const scanTrackEl = ref<HTMLElement | null>(null)
 
 /** Display: current frame number within the clamped range */
 const scanDisplayFrame = computed(() => {
@@ -1067,11 +1062,56 @@ const scanDisplayFrame = computed(() => {
   return `${frame + 1}`
 })
 
+/** Bracket positions as percentage of the track width */
+const rangeStartPct = computed(() => {
+  const total = wavetableOsc.frameCount.value
+  return total > 0 ? (wtRangeStart.value / total) * 100 : 0
+})
+const rangeEndPct = computed(() => {
+  const total = wavetableOsc.frameCount.value
+  return total > 0 ? (wtRangeEnd.value / total) * 100 : 100
+})
+const rangeBandStyle = computed(() => ({
+  left: `${rangeStartPct.value}%`,
+  width: `${rangeEndPct.value - rangeStartPct.value}%`,
+}))
+
+/** Drag a bracket handle to adjust range start/end */
+function startBracketDrag(which: 'start' | 'end', event: PointerEvent) {
+  const track = scanTrackEl.value
+  if (!track) return
+  const handle = event.target as HTMLElement
+  handle.setPointerCapture(event.pointerId)
+
+  const onMove = (e: PointerEvent) => {
+    const rect = track.getBoundingClientRect()
+    const frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    const total = wavetableOsc.frameCount.value
+    const frame = Math.round(frac * total)
+    if (which === 'start') {
+      wtRangeStart.value = Math.max(0, Math.min(frame, wtRangeEnd.value - 1))
+    } else {
+      wtRangeEnd.value = Math.max(wtRangeStart.value + 1, Math.min(frame, total))
+    }
+  }
+  const onUp = () => {
+    handle.releasePointerCapture(event.pointerId)
+    handle.removeEventListener('pointermove', onMove)
+    handle.removeEventListener('pointerup', onUp)
+  }
+  handle.addEventListener('pointermove', onMove)
+  handle.addEventListener('pointerup', onUp)
+}
+
 // ===== Step Sequencer =====
 const sequencer = useStepSequencer()
 
 // ===== Arpeggiator =====
-const arpeggiator = useArpeggiator(sequencer.bpm)
+// Use effective BPM: MIDI clock when active, otherwise manual BPM
+const effectiveBpm = computed(() =>
+  sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value
+)
+const arpeggiator = useArpeggiator(effectiveBpm)
 
 // ===== Transport State Machine =====
 // Single source of truth for UI — decoupled from low-level engine playback events.
@@ -1087,7 +1127,6 @@ let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
 
 // Derived state for template — NEVER flickers during MIDI/retrigger
 const generating = computed(() => transport.value === 'generating')
-const showStopButton = computed(() => transport.value === 'playing')
 const showPlayButton = computed(() =>
   transport.value === 'paused' && hasLoadedAudio.value
 )
@@ -1098,17 +1137,27 @@ const hasLoadedAudio = computed(() =>
 const wavetableOn = computed(() => engineMode.value === 'wavetable')
 const sequencerOn = computed(() => sequencerEnabled.value)
 
-// ===== ADSR Envelope =====
+// ===== ADSR Envelope + Effects =====
 const envelope = useEnvelope()
+const effects = useEffects()
 let envelopeWired = false
 
-/** Lazily wire envelope GainNode between engines and AudioContext destination. */
+/**
+ * Lazily wire: engines → envelope → effects (delay/reverb) → destination.
+ * All native Web Audio nodes, no AudioWorklet (iPad-safe).
+ */
 function wireEnvelope() {
   if (envelopeWired) return
-  // Need an AudioContext — get from looper (always available, sequencer uses it too)
   const ac = looper.getContext()
+
+  // Effects chain: returns an input GainNode that routes to destination
+  const effectsInput = effects.createChain(ac, ac.destination)
+
+  // Envelope → effects input
   const envNode = envelope.createNode(ac)
-  envNode.connect(ac.destination)
+  envNode.connect(effectsInput)
+
+  // Engines → envelope
   looper.setDestination(envNode)
   wavetableOsc.setContext(ac)
   wavetableOsc.setDestination(envNode)
@@ -1145,7 +1194,17 @@ function onKeyDown_key(midi: number) {
 
 function onKeyUp_key() {
   activeKeyNote.value = null
+  if (engineMode.value === 'wavetable') {
+    wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
+  }
   envelope.triggerRelease()
+  // Stop engine after ADSR release completes (or immediately if release = 0)
+  const stopDelay = envelope.releaseMs.value + 50
+  setTimeout(() => {
+    if (activeKeyNote.value !== null) return // new note pressed during release
+    if (engineMode.value === 'looper') looper.stop()
+    else wavetableOsc.stop()
+  }, stopDelay)
 }
 
 // Monophonic note stack for last-note priority
@@ -1206,7 +1265,7 @@ midi.onNote((note, velocity, on) => {
       // Last note released: stop arpeggiator, start release phase
       arpeggiator.stop()
       if (engineMode.value === 'wavetable') {
-        wavetableOsc.stopScanEnvelope(wtScanRelease.value)
+        wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
       }
       envelope.triggerRelease(() => {
         if (heldNotes.length === 0) {
@@ -1735,9 +1794,12 @@ function transportPlay() {
   } else {
     if (wavetableOsc.hasFrames.value) {
       wavetableOsc.start()
-      // Trigger one-shot scan sweep if ADR configured
+      // Trigger scan sweep if ADR configured (deferred if worklet not yet ready)
       if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
-        wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
+        wavetableOsc.triggerScanEnvelope(
+          wtScanAttack.value, wtScanDecay.value,
+          mappedScanPosition(0), mappedScanPosition(1),
+        )
       }
     }
   }
@@ -1757,7 +1819,7 @@ function transportStop() {
   if (engineMode.value === 'looper') {
     looper.stop()
   } else {
-    wavetableOsc.stopScanEnvelope(wtScanRelease.value)
+    wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
     wavetableOsc.stop()
   }
   transport.value = 'paused'
@@ -1823,10 +1885,13 @@ function triggerEngine(note: number, velocity: number) {
     wavetableOsc.setFrequencyFromNote(note)
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) {
       wavetableOsc.start()
-      // Trigger one-shot scan sweep on first start
-      if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
-        wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
-      }
+    }
+    // Re-trigger scan envelope on every note-on (like ADSR re-triggers)
+    if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
+      wavetableOsc.triggerScanEnvelope(
+        wtScanAttack.value, wtScanDecay.value,
+        mappedScanPosition(0), mappedScanPosition(1),
+      )
     }
   }
   envelope.triggerAttack(velocity)
@@ -2168,6 +2233,7 @@ async function runSynth() {
       embeddingStats.value = result.embedding_stats
 
       // Load audio into looper (always, for buffer access)
+      looper.setLoop(loopMode.value !== 'oneshot')
       await looper.play(result.audio_base64)
       nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
@@ -2327,6 +2393,7 @@ onUnmounted(() => {
   arpeggiator.dispose()
   sequencer.dispose()
   envelope.dispose()
+  effects.dispose()
   looper.dispose()
   wavetableOsc.dispose()
 })
@@ -2610,23 +2677,6 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
-.stop-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.stop-btn {
-  background: rgba(255, 82, 82, 0.15);
-  border: 1px solid rgba(255, 82, 82, 0.3);
-  color: #ff5252;
-}
-
-.stop-btn:hover {
-  background: rgba(255, 82, 82, 0.25);
-}
 
 .play-btn {
   padding: 0.5rem 1rem;
@@ -3330,7 +3380,11 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.arp-pattern-select {
+.effects-params {
+  padding: 0.3rem 0;
+}
+
+.arp-select {
   padding: 0.3rem 0.5rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -3433,41 +3487,56 @@ onUnmounted(() => {
   font-weight: 600;
 }
 
-/* Wavetable range clamp */
-.wt-range-row {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 0.3rem;
+/* Scan track with range brackets */
+.wt-scan-track {
+  position: relative;
+  height: 28px;
+  margin-bottom: 0.2rem;
 }
 
-.wt-range-label {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  min-width: 38px;
+.wt-scan-track input[type="range"] {
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-.wt-range-slider {
-  flex: 1;
-  accent-color: #CE93D8;
+.wt-range-band {
+  position: absolute;
+  top: 4px;
+  height: 20px;
+  background: rgba(206, 147, 216, 0.1);
+  border-radius: 2px;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.wt-range-value {
-  font-size: 0.7rem;
-  color: #CE93D8;
-  min-width: 20px;
-  text-align: center;
-  font-weight: 600;
+.wt-bracket {
+  position: absolute;
+  top: 0;
+  width: 6px;
+  height: 28px;
+  z-index: 3;
+  cursor: ew-resize;
+  touch-action: none;
 }
 
-.wt-range-sep {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.7rem;
+.wt-bracket-start {
+  border-left: 2px solid #CE93D8;
+  border-top: 2px solid #CE93D8;
+  border-bottom: 2px solid #CE93D8;
+  border-radius: 3px 0 0 3px;
+  transform: translateX(-6px);
 }
 
-.wt-range-total {
-  color: rgba(255, 255, 255, 0.25);
-  font-size: 0.65rem;
+.wt-bracket-end {
+  border-right: 2px solid #CE93D8;
+  border-top: 2px solid #CE93D8;
+  border-bottom: 2px solid #CE93D8;
+  border-radius: 0 3px 3px 0;
+}
+
+.wt-bracket:hover {
+  border-color: #E1BEE7;
 }
 
 /* Wavetable options row */
@@ -3700,10 +3769,27 @@ onUnmounted(() => {
 }
 
 /* ADSR Envelope */
+/* Synth box grouping */
+.synth-box {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.env-target {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(206, 147, 216, 0.15);
+  color: #CE93D8;
+  font-weight: 600;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
 .adsr-section {
-  margin-top: 1rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.4rem;
 }
 
 .adsr-section h5 {

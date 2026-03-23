@@ -363,7 +363,7 @@ export function useAudioLooper() {
   let pitchCacheGeneration = 0
 
   const isPlaying = ref(false)
-  const isLooping = ref(true)
+  const isLooping = ref(false)
   const transposeSemitones = ref(0)
   const transposeMode = ref<TransposeMode>('rate')
   const loopStartFrac = ref(0)

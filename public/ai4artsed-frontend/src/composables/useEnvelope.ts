@@ -46,21 +46,24 @@ export function useEnvelope() {
   }
 
   /**
-   * Note-off: ramp from current interpolated level → 0.
-   * Uses cancelAndHoldAtTime to capture the true current value,
-   * then ramps to zero. No echo/click from stale .value reads.
+   * Note-off: ramp from current level → 0.
+   * Reads .value (last rendered sample), cancels all automation,
+   * anchors at current level, then ramps to zero.
+   * Avoids cancelAndHoldAtTime (unreliable across browsers).
    */
   function triggerRelease(onComplete?: () => void): void {
     if (!gainNode) return
     const now = gainNode.context.currentTime
     const rel = releaseMs.value / 1000
 
-    // Freeze at current interpolated value, then ramp to 0
-    gainNode.gain.cancelAndHoldAtTime(now)
+    // Capture current gain level, cancel all scheduled events
+    const current = gainNode.gain.value
+    gainNode.gain.cancelScheduledValues(now)
+    gainNode.gain.setValueAtTime(current, now)
     if (rel > 0) {
       gainNode.gain.linearRampToValueAtTime(0, now + rel)
     } else {
-      gainNode.gain.setValueAtTime(0, now)
+      gainNode.gain.linearRampToValueAtTime(0, now + 0.002)
     }
 
     if (onComplete) {
