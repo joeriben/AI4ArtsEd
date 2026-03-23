@@ -438,12 +438,16 @@
               {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
             </label>
             <div class="wt-scan-env">
-              <label>{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }}</label>
-              <input type="number" v-model.number="wtScanAttack" min="0" max="5000" step="50" class="wt-env-input" />
+              <span class="wt-env-title">{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }}</span>
               <span class="wt-env-label">A</span>
-              <input type="number" v-model.number="wtScanDecay" min="0" max="5000" step="50" class="wt-env-input" />
+              <input type="range" v-model.number="wtScanAttack" min="0" max="3000" step="10" class="wt-env-slider" />
+              <span class="wt-env-value">{{ wtScanAttack }}</span>
               <span class="wt-env-label">D</span>
-              <span class="wt-env-unit">ms</span>
+              <input type="range" v-model.number="wtScanDecay" min="0" max="3000" step="10" class="wt-env-slider" />
+              <span class="wt-env-value">{{ wtScanDecay }}</span>
+              <span class="wt-env-label">R</span>
+              <input type="range" v-model.number="wtScanRelease" min="0" max="3000" step="10" class="wt-env-slider" />
+              <span class="wt-env-value">{{ wtScanRelease }}</span>
             </div>
           </div>
         </div>
@@ -1037,6 +1041,7 @@ const wtBuildProgressCurrent = ref(0)
 const wtInterpolate = ref(true)
 const wtScanAttack = ref(500)
 const wtScanDecay = ref(1000)
+const wtScanRelease = ref(300)
 
 // ===== Step Sequencer =====
 const sequencer = useStepSequencer()
@@ -1149,6 +1154,9 @@ midi.onNote((note, velocity, on) => {
     if (heldNotes.length === 0) {
       // Last note released: stop arpeggiator, start release phase
       arpeggiator.stop()
+      if (engineMode.value === 'wavetable') {
+        wavetableOsc.stopScanEnvelope(wtScanRelease.value)
+      }
       envelope.triggerRelease(() => {
         if (heldNotes.length === 0) {
           if (engineMode.value === 'looper') looper.stop()
@@ -3359,20 +3367,21 @@ onUnmounted(() => {
 .wt-scan-env {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
+  flex-wrap: wrap;
 }
 
-.wt-env-input {
-  width: 55px;
-  padding: 0.2rem 0.3rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  color: #fff;
-  font-size: 0.75rem;
-  text-align: center;
+.wt-env-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  margin-right: 0.2rem;
+}
+
+.wt-env-slider {
+  width: 60px;
+  accent-color: #CE93D8;
 }
 
 .wt-env-label {
@@ -3381,9 +3390,11 @@ onUnmounted(() => {
   font-size: 0.7rem;
 }
 
-.wt-env-unit {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.65rem;
+.wt-env-value {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.6rem;
+  min-width: 28px;
+  text-align: right;
 }
 
 .midi-sync-badge {

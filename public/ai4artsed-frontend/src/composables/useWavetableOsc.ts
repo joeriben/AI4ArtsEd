@@ -350,43 +350,46 @@ export function useWavetableOsc() {
   }
 
   /**
-   * Trigger a scan envelope (AD): ramp scanPosition from 0→1 over attackMs,
-   * then 1→0 over decayMs. Used for automatic wavetable traversal on note-on.
+   * Trigger scan envelope (ADR) using AudioParam automation for sample-accurate timing.
+   * Attack: 0→1, Decay: 1→0, Release: current→0 (on stopScanEnvelope).
    */
-  let scanEnvTimer: ReturnType<typeof requestAnimationFrame> | null = null
-
   function triggerScanEnvelope(attackMs: number, decayMs: number): void {
-    if (scanEnvTimer !== null) cancelAnimationFrame(scanEnvTimer)
-    const totalMs = attackMs + decayMs
-    if (totalMs <= 0) return
+    if (!workletNode) return
+    const param = workletNode.parameters.get('scanPosition')
+    if (!param) return
 
-    const startTime = performance.now()
+    const now = (ctx ?? ensureContext()).currentTime
+    const aSec = attackMs / 1000
+    const dSec = decayMs / 1000
 
-    function tick() {
-      const elapsed = performance.now() - startTime
-      let pos: number
-      if (elapsed < attackMs) {
-        // Attack: 0 → 1
-        pos = elapsed / attackMs
-      } else if (elapsed < totalMs) {
-        // Decay: 1 → 0
-        pos = 1 - (elapsed - attackMs) / decayMs
-      } else {
-        pos = 0
-        setScanPosition(0)
-        scanEnvTimer = null
-        return
-      }
-      setScanPosition(pos)
-      scanEnvTimer = requestAnimationFrame(tick)
+    param.cancelScheduledValues(now)
+    param.setValueAtTime(0, now)
+    if (aSec > 0) {
+      param.linearRampToValueAtTime(1, now + aSec)
+    } else {
+      param.setValueAtTime(1, now)
     }
-    scanEnvTimer = requestAnimationFrame(tick)
+    if (dSec > 0) {
+      param.linearRampToValueAtTime(0, now + aSec + dSec)
+    }
   }
 
-  function stopScanEnvelope(): void {
-    if (scanEnvTimer !== null) {
-      cancelAnimationFrame(scanEnvTimer)
-      scanEnvTimer = null
+  /** Release: ramp scan position from current value to 0. */
+  function stopScanEnvelope(releaseMs: number = 200): void {
+    if (!workletNode) return
+    const param = workletNode.parameters.get('scanPosition')
+    if (!param) return
+
+    const now = (ctx ?? ensureContext()).currentTime
+    const rSec = releaseMs / 1000
+
+    param.cancelScheduledValues(now)
+    // setValueAtTime to "capture" current value before ramping
+    param.setValueAtTime(param.value, now)
+    if (rSec > 0) {
+      param.linearRampToValueAtTime(0, now + rSec)
+    } else {
+      param.setValueAtTime(0, now)
     }
   }
 

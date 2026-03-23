@@ -59,12 +59,34 @@ class WavetableProcessor extends AudioWorkletProcessor {
       const sampleA = a[idx0] + (a[idx1] - a[idx0]) * phaseFrac
 
       if (doInterpolate) {
-        // Bilinear: smooth interpolation between adjacent frames
-        const frameB = Math.min(frameA + 1, numFrames - 1)
+        // Catmull-Rom cubic interpolation across 4 frames for smooth morphing
         const frameMix = framePos - frameA
-        const b = this.frames[frameB]
-        const sampleB = b[idx0] + (b[idx1] - b[idx0]) * phaseFrac
-        output[i] = sampleA + (sampleB - sampleA) * frameMix
+        const i0 = Math.max(frameA - 1, 0)
+        const i1 = frameA
+        const i2 = Math.min(frameA + 1, numFrames - 1)
+        const i3 = Math.min(frameA + 2, numFrames - 1)
+
+        const f0 = this.frames[i0]
+        const f1 = this.frames[i1]
+        const f2 = this.frames[i2]
+        const f3 = this.frames[i3]
+
+        // Sample each frame at current phase (linear within-frame)
+        const s0 = f0[idx0] + (f0[idx1] - f0[idx0]) * phaseFrac
+        const s1 = f1[idx0] + (f1[idx1] - f1[idx0]) * phaseFrac
+        const s2 = f2[idx0] + (f2[idx1] - f2[idx0]) * phaseFrac
+        const s3 = f3[idx0] + (f3[idx1] - f3[idx0]) * phaseFrac
+
+        // Catmull-Rom spline
+        const t = frameMix
+        const t2 = t * t
+        const t3 = t2 * t
+        output[i] = 0.5 * (
+          (2 * s1) +
+          (-s0 + s2) * t +
+          (2 * s0 - 5 * s1 + 4 * s2 - s3) * t2 +
+          (-s0 + 3 * s1 - 3 * s2 + s3) * t3
+        )
       } else {
         // Stepped: hard frame switch, no frame interpolation (raw wavetable)
         output[i] = sampleA
