@@ -585,16 +585,6 @@
               @pointerleave="onKeyUp_key"
             >{{ note.label }}</button>
           </div>
-          <div v-if="engineMode === 'looper' && !sequencerOn" class="transpose-mode-row">
-            <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'rate' }">
-              <input type="radio" value="rate" :checked="looper.transposeMode.value === 'rate'" :disabled="!looper.hasAudio.value" @change="looper.setTransposeMode('rate')" />
-              {{ t('latentLab.crossmodal.synth.modeRate') }}
-            </label>
-            <label class="inline-toggle" :class="{ active: looper.transposeMode.value === 'pitch' }">
-              <input type="radio" value="pitch" :checked="looper.transposeMode.value === 'pitch'" :disabled="!looper.hasAudio.value" @change="looper.setTransposeMode('pitch')" />
-              {{ t('latentLab.crossmodal.synth.modePitch') }}
-            </label>
-          </div>
 
           <!-- Sequencer -->
           <div class="section-toggle">

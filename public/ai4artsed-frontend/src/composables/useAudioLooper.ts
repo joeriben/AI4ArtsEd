@@ -3,8 +3,8 @@
  *
  * - Linear crossfade (linearRampToValueAtTime — safe from AudioParam racing)
  * - Cross-correlation loop-point optimization for seamless oscillator-like loops
- * - WSOLA pitch shifting: transpose without tempo change
- * - Adjustable crossfade duration, loop interval, pitch transposition
+ * - Pitch transposition via playbackRate (preserves timing characteristics)
+ * - Adjustable crossfade duration, loop interval
  * - Peak normalization (playback only), raw/loop WAV export
  *
  * AudioContext is created lazily on first play() call (browser autoplay policy).
@@ -12,11 +12,6 @@
  * Equal-power crossfade: Boris Smus, "Web Audio API" (O'Reilly, 2013), Ch. 3
  * https://webaudioapi.com/book/Web_Audio_API_Boris_Smus_html/ch03.html
  * License: CC-BY-NC-ND 3.0
- *
- * WSOLA pitch shifting: Waveform Similarity Overlap-Add for artifact-free pitch shift.
- * Cross-correlation grain alignment eliminates phase cancellation artifacts.
- * Lanczos sinc resampling eliminates aliasing from the time-stretch step.
- * Reference: Verhelst & Roelands, ICASSP 1993.
  */
 import { ref, readonly } from 'vue'
 
@@ -25,28 +20,13 @@ import { ref, readonly } from 'vue'
 // ═══════════════════════════════════════════════════════════════════
 
 const SCHEDULE_AHEAD = 0.005 // 5ms lookahead for scheduling safety
-// WSOLA pitch shift
-const GRAIN_SIZE = 2048      // ~46ms at 44.1kHz
-const WSOLA_OVERLAP = 4      // 75% overlap → analysisHop = grain/4
-const WSOLA_TOLERANCE = 512  // cross-correlation search window ±samples
-const SINC_KERNEL_A = 6      // Lanczos kernel half-width
-const CORR_SUBSAMPLE = 4     // subsample correlation for speed
 // Loop optimization
 const XCORR_WINDOW = 512    // comparison window (samples)
 const XCORR_SEARCH = 2000   // search radius (samples)
-// Pitch cache: pre-computed WSOLA buffers for instant MIDI response
-const PITCH_CACHE_LO = -12  // C2 relative to C3
-const PITCH_CACHE_HI = 12   // C4 relative to C3
 
 // ═══════════════════════════════════════════════════════════════════
 // DSP utilities (stateless, pure functions)
 // ═══════════════════════════════════════════════════════════════════
-
-// Pre-computed Hann window for WSOLA
-const hannWindow = new Float32Array(GRAIN_SIZE)
-for (let i = 0; i < GRAIN_SIZE; i++) {
-  hannWindow[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / GRAIN_SIZE))
-}
 
 
 function encodeWav(buffer: AudioBuffer, startSample: number, endSample: number): Blob {
@@ -199,156 +179,9 @@ function createPalindromeBuffer(
   return { buffer: result, palindromeEnd: loopEnd + reverseLen }
 }
 
-/**
- * Lanczos windowed sinc resampling with anti-aliasing.
- * Properly band-limits when downsampling (ratio > 1) to prevent aliasing.
- */
-function sincResample(input: Float32Array, outputLen: number): Float32Array {
-  const inputLen = input.length
-  if (inputLen === outputLen) return new Float32Array(input)
-  if (inputLen === 0 || outputLen === 0) return new Float32Array(outputLen)
-
-  const output = new Float32Array(outputLen)
-  const ratio = inputLen / outputLen
-  // When downsampling, widen the kernel to act as anti-aliasing low-pass filter
-  const filterScale = Math.max(1.0, ratio)
-  const kernelRadius = Math.ceil(SINC_KERNEL_A * filterScale)
-  const invFS = 1.0 / filterScale
-
-  for (let i = 0; i < outputLen; i++) {
-    const center = i * ratio
-    const lo = Math.max(0, Math.ceil(center - kernelRadius))
-    const hi = Math.min(inputLen - 1, Math.floor(center + kernelRadius))
-    let sum = 0, wSum = 0
-
-    for (let j = lo; j <= hi; j++) {
-      const x = (j - center) * invFS
-      let w: number
-      if (Math.abs(x) < 1e-7) {
-        w = 1.0
-      } else if (Math.abs(x) >= SINC_KERNEL_A) {
-        w = 0.0
-      } else {
-        const px = Math.PI * x
-        const pxa = px / SINC_KERNEL_A
-        w = (Math.sin(px) / px) * (Math.sin(pxa) / pxa)
-      }
-      sum += input[j]! * w
-      wSum += w
-    }
-    output[i] = wSum > 1e-10 ? sum / wSum : 0
-  }
-  return output
-}
-
-/**
- * WSOLA (Waveform Similarity Overlap-Add) pitch shift.
- *
- * Phase 1: Time-stretch by rate via WSOLA — each grain's analysis position is
- * adjusted by cross-correlation search to find the best waveform continuity
- * with the previously written output. This eliminates the phase cancellation
- * artifacts of naive OLA.
- *
- * Phase 2: Lanczos sinc resample back to original length → pitch shift.
- *
- * Amplitude is normalized by accumulated window sum to prevent modulation
- * artifacts from non-constant overlap at arbitrary synthesis hops.
- */
-function wsolaPitchShift(input: Float32Array, semitones: number): Float32Array {
-  if (semitones === 0) return input
-  const inputLen = input.length
-  if (inputLen < GRAIN_SIZE) return input
-
-  const rate = Math.pow(2, semitones / 12)
-  const analysisHop = Math.floor(GRAIN_SIZE / WSOLA_OVERLAP)
-  const synthesisHop = Math.max(1, Math.round(analysisHop * rate))
-  const numGrains = Math.floor((inputLen - GRAIN_SIZE) / analysisHop) + 1
-  if (numGrains < 1) return input
-
-  const stretchedLen = (numGrains - 1) * synthesisHop + GRAIN_SIZE
-  const stretched = new Float32Array(stretchedLen)
-  const winSum = new Float32Array(stretchedLen)
-  const overlapLen = GRAIN_SIZE - synthesisHop
-  const minOverlap = 64 // skip WSOLA search if overlap too small (extreme shifts)
-
-  let analysisOffset = 0 // cumulative offset from cross-correlation search
-
-  for (let g = 0; g < numGrains; g++) {
-    const nominalPos = g * analysisHop
-    let bestPos = nominalPos + analysisOffset
-
-    // WSOLA: find analysis position with best waveform continuity
-    if (g > 0 && overlapLen >= minOverlap) {
-      const synthStart = g * synthesisHop
-      const searchLen = Math.min(overlapLen, GRAIN_SIZE)
-      let bestCorr = -Infinity
-      const lo = Math.max(0, bestPos - WSOLA_TOLERANCE)
-      const hi = Math.min(inputLen - GRAIN_SIZE, bestPos + WSOLA_TOLERANCE)
-
-      for (let cand = lo; cand <= hi; cand++) {
-        let dot = 0, na = 0, nb = 0
-        for (let i = 0; i < searchLen; i += CORR_SUBSAMPLE) {
-          const outIdx = synthStart + i
-          const a = outIdx < stretchedLen && winSum[outIdx]! > 0.01
-            ? stretched[outIdx]! / winSum[outIdx]!
-            : 0
-          const b = input[cand + i]!
-          dot += a * b
-          na += a * a
-          nb += b * b
-        }
-        const denom = Math.sqrt(na * nb)
-        const corr = denom > 1e-10 ? dot / denom : 0
-        if (corr > bestCorr) {
-          bestCorr = corr
-          bestPos = cand
-        }
-      }
-      analysisOffset = bestPos - nominalPos
-    }
-
-    bestPos = Math.max(0, Math.min(inputLen - GRAIN_SIZE, bestPos))
-
-    // Write windowed grain to output
-    const synthPos = g * synthesisHop
-    for (let i = 0; i < GRAIN_SIZE; i++) {
-      const outIdx = synthPos + i
-      if (outIdx < stretchedLen) {
-        stretched[outIdx]! += input[bestPos + i]! * hannWindow[i]!
-        winSum[outIdx]! += hannWindow[i]!
-      }
-    }
-  }
-
-  // Normalize by accumulated window sum
-  for (let i = 0; i < stretchedLen; i++) {
-    if (winSum[i]! > 0.001) {
-      stretched[i]! /= winSum[i]!
-    }
-  }
-
-  // Resample to original length via Lanczos sinc interpolation
-  return sincResample(stretched, inputLen)
-}
-
-/**
- * Apply OLA pitch shift to an AudioBuffer (all channels).
- */
-function pitchShiftBuffer(ac: AudioContext, source: AudioBuffer, semitones: number): AudioBuffer {
-  if (semitones === 0) return source
-  const result = ac.createBuffer(source.numberOfChannels, source.length, source.sampleRate)
-  for (let ch = 0; ch < source.numberOfChannels; ch++) {
-    const shifted = wsolaPitchShift(source.getChannelData(ch), semitones)
-    result.getChannelData(ch).set(shifted)
-  }
-  return result
-}
-
 // ═══════════════════════════════════════════════════════════════════
 // Composable
 // ═══════════════════════════════════════════════════════════════════
-
-export type TransposeMode = 'rate' | 'pitch'
 
 export function useAudioLooper() {
   let ctx: AudioContext | null = null
@@ -358,14 +191,9 @@ export function useAudioLooper() {
   let rawBase64: string | null = null
   let destinationNode: AudioNode | null = null
 
-  // ── Pitch cache (pre-computed OLA buffers per semitone) ──
-  let pitchCache: Map<number, AudioBuffer> = new Map()
-  let pitchCacheGeneration = 0
-
   const isPlaying = ref(false)
   const isLooping = ref(false)
   const transposeSemitones = ref(0)
-  const transposeMode = ref<TransposeMode>('rate')
   const loopStartFrac = ref(0)
   const loopEndFrac = ref(1)
   const bufferDuration = ref(0)
@@ -377,8 +205,6 @@ export function useAudioLooper() {
   const loopPingPong = ref(false)
   // Optimized loop end as fraction (for display, may differ from user's loopEndFrac)
   const optimizedEndFrac = ref(1)
-  const pitchCacheSize = ref(0)
-
   // Internal loop bounds in seconds (decoupled from fractions when buffer length changes, e.g. palindrome)
   let preparedLoopStartSec = 0
   let preparedLoopEndSec = 0
@@ -392,9 +218,7 @@ export function useAudioLooper() {
   }
 
   function rateForPlayback(): number {
-    return transposeMode.value === 'rate'
-      ? Math.pow(2, transposeSemitones.value / 12)
-      : 1 // OLA mode: pitch baked into buffer, play at normal rate
+    return Math.pow(2, transposeSemitones.value / 12)
   }
 
   function loopBoundsSamples(buf: AudioBuffer): [number, number] {
@@ -424,92 +248,6 @@ export function useAudioLooper() {
       const d = buffer.getChannelData(ch)
       for (let i = 0; i < d.length; i++) d[i]! *= g
     }
-  }
-
-  // ── Pitch cache management ──
-
-  function invalidatePitchCache() {
-    pitchCacheGeneration++
-    pitchCache = new Map()
-    pitchCacheSize.value = 0
-  }
-
-  /**
-   * Asynchronously pre-compute OLA-shifted buffers for all semitones in range.
-   * Iterates center-outward (0, ±1, ±2, ...) so common transpositions cache first.
-   * Uses requestIdleCallback to yield to user input between computations.
-   */
-  function buildPitchCacheAsync(
-    ac: AudioContext, loopProcessed: AudioBuffer, generation: number,
-  ) {
-    // Build ordering: 0, +1, -1, +2, -2, ...
-    const semitones: number[] = [0]
-    for (let i = 1; i <= Math.max(PITCH_CACHE_HI, -PITCH_CACHE_LO); i++) {
-      if (i <= PITCH_CACHE_HI) semitones.push(i)
-      if (-i >= PITCH_CACHE_LO) semitones.push(-i)
-    }
-
-    // Schedule with requestIdleCallback to avoid blocking input events.
-    // Fallback to setTimeout(fn, 50) for browsers without rIC support.
-    const schedule = typeof requestIdleCallback === 'function'
-      ? (fn: () => void) => requestIdleCallback(fn, { timeout: 200 })
-      : (fn: () => void) => setTimeout(fn, 50)
-
-    let idx = 0
-    function processNext() {
-      if (pitchCacheGeneration !== generation) return
-      if (idx >= semitones.length) return
-
-      const st = semitones[idx++]!
-      if (!pitchCache.has(st)) {
-        let buf: AudioBuffer
-        if (st === 0) {
-          buf = ac.createBuffer(
-            loopProcessed.numberOfChannels, loopProcessed.length, loopProcessed.sampleRate,
-          )
-          for (let ch = 0; ch < loopProcessed.numberOfChannels; ch++) {
-            buf.getChannelData(ch).set(loopProcessed.getChannelData(ch))
-          }
-        } else {
-          buf = pitchShiftBuffer(ac, loopProcessed, st)
-        }
-        if (normalizeOn.value) normalizeBuffer(buf)
-        if (pitchCacheGeneration !== generation) return
-        pitchCache.set(st, buf)
-        pitchCacheSize.value = pitchCache.size
-      }
-      schedule(processNext)
-    }
-    schedule(processNext)
-  }
-
-  function rebuildPitchCache() {
-    if (!originalBuffer || !ctx) return
-    invalidatePitchCache()
-    // Pitch cache is only needed for OLA transpose mode.
-    // In 'rate' mode, pitch is handled by playbackRate — zero CPU cost.
-    if (transposeMode.value !== 'pitch') return
-    const ac = ensureContext()
-    const [ls, le] = loopBoundsSamples(originalBuffer)
-
-    let baseBuffer: AudioBuffer
-    if (loopPingPong.value) {
-      let actualEnd = le
-      if (loopOptimize.value && originalBuffer.numberOfChannels > 0) {
-        actualEnd = optimizeLoopEndSample(originalBuffer.getChannelData(0), ls, le)
-      }
-      const copy = ac.createBuffer(originalBuffer.numberOfChannels, originalBuffer.length, originalBuffer.sampleRate)
-      for (let ch = 0; ch < originalBuffer.numberOfChannels; ch++) {
-        copy.getChannelData(ch).set(originalBuffer.getChannelData(ch))
-      }
-      baseBuffer = createPalindromeBuffer(ac, copy, ls, actualEnd).buffer
-    } else {
-      const { buffer: loopProcessed, optimizedEnd } =
-        applyLoopProcessing(ac, originalBuffer, ls, le, loopOptimize.value, crossfadeMs.value)
-      optimizedEndFrac.value = optimizedEnd / originalBuffer.length
-      baseBuffer = loopProcessed
-    }
-    buildPitchCacheAsync(ac, baseBuffer, pitchCacheGeneration)
   }
 
   async function decodeBase64Wav(base64: string): Promise<AudioBuffer> {
@@ -563,16 +301,6 @@ export function useAudioLooper() {
       preparedLoopEndSec = optimizedEnd / sr
       preparedColdStartSec = (ls + fadeSamples) / sr // past the crossfade zone
       processed = loopProcessed
-    }
-
-    // OLA pitch shift (if in pitch mode)
-    if (transposeMode.value === 'pitch') {
-      const st = transposeSemitones.value
-      const cached = pitchCache.get(st)
-      if (cached) return cached // already OLA-shifted + normalized
-      if (st !== 0) {
-        processed = pitchShiftBuffer(ac, processed, st)
-      }
     }
 
     // Normalize (if enabled)
@@ -645,9 +373,7 @@ export function useAudioLooper() {
     bufferDuration.value = decoded.duration
     hasAudio.value = true
     peakAmplitude.value = measurePeak(decoded)
-    invalidatePitchCache()
     startSource(ac, prepareBuffer(ac, decoded))
-    rebuildPitchCache()
   }
 
   function replay() {
@@ -669,38 +395,14 @@ export function useAudioLooper() {
 
   function setTranspose(semitones: number) {
     transposeSemitones.value = semitones
-    if (transposeMode.value === 'rate') {
-      // Instant: just change playback rate
-      if (activeSource) activeSource.playbackRate.value = rateForPlayback()
-    } else {
-      // OLA: use cached buffer for instant response, fall back to live OLA
-      if (originalBuffer && isPlaying.value) {
-        const cached = pitchCache.get(semitones)
-        if (cached) {
-          startSource(ensureContext(), cached)
-        } else {
-          replay()
-        }
-      }
-    }
+    if (activeSource) activeSource.playbackRate.value = rateForPlayback()
   }
-
-  function setTransposeMode(mode: TransposeMode) {
-    transposeMode.value = mode
-    if (originalBuffer && isPlaying.value) replay()
-    if (mode === 'pitch') rebuildPitchCache()
-  }
-
-  let loopBoundsDebounce: ReturnType<typeof setTimeout> | null = null
 
   function setLoopStart(frac: number) {
     loopStartFrac.value = Math.max(0, Math.min(frac, loopEndFrac.value - 0.01))
-    // Instant audio update: approximate using original buffer duration
     if (activeSource && originalBuffer) {
       activeSource.loopStart = loopStartFrac.value * originalBuffer.duration
     }
-    if (loopBoundsDebounce) clearTimeout(loopBoundsDebounce)
-    loopBoundsDebounce = setTimeout(() => rebuildPitchCache(), 150)
   }
 
   function setLoopEnd(frac: number) {
@@ -709,8 +411,6 @@ export function useAudioLooper() {
     if (activeSource && originalBuffer) {
       activeSource.loopEnd = loopEndFrac.value * originalBuffer.duration
     }
-    if (loopBoundsDebounce) clearTimeout(loopBoundsDebounce)
-    loopBoundsDebounce = setTimeout(() => rebuildPitchCache(), 150)
   }
 
   let crossfadeDebounce: ReturnType<typeof setTimeout> | null = null
@@ -730,7 +430,6 @@ export function useAudioLooper() {
     if (loopModeDebounce) clearTimeout(loopModeDebounce)
     loopModeDebounce = setTimeout(() => {
       if (originalBuffer && isPlaying.value) replay()
-      rebuildPitchCache()
     }, 100)
   }
 
@@ -739,7 +438,6 @@ export function useAudioLooper() {
     if (loopModeDebounce) clearTimeout(loopModeDebounce)
     loopModeDebounce = setTimeout(() => {
       if (originalBuffer && isPlaying.value) replay()
-      rebuildPitchCache()
     }, 100)
   }
 
@@ -748,7 +446,6 @@ export function useAudioLooper() {
     if (loopModeDebounce) clearTimeout(loopModeDebounce)
     loopModeDebounce = setTimeout(() => {
       if (originalBuffer && isPlaying.value) replay()
-      rebuildPitchCache()
     }, 100)
   }
 
@@ -803,7 +500,6 @@ export function useAudioLooper() {
 
   function dispose() {
     stop()
-    invalidatePitchCache()
     originalBuffer = null; rawBase64 = null; hasAudio.value = false
     if (ctx && ctx.state !== 'closed') ctx.close()
     ctx = null
@@ -811,7 +507,7 @@ export function useAudioLooper() {
 
   return {
     play, replay, stop, retrigger,
-    setLoop, setTranspose, setTransposeMode, setDestination, getContext,
+    setLoop, setTranspose, setDestination, getContext,
     setLoopStart, setLoopEnd, setLoopOptimize, setLoopPingPong,
     setCrossfade, setNormalize,
     exportRaw, exportLoop, getWaveformPeaks, dispose,
@@ -819,7 +515,6 @@ export function useAudioLooper() {
     isPlaying: readonly(isPlaying),
     isLooping: readonly(isLooping),
     transposeSemitones: readonly(transposeSemitones),
-    transposeMode: readonly(transposeMode),
     loopStartFrac: readonly(loopStartFrac),
     loopEndFrac: readonly(loopEndFrac),
     optimizedEndFrac: readonly(optimizedEndFrac),
@@ -830,6 +525,5 @@ export function useAudioLooper() {
     peakAmplitude: readonly(peakAmplitude),
     loopOptimize: readonly(loopOptimize),
     loopPingPong: readonly(loopPingPong),
-    pitchCacheSize: readonly(pitchCacheSize),
   }
 }
