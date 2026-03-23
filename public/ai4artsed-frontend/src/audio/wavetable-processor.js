@@ -26,6 +26,7 @@ class WavetableProcessor extends AudioWorkletProcessor {
     return [
       { name: 'frequency', defaultValue: 440, minValue: 20, maxValue: 20000, automationRate: 'a-rate' },
       { name: 'scanPosition', defaultValue: 0, minValue: 0, maxValue: 1, automationRate: 'a-rate' },
+      { name: 'interpolate', defaultValue: 1, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
     ]
   }
 
@@ -36,8 +37,10 @@ class WavetableProcessor extends AudioWorkletProcessor {
     const numFrames = this.frames.length
     const freqParam = parameters.frequency
     const scanParam = parameters.scanPosition
+    const interpParam = parameters.interpolate
     const freqConstant = freqParam.length === 1
     const scanConstant = scanParam.length === 1
+    const doInterpolate = interpParam[0] >= 0.5
 
     for (let i = 0; i < output.length; i++) {
       const freq = freqConstant ? freqParam[0] : freqParam[i]
@@ -46,20 +49,26 @@ class WavetableProcessor extends AudioWorkletProcessor {
       // Frame selection via scan position
       const framePos = scan * (numFrames - 1)
       const frameA = Math.floor(framePos)
-      const frameB = Math.min(frameA + 1, numFrames - 1)
-      const frameMix = framePos - frameA
 
       // Sample position via phase accumulator
       const idx0 = Math.floor(this.phase) % FRAME_SIZE
       const idx1 = (idx0 + 1) % FRAME_SIZE
       const phaseFrac = this.phase - Math.floor(this.phase)
 
-      // Bilinear interpolation: within frame, then between frames
       const a = this.frames[frameA]
-      const b = this.frames[frameB]
       const sampleA = a[idx0] + (a[idx1] - a[idx0]) * phaseFrac
-      const sampleB = b[idx0] + (b[idx1] - b[idx0]) * phaseFrac
-      output[i] = sampleA + (sampleB - sampleA) * frameMix
+
+      if (doInterpolate) {
+        // Bilinear: smooth interpolation between adjacent frames
+        const frameB = Math.min(frameA + 1, numFrames - 1)
+        const frameMix = framePos - frameA
+        const b = this.frames[frameB]
+        const sampleB = b[idx0] + (b[idx1] - b[idx0]) * phaseFrac
+        output[i] = sampleA + (sampleB - sampleA) * frameMix
+      } else {
+        // Stepped: hard frame switch, no frame interpolation (raw wavetable)
+        output[i] = sampleA
+      }
 
       // Advance phase, wrap to prevent float precision loss
       this.phase += freq * FRAME_SIZE / sampleRate

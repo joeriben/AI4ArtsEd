@@ -430,6 +430,22 @@
           </div>
           <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
           <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
+
+          <!-- Interpolation + Scan Envelope -->
+          <div class="wt-options-row">
+            <label class="inline-toggle" :class="{ active: wtInterpolate }">
+              <input type="checkbox" :checked="wtInterpolate" @change="onWtInterpolateChange" />
+              {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
+            </label>
+            <div class="wt-scan-env">
+              <label>{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }}</label>
+              <input type="number" v-model.number="wtScanAttack" min="0" max="5000" step="50" class="wt-env-input" />
+              <span class="wt-env-label">A</span>
+              <input type="number" v-model.number="wtScanDecay" min="0" max="5000" step="50" class="wt-env-input" />
+              <span class="wt-env-label">D</span>
+              <span class="wt-env-unit">ms</span>
+            </div>
+          </div>
         </div>
 
         <!-- ===== Sequencer Section ===== -->
@@ -1018,6 +1034,9 @@ const wtBuildFrameCount = ref(16)
 const wtBuilding = ref(false)
 const wtBuildProgress = ref(0)
 const wtBuildProgressCurrent = ref(0)
+const wtInterpolate = ref(true)
+const wtScanAttack = ref(500)
+const wtScanDecay = ref(1000)
 
 // ===== Step Sequencer =====
 const sequencer = useStepSequencer()
@@ -1734,6 +1753,10 @@ function triggerEngine(note: number, velocity: number) {
   } else {
     wavetableOsc.setFrequencyFromNote(note)
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) wavetableOsc.start()
+    // Trigger scan AD envelope if configured
+    if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
+      wavetableOsc.triggerScanEnvelope(wtScanAttack.value, wtScanDecay.value)
+    }
   }
   envelope.triggerAttack(velocity)
 }
@@ -1819,6 +1842,11 @@ function onScanInput(event: Event) {
 watch(wavetableScan, (v) => {
   wavetableOsc.setScanPosition(v)
 })
+
+function onWtInterpolateChange(event: Event) {
+  wtInterpolate.value = (event.target as HTMLInputElement).checked
+  wavetableOsc.setInterpolate(wtInterpolate.value)
+}
 
 // ===== Sequencer transport =====
 function wireSequencerCallbacks() {
@@ -3317,6 +3345,45 @@ onUnmounted(() => {
   background: rgba(76, 175, 80, 0.15);
   color: #4CAF50;
   font-weight: 600;
+}
+
+/* Wavetable options row */
+.wt-options-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.wt-scan-env {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wt-env-input {
+  width: 55px;
+  padding: 0.2rem 0.3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.wt-env-label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
+}
+
+.wt-env-unit {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.65rem;
 }
 
 .midi-sync-badge {

@@ -176,10 +176,11 @@ export function useWavetableOsc() {
             const period = mono.slice(start, start + periodSamples)
             // Resample to FRAME_SIZE
             const resampled = sincResample(period, FRAME_SIZE)
-            // Apply Hann window
+            // Apply Hann window + normalize
             for (let i = 0; i < FRAME_SIZE; i++) {
               resampled[i]! *= hann[i]!
             }
+            normalizeFrame(resampled)
             result.push(resampled)
           }
         }
@@ -196,6 +197,7 @@ export function useWavetableOsc() {
         for (let i = 0; i < FRAME_SIZE; i++) {
           frame[i] = mono[offset + i]! * hann[i]!
         }
+        normalizeFrame(frame)
         result.push(frame)
         offset += overlap
       }
@@ -225,10 +227,25 @@ export function useWavetableOsc() {
     }
   }
 
+  /** Normalize a frame to peak amplitude 1.0 to prevent volume jumps when scanning. */
+  function normalizeFrame(frame: Float32Array): void {
+    let peak = 0
+    for (let i = 0; i < frame.length; i++) {
+      const abs = Math.abs(frame[i]!)
+      if (abs > peak) peak = abs
+    }
+    if (peak > 1e-6) {
+      const scale = 1.0 / peak
+      for (let i = 0; i < frame.length; i++) {
+        frame[i]! *= scale
+      }
+    }
+  }
+
   /**
    * Load pre-extracted frames directly (e.g. from semantic wavetable builder).
    * Each frame should be a single-cycle waveform. Frames are resampled to
-   * FRAME_SIZE and Hann-windowed if not already the correct length.
+   * FRAME_SIZE, Hann-windowed, and peak-normalized to prevent volume jumps.
    */
   function loadRawFrames(rawFrames: Float32Array[]): void {
     if (rawFrames.length === 0) return
@@ -246,6 +263,8 @@ export function useWavetableOsc() {
       for (let i = 0; i < FRAME_SIZE; i++) {
         resampled[i]! *= hann[i]!
       }
+      // Normalize to peak 1.0
+      normalizeFrame(resampled)
       return resampled
     })
 
@@ -322,6 +341,55 @@ export function useWavetableOsc() {
     }
   }
 
+  /** Toggle frame interpolation: true = smooth morph, false = stepped/raw. */
+  function setInterpolate(on: boolean): void {
+    if (workletNode) {
+      const param = workletNode.parameters.get('interpolate')
+      if (param) param.value = on ? 1 : 0
+    }
+  }
+
+  /**
+   * Trigger a scan envelope (AD): ramp scanPosition from 0→1 over attackMs,
+   * then 1→0 over decayMs. Used for automatic wavetable traversal on note-on.
+   */
+  let scanEnvTimer: ReturnType<typeof requestAnimationFrame> | null = null
+
+  function triggerScanEnvelope(attackMs: number, decayMs: number): void {
+    if (scanEnvTimer !== null) cancelAnimationFrame(scanEnvTimer)
+    const totalMs = attackMs + decayMs
+    if (totalMs <= 0) return
+
+    const startTime = performance.now()
+
+    function tick() {
+      const elapsed = performance.now() - startTime
+      let pos: number
+      if (elapsed < attackMs) {
+        // Attack: 0 → 1
+        pos = elapsed / attackMs
+      } else if (elapsed < totalMs) {
+        // Decay: 1 → 0
+        pos = 1 - (elapsed - attackMs) / decayMs
+      } else {
+        pos = 0
+        setScanPosition(0)
+        scanEnvTimer = null
+        return
+      }
+      setScanPosition(pos)
+      scanEnvTimer = requestAnimationFrame(tick)
+    }
+    scanEnvTimer = requestAnimationFrame(tick)
+  }
+
+  function stopScanEnvelope(): void {
+    if (scanEnvTimer !== null) {
+      cancelAnimationFrame(scanEnvTimer)
+      scanEnvTimer = null
+    }
+  }
+
   function setDestination(node: AudioNode | null): void {
     destinationNode = node
   }
@@ -354,6 +422,9 @@ export function useWavetableOsc() {
     setFrequency,
     setFrequencyFromNote,
     setScanPosition,
+    setInterpolate,
+    triggerScanEnvelope,
+    stopScanEnvelope,
     setDestination,
     getContext,
     dispose,
