@@ -26,72 +26,96 @@ export interface Preset {
   steps: Step[]
 }
 
-export type StepCountOption = 5 | 8 | 16
-export const STEP_COUNT_OPTIONS: StepCountOption[] = [5, 8, 16]
+export type StepCountOption = 5 | 8 | 16 | 32
+export const STEP_COUNT_OPTIONS: StepCountOption[] = [5, 8, 16, 32]
+
+/** Note division: how long each step lasts relative to a beat */
+export type NoteDivision = '1/1' | '1/2' | '1/4' | '1/8' | '1/16'
+export const NOTE_DIVISIONS: NoteDivision[] = ['1/1', '1/2', '1/4', '1/8', '1/16']
+const DIVISION_FACTORS: Record<NoteDivision, number> = {
+  '1/1': 4, '1/2': 2, '1/4': 1, '1/8': 0.5, '1/16': 0.25,
+}
 
 function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step {
   return { active, semitone, velocity, gate }
 }
 
-// Preset patterns — used as grid initializers, user can modify after loading
+// Preset patterns — used as grid initializers, user can modify after loading.
+// Named after sequencer traditions, not arpeggios.
 const PRESETS: Preset[] = [
   {
-    name: 'arpeggio_up',
+    // Eastcoast classic: minor pentatonic, 5 steps, accented root
+    // Moog/Buchla-era East Coast modular — melodic, tonal center
+    name: 'eastcoast',
     steps: [
-      makeStep(0, 1.0), makeStep(4, 0.8), makeStep(7, 0.8), makeStep(12, 1.0),
-      makeStep(0, 0.9), makeStep(4, 0.7), makeStep(7, 0.7), makeStep(12, 0.9),
+      makeStep(0, 1.0, 0.9),   // root, accent
+      makeStep(3, 0.7, 0.8),   // minor 3rd
+      makeStep(5, 0.8, 0.8),   // 4th
+      makeStep(7, 0.7, 0.8),   // 5th
+      makeStep(10, 0.9, 0.7),  // minor 7th
     ],
   },
   {
-    name: 'arpeggio_down',
+    // Westcoast: non-standard intervals, varied gates, exploratory
+    // Buchla-inspired — less tonal, more timbral
+    name: 'westcoast',
     steps: [
-      makeStep(12, 1.0), makeStep(7, 0.8), makeStep(4, 0.8), makeStep(0, 1.0),
-      makeStep(12, 0.9), makeStep(7, 0.7), makeStep(4, 0.7), makeStep(0, 0.9),
+      makeStep(0, 1.0, 0.6),   // root, short gate
+      makeStep(6, 0.6, 1.0),   // tritone, long gate
+      makeStep(2, 0.8, 0.4),   // major 2nd, staccato
+      makeStep(9, 0.5, 0.9),   // major 6th, soft
+      makeStep(5, 0.9, 0.5),   // 4th
+      makeStep(11, 0.4, 1.0),  // major 7th, quiet + legato
+      makeStep(1, 0.7, 0.3),   // minor 2nd, staccato
+      makeStep(8, 0.8, 0.7),   // augmented 5th
     ],
   },
   {
-    name: 'arpeggio_updown',
+    // British: New Order / Depeche Mode — 16th note bass sequences
+    // Driving octave-root patterns with syncopation
+    name: 'british',
     steps: [
-      makeStep(0, 1.0), makeStep(4, 0.8), makeStep(7, 0.8), makeStep(12, 1.0),
-      makeStep(12, 0.9), makeStep(7, 0.7), makeStep(4, 0.7), makeStep(0, 0.9),
+      makeStep(0, 1.0, 0.9),   // root accent
+      makeStep(0, 0.5, 0.3),   // ghost note
+      makeStep(0, 0.7, 0.6),
+      makeStep(12, 0.9, 0.4),  // octave, short
+      makeStep(0, 0.8, 0.9),
+      makeStep(0, 0.3, 0.2, false), // rest
+      makeStep(7, 0.8, 0.6),   // 5th
+      makeStep(5, 0.7, 0.5),   // 4th
     ],
   },
   {
-    name: 'octaves',
+    // Kraftwerk: precise, mechanical, equal velocity, strict gate
+    // Robotic feel, chromatic movement, 16 steps
+    name: 'kraftwerk',
     steps: [
-      makeStep(0, 1.0, 0.7), makeStep(12, 0.9, 0.7),
-      makeStep(0, 0.9, 0.7), makeStep(12, 1.0, 0.7),
-      makeStep(0, 1.0, 0.7), makeStep(12, 0.9, 0.7),
-      makeStep(0, 0.9, 0.7), makeStep(12, 1.0, 0.7),
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
+      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
+      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
+      makeStep(7, 0.9, 0.5), makeStep(7, 0.9, 0.5),
+      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
+      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
     ],
   },
   {
-    name: 'power_chord',
+    // Synthwave: retro 80s arpeggiated chords, wide intervals, pumping gates
+    name: 'synthwave',
     steps: [
-      makeStep(0, 1.0, 0.9), makeStep(7, 0.9, 0.9),
-      makeStep(0, 0.9, 0.9), makeStep(7, 1.0, 0.9),
-      makeStep(0, 1.0, 0.9), makeStep(7, 0.9, 0.9),
-      makeStep(0, 0.9, 0.9), makeStep(7, 1.0, 0.9),
+      makeStep(0, 1.0, 0.9),   // root
+      makeStep(7, 0.7, 0.7),   // 5th
+      makeStep(12, 0.8, 0.7),  // octave
+      makeStep(16, 0.6, 0.6),  // major 3rd + octave
+      makeStep(19, 0.9, 0.8),  // 5th + octave
+      makeStep(16, 0.6, 0.6),
+      makeStep(12, 0.8, 0.7),
+      makeStep(7, 0.7, 0.7),
     ],
   },
   {
-    name: 'minor_pentatonic',
-    steps: [
-      makeStep(0, 1.0), makeStep(3, 0.8), makeStep(5, 0.9),
-      makeStep(7, 0.8), makeStep(10, 1.0),
-      makeStep(7, 0.7), makeStep(5, 0.8), makeStep(3, 0.7),
-    ],
-  },
-  {
-    name: 'bass_groove',
-    steps: [
-      makeStep(-12, 1.0, 0.9), makeStep(-12, 0.4, 0.3),
-      makeStep(-5, 1.0, 0.9), makeStep(-5, 0.4, 0.3),
-      makeStep(-2, 1.0, 0.9), makeStep(-2, 0.4, 0.3),
-      makeStep(-7, 1.0, 0.9), makeStep(-7, 0.4, 0.3),
-    ],
-  },
-  {
+    // Trance gate: same note, rhythmic gating creates pattern from texture
     name: 'trance_gate',
     steps: [
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
@@ -100,19 +124,30 @@ const PRESETS: Preset[] = [
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
     ],
   },
+  {
+    // Bass groove: sub-octave movement with ghost notes
+    name: 'bass_groove',
+    steps: [
+      makeStep(-12, 1.0, 0.9), makeStep(-12, 0.4, 0.3),
+      makeStep(-5, 1.0, 0.9), makeStep(-5, 0.4, 0.3),
+      makeStep(-2, 1.0, 0.9), makeStep(-2, 0.4, 0.3),
+      makeStep(-7, 1.0, 0.9), makeStep(-7, 0.4, 0.3),
+    ],
+  },
 ]
 
 export function useStepSequencer() {
   const isPlaying = ref(false)
   const currentStep = ref(-1)
   const bpm = ref(120)
-  const stepCount = ref<StepCountOption>(8)
+  const stepCount = ref<StepCountOption>(5)
+  const division = ref<NoteDivision>('1/8')
   const presetIndex = ref(-1) // -1 = custom / no preset
   const midiClockActive = ref(false)
   const midiClockBpm = ref(0)
 
-  // User-editable step grid (reactive array)
-  const steps = reactive<Step[]>(createDefaultSteps(8))
+  // User-editable step grid (reactive array) — default 5 steps (Eastcoast)
+  const steps = reactive<Step[]>(createDefaultSteps(5))
 
   let audioCtx: AudioContext | null = null
   let schedulerInterval: ReturnType<typeof setInterval> | null = null
@@ -155,7 +190,8 @@ export function useStepSequencer() {
   }
 
   function stepDurationSec(): number {
-    return (60 / getEffectiveBpm()) / 4
+    const quarterNote = 60 / getEffectiveBpm()
+    return quarterNote * DIVISION_FACTORS[division.value]
   }
 
   function scheduleStep(stepIdx: number, time: number, schedId: number) {
@@ -226,6 +262,10 @@ export function useStepSequencer() {
 
   function setBpm(newBpm: number) {
     bpm.value = Math.max(60, Math.min(200, newBpm))
+  }
+
+  function setDivision(div: NoteDivision) {
+    division.value = div
   }
 
   function setStepCount(count: StepCountOption) {
@@ -339,6 +379,7 @@ export function useStepSequencer() {
     currentStep: readonly(currentStep),
     bpm: readonly(bpm) as Readonly<Ref<number>>,
     stepCount: readonly(stepCount) as Readonly<Ref<StepCountOption>>,
+    division: readonly(division) as Readonly<Ref<NoteDivision>>,
     presetIndex: readonly(presetIndex),
     steps,
     activeStepCount,
@@ -348,11 +389,13 @@ export function useStepSequencer() {
     // Constants
     presets: PRESETS,
     stepCountOptions: STEP_COUNT_OPTIONS,
+    noteDivisions: NOTE_DIVISIONS,
 
     // Methods
     start,
     stop,
     setBpm,
+    setDivision,
     setStepCount,
     loadPreset,
     setStepActive,

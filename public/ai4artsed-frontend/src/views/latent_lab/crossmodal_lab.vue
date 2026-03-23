@@ -453,6 +453,15 @@
                 @click="sequencer.setStepCount(opt)"
               >{{ opt }}</button>
             </div>
+            <div class="seq-division">
+              <button
+                v-for="div in sequencer.noteDivisions"
+                :key="div"
+                class="division-btn"
+                :class="{ active: sequencer.division.value === div }"
+                @click="sequencer.setDivision(div)"
+              >{{ div }}</button>
+            </div>
             <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
               {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
               <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
@@ -3281,6 +3290,35 @@ onUnmounted(() => {
   font-weight: 600;
 }
 
+.seq-division {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.division-btn {
+  padding: 0.25rem 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.division-btn:last-child {
+  border-right: none;
+}
+
+.division-btn.active {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  font-weight: 600;
+}
+
 .midi-sync-badge {
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
@@ -3353,6 +3391,7 @@ onUnmounted(() => {
 .seq-grid-5 { grid-template-columns: repeat(5, 1fr); }
 .seq-grid-8 { grid-template-columns: repeat(8, 1fr); }
 .seq-grid-16 { grid-template-columns: repeat(16, 1fr); }
+.seq-grid-32 { grid-template-columns: repeat(32, 1fr); }
 
 .seq-step {
   display: flex;
