@@ -2724,6 +2724,7 @@ interface SynthPreset {
     envs: Array<{ attackMs: number; decayMs: number; sustain: number; releaseMs: number; amount: number; target: string; loop: boolean }>
     lfos: Array<{ rate: number; depth: number; waveform: string; target: string; mode: string }>
   }
+  driftLfos?: Array<{ rate: number; depth: number; waveform: string; target: string }>
   wavetable?: {
     scan: number; interpolate: boolean
     rangeStart: number; rangeEnd: number
@@ -2813,6 +2814,10 @@ function exportPreset() {
         waveform: l.waveform.value, target: l.target.value, mode: l.mode.value,
       })),
     },
+    driftLfos: driftLfo.lfos.map(d => ({
+      rate: d.rate.value, depth: d.depth.value,
+      waveform: d.waveform.value, target: d.target.value,
+    })),
     wavetable: {
       scan: wavetableScan.value,
       interpolate: wtInterpolate.value,
@@ -2956,6 +2961,18 @@ async function importPreset(event: Event) {
           dst.target.value = src.target ?? 'none'
           dst.mode.value = src.mode ?? 'free'
         }
+      }
+    }
+
+    // Restore drift LFOs
+    if (preset.driftLfos) {
+      for (let i = 0; i < preset.driftLfos.length && i < driftLfo.lfos.length; i++) {
+        const src = preset.driftLfos[i]!
+        const dst = driftLfo.lfos[i]!
+        dst.rate.value = src.rate ?? 0.01
+        dst.depth.value = src.depth ?? 0
+        dst.waveform.value = (src.waveform as DriftWaveform) ?? 'sine'
+        dst.target.value = (src.target as DriftTarget) ?? 'none'
       }
     }
 
