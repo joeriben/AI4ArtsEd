@@ -1518,6 +1518,7 @@ export const en = {
         transposeHint: 'Shifts pitch in semitones',
         crossfadeHint: 'Crossfade time at loop boundary (ms)',
         normalizeHint: 'Normalizes volume to maximum amplitude',
+        testNote: 'Test C3',
         record: 'Record',
         stopRecording: 'Stop',
         saveRaw: 'Save raw',

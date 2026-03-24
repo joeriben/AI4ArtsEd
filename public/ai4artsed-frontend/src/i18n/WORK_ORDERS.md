@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-24-test-note-button
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.testNote` (NEW): "Test C3"
+- **Context**: Test button next to Generate. Plays a single C3 note (500ms) through the current engine so the user can hear the generated audio without auto-play on generation.
+
 ### WO-2026-03-24-wavetable-region-extraction
 - **Scope**: en.ts
 - **Changed keys** (new):

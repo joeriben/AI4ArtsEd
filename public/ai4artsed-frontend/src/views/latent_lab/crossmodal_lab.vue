@@ -77,6 +77,9 @@
           <button class="generate-btn" :disabled="!synth.promptA || generating" @click="runSynth">
             {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
           </button>
+          <button class="test-btn" :disabled="!hasLoadedAudio || generating" @click="testNote">
+            {{ t('latentLab.crossmodal.synth.testNote') }}
+          </button>
         </div>
       </div>
 
@@ -3020,6 +3023,14 @@ function audioBufferToWav(buffer: AudioBuffer, startSample: number, endSample: n
   return new Blob([ab], { type: 'audio/wav' })
 }
 
+/** Play a single C3 test note (500ms) through the current engine. */
+function testNote() {
+  if (!hasLoadedAudio.value) return
+  wireEnvelope()
+  triggerEngine(MIDI_REF_NOTE, 0.9)  // C3
+  setTimeout(() => releaseCurrentNote(), 500)
+}
+
 // ===== Synth =====
 async function runSynth() {
   // Track pre-generation state to restore after completion
@@ -3110,13 +3121,8 @@ async function runSynth() {
       // looper/WT connect directly to ac.destination, bypassing the DCA.
       if (!envelopeWired) wireEnvelope()
 
-      // Load audio into looper. In WT mode: load only (no playback, no leak).
-      if (engineMode.value === 'wavetable') {
-        await looper.loadBuffer(result.audio_base64)
-      } else {
-        looper.setLoop(loopMode.value !== 'oneshot')
-        await looper.play(result.audio_base64)
-      }
+      // Load audio — never auto-play. User triggers sound via Test button or keyboard.
+      await looper.loadBuffer(result.audio_base64)
 
       nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
@@ -3136,16 +3142,8 @@ async function runSynth() {
         wavetableOsc.setContext(ac)
       }
 
-      // Restore transport
-      if (engineMode.value === 'wavetable') {
-        // Wavetable: always paused after generation — oscillator starts on note trigger
-        transport.value = 'paused'
-      } else if (preGenTransport === 'playing' || preGenTransport === 'idle') {
-        transport.value = 'playing'
-      } else {
-        looper.stop()
-        transport.value = 'paused'
-      }
+      // Always paused after generation — user triggers sound explicitly
+      transport.value = 'paused'
 
       // Record for research export
       labRecord({
@@ -3575,6 +3573,22 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
+.test-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.test-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+.test-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
 .play-btn {
   padding: 0.5rem 1rem;
