@@ -1496,7 +1496,7 @@ export const en = {
             techno: 'Techno (303)',
             ambient: 'Ambient (Eno)',
             idm_glitch: 'IDM / Glitch',
-            kraftwerk: 'Kraftwerk',
+            power_plant: 'Power Plant',
             arpeggio_bass: 'Arpeggio Bass (32)',
             trance_gate: 'Trance Gate',
           },
