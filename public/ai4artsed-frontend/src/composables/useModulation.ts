@@ -69,8 +69,8 @@ export function useModulation() {
   // ─── Audio state ───
   let ctx: AudioContext | null = null
   const targetParams: Record<string, AudioParam | null> = {}
-  // Base values for targets that need relative modulation (envelope resets to these)
-  const targetBaseValues: Record<string, number> = {}
+  // Base value getters — read current value at trigger time, not cached from init
+  const targetBaseGetters: Record<string, () => number> = {}
 
   // Envelope GainNodes (one per envelope, used for DCA-type modulation)
   const envGainNodes: (GainNode | null)[] = [null, null, null]
@@ -111,10 +111,10 @@ export function useModulation() {
    * For 'dca', pass the GainNode.gain that controls amplitude.
    * Base values are used as the "home" position for envelope release.
    */
-  function setTargets(targets: Record<string, { param: AudioParam; baseValue: number }>): void {
+  function setTargets(targets: Record<string, { param: AudioParam; baseValue: () => number }>): void {
     for (const [key, { param, baseValue }] of Object.entries(targets)) {
       targetParams[key] = param
-      targetBaseValues[key] = baseValue
+      targetBaseGetters[key] = baseValue
     }
     applyLfoRouting()
   }
@@ -178,7 +178,7 @@ export function useModulation() {
       // AudioParam modulation (dcf_cutoff, pitch): additive scheduling
       const param = targetParams[target]
       if (!param) return
-      const baseVal = targetBaseValues[target] ?? param.value
+      const baseVal = targetBaseGetters[target]?.() ?? param.value
       const peakVal = baseVal + amount * baseVal // modulate by `amount` fraction of base
       const susVal = baseVal + (peakVal - baseVal) * sus
 
@@ -221,7 +221,7 @@ export function useModulation() {
     } else {
       const param = targetParams[target]
       if (!param) return
-      const baseVal = targetBaseValues[target] ?? 1
+      const baseVal = targetBaseGetters[target]?.() ?? 1
       const current = param.value
       param.cancelScheduledValues(now)
       param.setValueAtTime(Math.max(current, 0.001), now)
@@ -261,7 +261,7 @@ export function useModulation() {
         const param = targetParams[env.target.value]
         if (param) {
           param.cancelScheduledValues(now)
-          param.setValueAtTime(targetBaseValues[env.target.value] ?? param.value, now)
+          param.setValueAtTime(targetBaseGetters[env.target.value]?.() ?? param.value, now)
         }
       }
     }
@@ -290,7 +290,7 @@ export function useModulation() {
       const param = targetParams[lfo.target.value]
       if (!param) { gain.gain.value = 0; continue }
 
-      const baseVal = targetBaseValues[lfo.target.value] ?? param.value
+      const baseVal = targetBaseGetters[lfo.target.value]?.() ?? param.value
       // Depth as fraction of base value (e.g., depth=0.5 modulates ±50% of base)
       gain.gain.value = baseVal * lfo.depth.value
       gain.connect(param)
