@@ -523,7 +523,136 @@
           </div>
         </div>
 
-        <!-- ═══════ BOX 3: EFFECTS (Delay + Reverb) ═══════ -->
+        <!-- ═══════ BOX 3: FILTER + LFOs ═══════ -->
+        <div class="synth-box">
+          <div class="section-toggle">
+            <label class="inline-toggle">
+              <input type="checkbox" :checked="filter.enabled.value" @change="filter.setEnabled(($event.target as HTMLInputElement).checked)" />
+              {{ t('latentLab.crossmodal.synth.filter.title') }}
+            </label>
+            <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.type.value" @change="filter.setType(($event.target as HTMLSelectElement).value as FilterType)">
+              <option value="lowpass">LP</option>
+              <option value="highpass">HP</option>
+              <option value="bandpass">BP</option>
+            </select>
+          </div>
+
+          <div v-if="filter.enabled.value" class="filter-params">
+            <!-- Cutoff + Resonance -->
+            <div class="adsr-grid">
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</label>
+                <input type="range" :value="filter.cutoff.value" min="0" max="1" step="0.005" @input="filter.setCutoff(Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ Math.round(filter.normalizedToFreq(filter.cutoff.value)) }} Hz</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.resonance') }}</label>
+                <input type="range" :value="filter.resonance.value" min="0" max="1" step="0.01" @input="filter.setResonance(Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ filter.resonance.value.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <!-- Filter Envelope -->
+            <div class="adsr-section">
+              <h5>{{ t('latentLab.crossmodal.synth.filter.envelope') }} <span class="env-target">Cutoff</span></h5>
+              <div class="adsr-grid">
+                <div class="adsr-slider">
+                  <label>A</label>
+                  <input type="range" v-model.number="filter.envAttackMs.value" min="0" max="2000" step="1" />
+                  <span class="adsr-value">{{ filter.envAttackMs.value }}ms</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>D</label>
+                  <input type="range" v-model.number="filter.envDecayMs.value" min="0" max="2000" step="1" />
+                  <span class="adsr-value">{{ filter.envDecayMs.value }}ms</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>S</label>
+                  <input type="range" v-model.number="filter.envSustain.value" min="0" max="1" step="0.01" />
+                  <span class="adsr-value">{{ filter.envSustain.value.toFixed(2) }}</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>R</label>
+                  <input type="range" v-model.number="filter.envReleaseMs.value" min="0" max="3000" step="1" />
+                  <span class="adsr-value">{{ filter.envReleaseMs.value }}ms</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>{{ t('latentLab.crossmodal.synth.filter.envAmount') }}</label>
+                  <input type="range" :value="filter.envAmount.value" min="0" max="1" step="0.01" @input="filter.setEnvAmount(Number(($event.target as HTMLInputElement).value))" />
+                  <span class="adsr-value">{{ filter.envAmount.value.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- LFO 1 -->
+            <div class="adsr-section">
+              <div class="section-toggle lfo-header">
+                <label class="inline-toggle">
+                  <input type="checkbox" :checked="filter.lfo1Enabled.value" @change="filter.setLfo1Enabled(($event.target as HTMLInputElement).checked)" />
+                  LFO 1
+                </label>
+                <select v-if="filter.lfo1Enabled.value" class="lfo-select" :value="filter.lfo1Target.value" @change="filter.setLfo1Target(($event.target as HTMLSelectElement).value as LfoTarget)">
+                  <option value="cutoff">{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</option>
+                  <option value="resonance">{{ t('latentLab.crossmodal.synth.filter.resonance') }}</option>
+                  <option value="amplitude">{{ t('latentLab.crossmodal.synth.filter.amplitude') }}</option>
+                </select>
+                <select v-if="filter.lfo1Enabled.value" class="lfo-select" :value="filter.lfo1Waveform.value" @change="filter.setLfo1Waveform(($event.target as HTMLSelectElement).value as LfoWaveform)">
+                  <option value="sine">Sine</option>
+                  <option value="triangle">Tri</option>
+                  <option value="square">Sq</option>
+                  <option value="sawtooth">Saw</option>
+                </select>
+              </div>
+              <div v-if="filter.lfo1Enabled.value" class="adsr-grid">
+                <div class="adsr-slider">
+                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
+                  <input type="range" :value="filter.lfo1Rate.value" min="0.05" max="20" step="0.05" @input="filter.setLfo1Rate(Number(($event.target as HTMLInputElement).value))" />
+                  <span class="adsr-value">{{ filter.lfo1Rate.value.toFixed(1) }} Hz</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
+                  <input type="range" :value="filter.lfo1Depth.value" min="0" max="1" step="0.01" @input="filter.setLfo1Depth(Number(($event.target as HTMLInputElement).value))" />
+                  <span class="adsr-value">{{ filter.lfo1Depth.value.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- LFO 2 -->
+            <div class="adsr-section">
+              <div class="section-toggle lfo-header">
+                <label class="inline-toggle">
+                  <input type="checkbox" :checked="filter.lfo2Enabled.value" @change="filter.setLfo2Enabled(($event.target as HTMLInputElement).checked)" />
+                  LFO 2
+                </label>
+                <select v-if="filter.lfo2Enabled.value" class="lfo-select" :value="filter.lfo2Target.value" @change="filter.setLfo2Target(($event.target as HTMLSelectElement).value as LfoTarget)">
+                  <option value="cutoff">{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</option>
+                  <option value="resonance">{{ t('latentLab.crossmodal.synth.filter.resonance') }}</option>
+                  <option value="amplitude">{{ t('latentLab.crossmodal.synth.filter.amplitude') }}</option>
+                </select>
+                <select v-if="filter.lfo2Enabled.value" class="lfo-select" :value="filter.lfo2Waveform.value" @change="filter.setLfo2Waveform(($event.target as HTMLSelectElement).value as LfoWaveform)">
+                  <option value="sine">Sine</option>
+                  <option value="triangle">Tri</option>
+                  <option value="square">Sq</option>
+                  <option value="sawtooth">Saw</option>
+                </select>
+              </div>
+              <div v-if="filter.lfo2Enabled.value" class="adsr-grid">
+                <div class="adsr-slider">
+                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
+                  <input type="range" :value="filter.lfo2Rate.value" min="0.05" max="20" step="0.05" @input="filter.setLfo2Rate(Number(($event.target as HTMLInputElement).value))" />
+                  <span class="adsr-value">{{ filter.lfo2Rate.value.toFixed(1) }} Hz</span>
+                </div>
+                <div class="adsr-slider">
+                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
+                  <input type="range" :value="filter.lfo2Depth.value" min="0" max="1" step="0.01" @input="filter.setLfo2Depth(Number(($event.target as HTMLInputElement).value))" />
+                  <span class="adsr-value">{{ filter.lfo2Depth.value.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════ BOX 4: EFFECTS (Delay + Reverb) ═══════ -->
         <div class="synth-box">
           <!-- Delay -->
           <div class="section-toggle">
@@ -973,6 +1102,7 @@ import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
 import { useEffects, type PlateVariant } from '@/composables/useEffects'
+import { useFilter, type FilterType, type LfoWaveform, type LfoTarget } from '@/composables/useFilter'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -1171,6 +1301,7 @@ const sequencerOn = computed(() => sequencerEnabled.value)
 
 // ===== ADSR Envelope + Effects =====
 const envelope = useEnvelope()
+const filter = useFilter()
 const effects = useEffects()
 let envelopeWired = false
 
@@ -1185,9 +1316,13 @@ function wireEnvelope() {
   // Effects chain: returns an input GainNode that routes to destination
   const effectsInput = effects.createChain(ac, ac.destination)
 
-  // Envelope → effects input
+  // Filter → effects input
+  const { input: filterInput, output: filterOutput } = filter.createNode(ac)
+  filterOutput.connect(effectsInput)
+
+  // Envelope → filter input
   const envNode = envelope.createNode(ac)
-  envNode.connect(effectsInput)
+  envNode.connect(filterInput)
 
   // Engines → envelope
   looper.setDestination(envNode)
@@ -1254,6 +1389,7 @@ function releaseCurrentNote() {
     wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
   }
   envelope.triggerRelease()
+  filter.triggerEnvRelease()
   const stopDelay = envelope.releaseMs.value + 50
   setTimeout(() => {
     if (activeKeyNote.value !== null) return
@@ -1301,6 +1437,7 @@ midi.onNote((note, velocity, on) => {
         triggerEngine(n, v)
       }, () => {
         envelope.triggerRelease()
+        filter.triggerEnvRelease()
       })
     } else {
       // Legato: just transpose, envelope continues at sustain
@@ -1323,6 +1460,7 @@ midi.onNote((note, velocity, on) => {
         wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
       }
       envelope.triggerRelease(() => {
+        filter.triggerEnvRelease()
         if (heldNotes.length === 0) {
           if (engineMode.value === 'looper') looper.stop()
           else wavetableOsc.stop()
@@ -2102,6 +2240,7 @@ function triggerEngine(note: number, velocity: number) {
     }
   }
   envelope.triggerAttack(velocity)
+  filter.triggerEnvAttack()
 }
 
 /**
@@ -2212,12 +2351,14 @@ function wireSequencerCallbacks() {
         triggerEngine(n, v)
       }, () => {
         envelope.triggerRelease()
+        filter.triggerEnvRelease()
       })
     },
     // noteOff: stop arpeggiator, fire ADSR release
     () => {
       arpeggiator.stop()
       envelope.triggerRelease()
+      filter.triggerEnvRelease()
     },
   )
 }
@@ -2226,6 +2367,7 @@ function toggleSequencer() {
   if (sequencer.isPlaying.value) {
     sequencer.stop()
     envelope.triggerRelease()
+    filter.triggerEnvRelease()
     return
   }
   wireEnvelope()
@@ -2395,6 +2537,19 @@ interface SynthPreset {
     rate: string
     octaveRange: number
   }
+  filter?: {
+    enabled: boolean
+    type: string
+    cutoff: number
+    resonance: number
+    envAttackMs: number
+    envDecayMs: number
+    envSustain: number
+    envReleaseMs: number
+    envAmount: number
+    lfo1: { enabled: boolean; rate: number; depth: number; waveform: string; target: string }
+    lfo2: { enabled: boolean; rate: number; depth: number; waveform: string; target: string }
+  }
 }
 
 function exportPreset() {
@@ -2456,6 +2611,31 @@ function exportPreset() {
       pattern: arpeggiator.pattern.value,
       rate: arpeggiator.rate.value,
       octaveRange: arpeggiator.octaveRange.value,
+    },
+    filter: {
+      enabled: filter.enabled.value,
+      type: filter.type.value,
+      cutoff: filter.cutoff.value,
+      resonance: filter.resonance.value,
+      envAttackMs: filter.envAttackMs.value,
+      envDecayMs: filter.envDecayMs.value,
+      envSustain: filter.envSustain.value,
+      envReleaseMs: filter.envReleaseMs.value,
+      envAmount: filter.envAmount.value,
+      lfo1: {
+        enabled: filter.lfo1Enabled.value,
+        rate: filter.lfo1Rate.value,
+        depth: filter.lfo1Depth.value,
+        waveform: filter.lfo1Waveform.value,
+        target: filter.lfo1Target.value,
+      },
+      lfo2: {
+        enabled: filter.lfo2Enabled.value,
+        rate: filter.lfo2Rate.value,
+        depth: filter.lfo2Depth.value,
+        waveform: filter.lfo2Waveform.value,
+        target: filter.lfo2Target.value,
+      },
     },
   }
 
@@ -2570,6 +2750,33 @@ async function importPreset(event: Event) {
       arpeggiator.setPattern(preset.arpeggiator.pattern as any ?? 'up')
       arpeggiator.setRate(preset.arpeggiator.rate as any ?? '1/8')
       arpeggiator.setOctaveRange(preset.arpeggiator.octaveRange ?? 2)
+    }
+
+    // Restore filter
+    if (preset.filter) {
+      filter.setType(preset.filter.type as FilterType ?? 'lowpass')
+      filter.setCutoff(preset.filter.cutoff ?? 1)
+      filter.setResonance(preset.filter.resonance ?? 0.7)
+      filter.envAttackMs.value = preset.filter.envAttackMs ?? 0
+      filter.envDecayMs.value = preset.filter.envDecayMs ?? 0
+      filter.envSustain.value = preset.filter.envSustain ?? 1
+      filter.envReleaseMs.value = preset.filter.envReleaseMs ?? 0
+      filter.setEnvAmount(preset.filter.envAmount ?? 0)
+      if (preset.filter.lfo1) {
+        filter.setLfo1Rate(preset.filter.lfo1.rate ?? 2)
+        filter.setLfo1Depth(preset.filter.lfo1.depth ?? 0.3)
+        filter.setLfo1Waveform(preset.filter.lfo1.waveform as LfoWaveform ?? 'sine')
+        filter.setLfo1Target(preset.filter.lfo1.target as LfoTarget ?? 'cutoff')
+        filter.setLfo1Enabled(preset.filter.lfo1.enabled ?? false)
+      }
+      if (preset.filter.lfo2) {
+        filter.setLfo2Rate(preset.filter.lfo2.rate ?? 0.5)
+        filter.setLfo2Depth(preset.filter.lfo2.depth ?? 0.2)
+        filter.setLfo2Waveform(preset.filter.lfo2.waveform as LfoWaveform ?? 'triangle')
+        filter.setLfo2Target(preset.filter.lfo2.target as LfoTarget ?? 'amplitude')
+        filter.setLfo2Enabled(preset.filter.lfo2.enabled ?? false)
+      }
+      filter.setEnabled(preset.filter.enabled ?? false)
     }
 
     // Regenerate audio with restored params
@@ -2853,6 +3060,7 @@ onUnmounted(() => {
   arpeggiator.dispose()
   sequencer.dispose()
   envelope.dispose()
+  filter.dispose()
   effects.dispose()
   looper.dispose()
   wavetableOsc.dispose()
@@ -3867,6 +4075,25 @@ onUnmounted(() => {
 
 .effects-params {
   padding: 0.3rem 0;
+}
+
+.filter-params {
+  padding: 0.3rem 0;
+}
+
+.filter-type-select,
+.lfo-select {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lfo-header {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.4rem;
 }
 
 .arp-select {

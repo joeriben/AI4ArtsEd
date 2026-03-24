@@ -21,6 +21,30 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-24-bias-model-scenarios
+- **Session**: 285
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.textLab.bias.scenarioQwen` (NEW): "Qwen family"
+  - `latentLab.textLab.bias.scenarioMixed` (NEW): "Mixed families"
+  - `latentLab.textLab.bias.scenarioQwenHint` (NEW): "Same model family, different sizes — isolates how scale affects bias."
+  - `latentLab.textLab.bias.scenarioMixedHint` (NEW): "Different model families, similar sizes — isolates how tokenizer and training data affect bias."
+- **Context**: Bias Archaeology now has a toggle between two model preset scenarios: "Qwen family" (same family, 4 sizes) and "Mixed families" (4 different model families at similar sizes). The hints explain the pedagogical purpose of each scenario.
+
+### WO-2026-03-24-synth-filter
+- **Session**: 284
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.filter.title` (NEW): "Filter"
+  - `latentLab.crossmodal.synth.filter.cutoff` (NEW): "Cutoff"
+  - `latentLab.crossmodal.synth.filter.resonance` (NEW): "Resonance"
+  - `latentLab.crossmodal.synth.filter.envelope` (NEW): "Filter Envelope"
+  - `latentLab.crossmodal.synth.filter.envAmount` (NEW): "Amount"
+  - `latentLab.crossmodal.synth.filter.lfoRate` (NEW): "Rate"
+  - `latentLab.crossmodal.synth.filter.lfoDepth` (NEW): "Depth"
+  - `latentLab.crossmodal.synth.filter.amplitude` (NEW): "Amplitude"
+- **Context**: Filter section with LP/HP/BP, cutoff+resonance, filter ADSR envelope, and two LFOs. Audio synthesis terminology — keep technical but short.
+
 ### WO-2026-03-24-synth-presets
 - **Session**: 284
 - **Scope**: en.ts
