@@ -30,6 +30,7 @@ export function useWavetableOsc() {
   const isPlaying = ref(false)
   const frameCount = ref(0)
   const currentFrequency = ref(440)
+  const detectedPitch = ref(0)
 
   /** Accept an external AudioContext (e.g. from looper) for shared routing. */
   function setContext(ac: AudioContext): void {
@@ -146,21 +147,31 @@ export function useWavetableOsc() {
     }
   }
 
-  function extractFrames(buffer: AudioBuffer): Float32Array[] {
+  /** Sum an AudioBuffer to mono, optionally slicing to [startSample, endSample). */
+  function bufferToMono(buffer: AudioBuffer, startSample = 0, endSample = buffer.length): Float32Array {
     const nc = buffer.numberOfChannels
-    const len = buffer.length
-    const sr = buffer.sampleRate
-
-    // Sum to mono
+    const lo = Math.max(0, startSample)
+    const hi = Math.min(buffer.length, endSample)
+    const len = hi - lo
     const mono = new Float32Array(len)
     for (let ch = 0; ch < nc; ch++) {
       const data = buffer.getChannelData(ch)
-      for (let i = 0; i < len; i++) mono[i] = mono[i]! + data[i]!
+      for (let i = 0; i < len; i++) mono[i] = mono[i]! + data[lo + i]!
     }
     if (nc > 1) {
       const scale = 1 / nc
       for (let i = 0; i < len; i++) mono[i] = mono[i]! * scale
     }
+    return mono
+  }
+
+  interface ExtractionResult {
+    frames: Float32Array[]
+    medianPitchHz: number
+  }
+
+  function extractFrames(mono: Float32Array, sr: number): ExtractionResult {
+    const len = mono.length
 
     // Hann window for fallback path (unpitched audio needs windowing for clean loops)
     const hann = new Float32Array(FRAME_SIZE)
@@ -172,6 +183,7 @@ export function useWavetableOsc() {
     // Uses linear-ramp discontinuity fix instead of Hann: preserves ALL harmonics
     // while ensuring seamless looping.
     const result: Float32Array[] = []
+    const pitches: number[] = []
 
     if (len >= PITCH_ANALYSIS_WINDOW) {
       const detector = PitchDetector.forFloat32Array(PITCH_ANALYSIS_WINDOW)
@@ -183,6 +195,7 @@ export function useWavetableOsc() {
         const [pitch, clarity] = detector.findPitch(analysisWindow, sr)
 
         if (clarity >= PITCH_CONFIDENCE_THRESHOLD && pitch > 20 && pitch < 20000) {
+          pitches.push(pitch)
           const periodSamples = Math.round(sr / pitch)
           if (periodSamples < 4 || periodSamples > len) continue
 
@@ -233,13 +246,36 @@ export function useWavetableOsc() {
       result.push(new Float32Array(result[result.length - 1]!))
     }
 
-    return result
+    // Median pitch (sorted middle element)
+    let medianPitchHz = 0
+    if (pitches.length > 0) {
+      pitches.sort((a, b) => a - b)
+      medianPitchHz = pitches[Math.floor(pitches.length / 2)]!
+    }
+
+    return { frames: result, medianPitchHz }
   }
 
-  async function loadFrames(buffer: AudioBuffer): Promise<void> {
-    frames = extractFrames(buffer)
+  /**
+   * Extract wavetable frames from an AudioBuffer.
+   * Optional startSample/endSample limit extraction to a region (for user-selected range).
+   */
+  async function loadFrames(buffer: AudioBuffer, startSample = 0, endSample = buffer.length): Promise<void> {
+    const mono = bufferToMono(buffer, startSample, endSample)
+    const { frames: extracted, medianPitchHz } = extractFrames(mono, buffer.sampleRate)
+    frames = extracted
     frameCount.value = frames.length
     hasFrames.value = true
+    detectedPitch.value = medianPitchHz
+
+    // Default playback at detected pitch so timbre is immediately recognizable
+    if (medianPitchHz > 0) {
+      currentFrequency.value = medianPitchHz
+      if (workletNode) {
+        const freqParam = workletNode.parameters.get('frequency')
+        if (freqParam) freqParam.value = medianPitchHz
+      }
+    }
 
     if (workletNode) {
       workletNode.port.postMessage({ frames })
@@ -354,7 +390,10 @@ export function useWavetableOsc() {
   }
 
   function glideToNote(midiNote: number, timeMs: number): void {
-    const hz = 440 * Math.pow(2, (midiNote - 69) / 12)
+    glideToFrequency(440 * Math.pow(2, (midiNote - 69) / 12), timeMs)
+  }
+
+  function glideToFrequency(hz: number, timeMs: number): void {
     currentFrequency.value = Math.max(20, Math.min(20000, hz))
     if (workletNode) {
       const param = workletNode.parameters.get('frequency')
@@ -462,11 +501,18 @@ export function useWavetableOsc() {
     return ensureContext()
   }
 
+  /** Get frame data for visualization. Returns null if index out of range. */
+  function getFrameData(index: number): Float32Array | null {
+    if (index < 0 || index >= frames.length) return null
+    return frames[index]!
+  }
+
   function dispose(): void {
     stop()
     frames = []
     hasFrames.value = false
     frameCount.value = 0
+    detectedPitch.value = 0
     if (ctx && ctx.state !== 'closed') ctx.close()
     ctx = null
     workletReady = false
@@ -477,6 +523,7 @@ export function useWavetableOsc() {
     isPlaying: readonly(isPlaying),
     frameCount: readonly(frameCount),
     currentFrequency: readonly(currentFrequency),
+    detectedPitch: readonly(detectedPitch),
 
     loadFrames,
     loadRawFrames,
@@ -486,12 +533,14 @@ export function useWavetableOsc() {
     setFrequency,
     setFrequencyFromNote,
     glideToNote,
+    glideToFrequency,
     setScanPosition,
     setInterpolate,
     triggerScanEnvelope,
     stopScanEnvelope,
     setDestination,
     getContext,
+    getFrameData,
     dispose,
   }
 }

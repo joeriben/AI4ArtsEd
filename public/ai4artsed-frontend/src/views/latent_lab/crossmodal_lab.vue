@@ -312,10 +312,10 @@
             {{ looper.bufferDuration.value.toFixed(2) }}s
           </span>
         </div>
-        <!-- Waveform + loop region (always visible when audio loaded) -->
-        <div v-if="engineMode === 'looper'" class="loop-interval">
+        <!-- Waveform + region selection (visible in both engine modes) -->
+        <div v-if="looper.hasAudio.value" class="loop-interval">
           <div class="slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.loopInterval') }}</label>
+            <label>{{ engineMode === 'wavetable' ? t('latentLab.crossmodal.synth.extractionRegion') : t('latentLab.crossmodal.synth.loopInterval') }}</label>
             <span class="slider-value">
               {{ (looper.loopStartFrac.value * looper.bufferDuration.value).toFixed(3) }}s
               – {{ (looper.loopEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
@@ -409,6 +409,9 @@
                 <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
                 {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
               </label>
+              <button v-if="wtMode === 'extract' && looper.hasAudio.value" class="wt-reextract-btn" @click="reextractFromRegion">
+                {{ t('latentLab.crossmodal.synth.wtReextract') }}
+              </button>
             </div>
             <div v-if="wtMode === 'semantic'" class="wt-build-section" v-memo="[wtBuildAxis, wtBuildFrameCount, wtBuilding, wtBuildProgress, wtBuildProgressCurrent]">
               <div class="wt-build-row">
@@ -443,7 +446,12 @@
             <!-- Scan position with range brackets -->
             <div class="slider-header">
               <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
-              <span class="slider-value">{{ scanDisplayFrame }} / {{ wavetableOsc.frameCount.value }}</span>
+              <span class="slider-value">
+                {{ scanDisplayFrame }} / {{ wavetableOsc.frameCount.value }}
+                <template v-if="wavetableOsc.detectedPitch.value > 0">
+                  @ {{ Math.round(wavetableOsc.detectedPitch.value) }} Hz
+                </template>
+              </span>
             </div>
             <div class="wt-scan-track" ref="scanTrackEl">
               <div class="wt-range-band" :style="rangeBandStyle" />
@@ -457,6 +465,8 @@
               <input type="checkbox" :checked="wtInterpolate" @change="onWtInterpolateChange" />
               {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
             </label>
+            <!-- Frame waveform visualizer -->
+            <canvas v-if="wavetableOsc.hasFrames.value" ref="wtFrameCanvasRef" class="wt-frame-canvas" />
           </div>
 
           <!-- Normalize + Peak -->
@@ -1174,6 +1184,61 @@ function drawWaveform() {
 // ===== Wavetable Oscillator =====
 const wavetableOsc = useWavetableOsc()
 const wavetableScan = ref(0)
+const wtFrameCanvasRef = ref<HTMLCanvasElement | null>(null)
+
+/** Re-extract wavetable frames from the user-selected waveform region. */
+async function reextractFromRegion() {
+  const buf = looper.getOriginalBuffer()
+  if (!buf) return
+  const startSample = Math.floor(looper.loopStartFrac.value * buf.length)
+  const endSample = Math.ceil(looper.loopEndFrac.value * buf.length)
+  await wavetableOsc.loadFrames(buf, startSample, endSample)
+  wtRangeStart.value = 0
+  wtRangeEnd.value = wavetableOsc.frameCount.value
+  drawWtFrame()
+}
+
+/** Draw the current scan-position frame waveform on the visualizer canvas. */
+function drawWtFrame() {
+  const canvas = wtFrameCanvasRef.value
+  if (!canvas || !wavetableOsc.hasFrames.value) return
+  const c = canvas.getContext('2d')
+  if (!c) return
+  const dpr = window.devicePixelRatio || 1
+  const w = canvas.clientWidth
+  const h = canvas.clientHeight
+  if (w === 0 || h === 0) return
+  canvas.width = w * dpr
+  canvas.height = h * dpr
+  c.scale(dpr, dpr)
+  c.clearRect(0, 0, w, h)
+
+  // Determine which frame to draw based on scan position
+  const total = wavetableOsc.frameCount.value
+  const frameIdx = Math.min(Math.floor(wavetableScan.value * total), total - 1)
+  const data = wavetableOsc.getFrameData(frameIdx)
+  if (!data) return
+
+  const mid = h / 2
+  const step = data.length / w
+  c.strokeStyle = 'rgba(76, 175, 80, 0.8)'
+  c.lineWidth = 1
+  c.beginPath()
+  for (let x = 0; x < w; x++) {
+    const idx = Math.floor(x * step)
+    const y = mid - data[idx]! * mid * 0.9
+    if (x === 0) c.moveTo(x, y)
+    else c.lineTo(x, y)
+  }
+  c.stroke()
+
+  // Zero line
+  c.strokeStyle = 'rgba(255, 255, 255, 0.1)'
+  c.beginPath()
+  c.moveTo(0, mid)
+  c.lineTo(w, mid)
+  c.stroke()
+}
 type WtMode = 'extract' | 'semantic'
 const wtMode = ref<WtMode>('extract')
 const wtBuildAxis = ref('')
@@ -1455,11 +1520,10 @@ midi.onNote((note, velocity, on) => {
       })
     } else {
       // Legato: just transpose, envelope continues at sustain
-      const semitones = note - MIDI_REF_NOTE
       if (engineMode.value === 'looper') {
-        looper.setTranspose(semitones)
+        looper.setTranspose(note - MIDI_REF_NOTE)
       } else {
-        wavetableOsc.setFrequencyFromNote(note)
+        wavetableOsc.setFrequency(wtFreqForNote(note))
       }
     }
   } else {
@@ -1486,7 +1550,7 @@ midi.onNote((note, velocity, on) => {
       if (engineMode.value === 'looper') {
         looper.setTranspose(lastNote - MIDI_REF_NOTE)
       } else {
-        wavetableOsc.setFrequencyFromNote(lastNote)
+        wavetableOsc.setFrequency(wtFreqForNote(lastNote))
       }
     }
   }
@@ -2238,6 +2302,17 @@ function setSequencerEnabled(on: boolean) {
 }
 
 /** Trigger the active synthesis engine for a given note + velocity (MIDI/sequencer). */
+/**
+ * Wavetable frequency from MIDI note: transpose relative to detected pitch.
+ * MIDI_REF_NOTE (C3=60) plays at the sample's detected pitch; other notes
+ * transpose from there — just like the looper transposes by semitones.
+ */
+function wtFreqForNote(note: number): number {
+  const basePitch = wavetableOsc.detectedPitch.value || 440
+  const semitones = note - MIDI_REF_NOTE
+  return basePitch * Math.pow(2, semitones / 12)
+}
+
 function triggerEngine(note: number, velocity: number) {
   wireEnvelope()
   filter.setNote(note)
@@ -2246,7 +2321,7 @@ function triggerEngine(note: number, velocity: number) {
     looper.setTranspose(semitones)
     if (looper.hasAudio.value) looper.retrigger()
   } else {
-    wavetableOsc.setFrequencyFromNote(note)
+    wavetableOsc.setFrequency(wtFreqForNote(note))
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) {
       wavetableOsc.start()
     }
@@ -2267,7 +2342,7 @@ function glideEngine(note: number, timeMs: number) {
   if (engineMode.value === 'looper') {
     looper.glideToSemitones(semitones, timeMs)
   } else {
-    wavetableOsc.glideToNote(note, timeMs)
+    wavetableOsc.glideToFrequency(wtFreqForNote(note), timeMs)
   }
 }
 
@@ -2331,6 +2406,7 @@ async function buildSemanticWavetable() {
       wavetableOsc.loadRawFrames(rawFrames)
       wtRangeStart.value = 0
       wtRangeEnd.value = wavetableOsc.frameCount.value
+      nextTick(drawWtFrame)
 
       // Auto-switch to wavetable engine and start playing
       if (engineMode.value !== 'wavetable') setEngineMode('wavetable')
@@ -2358,10 +2434,12 @@ function onScanInput(event: Event) {
   const val = parseFloat((event.target as HTMLInputElement).value)
   wavetableScan.value = val
   wavetableOsc.setScanPosition(mappedScanPosition(val))
+  drawWtFrame()
 }
 
 watch(wavetableScan, (v) => {
   wavetableOsc.setScanPosition(mappedScanPosition(v))
+  drawWtFrame()
 })
 
 function onWtInterpolateChange(event: Event) {
@@ -3026,12 +3104,13 @@ async function runSynth() {
       nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
 
-      // Extract wavetable frames from the new buffer
+      // Extract wavetable frames from the new buffer (full buffer on auto-extract)
       const buf = looper.getOriginalBuffer()
       if (buf) {
         await wavetableOsc.loadFrames(buf)
         wtRangeStart.value = 0
         wtRangeEnd.value = wavetableOsc.frameCount.value
+        nextTick(drawWtFrame)
       }
 
       // Enforce correct engine mode
@@ -3040,7 +3119,15 @@ async function runSynth() {
         const ac = looper.getContext()
         wavetableOsc.setContext(ac)
         if (!envelopeWired) wireEnvelope()
-        if (wavetableOsc.hasFrames.value) await wavetableOsc.start()
+        if (wavetableOsc.hasFrames.value) {
+          // Silence DCA before starting — sound only via note trigger / ADSR
+          const dcaGain = modulation.getDcaGainNode()
+          if (dcaGain) {
+            dcaGain.gain.cancelScheduledValues(ac.currentTime)
+            dcaGain.gain.setValueAtTime(0, ac.currentTime)
+          }
+          await wavetableOsc.start()
+        }
       }
 
       // Restore transport: play if was playing or first generation
@@ -3169,15 +3256,17 @@ function onKeyDown(e: KeyboardEvent) {
   }
 }
 
+function onResize() { drawWaveform(); drawWtFrame() }
+
 onMounted(() => {
   window.addEventListener('keydown', onKeyDown)
-  window.addEventListener('resize', drawWaveform)
+  window.addEventListener('resize', onResize)
   fetchSemanticAxes()
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeyDown)
-  window.removeEventListener('resize', drawWaveform)
+  window.removeEventListener('resize', onResize)
   arpeggiator.dispose()
   sequencer.dispose()
   modulation.dispose()
@@ -4134,6 +4223,30 @@ onUnmounted(() => {
   border-radius: 3px;
   margin-left: 0.3rem;
   font-weight: 600;
+}
+
+/* Re-extract button */
+.wt-reextract-btn {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  background: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.wt-reextract-btn:hover {
+  background: rgba(76, 175, 80, 0.25);
+}
+
+/* Frame waveform visualizer */
+.wt-frame-canvas {
+  width: 100%;
+  height: 60px;
+  margin-top: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
 }
 
 /* Wavetable controls */

@@ -21,6 +21,13 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-24-wavetable-region-extraction
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.extractionRegion` (NEW): "Extraction region"
+  - `latentLab.crossmodal.synth.wtReextract` (NEW): "Re-extract"
+- **Context**: Wavetable extraction now shows the waveform with region markers in wavetable mode too. "Extraction region" labels the region selector (replaces "Loop interval" contextually). "Re-extract" button re-runs frame extraction from the selected region only.
+
 ### WO-2026-03-24-synth-glide-recording
 - **Scope**: en.ts
 - **Changed keys** (new):
