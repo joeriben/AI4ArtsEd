@@ -33,6 +33,7 @@ export function useEffects() {
   let delaySend: GainNode | null = null
   let delayNode: DelayNode | null = null
   let feedbackGain: GainNode | null = null
+  let feedbackFilter: BiquadFilterNode | null = null  // LP in feedback loop — analog warmth
   let delayOut: GainNode | null = null
 
   // Reverb
@@ -96,10 +97,18 @@ export function useEffects() {
     delayOut = ac.createGain()
     delayOut.gain.value = 1
 
+    // Analog-style feedback damping: LP filter in feedback path
+    // Each repeat loses highs, like BBD/tape delay
+    feedbackFilter = ac.createBiquadFilter()
+    feedbackFilter.type = 'lowpass'
+    feedbackFilter.frequency.value = 4000  // ~4kHz — warm but not muddy
+    feedbackFilter.Q.value = 0.7           // Butterworth, no resonance
+
     inputNode.connect(delaySend)
     delaySend.connect(delayNode)
     delayNode.connect(feedbackGain)
-    feedbackGain.connect(delayNode)  // feedback loop
+    feedbackGain.connect(feedbackFilter)
+    feedbackFilter.connect(delayNode)  // feedback loop with damping
     delayNode.connect(delayOut)
     delayOut.connect(mixBus)
 
@@ -236,6 +245,7 @@ export function useEffects() {
     if (delaySend) { delaySend.disconnect(); delaySend = null }
     if (delayNode) { delayNode.disconnect(); delayNode = null }
     if (feedbackGain) { feedbackGain.disconnect(); feedbackGain = null }
+    if (feedbackFilter) { feedbackFilter.disconnect(); feedbackFilter = null }
     if (delayOut) { delayOut.disconnect(); delayOut = null }
     if (reverbSend) { reverbSend.disconnect(); reverbSend = null }
     if (convolver) { convolver.disconnect(); convolver = null }
