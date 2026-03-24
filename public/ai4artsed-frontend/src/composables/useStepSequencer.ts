@@ -26,8 +26,8 @@ export interface Preset {
   steps: Step[]
 }
 
-export type StepCountOption = 5 | 8 | 16 | 32
-export const STEP_COUNT_OPTIONS: StepCountOption[] = [5, 8, 16, 32]
+export type StepCountOption = 5 | 8 | 10 | 16 | 32
+export const STEP_COUNT_OPTIONS: StepCountOption[] = [5, 8, 10, 16, 32]
 
 /** Note division: how long each step lasts relative to a beat */
 export type NoteDivision = '1/1' | '1/2' | '1/4' | '1/8' | '1/16'
@@ -44,94 +44,120 @@ function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step
 // Named after sequencer traditions, not arpeggios.
 const PRESETS: Preset[] = [
   {
-    // Eastcoast classic: minor pentatonic, 5 steps, accented root
-    // Moog/Buchla-era East Coast modular — melodic, tonal center
+    // Eastcoast: Moog-style bass (Switched-On Bach). 8 steps, C minor pentatonic.
     name: 'eastcoast',
     steps: [
-      makeStep(0, 1.0, 0.9),   // root, accent
-      makeStep(3, 0.7, 0.8),   // minor 3rd
-      makeStep(5, 0.8, 0.8),   // 4th
-      makeStep(7, 0.7, 0.8),   // 5th
-      makeStep(10, 0.9, 0.7),  // minor 7th
+      makeStep(0, 0.94, 0.8),   // C2 root, accent
+      makeStep(4, 0.78, 0.5),   // E2, short
+      makeStep(7, 0.94, 0.8),   // G2
+      makeStep(12, 0.71, 0.5),  // C3, soft+short
+      makeStep(4, 0.86, 0.8),   // E2
+      makeStep(0, 0.78, 0.5),   // C2, soft
+      makeStep(7, 0.94, 0.8),   // G2
+      makeStep(4, 0.71, 0.5),   // E2, soft+short
     ],
   },
   {
-    // Westcoast: non-standard intervals, varied gates, exploratory
-    // Buchla-inspired — less tonal, more timbral
+    // Westcoast: Buchla 245 / Suzanne Ciani. 5 steps, atonal, variable pulses.
     name: 'westcoast',
     steps: [
-      makeStep(0, 1.0, 0.6),   // root, short gate
-      makeStep(6, 0.6, 1.0),   // tritone, long gate
-      makeStep(2, 0.8, 0.4),   // major 2nd, staccato
-      makeStep(9, 0.5, 0.9),   // major 6th, soft
-      makeStep(5, 0.9, 0.5),   // 4th
-      makeStep(11, 0.4, 1.0),  // major 7th, quiet + legato
-      makeStep(1, 0.7, 0.3),   // minor 2nd, staccato
-      makeStep(8, 0.8, 0.7),   // augmented 5th
+      makeStep(0, 0.71, 0.4),   // A3
+      makeStep(4, 1.0, 1.0),    // C#4, accent+legato
+      makeStep(-4, 0.55, 0.2),  // F3, quiet+staccato
+      makeStep(7, 0.86, 0.6),   // Eb4
+      makeStep(1, 0.78, 0.8),   // Bb3
     ],
   },
   {
-    // British: New Order / Depeche Mode — 16th note bass sequences
-    // Driving octave-root patterns with syncopation
-    name: 'british',
-    steps: [
-      makeStep(0, 1.0, 0.9),   // root accent
-      makeStep(0, 0.5, 0.3),   // ghost note
-      makeStep(0, 0.7, 0.6),
-      makeStep(12, 0.9, 0.4),  // octave, short
-      makeStep(0, 0.8, 0.9),
-      makeStep(0, 0.3, 0.2, false), // rest
-      makeStep(7, 0.8, 0.6),   // 5th
-      makeStep(5, 0.7, 0.5),   // 4th
-    ],
-  },
-  {
-    // Kraftwerk: precise, mechanical, equal velocity, strict gate
-    // Robotic feel, chromatic movement, 16 steps
-    name: 'kraftwerk',
-    steps: [
-      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
-      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
-      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
-      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
-      makeStep(7, 0.9, 0.5), makeStep(7, 0.9, 0.5),
-      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
-      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
-      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
-    ],
-  },
-  {
-    // Synthwave: retro 80s arpeggiated chords, wide intervals, pumping gates
+    // Synthwave: Perturbator/Kavinsky arpeggios. 16 steps, up-down C major.
     name: 'synthwave',
     steps: [
-      makeStep(0, 1.0, 0.9),   // root
-      makeStep(7, 0.7, 0.7),   // 5th
-      makeStep(12, 0.8, 0.7),  // octave
-      makeStep(16, 0.6, 0.6),  // major 3rd + octave
-      makeStep(19, 0.9, 0.8),  // 5th + octave
-      makeStep(16, 0.6, 0.6),
-      makeStep(12, 0.8, 0.7),
-      makeStep(7, 0.7, 0.7),
+      makeStep(0, 1.0, 0.6),    // C3
+      makeStep(4, 1.0, 0.6),    // E3
+      makeStep(7, 1.0, 0.6),    // G3
+      makeStep(12, 1.0, 0.6),   // C4
+      makeStep(16, 1.0, 0.6),   // E4
+      makeStep(19, 1.0, 0.6),   // G4
+      makeStep(24, 1.0, 0.6),   // C5
+      makeStep(19, 1.0, 0.6),   // G4
+      makeStep(16, 1.0, 0.6),   // E4
+      makeStep(12, 1.0, 0.6),   // C4
+      makeStep(7, 1.0, 0.6),    // G3
+      makeStep(4, 1.0, 0.6),    // E3
+      makeStep(0, 1.0, 0.6),    // C3
+      makeStep(4, 1.0, 0.6),    // E3
+      makeStep(7, 1.0, 0.6),    // G3
+      makeStep(12, 1.0, 0.6),   // C4
     ],
   },
   {
-    // Trance gate: same note, rhythmic gating creates pattern from texture
+    // Techno: TB-303-style acid. 16 steps, C1+G1 with rests.
+    name: 'techno',
+    steps: [
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(7, 0.86, 0.2),   // G1
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(7, 0.86, 0.2),   // G1
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(7, 0.86, 0.2),   // G1
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(0, 1.0, 0.2),    // C1
+      makeStep(7, 0.86, 0.2),   // G1
+    ],
+  },
+  {
+    // Ambient: Brian Eno evolving pads. 16 steps, C major held notes, rising dynamics.
+    name: 'ambient',
+    steps: [
+      makeStep(0, 0.63, 1.0),   // C4 ×4
+      makeStep(0, 0.63, 1.0),
+      makeStep(0, 0.63, 1.0),
+      makeStep(0, 0.63, 1.0),
+      makeStep(4, 0.71, 1.0),   // E4 ×4
+      makeStep(4, 0.71, 1.0),
+      makeStep(4, 0.71, 1.0),
+      makeStep(4, 0.71, 1.0),
+      makeStep(7, 0.78, 1.0),   // G4 ×4
+      makeStep(7, 0.78, 1.0),
+      makeStep(7, 0.78, 1.0),
+      makeStep(7, 0.78, 1.0),
+      makeStep(12, 0.86, 1.0),  // C5 ×4
+      makeStep(12, 0.86, 1.0),
+      makeStep(12, 0.86, 1.0),
+      makeStep(12, 0.86, 1.0),
+    ],
+  },
+  {
+    // IDM/Glitch: Autechre-inspired. 10 steps, irregular, extreme gate variation.
+    name: 'idm_glitch',
+    steps: [
+      makeStep(0, 1.0, 0.1),    // F#4
+      makeStep(3, 0.39, 0.9),   // A4, soft+legato
+      makeStep(6, 1.0, 0.05),   // C5, staccatissimo
+      makeStep(4, 0.63, 0.7),   // Bb4
+      makeStep(9, 1.0, 0.15),   // D5, staccato
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(1, 0.78, 0.4),   // G4
+      makeStep(11, 1.0, 0.2),   // E5
+      makeStep(0, 0.71, 0.6),   // F#4
+      makeStep(6, 1.0, 1.0),    // C5, accent+legato
+    ],
+  },
+  {
+    // Trance gate: same note, rhythmic gating, accent pattern.
     name: 'trance_gate',
     steps: [
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
       makeStep(0, 1.0, 0.9), makeStep(0, 0.4, 0.3),
-    ],
-  },
-  {
-    // Bass groove: sub-octave movement with ghost notes
-    name: 'bass_groove',
-    steps: [
-      makeStep(-12, 1.0, 0.9), makeStep(-12, 0.4, 0.3),
-      makeStep(-5, 1.0, 0.9), makeStep(-5, 0.4, 0.3),
-      makeStep(-2, 1.0, 0.9), makeStep(-2, 0.4, 0.3),
-      makeStep(-7, 1.0, 0.9), makeStep(-7, 0.4, 0.3),
     ],
   },
 ]
@@ -293,15 +319,35 @@ export function useStepSequencer() {
     const wasPlaying = isPlaying.value
     if (wasPlaying) stop()
 
-    // Adapt preset to current step count:
-    // fill grid by wrapping or truncating
-    const count = stepCount.value
+    // Set step count to match preset length (snap to nearest valid option)
+    const presetLen = preset.steps.length
+    const bestCount = STEP_COUNT_OPTIONS.reduce((best, opt) =>
+      Math.abs(opt - presetLen) < Math.abs(best - presetLen) ? opt : best
+    , STEP_COUNT_OPTIONS[0]!)
+    stepCount.value = Math.max(bestCount, presetLen) as StepCountOption
+
+    // Load preset steps, pad with defaults if needed
     steps.length = 0
-    for (let i = 0; i < count; i++) {
-      const src = preset.steps[i % preset.steps.length]!
-      steps.push({ ...src })
+    for (let i = 0; i < stepCount.value; i++) {
+      if (i < preset.steps.length) {
+        steps.push({ ...preset.steps[i]! })
+      } else {
+        steps.push(makeStep(0, 0.8, 0.8, false)) // pad with inactive steps
+      }
     }
 
+    if (wasPlaying && audioCtx) start(audioCtx)
+  }
+
+  /** Reset grid to uniform defaults (all C3, gate 80%, velocity 80%) */
+  function resetGrid() {
+    const wasPlaying = isPlaying.value
+    if (wasPlaying) stop()
+    presetIndex.value = -1
+    steps.length = 0
+    for (let i = 0; i < stepCount.value; i++) {
+      steps.push(makeStep(0, 0.8, 0.8, true))
+    }
     if (wasPlaying && audioCtx) start(audioCtx)
   }
 
@@ -404,6 +450,7 @@ export function useStepSequencer() {
     setDivision,
     setStepCount,
     loadPreset,
+    resetGrid,
     setStepActive,
     setStepSemitone,
     setStepVelocity,

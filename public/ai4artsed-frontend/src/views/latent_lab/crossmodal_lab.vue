@@ -2372,7 +2372,11 @@ function onBpmInput(event: Event) {
 
 function onPresetChange(event: Event) {
   const idx = parseInt((event.target as HTMLSelectElement).value)
-  if (idx >= 0) sequencer.loadPreset(idx)
+  if (idx >= 0) {
+    sequencer.loadPreset(idx)
+  } else {
+    sequencer.resetGrid()
+  }
 }
 
 function onStepSemitoneInput(idx: number, event: Event) {
