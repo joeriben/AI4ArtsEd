@@ -2585,6 +2585,15 @@ interface SynthPreset {
     sustain: number
     releaseMs: number
   }
+  modulation?: {
+    envs: Array<{ attackMs: number; decayMs: number; sustain: number; releaseMs: number; amount: number; target: string; loop: boolean }>
+    lfos: Array<{ rate: number; depth: number; waveform: string; target: string; mode: string }>
+  }
+  wavetable?: {
+    scan: number; interpolate: boolean
+    scanAttack: number; scanDecay: number; scanRelease: number
+    rangeStart: number; rangeEnd: number
+  }
   effects: {
     delayEnabled: boolean
     delayTimeMs: number
