@@ -2204,12 +2204,7 @@ function setSequencerEnabled(on: boolean) {
     sequencer.stop()
     arpeggiator.stop()
   }
-  if (on && transport.value === 'playing') {
-    wireEnvelope()
-    wireSequencerCallbacks()
-    const ac = looper.getContext()
-    sequencer.start(ac)
-  }
+  // Don't auto-start — user clicks Play explicitly
 }
 
 /** Trigger the active synthesis engine for a given note + velocity (MIDI/sequencer). */
