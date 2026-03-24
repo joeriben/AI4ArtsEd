@@ -2152,6 +2152,15 @@ function transportPlay() {
     looper.replay()
   } else {
     if (wavetableOsc.hasFrames.value) {
+      // Silence DCA before starting oscillator — sound only comes through
+      // when a note triggers the attack envelope (prevents hanging tone)
+      wireEnvelope()
+      const dcaGain = modulation.getDcaGainNode()
+      if (dcaGain) {
+        const ac = looper.getContext()
+        dcaGain.gain.cancelScheduledValues(ac.currentTime)
+        dcaGain.gain.setValueAtTime(0, ac.currentTime)
+      }
       wavetableOsc.start()
       // Trigger scan sweep if ADR configured (deferred if worklet not yet ready)
       if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
