@@ -99,6 +99,9 @@ export function useModulation() {
   const lfoOscs: (OscillatorNode | null)[] = [null, null]
   const lfoGains: (GainNode | null)[] = [null, null]
 
+  // Track current LFO connection targets to avoid disconnect/reconnect glitches
+  const lfoCurrentParams: (AudioParam | null)[] = [null, null]
+
   // LFO callback polling
   let lfoRafId: number | null = null
   const lfoAnalysers: (AnalyserNode | null)[] = [null, null]
@@ -118,7 +121,11 @@ export function useModulation() {
   }
 
   function createLfoNodes(ac: AudioContext, idx: number): void {
-    // Clean up old
+    // Clean up old — disconnect from tracked param first to avoid orphaned connections
+    if (lfoCurrentParams[idx]) {
+      try { lfoGains[idx]?.disconnect(lfoCurrentParams[idx]!) } catch { /* noop */ }
+      lfoCurrentParams[idx] = null
+    }
     if (lfoOscs[idx]) { try { lfoOscs[idx]!.stop() } catch { /* noop */ }; lfoOscs[idx]!.disconnect() }
     if (lfoGains[idx]) lfoGains[idx]!.disconnect()
     if (lfoAnalysers[idx]) lfoAnalysers[idx]!.disconnect()
@@ -473,32 +480,45 @@ export function useModulation() {
       const lfo = lfos[i]!
       if (!gain || !osc) continue
 
-      try { gain.disconnect() } catch { /* noop */ }
-      // Reconnect analyser
-      const analyser = lfoAnalysers[i]
-      if (analyser) gain.connect(analyser)
-
       osc.frequency.value = lfo.rate.value
       osc.type = lfo.waveform.value
 
-      if (lfo.target.value === 'none' || lfo.depth.value === 0) {
+      const newTarget = lfo.target.value
+      const inactive = newTarget === 'none' || lfo.depth.value === 0
+      const isCallback = !inactive && isCallbackTarget(newTarget)
+      const newParam = (!inactive && !isCallback) ? (targetParams[newTarget] ?? null) : null
+
+      const prevParam = lfoCurrentParams[i]
+
+      // Only reconnect if target changed — avoids disconnect/reconnect glitch
+      if (newParam !== prevParam) {
+        // Connect to new target BEFORE disconnecting old (atomic swap)
+        if (newParam) gain.connect(newParam)
+        if (prevParam) { try { gain.disconnect(prevParam) } catch { /* noop */ } }
+        lfoCurrentParams[i] = newParam
+      }
+
+      // Ensure analyser is always connected (for callback target readback)
+      const analyser = lfoAnalysers[i]
+      if (analyser) { try { gain.connect(analyser) } catch { /* already connected */ } }
+
+      if (inactive) {
         gain.gain.value = 0
         continue
       }
 
-      // Callback target: polling handles it, just set gain for analyser readback
-      if (isCallbackTarget(lfo.target.value)) {
-        gain.gain.value = 1 // analyser reads raw oscillator output
+      if (isCallback) {
+        gain.gain.value = 1
         startLfoCallbackPolling()
         continue
       }
 
-      const param = targetParams[lfo.target.value]
-      if (!param) { gain.gain.value = 0; continue }
-
-      const baseVal = targetBaseGetters[lfo.target.value]?.() ?? param.value
-      gain.gain.value = baseVal * lfo.depth.value
-      gain.connect(param)
+      if (newParam) {
+        const baseVal = targetBaseGetters[newTarget]?.() ?? newParam.value
+        gain.gain.value = baseVal * lfo.depth.value
+      } else {
+        gain.gain.value = 0
+      }
     }
   }
 
@@ -534,6 +554,7 @@ export function useModulation() {
     }
     if (lfoRafId !== null) cancelAnimationFrame(lfoRafId)
     for (let i = 0; i < 2; i++) {
+      lfoCurrentParams[i] = null
       if (lfoOscs[i]) { try { lfoOscs[i]!.stop() } catch { /* noop */ }; lfoOscs[i]!.disconnect() }
       if (lfoGains[i]) lfoGains[i]!.disconnect()
       if (lfoAnalysers[i]) lfoAnalysers[i]!.disconnect()
