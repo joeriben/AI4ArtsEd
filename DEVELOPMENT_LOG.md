@@ -1,22 +1,57 @@
 # Development Log
 
-## Session 284 - Dimension Explorer: Relative/Absolute Modes + Alpha Extrapolation
+## Session 284 - Synth Architecture: Modulation Bank, Filter, Presets, Dim Explorer Modes
 **Date:** 2026-03-24
-**Focus:** Dimension Explorer bekommt zwei Modi (Relativ/Absolut) fuer intuitivere per-Dimension A/B-Kontrolle. Alpha-Slider fuer Extrapolation geoeffnet mit automatischer Magnitude-Renormalisierung.
+**Focus:** Grundlegender Architektur-Umbau des Latent Audio Synth: Modulationssystem (3 ENV + 2 LFO), reiner Filter mit Mix/Kbd Track, Preset Export/Import, Dimension Explorer Modi.
 
-### Changes
-1. **Dimension Explorer — Relative Mode** (Default): Per-Dimension Mix zwischen Prompt A (oben, orange) und Prompt B (unten, blau). Wert -1..+1 = Mix-Faktor, wird vor API-Call in tatsaechliche Offsets konvertiert. A/B-Referenz-Ticks pro Balken.
-2. **Dimension Explorer — Absolute Mode**: Bestehende Funktionalitaet (direkte Offsets). Neu: gestrichelte A/B-Korridorlinien (orange/blau) wenn beide Prompts vorhanden.
-3. **Mode Toggle**: Radio-Buttons wie Engine Switch (Looper/Wavetable). Wechsel loescht Offsets (mit Undo). Relative Mode disabled ohne Prompt B.
-4. **Alpha Extrapolation**: Slider-Range von ±1 auf ±2 erweitert. Backend renormalisiert nach Extrapolation (alpha ausserhalb [0,1]) automatisch auf Midpoint-L2-Norm. Magnitude-Slider bleibt orthogonal — Richtung vs. Skalierung sind getrennte Konzepte.
-5. **Backend**: `_compute_stats()` liefert `emb_a_values` und `emb_b_values` (per-Dimension Referenzwerte).
-6. **i18n**: 4 neue Keys in en.ts, Work Order fuer Translator.
+### Dimension Explorer — Relative/Absolute Modes
+1. **Relative Mode** (Default): Per-Dimension Mix zwischen Prompt A (oben, orange) und Prompt B (unten, blau). Mix-Faktor -1..+1, wird vor API-Call in Offsets konvertiert.
+2. **Absolute Mode**: Direkte Offsets (bestehend). Neu: gestrichelte A/B-Korridorlinien.
+3. **Mode Toggle**: Radio-Buttons, Wechsel loescht Offsets (mit Undo).
+
+### Alpha Extrapolation
+- Slider-Range von ±1 auf ±2 erweitert
+- Backend renormalisiert nach Extrapolation automatisch auf Midpoint-L2-Norm
+- Magnitude-Slider bleibt orthogonal (Richtung vs. Skalierung getrennt)
+
+### Preset Export/Import
+- Kompletter Synth-State als JSON exportierbar (Prompts, Params, Offsets, Axes, Envelope, Filter, Effects, Sequencer, Arpeggiator)
+- Import laedt alles und triggert `runSynth()` zur Audio-Regeneration
+- Version-Feld fuer zukuenftige Migration
+- Buttons in eigener Box oberhalb MIDI-Section
+
+### Modulation Bank (MAJOR REFACTOR)
+- **`useModulation.ts`** (neu): 3 ADSR-Envelopes + 2 LFOs
+- Jeder Modulator frei zuweisbar: DCA, DCF_CUTOFF, PITCH, NONE
+- Envelopes: ADSR + Amount + Loop-Toggle
+- LFOs: Rate + Depth + Waveform (Sine/Tri/Sq/Saw) + Target
+- Getter-basierte Basiswerte: liest aktuellen Cutoff bei Trigger (nicht gecached)
+- Ersetzt alte `useEnvelope.ts` (monolithisch, nur DCA)
+
+### Filter Redesign
+- **`useFilter.ts`** (Rewrite): Reiner Filter ohne eingebettete Modulatoren
+- **Wet/Dry Mix**: Parallele Pfade mit Equal-Power Crossfade (0% = ungefiltert, 100% = voll gefiltert)
+- **Keyboard Tracking**: Cutoff folgt MIDI-Note (0-100%, relativ zu C3)
+- LP/HP/BP mit Cutoff (log 20-20kHz) und Resonance (exp Q-Mapping)
+- Signalkette: Engines → DCA GainNode → Filter (Mix) → Delay/Reverb → Out
+
+### Wavetable Scan Position Marker
+- Gruener dynamischer Marker auf dem Scan-Track zeigt aktuelle Frame-Position
+- CSS transition fuer smooth movement, ergaenzt die statischen lila Brackets
 
 ### Technical Notes
-- Renormalisierung: `result * (midpoint_norm / result_norm)` — nur bei Extrapolation, vor Magnitude-Scaling
-- MIDI CC1 Range entsprechend auf ±2 angepasst
-- `synthFingerprint()` enthaelt jetzt `spectralMode` — Modus-Wechsel triggert Regeneration bei MIDI-Note
-- `prevStats` Snapshot vor `embeddingStats = null` — verhindert Race Condition bei Relative→Offset-Konvertierung
+- Backend: `_compute_stats()` liefert `emb_a_values`/`emb_b_values` fuer Relative Mode
+- Backend: `_manipulate_embedding()` renormalisiert nach Extrapolation (Midpoint-L2-Norm)
+- Modulation targets nutzen `() => number` Getter statt statische Werte
+- `synthFingerprint()` enthaelt `spectralMode`
+- `prevStats` Snapshot vor `embeddingStats = null` (Race Condition Fix)
+- Offline-Envelope fuer WAV-Export entfernt (war an `useEnvelope.applyToSamples` gebunden)
+
+### Open Items
+- Pitch als Modulation-Target (braucht Zugriff auf Looper's `playbackRate`)
+- WT Scan als Modulation-Target (Callback-basiert, nicht AudioParam)
+- Polyphonie (Voice Pool)
+- Bessere Sequenzen
 
 ## Session 283 - Latent Audio Synth: Envelope Fixes, Effects, Arpeggiator, UI Overhaul
 **Date:** 2026-03-23
