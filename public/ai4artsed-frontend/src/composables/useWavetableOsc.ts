@@ -130,6 +130,22 @@ export function useWavetableOsc() {
    *    resample to FRAME_SIZE via Lanczos sinc, apply Hann window
    * 4. Fallback for unpitched/noisy audio: overlapping windowed extraction (50% overlap + Hann)
    */
+  /**
+   * Make a frame seamlessly loopable by spreading the loop-point discontinuity
+   * as an imperceptible linear slope across all samples. Standard wavetable
+   * technique — preserves harmonics (unlike Hann which destroys them).
+   */
+  function makeLoopSafe(frame: Float32Array): void {
+    const n = frame.length
+    if (n < 2) return
+    const disc = frame[0]! - frame[n - 1]!
+    if (Math.abs(disc) < 1e-7) return
+    const step = disc / (n - 1)
+    for (let i = 0; i < n; i++) {
+      frame[i]! -= step * (n - 1 - i)
+    }
+  }
+
   function extractFrames(buffer: AudioBuffer): Float32Array[] {
     const nc = buffer.numberOfChannels
     const len = buffer.length
@@ -146,13 +162,15 @@ export function useWavetableOsc() {
       for (let i = 0; i < len; i++) mono[i] = mono[i]! * scale
     }
 
-    // Pre-compute Hann window for FRAME_SIZE
+    // Hann window for fallback path (unpitched audio needs windowing for clean loops)
     const hann = new Float32Array(FRAME_SIZE)
     for (let i = 0; i < FRAME_SIZE; i++) {
       hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / FRAME_SIZE))
     }
 
     // --- Pitch-synchronous extraction ---
+    // Uses linear-ramp discontinuity fix instead of Hann: preserves ALL harmonics
+    // while ensuring seamless looping.
     const result: Float32Array[] = []
 
     if (len >= PITCH_ANALYSIS_WINDOW) {
@@ -173,14 +191,9 @@ export function useWavetableOsc() {
           const start = nearestZeroCrossing(mono, center - Math.floor(periodSamples / 2), periodSamples)
 
           if (start >= 0 && start + periodSamples <= len) {
-            // Extract one period
             const period = mono.slice(start, start + periodSamples)
-            // Resample to FRAME_SIZE
             const resampled = sincResample(period, FRAME_SIZE)
-            // Apply Hann window + normalize
-            for (let i = 0; i < FRAME_SIZE; i++) {
-              resampled[i]! *= hann[i]!
-            }
+            makeLoopSafe(resampled)
             normalizeFrame(resampled)
             result.push(resampled)
           }
@@ -188,9 +201,13 @@ export function useWavetableOsc() {
       }
     }
 
-    // --- Fallback: overlapping windowed extraction (50% overlap + Hann) ---
+    if (result.length > 0) {
+      console.log(`[WT] pitch-sync extraction: ${result.length} frames`)
+    }
+
+    // --- Fallback: overlapping Hann-windowed extraction (unpitched/noisy audio) ---
     if (result.length < MIN_FRAMES) {
-      result.length = 0 // discard sparse pitch-sync frames; windowed fallback is more consistent
+      result.length = 0
       const overlap = Math.floor(FRAME_SIZE / 2)
       let offset = 0
       while (offset + FRAME_SIZE <= len) {
@@ -202,6 +219,7 @@ export function useWavetableOsc() {
         result.push(frame)
         offset += overlap
       }
+      console.log(`[WT] fallback extraction (Hann): ${result.length} frames`)
     }
 
     // Pad to MIN_FRAMES
@@ -246,24 +264,16 @@ export function useWavetableOsc() {
   /**
    * Load pre-extracted frames directly (e.g. from semantic wavetable builder).
    * Each frame should be a single-cycle waveform. Frames are resampled to
-   * FRAME_SIZE, Hann-windowed, and peak-normalized to prevent volume jumps.
+   * FRAME_SIZE, loop-safed, and peak-normalized to prevent volume jumps.
    */
   function loadRawFrames(rawFrames: Float32Array[]): void {
     if (rawFrames.length === 0) return
 
-    // Pre-compute Hann window
-    const hann = new Float32Array(FRAME_SIZE)
-    for (let i = 0; i < FRAME_SIZE; i++) {
-      hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / FRAME_SIZE))
-    }
-
     frames = rawFrames.map(f => {
       // Resample to FRAME_SIZE if needed
       const resampled = f.length === FRAME_SIZE ? new Float32Array(f) : sincResample(f, FRAME_SIZE)
-      // Apply Hann window
-      for (let i = 0; i < FRAME_SIZE; i++) {
-        resampled[i]! *= hann[i]!
-      }
+      // Linear ramp loop-safe (preserves harmonics, unlike Hann)
+      makeLoopSafe(resampled)
       // Normalize to peak 1.0
       normalizeFrame(resampled)
       return resampled
