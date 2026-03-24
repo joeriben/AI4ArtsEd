@@ -183,25 +183,31 @@ export function useModulation() {
       if (!param) return
       const baseVal = targetBaseGetters[target]?.() ?? param.value
 
+      let startVal: number
       let peakVal: number
       let susVal: number
 
       if (target === 'dcf_cutoff') {
-        // Frequency: amount sweeps octaves (amount=1 → 4 octaves up)
-        peakVal = Math.min(20000, baseVal * Math.pow(2, amount * 4))
-        susVal = baseVal + (peakVal - baseVal) * sus
+        // Subtractive model: envelope opens filter from closed (20Hz)
+        // up to cutoff slider position. Amount = how far it opens.
+        const minFreq = 20
+        startVal = minFreq
+        peakVal = Math.max(minFreq, minFreq + (baseVal - minFreq) * amount)
+        susVal = Math.max(minFreq, minFreq + (peakVal - minFreq) * sus)
       } else {
         // Linear targets: amount as fraction of base
+        startVal = baseVal
         peakVal = baseVal + amount * baseVal
         susVal = baseVal + (peakVal - baseVal) * sus
       }
 
       param.cancelScheduledValues(now)
-      param.setValueAtTime(Math.max(baseVal, 0.001), now)
       if (target === 'dcf_cutoff') {
+        param.setValueAtTime(Math.max(startVal, 20), now)
         param.exponentialRampToValueAtTime(Math.max(peakVal, 20), now + Math.max(atk, 0.002))
         param.exponentialRampToValueAtTime(Math.max(susVal, 20), now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
       } else {
+        param.setValueAtTime(Math.max(startVal, 0.001), now)
         param.linearRampToValueAtTime(peakVal, now + Math.max(atk, 0.002))
         param.linearRampToValueAtTime(susVal, now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
       }
@@ -238,7 +244,8 @@ export function useModulation() {
       param.cancelScheduledValues(now)
       param.setValueAtTime(Math.max(current, 0.001), now)
       if (target === 'dcf_cutoff') {
-        param.exponentialRampToValueAtTime(Math.max(baseVal, 20), now + Math.max(rel, 0.002))
+        // Release closes filter back to minimum (20Hz)
+        param.exponentialRampToValueAtTime(20, now + Math.max(rel, 0.002))
       } else {
         param.linearRampToValueAtTime(baseVal, now + Math.max(rel, 0.002))
       }
