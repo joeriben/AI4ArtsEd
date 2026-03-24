@@ -623,7 +623,7 @@ async function analyzeImage() {
       console.log('[Stage 5] Analysis complete')
 
       // Trigger Trashy reflection
-      analysisEventStore.requestReflection(data.analysis, inputText.value, 'direct')
+      analysisEventStore.requestReflection(data.analysis, inputText.value, 'direct', runId || undefined)
     } else {
       throw new Error(data.error || 'Unknown error')
     }

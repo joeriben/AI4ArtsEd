@@ -578,7 +578,45 @@ def _split_system_and_messages(messages: list):
     return system_prompt, chat_messages
 
 
-def _call_bedrock_chat(messages: list, model: str, temperature: float, max_tokens: int):
+def _inject_image_into_messages(messages: list, image_b64: str, provider_format: str) -> list:
+    """
+    Inject a base64 image into the last user message using provider-specific format.
+
+    Args:
+        messages: List of message dicts
+        image_b64: Base64-encoded image string
+        provider_format: One of 'openai', 'anthropic', 'ollama'
+
+    Returns:
+        New list with image injected into the last user message
+    """
+    import copy
+    result = copy.deepcopy(messages)
+
+    # Find last user message
+    for i in range(len(result) - 1, -1, -1):
+        if result[i].get('role') == 'user':
+            text_content = result[i].get('content', '')
+
+            if provider_format == 'openai':
+                result[i]['content'] = [
+                    {"type": "text", "text": text_content},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
+                ]
+            elif provider_format == 'anthropic':
+                result[i]['content'] = [
+                    {"type": "text", "text": text_content},
+                    {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}}
+                ]
+            elif provider_format == 'ollama':
+                result[i]['images'] = [image_b64]
+
+            break
+
+    return result
+
+
+def _call_bedrock_chat(messages: list, model: str, temperature: float, max_tokens: int, image_b64: str = None):
     """Call AWS Bedrock Anthropic models for chat helper."""
     try:
         import json
@@ -586,14 +624,19 @@ def _call_bedrock_chat(messages: list, model: str, temperature: float, max_token
 
         system_prompt, chat_messages = _split_system_and_messages(messages)
 
+        # Inject image if provided
+        if image_b64:
+            chat_messages = _inject_image_into_messages(chat_messages, image_b64, 'anthropic')
+
         # Convert to Anthropic Messages API format
-        anthropic_messages = [
-            {
-                "role": msg["role"],
-                "content": [{"type": "text", "text": msg["content"]}]
-            }
-            for msg in chat_messages
-        ]
+        anthropic_messages = []
+        for msg in chat_messages:
+            content = msg.get("content", "")
+            if isinstance(content, list):
+                # Already multimodal content blocks
+                anthropic_messages.append({"role": msg["role"], "content": content})
+            else:
+                anthropic_messages.append({"role": msg["role"], "content": [{"type": "text", "text": content}]})
 
         payload = {
             "anthropic_version": "bedrock-2023-05-31",
@@ -628,7 +671,7 @@ def _call_bedrock_chat(messages: list, model: str, temperature: float, max_token
         raise
 
 
-def _call_mistral_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
+def _call_mistral_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None, image_b64: str = None):
     """Call Mistral AI API directly (EU-based, DSGVO-compliant)"""
     try:
         api_url, api_key = get_mistral_credentials()
@@ -641,9 +684,11 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
             "Content-Type": "application/json"
         }
 
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
+
         payload = {
             "model": model,
-            "messages": messages,
+            "messages": effective_messages,
             "temperature": temperature,
             "max_tokens": max_tokens
         }
@@ -675,7 +720,7 @@ def _call_mistral_chat(messages: list, model: str, temperature: float, max_token
         raise
 
 
-def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
+def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None, image_b64: str = None):
     """Call IONOS AI Model Hub API (EU datacenter Berlin, DSGVO-compliant)"""
     try:
         api_url, api_key = get_ionos_credentials()
@@ -739,7 +784,7 @@ def _call_ionos_chat(messages: list, model: str, temperature: float, max_tokens:
         raise
 
 
-def _call_mammouth_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
+def _call_mammouth_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None, image_b64: str = None):
     """Call Mammouth AI API (EU-based, DSGVO-compliant)"""
     try:
         api_url, api_key = get_mammouth_credentials()
@@ -752,9 +797,11 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
             "Content-Type": "application/json"
         }
 
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
+
         payload = {
             "model": model,
-            "messages": messages,
+            "messages": effective_messages,
             "temperature": temperature,
             "max_tokens": max_tokens
         }
@@ -790,13 +837,17 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
         raise
 
 
-def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True, tools: list = None):
+def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True, tools: list = None, image_b64: str = None):
     """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
     try:
         from my_app.services.llm_backend import get_llm_backend
+
+        # For vision: inject image into last user message (Ollama format)
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'ollama') if image_b64 else messages
+
         result = get_llm_backend().chat(
             model=model,
-            messages=messages,
+            messages=effective_messages,
             temperature=temperature,
             max_new_tokens=max_tokens,
             enable_thinking=enable_thinking,
@@ -817,7 +868,7 @@ def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens
         raise
 
 
-def _call_openrouter_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None):
+def _call_openrouter_chat(messages: list, model: str, temperature: float, max_tokens: int, tools: list = None, image_b64: str = None):
     """Call OpenRouter API for chat helper."""
     try:
         api_url, api_key = get_openrouter_credentials()
@@ -830,9 +881,11 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
             "Content-Type": "application/json"
         }
 
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
+
         payload = {
             "model": model,
-            "messages": messages,
+            "messages": effective_messages,
             "temperature": temperature,
             "max_tokens": max_tokens
         }
@@ -864,7 +917,7 @@ def _call_openrouter_chat(messages: list, model: str, temperature: float, max_to
         raise
 
 
-def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500, enable_thinking: bool = True, model_override: str = None, tools: list = None) -> dict:
+def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int = 500, enable_thinking: bool = True, model_override: str = None, tools: list = None, image_b64: str = None) -> dict:
     """
     Call the configured chat helper model based on provider prefix.
 
@@ -872,52 +925,53 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
     This allows runtime configuration via Settings UI.
     model_override: if provided, use this model string instead of the configured default.
     tools: optional list of OpenAI-format tool definitions for tool use.
+    image_b64: optional base64-encoded image to include in the request (vision support).
 
     Returns dict: {"content": str, "thinking": str|None, "tool_calls": list|None}
     """
     model_string = model_override or get_user_setting("CHAT_HELPER_MODEL", default=CHAT_HELPER_MODEL)
-    logger.info(f"[CHAT] Using model: {model_string}")
+    logger.info(f"[CHAT] Using model: {model_string}" + (", with image" if image_b64 else ""))
 
     if model_string.startswith("bedrock/"):
         model = model_string[len("bedrock/"):]
         logger.info(f"[CHAT] Calling Bedrock with model: {model}")
-        result = _call_bedrock_chat(messages, model, temperature, max_tokens)
+        result = _call_bedrock_chat(messages, model, temperature, max_tokens, image_b64=image_b64)
 
     elif model_string.startswith("mistral/"):
         model = model_string[len("mistral/"):]
         logger.info(f"[CHAT] Calling Mistral with model: {model}")
-        result = _call_mistral_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_mistral_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     elif model_string.startswith("ionos/"):
         model = model_string[len("ionos/"):]
         logger.info(f"[CHAT] Calling IONOS with model: {model}")
-        result = _call_ionos_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_ionos_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     elif model_string.startswith("mammouth/"):
         model = model_string[len("mammouth/"):]
         logger.info(f"[CHAT] Calling Mammouth with model: {model}")
-        result = _call_mammouth_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_mammouth_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     # OpenRouter-compatible providers
     elif model_string.startswith("anthropic/"):
         model = model_string[len("anthropic/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     elif model_string.startswith("openai/"):
         model = model_string[len("openai/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     elif model_string.startswith("openrouter/"):
         model = model_string[len("openrouter/"):]
         logger.info(f"[CHAT] Calling OpenRouter with model: {model}")
-        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools)
+        result = _call_openrouter_chat(messages, model, temperature, max_tokens, tools=tools, image_b64=image_b64)
 
     elif model_string.startswith("local/"):
         model = model_string[len("local/"):]
         logger.info(f"[CHAT] Calling Ollama with model: {model}")
-        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking, tools=tools)
+        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking, tools=tools, image_b64=image_b64)
 
     else:
         raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, mammouth/, anthropic/, openai/, openrouter/")
@@ -1181,8 +1235,19 @@ def chat():
         # Add current user message
         messages.append({"role": "user", "content": user_message})
 
+        # ======================================================================
+        # Vision support: resolve image_path to base64, detect capability
+        # ======================================================================
+        image_b64 = None
+        image_path = data.get('image_path')
+        if image_path:
+            from my_app.utils.vision_support import prepare_image_b64, is_vision_capable, describe_image_for_fallback
+            image_b64 = prepare_image_b64(image_source=image_path, run_id=image_path if '/' not in image_path else None)
+            if image_b64:
+                logger.info(f"[CHAT] Image resolved ({len(image_b64)} b64 chars)")
+
         # Call configured chat helper model
-        logger.info(f"Calling chat helper with {len(messages)} messages (context_used={context_used})")
+        logger.info(f"Calling chat helper with {len(messages)} messages (context_used={context_used})" + (", with image" if image_b64 else ""))
         # Session 133 DEBUG: Log user message to see if draft context is prepended
         logger.info(f"[CHAT-DEBUG] User message preview: {user_message[:200]}..." if len(user_message) > 200 else f"[CHAT-DEBUG] User message: {user_message}")
 
@@ -1207,6 +1272,21 @@ def chat():
             tools = get_tool_registry().get_openai_format()
             logger.info(f"[CHAT] Tools enabled: {get_tool_registry().list_names()}")
 
+        # Vision capability check: fallback to text description if model can't see images
+        if image_b64:
+            effective_model = model_override or get_user_setting("CHAT_HELPER_MODEL", default=CHAT_HELPER_MODEL)
+            if not is_vision_capable(effective_model):
+                logger.info(f"[CHAT] Model {effective_model} is not vision-capable, using text fallback")
+                description = describe_image_for_fallback(image_b64)
+                # Prepend description to the last user message
+                for i in range(len(messages) - 1, -1, -1):
+                    if messages[i].get('role') == 'user':
+                        messages[i]['content'] = f"[Image description: {description}]\n\n{messages[i]['content']}"
+                        break
+                image_b64 = None  # Don't send image to non-vision model
+            else:
+                logger.info(f"[CHAT] Model {effective_model} supports vision, sending image directly")
+
         # Tool-call loop: LLM may request tool calls before producing final answer
         MAX_TOOL_ITERATIONS = 5
         result = None
@@ -1218,6 +1298,7 @@ def chat():
                 enable_thinking=not (is_temp_compare or is_sysprompt_compare or is_llm_compare),
                 model_override=model_override,
                 tools=tools,
+                image_b64=image_b64 if iteration == 0 else None,  # Image only on first iteration
             )
 
             tool_calls = result.get("tool_calls")

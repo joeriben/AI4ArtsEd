@@ -6,10 +6,11 @@ export const useAnalysisEventStore = defineStore('analysisEvent', () => {
     analysisText: string
     userPrompt: string
     viewType: string
+    runId?: string
   } | null>(null)
 
-  function requestReflection(analysisText: string, userPrompt: string, viewType: string) {
-    pendingReflection.value = { analysisText, userPrompt, viewType }
+  function requestReflection(analysisText: string, userPrompt: string, viewType: string, runId?: string) {
+    pendingReflection.value = { analysisText, userPrompt, viewType, runId }
   }
 
   function consume() {

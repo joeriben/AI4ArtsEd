@@ -1241,8 +1241,9 @@ async function analyzeImage() {
       showAnalysis.value = true
       console.log('[I2I Analysis] Success:', data)
 
-      // Trigger Trashy reflection
-      analysisEventStore.requestReflection(data.analysis || '', contextPrompt.value, 'multi_image_transformation')
+      // Trigger Trashy reflection — extract run_id from output URL
+      const runIdMatch = outputImage.value?.match(/\/api\/media\/\w+\/([^/]+)/)
+      analysisEventStore.requestReflection(data.analysis || '', contextPrompt.value, 'multi_image_transformation', runIdMatch?.[1])
     } else {
       console.error('[I2I Analysis] Failed:', data.error)
       alert('Bildanalyse fehlgeschlagen')

@@ -752,7 +752,7 @@ async function analyzeImage() {
       console.log('[Stage 5] Analysis complete')
 
       // Trigger Trashy reflection
-      analysisEventStore.requestReflection(data.analysis, inputText.value, 'surrealizer')
+      analysisEventStore.requestReflection(data.analysis, inputText.value, 'surrealizer', currentRunId.value || undefined)
     } else {
       throw new Error(data.error || 'Unknown error')
     }

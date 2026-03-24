@@ -649,7 +649,7 @@ watch(
       await nextTick()
     }
 
-    await generateAnalysisReflection(event.analysisText, event.userPrompt)
+    await generateAnalysisReflection(event.analysisText, event.userPrompt, event.runId)
   }
 )
 
@@ -657,7 +657,7 @@ watch(
  * Generate a process-oriented reflection via LLM after image analysis completes.
  * Same two-step pattern as generateSafetySuggestion: loading message → LLM response.
  */
-async function generateAnalysisReflection(analysisText: string, userPrompt: string) {
+async function generateAnalysisReflection(analysisText: string, userPrompt: string, runId?: string) {
   // Step 1: Show loading message
   const loadingId = messageIdCounter++
   messages.value.push({
@@ -686,6 +686,7 @@ Be warm and curious, not lecturing. Respond in the language the user used for th
 
     const response = await axios.post('/api/chat', {
       message: reflectionPrompt,
+      image_path: runId || undefined,
       draft_context: draftContextString.value || undefined,
       language: locale.value,
     })

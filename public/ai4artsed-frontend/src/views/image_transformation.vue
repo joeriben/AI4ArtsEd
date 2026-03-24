@@ -1078,7 +1078,7 @@ async function analyzeImage() {
       console.log('[I2I Analysis] Success:', data)
 
       // Trigger Trashy reflection
-      analysisEventStore.requestReflection(data.analysis || '', contextPrompt.value, 'image_transformation')
+      analysisEventStore.requestReflection(data.analysis || '', contextPrompt.value, 'image_transformation', currentRunId.value || undefined)
     } else {
       console.error('[I2I Analysis] Failed:', data.error)
       alert('Bildanalyse fehlgeschlagen')
