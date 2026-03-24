@@ -626,7 +626,7 @@
             </div>
             <div class="adsr-slider">
               <label>Feedback</label>
-              <input type="range" :value="effects.delayFeedback.value" min="0" max="0.95" step="0.01" @input="effects.setDelayFeedback(Number(($event.target as HTMLInputElement).value))" />
+              <input type="range" :value="effects.delayFeedback.value" min="0" max="0.7" step="0.01" @input="effects.setDelayFeedback(Number(($event.target as HTMLInputElement).value))" />
               <span class="adsr-value">{{ effects.delayFeedback.value.toFixed(2) }}</span>
             </div>
             <div class="adsr-slider">
