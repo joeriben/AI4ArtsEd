@@ -34,7 +34,7 @@ export function useFilter() {
   const enabled = ref(false)
   const type = ref<FilterType>('lowpass')
   const cutoff = ref(1.0)       // 0–1 normalized
-  const resonance = ref(0.1)    // 0–1 mapped to Q (0.1 ≈ Butterworth flat passband)
+  const resonance = ref(0)      // 0–1 mapped to Q (0 = minimal Q, flat passband)
   const mix = ref(1.0)          // 0 = dry, 1 = wet
   const kbdTrack = ref(0)       // 0–1: how much note pitch affects cutoff
 
