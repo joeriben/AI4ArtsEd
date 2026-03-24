@@ -265,6 +265,7 @@ export function useStepSequencer() {
   // Callbacks
   let noteOnCb: ((note: number, velocity: number, glide: boolean) => void) | null = null
   let noteOffCb: (() => void) | null = null
+  let barStartCb: (() => void) | null = null
 
   // MIDI clock EMA state
   let lastClockTime = 0
@@ -288,6 +289,10 @@ export function useStepSequencer() {
   ) {
     noteOnCb = onNoteOn
     noteOffCb = onNoteOff
+  }
+
+  function setBarStartCallback(cb: (() => void) | null) {
+    barStartCb = cb
   }
 
   function getEffectiveBpm(): number {
@@ -335,6 +340,15 @@ export function useStepSequencer() {
 
     while (nextStepTime < endWindow) {
       const stepIdx = scheduledStep % count
+
+      // Bar boundary: step wraps to 0 (skip initial start at scheduledStep 0)
+      if (stepIdx === 0 && scheduledStep > 0 && barStartCb) {
+        const now = audioCtx.currentTime
+        const delayMs = Math.max(0, (nextStepTime - now) * 1000)
+        const cb = barStartCb
+        setTimeout(() => { if (isPlaying.value) cb() }, delayMs)
+      }
+
       scheduleStep(stepIdx, nextStepTime, scheduledStep)
       nextStepTime += stepDurationSec()
       scheduledStep++
@@ -505,6 +519,7 @@ export function useStepSequencer() {
     stop()
     noteOnCb = null
     noteOffCb = null
+    barStartCb = null
     midiClockActive.value = false
     midiClockBpm.value = 0
     clockPulseCount = 0
@@ -547,6 +562,7 @@ export function useStepSequencer() {
     setAllGates,
     setGlideTime,
     setCallbacks,
+    setBarStartCallback,
     handleMidiClock,
     dispose,
   }

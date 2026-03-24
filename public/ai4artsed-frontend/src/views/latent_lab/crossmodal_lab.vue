@@ -90,7 +90,10 @@
             <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
             <span class="slider-value">{{ synth.alpha.toFixed(2) }}</span>
           </div>
-          <input type="range" v-model.number="synth.alpha" min="-2" max="2" step="0.01" />
+          <div class="slider-drift-track">
+            <input type="range" v-model.number="synth.alpha" min="-2" max="2" step="0.01" />
+            <div v-if="driftMarkerPct('alpha', synth.alpha, -2, 2) >= 0" class="drift-marker" :style="{ left: driftMarkerPct('alpha', synth.alpha, -2, 2) + '%' }" />
+          </div>
         </div>
 
         <div class="slider-item">
@@ -187,16 +190,19 @@
               </select>
               <div v-if="slot.axis" class="axis-slider-row">
                 <span class="axis-pole-label pole-b" :title="getAxisMeta(slot.axis)?.pole_b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
-                <input
-                  type="range"
-                  :value="axisValueToSlider(slot.value)"
-                  min="0"
-                  max="1"
-                  step="0.002"
-                  class="axis-range"
-                  :style="{ accentColor: axisColors[idx] }"
-                  @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
-                />
+                <div class="slider-drift-track axis-drift-track">
+                  <input
+                    type="range"
+                    :value="axisValueToSlider(slot.value)"
+                    min="0"
+                    max="1"
+                    step="0.002"
+                    class="axis-range"
+                    :style="{ accentColor: axisColors[idx] }"
+                    @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
+                  />
+                  <div v-if="axisDriftMarkerPct(idx) >= 0" class="drift-marker" :style="{ left: axisDriftMarkerPct(idx) + '%', backgroundColor: axisColors[idx] }" />
+                </div>
                 <span class="axis-pole-label pole-a" :title="getAxisMeta(slot.axis)?.pole_a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
                 <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
               </div>
@@ -461,6 +467,7 @@
               <div class="wt-bracket wt-bracket-start" :style="{ left: `${rangeStartPct}%` }" @pointerdown.prevent="startBracketDrag('start', $event)" />
               <div class="wt-bracket wt-bracket-end" :style="{ left: `${rangeEndPct}%` }" @pointerdown.prevent="startBracketDrag('end', $event)" />
               <div class="wt-scan-marker" :style="{ left: `${scanMarkerPct}%` }" />
+              <div v-if="driftMarkerPct('wt_scan', wavetableScan, 0, 1) >= 0" class="drift-marker drift-marker-wt" :style="{ left: driftMarkerPct('wt_scan', wavetableScan, 0, 1) + '%' }" />
               <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
             </div>
             <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
@@ -587,10 +594,18 @@
               </div>
               <div class="adsr-slider">
                 <label>Depth</label>
-                <input type="range" :value="dlfo.depth.value" min="0" max="1" step="0.01" @input="driftLfo.setParam(idx, 'depth', Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ dlfo.depth.value.toFixed(2) }}</span>
+                <input type="range" :value="driftDepthToSlider(dlfo.depth.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'depth', sliderToDriftDepth(Number(($event.target as HTMLInputElement).value)))" />
+                <span class="adsr-value">{{ formatDriftDepth(dlfo.depth.value) }}</span>
               </div>
             </div>
+          </div>
+          <div class="drift-autoregen">
+            <label class="inline-toggle">
+              <input type="checkbox" v-model="autoRegenEnabled" />
+              Auto-Regen
+            </label>
+            <span v-if="regenInFlight" class="regen-badge generating">GEN</span>
+            <span v-else-if="pendingBase64" class="regen-badge ready">RDY</span>
           </div>
         </div>
 
@@ -1101,7 +1116,7 @@ import { useI18n } from 'vue-i18n'
 import { useAudioLooper } from '@/composables/useAudioLooper'
 import { useWavetableOsc } from '@/composables/useWavetableOsc'
 import { useModulation, type ModTarget, type LfoWaveform, MOD_TARGETS } from '@/composables/useModulation'
-import { useDriftLfo, type DriftTarget, type DriftWaveform, DRIFT_TARGETS, sliderToDriftRate, driftRateToSlider, formatDriftRate } from '@/composables/useDriftLfo'
+import { useDriftLfo, type DriftTarget, type DriftWaveform, DRIFT_TARGETS, TARGET_RANGES, sliderToDriftRate, driftRateToSlider, formatDriftRate, sliderToDriftDepth, driftDepthToSlider, formatDriftDepth } from '@/composables/useDriftLfo'
 import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
@@ -1352,6 +1367,11 @@ const sequencerEnabled = ref(false)
 const seqOctave = ref(0) // -1, 0, +1
 let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
 
+// Beat-sync'd auto-regeneration (Octatrack-style drift)
+const autoRegenEnabled = ref(false)
+const pendingBase64 = ref<string | null>(null)
+const regenInFlight = ref(false)
+
 // Audio recording
 const isRecording = ref(false)
 let mediaRecorder: MediaRecorder | null = null
@@ -1366,6 +1386,26 @@ const showPlayButton = computed(() =>
 const hasLoadedAudio = computed(() =>
   engineMode.value === 'looper' ? looper.hasAudio.value : wavetableOsc.hasFrames.value
 )
+const hasActiveDrift = computed(() =>
+  driftLfo.lfos.some(l => l.target.value !== 'none' && l.depth.value > 0)
+)
+
+/** Drift marker position (%) for a target's slider. Returns -1 if no active drift. */
+function driftMarkerPct(target: DriftTarget, baseValue: number, min: number, max: number): number {
+  const offset = driftLfo.getOffsetForTarget(target)
+  if (offset === 0) return -1
+  const modulated = Math.max(min, Math.min(max, baseValue + offset))
+  return ((modulated - min) / (max - min)) * 100
+}
+
+/** Drift marker for axis sliders (uses quadratic mapping). */
+function axisDriftMarkerPct(idx: number): number {
+  const target = `sem_axis_${idx + 1}` as DriftTarget
+  const offset = driftLfo.getOffsetForTarget(target)
+  if (offset === 0) return -1
+  const modulated = Math.max(-2, Math.min(2, axisSlots[idx]!.value + offset))
+  return axisValueToSlider(modulated) * 100
+}
 // Compat aliases for code that still references old names
 const wavetableOn = computed(() => engineMode.value === 'wavetable')
 const sequencerOn = computed(() => sequencerEnabled.value)
@@ -1438,29 +1478,29 @@ function wireEnvelope() {
     },
   })
 
-  // Drift LFO callbacks (alpha, semantic axes, wt_scan)
+  // Drift LFO callbacks — offset-based: base read every tick, no write-back.
+  // alpha/sem_axes: no-op callback (only used at generation time via getOffsetForTarget).
+  // wt_scan: drives scan position in real-time but does NOT write to wavetableScan ref.
   driftLfo.setCallbacks({
     alpha: {
-      callback: (v: number) => { synth.alpha = v },
+      callback: () => {},
       baseValue: () => synth.alpha,
     },
     sem_axis_1: {
-      callback: (v: number) => { axisSlots[0]!.value = v },
+      callback: () => {},
       baseValue: () => axisSlots[0]!.value,
     },
     sem_axis_2: {
-      callback: (v: number) => { axisSlots[1]!.value = v },
+      callback: () => {},
       baseValue: () => axisSlots[1]!.value,
     },
     sem_axis_3: {
-      callback: (v: number) => { axisSlots[2]!.value = v },
+      callback: () => {},
       baseValue: () => axisSlots[2]!.value,
     },
     wt_scan: {
       callback: (v: number) => {
-        // Write to slider ref — this IS the base the modulation ENV reads.
-        // Drift moves the center; ENV sweeps from there. No override.
-        wavetableScan.value = v
+        // Drive scan position in real-time; slider ref stays at user's base.
         wavetableOsc.setScanPosition(mappedScanPosition(v))
       },
       baseValue: () => wavetableScan.value,
@@ -2305,6 +2345,8 @@ function transportStop() {
     dcaGain.gain.cancelScheduledValues(ac.currentTime)
     dcaGain.gain.setValueAtTime(0, ac.currentTime)
   }
+  // Discard pending auto-regen buffer (stale after stop)
+  pendingBase64.value = null
   transport.value = 'paused'
 }
 
@@ -2533,6 +2575,7 @@ function wireSequencerCallbacks() {
       modulation.triggerRelease()
     },
   )
+  sequencer.setBarStartCallback(onBarStart)
 }
 
 // ===== Audio Recording =====
@@ -2738,6 +2781,7 @@ interface SynthPreset {
     lfos: Array<{ rate: number; depth: number; waveform: string; target: string; mode: string }>
   }
   driftLfos?: Array<{ rate: number; depth: number; waveform: string; target: string }>
+  autoRegen?: boolean
   wavetable?: {
     scan: number; interpolate: boolean
     rangeStart: number; rangeEnd: number
@@ -2831,6 +2875,7 @@ function exportPreset() {
       rate: d.rate.value, depth: d.depth.value,
       waveform: d.waveform.value, target: d.target.value,
     })),
+    autoRegen: autoRegenEnabled.value,
     wavetable: {
       scan: wavetableScan.value,
       interpolate: wtInterpolate.value,
@@ -2977,7 +3022,7 @@ async function importPreset(event: Event) {
       }
     }
 
-    // Restore drift LFOs
+    // Restore drift LFOs + auto-regen
     if (preset.driftLfos) {
       for (let i = 0; i < preset.driftLfos.length && i < driftLfo.lfos.length; i++) {
         const src = preset.driftLfos[i]!
@@ -2988,6 +3033,7 @@ async function importPreset(event: Event) {
         dst.target.value = (src.target as DriftTarget) ?? 'none'
       }
     }
+    autoRegenEnabled.value = preset.autoRegen ?? false
 
     // Restore wavetable params
     const wt = (preset as any).wavetable
@@ -3223,6 +3269,107 @@ async function runSynth() {
   } catch (e) {
     error.value = String(e)
     transport.value = preGenTransport === 'playing' ? 'playing' : 'idle'
+  }
+}
+
+// ===== Beat-sync'd auto-regeneration =====
+
+/** Background synth generation — doesn't touch transport, stores result as pending. */
+async function runSynthBackground() {
+  if (regenInFlight.value) return
+  regenInFlight.value = true
+  try {
+    // Apply drift offsets to alpha and axes for background generation
+    const driftedAlpha = synth.alpha + driftLfo.getOffsetForTarget('alpha')
+    const body: Record<string, unknown> = {
+      prompt_a: synth.promptA,
+      alpha: driftedAlpha / 2 + 0.5,
+      magnitude: synth.magnitude,
+      noise_sigma: synth.noise,
+      duration_seconds: synth.duration,
+      start_position: synth.startPosition,
+      steps: synth.steps,
+      cfg_scale: synth.cfg,
+      seed: synth.seed,
+    }
+    if (synth.promptB.trim()) body.prompt_b = synth.promptB
+
+    // Dimension offsets (read current stats without clearing)
+    const nonZeroOffsets: Record<string, number> = {}
+    const stats = embeddingStats.value
+    const isRelative = spectralMode.value === 'relative'
+      && !!(stats?.emb_a_values && stats?.emb_b_values)
+    for (const [k, v] of Object.entries(dimensionOffsets)) {
+      if (v === 0) continue
+      if (isRelative && stats?.emb_a_values && stats?.emb_b_values && stats?.all_activations) {
+        const dim = Number(k)
+        const actEntry = stats.all_activations.find((a: any) => a.dim === dim)
+        const currentVal = actEntry?.value ?? 0
+        const aVal = stats.emb_a_values[dim] ?? 0
+        const bVal = stats.emb_b_values[dim] ?? 0
+        const targetVal = v > 0
+          ? currentVal + Math.abs(v) * (aVal - currentVal)
+          : currentVal + Math.abs(v) * (bVal - currentVal)
+        const offset = targetVal - currentVal
+        if (Math.abs(offset) > 0.0001) nonZeroOffsets[k] = offset
+      } else {
+        nonZeroOffsets[k] = v
+      }
+    }
+    if (Object.keys(nonZeroOffsets).length > 0) body.dimension_offsets = nonZeroOffsets
+
+    // Semantic axes — apply drift offsets
+    const axisTargets: DriftTarget[] = ['sem_axis_1', 'sem_axis_2', 'sem_axis_3']
+    const activeAxes: Record<string, number> = {}
+    for (let i = 0; i < axisSlots.length; i++) {
+      const slot = axisSlots[i]!
+      const drifted = slot.value + driftLfo.getOffsetForTarget(axisTargets[i]!)
+      if (slot.axis && Math.abs(drifted) > 0.001) activeAxes[slot.axis] = drifted
+    }
+    if (Object.keys(activeAxes).length > 0) body.axes = activeAxes
+
+    const result = await apiPost('/api/cross_aesthetic/synth', body)
+    if (result.success) {
+      pendingBase64.value = result.audio_base64
+    }
+  } catch {
+    // Background gen failed silently — no UI disruption
+  } finally {
+    regenInFlight.value = false
+  }
+}
+
+/** Bar-boundary callback: swap pending audio + kick off next background gen. */
+async function onBarStart() {
+  // 1. Swap pending buffer into active engine
+  if (pendingBase64.value) {
+    const base64 = pendingBase64.value
+    pendingBase64.value = null
+
+    if (engineMode.value === 'wavetable') {
+      // Decode → extract frames → worklet swaps seamlessly (scan position preserved)
+      try {
+        const wavBytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+        const ac = looper.getContext()
+        const buffer = await ac.decodeAudioData(wavBytes.buffer.slice(0))
+        await wavetableOsc.loadFrames(buffer)
+      } catch { /* decode failed — skip this swap */ }
+    } else {
+      // Looper: load new buffer + replay with crossfade
+      await looper.loadBuffer(base64)
+      looper.replay()
+      // Also update WT frames for potential engine switch
+      const buf = looper.getOriginalBuffer()
+      if (buf) await wavetableOsc.loadFrames(buf)
+    }
+
+    lastSynthBase64.value = base64
+    nextTick(drawWaveform)
+  }
+
+  // 2. Kick off next background generation if drift is active
+  if (autoRegenEnabled.value && hasActiveDrift.value) {
+    runSynthBackground()
   }
 }
 
@@ -4916,6 +5063,73 @@ onUnmounted(() => {
   font-weight: 600;
   margin-left: 0.4rem;
   vertical-align: middle;
+}
+
+/* Drift marker: ghost indicator showing modulated position on slider track */
+.slider-drift-track {
+  position: relative;
+  width: 100%;
+}
+
+.slider-drift-track input[type="range"] {
+  width: 100%;
+}
+
+.drift-marker {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  background: rgba(255, 167, 38, 0.7);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  transition: left 0.06s linear;
+}
+
+.drift-marker-wt {
+  top: 50%;
+  height: 100%;
+  background: rgba(255, 167, 38, 0.5);
+}
+
+.axis-drift-track {
+  flex: 1;
+  min-width: 0;
+}
+
+.drift-autoregen {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 0.4rem;
+}
+
+.regen-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.regen-badge.generating {
+  color: #ffa726;
+  background: rgba(255, 167, 38, 0.12);
+  animation: regen-pulse 1.2s ease-in-out infinite;
+}
+
+.regen-badge.ready {
+  color: #66bb6a;
+  background: rgba(102, 187, 106, 0.12);
+}
+
+@keyframes regen-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 .adsr-section {

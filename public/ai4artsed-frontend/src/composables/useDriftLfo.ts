@@ -1,7 +1,10 @@
 /**
  * 3 Drift LFOs — rAF-driven, ultra-slow parameter modulation.
- * output = center + waveform(phase) * depth * halfRange
- * Center captured once on target assignment. Rate 0.001–2 Hz.
+ *
+ * Offset-based: reads base (slider value) every tick, applies offset on top.
+ * Slider stays at user's setting; drift indicator shows modulated position.
+ *
+ * output = base() + waveform(phase) * depth * halfRange
  */
 import { ref, type Ref } from 'vue'
 
@@ -19,14 +22,14 @@ export type DriftWaveform = 'sine' | 'triangle' | 'square' | 'sawtooth'
 
 export interface DriftLfoState {
   rate: Ref<number>      // Hz (0.001 – 2)
-  depth: Ref<number>     // 0 – 1
+  depth: Ref<number>     // 0 – 1 (exponential mapped)
   waveform: Ref<DriftWaveform>
   target: Ref<DriftTarget>
 }
 
 // ─── Target ranges: min/max bounds, halfRange derived ───
 
-const TARGET_RANGES: Record<string, { min: number; max: number }> = {
+export const TARGET_RANGES: Record<string, { min: number; max: number }> = {
   alpha:      { min: -2, max: 2 },
   sem_axis_1: { min: -2, max: 2 },
   sem_axis_2: { min: -2, max: 2 },
@@ -51,6 +54,28 @@ export function formatDriftRate(hz: number): string {
   if (hz >= 1) return `${hz.toFixed(2)} Hz`
   if (hz >= 0.01) return `${hz.toFixed(3)} Hz`
   return `${hz.toFixed(4)} Hz`
+}
+
+// ─── Depth mapping: exponential 0.001 – 1 (micro-drift at low end) ───
+
+const DRIFT_DEPTH_MIN = 0.001
+const DRIFT_DEPTH_MAX = 1
+
+export function sliderToDriftDepth(v: number): number {
+  if (v === 0) return 0
+  return DRIFT_DEPTH_MIN * Math.pow(DRIFT_DEPTH_MAX / DRIFT_DEPTH_MIN, v)
+}
+
+export function driftDepthToSlider(d: number): number {
+  if (d <= 0) return 0
+  return Math.log(Math.max(DRIFT_DEPTH_MIN, d) / DRIFT_DEPTH_MIN) / Math.log(DRIFT_DEPTH_MAX / DRIFT_DEPTH_MIN)
+}
+
+export function formatDriftDepth(d: number): string {
+  if (d === 0) return '0'
+  if (d >= 0.1) return d.toFixed(2)
+  if (d >= 0.01) return d.toFixed(3)
+  return d.toFixed(4)
 }
 
 // ─── Waveform computation (phase 0–1 → output -1..+1) ───
@@ -85,13 +110,12 @@ export function useDriftLfo() {
   let lastTime = 0
   let rafId: number | null = null
 
-  // Frozen base values per LFO — captured when target is assigned.
-  // LFO oscillates around this center, never reads the live modulated value.
-  const baseSnapshots: number[] = [0, 0, 0]
+  // Current offsets (reactive) — for visual indicators on sliders
+  const offsets: Ref<number>[] = [ref(0), ref(0), ref(0)]
 
   // Callback registry: target → setter function
   const callbacks: Record<string, (value: number) => void> = {}
-  // Base value getters: target → current user base value (for snapshot capture only)
+  // Base value getters: target → current user base value (read every tick)
   const baseGetters: Record<string, () => number> = {}
 
   function setCallbacks(targets: Record<string, { callback: (v: number) => void; baseValue: () => number }>): void {
@@ -99,14 +123,6 @@ export function useDriftLfo() {
       callbacks[key] = callback
       baseGetters[key] = baseValue
     }
-  }
-
-  /** Capture the current base value for this LFO's target. */
-  function snapshotBase(idx: number): void {
-    const target = lfos[idx]!.target.value
-    if (target === 'none') return
-    const getter = baseGetters[target]
-    if (getter) baseSnapshots[idx] = getter()
   }
 
   function start(): void {
@@ -131,7 +147,7 @@ export function useDriftLfo() {
 
   function tick(): void {
     const now = performance.now()
-    const dt = (now - lastTime) / 1000 // seconds
+    const dt = (now - lastTime) / 1000
     lastTime = now
 
     let anyActive = false
@@ -139,10 +155,14 @@ export function useDriftLfo() {
     for (let i = 0; i < 3; i++) {
       const lfo = lfos[i]!
       const target = lfo.target.value
-      if (target === 'none' || lfo.depth.value === 0) continue
+      if (target === 'none' || lfo.depth.value === 0) {
+        if (offsets[i]!.value !== 0) offsets[i]!.value = 0
+        continue
+      }
 
       const cb = callbacks[target]
-      if (!cb) continue
+      const getter = baseGetters[target]
+      if (!cb || !getter) continue
 
       const range = TARGET_RANGES[target]
       if (!range) continue
@@ -153,10 +173,12 @@ export function useDriftLfo() {
       phases[i] = (phases[i]! + lfo.rate.value * dt) % 1
 
       const raw = waveformValue(phases[i]!, lfo.waveform.value)
-      const center = baseSnapshots[i]!
+      const base = getter() // Read current slider value EVERY tick
       const halfRange = (range.max - range.min) / 2
-      const modulated = center + raw * lfo.depth.value * halfRange
-      cb(Math.max(range.min, Math.min(range.max, modulated)))
+      const offset = raw * lfo.depth.value * halfRange
+      offsets[i]!.value = offset
+      const modulated = Math.max(range.min, Math.min(range.max, base + offset))
+      cb(modulated)
     }
 
     if (anyActive) {
@@ -166,16 +188,29 @@ export function useDriftLfo() {
     }
   }
 
+  /** Sum of all LFO offsets currently targeting a given parameter. */
+  function getOffsetForTarget(target: DriftTarget): number {
+    let total = 0
+    for (let i = 0; i < 3; i++) {
+      if (lfos[i]!.target.value === target) {
+        total += offsets[i]!.value
+      }
+    }
+    return total
+  }
+
   function setParam(idx: number, key: keyof DriftLfoState, value: number | string): void {
     const lfo = lfos[idx]
     if (!lfo) return
 
     if (key === 'target') {
-      // Restore old target to its original center before switching away
+      // Restore old target: zero offset, call cb with current base (undo modulation)
       const oldTarget = lfo.target.value
       if (oldTarget !== 'none') {
+        offsets[idx]!.value = 0
         const cb = callbacks[oldTarget]
-        if (cb) cb(baseSnapshots[idx]!)
+        const getter = baseGetters[oldTarget]
+        if (cb && getter) cb(getter())
       }
     }
 
@@ -183,7 +218,6 @@ export function useDriftLfo() {
     r.value = value
 
     if (key === 'target') {
-      snapshotBase(idx)
       phases[idx] = 0
     }
 
@@ -201,9 +235,10 @@ export function useDriftLfo() {
 
   return {
     lfos,
+    offsets,
     setCallbacks,
     setParam,
-    snapshotBase,
+    getOffsetForTarget,
     start,
     stop,
     resetPhases,
