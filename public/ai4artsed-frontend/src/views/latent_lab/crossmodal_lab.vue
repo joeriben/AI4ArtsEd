@@ -2215,17 +2215,12 @@ function transportPlay() {
     looper.setLoopPingPong(loopMode.value === 'pingpong')
     looper.replay()
   } else {
+    // Stop looper — both engines share the DCA, looper would leak through
+    looper.stop()
     if (wavetableOsc.hasFrames.value) {
-      // Silence DCA before starting oscillator — sound only comes through
-      // when a note triggers the attack envelope (prevents hanging tone)
       wireEnvelope()
-      const dcaGain = modulation.getDcaGainNode()
-      if (dcaGain) {
-        const ac = looper.getContext()
-        dcaGain.gain.cancelScheduledValues(ac.currentTime)
-        dcaGain.gain.setValueAtTime(0, ac.currentTime)
-      }
-      wavetableOsc.start()
+      // Do NOT start oscillator here — triggerEngine starts it on first note.
+      // Starting here wastes CPU looping silently and causes race conditions.
       // Trigger scan sweep if ADR configured (deferred if worklet not yet ready)
       if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
         wavetableOsc.triggerScanEnvelope(
@@ -2248,12 +2243,10 @@ function transportPlay() {
 function transportStop() {
   sequencer.stop()
   arpeggiator.stop()
-  if (engineMode.value === 'looper') {
-    looper.stop()
-  } else {
-    wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
-    wavetableOsc.stop()
-  }
+  // Always stop BOTH engines — they share the DCA, leftover from the other leaks through
+  looper.stop()
+  wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
+  wavetableOsc.stop()
   transport.value = 'paused'
 }
 
@@ -2555,6 +2548,8 @@ function toggleSequencer() {
     modulation.triggerRelease()
     return
   }
+  // Stop the other engine — both share the DCA
+  if (engineMode.value === 'wavetable') looper.stop()
   wireEnvelope()
   wireSequencerCallbacks()
   const ac = looper.getContext()

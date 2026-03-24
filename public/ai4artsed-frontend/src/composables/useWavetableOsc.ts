@@ -118,6 +118,7 @@ export function useWavetableOsc() {
   let workletNode: AudioWorkletNode | null = null
   let gainNode: GainNode | null = null
   let workletReady = false
+  let starting = false  // Guard against concurrent start() calls
   let frames: Float32Array[] = []
   let mipFrames: Float32Array[][] = []  // mipFrames[level][frameIndex]
   let destinationNode: AudioNode | null = null
@@ -136,6 +137,8 @@ export function useWavetableOsc() {
       workletReady = false
     }
     ctx = ac
+    // Pre-load worklet so start() is synchronous during note triggers
+    ensureWorklet(ac)
   }
 
   function ensureContext(): AudioContext {
@@ -430,38 +433,46 @@ export function useWavetableOsc() {
   }
 
   async function start(): Promise<void> {
-    if (isPlaying.value) return
-    const ac = ensureContext()
-    await ensureWorklet(ac)
+    if (isPlaying.value || starting) return
+    starting = true
+    try {
+      const ac = ensureContext()
+      await ensureWorklet(ac)
 
-    // Create fresh node chain
-    workletNode = new AudioWorkletNode(ac, 'wavetable-processor', {
-      numberOfInputs: 0,
-      numberOfOutputs: 1,
-      outputChannelCount: [1],
-    })
-    gainNode = ac.createGain()
-    gainNode.gain.value = 0.5
-    workletNode.connect(gainNode)
-    gainNode.connect(destinationNode ?? ac.destination)
+      // Disconnect any leftover nodes (belt and suspenders)
+      if (workletNode) { workletNode.disconnect(); workletNode = null }
+      if (gainNode) { gainNode.disconnect(); gainNode = null }
 
-    // Send mip-mapped frames if already loaded
-    if (mipFrames.length > 0) {
-      workletNode.port.postMessage({ mipFrames })
-    }
+      // Create fresh node chain
+      workletNode = new AudioWorkletNode(ac, 'wavetable-processor', {
+        numberOfInputs: 0,
+        numberOfOutputs: 1,
+        outputChannelCount: [1],
+      })
+      gainNode = ac.createGain()
+      gainNode.gain.value = 0.5
+      workletNode.connect(gainNode)
+      gainNode.connect(destinationNode ?? ac.destination)
 
-    // Set initial frequency
-    const freqParam = workletNode.parameters.get('frequency')
-    if (freqParam) freqParam.value = currentFrequency.value
+      // Send mip-mapped frames if already loaded
+      if (mipFrames.length > 0) {
+        workletNode.port.postMessage({ mipFrames })
+      }
 
-    isPlaying.value = true
+      // Set initial frequency
+      const freqParam = workletNode.parameters.get('frequency')
+      if (freqParam) freqParam.value = currentFrequency.value
 
-    // Apply deferred scan envelope (fixes async race: triggerScanEnvelope
-    // may have been called before the worklet node was created)
-    if (pendingScan) {
-      const { attack, decay, start: s, end: e } = pendingScan
-      pendingScan = null
-      scheduleScanRamp(attack, decay, s, e)
+      isPlaying.value = true
+
+      // Apply deferred scan envelope
+      if (pendingScan) {
+        const { attack, decay, start: s, end: e } = pendingScan
+        pendingScan = null
+        scheduleScanRamp(attack, decay, s, e)
+      }
+    } finally {
+      starting = false
     }
   }
 
