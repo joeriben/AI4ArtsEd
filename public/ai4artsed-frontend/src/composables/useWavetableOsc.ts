@@ -119,6 +119,7 @@ export function useWavetableOsc() {
   let gainNode: GainNode | null = null
   let workletReady = false
   let starting = false  // Guard against concurrent start() calls
+  let lastScanPosition = 0  // Persist scan position across worklet recreations
   let frames: Float32Array[] = []
   let mipFrames: Float32Array[][] = []  // mipFrames[level][frameIndex]
   let destinationNode: AudioNode | null = null
@@ -459,9 +460,11 @@ export function useWavetableOsc() {
         workletNode.port.postMessage({ mipFrames })
       }
 
-      // Set initial frequency
+      // Restore state on new worklet — frequency AND scan position
       const freqParam = workletNode.parameters.get('frequency')
       if (freqParam) freqParam.value = currentFrequency.value
+      const scanParam = workletNode.parameters.get('scanPosition')
+      if (scanParam) scanParam.value = lastScanPosition
 
       isPlaying.value = true
 
@@ -521,6 +524,7 @@ export function useWavetableOsc() {
 
   function setScanPosition(pos: number): void {
     const clamped = Math.max(0, Math.min(1, pos))
+    lastScanPosition = clamped
     if (workletNode) {
       const param = workletNode.parameters.get('scanPosition')
       if (param) {

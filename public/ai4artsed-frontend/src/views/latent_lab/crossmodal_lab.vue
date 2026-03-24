@@ -3106,9 +3106,20 @@ async function runSynth() {
       generationTimeMs.value = result.generation_time_ms
       embeddingStats.value = result.embedding_stats
 
+      // Ensure signal chain is wired BEFORE looper.play — otherwise looper
+      // connects directly to ac.destination, bypassing the DCA entirely.
+      if (!envelopeWired) wireEnvelope()
+
       // Load audio into looper (always, for buffer access)
       looper.setLoop(loopMode.value !== 'oneshot')
       await looper.play(result.audio_base64)
+
+      // In WT mode: stop looper IMMEDIATELY — we only needed it to load the buffer.
+      // Must happen before any audio frame renders through the shared DCA.
+      if (engineMode.value === 'wavetable') {
+        looper.stop()
+      }
+
       nextTick(drawWaveform)
       lastSynthFingerprint.value = synthFingerprint()
 
@@ -3123,12 +3134,8 @@ async function runSynth() {
 
       // Enforce correct engine mode
       if (engineMode.value === 'wavetable') {
-        looper.stop()
         const ac = looper.getContext()
         wavetableOsc.setContext(ac)
-        if (!envelopeWired) wireEnvelope()
-        // Do NOT auto-start oscillator — wastes CPU looping silently.
-        // Oscillator starts on first note trigger (triggerEngine) or Play.
       }
 
       // Restore transport
