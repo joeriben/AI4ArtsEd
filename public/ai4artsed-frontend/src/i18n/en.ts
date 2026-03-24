@@ -1495,6 +1495,7 @@ export const en = {
             synthwave: 'Synthwave',
             techno: 'Acid',
             ambient: 'Ambient',
+            dub_techno: 'Dub Techno',
             idm_glitch: 'IDM / Glitch',
             solar: 'Solar',
             arpeggio_bass: 'Arpeggio Bass (32)',

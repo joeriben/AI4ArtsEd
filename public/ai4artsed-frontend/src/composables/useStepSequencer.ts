@@ -44,82 +44,116 @@ function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step
 // Named after sequencer traditions, not arpeggios.
 const PRESETS: Preset[] = [
   {
-    // Eastcoast: melodic modular, minor 7th chord tones + chromatic passing.
-    // Uneven accents, driving but not mechanical.
+    // Eastcoast: driving modular bass (Gemini-sourced, adapted).
+    // Cm tonality with chromatic G#, ghost note ending. 16 steps.
     name: 'eastcoast',
     steps: [
-      makeStep(0, 1.0, 0.85),    // root, driving
-      makeStep(10, 0.6, 0.4),    // b7, ghost
-      makeStep(3, 0.85, 0.7),    // m3
-      makeStep(7, 0.7, 0.9),     // 5th, legato
-      makeStep(-2, 0.95, 0.3),   // b7 below, staccato punch
-      makeStep(5, 0.5, 0.6),     // 4th, soft
-      makeStep(10, 0.9, 0.45),   // b7, accent short
-      makeStep(6, 0.65, 0.8),    // tritone, tension
+      makeStep(0, 1.0, 0.3),     // C2, accent
+      makeStep(12, 0.63, 0.3),   // C3, softer
+      makeStep(3, 0.63, 0.3),    // Eb2
+      makeStep(0, 0.71, 0.3),    // C2
+      makeStep(7, 1.0, 0.3),     // G2, accent
+      makeStep(12, 0.63, 0.3),   // C3
+      makeStep(10, 0.79, 0.8),   // Bb2, legato
+      makeStep(7, 0.39, 0.2),    // G2, ghost
+      makeStep(0, 0.94, 0.3),    // C2, strong
+      makeStep(0, 0.47, 0.3),    // C2, softer echo
+      makeStep(3, 0.63, 0.3),    // Eb2
+      makeStep(5, 0.71, 0.3),    // F2
+      makeStep(7, 1.0, 0.3),     // G2, accent
+      makeStep(8, 0.63, 0.3),    // G#2, chromatic!
+      makeStep(10, 0.79, 0.9),   // Bb2, legato
+      makeStep(7, 0.12, 0.1),    // G2, ghost note
     ],
   },
   {
-    // Westcoast: exploratory modular. 5 steps.
-    // No tonal center, wide leaps, extreme dynamic + gate contrast.
+    // Westcoast: exploratory modular. 8 steps (Gemini 7+1 adapted).
+    // Wide leaps, glides as long gates, no tonal center.
     name: 'westcoast',
     steps: [
-      makeStep(0, 0.5, 0.15),    // barely there
-      makeStep(11, 1.0, 1.0),    // maj7 leap, full blast legato
-      makeStep(-6, 0.3, 0.08),   // tritone below, whisper staccato
-      makeStep(14, 0.85, 0.5),   // 9th above, medium
-      makeStep(-3, 0.7, 0.95),   // minor 3rd below, soft legato
+      makeStep(0, 0.79, 0.2),    // C2, short
+      makeStep(19, 0.47, 0.5),   // G3, glide (long gate)
+      makeStep(24, 0.31, 0.1),   // C4, staccatissimo
+      makeStep(5, 1.0, 0.8),     // F2, accent legato
+      makeStep(10, 0.63, 0.5),   // Bb2, glide
+      makeStep(13, 0.39, 0.2),   // C#3, whisper
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(-2, 0.7, 0.6),    // Bb1, low tension
     ],
   },
   {
-    // Synthwave: 16 steps. Not a boring triad — dim7 arpeggio with octave displacement.
+    // Synthwave: rolling bass / sidechain pump. 16 steps.
+    // Rhythmic gating on root, mutes create pumping feel.
     name: 'synthwave',
     steps: [
-      makeStep(0, 0.9, 0.7),     // root
-      makeStep(3, 0.75, 0.6),    // m3
-      makeStep(6, 0.85, 0.7),    // tritone
-      makeStep(9, 0.7, 0.55),    // dim7
-      makeStep(12, 0.95, 0.7),   // octave
-      makeStep(15, 0.75, 0.6),   // m3+oct
-      makeStep(18, 0.85, 0.7),   // tritone+oct
-      makeStep(21, 0.7, 0.55),   // dim7+oct
-      makeStep(18, 0.8, 0.65),   // back down
-      makeStep(15, 0.7, 0.6),
-      makeStep(12, 0.9, 0.7),
-      makeStep(9, 0.65, 0.5),
-      makeStep(6, 0.8, 0.65),
-      makeStep(3, 0.7, 0.6),
-      makeStep(0, 0.85, 0.7),
-      makeStep(-5, 0.95, 0.4),   // 4th below, surprise ending
+      makeStep(0, 0, 0, false),  // mute (kick)
+      makeStep(0, 0.79, 0.5),    // root comes in
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0, 0, false),  // mute
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0, 0, false),  // mute
+      makeStep(0, 0, 0, false),  // double mute = syncopation
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0, 0, false),  // mute
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.5),
     ],
   },
   {
-    // Acid: 16 steps. Chromatic movement, rests, accent/ghost pattern.
+    // Acid: 16 steps (Gemini-sourced). Accents, ties (long gate), slides, rests.
     name: 'techno',
     steps: [
-      makeStep(0, 1.0, 0.3),     // root, short
-      makeStep(0, 0.6, 0.15),    // ghost
-      makeStep(12, 0.9, 0.2),    // octave, stab
-      makeStep(0, 0, 0, false),   // rest
-      makeStep(10, 0.85, 0.7),   // b7, longer
-      makeStep(0, 1.0, 0.15),    // root, staccato
-      makeStep(3, 0.7, 0.5),     // m3
-      makeStep(0, 0, 0, false),   // rest
-      makeStep(0, 0.95, 0.3),    // root
-      makeStep(5, 0.6, 0.2),     // 4th, ghost
-      makeStep(-2, 1.0, 0.6),    // b7 below, accent
-      makeStep(0, 0.5, 0.15),    // ghost
-      makeStep(7, 0.9, 0.4),     // 5th
-      makeStep(6, 0.75, 0.3),    // tritone, chromatic slide
-      makeStep(5, 0.85, 0.5),    // 4th
-      makeStep(0, 0, 0, false),   // rest before repeat
+      makeStep(0, 0.79, 0.5),    // C2
+      makeStep(0, 0.63, 0.5),    // C2, softer
+      makeStep(3, 1.0, 1.0),     // Eb2, ACCENT + TIE (legato)
+      makeStep(15, 0.63, 0.5),   // Eb3, slide up (long gate prev)
+      makeStep(0, 0.63, 0.5),    // C2
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(7, 0.63, 1.0),    // G2, TIE
+      makeStep(7, 1.0, 0.5),     // G2, ACCENT
+      makeStep(10, 0.63, 0.5),   // Bb2
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(12, 1.0, 1.0),    // C3, ACCENT + TIE
+      makeStep(10, 0.63, 0.5),   // Bb2, slide down
+      makeStep(0, 0.63, 0.5),    // C2
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(3, 0.63, 0.5),    // Eb2
+      makeStep(0, 0.63, 0.5),    // C2
     ],
   },
   {
-    // Ambient: 16 steps. Slow evolving, non-obvious voicings (add9, sus4), gradual swell.
+    // Dub Techno: sparse chord stabs with long silences. 16 steps.
+    name: 'dub_techno',
+    steps: [
+      makeStep(0, 0.71, 0.1),    // stab
+      makeStep(0, 0, 0, false),  // silence
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0.86, 0.1),    // stab, louder
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0.55, 0.1),    // stab, softer
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+      makeStep(0, 0, 0, false),
+    ],
+  },
+  {
+    // Ambient: 16 steps. Slow evolving, non-obvious voicings, gradual swell.
     name: 'ambient',
     steps: [
       makeStep(0, 0.45, 1.0),    // root, pp
-      makeStep(0, 0.48, 1.0),    // root, slightly louder
+      makeStep(0, 0.48, 1.0),
       makeStep(2, 0.5, 1.0),     // add9
       makeStep(2, 0.53, 1.0),
       makeStep(7, 0.55, 1.0),    // 5th
@@ -143,77 +177,61 @@ const PRESETS: Preset[] = [
       makeStep(6, 1.0, 0.04),    // tritone, click
       makeStep(-8, 0.3, 1.0),    // low, whisper legato
       makeStep(17, 0.95, 0.12),  // high, stab
-      makeStep(0, 0, 0, false),   // rest
-      makeStep(-1, 0.7, 0.7),    // semitone below, medium
-      makeStep(23, 0.4, 0.03),   // extreme high, barely audible tick
+      makeStep(0, 0, 0, false),  // rest
+      makeStep(-1, 0.7, 0.7),    // semitone below
+      makeStep(23, 0.4, 0.03),   // extreme high, tick
       makeStep(-11, 1.0, 0.5),   // low, accent
       makeStep(8, 0.55, 0.85),   // aug5, lingering
-      makeStep(0, 0, 0, false),   // rest
+      makeStep(0, 0, 0, false),  // rest
       makeStep(-4, 0.9, 1.0),    // M3 below, full
     ],
   },
   {
-    // Solar: 16 steps. Mechanical but with chromatic tension, not just scale tones.
+    // Solar: 16 steps. Mechanical, chromatic upper neighbors on each degree.
     name: 'solar',
     steps: [
-      makeStep(0, 0.9, 0.5), makeStep(1, 0.9, 0.5),   // root, chromatic
+      makeStep(0, 0.9, 0.5), makeStep(1, 0.9, 0.5),
       makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
-      makeStep(5, 0.9, 0.5), makeStep(6, 0.9, 0.5),   // 4th, tritone
+      makeStep(5, 0.9, 0.5), makeStep(6, 0.9, 0.5),
       makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
-      makeStep(7, 0.9, 0.5), makeStep(8, 0.9, 0.5),   // 5th, #5
+      makeStep(7, 0.9, 0.5), makeStep(8, 0.9, 0.5),
       makeStep(7, 0.9, 0.5), makeStep(7, 0.9, 0.5),
-      makeStep(11, 0.9, 0.5), makeStep(12, 0.9, 0.5), // maj7, octave
-      makeStep(11, 0.9, 0.5), makeStep(10, 0.9, 0.5), // maj7, b7 — resolves down
+      makeStep(11, 0.9, 0.5), makeStep(12, 0.9, 0.5),
+      makeStep(11, 0.9, 0.5), makeStep(10, 0.9, 0.5),
     ],
   },
   {
-    // Arpeggio bass: 32 steps. Alternating 5ths and tritones, building intensity.
+    // Arpeggio bass: 32 steps. Alternating 5ths/tritones, building intensity.
     name: 'arpeggio_bass',
     steps: [
-      makeStep(0, 0.8, 0.5),     // root
-      makeStep(7, 0.65, 0.45),   // 5th
-      makeStep(0, 0.8, 0.5),
-      makeStep(6, 0.65, 0.45),   // tritone — tension
-      makeStep(0, 0.8, 0.5),
-      makeStep(7, 0.65, 0.45),
-      makeStep(0, 0.8, 0.5),
-      makeStep(10, 0.7, 0.5),    // b7 — surprise
-      makeStep(0, 0.85, 0.5),    // building
-      makeStep(7, 0.7, 0.45),
-      makeStep(0, 0.85, 0.5),
-      makeStep(6, 0.7, 0.45),
-      makeStep(0, 0.85, 0.5),
-      makeStep(7, 0.7, 0.45),
-      makeStep(0, 0.85, 0.5),
-      makeStep(11, 0.75, 0.55),  // maj7 — brighter
-      makeStep(0, 0.9, 0.55),    // second half: more intensity
-      makeStep(7, 0.75, 0.5),
-      makeStep(12, 0.9, 0.55),   // octave — opens up
-      makeStep(6, 0.75, 0.5),
-      makeStep(0, 0.9, 0.55),
-      makeStep(7, 0.75, 0.5),
-      makeStep(12, 0.9, 0.55),
-      makeStep(10, 0.8, 0.55),   // b7
-      makeStep(0, 0.95, 0.6),    // peak intensity
-      makeStep(7, 0.8, 0.5),
-      makeStep(12, 0.95, 0.6),
-      makeStep(6, 0.8, 0.5),
-      makeStep(0, 1.0, 0.6),     // climax
-      makeStep(11, 0.85, 0.55),
-      makeStep(7, 1.0, 0.6),
-      makeStep(0, 0, 0, false),   // rest before repeat — breathing room
+      makeStep(0, 0.8, 0.5), makeStep(7, 0.65, 0.45),
+      makeStep(0, 0.8, 0.5), makeStep(6, 0.65, 0.45),
+      makeStep(0, 0.8, 0.5), makeStep(7, 0.65, 0.45),
+      makeStep(0, 0.8, 0.5), makeStep(10, 0.7, 0.5),
+      makeStep(0, 0.85, 0.5), makeStep(7, 0.7, 0.45),
+      makeStep(0, 0.85, 0.5), makeStep(6, 0.7, 0.45),
+      makeStep(0, 0.85, 0.5), makeStep(7, 0.7, 0.45),
+      makeStep(0, 0.85, 0.5), makeStep(11, 0.75, 0.55),
+      makeStep(0, 0.9, 0.55), makeStep(7, 0.75, 0.5),
+      makeStep(12, 0.9, 0.55), makeStep(6, 0.75, 0.5),
+      makeStep(0, 0.9, 0.55), makeStep(7, 0.75, 0.5),
+      makeStep(12, 0.9, 0.55), makeStep(10, 0.8, 0.55),
+      makeStep(0, 0.95, 0.6), makeStep(7, 0.8, 0.5),
+      makeStep(12, 0.95, 0.6), makeStep(6, 0.8, 0.5),
+      makeStep(0, 1.0, 0.6), makeStep(11, 0.85, 0.55),
+      makeStep(7, 1.0, 0.6), makeStep(0, 0, 0, false),
     ],
   },
   {
-    // Trance gate: 8 steps. Rhythmic gating with syncopation, not just on/off.
+    // Trance gate: 8 steps. Rhythmic gating with syncopation.
     name: 'trance_gate',
     steps: [
       makeStep(0, 1.0, 0.9),
-      makeStep(0, 0.3, 0.15),    // ghost
+      makeStep(0, 0.3, 0.15),
       makeStep(0, 0.85, 0.7),
       makeStep(0, 0.5, 0.3),
       makeStep(0, 1.0, 0.9),
-      makeStep(0, 0, 0, false),   // rest — creates syncopation
+      makeStep(0, 0, 0, false),
       makeStep(0, 0.9, 0.6),
       makeStep(0, 0.4, 0.2),
     ],
