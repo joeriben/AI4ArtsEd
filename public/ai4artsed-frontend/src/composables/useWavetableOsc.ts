@@ -12,10 +12,106 @@ import { ref, readonly } from 'vue'
 import { PitchDetector } from 'pitchy'
 
 const FRAME_SIZE = 2048
+const HALF_FRAME = FRAME_SIZE / 2  // 1024 harmonics max
+const NUM_MIP_LEVELS = 8           // octave 0..7 → 1024, 512, ..., 8 harmonics
 const MIN_FRAMES = 8
 const PITCH_ANALYSIS_WINDOW = 4096
 const PITCH_CONFIDENCE_THRESHOLD = 0.9
 const SINC_KERNEL_A = 6
+
+// ===== Radix-2 Cooley-Tukey FFT (in-place) =====
+
+function fft(re: Float64Array, im: Float64Array): void {
+  const n = re.length
+  // Bit-reversal permutation
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1
+    for (; j & bit; bit >>= 1) j ^= bit
+    j ^= bit
+    if (i < j) {
+      let tmp = re[i]!; re[i] = re[j]!; re[j] = tmp
+      tmp = im[i]!; im[i] = im[j]!; im[j] = tmp
+    }
+  }
+  // Butterfly stages
+  for (let len = 2; len <= n; len *= 2) {
+    const half = len >> 1
+    const angle = -2 * Math.PI / len
+    const wRe = Math.cos(angle), wIm = Math.sin(angle)
+    for (let i = 0; i < n; i += len) {
+      let curRe = 1, curIm = 0
+      for (let j = 0; j < half; j++) {
+        const a = i + j, b = a + half
+        const tRe = re[b]! * curRe - im[b]! * curIm
+        const tIm = re[b]! * curIm + im[b]! * curRe
+        re[b] = re[a]! - tRe; im[b] = im[a]! - tIm
+        re[a] = re[a]! + tRe; im[a] = im[a]! + tIm
+        const tmp = curRe * wRe - curIm * wIm
+        curIm = curRe * wIm + curIm * wRe
+        curRe = tmp
+      }
+    }
+  }
+}
+
+function ifft(re: Float64Array, im: Float64Array): void {
+  const n = re.length
+  // Conjugate
+  for (let i = 0; i < n; i++) im[i] = -im[i]!
+  fft(re, im)
+  // Conjugate + scale
+  const invN = 1 / n
+  for (let i = 0; i < n; i++) {
+    re[i] = re[i]! * invN
+    im[i] = -im[i]! * invN
+  }
+}
+
+/**
+ * Generate band-limited mip levels for a set of frames.
+ * Level k keeps only the first (HALF_FRAME >> k) harmonics.
+ * Returns mipFrames[level][frameIndex] = Float32Array(FRAME_SIZE).
+ */
+function generateMipLevels(srcFrames: Float32Array[]): Float32Array[][] {
+  const numFrames = srcFrames.length
+  const mip: Float32Array[][] = []
+
+  // Level 0 = original frames (full spectrum)
+  mip.push(srcFrames.map(f => new Float32Array(f)))
+
+  // Pre-allocate FFT buffers (reused across frames)
+  const re = new Float64Array(FRAME_SIZE)
+  const im = new Float64Array(FRAME_SIZE)
+
+  for (let level = 1; level < NUM_MIP_LEVELS; level++) {
+    const maxHarmonic = HALF_FRAME >> level  // 512, 256, 128, 64, 32, 16, 8
+    const levelFrames: Float32Array[] = []
+
+    for (let f = 0; f < numFrames; f++) {
+      const src = srcFrames[f]!
+      // Load into FFT buffers
+      for (let i = 0; i < FRAME_SIZE; i++) { re[i] = src[i]!; im[i] = 0 }
+
+      fft(re, im)
+
+      // Zero harmonics above maxHarmonic (keep DC + bins 1..maxHarmonic + conjugates)
+      // Bins: 0=DC, 1..N/2-1=harmonics, N/2=Nyquist, N/2+1..N-1=conjugate mirror
+      for (let k = maxHarmonic + 1; k <= FRAME_SIZE - maxHarmonic - 1; k++) {
+        re[k] = 0; im[k] = 0
+      }
+
+      ifft(re, im)
+
+      // Copy back to Float32
+      const out = new Float32Array(FRAME_SIZE)
+      for (let i = 0; i < FRAME_SIZE; i++) out[i] = re[i]!
+      levelFrames.push(out)
+    }
+    mip.push(levelFrames)
+  }
+
+  return mip
+}
 
 export function useWavetableOsc() {
   let ctx: AudioContext | null = null
@@ -23,6 +119,7 @@ export function useWavetableOsc() {
   let gainNode: GainNode | null = null
   let workletReady = false
   let frames: Float32Array[] = []
+  let mipFrames: Float32Array[][] = []  // mipFrames[level][frameIndex]
   let destinationNode: AudioNode | null = null
   let pendingScan: { attack: number; decay: number; start: number; end: number } | null = null
 
@@ -260,10 +357,17 @@ export function useWavetableOsc() {
    * Extract wavetable frames from an AudioBuffer.
    * Optional startSample/endSample limit extraction to a region (for user-selected range).
    */
+  /** Send current mip levels to the worklet. */
+  function sendMipToWorklet(): void {
+    if (!workletNode || mipFrames.length === 0) return
+    workletNode.port.postMessage({ mipFrames })
+  }
+
   async function loadFrames(buffer: AudioBuffer, startSample = 0, endSample = buffer.length): Promise<void> {
     const mono = bufferToMono(buffer, startSample, endSample)
     const { frames: extracted, medianPitchHz } = extractFrames(mono, buffer.sampleRate)
     frames = extracted
+    mipFrames = generateMipLevels(frames)
     frameCount.value = frames.length
     hasFrames.value = true
     detectedPitch.value = medianPitchHz
@@ -277,9 +381,7 @@ export function useWavetableOsc() {
       }
     }
 
-    if (workletNode) {
-      workletNode.port.postMessage({ frames })
-    }
+    sendMipToWorklet()
   }
 
   /** Normalize a frame to peak amplitude 1.0 to prevent volume jumps when scanning. */
@@ -320,12 +422,11 @@ export function useWavetableOsc() {
       frames.push(new Float32Array(frames[frames.length - 1]!))
     }
 
+    mipFrames = generateMipLevels(frames)
     frameCount.value = frames.length
     hasFrames.value = true
 
-    if (workletNode) {
-      workletNode.port.postMessage({ frames })
-    }
+    sendMipToWorklet()
   }
 
   async function start(): Promise<void> {
@@ -344,9 +445,9 @@ export function useWavetableOsc() {
     workletNode.connect(gainNode)
     gainNode.connect(destinationNode ?? ac.destination)
 
-    // Send frames if already loaded
-    if (frames.length > 0) {
-      workletNode.port.postMessage({ frames })
+    // Send mip-mapped frames if already loaded
+    if (mipFrames.length > 0) {
+      workletNode.port.postMessage({ mipFrames })
     }
 
     // Set initial frequency
@@ -510,6 +611,7 @@ export function useWavetableOsc() {
   function dispose(): void {
     stop()
     frames = []
+    mipFrames = []
     hasFrames.value = false
     frameCount.value = 0
     detectedPitch.value = 0

@@ -1,9 +1,13 @@
 /**
- * AudioWorklet processor for wavetable synthesis.
+ * AudioWorklet processor for wavetable synthesis with mip-mapped anti-aliasing.
  *
  * Phase-accumulator reads single-cycle frames at a controlled frequency.
  * Catmull-Rom cubic interpolation between frames provides smooth timbral
  * morphing via the scanPosition parameter.
+ *
+ * Mip-mapping: each frame exists at multiple band-limited levels. Higher
+ * playback frequencies use levels with fewer harmonics, preventing aliasing.
+ * Level k has (1024 >> k) harmonics. Level selection based on frequency.
  *
  * Frame size: 2048 samples (~21.5 Hz fundamental at 44.1 kHz).
  */
@@ -13,11 +17,15 @@ const FRAME_SIZE = 2048
 class WavetableProcessor extends AudioWorkletProcessor {
   constructor() {
     super()
-    this.frames = []
+    this.mipFrames = []   // mipFrames[level][frameIndex] = Float32Array
+    this.numLevels = 0
+    this.numFrames = 0
     this.phase = 0
     this.port.onmessage = (e) => {
-      if (e.data && e.data.frames) {
-        this.frames = e.data.frames
+      if (e.data && e.data.mipFrames) {
+        this.mipFrames = e.data.mipFrames
+        this.numLevels = this.mipFrames.length
+        this.numFrames = this.numLevels > 0 ? this.mipFrames[0].length : 0
       }
     }
   }
@@ -32,9 +40,10 @@ class WavetableProcessor extends AudioWorkletProcessor {
 
   process(_inputs, outputs, parameters) {
     const output = outputs[0] && outputs[0][0]
-    if (!output || this.frames.length === 0) return true
+    if (!output || this.numFrames === 0) return true
 
-    const numFrames = this.frames.length
+    const numFrames = this.numFrames
+    const numLevels = this.numLevels
     const freqParam = parameters.frequency
     const scanParam = parameters.scanPosition
     const interpParam = parameters.interpolate
@@ -42,9 +51,21 @@ class WavetableProcessor extends AudioWorkletProcessor {
     const scanConstant = scanParam.length === 1
     const doInterpolate = interpParam[0] >= 0.5
 
+    // Pre-compute mip threshold: freq where level 0 transitions to level 1
+    // level = ceil(log2(freq * FRAME_SIZE / sampleRate))
+    // Equivalent: level = ceil(log2(freq / baseFreq)) where baseFreq = sampleRate / FRAME_SIZE
+    const invBaseFreq = FRAME_SIZE / sampleRate
+    const log2 = Math.log2
+    const maxLevel = numLevels - 1
+
     for (let i = 0; i < output.length; i++) {
       const freq = freqConstant ? freqParam[0] : freqParam[i]
       const scan = scanConstant ? scanParam[0] : scanParam[i]
+
+      // Select mip level based on playback frequency
+      const rawLevel = log2(freq * invBaseFreq)
+      const mipLevel = Math.max(0, Math.min(maxLevel, Math.ceil(rawLevel)))
+      const frames = this.mipFrames[mipLevel]
 
       // Frame selection via scan position
       const framePos = scan * (numFrames - 1)
@@ -55,7 +76,7 @@ class WavetableProcessor extends AudioWorkletProcessor {
       const idx1 = (idx0 + 1) % FRAME_SIZE
       const phaseFrac = this.phase - Math.floor(this.phase)
 
-      const a = this.frames[frameA]
+      const a = frames[frameA]
       const sampleA = a[idx0] + (a[idx1] - a[idx0]) * phaseFrac
 
       if (doInterpolate) {
@@ -66,10 +87,10 @@ class WavetableProcessor extends AudioWorkletProcessor {
         const i2 = Math.min(frameA + 1, numFrames - 1)
         const i3 = Math.min(frameA + 2, numFrames - 1)
 
-        const f0 = this.frames[i0]
-        const f1 = this.frames[i1]
-        const f2 = this.frames[i2]
-        const f3 = this.frames[i3]
+        const f0 = frames[i0]
+        const f1 = frames[i1]
+        const f2 = frames[i2]
+        const f3 = frames[i3]
 
         const s0 = f0[idx0] + (f0[idx1] - f0[idx0]) * phaseFrac
         const s1 = f1[idx0] + (f1[idx1] - f1[idx0]) * phaseFrac
