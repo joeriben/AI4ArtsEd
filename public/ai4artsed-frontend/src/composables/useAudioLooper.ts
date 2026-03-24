@@ -398,6 +398,14 @@ export function useAudioLooper() {
     if (activeSource) activeSource.playbackRate.value = rateForPlayback()
   }
 
+  function glideToSemitones(semitones: number, timeMs: number) {
+    transposeSemitones.value = semitones
+    if (activeSource && ctx) {
+      const rate = Math.pow(2, semitones / 12)
+      activeSource.playbackRate.linearRampToValueAtTime(rate, ctx.currentTime + timeMs / 1000)
+    }
+  }
+
   function setLoopStart(frac: number) {
     loopStartFrac.value = Math.max(0, Math.min(frac, loopEndFrac.value - 0.01))
     if (activeSource && originalBuffer) {
@@ -507,7 +515,7 @@ export function useAudioLooper() {
 
   return {
     play, replay, stop, retrigger,
-    setLoop, setTranspose, setDestination, getContext,
+    setLoop, setTranspose, glideToSemitones, setDestination, getContext,
     setLoopStart, setLoopEnd, setLoopOptimize, setLoopPingPong,
     setCrossfade, setNormalize,
     exportRaw, exportLoop, getWaveformPeaks, dispose,

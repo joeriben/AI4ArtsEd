@@ -21,6 +21,15 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-24-synth-glide-recording
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.crossmodal.synth.sequencer.glideTime` (NEW): "Glide"
+  - `latentLab.crossmodal.synth.sequencer.gridHint` (MODIFIED): added "G = glide" to hint text
+  - `latentLab.crossmodal.synth.record` (NEW): "Record"
+  - `latentLab.crossmodal.synth.stopRecording` (NEW): "Stop"
+- **Context**: Synth sequencer glide/portamento feature + audio recording button. "Glide" = smooth pitch transition between notes (portamento). "Record" captures synth output as WAV.
+
 ### WO-2026-03-24-bias-model-scenarios
 - **Session**: 285
 - **Scope**: en.ts

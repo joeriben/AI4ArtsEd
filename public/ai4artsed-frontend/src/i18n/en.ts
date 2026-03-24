@@ -1488,7 +1488,8 @@ export const en = {
           bpmHint: 'Tempo in beats per minute (16th-note steps)',
           preset: 'Preset',
           midiSync: 'MIDI Sync',
-          gridHint: 'Slider = semitone offset, dot = active toggle, bottom = velocity',
+          gridHint: 'Slider = semitone offset, dot = active toggle, G = glide, bottom = velocity',
+          glideTime: 'Glide',
           patterns: {
             eastcoast: 'Eastcoast',
             westcoast: 'Westcoast',
@@ -1515,6 +1516,8 @@ export const en = {
         transposeHint: 'Shifts pitch in semitones',
         crossfadeHint: 'Crossfade time at loop boundary (ms)',
         normalizeHint: 'Normalizes volume to maximum amplitude',
+        record: 'Record',
+        stopRecording: 'Stop',
         saveRaw: 'Save raw',
         saveLoop: 'Save loop',
         filter: {

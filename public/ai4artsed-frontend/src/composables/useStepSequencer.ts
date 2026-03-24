@@ -19,6 +19,7 @@ export interface Step {
   semitone: number   // -24 to +24 offset from base note (C3 = 0)
   velocity: number   // 0-1
   gate: number       // 0-1 fraction of step duration
+  glide: boolean     // ramp pitch to this step instead of retriggering
 }
 
 export interface Preset {
@@ -36,8 +37,8 @@ const DIVISION_FACTORS: Record<NoteDivision, number> = {
   '1/1': 4, '1/2': 2, '1/4': 1, '1/8': 0.5, '1/16': 0.25,
 }
 
-function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step {
-  return { active, semitone, velocity, gate }
+function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true, glide = false): Step {
+  return { active, semitone, velocity, gate, glide }
 }
 
 // Preset patterns — used as grid initializers, user can modify after loading.
@@ -105,21 +106,22 @@ const PRESETS: Preset[] = [
   {
     // Acid: 16 steps. Rests for air, ties (gate=1.0), accents,
     // the classic 2-octave belly-drop Eb→G1 at steps 10-12. Gemini V2.
+    // Glide on slide-up and belly-drop for 303-style portamento.
     name: 'techno',
     steps: [
       makeStep(0, 0, 0, false),  // REST — acid needs air
       makeStep(0, 0.79, 0.5),    // C2
       makeStep(0, 0.63, 1.0),    // C2, TIE (legato into next)
-      makeStep(12, 1.0, 0.5),    // C3, ACCENT + slide up
+      makeStep(12, 1.0, 0.5, true, true),   // C3, ACCENT + slide up + GLIDE
       makeStep(0, 0, 0, false),  // REST
       makeStep(0, 0.79, 0.5),    // C2
       makeStep(0, 0, 0, false),  // REST
       makeStep(0, 0.79, 0.5),    // C2
       makeStep(0, 0.63, 1.0),    // C2, TIE
-      makeStep(3, 1.0, 1.0),     // Eb2, ACCENT + TIE — belly ache starts
+      makeStep(3, 1.0, 1.0, true, true),    // Eb2, ACCENT + TIE + GLIDE — belly ache starts
       makeStep(3, 0.63, 1.0),    // Eb2, TIE (sustaining)
-      makeStep(-5, 0.63, 0.5),   // G1, 2-octave DROP (the 303 moment)
-      makeStep(0, 1.0, 0.5),     // C2, ACCENT — landing
+      makeStep(-5, 0.63, 0.5, true, true),  // G1, 2-octave DROP + GLIDE (the 303 moment)
+      makeStep(0, 1.0, 0.5, true, true),    // C2, ACCENT + GLIDE — landing
       makeStep(0, 0, 0, false),  // REST
       makeStep(12, 0.63, 0.5),   // C3
       makeStep(0, 0, 0, false),  // REST
@@ -247,6 +249,8 @@ export function useStepSequencer() {
   const midiClockActive = ref(false)
   const midiClockBpm = ref(0)
 
+  const glideTime = ref(80)  // ms, range 10–500
+
   // User-editable step grid (reactive array) — default 5 steps (Eastcoast)
   const steps = reactive<Step[]>(createDefaultSteps(5))
 
@@ -259,7 +263,7 @@ export function useStepSequencer() {
   const gateTimers = new Map<number, ReturnType<typeof setTimeout>>()
 
   // Callbacks
-  let noteOnCb: ((note: number, velocity: number) => void) | null = null
+  let noteOnCb: ((note: number, velocity: number, glide: boolean) => void) | null = null
   let noteOffCb: (() => void) | null = null
 
   // MIDI clock EMA state
@@ -279,7 +283,7 @@ export function useStepSequencer() {
   }
 
   function setCallbacks(
-    onNoteOn: (note: number, velocity: number) => void,
+    onNoteOn: (note: number, velocity: number, glide: boolean) => void,
     onNoteOff: () => void,
   ) {
     noteOnCb = onNoteOn
@@ -308,7 +312,7 @@ export function useStepSequencer() {
     setTimeout(() => {
       if (!isPlaying.value) return
       currentStep.value = stepIdx
-      noteOnCb?.(midiNote, step.velocity)
+      noteOnCb?.(midiNote, step.velocity, step.glide)
     }, delayMs)
 
     // Cancel any pending gate-off for this schedule ID
@@ -443,6 +447,14 @@ export function useStepSequencer() {
     if (steps[idx]) { steps[idx].gate = Math.max(0.1, Math.min(1, gate)); presetIndex.value = -1 }
   }
 
+  function setStepGlide(idx: number, glide: boolean) {
+    if (steps[idx]) { steps[idx].glide = glide; presetIndex.value = -1 }
+  }
+
+  function setGlideTime(ms: number) {
+    glideTime.value = Math.max(10, Math.min(500, ms))
+  }
+
   /** Set gate for all steps at once */
   function setAllGates(gate: number) {
     const g = Math.max(0.1, Math.min(1, gate))
@@ -507,6 +519,7 @@ export function useStepSequencer() {
     bpm: readonly(bpm) as Readonly<Ref<number>>,
     stepCount: readonly(stepCount) as Readonly<Ref<StepCountOption>>,
     division: readonly(division) as Readonly<Ref<NoteDivision>>,
+    glideTime: readonly(glideTime) as Readonly<Ref<number>>,
     presetIndex: readonly(presetIndex),
     steps,
     activeStepCount,
@@ -530,7 +543,9 @@ export function useStepSequencer() {
     setStepSemitone,
     setStepVelocity,
     setStepGate,
+    setStepGlide,
     setAllGates,
+    setGlideTime,
     setCallbacks,
     handleMidiClock,
     dispose,

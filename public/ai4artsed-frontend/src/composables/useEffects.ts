@@ -216,6 +216,10 @@ export function useEffects() {
     return inputNode
   }
 
+  function getOutputNode(): DynamicsCompressorNode | null {
+    return limiter
+  }
+
   /** Expose AudioParams for modulation routing */
   function getModTargets(): Record<string, { param: AudioParam; baseValue: () => number }> {
     const targets: Record<string, { param: AudioParam; baseValue: () => number }> = {}
@@ -266,6 +270,7 @@ export function useEffects() {
     // Chain
     createChain,
     getInputNode,
+    getOutputNode,
     getModTargets,
     dispose,
   }

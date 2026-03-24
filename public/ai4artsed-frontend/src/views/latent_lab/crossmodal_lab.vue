@@ -410,7 +410,7 @@
                 {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
               </label>
             </div>
-            <div v-if="wtMode === 'semantic'" class="wt-build-section">
+            <div v-if="wtMode === 'semantic'" class="wt-build-section" v-memo="[wtBuildAxis, wtBuildFrameCount, wtBuilding, wtBuildProgress, wtBuildProgressCurrent]">
               <div class="wt-build-row">
                 <select v-model="wtBuildAxis" class="wt-axis-select">
                   <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
@@ -717,7 +717,7 @@
                 <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
               </span>
             </div>
-            <div class="sequencer-settings-row" v-memo="[sequencer.presetIndex.value, sequencer.bpm.value, sequencer.midiClockActive.value, sequencer.midiClockBpm.value, sequencer.stepCount.value, sequencer.division.value, sequencer.steps[0]?.gate]">
+            <div class="sequencer-settings-row" v-memo="[sequencer.presetIndex.value, sequencer.bpm.value, sequencer.midiClockActive.value, sequencer.midiClockBpm.value, sequencer.stepCount.value, sequencer.division.value, sequencer.steps[0]?.gate, sequencer.glideTime.value]">
               <div class="sequencer-preset">
                 <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
                 <select :value="sequencer.presetIndex.value" @change="onPresetChange">
@@ -737,6 +737,11 @@
                 <input type="range" :value="sequencer.steps[0]?.gate ?? 0.8" min="0.1" max="1" step="0.05" @input="sequencer.setAllGates(Number(($event.target as HTMLInputElement).value))" />
                 <span class="seq-bpm-value">{{ Math.round((sequencer.steps[0]?.gate ?? 0.8) * 100) }}%</span>
               </div>
+              <div class="sequencer-glide">
+                <label>{{ t('latentLab.crossmodal.synth.sequencer.glideTime') }}</label>
+                <input type="range" :value="sequencer.glideTime.value" min="10" max="500" step="5" @input="sequencer.setGlideTime(Number(($event.target as HTMLInputElement).value))" />
+                <span class="seq-bpm-value">{{ sequencer.glideTime.value }}ms</span>
+              </div>
             </div>
             <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
               <div v-for="(step, idx) in sequencer.steps" :key="idx" class="seq-step" :class="{ active: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx, muted: !step.active }">
@@ -744,6 +749,7 @@
                 <input type="range" class="seq-semitone-slider" :value="step.semitone" min="-24" max="24" step="1" orient="vertical" @input="onStepSemitoneInput(idx, $event)" />
                 <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
                 <button class="seq-step-toggle" :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }" @click="sequencer.setStepActive(idx, !step.active)" />
+                <button class="seq-glide-btn" :class="{ on: step.glide }" @click="sequencer.setStepGlide(idx, !step.glide)" title="Glide">G</button>
                 <input type="range" class="seq-velocity-slider" :value="step.velocity" min="0" max="1" step="0.05" @input="onStepVelocityInput(idx, $event)" />
               </div>
             </div>
@@ -784,6 +790,10 @@
       <!-- Preset Export/Import -->
       <div class="synth-box preset-box">
         <div class="save-row">
+          <button class="save-btn record-btn" :class="{ recording: isRecording }" @click="toggleRecording">
+            <span class="record-dot" />
+            {{ isRecording ? t('latentLab.crossmodal.synth.stopRecording') : t('latentLab.crossmodal.synth.record') }}
+          </button>
           <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
             {{ t('latentLab.crossmodal.synth.saveRaw') }}
           </button>
@@ -1260,6 +1270,12 @@ const loopMode = ref<LoopMode>('oneshot')
 const sequencerEnabled = ref(false)
 const seqOctave = ref(0) // -1, 0, +1
 let preGenTransport: 'idle' | 'playing' | 'paused' = 'idle'
+
+// Audio recording
+const isRecording = ref(false)
+let mediaRecorder: MediaRecorder | null = null
+let mediaStreamDest: MediaStreamAudioDestinationNode | null = null
+let recordedChunks: Blob[] = []
 
 // Derived state for template — NEVER flickers during MIDI/retrigger
 const generating = computed(() => transport.value === 'generating')
@@ -2210,6 +2226,7 @@ function setSequencerEnabled(on: boolean) {
 /** Trigger the active synthesis engine for a given note + velocity (MIDI/sequencer). */
 function triggerEngine(note: number, velocity: number) {
   wireEnvelope()
+  filter.setNote(note)
   const semitones = note - MIDI_REF_NOTE
   if (engineMode.value === 'looper') {
     looper.setTranspose(semitones)
@@ -2228,6 +2245,16 @@ function triggerEngine(note: number, velocity: number) {
     }
   }
   modulation.triggerAttack(velocity)
+}
+
+/** Glide: ramp pitch to target note without retriggering envelope/ADSR. */
+function glideEngine(note: number, timeMs: number) {
+  const semitones = note - MIDI_REF_NOTE
+  if (engineMode.value === 'looper') {
+    looper.glideToSemitones(semitones, timeMs)
+  } else {
+    wavetableOsc.glideToNote(note, timeMs)
+  }
 }
 
 /**
@@ -2332,13 +2359,19 @@ function onWtInterpolateChange(event: Event) {
 function wireSequencerCallbacks() {
   sequencer.setCallbacks(
     // noteOn: retrigger active engine at new pitch, through arpeggiator
-    (note, velocity) => {
+    (note, velocity, glide) => {
       const octNote = note + seqOctave.value * 12 + seqKeyTranspose.value
-      arpeggiator.processNote(octNote, velocity, (n, v) => {
-        triggerEngine(n, v)
-      }, () => {
-        modulation.triggerRelease()
-      })
+      if (glide) {
+        // Glide: ramp pitch without retriggering envelope
+        glideEngine(octNote, sequencer.glideTime.value)
+        filter.setNote(octNote)
+      } else {
+        arpeggiator.processNote(octNote, velocity, (n, v) => {
+          triggerEngine(n, v)
+        }, () => {
+          modulation.triggerRelease()
+        })
+      }
     },
     // noteOff: stop arpeggiator, fire ADSR release
     () => {
@@ -2346,6 +2379,79 @@ function wireSequencerCallbacks() {
       modulation.triggerRelease()
     },
   )
+}
+
+// ===== Audio Recording =====
+function startRecording() {
+  if (isRecording.value) return
+  wireEnvelope()
+  const ac = looper.getContext()
+  const outputNode = effects.getOutputNode()
+  if (!outputNode) return
+
+  mediaStreamDest = ac.createMediaStreamDestination()
+  outputNode.connect(mediaStreamDest)
+  recordedChunks = []
+
+  const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+    ? 'audio/webm;codecs=opus' : 'audio/webm'
+  mediaRecorder = new MediaRecorder(mediaStreamDest.stream, { mimeType })
+  mediaRecorder.ondataavailable = (e) => {
+    if (e.data.size > 0) recordedChunks.push(e.data)
+  }
+  mediaRecorder.onstop = async () => {
+    const webmBlob = new Blob(recordedChunks, { type: mimeType })
+    try {
+      // Convert to WAV for universal playback
+      const arrayBuf = await webmBlob.arrayBuffer()
+      const audioBuf = await ac.decodeAudioData(arrayBuf)
+      const wavBlob = encodeWavFromBuffer(audioBuf)
+      downloadBlob(wavBlob, `synth_recording_${Date.now()}.wav`)
+    } catch {
+      // Fallback: download as webm if WAV conversion fails
+      downloadBlob(webmBlob, `synth_recording_${Date.now()}.webm`)
+    }
+    if (mediaStreamDest && outputNode) {
+      try { outputNode.disconnect(mediaStreamDest) } catch { /* already disconnected */ }
+    }
+    mediaStreamDest = null
+  }
+  mediaRecorder.start(100) // collect chunks every 100ms
+  isRecording.value = true
+}
+
+function stopRecording() {
+  if (!isRecording.value || !mediaRecorder) return
+  mediaRecorder.stop()
+  mediaRecorder = null
+  isRecording.value = false
+}
+
+function toggleRecording() {
+  if (isRecording.value) stopRecording()
+  else startRecording()
+}
+
+/** Encode AudioBuffer to 16-bit PCM WAV Blob. */
+function encodeWavFromBuffer(buffer: AudioBuffer): Blob {
+  const nc = buffer.numberOfChannels, sr = buffer.sampleRate
+  const len = buffer.length, ds = len * nc * 2
+  const ab = new ArrayBuffer(44 + ds), v = new DataView(ab)
+  const ws = (o: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)) }
+  ws(0, 'RIFF'); v.setUint32(4, 36 + ds, true); ws(8, 'WAVE'); ws(12, 'fmt ')
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nc, true)
+  v.setUint32(24, sr, true); v.setUint32(28, sr * nc * 2, true)
+  v.setUint16(32, nc * 2, true); v.setUint16(34, 16, true); ws(36, 'data'); v.setUint32(40, ds, true)
+  const chs: Float32Array[] = []
+  for (let c = 0; c < nc; c++) chs.push(buffer.getChannelData(c))
+  let off = 44
+  for (let i = 0; i < len; i++) {
+    for (let c = 0; c < nc; c++) {
+      const s = Math.max(-1, Math.min(1, chs[c]![i]!))
+      v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true); off += 2
+    }
+  }
+  return new Blob([ab], { type: 'audio/wav' })
 }
 
 function toggleSequencer() {
@@ -2544,6 +2650,26 @@ function exportPreset() {
       sustain: modulation.envs[0]!.sustain.value,
       releaseMs: modulation.envs[0]!.releaseMs.value,
     },
+    modulation: {
+      envs: modulation.envs.map(e => ({
+        attackMs: e.attackMs.value, decayMs: e.decayMs.value,
+        sustain: e.sustain.value, releaseMs: e.releaseMs.value,
+        amount: e.amount.value, target: e.target.value, loop: e.loop.value,
+      })),
+      lfos: modulation.lfos.map(l => ({
+        rate: l.rate.value, depth: l.depth.value,
+        waveform: l.waveform.value, target: l.target.value, mode: l.mode.value,
+      })),
+    },
+    wavetable: {
+      scan: wavetableScan.value,
+      interpolate: wtInterpolate.value,
+      scanAttack: wtScanAttack.value,
+      scanDecay: wtScanDecay.value,
+      scanRelease: wtScanRelease.value,
+      rangeStart: wtRangeStart.value,
+      rangeEnd: wtRangeEnd.value,
+    },
     effects: {
       delayEnabled: effects.delayEnabled.value,
       delayTimeMs: effects.delayTimeMs.value,
@@ -2558,8 +2684,9 @@ function exportPreset() {
       bpm: sequencer.bpm.value,
       stepCount: sequencer.stepCount.value,
       division: sequencer.division.value,
+      glideTime: sequencer.glideTime.value,
       steps: sequencer.steps.map(s => ({
-        active: s.active, semitone: s.semitone, velocity: s.velocity, gate: s.gate,
+        active: s.active, semitone: s.semitone, velocity: s.velocity, gate: s.gate, glide: s.glide,
       })),
     },
     arpeggiator: {
@@ -2571,6 +2698,7 @@ function exportPreset() {
     filter: {
       enabled: filter.enabled.value,
       type: filter.type.value,
+      slope: filter.slope.value,
       cutoff: filter.cutoff.value,
       resonance: filter.resonance.value,
       mix: filter.mix.value,
@@ -2645,12 +2773,53 @@ async function importPreset(event: Event) {
       looper.setCrossfade(preset.engine.crossfadeMs ?? 150)
     }
 
-    // Restore envelope
+    // Restore envelope (legacy: single env)
     if (preset.envelope) {
       modulation.envs[0]!.attackMs.value = preset.envelope.attackMs ?? 0
       modulation.envs[0]!.decayMs.value = preset.envelope.decayMs ?? 0
       modulation.envs[0]!.sustain.value = preset.envelope.sustain ?? 1
       modulation.envs[0]!.releaseMs.value = preset.envelope.releaseMs ?? 0
+    }
+
+    // Restore full modulation bank (overrides legacy envelope if present)
+    const mod = (preset as any).modulation
+    if (mod) {
+      if (mod.envs) {
+        for (let i = 0; i < mod.envs.length && i < modulation.envs.length; i++) {
+          const src = mod.envs[i]
+          const dst = modulation.envs[i]!
+          dst.attackMs.value = src.attackMs ?? 0
+          dst.decayMs.value = src.decayMs ?? 0
+          dst.sustain.value = src.sustain ?? 1
+          dst.releaseMs.value = src.releaseMs ?? 0
+          dst.amount.value = src.amount ?? (i === 0 ? 1 : 0.5)
+          dst.target.value = src.target ?? (i === 0 ? 'dca' : 'none')
+          dst.loop.value = src.loop ?? false
+        }
+      }
+      if (mod.lfos) {
+        for (let i = 0; i < mod.lfos.length && i < modulation.lfos.length; i++) {
+          const src = mod.lfos[i]
+          const dst = modulation.lfos[i]!
+          dst.rate.value = src.rate ?? (i === 0 ? 2 : 0.5)
+          dst.depth.value = src.depth ?? 0
+          dst.waveform.value = src.waveform ?? 'sine'
+          dst.target.value = src.target ?? 'none'
+          dst.mode.value = src.mode ?? 'free'
+        }
+      }
+    }
+
+    // Restore wavetable params
+    const wt = (preset as any).wavetable
+    if (wt) {
+      if (wt.scan != null) wavetableScan.value = wt.scan
+      if (wt.interpolate != null) wtInterpolate.value = wt.interpolate
+      if (wt.scanAttack != null) wtScanAttack.value = wt.scanAttack
+      if (wt.scanDecay != null) wtScanDecay.value = wt.scanDecay
+      if (wt.scanRelease != null) wtScanRelease.value = wt.scanRelease
+      if (wt.rangeStart != null) wtRangeStart.value = wt.rangeStart
+      if (wt.rangeEnd != null) wtRangeEnd.value = wt.rangeEnd
     }
 
     // Restore effects
@@ -2672,6 +2841,7 @@ async function importPreset(event: Event) {
       sequencer.setBpm(preset.sequencer.bpm ?? 120)
       sequencer.setStepCount(preset.sequencer.stepCount as any ?? 8)
       sequencer.setDivision(preset.sequencer.division as any ?? '1/8')
+      if ((preset.sequencer as any).glideTime) sequencer.setGlideTime((preset.sequencer as any).glideTime)
       if (preset.sequencer.steps) {
         for (let i = 0; i < preset.sequencer.steps.length && i < sequencer.steps.length; i++) {
           const s = preset.sequencer.steps[i]!
@@ -2679,6 +2849,7 @@ async function importPreset(event: Event) {
           sequencer.setStepSemitone(i, s.semitone)
           sequencer.setStepVelocity(i, s.velocity)
           sequencer.setStepGate(i, s.gate)
+          sequencer.setStepGlide(i, (s as any).glide ?? false)
         }
       }
     }
@@ -2694,6 +2865,7 @@ async function importPreset(event: Event) {
     // Restore filter (pure filter — modulators are in the modulation bank)
     if (preset.filter) {
       filter.setType(preset.filter.type as FilterType ?? 'lowpass')
+      if ('slope' in preset.filter) filter.setSlope((preset.filter as any).slope ?? '12')
       filter.setCutoff(preset.filter.cutoff ?? 1)
       filter.setResonance(preset.filter.resonance ?? 0.7)
       if ('mix' in preset.filter) filter.setMix((preset.filter as any).mix ?? 1)
@@ -3535,6 +3707,34 @@ onUnmounted(() => {
 .save-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+}
+
+.record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.record-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f44336;
+}
+
+.record-btn.recording {
+  border-color: rgba(244, 67, 54, 0.5);
+  color: #f44336;
+}
+
+.record-btn.recording .record-dot {
+  animation: pulse-record 1s ease-in-out infinite;
+}
+
+@keyframes pulse-record {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 /* MIDI section */
@@ -4444,6 +4644,27 @@ onUnmounted(() => {
   background: #4CAF50;
   border-color: #4CAF50;
   box-shadow: 0 0 6px rgba(76, 175, 80, 0.7);
+}
+
+.seq-glide-btn {
+  width: 16px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.55rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.1s;
+}
+
+.seq-glide-btn.on {
+  background: rgba(255, 152, 0, 0.3);
+  border-color: rgba(255, 152, 0, 0.6);
+  color: #FF9800;
 }
 
 /* Horizontal velocity slider (small) */

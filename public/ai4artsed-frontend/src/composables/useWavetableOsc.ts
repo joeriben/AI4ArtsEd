@@ -14,7 +14,7 @@ import { PitchDetector } from 'pitchy'
 const FRAME_SIZE = 2048
 const MIN_FRAMES = 8
 const PITCH_ANALYSIS_WINDOW = 4096
-const PITCH_CONFIDENCE_THRESHOLD = 0.9
+const PITCH_CONFIDENCE_THRESHOLD = 0.8
 const SINC_KERNEL_A = 6
 
 export function useWavetableOsc() {
@@ -146,10 +146,26 @@ export function useWavetableOsc() {
       for (let i = 0; i < len; i++) mono[i] = mono[i]! * scale
     }
 
-    // Pre-compute Hann window for FRAME_SIZE
-    const hann = new Float32Array(FRAME_SIZE)
+    // Cosine taper for pitch-sync frames: smooth only first/last TAPER_LEN samples
+    // to avoid clicks while preserving harmonic content of the cycle.
+    const TAPER_LEN = 32
+    const taper = new Float32Array(TAPER_LEN)
+    for (let i = 0; i < TAPER_LEN; i++) {
+      taper[i] = 0.5 * (1 - Math.cos(Math.PI * i / TAPER_LEN))
+    }
+
+    // Tukey window for fallback: flat center (~70% of frame), cosine edges
+    const TUKEY_ALPHA = 0.3
+    const tukey = new Float32Array(FRAME_SIZE)
+    const taperSamples = Math.floor(TUKEY_ALPHA * FRAME_SIZE / 2)
     for (let i = 0; i < FRAME_SIZE; i++) {
-      hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / FRAME_SIZE))
+      if (i < taperSamples) {
+        tukey[i] = 0.5 * (1 - Math.cos(Math.PI * i / taperSamples))
+      } else if (i >= FRAME_SIZE - taperSamples) {
+        tukey[i] = 0.5 * (1 - Math.cos(Math.PI * (FRAME_SIZE - 1 - i) / taperSamples))
+      } else {
+        tukey[i] = 1.0
+      }
     }
 
     // --- Pitch-synchronous extraction ---
@@ -177,9 +193,10 @@ export function useWavetableOsc() {
             const period = mono.slice(start, start + periodSamples)
             // Resample to FRAME_SIZE
             const resampled = sincResample(period, FRAME_SIZE)
-            // Apply Hann window + normalize
-            for (let i = 0; i < FRAME_SIZE; i++) {
-              resampled[i]! *= hann[i]!
+            // Minimal cosine taper at edges (NOT full Hann — preserves harmonics)
+            for (let i = 0; i < TAPER_LEN; i++) {
+              resampled[i]! *= taper[i]!
+              resampled[FRAME_SIZE - 1 - i]! *= taper[i]!
             }
             normalizeFrame(resampled)
             result.push(resampled)
@@ -188,15 +205,16 @@ export function useWavetableOsc() {
       }
     }
 
-    // --- Fallback: overlapping windowed extraction (50% overlap + Hann) ---
+    // --- Fallback: overlapping Tukey-windowed extraction ---
+    // Tukey preserves ~70% of waveform character vs Hann's 0% at edges.
     if (result.length < MIN_FRAMES) {
-      result.length = 0 // discard sparse pitch-sync frames; windowed fallback is more consistent
+      result.length = 0
       const overlap = Math.floor(FRAME_SIZE / 2)
       let offset = 0
       while (offset + FRAME_SIZE <= len) {
         const frame = new Float32Array(FRAME_SIZE)
         for (let i = 0; i < FRAME_SIZE; i++) {
-          frame[i] = mono[offset + i]! * hann[i]!
+          frame[i] = mono[offset + i]! * tukey[i]!
         }
         normalizeFrame(frame)
         result.push(frame)
@@ -208,7 +226,12 @@ export function useWavetableOsc() {
     if (result.length === 0) {
       const padded = new Float32Array(FRAME_SIZE)
       padded.set(mono.subarray(0, Math.min(len, FRAME_SIZE)))
-      for (let i = 0; i < FRAME_SIZE; i++) padded[i]! *= hann[i]!
+      for (let i = 0; i < TAPER_LEN; i++) {
+        padded[i]! *= taper[i]!
+        const end = Math.min(len, FRAME_SIZE) - 1 - i
+        if (end >= 0 && end < FRAME_SIZE) padded[end]! *= taper[i]!
+      }
+      normalizeFrame(padded)
       result.push(padded)
     }
     while (result.length < MIN_FRAMES) {
@@ -246,23 +269,25 @@ export function useWavetableOsc() {
   /**
    * Load pre-extracted frames directly (e.g. from semantic wavetable builder).
    * Each frame should be a single-cycle waveform. Frames are resampled to
-   * FRAME_SIZE, Hann-windowed, and peak-normalized to prevent volume jumps.
+   * FRAME_SIZE, cosine-tapered at edges, and peak-normalized.
    */
   function loadRawFrames(rawFrames: Float32Array[]): void {
     if (rawFrames.length === 0) return
 
-    // Pre-compute Hann window
-    const hann = new Float32Array(FRAME_SIZE)
-    for (let i = 0; i < FRAME_SIZE; i++) {
-      hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / FRAME_SIZE))
+    // Cosine taper — only smooth first/last 32 samples to preserve harmonics
+    const TAPER = 32
+    const taperWin = new Float32Array(TAPER)
+    for (let i = 0; i < TAPER; i++) {
+      taperWin[i] = 0.5 * (1 - Math.cos(Math.PI * i / TAPER))
     }
 
     frames = rawFrames.map(f => {
       // Resample to FRAME_SIZE if needed
       const resampled = f.length === FRAME_SIZE ? new Float32Array(f) : sincResample(f, FRAME_SIZE)
-      // Apply Hann window
-      for (let i = 0; i < FRAME_SIZE; i++) {
-        resampled[i]! *= hann[i]!
+      // Minimal cosine taper at edges
+      for (let i = 0; i < TAPER; i++) {
+        resampled[i]! *= taperWin[i]!
+        resampled[FRAME_SIZE - 1 - i]! *= taperWin[i]!
       }
       // Normalize to peak 1.0
       normalizeFrame(resampled)
@@ -341,6 +366,18 @@ export function useWavetableOsc() {
 
   function setFrequencyFromNote(midiNote: number): void {
     setFrequency(440 * Math.pow(2, (midiNote - 69) / 12))
+  }
+
+  function glideToNote(midiNote: number, timeMs: number): void {
+    const hz = 440 * Math.pow(2, (midiNote - 69) / 12)
+    currentFrequency.value = Math.max(20, Math.min(20000, hz))
+    if (workletNode) {
+      const param = workletNode.parameters.get('frequency')
+      if (param) {
+        const ac = ctx ?? ensureContext()
+        param.linearRampToValueAtTime(currentFrequency.value, ac.currentTime + timeMs / 1000)
+      }
+    }
   }
 
   function setScanPosition(pos: number): void {
@@ -460,6 +497,7 @@ export function useWavetableOsc() {
     setContext,
     setFrequency,
     setFrequencyFromNote,
+    glideToNote,
     setScanPosition,
     setInterpolate,
     triggerScanEnvelope,
