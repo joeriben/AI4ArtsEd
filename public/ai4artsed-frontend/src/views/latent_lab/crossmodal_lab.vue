@@ -2244,10 +2244,18 @@ function transportPlay() {
 function transportStop() {
   sequencer.stop()
   arpeggiator.stop()
-  // Always stop BOTH engines — they share the DCA, leftover from the other leaks through
+  modulation.triggerRelease()
+  // Stop BOTH engines — they share the DCA
   looper.stop()
   wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
   wavetableOsc.stop()
+  // DCA to 0 immediately — no lingering sustain
+  const dcaGain = modulation.getDcaGainNode()
+  if (dcaGain) {
+    const ac = looper.getContext()
+    dcaGain.gain.cancelScheduledValues(ac.currentTime)
+    dcaGain.gain.setValueAtTime(0, ac.currentTime)
+  }
   transport.value = 'paused'
 }
 
@@ -2276,12 +2284,8 @@ function setEngineMode(mode: EngineMode) {
     }
   }
 
-  // Resume if was playing and new engine has audio
-  if (wasPlaying && hasLoadedAudio.value) {
-    transportPlay()
-  } else {
-    transport.value = hasLoadedAudio.value ? 'paused' : 'idle'
-  }
+  // Always paused after engine switch — user starts explicitly
+  transport.value = hasLoadedAudio.value ? 'paused' : 'idle'
 }
 
 /** Set loop mode (oneshot/loop/pingpong). */
