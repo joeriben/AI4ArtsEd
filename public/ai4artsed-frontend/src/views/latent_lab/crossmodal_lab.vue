@@ -610,7 +610,7 @@
         </div>
 
         <!-- ═══════ BOX 4: EFFECTS (Delay + Reverb) ═══════ -->
-        <div class="synth-box" v-memo="[effects.delayEnabled.value, effects.delayTimeMs.value, effects.delayFeedback.value, effects.delayMix.value, effects.reverbEnabled.value, effects.reverbMix.value, effects.reverbVariant.value, effects.reverbLoaded.value]">
+        <div class="synth-box" v-memo="[effects.delayEnabled.value, effects.delayTimeMs.value, effects.delayFeedback.value, effects.delayDamp.value, effects.delayDampFreq.value, effects.delayMix.value, effects.reverbEnabled.value, effects.reverbMix.value, effects.reverbVariant.value, effects.reverbLoaded.value]">
           <!-- Delay -->
           <div class="section-toggle">
             <label class="inline-toggle">
