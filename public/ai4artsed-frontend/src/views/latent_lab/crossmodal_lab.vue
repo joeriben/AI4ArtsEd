@@ -717,7 +717,7 @@
                 <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
               </span>
             </div>
-            <div class="sequencer-settings-row">
+            <div class="sequencer-settings-row" v-memo="[sequencer.presetIndex.value, sequencer.bpm.value, sequencer.midiClockActive.value, sequencer.midiClockBpm.value, sequencer.stepCount.value, sequencer.division.value, sequencer.steps[0]?.gate]">
               <div class="sequencer-preset">
                 <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
                 <select :value="sequencer.presetIndex.value" @change="onPresetChange">
@@ -751,7 +751,7 @@
           </div>
 
           <!-- Arpeggiator -->
-          <div class="section-toggle">
+          <div class="section-toggle" v-memo="[arpeggiator.enabled.value, arpeggiator.pattern.value, arpeggiator.rate.value, arpeggiator.octaveRange.value]">
             <label class="inline-toggle">
               <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
               {{ t('latentLab.crossmodal.synth.arpeggiator') }}
