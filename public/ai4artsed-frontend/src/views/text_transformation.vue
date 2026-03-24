@@ -683,6 +683,16 @@ const trashyFocusHint = computed<FocusHint>(() => {
   return { x: 95, y: trashyY.value, anchor: 'bottom-right' }
 })
 
+// Stage 5 refs — declared here (before pageContext computed) to avoid TDZ
+const isAnalyzing = ref(false)
+const imageAnalysis = ref<{
+  analysis: string
+  reflection_prompts: string[]
+  insights: string[]
+  success: boolean
+} | null>(null)
+const showAnalysis = ref(false)
+
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'text_transformation',
   pageContent: {
@@ -2046,16 +2056,8 @@ async function downloadMedia() {
 
 // ============================================================================
 // Stage 5: Image Analysis (Pedagogical Reflection)
+// (refs declared above pageContext to avoid TDZ — see isAnalyzing, imageAnalysis, showAnalysis)
 // ============================================================================
-
-const isAnalyzing = ref(false)
-const imageAnalysis = ref<{
-  analysis: string
-  reflection_prompts: string[]
-  insights: string[]
-  success: boolean
-} | null>(null)
-const showAnalysis = ref(false)
 
 async function analyzeImage() {
   if (!outputImage.value || outputMediaType.value !== 'image') {
