@@ -1,32 +1,32 @@
 /**
  * Modulation bank: 3 ADSR envelopes + 2 LFOs with flexible target routing.
  *
- * Each modulator is independently assignable to a target AudioParam.
- * Targets are registered via setTargets() after audio nodes are created.
+ * Targets come in two flavors:
+ *   - AudioParam targets (dca, dcf_cutoff, pitch, delay_*, reverb_*, lfo rates)
+ *     → modulated via Web Audio scheduling / LFO connection
+ *   - Callback targets (wt_scan)
+ *     → modulated via requestAnimationFrame polling
  *
- * Envelopes:
- *   - ADSR + amount (depth of modulation)
- *   - Loop toggle: after decay→sustain, restart attack (ADS cycle)
- *   - triggerAttack() / triggerRelease() called from MIDI/sequencer
- *
- * LFOs:
- *   - OscillatorNode → GainNode → target AudioParam (additive)
- *   - Rate, depth, waveform (sine/tri/sq/saw)
- *
- * Targets:
- *   - 'dca'         → amplitude GainNode.gain
- *   - 'dcf_cutoff'  → BiquadFilterNode.frequency
- *   - 'pitch'       → AudioBufferSourceNode.playbackRate (via intermediary)
- *   - 'none'        → unassigned
+ * LFO modes:
+ *   - 'free': runs continuously, phase never resets
+ *   - 'trigger': phase resets to 0 on each note-on
  */
 import { ref, readonly, type Ref } from 'vue'
 
-export type ModTarget = 'dca' | 'dcf_cutoff' | 'pitch' | 'delay_time' | 'delay_feedback' | 'delay_mix' | 'reverb_mix' | 'none'
+export type ModTarget =
+  | 'dca' | 'dcf_cutoff' | 'pitch'
+  | 'delay_time' | 'delay_feedback' | 'delay_mix' | 'reverb_mix'
+  | 'lfo1_rate' | 'lfo2_rate'
+  | 'wt_scan'
+  | 'none'
+
 export type LfoWaveform = 'sine' | 'triangle' | 'square' | 'sawtooth'
+export type LfoMode = 'free' | 'trigger'
 
 export const MOD_TARGETS: ModTarget[] = [
   'none', 'dca', 'dcf_cutoff', 'pitch',
   'delay_time', 'delay_feedback', 'delay_mix', 'reverb_mix',
+  'lfo1_rate', 'lfo2_rate', 'wt_scan',
 ]
 
 export interface EnvState {
@@ -44,6 +44,7 @@ export interface LfoState {
   depth: Ref<number>
   waveform: Ref<LfoWaveform>
   target: Ref<ModTarget>
+  mode: Ref<LfoMode>
 }
 
 export function useModulation() {
@@ -65,72 +66,119 @@ export function useModulation() {
 
   // ─── 2 LFOs ───
   const lfos: LfoState[] = [
-    { rate: ref(2.0), depth: ref(0), waveform: ref<LfoWaveform>('sine'), target: ref<ModTarget>('none') },
-    { rate: ref(0.5), depth: ref(0), waveform: ref<LfoWaveform>('triangle'), target: ref<ModTarget>('none') },
+    { rate: ref(2.0), depth: ref(0), waveform: ref<LfoWaveform>('sine'), target: ref<ModTarget>('none'), mode: ref<LfoMode>('free') },
+    { rate: ref(0.5), depth: ref(0), waveform: ref<LfoWaveform>('triangle'), target: ref<ModTarget>('none'), mode: ref<LfoMode>('free') },
   ]
 
   // ─── Audio state ───
   let ctx: AudioContext | null = null
   const targetParams: Record<string, AudioParam | null> = {}
-  // Base value getters — read current value at trigger time, not cached from init
   const targetBaseGetters: Record<string, () => number> = {}
 
-  // Envelope GainNodes (one per envelope, used for DCA-type modulation)
+  // Callback targets (non-AudioParam, e.g. wt_scan)
+  const callbackTargets: Record<string, (value: number) => void> = {}
+  const callbackBaseGetters: Record<string, () => number> = {}
+
+  // Envelope GainNodes (for DCA)
   const envGainNodes: (GainNode | null)[] = [null, null, null]
   const envLoopTimers: (ReturnType<typeof setTimeout> | null)[] = [null, null, null]
+
+  // Callback envelope state (for rAF-driven ADSR on non-AudioParam targets)
+  const cbEnvState: Array<{
+    active: boolean; releasing: boolean
+    startTime: number; releaseTime: number
+    velocity: number
+    rafId: number | null
+  }> = [
+    { active: false, releasing: false, startTime: 0, releaseTime: 0, velocity: 1, rafId: null },
+    { active: false, releasing: false, startTime: 0, releaseTime: 0, velocity: 1, rafId: null },
+    { active: false, releasing: false, startTime: 0, releaseTime: 0, velocity: 1, rafId: null },
+  ]
 
   // LFO nodes
   const lfoOscs: (OscillatorNode | null)[] = [null, null]
   const lfoGains: (GainNode | null)[] = [null, null]
 
-  /**
-   * Initialize with AudioContext. Call once.
-   */
+  // LFO callback polling
+  let lfoRafId: number | null = null
+  const lfoAnalysers: (AnalyserNode | null)[] = [null, null]
+  const lfoSampleBuf = new Float32Array(1)
+
   function init(ac: AudioContext): void {
     ctx = ac
 
-    // Create envelope GainNodes (for DCA envelopes — inserted in signal chain)
     for (let i = 0; i < 3; i++) {
       envGainNodes[i] = ac.createGain()
       envGainNodes[i]!.gain.value = 1
     }
 
-    // Create LFO oscillators
     for (let i = 0; i < 2; i++) {
-      const osc = ac.createOscillator()
-      const gain = ac.createGain()
-      osc.type = lfos[i]!.waveform.value
-      osc.frequency.value = lfos[i]!.rate.value
-      gain.gain.value = 0
-      osc.connect(gain)
-      osc.start()
-      lfoOscs[i] = osc
-      lfoGains[i] = gain
+      createLfoNodes(ac, i)
     }
   }
 
+  function createLfoNodes(ac: AudioContext, idx: number): void {
+    // Clean up old
+    if (lfoOscs[idx]) { try { lfoOscs[idx]!.stop() } catch { /* noop */ }; lfoOscs[idx]!.disconnect() }
+    if (lfoGains[idx]) lfoGains[idx]!.disconnect()
+    if (lfoAnalysers[idx]) lfoAnalysers[idx]!.disconnect()
+
+    const osc = ac.createOscillator()
+    const gain = ac.createGain()
+    const analyser = ac.createAnalyser()
+    analyser.fftSize = 32
+
+    osc.type = lfos[idx]!.waveform.value
+    osc.frequency.value = lfos[idx]!.rate.value
+    gain.gain.value = 0
+
+    osc.connect(gain)
+    gain.connect(analyser) // for callback target value readback
+
+    osc.start()
+    lfoOscs[idx] = osc
+    lfoGains[idx] = gain
+    lfoAnalysers[idx] = analyser
+  }
+
   /**
-   * Register target AudioParams. Call after all audio nodes are created.
-   * For 'dca', pass the GainNode.gain that controls amplitude.
-   * Base values are used as the "home" position for envelope release.
+   * Register AudioParam-based targets.
    */
   function setTargets(targets: Record<string, { param: AudioParam; baseValue: () => number }>): void {
     for (const [key, { param, baseValue }] of Object.entries(targets)) {
       targetParams[key] = param
       targetBaseGetters[key] = baseValue
     }
+
+    // Also register LFO rate params as targets
+    if (lfoOscs[0]) {
+      targetParams['lfo1_rate'] = lfoOscs[0]!.frequency
+      targetBaseGetters['lfo1_rate'] = () => lfos[0]!.rate.value
+    }
+    if (lfoOscs[1]) {
+      targetParams['lfo2_rate'] = lfoOscs[1]!.frequency
+      targetBaseGetters['lfo2_rate'] = () => lfos[1]!.rate.value
+    }
+
     applyLfoRouting()
   }
 
   /**
-   * Get the first DCA envelope's GainNode for signal chain insertion.
-   * Chain: source → envGainNodes[0] → ... → destination
-   * Only envelope 0 is in the signal path as a GainNode. Envelopes 1/2
-   * modulate their targets via AudioParam scheduling (additive), not
-   * signal-chain insertion.
+   * Register callback-based targets (non-AudioParam, e.g. wt_scan).
    */
+  function setCallbackTargets(targets: Record<string, { callback: (v: number) => void; baseValue: () => number }>): void {
+    for (const [key, { callback, baseValue }] of Object.entries(targets)) {
+      callbackTargets[key] = callback
+      callbackBaseGetters[key] = baseValue
+    }
+  }
+
   function getDcaGainNode(): GainNode | null {
     return envGainNodes[0] ?? null
+  }
+
+  function isCallbackTarget(target: ModTarget): boolean {
+    return target in callbackTargets
   }
 
   // ─── Envelope scheduling ───
@@ -140,6 +188,14 @@ export function useModulation() {
     for (let i = 0; i < 3; i++) {
       triggerEnvAttack(i, velocity)
     }
+    // Retrigger LFOs in trigger mode
+    for (let i = 0; i < 2; i++) {
+      if (lfos[i]!.mode.value === 'trigger' && ctx) {
+        createLfoNodes(ctx, i)
+        applyLfoRouting()
+      }
+    }
+    startLfoCallbackPolling()
   }
 
   function triggerRelease(): void {
@@ -163,8 +219,18 @@ export function useModulation() {
     const sus = env.sustain.value
     const amount = env.amount.value
 
+    if (isCallbackTarget(target)) {
+      // Callback target: drive via rAF
+      const st = cbEnvState[idx]!
+      st.active = true
+      st.releasing = false
+      st.startTime = performance.now()
+      st.velocity = velocity
+      if (!st.rafId) startCbEnvLoop(idx)
+      return
+    }
+
     if (target === 'dca') {
-      // DCA envelope: modulate the GainNode in the signal chain
       const gain = envGainNodes[0]
       if (!gain) return
       const peak = velocity * amount
@@ -178,7 +244,7 @@ export function useModulation() {
         scheduleEnvLoop(idx, velocity, atk + dec)
       }
     } else {
-      // AudioParam modulation: scheduling on target param
+      // AudioParam modulation
       const param = targetParams[target]
       if (!param) return
       const baseVal = targetBaseGetters[target]?.() ?? param.value
@@ -188,14 +254,14 @@ export function useModulation() {
       let susVal: number
 
       if (target === 'dcf_cutoff') {
-        // Subtractive model: envelope opens filter from closed (20Hz)
-        // up to cutoff slider position. Amount = how far it opens.
+        // Subtractive model: amount controls sweep range around cutoff slider.
+        // amount=0: no sweep (stays at baseVal). amount=1: 20Hz→20kHz full sweep.
+        // Start drops below base, peak rises above base — proportional to amount.
         const minFreq = 20
-        startVal = minFreq
-        peakVal = Math.max(minFreq, minFreq + (baseVal - minFreq) * amount)
-        susVal = Math.max(minFreq, minFreq + (peakVal - minFreq) * sus)
+        startVal = Math.max(minFreq, baseVal * (1 - amount))
+        peakVal = Math.min(20000, baseVal * (1 + amount * 8))
+        susVal = Math.max(minFreq, startVal + (peakVal - startVal) * sus)
       } else {
-        // Linear targets: amount as fraction of base
         startVal = baseVal
         peakVal = baseVal + amount * baseVal
         susVal = baseVal + (peakVal - baseVal) * sus
@@ -226,6 +292,13 @@ export function useModulation() {
 
     if (envLoopTimers[idx]) { clearTimeout(envLoopTimers[idx]!); envLoopTimers[idx] = null }
 
+    if (isCallbackTarget(target)) {
+      const st = cbEnvState[idx]!
+      st.releasing = true
+      st.releaseTime = performance.now()
+      return
+    }
+
     const now = ctx.currentTime
     const rel = env.releaseMs.value / 1000
 
@@ -239,14 +312,16 @@ export function useModulation() {
     } else {
       const param = targetParams[target]
       if (!param) return
-      const baseVal = targetBaseGetters[target]?.() ?? 1
       const current = param.value
       param.cancelScheduledValues(now)
       param.setValueAtTime(Math.max(current, 0.001), now)
       if (target === 'dcf_cutoff') {
-        // Release closes filter back to minimum (20Hz)
-        param.exponentialRampToValueAtTime(20, now + Math.max(rel, 0.002))
+        // Release to start position (baseVal * (1-amount), minimum 20Hz)
+        const baseVal = targetBaseGetters[target]?.() ?? 1000
+        const releaseTarget = Math.max(20, baseVal * (1 - env.amount.value))
+        param.exponentialRampToValueAtTime(releaseTarget, now + Math.max(rel, 0.002))
       } else {
+        const baseVal = targetBaseGetters[target]?.() ?? 1
         param.linearRampToValueAtTime(baseVal, now + Math.max(rel, 0.002))
       }
     }
@@ -260,15 +335,110 @@ export function useModulation() {
     }, cycleTime * 1000)
   }
 
-  /**
-   * Bypass all envelopes: set DCA gain to 1, cancel all scheduling.
-   * Used for non-MIDI playback (direct generate+play).
-   */
+  // ─── Callback envelope (rAF-driven ADSR for non-AudioParam targets) ───
+
+  function computeEnvValue(idx: number, now: number): number {
+    const env = envs[idx]!
+    const st = cbEnvState[idx]!
+    const atk = env.attackMs.value
+    const dec = env.decayMs.value
+    const sus = env.sustain.value
+    const rel = env.releaseMs.value
+    const amount = env.amount.value
+
+    if (st.releasing) {
+      const elapsed = now - st.releaseTime
+      if (elapsed >= rel) { st.active = false; return 0 }
+      // Compute level at release start, then ramp to 0
+      const preRelLevel = computeSustainLevel(idx, st.releaseTime - st.startTime)
+      return preRelLevel * (1 - elapsed / Math.max(rel, 1)) * amount
+    }
+
+    const elapsed = now - st.startTime
+    let level: number
+    if (elapsed < atk) {
+      level = atk > 0 ? elapsed / atk : 1
+    } else if (elapsed < atk + dec) {
+      const t = (elapsed - atk) / Math.max(dec, 1)
+      level = 1 - t * (1 - sus)
+    } else {
+      level = sus
+      // Loop: restart cycle
+      if (env.loop.value && !st.releasing) {
+        st.startTime = now - 0 // restart
+        level = 0
+      }
+    }
+    return level * amount * st.velocity
+  }
+
+  function computeSustainLevel(idx: number, elapsed: number): number {
+    const env = envs[idx]!
+    const atk = env.attackMs.value
+    const dec = env.decayMs.value
+    const sus = env.sustain.value
+    if (elapsed < atk) return atk > 0 ? elapsed / atk : 1
+    if (elapsed < atk + dec) return 1 - ((elapsed - atk) / Math.max(dec, 1)) * (1 - sus)
+    return sus
+  }
+
+  function startCbEnvLoop(idx: number): void {
+    const st = cbEnvState[idx]!
+    const env = envs[idx]!
+
+    function tick() {
+      if (!st.active) { st.rafId = null; return }
+      const target = env.target.value
+      const cb = callbackTargets[target]
+      const baseGet = callbackBaseGetters[target]
+      if (cb && baseGet) {
+        const envVal = computeEnvValue(idx, performance.now())
+        const base = baseGet()
+        cb(base * envVal)
+      }
+      st.rafId = requestAnimationFrame(tick)
+    }
+    st.rafId = requestAnimationFrame(tick)
+  }
+
+  // ─── LFO callback polling (for non-AudioParam targets like wt_scan) ───
+
+  function startLfoCallbackPolling(): void {
+    if (lfoRafId !== null) return
+    function poll() {
+      let anyActive = false
+      for (let i = 0; i < 2; i++) {
+        const lfo = lfos[i]!
+        const target = lfo.target.value
+        if (target === 'none' || lfo.depth.value === 0) continue
+        const cb = callbackTargets[target]
+        if (!cb) continue
+        const analyser = lfoAnalysers[i]
+        if (!analyser) continue
+
+        anyActive = true
+        analyser.getFloatTimeDomainData(lfoSampleBuf)
+        const lfoVal = lfoSampleBuf[0]! // -1..+1
+        const baseGet = callbackBaseGetters[target]
+        const base = baseGet?.() ?? 0.5
+        // Map LFO output: base ± depth * base
+        cb(Math.max(0, Math.min(1, base + lfoVal * lfo.depth.value * base)))
+      }
+      if (anyActive) {
+        lfoRafId = requestAnimationFrame(poll)
+      } else {
+        lfoRafId = null
+      }
+    }
+    lfoRafId = requestAnimationFrame(poll)
+  }
+
   function bypass(): void {
     if (!ctx) return
     const now = ctx.currentTime
     for (let i = 0; i < 3; i++) {
       if (envLoopTimers[i]) { clearTimeout(envLoopTimers[i]!); envLoopTimers[i] = null }
+      cbEnvState[i]!.active = false
       const env = envs[i]!
       if (env.target.value === 'dca') {
         const gain = envGainNodes[0]
@@ -276,7 +446,7 @@ export function useModulation() {
           gain.gain.cancelScheduledValues(now)
           gain.gain.setValueAtTime(1, now)
         }
-      } else if (env.target.value !== 'none') {
+      } else if (env.target.value !== 'none' && !isCallbackTarget(env.target.value)) {
         const param = targetParams[env.target.value]
         if (param) {
           param.cancelScheduledValues(now)
@@ -295,8 +465,10 @@ export function useModulation() {
       const lfo = lfos[i]!
       if (!gain || !osc) continue
 
-      // Disconnect from previous target
       try { gain.disconnect() } catch { /* noop */ }
+      // Reconnect analyser
+      const analyser = lfoAnalysers[i]
+      if (analyser) gain.connect(analyser)
 
       osc.frequency.value = lfo.rate.value
       osc.type = lfo.waveform.value
@@ -306,11 +478,17 @@ export function useModulation() {
         continue
       }
 
+      // Callback target: polling handles it, just set gain for analyser readback
+      if (isCallbackTarget(lfo.target.value)) {
+        gain.gain.value = 1 // analyser reads raw oscillator output
+        startLfoCallbackPolling()
+        continue
+      }
+
       const param = targetParams[lfo.target.value]
       if (!param) { gain.gain.value = 0; continue }
 
       const baseVal = targetBaseGetters[lfo.target.value]?.() ?? param.value
-      // Depth as fraction of base value (e.g., depth=0.5 modulates ±50% of base)
       gain.gain.value = baseVal * lfo.depth.value
       gain.connect(param)
     }
@@ -323,7 +501,7 @@ export function useModulation() {
     if (!env) return
     const r = env[key] as Ref<any>
     r.value = value
-    if (key === 'target') applyLfoRouting() // targets may share params
+    if (key === 'target') applyLfoRouting()
   }
 
   function setLfoParam(idx: number, key: keyof LfoState, value: number | string): void {
@@ -342,11 +520,15 @@ export function useModulation() {
   function dispose(): void {
     for (let i = 0; i < 3; i++) {
       if (envLoopTimers[i]) clearTimeout(envLoopTimers[i]!)
+      cbEnvState[i]!.active = false
+      if (cbEnvState[i]!.rafId) cancelAnimationFrame(cbEnvState[i]!.rafId!)
       if (envGainNodes[i]) envGainNodes[i]!.disconnect()
     }
+    if (lfoRafId !== null) cancelAnimationFrame(lfoRafId)
     for (let i = 0; i < 2; i++) {
-      if (lfoOscs[i]) { lfoOscs[i]!.stop(); lfoOscs[i]!.disconnect() }
+      if (lfoOscs[i]) { try { lfoOscs[i]!.stop() } catch { /* noop */ }; lfoOscs[i]!.disconnect() }
       if (lfoGains[i]) lfoGains[i]!.disconnect()
+      if (lfoAnalysers[i]) lfoAnalysers[i]!.disconnect()
     }
     ctx = null
   }
@@ -356,6 +538,7 @@ export function useModulation() {
     lfos,
     init,
     setTargets,
+    setCallbackTargets,
     getDcaGainNode,
     triggerAttack,
     triggerRelease,

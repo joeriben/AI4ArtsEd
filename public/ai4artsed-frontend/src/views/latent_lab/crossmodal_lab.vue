@@ -517,7 +517,7 @@
           </div>
 
           <!-- 2 LFOs -->
-          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" v-memo="[lfo.target.value, lfo.rate.value, lfo.depth.value, lfo.waveform.value]" class="adsr-section">
+          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" v-memo="[lfo.target.value, lfo.rate.value, lfo.depth.value, lfo.waveform.value, lfo.mode.value]" class="adsr-section">
             <div class="mod-header">
               <h5>LFO {{ idx + 1 }}</h5>
               <select class="mod-target-select" :value="lfo.target.value" @change="modulation.setLfoParam(idx, 'target', ($event.target as HTMLSelectElement).value)">
@@ -528,6 +528,10 @@
                 <option value="triangle">Tri</option>
                 <option value="square">Sq</option>
                 <option value="sawtooth">Saw</option>
+              </select>
+              <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.mode.value" @change="modulation.setLfoParam(idx, 'mode', ($event.target as HTMLSelectElement).value)">
+                <option value="free">Free</option>
+                <option value="trigger">Trig</option>
               </select>
             </div>
             <div v-if="lfo.target.value !== 'none'" class="adsr-grid">
@@ -1305,6 +1309,14 @@ function wireEnvelope() {
     dca: { param: dcaGain.gain, baseValue: () => 1 },
     ...(freqParam ? { dcf_cutoff: { param: freqParam, baseValue: () => normalizedToFreq(filter.cutoff.value) } } : {}),
     ...effectTargets,
+  })
+
+  // Register callback targets (non-AudioParam)
+  modulation.setCallbackTargets({
+    wt_scan: {
+      callback: (v: number) => { wavetableScan.value = Math.max(0, Math.min(1, v)); wavetableOsc.setScanPosition(v) },
+      baseValue: () => wavetableScan.value || 0.5,
+    },
   })
 
   // Engines → DCA gain
