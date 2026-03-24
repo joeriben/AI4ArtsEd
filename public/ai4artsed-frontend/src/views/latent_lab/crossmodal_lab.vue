@@ -563,6 +563,37 @@
 
         </div>
 
+        <!-- ═══════ BOX 2b: DRIFT LFOs ═══════ -->
+        <div class="synth-box">
+          <h5 class="box-title">DRIFT</h5>
+          <div v-for="(dlfo, idx) in driftLfo.lfos" :key="'drift'+idx" v-memo="[dlfo.target.value, dlfo.rate.value, dlfo.depth.value, dlfo.waveform.value]" class="adsr-section">
+            <div class="mod-header">
+              <h5>DRIFT {{ idx + 1 }}</h5>
+              <select class="mod-target-select" :value="dlfo.target.value" @change="driftLfo.setParam(idx, 'target', ($event.target as HTMLSelectElement).value as DriftTarget)">
+                <option v-for="t in DRIFT_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.replace('sem_axis_', 'Axis ').replace('wt_scan', 'WT Scan').replace('alpha', 'Alpha') }}</option>
+              </select>
+              <select v-if="dlfo.target.value !== 'none'" class="lfo-select" :value="dlfo.waveform.value" @change="driftLfo.setParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
+                <option value="sine">Sine</option>
+                <option value="triangle">Tri</option>
+                <option value="square">Sq</option>
+                <option value="sawtooth">Saw</option>
+              </select>
+            </div>
+            <div v-if="dlfo.target.value !== 'none'" class="adsr-grid">
+              <div class="adsr-slider">
+                <label>Rate</label>
+                <input type="range" :value="driftRateToSlider(dlfo.rate.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'rate', sliderToDriftRate(Number(($event.target as HTMLInputElement).value)))" />
+                <span class="adsr-value">{{ formatDriftRate(dlfo.rate.value) }}</span>
+              </div>
+              <div class="adsr-slider">
+                <label>Depth</label>
+                <input type="range" :value="dlfo.depth.value" min="0" max="1" step="0.01" @input="driftLfo.setParam(idx, 'depth', Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ dlfo.depth.value.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ═══════ BOX 3: FILTER ═══════ -->
         <div class="synth-box" v-memo="[filter.enabled.value, filter.type.value, filter.slope.value, filter.cutoff.value, filter.resonance.value, filter.mix.value, filter.kbdTrack.value]">
           <div class="section-toggle">
@@ -1070,6 +1101,7 @@ import { useI18n } from 'vue-i18n'
 import { useAudioLooper } from '@/composables/useAudioLooper'
 import { useWavetableOsc } from '@/composables/useWavetableOsc'
 import { useModulation, type ModTarget, type LfoWaveform, MOD_TARGETS } from '@/composables/useModulation'
+import { useDriftLfo, type DriftTarget, type DriftWaveform, DRIFT_TARGETS, sliderToDriftRate, driftRateToSlider, formatDriftRate } from '@/composables/useDriftLfo'
 import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
@@ -1340,6 +1372,7 @@ const sequencerOn = computed(() => sequencerEnabled.value)
 
 // ===== ADSR Envelope + Effects =====
 const modulation = useModulation()
+const driftLfo = useDriftLfo()
 const filter = useFilter()
 const effects = useEffects()
 
@@ -1404,6 +1437,34 @@ function wireEnvelope() {
       baseValue: () => wavetableScan.value,
     },
   })
+
+  // Drift LFO callbacks (alpha, semantic axes, wt_scan)
+  driftLfo.setCallbacks({
+    alpha: {
+      callback: (v: number) => { synth.alpha = Math.max(-2, Math.min(2, v)) },
+      baseValue: () => synth.alpha,
+    },
+    sem_axis_1: {
+      callback: (v: number) => { axisSlots[0]!.value = Math.max(-2, Math.min(2, v)) },
+      baseValue: () => axisSlots[0]!.value,
+    },
+    sem_axis_2: {
+      callback: (v: number) => { axisSlots[1]!.value = Math.max(-2, Math.min(2, v)) },
+      baseValue: () => axisSlots[1]!.value,
+    },
+    sem_axis_3: {
+      callback: (v: number) => { axisSlots[2]!.value = Math.max(-2, Math.min(2, v)) },
+      baseValue: () => axisSlots[2]!.value,
+    },
+    wt_scan: {
+      callback: (v: number) => {
+        const clamped = Math.max(0, Math.min(1, v))
+        wavetableOsc.setScanPosition(mappedScanPosition(clamped))
+      },
+      baseValue: () => wavetableScan.value,
+    },
+  })
+  driftLfo.start()
 
   // Engines → DCA gain
   looper.setDestination(dcaGain)
@@ -3244,6 +3305,7 @@ onUnmounted(() => {
   arpeggiator.dispose()
   sequencer.dispose()
   modulation.dispose()
+  driftLfo.dispose()
   filter.dispose()
   effects.dispose()
   looper.dispose()
