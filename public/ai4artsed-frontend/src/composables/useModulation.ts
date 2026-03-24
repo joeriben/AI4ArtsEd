@@ -21,10 +21,13 @@
  */
 import { ref, readonly, type Ref } from 'vue'
 
-export type ModTarget = 'dca' | 'dcf_cutoff' | 'pitch' | 'none'
+export type ModTarget = 'dca' | 'dcf_cutoff' | 'pitch' | 'delay_time' | 'delay_feedback' | 'delay_mix' | 'reverb_mix' | 'none'
 export type LfoWaveform = 'sine' | 'triangle' | 'square' | 'sawtooth'
 
-export const MOD_TARGETS: ModTarget[] = ['none', 'dca', 'dcf_cutoff', 'pitch']
+export const MOD_TARGETS: ModTarget[] = [
+  'none', 'dca', 'dcf_cutoff', 'pitch',
+  'delay_time', 'delay_feedback', 'delay_mix', 'reverb_mix',
+]
 
 export interface EnvState {
   attackMs: Ref<number>

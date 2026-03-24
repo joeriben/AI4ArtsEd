@@ -40,6 +40,9 @@ export function useEffects() {
   let convolver: ConvolverNode | null = null
   let reverbOut: GainNode | null = null
 
+  // Limiter (brick-wall at end of chain)
+  let limiter: DynamicsCompressorNode | null = null
+
   // Reactive state
   const delayEnabled = ref(false)
   const delayTimeMs = ref(250)
@@ -62,6 +65,17 @@ export function useEffects() {
     ctx = ac
     destinationNode = dest
 
+    // Limiter at end of chain (brick-wall, prevents clipping)
+    limiter = ac.createDynamicsCompressor()
+    limiter.threshold.value = -3   // dB — start limiting 3dB below clipping
+    limiter.knee.value = 6         // dB — soft knee for musical response
+    limiter.ratio.value = 20       // near brick-wall
+    limiter.attack.value = 0.001   // 1ms — fast catch
+    limiter.release.value = 0.1    // 100ms — smooth release
+    limiter.connect(dest)
+
+    const mixBus = limiter  // everything routes through limiter
+
     // Input splitter
     inputNode = ac.createGain()
     inputNode.gain.value = 1
@@ -70,7 +84,7 @@ export function useEffects() {
     dryGain = ac.createGain()
     dryGain.gain.value = 1
     inputNode.connect(dryGain)
-    dryGain.connect(dest)
+    dryGain.connect(mixBus)
 
     // Delay path
     delaySend = ac.createGain()
@@ -87,7 +101,7 @@ export function useEffects() {
     delayNode.connect(feedbackGain)
     feedbackGain.connect(delayNode)  // feedback loop
     delayNode.connect(delayOut)
-    delayOut.connect(dest)
+    delayOut.connect(mixBus)
 
     // Reverb path
     reverbSend = ac.createGain()
@@ -99,7 +113,7 @@ export function useEffects() {
     inputNode.connect(reverbSend)
     reverbSend.connect(convolver)
     convolver.connect(reverbOut)
-    reverbOut.connect(dest)
+    reverbOut.connect(mixBus)
 
     // Apply initial state
     applyDelayParams()
@@ -202,6 +216,16 @@ export function useEffects() {
     return inputNode
   }
 
+  /** Expose AudioParams for modulation routing */
+  function getModTargets(): Record<string, { param: AudioParam; baseValue: () => number }> {
+    const targets: Record<string, { param: AudioParam; baseValue: () => number }> = {}
+    if (delayNode) targets.delay_time = { param: delayNode.delayTime, baseValue: () => delayTimeMs.value / 1000 }
+    if (feedbackGain) targets.delay_feedback = { param: feedbackGain.gain, baseValue: () => delayFeedback.value }
+    if (delaySend) targets.delay_mix = { param: delaySend.gain, baseValue: () => delayEnabled.value ? delayMix.value : 0 }
+    if (reverbSend) targets.reverb_mix = { param: reverbSend.gain, baseValue: () => reverbEnabled.value ? reverbMix.value : 0 }
+    return targets
+  }
+
   function dispose(): void {
     if (inputNode) { inputNode.disconnect(); inputNode = null }
     if (dryGain) { dryGain.disconnect(); dryGain = null }
@@ -212,6 +236,7 @@ export function useEffects() {
     if (reverbSend) { reverbSend.disconnect(); reverbSend = null }
     if (convolver) { convolver.disconnect(); convolver = null }
     if (reverbOut) { reverbOut.disconnect(); reverbOut = null }
+    if (limiter) { limiter.disconnect(); limiter = null }
     reverbLoaded.value = false
     loadedVariant = null
     ctx = null
@@ -241,6 +266,7 @@ export function useEffects() {
     // Chain
     createChain,
     getInputNode,
+    getModTargets,
     dispose,
   }
 }

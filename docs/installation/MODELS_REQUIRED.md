@@ -1,7 +1,7 @@
 # AI4ArtsEd — Required AI Models
 
 Complete inventory of all AI models used by the platform.
-**Updated:** 2026-02-23
+**Updated:** 2026-03-24
 
 ---
 
@@ -11,10 +11,11 @@ Complete inventory of all AI models used by the platform.
 |----------|------|---------|
 | **Ollama Models** | ~16 GB | Safety, DSGVO, VLM, translation, interception |
 | **HuggingFace / Diffusers** | ~129 GB | Image, video, audio generation (GPU Service) |
+| **HuggingFace / Text (Latent Lab)** | ~65 GB | Bias Archaeology, Representation Engineering |
 | **SwarmUI / ComfyUI** | ~450 GB | ComfyUI fallback models |
 | **GPU Service Weights** | ~6 GB | MMAudio (video-to-audio) |
 | **HeartMuLa** | ~21 GB | Music generation checkpoint |
-| **Total** | **~620 GB** | |
+| **Total** | **~685 GB** | |
 
 ---
 
@@ -96,6 +97,58 @@ The HuggingFace cache is directly portable between machines:
 These are duplicates in non-standard locations (referenced by `config.py`):
 - `~/ai/models/diffusers/` — SD 3.5 Large Turbo (~16 GB)
 - `~/ai/diffusers_cache/` — SD 3.5 Large (~1.6 GB, partial)
+
+---
+
+## 2b. HuggingFace / Text Models (Latent Text Lab)
+
+Used by the GPU Service text backend (`gpu_service/services/text_backend.py`) for Bias Archaeology
+and Representation Engineering. These require direct logit access via HuggingFace transformers
+(not Ollama). Stored at `~/.cache/huggingface/hub/`.
+
+Two preset scenarios are available (toggle in the Bias Archaeology tab):
+
+### Scenario "Qwen family" — Same family, different sizes
+
+Isolates how model scale affects bias patterns.
+
+| Model | HF ID | Size (bf16) | Purpose |
+|-------|-------|-------------|---------|
+| Qwen3 1.7B | `Qwen/Qwen3-1.7B` | ~4 GB | Fast iteration |
+| Qwen3 4B | `Qwen/Qwen3-4B` | ~8 GB | Good balance |
+| Qwen3 8B | `Qwen/Qwen3-8B` | ~16 GB | Strong mid-range |
+| Qwen3 14B | `Qwen/Qwen3-14B` | ~28 GB | Best quality |
+
+### Scenario "Mixed families" — Different families, similar sizes
+
+Isolates how tokenizer and training data affect bias patterns.
+
+| Model | HF ID | Size (bf16) | Purpose |
+|-------|-------|-------------|---------|
+| Qwen3 4B | `Qwen/Qwen3-4B` | ~8 GB | Qwen tokenizer |
+| Phi 3.5 Mini | `microsoft/Phi-3.5-mini-instruct` | ~8 GB | Microsoft tokenizer |
+| Llama 3.2 3B | `meta-llama/Llama-3.2-3B-Instruct` | ~7 GB | Meta tokenizer |
+| Gemma 2 2B | `google/gemma-2-2b-it` | ~5 GB | Google tokenizer |
+
+**Total unique models: 7** (~65 GB bf16, less with quantization)
+
+### Pre-download
+
+```bash
+# Qwen family scenario
+huggingface-cli download Qwen/Qwen3-1.7B
+huggingface-cli download Qwen/Qwen3-4B
+huggingface-cli download Qwen/Qwen3-8B
+huggingface-cli download Qwen/Qwen3-14B
+
+# Mixed families scenario (Qwen3-4B already above)
+huggingface-cli download microsoft/Phi-3.5-mini-instruct
+huggingface-cli download meta-llama/Llama-3.2-3B-Instruct
+huggingface-cli download google/gemma-2-2b-it
+```
+
+**Note:** Models are auto-downloaded on first use, but pre-downloading avoids delays during workshops.
+The VRAM coordinator handles loading/eviction at runtime — only one model is loaded at a time.
 
 ---
 

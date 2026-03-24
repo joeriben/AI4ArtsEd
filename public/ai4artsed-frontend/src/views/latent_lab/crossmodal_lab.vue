@@ -1295,9 +1295,12 @@ function wireEnvelope() {
 
   // Register modulation targets
   const freqParam = filter.getFrequencyParam()
+  // Register all modulation targets
+  const effectTargets = effects.getModTargets()
   modulation.setTargets({
     dca: { param: dcaGain.gain, baseValue: () => 1 },
     ...(freqParam ? { dcf_cutoff: { param: freqParam, baseValue: () => normalizedToFreq(filter.cutoff.value) } } : {}),
+    ...effectTargets,
   })
 
   // Engines → DCA gain
