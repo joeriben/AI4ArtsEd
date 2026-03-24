@@ -64,8 +64,9 @@ def list_models():
 @text_bp.route('/presets', methods=['GET'])
 def list_presets():
     """List available model presets with VRAM info."""
+    scenario = request.args.get("scenario", "qwen")
     client = _get_client()
-    data = _run_async(client.get_presets())
+    data = _run_async(client.get_presets(scenario=scenario))
     return jsonify(data)
 
 

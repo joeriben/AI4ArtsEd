@@ -94,30 +94,58 @@ TEXT_DEVICE = os.environ.get("TEXT_DEVICE", "cuda")
 TEXT_DEFAULT_DTYPE = os.environ.get("TEXT_DEFAULT_DTYPE", "bfloat16")
 TEXT_VRAM_RESERVE_MB = int(os.environ.get("TEXT_VRAM_RESERVE_MB", "2048"))
 
-# Model presets with VRAM estimates (bf16)
-# Used for auto-quantization decisions
-TEXT_MODEL_PRESETS = {
-    "tiny": {
-        "id": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
-        "vram_gb": 4.0,
-        "description": "SmolLM2 1.7B - Fast iteration"
+# Model preset scenarios for Bias Archaeology
+# "qwen": Same family, different sizes → isolates size effects
+# "mixed": Different families, similar sizes → isolates tokenizer/training effects
+TEXT_PRESET_SCENARIOS = {
+    "qwen": {
+        "tiny": {
+            "id": "Qwen/Qwen3-1.7B",
+            "vram_gb": 4.0,
+            "description": "Qwen3 1.7B - Fast iteration"
+        },
+        "small": {
+            "id": "Qwen/Qwen3-4B",
+            "vram_gb": 8.0,
+            "description": "Qwen3 4B - Good balance"
+        },
+        "medium": {
+            "id": "Qwen/Qwen3-8B",
+            "vram_gb": 16.0,
+            "description": "Qwen3 8B - Strong mid-range"
+        },
+        "large": {
+            "id": "Qwen/Qwen3-14B",
+            "vram_gb": 28.0,
+            "description": "Qwen3 14B - Best quality"
+        },
     },
-    "small": {
-        "id": "Qwen/Qwen2.5-3B-Instruct",
-        "vram_gb": 7.0,
-        "description": "Qwen 2.5 3B - Different tokenizer"
-    },
-    "nemo": {
-        "id": "mistralai/Mistral-Nemo-Instruct-2407",
-        "vram_gb": 24.0,
-        "description": "Mistral Nemo 12B - Sliding window attention"
-    },
-    "large": {
-        "id": "Qwen/Qwen2.5-14B-Instruct",
-        "vram_gb": 30.0,
-        "description": "Qwen 2.5 14B - Best quality"
+    "mixed": {
+        "qwen": {
+            "id": "Qwen/Qwen3-4B",
+            "vram_gb": 8.0,
+            "description": "Qwen3 4B - Qwen tokenizer"
+        },
+        "phi": {
+            "id": "microsoft/Phi-3.5-mini-instruct",
+            "vram_gb": 8.0,
+            "description": "Phi 3.5 Mini 3.8B - Microsoft tokenizer"
+        },
+        "llama": {
+            "id": "meta-llama/Llama-3.2-3B-Instruct",
+            "vram_gb": 7.0,
+            "description": "Llama 3.2 3B - Meta tokenizer"
+        },
+        "gemma": {
+            "id": "google/gemma-2-2b-it",
+            "vram_gb": 6.0,
+            "description": "Gemma 2 2B - Google tokenizer"
+        },
     },
 }
+
+# Default preset (backward compat)
+TEXT_MODEL_PRESETS = TEXT_PRESET_SCENARIOS["qwen"]
 
 # Quantization VRAM multipliers
 TEXT_QUANT_MULTIPLIERS = {

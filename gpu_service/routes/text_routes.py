@@ -132,6 +132,9 @@ def list_presets():
     """
     List available model presets with VRAM fit status.
 
+    Query params:
+        scenario: "qwen" (default) or "mixed"
+
     Response:
         {
             "presets": {
@@ -142,20 +145,28 @@ def list_presets():
                 },
                 ...
             },
+            "scenario": "qwen",
+            "available_scenarios": ["qwen", "mixed"],
             "free_vram_gb": 22.3,
             "total_vram_gb": 24.0
         }
     """
-    from config import TEXT_MODEL_PRESETS
+    from config import TEXT_PRESET_SCENARIOS
     from services.text_backend import estimate_model_vram
     from services.vram_coordinator import get_vram_coordinator
+
+    scenario = request.args.get("scenario", "qwen")
+    if scenario not in TEXT_PRESET_SCENARIOS:
+        scenario = "qwen"
+
+    presets = TEXT_PRESET_SCENARIOS[scenario]
 
     coordinator = get_vram_coordinator()
     free_vram_gb = coordinator.get_free_vram_mb() / 1024
     total_vram_gb = coordinator.get_total_vram_mb() / 1024
 
     enriched = {}
-    for key, preset in TEXT_MODEL_PRESETS.items():
+    for key, preset in presets.items():
         p = dict(preset)
         p["fits_bf16"] = estimate_model_vram(preset["id"], "bf16") * 1.1 < free_vram_gb
         p["fits_int8"] = estimate_model_vram(preset["id"], "int8") * 1.1 < free_vram_gb
@@ -170,6 +181,8 @@ def list_presets():
 
     return jsonify({
         "presets": enriched,
+        "scenario": scenario,
+        "available_scenarios": list(TEXT_PRESET_SCENARIOS.keys()),
         "free_vram_gb": round(free_vram_gb, 1),
         "total_vram_gb": round(total_vram_gb, 1),
     })

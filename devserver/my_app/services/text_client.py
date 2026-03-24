@@ -103,10 +103,12 @@ class TextClient:
             return result.get("models", [])
         return []
 
-    async def get_presets(self) -> Dict[str, Any]:
+    async def get_presets(self, scenario: str = "qwen") -> Dict[str, Any]:
         """Get available model presets with VRAM info."""
         import asyncio
-        result = await asyncio.to_thread(self._get, '/api/text/presets')
+        result = await asyncio.to_thread(
+            self._get, f'/api/text/presets?scenario={scenario}'
+        )
         return result or {}
 
     # =========================================================================
