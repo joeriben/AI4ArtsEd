@@ -304,6 +304,15 @@ class BackendRouter:
         return await ollama_service.generate(model, chunk.prompt, chunk.parameters)
 ```
 
+**UI_MODE Length Enforcement (Session 285):**
+
+BackendRouter applies UI_MODE-adaptive length limits in `_process_prompt_interception_request()` before passing the request to `PromptInterceptionEngine`. This ensures interception output (student-facing) respects word budgets, while optimization (machine-consumed, called directly via engine) is unconstrained.
+
+```
+Interception path:  ChunkBuilder → BackendRouter (applies limits) → Engine → LLM
+Optimization path:  execute_optimization() → Engine → LLM  (no limits)
+```
+
 **Backend Types:**
 - `ollama`: Local LLM server (mistral-nemo, llama3.2, gemma2, etc.)
 - `comfyui`: Local ComfyUI server (SD3.5, Flux1, Stable Audio, AceStep)
@@ -528,16 +537,20 @@ Chunk (manipulate.json)
 ```
 
 **Key Methods:**
-- `process_request()` - Main processing with fallback logic
+- `process_request()` - Main processing with fallback logic (pure LLM routing, no policy)
 - `_call_ollama()` - Direct Ollama API calls
 - `_call_openrouter()` - Direct OpenRouter API calls
 - `_find_ollama_fallback()` / `_find_openrouter_fallback()` - Model fallback logic
 
-**Usage:**
-1. `backend_router.py:74` - Routes all Ollama/OpenRouter chunks through this
-2. `schema_pipeline_routes.py:1049` - Direct test endpoint
+**Exported Constants** (used by BackendRouter for interception-path limits):
+- `UI_MODE_WORD_LIMITS` - Word budget per UI_MODE (kids=80, youth=150, expert=250)
+- `UI_MODE_MAX_TOKENS_SAFETY` - Token safety cap per UI_MODE (kids=400, youth=600, expert=800)
 
-**Note:** Previously marked as DEPRECATED in docs - this was incorrect. Module is actively used.
+**Usage:**
+1. `backend_router.py` - Routes all Ollama/OpenRouter chunks through this (with UI_MODE limits applied by BackendRouter)
+2. `schema_pipeline_routes.py` - Direct optimization calls (no UI_MODE limits — output is machine-consumed)
+
+**Note:** Previously marked as DEPRECATED in docs - this was incorrect. Module is actively used. The engine is a pure LLM router — UI_MODE length limits are enforced by BackendRouter (interception path), not by the engine itself.
 
 ---
 

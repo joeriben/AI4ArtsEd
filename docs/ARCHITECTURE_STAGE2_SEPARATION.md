@@ -295,25 +295,48 @@ if skip_execution:
 
 ---
 
+## 7. UI_MODE Length Limits: Interception Only (Session 285)
+
+### Principle: Limits Belong to the Interception Path, Not the Engine
+
+UI_MODE-based length limits (word guidance + max_tokens safety cap) are enforced by `BackendRouter`, not by `PromptInterceptionEngine`. The engine is a pure LLM router.
+
+```
+Interception:  ChunkBuilder → BackendRouter (applies limits) → Engine → LLM
+Optimization:  execute_optimization() → Engine → LLM  (no limits)
+```
+
+**Why:** Interception output is student-facing (readability matters). Optimization output is machine-consumed (Stage 4 needs full token budget, e.g. 4096 for p5.js code).
+
+**Limits (applied in BackendRouter only):**
+| UI_MODE | Word guidance | max_tokens cap |
+|---------|--------------|----------------|
+| kids    | 80 words     | 400 tokens     |
+| youth   | 150 words    | 600 tokens     |
+| expert  | 250 words    | 800 tokens     |
+
+---
+
 ## File References
 
 These principles apply to:
 
 ### Backend
 - `/devserver/my_app/routes/schema_pipeline_routes.py`
-  - Line 784: `/pipeline/optimize` endpoint
-  - Line 207: `execute_optimization()` function using PromptInterceptionEngine
-  - Line 541: `/pipeline/stage2` endpoint
+  - `execute_optimization()` — calls engine directly (no UI_MODE limits)
+  - `/pipeline/stage2` endpoint — interception via BackendRouter (with limits)
+  - `/pipeline/optimize` endpoint
 
 ### Frontend
 - `/public/ai4artsed-frontend/src/views/text_transformation.vue`
-  - Line 522: `runInterception()` - calls `/stage2`
-  - Line 555: `runOptimization()` - calls `/optimize`
-  - Line 501: `selectConfig()` - triggers optimization on model selection
+  - `runInterception()` - calls `/stage2`
+  - `runOptimization()` - calls `/optimize`
+  - `selectConfig()` - triggers optimization on model selection
 
 ### Schema Engine
 - `/devserver/schemas/chunks/manipulate.json` - Prompt Interception template
-- `/devserver/schemas/engine/prompt_interception_engine.py` - Core interception logic
+- `/devserver/schemas/engine/prompt_interception_engine.py` - LLM routing engine (exports `UI_MODE_WORD_LIMITS`, `UI_MODE_MAX_TOKENS_SAFETY`)
+- `/devserver/schemas/engine/backend_router.py` - Applies UI_MODE limits in interception path
 - `/devserver/schemas/chunks/output_image_sd35_large.json` - Example with `optimization_instruction` in meta
 
 ---

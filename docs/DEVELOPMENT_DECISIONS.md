@@ -9,6 +9,22 @@
 
 ---
 
+## 2026-03-24: UI_MODE Length Limits Moved from Engine to BackendRouter
+
+**Decision:** `UI_MODE_WORD_LIMITS` and `UI_MODE_MAX_TOKENS_SAFETY` enforcement moved from `PromptInterceptionEngine.process_request()` to `BackendRouter._process_prompt_interception_request()`.
+
+**Problem:** The engine unconditionally applied word-count injection ("Keep your response under 150 words") and max_tokens safety caps (youth=600, expert=800) to ALL requests — including prompt optimization. p5.js code generation requires ~4096 tokens but was capped to 600 in youth mode, breaking code output.
+
+**Root cause:** The limits are a policy of the interception workflow (student-facing output), not a feature of the LLM routing engine. Optimization output goes to Stage 4 (machine-consumed), never directly to students.
+
+**Solution:** Separation of concerns — limits belong in the interception call path (BackendRouter), not the engine. `execute_optimization()` calls the engine directly, bypassing BackendRouter, so it naturally has no limits. No flags, no opt-out logic needed.
+
+**Affected files:**
+- `devserver/schemas/engine/prompt_interception_engine.py` (removed lines 213-225)
+- `devserver/schemas/engine/backend_router.py` (added limits before PromptInterceptionRequest creation)
+
+---
+
 ## 2026-03-22: media_type Detection Must Use Config Metadata, Not Name Substrings
 
 **Decision:** Added `'heartmula'` to all 5 media_type substring-detection sites in `schema_pipeline_routes.py` to fix HeartMuLa being misclassified as `image`. Removed `p5js_code` and `tonejs_code` from Persona's available config list.

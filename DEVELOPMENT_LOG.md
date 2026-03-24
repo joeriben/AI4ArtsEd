@@ -1,5 +1,24 @@
 # Development Log
 
+## Session 285 - UI_MODE Length Limits: Separation of Concerns
+**Date:** 2026-03-24
+**Focus:** UI_MODE-basierte Laengenlimits (Word-Guidance + max_tokens Safety-Cap) aus der PromptInterceptionEngine in den BackendRouter verschoben.
+
+### Problem
+`PromptInterceptionEngine.process_request()` wandte unconditionally UI_MODE-Limits auf ALLE Requests an — auch auf Optimization. p5.js Code-Generierung (4096 tokens) wurde auf 600 (youth) gekappt.
+
+### Loesung
+Separation of Concerns: Limits gehoeren zur Interception-Policy (student-facing), nicht zur LLM-Routing-Engine. Verschoben nach `BackendRouter._process_prompt_interception_request()`. `execute_optimization()` ruft die Engine direkt auf → natuerlich keine Limits, kein Flag noetig.
+
+### Geaenderte Dateien
+- `devserver/schemas/engine/prompt_interception_engine.py` — Zeilen 213-225 entfernt
+- `devserver/schemas/engine/backend_router.py` — Limits vor PromptInterceptionRequest-Erstellung hinzugefuegt
+- `docs/DEVELOPMENT_DECISIONS.md` — Design Decision dokumentiert
+- `docs/ARCHITECTURE PART 07 - Engine-Modules.md` — Engine/Router Beschreibungen aktualisiert
+- `docs/ARCHITECTURE_STAGE2_SEPARATION.md` — Neuer Abschnitt 7: UI_MODE Length Limits
+
+---
+
 ## Session 284 - Synth Architecture: Modulation Bank, Filter, Presets, Dim Explorer Modes
 **Date:** 2026-03-24
 **Focus:** Grundlegender Architektur-Umbau des Latent Audio Synth: Modulationssystem (3 ENV + 2 LFO), reiner Filter mit Mix/Kbd Track, Preset Export/Import, Dimension Explorer Modi, Gain Staging, Sequencer-Presets.
