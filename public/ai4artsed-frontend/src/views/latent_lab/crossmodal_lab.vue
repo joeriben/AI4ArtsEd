@@ -621,7 +621,7 @@
           <div v-if="effects.delayEnabled.value" class="effects-params">
             <div class="adsr-slider">
               <label>Time</label>
-              <input type="range" :value="effects.delayTimeMs.value" min="1" max="2000" step="1" @input="effects.setDelayTime(Number(($event.target as HTMLInputElement).value))" />
+              <input type="range" :value="delayTimeToSlider(effects.delayTimeMs.value)" min="0" max="1" step="0.001" @input="effects.setDelayTime(sliderToDelayTime(Number(($event.target as HTMLInputElement).value)))" />
               <span class="adsr-value">{{ effects.delayTimeMs.value }}ms</span>
             </div>
             <div class="adsr-slider">
@@ -1337,6 +1337,14 @@ const sequencerOn = computed(() => sequencerEnabled.value)
 const modulation = useModulation()
 const filter = useFilter()
 const effects = useEffects()
+
+/** Exponential delay time mapping: slider 0–1 → 1–2000ms (more resolution at short times) */
+function sliderToDelayTime(v: number): number {
+  return Math.round(1 * Math.pow(2000, v))
+}
+function delayTimeToSlider(ms: number): number {
+  return Math.log(Math.max(1, ms)) / Math.log(2000)
+}
 let envelopeWired = false
 
 /**
