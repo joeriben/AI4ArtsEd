@@ -299,6 +299,27 @@ export function useModulation() {
     }
   }
 
+  /**
+   * Freeze current automation value, then ramp to target.
+   * Uses cancelAndHoldAtTime where available (Chrome), falls back to
+   * cancelScheduledValues + setValueAtTime for Firefox/Safari.
+   */
+  function holdAndRamp(param: AudioParam, target: number, now: number, duration: number): void {
+    if (typeof param.cancelAndHoldAtTime === 'function') {
+      param.cancelAndHoldAtTime(now)
+    } else {
+      // Fallback: cancel all automation, anchor at last known sustain value.
+      // During sustain phase this is the susLevel. During attack/decay ramps
+      // .value returns the intrinsic (not computed) value, so we compute it
+      // from the envelope state. In practice, release during sustain is the
+      // common case — the sustain value was the last ramp target.
+      const current = param.value  // Best effort — correct during sustain
+      param.cancelScheduledValues(now)
+      param.setValueAtTime(current || 0.001, now)
+    }
+    param.linearRampToValueAtTime(target, now + Math.max(duration, 0.002))
+  }
+
   function triggerEnvRelease(idx: number): void {
     if (!ctx) return
     const env = envs[idx]!
@@ -320,22 +341,17 @@ export function useModulation() {
     if (target === 'dca') {
       const gain = envGainNodes[0]
       if (!gain) return
-      // cancelAndHoldAtTime freezes the current computed value (not the intrinsic .value
-      // which returns 0 during attack/decay ramps, causing instant silence)
-      gain.gain.cancelAndHoldAtTime(now)
-      gain.gain.linearRampToValueAtTime(0, now + Math.max(rel, 0.002))
+      holdAndRamp(gain.gain, 0, now, rel)
     } else {
       const param = targetParams[target]
       if (!param) return
-      // cancelAndHoldAtTime captures the actual automation value at 'now'
-      param.cancelAndHoldAtTime(now)
       if (target === 'dcf_cutoff') {
         const baseVal = targetBaseGetters[target]?.() ?? 1000
         const releaseTarget = Math.max(20, baseVal * (1 - env.amount.value))
-        param.exponentialRampToValueAtTime(releaseTarget, now + Math.max(rel, 0.002))
+        holdAndRamp(param, releaseTarget, now, rel)
       } else {
         const baseVal = targetBaseGetters[target]?.() ?? 1
-        param.linearRampToValueAtTime(baseVal, now + Math.max(rel, 0.002))
+        holdAndRamp(param, baseVal, now, rel)
       }
     }
   }

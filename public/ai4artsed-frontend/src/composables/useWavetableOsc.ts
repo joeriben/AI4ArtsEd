@@ -119,6 +119,7 @@ export function useWavetableOsc() {
   let gainNode: GainNode | null = null
   let workletReady = false
   let starting = false  // Guard against concurrent start() calls
+  let stopGeneration = 0   // Incremented by stop() — start() aborts if changed during await
   let lastScanPosition = 0  // Persist scan position across worklet recreations
   let frames: Float32Array[] = []
   let mipFrames: Float32Array[][] = []  // mipFrames[level][frameIndex]
@@ -436,9 +437,13 @@ export function useWavetableOsc() {
   async function start(): Promise<void> {
     if (isPlaying.value || starting) return
     starting = true
+    const gen = stopGeneration  // Snapshot before await
     try {
       const ac = ensureContext()
       await ensureWorklet(ac)
+
+      // stop() was called during await — abort, don't create orphan nodes
+      if (gen !== stopGeneration) return
 
       // Disconnect any leftover nodes (belt and suspenders)
       if (workletNode) { workletNode.disconnect(); workletNode = null }
@@ -480,6 +485,7 @@ export function useWavetableOsc() {
   }
 
   function stop(): void {
+    stopGeneration++  // Signal any in-flight start() to abort
     pendingScan = null
     if (workletNode) {
       workletNode.disconnect()
