@@ -3106,18 +3106,16 @@ async function runSynth() {
       generationTimeMs.value = result.generation_time_ms
       embeddingStats.value = result.embedding_stats
 
-      // Ensure signal chain is wired BEFORE looper.play — otherwise looper
-      // connects directly to ac.destination, bypassing the DCA entirely.
+      // Ensure signal chain is wired BEFORE any audio plays — otherwise
+      // looper/WT connect directly to ac.destination, bypassing the DCA.
       if (!envelopeWired) wireEnvelope()
 
-      // Load audio into looper (always, for buffer access)
-      looper.setLoop(loopMode.value !== 'oneshot')
-      await looper.play(result.audio_base64)
-
-      // In WT mode: stop looper IMMEDIATELY — we only needed it to load the buffer.
-      // Must happen before any audio frame renders through the shared DCA.
+      // Load audio into looper. In WT mode: load only (no playback, no leak).
       if (engineMode.value === 'wavetable') {
-        looper.stop()
+        await looper.loadBuffer(result.audio_base64)
+      } else {
+        looper.setLoop(loopMode.value !== 'oneshot')
+        await looper.play(result.audio_base64)
       }
 
       nextTick(drawWaveform)

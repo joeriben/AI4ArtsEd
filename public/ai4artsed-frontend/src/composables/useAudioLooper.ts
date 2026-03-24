@@ -376,6 +376,17 @@ export function useAudioLooper() {
     startSource(ac, prepareBuffer(ac, decoded))
   }
 
+  /** Decode and store buffer WITHOUT starting playback. For WT extraction. */
+  async function loadBuffer(base64Wav: string) {
+    const ac = ensureContext()
+    const decoded = await decodeBase64Wav(base64Wav)
+    originalBuffer = decoded
+    rawBase64 = base64Wav
+    bufferDuration.value = decoded.duration
+    hasAudio.value = true
+    peakAmplitude.value = measurePeak(decoded)
+  }
+
   function replay() {
     if (!originalBuffer) return
     const ac = ensureContext()
@@ -517,7 +528,7 @@ export function useAudioLooper() {
   }
 
   return {
-    play, replay, stop, retrigger,
+    play, loadBuffer, replay, stop, retrigger,
     setLoop, setTranspose, glideToSemitones, setDestination, getContext,
     setLoopStart, setLoopEnd, setLoopOptimize, setLoopPingPong,
     setCrossfade, setNormalize,
