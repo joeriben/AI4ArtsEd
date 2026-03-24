@@ -469,23 +469,6 @@
               {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
             </span>
           </div>
-          <!-- Save -->
-          <div class="save-row">
-            <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
-              {{ t('latentLab.crossmodal.synth.saveRaw') }}
-            </button>
-            <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
-              {{ t('latentLab.crossmodal.synth.saveLoop') }}
-            </button>
-            <span class="save-separator" />
-            <button class="save-btn" @click="exportPreset">
-              {{ t('latentLab.crossmodal.synth.preset.export') }}
-            </button>
-            <button class="save-btn" @click="() => presetFileInput?.click()">
-              {{ t('latentLab.crossmodal.synth.preset.import') }}
-            </button>
-            <input ref="presetFileInput" type="file" accept=".json" style="display:none" @change="importPreset" />
-          </div>
         </div>
 
         <!-- ═══════ BOX 2: ENVELOPES ═══════ -->
@@ -703,6 +686,26 @@
           </div>
         </div>
       </details>
+
+      <!-- Preset Export/Import -->
+      <div class="synth-box preset-box">
+        <div class="save-row">
+          <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
+            {{ t('latentLab.crossmodal.synth.saveRaw') }}
+          </button>
+          <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+            {{ t('latentLab.crossmodal.synth.saveLoop') }}
+          </button>
+          <span class="save-separator" />
+          <button class="save-btn" @click="exportPreset">
+            {{ t('latentLab.crossmodal.synth.preset.export') }}
+          </button>
+          <button class="save-btn" @click="() => presetFileInput?.click()">
+            {{ t('latentLab.crossmodal.synth.preset.import') }}
+          </button>
+          <input ref="presetFileInput" type="file" accept=".json" style="display:none" @change="importPreset" />
+        </div>
+      </div>
 
       <!-- MIDI Section (collapsed by default) -->
       <details class="midi-section lab-section" :open="midiOpen" @toggle="onMidiToggle">

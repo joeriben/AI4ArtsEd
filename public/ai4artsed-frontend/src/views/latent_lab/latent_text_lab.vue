@@ -481,6 +481,21 @@
           </div>
         </details>
 
+        <!-- Model Scenario Toggle -->
+        <div class="section-toggle scenario-toggle">
+          <label class="inline-toggle" :class="{ active: modelScenario === 'qwen' }">
+            <input type="radio" value="qwen" v-model="modelScenario" />
+            {{ t('latentLab.textLab.bias.scenarioQwen') }}
+          </label>
+          <label class="inline-toggle" :class="{ active: modelScenario === 'mixed' }">
+            <input type="radio" value="mixed" v-model="modelScenario" />
+            {{ t('latentLab.textLab.bias.scenarioMixed') }}
+          </label>
+        </div>
+        <p class="scenario-hint">{{ modelScenario === 'qwen'
+          ? t('latentLab.textLab.bias.scenarioQwenHint')
+          : t('latentLab.textLab.bias.scenarioMixedHint') }}</p>
+
         <!-- Inline Preset Selector -->
         <div class="inline-preset-row">
           <label class="control-label control-small">
@@ -632,7 +647,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -708,6 +723,7 @@ interface PresetInfo {
   suggested_quant?: string | null
 }
 
+const modelScenario = ref<'qwen' | 'mixed'>('qwen')
 const presets = ref<Record<string, PresetInfo>>({})
 const freeVram = ref<number | null>(null)
 const totalVram = ref<number | null>(null)
@@ -723,15 +739,22 @@ const activeModelId = computed(() => {
 
 async function fetchPresets() {
   try {
-    const resp = await fetch(`${apiBase}/api/text/presets`)
+    const resp = await fetch(`${apiBase}/api/text/presets?scenario=${modelScenario.value}`)
     if (resp.ok) {
       const data = await resp.json()
       presets.value = data.presets || {}
       freeVram.value = data.free_vram_gb ?? null
       totalVram.value = data.total_vram_gb ?? null
+      // Select first available preset in new scenario
+      const keys = Object.keys(presets.value)
+      if (keys.length && !presets.value[selectedPreset.value]) {
+        selectedPreset.value = keys[0]!
+      }
     }
   } catch { /* GPU service may not be running */ }
 }
+
+watch(modelScenario, () => fetchPresets())
 
 function presetLabel(key: string, info: PresetInfo): string {
   const quant = info.suggested_quant
@@ -1313,6 +1336,35 @@ onMounted(() => {
 
 /* Error banner */
 .error-banner { background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.3); color: #fca5a5; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; cursor: pointer; font-size: 0.85rem; }
+
+/* Model scenario toggle */
+.scenario-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.scenario-toggle .inline-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.scenario-toggle .inline-toggle.active {
+  color: #4CAF50;
+}
+.scenario-toggle .inline-toggle input[type="radio"] {
+  accent-color: #4CAF50;
+}
+.scenario-hint {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0 0.5rem;
+}
 
 /* Inline preset selector (per-tab) */
 .inline-preset-row {
