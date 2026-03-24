@@ -151,6 +151,60 @@ const PRESETS: Preset[] = [
     ],
   },
   {
+    // Kraftwerk: precise, mechanical, equal velocity, robotic chromatic movement.
+    name: 'kraftwerk',
+    steps: [
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
+      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
+      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
+      makeStep(7, 0.9, 0.5), makeStep(7, 0.9, 0.5),
+      makeStep(5, 0.9, 0.5), makeStep(5, 0.9, 0.5),
+      makeStep(3, 0.9, 0.5), makeStep(3, 0.9, 0.5),
+      makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
+    ],
+  },
+  {
+    // Arpeggio-Bassline: Daft Punk-style EDM. 32 steps, C-G-C-E ascending pattern.
+    // Second half slightly louder for variation.
+    name: 'arpeggio_bass',
+    steps: [
+      makeStep(0, 0.94, 0.5),   // C2
+      makeStep(7, 0.78, 0.5),   // G2
+      makeStep(12, 0.94, 0.5),  // C3
+      makeStep(16, 0.78, 0.5),  // E3
+      makeStep(0, 0.94, 0.5),   // C2
+      makeStep(7, 0.78, 0.5),   // G2
+      makeStep(12, 0.94, 0.5),  // C3
+      makeStep(16, 0.78, 0.5),  // E3
+      makeStep(0, 0.94, 0.5),
+      makeStep(7, 0.78, 0.5),
+      makeStep(12, 0.94, 0.5),
+      makeStep(16, 0.78, 0.5),
+      makeStep(0, 0.94, 0.5),
+      makeStep(7, 0.78, 0.5),
+      makeStep(12, 0.94, 0.5),
+      makeStep(16, 0.78, 0.5),
+      // Second half: slightly louder
+      makeStep(0, 1.0, 0.5),
+      makeStep(7, 0.86, 0.5),
+      makeStep(12, 1.0, 0.5),
+      makeStep(16, 0.86, 0.5),
+      makeStep(0, 1.0, 0.5),
+      makeStep(7, 0.86, 0.5),
+      makeStep(12, 1.0, 0.5),
+      makeStep(16, 0.86, 0.5),
+      makeStep(0, 1.0, 0.5),
+      makeStep(7, 0.86, 0.5),
+      makeStep(12, 1.0, 0.5),
+      makeStep(16, 0.86, 0.5),
+      makeStep(0, 1.0, 0.5),
+      makeStep(7, 0.86, 0.5),
+      makeStep(12, 1.0, 0.5),
+      makeStep(16, 0.86, 0.5),
+    ],
+  },
+  {
     // Trance gate: same note, rhythmic gating, accent pattern.
     name: 'trance_gate',
     steps: [
