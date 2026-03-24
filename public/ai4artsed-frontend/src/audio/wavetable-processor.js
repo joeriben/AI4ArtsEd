@@ -9,10 +9,15 @@
  * playback frequencies use levels with fewer harmonics, preventing aliasing.
  * Level k has (1024 >> k) harmonics. Level selection based on frequency.
  *
+ * Scan smoothing: one-pole lowpass on scanPosition prevents clicks when
+ * frame content changes abruptly at the current phase position.
+ *
  * Frame size: 2048 samples (~21.5 Hz fundamental at 44.1 kHz).
  */
 
 const FRAME_SIZE = 2048
+// Scan smoothing: ~5ms time constant at 44.1kHz (prevents clicks on frame transitions)
+const SCAN_SMOOTH_COEFF = 1.0 - Math.exp(-1.0 / (44100 * 0.005))
 
 class WavetableProcessor extends AudioWorkletProcessor {
   constructor() {
@@ -21,6 +26,7 @@ class WavetableProcessor extends AudioWorkletProcessor {
     this.numLevels = 0
     this.numFrames = 0
     this.phase = 0
+    this.smoothedScan = 0 // Smoothed scan position (one-pole lowpass)
     this.port.onmessage = (e) => {
       if (e.data && e.data.mipFrames) {
         this.mipFrames = e.data.mipFrames
@@ -50,25 +56,27 @@ class WavetableProcessor extends AudioWorkletProcessor {
     const freqConstant = freqParam.length === 1
     const scanConstant = scanParam.length === 1
     const doInterpolate = interpParam[0] >= 0.5
+    const coeff = SCAN_SMOOTH_COEFF
 
-    // Pre-compute mip threshold: freq where level 0 transitions to level 1
-    // level = ceil(log2(freq * FRAME_SIZE / sampleRate))
-    // Equivalent: level = ceil(log2(freq / baseFreq)) where baseFreq = sampleRate / FRAME_SIZE
     const invBaseFreq = FRAME_SIZE / sampleRate
     const log2 = Math.log2
     const maxLevel = numLevels - 1
+    let smoothed = this.smoothedScan
 
     for (let i = 0; i < output.length; i++) {
       const freq = freqConstant ? freqParam[0] : freqParam[i]
-      const scan = scanConstant ? scanParam[0] : scanParam[i]
+      const rawScan = scanConstant ? scanParam[0] : scanParam[i]
+
+      // One-pole lowpass on scan position — prevents clicks on frame transitions
+      smoothed += (rawScan - smoothed) * coeff
 
       // Select mip level based on playback frequency
       const rawLevel = log2(freq * invBaseFreq)
       const mipLevel = Math.max(0, Math.min(maxLevel, Math.ceil(rawLevel)))
       const frames = this.mipFrames[mipLevel]
 
-      // Frame selection via scan position
-      const framePos = scan * (numFrames - 1)
+      // Frame selection via smoothed scan position
+      const framePos = smoothed * (numFrames - 1)
       const frameA = Math.floor(framePos)
 
       // Sample position via phase accumulator
@@ -119,6 +127,7 @@ class WavetableProcessor extends AudioWorkletProcessor {
       }
     }
 
+    this.smoothedScan = smoothed
     return true
   }
 }
