@@ -472,35 +472,78 @@
         </div>
 
         <!-- ═══════ BOX 2: ENVELOPES ═══════ -->
+        <!-- ═══════ BOX 2: MODULATION (3 Envelopes + 2 LFOs) ═══════ -->
         <div class="synth-box">
-          <!-- ADSR → VCA -->
-          <div class="adsr-section">
-            <h5>{{ t('latentLab.crossmodal.synth.adsrTitle') }} <span class="env-target">VCA</span></h5>
-            <span class="slider-hint">{{ t('latentLab.crossmodal.synth.adsrHint') }}</span>
-            <div class="adsr-grid">
+          <!-- 3 ADSR Envelopes -->
+          <div v-for="(env, idx) in modulation.envs" :key="'env'+idx" class="adsr-section">
+            <div class="mod-header">
+              <h5>ENV {{ idx + 1 }}</h5>
+              <select class="mod-target-select" :value="env.target.value" @change="modulation.setEnvParam(idx, 'target', ($event.target as HTMLSelectElement).value as ModTarget)">
+                <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
+              </select>
+              <label class="inline-toggle loop-toggle">
+                <input type="checkbox" :checked="env.loop.value" @change="modulation.setEnvParam(idx, 'loop', ($event.target as HTMLInputElement).checked)" />
+                Loop
+              </label>
+            </div>
+            <div v-if="env.target.value !== 'none'" class="adsr-grid">
               <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.adsrAttack') }}</label>
-                <input type="range" v-model.number="envelope.attackMs.value" min="0" max="1000" step="1" />
-                <span class="adsr-value">{{ envelope.attackMs.value }}ms</span>
+                <label>A</label>
+                <input type="range" v-model.number="env.attackMs.value" min="0" max="2000" step="1" />
+                <span class="adsr-value">{{ env.attackMs.value }}ms</span>
               </div>
               <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.adsrDecay') }}</label>
-                <input type="range" v-model.number="envelope.decayMs.value" min="0" max="2000" step="1" />
-                <span class="adsr-value">{{ envelope.decayMs.value }}ms</span>
+                <label>D</label>
+                <input type="range" v-model.number="env.decayMs.value" min="0" max="2000" step="1" />
+                <span class="adsr-value">{{ env.decayMs.value }}ms</span>
               </div>
               <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.adsrSustain') }}</label>
-                <input type="range" v-model.number="envelope.sustain.value" min="0" max="1" step="0.01" />
-                <span class="adsr-value">{{ envelope.sustain.value.toFixed(2) }}</span>
+                <label>S</label>
+                <input type="range" v-model.number="env.sustain.value" min="0" max="1" step="0.01" />
+                <span class="adsr-value">{{ env.sustain.value.toFixed(2) }}</span>
               </div>
               <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.adsrRelease') }}</label>
-                <input type="range" v-model.number="envelope.releaseMs.value" min="0" max="3000" step="1" />
-                <span class="adsr-value">{{ envelope.releaseMs.value }}ms</span>
+                <label>R</label>
+                <input type="range" v-model.number="env.releaseMs.value" min="0" max="3000" step="1" />
+                <span class="adsr-value">{{ env.releaseMs.value }}ms</span>
+              </div>
+              <div class="adsr-slider">
+                <label>Amt</label>
+                <input type="range" v-model.number="env.amount.value" min="0" max="1" step="0.01" />
+                <span class="adsr-value">{{ env.amount.value.toFixed(2) }}</span>
               </div>
             </div>
           </div>
-          <!-- ADR → WT Scan -->
+
+          <!-- 2 LFOs -->
+          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" class="adsr-section">
+            <div class="mod-header">
+              <h5>LFO {{ idx + 1 }}</h5>
+              <select class="mod-target-select" :value="lfo.target.value" @change="modulation.setLfoParam(idx, 'target', ($event.target as HTMLSelectElement).value)">
+                <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
+              </select>
+              <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.waveform.value" @change="modulation.setLfoParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
+                <option value="sine">Sine</option>
+                <option value="triangle">Tri</option>
+                <option value="square">Sq</option>
+                <option value="sawtooth">Saw</option>
+              </select>
+            </div>
+            <div v-if="lfo.target.value !== 'none'" class="adsr-grid">
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
+                <input type="range" :value="lfo.rate.value" min="0.05" max="20" step="0.05" @input="modulation.setLfoParam(idx, 'rate', Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ lfo.rate.value.toFixed(1) }} Hz</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
+                <input type="range" :value="lfo.depth.value" min="0" max="1" step="0.01" @input="modulation.setLfoParam(idx, 'depth', Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ lfo.depth.value.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADR → WT Scan (legacy, kept separate) -->
           <div v-if="wavetableOn" class="adsr-section">
             <h5>{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }} <span class="env-target">WT Scan</span></h5>
             <div class="adsr-grid">
@@ -523,7 +566,7 @@
           </div>
         </div>
 
-        <!-- ═══════ BOX 3: FILTER + LFOs ═══════ -->
+        <!-- ═══════ BOX 3: FILTER ═══════ -->
         <div class="synth-box">
           <div class="section-toggle">
             <label class="inline-toggle">
@@ -538,117 +581,30 @@
           </div>
 
           <div v-if="filter.enabled.value" class="filter-params">
-            <!-- Cutoff + Resonance -->
             <div class="adsr-grid">
               <div class="adsr-slider">
                 <label>{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</label>
                 <input type="range" :value="filter.cutoff.value" min="0" max="1" step="0.005" @input="filter.setCutoff(Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ Math.round(filter.normalizedToFreq(filter.cutoff.value)) }} Hz</span>
+                <span class="adsr-value">{{ Math.round(normalizedToFreq(filter.cutoff.value)) }} Hz</span>
               </div>
               <div class="adsr-slider">
                 <label>{{ t('latentLab.crossmodal.synth.filter.resonance') }}</label>
                 <input type="range" :value="filter.resonance.value" min="0" max="1" step="0.01" @input="filter.setResonance(Number(($event.target as HTMLInputElement).value))" />
                 <span class="adsr-value">{{ filter.resonance.value.toFixed(2) }}</span>
               </div>
-            </div>
-
-            <!-- Filter Envelope -->
-            <div class="adsr-section">
-              <h5>{{ t('latentLab.crossmodal.synth.filter.envelope') }} <span class="env-target">Cutoff</span></h5>
-              <div class="adsr-grid">
-                <div class="adsr-slider">
-                  <label>A</label>
-                  <input type="range" v-model.number="filter.envAttackMs.value" min="0" max="2000" step="1" />
-                  <span class="adsr-value">{{ filter.envAttackMs.value }}ms</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>D</label>
-                  <input type="range" v-model.number="filter.envDecayMs.value" min="0" max="2000" step="1" />
-                  <span class="adsr-value">{{ filter.envDecayMs.value }}ms</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>S</label>
-                  <input type="range" v-model.number="filter.envSustain.value" min="0" max="1" step="0.01" />
-                  <span class="adsr-value">{{ filter.envSustain.value.toFixed(2) }}</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>R</label>
-                  <input type="range" v-model.number="filter.envReleaseMs.value" min="0" max="3000" step="1" />
-                  <span class="adsr-value">{{ filter.envReleaseMs.value }}ms</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.filter.envAmount') }}</label>
-                  <input type="range" :value="filter.envAmount.value" min="0" max="1" step="0.01" @input="filter.setEnvAmount(Number(($event.target as HTMLInputElement).value))" />
-                  <span class="adsr-value">{{ filter.envAmount.value.toFixed(2) }}</span>
-                </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.mix') }}</label>
+                <input type="range" :value="filter.mix.value" min="0" max="1" step="0.01" @input="filter.setMix(Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ Math.round(filter.mix.value * 100) }}%</span>
+              </div>
+              <div class="adsr-slider">
+                <label>{{ t('latentLab.crossmodal.synth.filter.kbdTrack') }}</label>
+                <input type="range" :value="filter.kbdTrack.value" min="0" max="1" step="0.01" @input="filter.setKbdTrack(Number(($event.target as HTMLInputElement).value))" />
+                <span class="adsr-value">{{ Math.round(filter.kbdTrack.value * 100) }}%</span>
               </div>
             </div>
 
-            <!-- LFO 1 -->
-            <div class="adsr-section">
-              <div class="section-toggle lfo-header">
-                <label class="inline-toggle">
-                  <input type="checkbox" :checked="filter.lfo1Enabled.value" @change="filter.setLfo1Enabled(($event.target as HTMLInputElement).checked)" />
-                  LFO 1
-                </label>
-                <select v-if="filter.lfo1Enabled.value" class="lfo-select" :value="filter.lfo1Target.value" @change="filter.setLfo1Target(($event.target as HTMLSelectElement).value as LfoTarget)">
-                  <option value="cutoff">{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</option>
-                  <option value="resonance">{{ t('latentLab.crossmodal.synth.filter.resonance') }}</option>
-                  <option value="amplitude">{{ t('latentLab.crossmodal.synth.filter.amplitude') }}</option>
-                </select>
-                <select v-if="filter.lfo1Enabled.value" class="lfo-select" :value="filter.lfo1Waveform.value" @change="filter.setLfo1Waveform(($event.target as HTMLSelectElement).value as LfoWaveform)">
-                  <option value="sine">Sine</option>
-                  <option value="triangle">Tri</option>
-                  <option value="square">Sq</option>
-                  <option value="sawtooth">Saw</option>
-                </select>
-              </div>
-              <div v-if="filter.lfo1Enabled.value" class="adsr-grid">
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
-                  <input type="range" :value="filter.lfo1Rate.value" min="0.05" max="20" step="0.05" @input="filter.setLfo1Rate(Number(($event.target as HTMLInputElement).value))" />
-                  <span class="adsr-value">{{ filter.lfo1Rate.value.toFixed(1) }} Hz</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
-                  <input type="range" :value="filter.lfo1Depth.value" min="0" max="1" step="0.01" @input="filter.setLfo1Depth(Number(($event.target as HTMLInputElement).value))" />
-                  <span class="adsr-value">{{ filter.lfo1Depth.value.toFixed(2) }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- LFO 2 -->
-            <div class="adsr-section">
-              <div class="section-toggle lfo-header">
-                <label class="inline-toggle">
-                  <input type="checkbox" :checked="filter.lfo2Enabled.value" @change="filter.setLfo2Enabled(($event.target as HTMLInputElement).checked)" />
-                  LFO 2
-                </label>
-                <select v-if="filter.lfo2Enabled.value" class="lfo-select" :value="filter.lfo2Target.value" @change="filter.setLfo2Target(($event.target as HTMLSelectElement).value as LfoTarget)">
-                  <option value="cutoff">{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</option>
-                  <option value="resonance">{{ t('latentLab.crossmodal.synth.filter.resonance') }}</option>
-                  <option value="amplitude">{{ t('latentLab.crossmodal.synth.filter.amplitude') }}</option>
-                </select>
-                <select v-if="filter.lfo2Enabled.value" class="lfo-select" :value="filter.lfo2Waveform.value" @change="filter.setLfo2Waveform(($event.target as HTMLSelectElement).value as LfoWaveform)">
-                  <option value="sine">Sine</option>
-                  <option value="triangle">Tri</option>
-                  <option value="square">Sq</option>
-                  <option value="sawtooth">Saw</option>
-                </select>
-              </div>
-              <div v-if="filter.lfo2Enabled.value" class="adsr-grid">
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
-                  <input type="range" :value="filter.lfo2Rate.value" min="0.05" max="20" step="0.05" @input="filter.setLfo2Rate(Number(($event.target as HTMLInputElement).value))" />
-                  <span class="adsr-value">{{ filter.lfo2Rate.value.toFixed(1) }} Hz</span>
-                </div>
-                <div class="adsr-slider">
-                  <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
-                  <input type="range" :value="filter.lfo2Depth.value" min="0" max="1" step="0.01" @input="filter.setLfo2Depth(Number(($event.target as HTMLInputElement).value))" />
-                  <span class="adsr-value">{{ filter.lfo2Depth.value.toFixed(2) }}</span>
-                </div>
-              </div>
-            </div>
+            <!-- Modulators route to filter cutoff via the modulation bank -->
           </div>
         </div>
 
@@ -1097,12 +1053,12 @@ import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from
 import { useI18n } from 'vue-i18n'
 import { useAudioLooper } from '@/composables/useAudioLooper'
 import { useWavetableOsc } from '@/composables/useWavetableOsc'
-import { useEnvelope } from '@/composables/useEnvelope'
+import { useModulation, type ModTarget, type LfoWaveform, MOD_TARGETS } from '@/composables/useModulation'
 import { useWebMidi } from '@/composables/useWebMidi'
 import { useStepSequencer } from '@/composables/useStepSequencer'
 import { useArpeggiator } from '@/composables/useArpeggiator'
 import { useEffects, type PlateVariant } from '@/composables/useEffects'
-import { useFilter, type FilterType, type LfoWaveform, type LfoTarget } from '@/composables/useFilter'
+import { useFilter, type FilterType, normalizedToFreq } from '@/composables/useFilter'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -1300,18 +1256,21 @@ const wavetableOn = computed(() => engineMode.value === 'wavetable')
 const sequencerOn = computed(() => sequencerEnabled.value)
 
 // ===== ADSR Envelope + Effects =====
-const envelope = useEnvelope()
+const modulation = useModulation()
 const filter = useFilter()
 const effects = useEffects()
 let envelopeWired = false
 
 /**
- * Lazily wire: engines → envelope → effects (delay/reverb) → destination.
+ * Lazily wire: engines → DCA gain → filter → effects → destination.
  * All native Web Audio nodes, no AudioWorklet (iPad-safe).
  */
 function wireEnvelope() {
   if (envelopeWired) return
   const ac = looper.getContext()
+
+  // Initialize modulation bank
+  modulation.init(ac)
 
   // Effects chain: returns an input GainNode that routes to destination
   const effectsInput = effects.createChain(ac, ac.destination)
@@ -1320,14 +1279,21 @@ function wireEnvelope() {
   const { input: filterInput, output: filterOutput } = filter.createNode(ac)
   filterOutput.connect(effectsInput)
 
-  // Envelope → filter input
-  const envNode = envelope.createNode(ac)
-  envNode.connect(filterInput)
+  // DCA GainNode (from modulation bank) → filter input
+  const dcaGain = modulation.getDcaGainNode()!
+  dcaGain.connect(filterInput)
 
-  // Engines → envelope
-  looper.setDestination(envNode)
+  // Register modulation targets
+  const freqParam = filter.getFrequencyParam()
+  modulation.setTargets({
+    dca: { param: dcaGain.gain, baseValue: 1 },
+    ...(freqParam ? { dcf_cutoff: { param: freqParam, baseValue: freqParam.value } } : {}),
+  })
+
+  // Engines → DCA gain
+  looper.setDestination(dcaGain)
   wavetableOsc.setContext(ac)
-  wavetableOsc.setDestination(envNode)
+  wavetableOsc.setDestination(dcaGain)
   envelopeWired = true
 }
 
@@ -1388,9 +1354,8 @@ function releaseCurrentNote() {
   if (engineMode.value === 'wavetable') {
     wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
   }
-  envelope.triggerRelease()
-  filter.triggerEnvRelease()
-  const stopDelay = envelope.releaseMs.value + 50
+  modulation.triggerRelease()
+  const stopDelay = modulation.envs[0]!.releaseMs.value + 50
   setTimeout(() => {
     if (activeKeyNote.value !== null) return
     if (engineMode.value === 'looper') looper.stop()
@@ -1436,8 +1401,7 @@ midi.onNote((note, velocity, on) => {
       arpeggiator.processNote(note, velocity, (n, v) => {
         triggerEngine(n, v)
       }, () => {
-        envelope.triggerRelease()
-        filter.triggerEnvRelease()
+        modulation.triggerRelease()
       })
     } else {
       // Legato: just transpose, envelope continues at sustain
@@ -1459,13 +1423,13 @@ midi.onNote((note, velocity, on) => {
       if (engineMode.value === 'wavetable') {
         wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
       }
-      envelope.triggerRelease(() => {
-        filter.triggerEnvRelease()
+      modulation.triggerRelease()
+      setTimeout(() => {
         if (heldNotes.length === 0) {
           if (engineMode.value === 'looper') looper.stop()
           else wavetableOsc.stop()
         }
-      })
+      }, modulation.envs[0]!.releaseMs.value + 50)
     } else {
       // Notes remaining: switch pitch to last held note
       const lastNote = heldNotes[heldNotes.length - 1]!
@@ -2239,8 +2203,7 @@ function triggerEngine(note: number, velocity: number) {
       )
     }
   }
-  envelope.triggerAttack(velocity)
-  filter.triggerEnvAttack()
+  modulation.triggerAttack(velocity)
 }
 
 /**
@@ -2350,15 +2313,13 @@ function wireSequencerCallbacks() {
       arpeggiator.processNote(octNote, velocity, (n, v) => {
         triggerEngine(n, v)
       }, () => {
-        envelope.triggerRelease()
-        filter.triggerEnvRelease()
+        modulation.triggerRelease()
       })
     },
     // noteOff: stop arpeggiator, fire ADSR release
     () => {
       arpeggiator.stop()
-      envelope.triggerRelease()
-      filter.triggerEnvRelease()
+      modulation.triggerRelease()
     },
   )
 }
@@ -2366,8 +2327,7 @@ function wireSequencerCallbacks() {
 function toggleSequencer() {
   if (sequencer.isPlaying.value) {
     sequencer.stop()
-    envelope.triggerRelease()
-    filter.triggerEnvRelease()
+    modulation.triggerRelease()
     return
   }
   wireEnvelope()
@@ -2435,45 +2395,13 @@ function downloadResultAudio() {
 function saveRaw() {
   const blob = looper.exportRaw()
   if (!blob) return
-  if (envelope.isNeutral.value) {
-    downloadBlob(blob, `synth_raw_${resultSeed.value ?? 0}.wav`)
-    return
-  }
-  // Apply envelope offline: decode raw → apply ADSR → re-encode
-  const reader = new FileReader()
-  reader.onload = () => {
-    const ac = new AudioContext()
-    ac.decodeAudioData(reader.result as ArrayBuffer).then((buf) => {
-      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
-        envelope.applyToSamples(buf.getChannelData(ch), buf.sampleRate)
-      }
-      downloadBlob(audioBufferToWav(buf, 0, buf.length), `synth_raw_${resultSeed.value ?? 0}.wav`)
-      ac.close()
-    })
-  }
-  reader.readAsArrayBuffer(blob)
+  downloadBlob(blob, `synth_raw_${resultSeed.value ?? 0}.wav`)
 }
 
 function saveLoop() {
   const blob = looper.exportLoop()
   if (!blob) return
-  if (envelope.isNeutral.value) {
-    downloadBlob(blob, `synth_loop_${resultSeed.value ?? 0}.wav`)
-    return
-  }
-  // Apply envelope offline: decode loop → apply ADSR → re-encode
-  const reader = new FileReader()
-  reader.onload = () => {
-    const ac = new AudioContext()
-    ac.decodeAudioData(reader.result as ArrayBuffer).then((buf) => {
-      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
-        envelope.applyToSamples(buf.getChannelData(ch), buf.sampleRate)
-      }
-      downloadBlob(audioBufferToWav(buf, 0, buf.length), `synth_loop_${resultSeed.value ?? 0}.wav`)
-      ac.close()
-    })
-  }
-  reader.readAsArrayBuffer(blob)
+  downloadBlob(blob, `synth_loop_${resultSeed.value ?? 0}.wav`)
 }
 
 // ===== Preset Export/Import =====
@@ -2583,10 +2511,10 @@ function exportPreset() {
       crossfadeMs: looper.crossfadeMs.value,
     },
     envelope: {
-      attackMs: envelope.attackMs.value,
-      decayMs: envelope.decayMs.value,
-      sustain: envelope.sustain.value,
-      releaseMs: envelope.releaseMs.value,
+      attackMs: modulation.envs[0]!.attackMs.value,
+      decayMs: modulation.envs[0]!.decayMs.value,
+      sustain: modulation.envs[0]!.sustain.value,
+      releaseMs: modulation.envs[0]!.releaseMs.value,
     },
     effects: {
       delayEnabled: effects.delayEnabled.value,
@@ -2617,26 +2545,9 @@ function exportPreset() {
       type: filter.type.value,
       cutoff: filter.cutoff.value,
       resonance: filter.resonance.value,
-      envAttackMs: filter.envAttackMs.value,
-      envDecayMs: filter.envDecayMs.value,
-      envSustain: filter.envSustain.value,
-      envReleaseMs: filter.envReleaseMs.value,
-      envAmount: filter.envAmount.value,
-      lfo1: {
-        enabled: filter.lfo1Enabled.value,
-        rate: filter.lfo1Rate.value,
-        depth: filter.lfo1Depth.value,
-        waveform: filter.lfo1Waveform.value,
-        target: filter.lfo1Target.value,
-      },
-      lfo2: {
-        enabled: filter.lfo2Enabled.value,
-        rate: filter.lfo2Rate.value,
-        depth: filter.lfo2Depth.value,
-        waveform: filter.lfo2Waveform.value,
-        target: filter.lfo2Target.value,
-      },
-    },
+      mix: filter.mix.value,
+      kbdTrack: filter.kbdTrack.value,
+    } as any,
   }
 
   const json = JSON.stringify(preset, null, 2)
@@ -2708,10 +2619,10 @@ async function importPreset(event: Event) {
 
     // Restore envelope
     if (preset.envelope) {
-      envelope.attackMs.value = preset.envelope.attackMs ?? 0
-      envelope.decayMs.value = preset.envelope.decayMs ?? 0
-      envelope.sustain.value = preset.envelope.sustain ?? 1
-      envelope.releaseMs.value = preset.envelope.releaseMs ?? 0
+      modulation.envs[0]!.attackMs.value = preset.envelope.attackMs ?? 0
+      modulation.envs[0]!.decayMs.value = preset.envelope.decayMs ?? 0
+      modulation.envs[0]!.sustain.value = preset.envelope.sustain ?? 1
+      modulation.envs[0]!.releaseMs.value = preset.envelope.releaseMs ?? 0
     }
 
     // Restore effects
@@ -2752,30 +2663,13 @@ async function importPreset(event: Event) {
       arpeggiator.setOctaveRange(preset.arpeggiator.octaveRange ?? 2)
     }
 
-    // Restore filter
+    // Restore filter (pure filter — modulators are in the modulation bank)
     if (preset.filter) {
       filter.setType(preset.filter.type as FilterType ?? 'lowpass')
       filter.setCutoff(preset.filter.cutoff ?? 1)
       filter.setResonance(preset.filter.resonance ?? 0.7)
-      filter.envAttackMs.value = preset.filter.envAttackMs ?? 0
-      filter.envDecayMs.value = preset.filter.envDecayMs ?? 0
-      filter.envSustain.value = preset.filter.envSustain ?? 1
-      filter.envReleaseMs.value = preset.filter.envReleaseMs ?? 0
-      filter.setEnvAmount(preset.filter.envAmount ?? 0)
-      if (preset.filter.lfo1) {
-        filter.setLfo1Rate(preset.filter.lfo1.rate ?? 2)
-        filter.setLfo1Depth(preset.filter.lfo1.depth ?? 0.3)
-        filter.setLfo1Waveform(preset.filter.lfo1.waveform as LfoWaveform ?? 'sine')
-        filter.setLfo1Target(preset.filter.lfo1.target as LfoTarget ?? 'cutoff')
-        filter.setLfo1Enabled(preset.filter.lfo1.enabled ?? false)
-      }
-      if (preset.filter.lfo2) {
-        filter.setLfo2Rate(preset.filter.lfo2.rate ?? 0.5)
-        filter.setLfo2Depth(preset.filter.lfo2.depth ?? 0.2)
-        filter.setLfo2Waveform(preset.filter.lfo2.waveform as LfoWaveform ?? 'triangle')
-        filter.setLfo2Target(preset.filter.lfo2.target as LfoTarget ?? 'amplitude')
-        filter.setLfo2Enabled(preset.filter.lfo2.enabled ?? false)
-      }
+      if ('mix' in preset.filter) filter.setMix((preset.filter as any).mix ?? 1)
+      if ('kbdTrack' in preset.filter) filter.setKbdTrack((preset.filter as any).kbdTrack ?? 0)
       filter.setEnabled(preset.filter.enabled ?? false)
     }
 
@@ -3059,7 +2953,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', drawWaveform)
   arpeggiator.dispose()
   sequencer.dispose()
-  envelope.dispose()
+  modulation.dispose()
   filter.dispose()
   effects.dispose()
   looper.dispose()
@@ -4079,6 +3973,33 @@ onUnmounted(() => {
 
 .filter-params {
   padding: 0.3rem 0;
+}
+
+.mod-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+}
+
+.mod-header h5 {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 3rem;
+}
+
+.mod-target-select {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.loop-toggle {
+  font-size: 0.65rem !important;
 }
 
 .filter-type-select,

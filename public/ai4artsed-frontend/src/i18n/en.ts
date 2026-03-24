@@ -1518,6 +1518,8 @@ export const en = {
           title: 'Filter',
           cutoff: 'Cutoff',
           resonance: 'Resonance',
+          mix: 'Mix',
+          kbdTrack: 'Kbd Track',
           envelope: 'Filter Envelope',
           envAmount: 'Amount',
           lfoRate: 'Rate',
