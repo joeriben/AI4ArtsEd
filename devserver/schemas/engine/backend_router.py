@@ -10,8 +10,10 @@ from pathlib import Path
 import json
 
 from my_app.services.pipeline_recorder import load_recorder
+import config as _config
 from config import JSON_STORAGE_DIR, COMFYUI_BASE_PATH, LORA_TRIGGERS, COMFYUI_MAX_QUEUE_DEPTH, COMFYUI_TIMEOUT
 from schemas.engine.progress_callback import get_progress_callback
+from schemas.engine.prompt_interception_engine import UI_MODE_WORD_LIMITS, UI_MODE_MAX_TOKENS_SAFETY
 
 logger = logging.getLogger(__name__)
 
@@ -341,15 +343,28 @@ class BackendRouter:
             model = request.model
             logger.info(f"[BACKEND] Using model: {model}")
 
+            # UI_MODE-adaptive length limits (interception output is student-facing)
+            prompt = request.prompt
+            params = dict(request.parameters)
+
+            word_limit = UI_MODE_WORD_LIMITS.get(_config.UI_MODE)
+            if word_limit:
+                prompt += f"\n\nIMPORTANT: Keep your response under {word_limit} words. Be concise."
+                logger.info(f"[BACKEND] Length guidance injected: {word_limit} words (UI_MODE={_config.UI_MODE})")
+
+            safety_limit = UI_MODE_MAX_TOKENS_SAFETY.get(_config.UI_MODE, 800)
+            if params.get("max_tokens", 2048) > safety_limit:
+                params["max_tokens"] = safety_limit
+
             # Pass pre-built prompt directly — ChunkBuilder already assembled it correctly
             pi_engine = PromptInterceptionEngine()
             pi_request = PromptInterceptionRequest(
                 input_prompt="",
-                prebuilt_prompt=request.prompt,
+                prebuilt_prompt=prompt,
                 model=model,
-                debug=request.parameters.get('debug', False),
-                unload_model=request.parameters.get('unload_model', False),
-                parameters=request.parameters,
+                debug=params.get('debug', False),
+                unload_model=params.get('unload_model', False),
+                parameters=params,
             )
             
             # Engine-Request ausführen

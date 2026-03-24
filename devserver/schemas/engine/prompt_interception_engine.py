@@ -210,20 +210,6 @@ class PromptInterceptionEngine:
             self.openrouter_models = self.model_selector.get_openrouter_models()
             self.ollama_models = self.model_selector.get_ollama_models()
 
-            # Inject length guidance into prompt (LLM self-limits instead of hard truncation)
-            word_limit = UI_MODE_WORD_LIMITS.get(_config.UI_MODE)
-            if word_limit:
-                length_instruction = f"\n\nIMPORTANT: Keep your response under {word_limit} words. Be concise."
-                full_prompt = full_prompt + length_instruction
-                logger.info(f"[BACKEND] Length guidance injected: {word_limit} words (UI_MODE={_config.UI_MODE})")
-
-            # Safety-net max_tokens (generous, should never truncate)
-            safety_limit = UI_MODE_MAX_TOKENS_SAFETY.get(_config.UI_MODE, 800)
-            req_params = request.parameters or {}
-            if req_params.get("max_tokens", 2048) > safety_limit:
-                req_params["max_tokens"] = safety_limit
-                request.parameters = req_params
-
             # Route based on provider prefix (explicit routing)
             # Canvas and other components select specific providers via prefix
             params = request.parameters or {}
