@@ -1441,25 +1441,27 @@ function wireEnvelope() {
   // Drift LFO callbacks (alpha, semantic axes, wt_scan)
   driftLfo.setCallbacks({
     alpha: {
-      callback: (v: number) => { synth.alpha = Math.max(-2, Math.min(2, v)) },
+      callback: (v: number) => { synth.alpha = v },
       baseValue: () => synth.alpha,
     },
     sem_axis_1: {
-      callback: (v: number) => { axisSlots[0]!.value = Math.max(-2, Math.min(2, v)) },
+      callback: (v: number) => { axisSlots[0]!.value = v },
       baseValue: () => axisSlots[0]!.value,
     },
     sem_axis_2: {
-      callback: (v: number) => { axisSlots[1]!.value = Math.max(-2, Math.min(2, v)) },
+      callback: (v: number) => { axisSlots[1]!.value = v },
       baseValue: () => axisSlots[1]!.value,
     },
     sem_axis_3: {
-      callback: (v: number) => { axisSlots[2]!.value = Math.max(-2, Math.min(2, v)) },
+      callback: (v: number) => { axisSlots[2]!.value = v },
       baseValue: () => axisSlots[2]!.value,
     },
     wt_scan: {
       callback: (v: number) => {
-        const clamped = Math.max(0, Math.min(1, v))
-        wavetableOsc.setScanPosition(mappedScanPosition(clamped))
+        // Write to slider ref — this IS the base the modulation ENV reads.
+        // Drift moves the center; ENV sweeps from there. No override.
+        wavetableScan.value = v
+        wavetableOsc.setScanPosition(mappedScanPosition(v))
       },
       baseValue: () => wavetableScan.value,
     },

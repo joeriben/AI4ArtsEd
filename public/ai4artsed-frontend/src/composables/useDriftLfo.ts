@@ -6,6 +6,11 @@
  *
  * Pure rAF-driven (no AudioContext dependency).
  * Phase-accumulating: each LFO tracks its own phase, waveform computed per frame.
+ *
+ * Base-snapshot design: when a target is assigned, the current value is captured
+ * as the center of oscillation. The LFO then sweeps around that center, never
+ * reading the live (modulated) value back — no feedback loop.
+ * Depth=1 sweeps the full target range (e.g. -2..+2 for alpha).
  */
 import { ref, type Ref } from 'vue'
 
@@ -26,6 +31,24 @@ export interface DriftLfoState {
   depth: Ref<number>     // 0 – 1
   waveform: Ref<DriftWaveform>
   target: Ref<DriftTarget>
+}
+
+// ─── Target range definitions ───
+// halfRange = how far depth=1 sweeps from center in each direction.
+// min/max = hard clamp boundaries for the callback output.
+
+interface TargetRange {
+  min: number
+  max: number
+  halfRange: number  // depth=1 sweeps center ± halfRange
+}
+
+const TARGET_RANGES: Record<string, TargetRange> = {
+  alpha:      { min: -2, max: 2, halfRange: 2 },
+  sem_axis_1: { min: -2, max: 2, halfRange: 2 },
+  sem_axis_2: { min: -2, max: 2, halfRange: 2 },
+  sem_axis_3: { min: -2, max: 2, halfRange: 2 },
+  wt_scan:    { min: 0, max: 1, halfRange: 0.5 },
 }
 
 // ─── Rate mapping: exponential 0.001 – 2 Hz ───
@@ -79,9 +102,13 @@ export function useDriftLfo() {
   let lastTime = 0
   let rafId: number | null = null
 
+  // Frozen base values per LFO — captured when target is assigned.
+  // LFO oscillates around this center, never reads the live modulated value.
+  const baseSnapshots: number[] = [0, 0, 0]
+
   // Callback registry: target → setter function
   const callbacks: Record<string, (value: number) => void> = {}
-  // Base value getters: target → current base value
+  // Base value getters: target → current user base value (for snapshot capture only)
   const baseGetters: Record<string, () => number> = {}
 
   function setCallbacks(targets: Record<string, { callback: (v: number) => void; baseValue: () => number }>): void {
@@ -89,6 +116,14 @@ export function useDriftLfo() {
       callbacks[key] = callback
       baseGetters[key] = baseValue
     }
+  }
+
+  /** Capture the current base value for this LFO's target. */
+  function snapshotBase(idx: number): void {
+    const target = lfos[idx]!.target.value
+    if (target === 'none') return
+    const getter = baseGetters[target]
+    if (getter) baseSnapshots[idx] = getter()
   }
 
   function start(): void {
@@ -124,20 +159,22 @@ export function useDriftLfo() {
       if (target === 'none' || lfo.depth.value === 0) continue
 
       const cb = callbacks[target]
-      const baseGet = baseGetters[target]
-      if (!cb || !baseGet) continue
+      if (!cb) continue
+
+      const range = TARGET_RANGES[target]
+      if (!range) continue
 
       anyActive = true
 
       // Advance phase
       phases[i] = (phases[i]! + lfo.rate.value * dt) % 1
 
-      // Compute waveform output (-1..+1), scale by depth
+      // Compute waveform output (-1..+1), scale by depth and target range
       const raw = waveformValue(phases[i]!, lfo.waveform.value)
-      const base = baseGet()
-      // Bipolar modulation: base ± (depth * range)
-      // Depth of 1.0 = full range sweep of the target
-      cb(base + raw * lfo.depth.value)
+      const center = baseSnapshots[i]!
+      const modulated = center + raw * lfo.depth.value * range.halfRange
+      // Hard clamp to target bounds
+      cb(Math.max(range.min, Math.min(range.max, modulated)))
     }
 
     if (anyActive) {
@@ -152,6 +189,12 @@ export function useDriftLfo() {
     if (!lfo) return
     const r = lfo[key] as Ref<any>
     r.value = value
+
+    // Snapshot base when target changes
+    if (key === 'target') {
+      snapshotBase(idx)
+      phases[idx] = 0 // reset phase on target change
+    }
 
     // Auto-start/stop the rAF loop based on active targets
     const anyActive = lfos.some(l => l.target.value !== 'none' && l.depth.value > 0)
@@ -169,6 +212,7 @@ export function useDriftLfo() {
     lfos,
     setCallbacks,
     setParam,
+    snapshotBase,
     start,
     stop,
     resetPhases,

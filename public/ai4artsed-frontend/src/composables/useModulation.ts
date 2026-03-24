@@ -250,10 +250,11 @@ export function useModulation() {
       if (!gain) return
       const peak = velocity * amount
       const susLevel = sus * peak
+      // Soft retrigger: hold current value, ramp from there (no click on retrigger)
       gain.gain.cancelScheduledValues(now)
-      gain.gain.setValueAtTime(0, now)
-      gain.gain.linearRampToValueAtTime(peak, now + Math.max(atk, 0.002))
-      gain.gain.linearRampToValueAtTime(susLevel, now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
+      gain.gain.setValueAtTime(gain.gain.value, now)
+      gain.gain.linearRampToValueAtTime(peak, now + Math.max(atk, 0.003))
+      gain.gain.linearRampToValueAtTime(susLevel, now + Math.max(atk, 0.003) + Math.max(dec, 0.003))
 
       if (env.loop.value) {
         scheduleEnvLoop(idx, velocity, atk + dec)
@@ -285,12 +286,12 @@ export function useModulation() {
       param.cancelScheduledValues(now)
       if (target === 'dcf_cutoff') {
         param.setValueAtTime(Math.max(startVal, 20), now)
-        param.exponentialRampToValueAtTime(Math.max(peakVal, 20), now + Math.max(atk, 0.002))
-        param.exponentialRampToValueAtTime(Math.max(susVal, 20), now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
+        param.exponentialRampToValueAtTime(Math.max(peakVal, 20), now + Math.max(atk, 0.003))
+        param.exponentialRampToValueAtTime(Math.max(susVal, 20), now + Math.max(atk, 0.003) + Math.max(dec, 0.003))
       } else {
         param.setValueAtTime(Math.max(startVal, 0.001), now)
-        param.linearRampToValueAtTime(peakVal, now + Math.max(atk, 0.002))
-        param.linearRampToValueAtTime(susVal, now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
+        param.linearRampToValueAtTime(peakVal, now + Math.max(atk, 0.003))
+        param.linearRampToValueAtTime(susVal, now + Math.max(atk, 0.003) + Math.max(dec, 0.003))
       }
 
       if (env.loop.value) {
@@ -317,7 +318,7 @@ export function useModulation() {
       param.cancelScheduledValues(now)
       param.setValueAtTime(current || 0.001, now)
     }
-    param.linearRampToValueAtTime(target, now + Math.max(duration, 0.002))
+    param.linearRampToValueAtTime(target, now + Math.max(duration, 0.003))
   }
 
   function triggerEnvRelease(idx: number): void {
