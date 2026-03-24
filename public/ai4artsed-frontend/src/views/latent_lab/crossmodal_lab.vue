@@ -630,6 +630,11 @@
               <span class="adsr-value">{{ effects.delayFeedback.value.toFixed(2) }}</span>
             </div>
             <div class="adsr-slider">
+              <label>Damp</label>
+              <input type="range" :value="effects.delayDamp.value" min="0" max="1" step="0.01" @input="effects.setDelayDamp(Number(($event.target as HTMLInputElement).value))" />
+              <span class="adsr-value">{{ effects.delayDampFreq.value }}Hz</span>
+            </div>
+            <div class="adsr-slider">
               <label>Mix</label>
               <input type="range" :value="effects.delayMix.value" min="0" max="1" step="0.01" @input="effects.setDelayMix(Number(($event.target as HTMLInputElement).value))" />
               <span class="adsr-value">{{ effects.delayMix.value.toFixed(2) }}</span>

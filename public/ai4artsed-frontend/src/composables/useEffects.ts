@@ -48,6 +48,8 @@ export function useEffects() {
   const delayEnabled = ref(false)
   const delayTimeMs = ref(250)
   const delayFeedback = ref(0.35)
+  const delayDamp = ref(0.5)      // 0 = no damping (20kHz), 1 = max damping (500Hz)
+  const delayDampFreq = ref(4000) // Display value in Hz
   const delayMix = ref(0.3)
 
   const reverbEnabled = ref(false)
@@ -101,7 +103,7 @@ export function useEffects() {
     // Each repeat loses highs, like BBD/tape delay
     feedbackFilter = ac.createBiquadFilter()
     feedbackFilter.type = 'lowpass'
-    feedbackFilter.frequency.value = 4000  // ~4kHz — warm but not muddy
+    feedbackFilter.frequency.value = Math.round(20000 * Math.pow(500 / 20000, delayDamp.value))
     feedbackFilter.Q.value = 0.7           // Butterworth, no resonance
 
     inputNode.connect(delaySend)
@@ -160,6 +162,15 @@ export function useEffects() {
   function setDelayFeedback(fb: number): void {
     delayFeedback.value = Math.max(0, Math.min(0.95, fb))
     if (feedbackGain) feedbackGain.gain.value = delayFeedback.value
+  }
+
+  /** Damping 0–1: 0 = bright (20kHz), 1 = dark (500Hz). Exponential mapping. */
+  function setDelayDamp(d: number): void {
+    delayDamp.value = Math.max(0, Math.min(1, d))
+    // Exp mapping: 0 → 20000Hz, 1 → 500Hz
+    const freq = Math.round(20000 * Math.pow(500 / 20000, delayDamp.value))
+    delayDampFreq.value = freq
+    if (feedbackFilter) feedbackFilter.frequency.value = freq
   }
 
   function setDelayMix(mix: number): void {
@@ -261,10 +272,13 @@ export function useEffects() {
     delayEnabled: readonly(delayEnabled),
     delayTimeMs: readonly(delayTimeMs),
     delayFeedback: readonly(delayFeedback),
+    delayDamp: readonly(delayDamp),
+    delayDampFreq: readonly(delayDampFreq),
     delayMix: readonly(delayMix),
     setDelayEnabled,
     setDelayTime,
     setDelayFeedback,
+    setDelayDamp,
     setDelayMix,
     syncDelayToBpm,
 
