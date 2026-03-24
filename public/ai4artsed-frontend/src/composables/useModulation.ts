@@ -16,7 +16,7 @@ import { ref, readonly, type Ref } from 'vue'
 export type ModTarget =
   | 'dca' | 'dcf_cutoff' | 'pitch'
   | 'delay_time' | 'delay_feedback' | 'delay_mix' | 'reverb_mix'
-  | 'lfo1_rate' | 'lfo2_rate'
+  | 'lfo1_rate' | 'lfo2_rate' | 'lfo1_depth' | 'lfo2_depth'
   | 'wt_scan'
   | 'none'
 
@@ -26,7 +26,7 @@ export type LfoMode = 'free' | 'trigger'
 export const MOD_TARGETS: ModTarget[] = [
   'none', 'dca', 'dcf_cutoff', 'pitch',
   'delay_time', 'delay_feedback', 'delay_mix', 'reverb_mix',
-  'lfo1_rate', 'lfo2_rate', 'wt_scan',
+  'lfo1_rate', 'lfo2_rate', 'lfo1_depth', 'lfo2_depth', 'wt_scan',
 ]
 
 export interface EnvState {
@@ -155,9 +155,17 @@ export function useModulation() {
       targetParams['lfo1_rate'] = lfoOscs[0]!.frequency
       targetBaseGetters['lfo1_rate'] = () => lfos[0]!.rate.value
     }
+    if (lfoGains[0]) {
+      targetParams['lfo1_depth'] = lfoGains[0]!.gain
+      targetBaseGetters['lfo1_depth'] = () => lfoGains[0]!.gain.value
+    }
     if (lfoOscs[1]) {
       targetParams['lfo2_rate'] = lfoOscs[1]!.frequency
       targetBaseGetters['lfo2_rate'] = () => lfos[1]!.rate.value
+    }
+    if (lfoGains[1]) {
+      targetParams['lfo2_depth'] = lfoGains[1]!.gain
+      targetBaseGetters['lfo2_depth'] = () => lfoGains[1]!.gain.value
     }
 
     applyLfoRouting()
