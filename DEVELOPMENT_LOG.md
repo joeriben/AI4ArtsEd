@@ -1,5 +1,50 @@
 # Development Log
 
+## Session 287 - Wavetable Synth: Signal Path Audit, Mip-Mapping, Bug Fixes
+**Date:** 2026-03-24
+**Focus:** Komplette Überarbeitung des Wavetable-Signalpfads. Mip-Mapped Anti-Aliasing. Dutzende Signal-Routing-Bugs gefixt. Delay-Damping. LFO Super-Slow-Drift.
+
+### Neue Features
+- **Mip-Mapped Wavetable Anti-Aliasing**: 8 band-limitierte Levels pro Frame (FFT → harmonics zeroen → IFFT). Worklet wählt Level automatisch nach Frequenz. Transposition klingt jetzt korrekt über den gesamten Bereich.
+- **Region-Aware Extraction**: Waveform + Markers in beiden Engine-Modi sichtbar. "Re-extract" Button extrahiert Frames nur aus der gewählten Region.
+- **Detected Pitch**: Extraction gibt Median-Pitch zurück, wird als Default-Playback-Frequenz gesetzt. Keyboard-Noten transponieren relativ zum erkannten Pitch (nicht absolut MIDI→Hz).
+- **Frame Waveform Visualizer**: Canvas zeigt aktuelle Scan-Position-Frame.
+- **Test C3 Button**: Neben Generate — spielt einzelne 500ms Note, kein Auto-Play bei Generation.
+- **Delay Damping**: Lowpass-Filter im Feedback-Loop (analog BBD/Tape-Stil). Damp-Slider 0–1 (20kHz→500Hz).
+- **Exponentieller Delay-Time-Slider**: 1–2000ms, mehr Auflösung bei kurzen Zeiten.
+- **LFO Rate 0.005–20Hz**: Ermöglicht Super-Slow-Drift durch semantische Wavetables (200s Zykluszeit).
+- **Scan Position Smoothing**: Ein-Pol-Tiefpass im Worklet (~5ms) verhindert Knackser bei Frame-Wechsel.
+
+### Bug Fixes (Signal Path Audit)
+- **Legacy WT Scan Envelope entfernt**: War die Hauptursache für ungewollte Wavetable-Fahrten. Lief parallel zur Modulationsmatrix. -51 Zeilen.
+- **DCA init = 0**: envGainNodes starten jetzt geschlossen (war 1 → sofort volle Lautstärke).
+- **Looper-Leak in WT-Modus**: Looper und Wavetable teilen denselben DCA. Looper wurde in WT-Pfaden nicht gestoppt → Bleedthrough (inkl. Pingpong).
+- **looper.loadBuffer()**: Neuer Pfad für WT-Modus — decodiert Buffer ohne Playback zu starten. Eliminiert Audio-Leak zwischen play() und stop().
+- **Looper umging DCA komplett**: Vor wireEnvelope() connected looper.play() direkt zu ac.destination. wireEnvelope() wird jetzt VOR jeder Audio-Operation aufgerufen.
+- **cancelAndHoldAtTime fehlt in Firefox**: Gesamter Release-Pfad crashte mit TypeError → DCA blieb auf Sustain. Fix: holdAndRamp() mit Feature Detection + Fallback.
+- **Async start() Race Condition**: start() ist async (Worklet-Modul laden), wurde sync aufgerufen → doppelte Worklet-Nodes. Fix: starting-Guard + stopGeneration-Counter.
+- **transportStop silenced DCA nicht**: triggerRelease() fehlte + DCA=0 sofort.
+- **Kein Auto-Resume bei Engine-Switch**: setEngineMode startete Sequencer automatisch.
+- **Sequencer Grid-10 fehlte**: CSS-Regel für 10-Step-Grid nicht vorhanden.
+- **Scan Position Reset**: Neuer Worklet startete bei Frame 0, nicht beim Slider-Wert. Fix: lastScanPosition persistiert.
+
+### Architektur-Entscheidungen
+- **DCA = Envelope-Only**: Kein VCA-Envelope = kein Sound. ENV 0 Default: target=dca, sustain=1, amount=1 (Gate-Verhalten).
+- **Generate erzeugt keinen Sound**: Immer loadBuffer(), nie play(). User triggert explizit.
+- **Synth sollte nativ werden**: Web Audio API zu inkonsistent für ernsthaften Synth (cancelAndHoldAtTime, async Worklet, Main-Thread-Jitter). Bleibt im Browser für AI Lab, Weiterentwicklung nativ.
+- **Beat-sync'd Regeneration (Octatrack-Stil)**: Zukunftsidee — async Re-Generation + Bar-Boundary-Crossfade = live Latent-Space-Drift.
+
+### Geänderte Dateien
+- `src/composables/useWavetableOsc.ts` — Mip-Mapping (FFT/IFFT), Region-Extraction, Detected Pitch, Scan Smoothing, Race Condition Guards
+- `src/composables/useModulation.ts` — DCA init=0, holdAndRamp() Firefox-Fallback
+- `src/composables/useEffects.ts` — Feedback Damping Filter, Damp-Slider
+- `src/composables/useAudioLooper.ts` — loadBuffer() Methode
+- `src/audio/wavetable-processor.js` — Mip-Level-Auswahl, Scan Smoothing
+- `src/views/latent_lab/crossmodal_lab.vue` — Signal-Routing-Fixes, Legacy Scan Envelope entfernt, Test Button, Exp Slider, UI
+- `src/i18n/en.ts` — Neue Keys (extractionRegion, wtReextract, testNote)
+
+---
+
 ## Session 285 - UI_MODE Length Limits: Separation of Concerns
 **Date:** 2026-03-24
 **Focus:** UI_MODE-basierte Laengenlimits (Word-Guidance + max_tokens Safety-Cap) aus der PromptInterceptionEngine in den BackendRouter verschoben.
