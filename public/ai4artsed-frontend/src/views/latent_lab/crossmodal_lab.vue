@@ -3119,24 +3119,18 @@ async function runSynth() {
         const ac = looper.getContext()
         wavetableOsc.setContext(ac)
         if (!envelopeWired) wireEnvelope()
-        if (wavetableOsc.hasFrames.value) {
-          // Silence DCA before starting — sound only via note trigger / ADSR
-          const dcaGain = modulation.getDcaGainNode()
-          if (dcaGain) {
-            dcaGain.gain.cancelScheduledValues(ac.currentTime)
-            dcaGain.gain.setValueAtTime(0, ac.currentTime)
-          }
-          await wavetableOsc.start()
-        }
+        // Do NOT auto-start oscillator — wastes CPU looping silently.
+        // Oscillator starts on first note trigger (triggerEngine) or Play.
       }
 
-      // Restore transport: play if was playing or first generation
-      if (preGenTransport === 'playing' || preGenTransport === 'idle') {
+      // Restore transport
+      if (engineMode.value === 'wavetable') {
+        // Wavetable: always paused after generation — oscillator starts on note trigger
+        transport.value = 'paused'
+      } else if (preGenTransport === 'playing' || preGenTransport === 'idle') {
         transport.value = 'playing'
       } else {
-        // User had paused — load but don't play
-        if (engineMode.value === 'looper') looper.stop()
-        else wavetableOsc.stop()
+        looper.stop()
         transport.value = 'paused'
       }
 
@@ -4716,6 +4710,7 @@ onUnmounted(() => {
 
 .seq-grid-5 { grid-template-columns: repeat(5, 1fr); }
 .seq-grid-8 { grid-template-columns: repeat(8, 1fr); }
+.seq-grid-10 { grid-template-columns: repeat(10, 1fr); }
 .seq-grid-16 { grid-template-columns: repeat(16, 1fr); }
 .seq-grid-32 { grid-template-columns: repeat(32, 1fr); }
 
