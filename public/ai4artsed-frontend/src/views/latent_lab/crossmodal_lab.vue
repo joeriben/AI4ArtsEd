@@ -2229,7 +2229,7 @@ function transportPlay() {
       if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
         wavetableOsc.triggerScanEnvelope(
           wtScanAttack.value, wtScanDecay.value,
-          mappedScanPosition(0), mappedScanPosition(1),
+          mappedScanPosition(wavetableScan.value), mappedScanPosition(1),
         )
       }
     }
@@ -2338,7 +2338,7 @@ function triggerEngine(note: number, velocity: number) {
     if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
       wavetableOsc.triggerScanEnvelope(
         wtScanAttack.value, wtScanDecay.value,
-        mappedScanPosition(0), mappedScanPosition(1),
+        mappedScanPosition(wavetableScan.value), mappedScanPosition(1),
       )
     }
   }
