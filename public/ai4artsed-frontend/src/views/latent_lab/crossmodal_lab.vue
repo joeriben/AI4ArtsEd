@@ -2644,7 +2644,6 @@ interface SynthPreset {
   }
   wavetable?: {
     scan: number; interpolate: boolean
-    scanAttack: number; scanDecay: number; scanRelease: number
     rangeStart: number; rangeEnd: number
   }
   effects: {
