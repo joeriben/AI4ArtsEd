@@ -112,7 +112,7 @@ export function useModulation() {
 
     for (let i = 0; i < 3; i++) {
       envGainNodes[i] = ac.createGain()
-      envGainNodes[i]!.gain.value = 1
+      envGainNodes[i]!.gain.value = 0  // Closed gate — envelope opens it
     }
 
     for (let i = 0; i < 2; i++) {
