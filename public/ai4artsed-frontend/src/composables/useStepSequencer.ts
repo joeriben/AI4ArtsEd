@@ -44,86 +44,85 @@ function makeStep(semitone = 0, velocity = 0.8, gate = 0.8, active = true): Step
 // Named after sequencer traditions, not arpeggios.
 const PRESETS: Preset[] = [
   {
-    // Eastcoast: driving modular bass (Gemini-sourced, adapted).
-    // Cm tonality with chromatic G#, ghost note ending. 16 steps.
+    // Eastcoast (Berlin School): 16 steps, ratchet-style low-high alternation.
+    // Low tones on odd steps, octave staccato fills between. Melodic contour
+    // via Bb2, Eb2, F2. Last step = ghost note. Gemini V2.
     name: 'eastcoast',
     steps: [
-      makeStep(0, 1.0, 0.3),     // C2, accent
-      makeStep(12, 0.63, 0.3),   // C3, softer
-      makeStep(3, 0.63, 0.3),    // Eb2
-      makeStep(0, 0.71, 0.3),    // C2
-      makeStep(7, 1.0, 0.3),     // G2, accent
-      makeStep(12, 0.63, 0.3),   // C3
-      makeStep(10, 0.79, 0.8),   // Bb2, legato
-      makeStep(7, 0.39, 0.2),    // G2, ghost
-      makeStep(0, 0.94, 0.3),    // C2, strong
-      makeStep(0, 0.47, 0.3),    // C2, softer echo
-      makeStep(3, 0.63, 0.3),    // Eb2
-      makeStep(5, 0.71, 0.3),    // F2
-      makeStep(7, 1.0, 0.3),     // G2, accent
-      makeStep(8, 0.63, 0.3),    // G#2, chromatic!
-      makeStep(10, 0.79, 0.9),   // Bb2, legato
-      makeStep(7, 0.12, 0.1),    // G2, ghost note
+      makeStep(0, 0.79, 0.5),    // C2
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(7, 0.63, 0.5),    // G2
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(0, 0.87, 0.5),    // C2, accent
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(10, 0.63, 0.5),   // Bb2
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(0, 0.79, 0.5),    // C2
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(3, 0.63, 0.5),    // Eb2
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(0, 0.87, 0.5),    // C2, accent
+      makeStep(12, 0.63, 0.25),  // C3, staccato
+      makeStep(5, 0.71, 0.8),    // F2, legato
+      makeStep(7, 0.47, 0.25),   // G2, ghost
     ],
   },
   {
-    // Westcoast: exploratory modular. 8 steps (Gemini 7+1 adapted).
-    // Wide leaps, glides as long gates, no tonal center.
+    // Westcoast: 5-step polyrhythm against 4/4 — takes 5 bars to realign.
+    // Wide leaps, rest as rhythmic element, extreme timbre contrast. Gemini V2.
     name: 'westcoast',
     steps: [
-      makeStep(0, 0.79, 0.2),    // C2, short
-      makeStep(19, 0.47, 0.5),   // G3, glide (long gate)
-      makeStep(24, 0.31, 0.1),   // C4, staccatissimo
-      makeStep(5, 1.0, 0.8),     // F2, accent legato
-      makeStep(10, 0.63, 0.5),   // Bb2, glide
-      makeStep(13, 0.39, 0.2),   // C#3, whisper
-      makeStep(0, 0, 0, false),  // rest
-      makeStep(-2, 0.7, 0.6),    // Bb1, low tension
+      makeStep(0, 1.0, 0.8),     // C1, deep, accent
+      makeStep(19, 0.47, 1.0),   // G3, glide (long gate)
+      makeStep(0, 0, 0, false),  // REST — rhythmically essential
+      makeStep(24, 0.79, 0.1),   // C4, staccatissimo
+      makeStep(3, 0.31, 0.4),    // Eb2, whisper
     ],
   },
   {
-    // Synthwave: rolling bass / sidechain pump. 16 steps.
-    // Rhythmic gating on root, mutes create pumping feel.
+    // Synthwave (Outrun): sidechain bass pump. 16 steps.
+    // Mutes on downbeats (kick space), Eb/G variations in second half. Gemini V2.
     name: 'synthwave',
     steps: [
       makeStep(0, 0, 0, false),  // mute (kick)
-      makeStep(0, 0.79, 0.5),    // root comes in
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(3, 0.87, 0.4),    // Eb2
       makeStep(0, 0, 0, false),  // mute
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(3, 0.87, 0.4),    // Eb2
       makeStep(0, 0, 0, false),  // mute
-      makeStep(0, 0, 0, false),  // double mute = syncopation
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(7, 0.87, 0.4),    // G2 — opens up
       makeStep(0, 0, 0, false),  // mute
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
-      makeStep(0, 0.79, 0.5),
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(0, 0.79, 0.4),    // C2
+      makeStep(7, 0.87, 0.4),    // G2
     ],
   },
   {
-    // Acid: 16 steps (Gemini-sourced). Accents, ties (long gate), slides, rests.
+    // Acid: 16 steps. Rests for air, ties (gate=1.0), accents,
+    // the classic 2-octave belly-drop Eb→G1 at steps 10-12. Gemini V2.
     name: 'techno',
     steps: [
+      makeStep(0, 0, 0, false),  // REST — acid needs air
       makeStep(0, 0.79, 0.5),    // C2
-      makeStep(0, 0.63, 0.5),    // C2, softer
-      makeStep(3, 1.0, 1.0),     // Eb2, ACCENT + TIE (legato)
-      makeStep(15, 0.63, 0.5),   // Eb3, slide up (long gate prev)
-      makeStep(0, 0.63, 0.5),    // C2
-      makeStep(0, 0, 0, false),  // rest
-      makeStep(7, 0.63, 1.0),    // G2, TIE
-      makeStep(7, 1.0, 0.5),     // G2, ACCENT
-      makeStep(10, 0.63, 0.5),   // Bb2
-      makeStep(0, 0, 0, false),  // rest
-      makeStep(12, 1.0, 1.0),    // C3, ACCENT + TIE
-      makeStep(10, 0.63, 0.5),   // Bb2, slide down
-      makeStep(0, 0.63, 0.5),    // C2
-      makeStep(0, 0, 0, false),  // rest
-      makeStep(3, 0.63, 0.5),    // Eb2
-      makeStep(0, 0.63, 0.5),    // C2
+      makeStep(0, 0.63, 1.0),    // C2, TIE (legato into next)
+      makeStep(12, 1.0, 0.5),    // C3, ACCENT + slide up
+      makeStep(0, 0, 0, false),  // REST
+      makeStep(0, 0.79, 0.5),    // C2
+      makeStep(0, 0, 0, false),  // REST
+      makeStep(0, 0.79, 0.5),    // C2
+      makeStep(0, 0.63, 1.0),    // C2, TIE
+      makeStep(3, 1.0, 1.0),     // Eb2, ACCENT + TIE — belly ache starts
+      makeStep(3, 0.63, 1.0),    // Eb2, TIE (sustaining)
+      makeStep(-5, 0.63, 0.5),   // G1, 2-octave DROP (the 303 moment)
+      makeStep(0, 1.0, 0.5),     // C2, ACCENT — landing
+      makeStep(0, 0, 0, false),  // REST
+      makeStep(12, 0.63, 0.5),   // C3
+      makeStep(0, 0, 0, false),  // REST
     ],
   },
   {
