@@ -1267,7 +1267,7 @@ export const de = {
         promptAPlaceholder: 'z.B. Meereswellen',
         promptB: 'Prompt B (Optional, fuer Interpolation)',
         promptBPlaceholder: 'z.B. Klaviermelodie',
-        alpha: '\u0391 (Interpolation zwischen Prompt A- und Prompt B-Embeddings)',
+        alpha: '\u0391 (Interpolation zwischen Prompt A-Embedding (= -1.0) und Prompt B-Embedding (= 1.0))',
         alphaHint: '0 = nur A, 1 = nur B, dazwischen = Mischung, >1 oder <0 = Extrapolation',
         magnitude: 'Magnitude (Skalierung)',
         magnitudeHint: 'Globale Skalierung des Embeddings (1.0 = unveraendert)',
