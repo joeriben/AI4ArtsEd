@@ -2596,7 +2596,8 @@ interface SynthPreset {
     bpm: number
     stepCount: number
     division: string
-    steps: Array<{ active: boolean; semitone: number; velocity: number; gate: number }>
+    glideTime?: number
+    steps: Array<{ active: boolean; semitone: number; velocity: number; gate: number; glide?: boolean }>
   }
   arpeggiator: {
     enabled: boolean
