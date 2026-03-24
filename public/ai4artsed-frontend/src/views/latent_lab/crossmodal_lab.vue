@@ -449,6 +449,7 @@
               <div class="wt-range-band" :style="rangeBandStyle" />
               <div class="wt-bracket wt-bracket-start" :style="{ left: `${rangeStartPct}%` }" @pointerdown.prevent="startBracketDrag('start', $event)" />
               <div class="wt-bracket wt-bracket-end" :style="{ left: `${rangeEndPct}%` }" @pointerdown.prevent="startBracketDrag('end', $event)" />
+              <div class="wt-scan-marker" :style="{ left: `${scanMarkerPct}%` }" />
               <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
             </div>
             <span class="slider-hint">{{ t('latentLab.crossmodal.synth.wavetableScanHint') }}</span>
@@ -1188,6 +1189,15 @@ const rangeEndPct = computed(() => {
   const total = wavetableOsc.frameCount.value
   return total > 0 ? (wtRangeEnd.value / total) * 100 : 100
 })
+/** Dynamic scan position marker — maps current scan position to absolute track % */
+const scanMarkerPct = computed(() => {
+  const total = wavetableOsc.frameCount.value
+  if (total === 0) return 0
+  const rangeSize = wtRangeEnd.value - wtRangeStart.value
+  const absFrame = wtRangeStart.value + wavetableScan.value * Math.max(rangeSize - 1, 0)
+  return (absFrame / total) * 100
+})
+
 const rangeBandStyle = computed(() => ({
   left: `${rangeStartPct.value}%`,
   width: `${rangeEndPct.value - rangeStartPct.value}%`,
@@ -4166,6 +4176,19 @@ onUnmounted(() => {
   border-top: 2px solid #CE93D8;
   border-bottom: 2px solid #CE93D8;
   border-radius: 0 3px 3px 0;
+}
+
+.wt-scan-marker {
+  position: absolute;
+  top: 2px;
+  width: 2px;
+  height: 24px;
+  background: #4CAF50;
+  border-radius: 1px;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateX(-1px);
+  transition: left 0.05s linear;
 }
 
 .wt-bracket:hover {
