@@ -1,5 +1,33 @@
 # Development Log
 
+## Session 288 - Drift LFOs, Envelope Fixes, Beat-Sync Prep
+**Date:** 2026-03-24
+**Focus:** 3 neue Drift-LFOs fuer langsamen Parameter-Drift (alpha, semantische Achsen, WT-Scan). Envelope-Bugfixes. Vorbereitung Beat-Sync'd Regeneration.
+
+### Neue Features
+- **3 Drift-LFOs** (`useDriftLfo.ts`): rAF-getrieben, unabhaengig von AudioContext. Rate 0.001–2Hz (exponentieller Slider). Targets: Alpha, Sem. Axis 1/2/3, WT-Scan. Formel: `center + waveform(phase) * depth * halfRange`. Center per Snapshot beim Target-Wechsel fixiert.
+- **Drift-LFO UI**: Eigene "DRIFT"-Box zwischen Modulation und Filter. Pro LFO: Target-Select, Waveform, Rate, Depth.
+- **Drift-LFOs in Preset Export/Import**: `driftLfos` Array, backwards-compatible (alte Presets ohne Feld werden uebersprungen).
+
+### Bug Fixes
+- **Envelope Knacksen (Soft Retrigger)**: `setValueAtTime(0, now)` → `setValueAtTime(gain.gain.value, now)`. Kein harter Drop auf 0 bei Retrigger, stattdessen Ramp vom aktuellen Wert. Minimum-Ramp 2ms→3ms.
+- **Exponentieller Release**: `linearRampToValueAtTime` → `setTargetAtTime` (RC-Discharge). Natuerlicher Analog-Synth-Abfall statt linearem Drop. Gilt fuer DCA und Callback-Envelopes.
+- **Drift-LFO Target-Restore**: Beim Wechsel des Targets wird der alte Target auf seinen Original-Center-Wert zurueckgesetzt. Verhindert "vergessene" modulierte Werte.
+- **WT-Scan + Drift-LFO Kombination**: Drift schreibt auf `wavetableScan` Ref (Slider-Basis). Modulations-ENV liest diese als Center → kein Override, Systeme kombinieren sich.
+- **WT-Scan Watcher Performance**: `drawWtFrame()` nur noch bei Frame-Index-Wechsel, nicht bei jedem Sub-Step-Tick.
+- **Engine-Switch behaelt Sequencer**: `setEngineMode()` stoppt nur Audio-Engines (looper/wavetableOsc), nicht Sequencer/Arpeggiator. Transport bleibt 'playing' wenn Seq/Arp aktiv.
+
+### Architektur-Notizen
+- Drift-LFOs sind Baustein fuer Beat-Sync'd Regeneration (naechste Session): Parameter driften langsam → bei Bar-Boundary neues Audio generieren → Crossfade.
+- halfRange = `(max - min) / 2`, berechnet nicht hardcoded.
+- TARGET_RANGES: alpha/axes min=-2 max=2, wt_scan min=0 max=1.
+
+### Commits
+- `ab945d3` feat(synth): 3 drift LFOs
+- `33d62d2` feat(synth): drift LFOs in preset export/import
+- `e427ff1` fix(synth): drift LFO scale, envelope clicks, WT-scan override
+- `912fd9f` fix(synth): drift LFO scaling, exponential release, engine switch
+
 ## Session 287 - Wavetable Synth: Signal Path Audit, Mip-Mapping, Bug Fixes
 **Date:** 2026-03-24
 **Focus:** Komplette Überarbeitung des Wavetable-Signalpfads. Mip-Mapped Anti-Aliasing. Dutzende Signal-Routing-Bugs gefixt. Delay-Damping. LFO Super-Slow-Drift.
