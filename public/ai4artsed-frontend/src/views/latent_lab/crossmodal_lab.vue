@@ -550,7 +550,7 @@
             <div v-if="lfo.target.value !== 'none'" class="adsr-grid">
               <div class="adsr-slider">
                 <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
-                <input type="range" :value="lfo.rate.value" min="0.05" max="20" step="0.05" @input="modulation.setLfoParam(idx, 'rate', Number(($event.target as HTMLInputElement).value))" />
+                <input type="range" :value="lfoRateToSlider(lfo.rate.value)" min="0" max="1" step="0.001" @input="modulation.setLfoParam(idx, 'rate', sliderToLfoRate(Number(($event.target as HTMLInputElement).value)))" />
                 <span class="adsr-value">{{ lfo.rate.value.toFixed(1) }} Hz</span>
               </div>
               <div class="adsr-slider">
@@ -1349,6 +1349,14 @@ function sliderToDelayTime(v: number): number {
 }
 function delayTimeToSlider(ms: number): number {
   return Math.log(Math.max(1, ms)) / Math.log(2000)
+}
+
+/** Exponential LFO rate mapping: slider 0–1 → 0.005–20Hz (super slow to fast) */
+function sliderToLfoRate(v: number): number {
+  return 0.005 * Math.pow(20 / 0.005, v)
+}
+function lfoRateToSlider(hz: number): number {
+  return Math.log(Math.max(0.005, hz) / 0.005) / Math.log(20 / 0.005)
 }
 let envelopeWired = false
 
