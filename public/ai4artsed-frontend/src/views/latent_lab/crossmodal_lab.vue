@@ -561,27 +561,6 @@
             </div>
           </div>
 
-          <!-- ADR → WT Scan (legacy, kept separate) -->
-          <div v-if="wavetableOn" class="adsr-section">
-            <h5>{{ t('latentLab.crossmodal.synth.wtScanEnvelope') }} <span class="env-target">WT Scan</span></h5>
-            <div class="adsr-grid">
-              <div class="adsr-slider">
-                <label>A</label>
-                <input type="range" v-model.number="wtScanAttack" min="0" max="10000" step="50" />
-                <span class="adsr-value">{{ (wtScanAttack / 1000).toFixed(1) }}s</span>
-              </div>
-              <div class="adsr-slider">
-                <label>D</label>
-                <input type="range" v-model.number="wtScanDecay" min="0" max="10000" step="50" />
-                <span class="adsr-value">{{ (wtScanDecay / 1000).toFixed(1) }}s</span>
-              </div>
-              <div class="adsr-slider">
-                <label>R</label>
-                <input type="range" v-model.number="wtScanRelease" min="0" max="10000" step="50" />
-                <span class="adsr-value">{{ (wtScanRelease / 1000).toFixed(1) }}s</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- ═══════ BOX 3: FILTER ═══════ -->
@@ -1250,9 +1229,6 @@ const wtBuilding = ref(false)
 const wtBuildProgress = ref(0)
 const wtBuildProgressCurrent = ref(0)
 const wtInterpolate = ref(true)
-const wtScanAttack = ref(0)
-const wtScanDecay = ref(0)
-const wtScanRelease = ref(0)
 const wtRangeStart = ref(0)   // 0-based frame index
 const wtRangeEnd = ref(16)    // exclusive end, updated when frames loaded
 const scanTrackEl = ref<HTMLElement | null>(null)
@@ -1469,9 +1445,6 @@ function toggleHold() {
 
 function releaseCurrentNote() {
   activeKeyNote.value = null
-  if (engineMode.value === 'wavetable') {
-    wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
-  }
   modulation.triggerRelease()
   // Stop the oscillator after release completes — no CPU waste
   const stopDelay = modulation.envs[0]!.releaseMs.value + 50
@@ -1539,7 +1512,6 @@ midi.onNote((note, velocity, on) => {
       // Last note released: stop arpeggiator, start release phase
       arpeggiator.stop()
       if (engineMode.value === 'wavetable') {
-        wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
       }
       modulation.triggerRelease()
       setTimeout(() => {
@@ -2223,15 +2195,6 @@ function transportPlay() {
     looper.stop()
     if (wavetableOsc.hasFrames.value) {
       wireEnvelope()
-      // Do NOT start oscillator here — triggerEngine starts it on first note.
-      // Starting here wastes CPU looping silently and causes race conditions.
-      // Trigger scan sweep if ADR configured (deferred if worklet not yet ready)
-      if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
-        wavetableOsc.triggerScanEnvelope(
-          wtScanAttack.value, wtScanDecay.value,
-          mappedScanPosition(0), mappedScanPosition(1),
-        )
-      }
     }
   }
   if (sequencerEnabled.value && !sequencer.isPlaying.value) {
@@ -2250,7 +2213,6 @@ function transportStop() {
   modulation.triggerRelease()
   // Stop BOTH engines — they share the DCA
   looper.stop()
-  wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
   wavetableOsc.stop()
   // DCA to 0 immediately — no lingering sustain
   const dcaGain = modulation.getDcaGainNode()
@@ -2333,13 +2295,6 @@ function triggerEngine(note: number, velocity: number) {
     wavetableOsc.setFrequency(wtFreqForNote(note))
     if (!wavetableOsc.isPlaying.value && wavetableOsc.hasFrames.value) {
       wavetableOsc.start()
-    }
-    // Re-trigger scan envelope on every note-on (like ADSR re-triggers)
-    if (wtScanAttack.value > 0 || wtScanDecay.value > 0) {
-      wavetableOsc.triggerScanEnvelope(
-        wtScanAttack.value, wtScanDecay.value,
-        mappedScanPosition(0), mappedScanPosition(1),
-      )
     }
   }
   modulation.triggerAttack(velocity)
@@ -2780,9 +2735,6 @@ function exportPreset() {
     wavetable: {
       scan: wavetableScan.value,
       interpolate: wtInterpolate.value,
-      scanAttack: wtScanAttack.value,
-      scanDecay: wtScanDecay.value,
-      scanRelease: wtScanRelease.value,
       rangeStart: wtRangeStart.value,
       rangeEnd: wtRangeEnd.value,
     },
@@ -2931,9 +2883,6 @@ async function importPreset(event: Event) {
     if (wt) {
       if (wt.scan != null) wavetableScan.value = wt.scan
       if (wt.interpolate != null) wtInterpolate.value = wt.interpolate
-      if (wt.scanAttack != null) wtScanAttack.value = wt.scanAttack
-      if (wt.scanDecay != null) wtScanDecay.value = wt.scanDecay
-      if (wt.scanRelease != null) wtScanRelease.value = wt.scanRelease
       if (wt.rangeStart != null) wtRangeStart.value = wt.rangeStart
       if (wt.rangeEnd != null) wtRangeEnd.value = wt.rangeEnd
     }
