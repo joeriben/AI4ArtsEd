@@ -476,7 +476,7 @@
         <!-- ═══════ BOX 2: MODULATION (3 Envelopes + 2 LFOs) ═══════ -->
         <div class="synth-box">
           <!-- 3 ADSR Envelopes -->
-          <div v-for="(env, idx) in modulation.envs" :key="'env'+idx" class="adsr-section">
+          <div v-for="(env, idx) in modulation.envs" :key="'env'+idx" v-memo="[env.target.value, env.loop.value, env.attackMs.value, env.decayMs.value, env.sustain.value, env.releaseMs.value, env.amount.value]" class="adsr-section">
             <div class="mod-header">
               <h5>ENV {{ idx + 1 }}</h5>
               <select class="mod-target-select" :value="env.target.value" @change="modulation.setEnvParam(idx, 'target', ($event.target as HTMLSelectElement).value as ModTarget)">
@@ -517,7 +517,7 @@
           </div>
 
           <!-- 2 LFOs -->
-          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" class="adsr-section">
+          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" v-memo="[lfo.target.value, lfo.rate.value, lfo.depth.value, lfo.waveform.value]" class="adsr-section">
             <div class="mod-header">
               <h5>LFO {{ idx + 1 }}</h5>
               <select class="mod-target-select" :value="lfo.target.value" @change="modulation.setLfoParam(idx, 'target', ($event.target as HTMLSelectElement).value)">
@@ -568,7 +568,7 @@
         </div>
 
         <!-- ═══════ BOX 3: FILTER ═══════ -->
-        <div class="synth-box">
+        <div class="synth-box" v-memo="[filter.enabled.value, filter.type.value, filter.slope.value, filter.cutoff.value, filter.resonance.value, filter.mix.value, filter.kbdTrack.value]">
           <div class="section-toggle">
             <label class="inline-toggle">
               <input type="checkbox" :checked="filter.enabled.value" @change="filter.setEnabled(($event.target as HTMLInputElement).checked)" />
@@ -614,7 +614,7 @@
         </div>
 
         <!-- ═══════ BOX 4: EFFECTS (Delay + Reverb) ═══════ -->
-        <div class="synth-box">
+        <div class="synth-box" v-memo="[effects.delayEnabled.value, effects.delayTimeMs.value, effects.delayFeedback.value, effects.delayMix.value, effects.reverbEnabled.value, effects.reverbMix.value, effects.reverbVariant.value, effects.reverbLoaded.value]">
           <!-- Delay -->
           <div class="section-toggle">
             <label class="inline-toggle">
