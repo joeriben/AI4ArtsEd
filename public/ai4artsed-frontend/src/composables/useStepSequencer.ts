@@ -151,8 +151,8 @@ const PRESETS: Preset[] = [
     ],
   },
   {
-    // Power Plant: precise, mechanical, equal velocity, robotic chromatic movement.
-    name: 'power_plant',
+    // Solar: precise, mechanical, equal velocity, robotic chromatic movement.
+    name: 'solar',
     steps: [
       makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
       makeStep(0, 0.9, 0.5), makeStep(0, 0.9, 0.5),
