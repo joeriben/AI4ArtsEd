@@ -1468,14 +1468,6 @@ function releaseCurrentNote() {
   activeKeyNote.value = null
   if (engineMode.value === 'wavetable') {
     wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
-    // Always ramp DCA to 0 — whether envelope targets it or not
-    const dcaGain = modulation.getDcaGainNode()
-    if (dcaGain) {
-      const ac = looper.getContext()
-      const rel = modulation.envs[0]!.releaseMs.value / 1000
-      dcaGain.gain.cancelAndHoldAtTime(ac.currentTime)
-      dcaGain.gain.linearRampToValueAtTime(0, ac.currentTime + Math.max(rel, 0.002))
-    }
   }
   modulation.triggerRelease()
   // Stop the oscillator after release completes — no CPU waste
@@ -1545,14 +1537,6 @@ midi.onNote((note, velocity, on) => {
       arpeggiator.stop()
       if (engineMode.value === 'wavetable') {
         wavetableOsc.stopScanEnvelope(wtScanRelease.value, mappedScanPosition(0))
-        // Gate DCA to 0
-        const dcaGain = modulation.getDcaGainNode()
-        if (dcaGain) {
-          const ac = looper.getContext()
-          const rel = modulation.envs[0]!.releaseMs.value / 1000
-          dcaGain.gain.cancelAndHoldAtTime(ac.currentTime)
-          dcaGain.gain.linearRampToValueAtTime(0, ac.currentTime + Math.max(rel, 0.002))
-        }
       }
       modulation.triggerRelease()
       setTimeout(() => {
@@ -2351,20 +2335,7 @@ function triggerEngine(note: number, velocity: number) {
       )
     }
   }
-  // DCA envelope gates the sound. If ENV 0 doesn't target DCA, manually gate.
-  const env0Target = modulation.envs[0]!.target.value
-  if (env0Target === 'dca') {
-    modulation.triggerAttack(velocity)
-  } else {
-    // No DCA envelope — manually gate: DCA to velocity now, triggerAttack for other envs
-    const dcaGain = modulation.getDcaGainNode()
-    if (dcaGain) {
-      const ac = looper.getContext()
-      dcaGain.gain.cancelScheduledValues(ac.currentTime)
-      dcaGain.gain.setValueAtTime(velocity, ac.currentTime)
-    }
-    modulation.triggerAttack(velocity)
-  }
+  modulation.triggerAttack(velocity)
 }
 
 /** Glide: ramp pitch to target note without retriggering envelope/ADSR. */
@@ -2499,20 +2470,10 @@ function wireSequencerCallbacks() {
         })
       }
     },
-    // noteOff: stop arpeggiator, fire ADSR release, gate DCA to 0
+    // noteOff: stop arpeggiator, fire ADSR release
     () => {
       arpeggiator.stop()
       modulation.triggerRelease()
-      // Ensure DCA goes to 0 even if no envelope targets it
-      if (engineMode.value === 'wavetable') {
-        const dcaGain = modulation.getDcaGainNode()
-        if (dcaGain) {
-          const ac = looper.getContext()
-          const rel = modulation.envs[0]!.releaseMs.value / 1000
-          dcaGain.gain.cancelAndHoldAtTime(ac.currentTime)
-          dcaGain.gain.linearRampToValueAtTime(0, ac.currentTime + Math.max(rel, 0.002))
-        }
-      }
     },
   )
 }
