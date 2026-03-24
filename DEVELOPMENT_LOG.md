@@ -2,7 +2,7 @@
 
 ## Session 284 - Synth Architecture: Modulation Bank, Filter, Presets, Dim Explorer Modes
 **Date:** 2026-03-24
-**Focus:** Grundlegender Architektur-Umbau des Latent Audio Synth: Modulationssystem (3 ENV + 2 LFO), reiner Filter mit Mix/Kbd Track, Preset Export/Import, Dimension Explorer Modi.
+**Focus:** Grundlegender Architektur-Umbau des Latent Audio Synth: Modulationssystem (3 ENV + 2 LFO), reiner Filter mit Mix/Kbd Track, Preset Export/Import, Dimension Explorer Modi, Gain Staging, Sequencer-Presets.
 
 ### Dimension Explorer — Relative/Absolute Modes
 1. **Relative Mode** (Default): Per-Dimension Mix zwischen Prompt A (oben, orange) und Prompt B (unten, blau). Mix-Faktor -1..+1, wird vor API-Call in Offsets konvertiert.
@@ -22,36 +22,69 @@
 
 ### Modulation Bank (MAJOR REFACTOR)
 - **`useModulation.ts`** (neu): 3 ADSR-Envelopes + 2 LFOs
-- Jeder Modulator frei zuweisbar: DCA, DCF_CUTOFF, PITCH, NONE
-- Envelopes: ADSR + Amount + Loop-Toggle
-- LFOs: Rate + Depth + Waveform (Sine/Tri/Sq/Saw) + Target
+- Targets: DCA, DCF_CUTOFF, PITCH, DELAY_TIME/FEEDBACK/MIX, REVERB_MIX, LFO1/2_RATE, LFO1/2_DEPTH, WT_SCAN, NONE
+- Envelopes: ADSR + Amount + Loop-Toggle, frei zuweisbar
+- LFOs: Rate + Depth + Waveform (Sine/Tri/Sq/Saw) + Target + Mode (Free/Trigger)
 - Getter-basierte Basiswerte: liest aktuellen Cutoff bei Trigger (nicht gecached)
+- DCF Envelope: Subtractive-Synth-Modell (20Hz → Peak → Sustain → 20Hz), Amount skaliert Range um Cutoff-Slider
+- Callback-basierte Targets (WT_SCAN): rAF-getriebene ADSR + AnalyserNode fuer LFO-Readback
+- LFO Trigger-Mode: Phase-Reset bei Note-On (Oszillator wird neu erstellt)
 - Ersetzt alte `useEnvelope.ts` (monolithisch, nur DCA)
 
 ### Filter Redesign
 - **`useFilter.ts`** (Rewrite): Reiner Filter ohne eingebettete Modulatoren
-- **Wet/Dry Mix**: Parallele Pfade mit Equal-Power Crossfade (0% = ungefiltert, 100% = voll gefiltert)
+- **Wet/Dry Mix**: Parallele Pfade mit Equal-Power Crossfade (Mix als Feature, nicht Bug)
 - **Keyboard Tracking**: Cutoff folgt MIDI-Note (0-100%, relativ zu C3)
-- LP/HP/BP mit Cutoff (log 20-20kHz) und Resonance (exp Q-Mapping)
-- Signalkette: Engines → DCA GainNode → Filter (Mix) → Delay/Reverb → Out
+- **Slopes**: 12dB/oct (1x BiquadFilter) und 24dB/oct (2x kaskadiert)
+- LP/HP/BP mit Cutoff (log 20-20kHz), Resonance (exp Q-Mapping, Default=0)
+- Kein Bypass bei hohem Cutoff — Filter immer im Signalweg, bei Max transparent
+- Signalkette: Engines → DCA GainNode → Filter (Mix) → Limiter → Delay/Reverb → Out
+
+### Gain Staging
+- **DynamicsCompressorNode** als Brick-Wall-Limiter am Ende der Effects-Kette
+- Threshold -3dB, Ratio 20:1, Attack 1ms — faengt Clipping von Delay-Feedback, Filter-Resonanz, Wet/Dry-Summierung
+- Web Audio ist intern 32-bit Float — Verzerrung war Gain-Akkumulation, nicht Bit-Depth
+
+### Dropdown/MIDI-Bug Fix
+- **v-memo** auf Modulation-, Filter-, Effects-, Sequencer- und Arpeggiator-Sections
+- Sequencer `currentStep` Reactive-Update verursachte Full-Template-Reevaluation → Browser schloss offene Dropdowns
+- v-memo cached Subtrees, re-rendert nur bei eigenen Wert-Aenderungen
+
+### Sequencer Presets (komplett neu)
+- 10 Presets, musikalisch recherchiert (Gemini V2 + eigene):
+  - **Eastcoast**: Berlin School Ratchet (tief-hoch alternierend, Bb/Eb/F Kontur, Ghost)
+  - **Westcoast**: 5-Step Polyrhythmik gegen 4/4, Rest als rhythmisches Element
+  - **Synthwave**: Sidechain-Pump mit Eb/G-Variationen
+  - **Acid**: 303-Style mit Rests, Ties, Accents, 2-Oktaven-Drop (Eb→G1)
+  - **Dub Techno**: Sparse Stabs mit langen Pausen
+  - **Ambient**: Evolving Voicings (add9, sus4, maj7), gradueller Swell
+  - **IDM/Glitch**: Genuinely unpredictable, keine tonale Logik
+  - **Solar**: Mechanisch, chromatische Upper Neighbors
+  - **Arpeggio Bass**: 32 Steps, alternierend Quinten/Tritoni, steigende Intensitaet
+  - **Trance Gate**: Rhythmic Gating mit Synkopation
+- "—" Dropdown resettet Grid jetzt korrekt auf Defaults
+- Presets setzen automatisch passenden Step Count
+- Step Count Option 10 hinzugefuegt
+- Sequencer startet nicht mehr automatisch beim Aufklappen
 
 ### Wavetable Scan Position Marker
 - Gruener dynamischer Marker auf dem Scan-Track zeigt aktuelle Frame-Position
-- CSS transition fuer smooth movement, ergaenzt die statischen lila Brackets
+- CSS transition fuer smooth movement
 
 ### Technical Notes
 - Backend: `_compute_stats()` liefert `emb_a_values`/`emb_b_values` fuer Relative Mode
 - Backend: `_manipulate_embedding()` renormalisiert nach Extrapolation (Midpoint-L2-Norm)
-- Modulation targets nutzen `() => number` Getter statt statische Werte
 - `synthFingerprint()` enthaelt `spectralMode`
 - `prevStats` Snapshot vor `embeddingStats = null` (Race Condition Fix)
 - Offline-Envelope fuer WAV-Export entfernt (war an `useEnvelope.applyToSamples` gebunden)
+- Effects-AudioParams als Mod-Targets exponiert via `getModTargets()`
+- Keine Markennamen in Code-Kommentaren oder UI-Labels
 
-### Open Items
+### Open Items (naechste Session)
+- **Glide/Portamento** im Sequencer (pro-Step Flag + globale Glide-Time)
 - Pitch als Modulation-Target (braucht Zugriff auf Looper's `playbackRate`)
-- WT Scan als Modulation-Target (Callback-basiert, nicht AudioParam)
 - Polyphonie (Voice Pool)
-- Bessere Sequenzen
+- PWM via Wavetable (Pulsbreiten-Frames + LFO→WT_SCAN)
 
 ## Session 283 - Latent Audio Synth: Envelope Fixes, Effects, Arpeggiator, UI Overhaul
 **Date:** 2026-03-23
