@@ -1,16 +1,7 @@
 /**
- * 3 Drift LFOs — ultra-slow parameter modulation for generative drift.
- *
- * Targets: alpha (hallucinator blend), semantic axes 1–3, wavetable scan.
- * Rate range: 0.001 Hz (16min cycle) – 2 Hz, exponential slider mapping.
- *
- * Pure rAF-driven (no AudioContext dependency).
- * Phase-accumulating: each LFO tracks its own phase, waveform computed per frame.
- *
- * Base-snapshot design: when a target is assigned, the current value is captured
- * as the center of oscillation. The LFO then sweeps around that center, never
- * reading the live (modulated) value back — no feedback loop.
- * Depth=1 sweeps the full target range (e.g. -2..+2 for alpha).
+ * 3 Drift LFOs — rAF-driven, ultra-slow parameter modulation.
+ * output = center + waveform(phase) * depth * halfRange
+ * Center captured once on target assignment. Rate 0.001–2 Hz.
  */
 import { ref, type Ref } from 'vue'
 
@@ -33,22 +24,14 @@ export interface DriftLfoState {
   target: Ref<DriftTarget>
 }
 
-// ─── Target range definitions ───
-// halfRange = how far depth=1 sweeps from center in each direction.
-// min/max = hard clamp boundaries for the callback output.
+// ─── Target ranges: min/max bounds, halfRange derived ───
 
-interface TargetRange {
-  min: number
-  max: number
-  halfRange: number  // depth=1 sweeps center ± halfRange
-}
-
-const TARGET_RANGES: Record<string, TargetRange> = {
-  alpha:      { min: -2, max: 2, halfRange: 2 },
-  sem_axis_1: { min: -2, max: 2, halfRange: 2 },
-  sem_axis_2: { min: -2, max: 2, halfRange: 2 },
-  sem_axis_3: { min: -2, max: 2, halfRange: 2 },
-  wt_scan:    { min: 0, max: 1, halfRange: 0.5 },
+const TARGET_RANGES: Record<string, { min: number; max: number }> = {
+  alpha:      { min: -2, max: 2 },
+  sem_axis_1: { min: -2, max: 2 },
+  sem_axis_2: { min: -2, max: 2 },
+  sem_axis_3: { min: -2, max: 2 },
+  wt_scan:    { min: 0, max: 1 },
 }
 
 // ─── Rate mapping: exponential 0.001 – 2 Hz ───
@@ -169,11 +152,10 @@ export function useDriftLfo() {
       // Advance phase
       phases[i] = (phases[i]! + lfo.rate.value * dt) % 1
 
-      // Compute waveform output (-1..+1), scale by depth and target range
       const raw = waveformValue(phases[i]!, lfo.waveform.value)
       const center = baseSnapshots[i]!
-      const modulated = center + raw * lfo.depth.value * range.halfRange
-      // Hard clamp to target bounds
+      const halfRange = (range.max - range.min) / 2
+      const modulated = center + raw * lfo.depth.value * halfRange
       cb(Math.max(range.min, Math.min(range.max, modulated)))
     }
 
@@ -187,13 +169,22 @@ export function useDriftLfo() {
   function setParam(idx: number, key: keyof DriftLfoState, value: number | string): void {
     const lfo = lfos[idx]
     if (!lfo) return
+
+    if (key === 'target') {
+      // Restore old target to its original center before switching away
+      const oldTarget = lfo.target.value
+      if (oldTarget !== 'none') {
+        const cb = callbacks[oldTarget]
+        if (cb) cb(baseSnapshots[idx]!)
+      }
+    }
+
     const r = lfo[key] as Ref<any>
     r.value = value
 
-    // Snapshot base when target changes
     if (key === 'target') {
       snapshotBase(idx)
-      phases[idx] = 0 // reset phase on target change
+      phases[idx] = 0
     }
 
     // Auto-start/stop the rAF loop based on active targets

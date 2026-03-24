@@ -305,20 +305,20 @@ export function useModulation() {
    * Uses cancelAndHoldAtTime where available (Chrome), falls back to
    * cancelScheduledValues + setValueAtTime for Firefox/Safari.
    */
-  function holdAndRamp(param: AudioParam, target: number, now: number, duration: number): void {
+  function holdAndRelease(param: AudioParam, target: number, now: number, duration: number): void {
+    const dur = Math.max(duration, 0.003)
     if (typeof param.cancelAndHoldAtTime === 'function') {
       param.cancelAndHoldAtTime(now)
     } else {
-      // Fallback: cancel all automation, anchor at last known sustain value.
-      // During sustain phase this is the susLevel. During attack/decay ramps
-      // .value returns the intrinsic (not computed) value, so we compute it
-      // from the envelope state. In practice, release during sustain is the
-      // common case — the sustain value was the last ramp target.
-      const current = param.value  // Best effort — correct during sustain
+      const current = param.value
       param.cancelScheduledValues(now)
       param.setValueAtTime(current || 0.001, now)
     }
-    param.linearRampToValueAtTime(target, now + Math.max(duration, 0.003))
+    // Exponential decay (RC discharge): fast initial drop, long tail.
+    // timeConstant = dur/5 → after `dur` seconds, value is at ~0.7% of start.
+    param.setTargetAtTime(target, now, dur / 5)
+    // Hard-zero at end — setTargetAtTime is asymptotic, never truly reaches target
+    param.setValueAtTime(target, now + dur)
   }
 
   function triggerEnvRelease(idx: number): void {
@@ -342,17 +342,17 @@ export function useModulation() {
     if (target === 'dca') {
       const gain = envGainNodes[0]
       if (!gain) return
-      holdAndRamp(gain.gain, 0, now, rel)
+      holdAndRelease(gain.gain, 0, now, rel)
     } else {
       const param = targetParams[target]
       if (!param) return
       if (target === 'dcf_cutoff') {
         const baseVal = targetBaseGetters[target]?.() ?? 1000
         const releaseTarget = Math.max(20, baseVal * (1 - env.amount.value))
-        holdAndRamp(param, releaseTarget, now, rel)
+        holdAndRelease(param, releaseTarget, now, rel)
       } else {
         const baseVal = targetBaseGetters[target]?.() ?? 1
-        holdAndRamp(param, baseVal, now, rel)
+        holdAndRelease(param, baseVal, now, rel)
       }
     }
   }
@@ -379,9 +379,10 @@ export function useModulation() {
     if (st.releasing) {
       const elapsed = now - st.releaseTime
       if (elapsed >= rel) { st.active = false; return 0 }
-      // Compute level at release start, then ramp to 0
+      // Exponential decay (RC discharge): e^(-t/τ), τ = rel/5
       const preRelLevel = computeSustainLevel(idx, st.releaseTime - st.startTime)
-      return preRelLevel * (1 - elapsed / Math.max(rel, 1)) * amount
+      const tau = Math.max(rel, 1) / 5
+      return preRelLevel * Math.exp(-elapsed / tau) * amount * st.velocity
     }
 
     const elapsed = now - st.startTime

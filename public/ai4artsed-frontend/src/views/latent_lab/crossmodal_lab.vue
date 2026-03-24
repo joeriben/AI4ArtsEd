@@ -2313,9 +2313,7 @@ function setEngineMode(mode: EngineMode) {
   if (mode === engineMode.value) return
   const wasPlaying = transport.value === 'playing'
 
-  // Stop current engine
-  sequencer.stop()
-  arpeggiator.stop()
+  // Stop audio engines (but NOT sequencer/arpeggiator — user started those intentionally)
   looper.stop()
   wavetableOsc.stop()
 
@@ -2333,8 +2331,12 @@ function setEngineMode(mode: EngineMode) {
     }
   }
 
-  // Always paused after engine switch — user starts explicitly
-  transport.value = hasLoadedAudio.value ? 'paused' : 'idle'
+  // Keep transport state if sequencer/arp is driving playback
+  if (wasPlaying && (sequencerEnabled.value || arpeggiator.enabled.value)) {
+    transport.value = 'playing'
+  } else {
+    transport.value = hasLoadedAudio.value ? 'paused' : 'idle'
+  }
 }
 
 /** Set loop mode (oneshot/loop/pingpong). */
@@ -2485,9 +2487,18 @@ function onScanInput(event: Event) {
   drawWtFrame()
 }
 
+let lastDrawnFrameIdx = -1
 watch(wavetableScan, (v) => {
   wavetableOsc.setScanPosition(mappedScanPosition(v))
-  drawWtFrame()
+  // Only redraw canvas when the discrete frame index changes (not every 0.001 tick)
+  const total = wavetableOsc.frameCount.value
+  if (total > 0) {
+    const frameIdx = Math.min(Math.floor(v * total), total - 1)
+    if (frameIdx !== lastDrawnFrameIdx) {
+      lastDrawnFrameIdx = frameIdx
+      drawWtFrame()
+    }
+  }
 })
 
 function onWtInterpolateChange(event: Event) {
