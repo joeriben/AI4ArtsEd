@@ -108,8 +108,7 @@ export function useFilter() {
 
   function applyMix(): void {
     if (!dryGain || !wetGain) return
-    if (!enabled.value || cutoff.value > 0.95) {
-      // Disabled or cutoff wide open: bypass filter entirely
+    if (!enabled.value) {
       dryGain.gain.value = 1
       wetGain.gain.value = 0
     } else {
