@@ -1328,10 +1328,15 @@ function wireEnvelope() {
   })
 
   // Register callback targets (non-AudioParam)
+  // wt_scan: additive model — envelope sweeps scan position FROM base (slider pos).
+  // Callback must NOT write back to wavetableScan (feedback loop: base reads it, collapse to 0).
   modulation.setCallbackTargets({
     wt_scan: {
-      callback: (v: number) => { wavetableScan.value = Math.max(0, Math.min(1, v)); wavetableOsc.setScanPosition(v) },
-      baseValue: () => wavetableScan.value || 0.5,
+      callback: (v: number) => {
+        const clamped = Math.max(0, Math.min(1, v))
+        wavetableOsc.setScanPosition(mappedScanPosition(clamped))
+      },
+      baseValue: () => wavetableScan.value,
     },
   })
 

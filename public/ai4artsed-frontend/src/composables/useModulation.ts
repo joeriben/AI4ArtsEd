@@ -409,7 +409,8 @@ export function useModulation() {
       if (cb && baseGet) {
         const envVal = computeEnvValue(idx, performance.now())
         const base = baseGet()
-        cb(base * envVal)
+        // Additive: envelope sweeps value away from base position
+        cb(base + envVal)
       }
       st.rafId = requestAnimationFrame(tick)
     }
@@ -436,8 +437,8 @@ export function useModulation() {
         const lfoVal = lfoSampleBuf[0]! // -1..+1
         const baseGet = callbackBaseGetters[target]
         const base = baseGet?.() ?? 0.5
-        // Map LFO output: base ± depth * base
-        cb(Math.max(0, Math.min(1, base + lfoVal * lfo.depth.value * base)))
+        // Additive bipolar: base ± depth (depth controls absolute sweep range 0-1)
+        cb(base + lfoVal * lfo.depth.value)
       }
       if (anyActive) {
         lfoRafId = requestAnimationFrame(poll)
