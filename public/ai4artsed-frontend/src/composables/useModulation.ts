@@ -320,18 +320,16 @@ export function useModulation() {
     if (target === 'dca') {
       const gain = envGainNodes[0]
       if (!gain) return
-      const current = gain.gain.value
-      gain.gain.cancelScheduledValues(now)
-      gain.gain.setValueAtTime(current, now)
+      // cancelAndHoldAtTime freezes the current computed value (not the intrinsic .value
+      // which returns 0 during attack/decay ramps, causing instant silence)
+      gain.gain.cancelAndHoldAtTime(now)
       gain.gain.linearRampToValueAtTime(0, now + Math.max(rel, 0.002))
     } else {
       const param = targetParams[target]
       if (!param) return
-      const current = param.value
-      param.cancelScheduledValues(now)
-      param.setValueAtTime(Math.max(current, 0.001), now)
+      // cancelAndHoldAtTime captures the actual automation value at 'now'
+      param.cancelAndHoldAtTime(now)
       if (target === 'dcf_cutoff') {
-        // Release to start position (baseVal * (1-amount), minimum 20Hz)
         const baseVal = targetBaseGetters[target]?.() ?? 1000
         const releaseTarget = Math.max(20, baseVal * (1 - env.amount.value))
         param.exponentialRampToValueAtTime(releaseTarget, now + Math.max(rel, 0.002))
