@@ -178,21 +178,30 @@ export function useModulation() {
         scheduleEnvLoop(idx, velocity, atk + dec)
       }
     } else {
-      // AudioParam modulation (dcf_cutoff, pitch): additive scheduling
+      // AudioParam modulation: scheduling on target param
       const param = targetParams[target]
       if (!param) return
       const baseVal = targetBaseGetters[target]?.() ?? param.value
-      const peakVal = baseVal + amount * baseVal // modulate by `amount` fraction of base
-      const susVal = baseVal + (peakVal - baseVal) * sus
+
+      let peakVal: number
+      let susVal: number
+
+      if (target === 'dcf_cutoff') {
+        // Frequency: amount sweeps octaves (amount=1 → 4 octaves up)
+        peakVal = Math.min(20000, baseVal * Math.pow(2, amount * 4))
+        susVal = baseVal + (peakVal - baseVal) * sus
+      } else {
+        // Linear targets: amount as fraction of base
+        peakVal = baseVal + amount * baseVal
+        susVal = baseVal + (peakVal - baseVal) * sus
+      }
 
       param.cancelScheduledValues(now)
-      param.setValueAtTime(baseVal, now)
+      param.setValueAtTime(Math.max(baseVal, 0.001), now)
       if (target === 'dcf_cutoff') {
-        // Exponential ramps for frequency
         param.exponentialRampToValueAtTime(Math.max(peakVal, 20), now + Math.max(atk, 0.002))
         param.exponentialRampToValueAtTime(Math.max(susVal, 20), now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
       } else {
-        // Linear ramps for pitch/other
         param.linearRampToValueAtTime(peakVal, now + Math.max(atk, 0.002))
         param.linearRampToValueAtTime(susVal, now + Math.max(atk, 0.002) + Math.max(dec, 0.002))
       }

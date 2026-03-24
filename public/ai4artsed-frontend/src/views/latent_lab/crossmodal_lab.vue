@@ -579,6 +579,10 @@
               <option value="highpass">HP</option>
               <option value="bandpass">BP</option>
             </select>
+            <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.slope.value" @change="filter.setSlope(($event.target as HTMLSelectElement).value as any)">
+              <option value="12">12dB</option>
+              <option value="24">24dB</option>
+            </select>
           </div>
 
           <div v-if="filter.enabled.value" class="filter-params">
