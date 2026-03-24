@@ -75,7 +75,10 @@ export function useFilter() {
     inputNode.connect(dryGain)
     dryGain.connect(outputNode)
 
-    // Wet path — rewired by applySlope()
+    // Wet output → mix bus
+    wetGain.connect(outputNode)
+
+    // Wet path (filter chain) — rewired by applySlope()
     applySlope()
     applyMix()
 
