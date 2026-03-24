@@ -375,7 +375,10 @@ export function useWavetableOsc() {
       const param = workletNode.parameters.get('frequency')
       if (param) {
         const ac = ctx ?? ensureContext()
-        param.linearRampToValueAtTime(currentFrequency.value, ac.currentTime + timeMs / 1000)
+        const now = ac.currentTime
+        // Anchor current value before ramp (required by Web Audio spec)
+        param.setValueAtTime(param.value, now)
+        param.linearRampToValueAtTime(currentFrequency.value, now + timeMs / 1000)
       }
     }
   }

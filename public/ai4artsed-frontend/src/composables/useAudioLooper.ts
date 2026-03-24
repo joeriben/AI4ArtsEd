@@ -401,8 +401,11 @@ export function useAudioLooper() {
   function glideToSemitones(semitones: number, timeMs: number) {
     transposeSemitones.value = semitones
     if (activeSource && ctx) {
+      const now = ctx.currentTime
       const rate = Math.pow(2, semitones / 12)
-      activeSource.playbackRate.linearRampToValueAtTime(rate, ctx.currentTime + timeMs / 1000)
+      // Anchor current value before ramp (required by Web Audio spec)
+      activeSource.playbackRate.setValueAtTime(activeSource.playbackRate.value, now)
+      activeSource.playbackRate.linearRampToValueAtTime(rate, now + timeMs / 1000)
     }
   }
 

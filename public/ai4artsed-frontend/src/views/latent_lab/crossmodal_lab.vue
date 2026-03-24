@@ -2366,8 +2366,11 @@ function wireSequencerCallbacks() {
     // noteOn: retrigger active engine at new pitch, through arpeggiator
     (note, velocity, glide) => {
       const octNote = note + seqOctave.value * 12 + seqKeyTranspose.value
-      if (glide) {
-        // Glide: ramp pitch without retriggering envelope
+      const engineRunning = engineMode.value === 'looper'
+        ? looper.isPlaying.value
+        : wavetableOsc.isPlaying.value
+      if (glide && engineRunning) {
+        // Glide: ramp pitch without retriggering envelope (only if engine already playing)
         glideEngine(octNote, sequencer.glideTime.value)
         filter.setNote(octNote)
       } else {
