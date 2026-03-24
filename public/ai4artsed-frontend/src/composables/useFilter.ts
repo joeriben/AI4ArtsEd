@@ -82,12 +82,12 @@ export function useFilter() {
 
   function applyMix(): void {
     if (!dryGain || !wetGain) return
-    if (!enabled.value) {
-      // Disabled: full dry, no wet
+    if (!enabled.value || cutoff.value > 0.95) {
+      // Disabled or cutoff wide open: bypass filter entirely (no coloring)
       dryGain.gain.value = 1
       wetGain.gain.value = 0
     } else {
-      // Equal-power crossfade
+      // Equal-power crossfade between dry and filtered
       dryGain.gain.value = Math.cos(mix.value * Math.PI / 2)
       wetGain.gain.value = Math.sin(mix.value * Math.PI / 2)
     }
