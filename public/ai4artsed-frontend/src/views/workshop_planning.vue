@@ -10,20 +10,36 @@
       </div>
 
       <div class="chat-messages" ref="messagesRef">
-        <div
-          v-for="msg in messages"
-          :key="msg.id"
-          class="chat-bubble"
-          :class="msg.role"
-        >
-          {{ msg.content }}
+        <!-- Static greeting (always visible) -->
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.intro') }}</div>
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.context') }}</div>
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.resources') }}</div>
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.planning') }}</div>
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.flexibility') }}</div>
+        <div class="chat-bubble assistant">{{ t('workshop.greeting.callToAction') }}</div>
+
+        <!-- Activate button when dormant -->
+        <div v-if="!isActivated" class="activate-row">
+          <button class="activate-btn" @click="activateChat">{{ t('workshop.activate') }}</button>
         </div>
-        <div v-if="isLoading" class="chat-bubble assistant loading">
-          <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-        </div>
+
+        <!-- Interactive messages after activation -->
+        <template v-if="isActivated">
+          <div
+            v-for="msg in messages"
+            :key="msg.id"
+            class="chat-bubble"
+            :class="msg.role"
+          >
+            {{ msg.content }}
+          </div>
+          <div v-if="isLoading" class="chat-bubble assistant loading">
+            <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+          </div>
+        </template>
       </div>
 
-      <div class="chat-input-area">
+      <div v-if="isActivated" class="chat-input-area">
         <input
           v-model="userInput"
           class="chat-input"
@@ -349,6 +365,7 @@ interface ChatMessage {
 const messages = ref<ChatMessage[]>([])
 const userInput = ref('')
 const isLoading = ref(false)
+const isActivated = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextId = 0
 
@@ -357,6 +374,9 @@ function getBaseUrl(): string {
 }
 
 function addChatMessage(role: 'user' | 'assistant', content: string) {
+  if (!isActivated.value) {
+    isActivated.value = true
+  }
   messages.value.push({ id: nextId++, role, content })
   nextTick(() => {
     if (messagesRef.value) {
@@ -612,8 +632,17 @@ async function fetchGreeting() {
   }
 }
 
+function activateChat() {
+  isActivated.value = true
+  nextTick(() => {
+    if (messagesRef.value) {
+      messagesRef.value.scrollTop = messagesRef.value.scrollHeight
+    }
+  })
+}
+
 onMounted(() => {
-  fetchGreeting()
+  // Static greeting is shown via template — no LLM call needed
 })
 </script>
 
@@ -732,6 +761,31 @@ onMounted(() => {
 
 .chat-input:focus {
   border-color: rgba(76, 175, 80, 0.4);
+}
+
+.activate-row {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0 0.25rem;
+}
+
+.activate-btn {
+  padding: 0.45rem 1.1rem;
+  background: transparent;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  border-radius: 8px;
+  color: rgba(76, 175, 80, 0.8);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.activate-btn:hover {
+  background: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.55);
+  color: #4CAF50;
 }
 
 /* --- Memory Visualization --- */

@@ -35,6 +35,28 @@ Tags:
   - `compare.activation.llm-model` (NEW): "Same question to three different AI models. Shows where training data, safety policies, and cultural assumptions produce different answers."
 - **Context**: Deferred LLM activation for Persona and Compare pages. These descriptions appear as static text before the user clicks "Activate" to start the LLM agent. Persona description introduces the AI character. Compare descriptions are mode-specific one-liners explaining the pedagogical purpose of each comparison. "Trashy" is the AI assistant character name (keep as-is in all translations). Button texts should be action-oriented.
 
+### WO-2026-03-25-workshop-greeting-rewrite
+- **Scope**: en.ts
+- **Changed keys** (modified):
+  - `workshop.greeting.intro` (MODIFIED): "Hello, I am Trashy..." -> "Hello everyone. I am Trashy, the help system of this platform."
+  - `workshop.greeting.context` (NEW): "You are on the workshop planning page. That makes sense, because before you start, it is worth thinking briefly about what you actually want to do."
+  - `workshop.greeting.resources` (MODIFIED): now includes limits text, no more metaphor
+  - `workshop.greeting.planning` (MODIFIED): rewritten
+  - `workshop.greeting.flexibility` (MODIFIED): rewritten
+  - `workshop.greeting.callToAction` (MODIFIED): rewritten
+  - `workshop.greeting.memoryMetaphor` (REMOVED)
+  - `workshop.greeting.limits` (REMOVED — merged into resources)
+  - `workshop.activate` (NEW): "Ask Trashy"
+- **Context**: Complete rewrite of the Workshop Planning greeting. This text is now shown as static Trashy chat bubbles (no LLM call). The German original (authoritative source for de.ts) is:
+  - intro: "Hallo zusammen. Ich bin Trashy, das Hilfssystem dieser Plattform."
+  - context: "Ihr seid gerade auf der Seite zur Workshop-Planung. Das macht Sinn, denn bevor ihr loslegt, lohnt es sich kurz nachzudenken, was ihr eigentlich vorhabt."
+  - resources: "KI-Modelle brauchen überraschend viele Ressourcen. Vor allem brauchen sie Speicher auf der Grafikkarte, also auf dem Rechenwerk, das eure Bilder, Videos und Klänge berechnet. Dieser Speicher ist groß, aber nicht unendlich. Und die Modelle, die ihr nutzen wollt, sind so umfangreich, dass er sich schnell füllt."
+  - planning: "Wenn jemand ein neues Modell aktiviert, während der Speicher schon voll ist, kann es zu langen Wartezeiten kommen. Allein das Laden eines Modells dauert zwischen 30 Sekunden und 2 Minuten. Ist es erst einmal geladen, geht alles in der Regel sehr schnell."
+  - flexibility: "Ihr könnt natürlich jederzeit andere Modelle dazuladen oder wechseln, ohne auf diese Seite zurückzukehren. Aber dann wartet ihr eben. Und gutes Arbeiten, ob künstlerisch oder experimentell, fängt meistens damit an, dass man sich vorher überlegt, womit und wozu man eigentlich arbeiten will. Wer künstlerisch tätig ist, greift schließlich auch nicht einfach das nächste Objekt auf der Straße, nur weil es gerade da liegt."
+  - callToAction: "Schaut euch die Modellkarten hier auf der Seite an. Ihr könnt sie in den Speicherbalken ziehen und sehen, was zusammen passt. Oder ihr sagt mir, was ihr in der Session machen wollt, und ich erkläre, welche Modelle dafür in Frage kommen."
+  - activate: "Trashy fragen"
+- **IMPORTANT**: Use the German text above VERBATIM for de.ts — it is the user's original, not a translation.
+
 ### WO-2026-03-25-scene-graph-interception-config
 - **Scope**: `devserver/schemas/configs/interception/scene_graph.json` (LocalizedString fields, NOT en.ts)
 - **Changed keys** (new):
