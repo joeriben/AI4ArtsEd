@@ -4,6 +4,20 @@
   "source_session": 277,
   "items": [
     {
+      "id": "news-2026-03-25-trashy-image-reflection",
+      "date": "2026-03-25",
+      "session": 289,
+      "category": "feature",
+      "title": {
+        "en": "Trashy Now Reflects on Your Generated Images",
+        "de": "Trashy reflektiert jetzt ueber deine generierten Bilder"
+      },
+      "summary": {
+        "en": "When you click the analysis icon on a generated image, the platform now analyzes the result and Trashy opens with a process-oriented reflection: What was your intention? What unexpected qualities emerged? What could you explore next? This is an exploratory feature where the platform itself becomes a critical conversation partner — offering support, but also pedagogically challenging you to look more closely at what you created.",
+        "de": "Wenn du auf das Analyse-Icon bei einem generierten Bild klickst, analysiert die Plattform jetzt das Ergebnis und Trashy oeffnet sich mit einer prozessorientierten Reflexion: Was war deine Absicht? Welche unerwarteten Qualitaeten sind entstanden? Was koenntest du als naechstes erkunden? Das ist ein exploratives Feature, bei dem die Plattform selbst zur kritischen Gespraechspartnerin wird — sie unterstuetzt, fordert dich aber auch paedagogisch heraus, genauer hinzuschauen, was du geschaffen hast."
+      }
+    },
+    {
       "id": "news-2026-03-21-compare-hub-llm",
       "date": "2026-03-21",
       "session": 277,
