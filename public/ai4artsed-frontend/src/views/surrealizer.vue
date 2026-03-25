@@ -734,16 +734,9 @@ async function analyzeImage() {
     const analysisText = response.data.reply
     if (!analysisText) throw new Error('Empty response')
 
-    imageAnalysis.value = {
-      analysis: analysisText,
-      reflection_prompts: extractReflectionPrompts(analysisText),
-      insights: extractInsights(analysisText),
-      success: true
-    }
-    showAnalysis.value = true
-    console.log('[Stage 5] Analysis complete')
+    console.log('[Stage 5] Analysis complete, showing in Trashy')
 
-    // Show analysis in Trashy (no second LLM call — just display)
+    // Show analysis ONLY in Trashy — no inline box under the image
     analysisEventStore.requestReflection(analysisText, inputText.value, 'surrealizer', runId)
 
   } catch (error: any) {
@@ -755,49 +748,59 @@ async function analyzeImage() {
 }
 
 function buildAnalysisPrompt(userInput: string, mode: string): string {
-  const base = `Analyze this AI-generated image. The user's original input was: "${userInput}"
-
-Look at the image and provide a process-oriented analysis:`
+  const preambleRule = `CRITICAL FORMAT RULE: Your response IS the analysis shown directly to the user. Start with the first sentence of your analysis. FORBIDDEN: "Okay", "Let me", "I need to", "The user", "First,", thinking out loud, meta-commentary, restating the task. Just write the analysis.`
 
   if (mode === 'kids') {
-    return base + `
-- What do you see in the image? (2-3 sentences, simple language)
-- Does the image match what the user wanted? What is different?
-- What is one fun thing the user could try next?
+    return `${preambleRule}
 
-End with:
+Look at this AI-generated image. The user typed: "${userInput}"
+
+Write a short, friendly analysis (3-4 sentences):
+1. What do you see in the image?
+2. Does the image match what the user wanted? What changed?
+3. What is one fun thing to try next?
+
+Then write:
 REFLEXIONSFRAGEN:
-- [2 simple questions for the user]
+- [2 simple questions]
 
-Keep it short and encouraging. Use the user's language.`
+Use the user's language. Be encouraging.`
   }
 
   if (mode === 'youth') {
-    return base + `
-- Describe the key visual elements, composition, and mood (2-3 sentences)
-- How does the result relate to the user's input? What was preserved, what was transformed by the AI?
-- What unexpected or interesting qualities emerged?
-- Suggest one concrete next step to explore
+    return `${preambleRule}
 
-End with:
+Look at this AI-generated image. The user's original input was: "${userInput}"
+
+Write a process-oriented analysis (5-8 sentences):
+1. What do you see? Describe key visual elements, composition, mood.
+2. How does the result relate to the user's input? What was preserved, what did the AI transform or add?
+3. What unexpected or interesting qualities emerged?
+4. One concrete suggestion for what to explore next.
+
+Then write:
 REFLEXIONSFRAGEN:
-- [3 specific questions that challenge the user to look more closely]
+- [3 specific questions that challenge the user to look more closely at what they created]
 
-Be warm but also challenge the user to think critically. Use the user's language.`
+Use the user's language. Be warm but also push the user to think critically.`
   }
 
   // expert / research
-  return base + `
-- Describe visual elements, composition, mood, and technical qualities (2-3 sentences)
-- How does the result relate to the prompt chain (original input → interception → optimized prompt)? What survived the transformation, what is the AI's own contribution?
-- Are there aspects worth reading critically — hidden assumptions, aesthetic defaults, cultural biases?
-- What concrete directions could the user explore from here?
+  return `${preambleRule}
 
-End with:
+Look at this AI-generated image. The user's original input was: "${userInput}"
+
+Write an analytical reflection (6-10 sentences):
+1. Visual elements, composition, mood, technical qualities.
+2. How does the result relate to the prompt chain? What survived the transformation from user input through interception to the final image? What is the AI's own contribution?
+3. Critical reading: hidden assumptions, aesthetic defaults, cultural biases in the generated image.
+4. Concrete directions the user could explore from here.
+
+Then write:
 REFLEXIONSFRAGEN:
 - [3-4 questions that invite critical engagement with the image and the generation process]
 
-Be direct and intellectually honest. Use the user's language.`
+Use the user's language. Be direct and intellectually honest.`
 }
 
 // Helper functions for parsing analysis text
