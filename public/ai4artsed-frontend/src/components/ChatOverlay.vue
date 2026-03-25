@@ -13,8 +13,13 @@
       <img :src="trashyIcon" alt="Träshy" class="chat-icon-img" />
     </button>
 
-    <!-- Expanded State: Chat Window -->
-    <div v-else class="chat-window">
+    <!-- Expanded State: Chat Window (resizable) -->
+    <div v-else class="chat-window" :style="chatWindowStyle">
+      <!-- Resize handles at corners -->
+      <div class="resize-handle resize-nw" @mousedown.prevent="startResize('nw', $event)"></div>
+      <div class="resize-handle resize-ne" @mousedown.prevent="startResize('ne', $event)"></div>
+      <div class="resize-handle resize-sw" @mousedown.prevent="startResize('sw', $event)"></div>
+      <div class="resize-handle resize-se" @mousedown.prevent="startResize('se', $event)"></div>
       <!-- Header -->
       <div class="chat-header">
         <span class="chat-title">Träshy</span>
@@ -124,6 +129,69 @@ const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const userPosition = ref<{ right: number; bottom: number } | null>(null)
 
+// Resize state
+const RESIZE_STORAGE_KEY = 'trashy-size'
+const chatSize = ref({ width: 380, height: 520 })
+const MIN_WIDTH = 300
+const MIN_HEIGHT = 350
+const MAX_WIDTH = 700
+const MAX_HEIGHT = 900
+const isResizing = ref(false)
+
+const savedSize = localStorage.getItem(RESIZE_STORAGE_KEY)
+if (savedSize) {
+  try {
+    const parsed = JSON.parse(savedSize)
+    chatSize.value = {
+      width: Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, parsed.width || 380)),
+      height: Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, parsed.height || 520))
+    }
+  } catch { /* ignore */ }
+}
+
+const chatWindowStyle = computed(() => ({
+  width: `${chatSize.value.width}px`,
+  height: `${Math.min(chatSize.value.height, viewportHeight.value - 120)}px`,
+}))
+
+let resizeCorner = ''
+let resizeStart = { x: 0, y: 0, w: 0, h: 0 }
+
+function startResize(corner: string, event: MouseEvent) {
+  isResizing.value = true
+  resizeCorner = corner
+  resizeStart = { x: event.clientX, y: event.clientY, w: chatSize.value.width, h: chatSize.value.height }
+  document.body.style.cursor = corner === 'nw' || corner === 'se' ? 'nwse-resize' : 'nesw-resize'
+  window.addEventListener('mousemove', onResize)
+  window.addEventListener('mouseup', endResize)
+}
+
+function onResize(event: MouseEvent) {
+  const dx = event.clientX - resizeStart.x
+  const dy = event.clientY - resizeStart.y
+
+  let newW = resizeStart.w
+  let newH = resizeStart.h
+
+  if (resizeCorner.includes('e')) newW = resizeStart.w + dx
+  if (resizeCorner.includes('w')) newW = resizeStart.w - dx
+  if (resizeCorner.includes('s')) newH = resizeStart.h + dy
+  if (resizeCorner.includes('n')) newH = resizeStart.h - dy
+
+  chatSize.value = {
+    width: Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newW)),
+    height: Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newH))
+  }
+}
+
+function endResize() {
+  isResizing.value = false
+  document.body.style.cursor = ''
+  localStorage.setItem(RESIZE_STORAGE_KEY, JSON.stringify(chatSize.value))
+  window.removeEventListener('mousemove', onResize)
+  window.removeEventListener('mouseup', endResize)
+}
+
 // Load saved position from localStorage
 const STORAGE_KEY = 'trashy-position'
 const savedPosition = localStorage.getItem(STORAGE_KEY)
@@ -181,9 +249,7 @@ const draftContextString = computed(() => {
   return pageContextStore.formatForLLM(route.path)
 })
 
-// Chat window dimensions
-const CHAT_HEIGHT = 520
-const CHAT_WIDTH = 380
+// Chat window dimensions (reactive — chatSize is resizable)
 const CHAT_MIN_MARGIN = 10 // Minimum margin from viewport edges
 const ICON_SIZE = 100 // Maximum icon size (clamp max)
 
@@ -197,12 +263,12 @@ const overlayPositionStyle = computed(() => {
 
   if (isExpanded.value) {
     // EXPANDED: Chat window positioning (uses hint, not user position)
-    const chatHeight = Math.min(CHAT_HEIGHT, vh - 120)
+    const chatHeight = Math.min(chatSize.value.height, vh - 120)
 
     // Horizontal: Convert hint.x to pixels and clamp
     const requestedRight = ((100 - hint.x) / 100) * vw
     const minRight = CHAT_MIN_MARGIN
-    const maxRight = vw - CHAT_WIDTH - CHAT_MIN_MARGIN
+    const maxRight = vw - chatSize.value.width - CHAT_MIN_MARGIN
     const clampedRight = Math.max(minRight, Math.min(maxRight, requestedRight))
     style.right = `${clampedRight}px`
     style.left = 'auto'
@@ -737,11 +803,9 @@ watch(
   }
 }
 
-/* Expanded State: Chat Window */
+/* Expanded State: Chat Window (dimensions set via :style binding) */
 .chat-window {
-  width: 380px;
-  height: 520px;
-  max-height: calc(100vh - 120px); /* Stay within viewport */
+  position: relative;
   background: #1a1a1a;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
@@ -750,6 +814,18 @@ watch(
   overflow: hidden;
   border: 1px solid #333;
 }
+
+/* Resize handles at corners */
+.resize-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 10;
+}
+.resize-nw { top: 0; left: 0; cursor: nwse-resize; }
+.resize-ne { top: 0; right: 0; cursor: nesw-resize; }
+.resize-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.resize-se { bottom: 0; right: 0; cursor: nwse-resize; }
 
 /* Header */
 .chat-header {
