@@ -125,10 +125,11 @@ def analyze_image_from_run(
     Raises:
         FileNotFoundError: If run_id not found or no image in run
     """
-    from my_app.utils.live_pipeline_recorder import LivePipelineRecorder
+    from my_app.services.pipeline_recorder import load_recorder
+    from config import JSON_STORAGE_DIR
 
     # Load recorder
-    recorder = LivePipelineRecorder.load(run_id)
+    recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
     if not recorder:
         raise FileNotFoundError(f"Run ID not found: {run_id}")
 
