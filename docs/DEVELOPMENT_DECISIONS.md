@@ -9,6 +9,26 @@
 
 ---
 
+## 2026-03-25: Bildanalyse zentralisiert in MediaOutputBox + ChatOverlay (Trashy)
+
+**Decision:** Die Bildanalyse ist KEIN per-View Feature. Sie gehoert zentral in MediaOutputBox (Button) und ChatOverlay (Ausfuehrung + Anzeige). Kein Inline-Kasten unter dem Bild, kein per-View `analyzeImage()`, kein separater VLM-Endpoint.
+
+**Architektur:**
+1. MediaOutputBox: Analyze-Button dispatcht `runId` an `analysisEventStore` (Pinia)
+2. ChatOverlay: faengt Event → expandiert Trashy → `/api/chat` mit `image_path` → Sonnet sieht Bild direkt → zeigt prozessorientierte Reflexion
+3. Prompt ist safety-level-adaptiert (kids/youth/expert via `uiModeStore`)
+
+**Warum nicht per-View:** Die Analyse haengt nicht von der View ab, sondern vom generierten Bild und dem User-Input. Beides ist zentral verfuegbar (run_id aus MediaOutputBox, User-Input aus pageContextStore).
+
+**Warum kein Inline-Kasten:** Das Compare-Pattern (Trashy kommentiert am Rand) ist besser. Die Analyse ist ein Gespraech, kein statischer Text. User kann direkt in Trashy weiter fragen.
+
+**Affected files:**
+- `public/ai4artsed-frontend/src/components/MediaOutputBox.vue` (triggerAnalysis, kein Emit)
+- `public/ai4artsed-frontend/src/components/ChatOverlay.vue` (analysisEvent Watcher, /api/chat Call, buildImageAnalysisPrompt)
+- `public/ai4artsed-frontend/src/stores/analysisEvent.ts` (Pinia Event Store)
+
+---
+
 ## 2026-03-25: Vision in /api/chat — Nur generierte Bilder, keine Uploads
 
 **Decision:** Der /api/chat Endpoint akzeptiert optional `image_path` und sendet Bilder an vision-faehige Chat-Modelle. Es werden ausschliesslich **plattform-generierte Bilder** (aus LivePipelineRecorder runs) an externe Provider gesendet — **niemals vom User hochgeladene Bilder**.

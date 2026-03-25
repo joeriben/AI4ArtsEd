@@ -1,31 +1,50 @@
 # Development Log
 
-## Session 289 - Trashy Image Analysis Reflection + Hybrid Vision for /api/chat
+## Session 289 - Trashy Image Analysis: Vision-basierte Bildreflexion
 **Date:** 2026-03-25
-**Focus:** Trashy (Chat-Assistent) bekommt Bildanalyse-Reflexion und Vision-Support. Wenn User das Analyse-Icon klickt, oeffnet Trashy sich mit prozessorientierter Beratung. /api/chat kann nun optional Bilder mitsenden.
+**Focus:** Feature das seit 18 Monaten geplant war — Trashy analysiert generierte Bilder direkt und bietet prozessorientierte Reflexion. Zentralisiert in MediaOutputBox + ChatOverlay, kein per-View Code.
 
 ### Neue Features
-- **Trashy Analyse-Reflexion**: Analyse-Button in MediaOutputBox triggert nun zusaetzlich Trashy. Event-Store-Pattern (wie safetyEventStore). Trashy expandiert, zeigt Ladeindikator, sendet Reflexions-Prompt an /api/chat, ersetzt mit LLM-Antwort. Prozessorientiert: "Wo wolltest du hin? Wo stehst du mit dem Ergebnis?"
-- **Hybrid Vision fuer /api/chat**: Neuer optionaler `image_path` Parameter. Backend resolved run_id → Bild → base64. Falls Modell vision-faehig → Bild direkt als multimodaler Content (provider-spezifisch: OpenAI/Anthropic/Ollama-Format). Falls nicht → automatischer Fallback: IMAGE_ANALYSIS_MODEL (qwen3-vl:2b) beschreibt das Bild als Text, der in die Message injiziert wird.
-- **Provider-spezifische Bild-Formate**: `_inject_image_into_messages()` mit 3 Formaten: openai (Mammouth, Mistral, OpenRouter), anthropic (Bedrock), ollama (local/).
-- **Vision-Erkennung**: `is_vision_capable()` — Cloud-Provider = True, IONOS = False, Local = Namens-Heuristik (vl, vision, llava, pixtral).
+- **Trashy sieht generierte Bilder**: Analyse-Button in MediaOutputBox oeffnet Trashy, der das Bild via Sonnet 4.6 (Vision) direkt sieht und prozessorientiert kommentiert. Kein separater VLM-Call, kein Inline-Kasten unter dem Bild. Trashy IST die Analyse.
+- **Safety-Level-adaptierte Prompts**: kids (ermutigend, 3-4 Saetze), youth (kritisch-reflektiv, Prompt-Bild-Beziehung), expert (Critical Reading, Bias, Prompt-Chain-Analyse).
+- **Hybrid Vision fuer /api/chat**: Neuer optionaler `image_path` Parameter. Backend resolved run_id → Bild → base64. Vision-faehiges Modell → Bild direkt als multimodaler Content (provider-spezifisch). Nicht vision-faehig → automatischer Fallback: IMAGE_ANALYSIS_MODEL beschreibt lokal, Text wird injiziert.
+- **Resizable Trashy-Fenster**: Chat-Window an allen 4 Ecken draggable/resizable (300x350 bis 700x900), Groesse persistiert in localStorage.
 
-### Architektur-Notizen
-- `analysisEvent.ts` (Pinia Store) bridgt Views ↔ ChatOverlay (gleiche Architektur wie safetyEventStore)
-- `PageContent` um `imageAnalysisResult` erweitert — bleibt als laufender Kontext fuer Folge-Gespraeche mit Trashy
-- `vision_support.py` — 3 Utility-Funktionen: prepare_image_b64, is_vision_capable, describe_image_for_fallback
-- Bild wird nur beim ersten Iterations-Durchlauf des Tool-Call-Loops gesendet (image_b64 if iteration == 0)
-- i18n: 2 neue trashy-Keys in en.ts, Work Order fuer Batch-Translation
+### Architektur (zentralisiert)
+- **MediaOutputBox**: Analyse-Button dispatcht `runId` an `analysisEventStore` (Pinia). Kein Emit, kein per-View Handler.
+- **ChatOverlay**: Faengt Event → expandiert → `/api/chat` mit `image_path` → Sonnet sieht Bild → zeigt Antwort. Prompt via `pageContextStore` (User-Input) + `uiModeStore` (safety level).
+- **vision_support.py**: `prepare_image_b64()` (run_id → base64), `is_vision_capable()` (Provider-Heuristik), `describe_image_for_fallback()` (lokaler VLM-Fallback).
+- **_inject_image_into_messages()**: 3 Provider-Formate (openai, anthropic, ollama).
+- **Design Decision**: Nur plattform-generierte Bilder gehen an externe Provider (DSGVO-konform). Hochgeladene Bilder bleiben lokal.
+- Bild nur im ersten Tool-Call-Loop-Durchlauf gesendet (image_b64 if iteration == 0).
+
+### Bug Fixes
+- `image_analysis.py`: Import-Pfad (`load_recorder` statt nicht-existentem `LivePipelineRecorder.load()`)
+- `image_analysis.py`: Entity-Typ `output_image` statt exaktem `image`
+- `image_analysis.py`: `enable_thinking=False` + thinking-Feld-Fallback fuer qwen3-vl
+- run_id Regex: `/api/media/image/run_xxx/0` → extrahiert nur `run_xxx` (nicht `run_xxx/0`)
+- Mammouth base64: run_id-String wurde als base64 durchgereicht statt aufgeloest
+- Anti-Preamble: Sonnet schrieb Thinking-als-Content ("Okay let me try...") → starke Format-Regel
 
 ### Tests
 - Regression: /api/chat ohne Bild → OK
 - Vision: /api/chat + Bild + Sonnet → erkennt "Wanderer ueber dem Nebelmeer"
-- Fallback: /api/chat + Bild + text-only Modell (qwen3:4b) → VLM beschreibt, Text-Modell antwortet
+- Fallback: /api/chat + Bild + text-only Modell → VLM beschreibt, Text-Modell antwortet
 
 ### Commits
 - `8c2b610` feat(trashy): activate image analysis reflection via analyze button
 - `12d88f0` feat(chat): hybrid vision support for /api/chat endpoint
-- `f2167fc` fix(vision): correct import path + entity type filter for run_id resolution
+- `f2167fc` fix(vision): correct import path + entity type filter
+- `fd4df8a` fix(analysis): correct import path for LivePipelineRecorder
+- `52a7590` fix(analysis): run_id regex stripped media index
+- `b702b4e` fix(analysis): match output_image entity type
+- `85fe4bc` fix(analysis): disable thinking + fallback for qwen3-vl
+- `aa06a23` fix(chat): run_id dispatch + Mammouth format
+- `b4b61e4` fix(chat): revert Mammouth to OpenAI image format
+- `682c150` refactor(analysis): route through /api/chat + Sonnet
+- `05c19b4` fix(analysis): Trashy-only + anti-preamble
+- `6a20de1` feat(trashy): resizable chat window
+- `3a4a07c` refactor(analysis): centralize in MediaOutputBox + ChatOverlay
 
 ## Session 288 - Drift LFOs, Envelope Fixes, Beat-Sync Prep
 **Date:** 2026-03-24
