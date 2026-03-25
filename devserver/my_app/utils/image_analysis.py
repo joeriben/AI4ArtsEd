@@ -136,7 +136,7 @@ def analyze_image_from_run(
     # Find image entity
     entities = recorder.metadata.get('entities', [])
     image_entity = next(
-        (e for e in entities if e.get('type') == 'image'),
+        (e for e in entities if 'image' in e.get('type', '') and e.get('filename', '').endswith(('.png', '.jpg', '.jpeg', '.webp'))),
         None
     )
 
