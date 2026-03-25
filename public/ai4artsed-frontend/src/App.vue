@@ -7,7 +7,7 @@
           <a href="https://www.ucdcae.fau.de/" target="_blank" rel="noopener noreferrer" class="header-logo-link">
             <img src="/logos/unesco_chair.png" alt="UNESCO Chair" class="header-logo" />
           </a>
-          <span class="app-title">UCDCAE AI LAB</span>
+          <span class="app-title"><span style="color:#667eea">U</span><span style="color:#e91e63">C</span><span style="color:#7C4DFF">D</span><span style="color:#FF6F00">C</span><span style="color:#4CAF50">A</span><span style="color:#00BCD4">E</span> <span style="color:#667eea">A</span><span style="color:#e91e63">I</span> <span style="color:#7C4DFF">L</span><span style="color:#FF6F00">A</span><span style="color:#4CAF50">B</span></span>
         </div>
 
         <div class="header-center">
@@ -384,11 +384,11 @@ html, body {
 }
 
 .app-title {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  margin-right: 1.5rem;
 }
 
 /* Header Right Reorganization */
@@ -551,7 +551,8 @@ html, body {
   }
 
   .app-title {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
   }
 
   .mode-button {

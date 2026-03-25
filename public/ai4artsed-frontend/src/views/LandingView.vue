@@ -3,7 +3,8 @@
 
     <!-- Hero Section -->
     <section class="hero">
-      <h1 class="hero-title"><span style="color:#667eea">U</span><span style="color:#e91e63">C</span><span style="color:#7C4DFF">D</span><span style="color:#FF6F00">C</span><span style="color:#4CAF50">A</span><span style="color:#00BCD4">E</span> <span style="color:#667eea">A</span><span style="color:#e91e63">I</span> <span style="color:#7C4DFF">L</span><span style="color:#FF6F00">A</span><span style="color:#4CAF50">B</span></h1>
+      <h1 class="hero-title">AI4ArtsEd</h1>
+      <p class="hero-expanded">Artificial Intelligence for Arts Education</p>
       <p class="hero-subtitle">{{ $t('landing.subtitlePrefix') }} <span class="ucdcae-fullname"><span style="color:#667eea">U</span>NESCO <span style="color:#e91e63">C</span>hair in <span style="color:#7C4DFF">D</span>igital <span style="color:#FF6F00">C</span>ulture and <span style="color:#4CAF50">A</span>rts in <span style="color:#00BCD4">E</span>ducation</span> {{ $t('landing.subtitleSuffix') }}</p>
     </section>
 
@@ -252,11 +253,20 @@ const features: Feature[] = [
 }
 
 .hero-title {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
   letter-spacing: 0.05em;
+}
+
+.hero-expanded {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
 }
 
 .hero-subtitle {
