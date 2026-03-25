@@ -214,6 +214,7 @@
         :show-analysis="showAnalysis"
         :analysis-data="imageAnalysis"
         :model-meta="modelMeta"
+        :run-id="currentRunId"
         :ui-mode="uiModeStore.mode"
         :stage4-duration-ms="stage4DurationMs"
         forward-button-title="Erneut Transformieren"
@@ -324,6 +325,7 @@ const isPipelineExecuting = ref(false)
 const generationErrorMessage = ref('')
 const outputImage = ref<string | null>(null)
 const outputMediaType = ref<string>('image')
+const currentRunId = ref<string | null>(null)
 const fullscreenImage = ref<string | null>(null)
 
 // Session 148: SSE-based generation with real-time badge updates
@@ -1061,6 +1063,7 @@ async function startGeneration() {
       console.log('[Generation] Success, run_id:', runId, 'media_type:', mediaType, 'index:', mediaIndex)
 
       if (runId) {
+        currentRunId.value = runId
         outputMediaType.value = mediaType
         outputImage.value = `/api/media/${mediaType}/${runId}/${mediaIndex}`
         executionPhase.value = 'generation_done'
