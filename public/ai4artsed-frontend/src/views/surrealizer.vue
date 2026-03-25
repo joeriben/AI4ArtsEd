@@ -193,13 +193,15 @@ import { useDeviceId } from '@/composables/useDeviceId'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useAnalysisEventStore } from '@/stores/analysisEvent'
+import { useUiModeStore } from '@/stores/uiMode'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 
 // ============================================================================
 // i18n
 // ============================================================================
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const uiModeStore = useUiModeStore()
 
 // ============================================================================
 // Types
@@ -707,7 +709,6 @@ async function analyzeImage() {
     return
   }
 
-  // Extract run_id from URL: /api/media/image/run_abc123/0 → run_abc123
   const runIdMatch = primaryOutput.value.url.match(/\/api\/media\/\w+\/(run_[^/]+)/)
   const runId = runIdMatch ? runIdMatch[1] : null
 
@@ -718,44 +719,32 @@ async function analyzeImage() {
 
   isAnalyzing.value = true
   imageAnalysis.value = null
-  console.log('[Stage 5] Starting image analysis for run_id:', runId)
+  console.log('[Stage 5] Starting image analysis via /api/chat (vision), run_id:', runId)
 
   try {
-    // NEW: Call universal image analysis endpoint
-    const response = await fetch('/api/image/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        run_id: runId,
-        analysis_type: 'bildwissenschaftlich'  // Default: Panofsky framework
-        // Can be changed to: bildungstheoretisch, ethisch, kritisch
-        // No prompt parameter = uses default from config.py
-      })
+    const mode = uiModeStore.mode  // kids | youth | expert
+    const analysisPrompt = buildAnalysisPrompt(inputText.value, mode)
+
+    const response = await axios.post('/api/chat', {
+      message: analysisPrompt,
+      image_path: runId,
+      language: locale.value,
     })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.error || `HTTP ${response.status}`)
+    const analysisText = response.data.reply
+    if (!analysisText) throw new Error('Empty response')
+
+    imageAnalysis.value = {
+      analysis: analysisText,
+      reflection_prompts: extractReflectionPrompts(analysisText),
+      insights: extractInsights(analysisText),
+      success: true
     }
+    showAnalysis.value = true
+    console.log('[Stage 5] Analysis complete')
 
-    const data = await response.json()
-
-    if (data.success && data.analysis) {
-      // Parse analysis text into structured format
-      imageAnalysis.value = {
-        analysis: data.analysis,
-        reflection_prompts: extractReflectionPrompts(data.analysis),
-        insights: extractInsights(data.analysis),
-        success: true
-      }
-      showAnalysis.value = true
-      console.log('[Stage 5] Analysis complete')
-
-      // Trigger Trashy reflection
-      analysisEventStore.requestReflection(data.analysis, inputText.value, 'surrealizer', currentRunId.value || undefined)
-    } else {
-      throw new Error(data.error || 'Unknown error')
-    }
+    // Show analysis in Trashy (no second LLM call — just display)
+    analysisEventStore.requestReflection(analysisText, inputText.value, 'surrealizer', runId)
 
   } catch (error: any) {
     console.error('[Stage 5] Error:', error)
@@ -763,6 +752,52 @@ async function analyzeImage() {
   } finally {
     isAnalyzing.value = false
   }
+}
+
+function buildAnalysisPrompt(userInput: string, mode: string): string {
+  const base = `Analyze this AI-generated image. The user's original input was: "${userInput}"
+
+Look at the image and provide a process-oriented analysis:`
+
+  if (mode === 'kids') {
+    return base + `
+- What do you see in the image? (2-3 sentences, simple language)
+- Does the image match what the user wanted? What is different?
+- What is one fun thing the user could try next?
+
+End with:
+REFLEXIONSFRAGEN:
+- [2 simple questions for the user]
+
+Keep it short and encouraging. Use the user's language.`
+  }
+
+  if (mode === 'youth') {
+    return base + `
+- Describe the key visual elements, composition, and mood (2-3 sentences)
+- How does the result relate to the user's input? What was preserved, what was transformed by the AI?
+- What unexpected or interesting qualities emerged?
+- Suggest one concrete next step to explore
+
+End with:
+REFLEXIONSFRAGEN:
+- [3 specific questions that challenge the user to look more closely]
+
+Be warm but also challenge the user to think critically. Use the user's language.`
+  }
+
+  // expert / research
+  return base + `
+- Describe visual elements, composition, mood, and technical qualities (2-3 sentences)
+- How does the result relate to the prompt chain (original input → interception → optimized prompt)? What survived the transformation, what is the AI's own contribution?
+- Are there aspects worth reading critically — hidden assumptions, aesthetic defaults, cultural biases?
+- What concrete directions could the user explore from here?
+
+End with:
+REFLEXIONSFRAGEN:
+- [3-4 questions that invite critical engagement with the image and the generation process]
+
+Be direct and intellectually honest. Use the user's language.`
 }
 
 // Helper functions for parsing analysis text

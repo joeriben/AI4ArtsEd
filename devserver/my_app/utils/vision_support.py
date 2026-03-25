@@ -134,9 +134,9 @@ def describe_image_for_fallback(image_b64: str) -> str:
             model = model[len('local/'):]
 
         prompt = (
-            "Describe this image in 2-3 detailed sentences. "
-            "Focus on visual content, composition, colors, mood, and notable elements. "
-            "Be concrete and specific."
+            "Describe this image in 2-3 sentences. "
+            "What is shown? What are the colors, mood, composition? "
+            "Be concrete. No preamble."
         )
 
         result = get_llm_backend().chat(
@@ -145,10 +145,15 @@ def describe_image_for_fallback(image_b64: str) -> str:
             images=[image_b64],
             temperature=0.7,
             max_new_tokens=500,
+            enable_thinking=False,
         )
 
         if result and result.get('content'):
             return result['content'].strip()
+
+        # qwen3-vl quirk: may write to thinking field
+        if result and result.get('thinking'):
+            return result['thinking'].strip()
 
         return "[Image provided but could not be analyzed]"
     except Exception as e:
