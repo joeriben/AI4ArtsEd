@@ -6,31 +6,39 @@
     </div>
 
     <div class="chat-messages" ref="messagesRef">
-      <div
-        v-for="msg in messages"
-        :key="msg.id"
-        class="chat-bubble"
-        :class="[msg.role, { separator: msg.isSeparator }]"
-      >
-        <template v-if="msg.isSeparator">
-          <span class="separator-line"></span>
-          <span class="separator-label">{{ msg.content }}</span>
-          <span class="separator-line"></span>
-        </template>
-        <template v-else-if="msg.role === 'assistant'">
-          <span v-for="(part, idx) in parseSuggestions(msg.content)" :key="idx">
-            <span v-if="part.type === 'text'">{{ part.text }}</span>
-            <button v-else class="prompt-suggestion" @click="emit('use-prompt', part.text)">{{ part.text }}</button>
-          </span>
-        </template>
-        <template v-else>{{ msg.content }}</template>
+      <!-- Dormant state: description + activate button -->
+      <div v-if="!isActivated" class="dormant-state">
+        <p class="dormant-description">{{ t(`compare.activation.${props.compareType || 'language'}`) }}</p>
+        <button class="activate-btn" @click="activate">{{ t('compare.activation.button') }}</button>
       </div>
-      <div v-if="isLoading" class="chat-bubble assistant loading">
-        <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-      </div>
+      <!-- Active state: normal chat -->
+      <template v-else>
+        <div
+          v-for="msg in messages"
+          :key="msg.id"
+          class="chat-bubble"
+          :class="[msg.role, { separator: msg.isSeparator }]"
+        >
+          <template v-if="msg.isSeparator">
+            <span class="separator-line"></span>
+            <span class="separator-label">{{ msg.content }}</span>
+            <span class="separator-line"></span>
+          </template>
+          <template v-else-if="msg.role === 'assistant'">
+            <span v-for="(part, idx) in parseSuggestions(msg.content)" :key="idx">
+              <span v-if="part.type === 'text'">{{ part.text }}</span>
+              <button v-else class="prompt-suggestion" @click="emit('use-prompt', part.text)">{{ part.text }}</button>
+            </span>
+          </template>
+          <template v-else>{{ msg.content }}</template>
+        </div>
+        <div v-if="isLoading" class="chat-bubble assistant loading">
+          <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+        </div>
+      </template>
     </div>
 
-    <div class="chat-input-area">
+    <div v-if="isActivated" class="chat-input-area">
       <input
         v-model="userInput"
         class="chat-input"
@@ -77,6 +85,7 @@ const deviceId = useDeviceId()
 const messages = ref<ChatMessage[]>([])
 const userInput = ref('')
 const isLoading = ref(false)
+const isActivated = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextId = 0
 let runCounter = 0
@@ -179,6 +188,9 @@ async function sendMessage() {
 
 /** Called by parent to inject Trashy messages proactively */
 function injectMessage(content: string) {
+  if (!isActivated.value) {
+    isActivated.value = true
+  }
   addMessage('assistant', content)
 }
 
@@ -229,14 +241,25 @@ async function fetchProactiveGreeting() {
   }
 }
 
-onMounted(() => {
+function activate() {
+  isActivated.value = true
   fetchProactiveGreeting()
+}
+
+onMounted(() => {
+  // Dormant by default — wait for user to click activate
 })
 
 // Watch context changes — Trashy reacts to completed comparisons
 watch(() => props.comparisonContext, (ctx) => {
   if (ctx && ctx.includes('generation_complete')) {
-    sendAutoComment(ctx)
+    if (!isActivated.value) {
+      // User generated without activating Trashy — auto-activate
+      isActivated.value = true
+      fetchProactiveGreeting().then(() => sendAutoComment(ctx))
+    } else {
+      sendAutoComment(ctx)
+    }
   }
 })
 
@@ -294,16 +317,21 @@ function getMessages(): Array<{ role: string; content: string }> {
     .map(m => ({ role: m.role, content: m.content }))
 }
 
-/** Clear all messages and re-greet */
+/** Clear all messages — returns to dormant state */
 function clearMessages() {
   messages.value = []
   nextId = 0
   runCounter = 0
-  fetchProactiveGreeting()
+  isActivated.value = false
 }
 
 /** Trigger auto-comment programmatically (for text compare views) */
 function triggerAutoComment() {
+  if (!isActivated.value) {
+    isActivated.value = true
+    fetchProactiveGreeting().then(() => sendAutoComment(props.comparisonContext))
+    return
+  }
   sendAutoComment(props.comparisonContext)
 }
 
@@ -461,5 +489,44 @@ defineExpose({ injectMessage, onNewRun, getMessages, clearMessages, triggerAutoC
 
 .chat-input:disabled {
   opacity: 0.5;
+}
+
+/* ---------- Dormant state ---------- */
+
+.dormant-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+.dormant-description {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 260px;
+}
+
+.activate-btn {
+  padding: 0.45rem 1.1rem;
+  background: transparent;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  border-radius: 8px;
+  color: rgba(76, 175, 80, 0.8);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.activate-btn:hover {
+  background: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.55);
+  color: #4CAF50;
 }
 </style>

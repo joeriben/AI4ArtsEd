@@ -1606,6 +1606,15 @@ export const en = {
     }
   },
   compare: {
+    activation: {
+      button: 'Activate Trashy',
+      language: 'Same prompt, different languages, different images. This mode shows how language encodes cultural defaults that shape what AI generates.',
+      model: 'Same prompt, different models, different assumptions. Reveals what each model treats as the default human, family, or profession.',
+      'vlm-analysis': 'Upload an image and let multiple vision models describe it. Reveals what each model notices, what it ignores, and where descriptions diverge.',
+      temperature: 'Same message at three randomness levels: deterministic, balanced, creative. Shows how probability sampling changes AI output.',
+      systemprompt: 'Same message with three different system prompts. Shows how invisible instructions reshape the same AI into different personalities.',
+      'llm-model': 'Same question to three different AI models. Shows where training data, safety policies, and cultural assumptions produce different answers.',
+    },
     tabs: {
       model: 'Model Bias',
       language: 'Culture Bias',
@@ -1846,7 +1855,9 @@ export const en = {
     inputPlaceholder: 'Say something...',
     toggleTTS: 'Toggle voice output',
     fallbackGreeting: 'Hello, I am Persona. I am a machine. Not an assistant. Talk to me.',
-    newDialog: 'New dialog'
+    newDialog: 'New dialog',
+    description: 'Persona is an AI you can talk to. It decides whether to generate images, sound, video, or 3D objects during the conversation. It has opinions and can refuse.',
+    activate: 'Start Conversation',
   },
   workshop: {
     title: 'Workshop Planning',

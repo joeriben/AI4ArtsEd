@@ -55,26 +55,35 @@
       </div>
 
       <div class="chat-messages" ref="messagesRef">
-        <div
-          v-for="msg in messages"
-          :key="msg.id"
-          class="chat-bubble"
-          :class="msg.role"
-        >
-          <template v-if="msg.role === 'assistant'">
-            <span v-for="(part, idx) in parseContent(msg.content)" :key="idx">
-              <span v-if="part.type === 'text'">{{ part.text }}</span>
-              <button v-else-if="part.type === 'prompt'" class="prompt-suggestion" @click="usePrompt(part.text)">{{ part.text }}</button>
-            </span>
-          </template>
-          <template v-else>{{ msg.content }}</template>
+        <!-- Dormant state: description + activate button -->
+        <div v-if="!isActivated" class="dormant-state">
+          <img :src="trashyIcon" alt="" class="dormant-icon" />
+          <p class="dormant-description">{{ t('persona.description') }}</p>
+          <button class="activate-btn" @click="activate">{{ t('persona.activate') }}</button>
         </div>
-        <div v-if="isLoading" class="chat-bubble assistant loading">
-          <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-        </div>
+        <!-- Active state: normal chat -->
+        <template v-else>
+          <div
+            v-for="msg in messages"
+            :key="msg.id"
+            class="chat-bubble"
+            :class="msg.role"
+          >
+            <template v-if="msg.role === 'assistant'">
+              <span v-for="(part, idx) in parseContent(msg.content)" :key="idx">
+                <span v-if="part.type === 'text'">{{ part.text }}</span>
+                <button v-else-if="part.type === 'prompt'" class="prompt-suggestion" @click="usePrompt(part.text)">{{ part.text }}</button>
+              </span>
+            </template>
+            <template v-else>{{ msg.content }}</template>
+          </div>
+          <div v-if="isLoading" class="chat-bubble assistant loading">
+            <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+          </div>
+        </template>
       </div>
 
-      <div class="chat-input-area">
+      <div v-if="isActivated" class="chat-input-area">
         <input
           v-model="userInput"
           class="chat-input"
@@ -122,6 +131,7 @@ interface ContentPart {
 const { messages } = storeToRefs(personaChat)
 const userInput = ref('')
 const isLoading = ref(false)
+const isActivated = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 
 // ---------- Floating media boxes ----------
@@ -515,6 +525,11 @@ function usePrompt(text: string) {
 
 // ---------- Init ----------
 
+function activate() {
+  isActivated.value = true
+  fetchGreeting()
+}
+
 async function fetchGreeting() {
   isLoading.value = true
   try {
@@ -542,7 +557,7 @@ function startNewDialog() {
   savePersonaSession()
   personaChat.clearConversation()
   mediaBoxes.value = []
-  fetchGreeting()
+  isActivated.value = false
 }
 
 function restoreMediaBoxes() {
@@ -560,10 +575,10 @@ function restoreMediaBoxes() {
 onMounted(() => {
   restoreMediaBoxes()
   if (personaChat.hasConversation) {
+    isActivated.value = true
     scrollToBottom()
-  } else {
-    fetchGreeting()
   }
+  // else: stay dormant — wait for user to click activate
 })
 
 // Session 273: Save dialogue on page leave
@@ -811,6 +826,52 @@ onBeforeUnmount(() => {
 
 .chat-input:disabled {
   opacity: 0.5;
+}
+
+/* ---------- Dormant state ---------- */
+
+.dormant-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+.dormant-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.dormant-description {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 380px;
+}
+
+.activate-btn {
+  padding: 0.55rem 1.4rem;
+  background: transparent;
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  border-radius: 10px;
+  color: rgba(255, 179, 0, 0.75);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.activate-btn:hover {
+  background: rgba(255, 179, 0, 0.06);
+  border-color: rgba(255, 179, 0, 0.45);
+  color: #FFB300;
 }
 
 /* ---------- Fullscreen modal ---------- */

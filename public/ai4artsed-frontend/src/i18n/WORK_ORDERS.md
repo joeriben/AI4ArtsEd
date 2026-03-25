@@ -21,6 +21,20 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-25-deferred-llm-activation
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `persona.description` (NEW): "Persona is an AI you can talk to. It decides whether to generate images, sound, video, or 3D objects during the conversation. It has opinions and can refuse."
+  - `persona.activate` (NEW): "Start Conversation"
+  - `compare.activation.button` (NEW): "Activate Trashy"
+  - `compare.activation.language` (NEW): "Same prompt, different languages, different images. This mode shows how language encodes cultural defaults that shape what AI generates."
+  - `compare.activation.model` (NEW): "Same prompt, different models, different assumptions. Reveals what each model treats as the default human, family, or profession."
+  - `compare.activation.vlm-analysis` (NEW): "Upload an image and let multiple vision models describe it. Reveals what each model notices, what it ignores, and where descriptions diverge."
+  - `compare.activation.temperature` (NEW): "Same message at three randomness levels: deterministic, balanced, creative. Shows how probability sampling changes AI output."
+  - `compare.activation.systemprompt` (NEW): "Same message with three different system prompts. Shows how invisible instructions reshape the same AI into different personalities."
+  - `compare.activation.llm-model` (NEW): "Same question to three different AI models. Shows where training data, safety policies, and cultural assumptions produce different answers."
+- **Context**: Deferred LLM activation for Persona and Compare pages. These descriptions appear as static text before the user clicks "Activate" to start the LLM agent. Persona description introduces the AI character. Compare descriptions are mode-specific one-liners explaining the pedagogical purpose of each comparison. "Trashy" is the AI assistant character name (keep as-is in all translations). Button texts should be action-oriented.
+
 ### WO-2026-03-25-scene-graph-interception-config
 - **Scope**: `devserver/schemas/configs/interception/scene_graph.json` (LocalizedString fields, NOT en.ts)
 - **Changed keys** (new):
