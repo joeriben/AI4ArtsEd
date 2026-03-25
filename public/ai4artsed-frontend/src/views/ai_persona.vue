@@ -449,12 +449,19 @@ function addMessage(role: 'user' | 'assistant', content: string) {
 }
 
 async function callChat(message: string, history: Array<{ role: string; content: string }>): Promise<string | null> {
+  // Find the most recent generated image so Persona can see it
+  const lastImageRunId = [...mediaBoxes.value]
+    .reverse()
+    .find(b => b.runId && b.mediaType === 'image' && b.outputUrl)
+    ?.runId || undefined
+
   const response = await fetch(`${getBaseUrl()}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message,
       history,
+      image_path: lastImageRunId,
       context: {
         persona_mode: true,
         language: userPreferences.language,
