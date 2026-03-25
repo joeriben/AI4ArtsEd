@@ -381,7 +381,7 @@ function buildAvailableConfigs(): string {
   // Provide the persona with available configs to choose from
   return [
     'sd35_large — Stable Diffusion 3.5 Large (image)',
-    'flux2_diffusers — FLUX.2 (image)',
+    'flux2 — FLUX.2 (image)',
     'gemini_3_pro_image — Gemini 3 Pro image generation (cloud, EU, DSGVO via Mammouth)',
     'stableaudio — Stable Audio (audio/sound)',
     'heartmula_standard — HeartMuLa (music, dual input: lyrics || tags, e.g. [GENERATE: heartmula_standard | [Verse] Hello world... || pop,upbeat,piano])',
