@@ -797,8 +797,8 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
             "Content-Type": "application/json"
         }
 
-        # Mammouth proxies to Anthropic via litellm — use Anthropic native format
-        effective_messages = _inject_image_into_messages(messages, image_b64, 'anthropic') if image_b64 else messages
+        # Mammouth uses litellm — expects OpenAI-format messages, converts internally
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
 
         payload = {
             "model": model,
