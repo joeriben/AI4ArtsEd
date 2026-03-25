@@ -116,7 +116,7 @@
                 </svg>
               </span>
             </button>
-            <button class="action-btn" @click="$emit('analyze')" :disabled="isAnalyzing" :title="isAnalyzing ? 'Analysiere...' : 'Bildanalyse'">
+            <button class="action-btn" @click="triggerAnalysis" :disabled="isAnalyzing" :title="isAnalyzing ? 'Analysiere...' : 'Bildanalyse'">
               <span class="action-icon">
                 <svg v-if="!isAnalyzing" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
                   <path d="M440-240q116 0 198-81.5T720-520q0-116-82-198t-198-82q-117 0-198.5 82T160-520q0 117 81.5 198.5T440-240Zm0-280Zm0 160q-83 0-147.5-44.5T200-520q28-70 92.5-115T440-680q82 0 146.5 45T680-520q-29 71-93.5 115.5T440-360Zm0-60q55 0 101-26.5t72-73.5q-26-46-72-73t-101-27q-56 0-102 27t-72 73q26 47 72 73.5T440-420Zm0-40q25 0 42.5-17t17.5-43q0-25-17.5-42.5T440-580q-26 0-43 17.5T380-520q0 26 17 43t43 17Zm0 300q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T80-520q0-74 28.5-139.5t77-114.5q48.5-49 114-77.5T440-880q74 0 139.5 28.5T694-774q49 49 77.5 114.5T800-520q0 64-21 121t-58 104l159 159-57 56-159-158q-47 37-104 57.5T440-160Z"/>
@@ -286,32 +286,7 @@
         :safety-level="mapUiModeToSafetyLevel(uiMode ?? 'youth')"
       />
 
-      <!-- Image Analysis Section -->
-      <Transition name="analysis-expand">
-        <div v-if="showAnalysis && analysisData" class="image-analysis-section">
-          <div class="analysis-header">
-            <h3>🔍 Bildanalyse</h3>
-            <button class="collapse-btn" @click="$emit('close-analysis')" title="Schließen">×</button>
-          </div>
-
-          <div class="analysis-content">
-            <!-- Main Analysis Text -->
-            <div class="analysis-main">
-              <p class="analysis-text">{{ analysisData.analysis }}</p>
-            </div>
-
-            <!-- Reflection Prompts -->
-            <div v-if="analysisData.reflection_prompts && analysisData.reflection_prompts.length > 0" class="reflection-prompts">
-              <h4>💬 Sprich mit Träshi über:</h4>
-              <ul>
-                <li v-for="(prompt, idx) in analysisData.reflection_prompts" :key="idx">
-                  {{ prompt }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Transition>
+      <!-- Image analysis now handled by Trashy (ChatOverlay) — no inline box -->
     </div>
   </section>
 </template>
@@ -322,6 +297,9 @@ import '@google/model-viewer'
 import RandomEdutainmentAnimation from '@/components/edutainment/RandomEdutainmentAnimation.vue'
 import DenoisingProgressView from '@/components/edutainment/DenoisingProgressView.vue'
 import ModelProvenanceCard from '@/components/ModelProvenanceCard.vue'
+import { useAnalysisEventStore } from '@/stores/analysisEvent'
+
+const analysisEventStore = useAnalysisEventStore()
 
 // Captured from DenoisingProgressView on unmount
 const generationEnergyWh = ref(0)
@@ -385,11 +363,17 @@ defineEmits<{
   'print': []
   'forward': []
   'download': []
-  'analyze': []
   'image-click': [imageUrl: string]
-  'close-analysis': []
   'toggle-favorite': []
 }>()
+
+/** Trigger image analysis via Trashy (dispatches to analysisEventStore → ChatOverlay handles) */
+function triggerAnalysis() {
+  if (!props.runId || props.mediaType !== 'image') return
+  // Extract clean run_id from runId prop (may include path parts)
+  const cleanRunId = props.runId.includes('/') ? props.runId.match(/(run_[^/]+)/)?.[1] || props.runId : props.runId
+  analysisEventStore.requestReflection('', '', 'media_output', cleanRunId)
+}
 
 /** Map uiMode prop to safety level for provenance card */
 function mapUiModeToSafetyLevel(mode: string): string {
