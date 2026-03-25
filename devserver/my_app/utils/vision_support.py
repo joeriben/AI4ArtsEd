@@ -38,15 +38,16 @@ def prepare_image_b64(image_source: Optional[str] = None, run_id: Optional[str] 
     # Resolve run_id to file path
     if run_id and not image_source:
         try:
-            from my_app.utils.live_pipeline_recorder import LivePipelineRecorder
-            recorder = LivePipelineRecorder.load(run_id)
+            from my_app.services.pipeline_recorder import load_recorder
+            from config import JSON_STORAGE_DIR
+            recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
             if not recorder:
                 logger.warning(f"[VISION] Run ID not found: {run_id}")
                 return None
 
             entities = recorder.metadata.get('entities', [])
             image_entity = next(
-                (e for e in entities if e.get('type') == 'image'),
+                (e for e in entities if 'image' in e.get('type', '') and e.get('filename', '').endswith(('.png', '.jpg', '.jpeg', '.webp'))),
                 None
             )
             if not image_entity:
