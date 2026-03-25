@@ -88,12 +88,17 @@ def analyze_image(
             images=[image_data],
             temperature=0.7,
             max_new_tokens=2000,
+            enable_thinking=False,
         )
 
         if result is None:
             raise Exception("LLM returned None")
 
         analysis_text = result.get("content", "").strip()
+
+        # qwen3-vl quirk: sometimes writes to thinking field instead of content
+        if not analysis_text:
+            analysis_text = (result.get("thinking") or "").strip()
 
         if not analysis_text:
             raise Exception("Empty response from LLM")
