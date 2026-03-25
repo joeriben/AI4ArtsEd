@@ -797,7 +797,8 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
             "Content-Type": "application/json"
         }
 
-        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
+        # Mammouth proxies to Anthropic via litellm — use Anthropic native format
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'anthropic') if image_b64 else messages
 
         payload = {
             "model": model,
@@ -1242,7 +1243,11 @@ def chat():
         image_path = data.get('image_path')
         if image_path:
             from my_app.utils.vision_support import prepare_image_b64, is_vision_capable, describe_image_for_fallback
-            image_b64 = prepare_image_b64(image_source=image_path, run_id=image_path if '/' not in image_path else None)
+            # run_id has no slashes, file paths do
+            if '/' not in image_path:
+                image_b64 = prepare_image_b64(run_id=image_path)
+            else:
+                image_b64 = prepare_image_b64(image_source=image_path)
             if image_b64:
                 logger.info(f"[CHAT] Image resolved ({len(image_b64)} b64 chars)")
 
