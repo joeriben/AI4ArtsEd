@@ -21,6 +21,14 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-25-scene-graph-interception-config
+- **Scope**: `devserver/schemas/configs/interception/scene_graph.json` (LocalizedString fields, NOT en.ts)
+- **Changed keys** (new):
+  - `name` (NEW): "Scene Graph"
+  - `description` (NEW): "Decomposes your description into objects and their relationships — spatial, emotional, contrasting — then weaves them into a richly structured image prompt."
+  - `category` (NEW): "Creative Transformations" (reuse existing translations from theopposite.json)
+- **Context**: New interception config for pedagogical scene decomposition. Targets youth workshops (min_age 10). The concept is about making implicit relationships between objects explicit — especially contrasts and tensions. NOT about inversion (that's theopposite.json). The `context` field is LLM instruction (English only, not translated).
+
 ### WO-2026-03-24-test-note-button
 - **Scope**: en.ts
 - **Changed keys** (new):
