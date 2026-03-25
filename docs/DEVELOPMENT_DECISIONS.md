@@ -9,6 +9,23 @@
 
 ---
 
+## 2026-03-25: Anti-AI-Slop Guard + Trashy kennt Interception-Prompts
+
+**Decision:** Zwei zusammenhaengende Aenderungen:
+1. **VISUAL SPECIFICITY Klausel** in der `transformation`-Instruction (instruction_selector.py): Leichtgewichtiger, positiv formulierter Anti-Slop-Guard. Steuert Richtung Konkretheit und Spezifik statt Klischees aufzulisten — negative Instruktionen ("vermeide X") koennen beim LLM genau das ausloesen, was man vermeiden will.
+2. **lookup_interception Tool** fuer Trashy: Neues Tool im ToolRegistry, das Interception-Configs und Instruction-Templates dynamisch laedt. Trashy kann jetzt erklaeren, was ein bestimmter Modus tut ("Was macht der Bauhaus-Modus?"). Safety-Prefixes sind explizit ausgeschlossen.
+
+**Warum positiv statt negativ:** Der Clichéfilter (clichéfilter_v2.json) sagt selbst "NEVER use negative descriptions... describe POSITIVELY." Dieselbe Logik gilt fuer die Meta-Instruktion. "Bevorzuge Konkretheit" statt "Vermeide AI-Slop" — das zweite listet implizit auf, was man nicht will, und riskiert Fixierung.
+
+**Warum dynamisches Tool statt statische Knowledge Base:** Interception-Configs aendern sich haeufig (aktuell ~45). Ein Tool das die JSONs on-demand liest, ist immer aktuell. Kein manuelles Nachpflegen noetig.
+
+**Affected files:**
+- `devserver/schemas/engine/instruction_selector.py` (VISUAL SPECIFICITY Klausel)
+- `devserver/my_app/services/tool_registry.py` (lookup_interception Tool + 3 Helper-Funktionen)
+- `devserver/my_app/routes/chat_routes.py` (INTERCEPTION KNOWLEDGE Absatz in General + Session Prompt)
+
+---
+
 ## 2026-03-25: Bildanalyse zentralisiert in MediaOutputBox + ChatOverlay (Trashy)
 
 **Decision:** Die Bildanalyse ist KEIN per-View Feature. Sie gehoert zentral in MediaOutputBox (Button) und ChatOverlay (Ausfuehrung + Anzeige). Kein Inline-Kasten unter dem Bild, kein per-View `analyzeImage()`, kein separater VLM-Endpoint.

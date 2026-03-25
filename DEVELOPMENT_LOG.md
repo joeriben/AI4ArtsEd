@@ -1,5 +1,23 @@
 # Development Log
 
+## Session 291 - Anti-AI-Slop Guard + Trashy Interception Knowledge
+**Date:** 2026-03-25
+**Focus:** Zwei zusammenhaengende Erweiterungen — globaler Anti-Slop-Guard in der Interception-Instruction und Trashy-Zugang zu Interception-Prompts.
+
+### Aenderungen
+- **VISUAL SPECIFICITY Klausel** in `instruction_selector.py`: Positiv formulierter Anti-Slop-Guard in der `transformation`-Instruction. Steuert Richtung Konkretheit ("prefer concrete, specific, grounded descriptions"), nicht Negativliste ("vermeide X"). Konventionelle Aesthetik nur wenn User explizit danach fragt.
+- **lookup_interception Tool** in `tool_registry.py`: Drei Actions — `list_configs` (alle ~45 Configs auflisten), `get_config` (Config mit Context/Regeln laden), `get_instruction_templates` (Instruction-Templates ohne Safety-Prefixes). Dynamisch, liest JSON-Dateien on-demand.
+- **System Prompts** in `chat_routes.py`: INTERCEPTION KNOWLEDGE Absatz in General- und Session-Prompt. Trashy weiss jetzt, dass es Interception-Configs erklaeren kann.
+
+### Design-Entscheidung
+- Positiv statt negativ formuliert: Negative Instruktionen koennen beim LLM Fixierung auf das Verbotene ausloesen. Der Clichéfilter selbst sagt "describe POSITIVELY" — dieselbe Logik gilt fuer die Meta-Instruktion.
+- Safety-Prefixes explizit ausgeschlossen vom Tool — nur Interception-Knowledge, nicht Safety.
+
+### Kein Frontend-Change
+- Rein Backend. Kein i18n noetig (LLM-Prompts sind NICHT i18n-Scope).
+
+---
+
 ## Session 290 - Deferred LLM Activation: Persona, Compare, Workshop
 **Date:** 2026-03-25
 **Focus:** LLM-Kosten senken — Persona, Compare und Workshop starteten LLM-Agents sofort beim Seitenaufruf. Jetzt statischer Text + Aktivierungs-Button.
