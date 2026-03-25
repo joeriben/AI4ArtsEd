@@ -1,5 +1,23 @@
 # Development Log
 
+## Session 290 - Deferred LLM Activation: Persona, Compare, Workshop
+**Date:** 2026-03-25
+**Focus:** LLM-Kosten senken — Persona, Compare und Workshop starteten LLM-Agents sofort beim Seitenaufruf. Jetzt statischer Text + Aktivierungs-Button.
+
+### Aenderungen
+- **Persona**: Dormant-State mit Trashy-Icon, Beschreibung, "Start Conversation"-Button. LLM-Greeting erst nach Klick. Bei gecachter Konversation (Pinia Store) direkt aktiv. "New Dialog" kehrt zum Dormant-State zurueck. Amber-Akzent (#FFB300).
+- **ComparisonChat** (alle 6 Compare-Modi): Dormant-State mit modus-spezifischer Beschreibung + "Activate Trashy"-Button. Jeder Tab hat unabhaengigen Aktivierungszustand (KeepAlive). Auto-Aktivierung wenn User generiert ohne Trashy aktiviert zu haben (watch + triggerAutoComment + injectMessage). Green-Akzent (#4CAF50). clearMessages() setzt auf Dormant zurueck.
+- **Workshop Planning**: Komplett neuer Ansatz — statischer Greeting-Text als Trashy-Bubbles (6 Absaetze, kein LLM-Call). Greeting-Text vom User geschrieben. "Trashy fragen"-Button aktiviert interaktiven Chat. Model-Drag/Drop aktiviert Chat automatisch via addChatMessage-Guard. memoryMetaphor-Key entfernt (User-Text hat keine dynamischen GPU-Zahlen).
+
+### i18n
+- 9 neue Keys (persona.description, persona.activate, compare.activation.* x7)
+- workshop.greeting.* komplett umgeschrieben, workshop.activate neu
+- 2 Work Orders in WORK_ORDERS.md (deferred-llm-activation + workshop-greeting-rewrite)
+- Workshop WO enthaelt das deutsche Original verbatim als Referenz fuer de.ts
+
+### Kein Backend-Change
+- Alle Aenderungen rein Frontend. /api/chat Endpoint unveraendert.
+
 ## Session 289 - Trashy Image Analysis: Vision-basierte Bildreflexion
 **Date:** 2026-03-25
 **Focus:** Feature das seit 18 Monaten geplant war — Trashy analysiert generierte Bilder direkt und bietet prozessorientierte Reflexion. Zentralisiert in MediaOutputBox + ChatOverlay, kein per-View Code.
