@@ -27,6 +27,11 @@
           @update:value="userInput = $event"
           :rows="2"
           :disabled="isSending"
+          :show-preset-button="true"
+          @copy="copyPrompt"
+          @paste="pastePrompt"
+          @clear="clearPrompt"
+          @open-preset-selector="showPresetOverlay = true"
         />
         <GenerationButton
           :disabled="!userInput.trim()"
@@ -86,6 +91,13 @@
       compare-type="llm-model"
       @use-prompt="userInput = $event"
     />
+
+    <!-- Interception Preset Overlay -->
+    <InterceptionPresetOverlay
+      :visible="showPresetOverlay"
+      @close="showPresetOverlay = false"
+      @preset-selected="handlePresetSelected"
+    />
   </div>
 </template>
 
@@ -99,6 +111,7 @@ import { useChatModels } from '@/composables/useChatModels'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
+import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 
 const { t } = useI18n()
 const store = useLlmModelCompareStore()
@@ -162,6 +175,40 @@ const isSending = ref(false)
 const colLoading = ref([false, false, false])
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
 const comparisonContext = ref('')
+const showPresetOverlay = ref(false)
+
+// --- Clipboard ---
+function copyPrompt() { window.navigator.clipboard.writeText(userInput.value) }
+async function pastePrompt() { userInput.value = await window.navigator.clipboard.readText() }
+function clearPrompt() { userInput.value = '' }
+
+// --- Interception Preset ---
+async function handlePresetSelected(payload: { configId: string; context: string; configName: string }) {
+  showPresetOverlay.value = false
+  if (!userInput.value.trim()) return
+
+  const baseUrl = import.meta.env.DEV ? 'http://localhost:17802' : ''
+  try {
+    const res = await fetch(`${baseUrl}/api/schema/pipeline/stage2`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        schema: payload.configId,
+        input_text: userInput.value,
+        device_id: deviceId,
+      })
+    })
+    if (res.ok) {
+      const data = await res.json()
+      const result = data.interception_result || data.stage2_result
+      if (data.success && result) {
+        userInput.value = typeof result === 'string' ? result : JSON.stringify(result)
+      }
+    }
+  } catch (error) {
+    console.error('[LLM-COMPARE] Interception failed:', error)
+  }
+}
 
 function onModelChange(idx: number, modelId: string) {
   store.setModel(idx, modelId)
