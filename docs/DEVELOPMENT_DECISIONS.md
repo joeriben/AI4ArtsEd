@@ -9,6 +9,26 @@
 
 ---
 
+## 2026-03-25: Vision in /api/chat — Nur generierte Bilder, keine Uploads
+
+**Decision:** Der /api/chat Endpoint akzeptiert optional `image_path` und sendet Bilder an vision-faehige Chat-Modelle. Es werden ausschliesslich **plattform-generierte Bilder** (aus LivePipelineRecorder runs) an externe Provider gesendet — **niemals vom User hochgeladene Bilder**.
+
+**Hintergrund — Zwei Kategorien von Bildern:**
+1. **Hochgeladene Bilder** (img2img Upload, Sketch): Werden lokal verarbeitet und lokal safety-gecheckt (VLM). Verlassen den Server NICHT. Dies bleibt so.
+2. **Generierte Bilder** (Stage 4 Output): Von der Plattform selbst erzeugt. Diese duerfen an den Chat-Provider gesendet werden, weil (a) sie keine personenbezogenen Daten enthalten die nicht bereits durch die Pipeline gelaufen sind, und (b) der Provider (Mammouth/Anthropic) DSGVO-konform ist.
+
+**Fallback-Architektur:** Falls das Chat-Modell NICHT vision-faehig ist, wird das Bild lokal durch IMAGE_ANALYSIS_MODEL (qwen3-vl, lokal) beschrieben und nur die Textbeschreibung gesendet. In diesem Fall verlassen auch generierte Bilder den Server nicht.
+
+**Vision-Erkennung:** `is_vision_capable()` in `vision_support.py`. Cloud-Provider (mammouth/, anthropic/, openai/, openrouter/, mistral/, bedrock/) = True. IONOS = False. Local = Namens-Heuristik.
+
+**Affected files:**
+- `devserver/my_app/utils/vision_support.py` (NEU)
+- `devserver/my_app/routes/chat_routes.py` (image_path Handling, provider-spezifische Formate)
+- `public/ai4artsed-frontend/src/stores/analysisEvent.ts` (runId Feld)
+- `public/ai4artsed-frontend/src/components/ChatOverlay.vue` (image_path an /api/chat)
+
+---
+
 ## 2026-03-24: UI_MODE Length Limits Moved from Engine to BackendRouter
 
 **Decision:** `UI_MODE_WORD_LIMITS` and `UI_MODE_MAX_TOKENS_SAFETY` enforcement moved from `PromptInterceptionEngine.process_request()` to `BackendRouter._process_prompt_interception_request()`.

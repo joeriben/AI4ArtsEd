@@ -1,5 +1,32 @@
 # Development Log
 
+## Session 289 - Trashy Image Analysis Reflection + Hybrid Vision for /api/chat
+**Date:** 2026-03-25
+**Focus:** Trashy (Chat-Assistent) bekommt Bildanalyse-Reflexion und Vision-Support. Wenn User das Analyse-Icon klickt, oeffnet Trashy sich mit prozessorientierter Beratung. /api/chat kann nun optional Bilder mitsenden.
+
+### Neue Features
+- **Trashy Analyse-Reflexion**: Analyse-Button in MediaOutputBox triggert nun zusaetzlich Trashy. Event-Store-Pattern (wie safetyEventStore). Trashy expandiert, zeigt Ladeindikator, sendet Reflexions-Prompt an /api/chat, ersetzt mit LLM-Antwort. Prozessorientiert: "Wo wolltest du hin? Wo stehst du mit dem Ergebnis?"
+- **Hybrid Vision fuer /api/chat**: Neuer optionaler `image_path` Parameter. Backend resolved run_id → Bild → base64. Falls Modell vision-faehig → Bild direkt als multimodaler Content (provider-spezifisch: OpenAI/Anthropic/Ollama-Format). Falls nicht → automatischer Fallback: IMAGE_ANALYSIS_MODEL (qwen3-vl:2b) beschreibt das Bild als Text, der in die Message injiziert wird.
+- **Provider-spezifische Bild-Formate**: `_inject_image_into_messages()` mit 3 Formaten: openai (Mammouth, Mistral, OpenRouter), anthropic (Bedrock), ollama (local/).
+- **Vision-Erkennung**: `is_vision_capable()` — Cloud-Provider = True, IONOS = False, Local = Namens-Heuristik (vl, vision, llava, pixtral).
+
+### Architektur-Notizen
+- `analysisEvent.ts` (Pinia Store) bridgt Views ↔ ChatOverlay (gleiche Architektur wie safetyEventStore)
+- `PageContent` um `imageAnalysisResult` erweitert — bleibt als laufender Kontext fuer Folge-Gespraeche mit Trashy
+- `vision_support.py` — 3 Utility-Funktionen: prepare_image_b64, is_vision_capable, describe_image_for_fallback
+- Bild wird nur beim ersten Iterations-Durchlauf des Tool-Call-Loops gesendet (image_b64 if iteration == 0)
+- i18n: 2 neue trashy-Keys in en.ts, Work Order fuer Batch-Translation
+
+### Tests
+- Regression: /api/chat ohne Bild → OK
+- Vision: /api/chat + Bild + Sonnet → erkennt "Wanderer ueber dem Nebelmeer"
+- Fallback: /api/chat + Bild + text-only Modell (qwen3:4b) → VLM beschreibt, Text-Modell antwortet
+
+### Commits
+- `8c2b610` feat(trashy): activate image analysis reflection via analyze button
+- `12d88f0` feat(chat): hybrid vision support for /api/chat endpoint
+- `f2167fc` fix(vision): correct import path + entity type filter for run_id resolution
+
 ## Session 288 - Drift LFOs, Envelope Fixes, Beat-Sync Prep
 **Date:** 2026-03-24
 **Focus:** 3 neue Drift-LFOs fuer langsamen Parameter-Drift (alpha, semantische Achsen, WT-Scan). Envelope-Bugfixes. Vorbereitung Beat-Sync'd Regeneration.
