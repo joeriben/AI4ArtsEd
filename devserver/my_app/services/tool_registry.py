@@ -7,7 +7,8 @@ the chat endpoint's tool-call loop. Compatible with the agentic architecture
 
 Architecture:
     ToolRegistry (singleton)
-      └── lookup_reference  (Phase 0: platform knowledge)
+      └── lookup_reference      (Phase 0: platform knowledge)
+      └── lookup_interception   (Phase 0: interception config knowledge)
       └── (future) get_experience_summary  (Phase 1)
       └── (future) check_model_availability (Phase 1)
 """
@@ -204,3 +205,157 @@ def _register_builtin_tools(registry: ToolRegistry):
         },
         handler=lookup_reference,
     )
+
+    # --- lookup_interception ---
+    configs_dir = Path(__file__).parent.parent.parent / "schemas" / "configs" / "interception"
+
+    def lookup_interception(args: dict) -> str:
+        action = args.get("action", "")
+
+        if action == "list_configs":
+            return _list_interception_configs(configs_dir)
+        elif action == "get_config":
+            config_id = args.get("config_id", "")
+            if not config_id:
+                return "Error: 'config_id' is required for 'get_config' action."
+            return _get_interception_config(configs_dir, config_id)
+        elif action == "get_instruction_templates":
+            return _get_instruction_templates()
+        else:
+            return f"Unknown action '{action}'. Use: list_configs, get_config, get_instruction_templates."
+
+    registry.register(
+        name="lookup_interception",
+        description=(
+            "Look up how the platform's creative transformations (interception configs) work. "
+            "Use this when users ask what a specific mode does (e.g., 'What does Bauhaus mode do?'), "
+            "how prompt transformation works, or what transformation rules are applied. "
+            "Actions: 'list_configs' lists all available configs, 'get_config' shows a specific "
+            "config's transformation rules, 'get_instruction_templates' shows the general instruction types."
+        ),
+        parameters={
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["list_configs", "get_config", "get_instruction_templates"],
+                    "description": (
+                        "Action to perform: 'list_configs' = list all interception configs, "
+                        "'get_config' = get a specific config's details (requires config_id), "
+                        "'get_instruction_templates' = show the general instruction templates."
+                    ),
+                },
+                "config_id": {
+                    "type": "string",
+                    "description": (
+                        "Config ID (filename without .json) — required for 'get_config'. "
+                        "Example: 'bauhaus', 'surrealizer', 'jugendsprache'."
+                    ),
+                },
+            },
+            "required": ["action"],
+        },
+        handler=lookup_interception,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Interception tool helpers
+# ---------------------------------------------------------------------------
+
+def _list_interception_configs(configs_dir: Path) -> str:
+    """List all active interception configs with summary info."""
+    if not configs_dir.exists():
+        return "Error: Interception configs directory not found."
+
+    entries = []
+    for f in sorted(configs_dir.glob("*.json")):
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+            name_en = data.get("name", {}).get("en", f.stem)
+            desc_en = data.get("description", {}).get("en", "")
+            cat_en = data.get("category", {}).get("en", "")
+            entries.append(f"- {f.stem}: {name_en} ({cat_en}) — {desc_en}")
+        except Exception:
+            continue
+
+    if not entries:
+        return "No interception configs found."
+    return f"Available interception configs ({len(entries)}):\n\n" + "\n".join(entries)
+
+
+def _get_interception_config(configs_dir: Path, config_id: str) -> str:
+    """Get detailed info about a specific interception config."""
+    config_path = configs_dir / f"{config_id}.json"
+    if not config_path.exists():
+        # Check for deactivated/deprecated variants
+        for suffix in [".json.deactivated", ".json.deprecated"]:
+            alt = configs_dir / f"{config_id}{suffix}"
+            if alt.exists():
+                return f"Config '{config_id}' exists but is currently deactivated/deprecated."
+        available = [f.stem for f in sorted(configs_dir.glob("*.json"))]
+        return f"Config '{config_id}' not found. Available: {', '.join(available)}"
+
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return f"Error reading config '{config_id}': {e}"
+
+    parts = []
+    parts.append(f"Config: {config_id}")
+    parts.append(f"Name: {data.get('name', {}).get('en', 'N/A')}")
+    parts.append(f"Description: {data.get('description', {}).get('en', 'N/A')}")
+    parts.append(f"Category: {data.get('category', {}).get('en', 'N/A')}")
+    parts.append(f"Pipeline: {data.get('pipeline', 'N/A')}")
+    parts.append(f"Instruction type: {data.get('instruction_type', 'N/A')}")
+
+    props = data.get("properties", [])
+    if props:
+        parts.append(f"Properties: {', '.join(props)}")
+
+    media = data.get("media_preferences", {})
+    if media:
+        default_out = media.get("default_output", "")
+        supported = media.get("supported_types", [])
+        parts.append(f"Media: default={default_out}, supported={', '.join(supported)}")
+
+    # The pedagogical transformation context (the core content)
+    context = data.get("context", {})
+    if context:
+        context_en = context.get("en", "")
+        if context_en:
+            parts.append(f"\nTransformation rules (English):\n{context_en}")
+    else:
+        # Some configs use chunks directly instead of context
+        chunks = data.get("chunks", [])
+        if chunks:
+            parts.append(f"\nThis config uses {len(chunks)} pipeline chunk(s) instead of a direct context.")
+
+    return "\n".join(parts)
+
+
+def _get_instruction_templates() -> str:
+    """Return instruction templates from instruction_selector (no safety prefixes)."""
+    # Import here to avoid circular imports at module level
+    try:
+        import sys
+        engine_path = Path(__file__).parent.parent.parent / "schemas" / "engine"
+        if str(engine_path) not in sys.path:
+            sys.path.insert(0, str(engine_path))
+        from instruction_selector import INSTRUCTION_TYPES
+    except ImportError:
+        return "Error: Could not load instruction templates."
+
+    parts = ["Instruction templates used by the interception system:\n"]
+    for name, info in INSTRUCTION_TYPES.items():
+        desc = info.get("description", "")
+        default = info.get("default")
+        parts.append(f"--- {name} ---")
+        parts.append(f"Description: {desc}")
+        if default:
+            parts.append(f"Template:\n{default}")
+        else:
+            parts.append("(Alias — redirects to another type)")
+        parts.append("")
+
+    return "\n".join(parts)
