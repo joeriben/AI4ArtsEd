@@ -707,8 +707,8 @@ async function analyzeImage() {
     return
   }
 
-  // Extract run_id from URL: /api/media/image/run_abc123
-  const runIdMatch = primaryOutput.value.url.match(/\/api\/.*\/(.+)$/)
+  // Extract run_id from URL: /api/media/image/run_abc123/0 → run_abc123
+  const runIdMatch = primaryOutput.value.url.match(/\/api\/media\/\w+\/(run_[^/]+)/)
   const runId = runIdMatch ? runIdMatch[1] : null
 
   if (!runId) {
