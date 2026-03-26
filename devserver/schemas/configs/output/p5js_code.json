@@ -16,7 +16,7 @@
     "OUTPUT_CHUNK": "output_code_p5js",
     "temperature": 0.7,
     "top_p": 0.9,
-    "max_tokens": 4096
+    "max_tokens": 8192
   },
   "media_preferences": {
     "default_output": "code",

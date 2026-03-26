@@ -1709,7 +1709,6 @@ function getP5jsIframeContent(): string {
   return `<!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"><\/script>
     <style>
         body {
             margin: 0;
@@ -1722,16 +1721,27 @@ function getP5jsIframeContent(): string {
         canvas {
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        .error-display {
+            color: #ff6b6b;
+            padding: 20px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-width: 90%;
+            text-align: left;
+        }
     </style>
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            document.body.innerHTML = '<div class="error-display">Error (line ' + line + '): ' + msg + '<\\/div>';
+            return true;
+        };
+    <\/script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"><\/script>
 </head>
 <body>
     <script>
-        try {
-            ${codeToRender}
-        } catch (error) {
-            document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace;">Error: ' + error.message + '<\/div>';
-            console.error('p5.js error:', error);
-        }
+        ${codeToRender}
     <\/script>
 </body>
 </html>`

@@ -940,7 +940,7 @@
 /* Code Output in Stage 2 (after optimization) */
 .code-output-stage2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 3fr;
   gap: 2rem;
   width: 100%;
   padding: 2rem;
@@ -988,7 +988,7 @@
   border: 1px solid #3e3e3e;
   border-radius: 8px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   resize: vertical;
 }
