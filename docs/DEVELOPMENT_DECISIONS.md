@@ -9,6 +9,28 @@
 
 ---
 
+## 2026-03-26: Arcimboldo Mosaic + Composable Diffusion → Latent Lab (nicht t2X)
+
+**Decision:** Drei Konzepte aus einer explorativen Session (Assemblage/Mosaik/Collage-Diskussion) werden dem **Latent Lab** zugeordnet, NICHT dem t2X-Flow:
+
+1. **A — Arcimboldo Mosaic** (Image Lab Tab): Semantische Heatmap (Cross-Attention/DAAM) segmentiert ein Hauptbild → jede Region wird durch viele kleine Tile-Bilder des jeweiligen Konzepts ersetzt (Photo-Mosaik-Prinzip). Hauptbild via SD3.5/FLUX, Tiles via SD1.5 (weil Cross-Attention dort sauber separiert ist). Attention Cartography liefert bereits die Heatmaps.
+
+2. **B — Composable Diffusion** (Erweiterung Surrealizer oder eigener Tab): Prompt in semantische Teile zerlegen, jeweils eigene Energy-Funktion, im Denoising-Loop konjugieren. Der Surrealizer macht bereits nicht-semantische Composable Diffusion (CLIP-L/T5-Interpolation). Scene Graph als Input-Format (nicht als Interception-Config).
+
+3. **Scene Graph Config** (`scene_graph.json`): Bleibt vorlaeufig als Interception-Config (produziert ordentliche Bilder), ist aber eigentlich das Input-Format fuer B. Mittelfristig in den Latent Lab Graph-Editor ueberfuehren.
+
+**Kerngedanke (User):** "Aufbrechen der Prompt/CLIP-Machtposition durch Atomisierung" — CLIP komprimiert einen Prompt in eine monolithische Repraesentation. Composable Diffusion und Arcimboldo brechen das auf.
+
+**Warum Latent Lab, nicht t2X:** t2X ist medienagnostisch (text→image/video/audio/code). Arcimboldo und Composable Diffusion sind rein visuell und manipulieren Diffusion-Interna — das ist exakt der Scope des Latent Lab (Passthrough-Pipeline, skip_stage2, Diffusers direkt).
+
+**Status:** Konzept dokumentiert. Keine Implementierung begonnen. Scene Graph Config mit formaler Graph-Notation aktualisiert (Step-Ueberschriften + Netzwerkgraph-Notation mit NODES/EDGES).
+
+**Affected files:**
+- `devserver/schemas/configs/interception/scene_graph.json` (Notation aktualisiert)
+- Zukuenftig: neuer Image Lab Tab, Surrealizer-Erweiterung oder eigener Tab
+
+---
+
 ## 2026-03-25: Anti-AI-Slop Guard + Trashy kennt Interception-Prompts
 
 **Decision:** Zwei zusammenhaengende Aenderungen:
