@@ -2747,49 +2747,51 @@ class DiffusersImageGenerator:
                         )
 
                         # === COMPOSABLE DENOISING LOOP ===
-                        for step_idx, t in enumerate(timesteps):
-                            _generation_progress["step"] = step_idx
+                        with torch.no_grad():
+                            for step_idx, t in enumerate(timesteps):
+                                _generation_progress["step"] = step_idx
 
-                            timestep_single = t.expand(latents.shape[0])
+                                timestep_single = t.expand(latents.shape[0])
 
-                            # 1. Unconditional pass (shared negative)
-                            noise_uncond = pipe.transformer(
-                                hidden_states=latents,
-                                timestep=timestep_single,
-                                encoder_hidden_states=neg_embeds,
-                                pooled_projections=neg_pooled,
-                                return_dict=False,
-                            )[0]
-
-                            # 2. Per-concept conditional passes
-                            noise_composed = torch.zeros_like(noise_uncond)
-                            for i, (embeds, pooled, w) in enumerate(
-                                zip(concept_embeds_list, concept_pooled_list, weights)
-                            ):
-                                noise_i = pipe.transformer(
+                                # 1. Unconditional pass (shared negative)
+                                noise_uncond = pipe.transformer(
                                     hidden_states=latents,
                                     timestep=timestep_single,
-                                    encoder_hidden_states=embeds,
-                                    pooled_projections=pooled,
+                                    encoder_hidden_states=neg_embeds,
+                                    pooled_projections=neg_pooled,
                                     return_dict=False,
                                 )[0]
-                                noise_composed = noise_composed + w * noise_i
 
-                            # 3. CFG: uncond + cfg_scale * (composed - uncond)
-                            noise_pred = noise_uncond + cfg_scale * (noise_composed - noise_uncond)
+                                # 2. Per-concept conditional passes
+                                noise_composed = torch.zeros_like(noise_uncond)
+                                for i, (embeds, pooled, w) in enumerate(
+                                    zip(concept_embeds_list, concept_pooled_list, weights)
+                                ):
+                                    noise_i = pipe.transformer(
+                                        hidden_states=latents,
+                                        timestep=timestep_single,
+                                        encoder_hidden_states=embeds,
+                                        pooled_projections=pooled,
+                                        return_dict=False,
+                                    )[0]
+                                    noise_composed = noise_composed + w * noise_i
 
-                            # 4. Scheduler step
-                            latents_dtype = latents.dtype
-                            latents = pipe.scheduler.step(noise_pred, t, latents, return_dict=False)[0]
-                            if latents.dtype != latents_dtype:
-                                latents = latents.to(latents_dtype)
+                                # 3. CFG: uncond + cfg_scale * (composed - uncond)
+                                noise_pred = noise_uncond + cfg_scale * (noise_composed - noise_uncond)
+
+                                # 4. Scheduler step
+                                latents_dtype = latents.dtype
+                                latents = pipe.scheduler.step(noise_pred, t, latents, return_dict=False)[0]
+                                if latents.dtype != latents_dtype:
+                                    latents = latents.to(latents_dtype)
 
                         _generation_progress["step"] = steps
 
                         # === VAE decode ===
-                        latents = (latents / pipe.vae.config.scaling_factor) + pipe.vae.config.shift_factor
-                        image = pipe.vae.decode(latents, return_dict=False)[0]
-                        image = pipe.image_processor.postprocess(image, output_type="pil")[0]
+                        with torch.no_grad():
+                            latents = (latents / pipe.vae.config.scaling_factor) + pipe.vae.config.shift_factor
+                            image = pipe.vae.decode(latents, return_dict=False)[0]
+                            image = pipe.image_processor.postprocess(image, output_type="pil")[0]
 
                         elapsed = time.time() - start_time
                         logger.info(f"[COMPOSABLE] Done in {elapsed:.1f}s, {len(concepts)} concepts × {steps} steps")

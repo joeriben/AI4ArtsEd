@@ -547,21 +547,28 @@ def generate_composable():
         if not isinstance(c, dict) or 'prompt' not in c:
             return jsonify({"success": False, "error": f"Concept {i} missing 'prompt'"}), 400
 
-    backend = _get_backend()
-    result = _run_async(backend.generate_image_composable(
-        concepts=concepts,
-        model_id=data.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),
-        negative_prompt=data.get('negative_prompt', ''),
-        width=int(data.get('width', 1024)),
-        height=int(data.get('height', 1024)),
-        steps=int(data.get('steps', 25)),
-        cfg_scale=float(data.get('cfg_scale', 4.5)),
-        seed=int(data.get('seed', -1)),
-        normalize_weights=data.get('normalize_weights', True),
-    ))
+    try:
+        backend = _get_backend()
+        result = _run_async(backend.generate_image_composable(
+            concepts=concepts,
+            model_id=data.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),
+            negative_prompt=data.get('negative_prompt', ''),
+            width=int(data.get('width', 1024)),
+            height=int(data.get('height', 1024)),
+            steps=int(data.get('steps', 25)),
+            cfg_scale=float(data.get('cfg_scale', 4.5)),
+            seed=int(data.get('seed', -1)),
+            normalize_weights=data.get('normalize_weights', True),
+        ))
 
-    if result is None:
-        return jsonify({"success": False, "error": "Composable generation failed"}), 500
+        if result is None:
+            return jsonify({"success": False, "error": "Composable generation failed"}), 500
 
-    result["success"] = True
-    return jsonify(result)
+        result["success"] = True
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Composable generation error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
