@@ -21,6 +21,14 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-26-composable-diffusion-tab
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.imageLab.tabs.composable.label` (NEW): "Composable Diffusion"
+  - `latentLab.imageLab.tabs.composable.short` (NEW): "Multi-concept blending"
+  - `latentLab.composable.*` (NEW): all keys in the new `composable` section (~25 keys)
+- **Context**: New Latent Lab Image Lab tab for Composable Diffusion (Liu et al. 2022). Users decompose a prompt into separate concepts, each with adjustable weight. The model runs separate transformer passes for each concept and blends the noise predictions. Technical terms like "CFG", "seed", "transformer pass" should be translated to accessible equivalents where possible. "Composable Diffusion" is the method name and should stay in English.
+
 ### WO-2026-03-25-deferred-llm-activation
 - **Scope**: en.ts
 - **Changed keys** (new):

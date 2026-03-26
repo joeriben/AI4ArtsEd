@@ -1035,6 +1035,10 @@ export const en = {
         algebra: {
           label: 'Concept Algebra',
           short: 'Vector arithmetic'
+        },
+        composable: {
+          label: 'Composable Diffusion',
+          short: 'Multi-concept blending'
         }
       }
     },
@@ -1191,6 +1195,34 @@ export const en = {
       downloadReference: 'Download Reference',
       downloadResult: 'Download Result',
       resultHint: 'Enter three prompts and click Compute \u2014 the result of the vector arithmetic will appear here.'
+    },
+    composable: {
+      headerTitle: 'Composable Diffusion \u2014 Separate energy for each concept',
+      headerSubtitle: 'Instead of encoding your entire prompt as one monolithic vector, each concept gets its own transformer pass during denoising. The noise predictions are blended with weights you control.',
+      explanationToggle: 'Show detailed explanation',
+      explainWhatTitle: 'What does this tool do?',
+      explainWhatText: 'Standard image generation compresses your entire prompt into a single representation. The model sees "a red house by a lake" as one fused concept. Composable Diffusion breaks this apart: "red house" and "lake" each get their own complete processing pass through the neural network at every denoising step. Their noise predictions are then combined with adjustable weights. This gives each concept its own "energy function" \u2014 its own vote on what the image should look like.',
+      explainHowTitle: 'How does it work technically?',
+      explainHowText: 'At each of the 25 denoising steps, the model runs N+1 transformer passes: one for the negative prompt (unconditional), and one for each concept. Each concept produces its own noise prediction. These are blended using your weight settings: noise_composed = w1\u00d7noise_1 + w2\u00d7noise_2 + ... The composed noise is then used with classifier-free guidance (CFG) and the scheduler step. The result is an image where each concept contributes independently.',
+      techTitle: 'Technical details',
+      techText: 'Based on Liu et al. (2022). Each concept is encoded with all three SD3.5 encoders (CLIP-L, OpenCLIP-G, T5-XXL) independently. The custom denoising loop calls pipe.transformer() once per concept per step, producing per-concept noise predictions that are weighted and summed. VRAM: model weights are shared across passes; only activations vary. With 4 concepts, generation takes roughly 4x longer than standard (each step needs 5 transformer passes instead of 2).',
+      referencesTitle: 'Research References',
+      conceptLabel: 'Concept {n}',
+      conceptPlaceholder: 'e.g. a red house on a hill',
+      weightLabel: 'Weight',
+      removeBtn: 'Remove',
+      addConceptBtn: 'Add concept',
+      settingsToggle: 'Advanced settings',
+      negativePromptLabel: 'Negative Prompt',
+      negativePromptPlaceholder: 'e.g. blurry, text, watermark',
+      stepsLabel: 'Steps',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      normalizeLabel: 'Normalize weights (sum to 1.0)',
+      generateBtn: 'Generate',
+      generating: 'Composable generation in progress...',
+      resultInfo: '{concepts} concepts | {time} | seed {seed}',
+      downloadBtn: 'Download',
     },
     archaeology: {
       headerTitle: 'Denoising Archaeology \u2014 How does noise become an image?',

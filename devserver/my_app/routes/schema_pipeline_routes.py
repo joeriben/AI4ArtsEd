@@ -2024,6 +2024,20 @@ def execute_optimization_streaming(data: dict):
         else:
             model = STAGE3_MODEL
             logger.info(f"[OPTIMIZATION-STREAMING] Using default STAGE3_MODEL: {model}")
+
+        # Load max_tokens from output config parameters (same as non-streaming path)
+        extra_params = {}
+        if output_config:
+            try:
+                oc = pipeline_executor.config_loader.get_config(output_config)
+                if oc and hasattr(oc, 'parameters'):
+                    mt = oc.parameters.get('max_tokens')
+                    if mt:
+                        extra_params['max_tokens'] = mt
+                        logger.info(f"[OPTIMIZATION-STREAMING] Loaded max_tokens={mt} from {output_config}")
+            except Exception:
+                pass
+
         pi_request = PromptInterceptionRequest(
             input_prompt=input_text,
             input_context='',
@@ -2032,7 +2046,7 @@ def execute_optimization_streaming(data: dict):
             model=model,
             debug=False,
             unload_model=False,
-            parameters={"enable_thinking": False}  # Structured JSON output, no reasoning
+            parameters={"enable_thinking": False, **extra_params}
         )
         pi_response = asyncio.run(engine.process_request(pi_request))
 
@@ -4319,6 +4333,10 @@ def legacy_workflow():
         scale_sub = data.get('scale_sub')
         scale_add = data.get('scale_add')
 
+        # Composable diffusion parameters
+        composable_concepts = data.get('concepts')
+        composable_normalize = data.get('normalize_weights')
+
         # Additional workflow-specific parameters
         mode = data.get('mode')  # For partial_elimination
         prompt1 = data.get('prompt1')  # For split_and_combine
@@ -4482,6 +4500,12 @@ def legacy_workflow():
             custom_params['scale_sub'] = scale_sub
         if scale_add is not None:
             custom_params['scale_add'] = scale_add
+        # Composable diffusion parameters
+        if composable_concepts is not None:
+            import json
+            custom_params['concepts'] = json.dumps(composable_concepts) if isinstance(composable_concepts, list) else composable_concepts
+        if composable_normalize is not None:
+            custom_params['normalize_weights'] = composable_normalize
 
         from schemas.engine.pipeline_executor import PipelineContext
         context_override = None
@@ -4665,6 +4689,24 @@ def legacy_workflow():
                 )
                 logger.info(f"[LEGACY-ENDPOINT] Saved concept algebra image: {len(image_bytes)} bytes")
 
+        elif output_value == 'diffusers_composable_generated':
+            # Latent Lab: Composable Diffusion — single result image
+            image_b64 = output_result.metadata.get('image_base64')
+            if image_b64:
+                import base64
+                image_bytes = base64.b64decode(image_b64)
+                recorder.save_entity(
+                    entity_type='output_image',
+                    content=image_bytes,
+                    metadata={
+                        'config': output_config,
+                        'seed': result_seed,
+                        'format': 'png',
+                        'backend': 'diffusers_composable'
+                    }
+                )
+                logger.info(f"[LEGACY-ENDPOINT] Saved composable diffusion image: {len(image_bytes)} bytes")
+
         elif output_value == 'diffusers_archaeology_generated':
             # Latent Lab: Denoising Archaeology — image + step snapshots
             image_data_b64 = output_result.metadata.get('image_data')
@@ -4773,6 +4815,18 @@ def legacy_workflow():
                 algebra_data['result_image'] = result_b64
             algebra_data['seed'] = result_seed
             response_data['algebra_data'] = algebra_data
+
+        # Latent Lab: Include composable diffusion data in response
+        composable_image = output_result.metadata.get('image_base64') if output_result.metadata else None
+        composable_seed = output_result.metadata.get('seed') if output_result.metadata else None
+        if composable_image and output_result.metadata.get('content_marker') == 'diffusers_composable_generated':
+            response_data['composable_data'] = {
+                'image_base64': composable_image,
+                'seed': composable_seed,
+                'concept_count': output_result.metadata.get('concept_count'),
+                'weights_used': output_result.metadata.get('weights_used'),
+                'timing_s': output_result.metadata.get('timing_s'),
+            }
 
         # Latent Lab: Include archaeology data + image_base64 in response
         archaeology_data = output_result.metadata.get('archaeology_data') if output_result.metadata else None

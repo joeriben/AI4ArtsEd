@@ -388,3 +388,50 @@ def generate_archaeology():
 
     result["success"] = True
     return jsonify(result)
+
+
+@diffusers_bp.route('/api/diffusers/generate/composable', methods=['POST'])
+def generate_composable():
+    """Composable Diffusion: per-concept noise prediction blending.
+
+    Request body:
+        concepts: [{"prompt": str, "weight": float}, ...]
+        negative_prompt: str (optional)
+        width/height: int (optional, default 1024)
+        steps: int (optional, default 25)
+        cfg_scale: float (optional, default 4.5)
+        seed: int (optional, -1 for random)
+        normalize_weights: bool (optional, default true)
+
+    Returns: { success, image_base64, seed, concept_count, weights_used, timing_s }
+    """
+    data = request.get_json()
+    if not data or 'concepts' not in data:
+        return jsonify({"success": False, "error": "concepts required"}), 400
+
+    concepts = data['concepts']
+    if not isinstance(concepts, list) or len(concepts) < 2:
+        return jsonify({"success": False, "error": "Need at least 2 concepts"}), 400
+
+    for i, c in enumerate(concepts):
+        if not isinstance(c, dict) or 'prompt' not in c:
+            return jsonify({"success": False, "error": f"Concept {i} missing 'prompt'"}), 400
+
+    backend = _get_backend()
+    result = _run_async(backend.generate_image_composable(
+        concepts=concepts,
+        model_id=data.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),
+        negative_prompt=data.get('negative_prompt', ''),
+        width=int(data.get('width', 1024)),
+        height=int(data.get('height', 1024)),
+        steps=int(data.get('steps', 25)),
+        cfg_scale=float(data.get('cfg_scale', 4.5)),
+        seed=int(data.get('seed', -1)),
+        normalize_weights=data.get('normalize_weights', True),
+    ))
+
+    if result is None:
+        return jsonify({"success": False, "error": "Composable generation failed"}), 500
+
+    result["success"] = True
+    return jsonify(result)

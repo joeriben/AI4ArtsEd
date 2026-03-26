@@ -26,6 +26,7 @@
     <Surrealizer v-else-if="activeTab === 'fusion'" />
     <FeatureProbing v-else-if="activeTab === 'probing'" />
     <ConceptAlgebra v-else-if="activeTab === 'algebra'" />
+    <ComposableDiffusion v-else-if="activeTab === 'composable'" />
   </div>
 </template>
 
@@ -37,10 +38,11 @@ import AttentionCartography from './attention_cartography.vue'
 import Surrealizer from '../surrealizer.vue'
 import FeatureProbing from './feature_probing.vue'
 import ConceptAlgebra from './concept_algebra.vue'
+import ComposableDiffusion from './composable_diffusion.vue'
 
 const { t } = useI18n()
 
-type SubTabId = 'archaeology' | 'attention' | 'fusion' | 'probing' | 'algebra'
+type SubTabId = 'archaeology' | 'attention' | 'fusion' | 'probing' | 'algebra' | 'composable'
 
 const STORAGE_KEY = 'latent_lab_image_tab'
 
@@ -50,6 +52,7 @@ const tabs: { id: SubTabId }[] = [
   { id: 'fusion' },
   { id: 'probing' },
   { id: 'algebra' },
+  { id: 'composable' },
 ]
 
 const activeTab = ref<SubTabId>('archaeology')

@@ -2451,6 +2451,242 @@ class DiffusersImageGenerator:
             logger.error(f"[DIFFUSERS] Streaming error: {e}")
             yield {"type": "error", "message": str(e)}
 
+    async def generate_image_composable(
+        self,
+        concepts: list,
+        model_id: str = "stabilityai/stable-diffusion-3.5-large",
+        negative_prompt: str = "",
+        width: int = 1024,
+        height: int = 1024,
+        steps: int = 25,
+        cfg_scale: float = 4.5,
+        seed: int = -1,
+        normalize_weights: bool = True,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Composable Diffusion: per-concept noise prediction blending.
+
+        Instead of encoding all concepts into one embedding, each concept gets
+        its own transformer pass at every denoising step. Noise predictions are
+        blended with weights before the scheduler step.
+
+        Based on Liu et al. (2022) "Compositional Visual Generation with
+        Composable Diffusion Models".
+
+        Args:
+            concepts: List of {"prompt": str, "weight": float} dicts
+            model_id: SD3.5 model to use
+            negative_prompt: Shared negative prompt
+            width/height: Image dimensions
+            steps: Inference steps
+            cfg_scale: CFG scale
+            seed: Random seed (-1 for random)
+            normalize_weights: If True, concept weights sum to 1.0
+
+        Returns:
+            Dict with image_base64, seed, concept_count, timing_s
+        """
+        try:
+            import torch
+            import torch.nn.functional as F
+            import io
+            import base64
+
+            if not concepts or len(concepts) < 2:
+                logger.error("[COMPOSABLE] Need at least 2 concepts")
+                return None
+
+            if not await self.load_model(model_id):
+                return None
+
+            self._model_in_use[model_id] = self._model_in_use.get(model_id, 0) + 1
+            try:
+                self._model_last_used[model_id] = time.time()
+                pipe = self._pipelines[model_id]
+
+                if not hasattr(pipe, '_get_clip_prompt_embeds') or not hasattr(pipe, '_get_t5_prompt_embeds'):
+                    logger.error("[COMPOSABLE] Pipeline missing encoder methods")
+                    return None
+
+                if seed == -1:
+                    import random
+                    seed = random.randint(0, 2**32 - 1)
+
+                # Extract and optionally normalize weights
+                weights = [c.get("weight", 1.0) for c in concepts]
+                if normalize_weights:
+                    w_sum = sum(weights)
+                    if w_sum > 0:
+                        weights = [w / w_sum for w in weights]
+
+                logger.info(
+                    f"[COMPOSABLE] {len(concepts)} concepts, weights={[f'{w:.2f}' for w in weights]}, "
+                    f"steps={steps}, size={width}x{height}, seed={seed}, cfg={cfg_scale}"
+                )
+
+                def _encode_full(prompt_text, device):
+                    """Encode a prompt with all three SD3.5 encoders."""
+                    with torch.no_grad():
+                        clip_l, clip_l_pooled = pipe._get_clip_prompt_embeds(
+                            prompt=prompt_text, device=device,
+                            num_images_per_prompt=1, clip_model_index=0
+                        )
+                        clip_g, clip_g_pooled = pipe._get_clip_prompt_embeds(
+                            prompt=prompt_text, device=device,
+                            num_images_per_prompt=1, clip_model_index=1
+                        )
+                        t5 = pipe._get_t5_prompt_embeds(
+                            prompt=prompt_text, num_images_per_prompt=1,
+                            max_sequence_length=512, device=device
+                        )
+                    clip_combined = F.pad(
+                        torch.cat([clip_l, clip_g], dim=-1),
+                        (0, 4096 - 2048)
+                    )
+                    prompt_embeds = torch.cat([clip_combined, t5], dim=1)
+                    pooled = torch.cat([clip_l_pooled, clip_g_pooled], dim=-1)
+                    return prompt_embeds, pooled
+
+                def _generate():
+                    from diffusers.pipelines.stable_diffusion_3.pipeline_stable_diffusion_3 import (
+                        retrieve_timesteps, calculate_shift
+                    )
+
+                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    start_time = time.time()
+
+                    try:
+                        device = pipe._execution_device
+                        generator = torch.Generator(device=self.device).manual_seed(seed)
+
+                        # --- Encode all concepts ---
+                        concept_embeds_list = []
+                        concept_pooled_list = []
+                        for i, concept in enumerate(concepts):
+                            embeds, pooled = _encode_full(concept["prompt"], device)
+                            concept_embeds_list.append(embeds)
+                            concept_pooled_list.append(pooled)
+                            logger.info(f"[COMPOSABLE] Encoded concept {i}: '{concept['prompt'][:50]}' shape={embeds.shape}")
+
+                        # Pad all concept embeds to same sequence length
+                        max_seq_len = max(e.shape[1] for e in concept_embeds_list)
+                        for i in range(len(concept_embeds_list)):
+                            if concept_embeds_list[i].shape[1] < max_seq_len:
+                                pad_len = max_seq_len - concept_embeds_list[i].shape[1]
+                                concept_embeds_list[i] = F.pad(concept_embeds_list[i], (0, 0, 0, pad_len))
+
+                        # --- Encode negative prompt ---
+                        neg_text = negative_prompt if negative_prompt else ""
+                        neg_embeds, neg_pooled = _encode_full(neg_text, device)
+                        # Pad negative to same seq length
+                        if neg_embeds.shape[1] < max_seq_len:
+                            pad_len = max_seq_len - neg_embeds.shape[1]
+                            neg_embeds = F.pad(neg_embeds, (0, 0, 0, pad_len))
+
+                        torch.cuda.empty_cache()
+
+                        # --- Prepare latents ---
+                        num_channels_latents = pipe.transformer.config.in_channels
+                        latents = pipe.prepare_latents(
+                            1, num_channels_latents, height, width,
+                            concept_embeds_list[0].dtype, device, generator, None
+                        )
+
+                        # --- Prepare timesteps with dynamic shifting ---
+                        scheduler_kwargs = {}
+                        if pipe.scheduler.config.get("use_dynamic_shifting", None):
+                            _, _, lat_h, lat_w = latents.shape
+                            image_seq_len = (lat_h // pipe.transformer.config.patch_size) * (
+                                lat_w // pipe.transformer.config.patch_size
+                            )
+                            mu = calculate_shift(
+                                image_seq_len,
+                                pipe.scheduler.config.get("base_image_seq_len", 256),
+                                pipe.scheduler.config.get("max_image_seq_len", 4096),
+                                pipe.scheduler.config.get("base_shift", 0.5),
+                                pipe.scheduler.config.get("max_shift", 1.16),
+                            )
+                            scheduler_kwargs["mu"] = mu
+
+                        timesteps, num_inference_steps = retrieve_timesteps(
+                            pipe.scheduler, steps, device, **scheduler_kwargs
+                        )
+
+                        # === COMPOSABLE DENOISING LOOP ===
+                        for step_idx, t in enumerate(timesteps):
+                            _generation_progress["step"] = step_idx
+
+                            timestep_single = t.expand(latents.shape[0])
+
+                            # 1. Unconditional pass (shared negative)
+                            noise_uncond = pipe.transformer(
+                                hidden_states=latents,
+                                timestep=timestep_single,
+                                encoder_hidden_states=neg_embeds,
+                                pooled_projections=neg_pooled,
+                                return_dict=False,
+                            )[0]
+
+                            # 2. Per-concept conditional passes
+                            noise_composed = torch.zeros_like(noise_uncond)
+                            for i, (embeds, pooled, w) in enumerate(
+                                zip(concept_embeds_list, concept_pooled_list, weights)
+                            ):
+                                noise_i = pipe.transformer(
+                                    hidden_states=latents,
+                                    timestep=timestep_single,
+                                    encoder_hidden_states=embeds,
+                                    pooled_projections=pooled,
+                                    return_dict=False,
+                                )[0]
+                                noise_composed = noise_composed + w * noise_i
+
+                            # 3. CFG: uncond + cfg_scale * (composed - uncond)
+                            noise_pred = noise_uncond + cfg_scale * (noise_composed - noise_uncond)
+
+                            # 4. Scheduler step
+                            latents_dtype = latents.dtype
+                            latents = pipe.scheduler.step(noise_pred, t, latents, return_dict=False)[0]
+                            if latents.dtype != latents_dtype:
+                                latents = latents.to(latents_dtype)
+
+                        _generation_progress["step"] = steps
+
+                        # === VAE decode ===
+                        latents = (latents / pipe.vae.config.scaling_factor) + pipe.vae.config.shift_factor
+                        image = pipe.vae.decode(latents, return_dict=False)[0]
+                        image = pipe.image_processor.postprocess(image, output_type="pil")[0]
+
+                        elapsed = time.time() - start_time
+                        logger.info(f"[COMPOSABLE] Done in {elapsed:.1f}s, {len(concepts)} concepts × {steps} steps")
+
+                        # Convert to base64
+                        buffer = io.BytesIO()
+                        image.save(buffer, format="PNG")
+                        image_b64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+                        return {
+                            "image_base64": image_b64,
+                            "seed": seed,
+                            "concept_count": len(concepts),
+                            "weights_used": weights,
+                            "timing_s": round(elapsed, 1),
+                        }
+                    finally:
+                        _generation_progress["active"] = False
+
+                result = await asyncio.to_thread(self._locked_generate, _generate)
+                return result
+
+            finally:
+                self._model_in_use[model_id] -= 1
+                torch.cuda.empty_cache()
+
+        except Exception as e:
+            logger.error(f"[COMPOSABLE] Generation error: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
 
 
 # Singleton instance
