@@ -390,6 +390,136 @@ def generate_archaeology():
     return jsonify(result)
 
 
+@diffusers_bp.route('/api/diffusers/mosaic/segment', methods=['POST'])
+def mosaic_segment():
+    """Segment attention maps into discrete regions for Arcimboldo Mosaic.
+
+    Request body:
+        attention_maps: {step_N: {layer_M: [[int]]}}
+        tokens: [str]
+        word_groups: [[int]]
+        spatial_resolution: [h, w]
+        image_base64: str
+        grid_size: int (optional, default 16)
+
+    Returns: { success, regions, grid_assignment, grid_size, label_map }
+    """
+    data = request.get_json()
+    if not data or 'attention_maps' not in data:
+        return jsonify({"success": False, "error": "attention_maps required"}), 400
+
+    try:
+        from services.mosaic_segmentation import segment_attention_maps
+
+        result = segment_attention_maps(
+            attention_maps=data['attention_maps'],
+            tokens=data['tokens'],
+            word_groups=data['word_groups'],
+            spatial_resolution=data['spatial_resolution'],
+            image_base64=data['image_base64'],
+            grid_size=int(data.get('grid_size', 16)),
+            selected_layers=data.get('selected_layers'),
+            min_region_fraction=float(data.get('min_region_fraction', 0.02)),
+        )
+
+        result["success"] = True
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Mosaic segmentation error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@diffusers_bp.route('/api/diffusers/mosaic/generate-tiles', methods=['POST'])
+def mosaic_generate_tiles():
+    """Generate tiles for all regions.
+
+    Request body:
+        regions: [{"idx": int, "label": str, "avg_color_rgb": [r,g,b]}]
+        tiles_per_region: int (optional, default 8)
+        tile_size: int (optional, default 512)
+        steps: int (optional, default 8)
+        cfg_scale: float (optional, default 3.5)
+        seed: int (optional, -1 for random)
+        batch_size: int (optional, default 4)
+
+    Returns: { success, tiles: {region_idx: [base64]}, seed, total_generated }
+    """
+    data = request.get_json()
+    if not data or 'regions' not in data:
+        return jsonify({"success": False, "error": "regions required"}), 400
+
+    regions = data['regions']
+    tiles_per_region = int(data.get('tiles_per_region', 8))
+
+    # Build tile prompts from regions
+    tile_prompts = []
+    for region in regions:
+        label = region.get('label', 'object')
+        color = region.get('avg_color_rgb', [128, 128, 128])
+        tile_prompts.append({
+            "prompt": f"A detailed close-up of {label}, square composition, clean background",
+            "color_rgb": color,
+            "count": tiles_per_region,
+            "region_idx": region.get('idx', 0),
+        })
+
+    backend = _get_backend()
+    result = _run_async(backend.generate_mosaic_tiles(
+        tile_prompts=tile_prompts,
+        tile_size=int(data.get('tile_size', 512)),
+        steps=int(data.get('steps', 8)),
+        cfg_scale=float(data.get('cfg_scale', 3.5)),
+        seed=int(data.get('seed', -1)),
+        batch_size=int(data.get('batch_size', 4)),
+    ))
+
+    if result is None:
+        return jsonify({"success": False, "error": "Tile generation failed"}), 500
+
+    result["success"] = True
+    return jsonify(result)
+
+
+@diffusers_bp.route('/api/diffusers/mosaic/compose', methods=['POST'])
+def mosaic_compose():
+    """Assemble tiles into final mosaic image.
+
+    Request body:
+        grid_assignment: [[int]]
+        tiles: {region_idx: [base64]}
+        output_width/height: int (optional, default 1024)
+
+    Returns: { success, mosaic_base64 }
+    """
+    data = request.get_json()
+    if not data or 'grid_assignment' not in data or 'tiles' not in data:
+        return jsonify({"success": False, "error": "grid_assignment and tiles required"}), 400
+
+    try:
+        from services.mosaic_segmentation import compose_mosaic
+
+        mosaic_bytes = compose_mosaic(
+            grid_assignment=data['grid_assignment'],
+            tiles=data['tiles'],
+            output_width=int(data.get('output_width', 1024)),
+            output_height=int(data.get('output_height', 1024)),
+        )
+
+        return jsonify({
+            "success": True,
+            "mosaic_base64": base64.b64encode(mosaic_bytes).decode('utf-8'),
+        })
+
+    except Exception as e:
+        logger.error(f"Mosaic composition error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @diffusers_bp.route('/api/diffusers/generate/composable', methods=['POST'])
 def generate_composable():
     """Composable Diffusion: per-concept noise prediction blending.

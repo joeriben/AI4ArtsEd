@@ -2451,6 +2451,140 @@ class DiffusersImageGenerator:
             logger.error(f"[DIFFUSERS] Streaming error: {e}")
             yield {"type": "error", "message": str(e)}
 
+    async def generate_mosaic_tiles(
+        self,
+        tile_prompts: list,
+        model_id: str = "stabilityai/stable-diffusion-3.5-large",
+        tile_size: int = 512,
+        steps: int = 8,
+        cfg_scale: float = 3.5,
+        seed: int = -1,
+        batch_size: int = 4,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Generate mosaic tiles for Arcimboldo Mosaic.
+
+        Args:
+            tile_prompts: List of {"prompt": str, "color_rgb": [r,g,b], "count": int, "region_idx": int}
+            model_id: SD3.5 model to use
+            tile_size: Tile generation resolution (downscaled later)
+            steps: Inference steps (low for speed)
+            cfg_scale: CFG scale
+            seed: Base seed (-1 for random)
+            batch_size: Images per inference call
+
+        Returns:
+            Dict with tiles per region: {region_idx_str: [base64_png, ...]}
+        """
+        try:
+            import torch
+            import io
+            import base64
+
+            if not tile_prompts:
+                logger.error("[MOSAIC-TILES] No tile prompts provided")
+                return None
+
+            if not await self.load_model(model_id):
+                return None
+
+            self._model_in_use[model_id] = self._model_in_use.get(model_id, 0) + 1
+            try:
+                self._model_last_used[model_id] = time.time()
+                pipe = self._pipelines[model_id]
+
+                if seed == -1:
+                    import random
+                    seed = random.randint(0, 2**32 - 1)
+
+                total_tiles = sum(p.get("count", 8) for p in tile_prompts)
+                logger.info(
+                    f"[MOSAIC-TILES] Generating {total_tiles} tiles for "
+                    f"{len(tile_prompts)} regions, batch_size={batch_size}"
+                )
+
+                _generation_progress.update({
+                    "step": 0, "total_steps": total_tiles, "active": True
+                })
+
+                def _generate():
+                    from mosaic_segmentation import apply_color_transfer
+                    from PIL import Image as PILImage
+
+                    tiles_result = {}
+                    tiles_done = 0
+
+                    for prompt_info in tile_prompts:
+                        prompt = prompt_info["prompt"]
+                        color_rgb = prompt_info.get("color_rgb", [128, 128, 128])
+                        count = prompt_info.get("count", 8)
+                        region_idx = str(prompt_info.get("region_idx", 0))
+
+                        region_tiles = []
+
+                        # Generate in batches
+                        remaining = count
+                        batch_seed = seed + int(region_idx) * 1000
+
+                        while remaining > 0:
+                            current_batch = min(remaining, batch_size)
+                            generator = torch.Generator(device=self.device).manual_seed(batch_seed)
+
+                            gen_kwargs = {
+                                "prompt": prompt,
+                                "width": tile_size,
+                                "height": tile_size,
+                                "num_inference_steps": steps,
+                                "guidance_scale": cfg_scale,
+                                "generator": generator,
+                                "num_images_per_prompt": current_batch,
+                            }
+
+                            result = pipe(**gen_kwargs)
+
+                            for img in result.images:
+                                # Apply color transfer
+                                img = apply_color_transfer(img, color_rgb)
+
+                                # Encode to base64
+                                buffer = io.BytesIO()
+                                img.save(buffer, format="JPEG", quality=85)
+                                region_tiles.append(
+                                    base64.b64encode(buffer.getvalue()).decode('utf-8')
+                                )
+
+                            remaining -= current_batch
+                            batch_seed += 1
+                            tiles_done += current_batch
+                            _generation_progress["step"] = tiles_done
+
+                        tiles_result[region_idx] = region_tiles
+                        logger.info(
+                            f"[MOSAIC-TILES] Region '{prompt[:30]}' → "
+                            f"{len(region_tiles)} tiles"
+                        )
+
+                    _generation_progress["active"] = False
+                    return tiles_result
+
+                tiles = await asyncio.to_thread(self._locked_generate, _generate)
+
+                return {
+                    "tiles": tiles,
+                    "seed": seed,
+                    "total_generated": sum(len(v) for v in tiles.values()),
+                }
+
+            finally:
+                self._model_in_use[model_id] -= 1
+                torch.cuda.empty_cache()
+
+        except Exception as e:
+            logger.error(f"[MOSAIC-TILES] Generation error: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
+
     async def generate_image_composable(
         self,
         concepts: list,

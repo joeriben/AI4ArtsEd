@@ -21,6 +21,14 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-26-arcimboldo-mosaic-tab
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `latentLab.imageLab.tabs.arcimboldo.label` (NEW): "Arcimboldo Mosaic"
+  - `latentLab.imageLab.tabs.arcimboldo.short` (NEW): "Photo-mosaic from attention"
+  - `latentLab.arcimboldo.*` (NEW): all keys in the new `arcimboldo` section (~25 keys)
+- **Context**: New Latent Lab Image Lab tab for Arcimboldo Mosaic. Named after the 16th century painter Giuseppe Arcimboldo. The tool generates an image, segments it by semantic meaning using attention maps, then replaces each region with tiny AI-generated tiles of that concept. "Arcimboldo" is a proper name and should stay as-is.
+
 ### WO-2026-03-26-composable-diffusion-tab
 - **Scope**: en.ts
 - **Changed keys** (new):

@@ -1039,6 +1039,10 @@ export const en = {
         composable: {
           label: 'Composable Diffusion',
           short: 'Multi-concept blending'
+        },
+        arcimboldo: {
+          label: 'Arcimboldo Mosaic',
+          short: 'Photo-mosaic from attention'
         }
       }
     },
@@ -1195,6 +1199,37 @@ export const en = {
       downloadReference: 'Download Reference',
       downloadResult: 'Download Result',
       resultHint: 'Enter three prompts and click Compute \u2014 the result of the vector arithmetic will appear here.'
+    },
+    arcimboldo: {
+      headerTitle: 'Arcimboldo Mosaic \u2014 Painting with the model\u2019s own vocabulary',
+      headerSubtitle: 'Generate an image, let the model segment it by meaning, then replace each semantic region with tiny AI-generated tiles of that concept \u2014 a photo-mosaic where the table is built from tiny table images.',
+      explanationToggle: 'Show detailed explanation',
+      explainWhatTitle: 'What does this tool do?',
+      explainWhatText: 'Named after Giuseppe Arcimboldo, who painted portraits composed of fruit, vegetables, and objects, this tool creates photo-mosaics from AI-generated images. First, the model generates an image and reveals which word in the prompt influences which image region (via attention maps). Then, each semantic region is replaced by many small AI-generated tiles of that concept. The result is a mosaic that reads as the original image from a distance, but up close reveals that every region is built from its own concept.',
+      explainHowTitle: 'How does it work?',
+      explainHowText: 'Step 1: Generate an image with SD3.5 and extract attention maps (same as Attention Cartography). Step 2: Winner-takes-all segmentation assigns each spatial position to the word with the highest attention. Step 3: For each semantic region, generate small tile images of that concept, color-matched to the original. Step 4: Assemble the tiles into a mosaic grid.',
+      techTitle: 'Technical details',
+      techText: 'Attention maps are captured at 64\u00d764 spatial resolution from 3 transformer layers (early/mid/late). Segmentation uses winner-takes-all with morphological cleanup to merge regions smaller than 2% of the image. Tiles are generated at 512\u00d7512 with reduced steps (8) for speed, then color-transferred to match each region\u2019s average color in LAB space. The grid assignment uses majority-vote per cell.',
+      step1Title: 'Step 1 \u2014 Generate image + attention maps',
+      step2Title: 'Step 2 \u2014 Semantic regions',
+      step3Title: 'Step 3 \u2014 Tile generation',
+      step4Title: 'Step 4 \u2014 Mosaic result',
+      promptPlaceholder: 'e.g. A cat sitting on a table in a garden',
+      gridSizeLabel: 'Mosaic grid',
+      settingsToggle: 'Advanced settings',
+      stepsLabel: 'Steps',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      generateBtn: 'Generate + Segment',
+      generatingStatus: 'Generating image and extracting attention maps...',
+      segmentingStatus: 'Segmenting semantic regions...',
+      generateTilesBtn: 'Generate tiles for all regions',
+      tilesStatus: 'Generating tiles: {done} / {total}',
+      originalLabel: 'Original',
+      mosaicLabel: 'Mosaic',
+      blendLabel: 'Blend',
+      downloadBtn: 'Download mosaic',
+      resetBtn: 'Start over',
     },
     composable: {
       headerTitle: 'Composable Diffusion \u2014 Separate energy for each concept',
