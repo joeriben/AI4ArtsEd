@@ -263,22 +263,23 @@ def compose_mosaic(
             tile_img = Image.open(io.BytesIO(tile_data)).convert('RGB')
             tile_img = tile_img.resize((cell_w, cell_h), Image.LANCZOS)
 
-            # Per-cell color transfer: match this tile to THIS cell's
-            # average color in the original, not the region average
+            # Per-cell color matching: blend tile with the original cell's
+            # actual pixels. This is what makes photo-mosaics work — each
+            # tile becomes a "tinted" version matching its position's color.
+            # blend_factor: 0 = pure tile, 1 = pure original pixel
             if original_array is not None:
                 y0 = gy * cell_h
                 x0 = gx * cell_w
-                cell_pixels = original_array[y0:y0+cell_h, x0:x0+cell_w]
-                cell_avg = cell_pixels.mean(axis=(0, 1))
+                # Extract and resize original cell to tile size
+                cell_patch = original_array[y0:y0+cell_h, x0:x0+cell_w]
 
                 tile_arr = np.array(tile_img, dtype=np.float32)
-                tile_mean = tile_arr.mean(axis=(0, 1))
 
-                # Strong transfer (0.85) — the whole point is that
-                # brightness variation across cells creates the image
-                shift = (cell_avg - tile_mean) * 0.85
-                tile_arr = np.clip(tile_arr + shift, 0, 255).astype(np.uint8)
-                tile_img = Image.fromarray(tile_arr)
+                # Blend: tile structure + original color
+                # 0.45 keeps tile content visible but forces original brightness
+                blend = 0.45
+                blended = tile_arr * (1.0 - blend) + cell_patch * blend
+                tile_img = Image.fromarray(np.clip(blended, 0, 255).astype(np.uint8))
 
             # Paste into canvas
             canvas.paste(tile_img, (gx * cell_w, gy * cell_h))
