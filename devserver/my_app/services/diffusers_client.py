@@ -411,6 +411,66 @@ class DiffusersClient:
         result.pop('success', None)
         return result
 
+    async def generate_image_composable(
+        self,
+        concepts: list,
+        model_id: str = "stabilityai/stable-diffusion-3.5-large",
+        negative_prompt: str = "",
+        width: int = 1024,
+        height: int = 1024,
+        steps: int = 25,
+        cfg_scale: float = 4.5,
+        seed: int = -1,
+        normalize_weights: bool = True,
+    ) -> Optional[Dict[str, Any]]:
+        """Composable diffusion. Returns dict with image_base64 or None."""
+        import asyncio
+        result = await asyncio.to_thread(self._post, '/api/diffusers/generate/composable', {
+            'concepts': concepts,
+            'model_id': model_id,
+            'negative_prompt': negative_prompt,
+            'width': width,
+            'height': height,
+            'steps': steps,
+            'cfg_scale': cfg_scale,
+            'seed': seed,
+            'normalize_weights': normalize_weights,
+        })
+
+        if result is None or not result.get('success'):
+            return None
+
+        result.pop('success', None)
+        return result
+
+    async def generate_mosaic_tiles(
+        self,
+        tile_prompts: list,
+        model_id: str = "stabilityai/stable-diffusion-3.5-large",
+        tile_size: int = 512,
+        steps: int = 8,
+        cfg_scale: float = 3.5,
+        seed: int = -1,
+        batch_size: int = 4,
+    ) -> Optional[Dict[str, Any]]:
+        """Mosaic tile generation. Returns dict with tiles per region or None."""
+        import asyncio
+        result = await asyncio.to_thread(self._post, '/api/diffusers/mosaic/generate-tiles', {
+            'tile_prompts': tile_prompts,
+            'model_id': model_id,
+            'tile_size': tile_size,
+            'steps': steps,
+            'cfg_scale': cfg_scale,
+            'seed': seed,
+            'batch_size': batch_size,
+        })
+
+        if result is None or not result.get('success'):
+            return None
+
+        result.pop('success', None)
+        return result
+
     async def generate_image_streaming(
         self,
         prompt: str,
