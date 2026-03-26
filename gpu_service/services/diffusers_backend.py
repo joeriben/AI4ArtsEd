@@ -2508,7 +2508,7 @@ class DiffusersImageGenerator:
                 })
 
                 def _generate():
-                    from mosaic_segmentation import apply_color_transfer
+                    from services.mosaic_segmentation import apply_color_transfer
                     from PIL import Image as PILImage
 
                     tiles_result = {}
