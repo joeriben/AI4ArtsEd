@@ -41,6 +41,9 @@
             <option :value="12">12 × 12 (144 tiles)</option>
             <option :value="16">16 × 16 (256 tiles)</option>
             <option :value="20">20 × 20 (400 tiles)</option>
+            <option :value="30">30 × 30 (900 tiles)</option>
+            <option :value="40">40 × 40 (1600 tiles)</option>
+            <option :value="50">50 × 50 (2500 tiles)</option>
           </select>
         </div>
         <details class="settings-details">
@@ -264,12 +267,38 @@ async function startGeneration() {
   }
 }
 
+let progressInterval: ReturnType<typeof setInterval> | null = null
+
+function startProgressPolling() {
+  if (progressInterval) clearInterval(progressInterval)
+  progressInterval = setInterval(async () => {
+    try {
+      const resp = await axios.get(`${gpuUrl}/api/diffusers/progress`)
+      if (resp.data?.active) {
+        tilesDone.value = resp.data.step ?? 0
+      }
+    } catch { /* ignore polling errors */ }
+  }, 1500)
+}
+
+function stopProgressPolling() {
+  if (progressInterval) {
+    clearInterval(progressInterval)
+    progressInterval = null
+  }
+}
+
 async function startTileGeneration() {
   phase.value = 'tiles'
   errorMessage.value = ''
-  const tilesPerRegion = 8
+  // Scale unique tiles per region to grid size — each tile should appear at most ~2x
+  const totalCells = gridSize.value * gridSize.value
+  const avgCellsPerRegion = Math.ceil(totalCells / Math.max(regions.value.length, 1))
+  const tilesPerRegion = Math.max(4, Math.min(avgCellsPerRegion, 64))
   tilesTotal.value = regions.value.length * tilesPerRegion
   tilesDone.value = 0
+
+  startProgressPolling()
 
   try {
     // Step 3: Generate tiles
@@ -278,6 +307,8 @@ async function startTileGeneration() {
       tiles_per_region: tilesPerRegion,
       seed: actualSeed.value ?? -1,
     })
+
+    stopProgressPolling()
 
     if (!tilesResponse.data.success) {
       throw new Error(tilesResponse.data.error || 'Tile generation failed')
@@ -292,6 +323,7 @@ async function startTileGeneration() {
     const composeResponse = await axios.post(`${gpuUrl}/api/diffusers/mosaic/compose`, {
       grid_assignment: gridAssignment.value,
       tiles: tiles.value,
+      original_image_base64: mainImage.value,
     })
 
     if (!composeResponse.data.success) {
@@ -322,6 +354,7 @@ async function startTileGeneration() {
     })
 
   } catch (err: any) {
+    stopProgressPolling()
     errorMessage.value = err.response?.data?.error || err.message || 'Error'
     phase.value = 'reviewing'
   }

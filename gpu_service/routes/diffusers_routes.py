@@ -506,6 +506,7 @@ def mosaic_compose():
             tiles=data['tiles'],
             output_width=int(data.get('output_width', 1024)),
             output_height=int(data.get('output_height', 1024)),
+            original_image_base64=data.get('original_image_base64'),
         )
 
         return jsonify({

@@ -210,14 +210,20 @@ def compose_mosaic(
     tiles: dict,
     output_width: int = 1024,
     output_height: int = 1024,
+    original_image_base64: Optional[str] = None,
 ) -> bytes:
     """
-    Assemble tiles into a mosaic image.
+    Assemble tiles into a mosaic image with per-cell color matching.
+
+    Each tile is color-transferred to match the average color of its
+    corresponding cell in the original image — this creates the
+    brightness gradations that make the mosaic readable from a distance.
 
     Args:
         grid_assignment: [[int]] grid_size x grid_size, values = region index
         tiles: {region_idx_str: [base64_png, ...]} tiles per region
         output_width/height: Final mosaic dimensions
+        original_image_base64: Original image for per-cell color matching
 
     Returns:
         PNG bytes of the composed mosaic
@@ -226,6 +232,14 @@ def compose_mosaic(
     grid_h, grid_w = grid.shape
     cell_w = output_width // grid_w
     cell_h = output_height // grid_h
+
+    # Load original image for per-cell color sampling
+    original_array = None
+    if original_image_base64:
+        original_data = base64.b64decode(original_image_base64)
+        original_img = Image.open(io.BytesIO(original_data)).convert('RGB')
+        original_img = original_img.resize((output_width, output_height), Image.LANCZOS)
+        original_array = np.array(original_img, dtype=np.float32)
 
     canvas = Image.new('RGB', (output_width, output_height), (0, 0, 0))
 
@@ -249,6 +263,23 @@ def compose_mosaic(
             tile_img = Image.open(io.BytesIO(tile_data)).convert('RGB')
             tile_img = tile_img.resize((cell_w, cell_h), Image.LANCZOS)
 
+            # Per-cell color transfer: match this tile to THIS cell's
+            # average color in the original, not the region average
+            if original_array is not None:
+                y0 = gy * cell_h
+                x0 = gx * cell_w
+                cell_pixels = original_array[y0:y0+cell_h, x0:x0+cell_w]
+                cell_avg = cell_pixels.mean(axis=(0, 1))
+
+                tile_arr = np.array(tile_img, dtype=np.float32)
+                tile_mean = tile_arr.mean(axis=(0, 1))
+
+                # Strong transfer (0.85) — the whole point is that
+                # brightness variation across cells creates the image
+                shift = (cell_avg - tile_mean) * 0.85
+                tile_arr = np.clip(tile_arr + shift, 0, 255).astype(np.uint8)
+                tile_img = Image.fromarray(tile_arr)
+
             # Paste into canvas
             canvas.paste(tile_img, (gx * cell_w, gy * cell_h))
 
@@ -258,7 +289,7 @@ def compose_mosaic(
 
     logger.info(
         f"[MOSAIC-COMPOSE] {grid_h}x{grid_w} grid, "
-        f"cell {cell_w}x{cell_h}px, output {output_width}x{output_height}"
+        f"cell {cell_w}x{cell_h}px, per_cell_color={'yes' if original_array is not None else 'no'}"
     )
 
     return buffer.getvalue()
