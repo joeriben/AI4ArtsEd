@@ -291,20 +291,17 @@ function stopProgressPolling() {
 async function startTileGeneration() {
   phase.value = 'tiles'
   errorMessage.value = ''
-  // Scale unique tiles per region to grid size — each tile should appear at most ~2x
-  const totalCells = gridSize.value * gridSize.value
-  const avgCellsPerRegion = Math.ceil(totalCells / Math.max(regions.value.length, 1))
-  const tilesPerRegion = Math.max(4, Math.min(avgCellsPerRegion, 64))
-  tilesTotal.value = regions.value.length * tilesPerRegion
+  tilesTotal.value = gridSize.value * gridSize.value
   tilesDone.value = 0
 
   startProgressPolling()
 
   try {
-    // Step 3: Generate tiles
+    // Step 3: Generate tiles via img2img from original patches
     const tilesResponse = await axios.post(`${gpuUrl}/api/diffusers/mosaic/generate-tiles`, {
+      grid_assignment: gridAssignment.value,
       regions: regions.value,
-      tiles_per_region: tilesPerRegion,
+      original_image_base64: mainImage.value,
       seed: actualSeed.value ?? -1,
     })
 
@@ -321,9 +318,9 @@ async function startTileGeneration() {
     phase.value = 'composing'
 
     const composeResponse = await axios.post(`${gpuUrl}/api/diffusers/mosaic/compose`, {
-      grid_assignment: gridAssignment.value,
       tiles: tiles.value,
-      original_image_base64: mainImage.value,
+      grid_h: gridSize.value,
+      grid_w: gridSize.value,
     })
 
     if (!composeResponse.data.success) {

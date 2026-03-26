@@ -434,53 +434,52 @@ def mosaic_segment():
 
 @diffusers_bp.route('/api/diffusers/mosaic/generate-tiles', methods=['POST'])
 def mosaic_generate_tiles():
-    """Generate tiles for all regions.
+    """Generate tiles via img2img from original image patches.
 
     Request body:
-        regions: [{"idx": int, "label": str, "avg_color_rgb": [r,g,b]}]
-        tiles_per_region: int (optional, default 8)
-        tile_size: int (optional, default 512)
+        grid_assignment: [[int]] grid of region indices
+        regions: [{"idx": int, "label": str}]
+        original_image_base64: str
+        strength: float (optional, default 0.7)
         steps: int (optional, default 8)
         cfg_scale: float (optional, default 3.5)
         seed: int (optional, -1 for random)
-        batch_size: int (optional, default 4)
 
-    Returns: { success, tiles: {region_idx: [base64]}, seed, total_generated }
+    Returns: { success, tiles: {"row_col": base64}, seed, total_generated }
     """
     data = request.get_json()
-    if not data or 'regions' not in data:
-        return jsonify({"success": False, "error": "regions required"}), 400
+    if not data or 'grid_assignment' not in data:
+        return jsonify({"success": False, "error": "grid_assignment required"}), 400
+    if 'original_image_base64' not in data:
+        return jsonify({"success": False, "error": "original_image_base64 required"}), 400
 
-    regions = data['regions']
-    tiles_per_region = int(data.get('tiles_per_region', 8))
+    # Build region_labels lookup
+    regions = data.get('regions', [])
+    region_labels = {str(r.get('idx', i)): r.get('label', 'object') for i, r in enumerate(regions)}
 
-    # Build tile prompts from regions
-    tile_prompts = []
-    for region in regions:
-        label = region.get('label', 'object')
-        color = region.get('avg_color_rgb', [128, 128, 128])
-        tile_prompts.append({
-            "prompt": f"A detailed close-up of {label}, square composition, clean background",
-            "color_rgb": color,
-            "count": tiles_per_region,
-            "region_idx": region.get('idx', 0),
-        })
+    try:
+        backend = _get_backend()
+        result = _run_async(backend.generate_mosaic_tiles(
+            grid_assignment=data['grid_assignment'],
+            region_labels=region_labels,
+            original_image_base64=data['original_image_base64'],
+            steps=int(data.get('steps', 8)),
+            cfg_scale=float(data.get('cfg_scale', 3.5)),
+            strength=float(data.get('strength', 0.7)),
+            seed=int(data.get('seed', -1)),
+        ))
 
-    backend = _get_backend()
-    result = _run_async(backend.generate_mosaic_tiles(
-        tile_prompts=tile_prompts,
-        tile_size=int(data.get('tile_size', 512)),
-        steps=int(data.get('steps', 8)),
-        cfg_scale=float(data.get('cfg_scale', 3.5)),
-        seed=int(data.get('seed', -1)),
-        batch_size=int(data.get('batch_size', 4)),
-    ))
+        if result is None:
+            return jsonify({"success": False, "error": "Tile generation failed"}), 500
 
-    if result is None:
-        return jsonify({"success": False, "error": "Tile generation failed"}), 500
+        result["success"] = True
+        return jsonify(result)
 
-    result["success"] = True
-    return jsonify(result)
+    except Exception as e:
+        logger.error(f"Mosaic tile generation error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @diffusers_bp.route('/api/diffusers/mosaic/compose', methods=['POST'])
@@ -502,11 +501,11 @@ def mosaic_compose():
         from services.mosaic_segmentation import compose_mosaic
 
         mosaic_bytes = compose_mosaic(
-            grid_assignment=data['grid_assignment'],
             tiles=data['tiles'],
+            grid_h=int(data.get('grid_h', 16)),
+            grid_w=int(data.get('grid_w', 16)),
             output_width=int(data.get('output_width', 1024)),
             output_height=int(data.get('output_height', 1024)),
-            original_image_base64=data.get('original_image_base64'),
         )
 
         return jsonify({

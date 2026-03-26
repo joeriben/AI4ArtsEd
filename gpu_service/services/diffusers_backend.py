@@ -2453,37 +2453,44 @@ class DiffusersImageGenerator:
 
     async def generate_mosaic_tiles(
         self,
-        tile_prompts: list,
+        grid_assignment: list,
+        region_labels: dict,
+        original_image_base64: str,
         model_id: str = "stabilityai/stable-diffusion-3.5-large",
         tile_size: int = 512,
         steps: int = 8,
         cfg_scale: float = 3.5,
+        strength: float = 0.7,
         seed: int = -1,
-        batch_size: int = 4,
     ) -> Optional[Dict[str, Any]]:
         """
-        Generate mosaic tiles for Arcimboldo Mosaic.
+        Generate mosaic tiles via img2img from original image patches.
+
+        Each grid cell's patch from the original image is used as the
+        init_image for img2img denoising with the cell's concept prompt.
+        The tile retains the original's brightness/color while showing
+        the concept — the Arcimboldo principle.
 
         Args:
-            tile_prompts: List of {"prompt": str, "color_rgb": [r,g,b], "count": int, "region_idx": int}
+            grid_assignment: [[int]] grid of region indices
+            region_labels: {region_idx_str: "concept label"}
+            original_image_base64: Original image to extract patches from
             model_id: SD3.5 model to use
-            tile_size: Tile generation resolution (downscaled later)
-            steps: Inference steps (low for speed)
+            tile_size: Tile generation resolution
+            steps: Inference steps
             cfg_scale: CFG scale
+            strength: Denoising strength (0=keep original, 1=full denoise)
             seed: Base seed (-1 for random)
-            batch_size: Images per inference call
 
         Returns:
-            Dict with tiles per region: {region_idx_str: [base64_png, ...]}
+            Dict with tiles keyed by "row_col": base64_jpeg
         """
         try:
             import torch
             import io
             import base64
-
-            if not tile_prompts:
-                logger.error("[MOSAIC-TILES] No tile prompts provided")
-                return None
+            from PIL import Image as PILImage
+            from diffusers import StableDiffusion3Img2ImgPipeline
 
             if not await self.load_model(model_id):
                 return None
@@ -2491,16 +2498,20 @@ class DiffusersImageGenerator:
             self._model_in_use[model_id] = self._model_in_use.get(model_id, 0) + 1
             try:
                 self._model_last_used[model_id] = time.time()
-                pipe = self._pipelines[model_id]
+                t2i_pipe = self._pipelines[model_id]
 
                 if seed == -1:
                     import random
                     seed = random.randint(0, 2**32 - 1)
 
-                total_tiles = sum(p.get("count", 8) for p in tile_prompts)
+                grid = grid_assignment
+                grid_h = len(grid)
+                grid_w = len(grid[0]) if grid_h > 0 else 0
+                total_tiles = grid_h * grid_w
+
                 logger.info(
-                    f"[MOSAIC-TILES] Generating {total_tiles} tiles for "
-                    f"{len(tile_prompts)} regions, batch_size={batch_size}"
+                    f"[MOSAIC-TILES] img2img {grid_h}x{grid_w}={total_tiles} tiles, "
+                    f"strength={strength}, steps={steps}"
                 )
 
                 _generation_progress.update({
@@ -2508,63 +2519,63 @@ class DiffusersImageGenerator:
                 })
 
                 def _generate():
-                    from services.mosaic_segmentation import apply_color_transfer
-                    from PIL import Image as PILImage
+                    # Create img2img pipeline from loaded t2i pipeline
+                    i2i_pipe = StableDiffusion3Img2ImgPipeline.from_pipe(t2i_pipe)
+
+                    # Decode original image
+                    orig_data = base64.b64decode(original_image_base64)
+                    orig_img = PILImage.open(io.BytesIO(orig_data)).convert('RGB')
+                    orig_w, orig_h = orig_img.size
+                    cell_w = orig_w // grid_w
+                    cell_h = orig_h // grid_h
 
                     tiles_result = {}
                     tiles_done = 0
 
-                    for prompt_info in tile_prompts:
-                        prompt = prompt_info["prompt"]
-                        color_rgb = prompt_info.get("color_rgb", [128, 128, 128])
-                        count = prompt_info.get("count", 8)
-                        region_idx = str(prompt_info.get("region_idx", 0))
+                    with torch.no_grad():
+                        for gy in range(grid_h):
+                            for gx in range(grid_w):
+                                region_idx = str(grid[gy][gx])
+                                label = region_labels.get(region_idx, "object")
 
-                        region_tiles = []
+                                # Extract cell patch from original
+                                x0 = gx * cell_w
+                                y0 = gy * cell_h
+                                patch = orig_img.crop((x0, y0, x0 + cell_w, y0 + cell_h))
+                                patch = patch.resize((tile_size, tile_size), PILImage.LANCZOS)
 
-                        # Generate in batches
-                        remaining = count
-                        batch_seed = seed + int(region_idx) * 1000
+                                # img2img: denoise from original patch
+                                tile_seed = seed + gy * grid_w + gx
+                                generator = torch.Generator(device=self.device).manual_seed(tile_seed)
 
-                        while remaining > 0:
-                            current_batch = min(remaining, batch_size)
-                            generator = torch.Generator(device=self.device).manual_seed(batch_seed)
-
-                            gen_kwargs = {
-                                "prompt": prompt,
-                                "width": tile_size,
-                                "height": tile_size,
-                                "num_inference_steps": steps,
-                                "guidance_scale": cfg_scale,
-                                "generator": generator,
-                                "num_images_per_prompt": current_batch,
-                            }
-
-                            result = pipe(**gen_kwargs)
-
-                            for img in result.images:
-                                # Apply color transfer
-                                img = apply_color_transfer(img, color_rgb)
-
-                                # Encode to base64
-                                buffer = io.BytesIO()
-                                img.save(buffer, format="JPEG", quality=85)
-                                region_tiles.append(
-                                    base64.b64encode(buffer.getvalue()).decode('utf-8')
+                                result = i2i_pipe(
+                                    prompt=f"A detailed close-up of {label}, square composition",
+                                    image=patch,
+                                    strength=strength,
+                                    num_inference_steps=steps,
+                                    guidance_scale=cfg_scale,
+                                    generator=generator,
                                 )
 
-                            remaining -= current_batch
-                            batch_seed += 1
-                            tiles_done += current_batch
-                            _generation_progress["step"] = tiles_done
+                                tile_img = result.images[0]
 
-                        tiles_result[region_idx] = region_tiles
-                        logger.info(
-                            f"[MOSAIC-TILES] Region '{prompt[:30]}' → "
-                            f"{len(region_tiles)} tiles"
-                        )
+                                # Encode to JPEG
+                                buffer = io.BytesIO()
+                                tile_img.save(buffer, format="JPEG", quality=85)
+                                tile_key = f"{gy}_{gx}"
+                                tiles_result[tile_key] = base64.b64encode(
+                                    buffer.getvalue()
+                                ).decode('utf-8')
+
+                                tiles_done += 1
+                                _generation_progress["step"] = tiles_done
+
+                                if tiles_done % 50 == 0:
+                                    logger.info(f"[MOSAIC-TILES] {tiles_done}/{total_tiles}")
 
                     _generation_progress["active"] = False
+
+                    logger.info(f"[MOSAIC-TILES] Done: {total_tiles} tiles")
                     return tiles_result
 
                 tiles = await asyncio.to_thread(self._locked_generate, _generate)
@@ -2572,7 +2583,7 @@ class DiffusersImageGenerator:
                 return {
                     "tiles": tiles,
                     "seed": seed,
-                    "total_generated": sum(len(v) for v in tiles.values()),
+                    "total_generated": len(tiles),
                 }
 
             finally:

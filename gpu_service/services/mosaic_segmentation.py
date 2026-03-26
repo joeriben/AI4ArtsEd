@@ -206,91 +206,45 @@ def apply_color_transfer(tile: Image.Image, target_rgb: list) -> Image.Image:
 
 
 def compose_mosaic(
-    grid_assignment: list,
     tiles: dict,
+    grid_h: int,
+    grid_w: int,
     output_width: int = 1024,
     output_height: int = 1024,
-    original_image_base64: Optional[str] = None,
 ) -> bytes:
     """
-    Assemble tiles into a mosaic image with per-cell color matching.
-
-    Each tile is color-transferred to match the average color of its
-    corresponding cell in the original image — this creates the
-    brightness gradations that make the mosaic readable from a distance.
+    Assemble img2img tiles into a mosaic image.
 
     Args:
-        grid_assignment: [[int]] grid_size x grid_size, values = region index
-        tiles: {region_idx_str: [base64_png, ...]} tiles per region
+        tiles: {"row_col": base64_jpeg} — one tile per grid cell
+        grid_h/grid_w: Grid dimensions
         output_width/height: Final mosaic dimensions
-        original_image_base64: Original image for per-cell color matching
 
     Returns:
         PNG bytes of the composed mosaic
     """
-    grid = np.array(grid_assignment)
-    grid_h, grid_w = grid.shape
     cell_w = output_width // grid_w
     cell_h = output_height // grid_h
 
-    # Load original image for per-cell color sampling
-    original_array = None
-    if original_image_base64:
-        original_data = base64.b64decode(original_image_base64)
-        original_img = Image.open(io.BytesIO(original_data)).convert('RGB')
-        original_img = original_img.resize((output_width, output_height), Image.LANCZOS)
-        original_array = np.array(original_img, dtype=np.float32)
-
     canvas = Image.new('RGB', (output_width, output_height), (0, 0, 0))
 
-    # Track tile usage per region to cycle through available tiles
-    tile_counters = {}
-
+    placed = 0
     for gy in range(grid_h):
         for gx in range(grid_w):
-            region_idx = str(grid[gy, gx])
-            region_tiles = tiles.get(region_idx, [])
-            if not region_tiles:
+            tile_key = f"{gy}_{gx}"
+            tile_b64 = tiles.get(tile_key)
+            if not tile_b64:
                 continue
 
-            # Cycle through available tiles
-            counter = tile_counters.get(region_idx, 0)
-            tile_b64 = region_tiles[counter % len(region_tiles)]
-            tile_counters[region_idx] = counter + 1
-
-            # Decode and resize tile
             tile_data = base64.b64decode(tile_b64)
             tile_img = Image.open(io.BytesIO(tile_data)).convert('RGB')
             tile_img = tile_img.resize((cell_w, cell_h), Image.LANCZOS)
-
-            # Per-cell color matching: blend tile with the original cell's
-            # actual pixels. This is what makes photo-mosaics work — each
-            # tile becomes a "tinted" version matching its position's color.
-            # blend_factor: 0 = pure tile, 1 = pure original pixel
-            if original_array is not None:
-                y0 = gy * cell_h
-                x0 = gx * cell_w
-                # Extract and resize original cell to tile size
-                cell_patch = original_array[y0:y0+cell_h, x0:x0+cell_w]
-
-                tile_arr = np.array(tile_img, dtype=np.float32)
-
-                # Blend: tile structure + original color
-                # 0.45 keeps tile content visible but forces original brightness
-                blend = 0.45
-                blended = tile_arr * (1.0 - blend) + cell_patch * blend
-                tile_img = Image.fromarray(np.clip(blended, 0, 255).astype(np.uint8))
-
-            # Paste into canvas
             canvas.paste(tile_img, (gx * cell_w, gy * cell_h))
+            placed += 1
 
-    # Export as PNG
     buffer = io.BytesIO()
     canvas.save(buffer, format='PNG')
 
-    logger.info(
-        f"[MOSAIC-COMPOSE] {grid_h}x{grid_w} grid, "
-        f"cell {cell_w}x{cell_h}px, per_cell_color={'yes' if original_array is not None else 'no'}"
-    )
+    logger.info(f"[MOSAIC-COMPOSE] {grid_h}x{grid_w}, placed {placed} tiles")
 
     return buffer.getvalue()
