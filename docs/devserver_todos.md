@@ -106,6 +106,18 @@ Verbleibend: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein (ko
 
 ## 🟡 MEDIUM Priority
 
+### SD3.5 img2img und image-to-image-to-image in bestehenden Views ergänzen
+
+**Status:** TODO
+**Entdeckt:** Session 291 (2026-03-26) — SD3.5 StableDiffusion3Img2ImgPipeline existiert in diffusers v0.36.0
+**Was:**
+- `StableDiffusion3Img2ImgPipeline` unterstützt `image` (single oder `List[PIL.Image]`), `strength`, `num_images_per_prompt`
+- `from_pipe()` erzeugt img2img aus geladener t2i Pipeline ohne Neuladung der Gewichte
+- **i2i (image-to-image)**: In text_transformation.vue / i2x Views als SD3.5-Option ergänzen (aktuell nur ComfyUI-Pfad für i2i)
+- **iii2i (multi-image-to-image)**: Batch-img2img mit Liste von Init-Images — für multi_i2i.vue relevant
+- Arcimboldo Mosaic nutzt img2img bereits für Tile-Generierung (Session 291)
+**Betroffene Views:** `text_transformation.vue` (t2x/i2x), `multi_i2i.vue`, ggf. `surrealizer.vue`
+
 ### source_view in Favorites für korrektes Restore-Routing
 
 **Status:** Implementiert, funktioniert noch nicht — Debugging nötig
