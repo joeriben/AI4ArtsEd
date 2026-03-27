@@ -169,6 +169,18 @@ WSOLA Pitch Shifting läuft auf dem **Main Thread in purem JavaScript** → UI-L
 - [ ] **Streamline "Erweiterte Einstellungen" collapse state** — persist via localStorage
 - [ ] **Scientific references with DOI** in all labs (MMAudio=CVPR 2025, ImageBind=CVPR 2023, Stable Audio=ICML 2024)
 
+### Arcimboldo Mosaic — Konzept noch falsch gedacht
+
+**Status:** RETHINK NEEDED
+**Datum:** 2026-03-27
+**Problem:** Das Feature ist implementiert (img2img Tiles aus Originalbild-Patches, Attention-basierte Segmentation), aber das Ergebnis ueberzeugt nicht. Die Tiles wiederholen sich visuell trotz unterschiedlicher Seeds, die Helligkeitsvariation reicht nicht fuer einen ueberzeugenden Mosaic-Effekt. Mehrere Iterationen (Mean-Shift, Blend, per-Cell Color Transfer) haben am Symptom herumgedoktert statt das Grundproblem zu loesen.
+**Offene Fragen:**
+- Wie hat Arcimboldo eigentlich gearbeitet? Sorgfaeltige Auswahl und Platzierung einzelner Objekte — nicht algorithmische Wiederholung
+- Ist der Grid-basierte Ansatz ueberhaupt richtig, oder braucht es freie Platzierung entlang der Segmentierungsgrenzen?
+- Welche Rolle spielt die Tile-Diversitaet vs. die Positionierung?
+- Pedagogischer Mehrwert: Was lernt man ueber Diffusion-Modelle durch dieses Feature?
+**Betroffene Dateien:** `gpu_service/services/mosaic_segmentation.py`, `gpu_service/services/diffusers_backend.py` (generate_mosaic_tiles), `arcimboldo_mosaic.vue`
+
 ### MMAudio / ImageBind Downloads ausstehend
 
 **Datum:** 2026-02-20
