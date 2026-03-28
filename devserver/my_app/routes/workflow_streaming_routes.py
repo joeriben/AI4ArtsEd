@@ -11,7 +11,7 @@ from config import (
     COMFYUI_PREFIX,
     POLLING_TIMEOUT
 )
-from my_app.services.ollama_service import ollama_service
+from my_app.services.llm_service import llm_service as ollama_service
 from my_app.services.comfyui_service import comfyui_service
 from my_app.services.workflow_logic_service import workflow_logic_service
 from my_app.services.export_manager import export_manager

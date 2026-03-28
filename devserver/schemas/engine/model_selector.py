@@ -407,16 +407,16 @@ class ModelSelector:
     
     def get_ollama_models(self) -> List[str]:
         """
-        Get available Ollama models from API
-        Transferred from prompt_interception_engine
+        Get available local models from llama-server.
+        Method name kept for backward compatibility.
         """
         try:
-            from config import OLLAMA_API_BASE_URL
-            response = requests.get(f"{OLLAMA_API_BASE_URL}/api/tags", timeout=5)
+            from config import LLAMA_SERVER_URL
+            response = requests.get(f"{LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
             response.raise_for_status()
-            return [m.get('name', '') for m in response.json().get("models", [])]
+            return [m.get('id', '') for m in response.json().get("data", [])]
         except Exception as e:
-            logger.warning(f"Failed to get Ollama models: {e}")
+            logger.warning(f"Failed to get llama-server models: {e}")
             return []
     
     def find_openrouter_fallback(self, failed_model: str, debug: bool = False) -> str:

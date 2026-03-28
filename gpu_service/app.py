@@ -45,6 +45,7 @@ def create_app():
     from routes.mmaudio_routes import mmaudio_bp
     from routes.hunyuan3d_routes import hunyuan3d_bp
     from routes.vlm_proxy_routes import vlm_proxy_bp
+    from routes.llm_routes import llm_bp
 
     app.register_blueprint(health_bp)
     app.register_blueprint(diffusers_bp)
@@ -55,6 +56,7 @@ def create_app():
     app.register_blueprint(mmaudio_bp)
     app.register_blueprint(hunyuan3d_bp)
     app.register_blueprint(vlm_proxy_bp)
+    app.register_blueprint(llm_bp)
 
     logger.info("[GPU-SERVICE] Flask app created with all route blueprints")
     return app

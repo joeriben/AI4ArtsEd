@@ -104,37 +104,32 @@ def clear_vram():
             except Exception as e:
                 results["errors"].append(f"ComfyUI: {str(e)}")
 
-        # Unload Ollama models via keep_alive=0
+        # Unload llama-server models
         if unload_ollama:
             try:
-                # First get list of loaded models
+                from config import LLAMA_SERVER_URL
+                llm_url = LLAMA_SERVER_URL.rstrip('/')
+
                 loaded_response = requests.get(
-                    f"{OLLAMA_API_BASE_URL}/api/ps",
+                    f"{llm_url}/models",
                     timeout=10
                 )
 
                 if loaded_response.status_code == 200:
                     loaded_data = loaded_response.json()
-                    models = loaded_data.get("models", [])
+                    models = loaded_data if isinstance(loaded_data, list) else loaded_data.get("data", [])
 
                     if not models:
                         results["ollama"] = "No models loaded"
                     else:
                         unloaded = []
                         for model_info in models:
-                            model_name = model_info.get("name", "")
+                            model_name = model_info.get("id", model_info.get("name", ""))
                             if model_name:
-                                # Send request with keep_alive=0 to unload
-                                unload_payload = {
-                                    "model": model_name,
-                                    "prompt": "",
-                                    "keep_alive": 0,
-                                    "stream": False
-                                }
                                 try:
                                     requests.post(
-                                        f"{OLLAMA_API_BASE_URL}/api/generate",
-                                        json=unload_payload,
+                                        f"{llm_url}/models/unload",
+                                        json={"model": model_name},
                                         timeout=30
                                     )
                                     unloaded.append(model_name)
