@@ -108,7 +108,7 @@ def delete_pixel_template(name: str):
 
 @dev_bp.route('/vram-status', methods=['GET'])
 def vram_status():
-    """Consolidated VRAM usage across Ollama and GPU Service."""
+    """Consolidated VRAM usage across GPU Service backends."""
     try:
         monitor = get_vram_monitor()
         return jsonify(monitor.get_combined_status()), 200

@@ -47,7 +47,7 @@ export interface PhysicalModel {
  * RTX PRO 6000 Blackwell 96 GB, nvidia-smi peak monitoring.
  * ComfyUI models measured through actual ComfyUI workflows.
  * Diffusers models measured through GPU service.
- * Safety models measured via Ollama.
+ * Safety models measured via GPU Service LLM backend.
  */
 export const PHYSICAL_MODELS: PhysicalModel[] = [
   // --- Bilder ---
@@ -205,7 +205,7 @@ export const PHYSICAL_MODELS: PhysicalModel[] = [
 
 /**
  * Measured safety model VRAM — Session 268 (2026-03-18), nvidia-smi peak.
- * These are ALWAYS loaded via Ollama when the platform runs.
+ * These are ALWAYS loaded via GPU Service when the platform runs.
  */
 export const SAFETY_MODELS = [
   { name: 'Llama Guard', vram_gb: 1.6 },

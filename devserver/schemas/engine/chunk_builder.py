@@ -109,7 +109,7 @@ class ChunkBuilder:
             return ChunkTemplate(
                 name=data.get('name', template_file.stem),
                 template=template_data,
-                backend_type=data.get('backend_type', 'ollama'),
+                backend_type=data.get('backend_type', 'local_llm'),
                 model=data.get('model', ''),
                 parameters=data.get('parameters', {}),
                 placeholders=placeholders,

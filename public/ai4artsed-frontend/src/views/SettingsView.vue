@@ -132,7 +132,7 @@
         </table>
       </div>
 
-      <!-- Safety Models (local Ollama only) -->
+      <!-- Safety Models (local only) -->
       <div class="section">
         <h2>{{ $t('settings.safetyModels.title') }}</h2>
         <p class="help">{{ $t('settings.safetyModels.help') }}</p>
@@ -200,8 +200,8 @@
           {{ $t('settings.presets.openMatrix') }}
         </button>
         <p class="help">{{ $t('settings.models.help') }}</p>
-        <p v-if="ollamaModels.length > 0" class="help" style="color: #4CAF50;">
-          {{ $t('settings.models.ollamaAvailable', { count: ollamaModels.length }) }}
+        <p v-if="llmModels.length > 0" class="help" style="color: #4CAF50;">
+          {{ $t('settings.models.localModelsAvailable', { count: llmModels.length }) }}
         </p>
 
         <table class="config-table">
@@ -213,10 +213,10 @@
                   type="text"
                   v-model="settings[key]"
                   class="text-input"
-                  :list="'ollama-models-' + key"
+                  :list="'llm-models-' + key"
                 />
-                <datalist :id="'ollama-models-' + key">
-                  <option v-for="model in ollamaModels" :key="model.id" :value="model.id">
+                <datalist :id="'llm-models-' + key">
+                  <option v-for="model in llmModels" :key="model.id" :value="model.id">
                     {{ model.name }} ({{ model.size }})
                   </option>
                 </datalist>
@@ -231,27 +231,8 @@
         <h2>{{ $t('settings.api.title') }}</h2>
         <table class="config-table">
           <tbody>
-            <tr>
-              <td class="label-cell">{{ $t('settings.api.llmProvider') }}</td>
-            <td class="value-cell">
-              <select v-model="settings.LLM_PROVIDER">
-                <option value="ollama">Ollama</option>
-                <option value="lmstudio">LM Studio</option>
-              </select>
-              <span class="help-text">{{ $t('settings.api.localFramework') }}</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="label-cell">Ollama API URL</td>
-            <td class="value-cell">
-              <input type="text" v-model="settings.OLLAMA_API_BASE_URL" class="text-input" />
-            </td>
-          </tr>
-          <tr>
-            <td class="label-cell">LM Studio API URL</td>
-            <td class="value-cell">
-              <input type="text" v-model="settings.LMSTUDIO_API_BASE_URL" class="text-input" />
-            </td>
+            <tr v-if="false">
+            <!-- LLM Provider selection removed — now using in-process llama-cpp-python via GPU Service -->
           </tr>
           <tr>
             <td class="label-cell">{{ $t('settings.api.externalProvider') }}</td>
@@ -482,7 +463,7 @@ const awsCredentialsConfigured = ref(false)
 const saveMessage = ref('')
 const saveSuccess = ref(true)
 const saveInProgress = ref(false)
-const ollamaModels = ref([])  // Session 133: Ollama model dropdown
+const llmModels = ref([])  // Local LLM model dropdown
 
 const modelLabelKeys = {
   'STAGE1_TEXT_MODEL': 'settings.models.stage1Text',
@@ -523,19 +504,19 @@ const hasDsgvoWarning = computed(() => {
   return nonDsgvoModels.value.length > 0
 })
 
-// Session 133: Load available Ollama models for dropdown
-async function loadOllamaModels() {
+// Load available local LLM models for dropdown
+async function loadLlmModels() {
   try {
-    const response = await fetch('/api/settings/ollama-models')
+    const response = await fetch('/api/settings/llm-models')
     if (response.ok) {
       const data = await response.json()
       if (data.success && data.models) {
-        ollamaModels.value = data.models
-        console.log(`[Settings] Loaded ${data.models.length} Ollama models`)
+        llmModels.value = data.models
+        console.log(`[Settings] Loaded ${data.models.length} local LLM models`)
       }
     }
   } catch (e) {
-    console.warn('[Settings] Could not load Ollama models:', e)
+    console.warn('[Settings] Could not load LLM models:', e)
   }
 }
 
@@ -887,8 +868,8 @@ function onAuthenticated() {
   showAuthModal.value = false
   // Load settings after authentication
   loadSettings()
-  // Session 133: Load Ollama models for dropdown (no auth required)
-  loadOllamaModels()
+  // Load local LLM models for dropdown (no auth required)
+  loadLlmModels()
 }
 
 onMounted(() => {

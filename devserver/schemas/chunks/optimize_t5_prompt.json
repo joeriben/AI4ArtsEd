@@ -1,7 +1,7 @@
 {
   "name": "optimize_t5_prompt",
   "type": "processing_chunk",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "description": "Optimize prompt for T5 encoder with semantic expansion",
   "model": "STAGE2_OPTIMIZATION_MODEL",
   "template": {

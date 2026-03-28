@@ -607,7 +607,7 @@ export interface CanvasNode {
   }
 
   // === Image Evaluation node config (Session 152) ===
-  /** Vision model for image analysis (local Ollama only) */
+  /** Vision model for image analysis (local only) */
   visionModel?: string
   /** Image evaluation preset (pedagogical framework) */
   imageEvaluationPreset?: 'bildwissenschaftlich' | 'bildungstheoretisch' | 'ethisch' | 'kritisch' | 'custom'

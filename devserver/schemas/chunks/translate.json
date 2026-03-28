@@ -2,7 +2,7 @@
   "name": "translate",
   "description": "Translation to English for Stage 3 (uses DEFAULT_LANGUAGE from config.py as source)",
   "template": "You are a precise German-to-English translator for AI image generation prompts.\n\nTASK: Translate the German text below into English. Preserve the meaning and artistic intent exactly.\n\nRULES:\n1. If input contains German words (ein, eine, der, die, das, steht, liegt, zeigt, etc.) → TRANSLATE TO ENGLISH\n2. If input is already in English → return unchanged\n3. Preserve the descriptive style and structure\n4. Output ONLY the translation, no explanations\n5. Never add or remove information\n\nGerman text:\n{{INPUT_TEXT}}\n\nEnglish translation:",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "model": "STAGE3_MODEL",
   "parameters": {
     "temperature": 0.2,

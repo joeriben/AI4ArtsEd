@@ -1,7 +1,7 @@
 {
   "name": "optimize_clip_prompt_llama",
   "type": "processing_chunk",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "description": "CLIP prompt optimization - Llama-optimized variant",
   "model": "STAGE2_OPTIMIZATION_MODEL",
   "template": {

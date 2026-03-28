@@ -2,7 +2,7 @@
 Universal Image Analysis Helper
 Reusable function for analyzing images with vision models
 
-Uses LLMClient (GPU Service primary, Ollama fallback).
+Uses LLMClient (GPU Service).
 """
 
 import base64
@@ -77,7 +77,7 @@ def analyze_image(
             prompt = "Analyze this image thoroughly."
             logger.warning(f"Analysis prompt not found for {analysis_type}/{DEFAULT_LANGUAGE}, using fallback")
 
-    # Step 3: Call via LLMClient (GPU Service primary, Ollama fallback)
+    # Step 3: Call via LLMClient (GPU Service)
     logger.info(f"[IMAGE-ANALYSIS] Analyzing image with {vision_model}")
 
     try:

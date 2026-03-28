@@ -2,12 +2,12 @@
 Canvas Workflow Routes - API endpoints for Canvas Workflow Builder
 
 Session 129: Phase 2 Implementation
-Session 133: Curated LLM model selection + dynamic Ollama
+Session 133: Curated LLM model selection + dynamic local LLM
 
 Provides:
 - /api/canvas/interception-configs - List available interception configs
 - /api/canvas/output-configs - List available output/generation configs
-- /api/canvas/llm-models - Curated LLM selection + dynamic Ollama models
+- /api/canvas/llm-models - Curated LLM selection + dynamic local LLM models
 - /api/canvas/workflows - Save/load workflow definitions (future)
 """
 import logging
@@ -253,22 +253,22 @@ def get_llm_models():
     Get available LLM models for Canvas nodes.
 
     Sources (all dynamic, no hardcoded model lists):
-    1. Ollama models (local, queried live)
+    1. Local models (queried live from LLM backend)
     2. Cloud models from hardware_matrix.json (single source of truth)
     3. Configured default model (injected if not already in list)
     """
     selector = ModelSelector()
     models = []
-    ollama_count = 0
+    local_count = 0
 
     # Get default model from settings (Stage 2 Interception Model)
     # Note: config value already includes provider prefix (e.g., "local/qwen3:4b")
     default_model_id = config.STAGE2_INTERCEPTION_MODEL
 
-    # 1. Dynamic Ollama models (all locally installed models)
+    # 1. Dynamic local models (all locally installed models)
     try:
-        ollama_models = selector.get_ollama_models()
-        for model_name in ollama_models:
+        local_models = selector.get_local_models()
+        for model_name in local_models:
             model_id = f"local/{model_name}"
             models.append({
                 'id': model_id,
@@ -278,14 +278,14 @@ def get_llm_models():
                 'dsgvoCompliant': True,
                 'isDefault': model_id == default_model_id
             })
-            ollama_count += 1
-        logger.info(f"[Canvas LLM] Loaded {ollama_count} Ollama models")
+            local_count += 1
+        logger.info(f"[Canvas LLM] Loaded {local_count} local models")
     except Exception as e:
-        logger.warning(f"[Canvas LLM] Failed to load Ollama models: {e}")
+        logger.warning(f"[Canvas LLM] Failed to load local models: {e}")
 
     # 2. Cloud models from hardware_matrix.json (single source of truth)
     cloud_models = _load_cloud_models_from_matrix()
-    seen_ids = {m['id'] for m in models}  # skip Ollama duplicates
+    seen_ids = {m['id'] for m in models}  # skip local duplicates
     cloud_count = 0
     for cm in cloud_models:
         if cm['id'] not in seen_ids:
@@ -316,13 +316,13 @@ def get_llm_models():
         })
         logger.info(f"[Canvas LLM] Injected configured default: {default_model_id}")
 
-    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({ollama_count} Ollama + {cloud_count} cloud)")
+    logger.info(f"[Canvas LLM] Returning {len(models)} total models ({local_count} local + {cloud_count} cloud)")
 
     return jsonify({
         'status': 'success',
         'models': models,
         'count': len(models),
-        'ollamaCount': ollama_count
+        'localCount': local_count
     })
 
 
@@ -330,7 +330,7 @@ def get_llm_models():
 # VISION MODELS (Session 152)
 # ============================================================================
 
-# Vision-capable Ollama model patterns (checked against model names)
+# Vision-capable local model patterns (checked against model names)
 # Session 152: Comprehensive list - matches "vision" or "vl" in name
 VISION_CAPABLE_PATTERNS = [
     # Llama Vision
@@ -361,11 +361,11 @@ def get_vision_models():
     Get available Vision models for image_evaluation nodes.
 
     Session 152: Vision models are ALWAYS local (per Model Matrix architecture):
-    - Run on local Ollama
+    - Run on local LLM backend
     - VRAM-dependent
     - DSGVO-compliant by default (no cloud APIs)
 
-    Returns list of vision-capable Ollama models.
+    Returns list of vision-capable local models.
     """
     selector = ModelSelector()
     models = []
@@ -374,8 +374,8 @@ def get_vision_models():
     default_model_id = config.IMAGE_ANALYSIS_MODEL
 
     try:
-        ollama_models = selector.get_ollama_models()
-        for model_name in ollama_models:
+        local_models = selector.get_local_models()
+        for model_name in local_models:
             # Check if model is vision-capable
             base_name = model_name.split(':')[0].lower()
             is_vision = any(pattern in base_name for pattern in VISION_CAPABLE_PATTERNS)

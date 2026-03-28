@@ -13,8 +13,7 @@
   "parameters": {
     "temperature": 0.1,
     "top_p": 0.9,
-    "max_tokens": 2048,
-    "keep_alive": "10m"
+    "max_tokens": 2048
   },
   "meta": {
     "system_pipeline": true,

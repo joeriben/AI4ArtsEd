@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test actual pipeline execution with Ollama
+Test actual pipeline execution with local LLM
 """
 import sys
 import asyncio
@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from schemas.engine.pipeline_executor import executor
-from my_app.services.ollama_service import OllamaService
+from my_app.services.llm_service import LLMService
 
 async def test_simple_execution():
     """Test simple pipeline execution"""
@@ -18,12 +18,12 @@ async def test_simple_execution():
     print("PIPELINE EXECUTION TEST")
     print("="*60)
 
-    # Initialize executor with Ollama service
+    # Initialize executor with LLM service
     schemas_path = Path(__file__).parent / "schemas"
-    ollama_service = OllamaService()
+    llm_svc = LLMService()
 
     executor.initialize(
-        ollama_service=ollama_service,
+        llm_service=llm_svc,
         workflow_logic_service=None,
         comfyui_service=None
     )
@@ -36,7 +36,7 @@ async def test_simple_execution():
 
     print(f"\n📝 Testing config: {config_name}")
     print(f"   Input: {input_text}")
-    print(f"   Execution mode: eco (Ollama)")
+    print(f"   Execution mode: eco (local LLM)")
 
     try:
         result = await executor.execute_pipeline(
@@ -85,7 +85,7 @@ async def test_dada_execution():
 
     print(f"\n📝 Testing config: {config_name}")
     print(f"   Input: {input_text}")
-    print(f"   Execution mode: eco (Ollama)")
+    print(f"   Execution mode: eco (local LLM)")
 
     try:
         result = await executor.execute_pipeline(

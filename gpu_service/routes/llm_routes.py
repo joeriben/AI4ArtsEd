@@ -1,7 +1,7 @@
 """
 LLM Routes — Local LLM inference endpoints.
 
-Replaces Ollama for safety checks, DSGVO verification, VLM safety.
+Local LLM inference for safety checks, DSGVO verification, VLM safety.
 """
 
 import logging

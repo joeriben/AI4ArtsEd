@@ -589,7 +589,7 @@ def _inject_image_into_messages(messages: list, image_b64: str, provider_format:
     Args:
         messages: List of message dicts
         image_b64: Base64-encoded image string
-        provider_format: One of 'openai', 'anthropic', 'ollama'
+        provider_format: One of 'openai', 'anthropic'
 
     Returns:
         New list with image injected into the last user message
@@ -842,13 +842,13 @@ def _call_mammouth_chat(messages: list, model: str, temperature: float, max_toke
         raise
 
 
-def _call_ollama_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True, tools: list = None, image_b64: str = None):
-    """Call LLM via GPU Service (primary) with Ollama fallback for chat helper"""
+def _call_local_llm_chat(messages: list, model: str, temperature: float, max_tokens: int, enable_thinking: bool = True, tools: list = None, image_b64: str = None):
+    """Call LLM via GPU Service for chat helper."""
     try:
         from my_app.services.llm_backend import get_llm_backend
 
-        # For vision: inject image into last user message (Ollama format)
-        effective_messages = _inject_image_into_messages(messages, image_b64, 'ollama') if image_b64 else messages
+        # For vision: inject image into last user message (OpenAI format for llama-cpp-python)
+        effective_messages = _inject_image_into_messages(messages, image_b64, 'openai') if image_b64 else messages
 
         result = get_llm_backend().chat(
             model=model,
@@ -975,8 +975,8 @@ def call_chat_helper(messages: list, temperature: float = 0.7, max_tokens: int =
 
     elif model_string.startswith("local/"):
         model = model_string[len("local/"):]
-        logger.info(f"[CHAT] Calling Ollama with model: {model}")
-        result = _call_ollama_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking, tools=tools, image_b64=image_b64)
+        logger.info(f"[CHAT] Calling local LLM with model: {model}")
+        result = _call_local_llm_chat(messages, model, temperature, max_tokens, enable_thinking=enable_thinking, tools=tools, image_b64=image_b64)
 
     else:
         raise Exception(f"Unknown model prefix in '{model_string}'. Supported: local/, bedrock/, mistral/, ionos/, mammouth/, anthropic/, openai/, openrouter/")

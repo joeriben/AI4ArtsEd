@@ -1,7 +1,7 @@
 """
 LLM Backend — Local LLM inference via llama-cpp-python (in-process).
 
-Replaces Ollama. Runs small GGUF models (safety, DSGVO, VLM) directly
+Runs small GGUF models (safety, DSGVO, VLM) directly
 in the GPU Service process with full VRAM coordinator integration.
 
 Models:
@@ -47,7 +47,7 @@ MODEL_CONFIGS = {
     },
 }
 
-# Aliases for backward compatibility with Ollama model names
+# Aliases for backward compatibility with legacy model names
 MODEL_ALIASES = {
     "llama-guard3:latest": "llama-guard3:1b",
     "qwen3-vl:2b": "qwen2.5-vl:2b",  # VLM safety model alias

@@ -123,7 +123,7 @@ def _adapt_workflow_for_multi_image(workflow: Dict[str, Any], parameters: Dict[s
 
 class BackendType(Enum):
     """Backend-Typen"""
-    OLLAMA = "ollama"
+    LOCAL_LLM = "local_llm"
     OPENROUTER = "openrouter"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
@@ -137,6 +137,13 @@ class BackendType(Enum):
     # Python chunks: Self-contained executable Python modules (HeartMuLa, future backends)
     PYTHON = "python"
     PASSTHROUGH = "passthrough"  # text_passthrough chunks: no backend, frontend renders
+
+    @classmethod
+    def _missing_(cls, value):
+        """Backward compat: accept legacy 'ollama' value during migration."""
+        if value == "ollama":
+            return cls.LOCAL_LLM
+        return None
 
 @dataclass
 class BackendRequest:
@@ -167,11 +174,11 @@ class BackendRouter:
         self.comfyui_manager = get_comfyui_manager()
         logger.info("[ROUTER] ComfyUI manager initialized")
     
-    def initialize(self, ollama_service=None, workflow_logic_service=None, comfyui_service=None):
+    def initialize(self, llm_service=None, workflow_logic_service=None, comfyui_service=None):
         """Router mit Legacy-Services initialisieren"""
-        if ollama_service:
-            self.backends[BackendType.OLLAMA] = ollama_service
-            logger.info("Ollama-Backend registriert")
+        if llm_service:
+            self.backends[BackendType.LOCAL_LLM] = llm_service
+            logger.info("Local LLM backend registriert")
         
         if comfyui_service:
             self.backends[BackendType.COMFYUI] = comfyui_service
@@ -234,7 +241,7 @@ class BackendRouter:
             # 2. JSON chunks with workflow dict
             is_output_chunk = (
                 isinstance(request.prompt, dict) or  # Workflow dict
-                actual_backend not in [BackendType.OLLAMA, BackendType.OPENROUTER, BackendType.ANTHROPIC,
+                actual_backend not in [BackendType.LOCAL_LLM, BackendType.OPENROUTER, BackendType.ANTHROPIC,
                                       BackendType.OPENAI, BackendType.MISTRAL, BackendType.AWS_BEDROCK, BackendType.COMFYUI]
             )
 
@@ -251,7 +258,7 @@ class BackendRouter:
                 return await self._process_output_chunk(chunk_name, request.prompt, request.parameters)
 
             # Schema-Pipelines: All LLM providers via Prompt Interception Engine
-            if actual_backend in [BackendType.OLLAMA, BackendType.OPENROUTER, BackendType.ANTHROPIC, BackendType.OPENAI, BackendType.MISTRAL, BackendType.AWS_BEDROCK]:
+            if actual_backend in [BackendType.LOCAL_LLM, BackendType.OPENROUTER, BackendType.ANTHROPIC, BackendType.OPENAI, BackendType.MISTRAL, BackendType.AWS_BEDROCK]:
                 # Create modified request with detected backend for proper routing
                 modified_request = BackendRequest(
                     backend_type=actual_backend,
@@ -284,7 +291,7 @@ class BackendRouter:
         This allows execution_mode to override template's backend_type
 
         Supported prefixes:
-        - local/model-name → OLLAMA (local inference)
+        - local/model-name → LOCAL_LLM (local inference)
         - bedrock/model-name → AWS_BEDROCK (Anthropic via AWS Bedrock, EU region)
         - anthropic/model-name → ANTHROPIC (direct API)
         - openai/model-name → OPENAI (direct API)
@@ -321,8 +328,8 @@ class BackendRouter:
             logger.debug(f"[BACKEND-DETECT] Model '{model}' → OPENROUTER (aggregator)")
             return BackendType.OPENROUTER
         elif model.startswith("local/"):
-            logger.debug(f"[BACKEND-DETECT] Model '{model}' → OLLAMA (local)")
-            return BackendType.OLLAMA
+            logger.debug(f"[BACKEND-DETECT] Model '{model}' → LOCAL_LLM (local)")
+            return BackendType.LOCAL_LLM
         else:
             # No prefix, use fallback
             logger.debug(f"[BACKEND-DETECT] Model '{model}' → {fallback_backend.value} (fallback)")

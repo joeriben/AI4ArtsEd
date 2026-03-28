@@ -219,7 +219,7 @@ export const en = {
     },
     safetyModels: {
       title: 'Local Safety Models',
-      help: 'Local via Ollama — person names and safety checks never leave the system',
+      help: 'Local — person names and safety checks never leave the system',
       safetyModel: 'Safety Model',
       safetyModelHelp: 'Guard model for content safety (§86a, youth protection)',
       dsgvoModel: 'DSGVO-Verify Model',
@@ -238,7 +238,7 @@ export const en = {
       title: 'Model Configuration',
       help: 'Model identifiers with provider prefix: local/, mistral/, anthropic/, openai/, openrouter/',
       matrixAdvised: 'Use of Model Matrix is advised. However, you may configure your settings here freely.',
-      ollamaAvailable: '{count} Ollama models available (type or select from dropdown)',
+      localModelsAvailable: '{count} local models available (type or select from dropdown)',
       stage1Text: 'Translation Model',
       stage2Interception: 'Transformation Model',
       stage2Optimization: 'Prompt Optimization Model',
@@ -304,7 +304,7 @@ export const en = {
       subBackend: 'Sub-Backend',
       status: 'Status',
       comfyui: 'ComfyUI',
-      ollama: 'Ollama',
+      localLlm: 'Local LLM',
       gpuHardware: 'GPU Hardware',
       notDetected: 'Not detected',
       showModels: 'Show models',
@@ -855,7 +855,7 @@ export const en = {
       enough: 'Enough VRAM available for training.',
       clearing: 'Clearing VRAM...',
       newFree: 'New free',
-      clearBtn: 'Clear ComfyUI + Ollama VRAM'
+      clearBtn: 'Clear ComfyUI + LLM VRAM'
     }
   },
   safetyBadges: {
@@ -880,7 +880,7 @@ export const en = {
     generic: 'Your prompt was blocked by the safety system. The system protects you from unsuitable content. Try a different wording!',
     inputImage: 'The uploaded image was flagged as unsuitable by an image analysis AI. Please use a different image.',
     vlmSaw: 'The image AI saw',
-    systemUnavailable: 'The safety system (Ollama) is not responding, so no further processing is possible. Please contact the system administrator.',
+    systemUnavailable: 'The safety system is not responding, so no further processing is possible. Please contact the system administrator.',
     suggestionLoading: 'Hang on, I have an idea...',
     suggestionError: 'I couldn\'t generate a suggestion right now. Just try again with different words!'
   },

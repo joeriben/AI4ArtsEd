@@ -35,7 +35,7 @@ CORS_ALLOWED_ORIGINS = [
 # Edit via Settings UI — NOT here.
 #
 # Provider Prefix Format (for model values):
-#   "local/model-name" → Ollama | "mistral/model-name" → Mistral AI
+#   "local/model-name" → Local LLM | "mistral/model-name" → Mistral AI
 #   "ionos/model-name" → IONOS | "openrouter/provider/model" → OpenRouter
 #
 _SETTINGS_DEFAULTS = {
@@ -605,8 +605,7 @@ HEARTMULA_DEVICE = os.environ.get("HEARTMULA_DEVICE", "cuda")  # cuda, cpu
 # ============================================================================
 # GPU SERVICE (Media inference only: Diffusers, HeartMuLa, StableAudio)
 # ============================================================================
-# GPU Service handles media generation only. LLM inference goes directly
-# to Ollama via LLMClient — NOT through GPU Service.
+# GPU Service handles media generation AND LLM inference (llama-cpp-python in-process).
 #
 GPU_SERVICE_URL = os.environ.get("GPU_SERVICE_URL", "http://localhost:17803")
 GPU_SERVICE_TIMEOUT_DEFAULT = 60      # Health checks, status
@@ -634,11 +633,6 @@ LLM_TIMEOUT_DEFAULT = 120            # Standard LLM calls
 # Local LLM concurrency limit (Python-side semaphore).
 LLM_MAX_CONCURRENT = int(os.environ.get("LLM_MAX_CONCURRENT", "6"))
 
-# Backward-compatible aliases (used by callers not yet migrated)
-OLLAMA_TIMEOUT_SAFETY = LLM_TIMEOUT_SAFETY
-OLLAMA_TIMEOUT_DEFAULT = LLM_TIMEOUT_DEFAULT
-OLLAMA_MAX_CONCURRENT = LLM_MAX_CONCURRENT
-OLLAMA_API_BASE_URL = globals().get('LLAMA_SERVER_URL', 'http://localhost:11434')
 
 # Feature Flags
 ENABLE_VALIDATION_PIPELINE = True
@@ -706,7 +700,7 @@ CRITICAL RULES:
 - END your response after completing step 4, with NO additional text"""
 
 # Model Mapping Configuration
-OLLAMA_TO_OPENROUTER_MAP = {
+LOCAL_TO_OPENROUTER_MAP = {
     # Maps a local model's base name to its OpenRouter equivalent.
     "deepcoder": "agentica-org/deepcoder-14b-preview",
     "deepseek-r1": "deepseek/deepseek-r1",
@@ -741,7 +735,7 @@ OLLAMA_TO_OPENROUTER_MAP = {
     "sailor2-20b": "sailor2/sailor2-20b",
 }
 
-OPENROUTER_TO_OLLAMA_MAP = {v: k for k, v in OLLAMA_TO_OPENROUTER_MAP.items()}
+OPENROUTER_TO_LOCAL_MAP = {v: k for k, v in LOCAL_TO_OPENROUTER_MAP.items()}
 
 # Cache Configuration
 PROMPT_CACHE = {}
@@ -765,7 +759,6 @@ LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
 
 # Request Timeouts (in seconds)
 LLM_TIMEOUT = 300  # 5 minutes for heavy models
-OLLAMA_TIMEOUT = LLM_TIMEOUT  # backward-compatible alias
 COMFYUI_TIMEOUT = 480  # 8 minutes for data-rich workflows
 POLLING_TIMEOUT = 15
 MEDIA_DOWNLOAD_TIMEOUT = 30

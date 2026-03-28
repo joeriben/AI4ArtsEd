@@ -200,25 +200,24 @@
           </template>
         </div>
 
-        <!-- Ollama -->
+        <!-- Local LLM -->
         <div class="subsection">
           <h3>
-            {{ $t('settings.backendStatus.ollama') }}
-            <span class="port-tag" dir="ltr">:11434</span>
-            <span :class="['status-badge', ollama.reachable ? 'status-available' : 'status-unavailable']">
-              {{ ollama.reachable ? $t('settings.backendStatus.reachable') : $t('settings.backendStatus.unreachable') }}
+            {{ $t('settings.backendStatus.localLlm') }}
+            <span :class="['status-badge', llm.reachable ? 'status-available' : 'status-unavailable']">
+              {{ llm.reachable ? $t('settings.backendStatus.reachable') : $t('settings.backendStatus.unreachable') }}
             </span>
           </h3>
 
-          <template v-if="ollama.reachable && ollama.models.length">
-            <button class="toggle-btn" @click="showOllamaModels = !showOllamaModels">
-              {{ showOllamaModels ? $t('settings.backendStatus.hideModels') : $t('settings.backendStatus.showModels') }}
-              ({{ ollama.models.length }})
+          <template v-if="llm.reachable && llm.models.length">
+            <button class="toggle-btn" @click="showLlmModels = !showLlmModels">
+              {{ showLlmModels ? $t('settings.backendStatus.hideModels') : $t('settings.backendStatus.showModels') }}
+              ({{ llm.models.length }})
             </button>
-            <div v-if="showOllamaModels" class="model-details" dir="ltr">
+            <div v-if="showLlmModels" class="model-details" dir="ltr">
               <table class="status-table">
                 <tbody>
-                  <tr v-for="model in ollama.models" :key="model.name">
+                  <tr v-for="model in llm.models" :key="model.name">
                     <td class="label-cell mono">{{ model.name }}</td>
                     <td class="value-cell mono">{{ model.size }}</td>
                   </tr>
@@ -308,7 +307,7 @@ const data = ref<any>(null)
 
 // Collapsible sections
 const showComfyuiModels = ref(false)
-const showOllamaModels = ref(false)
+const showLlmModels = ref(false)
 const showLoadedModels = ref(true)
 const showForeignProcesses = ref(false)
 
@@ -316,7 +315,7 @@ const showForeignProcesses = ref(false)
 const gpuHardware = computed(() => data.value?.local_infrastructure?.gpu_hardware ?? { detected: false })
 const gpuService = computed(() => data.value?.local_infrastructure?.gpu_service ?? { reachable: false, sub_backends: {} })
 const comfyui = computed(() => data.value?.local_infrastructure?.comfyui ?? { reachable: false, models: {} })
-const ollama = computed(() => data.value?.local_infrastructure?.ollama ?? { reachable: false, models: [] })
+const llm = computed(() => data.value?.local_infrastructure?.llm ?? { reachable: false, models: [] })
 const cloudApis = computed(() => data.value?.cloud_apis ?? {})
 const configsByBackend = computed(() => data.value?.output_configs?.by_backend ?? {})
 

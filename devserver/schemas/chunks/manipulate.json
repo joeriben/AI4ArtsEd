@@ -2,13 +2,12 @@
   "name": "manipulate",
   "description": "Prompt Interception: Three-part transformation (TASK + USER_RULES + PROMPT)",
   "template": "Task:\n{{TASK_INSTRUCTION}}\n\nContext:\n{{CONTEXT}}\n\nImportant: Respond in the same language as the input prompt below.\n\nPrompt:\n{{INPUT_TEXT}}",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "model": "STAGE2_INTERCEPTION_MODEL",
   "parameters": {
     "temperature": 0.7,
     "top_p": 0.9,
-    "stream": false,
-    "keep_alive": "10m"
+    "stream": false
   },
   "meta": {
     "chunk_type": "manipulation",

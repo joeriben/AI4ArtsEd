@@ -214,6 +214,3 @@ class LLMService:
 
 # Singleton instance
 llm_service = LLMService()
-
-# Backward-compatible alias
-ollama_service = llm_service

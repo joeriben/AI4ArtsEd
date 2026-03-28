@@ -24,8 +24,8 @@ Key Features:
 - `request_vram()` triggers cross-backend LRU eviction
 - Priority system prevents evicting in-use models
 - Central coordination prevents eviction loops
-- NVML: sees ALL GPU processes (Ollama, ComfyUI, zombies)
-- Dynamic threshold: expected foreign VRAM adapts to Ollama/ComfyUI state
+- NVML: sees ALL GPU processes (ComfyUI, zombies)
+- Dynamic threshold: expected foreign VRAM adapts to ComfyUI state
 - Port blacklist: detects SwarmUI zombies on forbidden ports
 """
 
@@ -212,23 +212,12 @@ class VRAMCoordinator:
         """
         Dynamic threshold: how much foreign VRAM is expected.
 
-        Queries Ollama /api/ps + checks ComfyUI port + adds driver overhead.
-        Adapts automatically when safety models change or services start/stop.
+        Checks ComfyUI port + adds driver overhead.
+        Adapts automatically when services start/stop.
         """
-        from config import VRAM_FOREIGN_OVERHEAD_MB, OLLAMA_API_URL, COMFYUI_PORT
+        from config import VRAM_FOREIGN_OVERHEAD_MB, COMFYUI_PORT
 
         expected = VRAM_FOREIGN_OVERHEAD_MB  # Base: CUDA contexts + driver + display
-
-        # Query Ollama for loaded models
-        try:
-            req = urllib.request.Request(f"{OLLAMA_API_URL}/api/ps", method="GET")
-            with urllib.request.urlopen(req, timeout=2) as resp:
-                data = json.loads(resp.read())
-                for model in data.get("models", []):
-                    size_vram = model.get("size_vram", 0)
-                    expected += size_vram / (1024 * 1024)  # bytes → MB
-        except Exception:
-            pass  # Ollama unreachable → assume 0, still add overhead
 
         # Check if expected ComfyUI is running
         try:

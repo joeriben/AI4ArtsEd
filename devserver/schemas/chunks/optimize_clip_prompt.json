@@ -1,7 +1,7 @@
 {
   "name": "optimize_clip_prompt",
   "type": "processing_chunk",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "description": "Optimize prompt for CLIP encoder with token-weight prioritization",
   "model": "STAGE2_OPTIMIZATION_MODEL",
   "template": {
