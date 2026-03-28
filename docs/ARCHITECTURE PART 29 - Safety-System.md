@@ -270,11 +270,11 @@ Only 2 SpaCy models loaded (prevents cross-language false positives):
 
 **Dedicated model:** `config.DSGVO_VERIFY_MODEL` (configurable in Settings UI, default: `qwen3:1.7b`). Must be a **general-purpose model** — guard models (llama-guard) classify content safety categories, not "is this a name?". Recommended VRAM-efficient options: qwen3:1.7b, gemma3:1b, qwen2.5:1.5b, llama3.2:1b.
 
-**CRITICAL: Local-only.** The `llm_verify_person_name()` function ALWAYS runs via local Ollama — never external APIs. Sending detected personal names to Mistral/Anthropic/OpenAI for verification would itself be a DSGVO violation.
+**CRITICAL: Local-only.** The `llm_verify_person_name()` function ALWAYS runs via local LLM (GPU Service, in-process llama-cpp-python) — never external APIs. Sending detected personal names to Mistral/Anthropic/OpenAI for verification would itself be a DSGVO violation.
 
 **Thinking model support:** Some models use thinking mode — reasoning in `message.thinking`, answer in `message.content`. Under VRAM pressure, `content` may be empty while the answer exists only in `thinking`. The code checks both fields: first `content`, then falls back to extracting SAFE/UNSAFE from `thinking`. `num_predict: 500` minimum.
 
-**Fail-closed with Circuit Breaker (Session 218):** If neither `content` nor `thinking` yields a SAFE/UNSAFE answer, the system blocks. A circuit breaker (`my_app/utils/circuit_breaker.py`) tracks consecutive failures — after 3 failures, it triggers the Ollama watchdog for automatic restart before falling back to a human-readable error message. See Section 4.5 for details.
+**Fail-closed with Circuit Breaker (Session 218):** If neither `content` nor `thinking` yields a SAFE/UNSAFE answer, the system blocks. A circuit breaker (`my_app/utils/circuit_breaker.py`) tracks consecutive failures — after 3 failures, it triggers the LLM watchdog for automatic health check before falling back to a human-readable error message. See Section 4.5 for details.
 
 **Lesson learned (Session 175):** Running all 12 SpaCy models causes cross-language confusion (e.g., `en_core_web_lg` flags "Der Eiffelturm" as PERSON).
 
@@ -296,9 +296,13 @@ Post-generation visual analysis with hybrid two-path architecture:
 
 **Design decision (Session 265):** A pure two-model architecture (VLM describes → text model judges) was tested first but introduced false negatives: the VLM's text description loses visual horror quality ("hands reaching out" instead of "skeletal claws from darkness"). The primary single-model path preserves zero-FN accuracy because the VLM sees and classifies the actual pixels. The fallback only activates for the ~2.4% of cases where the VLM enters deliberation loops.
 
-### 4.5 Circuit Breaker + Ollama Self-Healing (Session 218)
+### 4.5 Circuit Breaker + LLM Self-Healing (Session 218, updated Session 292)
 
-**Problem:** When Ollama becomes unresponsive, all LLM verification calls (DSGVO NER, age filter) return None. Without mitigation, this either blocks all workshop activity (hard fail-closed) or lets unsafe content through (fail-open).
+**Problem:** When the LLM backend becomes unresponsive, all LLM verification calls (DSGVO NER, age filter) return None. Without mitigation, this either blocks all workshop activity (hard fail-closed) or lets unsafe content through (fail-open).
+
+> **Session 292 (2026-03-28):** Ollama replaced by in-process llama-cpp-python in GPU Service.
+> The circuit breaker now triggers the LLM watchdog which checks GPU Service health at
+> `/api/llm/health`. The sudoers-based `systemctl restart ollama` mechanism is obsolete.
 
 **Solution:** Three-layer defense:
 
@@ -309,14 +313,14 @@ LLM call returns None
   │   └─ Counter < 3 → log + continue (transient tolerance)
   │   └─ Counter ≥ 3 → Circuit OPEN
   │         │
-  │         ├─ Attempt auto-restart (Ollama Watchdog)
-  │         │   └─ sudo systemctl restart ollama
+  │         ├─ Attempt self-healing (LLM Watchdog)
+  │         │   └─ Health check at GPU_SERVICE_URL/api/llm/health
   │         │   └─ Health check loop (max 30s)
   │         │   └─ Success → Circuit CLOSED, proceed normally
   │         │
-  │         └─ Restart failed → fail-closed with admin message:
+  │         └─ Healing failed → fail-closed with admin message:
   │             "Sicherheitsprüfung nicht verfügbar.
-  │              Bitte Ollama neustarten: sudo systemctl restart ollama"
+  │              Bitte GPU Service neustarten."
   │
   └─ LLM responds (SAFE/UNSAFE) → record_success() → reset counter
 ```
@@ -326,21 +330,9 @@ LLM call returns None
 - **OPEN** (3+ failures): triggers self-healing, then fail-closed if healing fails
 - **HALF_OPEN** (after 30s cooldown): one probe call tests recovery
 
-**Watchdog constraints:**
-- Max 1 restart per 5 minutes (prevents crash loops)
-- Thread-safe (lock prevents concurrent restarts)
-- Graceful degradation: if passwordless sudo is not configured, falls back to admin message
-
-**Setup (one-time):**
-```bash
-sudo ./0_setup_ollama_watchdog.sh
-```
-This creates `/etc/sudoers.d/ai4artsed-ollama` granting passwordless `systemctl restart/start/stop ollama`.
-
 **Key files:**
 - `devserver/my_app/utils/circuit_breaker.py` — Circuit breaker with self-healing integration
-- `devserver/my_app/utils/ollama_watchdog.py` — Ollama restart + health check
-- `0_setup_ollama_watchdog.sh` — Sudoers setup script
+- `devserver/my_app/utils/llm_watchdog.py` — LLM health check via GPU Service
 
 ---
 
@@ -454,12 +446,12 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | `devserver/schemas/engine/stage_orchestrator.py` | Stage 1 + Stage 3 safety logic |
 | `devserver/my_app/routes/schema_pipeline_routes.py` | SAFETY-QUICK endpoint, VLM post-gen check |
 | `devserver/my_app/utils/vlm_safety.py` | VLM image analysis |
-| `devserver/my_app/utils/circuit_breaker.py` | Circuit breaker with Ollama self-healing |
-| `devserver/my_app/utils/ollama_watchdog.py` | Automatic Ollama restart on failure |
+| `devserver/my_app/utils/circuit_breaker.py` | Circuit breaker with LLM self-healing |
+| `devserver/my_app/utils/llm_watchdog.py` | LLM health check via GPU Service |
 | `devserver/schemas/chunks/safety_check_kids.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/chunks/safety_check_youth.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/data/stage1_safety_filters_*.json` | Filter term lists |
-| `0_setup_ollama_watchdog.sh` | Passwordless sudo setup for self-healing |
+| ~~`0_setup_ollama_watchdog.sh`~~ | ~~Deleted Session 292 — Ollama replaced by in-process llama-cpp-python~~ |
 | `public/.../views/text_transformation.vue` | Pre-generation `/safety/quick` gate in `startGeneration()` |
 | `public/.../views/SettingsView.vue` | Safety level dropdown UI |
 | `public/.../views/UsageAgreementView.vue` | Usage agreement (human safety layer) |

@@ -1,5 +1,43 @@
 # Development Log
 
+## Session 292 - Complete Ollama Removal (188+ References)
+**Date:** 2026-03-28
+**Focus:** Vollstaendige Entfernung aller Ollama-Referenzen aus dem Codebase. Ollama wurde in Session 291b durch in-process llama-cpp-python im GPU Service ersetzt (Commit `10a6dac`), aber 188+ Referenzen verblieben.
+
+### Aenderungen
+- **BackendType.OLLAMA → LOCAL_LLM**: Enum-Wert umbenannt, `_missing_()` fuer Abwaertskompatibilitaet serialisierter Daten
+- **VLM Proxy geloescht**: `vlm_proxy_backend.py` + `vlm_proxy_routes.py` waren redundant (LLM-Backend unterstuetzt VLM mit Bildern). Einziger Caller auf `/api/llm/chat` umgestellt.
+- **8 Chunk-JSONs**: `backend_type: "ollama"` → `"local_llm"`, `keep_alive` entfernt
+- **3 Config-JSONs**: `keep_alive` entfernt
+- **Model-Mappings**: `OLLAMA_TO_OPENROUTER_MAP` → `LOCAL_TO_OPENROUTER_MAP`
+- **Methoden umbenannt**: `get_ollama_models()` → `get_local_models()`, `_call_ollama()` → `_call_local_llm()`, `find_ollama_fallback()` → `find_local_fallback()`
+- **Semaphore**: `ollama_queue_semaphore` → `llm_queue_semaphore`
+- **Config-Aliases entfernt**: `OLLAMA_TIMEOUT_SAFETY`, `OLLAMA_MAX_CONCURRENT`, `OLLAMA_API_BASE_URL`, `OLLAMA_TIMEOUT`
+- **LLAMA_SERVER_URL → GPU_SERVICE_URL**: Alle LLM-Status-Checks, Model-Listing und Unload-Calls laufen jetzt ueber GPU Service (`/api/llm/*`)
+- **Neuer Endpoint**: `POST /api/llm/unload` im GPU Service fuer VRAM-Freigabe
+- **Frontend**: Settings/BackendStatus/Training Views aktualisiert, 5 i18n-Keys in en.ts umbenannt
+- **Geloeschte Dateien**: `ollama_service.py`, `ollama_watchdog.py`, `0_setup_ollama_watchdog.sh`, `vlm_proxy_backend.py`, `vlm_proxy_routes.py`
+- **Error Messages**: "Bitte Ollama neustarten" → "Bitte GPU Service neustarten"
+- **chat_routes.py**: `_call_ollama_chat()` → `_call_local_llm_chat()`, Image-Injection von Ollama-Format auf OpenAI-Format geaendert (llama-cpp-python)
+
+### Live-Tests bestanden
+- Backend-Status: LLM reachable=True, 5 Modelle
+- Canvas LLM Models: 5 local + 14 cloud
+- Training VRAM Clear: `llm` Key korrekt
+- Chat mit local/qwen3:1.7b: Antwort erhalten
+- GPU Service /api/llm/unload: success=true
+
+### Verbleibende intentionale Referenzen
+- `_missing_()` in BackendType (Abwaertskompatibilitaet)
+- `training_routes.py`: `unload_ollama` Fallback-Parameter
+- `translate_config_contexts.py`: Standalone-Script (separate Refaktorierung)
+- Nicht-englische i18n-Dateien: Work Order fuer Translation Agent geschrieben
+
+### Statistik
+60 Dateien, 321 Insertions, 710 Deletions, 5 Dateien geloescht.
+
+---
+
 ## Session 291 - Anti-AI-Slop Guard + Trashy Interception Knowledge
 **Date:** 2026-03-25
 **Focus:** Zwei zusammenhaengende Erweiterungen — globaler Anti-Slop-Guard in der Interception-Instruction und Trashy-Zugang zu Interception-Prompts.
