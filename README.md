@@ -1,4 +1,4 @@
-# AI4ArtsEd DevServer
+# AI4ArtsEd_lab
 
 **Pedagogical Experimentation Platform for Critical Engagement with Generative AI**
 
@@ -6,9 +6,9 @@ Version 2.1 | January 2026
 
 ---
 
-## What is AI4ArtsEd?
+## What is AI4ArtsEd_lab?
 
-AI4ArtsEd is a pedagogical platform that makes AI transformation transparent by separating the creative process into visible, editable steps. Designed for cultural education (ages 8-17), it treats generative AI not as a tool to be optimized, but as a subject of critical and creative exploration.
+AI4ArtsEd_lab is a pedagogical platform that makes AI transformation transparent by separating the creative process into visible, editable steps. Designed for cultural education (ages 8-17), it treats generative AI not as a tool to be optimized, but as a subject of critical and creative exploration.
 
 ### Key Features
 
