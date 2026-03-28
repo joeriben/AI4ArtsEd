@@ -639,9 +639,7 @@ def get_settings():
             "VLM_SAFETY_MODEL": config.VLM_SAFETY_MODEL,
 
             # API Configuration
-            "LLM_PROVIDER": config.LLM_PROVIDER,
-            "OLLAMA_API_BASE_URL": config.OLLAMA_API_BASE_URL,
-            "LMSTUDIO_API_BASE_URL": config.LMSTUDIO_API_BASE_URL,
+            "LLAMA_SERVER_URL": config.LLAMA_SERVER_URL,
             "EXTERNAL_LLM_PROVIDER": config.EXTERNAL_LLM_PROVIDER,
             "DSGVO_CONFORMITY": config.DSGVO_CONFORMITY,
         }
@@ -1716,22 +1714,19 @@ def get_backend_status():
     except Exception as e:
         logger.warning(f"[BACKEND-STATUS] Availability service check failed: {e}")
 
-    # --- Ollama ---
-    ollama_status = {"reachable": False, "url": config.OLLAMA_API_BASE_URL, "models": []}
+    # --- llama-server ---
+    ollama_status = {"reachable": False, "url": config.LLAMA_SERVER_URL, "models": []}
     try:
-        resp = requests.get(f"{config.OLLAMA_API_BASE_URL}/api/tags", timeout=5)
+        resp = requests.get(f"{config.LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
         if resp.ok:
             ollama_status["reachable"] = True
-            ollama_models = resp.json().get("models", [])
-            for model in ollama_models:
-                name = model.get("name", "")
-                size_bytes = model.get("size", 0)
-                size_gb = size_bytes / (1024 ** 3)
-                size_str = f"{size_gb:.1f} GB" if size_gb >= 1 else f"{size_bytes / (1024 ** 2):.0f} MB"
-                ollama_status["models"].append({"name": name, "size": size_str})
+            llm_models = resp.json().get("data", [])
+            for model in llm_models:
+                name = model.get("id", "")
+                ollama_status["models"].append({"name": name, "size": ""})
             ollama_status["models"].sort(key=lambda x: x["name"])
     except Exception as e:
-        logger.warning(f"[BACKEND-STATUS] Ollama check failed: {e}")
+        logger.warning(f"[BACKEND-STATUS] llama-server check failed: {e}")
 
     # --- Cloud APIs ---
     aws_env_script = Path(__file__).parent.parent.parent / "setup_aws_env.sh"
@@ -2236,47 +2231,37 @@ def get_ollama_models():
     }
     """
     try:
-        # Get Ollama URL from config or user settings
-        ollama_url = config.OLLAMA_API_BASE_URL
+        # Get llama-server URL from config
+        llm_url = config.LLAMA_SERVER_URL.rstrip('/')
 
-        # Call Ollama API to list models
-        response = requests.get(f"{ollama_url}/api/tags", timeout=5)
+        # Call llama-server API to list models
+        response = requests.get(f"{llm_url}/v1/models", timeout=5)
 
         if response.status_code != 200:
-            logger.warning(f"[SETTINGS] Ollama API returned {response.status_code}")
+            logger.warning(f"[SETTINGS] llama-server API returned {response.status_code}")
             return jsonify({
                 "success": False,
-                "error": f"Ollama API error: {response.status_code}",
+                "error": f"llama-server API error: {response.status_code}",
                 "models": []
             }), 200
 
         data = response.json()
-        ollama_models = data.get('models', [])
+        llm_models = data.get('data', [])
 
         # Format models for frontend dropdown
         models = []
-        for model in ollama_models:
-            name = model.get('name', '')
-            size_bytes = model.get('size', 0)
-
-            # Convert size to human-readable format
-            size_gb = size_bytes / (1024 ** 3)
-            if size_gb >= 1:
-                size_str = f"{size_gb:.0f} GB"
-            else:
-                size_mb = size_bytes / (1024 ** 2)
-                size_str = f"{size_mb:.0f} MB"
-
+        for model in llm_models:
+            name = model.get('id', '')
             models.append({
                 'id': f'local/{name}',
                 'name': name,
-                'size': size_str
+                'size': ''
             })
 
         # Sort by name
         models.sort(key=lambda x: x['name'])
 
-        logger.info(f"[SETTINGS] Found {len(models)} Ollama models")
+        logger.info(f"[SETTINGS] Found {len(models)} llama-server models")
         return jsonify({
             "success": True,
             "models": models

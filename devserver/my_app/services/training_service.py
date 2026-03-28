@@ -176,34 +176,32 @@ class TrainingService:
         except Exception as e:
             results["errors"].append(f"ComfyUI unload failed: {e}")
 
-        # Step 4: Unload Ollama models
+        # Step 4: Unload llama-server models
         try:
+            from config import LLAMA_SERVER_URL
+            llm_url = LLAMA_SERVER_URL.rstrip('/')
+
             # Get list of loaded models
             loaded_response = requests.get(
-                f"{OLLAMA_API_BASE_URL}/api/ps",
+                f"{llm_url}/models",
                 timeout=10
             )
 
             if loaded_response.status_code == 200:
                 loaded_data = loaded_response.json()
-                models = loaded_data.get("models", [])
+                models = loaded_data if isinstance(loaded_data, list) else loaded_data.get("data", [])
 
                 if not models:
-                    results["actions"].append("Ollama: no models loaded")
+                    results["actions"].append("llama-server: no models loaded")
                 else:
                     unloaded = []
                     for model_info in models:
-                        model_name = model_info.get("name", "")
+                        model_name = model_info.get("id", model_info.get("name", ""))
                         if model_name:
                             try:
                                 requests.post(
-                                    f"{OLLAMA_API_BASE_URL}/api/generate",
-                                    json={
-                                        "model": model_name,
-                                        "prompt": "",
-                                        "keep_alive": 0,
-                                        "stream": False
-                                    },
+                                    f"{llm_url}/models/unload",
+                                    json={"model": model_name},
                                     timeout=30
                                 )
                                 unloaded.append(model_name)
@@ -211,7 +209,7 @@ class TrainingService:
                                 pass
 
                     if unloaded:
-                        results["actions"].append(f"Ollama unloaded: {', '.join(unloaded)}")
+                        results["actions"].append(f"llama-server unloaded: {', '.join(unloaded)}")
                     else:
                         results["actions"].append("Ollama: no models to unload")
         except requests.exceptions.ConnectionError:
@@ -474,23 +472,35 @@ class TrainingService:
             try:
                 # Stage 1: VLM describes the image
                 img_b64 = base64.b64encode(img_path.read_bytes()).decode()
+                from config import LLAMA_SERVER_URL
+                llm_url = LLAMA_SERVER_URL.rstrip('/')
+                vlm_model = CAPTION_VLM_MODEL.replace("local/", "") if CAPTION_VLM_MODEL.startswith("local/") else CAPTION_VLM_MODEL
+
+                if not img_b64.startswith("data:"):
+                    img_b64_url = f"data:image/jpeg;base64,{img_b64}"
+                else:
+                    img_b64_url = img_b64
+
                 resp = requests.post(
-                    f"{OLLAMA_API_BASE_URL}/api/chat",
+                    f"{llm_url}/v1/chat/completions",
                     json={
-                        "model": CAPTION_VLM_MODEL,
-                        "messages": [{"role": "user", "content": vlm_prompt, "images": [img_b64]}],
+                        "model": vlm_model,
+                        "messages": [{
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": vlm_prompt},
+                                {"type": "image_url", "image_url": {"url": img_b64_url}},
+                            ],
+                        }],
                         "stream": False,
-                        "options": {"num_predict": 500, "temperature": 0.3},
+                        "max_tokens": 500,
+                        "temperature": 0.3,
                     },
                     timeout=120,
                 )
                 resp.raise_for_status()
-                msg = resp.json()["message"]
-                raw = msg.get("content", "").strip()
-
-                # qwen3-vl may put everything in 'thinking' when content is empty
-                if not raw and msg.get("thinking"):
-                    raw = msg["thinking"].strip()
+                choice = resp.json().get("choices", [{}])[0]
+                raw = choice.get("message", {}).get("content", "").strip()
 
                 # Stage 2: If VLM output looks like reasoning, extract via fast text LLM
                 caption = self._cleanup_caption(raw) if raw else ""
@@ -521,10 +531,14 @@ class TrainingService:
 
         # Chain-of-thought detected — use a non-thinking LLM to extract the caption
         try:
+            from config import LLAMA_SERVER_URL
+            llm_url = LLAMA_SERVER_URL.rstrip('/')
+            cleanup_model = CAPTION_CLEANUP_MODEL.replace("local/", "") if CAPTION_CLEANUP_MODEL.startswith("local/") else CAPTION_CLEANUP_MODEL
+
             resp = requests.post(
-                f"{OLLAMA_API_BASE_URL}/api/chat",
+                f"{llm_url}/v1/chat/completions",
                 json={
-                    "model": CAPTION_CLEANUP_MODEL,
+                    "model": cleanup_model,
                     "messages": [{
                         "role": "user",
                         "content": (
@@ -534,12 +548,14 @@ class TrainingService:
                         ),
                     }],
                     "stream": False,
-                    "options": {"num_predict": 300, "temperature": 0.1},
+                    "max_tokens": 300,
+                    "temperature": 0.1,
                 },
                 timeout=60,
             )
             resp.raise_for_status()
-            cleaned = resp.json()["message"].get("content", "").strip().strip('"\'')
+            choice = resp.json().get("choices", [{}])[0]
+            cleaned = choice.get("message", {}).get("content", "").strip().strip('"\'')
             return cleaned if cleaned and len(cleaned) > 30 else raw_text
         except Exception as e:
             logger.warning(f"Caption cleanup failed: {e}")

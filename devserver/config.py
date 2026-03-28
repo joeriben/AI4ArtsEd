@@ -44,9 +44,7 @@ _SETTINGS_DEFAULTS = {
     'DEFAULT_SAFETY_LEVEL': 'kids',
     'DEFAULT_LANGUAGE': 'de',
     'DEFAULT_INTERCEPTION_CONFIG': 'user_defined',
-    'LLM_PROVIDER': 'ollama',
-    'OLLAMA_API_BASE_URL': 'http://localhost:11434',
-    'LMSTUDIO_API_BASE_URL': 'http://localhost:1234',
+    'LLAMA_SERVER_URL': 'http://localhost:11434',
     'EXTERNAL_LLM_PROVIDER': 'none',
     'DSGVO_CONFORMITY': True,
     # Model roles — NO hardcoded model names. Actual values come from user_settings.json.
@@ -629,14 +627,18 @@ HUNYUAN3D_MODEL_ID = os.environ.get("HUNYUAN3D_MODEL_ID", "tencent/Hunyuan3D-2")
 # External LLM API timeouts (connect, read) in seconds
 LLM_API_TIMEOUT = (10, 90)            # 10s connect (fail fast if unreachable), 90s read (reasoning models need time)
 
-# Ollama LLM timeouts
-OLLAMA_TIMEOUT_SAFETY = 30            # Safety verify (small model, short prompt)
-OLLAMA_TIMEOUT_DEFAULT = 120          # Standard LLM calls
+# Local LLM timeouts (llama-server)
+LLM_TIMEOUT_SAFETY = 30              # Safety verify (small model, short prompt)
+LLM_TIMEOUT_DEFAULT = 120            # Standard LLM calls
 
-# Ollama concurrency limit (Python-side semaphore).
-# NOTE: Ollama server-side concurrency (OLLAMA_NUM_PARALLEL) must be configured
-# separately in the systemd unit / environment. This only caps the DevServer side.
-OLLAMA_MAX_CONCURRENT = int(os.environ.get("OLLAMA_MAX_CONCURRENT", "6"))
+# Local LLM concurrency limit (Python-side semaphore).
+LLM_MAX_CONCURRENT = int(os.environ.get("LLM_MAX_CONCURRENT", "6"))
+
+# Backward-compatible aliases (used by callers not yet migrated)
+OLLAMA_TIMEOUT_SAFETY = LLM_TIMEOUT_SAFETY
+OLLAMA_TIMEOUT_DEFAULT = LLM_TIMEOUT_DEFAULT
+OLLAMA_MAX_CONCURRENT = LLM_MAX_CONCURRENT
+OLLAMA_API_BASE_URL = globals().get('LLAMA_SERVER_URL', 'http://localhost:11434')
 
 # Feature Flags
 ENABLE_VALIDATION_PIPELINE = True
@@ -762,7 +764,8 @@ LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
 
 # Request Timeouts (in seconds)
-OLLAMA_TIMEOUT = 300  # 5 minutes for heavy models
+LLM_TIMEOUT = 300  # 5 minutes for heavy models
+OLLAMA_TIMEOUT = LLM_TIMEOUT  # backward-compatible alias
 COMFYUI_TIMEOUT = 480  # 8 minutes for data-rich workflows
 POLLING_TIMEOUT = 15
 MEDIA_DOWNLOAD_TIMEOUT = 30

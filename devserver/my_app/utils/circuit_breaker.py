@@ -66,7 +66,7 @@ class CircuitBreaker:
     def _attempt_self_healing(self) -> bool:
         """Try to restart Ollama automatically. Returns True if recovered."""
         try:
-            from my_app.utils.ollama_watchdog import attempt_restart
+            from my_app.utils.llm_watchdog import attempt_restart
             return attempt_restart()
         except Exception as e:
             logger.error(f"[CIRCUIT-BREAKER:{self.name}] Self-healing error: {e}")

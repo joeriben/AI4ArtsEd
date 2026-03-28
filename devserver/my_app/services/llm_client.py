@@ -1,116 +1,85 @@
 """
-Ollama LLM Client — Direct HTTP wrapper for Ollama inference.
+LLM Client — HTTP wrapper for GPU Service LLM endpoints.
 
-All LLM inference (safety verification, prompt interception, chat)
-goes directly to Ollama. GPU Service handles media inference only.
+All local LLM inference (safety verification, DSGVO, VLM safety)
+goes to the GPU Service's /api/llm/* endpoints.
+Cloud LLM calls (Stage 1-3 interception) go through backend_router.
 """
 
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 logger = logging.getLogger(__name__)
 
 
 class LLMClient:
-    """Ollama client for LLM inference."""
+    """Client for local LLM inference via GPU Service."""
 
     def __init__(self):
-        from config import OLLAMA_API_BASE_URL
-        self.ollama_url = OLLAMA_API_BASE_URL.rstrip('/')
-        logger.info(f"[LLM-CLIENT] Initialized: ollama={self.ollama_url}")
+        from config import GPU_SERVICE_URL
+        self.base_url = GPU_SERVICE_URL.rstrip('/')
+        logger.info(f"[LLM-CLIENT] Initialized: gpu_service={self.base_url}")
 
-    def _ollama_chat(self, model: str, messages: list, images: Optional[list] = None,
-                     temperature: float = 0.7, max_new_tokens: int = 500,
-                     keep_alive: str = "10m",
-                     repetition_penalty: Optional[float] = None,
-                     enable_thinking: bool = True,
-                     timeout: int = 120,
-                     tools: Optional[list] = None) -> Optional[Dict[str, Any]]:
-        """Ollama chat endpoint."""
+    def _prepare_model_name(self, model: str) -> str:
+        """Strip local/ prefix if present."""
+        return model.replace("local/", "") if model.startswith("local/") else model
+
+    def _chat(self, model: str, messages: list, images: Optional[List[str]] = None,
+              temperature: float = 0.7, max_new_tokens: int = 500,
+              repetition_penalty: Optional[float] = None,
+              timeout: int = 120) -> Optional[Dict[str, Any]]:
+        """Chat via GPU Service /api/llm/chat."""
         import requests
 
-        # Strip local/ prefix for Ollama
-        ollama_model = model.replace("local/", "") if model.startswith("local/") else model
-
-        # Inject images into first user message if provided
-        ollama_messages = []
-        for msg in messages:
-            m = dict(msg)
-            if images and m.get("role") == "user" and not any("images" in prev for prev in ollama_messages):
-                m["images"] = images
-            ollama_messages.append(m)
-
-        options = {"temperature": temperature, "num_predict": max_new_tokens}
-        if repetition_penalty is not None:
-            options["repeat_penalty"] = repetition_penalty
+        model_name = self._prepare_model_name(model)
 
         payload = {
-            "model": ollama_model,
-            "messages": ollama_messages,
-            "stream": False,
-            "keep_alive": keep_alive,
-            "options": options,
+            "model": model_name,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_new_tokens,
         }
-        # Ollama Qwen3 thinking suppression
-        if not enable_thinking:
-            payload["think"] = False
-            logger.debug(f"[LLM-CLIENT] Thinking disabled for {ollama_model}, payload has think={payload.get('think')}")
-
-        # Tool use support (Ollama 0.4+)
-        if tools:
-            payload["tools"] = tools
+        if images:
+            payload["images"] = images
+        if repetition_penalty is not None:
+            payload["repetition_penalty"] = repetition_penalty
 
         try:
-            resp = requests.post(f"{self.ollama_url}/api/chat", json=payload, timeout=timeout)
+            resp = requests.post(f"{self.base_url}/api/llm/chat", json=payload, timeout=timeout)
             resp.raise_for_status()
-            msg = resp.json().get("message", {})
-            return {
-                "content": msg.get("content", "").strip(),
-                "thinking": msg.get("thinking", "").strip() or None,
-                "tool_calls": msg.get("tool_calls") or None,
-            }
+            return resp.json()
         except Exception as e:
-            logger.error(f"[LLM-CLIENT] Ollama chat failed ({ollama_model}): {e}")
+            logger.error(f"[LLM-CLIENT] Chat failed ({model_name}): {e}")
             return None
 
-    def _ollama_generate(self, model: str, prompt: str,
-                         temperature: float = 0.7, max_new_tokens: int = 500,
-                         keep_alive: str = "10m",
-                         repetition_penalty: Optional[float] = None,
-                         enable_thinking: bool = True,
-                         timeout: int = 120) -> Optional[Dict[str, Any]]:
-        """Ollama generate endpoint."""
+    def _generate(self, model: str, prompt: str,
+                  temperature: float = 0.7, max_new_tokens: int = 500,
+                  repetition_penalty: Optional[float] = None,
+                  timeout: int = 120) -> Optional[Dict[str, Any]]:
+        """Generate via GPU Service /api/llm/generate."""
         import requests
 
-        ollama_model = model.replace("local/", "") if model.startswith("local/") else model
-
-        options = {"temperature": temperature, "num_predict": max_new_tokens}
-        if repetition_penalty is not None:
-            options["repeat_penalty"] = repetition_penalty
+        model_name = self._prepare_model_name(model)
 
         payload = {
-            "model": ollama_model,
+            "model": model_name,
             "prompt": prompt,
-            "stream": False,
-            "keep_alive": keep_alive,
-            "options": options,
+            "temperature": temperature,
+            "max_tokens": max_new_tokens,
         }
-        if not enable_thinking:
-            payload["think"] = False
+        if repetition_penalty is not None:
+            payload["repetition_penalty"] = repetition_penalty
 
         try:
-            resp = requests.post(f"{self.ollama_url}/api/generate", json=payload, timeout=timeout)
+            resp = requests.post(f"{self.base_url}/api/llm/generate", json=payload, timeout=timeout)
             resp.raise_for_status()
-            return {
-                "response": resp.json().get("response", "").strip(),
-                "thinking": None,
-            }
+            return resp.json()
         except Exception as e:
-            logger.error(f"[LLM-CLIENT] Ollama generate failed ({ollama_model}): {e}")
+            logger.error(f"[LLM-CLIENT] Generate failed ({model_name}): {e}")
             return None
 
     # =========================================================================
-    # Public API
+    # Public API (unchanged signatures for all callers)
     # =========================================================================
 
     def chat(self, model: str, messages: list, images: Optional[list] = None,
@@ -120,13 +89,15 @@ class LLMClient:
              enable_thinking: bool = True,
              timeout: int = 120,
              tools: Optional[list] = None) -> Optional[Dict[str, Any]]:
-        """Messages-based chat via Ollama.
+        """Messages-based chat.
 
         Returns {"content": str, "thinking": str|None, "tool_calls": list|None} or None on failure.
+
+        Note: keep_alive, enable_thinking, tools are accepted for backward compatibility
+        but ignored (llama-cpp-python does not support these Ollama-specific features).
         """
-        return self._ollama_chat(model, messages, images, temperature, max_new_tokens,
-                                 keep_alive, repetition_penalty, enable_thinking, timeout,
-                                 tools=tools)
+        return self._chat(model, messages, images, temperature, max_new_tokens,
+                          repetition_penalty, timeout)
 
     def generate(self, model: str, prompt: str,
                  temperature: float = 0.7, max_new_tokens: int = 500,
@@ -134,9 +105,12 @@ class LLMClient:
                  repetition_penalty: Optional[float] = None,
                  enable_thinking: bool = True,
                  timeout: int = 120) -> Optional[Dict[str, Any]]:
-        """Raw prompt generation via Ollama.
+        """Raw prompt generation.
 
         Returns {"response": str, "thinking": str|None} or None on failure.
+
+        Note: keep_alive and enable_thinking are accepted for backward compatibility
+        but ignored.
         """
-        return self._ollama_generate(model, prompt, temperature, max_new_tokens,
-                                     keep_alive, repetition_penalty, enable_thinking, timeout)
+        return self._generate(model, prompt, temperature, max_new_tokens,
+                              repetition_penalty, timeout)

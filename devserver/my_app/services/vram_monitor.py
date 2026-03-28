@@ -15,31 +15,30 @@ logger = logging.getLogger(__name__)
 
 
 class VRAMMonitor:
-    """Monitors VRAM usage across Ollama and GPU Service."""
+    """Monitors VRAM usage across llama-server and GPU Service."""
 
     def __init__(self):
-        from config import OLLAMA_API_BASE_URL, GPU_SERVICE_URL
-        self.ollama_url = OLLAMA_API_BASE_URL.rstrip('/')
+        from config import LLAMA_SERVER_URL, GPU_SERVICE_URL
+        self.llm_url = LLAMA_SERVER_URL.rstrip('/')
         self.gpu_url = GPU_SERVICE_URL.rstrip('/')
 
-    def get_ollama_models(self) -> List[Dict[str, Any]]:
-        """GET /api/ps → list of loaded Ollama models with VRAM usage."""
+    def get_llm_models(self) -> List[Dict[str, Any]]:
+        """GET /models → list of loaded llama-server models."""
         try:
-            resp = requests.get(f"{self.ollama_url}/api/ps", timeout=5)
+            resp = requests.get(f"{self.llm_url}/models", timeout=5)
             resp.raise_for_status()
             data = resp.json()
             models = []
-            for m in data.get("models", []):
-                vram_bytes = m.get("size_vram", 0)
+            for m in data if isinstance(data, list) else data.get("data", []):
                 models.append({
-                    "name": m.get("name", "unknown"),
-                    "vram_mb": round(vram_bytes / (1024 * 1024), 1) if vram_bytes else 0,
-                    "size_mb": round(m.get("size", 0) / (1024 * 1024), 1),
-                    "expires_at": m.get("expires_at"),
+                    "name": m.get("id", m.get("name", "unknown")),
+                    "vram_mb": 0,  # llama-server doesn't report per-model VRAM
+                    "size_mb": 0,
+                    "status": m.get("status", "unknown"),
                 })
             return models
         except Exception as e:
-            logger.debug(f"[VRAM-MONITOR] Ollama /api/ps failed: {e}")
+            logger.debug(f"[VRAM-MONITOR] llama-server /models failed: {e}")
             return []
 
     def get_gpu_service_status(self) -> Dict[str, Any]:
@@ -54,16 +53,13 @@ class VRAMMonitor:
 
     def get_combined_status(self) -> Dict[str, Any]:
         """Consolidated VRAM view across both backends."""
-        ollama_models = self.get_ollama_models()
+        llm_models = self.get_llm_models()
         gpu_status = self.get_gpu_service_status()
 
-        ollama_total_vram = sum(m["vram_mb"] for m in ollama_models)
-
         return {
-            "ollama": {
-                "reachable": len(ollama_models) > 0 or self._ollama_reachable(),
-                "models": ollama_models,
-                "total_vram_mb": round(ollama_total_vram, 1),
+            "llm_server": {
+                "reachable": len(llm_models) > 0 or self._llm_reachable(),
+                "models": llm_models,
             },
             "gpu_service": {
                 "reachable": gpu_status.get("status") in ("ok", "healthy"),
@@ -71,10 +67,10 @@ class VRAMMonitor:
             },
         }
 
-    def _ollama_reachable(self) -> bool:
-        """Quick reachability check for Ollama (no loaded models doesn't mean unreachable)."""
+    def _llm_reachable(self) -> bool:
+        """Quick reachability check for llama-server."""
         try:
-            resp = requests.get(f"{self.ollama_url}/api/tags", timeout=3)
+            resp = requests.get(f"{self.llm_url}/health", timeout=3)
             return resp.status_code == 200
         except Exception:
             return False
