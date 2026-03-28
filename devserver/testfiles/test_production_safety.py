@@ -123,20 +123,20 @@ def check_server(base_url: str) -> bool:
         return True  # Server is there, just returned something unexpected
 
 
-def check_ollama() -> bool:
-    """Check if Ollama is reachable."""
+def check_gpu_service_llm() -> bool:
+    """Check if GPU Service LLM backend is reachable."""
     try:
-        r = requests.get("http://localhost:11434/api/tags", timeout=3)
+        r = requests.get("http://localhost:17803/api/llm/health", timeout=3)
         return r.status_code == 200
     except Exception:
         return False
 
 
-def check_ollama_models() -> list:
-    """Return list of loaded Ollama models."""
+def check_llm_models() -> list:
+    """Return list of available LLM models."""
     try:
-        r = requests.get("http://localhost:11434/api/tags", timeout=3)
-        return [m["name"] for m in r.json().get("models", [])]
+        r = requests.get("http://localhost:17803/api/llm/models", timeout=3)
+        return [m for m in r.json().get("available", [])]
     except Exception:
         return []
 
@@ -300,17 +300,12 @@ def main():
         print(f"\n  ABORT: Server not reachable at {base_url}")
         sys.exit(1)
 
-    ollama_ok = check_ollama()
-    print(f"    Ollama (localhost:11434): {'OK' if ollama_ok else 'UNREACHABLE'}")
+    llm_ok = check_gpu_service_llm()
+    print(f"    GPU Service LLM (localhost:17803): {'OK' if llm_ok else 'UNREACHABLE'}")
 
-    if ollama_ok:
-        models = check_ollama_models()
-        required = ["llama-guard3:8b", "qwen3:1.7b"]
-        for model in required:
-            found = any(model in m for m in models)
-            print(f"    Model {model}: {'LOADED' if found else 'NOT FOUND'}")
-            if not found:
-                print(f"      Available: {models[:10]}")
+    if llm_ok:
+        models = check_llm_models()
+        print(f"    Available LLM models: {models[:10]}")
 
     # ─── Safety Tests ─────────────────────────────────────────────────
     all_failures = []

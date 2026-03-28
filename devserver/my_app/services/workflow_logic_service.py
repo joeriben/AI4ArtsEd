@@ -10,8 +10,8 @@ from typing import Dict, Any, Optional, Tuple, List
 
 from config import (
     LOCAL_WORKFLOWS_DIR,
-    OLLAMA_TO_OPENROUTER_MAP,
-    OPENROUTER_TO_OLLAMA_MAP,
+    LOCAL_TO_OPENROUTER_MAP,
+    OPENROUTER_TO_LOCAL_MAP,
     ENABLE_VALIDATION_PIPELINE,
     SAFETY_NEGATIVE_TERMS,
     DEFAULT_NEGATIVE_TERMS,
@@ -294,7 +294,7 @@ class WorkflowLogicService:
                 
                 if current_model_full.startswith("openrouter/"):
                     openrouter_model_name = current_model_full[11:].split(' ')[0]
-                    local_model = OPENROUTER_TO_OLLAMA_MAP.get(openrouter_model_name)
+                    local_model = OPENROUTER_TO_LOCAL_MAP.get(openrouter_model_name)
                     
                     if local_model:
                         node_data["inputs"]["model"] = f"local/{local_model}"
@@ -332,16 +332,16 @@ class WorkflowLogicService:
                     
                     # Try for exact match first
                     exact_match = (
-                        OLLAMA_TO_OPENROUTER_MAP.get(local_model_with_tag) or 
-                        OLLAMA_TO_OPENROUTER_MAP.get(local_model_with_tag.split(':')[0])
+                        LOCAL_TO_OPENROUTER_MAP.get(local_model_with_tag) or 
+                        LOCAL_TO_OPENROUTER_MAP.get(local_model_with_tag.split(':')[0])
                     )
                     
                     # Apply intelligent fallback logic
                     req_base, req_size = parse_model_name(local_model_with_tag)
                     
-                    if 7 <= req_size <= 32 and "mistral-nemo" in OLLAMA_TO_OPENROUTER_MAP and local_model_with_tag != "mistral-nemo":
+                    if 7 <= req_size <= 32 and "mistral-nemo" in LOCAL_TO_OPENROUTER_MAP and local_model_with_tag != "mistral-nemo":
                         if exact_match == "mistralai/mistral-small-24b" or not exact_match:
-                            openrouter_model = OLLAMA_TO_OPENROUTER_MAP["mistral-nemo"]
+                            openrouter_model = LOCAL_TO_OPENROUTER_MAP["mistral-nemo"]
                             status_updates.append(
                                 f"Using Mistral Nemo (14b) as intelligent fallback for {req_size}b model."
                             )
@@ -368,22 +368,22 @@ class WorkflowLogicService:
     def _find_fallback_model(self, model_name: str, req_base: str, req_size: int) -> Optional[str]:
         """Find a suitable fallback model for fast mode"""
         # For medium-sized models, prefer Mistral Nemo
-        if 7 <= req_size <= 32 and "mistral-nemo" in OLLAMA_TO_OPENROUTER_MAP:
-            return OLLAMA_TO_OPENROUTER_MAP["mistral-nemo"]
+        if 7 <= req_size <= 32 and "mistral-nemo" in LOCAL_TO_OPENROUTER_MAP:
+            return LOCAL_TO_OPENROUTER_MAP["mistral-nemo"]
         
         # Find candidates in the same family
         candidates = []
-        for map_key in OLLAMA_TO_OPENROUTER_MAP.keys():
+        for map_key in LOCAL_TO_OPENROUTER_MAP.keys():
             cand_base, cand_size = parse_model_name(map_key)
             if (req_base.startswith(cand_base) or cand_base.startswith(req_base)) and cand_size >= req_size:
                 candidates.append((map_key, cand_size))
         
         if candidates:
             candidates.sort(key=lambda x: x[1])
-            return OLLAMA_TO_OPENROUTER_MAP[candidates[0][0]]
+            return LOCAL_TO_OPENROUTER_MAP[candidates[0][0]]
         
         # Ultimate fallback
-        return OLLAMA_TO_OPENROUTER_MAP.get("mistral-nemo")
+        return LOCAL_TO_OPENROUTER_MAP.get("mistral-nemo")
     
     def inject_prompt(self, workflow: Dict[str, Any], prompt: str) -> bool:
         """

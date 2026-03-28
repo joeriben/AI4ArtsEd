@@ -98,10 +98,6 @@ def kill_foreign_process():
 
         cmdline = target_proc["cmdline"].lower()
 
-        # Safety: never kill Ollama
-        if "ollama" in cmdline:
-            return jsonify({"error": f"PID {target_pid} is Ollama — refusing to kill"}), 403
-
         # Safety: never kill expected ComfyUI
         if str(COMFYUI_PORT) in cmdline:
             return jsonify({"error": f"PID {target_pid} is expected ComfyUI on port {COMFYUI_PORT} — refusing to kill"}), 403

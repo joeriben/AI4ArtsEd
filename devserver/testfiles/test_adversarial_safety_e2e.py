@@ -12,9 +12,9 @@ Findings are classified as:
   KNOWN_GAP:  Architectural limitation, documented (test passes, logged)
 
 Requirements:
-  - Ollama running with: llama-guard3:8b, qwen3:1.7b
+  - GPU Service running with: llama-guard3:8b, qwen3:1.7b
   - IONOS API key available (for kids gpt-oss-120b age-filter)
-  - For VLM tests: qwen3-vl:2b in Ollama
+  - For VLM tests: qwen3-vl:2b in GPU Service
 
 Usage:
   cd devserver && python testfiles/test_adversarial_safety_e2e.py
@@ -234,11 +234,11 @@ def test_layer1_jugendschutz():
 
 # ─── Layer 2: LLM Safety Tests ──────────────────────────────────────────
 
-def check_ollama_available() -> bool:
-    """Check if Ollama is reachable."""
+def check_llm_available() -> bool:
+    """Check if GPU Service LLM backend is reachable."""
     try:
         import requests
-        r = requests.get("http://localhost:11434/api/tags", timeout=3)
+        r = requests.get("http://localhost:17803/api/llm/health", timeout=3)
         return r.status_code == 200
     except Exception:
         return False
@@ -250,8 +250,8 @@ async def test_layer2_stage1_unified():
     print("LAYER 2a: Stage 1 Unified Safety (LLM-backed)")
     print("-" * 70)
 
-    if not check_ollama_available():
-        print("  SKIP: Ollama not reachable at localhost:11434")
+    if not check_llm_available():
+        print("  SKIP: GPU Service LLM not reachable at localhost:17803")
         return []
 
     from schemas.engine.pipeline_executor import PipelineExecutor
@@ -335,8 +335,8 @@ async def test_layer2_stage3_llamaguard():
     print("LAYER 2b: Stage 3 Llama-Guard (pre-generation)")
     print("-" * 70)
 
-    if not check_ollama_available():
-        print("  SKIP: Ollama not reachable at localhost:11434")
+    if not check_llm_available():
+        print("  SKIP: GPU Service LLM not reachable at localhost:17803")
         return []
 
     failures = []
@@ -424,8 +424,8 @@ def test_layer3_vlm():
     print("LAYER 3: VLM Post-Generation Image Safety")
     print("-" * 70)
 
-    if not check_ollama_available():
-        print("  SKIP: Ollama not reachable at localhost:11434")
+    if not check_llm_available():
+        print("  SKIP: GPU Service LLM not reachable at localhost:17803")
         return []
 
     # Check if VLM model is available
@@ -435,7 +435,7 @@ def test_layer3_vlm():
         models = [m["name"] for m in r.json().get("models", [])]
         vlm_model = config.VLM_SAFETY_MODEL
         if not any(vlm_model in m for m in models):
-            print(f"  SKIP: VLM model '{vlm_model}' not loaded in Ollama")
+            print(f"  SKIP: VLM model '{vlm_model}' not loaded in GPU Service")
             print(f"  Available models: {models[:10]}")
             return []
     except Exception as e:
@@ -541,11 +541,11 @@ async def main():
         all_failures["L1_jugendschutz"] = test_layer1_jugendschutz()
         print()
 
-    # -- Layer 2: LLM Safety (requires Ollama) --
+    # -- Layer 2: LLM Safety (requires GPU Service LLM) --
     if args.layer in ("2", "all"):
         print()
         print("=" * 70)
-        print("LAYER 2: LLM SAFETY CHECKS (requires Ollama)")
+        print("LAYER 2: LLM SAFETY CHECKS (requires GPU Service LLM)")
         print("=" * 70)
         print()
         all_failures["L2_stage1"] = await test_layer2_stage1_unified()
@@ -553,7 +553,7 @@ async def main():
         all_failures["L2_stage3"] = await test_layer2_stage3_llamaguard()
         print()
 
-    # -- Layer 3: VLM (requires Ollama + VLM model) --
+    # -- Layer 3: VLM (requires GPU Service LLM + VLM model) --
     if args.layer in ("3", "all"):
         print()
         print("=" * 70)

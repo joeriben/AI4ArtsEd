@@ -239,7 +239,7 @@ async function startAnalysis() {
     error: null,
   }))
 
-  // Sequential execution — Ollama must swap VLMs one at a time (VRAM)
+  // Sequential execution — must swap VLMs one at a time (VRAM)
   for (let idx = 0; idx < models.length; idx++) {
     const model = models[idx]!
     activeModelIdx.value = idx

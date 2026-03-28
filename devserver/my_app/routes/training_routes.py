@@ -6,7 +6,6 @@ import requests
 from typing import List
 from flask import Blueprint, request, jsonify, Response, stream_with_context
 from my_app.services.training_service import training_service
-from config import OLLAMA_API_BASE_URL
 
 # Define Blueprint
 training_bp = Blueprint('training', __name__)
@@ -72,16 +71,16 @@ def clear_vram():
     Unload models from VRAM to free space for training.
     Options in request body:
     - unload_comfyui: bool (default True)
-    - unload_ollama: bool (default True)
+    - unload_llm: bool (default True)
     """
     try:
         data = request.get_json(silent=True) or {}
         unload_comfyui = data.get('unload_comfyui', True)
-        unload_ollama = data.get('unload_ollama', True)
+        unload_llm = data.get('unload_llm', data.get('unload_ollama', True))
 
         results = {
             "comfyui": None,
-            "ollama": None,
+            "llm": None,
             "errors": []
         }
 
@@ -105,7 +104,7 @@ def clear_vram():
                 results["errors"].append(f"ComfyUI: {str(e)}")
 
         # Unload llama-server models
-        if unload_ollama:
+        if unload_llm:
             try:
                 from config import LLAMA_SERVER_URL
                 llm_url = LLAMA_SERVER_URL.rstrip('/')
@@ -120,7 +119,7 @@ def clear_vram():
                     models = loaded_data if isinstance(loaded_data, list) else loaded_data.get("data", [])
 
                     if not models:
-                        results["ollama"] = "No models loaded"
+                        results["llm"] = "No models loaded"
                     else:
                         unloaded = []
                         for model_info in models:
@@ -136,14 +135,14 @@ def clear_vram():
                                 except:
                                     pass
 
-                        results["ollama"] = f"Unloaded: {', '.join(unloaded)}" if unloaded else "No models to unload"
+                        results["llm"] = f"Unloaded: {', '.join(unloaded)}" if unloaded else "No models to unload"
                 else:
-                    results["ollama"] = "Could not query loaded models"
+                    results["llm"] = "Could not query loaded models"
 
             except requests.exceptions.ConnectionError:
-                results["ollama"] = "Ollama not running (OK)"
+                results["llm"] = "LLM not running (OK)"
             except Exception as e:
-                results["errors"].append(f"Ollama: {str(e)}")
+                results["errors"].append(f"LLM: {str(e)}")
 
         # Wait a moment for VRAM to actually free
         time.sleep(2)

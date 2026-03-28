@@ -1,21 +1,20 @@
 """
-Prompt Interception Engine - Backend Proxy for Ollama/OpenRouter
+Prompt Interception Engine - Backend Proxy for Local LLM/OpenRouter
 
 ROLE: Backend proxy layer (NOT a chunk or pipeline)
-- Routes requests to Ollama/OpenRouter APIs
+- Routes requests to local LLM / OpenRouter APIs
 - Handles model fallbacks and error recovery
-- Called by BackendRouter for all Ollama/OpenRouter chunks
+- Called by BackendRouter for all LOCAL_LLM/OpenRouter chunks
 
 ARCHITECTURE:
   Chunk (manipulate.json)
     → ChunkBuilder → BackendRouter.route()
-      → PromptInterceptionEngine (THIS) → Ollama/OpenRouter API
+      → PromptInterceptionEngine (THIS) → LLM Backend / OpenRouter API
 
 USAGE:
-  1. backend_router.py:74 - Main routing (Ollama/OpenRouter backends)
+  1. backend_router.py:74 - Main routing (LOCAL_LLM/OpenRouter backends)
   2. schema_pipeline_routes.py:1049 - Direct test endpoint
 
-Migration der AI4ArtsEd Custom Node
 Uses centralized ModelSelector for all model operations
 """
 
@@ -104,7 +103,7 @@ class PromptInterceptionEngine:
         # Use centralized model selector instead of local methods
         self.model_selector = model_selector
         self.openrouter_models = self.model_selector.get_openrouter_models()
-        self.ollama_models = self.model_selector.get_ollama_models()
+        self.local_models = self.model_selector.get_local_models()
         # Set by stage orchestrator before calling process_request()
         self._current_stage: str = "stage2"
 
@@ -208,13 +207,13 @@ class PromptInterceptionEngine:
             
             # Backend-spezifische Verarbeitung (check fresh model lists)
             self.openrouter_models = self.model_selector.get_openrouter_models()
-            self.ollama_models = self.model_selector.get_ollama_models()
+            self.local_models = self.model_selector.get_local_models()
 
             # Route based on provider prefix (explicit routing)
             # Canvas and other components select specific providers via prefix
             params = request.parameters or {}
-            if request.model.startswith("local/") or real_model_name in self.ollama_models:
-                output_text, model_used = await self._call_ollama(
+            if request.model.startswith("local/") or real_model_name in self.local_models:
+                output_text, model_used = await self._call_local_llm(
                     full_prompt, real_model_name, request.debug, request.unload_model,
                     parameters=params
                 )
@@ -358,9 +357,9 @@ class PromptInterceptionEngine:
             else:
                 raise e
     
-    async def _call_ollama(self, prompt: str, model: str, debug: bool, unload_model: bool,
+    async def _call_local_llm(self, prompt: str, model: str, debug: bool, unload_model: bool,
                            parameters: Optional[Dict[str, Any]] = None) -> Tuple[str, str]:
-        """LLM inference via GPU Service (primary) with Ollama fallback."""
+        """LLM inference via GPU Service."""
         try:
             logger.info(f"[BACKEND] LLM Request: {model}")
 
@@ -399,11 +398,11 @@ class PromptInterceptionEngine:
                 logger.error(f"LLM Modell {model} fehlgeschlagen: {e}")
 
             # Fallback versuchen
-            fallback_model = self._find_ollama_fallback(model, debug)
+            fallback_model = self._find_local_fallback(model, debug)
             if fallback_model and fallback_model != model:
                 if debug:
                     logger.info(f"LLM Fallback: {fallback_model}")
-                return await self._call_ollama(prompt, fallback_model, debug, unload_model, parameters=parameters)
+                return await self._call_local_llm(prompt, fallback_model, debug, unload_model, parameters=parameters)
             else:
                 raise e
 
@@ -994,9 +993,9 @@ class PromptInterceptionEngine:
         """Use centralized OpenRouter fallback logic"""
         return self.model_selector.find_openrouter_fallback(failed_model, debug)
     
-    def _find_ollama_fallback(self, failed_model: str, debug: bool) -> Optional[str]:
-        """Use centralized Ollama fallback logic"""
-        return self.model_selector.find_ollama_fallback(failed_model, debug)
+    def _find_local_fallback(self, failed_model: str, debug: bool) -> Optional[str]:
+        """Use centralized local model fallback logic"""
+        return self.model_selector.find_local_fallback(failed_model, debug)
     
     def _format_outputs(self, output_text: str) -> Tuple[str, float, int, bool]:
         """Formatiert Output in alle vier Rückgabeformate (Custom Node Logic)"""

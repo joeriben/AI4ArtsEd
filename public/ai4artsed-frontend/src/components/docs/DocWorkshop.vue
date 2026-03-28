@@ -57,8 +57,8 @@
           : 'NO filters active. Exclusively for authorized research institutions (see LICENSE.md §3(e)). Unfiltered outputs must never be presented to learners.' }}</li>
       </ul>
       <p style="margin-top: 8px;"><em>{{ currentLanguage === 'de'
-        ? 'Die DSGVO-Prüfung (Personennamen) läuft immer lokal über Ollama — Daten verlassen nie das System.'
-        : 'The GDPR check (personal names) always runs locally via Ollama — data never leaves the system.' }}</em></p>
+        ? 'Die DSGVO-Prüfung (Personennamen) läuft immer lokal — Daten verlassen nie das System.'
+        : 'The GDPR check (personal names) always runs locally — data never leaves the system.' }}</em></p>
       <p style="margin-top: 8px;"><em>{{ currentLanguage === 'de'
         ? 'Wichtig: LLM-basierte Sicherheitsmechanismen bieten niemals absolute Sicherheit. Fehlerhafte Durchlassungen oder falsche Blockierungen sind unvermeidbar. Die pädagogische Verantwortung liegt beim Anwender, nicht beim System.'
         : 'Important: LLM-based safety mechanisms never provide absolute security. False passes or incorrect blocks are unavoidable. The pedagogical responsibility lies with the user, not the system.' }}</em></p>
@@ -70,7 +70,7 @@
         ? 'In den Einstellungen können die verwendeten Sprachmodelle flexibel konfiguriert werden:'
         : 'The language models used can be flexibly configured in the settings:' }}</p>
       <ul>
-        <li>{{ currentLanguage === 'de' ? 'Lokale Modelle (Ollama) – volle Datenkontrolle' : 'Local models (Ollama) – full data control' }}</li>
+        <li>{{ currentLanguage === 'de' ? 'Lokale Modelle – volle Datenkontrolle' : 'Local models – full data control' }}</li>
         <li>{{ currentLanguage === 'de' ? 'Externe Cloud-Anbieter – mehr Leistung' : 'External cloud providers – more performance' }}</li>
         <li>{{ currentLanguage === 'de' ? 'DSGVO-konforme Optionen (Mistral, lokale Modelle)' : 'GDPR-compliant options (Mistral, local models)' }}</li>
       </ul>

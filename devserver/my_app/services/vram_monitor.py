@@ -1,7 +1,7 @@
 """
 VRAM Monitor — consolidated view of GPU memory usage across backends.
 
-DevServer orchestrates both Ollama (LLM) and GPU Service (media generation).
+DevServer orchestrates GPU Service (LLM + media generation).
 This module provides a unified view of VRAM usage for both, enabling
 future VRAM budget management (Phase 4B).
 """

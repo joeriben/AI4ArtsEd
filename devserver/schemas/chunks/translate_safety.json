@@ -2,13 +2,12 @@
   "name": "translate_safety",
   "description": "Stage 1: Translation and Safety Check (TASK + CONTEXT + PROMPT)",
   "template": "Task:\n{{TASK_INSTRUCTION}}\n\nContext:\n{{CONTEXT}}\n\nPrompt:\n{{INPUT_TEXT}}",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "model": "STAGE1_TEXT_MODEL",
   "parameters": {
     "temperature": 0.7,
     "top_p": 0.9,
-    "stream": false,
-    "keep_alive": "10m"
+    "stream": false
   },
   "meta": {
     "chunk_type": "translation_safety",

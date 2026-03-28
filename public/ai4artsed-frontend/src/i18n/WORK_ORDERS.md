@@ -21,6 +21,16 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-28-ollama-removal-i18n
+- **Scope**: en.ts
+- **Changed keys** (modified — key names changed, old keys must be deleted in all languages):
+  - `settings.safetyModels.help` (MODIFIED): "Local via Ollama — ..." -> "Local — person names and safety checks never leave the system"
+  - `settings.models.ollamaAvailable` → RENAMED to `settings.models.localModelsAvailable` (MODIFIED): "Ollama models available" -> "local models available"
+  - `settings.backendStatus.ollama` → RENAMED to `settings.backendStatus.localLlm` (MODIFIED): "Ollama" -> "Local LLM"
+  - `training.vram.clearBtn` (MODIFIED): "Clear ComfyUI + Ollama VRAM" -> "Clear ComfyUI + LLM VRAM"
+  - `safetyBlocked.systemUnavailable` (MODIFIED): removed "(Ollama)" from text
+- **Context**: Ollama has been replaced by in-process llama-cpp-python in the GPU Service. All user-facing strings mentioning "Ollama" must be updated. The old key names (`ollamaAvailable`, `ollama`) must be deleted and replaced with the new names (`localModelsAvailable`, `localLlm`) in all 8 target languages.
+
 ### WO-2026-03-26-arcimboldo-mosaic-tab
 - **Scope**: en.ts
 - **Changed keys** (new):

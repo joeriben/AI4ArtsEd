@@ -96,11 +96,11 @@ class PipelineExecutor:
         self.backend_router = BackendRouter()
         self._initialized = False
         
-    def initialize(self, ollama_service=None, workflow_logic_service=None, comfyui_service=None):
+    def initialize(self, llm_service=None, workflow_logic_service=None, comfyui_service=None):
         """Initialize pipeline executor with legacy services"""
         self.config_loader.initialize(self.schemas_path)
         self.backend_router.initialize(
-            ollama_service=ollama_service,
+            llm_service=llm_service,
             workflow_logic_service=workflow_logic_service,
             comfyui_service=comfyui_service
         )

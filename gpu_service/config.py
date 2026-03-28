@@ -1,11 +1,10 @@
 """
 GPU Service Configuration
 
-Shared GPU inference service for media generation (Diffusers, HeartMuLa, StableAudio).
+Shared GPU inference service for media generation (Diffusers, HeartMuLa, StableAudio)
+and local LLM/VLM inference (llama-cpp-python).
 Runs as a standalone Flask/Waitress process on port 17803.
 Both dev (17802) and prod (17801) backends call this via HTTP REST.
-LLM text inference is handled directly by Ollama via LLMClient.
-VLM (vision) inference is proxied through GPU Service for VRAM coordination.
 """
 
 import os
@@ -160,20 +159,7 @@ TEXT_QUANT_MULTIPLIERS = {
 VRAM_USE_NVML = os.environ.get("VRAM_USE_NVML", "true").lower() == "true"
 VRAM_FOREIGN_OVERHEAD_MB = int(os.environ.get("VRAM_FOREIGN_OVERHEAD_MB", "2048"))  # CUDA context + driver overhead
 VRAM_BLACKLISTED_PORTS = [7801, 7821, 8188]  # SwarmUI ports — NEVER tolerated
-OLLAMA_API_URL = os.environ.get("OLLAMA_API_URL", "http://localhost:11434")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", "17804"))  # Expected ComfyUI
-
-# --- VLM Chat Proxy (Ollama vision models via VRAM-coordinated proxy) ---
-VLM_PROXY_ENABLED = os.environ.get("VLM_PROXY_ENABLED", "true").lower() == "true"
-# Estimated VRAM per model (MB) — Ollama quantized defaults
-VLM_VRAM_ESTIMATES = {
-    "qwen3-vl:2b": 2500,
-    "qwen3-vl:4b": 4000,
-    "qwen3-vl:32b": 20000,
-    "llama3.2-vision:latest": 8000,
-}
-VLM_DEFAULT_VRAM_MB = 4000  # Fallback for unknown models
-VLM_REQUEST_TIMEOUT = 180  # seconds per VLM call
 
 # --- Hunyuan3D-2 ---
 HUNYUAN3D_ENABLED = os.environ.get("HUNYUAN3D_ENABLED", "true").lower() == "true"

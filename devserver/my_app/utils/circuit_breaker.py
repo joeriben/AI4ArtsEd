@@ -7,7 +7,7 @@ Three states:
 - HALF_OPEN (after cooldown): one probe call tests recovery
 
 Replaces the TEMPORARY fail-open markers from Session 217 emergency fixes.
-Integrates with ollama_watchdog for automatic Ollama restart on failure.
+Integrates with llm_watchdog for automatic LLM health checking.
 """
 
 import time
@@ -56,15 +56,15 @@ class CircuitBreaker:
                     f"[CIRCUIT-BREAKER:{self.name}] → OPEN after {self._consecutive_failures} "
                     f"consecutive failures — attempting self-healing"
                 )
-                # Attempt automatic Ollama restart
+                # Attempt automatic LLM restart
                 if self._attempt_self_healing():
-                    # Ollama recovered — reset to CLOSED
+                    # LLM recovered — reset to CLOSED
                     self._state = CircuitState.CLOSED
                     self._consecutive_failures = 0
                     logger.info(f"[CIRCUIT-BREAKER:{self.name}] Self-healing succeeded → CLOSED")
 
     def _attempt_self_healing(self) -> bool:
-        """Try to restart Ollama automatically. Returns True if recovered."""
+        """Try to restart LLM backend automatically. Returns True if recovered."""
         try:
             from my_app.utils.llm_watchdog import attempt_restart
             return attempt_restart()

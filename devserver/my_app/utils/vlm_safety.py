@@ -24,9 +24,9 @@ import config
 
 # Max dimension for VLM input — safety classification doesn't need full resolution
 VLM_MAX_SIZE = 768
-# Min dimension — Ollama qwen3-vl panics on images < 32px (SmartResize factor=32).
+# Min dimension — qwen3-vl panics on images < 32px (SmartResize factor=32).
 # A panic kills the runner process, causing ALL subsequent VLM requests to 500
-# until Ollama is restarted. Discovered 2026-03-22 in production.
+# until the backend is restarted. Discovered 2026-03-22 in production.
 VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
@@ -188,7 +188,7 @@ def _call_verdict_model(prompt: str) -> Optional[str]:
             logger.error(f"[VLM-SAFETY] {provider} API call failed: {e}")
             return None
     else:
-        # Local model via Ollama
+        # Local model via GPU Service LLM backend
         from my_app.services.llm_backend import get_llm_backend
         result = get_llm_backend().chat(
             model=api_model,

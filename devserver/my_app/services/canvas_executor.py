@@ -415,7 +415,7 @@ class CanvasWorkflowExecutor:
                 logger.warning(f"[Canvas Executor] Image eval preset '{preset}' not found, using fallback")
 
         try:
-            # Use existing image analysis helper (calls Ollama vision)
+            # Use existing image analysis helper (calls local VLM)
             # Note: analyze_image handles both file paths and base64
             # Session 152: Pass selected vision model from node
             analysis_text = analyze_image(

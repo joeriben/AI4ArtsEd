@@ -11,7 +11,7 @@ from config import (
     COMFYUI_PREFIX,
     POLLING_TIMEOUT
 )
-from my_app.services.llm_service import llm_service as ollama_service
+from my_app.services.llm_service import llm_service
 from my_app.services.comfyui_service import comfyui_service
 from my_app.services.workflow_logic_service import workflow_logic_service
 from my_app.services.export_manager import export_manager
@@ -64,7 +64,7 @@ def execute_workflow_stream():
                 
                 # Analyze image and concatenate with prompt
                 workflow_prompt = inpainting_service.analyze_and_concatenate(
-                    original_prompt, image_data, ollama_service
+                    original_prompt, image_data, llm_service
                 )
                 logger.info(f"Combined prompt after image analysis: {workflow_prompt[:50]}...")
                 
@@ -78,7 +78,7 @@ def execute_workflow_stream():
             
             # Validate prompt if enabled
             if ENABLE_VALIDATION_PIPELINE:
-                validation_result = ollama_service.validate_and_translate_prompt(workflow_prompt)
+                validation_result = llm_service.validate_and_translate_prompt(workflow_prompt)
                 
                 if not validation_result["success"]:
                     return {"error": validation_result.get("error", "Prompt-Validierung fehlgeschlagen.")}

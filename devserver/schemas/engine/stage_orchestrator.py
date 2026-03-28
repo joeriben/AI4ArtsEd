@@ -194,7 +194,7 @@ def fast_dsgvo_check(text: str) -> Tuple[bool, List[str], bool]:
 
 
 # Short-lived cache for DSGVO LLM-Verify results.
-# Prevents redundant Ollama calls when multiple concurrent pipeline runs
+# Prevents redundant LLM calls when multiple concurrent pipeline runs
 # trigger NER on the same entity set (e.g. workshop burst generation).
 _dsgvo_verify_cache: Dict[tuple, tuple] = {}  # (sorted entities) → (result, timestamp)
 _DSGVO_VERIFY_CACHE_TTL = 60  # seconds
@@ -208,7 +208,7 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
     "muted earth tones:1.1" → PER). This function asks a LOCAL LLM whether
     the detected entities are real personal names before blocking.
 
-    IMPORTANT: Always local (Ollama) — NEVER external APIs.
+    IMPORTANT: Always local — NEVER external APIs.
     Personal names must not leave the local system (DSGVO).
 
     Model selection: STAGE1_TEXT_MODEL if local, else SAFETY_MODEL fallback.
@@ -237,11 +237,11 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
             logger.info(f"[DSGVO-LLM-VERIFY] Cache hit for {names_str} → {'UNSAFE' if cached_result else 'SAFE'}")
             return cached_result
 
-    # Resolve local Ollama model for DSGVO NER verification.
-    # DSGVO: personal names must NEVER leave the local system — Ollama only.
+    # Resolve local model for DSGVO NER verification.
+    # DSGVO: personal names must NEVER leave the local system — local LLM only.
     model = config.DSGVO_VERIFY_MODEL
-    # Strip local/ prefix for Ollama
-    ollama_model = model.replace("local/", "") if model.startswith("local/") else model
+    # Strip local/ prefix for LLM backend
+    local_model = model.replace("local/", "") if model.startswith("local/") else model
 
     prompt = (
         f"A text analysis system flagged the following words as person names. "
@@ -257,21 +257,21 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
 
     try:
         from my_app.services.llm_backend import get_llm_backend
-        from config import OLLAMA_TIMEOUT_SAFETY
+        from config import LLM_TIMEOUT_SAFETY
 
         start = _time.time()
         llm_result = get_llm_backend().chat(
-            model=ollama_model,
+            model=local_model,
             messages=messages,
             temperature=0.0,
             max_new_tokens=500,
-            timeout=OLLAMA_TIMEOUT_SAFETY,
+            timeout=LLM_TIMEOUT_SAFETY,
         )
         duration_ms = (_time.time() - start) * 1000
 
         if llm_result is None:
             logger.error(
-                f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM ({ollama_model}) returned None "
+                f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM ({local_model}) returned None "
                 f"({duration_ms:.0f}ms) — fail-closed"
             )
             return None
@@ -292,7 +292,7 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
 
         if not result:
             logger.error(
-                f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM ({ollama_model}) returned EMPTY "
+                f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM ({local_model}) returned EMPTY "
                 f"({duration_ms:.0f}ms) — fail-closed"
             )
             return None
@@ -309,7 +309,7 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
         return is_real_name
 
     except Exception as e:
-        logger.error(f"[DSGVO-LLM-VERIFY] LLM verification failed ({ollama_model}): {e} — fail-closed")
+        logger.error(f"[DSGVO-LLM-VERIFY] LLM verification failed ({local_model}): {e} — fail-closed")
         return None
 
 
@@ -321,7 +321,7 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
     this function asks the LLM to *discover* personal names in the text.
     Used only as a fallback when SpaCy models can't be loaded.
 
-    Uses DSGVO_VERIFY_MODEL (local Ollama) — personal names must NEVER
+    Uses DSGVO_VERIFY_MODEL (local LLM) — personal names must NEVER
     leave the local system.
 
     Returns:
@@ -332,7 +332,7 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
     import config
 
     model = config.DSGVO_VERIFY_MODEL
-    ollama_model = model.replace("local/", "") if model.startswith("local/") else model
+    local_model = model.replace("local/", "") if model.startswith("local/") else model
 
     prompt = (
         f"Does the following text contain real person names (first names, last names, "
@@ -349,20 +349,20 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
 
     try:
         from my_app.services.llm_backend import get_llm_backend
-        from config import OLLAMA_TIMEOUT_SAFETY
+        from config import LLM_TIMEOUT_SAFETY
 
         start = _time.time()
         llm_result = get_llm_backend().chat(
-            model=ollama_model,
+            model=local_model,
             messages=messages,
             temperature=0.0,
             max_new_tokens=500,
-            timeout=OLLAMA_TIMEOUT_SAFETY,
+            timeout=LLM_TIMEOUT_SAFETY,
         )
         duration_ms = (_time.time() - start) * 1000
 
         if llm_result is None:
-            logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({ollama_model}) returned None ({duration_ms:.0f}ms) — fail-closed")
+            logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({local_model}) returned None ({duration_ms:.0f}ms) — fail-closed")
             return None
 
         result = llm_result.get("content", "").strip()
@@ -379,7 +379,7 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
                     result = "SAFE"
 
         if not result:
-            logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({ollama_model}) returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
+            logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({local_model}) returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
             return None
 
         result_upper = result.upper().strip()
@@ -391,7 +391,7 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
         return has_names
 
     except Exception as e:
-        logger.error(f"[DSGVO-LLM-FALLBACK] LLM failed ({ollama_model}): {e} — fail-closed")
+        logger.error(f"[DSGVO-LLM-FALLBACK] LLM failed ({local_model}): {e} — fail-closed")
         return None
 
 
@@ -503,7 +503,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
         else:
             # Youth: use local DSGVO_VERIFY_MODEL (qwen3:1.7b)
             from my_app.services.llm_backend import get_llm_backend
-            from config import OLLAMA_TIMEOUT_SAFETY
+            from config import LLM_TIMEOUT_SAFETY
             model = config.DSGVO_VERIFY_MODEL
 
             llm_result = get_llm_backend().generate(
@@ -511,7 +511,7 @@ def llm_verify_age_filter_context(text: str, found_terms: list, safety_level: st
                 prompt=prompt_text,
                 temperature=0.0,
                 max_new_tokens=50,
-                timeout=OLLAMA_TIMEOUT_SAFETY,
+                timeout=LLM_TIMEOUT_SAFETY,
                 enable_thinking=False,
             )
             duration_ms = (_time.time() - start) * 1000
@@ -568,7 +568,7 @@ def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
 
     try:
         from my_app.services.llm_backend import get_llm_backend
-        from config import OLLAMA_TIMEOUT_SAFETY
+        from config import LLM_TIMEOUT_SAFETY
 
         start = _time.time()
         llm_result = get_llm_backend().generate(
@@ -576,7 +576,7 @@ def _llm_safety_check_generation(generation_prompt: str) -> Dict[str, Any]:
             prompt=prompt,
             temperature=0.0,
             max_new_tokens=50,
-            timeout=OLLAMA_TIMEOUT_SAFETY,
+            timeout=LLM_TIMEOUT_SAFETY,
             enable_thinking=False,
         )
         execution_time = _time.time() - start
@@ -1070,7 +1070,7 @@ async def execute_stage1_safety_unified(
         llm_start = _time.time()
         llm_result = get_llm_backend().generate(
             model=model, prompt=prompt, temperature=0.0,
-            max_new_tokens=50, timeout=config.OLLAMA_TIMEOUT_SAFETY,
+            max_new_tokens=50, timeout=config.LLM_TIMEOUT_SAFETY,
             enable_thinking=False,
         )
         llm_time = _time.time() - llm_start
@@ -1128,7 +1128,7 @@ async def execute_stage1_safety_unified(
         if verify_result is None:
             # LLM unavailable — fail-closed
             error_message = (
-                "Sicherheitssystem (Ollama) reagiert nicht, daher kann keine weitere "
+                "Sicherheitssystem reagiert nicht, daher kann keine weitere "
                 "Verarbeitung erfolgen. Bitte den Systemadministrator kontaktieren."
             )
             checks_passed.append('dsgvo_ner')
@@ -1169,7 +1169,7 @@ async def execute_stage1_safety_unified(
         if dsgvo_result is None:
             # LLM unavailable → fail-closed
             error_message = (
-                "Sicherheitssystem (Ollama) reagiert nicht, daher kann keine weitere "
+                "Sicherheitssystem reagiert nicht, daher kann keine weitere "
                 "Verarbeitung erfolgen. Bitte den Systemadministrator kontaktieren."
             )
             checks_passed.append('dsgvo_llm')

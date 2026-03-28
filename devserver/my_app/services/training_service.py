@@ -27,7 +27,6 @@ from config import (
     CLIP_L_PATH,
     CLIP_G_PATH,
     T5XXL_PATH,
-    OLLAMA_API_BASE_URL,
     CAPTION_VLM_MODEL,
     CAPTION_CLEANUP_MODEL,
     CAPTION_ENABLED,
@@ -128,7 +127,7 @@ class TrainingService:
         1. Python garbage collection
         2. torch.cuda.empty_cache() + synchronize
         3. Unload ComfyUI models via /free endpoint
-        4. Unload Ollama models via keep_alive=0
+        4. Unload LLM models
         5. Wait and do final cleanup pass
 
         Returns dict with cleanup results and before/after VRAM stats.
@@ -211,11 +210,11 @@ class TrainingService:
                     if unloaded:
                         results["actions"].append(f"llama-server unloaded: {', '.join(unloaded)}")
                     else:
-                        results["actions"].append("Ollama: no models to unload")
+                        results["actions"].append("LLM: no models to unload")
         except requests.exceptions.ConnectionError:
-            results["actions"].append("Ollama not running (OK)")
+            results["actions"].append("LLM not running (OK)")
         except Exception as e:
-            results["errors"].append(f"Ollama unload failed: {e}")
+            results["errors"].append(f"LLM unload failed: {e}")
 
         # Step 4b: Unload GPU Service LLM models
         try:
@@ -440,7 +439,7 @@ class TrainingService:
         }
 
     def _generate_captions(self):
-        """Auto-caption training images using a VLM via Ollama.
+        """Auto-caption training images using a VLM via GPU Service.
 
         Two-stage approach: qwen3-vl describes the image (may include chain-of-thought),
         then a fast text LLM extracts the clean descriptive sentence.
@@ -595,7 +594,7 @@ class TrainingService:
 
             if vram_status.get("free_gb", 0) < min_free_gb:
                 self._append_log(f"Free VRAM: {vram_status.get('free_gb', 0):.1f} GB (need {min_free_gb:.1f} GB)")
-                self._append_log("Clearing VRAM... (unloading ComfyUI, Ollama)")
+                self._append_log("Clearing VRAM... (unloading ComfyUI, LLM)")
 
                 cleanup_result = self.clear_vram_thoroughly()
 

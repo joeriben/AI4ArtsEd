@@ -20,7 +20,7 @@ export function useChatModels() {
     { id: 'mammouth/claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
     { id: 'mammouth/claude-opus-4-6', label: 'Claude Opus 4.6' },
     { id: 'mammouth/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
-    // Local (Ollama)
+    // Local
     { id: 'local/qwen3:32b', label: 'Qwen 3 32B (local)' },
     { id: 'local/qwen3:4b', label: 'Qwen 3 4B (local, fast)' },
     { id: 'local/deepseek-r1:32b', label: 'DeepSeek R1 32B (local)' },

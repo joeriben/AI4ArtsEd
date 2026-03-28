@@ -2,13 +2,12 @@
   "name": "text_split",
   "description": "Semantic text splitting - splits input into structured parts without transformation",
   "template": "{{CONTEXT}}\n\nInput:\n{{INPUT_TEXT}}",
-  "backend_type": "ollama",
+  "backend_type": "local_llm",
   "model": "SAFETY_MODEL",
   "parameters": {
     "temperature": 0.7,
     "top_p": 0.9,
-    "stream": false,
-    "keep_alive": "10m"
+    "stream": false
   },
   "meta": {
     "chunk_type": "text_split",

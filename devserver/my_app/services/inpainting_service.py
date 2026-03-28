@@ -95,21 +95,21 @@ class InpaintingService:
         return workflow
     
     def analyze_and_concatenate(self, prompt: str, image_data: str, 
-                              ollama_service) -> str:
+                              llm_service) -> str:
         """
         Analyze image and concatenate with prompt for standard workflows
         
         Args:
             prompt: User's text prompt
             image_data: Base64 encoded image data
-            ollama_service: Reference to ollama service for image analysis
+            llm_service: Reference to LLM service for image analysis
             
         Returns:
             Concatenated prompt with image analysis
         """
         try:
             # Analyze the image
-            analysis = ollama_service.analyze_image(image_data)
+            analysis = llm_service.analyze_image(image_data)
             
             if analysis:
                 # Format the combined prompt with a marker that the validation pipeline can recognize

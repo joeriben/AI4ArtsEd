@@ -94,7 +94,7 @@ class LLMClient:
         Returns {"content": str, "thinking": str|None, "tool_calls": list|None} or None on failure.
 
         Note: keep_alive, enable_thinking, tools are accepted for backward compatibility
-        but ignored (llama-cpp-python does not support these Ollama-specific features).
+        but ignored (llama-cpp-python does not support these legacy features).
         """
         return self._chat(model, messages, images, temperature, max_new_tokens,
                           repetition_penalty, timeout)

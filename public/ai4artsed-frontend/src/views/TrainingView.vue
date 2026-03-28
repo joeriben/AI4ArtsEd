@@ -66,7 +66,7 @@
 
           <div v-if="vramClearResult" class="vram-clear-result">
             <div v-if="vramClearResult.comfyui">ComfyUI: {{ vramClearResult.comfyui }}</div>
-            <div v-if="vramClearResult.ollama">Ollama: {{ vramClearResult.ollama }}</div>
+            <div v-if="vramClearResult.llm">LLM: {{ vramClearResult.llm }}</div>
             <div v-if="vramClearResult.new_free_gb">{{ t('training.vram.newFree') }}: {{ vramClearResult.new_free_gb }} GB</div>
           </div>
         </div>
@@ -193,7 +193,7 @@ interface VramInfo {
 
 interface VramClearResult {
   comfyui?: string;
-  ollama?: string;
+  llm?: string;
   new_free_gb?: number;
   new_used_gb?: number;
   errors?: string[];
@@ -298,7 +298,7 @@ const clearVram = async () => {
   try {
     const response = await uploadClient.post('/api/training/clear-vram', {
       unload_comfyui: true,
-      unload_ollama: true
+      unload_llm: true
     });
 
     if (response.data.success) {

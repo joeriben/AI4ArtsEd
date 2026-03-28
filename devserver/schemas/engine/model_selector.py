@@ -13,8 +13,8 @@ from typing import Optional, Tuple, Dict, List, Any
 
 logger = logging.getLogger(__name__)
 
-# Model mappings imported from legacy config
-OLLAMA_TO_OPENROUTER_MAP = {
+# Model mappings: local model names → OpenRouter equivalents
+LOCAL_TO_OPENROUTER_MAP = {
     "deepcoder": "agentica-org/deepcoder-14b-preview",
     "deepseek-r1": "deepseek/deepseek-r1",
     # NOTE: google/gemma-2-9b-it NOT available on OpenRouter, fallback to mistral-nemo
@@ -54,10 +54,10 @@ OLLAMA_TO_OPENROUTER_MAP = {
     "gemma2:27b": "google/gemma-2-27b-it",
 }
 
-OPENROUTER_TO_OLLAMA_MAP = {v: k for k, v in OLLAMA_TO_OPENROUTER_MAP.items()}
+OPENROUTER_TO_LOCAL_MAP = {v: k for k, v in LOCAL_TO_OPENROUTER_MAP.items()}
 
 # Add reverse mappings for common OpenRouter models
-OPENROUTER_TO_OLLAMA_MAP.update({
+OPENROUTER_TO_LOCAL_MAP.update({
     "google/gemma-2-27b-it": "gemma2:27b",
     "anthropic/claude-haiku-4.5": "mistral-nemo",  # Fallback for Claude
     "anthropic/claude-haiku-4.5": "mistral-nemo",
@@ -72,8 +72,8 @@ class ModelSelector:
     """
     
     def __init__(self):
-        self.ollama_to_openrouter = OLLAMA_TO_OPENROUTER_MAP
-        self.openrouter_to_ollama = OPENROUTER_TO_OLLAMA_MAP
+        self.local_to_openrouter = LOCAL_TO_OPENROUTER_MAP
+        self.openrouter_to_local = OPENROUTER_TO_LOCAL_MAP
         self.task_categories = self._define_task_categories()
     
     def _define_task_categories(self) -> Dict[str, Dict[str, str]]:
@@ -142,7 +142,7 @@ class ModelSelector:
             base_model: Template model OR task category
                        Concrete: "gemma2:9b", "openrouter/anthropic/claude-haiku-4.5"
                        Task-based: "task:standard", "task:advanced", "task:translation", etc.
-            execution_mode: "eco" (local/Ollama) or "fast" (cloud/OpenRouter)
+            execution_mode: "eco" (local) or "fast" (cloud/OpenRouter)
             
         Returns:
             Final model with proper prefix (e.g., "local/gemma2:9b" or "openrouter/...")
@@ -206,7 +206,7 @@ class ModelSelector:
     
     def switch_to_eco_mode(self, model: str) -> str:
         """
-        Switch model to eco mode (local/Ollama)
+        Switch model to eco mode (local)
         
         Args:
             model: Model string (may have prefix or not)
@@ -221,7 +221,7 @@ class ModelSelector:
         # If has openrouter/ prefix, convert to local equivalent
         if model.startswith("openrouter/"):
             openrouter_model_name = model[11:].split(' ')[0]
-            local_model = self.openrouter_to_ollama.get(openrouter_model_name)
+            local_model = self.openrouter_to_local.get(openrouter_model_name)
             
             if local_model:
                 result = f"local/{local_model}"
@@ -260,17 +260,17 @@ class ModelSelector:
         
         # Try exact match first
         exact_match = (
-            self.ollama_to_openrouter.get(local_model_with_tag) or 
-            self.ollama_to_openrouter.get(local_model_with_tag.split(':')[0])
+            self.local_to_openrouter.get(local_model_with_tag) or 
+            self.local_to_openrouter.get(local_model_with_tag.split(':')[0])
         )
         
         # Parse model for intelligent fallback
         req_base, req_size = self._parse_model_name(local_model_with_tag)
         
         # Apply intelligent fallback logic (from legacy)
-        if 7 <= req_size <= 32 and "mistral-nemo" in self.ollama_to_openrouter and local_model_with_tag != "mistral-nemo":
+        if 7 <= req_size <= 32 and "mistral-nemo" in self.local_to_openrouter and local_model_with_tag != "mistral-nemo":
             if exact_match == "mistralai/mistral-small-24b" or not exact_match:
-                openrouter_model = self.ollama_to_openrouter["mistral-nemo"]
+                openrouter_model = self.local_to_openrouter["mistral-nemo"]
                 logger.info(f"[FAST MODE] Using Mistral Nemo as intelligent fallback for {req_size}b model")
             else:
                 openrouter_model = exact_match
@@ -285,7 +285,7 @@ class ModelSelector:
                 logger.info(f"[FAST MODE] Found fallback: {openrouter_model}")
             else:
                 logger.warning(f"[FAST MODE] No fallback found for {local_model_with_tag}, using Mistral Nemo")
-                openrouter_model = self.ollama_to_openrouter.get("mistral-nemo", "mistralai/mistral-nemo")
+                openrouter_model = self.local_to_openrouter.get("mistral-nemo", "mistralai/mistral-nemo")
         
         result = f"openrouter/{openrouter_model}"
         logger.info(f"[FAST MODE] {model} → {result}")
@@ -327,12 +327,12 @@ class ModelSelector:
             OpenRouter model name or None
         """
         # For medium-sized models, prefer Mistral Nemo
-        if 7 <= req_size <= 32 and "mistral-nemo" in self.ollama_to_openrouter:
-            return self.ollama_to_openrouter["mistral-nemo"]
+        if 7 <= req_size <= 32 and "mistral-nemo" in self.local_to_openrouter:
+            return self.local_to_openrouter["mistral-nemo"]
         
         # Find candidates in the same family
         candidates = []
-        for map_key in self.ollama_to_openrouter.keys():
+        for map_key in self.local_to_openrouter.keys():
             cand_base, cand_size = self._parse_model_name(map_key)
             if (req_base.startswith(cand_base) or cand_base.startswith(req_base)) and cand_size >= req_size:
                 candidates.append((map_key, cand_size))
@@ -340,10 +340,10 @@ class ModelSelector:
         if candidates:
             # Sort by size and pick the smallest that meets requirements
             candidates.sort(key=lambda x: x[1])
-            return self.ollama_to_openrouter[candidates[0][0]]
+            return self.local_to_openrouter[candidates[0][0]]
         
         # Ultimate fallback
-        return self.ollama_to_openrouter.get("mistral-nemo")
+        return self.local_to_openrouter.get("mistral-nemo")
     
     def strip_prefix(self, model: str) -> str:
         """
@@ -405,11 +405,8 @@ class ModelSelector:
             "qwen/qwen3-32b": {"price": "$0.10/$0.30", "tag": "translator"},
         }
     
-    def get_ollama_models(self) -> List[str]:
-        """
-        Get available local models from llama-server.
-        Method name kept for backward compatibility.
-        """
+    def get_local_models(self) -> List[str]:
+        """Get available local models from llama-server."""
         try:
             from config import LLAMA_SERVER_URL
             response = requests.get(f"{LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
@@ -451,10 +448,9 @@ class ModelSelector:
             logger.warning(f"[FALLBACK] Using ultimate OpenRouter fallback: claude-3-haiku")
         return "anthropic/claude-haiku-4.5"
     
-    def find_ollama_fallback(self, failed_model: str, debug: bool = False) -> Optional[str]:
+    def find_local_fallback(self, failed_model: str, debug: bool = False) -> Optional[str]:
         """
-        Find fallback for Ollama model (when model unavailable/fails)
-        Transferred from prompt_interception_engine
+        Find fallback for local model (when model unavailable/fails).
 
         Args:
             failed_model: The model that failed
@@ -463,9 +459,9 @@ class ModelSelector:
         Returns:
             Fallback model name or None if no models available
         """
-        available_models = self.get_ollama_models()
+        available_models = self.get_local_models()
         if not available_models:
-            logger.error("[FALLBACK] No Ollama models available")
+            logger.error("[FALLBACK] No local models available")
             return None
 
         # Preferred fallbacks: small, fast models (prefix-matched to handle :latest/:8b etc.)
@@ -474,17 +470,17 @@ class ModelSelector:
             for model in available_models:
                 if model.startswith(pref) and model != failed_model:
                     if debug:
-                        logger.info(f"[FALLBACK] Ollama: {failed_model} → {model}")
+                        logger.info(f"[FALLBACK] Local: {failed_model} → {model}")
                     return model
 
         # Ultimate fallback: any model that isn't the one that just failed
         for model in available_models:
             if model != failed_model:
                 if debug:
-                    logger.warning(f"[FALLBACK] Using available Ollama model: {model}")
+                    logger.warning(f"[FALLBACK] Using available local model: {model}")
                 return model
 
-        logger.error(f"[FALLBACK] No alternative Ollama model found (only {failed_model} available)")
+        logger.error(f"[FALLBACK] No alternative local model found (only {failed_model} available)")
         return None
     
     def extract_model_name(self, full_model_string: str) -> str:

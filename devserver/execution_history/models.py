@@ -105,7 +105,7 @@ class ExecutionItem:
     # Technical metadata
     config_used: Optional[str] = None      # Which config generated this (dada, sd35_large)
     model_used: Optional[str] = None       # Which model (qwen3:4b, sd35_large)
-    backend_type: Optional[str] = None     # ollama | comfyui | openrouter
+    backend_type: Optional[str] = None     # local_llm | comfyui | openrouter
     execution_time: Optional[float] = None # Duration in seconds
 
     # Flexible metadata (for reproducibility)

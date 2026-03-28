@@ -11,8 +11,8 @@ import threading
 import json
 import uuid
 import config  # Session 154: For CODING_MODEL resolution in _load_model_from_output_config
-from config import OLLAMA_MAX_CONCURRENT
-import requests  # For direct Ollama calls (DSGVO LLM verification)
+from config import LLM_MAX_CONCURRENT
+import requests
 
 # Schema-Engine importieren
 import sys
@@ -69,10 +69,10 @@ schema_compat_bp = Blueprint('schema_compat', __name__)
 # Global Pipeline-Executor (wird bei App-Start initialisiert)
 pipeline_executor = None
 
-# Ollama Request Queue - Prevent concurrent overload of 120b model
+# LLM Request Queue - Prevent concurrent overload of large models
 # Use threading.Semaphore because asyncio.run() runs in separate event loops
-ollama_queue_semaphore = threading.Semaphore(OLLAMA_MAX_CONCURRENT)
-logger.info(f"[OLLAMA-QUEUE] Initialized with max concurrent requests: {OLLAMA_MAX_CONCURRENT}")
+llm_queue_semaphore = threading.Semaphore(LLM_MAX_CONCURRENT)
+logger.info(f"[LLM-QUEUE] Initialized with max concurrent requests: {LLM_MAX_CONCURRENT}")
 
 # Cache for output_config_defaults.json
 _output_config_defaults = None
@@ -981,7 +981,7 @@ def execute_stage2():
         "stage2_result": "Ein roter Apfel in fragmentierter dadaistischer Form...",
         "run_id": "uuid",                      # Session ID for Stage 3-4
         "model_used": "llama3:8b",
-        "backend_type": "ollama",
+        "backend_type": "local_llm",
         "execution_time_ms": 1234
     }
     """
@@ -1087,17 +1087,17 @@ def execute_stage2():
 
         stage1_start = time.time()
         
-        # OLLAMA QUEUE: Wrap Stage 1 execution
-        logger.info(f"[OLLAMA-QUEUE] Stage 2 Endpoint: Waiting for queue slot...")
-        with ollama_queue_semaphore:
-            logger.info(f"[OLLAMA-QUEUE] Stage 2 Endpoint: Acquired slot, executing Stage 1")
+        # LLM QUEUE: Wrap Stage 1 execution
+        logger.info(f"[LLM-QUEUE] Stage 2 Endpoint: Waiting for queue slot...")
+        with llm_queue_semaphore:
+            logger.info(f"[LLM-QUEUE] Stage 2 Endpoint: Acquired slot, executing Stage 1")
             is_safe, checked_text, error_message, checks_passed = asyncio.run(execute_stage1_safety_unified(
                 input_text,
                 safety_level,
                 pipeline_executor,
                 user_language=user_language
             ))
-        logger.info(f"[OLLAMA-QUEUE] Stage 2 Endpoint: Released slot")
+        logger.info(f"[LLM-QUEUE] Stage 2 Endpoint: Released slot")
 
         stage1_time = (time.time() - stage1_start) * 1000  # ms
 
@@ -1708,7 +1708,7 @@ def execute_pipeline_streaming(data: dict):
     import time
     import os
     import requests
-    from config import OLLAMA_API_BASE_URL, STAGE2_INTERCEPTION_MODEL, DEFAULT_INTERCEPTION_CONFIG, DEFAULT_SAFETY_LEVEL
+    from config import STAGE2_INTERCEPTION_MODEL, DEFAULT_INTERCEPTION_CONFIG, DEFAULT_SAFETY_LEVEL
 
     # Extract parameters
     schema_name = data.get('schema', DEFAULT_INTERCEPTION_CONFIG)
@@ -1788,7 +1788,7 @@ def execute_pipeline_streaming(data: dict):
                 if verify_result is None:
                     safety_breaker.record_failure()
                     if safety_breaker.is_open():
-                        reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
+                        reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
                         logger.warning(f"[UNIFIED-STREAMING] {reason}")
                         yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
                         yield ''
@@ -2197,7 +2197,7 @@ def safety_check_quick():
         §86a fast-filter → SpaCy NER → (if PER hit) LLM verify → block/allow
 
     Image mode (field: "image_path"):
-        VLM safety check via Ollama (kids/youth only, fail-open)
+        VLM safety check via GPU Service (kids/youth only, fail-open)
 
     Request Body: { "text": "..." } or { "image_path": "/path/to/uploaded.png" }
     Response: { "safe": bool, "checks_passed": [...], "error_message": str|null }
@@ -2259,11 +2259,11 @@ def safety_check_quick():
             if verify_result is None:
                 safety_breaker.record_failure()
                 if safety_breaker.is_open():
-                    logger.warning(f"[SAFETY-QUICK] DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama")
+                    logger.warning(f"[SAFETY-QUICK] DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.")
                     return jsonify({
                         'safe': False,
                         'checks_passed': checks_passed + ['dsgvo_ner'],
-                        'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte Ollama neustarten: sudo systemctl restart ollama'
+                        'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
                     })
                 logger.warning(f"[SAFETY-QUICK] DSGVO LLM unavailable — circuit breaker recording failure")
             elif verify_result:
@@ -2574,26 +2574,26 @@ def compare_analyze_image():
         # Strip 'local/' prefix if present
         clean_model = model.replace('local/', '') if model.startswith('local/') else model
 
-        # Route through GPU service VLM proxy (VRAM-coordinated)
+        # Route through GPU service LLM backend (VRAM-coordinated)
         start = time.monotonic()
         gpu_resp = http_requests.post(
-            f"{GPU_SERVICE_URL}/api/vlm/chat",
+            f"{GPU_SERVICE_URL}/api/llm/chat",
             json={
                 'model': clean_model,
                 'messages': [{'role': 'user', 'content': prompt}],
                 'images': [image_b64],
                 'temperature': 0.7,
-                'max_new_tokens': 2000,
-                'enable_thinking': False,
+                'max_tokens': 2000,
             },
             timeout=200,
         )
         latency = time.monotonic() - start
 
-        gpu_data = gpu_resp.json()
-        if gpu_data.get('status') != 'success':
+        if gpu_resp.status_code != 200:
+            gpu_data = gpu_resp.json()
             return jsonify({'status': 'error', 'error': gpu_data.get('error', 'GPU service error'), 'model': model}), 500
 
+        gpu_data = gpu_resp.json()
         description = gpu_data.get('content', '').strip()
         if not description:
             # Fallback: check thinking field (qwen3-vl quirk)
@@ -2676,7 +2676,7 @@ def log_prompt_change():
 
 def _vlm_safety_check_image(recorder, safety_level: str) -> tuple:
     """
-    Post-generation image safety check using a local VLM via Ollama.
+    Post-generation image safety check using a local VLM via GPU Service.
 
     Delegates to vlm_safety.vlm_safety_check() helper.
 
@@ -5105,17 +5105,17 @@ def interception_pipeline():
                 logger.info(f"[RECORDER] Saved input entity")
 
                 # Stage 1: Safety Check (No Translation)
-                # OLLAMA QUEUE: Wrap Stage 1 execution
-                logger.info(f"[OLLAMA-QUEUE] Unified Pipeline: Waiting for queue slot...")
-                with ollama_queue_semaphore:
-                    logger.info(f"[OLLAMA-QUEUE] Unified Pipeline: Acquired slot, executing Stage 1")
+                # LLM QUEUE: Wrap Stage 1 execution
+                logger.info(f"[LLM-QUEUE] Unified Pipeline: Waiting for queue slot...")
+                with llm_queue_semaphore:
+                    logger.info(f"[LLM-QUEUE] Unified Pipeline: Acquired slot, executing Stage 1")
                     is_safe, checked_text, error_message, checks_passed = asyncio.run(execute_stage1_safety_unified(
                         input_text,
                         safety_level,
                         pipeline_executor,
                         user_language=user_language
                     ))
-                logger.info(f"[OLLAMA-QUEUE] Unified Pipeline: Released slot")
+                logger.info(f"[LLM-QUEUE] Unified Pipeline: Released slot")
 
                 current_input = checked_text
 

@@ -1601,7 +1601,7 @@ def get_backend_status():
     """
     Aggregated backend status for the dashboard tab.
 
-    Returns status of all backends: GPU Service sub-backends, ComfyUI, Ollama,
+    Returns status of all backends: GPU Service sub-backends, ComfyUI, local LLM,
     cloud API key status, GPU hardware, and output configs grouped by backend_type.
 
     Query parameters:
@@ -1715,16 +1715,16 @@ def get_backend_status():
         logger.warning(f"[BACKEND-STATUS] Availability service check failed: {e}")
 
     # --- llama-server ---
-    ollama_status = {"reachable": False, "url": config.LLAMA_SERVER_URL, "models": []}
+    llm_status = {"reachable": False, "url": config.LLAMA_SERVER_URL, "models": []}
     try:
         resp = requests.get(f"{config.LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
         if resp.ok:
-            ollama_status["reachable"] = True
+            llm_status["reachable"] = True
             llm_models = resp.json().get("data", [])
             for model in llm_models:
                 name = model.get("id", "")
-                ollama_status["models"].append({"name": name, "size": ""})
-            ollama_status["models"].sort(key=lambda x: x["name"])
+                llm_status["models"].append({"name": name, "size": ""})
+            llm_status["models"].sort(key=lambda x: x["name"])
     except Exception as e:
         logger.warning(f"[BACKEND-STATUS] llama-server check failed: {e}")
 
@@ -1783,7 +1783,7 @@ def get_backend_status():
         "local_infrastructure": {
             "gpu_service": gpu_service,
             "comfyui": comfyui_status,
-            "ollama": ollama_status,
+            "llm": llm_status,
             "gpu_hardware": gpu_hardware,
         },
         "cloud_apis": cloud_apis,
@@ -2212,10 +2212,10 @@ def workshop_clear_all():
     return jsonify({"success": len(errors) == 0, "errors": errors})
 
 
-@settings_bp.route('/ollama-models', methods=['GET'])
-def get_ollama_models():
+@settings_bp.route('/llm-models', methods=['GET'])
+def get_llm_models():
     """
-    Get list of available Ollama models for dropdown selection.
+    Get list of available local LLM models for dropdown selection.
 
     No authentication required - just model list.
     Returns models with 'local/' prefix for direct use in settings.
@@ -2268,14 +2268,14 @@ def get_ollama_models():
         }), 200
 
     except requests.exceptions.ConnectionError:
-        logger.warning("[SETTINGS] Cannot connect to Ollama")
+        logger.warning("[SETTINGS] Cannot connect to LLM backend")
         return jsonify({
             "success": False,
-            "error": "Ollama not running",
+            "error": "LLM backend not running",
             "models": []
         }), 200
     except Exception as e:
-        logger.error(f"[SETTINGS] Error getting Ollama models: {e}")
+        logger.error(f"[SETTINGS] Error getting LLM models: {e}")
         return jsonify({
             "success": False,
             "error": str(e),
