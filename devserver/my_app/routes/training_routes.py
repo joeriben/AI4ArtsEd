@@ -103,37 +103,34 @@ def clear_vram():
             except Exception as e:
                 results["errors"].append(f"ComfyUI: {str(e)}")
 
-        # Unload llama-server models
+        # Unload LLM models via GPU Service
         if unload_llm:
             try:
-                from config import LLAMA_SERVER_URL
-                llm_url = LLAMA_SERVER_URL.rstrip('/')
+                from config import GPU_SERVICE_URL
+                gpu_url = GPU_SERVICE_URL.rstrip('/')
 
                 loaded_response = requests.get(
-                    f"{llm_url}/models",
+                    f"{gpu_url}/api/llm/models",
                     timeout=10
                 )
 
                 if loaded_response.status_code == 200:
-                    loaded_data = loaded_response.json()
-                    models = loaded_data if isinstance(loaded_data, list) else loaded_data.get("data", [])
+                    loaded_models = loaded_response.json().get("loaded", [])
 
-                    if not models:
+                    if not loaded_models:
                         results["llm"] = "No models loaded"
                     else:
                         unloaded = []
-                        for model_info in models:
-                            model_name = model_info.get("id", model_info.get("name", ""))
-                            if model_name:
-                                try:
-                                    requests.post(
-                                        f"{llm_url}/models/unload",
-                                        json={"model": model_name},
-                                        timeout=30
-                                    )
-                                    unloaded.append(model_name)
-                                except:
-                                    pass
+                        for model_name in loaded_models:
+                            try:
+                                requests.post(
+                                    f"{gpu_url}/api/llm/unload",
+                                    json={"model": model_name},
+                                    timeout=30
+                                )
+                                unloaded.append(model_name)
+                            except:
+                                pass
 
                         results["llm"] = f"Unloaded: {', '.join(unloaded)}" if unloaded else "No models to unload"
                 else:

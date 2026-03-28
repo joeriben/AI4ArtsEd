@@ -175,40 +175,33 @@ class TrainingService:
         except Exception as e:
             results["errors"].append(f"ComfyUI unload failed: {e}")
 
-        # Step 4: Unload llama-server models
+        # Step 4: Unload LLM models via GPU Service
         try:
-            from config import LLAMA_SERVER_URL
-            llm_url = LLAMA_SERVER_URL.rstrip('/')
+            from config import GPU_SERVICE_URL
+            gpu_url = GPU_SERVICE_URL.rstrip('/')
 
-            # Get list of loaded models
-            loaded_response = requests.get(
-                f"{llm_url}/models",
-                timeout=10
-            )
+            loaded_response = requests.get(f"{gpu_url}/api/llm/models", timeout=10)
 
             if loaded_response.status_code == 200:
-                loaded_data = loaded_response.json()
-                models = loaded_data if isinstance(loaded_data, list) else loaded_data.get("data", [])
+                loaded_models = loaded_response.json().get("loaded", [])
 
-                if not models:
-                    results["actions"].append("llama-server: no models loaded")
+                if not loaded_models:
+                    results["actions"].append("LLM: no models loaded")
                 else:
                     unloaded = []
-                    for model_info in models:
-                        model_name = model_info.get("id", model_info.get("name", ""))
-                        if model_name:
-                            try:
-                                requests.post(
-                                    f"{llm_url}/models/unload",
-                                    json={"model": model_name},
-                                    timeout=30
-                                )
-                                unloaded.append(model_name)
-                            except Exception:
-                                pass
+                    for model_name in loaded_models:
+                        try:
+                            requests.post(
+                                f"{gpu_url}/api/llm/unload",
+                                json={"model": model_name},
+                                timeout=30
+                            )
+                            unloaded.append(model_name)
+                        except Exception:
+                            pass
 
                     if unloaded:
-                        results["actions"].append(f"llama-server unloaded: {', '.join(unloaded)}")
+                        results["actions"].append(f"LLM unloaded: {', '.join(unloaded)}")
                     else:
                         results["actions"].append("LLM: no models to unload")
         except requests.exceptions.ConnectionError:
@@ -471,35 +464,23 @@ class TrainingService:
             try:
                 # Stage 1: VLM describes the image
                 img_b64 = base64.b64encode(img_path.read_bytes()).decode()
-                from config import LLAMA_SERVER_URL
-                llm_url = LLAMA_SERVER_URL.rstrip('/')
+                from config import GPU_SERVICE_URL
+                gpu_url = GPU_SERVICE_URL.rstrip('/')
                 vlm_model = CAPTION_VLM_MODEL.replace("local/", "") if CAPTION_VLM_MODEL.startswith("local/") else CAPTION_VLM_MODEL
 
-                if not img_b64.startswith("data:"):
-                    img_b64_url = f"data:image/jpeg;base64,{img_b64}"
-                else:
-                    img_b64_url = img_b64
-
                 resp = requests.post(
-                    f"{llm_url}/v1/chat/completions",
+                    f"{gpu_url}/api/llm/chat",
                     json={
                         "model": vlm_model,
-                        "messages": [{
-                            "role": "user",
-                            "content": [
-                                {"type": "text", "text": vlm_prompt},
-                                {"type": "image_url", "image_url": {"url": img_b64_url}},
-                            ],
-                        }],
-                        "stream": False,
+                        "messages": [{"role": "user", "content": vlm_prompt}],
+                        "images": [img_b64],
                         "max_tokens": 500,
                         "temperature": 0.3,
                     },
                     timeout=120,
                 )
                 resp.raise_for_status()
-                choice = resp.json().get("choices", [{}])[0]
-                raw = choice.get("message", {}).get("content", "").strip()
+                raw = resp.json().get("content", "").strip()
 
                 # Stage 2: If VLM output looks like reasoning, extract via fast text LLM
                 caption = self._cleanup_caption(raw) if raw else ""
@@ -530,12 +511,12 @@ class TrainingService:
 
         # Chain-of-thought detected — use a non-thinking LLM to extract the caption
         try:
-            from config import LLAMA_SERVER_URL
-            llm_url = LLAMA_SERVER_URL.rstrip('/')
+            from config import GPU_SERVICE_URL
+            gpu_url = GPU_SERVICE_URL.rstrip('/')
             cleanup_model = CAPTION_CLEANUP_MODEL.replace("local/", "") if CAPTION_CLEANUP_MODEL.startswith("local/") else CAPTION_CLEANUP_MODEL
 
             resp = requests.post(
-                f"{llm_url}/v1/chat/completions",
+                f"{gpu_url}/api/llm/chat",
                 json={
                     "model": cleanup_model,
                     "messages": [{
@@ -546,15 +527,13 @@ class TrainingService:
                             + raw_text[:3000]
                         ),
                     }],
-                    "stream": False,
                     "max_tokens": 300,
                     "temperature": 0.1,
                 },
                 timeout=60,
             )
             resp.raise_for_status()
-            choice = resp.json().get("choices", [{}])[0]
-            cleaned = choice.get("message", {}).get("content", "").strip().strip('"\'')
+            cleaned = resp.json().get("content", "").strip().strip('"\'')
             return cleaned if cleaned and len(cleaned) > 30 else raw_text
         except Exception as e:
             logger.warning(f"Caption cleanup failed: {e}")
