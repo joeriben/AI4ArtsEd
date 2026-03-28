@@ -801,6 +801,38 @@ Die professionelle Entscheidung ist nicht "immer die schnellste Sprache", sonder
 
 ---
 
+## Ollama Removal — In-Process llama-cpp-python (2026-03-28)
+
+**Kontext:** Ollama 0.18.2 berechnet `default_num_ctx` aus TOTAL VRAM (95GB), nicht AVAILABLE. Auf der Blackwell RTX PRO 6000 allokierte es 28GB KV-Cache fuer ein 2B-Modell → 12 konsekutive OOM-Crashes. Fundamentales Architekturproblem — nicht konfigurierbar, nicht vorhersagbar.
+
+### Decision 1: Ollama komplett ersetzen, nicht patchen
+
+**Problem:** Ollama als Blackbox-Prozess hat keine VRAM-Koordination mit anderen Backends (Diffusers, HeartMuLa, ComfyUI). Es allokiert selbstaendig und konkurriert mit GPU Service um VRAM.
+
+**Decision:** LLM-Inferenz direkt im GPU Service via llama-cpp-python (in-process). Alle GGUF-Modelle (Safety, DSGVO, VLM) laufen im selben Prozess wie Diffusers/HeartMuLa, koordiniert ueber den VRAM-Coordinator.
+
+**Begruendung:** In-process eliminiert den zweiten GPU-Prozess, gibt volle Kontrolle ueber VRAM-Allokation und eliminiert HTTP-Overhead fuer Safety-Checks. llama-cpp-python unterstuetzt identische GGUF-Modelle.
+
+**Alternatives verworfen:**
+- ❌ Ollama OLLAMA_NUM_CTX manuell setzen: Fragil, muss pro Modell angepasst werden
+- ❌ Separater llama-server Prozess: Gleiches Problem wie Ollama (zweiter GPU-Prozess, keine VRAM-Koordination)
+
+### Decision 2: VLM Proxy eliminieren
+
+**Problem:** `vlm_proxy_backend.py` war ein Wrapper, der Ollama's `/api/chat` mit VRAM-Koordination aufrief. Nach Migration zu llama-cpp-python ist der LLM-Backend bereits VRAM-koordiniert.
+
+**Decision:** VLM Proxy komplett geloescht. Einziger Caller (`schema_pipeline_routes.py` VLM Safety Check) ruft direkt `/api/llm/chat` auf.
+
+### Decision 3: BackendType.OLLAMA → LOCAL_LLM
+
+**Problem:** Der Enum-Wert "ollama" war ein Markenname im Code (verstoesst gegen Code Architecture Rules).
+
+**Decision:** `BackendType.LOCAL_LLM = "local_llm"` mit `_missing_()` fuer Abwaertskompatibilitaet serialisierter Daten. `local/` Routing-Prefix bleibt (war nie Ollama-spezifisch).
+
+**Betroffene Dateien:** 60+ Dateien, siehe Commits `c53be3b` und `d7862e4`.
+
+---
+
 ## 🔬 Surrealizer Fusion Strategy: Token-Level Extrapolation Redesign (2026-02-26)
 
 **Kontext:** Code-Audit der originalen ComfyUI `ai4artsed_t5_clip_fusion` Node offenbarte, dass T5-Tokens >77 unverändert (1×) angehängt werden. Die Diffusers-Übersetzung replizierte dieses Verhalten exakt. Bei langen Prompts (~500 T5-Tokens) überwältigten 400+ unmodifizierte Tokens die 77 extrapolierten — weniger surreale Ergebnisse als bei kurzen Prompts.

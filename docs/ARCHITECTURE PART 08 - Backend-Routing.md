@@ -12,7 +12,11 @@
 
 **Migration:** See `ARCHITECTURE PART 01 - Section 2: Model Selection Architecture` for current implementation.
 
-**Backend routing patterns (Ollama, ComfyUI, OpenRouter) remain valid.**
+**Backend routing patterns (Local LLM, ComfyUI, OpenRouter) remain valid.**
+
+> **Session 292 (2026-03-28):** Ollama replaced by in-process llama-cpp-python in GPU Service.
+> `BackendType.OLLAMA` → `BackendType.LOCAL_LLM`. VLM Proxy deleted. All LLM calls route through
+> GPU Service `/api/llm/*` endpoints. See DEVELOPMENT_DECISIONS.md for rationale.
 
 ---
 
@@ -21,7 +25,7 @@
 
 | Backend | Type | Use Cases | Authentication | DSGVO |
 |---------|------|-----------|----------------|-------|
-| **Ollama** | Local | Text transformation, translation | None (local) | ✅ Compliant |
+| **Local LLM** | Local | Text transformation, translation, safety | None (local) | ✅ Compliant |
 | **ComfyUI** | Local | Image/Audio/Video generation | None (local) | ✅ Compliant |
 | **HeartMuLa** | Local | Music generation (lyrics + tags → MP3) | None (local) | ✅ Compliant |
 | **Hunyuan3D** | Local | 3D mesh generation (text → GLB) | None (local) | ✅ Compliant |
