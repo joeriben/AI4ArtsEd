@@ -111,6 +111,20 @@ def llm_models():
     })
 
 
+@llm_bp.route('/unload', methods=['POST'])
+def llm_unload():
+    """Unload a specific LLM model to free VRAM."""
+    from services.llm_backend import get_llm_backend
+
+    data = request.get_json()
+    if not data or not data.get("model"):
+        return jsonify({"error": "model required"}), 400
+
+    backend = get_llm_backend()
+    success = backend.evict_model(data["model"])
+    return jsonify({"success": success, "model": data["model"]})
+
+
 @llm_bp.route('/health', methods=['GET'])
 def llm_health():
     """Health check for LLM backend."""

@@ -100,8 +100,8 @@ def attempt_restart() -> bool:
 
         logger.info("[LLM-WATCHDOG] systemctl restart succeeded, waiting for health...")
 
-        from config import LLAMA_SERVER_URL
-        base_url = LLAMA_SERVER_URL.rstrip('/')
+        from config import GPU_SERVICE_URL
+        base_url = GPU_SERVICE_URL.rstrip('/') + '/api/llm'
 
         start = time.time()
         while (time.time() - start) < _HEALTH_CHECK_MAX_WAIT:

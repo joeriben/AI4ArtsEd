@@ -18,27 +18,27 @@ class VRAMMonitor:
     """Monitors VRAM usage across llama-server and GPU Service."""
 
     def __init__(self):
-        from config import LLAMA_SERVER_URL, GPU_SERVICE_URL
-        self.llm_url = LLAMA_SERVER_URL.rstrip('/')
+        from config import GPU_SERVICE_URL
         self.gpu_url = GPU_SERVICE_URL.rstrip('/')
+        self.llm_url = self.gpu_url + '/api/llm'
 
     def get_llm_models(self) -> List[Dict[str, Any]]:
-        """GET /models → list of loaded llama-server models."""
+        """GET /api/llm/models → list of loaded LLM models."""
         try:
             resp = requests.get(f"{self.llm_url}/models", timeout=5)
             resp.raise_for_status()
             data = resp.json()
             models = []
-            for m in data if isinstance(data, list) else data.get("data", []):
+            for name in data.get("loaded", []):
                 models.append({
-                    "name": m.get("id", m.get("name", "unknown")),
-                    "vram_mb": 0,  # llama-server doesn't report per-model VRAM
+                    "name": name,
+                    "vram_mb": 0,
                     "size_mb": 0,
-                    "status": m.get("status", "unknown"),
+                    "status": "loaded",
                 })
             return models
         except Exception as e:
-            logger.debug(f"[VRAM-MONITOR] llama-server /models failed: {e}")
+            logger.debug(f"[VRAM-MONITOR] LLM /models failed: {e}")
             return []
 
     def get_gpu_service_status(self) -> Dict[str, Any]:

@@ -1714,19 +1714,18 @@ def get_backend_status():
     except Exception as e:
         logger.warning(f"[BACKEND-STATUS] Availability service check failed: {e}")
 
-    # --- llama-server ---
-    llm_status = {"reachable": False, "url": config.LLAMA_SERVER_URL, "models": []}
+    # --- Local LLM (via GPU Service) ---
+    llm_status = {"reachable": False, "url": config.GPU_SERVICE_URL, "models": []}
     try:
-        resp = requests.get(f"{config.LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
+        resp = requests.get(f"{config.GPU_SERVICE_URL.rstrip('/')}/api/llm/models", timeout=5)
         if resp.ok:
             llm_status["reachable"] = True
-            llm_models = resp.json().get("data", [])
-            for model in llm_models:
-                name = model.get("id", "")
+            llm_models = resp.json().get("available", [])
+            for name in llm_models:
                 llm_status["models"].append({"name": name, "size": ""})
             llm_status["models"].sort(key=lambda x: x["name"])
     except Exception as e:
-        logger.warning(f"[BACKEND-STATUS] llama-server check failed: {e}")
+        logger.warning(f"[BACKEND-STATUS] LLM backend check failed: {e}")
 
     # --- Cloud APIs ---
     aws_env_script = Path(__file__).parent.parent.parent / "setup_aws_env.sh"
@@ -2231,27 +2230,24 @@ def get_llm_models():
     }
     """
     try:
-        # Get llama-server URL from config
-        llm_url = config.LLAMA_SERVER_URL.rstrip('/')
+        gpu_url = config.GPU_SERVICE_URL.rstrip('/')
 
-        # Call llama-server API to list models
-        response = requests.get(f"{llm_url}/v1/models", timeout=5)
+        response = requests.get(f"{gpu_url}/api/llm/models", timeout=5)
 
         if response.status_code != 200:
-            logger.warning(f"[SETTINGS] llama-server API returned {response.status_code}")
+            logger.warning(f"[SETTINGS] LLM models API returned {response.status_code}")
             return jsonify({
                 "success": False,
-                "error": f"llama-server API error: {response.status_code}",
+                "error": f"LLM models API error: {response.status_code}",
                 "models": []
             }), 200
 
         data = response.json()
-        llm_models = data.get('data', [])
+        llm_models = data.get('available', [])
 
         # Format models for frontend dropdown
         models = []
-        for model in llm_models:
-            name = model.get('id', '')
+        for name in llm_models:
             models.append({
                 'id': f'local/{name}',
                 'name': name,

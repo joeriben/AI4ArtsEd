@@ -406,14 +406,14 @@ class ModelSelector:
         }
     
     def get_local_models(self) -> List[str]:
-        """Get available local models from llama-server."""
+        """Get available local models from GPU Service LLM backend."""
         try:
-            from config import LLAMA_SERVER_URL
-            response = requests.get(f"{LLAMA_SERVER_URL.rstrip('/')}/v1/models", timeout=5)
+            from config import GPU_SERVICE_URL
+            response = requests.get(f"{GPU_SERVICE_URL.rstrip('/')}/api/llm/models", timeout=5)
             response.raise_for_status()
-            return [m.get('id', '') for m in response.json().get("data", [])]
+            return response.json().get("available", [])
         except Exception as e:
-            logger.warning(f"Failed to get llama-server models: {e}")
+            logger.warning(f"Failed to get local LLM models: {e}")
             return []
     
     def find_openrouter_fallback(self, failed_model: str, debug: bool = False) -> str:
