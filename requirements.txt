@@ -54,6 +54,11 @@ torchtune==0.6.1                    # Fine-tuning utilities
 # einops — already pulled by MMAudio/ImageBind
 
 # ============================================================================
+# GPU Monitoring (VRAM Coordinator)
+# ============================================================================
+nvidia-ml-py>=12.0.0  # NVML bindings — enables VRAM visibility across all GPU processes
+
+# ============================================================================
 # Audio Processing
 # ============================================================================
 soundfile==0.13.1

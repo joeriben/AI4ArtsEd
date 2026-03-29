@@ -1408,7 +1408,8 @@ async def execute_stage3_safety(
 
     if is_safe:
         method = "llm_safety_check_escalation_override" if not llm_result["safe"] else "llm_safety_check"
-        logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
+        escalation_note = f" (S4/S8 escalation override)" if method == "llm_safety_check_escalation_override" else ""
+        logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s){escalation_note}, using {'translated' if safety_level == 'kids' else 'original'} prompt for generation")
         return {
             "safe": True,
             "method": method,
