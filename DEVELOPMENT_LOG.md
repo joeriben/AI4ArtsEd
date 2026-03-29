@@ -24,6 +24,13 @@
 - **Verbesserte Drain-Logik**: Queue wird bei jeder gecappten Pause geleert (nicht nur bei Pausen >60s), damit laufende Generierungen wie im echten Workshop zuende kommen
 - **Dokumentation**: `docs/WORKSHOP_REPLAY_TESTING.md` — permanente Anleitung fuer Erstellung und Ausfuehrung von Replay-Scripts (Regeln, Quellen, Ablauf)
 
+### Weitere Aenderungen
+- **Arcimboldo Mosaic entfernt**: Tab aus Image Lab raus, Backend-Route deregistriert. Ergebnisse nicht ueberzeugend, paedagogischer Mehrwert unklar.
+- **Canvas freigeschaltet**: `requiresAdvanced` Gate entfernt. Canvas laeuft bereits durch volle Stage 1-2-3-4 Safety-Pipeline — das Gate war eine UI-Restriktion, kein Safety-Gate.
+- **Stash-Cleanup**: 6 Stashes gesichtet. Stash 0 (S4/S8 Escalation Logging + nvidia-ml-py) committed, Rest obsolet und gedroppt.
+- **TODO-Cleanup**: Phantom-Bug "Stage 3 Negative Prompts" geschlossen (werden nie generiert). Provider-Konsolidierung auf LOW herabgestuft.
+- **Safety-Analyse**: Vollstaendige Untersuchung aller Latent-Lab-Tabs und Canvas bzgl. Safety-Pipeline-Abdeckung. Ergebnis: Canvas = voll safe, Latent Lab Legacy-Endpoint braucht optionalen Stage-3-Check fuer kids/youth. Handover geschrieben.
+
 ### Fazit
 Ollama-Migration erfolgreich verifiziert. Kein einziger LLM-bezogener Fehler im gesamten Replay.
 
