@@ -35,6 +35,13 @@ Tags:
   - `latentLab.shared.randomVariation` (NEW): "Random variation"
 - **Context**: All Latent Lab image tabs now show a visible seed field with a "Random variation" checkbox. When checked, the seed becomes random; when unchecked, a fixed seed (default 123456789) ensures reproducible results. Translate naturally — "Random variation" = "Zufallsvariation" (DE), etc.
 
+### WO-2026-03-29-loading-progress
+- **Session**: 296
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `edutainment.denoising.modelLoadingVram` (NEW): "Loading model... {used} / {expected} GB VRAM"
+- **Context**: Model loading progress indicator with live VRAM usage. {used} and {expected} are interpolated numbers (e.g. "37.2 / 57 GB VRAM"). "VRAM" is a technical term — keep as-is in all languages.
+
 ### WO-2026-03-29-encoding-transparency
 - **Session**: 296
 - **Scope**: en.ts
