@@ -394,6 +394,18 @@ interface ModelConfig {
 const configsByCategory = computed<Record<string, ModelConfig[]>>(() => ({
   image: [
     {
+      id: 'sd35_large_img2img',
+      label: 'SD 3.5\nLarge',
+      emoji: '',
+      name: t('imageTransform.configs.sd35Img2img.name'),
+      quality: 4,
+      speed: 3,
+      duration: '20-40',
+      color: '#FF6B6B',
+      logo: '/logos/logo_stable_diffusion.png',
+      lightBg: false
+    },
+    {
       id: 'qwen_img2img',
       label: 'Qwen',
       emoji: '🌸',

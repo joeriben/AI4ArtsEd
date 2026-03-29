@@ -806,6 +806,30 @@ class DiffusersImageGenerator:
                             gen_kwargs["image"] = pil_image
                             logger.info(f"[DIFFUSERS] Flux2 visual conditioning: {pil_image.size}")
 
+                        # SD3.5 img2img: create lightweight Img2Img pipeline via from_pipe()
+                        if pipeline_class == "StableDiffusion3Pipeline" and kwargs.get('image_bytes'):
+                            from PIL import Image
+                            from diffusers import StableDiffusion3Img2ImgPipeline
+                            pil_image = Image.open(io.BytesIO(kwargs['image_bytes'])).convert("RGB")
+                            pil_image = pil_image.resize((width, height), Image.LANCZOS)
+                            i2i_pipe = StableDiffusion3Img2ImgPipeline.from_pipe(pipe)
+                            # VAE tiling: img2img encodes the input image via VAE,
+                            # which at 1024x1024 with 16-ch latents causes massive
+                            # VRAM spikes without tiling (65GB+ vs ~28GB with tiling)
+                            i2i_pipe.enable_vae_tiling()
+                            gen_kwargs["image"] = pil_image
+                            gen_kwargs["strength"] = float(kwargs.get('strength', 0.65))
+                            gen_kwargs.pop("width", None)
+                            gen_kwargs.pop("height", None)
+                            logger.info(
+                                f"[DIFFUSERS] SD3.5 img2img: {pil_image.size}, "
+                                f"strength={gen_kwargs['strength']}"
+                            )
+                            gen_kwargs["callback_on_step_end"] = step_callback
+                            gen_kwargs["callback_on_step_end_tensor_inputs"] = ["latents"]
+                            result = i2i_pipe(**gen_kwargs)
+                            return result.images[0]
+
                         gen_kwargs["callback_on_step_end"] = step_callback
                         gen_kwargs["callback_on_step_end_tensor_inputs"] = ["latents"]
 

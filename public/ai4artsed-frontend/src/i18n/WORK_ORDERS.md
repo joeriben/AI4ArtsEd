@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-29-sd35-img2img
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `imageTransform.configs.sd35Img2img.name` (NEW): "SD 3.5 Large Image-to-Image"
+- **Context**: New SD3.5 img2img model config added to image transformation views. Uses Stable Diffusion 3.5 Large for image-to-image via diffusers from_pipe(). "SD 3.5 Large" is a product name, keep as-is. "Image-to-Image" should be translated.
+
 ### WO-2026-03-28-ollama-removal-i18n
 - **Scope**: en.ts
 - **Changed keys** (modified — key names changed, old keys must be deleted in all languages):

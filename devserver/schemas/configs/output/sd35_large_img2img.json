@@ -1,0 +1,140 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "SD 3.5 Large Image-to-Image",
+    "de": "SD 3.5 Large Bild-zu-Bild"
+  },
+  "description": {
+    "en": "Image transformation using Stable Diffusion 3.5 Large. Partially denoises your image and regenerates guided by your prompt — zero extra VRAM via from_pipe().",
+    "de": "Bildtransformation mit Stable Diffusion 3.5 Large. Entrauscht Ihr Bild teilweise und regeneriert mit Prompt-Steuerung — kein zusaetzlicher VRAM durch from_pipe()."
+  },
+  "category": {
+    "en": "Image Transformation",
+    "de": "Bildtransformation"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sd35_img2img_diffusers",
+    "NEGATIVE_PROMPT": "blurry, bad quality, watermark, text, distorted",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 25,
+    "CFG": 4.5,
+    "seed": "random"
+  },
+  "capabilities": {
+    "img2img": true,
+    "text2img": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sd3.5_large.safetensors",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "clip_models": [
+      "clip_g.safetensors",
+      "t5xxl_enconly.safetensors"
+    ],
+    "requires_gpu": true,
+    "gpu_vram_mb": 28000,
+    "estimated_duration_seconds": "15-30",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "512x512",
+      "768x768",
+      "1024x1024",
+      "1280x1280",
+      "1024x768",
+      "768x1024"
+    ],
+    "notes": "SD3.5 Large img2img via from_pipe() — shares all components (VAE, text encoders, transformer) with the t2i pipeline. Strength controls denoising amount (0=no change, 1=full generation).",
+    "display_name": "Stable Diffusion 3.5 Large Image-to-Image",
+    "icon": "replace_image",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "Undisclosed (claimed: synthetic + filtered public data)"
+      ],
+      "training_data_size": "Undisclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "London, UK",
+      "known_biases": [
+        {
+          "en": "CLIP text encoders trained predominantly on English-language web data",
+          "de": "CLIP-Textencoder ueberwiegend auf englischsprachigen Webdaten trainiert"
+        },
+        {
+          "en": "Western visual aesthetic emphasis (composition, lighting conventions)",
+          "de": "Betonung westlicher visueller Aesthetik (Komposition, Lichtkonventionen)"
+        },
+        {
+          "en": "T5-XXL multilingual but English-dominant (~80% C4 corpus is English)",
+          "de": "T5-XXL mehrsprachig, aber englisch-dominant (~80% des C4-Korpus ist Englisch)"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "Limited understanding of non-Latin scripts in CLIP encoders",
+          "de": "Eingeschraenktes Verstaendnis nicht-lateinischer Schriften in CLIP-Encodern"
+        },
+        {
+          "en": "Underrepresented: African, Indigenous, Southeast Asian visual traditions",
+          "de": "Unterrepraesentiert: afrikanische, indigene, suedostasiatische visuelle Traditionen"
+        },
+        {
+          "en": "No consent from original creators whose work may be in training data",
+          "de": "Keine Zustimmung der urspruenglichen Urheber, deren Werke moeglicherweise in den Trainingsdaten sind"
+        }
+      ]
+    },
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "replace_image",
+    "color": "#FF6B6B",
+    "category": "image_transformation",
+    "difficulty": 2,
+    "order": 15
+  },
+  "tags": {
+    "en": [
+      "image",
+      "stable-diffusion",
+      "sd3.5",
+      "img2img",
+      "diffusers",
+      "image-transformation"
+    ],
+    "de": [
+      "bild",
+      "stable-diffusion",
+      "sd3.5",
+      "img2img",
+      "diffusers",
+      "bildtransformation"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

@@ -129,9 +129,12 @@ class DiffusersClient:
             payload['prompt_2'] = kwargs['prompt_2']
         if kwargs.get('prompt_3'):
             payload['prompt_3'] = kwargs['prompt_3']
-        # Flux2 visual conditioning: forward image as base64
+        # Flux2 visual conditioning / SD3.5 img2img: forward image as base64
         if kwargs.get('image_base64'):
             payload['image_base64'] = kwargs['image_base64']
+        # SD3.5 img2img: forward strength parameter
+        if kwargs.get('strength') is not None:
+            payload['strength'] = kwargs['strength']
         result = await asyncio.to_thread(self._post, '/api/diffusers/generate', payload)
 
         if result is None or not result.get('success'):

@@ -1,5 +1,24 @@
 # Development Log
 
+## Session 294 - SD3.5 img2img via Diffusers from_pipe()
+**Date:** 2026-03-29
+**Focus:** SD3.5 Image-to-Image ueber Diffusers `StableDiffusion3Img2ImgPipeline.from_pipe()` — zero extra Modell-VRAM, teilt alle Komponenten (VAE, Text-Encoder, Transformer) mit der bestehenden t2i Pipeline.
+
+### Implementierung
+- **GPU Backend**: `generate_image()` in `diffusers_backend.py` erweitert — erkennt `StableDiffusion3Pipeline` + `image_bytes` und erstellt on-the-fly eine img2img Pipeline via `from_pipe()`
+- **VRAM-Fix**: `enable_vae_tiling()` auf der img2img Pipeline — ohne Tiling steigt VRAM auf 65 GB (VAE-Enkodierung des Eingabebildes bei 1024x1024 mit 16-Kanal-Latents). Mit Tiling bleibt es bei ~28 GB.
+- **GPU Route**: `strength` Parameter in `/api/diffusers/generate` hinzugefuegt
+- **DiffusersClient**: `strength` Forwarding an GPU Service
+- **Neuer Chunk**: `output_image_sd35_img2img_diffusers.py` — kombiniert Flux2-I2I-Pattern (Bild-Laden) mit SD3.5-Pattern (Triple-Prompt, LoRA)
+- **Neue Config**: `sd35_large_img2img.json` — `capabilities.img2img: true`, Provenance-Daten von SD3.5 t2i uebernommen
+- **Frontend**: SD3.5 img2img in `image_transformation.vue` und `multi_image_transformation.vue`, jeweils an erster Stelle vor Qwen
+- **i18n**: Key in en.ts + Work Order
+
+### Architektur-Entscheidung
+- `generate_image()` erweitert statt neue Methode — gleicher Pattern wie Flux2 Visual Conditioning
+- `from_pipe()` on-the-fly statt gecacht — lightweight (teilt alle Heavy-Komponenten), bewiesen in `generate_mosaic_tiles()`
+- VAE Tiling nur fuer img2img forced — t2i braucht es nicht (kein VAE-Encode)
+
 ## Session 293 - Workshop Replay Stress Test (Post-Ollama Verification)
 **Date:** 2026-03-28/29
 **Focus:** Workshop 27.03. komplett nachgespielt um zu verifizieren, dass die Ollama→llama-cpp-python Migration keine Regressionen verursacht.
