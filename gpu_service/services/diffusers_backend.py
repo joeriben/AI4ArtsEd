@@ -816,7 +816,7 @@ class DiffusersImageGenerator:
                             # VAE tiling: img2img encodes the input image via VAE,
                             # which at 1024x1024 with 16-ch latents causes massive
                             # VRAM spikes without tiling (65GB+ vs ~28GB with tiling)
-                            i2i_pipe.enable_vae_tiling()
+                            i2i_pipe.vae.enable_tiling()
                             gen_kwargs["image"] = pil_image
                             gen_kwargs["strength"] = float(kwargs.get('strength', 0.65))
                             gen_kwargs.pop("width", None)
