@@ -157,11 +157,9 @@
             <input v-model.number="scaleAdd" type="number" min="0" max="3" step="0.1" class="setting-input setting-small" />
             <div class="control-hint">{{ t('latentLab.algebra.scaleAddHint') }}</div>
           </label>
+          <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
         </div>
       </details>
-
-      <!-- Seed (always visible) -->
-      <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
     </div>
 
     <!-- Side-by-Side Image Comparison -->

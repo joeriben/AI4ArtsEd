@@ -100,6 +100,7 @@
             <label>{{ t('latentLab.composable.cfgLabel') }}</label>
             <input type="number" v-model.number="cfgScale" min="1" max="20" step="0.5" :disabled="isGenerating" class="setting-number" />
           </div>
+          <SeedControl v-model:seed="seed" v-model:random="randomSeed" :disabled="isGenerating" />
         </div>
         <div class="setting-row">
           <label class="checkbox-label">
@@ -109,9 +110,6 @@
         </div>
       </div>
     </details>
-
-    <!-- Seed (always visible) -->
-    <SeedControl v-model:seed="seed" v-model:random="randomSeed" :disabled="isGenerating" />
 
     <!-- Generate Button -->
     <button
