@@ -1,5 +1,34 @@
 # Development Log
 
+## Session 293 - Workshop Replay Stress Test (Post-Ollama Verification)
+**Date:** 2026-03-28/29
+**Focus:** Workshop 27.03. komplett nachgespielt um zu verifizieren, dass die Ollama→llama-cpp-python Migration keine Regressionen verursacht.
+
+### Ergebnis
+- **96% Success (51/53)** — keine Timeouts, keine Safety Blocks, keine Queue Rejections
+- **0 Ollama-bezogene Fehler** — LLM-Aufrufe (Stage 1-3 Safety, Interception, Translation) laufen stabil ueber llama-cpp-python im GPU Service
+- **2 erwartete Fehler**: `hunyuan3d_text_to_3d` braucht `input_image` (Image-to-3D, nicht Text-to-3D — Config-Bezeichnung irrefuehrend, kein Regressionsfehler)
+
+### Per-Config Ergebnisse
+| Config | Ergebnis | Avg Latenz |
+|--------|----------|------------|
+| qwen_img2img | 36/36 (100%) | 13.8s |
+| qwen_2511_multi | 7/7 (100%) | 20.4s |
+| flux2 | 3/3 (100%) | 27.8s |
+| wan22_i2v_video | 3/3 (100%) | 66.3s |
+| sd35_large | 2/2 (100%) | 44.4s |
+| hunyuan3d_text_to_3d | 0/2 (erwartet) | - |
+
+### Aenderungen
+- **Neues Replay-Script**: `devserver/testfiles/simulate_workshop_260327.py` — 53 Requests, 6 Configs, alle Prompts aus RECORDER-Exports extrahiert (keine synthetischen Prompts)
+- **Verbesserte Drain-Logik**: Queue wird bei jeder gecappten Pause geleert (nicht nur bei Pausen >60s), damit laufende Generierungen wie im echten Workshop zuende kommen
+- **Dokumentation**: `docs/WORKSHOP_REPLAY_TESTING.md` — permanente Anleitung fuer Erstellung und Ausfuehrung von Replay-Scripts (Regeln, Quellen, Ablauf)
+
+### Fazit
+Ollama-Migration erfolgreich verifiziert. Kein einziger LLM-bezogener Fehler im gesamten Replay.
+
+---
+
 ## Session 292 - Complete Ollama Removal (188+ References)
 **Date:** 2026-03-28
 **Focus:** Vollstaendige Entfernung aller Ollama-Referenzen aus dem Codebase. Ollama wurde in Session 291b durch in-process llama-cpp-python im GPU Service ersetzt (Commit `10a6dac`), aber 188+ Referenzen verblieben.
