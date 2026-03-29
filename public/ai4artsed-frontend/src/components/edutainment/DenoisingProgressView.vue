@@ -58,9 +58,17 @@
 
         <div class="loading-bar-section">
           <div class="loading-bar-track">
-            <div class="loading-bar-fill loading-bar-indeterminate"></div>
+            <div
+              class="loading-bar-fill"
+              :class="{ 'loading-bar-indeterminate': loadingPercent <= 0 }"
+              :style="loadingPercent > 0 ? { width: loadingPercent + '%' } : {}"
+            ></div>
           </div>
-          <span class="loading-label">{{ isCloudModel ? t('edutainment.denoising.cloudProcessing') : t('edutainment.denoising.modelLoading') }}</span>
+          <span class="loading-label">
+            <template v-if="isCloudModel">{{ t('edutainment.denoising.cloudProcessing') }}</template>
+            <template v-else-if="loadingPercent > 0">{{ t('edutainment.denoising.modelLoadingVram', { used: loadingVramUsed, expected: loadingVramExpected }) }}</template>
+            <template v-else>{{ t('edutainment.denoising.modelLoading') }}</template>
+          </span>
         </div>
 
         <!-- Rotating fact -->
@@ -165,6 +173,21 @@ const stepTotal = computed(() => props.modelMeta?.steps ?? 0)
 const stepCurrent = computed(() => {
   if (!stepTotal.value || props.progress <= 0) return 0
   return Math.round(props.progress * stepTotal.value / 100)
+})
+
+// --- Model loading progress from live VRAM ---
+const loadingPercent = computed(() => {
+  if (!isModelLoading.value || !gpuStats.value?.memory_used_mb) return 0
+  const expectedMb = props.modelMeta?.gpu_vram_mb || 0
+  if (!expectedMb) return 0
+  return Math.min(Math.round((gpuStats.value.memory_used_mb / expectedMb) * 100), 95)
+})
+const loadingVramUsed = computed(() =>
+  gpuStats.value?.memory_used_mb ? (gpuStats.value.memory_used_mb / 1024).toFixed(1) : '0'
+)
+const loadingVramExpected = computed(() => {
+  const mb = props.modelMeta?.gpu_vram_mb || 0
+  return mb ? (mb / 1024).toFixed(0) : '?'
 })
 
 // --- Encoding transparency: animated status line in Phase B ---

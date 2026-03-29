@@ -1809,6 +1809,7 @@ export const en = {
     },
     denoising: {
       modelLoading: 'Loading model into GPU memory...',
+      modelLoadingVram: 'Loading model... {used} / {expected} GB VRAM',
       cloudProcessing: 'Sending request to cloud API...',
       modelCard: 'Model Profile',
       publisher: 'Publisher',
