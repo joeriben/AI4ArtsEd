@@ -1,5 +1,27 @@
 # Development Log
 
+## Session 295 - Encoding Transparency (FAILED)
+**Date:** 2026-03-29
+**Focus:** SD3.5 Generierungsprozess sichtbar machen — Text-Encoding-Phase (CLIP-L, CLIP-G, T5-XXL) als Prozessschritt visualisieren.
+
+### Was versucht wurde
+- GPU Service: `encode_prompt_info()` Methode + `/api/diffusers/encode-info` Endpoint — funktionierte korrekt (Tokenisierung, Embedding-Normen, Encoder-Agreement per Cosine-Similarity)
+- DevServer: `encoding_info` SSE-Event im Diffusers-Generierungsflow — funktionierte korrekt (verifiziert via curl)
+- Frontend: Phase A.5 in DenoisingProgressView zwischen Model Card und Denoising
+
+### Warum gescheitert
+Claude Opus war nicht in der Lage, Informationen zuverlaessig in die DenoisingProgressView einzublenden. Drei Versuche:
+1. **Separates Phase A.5 div**: Vue `Transition mode="out-in"` uebersprang Phase A.5 komplett — encoding_info und generation_progress Events kamen im selben Render-Cycle an
+2. **Minimum Display Time (4s Timer)**: Phase A.5 erschien nicht, Progress-Bar wurde nur langsamer eingeblendet
+3. **Encoding-Info innerhalb Phase A**: Wieder nur Model Card sichtbar
+
+Das Backend (SSE-Events) funktionierte nachweislich korrekt. Das Problem lag ausschliesslich in der Frontend-Integration (Vue Transition Timing, Reactive State Batching).
+
+### Ergebnis
+- **Alle Aenderungen reverted** — Codebase zurueck auf f5c3385
+- Backend-Ansatz (encode_prompt_info) ist valide und koennte mit besserem Frontend-Verstaendnis erneut versucht werden
+- Zusaetzlich: Initiale Darstellung war ein Daten-Dump (Token-Normen, Cosine-Similarity) statt prozessorientierter Visualisierung — paedagogisches Ziel wurde verfehlt
+
 ## Session 294 - SD3.5 img2img via Diffusers from_pipe()
 **Date:** 2026-03-29
 **Focus:** SD3.5 Image-to-Image ueber Diffusers `StableDiffusion3Img2ImgPipeline.from_pipe()` — zero extra Modell-VRAM, teilt alle Komponenten (VAE, Text-Encoder, Transformer) mit der bestehenden t2i Pipeline.
