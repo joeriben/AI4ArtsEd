@@ -111,16 +111,7 @@
     </details>
 
     <!-- Seed (always visible) -->
-    <div class="seed-row">
-      <div class="setting-row">
-        <label>{{ t('latentLab.composable.seedLabel') }}</label>
-        <input type="number" v-model.number="seed" min="0" :disabled="randomSeed || isGenerating" class="setting-number" />
-      </div>
-      <label class="checkbox-label">
-        <input type="checkbox" v-model="randomSeed" :disabled="isGenerating" />
-        {{ t('latentLab.shared.randomVariation') }}
-      </label>
-    </div>
+    <SeedControl v-model:seed="seed" v-model:random="randomSeed" :disabled="isGenerating" />
 
     <!-- Generate Button -->
     <button
@@ -163,6 +154,7 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDetailsState } from '@/composables/useDetailsState'
+import SeedControl from '@/components/SeedControl.vue'
 
 const { t } = useI18n()
 const { record: labRecord } = useLatentLabRecorder('composable_diffusion')
@@ -582,13 +574,6 @@ async function generate() {
   font-size: 0.8rem !important;
   color: rgba(255, 255, 255, 0.5) !important;
   cursor: pointer;
-}
-
-.seed-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.75rem;
 }
 
 /* Generate */

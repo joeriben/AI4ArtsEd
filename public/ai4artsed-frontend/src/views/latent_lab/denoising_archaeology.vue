@@ -93,16 +93,7 @@
       </details>
 
       <!-- Seed (always visible) -->
-      <div class="seed-row">
-        <label>
-          {{ t('latentLab.archaeology.seedLabel') }}
-          <input v-model.number="seed" type="number" min="0" :disabled="randomSeed" class="setting-input setting-seed" />
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="randomSeed" />
-          {{ t('latentLab.shared.randomVariation') }}
-        </label>
-      </div>
+      <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
     </div>
 
     <!-- Visualization -->
@@ -222,6 +213,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import SeedControl from '@/components/SeedControl.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDetailsState } from '@/composables/useDetailsState'
@@ -841,21 +833,6 @@ onUnmounted(() => {
   padding: 0.15rem 0;
   background: rgba(0, 0, 0, 0.4);
   font-family: 'Fira Code', 'Consolas', monospace;
-}
-
-.seed-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.75rem;
-}
-
-.seed-row .checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  cursor: pointer;
 }
 
 .seed-display {
