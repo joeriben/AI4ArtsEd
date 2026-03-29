@@ -1,20 +1,18 @@
 <template>
-  <div class="seed-control">
-    <label class="seed-label">
-      Seed
-      <input
-        v-model.number="seedModel"
-        type="number"
-        min="0"
-        :disabled="randomModel || disabled"
-        class="seed-input"
-      />
-    </label>
-    <label class="seed-checkbox">
+  <label class="seed-control">
+    Seed
+    <input
+      v-model.number="seedModel"
+      type="number"
+      min="0"
+      :disabled="randomModel || disabled"
+      class="setting-input setting-seed"
+    />
+    <label class="seed-random-toggle">
       <input type="checkbox" v-model="randomModel" :disabled="disabled" />
       {{ t('latentLab.shared.randomVariation') }}
     </label>
-  </div>
+  </label>
 </template>
 
 <script setup lang="ts">
@@ -46,43 +44,12 @@ const randomModel = computed({
 </script>
 
 <style scoped>
-.seed-control {
+.seed-random-toggle {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 0.75rem;
-}
-
-.seed-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.85rem;
-}
-
-.seed-input {
-  width: 140px;
-  padding: 0.35rem 0.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  color: #fff;
-  font-size: 0.85rem;
-  font-family: 'Fira Code', 'Consolas', monospace;
-}
-
-.seed-input:disabled {
-  opacity: 0.4;
-}
-
-.seed-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
+  gap: 0.3rem;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.85rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
 }
 </style>
