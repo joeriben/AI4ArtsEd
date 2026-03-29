@@ -50,22 +50,10 @@ Ein zentraler Fix im Legacy-Endpoint (`schema_pipeline_routes.py`): nach Stage 1
 
 **Betroffene Datei:** `devserver/my_app/routes/schema_pipeline_routes.py` — Legacy-Endpoint
 
-### SD3.5 img2img fuer Diffusers GPU Service
+### ~~SD3.5 img2img fuer Diffusers GPU Service~~ — DONE (Session 294)
 
-**Datum:** 2026-03-26 (Session 291, Entdeckung)
-**Status:** HANDOVER — noch nicht angefangen
-
-**Was:** `StableDiffusion3Img2ImgPipeline` aus diffusers v0.36.0 einbinden:
-- `from_pipe()` erzeugt img2img aus geladener t2i Pipeline ohne Neuladung der Gewichte (~0 VRAM extra)
-- Unterstuetzt `image` (PIL), `strength`, `num_images_per_prompt`
-- **i2i**: In text_transformation.vue / i2x Views als SD3.5-Option (aktuell nur ComfyUI-Pfad)
-- **iii2i**: Batch-img2img mit Liste von Init-Images fuer multi_i2i.vue
-
-**Betroffene Dateien:**
-- `gpu_service/services/diffusers_backend.py` — neue `generate_img2img_sd35()` Methode
-- `gpu_service/routes/diffusers_routes.py` — neuer Endpoint
-- Frontend Views: `text_transformation.vue`, `multi_i2i.vue`
-- Output Config: neues `sd35_large_img2img.json` (oder bestehende Config erweitern)
+**Datum:** 2026-03-26 (Session 291, Entdeckung) | **Erledigt:** 2026-03-29
+`from_pipe()` in `generate_image()` integriert, VAE Tiling fuer img2img forced (sonst 65 GB VRAM). Chunk, Config, Frontend (image_transformation + multi_image_transformation) fertig.
 
 ---
 
@@ -141,17 +129,9 @@ Verbleibend: Model-Card-Höhe stimmt nicht mit MediaOutputBox-Höhe überein (ko
 
 ## 🟡 MEDIUM Priority
 
-### SD3.5 img2img und image-to-image-to-image in bestehenden Views ergänzen
+### ~~SD3.5 img2img und image-to-image-to-image in bestehenden Views ergänzen~~ — DONE (Session 294)
 
-**Status:** TODO
-**Entdeckt:** Session 291 (2026-03-26) — SD3.5 StableDiffusion3Img2ImgPipeline existiert in diffusers v0.36.0
-**Was:**
-- `StableDiffusion3Img2ImgPipeline` unterstützt `image` (single oder `List[PIL.Image]`), `strength`, `num_images_per_prompt`
-- `from_pipe()` erzeugt img2img aus geladener t2i Pipeline ohne Neuladung der Gewichte
-- **i2i (image-to-image)**: In text_transformation.vue / i2x Views als SD3.5-Option ergänzen (aktuell nur ComfyUI-Pfad für i2i)
-- **iii2i (multi-image-to-image)**: Batch-img2img mit Liste von Init-Images — für multi_i2i.vue relevant
-- Arcimboldo Mosaic nutzt img2img bereits für Tile-Generierung (Session 291)
-**Betroffene Views:** `text_transformation.vue` (t2x/i2x), `multi_i2i.vue`, ggf. `surrealizer.vue`
+**Erledigt:** 2026-03-29. SD3.5 img2img in image_transformation.vue und multi_image_transformation.vue integriert. Batch-img2img (iii2i mit `List[PIL.Image]`) noch offen — bisher kein Use Case.
 
 ### source_view in Favorites für korrektes Restore-Routing
 

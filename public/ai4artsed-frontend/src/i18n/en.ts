@@ -773,6 +773,9 @@ export const en = {
       hunyuan3d: {
         label: 'Hunyuan\n3D',
         name: 'Hunyuan3D-2 Image-to-3D'
+      },
+      sd35Img2img: {
+        name: 'SD 3.5 Large Image-to-Image'
       }
     },
     yourImage: 'Your image',

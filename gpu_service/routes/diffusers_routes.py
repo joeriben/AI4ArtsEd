@@ -107,9 +107,11 @@ def generate():
         extra_kwargs['prompt_2'] = data['prompt_2']
     if 'prompt_3' in data:
         extra_kwargs['prompt_3'] = data['prompt_3']
-    # Flux2 visual conditioning: pass through image bytes
+    # Flux2 visual conditioning / SD3.5 img2img: pass through image bytes
     if 'image_base64' in data:
         extra_kwargs['image_bytes'] = base64.b64decode(data['image_base64'])
+    if 'strength' in data:
+        extra_kwargs['strength'] = float(data['strength'])
     image_bytes = _run_async(backend.generate_image(
         prompt=data['prompt'],
         model_id=data.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),

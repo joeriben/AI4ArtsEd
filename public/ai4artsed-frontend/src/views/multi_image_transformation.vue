@@ -446,6 +446,18 @@ interface ModelConfig {
 const configsByCategory: Record<string, ModelConfig[]> = {
   image: [
     {
+      id: 'sd35_large_img2img',
+      label: 'SD 3.5\nLarge',
+      emoji: '',
+      name: 'SD 3.5 Large Image-to-Image',
+      quality: 4,
+      speed: 3,
+      duration: '20-40',
+      color: '#FF6B6B',
+      logo: '/logos/logo_stable_diffusion.png',
+      lightBg: false
+    },
+    {
       id: 'qwen_2511_multi',
       label: 'Qwen Multi',
       emoji: '🎨',
