@@ -12,8 +12,8 @@
       </div>
     </div>
     <p class="section-intro" style="opacity: 0.7; font-style: italic;">{{ currentLanguage === 'de'
-      ? 'Verfügbar nur bei Sicherheitsstufe "Erwachsene" oder "Forschung" \u2014 aus technischen Gründen sind Text- und Bildergebnisse unvorhersehbar. "Erwachsene" meint hier nicht "FSK 18", sondern verweist auf die Notwendigkeit mündiger Verantwortlichkeit der Bedienenden. Das kann auch bedeuten: zentral im Unterricht unter Aufsicht oder durch Lehrende bedient.'
-      : 'Available only at Safety Level "Adult" or "Research" \u2014 for technical reasons, text and image results are unpredictable. "Adult" here does not mean age-restricted content, but refers to the need for responsible, informed operation. This can also mean: used centrally in class under supervision or operated by teachers.' }}</p>
+      ? 'Verfügbar bei allen Sicherheitsstufen. Bei "Kinder" und "Jugendliche" werden alle Eingaben und Ergebnisse automatisch durch mehrstufige Sicherheitsprüfungen geschützt.'
+      : 'Available at all safety levels. At "Kids" and "Youth" levels, all inputs and outputs are automatically protected through multi-stage safety checks.' }}</p>
 
     <div class="canvas-card paradigm">
       <h3>{{ currentLanguage === 'de' ? 'Lehrforschung' : 'Exploratory Research' }}</h3>

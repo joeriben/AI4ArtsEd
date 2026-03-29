@@ -93,7 +93,6 @@ const router = createRouter({
       name: 'latent-lab',
       // Latent Lab: Deconstructive platform for vector/latent space exploration
       component: () => import('../views/latent_lab.vue'),
-      meta: { requiresAdvanced: true },
     },
     {
       path: '/music-generation-simple',
@@ -162,7 +161,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // Advanced-mode guard for Canvas and Latent Lab (prevents direct URL access at kids/youth)
+  // Advanced-mode guard (prevents direct URL access at kids/youth for routes with requiresAdvanced meta)
   if (to.meta.requiresAdvanced) {
     const { useSafetyLevelStore } = await import('../stores/safetyLevel')
     const store = useSafetyLevelStore()
