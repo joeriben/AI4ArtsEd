@@ -80,11 +80,17 @@
             <div class="step-bar-fill" :style="{ width: progress + '%' }"></div>
           </div>
           <div class="stats-line-compact">
-            <span v-if="gpuStats.available && gpuStats.power_draw_watts" class="stat-seg">{{ Math.round(gpuStats.power_draw_watts) }}W · {{ totalKwh }} kWh</span>
-            <span class="stat-sep" v-if="gpuStats.available && gpuStats.power_draw_watts">|</span>
-            <span v-if="gpuStats.available" class="stat-seg">GPU {{ gpuStats.utilization_percent ?? 0 }}%<template v-if="gpuStats.memory_used_mb && gpuStats.memory_total_mb"> · {{ (gpuStats.memory_used_mb / 1024).toFixed(1) }}/{{ (gpuStats.memory_total_mb / 1024).toFixed(0) }}GB</template></span>
-            <span class="stat-sep" v-if="gpuStats.available">|</span>
-            <span class="stat-seg"><template v-if="modelMeta?.seed != null">seed:{{ modelMeta.seed }}</template><template v-if="modelMeta?.cfg != null"> · CFG:{{ modelMeta.cfg }}</template><template v-if="stepTotal"> · {{ stepCurrent }}/{{ stepTotal }}</template></span>
+            <!-- Encoding status: sequential encoder steps before denoising stats -->
+            <template v-if="encodingStatusText">
+              <span class="encoding-step-text">{{ encodingStatusText }}</span>
+            </template>
+            <template v-else>
+              <span v-if="gpuStats.available && gpuStats.power_draw_watts" class="stat-seg">{{ Math.round(gpuStats.power_draw_watts) }}W · {{ totalKwh }} kWh</span>
+              <span class="stat-sep" v-if="gpuStats.available && gpuStats.power_draw_watts">|</span>
+              <span v-if="gpuStats.available" class="stat-seg">GPU {{ gpuStats.utilization_percent ?? 0 }}%<template v-if="gpuStats.memory_used_mb && gpuStats.memory_total_mb"> · {{ (gpuStats.memory_used_mb / 1024).toFixed(1) }}/{{ (gpuStats.memory_total_mb / 1024).toFixed(0) }}GB</template></span>
+              <span class="stat-sep" v-if="gpuStats.available">|</span>
+              <span class="stat-seg"><template v-if="modelMeta?.seed != null">seed:{{ modelMeta.seed }}</template><template v-if="modelMeta?.cfg != null"> · CFG:{{ modelMeta.cfg }}</template><template v-if="stepTotal"> · {{ stepCurrent }}/{{ stepTotal }}</template></span>
+            </template>
           </div>
         </div>
       </div>
@@ -93,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, onBeforeUnmount } from 'vue'
+import { computed, ref, watch, onUnmounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEdutainmentFacts } from '@/composables/useEdutainmentFacts'
 
@@ -103,6 +109,7 @@ interface Props {
   progress: number
   previewImage: string | null
   modelMeta: Record<string, any> | null
+  encodingInfo: Record<string, any> | null
   estimatedSeconds?: number
 }
 
@@ -110,6 +117,7 @@ const props = withDefaults(defineProps<Props>(), {
   progress: 0,
   previewImage: null,
   modelMeta: null,
+  encodingInfo: null,
   estimatedSeconds: 30
 })
 
@@ -159,6 +167,64 @@ const stepCurrent = computed(() => {
   return Math.round(props.progress * stepTotal.value / 100)
 })
 
+// --- Encoding transparency: animated status line in Phase B ---
+const encodingSteps = ref<string[]>([])
+const currentEncodingStep = ref(-1)
+let _encodingTimers: ReturnType<typeof setTimeout>[] = []
+let _encodingAnimationStarted = false
+
+function clearEncodingTimers() {
+  _encodingTimers.forEach(clearTimeout)
+  _encodingTimers = []
+}
+
+function startEncodingAnimation(info: Record<string, any>) {
+  clearEncodingTimers()
+  const steps: string[] = []
+  if (info.clip_l) steps.push(t('edutainment.denoising.encodingClipL', { count: info.clip_l.count }))
+  if (info.clip_g) steps.push(t('edutainment.denoising.encodingClipG', { count: info.clip_g.count }))
+  if (info.t5) steps.push(t('edutainment.denoising.encodingT5', { count: info.t5.count }))
+  steps.push(t('edutainment.denoising.encodingEmbeddings'))
+  steps.push(t('edutainment.denoising.encodingDenoisingStarts'))
+
+  encodingSteps.value = steps
+  currentEncodingStep.value = 0
+
+  let delay = 0
+  for (let i = 1; i < steps.length; i++) {
+    delay += 700
+    const timer = setTimeout(() => { currentEncodingStep.value = i }, delay)
+    _encodingTimers.push(timer)
+  }
+  // Clear after last step plays
+  delay += 700
+  _encodingTimers.push(setTimeout(() => { currentEncodingStep.value = -1 }, delay))
+}
+
+const encodingStatusText = computed(() => {
+  if (currentEncodingStep.value < 0 || currentEncodingStep.value >= encodingSteps.value.length) return ''
+  return encodingSteps.value[currentEncodingStep.value]
+})
+
+// Start animation when Phase B appears AND encoding data is available
+const encodingReady = computed(() => !!props.encodingInfo && !isModelLoading.value)
+watch(encodingReady, (ready) => {
+  if (ready && !_encodingAnimationStarted) {
+    _encodingAnimationStarted = true
+    startEncodingAnimation(props.encodingInfo!)
+  }
+})
+
+// Reset when encodingInfo is cleared (new generation cycle)
+watch(() => props.encodingInfo, (info) => {
+  if (!info) {
+    _encodingAnimationStarted = false
+    clearEncodingTimers()
+    currentEncodingStep.value = -1
+    encodingSteps.value = []
+  }
+})
+
 // --- Edutainment facts + GPU stats ---
 const {
   gpuStats,
@@ -177,7 +243,10 @@ startRotation()
 onBeforeUnmount(() => {
   emit('stats-snapshot', { energyWh: totalEnergyWh.value, co2Grams: totalCo2Grams.value })
 })
-onUnmounted(() => stopRotation())
+onUnmounted(() => {
+  stopRotation()
+  clearEncodingTimers()
+})
 </script>
 
 <style scoped>
@@ -351,6 +420,14 @@ onUnmounted(() => stopRotation())
 
 .stat-sep {
   color: rgba(255, 255, 255, 0.2);
+}
+
+/* Encoding step status */
+.encoding-step-text {
+  color: rgba(76, 175, 80, 0.85);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.72rem;
+  white-space: nowrap;
 }
 
 /* Expert fact (shared between phases) */

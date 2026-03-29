@@ -164,6 +164,7 @@
         :run-id="currentRunId"
         :is-favorited="isFavorited"
         :model-meta="modelMeta"
+        :encoding-info="encodingInfo"
         :ui-mode="uiModeStore.mode"
         :stage4-duration-ms="stage4DurationMs"
         forward-button-title="Erneut Transformieren"
@@ -288,6 +289,7 @@ const {
   previewImage,
   currentStage,
   modelMeta,
+  encodingInfo,
   stage4DurationMs,
   executeWithStreaming,
   reset: resetGenerationStream,

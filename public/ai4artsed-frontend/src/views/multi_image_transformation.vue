@@ -214,6 +214,7 @@
         :show-analysis="showAnalysis"
         :analysis-data="imageAnalysis"
         :model-meta="modelMeta"
+        :encoding-info="encodingInfo"
         :run-id="currentRunId"
         :ui-mode="uiModeStore.mode"
         :stage4-duration-ms="stage4DurationMs"
@@ -337,6 +338,7 @@ const {
   previewImage,
   currentStage,
   modelMeta,
+  encodingInfo,
   stage4DurationMs,
   executeWithStreaming,
   reset: resetGenerationStream,

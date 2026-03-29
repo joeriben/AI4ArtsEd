@@ -10,6 +10,7 @@
           :progress="progress"
           :preview-image="previewImage"
           :model-meta="modelMeta"
+          :encoding-info="encodingInfo"
           :estimated-seconds="estimatedSeconds"
           @stats-snapshot="handleStatsSnapshot"
         />
@@ -332,6 +333,7 @@ interface Props {
   isFavorited?: boolean
   // Expert denoising view
   modelMeta?: Record<string, any> | null
+  encodingInfo?: Record<string, any> | null
   uiMode?: string
   stage4DurationMs?: number
   // 3D model support
@@ -351,6 +353,7 @@ const props = withDefaults(defineProps<Props>(), {
   runId: null,
   isFavorited: false,
   modelMeta: null,
+  encodingInfo: null,
   uiMode: 'youth',
   stage4DurationMs: 0,
   meshUrl: null,

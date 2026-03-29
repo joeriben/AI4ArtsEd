@@ -2859,6 +2859,168 @@ class DiffusersImageGenerator:
             traceback.print_exc()
             raise
 
+    async def encode_prompt_info(
+        self,
+        prompt: str,
+        model_id: str = "stabilityai/stable-diffusion-3.5-large",
+    ) -> Dict[str, Any]:
+        """
+        Analyze how the three SD3.5 text encoders process a prompt.
+
+        Returns tokenization, per-token embedding norms (activation strength),
+        and encoder agreement (cosine similarity between encoders per token position).
+
+        This is lightweight: one forward pass per encoder (~100ms total on GPU).
+        Falls back to tokenization-only if model is not loaded.
+        """
+        try:
+            import torch
+            import torch.nn.functional as F
+
+            result = {"model_id": model_id}
+
+            # Check if model is loaded — if not, return tokenization only
+            if model_id not in self._pipelines:
+                # Try to load, but don't block if it fails
+                if not await self.load_model(model_id):
+                    return {"error": f"Model {model_id} not available"}
+
+            pipe = self._pipelines[model_id]
+
+            # Verify this is an SD3.5-style pipeline with triple encoders
+            has_triple = (
+                hasattr(pipe, 'tokenizer') and
+                hasattr(pipe, 'tokenizer_2') and
+                hasattr(pipe, 'tokenizer_3')
+            )
+            if not has_triple:
+                return {"error": "Pipeline does not have triple text encoders (not SD3.5?)"}
+
+            has_encoders = (
+                hasattr(pipe, '_get_clip_prompt_embeds') and
+                hasattr(pipe, '_get_t5_prompt_embeds')
+            )
+
+            # --- Tokenization (CPU only, always available) ---
+            def _tokenize(tokenizer, name, max_len):
+                tokens = tokenizer(
+                    prompt,
+                    padding=False,
+                    truncation=False,
+                    return_tensors=None,
+                )
+                input_ids = tokens["input_ids"]
+                # Strip special tokens (SOT/EOT for CLIP, pad for T5)
+                if hasattr(tokenizer, 'bos_token_id') and input_ids and input_ids[0] == tokenizer.bos_token_id:
+                    input_ids = input_ids[1:]
+                if hasattr(tokenizer, 'eos_token_id') and input_ids and input_ids[-1] == tokenizer.eos_token_id:
+                    input_ids = input_ids[:-1]
+
+                decoded_tokens = [tokenizer.decode([tid]) for tid in input_ids]
+                count = len(input_ids)
+                truncated = count > max_len
+
+                return {
+                    "tokens": decoded_tokens[:max_len],
+                    "count": min(count, max_len),
+                    "total_count": count,
+                    "max": max_len,
+                    "truncated": truncated,
+                }
+
+            clip_l_tok = _tokenize(pipe.tokenizer, "clip_l", 75)  # 77 - 2 special tokens
+            clip_g_tok = _tokenize(pipe.tokenizer_2, "clip_g", 75)
+            t5_tok = _tokenize(pipe.tokenizer_3, "t5", 512)
+
+            result["clip_l"] = {**clip_l_tok, "embed_dim": 768}
+            result["clip_g"] = {**clip_g_tok, "embed_dim": 1280}
+            result["t5"] = {**t5_tok, "embed_dim": 4096}
+
+            # --- Embedding analysis (GPU, only if encoders available) ---
+            if has_encoders:
+                self._model_in_use[model_id] = self._model_in_use.get(model_id, 0) + 1
+                try:
+                    self._model_last_used[model_id] = time.time()
+                    device = pipe._execution_device
+
+                    def _encode():
+                        with torch.no_grad():
+                            # CLIP-L: [1, 77, 768]
+                            clip_l_embeds, _ = pipe._get_clip_prompt_embeds(
+                                prompt=prompt, device=device,
+                                num_images_per_prompt=1, clip_model_index=0
+                            )
+                            # CLIP-G: [1, 77, 1280]
+                            clip_g_embeds, _ = pipe._get_clip_prompt_embeds(
+                                prompt=prompt, device=device,
+                                num_images_per_prompt=1, clip_model_index=1
+                            )
+                            # T5-XXL: [1, N, 4096]
+                            t5_embeds = pipe._get_t5_prompt_embeds(
+                                prompt=prompt, num_images_per_prompt=1,
+                                max_sequence_length=512, device=device
+                            )
+
+                        # Per-token L2 norms (activation strength)
+                        clip_l_norms = torch.norm(clip_l_embeds[0], dim=-1).cpu()  # [77]
+                        clip_g_norms = torch.norm(clip_g_embeds[0], dim=-1).cpu()  # [77]
+                        t5_norms = torch.norm(t5_embeds[0], dim=-1).cpu()  # [N]
+
+                        # Normalize to [0, 1] for visualization
+                        def _normalize(norms, token_count):
+                            """Normalize norms for actual tokens (skip padding)."""
+                            actual = norms[:token_count]
+                            if actual.max() > actual.min():
+                                return ((actual - actual.min()) / (actual.max() - actual.min())).tolist()
+                            return [0.5] * token_count
+
+                        clip_l_count = clip_l_tok["count"]
+                        clip_g_count = clip_g_tok["count"]
+                        t5_count = t5_tok["count"]
+
+                        result["clip_l"]["token_norms"] = _normalize(clip_l_norms, clip_l_count)
+                        result["clip_g"]["token_norms"] = _normalize(clip_g_norms, clip_g_count)
+                        result["t5"]["token_norms"] = _normalize(t5_norms, t5_count)
+
+                        # Encoder agreement: cosine similarity per token position
+                        # Compare over shared token count (min of all encoders)
+                        shared_count = min(clip_l_count, clip_g_count, t5_count)
+                        if shared_count > 0:
+                            # Pad CLIP embeddings to T5 dim for meaningful comparison
+                            clip_l_padded = F.pad(clip_l_embeds[0, :shared_count], (0, 4096 - 768))
+                            clip_g_padded = F.pad(clip_g_embeds[0, :shared_count], (0, 4096 - 1280))
+                            t5_shared = t5_embeds[0, :shared_count]
+
+                            cos = torch.nn.CosineSimilarity(dim=-1)
+                            result["encoder_agreement"] = {
+                                "clip_l_vs_t5": cos(clip_l_padded, t5_shared).cpu().tolist(),
+                                "clip_g_vs_t5": cos(clip_g_padded, t5_shared).cpu().tolist(),
+                                "clip_l_vs_clip_g": cos(
+                                    F.pad(clip_l_embeds[0, :shared_count], (0, 1280 - 768)),
+                                    clip_g_embeds[0, :shared_count]
+                                ).cpu().tolist(),
+                                "shared_positions": shared_count,
+                            }
+
+                    await asyncio.to_thread(_encode)
+
+                finally:
+                    self._model_in_use[model_id] -= 1
+
+            logger.info(
+                f"[ENCODE-INFO] clip_l={clip_l_tok['count']}/{clip_l_tok['max']}, "
+                f"clip_g={clip_g_tok['count']}/{clip_g_tok['max']}, "
+                f"t5={t5_tok['count']}/{t5_tok['max']}, "
+                f"has_norms={'token_norms' in result.get('clip_l', {})}"
+            )
+            return result
+
+        except Exception as e:
+            logger.error(f"[ENCODE-INFO] Error: {e}")
+            import traceback
+            traceback.print_exc()
+            return {"error": str(e)}
+
 
 # Singleton instance
 _backend: Optional[DiffusersImageGenerator] = None

@@ -90,6 +90,31 @@ def unload():
     return jsonify({"success": result})
 
 
+@diffusers_bp.route('/api/diffusers/encode-info', methods=['POST'])
+def encode_info():
+    """Analyze how the three SD3.5 text encoders process a prompt.
+
+    Returns tokenization, per-token embedding norms, and encoder agreement.
+    Body: { "prompt": "...", "model_id": "..." (optional) }
+    Returns: { clip_l, clip_g, t5, encoder_agreement }
+    """
+    data = request.get_json(silent=True) or {}
+    prompt = data.get('prompt', '')
+    if not prompt:
+        return jsonify({"error": "prompt required"}), 400
+
+    backend = _get_backend()
+    result = _run_async(backend.encode_prompt_info(
+        prompt=prompt,
+        model_id=data.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),
+    ))
+
+    if 'error' in result:
+        return jsonify(result), 500
+
+    return jsonify(result)
+
+
 @diffusers_bp.route('/api/diffusers/generate', methods=['POST'])
 def generate():
     """Standard image generation.
