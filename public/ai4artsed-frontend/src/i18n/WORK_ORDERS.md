@@ -26,8 +26,7 @@ Tags:
 - **Scope**: en.ts
 - **Changed keys**:
   - `latentLab.shared.randomVariation` (NEW): "Random variation"
-  - `latentLab.shared.seedHint` (MODIFIED): "-1 = random, fixed value = reproducible result" -> "Fixed seed = reproducible result"
-- **Context**: All Latent Lab image tabs now show a visible seed field with a "Random variation" checkbox. When checked, the seed becomes random (-1); when unchecked, a fixed seed (default 123456789) ensures reproducible results. This is for educational settings where reproducibility matters.
+- **Context**: All Latent Lab image tabs now show a visible seed field with a "Random variation" checkbox. When checked, the seed becomes random; when unchecked, a fixed seed (default 123456789) ensures reproducible results. Translate naturally — "Random variation" = "Zufallsvariation" (DE), etc.
 
 ### WO-2026-03-29-encoding-transparency
 - **Session**: 296
