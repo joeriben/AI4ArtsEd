@@ -24,7 +24,7 @@ CHUNK_META = {
     "output_format": "png",
     "estimated_duration_seconds": "15-30",
     "requires_gpu": True,
-    "gpu_vram_mb": 28000,
+    "gpu_vram_mb": 57000,
 }
 
 MODEL_ID = "stabilityai/stable-diffusion-3.5-large"
