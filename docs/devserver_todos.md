@@ -8,6 +8,7 @@
 
 | Session | Datum | Was |
 |---------|-------|-----|
+| 293 | 2026-03-29 | Workshop 27.03 Replay (Ollama-Migration verifiziert), Arcimboldo Mosaic entfernt, Canvas freigeschaltet, Stashes aufgeraeumt |
 | 250 | 2026-03-06 | Hunyuan3D-2 Text-to-3D Pipeline + Blender Headless + model-viewer |
 | 235 | 2026-03-02 | Proxy-Chunk-Pattern Elimination + Router Cleanup |
 | 234 | 2026-03-01 | LoRA Support for Diffusers GPU Service |
@@ -25,6 +26,46 @@
 ## 🔴 CRITICAL: Architektur-Verletzungen
 
 *Derzeit keine CRITICAL-Items.*
+
+---
+
+## 🟠 HIGH Priority
+
+### Latent Lab Safety-Gate: Stage 3 im Legacy-Endpoint nachrüsten
+
+**Datum:** 2026-03-29 (Session 293 — Analyse)
+**Status:** HANDOVER — Analyse abgeschlossen, Implementierung steht aus
+**Kontext:** Canvas ist bereits voll safety-gated (Stage 1-2-3-4) und seit Session 293 fuer alle Safety-Levels freigeschaltet. Latent Lab hingegen nutzt `/api/schema/pipeline/legacy`, das NUR Stage 1 (DSGVO + §86a Fast-Filter) hat — kein Stage 3 Llama-Guard-Check. Alle 5 Bild-Tabs (Archaeology, Attention, Probing, Algebra, Composable) nehmen User-Prompts und generieren Bilder ohne Llama-Guard.
+
+**Ziel:** Optionalen Stage-3-Check im Legacy-Endpoint nachrüsten, gesteuert durch `safety_level` aus der Session. Bei `kids`/`youth` wird Stage 3 automatisch aktiv, bei `adult`/`research` wie bisher.
+
+**Analyse-Ergebnis (Session 293):**
+- 5 Latent-Lab Bild-Tabs: `/api/schema/pipeline/legacy` → Stage 1 nur → **nachrüsten**
+- Latent Text Lab: `/api/text/*` → keine Safety, aber kein Medien-Output → **kein Handlungsbedarf**
+- Crossmodal Lab: `/api/cross_aesthetic/*` → keine Safety, Audio-Output → **Audio-Safety existiert nicht, deferred**
+- Canvas: `/api/canvas/execute*` → Stage 1-2-3-4 → **bereits safe, bereits freigeschaltet**
+
+**Implementierungsidee:**
+Ein zentraler Fix im Legacy-Endpoint (`schema_pipeline_routes.py`): nach Stage 1, vor Dispatch an Pipeline, `execute_stage3_safety()` aufrufen wenn `safety_level in ('kids', 'youth')`. Stage 2 (Interception) ist fuer Latent Lab nicht sinnvoll (User will exakt den Prompt den er eingibt), daher Stage 2 weiterhin ueberspringen.
+
+**Betroffene Datei:** `devserver/my_app/routes/schema_pipeline_routes.py` — Legacy-Endpoint
+
+### SD3.5 img2img fuer Diffusers GPU Service
+
+**Datum:** 2026-03-26 (Session 291, Entdeckung)
+**Status:** HANDOVER — noch nicht angefangen
+
+**Was:** `StableDiffusion3Img2ImgPipeline` aus diffusers v0.36.0 einbinden:
+- `from_pipe()` erzeugt img2img aus geladener t2i Pipeline ohne Neuladung der Gewichte (~0 VRAM extra)
+- Unterstuetzt `image` (PIL), `strength`, `num_images_per_prompt`
+- **i2i**: In text_transformation.vue / i2x Views als SD3.5-Option (aktuell nur ComfyUI-Pfad)
+- **iii2i**: Batch-img2img mit Liste von Init-Images fuer multi_i2i.vue
+
+**Betroffene Dateien:**
+- `gpu_service/services/diffusers_backend.py` — neue `generate_img2img_sd35()` Methode
+- `gpu_service/routes/diffusers_routes.py` — neuer Endpoint
+- Frontend Views: `text_transformation.vue`, `multi_i2i.vue`
+- Output Config: neues `sd35_large_img2img.json` (oder bestehende Config erweitern)
 
 ---
 
