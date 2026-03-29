@@ -575,7 +575,6 @@ onUnmounted(() => {
           :highlighted-node-id="highlightedNodeId"
           @toggle-collapse="drawerCollapsed = !drawerCollapsed"
           @highlight-node="highlightNode"
-          @download="() => {}"
         />
       </div>
     </div>

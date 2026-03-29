@@ -500,9 +500,7 @@ export const en = {
     batchStart: 'Start Batch',
     outputDrawer: {
       title: 'Outputs',
-      emptyState: 'Run workflow to generate outputs',
-      download: 'Download',
-      imageAlt: 'Generated output'
+      emptyState: 'Run workflow to generate outputs'
     },
     zoomControls: {
       zoomIn: 'Zoom in',
