@@ -742,6 +742,26 @@ class DiffusersImageGenerator:
                 def step_callback(pipe_inst, step, timestep, callback_kwargs):
                     _generation_progress["step"] = step + 1  # 0-indexed → 1-indexed
                     _generation_progress["total_steps"] = steps
+                    # Decode latents to preview image every 5 steps
+                    if step % 5 == 0 or step == steps - 1:
+                        try:
+                            latents = callback_kwargs.get("latents")
+                            if latents is not None:
+                                with torch.no_grad():
+                                    preview = pipe_inst.vae.decode(
+                                        latents / pipe_inst.vae.config.scaling_factor
+                                    ).sample
+                                from diffusers.image_processor import VaeImageProcessor
+                                from PIL import Image
+                                import base64
+                                processor = VaeImageProcessor()
+                                preview_img = processor.postprocess(preview, output_type="pil")[0]
+                                preview_img = preview_img.resize((256, 256), Image.LANCZOS)
+                                buf = io.BytesIO()
+                                preview_img.save(buf, format="JPEG", quality=40)
+                                _generation_progress["preview"] = base64.b64encode(buf.getvalue()).decode()
+                        except Exception as e:
+                            logger.debug(f"[DIFFUSERS] Preview decode failed (non-critical): {e}")
                     if callback:
                         try:
                             callback(step, steps, callback_kwargs.get("latents"))
@@ -751,7 +771,7 @@ class DiffusersImageGenerator:
 
                 # Run inference in thread to avoid blocking event loop
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True, "preview": None})
                     if loras:
                         self._apply_loras(pipe, loras)
                     try:
@@ -838,7 +858,7 @@ class DiffusersImageGenerator:
                     finally:
                         if loras:
                             self._remove_loras(pipe)
-                        _generation_progress["active"] = False
+                        _generation_progress.update({"active": False, "preview": None})
 
                 image = await asyncio.to_thread(self._locked_generate, _generate)
 

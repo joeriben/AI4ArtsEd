@@ -207,13 +207,14 @@ const encodingStatusText = computed(() => {
 })
 
 // Start animation when Phase B appears AND encoding data is available
+// immediate: true ensures it fires on HMR reload when data is already present
 const encodingReady = computed(() => !!props.encodingInfo && !isModelLoading.value)
 watch(encodingReady, (ready) => {
   if (ready && !_encodingAnimationStarted) {
     _encodingAnimationStarted = true
     startEncodingAnimation(props.encodingInfo!)
   }
-})
+}, { immediate: true })
 
 // Reset when encodingInfo is cleared (new generation cycle)
 watch(() => props.encodingInfo, (info) => {

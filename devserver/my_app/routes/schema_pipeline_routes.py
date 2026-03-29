@@ -3095,10 +3095,12 @@ def execute_generation_streaming(data: dict):
                     if resp.get('active') and resp.get('step', 0) != last_step:
                         last_step = resp['step']
                         total = resp.get('total_steps', 1)
+                        preview_b64 = resp.get('preview')
                         yield generate_sse_event('generation_progress', {
                             'percent': round((last_step / total) * 100) if total > 0 else 0,
                             'step': last_step,
-                            'total_steps': total
+                            'total_steps': total,
+                            'preview': f'data:image/jpeg;base64,{preview_b64}' if preview_b64 else None,
                         })
                         yield ''
                 except Exception:
@@ -6906,7 +6908,7 @@ def pipeline_configs_with_properties():
             {
                 "id": 4,
                 "pair": ["explore", "create"],
-                "symbols": {"explore": "🔍", "create": "🎨"},
+                "symbols": {"explore": "?", "create": "+"},
                 "labels": {
                     "de": {"explore": "austesten", "create": "artikulieren"},
                     "en": {"explore": "test AI", "create": "articulate"}
@@ -7074,7 +7076,7 @@ def pipeline_configs_with_properties():
                 # Add display metadata (icon, color, difficulty, etc.)
                 if "display" in config_data:
                     display = config_data["display"]
-                    metadata["icon"] = display.get("icon", "🎨")
+                    metadata["icon"] = display.get("icon", "")
                     metadata["color"] = display.get("color", "#888888")
                     metadata["difficulty"] = display.get("difficulty", 3)
 
