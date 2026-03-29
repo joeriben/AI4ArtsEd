@@ -79,8 +79,8 @@ const router = createRouter({
       path: '/canvas',
       name: 'canvas-workflow',
       // Session 129: Canvas workflow builder for parallel fan-out workflows
+      // Safety: Full Stage 1-2-3-4 pipeline — safe for all safety levels
       component: () => import('../views/canvas_workflow.vue'),
-      meta: { requiresAdvanced: true },
     },
     {
       path: '/music-generation',
