@@ -107,6 +107,9 @@ export function useGenerationStream() {
   const stage4DurationMs = ref(0)
   let _stage4StartTime = 0
 
+  // Encoding transparency (SD3.5 process visibility)
+  const encodingInfo = ref<Record<string, any> | null>(null)
+
   // Queue transparency + per-device lock
   const queuePosition = ref(0)
   const deviceBusy = ref(false)
@@ -303,6 +306,12 @@ export function useGenerationStream() {
         _stage4StartTime = Date.now()
       })
 
+      eventSource.addEventListener('encoding_info', (e: MessageEvent) => {
+        const data = JSON.parse(e.data)
+        console.log('[GENERATION-STREAM] Encoding info received:', Object.keys(data))
+        encodingInfo.value = data
+      })
+
       eventSource.addEventListener('generation_progress', (e: MessageEvent) => {
         const data = JSON.parse(e.data)
         generationProgress.value = data.percent
@@ -455,6 +464,7 @@ export function useGenerationStream() {
     isExecuting.value = false
     currentStage.value = 'idle'
     modelMeta.value = null
+    encodingInfo.value = null
     stage4DurationMs.value = 0
     _stage4StartTime = 0
     queuePosition.value = 0
@@ -473,6 +483,7 @@ export function useGenerationStream() {
     currentStage,
     modelMeta,
     stage4DurationMs,
+    encodingInfo,
 
     // Queue transparency + per-device lock
     queuePosition,
