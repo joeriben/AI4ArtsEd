@@ -89,11 +89,9 @@
             <input v-model.number="cfgScale" type="number" min="1" max="20" step="0.5" class="setting-input setting-small" />
             <div class="control-hint">{{ t('latentLab.shared.cfgHint') }}</div>
           </label>
+          <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
         </div>
       </details>
-
-      <!-- Seed (always visible) -->
-      <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
     </div>
 
     <!-- Main Visualization -->
