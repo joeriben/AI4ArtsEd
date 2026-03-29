@@ -28,7 +28,7 @@
 
 ---
 
-## 🔴 HIGH Priority
+## 🟢 LOW Priority
 
 ### Provider-agnostische API-Registry Refactor
 
@@ -82,16 +82,10 @@ Bestehende `_call_mistral()`, `_call_ollama()`, `_call_openai()`, `_call_anthrop
 3. **Code-Duplikation**: Stage 1 Safety in 4 Endpoints embedded (Funktionen zentralisiert, Callsites noch 4x)
 4. ✅ ~~**Frontend Bug**: MediaInputBox ignoriert 'blocked' SSE Events~~ — gefixt (Handler Zeile 528-538)
 
-### Stage 3 Negative Prompts nicht an Stage 4 weitergereicht
+### ~~Stage 3 Negative Prompts nicht an Stage 4 weitergereicht~~ — KEIN BUG
 
-**Datum:** 2025-11-20 (Session 53) — **Bug besteht weiterhin** (Stand 2026-02-23 verifiziert)
-
-Stage 3 generiert Negative Prompts basierend auf Safety Level (kids/youth), aber diese werden nie an Stage 4 übergeben:
-- `safety_result['negative_prompt']` wird gespeichert aber nie verwendet
-- Alle SD3.5 Images nutzen nur den hardcodierten Default: `"blurry, bad quality, watermark, text, distorted"`
-- Kids/youth Safety-Filter sind damit nicht voll wirksam
-
-**Fix:** `safety_result['negative_prompt']` an `pipeline_executor.execute_pipeline()` in Stage 4 übergeben.
+**Status:** CLOSED (Session 293, 2026-03-29)
+**Grund:** Stage 3 generiert tatsaechlich KEINE Negative Prompts — `negative_prompt` ist immer `None` oder `""`. Der TODO war ein Phantom. SD3.5 Default-Negative-Prompt (`"blurry, bad quality..."`) ist im Chunk-JSON hardcodiert und funktioniert.
 
 ### Frontend bleibt im Loading-State bei Backend-Fehler (Expert Mode)
 
@@ -169,17 +163,11 @@ WSOLA Pitch Shifting läuft auf dem **Main Thread in purem JavaScript** → UI-L
 - [ ] **Streamline "Erweiterte Einstellungen" collapse state** — persist via localStorage
 - [ ] **Scientific references with DOI** in all labs (MMAudio=CVPR 2025, ImageBind=CVPR 2023, Stable Audio=ICML 2024)
 
-### Arcimboldo Mosaic — Konzept noch falsch gedacht
+### ~~Arcimboldo Mosaic~~ — ENTFERNT (Session 293)
 
-**Status:** RETHINK NEEDED
-**Datum:** 2026-03-27
-**Problem:** Das Feature ist implementiert (img2img Tiles aus Originalbild-Patches, Attention-basierte Segmentation), aber das Ergebnis ueberzeugt nicht. Die Tiles wiederholen sich visuell trotz unterschiedlicher Seeds, die Helligkeitsvariation reicht nicht fuer einen ueberzeugenden Mosaic-Effekt. Mehrere Iterationen (Mean-Shift, Blend, per-Cell Color Transfer) haben am Symptom herumgedoktert statt das Grundproblem zu loesen.
-**Offene Fragen:**
-- Wie hat Arcimboldo eigentlich gearbeitet? Sorgfaeltige Auswahl und Platzierung einzelner Objekte — nicht algorithmische Wiederholung
-- Ist der Grid-basierte Ansatz ueberhaupt richtig, oder braucht es freie Platzierung entlang der Segmentierungsgrenzen?
-- Welche Rolle spielt die Tile-Diversitaet vs. die Positionierung?
-- Pedagogischer Mehrwert: Was lernt man ueber Diffusion-Modelle durch dieses Feature?
-**Betroffene Dateien:** `gpu_service/services/mosaic_segmentation.py`, `gpu_service/services/diffusers_backend.py` (generate_mosaic_tiles), `arcimboldo_mosaic.vue`
+**Status:** REMOVED
+**Datum:** 2026-03-29
+**Grund:** Ergebnisse nicht ueberzeugend, paedagogischer Mehrwert unklar. Tab aus Image Lab entfernt, Backend-Route deregistriert. Code bleibt im Repo (Vue-Komponente, GPU-Service-Endpoints, mosaic_segmentation.py) fuer den Fall dass das Konzept spaeter mit besserem Ansatz wiederbelebt wird.
 
 ### MMAudio / ImageBind Downloads ausstehend
 

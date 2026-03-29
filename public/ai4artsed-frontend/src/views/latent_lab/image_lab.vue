@@ -27,7 +27,6 @@
     <FeatureProbing v-else-if="activeTab === 'probing'" />
     <ConceptAlgebra v-else-if="activeTab === 'algebra'" />
     <ComposableDiffusion v-else-if="activeTab === 'composable'" />
-    <ArcimboldoMosaic v-else-if="activeTab === 'arcimboldo'" />
   </div>
 </template>
 
@@ -40,11 +39,10 @@ import Surrealizer from '../surrealizer.vue'
 import FeatureProbing from './feature_probing.vue'
 import ConceptAlgebra from './concept_algebra.vue'
 import ComposableDiffusion from './composable_diffusion.vue'
-import ArcimboldoMosaic from './arcimboldo_mosaic.vue'
 
 const { t } = useI18n()
 
-type SubTabId = 'archaeology' | 'attention' | 'fusion' | 'probing' | 'algebra' | 'composable' | 'arcimboldo'
+type SubTabId = 'archaeology' | 'attention' | 'fusion' | 'probing' | 'algebra' | 'composable'
 
 const STORAGE_KEY = 'latent_lab_image_tab'
 
@@ -55,7 +53,6 @@ const tabs: { id: SubTabId }[] = [
   { id: 'probing' },
   { id: 'algebra' },
   { id: 'composable' },
-  { id: 'arcimboldo' },
 ]
 
 const activeTab = ref<SubTabId>('archaeology')
