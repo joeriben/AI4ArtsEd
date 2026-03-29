@@ -21,6 +21,13 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-29-canvas-outputdrawer-mediaoutputbox
+- **Scope**: en.ts → all targets
+- **Removed keys**:
+  - `canvas.outputDrawer.download` (REMOVED — replaced by MediaOutputBox toolbar)
+  - `canvas.outputDrawer.imageAlt` (REMOVED — replaced by MediaOutputBox)
+- **Context**: Canvas OutputDrawer now uses the shared MediaOutputBox component for media rendering. Remove these dead keys from all language files.
+
 ### WO-2026-03-29-seed-random-variation
 - **Session**: 296
 - **Scope**: en.ts
