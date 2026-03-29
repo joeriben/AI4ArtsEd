@@ -21,6 +21,25 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-29-seed-random-variation
+- **Session**: 296
+- **Scope**: en.ts
+- **Changed keys**:
+  - `latentLab.shared.randomVariation` (NEW): "Random variation"
+  - `latentLab.shared.seedHint` (MODIFIED): "-1 = random, fixed value = reproducible result" -> "Fixed seed = reproducible result"
+- **Context**: All Latent Lab image tabs now show a visible seed field with a "Random variation" checkbox. When checked, the seed becomes random (-1); when unchecked, a fixed seed (default 123456789) ensures reproducible results. This is for educational settings where reproducibility matters.
+
+### WO-2026-03-29-encoding-transparency
+- **Session**: 296
+- **Scope**: en.ts
+- **Changed keys** (new):
+  - `edutainment.denoising.encodingClipL` (NEW): "CLIP-L reads your text... ({count} tokens)"
+  - `edutainment.denoising.encodingClipG` (NEW): "CLIP-G reads your text... ({count} tokens)"
+  - `edutainment.denoising.encodingT5` (NEW): "T5-XXL reads your text... ({count} tokens)"
+  - `edutainment.denoising.encodingEmbeddings` (NEW): "Creating embeddings..."
+  - `edutainment.denoising.encodingDenoisingStarts` (NEW): "Denoising starts..."
+- **Context**: SD3.5 encoding transparency status line in expert denoising view. Shows sequential encoder steps during image generation. CLIP-L, CLIP-G, T5-XXL are model names — keep as-is. "reads your text" should be translated naturally. "{count}" is interpolated token count.
+
 ### WO-2026-03-29-sd35-img2img
 - **Scope**: en.ts
 - **Changed keys** (new):

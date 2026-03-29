@@ -89,13 +89,21 @@
             <input v-model.number="cfgScale" type="number" min="1" max="20" step="0.5" class="setting-input setting-small" />
             <div class="control-hint">{{ t('latentLab.shared.cfgHint') }}</div>
           </label>
-          <label>
-            {{ t('latentLab.attention.seedLabel') }}
-            <input v-model.number="seed" type="number" min="-1" class="setting-input setting-seed" />
-            <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
-          </label>
         </div>
       </details>
+
+      <!-- Seed (always visible) -->
+      <div class="seed-row">
+        <label>
+          {{ t('latentLab.attention.seedLabel') }}
+          <input v-model.number="seed" type="number" min="0" :disabled="randomSeed" class="setting-input setting-seed" />
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="randomSeed" />
+          {{ t('latentLab.shared.randomVariation') }}
+        </label>
+        <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
+      </div>
     </div>
 
     <!-- Main Visualization -->
@@ -297,7 +305,8 @@ const promptText = ref('')
 const negativePrompt = ref('')
 const steps = ref(25)
 const cfgScale = ref(4.5)
-const seed = ref(-1)
+const seed = ref(123456789)
+const randomSeed = ref(false)
 const isGenerating = ref(false)
 const errorMessage = ref('')
 
@@ -417,18 +426,20 @@ onMounted(() => {
   if (s('lat_lab_ac_negative')) negativePrompt.value = s('lat_lab_ac_negative')!
   if (s('lat_lab_ac_steps')) steps.value = parseFloat(s('lat_lab_ac_steps')!) || 25
   if (s('lat_lab_ac_cfg')) cfgScale.value = parseFloat(s('lat_lab_ac_cfg')!) || 4.5
-  if (s('lat_lab_ac_seed')) seed.value = parseFloat(s('lat_lab_ac_seed')!) ?? -1
+  if (s('lat_lab_ac_seed')) seed.value = parseFloat(s('lat_lab_ac_seed')!) || 123456789
+  if (s('lat_lab_ac_random_seed')) randomSeed.value = s('lat_lab_ac_random_seed') === 'true'
   const enc = s('lat_lab_ac_encoder')
   if (enc === 'clip_l' || enc === 't5') selectedEncoder.value = enc
 })
 
 // Session persistence — save on change
 watch(promptText, v => sessionStorage.setItem('lat_lab_ac_prompt', v))
-watch([negativePrompt, steps, cfgScale, seed], () => {
+watch([negativePrompt, steps, cfgScale, seed, randomSeed], () => {
   sessionStorage.setItem('lat_lab_ac_negative', negativePrompt.value)
   sessionStorage.setItem('lat_lab_ac_steps', String(steps.value))
   sessionStorage.setItem('lat_lab_ac_cfg', String(cfgScale.value))
   sessionStorage.setItem('lat_lab_ac_seed', String(seed.value))
+  sessionStorage.setItem('lat_lab_ac_random_seed', String(randomSeed.value))
 })
 watch(selectedEncoder, v => sessionStorage.setItem('lat_lab_ac_encoder', v))
 
@@ -463,7 +474,7 @@ async function generate() {
     const response = await axios.post('/api/schema/pipeline/legacy', {
       prompt: promptText.value,
       output_config: 'attention_cartography_diffusers',
-      seed: seed.value,
+      seed: randomSeed.value ? -1 : seed.value,
       negative_prompt: negativePrompt.value,
       steps: steps.value,
       cfg: cfgScale.value,
@@ -1053,8 +1064,16 @@ onUnmounted(() => {
 .seed-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
   margin-top: 0.75rem;
+}
+
+.seed-row .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .seed-display {

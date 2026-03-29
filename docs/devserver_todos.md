@@ -8,6 +8,7 @@
 
 | Session | Datum | Was |
 |---------|-------|-----|
+| 296 | 2026-03-29 | Canvas + Latent Lab fuer alle Safety-Levels freigeschaltet, Stage 3 + VLM im Legacy-Endpoint |
 | 293 | 2026-03-29 | Workshop 27.03 Replay (Ollama-Migration verifiziert), Arcimboldo Mosaic entfernt, Canvas freigeschaltet, Stashes aufgeraeumt |
 | 250 | 2026-03-06 | Hunyuan3D-2 Text-to-3D Pipeline + Blender Headless + model-viewer |
 | 235 | 2026-03-02 | Proxy-Chunk-Pattern Elimination + Router Cleanup |
@@ -31,10 +32,10 @@
 
 ## 🟠 HIGH Priority
 
-### Latent Lab Safety-Gate: Stage 3 im Legacy-Endpoint nachrüsten
+### ~~Latent Lab Safety-Gate: Stage 3 im Legacy-Endpoint nachrüsten~~ — DONE (Session 296)
 
-**Datum:** 2026-03-29 (Session 293 — Analyse)
-**Status:** HANDOVER — Analyse abgeschlossen, Implementierung steht aus
+**Datum:** 2026-03-29 (Session 293 — Analyse) | **Erledigt:** 2026-03-29
+**Status:** DONE
 **Kontext:** Canvas ist bereits voll safety-gated (Stage 1-2-3-4) und seit Session 293 fuer alle Safety-Levels freigeschaltet. Latent Lab hingegen nutzt `/api/schema/pipeline/legacy`, das NUR Stage 1 (DSGVO + §86a Fast-Filter) hat — kein Stage 3 Llama-Guard-Check. Alle 5 Bild-Tabs (Archaeology, Attention, Probing, Algebra, Composable) nehmen User-Prompts und generieren Bilder ohne Llama-Guard.
 
 **Ziel:** Optionalen Stage-3-Check im Legacy-Endpoint nachrüsten, gesteuert durch `safety_level` aus der Session. Bei `kids`/`youth` wird Stage 3 automatisch aktiv, bei `adult`/`research` wie bisher.

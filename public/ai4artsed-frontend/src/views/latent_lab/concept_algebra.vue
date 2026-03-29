@@ -148,11 +148,6 @@
             <div class="control-hint">{{ t('latentLab.shared.cfgHint') }}</div>
           </label>
           <label>
-            {{ t('latentLab.algebra.seedLabel') }}
-            <input v-model.number="seed" type="number" min="-1" class="setting-input setting-seed" />
-            <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
-          </label>
-          <label>
             {{ t('latentLab.algebra.scaleSubLabel') }}
             <input v-model.number="scaleSub" type="number" min="0" max="3" step="0.1" class="setting-input setting-small" />
             <div class="control-hint">{{ t('latentLab.algebra.scaleSubHint') }}</div>
@@ -164,6 +159,19 @@
           </label>
         </div>
       </details>
+
+      <!-- Seed (always visible) -->
+      <div class="seed-row">
+        <label>
+          {{ t('latentLab.algebra.seedLabel') }}
+          <input v-model.number="seed" type="number" min="0" :disabled="randomSeed" class="setting-input setting-seed" />
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="randomSeed" />
+          {{ t('latentLab.shared.randomVariation') }}
+        </label>
+        <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
+      </div>
     </div>
 
     <!-- Side-by-Side Image Comparison -->
@@ -254,7 +262,8 @@ const selectedEncoder = ref<EncoderId>('all')
 const negativePrompt = ref('')
 const steps = ref(25)
 const cfgScale = ref(4.5)
-const seed = ref(-1)
+const seed = ref(123456789)
+const randomSeed = ref(false)
 const scaleSub = ref(1.0)
 const scaleAdd = ref(1.0)
 const isGenerating = ref(false)
@@ -281,7 +290,8 @@ onMounted(() => {
   if (s('lat_lab_ca_negative')) negativePrompt.value = s('lat_lab_ca_negative')!
   if (s('lat_lab_ca_steps')) steps.value = parseFloat(s('lat_lab_ca_steps')!) || 25
   if (s('lat_lab_ca_cfg')) cfgScale.value = parseFloat(s('lat_lab_ca_cfg')!) || 4.5
-  if (s('lat_lab_ca_seed')) seed.value = parseFloat(s('lat_lab_ca_seed')!) ?? -1
+  if (s('lat_lab_ca_seed')) seed.value = parseFloat(s('lat_lab_ca_seed')!) || 123456789
+  if (s('lat_lab_ca_random_seed')) randomSeed.value = s('lat_lab_ca_random_seed') === 'true'
   if (s('lat_lab_ca_scaleSub')) scaleSub.value = parseFloat(s('lat_lab_ca_scaleSub')!) || 1.0
   if (s('lat_lab_ca_scaleAdd')) scaleAdd.value = parseFloat(s('lat_lab_ca_scaleAdd')!) || 1.0
 })
@@ -291,11 +301,12 @@ watch(promptA, v => sessionStorage.setItem('lat_lab_ca_promptA', v))
 watch(promptB, v => sessionStorage.setItem('lat_lab_ca_promptB', v))
 watch(promptC, v => sessionStorage.setItem('lat_lab_ca_promptC', v))
 watch(selectedEncoder, v => sessionStorage.setItem('lat_lab_ca_encoder', v))
-watch([negativePrompt, steps, cfgScale, seed, scaleSub, scaleAdd], () => {
+watch([negativePrompt, steps, cfgScale, seed, randomSeed, scaleSub, scaleAdd], () => {
   sessionStorage.setItem('lat_lab_ca_negative', negativePrompt.value)
   sessionStorage.setItem('lat_lab_ca_steps', String(steps.value))
   sessionStorage.setItem('lat_lab_ca_cfg', String(cfgScale.value))
   sessionStorage.setItem('lat_lab_ca_seed', String(seed.value))
+  sessionStorage.setItem('lat_lab_ca_random_seed', String(randomSeed.value))
   sessionStorage.setItem('lat_lab_ca_scaleSub', String(scaleSub.value))
   sessionStorage.setItem('lat_lab_ca_scaleAdd', String(scaleAdd.value))
 })
@@ -342,7 +353,7 @@ async function compute() {
     const response = await axios.post(`${baseUrl}/api/schema/pipeline/legacy`, {
       prompt: promptA.value,
       output_config: 'concept_algebra_diffusers',
-      seed: seed.value,
+      seed: randomSeed.value ? -1 : seed.value,
       negative_prompt: negativePrompt.value,
       steps: steps.value,
       cfg: cfgScale.value,
@@ -654,6 +665,21 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.3);
   font-size: 0.7rem;
   line-height: 1.4;
+}
+
+.seed-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.seed-row .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 </style>

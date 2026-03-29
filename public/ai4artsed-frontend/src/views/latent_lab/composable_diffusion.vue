@@ -100,10 +100,6 @@
             <label>{{ t('latentLab.composable.cfgLabel') }}</label>
             <input type="number" v-model.number="cfgScale" min="1" max="20" step="0.5" :disabled="isGenerating" class="setting-number" />
           </div>
-          <div class="setting-row">
-            <label>{{ t('latentLab.composable.seedLabel') }}</label>
-            <input type="number" v-model.number="seed" min="-1" :disabled="isGenerating" class="setting-number" />
-          </div>
         </div>
         <div class="setting-row">
           <label class="checkbox-label">
@@ -113,6 +109,19 @@
         </div>
       </div>
     </details>
+
+    <!-- Seed (always visible) -->
+    <div class="seed-row">
+      <div class="setting-row">
+        <label>{{ t('latentLab.composable.seedLabel') }}</label>
+        <input type="number" v-model.number="seed" min="0" :disabled="randomSeed || isGenerating" class="setting-number" />
+      </div>
+      <label class="checkbox-label">
+        <input type="checkbox" v-model="randomSeed" :disabled="isGenerating" />
+        {{ t('latentLab.shared.randomVariation') }}
+      </label>
+      <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
+    </div>
 
     <!-- Generate Button -->
     <button
@@ -175,7 +184,8 @@ const concepts = ref<Concept[]>([
 const negativePrompt = ref('')
 const steps = ref(25)
 const cfgScale = ref(4.5)
-const seed = ref(-1)
+const seed = ref(123456789)
+const randomSeed = ref(false)
 const normalizeWeights = ref(true)
 
 const isGenerating = ref(false)
@@ -201,6 +211,7 @@ function saveState() {
   sessionStorage.setItem(`${STORAGE_PREFIX}steps`, String(steps.value))
   sessionStorage.setItem(`${STORAGE_PREFIX}cfg`, String(cfgScale.value))
   sessionStorage.setItem(`${STORAGE_PREFIX}seed`, String(seed.value))
+  sessionStorage.setItem(`${STORAGE_PREFIX}randomSeed`, String(randomSeed.value))
   sessionStorage.setItem(`${STORAGE_PREFIX}normalize`, String(normalizeWeights.value))
 }
 
@@ -220,7 +231,9 @@ function restoreState() {
   const c = sessionStorage.getItem(`${STORAGE_PREFIX}cfg`)
   if (c) cfgScale.value = parseFloat(c)
   const sd = sessionStorage.getItem(`${STORAGE_PREFIX}seed`)
-  if (sd) seed.value = parseInt(sd)
+  if (sd) seed.value = parseInt(sd) || 123456789
+  const rs = sessionStorage.getItem(`${STORAGE_PREFIX}randomSeed`)
+  if (rs) randomSeed.value = rs === 'true'
   const n = sessionStorage.getItem(`${STORAGE_PREFIX}normalize`)
   if (n) normalizeWeights.value = n === 'true'
 }
@@ -273,7 +286,7 @@ async function generate() {
       negative_prompt: negativePrompt.value,
       steps: steps.value,
       cfg: cfgScale.value,
-      seed: seed.value,
+      seed: randomSeed.value ? -1 : seed.value,
       normalize_weights: normalizeWeights.value,
     })
 
@@ -570,6 +583,13 @@ async function generate() {
   font-size: 0.8rem !important;
   color: rgba(255, 255, 255, 0.5) !important;
   cursor: pointer;
+}
+
+.seed-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
 }
 
 /* Generate */

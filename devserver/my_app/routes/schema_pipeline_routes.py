@@ -3062,6 +3062,23 @@ def execute_generation_streaming(data: dict):
                 yield ''
 
         elif backend_type == 'diffusers':
+            # Encoding transparency: fetch tokenization + embedding info from GPU service
+            # This runs while the generation thread is loading the model / starting inference
+            try:
+                encode_info_url = f"{config.GPU_SERVICE_URL}/api/diffusers/encode-info"
+                encode_resp = requests.post(encode_info_url, json={
+                    'prompt': translated_prompt,
+                    'model_id': model_meta.get('model_id', 'stabilityai/stable-diffusion-3.5-large'),
+                }, timeout=10)
+                if encode_resp.status_code == 200:
+                    encode_data = encode_resp.json()
+                    if 'error' not in encode_data:
+                        yield generate_sse_event('encoding_info', encode_data)
+                        yield ''
+                        logger.info(f"[GENERATION-STREAMING] Sent encoding_info event")
+            except Exception as e:
+                logger.warning(f"[GENERATION-STREAMING] encoding_info failed (non-blocking): {e}")
+
             # Diffusers: poll GPU service progress endpoint
             gpu_progress_url = f"{config.GPU_SERVICE_URL}/api/diffusers/progress"
             last_step = -1
@@ -4283,12 +4300,12 @@ async def execute_generation_stage4(
 @schema_bp.route('/pipeline/legacy', methods=['POST'])
 def legacy_workflow():
     """
-    Legacy workflow endpoint - Direct ComfyUI workflow execution WITH Stage 1 Safety.
+    Legacy workflow endpoint - Direct workflow execution WITH Stage 1 + conditional Stage 3/VLM Safety.
 
     Lab Architecture: For workflows that bypass interception/optimization.
-    Used by Surrealizer, Split&Combine, Partial Elimination, etc.
+    Used by Surrealizer, Split&Combine, Partial Elimination, Latent Lab tabs, etc.
 
-    Flow: Stage 1 (Safety) → ComfyUI Workflow (no Stage 2/3)
+    Flow: Stage 1 (Safety) → [Stage 3 if kids/youth] → Workflow → [VLM if kids/youth]
 
     Request Body:
     {
@@ -4377,10 +4394,54 @@ def legacy_workflow():
                 'status': 'blocked',
                 'stage': 1,
                 'reason': error_message,
+                'error': error_message,
                 'checks_passed': checks_passed
             }), 403
 
         logger.info(f"[LEGACY-ENDPOINT] Stage 1 PASSED")
+
+        # ====================================================================
+        # STAGE 3: PRE-OUTPUT SAFETY CHECK (kids/youth only)
+        # Llama Guard S1-S13 — blocks harmful prompts before GPU generation
+        # ====================================================================
+        if safety_level in ('kids', 'youth'):
+            logger.info(f"[LEGACY-ENDPOINT] Stage 3: Pre-output safety check (level: {safety_level})")
+
+            # Collect all prompts that influence the generated image
+            all_prompts = [p for p in [
+                prompt, prompt_b, prompt_c, prompt1, prompt2
+            ] if p and p.strip()]
+
+            # Composable diffusion: extract concept prompts
+            if composable_concepts:
+                concepts_list = composable_concepts if isinstance(composable_concepts, list) else json.loads(composable_concepts)
+                for concept in concepts_list:
+                    cp = concept.get('prompt', '').strip() if isinstance(concept, dict) else ''
+                    if cp and cp not in all_prompts:
+                        all_prompts.append(cp)
+
+            # Single Stage 3 call with all prompts concatenated
+            combined_prompt = ' | '.join(all_prompts)
+            stage3_result = asyncio.run(execute_stage3_safety(
+                combined_prompt,
+                safety_level,
+                'image',
+                pipeline_executor,
+                user_language=user_language
+            ))
+
+            if not stage3_result['safe']:
+                abort_reason = stage3_result.get('abort_reason', 'Safety check failed')
+                logger.warning(f"[LEGACY-ENDPOINT] Stage 3 BLOCKED: {abort_reason}")
+                return jsonify({
+                    'status': 'blocked',
+                    'stage': 3,
+                    'reason': abort_reason,
+                    'error': abort_reason,
+                    'checks_passed': checks_passed + ['stage3_blocked']
+                }), 403
+
+            logger.info(f"[LEGACY-ENDPOINT] Stage 3 PASSED ({len(all_prompts)} prompt(s) checked)")
 
         # ====================================================================
         # T5 PROMPT EXPANSION (optional, user-controlled)
@@ -4757,6 +4818,24 @@ def legacy_workflow():
                             'seed': result_seed,
                         }
                     )
+
+        # ====================================================================
+        # POST-GENERATION VLM SAFETY CHECK (kids/youth only)
+        # Images can emerge unsafe despite safe prompts — VLM catches these
+        # ====================================================================
+        if safety_level in ('kids', 'youth'):
+            vlm_safe, vlm_reason, vlm_description = _vlm_safety_check_image(recorder, safety_level)
+            if not vlm_safe:
+                logger.warning(f"[LEGACY-ENDPOINT] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
+                return jsonify({
+                    'status': 'blocked',
+                    'stage': 'vlm_safety',
+                    'reason': vlm_reason,
+                    'error': vlm_reason,
+                    'vlm_description': vlm_description,
+                    'run_id': run_id,
+                    'checks_passed': ['stage1', 'stage3', 'generation', 'vlm_blocked']
+                }), 403
 
         duration_ms = (time.time() - start_time) * 1000
         logger.info(f"[LEGACY-ENDPOINT] Success in {duration_ms:.0f}ms")

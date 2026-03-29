@@ -136,13 +136,21 @@
             <input v-model.number="cfgScale" type="number" min="1" max="20" step="0.5" class="setting-input setting-small" />
             <div class="control-hint">{{ t('latentLab.shared.cfgHint') }}</div>
           </label>
-          <label>
-            {{ t('latentLab.probing.seedLabel') }}
-            <input v-model.number="seed" type="number" min="-1" class="setting-input setting-seed" />
-            <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
-          </label>
         </div>
       </details>
+
+      <!-- Seed (always visible) -->
+      <div class="seed-row">
+        <label>
+          {{ t('latentLab.probing.seedLabel') }}
+          <input v-model.number="seed" type="number" min="0" :disabled="randomSeed" class="setting-input setting-seed" />
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="randomSeed" />
+          {{ t('latentLab.shared.randomVariation') }}
+        </label>
+        <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
+      </div>
     </div>
 
     <!-- Side-by-Side Image Comparison (always visible) -->
@@ -324,7 +332,8 @@ const selectedEncoder = ref<EncoderId>('all')
 const negativePrompt = ref('')
 const steps = ref(25)
 const cfgScale = ref(4.5)
-const seed = ref(-1)
+const seed = ref(123456789)
+const randomSeed = ref(false)
 const isAnalyzing = ref(false)
 const isTransferring = ref(false)
 const errorMessage = ref('')
@@ -449,18 +458,20 @@ onMounted(() => {
   if (s('lat_lab_fp_negative')) negativePrompt.value = s('lat_lab_fp_negative')!
   if (s('lat_lab_fp_steps')) steps.value = parseFloat(s('lat_lab_fp_steps')!) || 25
   if (s('lat_lab_fp_cfg')) cfgScale.value = parseFloat(s('lat_lab_fp_cfg')!) || 4.5
-  if (s('lat_lab_fp_seed')) seed.value = parseFloat(s('lat_lab_fp_seed')!) ?? -1
+  if (s('lat_lab_fp_seed')) seed.value = parseFloat(s('lat_lab_fp_seed')!) || 123456789
+  if (s('lat_lab_fp_random_seed')) randomSeed.value = s('lat_lab_fp_random_seed') === 'true'
 })
 
 // Session persistence — save on change
 watch(promptA, v => sessionStorage.setItem('lat_lab_fp_promptA', v))
 watch(promptB, v => sessionStorage.setItem('lat_lab_fp_promptB', v))
 watch(selectedEncoder, v => sessionStorage.setItem('lat_lab_fp_encoder', v))
-watch([negativePrompt, steps, cfgScale, seed], () => {
+watch([negativePrompt, steps, cfgScale, seed, randomSeed], () => {
   sessionStorage.setItem('lat_lab_fp_negative', negativePrompt.value)
   sessionStorage.setItem('lat_lab_fp_steps', String(steps.value))
   sessionStorage.setItem('lat_lab_fp_cfg', String(cfgScale.value))
   sessionStorage.setItem('lat_lab_fp_seed', String(seed.value))
+  sessionStorage.setItem('lat_lab_fp_random_seed', String(randomSeed.value))
 })
 
 function copyPromptA() { copyToClipboard(promptA.value) }
@@ -502,7 +513,7 @@ async function analyze() {
     const response = await axios.post(`${baseUrl}/api/schema/pipeline/legacy`, {
       prompt: promptA.value,
       output_config: 'feature_probing_diffusers',
-      seed: seed.value,
+      seed: randomSeed.value ? -1 : seed.value,
       negative_prompt: negativePrompt.value,
       steps: steps.value,
       cfg: cfgScale.value,
@@ -1153,6 +1164,21 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.3);
   font-size: 0.7rem;
   line-height: 1.4;
+}
+
+.seed-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.seed-row .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 </style>

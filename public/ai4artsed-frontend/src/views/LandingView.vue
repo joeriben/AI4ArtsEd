@@ -212,7 +212,6 @@ const features: Feature[] = [
       '/config-previews/canvas_workflow_2.png',
       '/config-previews/canvas_workflow_3.png',
     ],
-    requiresAdvanced: true,
   },
   {
     id: 'latent-lab',
@@ -230,7 +229,6 @@ const features: Feature[] = [
       '/config-previews/latent_lab_6.jpg',
       '/config-previews/partial_elimination.png',
     ],
-    requiresAdvanced: true,
   },
 ]
 </script>
