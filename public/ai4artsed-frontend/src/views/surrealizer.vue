@@ -124,16 +124,7 @@
         </details>
 
         <!-- Seed (always visible) -->
-        <div class="seed-row">
-          <label>
-            {{ t('surrealizer.seedLabel') }}
-            <input v-model="seedInputText" type="text" inputmode="numeric" :disabled="randomSeed" class="setting-input setting-small" placeholder="123456789" />
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="randomSeed" />
-            {{ t('latentLab.shared.randomVariation') }}
-          </label>
-        </div>
+        <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
 
         <!-- Execute Button -->
         <GenerationButton
@@ -194,6 +185,7 @@ import SpriteProgressAnimation from '@/components/SpriteProgressAnimation.vue'
 import MediaOutputBox from '@/components/MediaOutputBox.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
+import SeedControl from '@/components/SeedControl.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDeviceId } from '@/composables/useDeviceId'
@@ -271,12 +263,8 @@ const currentSeed = ref<number | null>(null)
 // Advanced settings
 const negativePrompt = ref('watermark')
 const cfgScale = ref(5.5)
-const seedInputText = ref('123456789')
+const seed = ref(123456789)
 const randomSeed = ref(false)
-const seedInput = computed(() => {
-  const n = parseInt(seedInputText.value)
-  return isNaN(n) ? -1 : n
-})
 // T5 prompt expansion
 const expandPrompt = ref(false)
 const expandedT5Text = ref('')
@@ -302,19 +290,19 @@ onMounted(() => {
   if (s('lat_lab_ef_cfg')) cfgScale.value = parseFloat(s('lat_lab_ef_cfg')!) || 5.5
   if (s('lat_lab_ef_expand')) expandPrompt.value = s('lat_lab_ef_expand') === 'true'
   if (s('lat_lab_ef_fusion')) fusionStrategy.value = s('lat_lab_ef_fusion')!
-  if (s('lat_lab_ef_seed')) seedInputText.value = s('lat_lab_ef_seed')!
+  if (s('lat_lab_ef_seed')) seed.value = parseInt(s('lat_lab_ef_seed')!) || 123456789
   if (s('lat_lab_ef_random_seed')) randomSeed.value = s('lat_lab_ef_random_seed') === 'true'
 })
 
 // Session persistence — save on change
 watch(inputText, v => sessionStorage.setItem('lat_lab_ef_prompt', v))
-watch([alphaFaktor, negativePrompt, cfgScale, expandPrompt, fusionStrategy, seedInputText, randomSeed], () => {
+watch([alphaFaktor, negativePrompt, cfgScale, expandPrompt, fusionStrategy, seed, randomSeed], () => {
   sessionStorage.setItem('lat_lab_ef_alpha', String(alphaFaktor.value))
   sessionStorage.setItem('lat_lab_ef_negative', negativePrompt.value)
   sessionStorage.setItem('lat_lab_ef_cfg', String(cfgScale.value))
   sessionStorage.setItem('lat_lab_ef_expand', String(expandPrompt.value))
   sessionStorage.setItem('lat_lab_ef_fusion', fusionStrategy.value)
-  sessionStorage.setItem('lat_lab_ef_seed', seedInputText.value)
+  sessionStorage.setItem('lat_lab_ef_seed', String(seed.value))
   sessionStorage.setItem('lat_lab_ef_random_seed', String(randomSeed.value))
 })
 
@@ -412,9 +400,9 @@ async function executeWorkflow() {
 
   try {
     // Seed logic: fixed seed OR auto-seed (keep on param change, new on repeat)
-    if (!randomSeed.value && seedInput.value >= 0) {
+    if (!randomSeed.value && seed.value >= 0) {
       // User specified a fixed seed
-      currentSeed.value = seedInput.value
+      currentSeed.value = seed.value
       console.log('[Seed Logic] Fixed seed from user:', currentSeed.value)
     } else {
       const promptChanged = inputText.value !== previousPrompt.value
@@ -1472,18 +1460,4 @@ watch(() => favoritesStore.pendingRestoreData, (restoreData) => {
   user-select: all;
 }
 
-.seed-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.75rem;
-}
-
-.seed-row .checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  cursor: pointer;
-}
 </style>

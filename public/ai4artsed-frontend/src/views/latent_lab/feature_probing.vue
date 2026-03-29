@@ -140,16 +140,7 @@
       </details>
 
       <!-- Seed (always visible) -->
-      <div class="seed-row">
-        <label>
-          {{ t('latentLab.probing.seedLabel') }}
-          <input v-model.number="seed" type="number" min="0" :disabled="randomSeed" class="setting-input setting-seed" />
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="randomSeed" />
-          {{ t('latentLab.shared.randomVariation') }}
-        </label>
-      </div>
+      <SeedControl v-model:seed="seed" v-model:random="randomSeed" />
     </div>
 
     <!-- Side-by-Side Image Comparison (always visible) -->
@@ -293,6 +284,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import SeedControl from '@/components/SeedControl.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useLatentLabRecorder } from '@/composables/useLatentLabRecorder'
 import { useDetailsState } from '@/composables/useDetailsState'
@@ -1165,20 +1157,6 @@ onUnmounted(() => {
   line-height: 1.4;
 }
 
-.seed-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.75rem;
-}
-
-.seed-row .checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  cursor: pointer;
-}
 
 </style>
 
