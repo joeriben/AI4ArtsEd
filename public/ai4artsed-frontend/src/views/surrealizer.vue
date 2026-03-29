@@ -133,7 +133,6 @@
             <input type="checkbox" v-model="randomSeed" />
             {{ t('latentLab.shared.randomVariation') }}
           </label>
-          <span class="setting-hint">{{ t('latentLab.shared.seedHint') }}</span>
         </div>
 
         <!-- Execute Button -->

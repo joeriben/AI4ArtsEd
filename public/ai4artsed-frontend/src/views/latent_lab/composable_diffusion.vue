@@ -120,7 +120,6 @@
         <input type="checkbox" v-model="randomSeed" :disabled="isGenerating" />
         {{ t('latentLab.shared.randomVariation') }}
       </label>
-      <div class="control-hint">{{ t('latentLab.shared.seedHint') }}</div>
     </div>
 
     <!-- Generate Button -->
