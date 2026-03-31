@@ -21,7 +21,7 @@
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.forest.trees') }}</span>
-        <span class="stat-value">{{ trees.length }} 🌳</span>
+        <span class="stat-value">{{ trees.length }}</span>
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.pixel.co2Menge') }}</span>
@@ -40,7 +40,7 @@
           {{ t('edutainment.forest.clickToPlant') }}
         </template>
         <template v-else-if="plantCooldown > 0">
-          ⏳ {{ plantCooldown.toFixed(1) }}s
+          {{ plantCooldown.toFixed(1) }}s
         </template>
       </div>
     </Transition>

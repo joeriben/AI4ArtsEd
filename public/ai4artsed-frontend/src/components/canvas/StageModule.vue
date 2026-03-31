@@ -105,7 +105,7 @@ const emit = defineEmits<{
 
 const nodeTypeDef = computed(() => getNodeTypeDefinition(props.node.type))
 const nodeColor = computed(() => nodeTypeDef.value?.color || '#666')
-const nodeIcon = computed(() => nodeTypeDef.value?.icon || '📦')
+const nodeIcon = computed(() => nodeTypeDef.value?.icon || '')
 const nodeIconUrl = computed(() => {
   const icon = nodeTypeDef.value?.icon
   if (icon && icon.endsWith('.svg')) {

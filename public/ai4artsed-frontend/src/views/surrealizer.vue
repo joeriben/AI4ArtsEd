@@ -25,7 +25,7 @@
       <!-- Input Section -->
       <section class="input-section">
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           label="Dein Input"
           placeholder="Beschreibe deine Idee..."
           v-model:value="inputText"

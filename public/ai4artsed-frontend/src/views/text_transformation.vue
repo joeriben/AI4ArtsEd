@@ -9,7 +9,7 @@
           <!-- Input Bubble -->
           <MediaInputBox
             ref="inputBoxRef"
-            icon="💡"
+            icon="lightbulb"
             :label="$t('textTransform.inputLabel')"
             :tooltip="$t('textTransform.inputTooltip')"
             :placeholder="$t('textTransform.inputPlaceholder')"
@@ -27,7 +27,7 @@
           <!-- Context Bubble -->
           <MediaInputBox
             ref="contextBoxRef"
-            icon="📋"
+            icon="clipboard"
             :label="$t('textTransform.contextLabel')"
             :tooltip="$t('textTransform.contextTooltip')"
             :placeholder="$t('textTransform.contextPlaceholder')"
@@ -254,7 +254,7 @@
         <!-- Section 4: Optimized Prompt Preview (Always visible, disabled until model selected) -->
         <section class="optimization-section" ref="optimizationSectionRef">
           <MediaInputBox
-            icon="✨"
+            icon="stars"
             :label="$t('textTransform.optimizedLabel')"
             :placeholder="optimizedPrompt ? '' : $t('textTransform.optimizedPlaceholder')"
             v-model:value="optimizedPrompt"
@@ -722,27 +722,27 @@ onUnmounted(() => {
 // ============================================================================
 
 const availableCategories: Category[] = [
-  { id: 'image', label: 'Bild', emoji: '🖼️', color: '#4CAF50' },
-  { id: 'video', label: 'Video', emoji: '📽️', color: '#9C27B0' },
-  { id: 'sound', label: 'Sound', emoji: '🔊', color: '#FF9800' },
+  { id: 'image', label: 'Bild', emoji: '', color: '#4CAF50' },
+  { id: 'video', label: 'Video', emoji: '', color: '#9C27B0' },
+  { id: 'sound', label: 'Sound', emoji: '', color: '#FF9800' },
 ]
 
 const configsByCategory: Record<string, Config[]> = {
   image: [
-    { id: 'sd35_large', label: 'Stable\nDiffusion', emoji: '🎨', color: '#2196F3', description: 'Klassische Bildgenerierung', logo: '/logos/logo_stable_diffusion.png', lightBg: false },
-    { id: 'qwen', label: 'Qwen', emoji: '🌸', color: '#9C27B0', description: 'Qwen Vision Model', logo: '/logos/Qwen_logo.png', lightBg: false },
-    { id: 'flux2', label: 'Flux 2', emoji: '⚡', color: '#FF6B35', description: 'Hochwertige Bildgenerierung mit Flux 2 Dev', logo: '/logos/flux2_logo.png', lightBg: false },
-    { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro', emoji: '🔷', color: '#4285F4', description: 'Google Gemini 3 Pro via Mammouth AI (EU)', logo: '/logos/gemini_logo.png', lightBg: false },
-    { id: 'p5js_code', label: 'P5.js', emoji: '💻', color: '#ED225D', description: 'Generative Computergrafik mit P5.js Code', logo: '/logos/p5js_logo.png', lightBg: false }
+    { id: 'sd35_large', label: 'Stable\nDiffusion', emoji: '', color: '#2196F3', description: 'Klassische Bildgenerierung', logo: '/logos/logo_stable_diffusion.png', lightBg: false },
+    { id: 'qwen', label: 'Qwen', emoji: '', color: '#9C27B0', description: 'Qwen Vision Model', logo: '/logos/Qwen_logo.png', lightBg: false },
+    { id: 'flux2', label: 'Flux 2', emoji: '', color: '#FF6B35', description: 'Hochwertige Bildgenerierung mit Flux 2 Dev', logo: '/logos/flux2_logo.png', lightBg: false },
+    { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro', emoji: '', color: '#4285F4', description: 'Google Gemini 3 Pro via Mammouth AI (EU)', logo: '/logos/gemini_logo.png', lightBg: false },
+    { id: 'p5js_code', label: 'P5.js', emoji: '', color: '#ED225D', description: 'Generative Computergrafik mit P5.js Code', logo: '/logos/p5js_logo.png', lightBg: false }
   ],
   video: [
-    { id: 'ltx_video', label: 'LTX\nVideo', emoji: '⚡', color: '#9C27B0', description: 'Schnelle lokale Videogenerierung', logo: '/logos/ltx_logo.png', lightBg: false },
-    { id: 'wan22_t2v_video_fast', label: 'Wan 2.2\n14B Fast', emoji: '🎬', color: '#E91E63', description: 'Schnelle 14B Videogenerierung mit LightX2V (4 Steps)', logo: '/logos/Qwen_logo.png', lightBg: false }
+    { id: 'ltx_video', label: 'LTX\nVideo', emoji: '', color: '#9C27B0', description: 'Schnelle lokale Videogenerierung', logo: '/logos/ltx_logo.png', lightBg: false },
+    { id: 'wan22_t2v_video_fast', label: 'Wan 2.2\n14B Fast', emoji: '', color: '#E91E63', description: 'Schnelle 14B Videogenerierung mit LightX2V (4 Steps)', logo: '/logos/Qwen_logo.png', lightBg: false }
   ],
   sound: [
-    { id: 'acenet_t2instrumental', label: 'ACE\nInstrumental', emoji: '🎵', color: '#FF5722', description: 'KI-Musikgenerierung für Instrumentalstücke', logo: '/logos/ace_logo.png', lightBg: false },
-    { id: 'stableaudio_open', label: 'Stable\nAudio', emoji: '🔊', color: '#00BCD4', description: 'Open-Source Audio-Generierung (max 47s)', logo: '/logos/stableaudio_logo.png', lightBg: false },
-    { id: 'tonejs_code', label: 'Tone.js', emoji: '🎹', color: '#FF4081', description: 'Browser-basierte Musiksynthese mit Live-Code' }
+    { id: 'acenet_t2instrumental', label: 'ACE\nInstrumental', emoji: '', color: '#FF5722', description: 'KI-Musikgenerierung für Instrumentalstücke', logo: '/logos/ace_logo.png', lightBg: false },
+    { id: 'stableaudio_open', label: 'Stable\nAudio', emoji: '', color: '#00BCD4', description: 'Open-Source Audio-Generierung (max 47s)', logo: '/logos/stableaudio_logo.png', lightBg: false },
+    { id: 'tonejs_code', label: 'Tone.js', emoji: '', color: '#FF4081', description: 'Browser-basierte Musiksynthese mit Live-Code' }
   ],
 }
 

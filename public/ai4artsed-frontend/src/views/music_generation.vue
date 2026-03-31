@@ -9,7 +9,7 @@
         <!-- Lyrics Input (TEXT_1) -->
         <MediaInputBox
           ref="lyricsBoxRef"
-          icon="💡"
+          icon="lightbulb"
           :label="$t('musicGen.lyricsLabel')"
           :placeholder="$t('musicGen.lyricsPlaceholder')"
           v-model:value="lyricsInput"
@@ -26,7 +26,7 @@
         <!-- Tags Input (TEXT_2) -->
         <MediaInputBox
           ref="tagsBoxRef"
-          icon="📋"
+          icon="clipboard"
           :label="$t('musicGen.tagsLabel')"
           :placeholder="$t('musicGen.tagsPlaceholder')"
           v-model:value="tagsInput"
@@ -81,7 +81,7 @@
 
         <!-- Refined Tags (TEXT_2) -->
         <MediaInputBox
-          icon="✨"
+          icon="stars"
           :label="$t('musicGen.refinedTagsLabel')"
           :placeholder="$t('musicGen.refinedTagsPlaceholder')"
           v-model:value="refinedTags"

@@ -21,10 +21,10 @@
           @click="handleSplit"
         >
           <span v-if="!isSplitting">
-            ✂️ {{ $t('vectorFusion.splitButton') || 'Text aufteilen & visualisieren' }}
+            {{ $t('vectorFusion.splitButton') || 'Text aufteilen & visualisieren' }}
           </span>
           <span v-else>
-            ⚙️ {{ $t('vectorFusion.splitting') || 'Teile auf...' }}
+            {{ $t('vectorFusion.splitting') || 'Teile auf...' }}
           </span>
         </button>
       </div>
@@ -35,7 +35,7 @@
       <!-- Original Input Bubble -->
       <div class="flow-row">
         <div class="bubble bubble-input">
-          <div class="bubble-icon">💭</div>
+          <div class="bubble-icon">IN</div>
           <div class="bubble-title">{{ $t('vectorFusion.originalInput') || 'Deine Eingabe' }}</div>
           <div class="bubble-text">{{ userInput }}</div>
         </div>
@@ -50,7 +50,7 @@
       <!-- Explanation: Splitting -->
       <div class="flow-row">
         <div class="explanation-box">
-          <div class="explanation-icon">✂️</div>
+          <div class="explanation-icon">Split</div>
           <div class="explanation-text">
             {{ $t('vectorFusion.splitExplanation') || 'Die KI teilt deinen Text in zwei semantische Konzepte' }}
           </div>
@@ -66,13 +66,13 @@
       <!-- Two Parallel Bubbles -->
       <div class="flow-row parallel">
         <div class="bubble bubble-part-a">
-          <div class="bubble-icon">🔵</div>
+          <div class="bubble-icon dot-a">A</div>
           <div class="bubble-title">{{ $t('vectorFusion.partA') || 'Konzept A' }}</div>
           <div class="bubble-text">{{ splitResult?.part_a }}</div>
         </div>
 
         <div class="bubble bubble-part-b">
-          <div class="bubble-icon">🟠</div>
+          <div class="bubble-icon dot-b">B</div>
           <div class="bubble-title">{{ $t('vectorFusion.partB') || 'Konzept B' }}</div>
           <div class="bubble-text">{{ splitResult?.part_b }}</div>
         </div>
@@ -93,7 +93,7 @@
       <!-- Explanation: Vectorization -->
       <div class="flow-row">
         <div class="explanation-box">
-          <div class="explanation-icon">🧮</div>
+          <div class="explanation-icon">CLIP</div>
           <div class="explanation-text">
             {{ $t('vectorFusion.vectorExplanation') || 'Beide Texte werden in semantische Vektoren umgewandelt (CLIP)' }}
           </div>
@@ -115,7 +115,7 @@
       <!-- Explanation: Fusion -->
       <div class="flow-row">
         <div class="explanation-box highlight">
-          <div class="explanation-icon">✨</div>
+          <div class="explanation-icon">SLERP</div>
           <div class="explanation-text">
             {{ $t('vectorFusion.fusionExplanation') || 'Die Vektoren werden im semantischen Raum kombiniert (SLERP)' }}
           </div>
@@ -134,7 +134,7 @@
       <!-- Fusion Bubble -->
       <div class="flow-row">
         <div class="bubble bubble-fusion">
-          <div class="bubble-icon">🎨</div>
+          <div class="bubble-icon">A+B</div>
           <div class="bubble-title">{{ $t('vectorFusion.fusion') || 'Fusion beider Konzepte' }}</div>
           <div class="bubble-text">{{ interpolationMethod === 'linear' ? 'Linear (LERP)' : 'Spherical (SLERP)' }} @ α=0.5</div>
         </div>
@@ -148,10 +148,10 @@
           @click="handleGenerate"
         >
           <span v-if="!isGenerating">
-            ✨ {{ $t('vectorFusion.generateImages') || '4 Bilder generieren' }}
+            {{ $t('vectorFusion.generateImages') || '4 Bilder generieren' }}
           </span>
           <span v-else>
-            ⚙️ {{ $t('vectorFusion.generating') || 'Generiere...' }}
+            {{ $t('vectorFusion.generating') || 'Generiere...' }}
           </span>
         </button>
       </div>
@@ -167,15 +167,15 @@
         <!-- Image 1: Original -->
         <div class="image-card" :class="{ loading: generationStep < 1, active: generationStep === 1, complete: generationStep > 1 }">
           <div class="image-header">
-            <div class="image-icon">📝</div>
+            <div class="image-icon">1</div>
             <div class="image-title">{{ $t('vectorFusion.original') || 'Original' }}</div>
           </div>
           <div v-if="generationStep >= 1 && images.original" class="image-container">
             <img :src="images.original" alt="Original" />
           </div>
           <div v-else class="image-placeholder">
-            <div v-if="generationStep === 1" class="spinner">⚙️</div>
-            <div v-else class="waiting">⏳</div>
+            <div v-if="generationStep === 1" class="spinner">...</div>
+            <div v-else class="waiting">—</div>
           </div>
           <div class="image-caption">{{ $t('vectorFusion.originalDesc') || 'Ganzer Input' }}</div>
         </div>
@@ -190,8 +190,8 @@
             <img :src="images.splitA" alt="Split A" />
           </div>
           <div v-else class="image-placeholder">
-            <div v-if="generationStep === 2" class="spinner">⚙️</div>
-            <div v-else class="waiting">⏳</div>
+            <div v-if="generationStep === 2" class="spinner">...</div>
+            <div v-else class="waiting">—</div>
           </div>
           <div class="image-caption">{{ splitResult?.part_a }}</div>
         </div>
@@ -199,15 +199,15 @@
         <!-- Image 3: Split B -->
         <div class="image-card" :class="{ loading: generationStep < 3, active: generationStep === 3, complete: generationStep > 3 }">
           <div class="image-header">
-            <div class="image-icon">🟠</div>
+            <div class="image-icon dot-b">3</div>
             <div class="image-title">{{ $t('vectorFusion.partB') || 'Konzept B' }}</div>
           </div>
           <div v-if="generationStep >= 3 && images.splitB" class="image-container">
             <img :src="images.splitB" alt="Split B" />
           </div>
           <div v-else class="image-placeholder">
-            <div v-if="generationStep === 3" class="spinner">⚙️</div>
-            <div v-else class="waiting">⏳</div>
+            <div v-if="generationStep === 3" class="spinner">...</div>
+            <div v-else class="waiting">—</div>
           </div>
           <div class="image-caption">{{ splitResult?.part_b }}</div>
         </div>
@@ -215,15 +215,15 @@
         <!-- Image 4: Fusion -->
         <div class="image-card" :class="{ loading: generationStep < 4, active: generationStep === 4, complete: generationStep > 4 }">
           <div class="image-header">
-            <div class="image-icon">✨</div>
+            <div class="image-icon">4</div>
             <div class="image-title">{{ $t('vectorFusion.fusion') || 'Fusion' }}</div>
           </div>
           <div v-if="generationStep >= 4 && images.fusion" class="image-container">
             <img :src="images.fusion" alt="Fusion" />
           </div>
           <div v-else class="image-placeholder">
-            <div v-if="generationStep === 4" class="spinner">⚙️</div>
-            <div v-else class="waiting">⏳</div>
+            <div v-if="generationStep === 4" class="spinner">...</div>
+            <div v-else class="waiting">—</div>
           </div>
           <div class="image-caption">{{ $t('vectorFusion.fusionDesc') || 'A ⊕ B (α=0.5)' }}</div>
         </div>
@@ -232,7 +232,7 @@
       <!-- Reset Button -->
       <div v-if="currentStep === 'complete'" class="flow-row">
         <button class="reset-btn" @click="handleReset">
-          🔄 {{ $t('vectorFusion.reset') || 'Neu beginnen' }}
+          {{ $t('vectorFusion.reset') || 'Neu beginnen' }}
         </button>
       </div>
     </div>
@@ -542,8 +542,17 @@ function handleReset() {
 }
 
 .bubble-icon {
-  font-size: 32px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   margin-bottom: 12px;
+  opacity: 0.7;
+}
+.bubble-icon.dot-a {
+  color: #4a9eff;
+}
+.bubble-icon.dot-b {
+  color: #ff8c42;
 }
 
 .bubble-title {

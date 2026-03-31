@@ -7,7 +7,7 @@
       <section class="input-context-section">
         <!-- Image Upload/Sketch Bubble (LEFT) -->
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="$t('imageTransform.imageLabel')"
           :value="uploadedImage ?? ''"
           @update:value="(val: string) => uploadedImage = val || undefined"
@@ -23,7 +23,7 @@
 
         <!-- Context Bubble (RIGHT) — with Stage 2 Interception streaming -->
         <MediaInputBox
-          icon="📋"
+          icon="clipboard"
           :label="$t('imageTransform.contextLabel')"
           :placeholder="$t('imageTransform.contextPlaceholder')"
           v-model:value="contextPrompt"
@@ -373,10 +373,10 @@ interface Category {
 }
 
 const availableCategories = computed<Category[]>(() => [
-  { id: 'image', label: t('imageTransform.categories.image'), emoji: '🖼️', color: '#4CAF50' },
-  { id: 'video', label: t('imageTransform.categories.video'), emoji: '🎬', color: '#9C27B0' },
-  { id: '3d', label: t('imageTransform.categories.threeD'), emoji: '🧊', color: '#00BCD4' },
-  { id: 'sound', label: t('imageTransform.categories.sound'), emoji: '🔊', color: '#FF9800', disabled: true }
+  { id: 'image', label: t('imageTransform.categories.image'), emoji: '', color: '#4CAF50' },
+  { id: 'video', label: t('imageTransform.categories.video'), emoji: '', color: '#9C27B0' },
+  { id: '3d', label: t('imageTransform.categories.threeD'), emoji: '', color: '#00BCD4' },
+  { id: 'sound', label: t('imageTransform.categories.sound'), emoji: '', color: '#FF9800', disabled: true }
 ])
 
 // Available IMG2IMG Models (copied structure from text_transformation.vue)
@@ -410,7 +410,7 @@ const configsByCategory = computed<Record<string, ModelConfig[]>>(() => ({
     {
       id: 'qwen_img2img',
       label: 'Qwen',
-      emoji: '🌸',
+      emoji: '',
       name: t('imageTransform.configs.qwenImg2img.name'),
       quality: 3,
       speed: 5,
@@ -424,7 +424,7 @@ const configsByCategory = computed<Record<string, ModelConfig[]>>(() => ({
     {
       id: 'wan22_i2v_video',
       label: 'WAN 2.2',
-      emoji: '🎬',
+      emoji: '',
       name: t('imageTransform.configs.wan22I2v.name'),
       quality: 4,
       speed: 3,
@@ -438,7 +438,7 @@ const configsByCategory = computed<Record<string, ModelConfig[]>>(() => ({
     {
       id: 'hunyuan3d_text_to_3d',
       label: t('imageTransform.configs.hunyuan3d.label'),
-      emoji: '🧊',
+      emoji: '',
       name: t('imageTransform.configs.hunyuan3d.name'),
       quality: 4,
       speed: 2,

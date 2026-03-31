@@ -92,11 +92,11 @@
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.rareearth.statsSludge') }}</span>
-        <span class="stat-value">{{ sludgeRemoved }} 🧪</span>
+        <span class="stat-value">{{ sludgeRemoved }}</span>
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.rareearth.statsHealth') }}</span>
-        <span class="stat-value">{{ environmentHealth }}% 🌱</span>
+        <span class="stat-value">{{ environmentHealth }}%</span>
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.pixel.co2Menge') }}</span>

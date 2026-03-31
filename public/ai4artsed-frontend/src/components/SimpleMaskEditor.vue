@@ -25,7 +25,7 @@
           @click="currentTool = 'eraser'"
           title="Radiergummi"
         >
-          🧹 Radiergummi
+          Radiergummi
         </button>
       </div>
     </div>

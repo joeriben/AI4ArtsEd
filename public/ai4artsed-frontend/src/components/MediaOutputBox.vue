@@ -371,9 +371,14 @@ defineEmits<{
 
 /** Trigger image analysis via Trashy (dispatches to analysisEventStore → ChatOverlay handles) */
 function triggerAnalysis() {
-  if (!props.runId || props.mediaType !== 'image') return
+  console.log('[MediaOutputBox] triggerAnalysis called. runId:', props.runId, 'mediaType:', props.mediaType)
+  if (!props.runId || props.mediaType !== 'image') {
+    console.warn('[MediaOutputBox] triggerAnalysis ABORTED: runId=', props.runId, 'mediaType=', props.mediaType)
+    return
+  }
   // Extract clean run_id from runId prop (may include path parts)
   const cleanRunId = props.runId.includes('/') ? props.runId.match(/(run_[^/]+)/)?.[1] || props.runId : props.runId
+  console.log('[MediaOutputBox] Dispatching analysis with cleanRunId:', cleanRunId)
   analysisEventStore.requestReflection('', '', 'media_output', cleanRunId)
 }
 

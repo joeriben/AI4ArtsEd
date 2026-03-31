@@ -69,7 +69,7 @@
             <div class="network-connection conn-3"></div>
             <div class="network-connection conn-4"></div>
           </div>
-          <div class="processor-icon">⚡</div>
+          <div class="processor-icon">GPU</div>
         </div>
       </div>
 
