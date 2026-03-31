@@ -59,7 +59,7 @@
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.forest.trees') }}</span>
-        <span class="stat-value">{{ trees.length }} 🌳</span>
+        <span class="stat-value">{{ trees.length }}</span>
       </div>
       <div class="stat">
         <span class="stat-label">{{ t('edutainment.pixel.co2Menge') }}</span>

@@ -180,17 +180,17 @@ function setViewModeGlobal() {
 
 function getMediaIcon(mediaType: string): string {
   const icons: Record<string, string> = {
-    image: '🖼️',
-    video: '🎬',
-    audio: '🎵',
-    music: '🎶',
-    '3d': '🎨',
-    midi: '🎹',
-    p5: '💻',
-    sonicpi: '🔊',
-    text: '📝'
+    image: 'IMG',
+    video: 'VID',
+    audio: 'AUD',
+    music: 'MUS',
+    '3d': '3D',
+    midi: 'MID',
+    p5: 'P5',
+    sonicpi: 'SPI',
+    text: 'TXT'
   }
-  return icons[mediaType] || '📄'
+  return icons[mediaType] || '—'
 }
 
 function handleItemClick(favorite: FavoriteItem) {

@@ -55,14 +55,14 @@ export default {
   methods: {
     getStageIcon(stageId) {
       const icons = {
-        pipeline_starting: '🚀',
-        translation_and_safety: '🔒',
-        interception: '🎨',
-        pre_output_safety: '✓',
-        media_generation: '🖼️',
-        completed: '✨'
+        pipeline_starting: '1',
+        translation_and_safety: '2',
+        interception: '3',
+        pre_output_safety: '4',
+        media_generation: '5',
+        completed: '✓'
       }
-      return icons[stageId] || '⚙️'
+      return icons[stageId] || '—'
     }
   }
 }

@@ -21,6 +21,20 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-03-29-remove-edutainment-emoji
+- **Scope**: all target language files (de, tr, ko, uk, fr, es, he, ar, bg)
+- **Changed keys** (MODIFIED — remove leading emoji from each value):
+  - `edutainment.ui.didYouKnow` (MODIFIED): remove leading emoji
+  - `edutainment.ui.learnMore` (MODIFIED): remove leading emoji
+  - `edutainment.ui.currentlyHappening` (MODIFIED): remove leading emoji
+  - `edutainment.energy.*` (MODIFIED): remove leading emoji from ALL kids/youth/expert strings
+  - `edutainment.data.*` (MODIFIED): remove leading emoji from ALL kids/youth/expert strings
+  - `edutainment.model.*` (MODIFIED): remove leading emoji from ALL kids/youth/expert strings
+  - `edutainment.ethics.*` (MODIFIED): remove leading emoji from ALL kids/youth/expert strings
+  - `edutainment.environment.*` (MODIFIED): remove leading emoji from ALL kids/youth/expert strings
+  - `edutainment.forest.instructionsCooldown` (MODIFIED): remove leading emoji
+- **Context**: Emoji icons are forbidden per project rules. Each string had a leading emoji prefix (like ⚡, 🎨, 💡 etc.) that has been removed in en.ts. Remove the same leading emoji from all translations — the text content stays identical, only the emoji prefix is stripped.
+
 ### WO-2026-03-29-canvas-outputdrawer-mediaoutputbox
 - **Scope**: en.ts → all targets
 - **Removed keys**:

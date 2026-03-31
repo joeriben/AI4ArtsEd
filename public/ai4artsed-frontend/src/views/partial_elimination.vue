@@ -25,7 +25,7 @@
       <!-- Input Section -->
       <section class="input-section">
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           label="Dein Input"
           placeholder="Beschreibe deine Idee..."
           v-model:value="inputText"
@@ -58,7 +58,7 @@
           <!-- Encoder Type Selector -->
           <div class="section-card">
             <div class="card-header">
-              <span class="card-icon">🧠</span>
+              <span class="card-icon">Enc</span>
               <span class="card-label">{{ t('partialElimination.encoderLabel') }}</span>
             </div>
             <div class="dropdown-container">

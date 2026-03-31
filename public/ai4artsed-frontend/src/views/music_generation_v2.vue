@@ -11,7 +11,7 @@
         <!-- Lyrics Input -->
         <MediaInputBox
           ref="lyricsBoxRef"
-          icon="💡"
+          icon="lightbulb"
           :label="$t('musicGenV2.lyricsInput')"
           :placeholder="$t('musicGenV2.lyricsPlaceholder')"
           v-model:value="lyricsInput"

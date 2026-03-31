@@ -170,7 +170,7 @@
           <p class="subsection-subtitle">{{ t('latentLab.textLab.repeng.testSubtitle') }}</p>
           <div class="tool-inputs">
             <MediaInputBox
-              icon="💡"
+              icon="lightbulb"
               :label="t('latentLab.textLab.repeng.testPromptLabel')"
               :placeholder="t('latentLab.textLab.repeng.testPromptPlaceholder')"
               :value="repTestText"
@@ -363,7 +363,7 @@
         <!-- Compare Controls -->
         <div class="tool-inputs">
           <MediaInputBox
-            icon="💡"
+            icon="lightbulb"
             :label="t('latentLab.textLab.compare.promptLabel')"
             :placeholder="t('latentLab.textLab.compare.promptPlaceholder')"
             :value="cmpText"
@@ -559,7 +559,7 @@
 
           <!-- Prompt -->
           <MediaInputBox
-            icon="💡"
+            icon="lightbulb"
             :label="t('latentLab.textLab.bias.promptLabel')"
             :placeholder="t('latentLab.textLab.bias.promptPlaceholder')"
             :value="biasPrompt"

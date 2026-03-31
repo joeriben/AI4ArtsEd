@@ -6,7 +6,7 @@
       <!-- Section 1: Three Image Upload Boxes -->
       <section class="multi-image-section">
         <MediaInputBox
-          icon="🖼️"
+          icon="image"
           :label="$t('multiImage.image1Label')"
           :value="uploadedImage1 ?? ''"
           @update:value="(val: string) => uploadedImage1 = val || undefined"
@@ -20,7 +20,7 @@
           @clear="clearImage1"
         />
         <MediaInputBox
-          icon="➕"
+          icon="plus"
           :label="$t('multiImage.image2Label')"
           :value="uploadedImage2 ?? ''"
           @update:value="(val: string) => uploadedImage2 = val || undefined"
@@ -34,7 +34,7 @@
           @clear="clearImage2"
         />
         <MediaInputBox
-          icon="➕"
+          icon="plus"
           :label="$t('multiImage.image3Label')"
           :value="uploadedImage3 ?? ''"
           @update:value="(val: string) => uploadedImage3 = val || undefined"
@@ -52,7 +52,7 @@
       <!-- Section 2: Context (Full Width) — with Stage 2 Interception streaming -->
       <section class="context-section-full">
         <MediaInputBox
-          icon="📋"
+          icon="clipboard"
           :label="$t('multiImage.contextLabel')"
           :placeholder="$t('multiImage.contextPlaceholder')"
           v-model:value="contextPrompt"
@@ -78,7 +78,7 @@
       <!-- OLD Section 1 (keeping one box for structure) -->
       <section class="input-context-section" style="display:none">
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           label="Hidden"
           :value="''"
           input-type="image"
@@ -86,7 +86,7 @@
 
         <!-- Context Bubble (RIGHT) -->
         <MediaInputBox
-          icon="📋"
+          icon="clipboard"
           :label="$t('multiImage.contextLabel')"
           :placeholder="$t('multiImage.contextPlaceholder')"
           v-model:value="contextPrompt"
@@ -474,7 +474,7 @@ const configsByCategory: Record<string, ModelConfig[]> = {
     {
       id: 'flux2_img2img_diffusers',
       label: 'Flux 2\nDiffusers',
-      emoji: '⚡',
+      emoji: '',
       name: 'Flux 2 Visual Conditioning',
       quality: 5,
       speed: 3,

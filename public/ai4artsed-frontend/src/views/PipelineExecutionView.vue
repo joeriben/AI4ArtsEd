@@ -49,7 +49,7 @@
 
         <!-- Bubble 2: Meta-Prompt (Context) -->
         <EditableBubble
-          icon="🧠"
+          icon=""
           :title="$t('phase2.metaPrompt')"
           v-model="localMetaPrompt"
           :default-value="pipelineStore.originalMetaPrompt"
@@ -62,7 +62,7 @@
         <div v-if="executionResult" class="bubble result-bubble">
           <div class="bubble-header">
             <div class="header-left">
-              <span class="bubble-icon">✨</span>
+              <span class="bubble-icon"></span>
               <h3 class="bubble-title">{{ $t('phase2.result') }}</h3>
             </div>
           </div>

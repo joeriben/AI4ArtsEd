@@ -45,7 +45,7 @@
       <div class="synth-sticky-top">
         <!-- Prompt A -->
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('latentLab.crossmodal.synth.promptA')"
           :placeholder="t('latentLab.crossmodal.synth.promptAPlaceholder')"
           :value="synth.promptA"
@@ -60,7 +60,7 @@
 
         <!-- Prompt B (optional) -->
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('latentLab.crossmodal.synth.promptB')"
           :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
           :value="synth.promptB"
@@ -914,7 +914,7 @@
 
       <MediaInputBox
         inputType="image"
-        icon="🖼️"
+        icon="image"
         :label="t('latentLab.crossmodal.mmaudio.imageUpload')"
         :allow-sketch="true"
         value=""
@@ -927,7 +927,7 @@
       />
 
       <MediaInputBox
-        icon="💡"
+        icon="lightbulb"
         :label="t('latentLab.crossmodal.mmaudio.prompt')"
         :placeholder="t('latentLab.crossmodal.mmaudio.promptPlaceholder')"
         :value="mmaudio.prompt"
@@ -941,7 +941,7 @@
       />
 
       <MediaInputBox
-        icon="📋"
+        icon="clipboard"
         :label="t('latentLab.crossmodal.mmaudio.negativePrompt')"
         :value="mmaudio.negativePrompt"
         @update:value="mmaudio.negativePrompt = $event"
@@ -1014,7 +1014,7 @@
 
       <MediaInputBox
         inputType="image"
-        icon="🖼️"
+        icon="image"
         :label="t('latentLab.crossmodal.guidance.imageUpload')"
         :allow-sketch="true"
         value=""
@@ -1027,7 +1027,7 @@
       />
 
       <MediaInputBox
-        icon="💡"
+        icon="lightbulb"
         :label="t('latentLab.crossmodal.guidance.prompt')"
         :placeholder="t('latentLab.crossmodal.guidance.promptPlaceholder')"
         :value="guidance.prompt"

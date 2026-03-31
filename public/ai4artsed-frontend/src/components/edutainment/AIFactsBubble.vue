@@ -12,7 +12,7 @@
           <div class="mini-viz">
             <!-- Energy Bar -->
             <template v-if="vizType === 'energy'">
-              <span class="viz-emoji">⚡</span>
+              <span class="viz-emoji">W</span>
               <div class="viz-bar">
                 <div
                   class="viz-bar-fill energy-fill"
@@ -24,7 +24,7 @@
 
             <!-- VRAM Bar -->
             <template v-else-if="vizType === 'vram'">
-              <span class="viz-emoji">💾</span>
+              <span class="viz-emoji">GB</span>
               <div class="viz-bar">
                 <div
                   class="viz-bar-fill vram-fill"
@@ -36,7 +36,7 @@
 
             <!-- Temperature -->
             <template v-else-if="vizType === 'temperature'">
-              <span class="viz-emoji">🌡️</span>
+              <span class="viz-emoji">°C</span>
               <div class="viz-thermometer">
                 <div
                   class="thermometer-fill"
@@ -49,14 +49,14 @@
 
             <!-- CO2 Counter -->
             <template v-else-if="vizType === 'co2'">
-              <span class="viz-emoji">☁️</span>
+              <span class="viz-emoji">CO₂</span>
               <span class="viz-counter">{{ totalCo2.toFixed(1) }}</span>
               <span class="viz-label">g CO₂</span>
             </template>
 
             <!-- Energy Counter -->
             <template v-else-if="vizType === 'kwh'">
-              <span class="viz-emoji">🔋</span>
+              <span class="viz-emoji">kWh</span>
               <span class="viz-counter">{{ (totalEnergy / 1000).toFixed(3) }}</span>
               <span class="viz-label">kWh</span>
             </template>

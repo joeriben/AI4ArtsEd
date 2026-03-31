@@ -4,7 +4,7 @@
       <!-- Image Input Section -->
       <div class="input-section">
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('compare.vlmAnalysis.imageLabel')"
           :value="uploadedImage ?? ''"
           @update:value="(val: string) => uploadedImage = val || undefined"

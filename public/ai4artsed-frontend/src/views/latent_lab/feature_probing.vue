@@ -56,7 +56,7 @@
     <div class="input-section">
       <div class="input-pair">
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('latentLab.probing.promptALabel')"
           :placeholder="t('latentLab.probing.promptAPlaceholder')"
           v-model:value="promptA"
@@ -72,7 +72,7 @@
           @blur="() => {}"
         />
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('latentLab.probing.promptBLabel')"
           :placeholder="t('latentLab.probing.promptBPlaceholder')"
           v-model:value="promptB"

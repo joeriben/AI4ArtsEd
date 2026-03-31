@@ -18,7 +18,7 @@
         </div>
 
         <MediaInputBox
-          icon="💡"
+          icon="lightbulb"
           :label="t('compare.promptLabel')"
           :placeholder="t('compare.promptPlaceholder')"
           v-model:value="userPrompt"

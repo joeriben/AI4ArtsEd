@@ -499,6 +499,7 @@ async function sendMessage() {
     const response = await axios.post('/api/chat', {
       message: userMessage,  // Original message without context prefix
       run_id: currentSession.value.runId || undefined,
+      image_path: currentSession.value.runId || undefined,  // Let Träshy see generated images
       draft_context: draftContextString.value || undefined,  // Always send current page state
       history: historyForBackend,
       language: locale.value,

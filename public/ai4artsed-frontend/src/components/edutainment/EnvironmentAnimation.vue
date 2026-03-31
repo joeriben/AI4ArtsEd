@@ -58,15 +58,15 @@
     <!-- Stats overlay -->
     <div class="stats-overlay">
       <div class="stat">
-        <span class="stat-icon">⚡</span>
+        <span class="stat-icon">W</span>
         <span class="stat-value">{{ Math.round(powerWatts) }}W</span>
       </div>
       <div class="stat">
-        <span class="stat-icon">☁️</span>
-        <span class="stat-value">{{ co2Grams.toFixed(1) }}g CO₂</span>
+        <span class="stat-icon">CO₂</span>
+        <span class="stat-value">{{ co2Grams.toFixed(1) }}g</span>
       </div>
       <div class="stat">
-        <span class="stat-icon">🌡️</span>
+        <span class="stat-icon">°C</span>
         <span class="stat-value">{{ temperature }}°C</span>
       </div>
     </div>

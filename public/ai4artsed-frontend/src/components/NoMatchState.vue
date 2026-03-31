@@ -1,7 +1,7 @@
 <template>
   <div class="no-match-state">
     <div class="no-match-content">
-      <div class="no-match-icon">😿</div>
+      <div class="no-match-icon">—</div>
       <h2 class="no-match-title">
         {{ currentLanguage === 'en' ? 'sorry, no matches' : 'sorry, keine Treffer' }}
       </h2>

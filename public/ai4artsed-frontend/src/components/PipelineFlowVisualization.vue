@@ -10,7 +10,7 @@
       <!-- User Input Bubble -->
       <div class="flow-step input-step">
         <div class="step-bubble completed">
-          <span class="step-icon">💡</span>
+          <span class="step-icon">IN</span>
           <div class="step-label">{{ $t('pipeline.yourInput') }}</div>
           <div class="step-preview">{{ truncatedInput }}</div>
         </div>
@@ -184,16 +184,16 @@ const mergedSteps = computed((): MergedStep[] => {
 
 // Final output icon (visual-first for kids)
 const finalOutputIcon = computed(() => {
-  if (!props.finalOutput) return '🖼️'
+  if (!props.finalOutput) return 'OUT'
 
   const iconMap: Record<string, string> = {
-    'image': '🖼️',
-    'audio': '🎵',
-    'music': '🎶',
-    'video': '🎬'
+    'image': 'IMG',
+    'audio': 'AUD',
+    'music': 'MUS',
+    'video': 'VID'
   }
 
-  return iconMap[props.finalOutput.media_type || 'image'] || '🖼️'
+  return iconMap[props.finalOutput.media_type || 'image'] || 'OUT'
 })
 
 // Toggle step details (click to expand)
