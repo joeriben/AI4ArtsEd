@@ -1,5 +1,32 @@
 # Development Log
 
+## Session 298 - VLM Safety Total Blockade Fix
+**Date:** 2026-04-04
+**Focus:** Post-generation VLM safety check blockt ALLE Bilder pauschal.
+
+### Root Cause
+Ollama→llama-cpp Migration (Session ~290) setzte Alias `qwen3-vl:2b → qwen2.5-vl:2b`. qwen2.5-vl:2b (Q4_K_M via llama-cpp-python) halluziniert UNSAFE bei JEDER SAFE/UNSAFE-Frage mit dramatischer Bildsprache. Konkretes Beispiel: Schiff in der Wueste = UNSAFE.
+
+### Diagnose-Weg
+1. GPU-Service-Logs: Modell empfaengt Request, antwortet "UNSAFE"
+2. Direkttest mit synthetischem Bild: einfarbiges Quadrat → SAFE, echtes SD3.5-Bild → UNSAFE
+3. Prompt-Variationen: JEDER Prompt mit "SAFE/UNSAFE" → UNSAFE. Konkrete Frage "Is there blood?" → korrekt "No"
+4. Git-History-Analyse: 15 Commits, 7 Prompt-Strategien. Workshop-validierter Prompt (2ee36d7) war korrekt — Problem war Modellwechsel
+5. qwen3-vl:2b GGUF existierte bereits auf Disk (27.03), nur nicht im GPU-Service registriert
+
+### Fix
+- qwen3-vl:2b als eigenes Modell in GPU Service MODEL_CONFIGS (Qwen25VLChatHandler funktioniert)
+- Workshop-validierter Content-Checklist-Prompt wiederhergestellt
+- Alias `qwen3-vl:2b → qwen2.5-vl:2b` entfernt
+- Verifiziert: qwen3-vl + Workshop-Prompt = SAFE auf blockiertem Bild
+
+### Lesson Learned
+- VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung
+- Aliase in Model-Registries verbergen Breaking Changes
+- Git-History der Prompts MUSS konsultiert werden bevor Prompt-Aenderungen vorgenommen werden
+
+---
+
 ## Session 295 - Encoding Transparency (FAILED)
 **Date:** 2026-03-29
 **Focus:** SD3.5 Generierungsprozess sichtbar machen — Text-Encoding-Phase (CLIP-L, CLIP-G, T5-XXL) als Prozessschritt visualisieren.
