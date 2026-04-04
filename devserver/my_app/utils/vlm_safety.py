@@ -31,15 +31,18 @@ VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
-# --- Primary path: VLM sees + judges (same categories as before) ---
+# --- Primary path: VLM sees + classifies ---
+# CRITICAL: qwen2.5-vl:2b hallucinates "UNSAFE" when asked SAFE/UNSAFE directly.
+# Instead ask concrete YES/NO questions — the model answers these accurately.
+# Verdict logic inverts: YES (harmful content found) → unsafe, NO → safe.
 VLM_PROMPTS = {
     'kids': (
-        'Is this image safe and appropriate for young children (ages 6-12)? '
-        'Answer SAFE or UNSAFE.'
+        'Is there blood, gore, nudity, a swastika, or weapons in this image? '
+        'Answer YES or NO.'
     ),
     'youth': (
-        'Is this image safe and appropriate for teenagers (ages 12-16)? '
-        'Answer SAFE or UNSAFE.'
+        'Is there graphic violence, explicit nudity, or hate symbols in this image? '
+        'Answer YES or NO.'
     ),
 }
 
@@ -197,32 +200,43 @@ def _call_verdict_model(prompt: str) -> Optional[str]:
 
 
 def _extract_verdict(text: str) -> str | None:
-    """Extract SAFE/UNSAFE verdict from text.
+    """Extract safety verdict from text.
 
-    Priority: first word, last word, then last occurrence of 'unsafe'/'safe'
-    in text (to catch thinking conclusions like '...so this is unsafe').
-    'unsafe' is checked before 'safe' to avoid substring false matches.
+    Supports two response formats:
+    - YES/NO (primary path): YES = harmful content found → 'unsafe', NO → 'safe'
+    - SAFE/UNSAFE (fallback verdict model): direct mapping
+
+    Priority: first word, last word, then last standalone occurrence.
     """
     if not text or not text.strip():
         return None
     words = text.strip().split()
+
+    # Map both YES/NO and SAFE/UNSAFE to canonical verdicts
+    _VERDICT_MAP = {
+        'yes': 'unsafe',   # YES = harmful content found
+        'no': 'safe',      # NO = no harmful content
+        'safe': 'safe',
+        'unsafe': 'unsafe',
+    }
+
     # Check first and last word (cleanest signal)
     for word in (words[0], words[-1]):
         cleaned = word.lower().rstrip('.,!:;')
-        if cleaned in ('safe', 'unsafe'):
-            return cleaned
-    # Fallback: scan for last standalone 'unsafe' or 'safe' in text.
-    # Check unsafe first — 'unsafe' contains 'safe' as substring.
+        if cleaned in _VERDICT_MAP:
+            return _VERDICT_MAP[cleaned]
+
+    # Fallback: scan for last standalone occurrence
     lower = text.lower()
-    for target in ('unsafe', 'safe'):
+    # Check in order: unsafe, yes, no, safe (unsafe before safe to avoid substring)
+    for target, verdict in [('unsafe', 'unsafe'), ('yes', 'unsafe'), ('no', 'safe'), ('safe', 'safe')]:
         pos = lower.rfind(target)
         if pos != -1:
-            # Verify it's a standalone word (not part of e.g. "unsafely")
             before_ok = pos == 0 or not lower[pos - 1].isalpha()
             after_end = pos + len(target)
             after_ok = after_end >= len(lower) or not lower[after_end].isalpha()
             if before_ok and after_ok:
-                return target
+                return verdict
     return None
 
 
