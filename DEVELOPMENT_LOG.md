@@ -34,11 +34,34 @@ qwen3-vl:2b mit Workshop-Prompt auf synthetischen Testbildern:
 - **qwen2.5-vl:2b**: Halluziniert UNSAFE bei JEDER SAFE/UNSAFE-Frage mit dramatischer Bildsprache. NICHT fuer Safety verwenden.
 - Beide Modelle als GGUF in `~/ai/llama-server-models/` vorhanden.
 
+### Youth-Prompt-Problem
+Der youth-Prompt (ohne "scary, unsettling, or traumatizing for young children"-Klausel) war **funktionslos** — klassifizierte alles als SAFE, inkl. Zombie und Hakenkreuz. Nur die exakte Formulierung "for young children" aktiviert qwen3-vl:2b's Schutzfunktion. "for children", "for teenagers", "for minors" — alle wirkungslos. Der vordere Aufzaehlungsteil allein reicht nicht; beide Teile zusammen ergeben den funktionierenden Prompt.
+
+### VLM-Safety-Modell-Evaluation (Altersdifferenzierung kids/youth)
+
+**Anforderung:** kids (FSK 6) strenger als youth (FSK 12). qwen3-vl:2b kann nicht differenzieren.
+
+| Modell | Zombie | Hakenkreuz | Totenkopf | Messer | Blumen | Schiffswrack | VRAM |
+|--------|--------|-----------|-----------|--------|--------|-------------|------|
+| qwen3-vl:2b (kids-Prompt) | UNSAFE | UNSAFE | UNSAFE | UNSAFE | SAFE | SAFE | 2.5 GB |
+| qwen3-vl:2b (youth-Prompt) | SAFE | SAFE | SAFE | SAFE | SAFE | SAFE | — |
+| LlavaGuard 0.5B | Safe | Safe | Safe | Safe | Safe | Safe | 1.7 GB |
+| **LlavaGuard 7B** | **Unsafe (O2)** | **Unsafe (O1)** | Safe | Safe | Safe | Safe | **15 GB** |
+
+**Ergebnis:** LlavaGuard 7B bietet die gewuenschte Abstufung:
+- Erkennt Gewalt (Zombie) und Hate-Symbole (Hakenkreuz) zuverlaessig
+- Laesst Totenkopf und stilisiertes Messer durch (fuer 12+ vertretbar)
+- 9 Kategorien + JSON-Rationale + anpassbare Taxonomie
+- 15 GB VRAM, ~14 GB Download, HuggingFace Transformers (nicht llama-cpp)
+
+**Offene Integration:** LlavaGuard 7B fuer youth in GPU-Service einbauen. Requires neuen Backend-Typ neben llama-cpp.
+
 ### Lesson Learned
 - VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung (202 Bilder, Workshop 13.03.2026)
 - Aliase in Model-Registries verbergen Breaking Changes — Modelle immer explizit registrieren
 - Git-History der Prompts MUSS konsultiert werden bevor Prompt-Aenderungen vorgenommen werden
 - qwen2.5-vl und qwen3-vl verhalten sich fundamental unterschiedlich trotz aehnlichem Namen
+- Behauptungen ueber Modell-Limitierungen muessen belegt werden — nicht spekulieren
 
 ---
 
