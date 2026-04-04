@@ -7,7 +7,8 @@ in the GPU Service process with full VRAM coordinator integration.
 Models:
 - qwen3:1.7b — DSGVO verification, text tasks
 - llama-guard3:1b — Stage 3 safety (Llama Guard S1-S13)
-- qwen2.5-vl:2b — VLM safety checks (image classification)
+- qwen3-vl:2b — VLM safety checks (image classification, workshop-validated)
+- qwen2.5-vl:2b — VLM fallback (NOT recommended: hallucinates UNSAFE on SAFE/UNSAFE prompts)
 """
 
 import gc
@@ -45,12 +46,19 @@ MODEL_CONFIGS = {
         "estimated_vram_mb": 2500,
         "chat_handler": "qwen25vl",
     },
+    "qwen3-vl:2b": {
+        "model_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "Qwen3VL-2B-Instruct-Q4_K_M.gguf"),
+        "mmproj_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "mmproj-Qwen3VL-2B-Instruct-F16.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 2500,
+        "chat_handler": "qwen25vl",  # Qwen25VLChatHandler works for qwen3-vl too
+    },
 }
 
 # Aliases for backward compatibility with legacy model names
 MODEL_ALIASES = {
     "llama-guard3:latest": "llama-guard3:1b",
-    "qwen3-vl:2b": "qwen2.5-vl:2b",  # VLM safety model alias
 }
 
 

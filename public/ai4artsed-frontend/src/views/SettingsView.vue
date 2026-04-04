@@ -166,7 +166,8 @@
               <td class="label-cell">{{ $t('settings.safetyModels.vlmModel') }}</td>
               <td class="value-cell">
                 <select v-model="settings.VLM_SAFETY_MODEL">
-                  <option value="qwen2.5-vl:2b">qwen2.5-vl:2b (~2.5 GB VRAM, {{ $t('settings.safetyModels.recommended') }})</option>
+                  <option value="qwen3-vl:2b">qwen3-vl:2b (~2.5 GB VRAM, {{ $t('settings.safetyModels.recommended') }})</option>
+                  <option value="qwen2.5-vl:2b">qwen2.5-vl:2b (~2.5 GB VRAM)</option>
                 </select>
                 <span class="help-text">{{ $t('settings.safetyModels.vlmModelHelp') }}</span>
               </td>

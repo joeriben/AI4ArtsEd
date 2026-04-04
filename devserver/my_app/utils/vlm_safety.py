@@ -31,30 +31,36 @@ VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
-# --- Primary path: VLM sees + classifies ---
-# CRITICAL: qwen2.5-vl:2b hallucinates "UNSAFE" when asked SAFE/UNSAFE directly.
-# Instead ask concrete YES/NO questions — the model answers these accurately.
-# Verdict logic inverts: YES (harmful content found) → unsafe, NO → safe.
+# --- Primary path: VLM sees + judges ---
+# Workshop-validated prompt (2ee36d7, Workshop 13.03.2026, 202 images tested).
+# Enumerates concrete harmful categories — proven with qwen3-vl:2b.
+# DO NOT simplify or restructure without re-testing on the workshop corpus.
 VLM_PROMPTS = {
     'kids': (
-        'Is there blood, gore, nudity, a swastika, or weapons in this image? '
-        'Answer YES or NO.'
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children? '
+        'Answer SAFE or UNSAFE.'
     ),
     'youth': (
-        'Is there graphic violence, explicit nudity, or hate symbols in this image? '
-        'Answer YES or NO.'
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, or sexism? '
+        'Answer SAFE or UNSAFE.'
     ),
 }
 
 # --- Fallback path: VLM describes, text model judges ---
 VLM_DESCRIBE_PROMPTS = {
     'kids': (
-        'Describe what you see in this image. '
-        'Focus on any content that might not be appropriate for young children.'
+        'Examine this image for the following: violence, gore, nudity, hate symbols, '
+        'self-harm, racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children. '
+        'Describe what you see.'
     ),
     'youth': (
-        'Describe what you see in this image. '
-        'Focus on any content that might not be appropriate for teenagers.'
+        'Examine this image for the following: violence, gore, nudity, hate symbols, '
+        'self-harm, racism, hate crime settings, terrorism, or sexism. '
+        'Describe what you see.'
     ),
 }
 
@@ -200,43 +206,32 @@ def _call_verdict_model(prompt: str) -> Optional[str]:
 
 
 def _extract_verdict(text: str) -> str | None:
-    """Extract safety verdict from text.
+    """Extract SAFE/UNSAFE verdict from text.
 
-    Supports two response formats:
-    - YES/NO (primary path): YES = harmful content found → 'unsafe', NO → 'safe'
-    - SAFE/UNSAFE (fallback verdict model): direct mapping
-
-    Priority: first word, last word, then last standalone occurrence.
+    Priority: first word, last word, then last occurrence of 'unsafe'/'safe'
+    in text (to catch thinking conclusions like '...so this is unsafe').
+    'unsafe' is checked before 'safe' to avoid substring false matches.
     """
     if not text or not text.strip():
         return None
     words = text.strip().split()
-
-    # Map both YES/NO and SAFE/UNSAFE to canonical verdicts
-    _VERDICT_MAP = {
-        'yes': 'unsafe',   # YES = harmful content found
-        'no': 'safe',      # NO = no harmful content
-        'safe': 'safe',
-        'unsafe': 'unsafe',
-    }
-
     # Check first and last word (cleanest signal)
     for word in (words[0], words[-1]):
         cleaned = word.lower().rstrip('.,!:;')
-        if cleaned in _VERDICT_MAP:
-            return _VERDICT_MAP[cleaned]
-
-    # Fallback: scan for last standalone occurrence
+        if cleaned in ('safe', 'unsafe'):
+            return cleaned
+    # Fallback: scan for last standalone 'unsafe' or 'safe' in text.
+    # Check unsafe first — 'unsafe' contains 'safe' as substring.
     lower = text.lower()
-    # Check in order: unsafe, yes, no, safe (unsafe before safe to avoid substring)
-    for target, verdict in [('unsafe', 'unsafe'), ('yes', 'unsafe'), ('no', 'safe'), ('safe', 'safe')]:
+    for target in ('unsafe', 'safe'):
         pos = lower.rfind(target)
         if pos != -1:
+            # Verify it's a standalone word (not part of e.g. "unsafely")
             before_ok = pos == 0 or not lower[pos - 1].isalpha()
             after_end = pos + len(target)
             after_ok = after_end >= len(lower) or not lower[after_end].isalpha()
             if before_ok and after_ok:
-                return verdict
+                return target
     return None
 
 

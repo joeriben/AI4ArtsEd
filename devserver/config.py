@@ -61,7 +61,7 @@ _SETTINGS_DEFAULTS = {
     'IMAGE_ANALYSIS_MODEL': '',
     'SAFETY_MODEL': '',
     'DSGVO_VERIFY_MODEL': '',
-    'VLM_SAFETY_MODEL': 'qwen2.5-vl:2b',
+    'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
 }
 
 # Pre-initialize module globals for imports (overwritten by reload_user_settings at startup)
