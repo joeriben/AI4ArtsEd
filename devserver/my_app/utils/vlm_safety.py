@@ -327,48 +327,63 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         from my_app.services.llm_backend import get_llm_backend
         llm = get_llm_backend()
 
+        description = ''
+
         # =================================================================
-        # PRIMARY PATH: VLM sees image + classifies directly
+        # KIDS: Primary path — VLM sees image + classifies directly
+        #   (workshop-validated with qwen3-vl:2b, proven zero-FN)
+        #
+        # YOUTH: Skip primary — qwen3-vl:2b cannot differentiate age groups.
+        #   Go straight to two-model path: VLM describes + STAGE3_MODEL judges.
+        #   The youth verdict prompt (VLM_VERDICT_PROMPTS['youth']) is calibrated
+        #   for FSK 12: flags violence/gore/nudity/hate but NOT horror imagery
+        #   (skulls, zombies, ghosts) which is acceptable for ages 12+.
         # =================================================================
-        logger.info(
-            f"[VLM-SAFETY] Primary: VLM direct check ({original_size} -> {img.size}, "
-            f"{len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL} for {safety_level}"
-        )
-
-        result = llm.chat(
-            model=config.VLM_SAFETY_MODEL,
-            messages=[{'role': 'user', 'content': prompt_text}],
-            images=[image_b64],
-            temperature=0.0,
-            max_new_tokens=1500,
-            enable_thinking=False,
-        )
-
-        if result is not None:
-            content = result.get('content', '').strip()
-            thinking = (result.get('thinking') or '').strip()
-            description = thinking or content
-
-            logger.info(f"[VLM-SAFETY] Primary response: content={content!r}, thinking={thinking[:200]!r}")
-
-            verdict = _extract_verdict(content) or _extract_verdict(thinking)
-
-            if verdict == 'unsafe':
-                return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for {safety_level}", description)
-            if verdict == 'safe':
-                return (True, '', description)
-
-            # No verdict from primary — fall through to two-model fallback
-            logger.warning(
-                "[VLM-SAFETY] Primary: no SAFE/UNSAFE verdict — trying two-model fallback. "
-                f"content={content[:100]!r}, thinking={thinking[:100]!r}"
+        if safety_level == 'kids':
+            logger.info(
+                f"[VLM-SAFETY] Kids primary: VLM direct check ({original_size} -> {img.size}, "
+                f"{len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL}"
             )
+
+            result = llm.chat(
+                model=config.VLM_SAFETY_MODEL,
+                messages=[{'role': 'user', 'content': prompt_text}],
+                images=[image_b64],
+                temperature=0.0,
+                max_new_tokens=1500,
+                enable_thinking=False,
+            )
+
+            if result is not None:
+                content = result.get('content', '').strip()
+                thinking = (result.get('thinking') or '').strip()
+                description = thinking or content
+
+                logger.info(f"[VLM-SAFETY] Kids primary response: content={content!r}, thinking={thinking[:200]!r}")
+
+                verdict = _extract_verdict(content) or _extract_verdict(thinking)
+
+                if verdict == 'unsafe':
+                    return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for kids", description)
+                if verdict == 'safe':
+                    return (True, '', description)
+
+                logger.warning(
+                    "[VLM-SAFETY] Kids primary: no verdict — falling through to two-model path. "
+                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
+                )
+            else:
+                logger.warning("[VLM-SAFETY] Kids primary: VLM returned None — falling through to two-model path")
         else:
-            description = ''
-            logger.warning("[VLM-SAFETY] Primary: VLM returned None — trying two-model fallback")
+            logger.info(
+                f"[VLM-SAFETY] Youth: two-model path ({config.VLM_SAFETY_MODEL} describe → "
+                f"{verdict_model} verdict) for {original_size} -> {img.size}"
+            )
 
         # =================================================================
-        # FALLBACK PATH: VLM describes → STAGE3_MODEL judges
+        # TWO-MODEL PATH: VLM describes → STAGE3_MODEL judges
+        # Kids: fallback when primary produces no verdict
+        # Youth: PRIMARY path — cloud model provides FSK 12 differentiation
         # =================================================================
         describe_prompt = VLM_DESCRIBE_PROMPTS.get(safety_level)
         verdict_prompt_template = VLM_VERDICT_PROMPTS.get(safety_level)
