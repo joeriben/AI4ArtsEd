@@ -31,10 +31,13 @@ VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
-# --- Primary path: VLM sees + judges ---
-# Workshop-validated prompt (2ee36d7, Workshop 13.03.2026, 202 images tested).
-# Enumerates concrete harmful categories — proven with qwen3-vl:2b.
-# DO NOT simplify or restructure without re-testing on the workshop corpus.
+# --- DEPRECATED: Direct VLM classification ---
+# qwen3-vl:2b direct classification was proven unreliable (Session 298, 21 test images):
+# - 2/5 critical unsafe images missed (explicit nudity, terrorism)
+# - 0/10 horror images detected for kids
+# - 2/6 harmless images falsely blocked (cathedral, chocolate cake)
+# Both levels now use the two-model path: VLM describes → STAGE3_MODEL judges.
+# The direct prompt is kept only for potential future use with better VLM models.
 VLM_PROMPTS = {
     'kids': (
         'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
@@ -49,10 +52,6 @@ VLM_PROMPTS = {
         'Answer SAFE or UNSAFE.'
     ),
 }
-# NOTE: kids and youth use identical prompts. qwen3-vl:2b cannot differentiate
-# age groups — only the exact phrase "for young children" activates its safety mode.
-# Without it, the model classifies everything as SAFE regardless of content.
-# Tested 2026-04-04: "for children", "for teenagers", "for minors" all non-functional.
 
 # --- Fallback path: VLM describes, text model judges ---
 VLM_DESCRIBE_PROMPTS = {
@@ -327,64 +326,26 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         from my_app.services.llm_backend import get_llm_backend
         llm = get_llm_backend()
 
-        description = ''
-
         # =================================================================
-        # KIDS: Primary path — VLM sees image + classifies directly
-        #   (workshop-validated with qwen3-vl:2b, proven zero-FN)
+        # TWO-MODEL PATH (both levels):
+        #   Step 1: VLM (qwen3-vl:2b) describes image — what does it see?
+        #   Step 2: STAGE3_MODEL (cloud) judges description — is it harmful?
         #
-        # YOUTH: Skip primary — qwen3-vl:2b cannot differentiate age groups.
-        #   Go straight to two-model path: VLM describes + STAGE3_MODEL judges.
-        #   The youth verdict prompt (VLM_VERDICT_PROMPTS['youth']) is calibrated
-        #   for FSK 12: flags violence/gore/nudity/hate but NOT horror imagery
-        #   (skulls, zombies, ghosts) which is acceptable for ages 12+.
+        # Age differentiation via verdict prompts:
+        #   Kids (FSK 6): flags violence, gore, nudity, hate, terrorism,
+        #                  AND horror imagery (monsters, zombies, skulls, demons)
+        #   Youth (FSK 12): flags violence, gore, nudity, hate, terrorism only
+        #                   Horror imagery is acceptable for 12+
+        #
+        # Why not direct VLM classification:
+        #   qwen3-vl:2b direct SAFE/UNSAFE is unreliable (Session 298 test,
+        #   21 images): misses nudity+terrorism, false-positives on cathedral+cake.
+        #   The two-model path caught all 5/5 critical images with 0 FP.
         # =================================================================
-        if safety_level == 'kids':
-            logger.info(
-                f"[VLM-SAFETY] Kids primary: VLM direct check ({original_size} -> {img.size}, "
-                f"{len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL}"
-            )
-
-            result = llm.chat(
-                model=config.VLM_SAFETY_MODEL,
-                messages=[{'role': 'user', 'content': prompt_text}],
-                images=[image_b64],
-                temperature=0.0,
-                max_new_tokens=1500,
-                enable_thinking=False,
-            )
-
-            if result is not None:
-                content = result.get('content', '').strip()
-                thinking = (result.get('thinking') or '').strip()
-                description = thinking or content
-
-                logger.info(f"[VLM-SAFETY] Kids primary response: content={content!r}, thinking={thinking[:200]!r}")
-
-                verdict = _extract_verdict(content) or _extract_verdict(thinking)
-
-                if verdict == 'unsafe':
-                    return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for kids", description)
-                if verdict == 'safe':
-                    return (True, '', description)
-
-                logger.warning(
-                    "[VLM-SAFETY] Kids primary: no verdict — falling through to two-model path. "
-                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
-                )
-            else:
-                logger.warning("[VLM-SAFETY] Kids primary: VLM returned None — falling through to two-model path")
-        else:
-            logger.info(
-                f"[VLM-SAFETY] Youth: two-model path ({config.VLM_SAFETY_MODEL} describe → "
-                f"{verdict_model} verdict) for {original_size} -> {img.size}"
-            )
-
-        # =================================================================
-        # TWO-MODEL PATH: VLM describes → STAGE3_MODEL judges
-        # Kids: fallback when primary produces no verdict
-        # Youth: PRIMARY path — cloud model provides FSK 12 differentiation
-        # =================================================================
+        logger.info(
+            f"[VLM-SAFETY] Two-model path ({config.VLM_SAFETY_MODEL} describe → "
+            f"{verdict_model} verdict) for {safety_level}, {original_size} -> {img.size}"
+        )
         describe_prompt = VLM_DESCRIBE_PROMPTS.get(safety_level)
         verdict_prompt_template = VLM_VERDICT_PROMPTS.get(safety_level)
 
