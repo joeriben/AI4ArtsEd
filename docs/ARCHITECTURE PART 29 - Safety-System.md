@@ -223,6 +223,23 @@ FALLBACK PATH: VLM describes → STAGE3_MODEL judges
 **Config:** `VLM_SAFETY_MODEL` in `user_settings.json` for VLM, `STAGE3_MODEL` for verdict fallback.
 **Fail-closed throughout:** No verdict from either path → blocked.
 
+**Model Constraints (Session 298, 2026-04-04):**
+
+| Model | SAFE/UNSAFE prompts | Recommendation |
+|-------|-------------------|----------------|
+| **qwen3-vl:2b** | Reliable. Workshop-validated (202 images, 13.03.2026). | **USE THIS** |
+| qwen2.5-vl:2b | Hallucinates UNSAFE on dramatic imagery. 100% FP rate. | DO NOT USE for safety |
+
+qwen3-vl:2b runs via `Qwen25VLChatHandler` in llama-cpp-python (handler is architecture-compatible).
+The content-checklist prompt (enumerating concrete categories) is validated — DO NOT simplify without workshop re-test.
+
+**False-Negative Test (Session 298):**
+- Hate symbols (swastika): UNSAFE (kids) — correctly caught
+- Skull/skeleton: UNSAFE (kids), SAFE (youth) — correctly differentiated
+- Bloody knife: UNSAFE (kids) — correctly caught
+- Flowers, ship wreck: SAFE — correctly passed
+- Abstract red shapes: SAFE — model interprets as "abstract art", not blood (acceptable for synthetic primitives)
+
 ---
 
 ## 4. Detection Mechanisms

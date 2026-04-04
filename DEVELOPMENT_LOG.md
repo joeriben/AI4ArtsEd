@@ -20,10 +20,25 @@ Ollama→llama-cpp Migration (Session ~290) setzte Alias `qwen3-vl:2b → qwen2.
 - Alias `qwen3-vl:2b → qwen2.5-vl:2b` entfernt
 - Verifiziert: qwen3-vl + Workshop-Prompt = SAFE auf blockiertem Bild
 
+### False-Negative Validierung (nach Fix)
+qwen3-vl:2b mit Workshop-Prompt auf synthetischen Testbildern:
+- Hakenkreuz → UNSAFE (kids) — korrekt
+- Totenkopf → UNSAFE (kids), SAFE (youth) — korrekt differenziert
+- Blutiges Messer → UNSAFE (kids) — korrekt
+- Blumen → SAFE — korrekt
+- Schiffswrack (das blockierte Bild) → SAFE — korrekt
+- Abstrakte rote Formen → SAFE — FN, aber Modell interpretiert primitives als "abstract art" (kein realistisches Szenario)
+
+### Modell-Kompatibilitaet (GPU Service llama-cpp-python)
+- **qwen3-vl:2b**: Funktioniert mit `Qwen25VLChatHandler` (Architektur-kompatibel). Workshop-validiert.
+- **qwen2.5-vl:2b**: Halluziniert UNSAFE bei JEDER SAFE/UNSAFE-Frage mit dramatischer Bildsprache. NICHT fuer Safety verwenden.
+- Beide Modelle als GGUF in `~/ai/llama-server-models/` vorhanden.
+
 ### Lesson Learned
-- VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung
-- Aliase in Model-Registries verbergen Breaking Changes
+- VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung (202 Bilder, Workshop 13.03.2026)
+- Aliase in Model-Registries verbergen Breaking Changes — Modelle immer explizit registrieren
 - Git-History der Prompts MUSS konsultiert werden bevor Prompt-Aenderungen vorgenommen werden
+- qwen2.5-vl und qwen3-vl verhalten sich fundamental unterschiedlich trotz aehnlichem Namen
 
 ---
 
