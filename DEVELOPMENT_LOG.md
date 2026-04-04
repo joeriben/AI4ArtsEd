@@ -76,12 +76,29 @@ Youth-Verdict-Prompt: Flaggt violence/gore/nudity/hate/terrorism. Flaggt NICHT h
 - Nur 2.5 GB lokaler VRAM (qwen3-vl, sowieso fuer kids geladen)
 - Nuancierte Textbeurteilung ist die Staerke von Cloud-LLMs, nicht von 2B-VLMs
 
+### Umfassender 21-Bilder-Test (Zwei-Modell-Pfad fuer beide Level)
+
+Nachdem qwen3-vl:2b direkte Klassifikation als unzuverlaessig identifiziert wurde (Nacktheit + Terrorismus durchgelassen, Kathedrale + Kuchen geblockt), wurden beide Level auf den Zwei-Modell-Pfad umgestellt.
+
+**Ergebnisse (21 SD3.5-generierte Testbilder):**
+
+| Kategorie | Kids (FSK 6) | Youth (FSK 12) |
+|-----------|-------------|----------------|
+| Kritisch (Gewalt, Nacktheit, Hass, Terror, Selbstverletzung) | 5/5 UNSAFE | 5/5 UNSAFE |
+| Horror (Zombie, Skelett, Geist, Daemon, Schaedel, Wald, Monster, Vampir) | 8/10 UNSAFE | 1/10 UNSAFE |
+| Harmlos (Landschaft, Tiere, Kunst, Portrait, Kathedrale, Kuchen) | 0/6 FP | 0/6 FP |
+| **Korrekte Differenzierungen kids ≠ youth** | **7 Bilder** | |
+
+Zombie bei beiden UNSAFE (Blut/Gore). Halloween und Kriegsszene bei beiden SAFE (Grenzfaelle).
+
 ### Lesson Learned
 - VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung (202 Bilder, Workshop 13.03.2026)
 - Aliase in Model-Registries verbergen Breaking Changes — Modelle immer explizit registrieren
 - Git-History der Prompts MUSS konsultiert werden bevor Prompt-Aenderungen vorgenommen werden
 - qwen2.5-vl und qwen3-vl verhalten sich fundamental unterschiedlich trotz aehnlichem Namen
 - Behauptungen ueber Modell-Limitierungen muessen belegt werden — nicht spekulieren
+- Direkte VLM-Klassifikation (SAFE/UNSAFE) ist bei kleinen Modellen grundsaetzlich unzuverlaessig — Zwei-Modell-Pfad (VLM describe + Cloud verdict) ist konsistent ueberlegen
+- Umfassende Tests ueber alle Problembereiche BEVOR Code deployed wird, nicht danach
 
 ---
 

@@ -223,22 +223,29 @@ FALLBACK PATH: VLM describes → STAGE3_MODEL judges
 **Config:** `VLM_SAFETY_MODEL` in `user_settings.json` for VLM, `STAGE3_MODEL` for verdict fallback.
 **Fail-closed throughout:** No verdict from either path → blocked.
 
-**Age-Differentiated Routing (Session 298, 2026-04-04):**
+**Two-Model Architecture (Session 298, 2026-04-05):**
 
+Both safety levels use the same two-model path:
 ```
-kids (FSK 6):  VLM sees image → direct SAFE/UNSAFE classification (strict)
-               Fallback: VLM describe → STAGE3_MODEL verdict (if no direct verdict)
-
-youth (FSK 12): VLM describes image → STAGE3_MODEL verdict (always two-model)
-                Youth verdict prompt: flags violence/gore/nudity/hate/terrorism
-                Does NOT flag horror imagery (skulls, zombies = acceptable for 12+)
+Step 1: VLM (qwen3-vl:2b, local, 2.5 GB) describes image
+Step 2: STAGE3_MODEL (Gemini 3 Flash, cloud) judges description
 ```
 
-Why two different paths:
-- qwen3-vl:2b's direct classification only works with the exact phrase "for young children"
-- Without it, the model classifies everything as SAFE (tested: "for children", "for teenagers", "for minors" — all non-functional)
-- The two-model path lets STAGE3_MODEL (Gemini 3 Flash) handle the nuanced age differentiation
-- Only 2.5 GB local VRAM needed (qwen3-vl shared between both levels)
+Age differentiation via verdict prompts:
+```
+kids (FSK 6):  UNSAFE = violence, gore, nudity, hate, terrorism,
+               horror imagery (monsters, zombies, ghosts, skulls, demons)
+
+youth (FSK 12): UNSAFE = violence, gore, nudity, hate, terrorism
+                Horror imagery is acceptable for ages 12+
+```
+
+Why not direct VLM classification (deprecated):
+- qwen3-vl:2b direct SAFE/UNSAFE proved unreliable (21-image test, Session 298)
+- Missed explicit nudity and terrorism (2/5 critical FN)
+- False-positived cathedral and chocolate cake (2/6 harmless FP)
+- Could not differentiate between age groups at all
+- Two-model path: 5/5 critical caught, 0 FP, 7 correct age differentiations
 
 **Model Constraints (Session 298, 2026-04-04):**
 
