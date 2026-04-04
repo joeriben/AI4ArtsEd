@@ -44,10 +44,15 @@ VLM_PROMPTS = {
     ),
     'youth': (
         'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
-        'racism, hate crime settings, terrorism, or sexism? '
+        'racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children? '
         'Answer SAFE or UNSAFE.'
     ),
 }
+# NOTE: kids and youth use identical prompts. qwen3-vl:2b cannot differentiate
+# age groups — only the exact phrase "for young children" activates its safety mode.
+# Without it, the model classifies everything as SAFE regardless of content.
+# Tested 2026-04-04: "for children", "for teenagers", "for minors" all non-functional.
 
 # --- Fallback path: VLM describes, text model judges ---
 VLM_DESCRIBE_PROMPTS = {
