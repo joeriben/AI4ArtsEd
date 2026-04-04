@@ -34,14 +34,11 @@ logger = logging.getLogger(__name__)
 # --- Primary path: VLM sees + judges (same categories as before) ---
 VLM_PROMPTS = {
     'kids': (
-        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
-        'racism, hate crime settings, terrorism, sexism, '
-        'or content that is scary, unsettling, or traumatizing for young children? '
+        'Is this image safe and appropriate for young children (ages 6-12)? '
         'Answer SAFE or UNSAFE.'
     ),
     'youth': (
-        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
-        'racism, hate crime settings, terrorism, or sexism? '
+        'Is this image safe and appropriate for teenagers (ages 12-16)? '
         'Answer SAFE or UNSAFE.'
     ),
 }
@@ -49,15 +46,12 @@ VLM_PROMPTS = {
 # --- Fallback path: VLM describes, text model judges ---
 VLM_DESCRIBE_PROMPTS = {
     'kids': (
-        'Examine this image for the following: violence, gore, nudity, hate symbols, '
-        'self-harm, racism, hate crime settings, terrorism, sexism, '
-        'or content that is scary, unsettling, or traumatizing for young children. '
-        'Describe what you see.'
+        'Describe what you see in this image. '
+        'Focus on any content that might not be appropriate for young children.'
     ),
     'youth': (
-        'Examine this image for the following: violence, gore, nudity, hate symbols, '
-        'self-harm, racism, hate crime settings, terrorism, or sexism. '
-        'Describe what you see.'
+        'Describe what you see in this image. '
+        'Focus on any content that might not be appropriate for teenagers.'
     ),
 }
 
