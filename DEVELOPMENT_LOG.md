@@ -54,7 +54,27 @@ Der youth-Prompt (ohne "scary, unsettling, or traumatizing for young children"-K
 - 9 Kategorien + JSON-Rationale + anpassbare Taxonomie
 - 15 GB VRAM, ~14 GB Download, HuggingFace Transformers (nicht llama-cpp)
 
-**Offene Integration:** LlavaGuard 7B fuer youth in GPU-Service einbauen. Requires neuen Backend-Typ neben llama-cpp.
+**Implementiert:** Youth nutzt Zwei-Modell-Pfad (qwen3-vl describe + Gemini verdict) statt LlavaGuard.
+LlavaGuard 7B bleibt Option fuer rein-lokale Deployments (15 GB VRAM, HuggingFace Transformers).
+
+### Youth-Lösung: Zwei-Modell-Pfad (implementiert)
+Statt LlavaGuard 7B (15 GB) nutzt youth den bestehenden Zwei-Modell-Pfad als primaeren Pfad:
+1. qwen3-vl:2b beschreibt das Bild (2.5 GB, lokal, schon geladen)
+2. STAGE3_MODEL (Gemini 3 Flash via Mammouth) beurteilt die Beschreibung mit FSK-12-kalibriertem Verdict-Prompt
+
+Youth-Verdict-Prompt: Flaggt violence/gore/nudity/hate/terrorism. Flaggt NICHT horror imagery (Skulls, Zombies, Geister) — fuer 12+ akzeptabel.
+
+**Getestet:**
+- Zombie: UNSAFE (Gemini erkennt "grotesque undead, blood dripping" als graphic violence)
+- Schiffswrack: SAFE
+- CDF Wanderer: SAFE
+- Mona Lisa: SAFE
+
+**Architektur-Entscheidung:** Cloud-Modell fuer Verdict statt lokales 7B-Modell weil:
+- 15 GB VRAM fuer RTX 4090 Deployments nicht tragbar
+- Gemini 3 Flash ist schnell und guenstig
+- Nur 2.5 GB lokaler VRAM (qwen3-vl, sowieso fuer kids geladen)
+- Nuancierte Textbeurteilung ist die Staerke von Cloud-LLMs, nicht von 2B-VLMs
 
 ### Lesson Learned
 - VLM-Modellwechsel erfordert IMMER Workshop-Revalidierung (202 Bilder, Workshop 13.03.2026)

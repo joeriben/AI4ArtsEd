@@ -223,6 +223,23 @@ FALLBACK PATH: VLM describes → STAGE3_MODEL judges
 **Config:** `VLM_SAFETY_MODEL` in `user_settings.json` for VLM, `STAGE3_MODEL` for verdict fallback.
 **Fail-closed throughout:** No verdict from either path → blocked.
 
+**Age-Differentiated Routing (Session 298, 2026-04-04):**
+
+```
+kids (FSK 6):  VLM sees image → direct SAFE/UNSAFE classification (strict)
+               Fallback: VLM describe → STAGE3_MODEL verdict (if no direct verdict)
+
+youth (FSK 12): VLM describes image → STAGE3_MODEL verdict (always two-model)
+                Youth verdict prompt: flags violence/gore/nudity/hate/terrorism
+                Does NOT flag horror imagery (skulls, zombies = acceptable for 12+)
+```
+
+Why two different paths:
+- qwen3-vl:2b's direct classification only works with the exact phrase "for young children"
+- Without it, the model classifies everything as SAFE (tested: "for children", "for teenagers", "for minors" — all non-functional)
+- The two-model path lets STAGE3_MODEL (Gemini 3 Flash) handle the nuanced age differentiation
+- Only 2.5 GB local VRAM needed (qwen3-vl shared between both levels)
+
 **Model Constraints (Session 298, 2026-04-04):**
 
 | Model | SAFE/UNSAFE prompts | Recommendation |
