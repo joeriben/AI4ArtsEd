@@ -61,7 +61,7 @@ class WorkflowLogicService:
                     self.metadata = json.load(f)
                 logger.info("Workflow metadata loaded successfully")
             else:
-                logger.warning(f"Metadata file not found at {self.metadata_path}")
+                logger.debug(f"Metadata file not found at {self.metadata_path}")
                 self.metadata = {"categories": {}, "workflows": {}, "ui": {}}
         except Exception as e:
             logger.error(f"Failed to load metadata: {e}")
