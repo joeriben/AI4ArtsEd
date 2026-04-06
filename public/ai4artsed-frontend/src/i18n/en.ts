@@ -1700,6 +1700,7 @@ export const en = {
       error: 'Connection error',
       modelLabel: 'Model',
       defaultModel: 'Default (Settings)',
+      modelNotDownloaded: '(not downloaded)',
     },
     temperature: {
       inputLabel: 'Your Message',

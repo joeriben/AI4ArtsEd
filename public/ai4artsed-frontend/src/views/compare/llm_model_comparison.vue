@@ -63,7 +63,12 @@
               class="column-model-select"
               @change="onModelChange(idx, ($event.target as HTMLSelectElement).value)"
             >
-              <option v-for="m in chatModels" :key="m.id" :value="m.id">{{ m.label }}</option>
+              <option
+                v-for="m in chatModels"
+                :key="m.id"
+                :value="m.id"
+                :disabled="!m.available"
+              >{{ m.label }}{{ !m.available ? ` ${t('compare.shared.modelNotDownloaded')}` : '' }}</option>
             </select>
           </div>
           <div class="column-messages" :ref="el => setColRef(idx, el)">

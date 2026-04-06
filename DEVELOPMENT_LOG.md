@@ -1,5 +1,29 @@
 # Development Log
 
+## Session 299 - Compare Hub: Dynamic Local Models (Post-Ollama Fix)
+**Date:** 2026-04-06
+**Focus:** Compare Hub "Model Bias" Tab funktioniert nicht mit lokalen Modellen nach Ollama→llama-cpp-python Migration.
+
+### Problem
+`useChatModels.ts` hardcodete 4 lokale Modelle (`local/qwen3:32b`, `local/deepseek-r1:32b`, etc.) die als GGUF nicht existieren. `llm_backend.py` MODEL_CONFIGS kannte nur 4 kleine Utility-Modelle (Safety/VLM). Mit Ollama funktionierte jeder Modellname (pull on demand), mit llama-cpp-python muessen Modelle explizit konfiguriert sein.
+
+### Fix
+- **GPU Service**: 3 neue Chat-Modelle in MODEL_CONFIGS (Qwen3-4B, Phi-3.5-Mini, Gemma-2-2B — verschiedene Familien fuer Bias-Vergleich). `chat_capable`/`display_name` Felder fuer alle Modelle. Neue `get_chat_models()` Methode + `/api/llm/chat-models` Endpoint.
+- **DevServer**: Proxy-Endpoint `/api/chat/models` kombiniert Cloud-Modelle (Mammouth) + lokale (GPU Service).
+- **Frontend**: `useChatModels.ts` fetcht dynamisch statt Hardcoding. Module-level Cache. Unavailable Modelle disabled in Dropdowns. Store-Defaults auf die 3 neuen lokalen Modelle.
+- **Pending**: GGUF-Downloads (Qwen3-4B-Q8_0, Phi-3.5-mini-instruct-Q8_0, gemma-2-2b-it-Q8_0) in `~/ai/llama-server-models/`.
+
+### Files Changed
+- `gpu_service/services/llm_backend.py` — MODEL_CONFIGS + get_chat_models()
+- `gpu_service/routes/llm_routes.py` — /api/llm/chat-models
+- `devserver/my_app/routes/chat_routes.py` — /api/chat/models
+- `public/ai4artsed-frontend/src/composables/useChatModels.ts` — dynamic fetch
+- `public/ai4artsed-frontend/src/stores/llmModelCompare.ts` — new defaults
+- 3 compare views — disabled option handling
+- i18n: `compare.shared.modelNotDownloaded` key + work order
+
+---
+
 ## Session 298 - VLM Safety Total Blockade Fix
 **Date:** 2026-04-04
 **Focus:** Post-generation VLM safety check blockt ALLE Bilder pauschal.

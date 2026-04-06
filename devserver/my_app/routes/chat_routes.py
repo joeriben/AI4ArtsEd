@@ -29,6 +29,37 @@ logger = logging.getLogger(__name__)
 # Blueprint
 chat_bp = Blueprint('chat', __name__, url_prefix='/api/chat')
 
+# ── Model list endpoint for Compare Hub ──────────────────────────────────
+
+@chat_bp.route('/models', methods=['GET'])
+def chat_models():
+    """
+    Chat-capable models for Compare Hub dropdowns.
+    Returns local models (from GPU Service) + cloud models.
+    """
+    from config import GPU_SERVICE_URL
+
+    models = [
+        {"id": "mammouth/claude-sonnet-4-6", "label": "Claude Sonnet 4.6", "available": True},
+        {"id": "mammouth/claude-opus-4-6", "label": "Claude Opus 4.6", "available": True},
+        {"id": "mammouth/claude-haiku-4-5-20251001", "label": "Claude Haiku 4.5", "available": True},
+    ]
+
+    try:
+        resp = requests.get(f"{GPU_SERVICE_URL.rstrip('/')}/api/llm/chat-models", timeout=5)
+        if resp.ok:
+            for m in resp.json().get("models", []):
+                models.append({
+                    "id": f"local/{m['id']}",
+                    "label": f"{m['display_name']} (local)",
+                    "available": m.get("available", False),
+                })
+    except Exception as e:
+        logger.warning(f"[CHAT] Failed to fetch local chat models: {e}")
+
+    return jsonify({"models": models})
+
+
 # Load interface reference guide
 INTERFACE_REFERENCE = ""
 try:

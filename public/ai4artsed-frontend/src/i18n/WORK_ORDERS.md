@@ -21,6 +21,12 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-04-06-compare-model-availability
+- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys**:
+  - `compare.shared.modelNotDownloaded` (NEW): "(not downloaded)"
+- **Context**: Local LLM models in the Compare Hub dropdown now show availability status. Models whose GGUF files have not been downloaded yet appear with this suffix and are disabled in the dropdown. Short parenthetical indicator.
+
 ### WO-2026-03-29-remove-edutainment-emoji
 - **Scope**: all target language files (de, tr, ko, uk, fr, es, he, ar, bg)
 - **Changed keys** (MODIFIED — remove leading emoji from each value):
