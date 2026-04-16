@@ -12,13 +12,46 @@ from pathlib import Path
 import logging
 import json
 import re
+import threading
 import time as _time
 
 logger = logging.getLogger(__name__)
 
-# Translation reuse: skip API call if prompt unchanged since last translation
-_last_untranslated: Optional[str] = None
-_last_translated: Optional[str] = None
+# Translation reuse: cache only within a device bucket.
+# A single global "last translation" leaks prompt state across workshop devices.
+_translation_cache_lock = threading.Lock()
+_translation_cache: Dict[str, Dict[str, Any]] = {}
+_TRANSLATION_CACHE_TTL = 3600  # 1 hour
+
+
+def _get_translation_cache_entry(device_id: Optional[str]) -> Optional[Dict[str, Any]]:
+    """Return the translation cache bucket for one device, or None if unscoped."""
+    if not device_id:
+        return None
+
+    now = _time.time()
+    with _translation_cache_lock:
+        stale = [
+            key for key, value in _translation_cache.items()
+            if now - value.get('ts', 0) > _TRANSLATION_CACHE_TTL
+        ]
+        for key in stale:
+            del _translation_cache[key]
+
+        return _translation_cache.get(device_id)
+
+
+def _update_translation_cache(device_id: Optional[str], untranslated: str, translated: str) -> None:
+    """Store the latest translation for one device."""
+    if not device_id:
+        return
+
+    with _translation_cache_lock:
+        _translation_cache[device_id] = {
+            'untranslated': untranslated,
+            'translated': translated,
+            'ts': _time.time(),
+        }
 
 # ============================================================================
 # FUZZY MATCHING: Levenshtein distance for typo-resilient filter lists
@@ -1286,7 +1319,8 @@ async def execute_stage3_safety(
     safety_level: str,
     media_type: str,
     pipeline_executor,
-    user_language: str = 'de'
+    user_language: str = 'de',
+    device_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Execute Stage 3: Pre-Output Safety Check (Jugendschutz)
@@ -1324,7 +1358,6 @@ async def execute_stage3_safety(
         }
     """
     import time
-    global _last_untranslated, _last_translated
 
     # STEP 1: research/adult — no translation, no safety check
     if safety_level in ('research', 'adult'):
@@ -1337,11 +1370,19 @@ async def execute_stage3_safety(
         }
 
     # STEP 2: Translate to English (for safety check on kids/youth)
-    # Skip API call if prompt unchanged since last translation
-    if prompt == _last_untranslated and _last_translated is not None:
-        translated_prompt = _last_translated
+    # Reuse only within one device bucket to avoid cross-device prompt bleed.
+    cached_translation = _get_translation_cache_entry(device_id)
+    if (
+        cached_translation is not None
+        and prompt == cached_translation.get('untranslated')
+        and cached_translation.get('translated') is not None
+    ):
+        translated_prompt = cached_translation['translated']
         translate_time = 0
-        logger.info(f"[STAGE3-TRANSLATION] Reused (prompt unchanged): {translated_prompt[:150]}...")
+        logger.info(
+            f"[STAGE3-TRANSLATION] Reused for device {device_id}: "
+            f"{translated_prompt[:150]}..."
+        )
     else:
         translate_start = time.time()
         translate_result = await pipeline_executor.execute_pipeline(
@@ -1352,8 +1393,7 @@ async def execute_stage3_safety(
 
         if translate_result.success:
             translated_prompt = translate_result.final_output
-            _last_untranslated = prompt
-            _last_translated = translated_prompt
+            _update_translation_cache(device_id, prompt, translated_prompt)
             logger.info(f"[STAGE3-TRANSLATION] Translated in {translate_time:.2f}s: {translated_prompt[:150]}...")
         else:
             # Translation failed - use original prompt

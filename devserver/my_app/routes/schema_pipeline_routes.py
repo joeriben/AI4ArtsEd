@@ -1385,7 +1385,10 @@ def optimize_prompt():
             'error': str(e)
         }), 500
 
-
+# DEPRECATED:
+# This endpoint reflects an older split flow (`/stage2` -> `/stage3-4`).
+# The current frontend uses `/api/schema/pipeline/generation` for Stage 3+4 work.
+# Keep this route only for compatibility with older scripts/docs and ad-hoc tests.
 @schema_bp.route('/pipeline/stage3-4', methods=['POST'])
 def execute_stage3_4():
     """
@@ -1436,7 +1439,8 @@ def execute_stage3_4():
         run_id = data.get('run_id', generate_run_id())
         seed_override = data.get('seed')
         interception_result_param = data.get('interception_result')  # Optional: user's original interception text for T5
-        device_id = data.get('device_id', 'anonymous')  # Session 261: per-device seed isolation
+        device_id = data.get('device_id') or f"api_{uuid.uuid4().hex[:12]}"
+        user_language = data.get('user_language', 'en')
 
         if not stage2_result or not output_config:
             return jsonify({
@@ -1522,7 +1526,8 @@ def execute_stage3_4():
             safety_level,
             media_type,
             pipeline_executor,
-            user_language=user_language
+            user_language=user_language,
+            device_id=device_id
         ))
 
         stage3_time = (time.time() - stage3_start) * 1000  # ms
@@ -2830,7 +2835,8 @@ def execute_generation_streaming(data: dict):
                 safety_level,
                 media_type,
                 pipeline_executor,
-                user_language=user_language
+                user_language=user_language,
+                device_id=device_id
             ))
             # Override: use original prompt regardless of translation
             safety_result['positive_prompt'] = prompt
@@ -2840,7 +2846,8 @@ def execute_generation_streaming(data: dict):
                 safety_level,
                 media_type,
                 pipeline_executor,
-                user_language=user_language
+                user_language=user_language,
+                device_id=device_id
             ))
 
         # Check if translation occurred
@@ -4212,7 +4219,8 @@ async def execute_generation_stage4(
                 safety_level,
                 media_type,
                 pipeline_executor,
-                user_language=user_language
+                user_language=user_language,
+                device_id=device_id
             )
 
             if not safety_result['safe']:
@@ -4429,7 +4437,8 @@ def legacy_workflow():
                 safety_level,
                 'image',
                 pipeline_executor,
-                user_language=user_language
+                user_language=user_language,
+                device_id=device_id
             ))
 
             if not stage3_result['safe']:
@@ -5065,7 +5074,7 @@ def interception_pipeline():
             STAGE3_MODEL
         )
         # Extract device_id from request (FIX: consistent folder structure)
-        device_id = data.get('device_id')
+        device_id = data.get('device_id') or f"api_{uuid.uuid4().hex[:12]}"
 
         recorder = get_recorder(
             run_id=run_id,
@@ -5559,7 +5568,8 @@ def interception_pipeline():
                             safety_level,
                             media_type,
                             pipeline_executor,
-                            user_language=user_language
+                            user_language=user_language,
+                            device_id=device_id
                         ))
 
                     # Log Stage 3 safety check
