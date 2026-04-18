@@ -257,6 +257,13 @@ def vlm_describe_image(image_path: str | Path) -> str:
             logger.warning(f"[VLM-DESCRIBE] Upscaled undersized image {image_path.name}: {img.size}")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        if img.mode not in ('RGB', 'L'):
+            if img.mode == 'RGBA' or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                bg.paste(img.convert('RGBA'), mask=img.convert('RGBA').split()[-1])
+                img = bg
+            else:
+                img = img.convert('RGB')
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=80)
         image_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
@@ -318,6 +325,13 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             logger.warning(f"[VLM-SAFETY] Upscaled undersized image {original_size} -> {img.size} (min {VLM_MIN_SIZE}px)")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        if img.mode not in ('RGB', 'L'):
+            if img.mode == 'RGBA' or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                bg.paste(img.convert('RGBA'), mask=img.convert('RGBA').split()[-1])
+                img = bg
+            else:
+                img = img.convert('RGB')
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=80)
         image_bytes = buf.getvalue()
