@@ -626,7 +626,7 @@ HUNYUAN3D_MODEL_ID = os.environ.get("HUNYUAN3D_MODEL_ID", "tencent/Hunyuan3D-2")
 # External LLM API timeouts (connect, read) in seconds
 LLM_API_TIMEOUT = (10, 90)            # 10s connect (fail fast if unreachable), 90s read (reasoning models need time)
 
-# Local LLM timeouts (llama-server)
+# Local LLM timeouts (GPU Service, llama-cpp-python in-process)
 LLM_TIMEOUT_SAFETY = 30              # Safety verify (small model, short prompt)
 LLM_TIMEOUT_DEFAULT = 120            # Standard LLM calls
 
