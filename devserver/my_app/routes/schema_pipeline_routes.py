@@ -1792,13 +1792,11 @@ def execute_pipeline_streaming(data: dict):
                 verify_result = llm_verify_person_name(input_text, found_pii)
                 if verify_result is None:
                     safety_breaker.record_failure()
-                    if safety_breaker.is_open():
-                        reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
-                        logger.warning(f"[UNIFIED-STREAMING] {reason}")
-                        yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
-                        yield ''
-                        return
-                    logger.warning(f"[UNIFIED-STREAMING] DSGVO LLM unavailable — circuit breaker recording failure")
+                    reason = 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
+                    logger.warning(f"[UNIFIED-STREAMING] {reason} (fail-closed)")
+                    yield generate_sse_event('blocked', {'stage': 'safety', 'reason': reason})
+                    yield ''
+                    return
                 elif verify_result:
                     safety_breaker.record_success()
                     reason = f'DSGVO: {", ".join(found_pii[:3])}'
@@ -2263,14 +2261,12 @@ def safety_check_quick():
             verify_result = llm_verify_person_name(text, found_pii)
             if verify_result is None:
                 safety_breaker.record_failure()
-                if safety_breaker.is_open():
-                    logger.warning(f"[SAFETY-QUICK] DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.")
-                    return jsonify({
-                        'safe': False,
-                        'checks_passed': checks_passed + ['dsgvo_ner'],
-                        'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
-                    })
-                logger.warning(f"[SAFETY-QUICK] DSGVO LLM unavailable — circuit breaker recording failure")
+                logger.warning(f"[SAFETY-QUICK] DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten. (fail-closed)")
+                return jsonify({
+                    'safe': False,
+                    'checks_passed': checks_passed,
+                    'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
+                })
             elif verify_result:
                 safety_breaker.record_success()
                 logger.warning(f"[SAFETY-QUICK] DSGVO BLOCKED (LLM confirmed): {found_pii[:3]}")

@@ -2257,7 +2257,7 @@ def get_llm_models():
         # Sort by name
         models.sort(key=lambda x: x['name'])
 
-        logger.info(f"[SETTINGS] Found {len(models)} llama-server models")
+        logger.info(f"[SETTINGS] Found {len(models)} local LLM models")
         return jsonify({
             "success": True,
             "models": models

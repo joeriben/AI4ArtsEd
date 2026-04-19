@@ -3,11 +3,12 @@ Circuit Breaker for safety LLM verification calls.
 
 Three states:
 - CLOSED (normal): LLM calls go through
-- OPEN (after consecutive failures): attempt self-healing, then fail-closed
+- OPEN (after consecutive failures): fail-closed until cooldown
 - HALF_OPEN (after cooldown): one probe call tests recovery
 
-Replaces the TEMPORARY fail-open markers from Session 217 emergency fixes.
-Integrates with llm_watchdog for automatic LLM health checking.
+Observability/cooldown instrument only — not a safety gate.
+Safety-critical call sites block on every single failure independently;
+the breaker here reduces log spam and avoids hammering a dead backend.
 """
 
 import time
@@ -54,23 +55,8 @@ class CircuitBreaker:
                 self._state = CircuitState.OPEN
                 logger.warning(
                     f"[CIRCUIT-BREAKER:{self.name}] → OPEN after {self._consecutive_failures} "
-                    f"consecutive failures — attempting self-healing"
+                    f"consecutive failures — cooling down for {self.cooldown_seconds}s"
                 )
-                # Attempt automatic LLM restart
-                if self._attempt_self_healing():
-                    # LLM recovered — reset to CLOSED
-                    self._state = CircuitState.CLOSED
-                    self._consecutive_failures = 0
-                    logger.info(f"[CIRCUIT-BREAKER:{self.name}] Self-healing succeeded → CLOSED")
-
-    def _attempt_self_healing(self) -> bool:
-        """Try to restart LLM backend automatically. Returns True if recovered."""
-        try:
-            from my_app.utils.llm_watchdog import attempt_restart
-            return attempt_restart()
-        except Exception as e:
-            logger.error(f"[CIRCUIT-BREAKER:{self.name}] Self-healing error: {e}")
-            return False
 
     def record_success(self):
         """Record a successful LLM call."""

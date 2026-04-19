@@ -12,7 +12,7 @@
 - [x] `gpu_service/routes/llm_routes.py` — `/api/llm/chat`, `/api/llm/generate`
 - [x] `devserver/my_app/services/llm_client.py` — Ruft GPU Service statt Ollama
 - [x] `devserver/my_app/services/llm_service.py` — Ersetzt OllamaService
-- [x] `devserver/my_app/utils/llm_watchdog.py` — Ersetzt ollama_watchdog
+- [x] ~~`devserver/my_app/utils/llm_watchdog.py` — Ersetzt ollama_watchdog~~ — entfernt (2026-04-19): targetete eine llama-server.service, die nie existiert hat; Circuit Breaker übernimmt Cooldown-Logik ohne Self-Healing
 - [x] `devserver/config.py` — LLAMA_SERVER_URL + Backward-Aliases
 - [x] `devserver/user_settings.json` — LLM_PROVIDER/LMSTUDIO entfernt
 - [x] Settings-Routes, Training-Routes, VRAM-Monitor, Model-Selector Endpoints migriert

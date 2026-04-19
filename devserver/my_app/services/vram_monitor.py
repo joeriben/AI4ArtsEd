@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class VRAMMonitor:
-    """Monitors VRAM usage across llama-server and GPU Service."""
+    """Monitors VRAM usage across the GPU Service (diffusers, heartmula, in-process LLM)."""
 
     def __init__(self):
         from config import GPU_SERVICE_URL
@@ -68,7 +68,7 @@ class VRAMMonitor:
         }
 
     def _llm_reachable(self) -> bool:
-        """Quick reachability check for llama-server."""
+        """Quick reachability check for the GPU Service LLM endpoint."""
         try:
             resp = requests.get(f"{self.llm_url}/health", timeout=3)
             return resp.status_code == 200

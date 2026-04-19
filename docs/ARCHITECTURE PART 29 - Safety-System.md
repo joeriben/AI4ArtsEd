@@ -368,12 +368,15 @@ LLM call returns None
 
 **Circuit Breaker states:**
 - **CLOSED** (normal): LLM calls pass through
-- **OPEN** (3+ failures): triggers self-healing, then fail-closed if healing fails
-- **HALF_OPEN** (after 30s cooldown): one probe call tests recovery
+- **OPEN** (3+ failures): cooldown for 30s to avoid hammering a dead backend
+- **HALF_OPEN** (after cooldown): next call probes recovery
+
+Safety-critical call sites block on every single verification failure
+independently (fail-closed). The breaker is an observability/cooldown
+instrument, not a safety gate.
 
 **Key files:**
-- `devserver/my_app/utils/circuit_breaker.py` — Circuit breaker with self-healing integration
-- `devserver/my_app/utils/llm_watchdog.py` — LLM health check via GPU Service
+- `devserver/my_app/utils/circuit_breaker.py` — Circuit breaker (observability/cooldown)
 
 ---
 
@@ -487,8 +490,7 @@ The research mode restriction is codified in `LICENSE.md` §3(e):
 | `devserver/schemas/engine/stage_orchestrator.py` | Stage 1 + Stage 3 safety logic |
 | `devserver/my_app/routes/schema_pipeline_routes.py` | SAFETY-QUICK endpoint, VLM post-gen check |
 | `devserver/my_app/utils/vlm_safety.py` | VLM image analysis |
-| `devserver/my_app/utils/circuit_breaker.py` | Circuit breaker with LLM self-healing |
-| `devserver/my_app/utils/llm_watchdog.py` | LLM health check via GPU Service |
+| `devserver/my_app/utils/circuit_breaker.py` | Circuit breaker (observability/cooldown) |
 | `devserver/schemas/chunks/safety_check_kids.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/chunks/safety_check_youth.json` | ~~Dead code~~ (Stage 3 no longer uses pipeline chunks, Session 244) |
 | `devserver/schemas/data/stage1_safety_filters_*.json` | Filter term lists |
