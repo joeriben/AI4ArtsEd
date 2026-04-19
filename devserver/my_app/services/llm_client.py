@@ -45,6 +45,10 @@ class LLMClient:
             payload["repetition_penalty"] = repetition_penalty
 
         try:
+            from my_app.services.gpu_service_manager import get_gpu_service_manager
+            if not get_gpu_service_manager().ensure_gpu_service_available():
+                logger.error(f"[LLM-CLIENT] GPU service unavailable at {self.base_url}")
+                return None
             resp = requests.post(f"{self.base_url}/api/llm/chat", json=payload, timeout=timeout)
             resp.raise_for_status()
             return resp.json()
@@ -71,6 +75,10 @@ class LLMClient:
             payload["repetition_penalty"] = repetition_penalty
 
         try:
+            from my_app.services.gpu_service_manager import get_gpu_service_manager
+            if not get_gpu_service_manager().ensure_gpu_service_available():
+                logger.error(f"[LLM-CLIENT] GPU service unavailable at {self.base_url}")
+                return None
             resp = requests.post(f"{self.base_url}/api/llm/generate", json=payload, timeout=timeout)
             resp.raise_for_status()
             return resp.json()
