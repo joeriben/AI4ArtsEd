@@ -9,12 +9,18 @@ already cached locally. It avoids network downloads by using local_files_only.
 from __future__ import annotations
 
 import gc
+import os
 import sys
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
+
+# Force deterministic offline behavior for upgrade validation.
+# local_files_only=True alone is not sufficient across all hub code paths.
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 
 def run_text_backend_probe() -> list[str]:
