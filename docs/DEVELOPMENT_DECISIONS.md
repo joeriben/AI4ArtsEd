@@ -5516,3 +5516,83 @@ Bei Tab-Wechsel in der Vue SPA unmountet die View, aber der Server-Prozess laeuf
 
 Compare-Views feuern intentional parallele Generierungen. Per-Slot Suffix (`${deviceId}_cmp${i}`) gibt jedem Slot einen eigenen Lock. ai_persona analog (`${deviceId}_persona${Date.now()}`).
 
+---
+
+## Session 299: Transformers Upgrade Decision
+
+**Date:** 2026-04-21
+
+### Decision
+
+AI4ArtsEd upgrades to **`transformers==4.57.6`**.
+
+AI4ArtsEd does **not** adopt:
+- `transformers==4.57.0` — rejected because PyPI marks it as **yanked**
+- `transformers==5.5.4` — rejected for now because the isolated empirical test exposed a Wan/HuggingFace offline-cache regression risk
+
+### Why This Needed Testing
+
+`transformers` is not a side dependency in AI4ArtsEd. It is productively used in:
+
+- `gpu_service/services/text_backend.py`
+- `gpu_service/services/diffusers_backend.py`
+- `research/t5_interpretability/*`
+
+Therefore a global upgrade in the main venv was treated as an architecture decision, not a helper-model experiment.
+
+### Test Method
+
+A copied, isolated test venv (`.venv-transformers-upgrade`) was used instead of modifying the working main `venv/`.
+
+Two test layers were executed:
+
+1. **Import-level smoke checks**
+   - productive modules still import
+   - productive Transformers symbols still resolve
+
+2. **Empirical load-path checks** using locally cached models only
+   - TextBackend: `google/gemma-2-2b-it`
+   - Flux2 HF path: `black-forest-labs/FLUX.2-dev`
+   - Wan HF path: `Wan-AI/Wan2.2-TI2V-5B-Diffusers`
+   - Research T5 path: `google-t5/t5-base`
+
+### Results
+
+#### `transformers==4.57.0`
+
+- Smoke checks: PASS
+- Empirical load checks: PASS
+- **Rejected anyway** because the release is yanked and therefore unsuitable for deployment/reproducible installs
+
+#### `transformers==4.57.6`
+
+- Smoke checks: PASS
+- Empirical load checks: PASS
+  - TextBackend load + generation: PASS
+  - Flux2 text/processor path: PASS
+  - Wan tokenizer/text encoder path: PASS
+  - T5 research encoder forward pass: PASS
+
+#### `transformers==5.5.4`
+
+- Smoke checks: PASS
+- Empirical load checks: PARTIAL FAIL
+  - TextBackend: PASS
+  - Flux2: PASS
+  - T5: PASS
+  - Wan: FAIL
+
+**Observed failure:** under `5.5.4`, the Wan path no longer resolved the locally cached files cleanly in offline mode and fell through to a Hugging Face connectivity/cache-resolution error. That is enough risk to reject the major-line upgrade for the current production stack.
+
+### Rationale
+
+`4.57.6` is the closest non-yanked stable line to the previously investigated `4.57.0`, and it passed all isolated checks without introducing new observed regressions in the productively relevant load paths.
+
+`5.5.4` may still be viable later, but not before the Wan/offline-cache behavior is specifically investigated and fixed.
+
+### Supporting Files Added
+
+- `scripts/test_transformers_upgrade_isolated.sh`
+- `devserver/testfiles/test_transformers_upgrade_smoke.py`
+- `devserver/testfiles/test_transformers_upgrade_empirical.py`
+- `docs/TRANSFORMERS_UPGRADE_TEST_PLAN.md`
