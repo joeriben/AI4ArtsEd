@@ -167,22 +167,6 @@ class ModelAvailabilityService:
         except Exception as e:
             logger.warning(f"[MODEL_AVAILABILITY] Hunyuan3D check failed: {e}")
 
-        # Kein Backend erreichbar → GPU-Service-Auto-Start versuchen (1× retry).
-        # Analog zum ComfyUI-Pattern unten (Zeile ~274).
-        if not status["gpu_service_reachable"]:
-            try:
-                import asyncio
-                from my_app.services.gpu_service_manager import get_gpu_service_manager
-                manager = get_gpu_service_manager()
-                if manager._auto_start_enabled and not manager.is_starting():
-                    logger.info("[MODEL_AVAILABILITY] Triggering GPU service auto-start...")
-                    started = await asyncio.to_thread(manager.ensure_gpu_service_available)
-                    if started:
-                        logger.info("[MODEL_AVAILABILITY] GPU service started, retrying query...")
-                        return await self.get_gpu_service_status(force_refresh=True)
-            except Exception as start_err:
-                logger.warning(f"[MODEL_AVAILABILITY] GPU service auto-start failed: {start_err}")
-
         # Update cache
         self._gpu_cache["diffusers_available"] = status["diffusers"]
         self._gpu_cache["heartmula_available"] = status["heartmula"]
