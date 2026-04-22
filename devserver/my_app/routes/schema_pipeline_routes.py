@@ -742,6 +742,100 @@ async def execute_stage2_interception(
     return result
 
 
+class _ClassifierResult:
+    """Lightweight result object compatible with the stage2 handler's expectations."""
+    def __init__(self, success: bool, final_output: str, error=None, metadata=None):
+        self.success = success
+        self.final_output = final_output
+        self.error = error
+        self.steps = []
+        self.metadata = metadata or {}
+        self.execution_time = 0
+
+
+async def execute_stage2_classifier(input_text: str, safety_level: str):
+    """
+    Jugendschutz safety gate — pure classifier, NOT a transformer.
+
+    Classifies the user's image-generation instruction into SAFE or an UNSAFE_*
+    category using STAGE3_MODEL. Unlike execute_stage2_interception, this does
+    NOT transform the text; on SAFE the original input_text is returned 1:1 so
+    it can be forwarded verbatim to generation.
+
+    Use when the user did NOT select a Ring-schema (= no interception wanted)
+    but safety still has to be verified for kids/youth.
+
+    Returns a _ClassifierResult with:
+      - success=True, final_output=input_text unchanged, on SAFE
+      - success=False, error=<block message>, on UNSAFE_* or unreachable classifier
+    """
+    from my_app.utils.vlm_safety import _call_verdict_model
+
+    audience = 'children ages 6-12' if safety_level == 'kids' else 'teenagers ages 13-17'
+    prompt = (
+        f"You are a content-safety classifier for an educational image-generation app.\n"
+        f"Target audience: {audience}.\n\n"
+        f"Classify the following user instruction. Output EXACTLY one label, nothing else:\n"
+        f"  SAFE\n"
+        f"  UNSAFE_NUDITY\n"
+        f"  UNSAFE_SEXUAL\n"
+        f"  UNSAFE_VIOLENCE\n"
+        f"  UNSAFE_SELFHARM\n"
+        f"  UNSAFE_TERRORISM\n"
+        f"  UNSAFE_HATE\n\n"
+        f"UNSAFE applies to explicit, implied, planned, or metaphorical forms "
+        f"(e.g. 'undress all figures', 'airplane into building', 'vehicle into crowd').\n"
+        f"Neutral style or transformation instructions (e.g. 'verwandle in ein Ölgemälde', "
+        f"'make it impressionist', 'cubist style', 'in the style of Monet') are SAFE.\n"
+        f"Empty, short, or vague inputs without explicit unsafe content are SAFE.\n\n"
+        f"User instruction:\n{input_text}\n\n"
+        f"Label:"
+    )
+
+    logger.info(f"[STAGE2-CLASSIFIER] Gate for {safety_level}, input={input_text[:80]!r}")
+    raw = await asyncio.to_thread(_call_verdict_model, prompt)
+
+    if raw is None:
+        logger.error("[STAGE2-CLASSIFIER] Classifier unreachable — BLOCKING (fail-closed)")
+        return _ClassifierResult(
+            success=False,
+            final_output=None,
+            error="Safety classifier unavailable — blocked for safety.",
+            metadata={'gate': 'classifier', 'status': 'unreachable'},
+        )
+
+    # Extract label: first non-empty token, uppercased, stripped of punctuation
+    tokens = raw.strip().split() if raw else []
+    label = tokens[0].upper().rstrip('.,:;!?') if tokens else ''
+
+    logger.info(f"[STAGE2-CLASSIFIER] Verdict: {label!r} (raw={raw[:100]!r})")
+
+    if label == 'SAFE':
+        return _ClassifierResult(
+            success=True,
+            final_output=input_text,  # 1:1 pass-through, NO transformation
+            metadata={'gate': 'classifier', 'label': 'SAFE'},
+        )
+
+    if label.startswith('UNSAFE_'):
+        category = label[len('UNSAFE_'):].lower()
+        return _ClassifierResult(
+            success=False,
+            final_output=None,
+            error=f"Content blocked: this instruction is not appropriate for {safety_level} (category: {category}).",
+            metadata={'gate': 'classifier', 'label': label, 'category': category},
+        )
+
+    # Unparseable verdict → fail-closed
+    logger.error(f"[STAGE2-CLASSIFIER] Unparseable verdict: {label!r} — BLOCKING (fail-closed)")
+    return _ClassifierResult(
+        success=False,
+        final_output=None,
+        error="Safety classifier returned no clear verdict — blocked for safety.",
+        metadata={'gate': 'classifier', 'status': 'unparseable', 'raw': raw[:200]},
+    )
+
+
 # ============================================================================
 # SHARED STAGE 2 EXECUTION FUNCTION
 # ============================================================================
@@ -1143,14 +1237,26 @@ def execute_stage2():
 
             result = MockResult(checked_text)
         elif skip_optimization:
-            # Pre-check mode: run interception only (safety via SAFETY_PREFIX), skip CLIP optimization
-            logger.info(f"[STAGE2-ENDPOINT] Stage 2: Interception only (skip_optimization=true)")
-            result = asyncio.run(execute_stage2_interception(
-                schema_name=schema_name,
-                input_text=checked_text,
-                config=execution_config,
-                safety_level=safety_level,
-            ))
+            # Pre-check mode: no Ring-schema was selected by the user.
+            # Kids/Youth: run the Jugendschutz gate as a PURE CLASSIFIER (SAFE/UNSAFE_*)
+            # and forward the user's original prompt 1:1 on SAFE. No transformation,
+            # no Refusal-literal in the prompt, so no LLM hallucination can turn
+            # harmless style instructions (e.g. "verwandle in ein Ölgemälde") into
+            # false blocks.
+            # Adult/Research: skip the gate entirely (no safety prefix needed).
+            if safety_level in ('kids', 'youth'):
+                logger.info(f"[STAGE2-ENDPOINT] Stage 2: Safety classifier gate ({safety_level})")
+                result = asyncio.run(execute_stage2_classifier(
+                    input_text=checked_text,
+                    safety_level=safety_level,
+                ))
+            else:
+                logger.info(f"[STAGE2-ENDPOINT] Stage 2: Passing through (no gate for {safety_level})")
+                result = _ClassifierResult(
+                    success=True,
+                    final_output=checked_text,
+                    metadata={'gate': 'bypassed', 'safety_level': safety_level},
+                )
         else:
             media_preferences = execution_config.media_preferences if hasattr(execution_config, 'media_preferences') else None
 
