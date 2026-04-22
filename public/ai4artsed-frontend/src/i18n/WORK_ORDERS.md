@@ -21,22 +21,6 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
-### WO-2026-04-22-safety-age-labels-realigned
-- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
-- **Changed keys** (all MODIFIED):
-  - `settings.general.kids` (MODIFIED): "Kids (8–12)" -> "Kids (8–13)"
-  - `settings.general.youth` (MODIFIED): "Youth (13–17)" -> "Youth (14–18)"
-  - `settings.safety.kidsTitle` (MODIFIED): "Children (8–12)" -> "Children (8–13)"
-  - `settings.safety.youthTitle` (MODIFIED): "Youth (13–17)" -> "Youth (14–18)"
-  - `settings.safety.kidsDesc` (MODIFIED): full description rewritten — see en.ts for new English text
-  - `settings.safety.youthDesc` (MODIFIED): full description rewritten — see en.ts for new English text
-- **Context**: The internal safety filters were re-calibrated so the age labels match actual behaviour. `kids` now covers ages 8–13 with strict protection (no horror imagery, no depicted violence, no nudity). `youth` covers ages 14–18 and blocks only graphic violence, gore, nudity, hate, self-harm, terrorism — non-graphic horror imagery (ghosts, skeletal figures, zombies without gore) is intentionally allowed. The user-facing descriptions must reflect this. IMPORTANT: MUST NOT mention the FSK rating mark or any national rating trademark (trademark-protected); phrase the protection level in neutral language ("age-appropriate", "strict child-appropriate"). Keep the German "§86a" reference literally; localise "DSGVO" to GDPR/RGPD/etc. where the target language already did so.
-
-### WO-2026-04-06-compare-model-availability
-- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
-- **Changed keys**:
-  - `compare.shared.modelNotDownloaded` (NEW): "(not downloaded)"
-- **Context**: Local LLM models in the Compare Hub dropdown now show availability status. Models whose GGUF files have not been downloaded yet appear with this suffix and are disabled in the dropdown. Short parenthetical indicator.
 
 ### WO-2026-03-29-remove-edutainment-emoji
 - **Scope**: all target language files (de, tr, ko, uk, fr, es, he, ar, bg)
@@ -744,6 +728,16 @@ Tags:
 - **Context**: Deduplication — these strings were identical across Temperature and System Prompt comparison tabs. Now shared. "Default (Settings)" is the label for the default model option in the model selector dropdown.
 
 ## Completed
+
+### WO-2026-04-22-safety-age-labels-realigned
+- **Completed**: 2026-04-22
+- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
+- **Result**: All 6 MODIFIED keys replaced in all 9 target languages. Age ranges updated to kids 8–13 / youth 14–18. Descriptions rewritten to reflect new filter calibration (kids: strict no-horror/no-violence/no-nudity; youth: blocks graphic violence/gore/nudity/hate/self-harm/terrorism — non-graphic horror allowed). No national rating trademark mentioned; §86a kept literally; DSGVO localised to GDPR/RGPD/KVKK per language convention.
+
+### WO-2026-04-06-compare-model-availability
+- **Completed**: 2026-04-22
+- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
+- **Result**: `compare.shared.modelNotDownloaded` (NEW) translated into all 9 target languages.
 
 ### WO-2026-03-03-comfyui-label-cleanup
 - **Completed**: 2026-03-03

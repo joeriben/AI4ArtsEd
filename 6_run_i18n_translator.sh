@@ -13,10 +13,11 @@ LOGDIR="logs/i18n"
 mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/$(date +%Y%m%d_%H%M%S).log"
 
-PROMPT="You are the i18n batch translator. Follow the workflow in .claude/agents/i18n-translator.md exactly: 1) Run the auto-audit (compare en.ts keys vs all 8 target files). 2) Process all pending work orders from WORK_ORDERS.md. 3) Translate any missing keys found by the audit. 4) Run apostrophe validation, type-check, build. 5) Move completed WOs, commit with chore(i18n): prefix. Target languages: de/tr/ko/uk/fr/es/he/ar (8 total)."
+PROMPT="You are the i18n batch translator. Follow the workflow in .claude/agents/i18n-translator.md exactly: 1) Run the auto-audit (compare en.ts keys vs all 9 target files). 2) Process all pending work orders from WORK_ORDERS.md. 3) Translate any missing keys found by the audit. 4) Run apostrophe validation, type-check, build. 5) Move completed WOs, commit with chore(i18n): prefix. Target languages: de/tr/ko/uk/fr/es/he/ar/bg (9 total)."
 
 CLAUDE_OPTS=(
     -p
+    --verbose
     --permission-mode bypassPermissions
     --model sonnet
     --allowedTools "Read,Edit,Write,Bash,Glob,Grep"

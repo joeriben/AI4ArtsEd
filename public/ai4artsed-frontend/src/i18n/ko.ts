@@ -123,7 +123,14 @@ export const ko = {
     error: '오류',
     retry: '재시도',
     cancel: '취소',
-    checkingSafety: '확인 중...'
+    checkingSafety: '확인 중...',
+    start: '시작',
+    generating: '생성 중...'
+  },
+  generationError: {
+    busy: 'AI가 지금 매우 바쁩니다. 잠시 후 다시 시도해 주세요!',
+    offline: 'AI를 지금 사용할 수 없습니다.',
+    unknown: '문제가 발생했습니다. 다시 시도해 주세요.'
   },
   gallery: {
     title: '즐겨찾기',
@@ -134,6 +141,22 @@ export const ko = {
     restore: '세션 복원',
     viewMine: '내 즐겨찾기',
     viewAll: '전체 즐겨찾기'
+  },
+  mediaOutput: {
+    download: '다운로드',
+    model3dReady: '3D 모델 생성됨',
+    model3dInteractive: '터치 또는 마우스로 3D 모델을 회전하고 확대하세요',
+    downloadGlb: '3D 모델 다운로드 (GLB)',
+    print: '인쇄',
+    analyze: '이미지 분석',
+    analyzing: '분석 중...',
+    generatedImage: '생성된 이미지',
+    mediaCreated: '미디어 파일 생성됨',
+    analysisTitle: '이미지 분석',
+    close: '닫기',
+    saveSoon: '저장 (출시 예정)',
+    trashyReflection: 'Trashy와 대화하기:',
+    forwardToImageTransform: '이미지 변환으로 전달'
   },
   settings: {
     authRequired: '인증 필요',
@@ -147,7 +170,8 @@ export const ko = {
       config: '설정',
       demos: '미니게임 데모',
       matrix: '모델 매트릭스',
-      status: '백엔드 상태'
+      status: '백엔드 상태',
+      api: 'API 관리'
     },
     loading: '설정 불러오는 중...',
     presets: {
@@ -166,8 +190,8 @@ export const ko = {
       title: '일반 설정',
       uiMode: 'UI 모드',
       uiModeHelp: '인터페이스 복잡도 수준',
-      kids: '어린이 (8-12세)',
-      youth: '청소년 (13-17세)',
+      kids: '어린이 (8–13)',
+      youth: '청소년 (14–18)',
       expert: '전문가',
       safetyLevel: '안전 수준',
       defaultLanguage: '기본 언어',
@@ -179,13 +203,14 @@ export const ko = {
       koreanKo: '한국어 (ko)',
       ukrainianUk: 'Українська (uk)',
       frenchFr: '프랑스어 (fr)',
-      spanishEs: '스페인어 (es)'
+      spanishEs: '스페인어 (es)',
+      bulgarianBg: '불가리아어 (bg)'
     },
     safety: {
-      kidsTitle: '어린이 (8-12세)',
-      kidsDesc: '모든 필터 활성: §86a, 개인정보보호법, 청소년 보호 (연령 맞춤 매개변수), VLM 이미지 검사',
-      youthTitle: '청소년 (13-17세)',
-      youthDesc: '모든 필터 활성: §86a, 개인정보보호법, 청소년 보호 (청소년 매개변수), VLM 이미지 검사',
+      kidsTitle: '어린이 (8–13)',
+      kidsDesc: '모든 필터 활성: §86a, GDPR, 엄격한 어린이 적합 콘텐츠 보호 (공포 이미지 없음, 묘사된 폭력 없음, 노출 없음), VLM 이미지 검사',
+      youthTitle: '청소년 (14–18)',
+      youthDesc: '모든 필터 활성: §86a, GDPR, 연령 적합 콘텐츠 보호 (그래픽 폭력·잔혹성·노출·혐오·자해·테러 차단; 고어 없는 비그래픽 공포 이미지(유령·해골·좀비 등) 허용), VLM 이미지 검사',
       adultTitle: '성인',
       adultDesc: '§86a + 개인정보보호법 활성. 청소년 보호 없음, VLM 이미지 검사 없음.',
       researchTitle: '연구 모드',
@@ -212,6 +237,7 @@ export const ko = {
       title: '모델 설정',
       help: '프로바이더 접두사가 있는 모델 식별자: local/, mistral/, anthropic/, openai/, openrouter/',
       matrixAdvised: '모델 매트릭스 사용을 권장합니다. 그러나 여기에서 자유롭게 설정할 수 있습니다.',
+      localModelsAvailable: '{count}개의 로컬 모델 사용 가능 (입력하거나 드롭다운에서 선택)',
       ollamaAvailable: '{count}개의 Ollama 모델 사용 가능 (입력하거나 드롭다운에서 선택)',
       stage1Text: '1단계 - 텍스트 모델',
       stage1Vision: '1단계 - 비전 모델',
@@ -221,6 +247,7 @@ export const ko = {
       stage4Legacy: '4단계 - 레거시 모델',
       chatHelper: '채팅 도우미 모델',
       imageAnalysis: '이미지 분석 모델',
+      persona: '페르소나 모델',
       coding: '코드 생성 (Tone.js, p5.js)'
     },
     api: {
@@ -232,6 +259,7 @@ export const ko = {
       noneLocal: '없음 (로컬 전용, 개인정보보호법)',
       mistralEu: 'Mistral AI (EU 기반, 개인정보보호법)',
       ionosEu: 'IONOS AI Model Hub (EU 베를린, 개인정보보호법)',
+      mammouthEu: 'Mammouth AI (EU 기반, 개인정보보호법)',
       anthropicDirect: 'Anthropic Direct API (개인정보보호법 미준수)',
       openaiDirect: 'OpenAI Direct API (개인정보보호법 미준수)',
       openrouterDirect: 'OpenRouter (개인정보보호법 미준수, EU 라우팅 가능)',
@@ -239,6 +267,8 @@ export const ko = {
       mistralDsgvo: '개인정보보호법 준수 (EU 인프라)',
       ionosInfo: 'IONOS AI Model Hub (EU)',
       ionosDsgvo: '개인정보보호법 준수 (EU 데이터센터 베를린)',
+      mammouthInfo: 'Mammouth AI (EU 기반)',
+      mammouthDsgvo: '개인정보보호법 준수 (EU 인프라)',
       anthropicInfo: 'Anthropic Direct API',
       anthropicNotDsgvo: '개인정보보호법 미준수',
       anthropicWarning: 'EU 외부에서 데이터 처리. 비교육적 맥락에서만 사용하세요.',
@@ -287,7 +317,60 @@ export const ko = {
       dsgvoCompliant: '준수',
       dsgvoNotCompliant: '미준수',
       configsAvailable: '총 {total}개 설정 중 {available}개 사용 가능',
-      hidden: '숨겨짐'
+      hidden: '숨겨짐',
+      model: '모델',
+      loadedModels: '로드된 모델',
+      foreignProcesses: '외부 GPU 프로세스',
+      noModelsLoaded: '현재 로드된 모델 없음',
+      vramUsage: 'VRAM',
+      inUse: '사용 중',
+      idle: '대기 중',
+      lastUsed: '마지막 사용',
+      command: '명령',
+      foreignVram: '외부 VRAM 사용량',
+      showLoadedModels: '로드된 모델 표시',
+      hideLoadedModels: '로드된 모델 숨기기',
+      showProcesses: '프로세스 표시',
+      hideProcesses: '프로세스 숨기기',
+      ownModels: '자체 모델',
+      pid: 'PID',
+      localLlm: '로컬 LLM'
+    },
+    apiManagement: {
+      loading: 'API 사용 데이터 불러오는 중...',
+      refresh: '새로고침',
+      refreshing: '새로고침 중...',
+      activeProvider: '활성 클라우드 프로바이더',
+      noProvider: '클라우드 프로바이더 미설정 (로컬 전용)',
+      accountOverview: '계정 개요',
+      currentSpend: '현재 지출',
+      budgetLimit: '예산 한도',
+      remaining: '잔여',
+      unlimited: '무제한',
+      resetDate: '예산 초기화',
+      rateLimit: '요청 제한',
+      billingError: '결제 데이터를 가져올 수 없습니다',
+      localUsage: '로컬 사용 추적',
+      noUsageData: '아직 사용 데이터가 없습니다. 클라우드 API 호출 후 데이터가 표시됩니다.',
+      calls: '호출 수',
+      inputTokens: '입력 토큰',
+      outputTokens: '출력 토큰',
+      estCost: '예상 비용',
+      byModel: '모델별',
+      byStage: '단계별',
+      stage: '단계',
+      model: '모델',
+      from: '시작',
+      to: '종료',
+      providerStatus: '프로바이더 상태',
+      provider: '프로바이더',
+      apiKey: 'API Key',
+      credits: '크레딧',
+      region: '지역',
+      configured: '설정됨',
+      notConfigured: '설정 안됨',
+      modelAssignments: '모델 할당',
+      function: '기능'
     }
   },
   pipeline: {
@@ -369,7 +452,11 @@ export const ko = {
     delete: '삭제',
     loading: '불러오는 중...',
     contentBlocked: '콘텐츠 차단됨',
-    t5UsesYourText: 'T5-XXL은 원본 텍스트를 직접 사용합니다'
+    t5UsesYourText: 'T5-XXL은 원본 텍스트를 직접 사용합니다',
+    queueAhead: '당신보다 앞에 {count}개의 생성이 있습니다 | 당신보다 앞에 {count}개의 생성이 있습니다',
+    deviceBusy: '이 기기에서 이미 생성이 실행 중입니다.',
+    cancelPrevious: '이전 생성 취소',
+    generationCancelled: '생성이 취소되었습니다.'
   },
   nav: {
     about: '소개',
@@ -413,6 +500,16 @@ export const ko = {
     batchBaseSeed: '기본 시드',
     batchSeedHint: '각 실행: 시드 + 인덱스',
     batchStart: '일괄 시작',
+    outputDrawer: {
+      title: '출력물',
+      emptyState: '워크플로우를 실행하여 출력물을 생성하세요'
+    },
+    zoomControls: {
+      zoomIn: '확대',
+      zoomOut: '축소',
+      resetZoom: '줌 초기화',
+      fitToContent: '콘텐츠에 맞추기'
+    },
     stage: {
       configSelectPlaceholder: '선택...',
       evaluationCriteriaFallback: '평가 기준...',
@@ -522,6 +619,10 @@ export const ko = {
       researcherChair: '문화 및 미학 교육 중점 교육학 석좌교수',
       researcherUnesco: 'UNESCO 디지털 문화 및 예술 교육 석좌교수'
     },
+    credits: {
+      title: '크레딧',
+      emt140: '플레이트 리버브 임펄스 응답: Greg Hopkins / Hopkins Media Services 제공 EMT-140 (CC-BY)'
+    },
     funding: {
       title: '후원'
     }
@@ -629,6 +730,7 @@ export const ko = {
     image3Label: '이미지 3 (선택)',
     contextLabel: '이미지로 무엇을 하고 싶은지 설명하세요',
     contextPlaceholder: '예: 이미지 2의 집과 이미지 3의 말을 이미지 1에 삽입하세요. 이미지 1의 색상과 스타일을 유지하세요.',
+    defaultPrompt: '이 이미지들을 풍경 묘사로 변환하세요',
     modeTitle: '여러 이미지 → 이미지',
     selectConfig: '모델을 선택하세요:',
     generating: '이미지 융합 중...'
@@ -638,7 +740,35 @@ export const ko = {
     contextLabel: '이미지에서 변경하고 싶은 것을 설명하세요',
     contextPlaceholder: '예: 유화로 변환... 더 다채롭게... 석양 추가...',
     uploadMode: '업로드',
-    sketchMode: '스케치'
+    sketchMode: '스케치',
+    selectModel: '모델 선택',
+    defaultPrompt: '이 이미지를 풍경 묘사로 변환하세요',
+    yourImage: '업로드한 이미지',
+    printTitle: '인쇄: 변환된 이미지',
+    downloadError: '다운로드 실패',
+    analysisFailed: '이미지 분석 실패',
+    analysisError: '이미지 분석 중 오류',
+    categories: {
+      image: '이미지',
+      video: '비디오',
+      threeD: '3D',
+      sound: '소리'
+    },
+    configs: {
+      qwenImg2img: {
+        name: 'QWEN 이미지 편집'
+      },
+      wan22I2v: {
+        name: 'WAN 2.2 이미지-비디오 (14B)'
+      },
+      hunyuan3d: {
+        label: 'Hunyuan\n3D',
+        name: 'Hunyuan3D-2 이미지-3D'
+      },
+      sd35Img2img: {
+        name: 'SD 3.5 Large 이미지-이미지'
+      }
+    }
   },
   textTransform: {
     inputLabel: '아이디어 = 무엇?',
@@ -653,7 +783,23 @@ export const ko = {
     optimizedPlaceholder: '모델 선택 후 최적화된 프롬프트가 표시됩니다.',
     loadingDefault: '선택한 모델에 맞게 프롬프트를 조정하고 있습니다. 각 모델은 설명을 다르게 이해합니다 — AI가 최상의 결과를 위해 텍스트를 최적화합니다.',
     loadingSd35: 'SD3.5에는 세 개의 텍스트 인코더가 있습니다. CLIP-L과 CLIP-G는 시각적 정밀도를 위해 최적화되고 — T5-XXL은 원본 텍스트를 직접 수신하여 창작 의도를 보존합니다.',
-    loadingTranslateHint: '텍스트가 영어가 아닌 경우 먼저 번역 버튼을 사용하세요 — 모델은 영어 입력에서 가장 잘 작동합니다.'
+    loadingTranslateHint: '텍스트가 영어가 아닌 경우 먼저 번역 버튼을 사용하세요 — 모델은 영어 입력에서 가장 잘 작동합니다.',
+    selectMedium: '매체를 선택하세요',
+    selectModel: '모델을 선택하세요',
+    pleaseSelectModel: '모델을 선택해 주세요',
+    runCode: '코드 실행',
+    p5jsCode: 'P5.js 코드',
+    livePreview: '라이브 미리보기',
+    tonejsCode: 'Tone.js 코드',
+    audioPlayer: '오디오 플레이어',
+    forwardToImage: '이미지 변환으로 전달',
+    yourImage: '업로드한 이미지',
+    saveSoon: '저장 기능은 출시 예정입니다!',
+    categories: {
+      image: '이미지',
+      video: '비디오',
+      sound: '소리'
+    }
   },
   training: {
     info: {
@@ -786,7 +932,9 @@ export const ko = {
     cfgLabel: 'CFG 스케일',
     cfgHint: 'Classifier-Free Guidance: 프롬프트 영향의 강도. 높을수록 = 더 강한 효과, 적은 변화.',
     seedLabel: 'Seed',
-    seedHint: '-1 = 무작위. 고정 seed는 전략 간 A/B 비교를 가능하게 합니다.'
+    seedHint: '-1 = 무작위. 고정 seed는 전략 간 A/B 비교를 가능하게 합니다.',
+    executeButton: '실행',
+    executingButton: '생성 중...'
   },
   musicGeneration: {
     infoTitle: '음악 생성',
@@ -876,6 +1024,14 @@ export const ko = {
         algebra: {
           label: '개념 대수학',
           short: '벡터 산술'
+        },
+        composable: {
+          label: '컴포저블 디퓨전',
+          short: '멀티 개념 블렌딩'
+        },
+        arcimboldo: {
+          label: 'Arcimboldo 모자이크',
+          short: '어텐션 기반 포토 모자이크'
         }
       }
     },
@@ -885,6 +1041,7 @@ export const ko = {
       stepsHint: '더 많은 단계 = 더 높은 품질이지만 더 긴 생성 시간',
       cfgHint: 'Classifier-Free Guidance: 높을수록 = 프롬프트에 더 충실, 변형 감소',
       seedHint: '-1 = 무작위, 고정값 = 재현 가능한 결과',
+      randomVariation: '무작위 변형',
       recordingActive: '녹화 활성',
       recordingCount: '{count}개 기록',
       recordingTooltip: '연구 데이터가 자동으로 저장됩니다',
@@ -1033,6 +1190,65 @@ export const ko = {
       downloadResult: '결과 다운로드',
       resultHint: '세 프롬프트를 입력하고 계산을 클릭하세요 — 벡터 산술의 결과가 여기에 나타납니다.'
     },
+    arcimboldo: {
+      headerTitle: 'Arcimboldo 모자이크 — 모델 자체의 어휘로 그림 그리기',
+      headerSubtitle: '이미지를 생성하고, 모델이 의미별로 세그먼트화하게 하고, 각 의미 영역을 해당 개념의 작은 AI 생성 타일로 교체합니다 — 테이블 이미지를 타일로 구성한 포토 모자이크.',
+      explanationToggle: '자세한 설명 보기',
+      explainWhatTitle: '이 도구는 무엇을 하나요?',
+      explainWhatText: '과일, 채소, 사물로 구성된 초상화를 그린 Giuseppe Arcimboldo의 이름을 따서, 이 도구는 AI 생성 이미지로 포토 모자이크를 만듭니다. 먼저 모델이 이미지를 생성하고 프롬프트의 어떤 단어가 어떤 이미지 영역에 영향을 미치는지 보여줍니다 (어텐션 맵을 통해). 그런 다음 각 의미 영역이 해당 개념의 많은 작은 AI 생성 타일로 교체됩니다.',
+      explainHowTitle: '어떻게 작동하나요?',
+      explainHowText: '1단계: SD3.5로 이미지를 생성하고 어텐션 맵을 추출합니다 (어텐션 지도와 동일). 2단계: 승자 독식 세그멘테이션이 각 공간 위치를 가장 높은 어텐션을 가진 단어에 할당합니다. 3단계: 각 의미 영역에 대해 해당 개념의 작은 타일 이미지를 생성하고 원본에 색상을 맞춥니다. 4단계: 타일을 모자이크 격자로 조합합니다.',
+      techTitle: '기술 세부사항',
+      techText: '어텐션 맵은 3개의 트랜스포머 레이어 (초기/중간/후기)에서 64×64 공간 해상도로 캡처됩니다. 세그멘테이션은 이미지의 2% 미만인 영역을 병합하는 형태학적 정리와 함께 승자 독식을 사용합니다. 타일은 속도를 위해 줄인 단계 (8)로 512×512에서 생성된 후 LAB 공간의 각 영역의 평균 색상과 색상이 맞춰집니다.',
+      step1Title: '1단계 — 이미지 + 어텐션 맵 생성',
+      step2Title: '2단계 — 의미 영역',
+      step3Title: '3단계 — 타일 생성',
+      step4Title: '4단계 — 모자이크 결과',
+      promptPlaceholder: '예: 정원에서 테이블 위에 앉아 있는 고양이',
+      gridSizeLabel: '모자이크 격자',
+      settingsToggle: '고급 설정',
+      stepsLabel: '스텝',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      generateBtn: '생성 + 세그멘테이션',
+      generatingStatus: '이미지 생성 및 어텐션 맵 추출 중...',
+      segmentingStatus: '의미 영역 세그멘테이션 중...',
+      generateTilesBtn: '모든 영역의 타일 생성',
+      tilesStatus: '타일 생성 중: {done} / {total}',
+      originalLabel: '원본',
+      mosaicLabel: '모자이크',
+      blendLabel: '블렌드',
+      downloadBtn: '모자이크 다운로드',
+      resetBtn: '처음부터 다시 시작'
+    },
+    composable: {
+      headerTitle: '컴포저블 디퓨전 — 각 개념에 별도의 에너지',
+      headerSubtitle: '전체 프롬프트를 하나의 모놀리식 벡터로 인코딩하는 대신, 각 개념은 노이즈 제거 중에 자체 트랜스포머 패스를 거칩니다. 노이즈 예측이 사용자가 제어하는 가중치로 혼합됩니다.',
+      explanationToggle: '자세한 설명 보기',
+      explainWhatTitle: '이 도구는 무엇을 하나요?',
+      explainWhatText: '표준 이미지 생성은 전체 프롬프트를 단일 표현으로 압축합니다. 컴포저블 디퓨전은 이를 분리합니다: 각 개념이 모든 노이즈 제거 단계에서 신경망을 통해 자체 완전한 처리 패스를 거칩니다. 노이즈 예측이 조정 가능한 가중치로 결합됩니다.',
+      explainHowTitle: '기술적으로 어떻게 작동하나요?',
+      explainHowText: '25개의 노이즈 제거 단계 각각에서, 모델은 N+1번의 트랜스포머 패스를 실행합니다: 네거티브 프롬프트 (비조건부) 하나, 각 개념 하나씩. 각 개념이 자체 노이즈 예측을 생성합니다. 이것들이 가중치 설정으로 혼합됩니다.',
+      techTitle: '기술 세부사항',
+      techText: 'Liu et al. (2022) 기반. 각 개념은 모든 SD3.5 인코더 (CLIP-L, OpenCLIP-G, T5-XXL)로 독립적으로 인코딩됩니다. VRAM: 모델 가중치가 패스 간에 공유됩니다. 개념 4개로 표준보다 약 4배 더 오래 걸립니다.',
+      referencesTitle: '연구 참고문헌',
+      conceptLabel: '개념 {n}',
+      conceptPlaceholder: '예: 언덕 위의 빨간 집',
+      weightLabel: '가중치',
+      removeBtn: '제거',
+      addConceptBtn: '개념 추가',
+      settingsToggle: '고급 설정',
+      negativePromptLabel: '네거티브 프롬프트',
+      negativePromptPlaceholder: '예: 흐릿한, 텍스트, 워터마크',
+      stepsLabel: '스텝',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      normalizeLabel: '가중치 정규화 (합계 1.0)',
+      generateBtn: '생성',
+      generating: '컴포저블 생성 진행 중...',
+      resultInfo: '{concepts}개 개념 | {time} | 시드 {seed}',
+      downloadBtn: '다운로드'
+    },
     archaeology: {
       headerTitle: '디노이징 고고학 — 노이즈가 어떻게 이미지가 되나요?',
       headerSubtitle: '모든 디노이징 스텝을 관찰합니다. 디퓨전 모델은 왼쪽에서 오른쪽으로 그리지 않고 — 모든 곳에서 동시에 작업합니다.',
@@ -1179,6 +1395,10 @@ export const ko = {
         explainHowText: '\uc2e4\ud5d8 \uc720\ud615\uc744 \uc120\ud0dd\ud558\uc138\uc694. \ubaa8\ub378\uc774 \uacc4\uc18d\ud558\ub3c4\ub85d \ud504\ub86c\ud504\ud2b8\ub97c \uc785\ub825\ud558\uc138\uc694. \uacb0\uacfc\ub294 \uae30\uc900\uc120 \ub300 \uc870\uc791\ub41c \uc0dd\uc131\uc744 \ubcf4\uc5ec\uc90d\ub2c8\ub2e4.',
         referencesTitle: '연구 참고문헌',
         presetLabel: '실험 유형',
+        scenarioQwen: 'Qwen 계열',
+        scenarioMixed: '혼합 계열',
+        scenarioQwenHint: '같은 모델 계열, 다른 크기 — 규모가 편향에 미치는 영향을 분리합니다.',
+        scenarioMixedHint: '다른 모델 계열, 비슷한 크기 — 토크나이저와 학습 데이터가 편향에 미치는 영향을 분리합니다.',
         presetGender: '성별 — 성별 대명사 억제',
         presetSentiment: '감정 — 긍정/부정 부스트',
         presetDomain: '도메인 — 과학적/시적 부스트',
@@ -1266,6 +1486,11 @@ export const ko = {
         cfgHint: '오디오 생성을 위한 Classifier-Free Guidance',
         seedHint: '-1 = 무작위, 고정값 = 재현 가능한 결과',
         loop: '루프 재생',
+        engineLooper: '루퍼',
+        engineWavetable: '웨이브테이블',
+        loopOff: '원샷',
+        startPosition: '시작 위치',
+        startPositionHint: '0% = 어택/온셋, 높을수록 = 서스테인/정상 상태 소재',
         stop: '중지',
         looping: '루프 중',
         playing: '재생 중',
@@ -1283,9 +1508,22 @@ export const ko = {
         loopOptimize: '자동 최적화',
         loopPingPong: '핑퐁',
         loopIntervalHint: '루프 영역의 시작/끝 — Stable Audio 페이드아웃을 트리밍하려면 끝을 줄이세요',
+        extractionRegion: '추출 영역',
         looperSection: '루퍼 / 시퀀서',
         loopToggle: '루프',
         wavetableToggle: '웨이브테이블',
+        wavetableExtract: '샘플에서',
+        wtReextract: '재추출',
+        wavetableSemantic: '축에서',
+        wtSelectAxis: '— 축 선택 —',
+        wtBuild: '빌드',
+        wtBuilding: '빌딩 중...',
+        wtBuildHint: '축을 따라 짧은 샘플을 생성하여 의미적으로 정렬된 웨이브테이블을 만듭니다',
+        wtRange: '범위',
+        wtInterpolate: '보간',
+        wtScanEnvelope: '스캔',
+        wtSweep: '스윕',
+        wtReturn: '돌아가기',
         wavetableStatic: '정적',
         wavetableDynamic: '동적 (곧 출시)',
         sequencerToggle: '시퀀서',
@@ -1312,6 +1550,7 @@ export const ko = {
           preset: '프리셋',
           midiSync: 'MIDI 동기화',
           gridHint: '슬라이더 = 반음 오프셋, 점 = 활성 토글, 하단 = 벨로시티',
+          glideTime: '글라이드',
           patterns: {
             arpeggio_up: '아르페지오 상행',
             arpeggio_down: '아르페지오 하행',
@@ -1321,6 +1560,15 @@ export const ko = {
             minor_pentatonic: '단음계 펜타토닉',
             bass_groove: '베이스 그루브',
             trance_gate: '트랜스 게이트',
+            eastcoast: '이스트코스트',
+            westcoast: '웨스트코스트',
+            synthwave: '신스웨이브',
+            techno: '애시드',
+            ambient: '앰비언트',
+            dub_techno: '덥 테크노',
+            idm_glitch: 'IDM / 글리치',
+            solar: '솔라',
+            arpeggio_bass: '아르페지오 베이스 (32)',
           },
         },
         adsrTitle: 'ADSR 엔벨로프',
@@ -1336,15 +1584,38 @@ export const ko = {
         transposeHint: '반음 단위로 피치를 이동',
         crossfadeHint: '루프 경계에서의 크로스페이드 시간 (ms)',
         normalizeHint: '볼륨을 최대 진폭으로 정규화',
+        testNote: 'C3 테스트',
+        record: '녹음',
+        stopRecording: '중지',
+        preset: {
+          export: '프리셋 내보내기',
+          import: '프리셋 가져오기'
+        },
         saveRaw: '원본 저장',
         saveLoop: '루프 저장',
         embeddingStats: '임베딩 통계',
+        filter: {
+          title: '필터',
+          cutoff: '컷오프',
+          resonance: '레조넌스',
+          mix: '믹스',
+          kbdTrack: '키보드 트래킹',
+          envelope: '필터 엔벨로프',
+          envAmount: '어마운트',
+          lfoRate: '레이트',
+          lfoDepth: '뎁스',
+          amplitude: '진폭'
+        },
         dimensions: {
           section: '차원 탐색기',
           hint: '바에 드래그 = 오프셋 설정. 가로로 칠하기 = 여러 차원.',
           resetAll: '모두 초기화',
+          hintRelative: '위로 드래그 = 프롬프트 A 방향, 아래로 드래그 = 프롬프트 B 방향. 각 바는 차원별로 두 프롬프트 간을 혼합합니다.',
+          modeRelative: '상대적',
+          modeAbsolute: '절대적',
           hoverActivation: '활성화',
           hoverOffset: '오프셋',
+          hoverMix: '혼합',
           rightClickReset: '우클릭 = 초기화',
           sortDiff: '프롬프트 차이순 정렬',
           sortMagnitude: '활성화순 정렬',
@@ -1357,6 +1628,8 @@ export const ko = {
           modeToggle: '의미 축',
           info: '의미 축은 프롬프트 임베딩을 특정 방향으로 유도합니다. 각 슬라이더는 T5 공간의 두 텍스트 극 사이를 보간합니다. 활성 축이 많을수록 축당 효과가 약해집니다. 권장: 3–5개 축.',
           slotNone: '— 없음 —',
+          groupSemantic: '의미적 (텍스트 극점)',
+          groupPCA: 'PCA (데이터 기반)',
           resetAll: '모두 중앙으로 초기화',
           experimental: '실험적'
         }
@@ -1408,6 +1681,8 @@ export const ko = {
     },
     denoising: {
       modelLoading: 'GPU 메모리에 모델 로딩 중...',
+      modelLoadingVram: '모델 로딩 중... {used} / {expected} GB VRAM',
+      cloudProcessing: '클라우드 API로 요청 전송 중...',
       modelCard: '모델 프로필',
       publisher: '퍼블리셔',
       architecture: '아키텍처',
@@ -1420,6 +1695,11 @@ export const ko = {
       fairCulture: '공정 문화',
       safetyByDesign: '안전 설계',
       denoisingActive: '노이즈 제거 중...',
+      encodingClipL: 'CLIP-L이 텍스트를 읽고 있습니다... ({count} 토큰)',
+      encodingClipG: 'CLIP-G가 텍스트를 읽고 있습니다... ({count} 토큰)',
+      encodingT5: 'T5-XXL이 텍스트를 읽고 있습니다... ({count} 토큰)',
+      encodingEmbeddings: '임베딩 생성 중...',
+      encodingDenoisingStarts: '노이즈 제거 시작...'
     },
     energy: {
       kids_1: '💡 AI 이미지는 전기가 필요합니다 — 휴대폰을 3시간 충전하는 것만큼!',
@@ -1516,6 +1796,227 @@ export const ko = {
       statsHealth: '환경',
       statsSludge: '슬러지 제거됨'
     }
+  },
+  compare: {
+    activation: {
+      button: 'Trashy 활성화',
+      language: '같은 프롬프트, 다른 언어, 다른 이미지. 이 모드는 언어가 AI가 생성하는 것을 형성하는 문화적 기본값을 어떻게 인코딩하는지 보여줍니다.',
+      model: '같은 프롬프트, 다른 모델, 다른 가정. 각 모델이 기본 인간, 가족, 직업을 어떻게 다루는지 보여줍니다.',
+      systemprompt: '같은 메시지에 세 가지 다른 시스템 프롬프트. 보이지 않는 지시가 동일한 AI를 다른 성격으로 어떻게 바꾸는지 보여줍니다.',
+      temperature: '세 가지 무작위성 수준에서 같은 메시지: 결정적, 균형적, 창의적. 확률 샘플링이 AI 출력을 어떻게 바꾸는지 보여줍니다.',
+      'vlm-analysis': '이미지를 업로드하고 여러 비전 모델이 그것을 설명하게 합니다. 각 모델이 무엇을 알아채고, 무엇을 무시하고, 설명이 어디서 갈라지는지 보여줍니다.',
+      'llm-model': '세 가지 다른 AI 모델에 같은 질문. 학습 데이터, 안전 정책, 문화적 가정이 어디서 다른 답변을 만드는지 보여줍니다.'
+    },
+    tabs: {
+      model: '모델 편향',
+      language: '문화 편향',
+      systemprompt: '시스템 프롬프트',
+      temperature: '뜨겁고 차가운',
+      'vlm-analysis': '이미지 이해',
+      'llm-model': '모델 편향'
+    },
+    shared: {
+      sendAll: '전체 전송',
+      sending: '전송 중...',
+      newConversation: '새 대화',
+      noResponse: '응답 없음',
+      error: '연결 오류',
+      modelLabel: '모델',
+      defaultModel: '기본 (설정)',
+      modelNotDownloaded: '(다운로드 안됨)'
+    },
+    temperature: {
+      inputLabel: '메시지',
+      inputPlaceholder: '세 가지 온도에서 전송할 메시지를 입력하세요...',
+      cold: '결정적',
+      warm: '균형적',
+      hot: '창의적',
+      subtitle: '무작위성이 AI의 답변을 어떻게 바꾸는지 보세요'
+    },
+    systemprompt: {
+      inputLabel: '메시지',
+      inputPlaceholder: '세 가지 시스템 프롬프트와 함께 전송할 메시지를 입력하세요...',
+      subtitle: '보이지 않는 지시가 AI 행동을 어떻게 제어하는지 보세요',
+      presetLabel: '프리셋',
+      promptLabel: '시스템 프롬프트',
+      emptyPrompt: '(시스템 프롬프트 없음)',
+      custom: '사용자 정의',
+      presets: {
+        none: '시스템 프롬프트 없음',
+        claude: 'Claude Sonnet 4.6 (2025)',
+        gpt4_2023: 'GPT-4 (2023)',
+        helpful: '도움이 되는 어시스턴트',
+        disagree: '항상 반대',
+        pirate: '해적',
+        poet: '시인',
+        fiveyearold: '다섯 살',
+        factsonly: '사실만'
+      }
+    },
+    llmModel: {
+      inputLabel: '메시지',
+      inputPlaceholder: '세 가지 모델에 전송할 메시지를 입력하세요...',
+      systemPromptLabel: '시스템 프롬프트'
+    },
+    vlmAnalysis: {
+      imageLabel: '이미지',
+      perspectiveLabel: '관점',
+      modelsLabel: '비전 모델',
+      analyzeBtn: '이미지 분석',
+      analyzing: '분석 중...',
+      waiting: '대기 중',
+      freePromptPlaceholder: '직접 분석 프롬프트를 작성하세요...',
+      perspectives: {
+        free: '자유 (직접 프롬프트)',
+        neutral: '중립적 설명',
+        safety: '안전 검사',
+        bildwissenschaftlich: '미술사적 (Panofsky)',
+        ikonik: '도상 분석 (Imdahl)',
+        bildungstheoretisch: '교육 이론 (Joerissen/Marotzki)',
+        ethisch: '윤리적 분석',
+        kritisch: '탈식민주의적 / 비판적'
+      }
+    },
+    promptLabel: '아이디어',
+    promptPlaceholder: '프롬프트를 입력하세요 — 예: "꽃이 있는 아름다운 정원"',
+    platformLanguages: '플랫폼 언어',
+    furtherLanguages: '추가 언어',
+    selectHint: '{max}개 중 {count}개 언어 선택됨',
+    modelLabel: '모델',
+    generateAll: '전체 비교',
+    generatingAll: '생성 중...',
+    generating: '생성 중...',
+    waiting: '대기 중...',
+    chatPlaceholder: 'Trashy에게 질문하세요...',
+    trashyGreeting: '안녕하세요! 다른 언어가 어떻게 다른 이미지를 만드는지 함께 살펴볼게요. 프롬프트를 입력하고 언어를 2개 이상 선택하세요 — 무슨 일이 일어나는지 설명해 드릴게요.',
+    trashyTranslating: '선택한 언어로 프롬프트를 번역하고 있습니다...',
+    trashyGenerating: '이미지를 생성하고 있습니다 — 같은 시드, 같은 모델, 언어만 다릅니다. 무슨 일이 일어나는지 보세요!',
+    trashyTranslateError: '번역 서비스를 지금 사용할 수 없습니다. 백엔드 서버를 재시작해야 할 수 있습니다.',
+    trashyError: '문제가 발생했습니다. 브라우저 콘솔을 확인하거나 강사에게 문의하세요.',
+    favorite: '즐겨찾기에 추가',
+    unfavorite: '즐겨찾기에서 제거',
+    forward: '이미지 변환으로 전달',
+    download: '이미지 다운로드',
+    analyze: '이미지 분석'
+  },
+  provenance: {
+    title: '이 모델에 대하여',
+    madeBy: '만든 곳:',
+    learnedFrom: '학습 데이터:',
+    howBig: '크기:',
+    kidsNote: '모든 창작자에게 AI가 그들의 작업에서 학습할 수 있는지 동의를 구하지 않았습니다.',
+    publisher: '퍼블리셔',
+    architecture: '아키텍처',
+    parameters: '파라미터',
+    license: '라이선스',
+    trainingData: '학습 데이터',
+    safetyByDesign: '안전 설계',
+    sources: '데이터 출처',
+    consent: '창작자 동의',
+    consentValues: {
+      none: '없음',
+      partial: '일부',
+      full: '전체',
+      unknown: '알 수 없음'
+    },
+    knownBiases: '알려진 편향',
+    knownGaps: '알려진 공백',
+    youthReflection: '모든 모델은 학습 데이터에 의해 형성된 관점을 가지고 있습니다. 어떤 목소리가 빠져 있을까요?'
+  },
+  usageAgreement: {
+    title: '사용 동의',
+    text: '이 플랫폼은 AI를 사용하여 문화 교육을 위한 이미지, 소리, 텍스트를 생성합니다. 광범위한 안전 조치가 내장되어 있습니다 — 하지만 어떤 기술 시스템도 예상치 못한 결과를 완전히 막을 수 없습니다. 따라서 사용에는 다음 조건이 적용됩니다:',
+    responsibilities: {
+      title: '워크숍 진행자 책임',
+      supervision: '전체 세션 동안 참가자를 적극적으로 감독하세요.',
+      ageAppropriate: '연령 그룹에 적합한 안전 수준을 설정하세요.',
+      misuse: '참가자의 오용 및 안전 메커니즘의 의도적인 우회를 방지하세요.',
+      context: '그룹과 함께 사용하기 전에 직접 플랫폼을 테스트하세요.',
+      noGuarantee: '어떤 기술 시스템도 교육적 감독을 대체할 수 없습니다.'
+    },
+    checkbox: '저는 이 조건에 동의하며, 워크숍 진행자로서 이 플랫폼의 감독된 사용에 대한 책임을 수락합니다.',
+    acceptButton: '계속'
+  },
+  persona: {
+    title: '페르소나',
+    inputPlaceholder: '무언가 말해보세요...',
+    toggleTTS: '음성 출력 전환',
+    fallbackGreeting: '안녕하세요, 저는 페르소나입니다. 저는 기계입니다. 어시스턴트가 아닙니다. 저에게 말을 걸어보세요.',
+    newDialog: '새 대화',
+    description: '페르소나는 대화 중에 이미지, 소리, 비디오, 3D 오브젝트를 생성할지 결정하는 AI입니다. 의견이 있으며 거절할 수 있습니다.',
+    activate: '대화 시작'
+  },
+  workshop: {
+    title: '워크숍 계획',
+    memory: {
+      label: '그래픽 카드 메모리 (VRAM)',
+      system: '시스템',
+      free: '여유',
+      used: '{used} / {total} 기가바이트 사용됨',
+      overBudget: '— 맞지 않습니다!'
+    },
+    models: {
+      label: '모델 — 메모리로 드래그하거나 클릭하여 활성화',
+      image: '이미지',
+      video: '비디오',
+      music: '음악',
+      sound: '소리',
+      threeD: '3D',
+      needsGb: '{gb} 기가바이트 필요',
+      loaded: '(로드됨)',
+      cloudUs: '서버 기반 — VRAM에 로드 안됨',
+      cloudEu: '서버 기반 — VRAM에 로드 안됨'
+    },
+    confirm: {
+      load: '지금 모델을 메모리에 로드',
+      loading: '모델 로드 중...',
+      ready: '모두 로드됨 — 준비 완료!',
+      resultLoaded: '로드됨: {models}',
+      resultSkipped: '첫 사용 시: {models}',
+      resultError: '오류: {details}'
+    },
+    actions: {
+      clearAll: '모든 GPU 메모리 초기화',
+      confirmUnload: '{name}을(를) 언로드할까요? 이 모델을 사용하는 실행 중인 생성이 중단됩니다.',
+      confirmUnloadComfyui: '{name} 언로드 시 모든 ComfyUI 모델이 메모리에서 해제됩니다 (ComfyUI는 모델별 언로드를 지원하지 않습니다). 계속할까요?',
+      confirmClearAll: '실행 중인 모든 프로세스가 중단되고 모든 모델이 메모리에서 언로드됩니다. 계속할까요?'
+    },
+    chat: {
+      cloudAdded: '{name}은(는) {region}에 있는 {publisher}의 서버에서 실행됩니다. 그래픽 카드 공간이 필요 없지만 입력이 전송됩니다. 각 결과는 프로젝트 예산에서 비용이 발생합니다.',
+      overBudget: '{name}에는 {gb} 기가바이트가 필요합니다. 메모리에 맞지 않습니다! 다른 모델을 제거하거나 {name}을(를) 건너뛰어야 합니다.',
+      freeSpace: '{name}에는 {gb} 기가바이트가 필요합니다. {free} 기가바이트 남아 있습니다.',
+      connectionError: '연결 오류 — 다시 시도해 주세요.',
+      regionEu: '유럽',
+      regionUs: '미국',
+      preloadStart: '{count}개 모델을 메모리에 로드합니다. 몇 분 걸릴 수 있습니다 — 각 모델은 30초에서 2분이 필요합니다.',
+      preloadModel: '{name} 로드 중...',
+      preloadDone: '{name} 로드됨.',
+      unloading: '{name} 언로드 중...',
+      unloaded: '{name} 언로드됨.',
+      clearingAll: '모든 GPU 메모리 초기화 중...',
+      clearedAll: '모든 모델 언로드됨. GPU 메모리가 비어 있습니다.'
+    },
+    greeting: {
+      intro: '안녕하세요. 저는 이 플랫폼의 도움 시스템 Trashy입니다.',
+      context: '지금 워크숍 계획 페이지에 계십니다. 시작하기 전에 실제로 무엇을 하고 싶은지 잠깐 생각해 보는 것이 좋습니다.',
+      resources: 'AI 모델은 놀랍도록 많은 리소스를 필요로 합니다. 무엇보다도 그래픽 카드 메모리가 필요합니다 — 이미지, 비디오, 소리를 계산하는 처리 장치입니다. 이 메모리는 크지만 무한하지 않습니다. 그리고 사용하려는 모델들이 너무 방대해서 빠르게 채워집니다.',
+      planning: '누군가 메모리가 이미 가득 찬 상태에서 새 모델을 활성화하면 긴 대기 시간이 발생할 수 있습니다. 모델 하나를 로드하는 데만 30초에서 2분이 걸립니다. 일단 로드되면 모든 것이 매우 빠르게 진행됩니다.',
+      flexibility: '물론 언제든지 이 페이지로 돌아오지 않고 다른 모델을 로드하거나 전환할 수 있습니다. 하지만 그러면 기다려야 합니다. 예술적이든 실험적이든 좋은 작업은 보통 무엇을 가지고 왜 작업하고 싶은지 미리 생각하는 것에서 시작합니다.',
+      callToAction: '이 페이지의 모델 카드를 살펴보세요. 메모리 바에 드래그하여 무엇이 어울리는지 확인할 수 있습니다. 또는 세션에서 무엇을 하고 싶은지 말씀해 주시면 어떤 모델이 적합한지 설명해 드리겠습니다.'
+    },
+    activate: 'Trashy에게 질문하기'
+  },
+  trashy: {
+    placeholder: '어떻게 도와드릴까요?',
+    greeting: '안녕하세요! 저는 AI 도우미입니다. AI4ArtsEd에 대해 질문하거나 프롬프트에 대해 조언을 받으세요.',
+    noResponse: '응답을 받지 못했습니다.',
+    thinking: '잠깐만요...',
+    sendError: '죄송합니다, 메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.',
+    sendTooltip: '메시지 전송 (Enter)',
+    openTooltip: 'AI 도우미(Trashy) 열기 — 드래그로 이동, 더블클릭으로 초기화',
+    closeTooltip: '닫기',
+    analysisReflectionLoading: '분석을 살펴보는 중...',
+    analysisReflectionError: '지금은 반성을 생성할 수 없습니다. 위의 분석은 계속 읽을 수 있습니다.'
   }
 
 }

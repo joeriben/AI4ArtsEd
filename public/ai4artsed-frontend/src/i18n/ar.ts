@@ -124,7 +124,14 @@ export const ar = {
     error: 'خطأ',
     retry: 'إعادة المحاولة',
     cancel: 'إلغاء',
-    checkingSafety: 'جارٍ الفحص...'
+    checkingSafety: 'جارٍ الفحص...',
+    start: 'ابدأ',
+    generating: 'جارٍ التوليد...'
+  },
+  generationError: {
+    busy: 'الذكاء الاصطناعي مشغول جداً الآن. حاول مرة أخرى بعد لحظة!',
+    offline: 'الذكاء الاصطناعي غير متاح الآن.',
+    unknown: 'حدث خطأ ما. يُرجى المحاولة مرة أخرى.'
   },
   gallery: {
     title: 'المفضلة',
@@ -135,6 +142,22 @@ export const ar = {
     restore: 'استعادة الجلسة',
     viewMine: 'مفضلاتي',
     viewAll: 'جميع المفضلات'
+  },
+  mediaOutput: {
+    download: 'تنزيل',
+    model3dReady: 'تم توليد نموذج ثلاثي الأبعاد',
+    model3dInteractive: 'دوّر وكبّر النموذج ثلاثي الأبعاد بالمس أو الماوس',
+    downloadGlb: 'تنزيل النموذج ثلاثي الأبعاد (GLB)',
+    print: 'طباعة',
+    analyze: 'تحليل الصورة',
+    analyzing: 'جارٍ التحليل...',
+    generatedImage: 'الصورة المولَّدة',
+    mediaCreated: 'تم إنشاء ملف الوسائط',
+    analysisTitle: 'تحليل الصورة',
+    close: 'إغلاق',
+    saveSoon: 'حفظ (قريباً)',
+    trashyReflection: 'تحدث إلى Trashy عن:',
+    forwardToImageTransform: 'إعادة التوجيه إلى تحويل الصور'
   },
   settings: {
     authRequired: 'المصادقة مطلوبة',
@@ -148,7 +171,8 @@ export const ar = {
       config: 'الإعدادات',
       demos: 'عرض الألعاب المصغرة',
       matrix: 'مصفوفة النماذج',
-      status: 'حالة الخادم الخلفي'
+      status: 'حالة الخادم الخلفي',
+      api: 'إدارة API'
     },
     loading: 'جارٍ تحميل الإعدادات...',
     presets: {
@@ -167,8 +191,8 @@ export const ar = {
       title: 'الإعدادات العامة',
       uiMode: 'وضع الواجهة',
       uiModeHelp: 'مستوى تعقيد الواجهة',
-      kids: 'أطفال (8\u201312)',
-      youth: 'يافعون (13\u201317)',
+      kids: 'الأطفال (8-13)',
+      youth: 'الشباب (14-18)',
       expert: 'خبير',
       safetyLevel: 'مستوى الأمان',
       defaultLanguage: 'اللغة الافتراضية',
@@ -180,13 +204,14 @@ export const ar = {
       koreanKo: 'الكورية (ko)',
       ukrainianUk: 'الأوكرانية (uk)',
       frenchFr: 'الفرنسية (fr)',
-      spanishEs: 'الإسبانية (es)'
+      spanishEs: 'الإسبانية (es)',
+      bulgarianBg: 'البلغارية (bg)'
     },
     safety: {
-      kidsTitle: 'أطفال (8\u201312)',
-      kidsDesc: 'جميع المرشحات مفعَّلة: \u00a786a، DSGVO، حماية الأحداث (معايير مناسبة للعمر)، فحص الصور بنموذج VLM',
-      youthTitle: 'يافعون (13\u201317)',
-      youthDesc: 'جميع المرشحات مفعَّلة: \u00a786a، DSGVO، حماية الأحداث (معايير اليافعين)، فحص الصور بنموذج VLM',
+      kidsTitle: 'الأطفال (8-13)',
+      kidsDesc: 'جميع المرشحات مفعَّلة: §86a، GDPR، حماية صارمة مناسبة للأطفال (بدون صور مرعبة، بدون عنف ظاهر، بدون إباحية)، فحص الصور بنموذج VLM',
+      youthTitle: 'الشباب (14-18)',
+      youthDesc: 'جميع المرشحات مفعَّلة: §86a، GDPR، حماية مناسبة للمراهقين الأكبر سناً (يُحظر العنف الصريح والدماء والإباحية والكراهية وإيذاء النفس والإرهاب؛ يُسمح بالرعب غير الصريح كالأشباح والهياكل العظمية والزومبيون دون دماء)، فحص الصور بنموذج VLM',
       adultTitle: 'بالغون',
       adultDesc: '\u00a786a + DSGVO مفعَّلان. بدون حماية أحداث، بدون فحص صور بنموذج VLM.',
       researchTitle: 'وضع البحث العلمي',
@@ -214,6 +239,7 @@ export const ar = {
       help: 'معرّفات النماذج مع بادئة المزوّد: local/، mistral/، anthropic/، openai/، openrouter/',
       matrixAdvised: 'يُنصح باستخدام مصفوفة النماذج. ومع ذلك، يمكنك تعديل إعداداتك هنا بحرية.',
       ollamaAvailable: '{count} نموذج Ollama متاح (اكتب أو اختر من القائمة المنسدلة)',
+      localModelsAvailable: '{count} نموذج محلي متاح (اكتب أو اختر من القائمة المنسدلة)',
       stage1Text: 'المرحلة 1 - نموذج النصوص',
       stage1Vision: 'المرحلة 1 - نموذج الرؤية',
       stage2Interception: 'المرحلة 2 - نموذج التحويل',
@@ -222,7 +248,8 @@ export const ar = {
       stage4Legacy: 'المرحلة 4 - النموذج القديم',
       chatHelper: 'نموذج مساعد المحادثة',
       imageAnalysis: 'نموذج تحليل الصور',
-      coding: 'توليد الأكواد (Tone.js، p5.js)'
+      coding: 'توليد الأكواد (Tone.js، p5.js)',
+      persona: 'نموذج الشخصية'
     },
     api: {
       title: 'إعدادات API',
@@ -233,6 +260,7 @@ export const ar = {
       noneLocal: 'بدون (محلي فقط، DSGVO)',
       mistralEu: 'Mistral AI (مقرّه الاتحاد الأوروبي، DSGVO)',
       ionosEu: 'IONOS AI Model Hub (الاتحاد الأوروبي برلين، DSGVO)',
+      mammouthEu: 'Mammouth AI (مقرّه الاتحاد الأوروبي، DSGVO)',
       anthropicDirect: 'Anthropic Direct API (غير متوافق مع DSGVO)',
       openaiDirect: 'OpenAI Direct API (غير متوافق مع DSGVO)',
       openrouterDirect: 'OpenRouter (غير متوافق مع DSGVO، التوجيه عبر الاتحاد الأوروبي متاح)',
@@ -240,6 +268,8 @@ export const ar = {
       mistralDsgvo: 'متوافق مع DSGVO (بنية تحتية أوروبية)',
       ionosInfo: 'IONOS AI Model Hub (الاتحاد الأوروبي)',
       ionosDsgvo: 'متوافق مع DSGVO (مركز بيانات أوروبي برلين)',
+      mammouthInfo: 'Mammouth AI (مقرّه الاتحاد الأوروبي)',
+      mammouthDsgvo: 'متوافق مع DSGVO (بنية تحتية أوروبية)',
       anthropicInfo: 'Anthropic Direct API',
       anthropicNotDsgvo: 'غير متوافق مع DSGVO',
       anthropicWarning: 'تُعالَج البيانات خارج الاتحاد الأوروبي. يُستخدم فقط في السياقات غير التعليمية.',
@@ -288,7 +318,60 @@ export const ar = {
       dsgvoCompliant: 'متوافق',
       dsgvoNotCompliant: 'غير متوافق',
       configsAvailable: '{available} من أصل {total} إعدادات متاحة',
-      hidden: 'مخفي'
+      hidden: 'مخفي',
+      model: 'النموذج',
+      loadedModels: 'النماذج المحمَّلة',
+      foreignProcesses: 'عمليات GPU أخرى',
+      noModelsLoaded: 'لا توجد نماذج محمَّلة حالياً',
+      vramUsage: 'VRAM',
+      inUse: 'قيد الاستخدام',
+      idle: 'خامل',
+      lastUsed: 'آخر استخدام',
+      command: 'الأمر',
+      foreignVram: 'استخدام VRAM خارجي',
+      showLoadedModels: 'عرض النماذج المحمَّلة',
+      hideLoadedModels: 'إخفاء النماذج المحمَّلة',
+      showProcesses: 'عرض العمليات',
+      hideProcesses: 'إخفاء العمليات',
+      ownModels: 'النماذج الخاصة',
+      pid: 'PID',
+      localLlm: 'LLM محلي'
+    },
+    apiManagement: {
+      loading: 'جارٍ تحميل بيانات استخدام API...',
+      refresh: 'تحديث',
+      refreshing: 'جارٍ التحديث...',
+      activeProvider: 'مزوّد السحابة النشط',
+      noProvider: 'لا يوجد مزوّد سحابي مُهيَّأ (محلي فقط)',
+      accountOverview: 'نظرة عامة على الحساب',
+      currentSpend: 'الإنفاق الحالي',
+      budgetLimit: 'حد الميزانية',
+      remaining: 'المتبقي',
+      unlimited: 'غير محدود',
+      resetDate: 'إعادة تعيين الميزانية',
+      rateLimit: 'حد المعدل',
+      billingError: 'تعذّر جلب بيانات الفواتير',
+      localUsage: 'تتبع الاستخدام المحلي',
+      noUsageData: 'لم يتم تسجيل بيانات استخدام بعد. ستظهر البيانات بعد مكالمات API السحابية.',
+      calls: 'المكالمات',
+      inputTokens: 'رموز الإدخال',
+      outputTokens: 'رموز الإخراج',
+      estCost: 'التكلفة التقديرية',
+      byModel: 'حسب النموذج',
+      byStage: 'حسب المرحلة',
+      stage: 'المرحلة',
+      model: 'النموذج',
+      from: 'من',
+      to: 'إلى',
+      providerStatus: 'حالة المزوّد',
+      provider: 'المزوّد',
+      apiKey: 'API Key',
+      credits: 'الرصيد',
+      region: 'المنطقة',
+      configured: 'مُهيَّأ',
+      notConfigured: 'غير مُهيَّأ',
+      modelAssignments: 'تعيينات النماذج',
+      function: 'الوظيفة'
     }
   },
   pipeline: {
@@ -370,7 +453,11 @@ export const ar = {
     delete: 'حذف',
     loading: 'جارٍ التحميل...',
     contentBlocked: 'المحتوى محظور',
-    t5UsesYourText: 'يستخدم T5-XXL نصك الأصلي مباشرةً'
+    t5UsesYourText: 'يستخدم T5-XXL نصك الأصلي مباشرةً',
+    queueAhead: 'توليد واحد قبلك | {count} توليدات قبلك',
+    deviceBusy: 'عملية توليد قيد التشغيل بالفعل على هذا الجهاز.',
+    cancelPrevious: 'إلغاء التوليد السابق',
+    generationCancelled: 'تم إلغاء التوليد.'
   },
   nav: {
     about: 'حول',
@@ -414,6 +501,16 @@ export const ar = {
     batchBaseSeed: 'Seed أساسي',
     batchSeedHint: 'كل تشغيل: Seed + الترتيب',
     batchStart: 'بدء الدفعة',
+    outputDrawer: {
+      title: 'المخرجات',
+      emptyState: 'شغّل سير العمل لتوليد المخرجات'
+    },
+    zoomControls: {
+      zoomIn: 'تكبير',
+      zoomOut: 'تصغير',
+      resetZoom: 'إعادة تعيين التكبير',
+      fitToContent: 'احتواء المحتوى'
+    },
     stage: {
       configSelectPlaceholder: 'اختر...',
       evaluationCriteriaFallback: 'معايير التقييم...',
@@ -522,6 +619,10 @@ export const ar = {
       researcherInstitute: 'معهد التربية',
       researcherChair: 'كرسي التربية مع التركيز على الثقافة والتربية الجمالية',
       researcherUnesco: 'كرسي UNESCO للثقافة الرقمية والفنون في التعليم'
+    },
+    credits: {
+      title: 'تقديرات',
+      emt140: 'استجابات نبضية لصدى الصفيحة: EMT-140 بقلم Greg Hopkins / Hopkins Media Services (CC-BY)'
     },
     funding: {
       title: 'بتمويل من'
@@ -632,6 +733,7 @@ export const ar = {
     contextPlaceholder: 'مثال: أدرج المنزل من الصورة 2 والحصان من الصورة 3 في الصورة 1. حافظ على الألوان والأسلوب من الصورة 1.',
     modeTitle: 'صور متعددة \u2192 صورة',
     selectConfig: 'اختر النموذج:',
+    defaultPrompt: 'حوّل هذه الصور إلى وصف مشهدي',
     generating: 'جارٍ دمج الصور...'
   },
   imageTransform: {
@@ -639,7 +741,35 @@ export const ar = {
     contextLabel: 'صِف ما تريد تغييره في الصورة',
     contextPlaceholder: 'مثال: حوّلها إلى لوحة زيتية... اجعلها أكثر ألواناً... أضف غروباً...',
     uploadMode: 'رفع',
-    sketchMode: 'رسم تخطيطي'
+    sketchMode: 'رسم تخطيطي',
+    selectModel: 'اختر نموذجاً',
+    yourImage: 'صورتك',
+    defaultPrompt: 'حوّل هذه الصورة إلى وصف مشهدي',
+    printTitle: 'طباعة: الصورة المحوّلة',
+    downloadError: 'فشل التنزيل',
+    analysisFailed: 'فشل تحليل الصورة',
+    analysisError: 'خطأ أثناء تحليل الصورة',
+    categories: {
+      image: 'صورة',
+      video: 'فيديو',
+      threeD: 'ثلاثي الأبعاد',
+      sound: 'صوت'
+    },
+    configs: {
+      qwenImg2img: {
+        name: 'QWEN تحرير الصور'
+      },
+      wan22I2v: {
+        name: 'WAN 2.2 صورة إلى فيديو (14B)'
+      },
+      hunyuan3d: {
+        label: 'Hunyuan\n3D',
+        name: 'Hunyuan3D-2 صورة إلى نموذج ثلاثي الأبعاد'
+      },
+      sd35Img2img: {
+        name: 'SD 3.5 Large صورة إلى صورة'
+      }
+    }
   },
   textTransform: {
     inputLabel: 'فكرتك = ماذا؟',
@@ -654,7 +784,23 @@ export const ar = {
     optimizedPlaceholder: 'سيظهر الأمر المُحسَّن بعد اختيار النموذج.',
     loadingDefault: 'جارٍ تكييف أمرك للنموذج المحدد. كل نموذج يفهم الأوصاف بشكل مختلف \u2014 يقوم الذكاء الاصطناعي بتحسين النص للحصول على أفضل النتائج.',
     loadingSd35: 'يمتلك SD3.5 ثلاثة مشفّرات نص. يتم تحسين CLIP-L وCLIP-G للدقة البصرية \u2014 بينما يتلقى T5-XXL نصك الأصلي مباشرةً، محافظًا على نيتك الإبداعية.',
-    loadingTranslateHint: 'إذا لم يكن نصك بالإنجليزية، استخدم زر الترجمة أولاً \u2014 يعمل النموذج بشكل أفضل مع المدخلات الإنجليزية.'
+    loadingTranslateHint: 'إذا لم يكن نصك بالإنجليزية، استخدم زر الترجمة أولاً \u2014 يعمل النموذج بشكل أفضل مع المدخلات الإنجليزية.',
+    selectMedium: 'اختر وسيطاً',
+    selectModel: 'اختر نموذجاً',
+    runCode: 'تشغيل الكود',
+    p5jsCode: 'كود P5.js',
+    livePreview: 'معاينة مباشرة',
+    tonejsCode: 'كود Tone.js',
+    audioPlayer: 'مشغّل الصوت',
+    forwardToImage: 'إعادة التوجيه إلى تحويل الصور',
+    yourImage: 'صورتك',
+    pleaseSelectModel: 'يُرجى اختيار نموذج',
+    saveSoon: 'ميزة الحفظ قريباً!',
+    categories: {
+      image: 'صورة',
+      video: 'فيديو',
+      sound: 'صوت'
+    }
   },
   training: {
     info: {
@@ -787,7 +933,9 @@ export const ar = {
     cfgLabel: 'مقياس CFG',
     cfgHint: 'Classifier-Free Guidance: قوة تأثير الأمر. أعلى = تأثير أقوى، تنوع أقل.',
     seedLabel: 'Seed',
-    seedHint: '-1 = عشوائي. Seed ثابت يتيح مقارنة A/B بين الاستراتيجيات.'
+    seedHint: '-1 = عشوائي. Seed ثابت يتيح مقارنة A/B بين الاستراتيجيات.',
+    executeButton: 'تنفيذ',
+    executingButton: 'جارٍ التوليد...'
   },
   musicGeneration: {
     infoTitle: 'توليد الموسيقى',
@@ -877,6 +1025,14 @@ export const ar = {
         algebra: {
           label: 'جبر المفاهيم',
           short: 'حساب متجهي'
+        },
+        composable: {
+          label: 'الانتشار القابل للتركيب',
+          short: 'مزج متعدد المفاهيم'
+        },
+        arcimboldo: {
+          label: 'فسيفساء أرتشيمبولدو',
+          short: 'فسيفساء صور من الانتباه'
         }
       }
     },
@@ -889,6 +1045,7 @@ export const ar = {
       recordingActive: 'التسجيل نشط',
       recordingCount: '{count} تسجيل | {count} تسجيلات',
       recordingTooltip: 'يتم حفظ بيانات البحث تلقائيًا',
+      randomVariation: 'تنويع عشوائي'
     },
     attention: {
       headerTitle: 'خرائطية الانتباه — أي كلمة توجّه أي منطقة في الصورة؟',
@@ -1033,6 +1190,65 @@ export const ar = {
       downloadReference: 'تنزيل المرجع',
       downloadResult: 'تنزيل النتيجة',
       resultHint: 'أدخل ثلاثة توجيهات وانقر حساب \u2014 ستظهر نتيجة الحساب المتجهي هنا.'
+    },
+    arcimboldo: {
+      headerTitle: 'فسيفساء أرتشيمبولدو — رسم بمفردات النموذج',
+      headerSubtitle: 'ولّد صورة، دع النموذج يقسّمها حسب المعنى، ثم استبدل كل منطقة دلالية ببلاطات صغيرة مولَّدة بالذكاء الاصطناعي لذلك المفهوم.',
+      explanationToggle: 'عرض الشرح التفصيلي',
+      explainWhatTitle: 'ماذا تفعل هذه الأداة؟',
+      explainWhatText: 'تُنشئ هذه الأداة فسيفساء صور من صور مولَّدة بالذكاء الاصطناعي، مستوحاة من أعمال جوزيبي أرتشيمبولدو. أولاً يولّد النموذج صورة ويكشف أي كلمة في التوجيه تؤثر في أي منطقة. ثم تُستبدل كل منطقة دلالية بالعديد من البلاطات الصغيرة المولَّدة لذلك المفهوم.',
+      explainHowTitle: 'كيف يعمل؟',
+      explainHowText: 'الخطوة 1: توليد صورة مع SD3.5 واستخراج خرائط الانتباه. الخطوة 2: تجزئة "الفائز يأخذ كل شيء" تعيّن كل موضع مكاني للكلمة ذات الانتباه الأعلى. الخطوة 3: لكل منطقة دلالية، توليد بلاطات صغيرة مع مطابقة اللون. الخطوة 4: تجميع البلاطات في شبكة فسيفساء.',
+      techTitle: 'تفاصيل تقنية',
+      techText: 'يتم التقاط خرائط الانتباه بدقة 64×64 من 3 طبقات محول. يستخدم التجزئة "الفائز يأخذ كل شيء" مع تنظيف مورفولوجي. البلاطات بدقة 512×512 مع خطوات مخفضة (8)، ثم نقل الألوان لمطابقة متوسط لون كل منطقة.',
+      step1Title: 'الخطوة 1 — توليد الصورة + خرائط الانتباه',
+      step2Title: 'الخطوة 2 — المناطق الدلالية',
+      step3Title: 'الخطوة 3 — توليد البلاطات',
+      step4Title: 'الخطوة 4 — نتيجة الفسيفساء',
+      promptPlaceholder: 'مثال: قطة جالسة على طاولة في حديقة',
+      gridSizeLabel: 'شبكة الفسيفساء',
+      settingsToggle: 'إعدادات متقدمة',
+      stepsLabel: 'الخطوات',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      generateBtn: 'توليد + تجزئة',
+      generatingStatus: 'جارٍ توليد الصورة واستخراج خرائط الانتباه...',
+      segmentingStatus: 'جارٍ تجزئة المناطق الدلالية...',
+      generateTilesBtn: 'توليد بلاطات لجميع المناطق',
+      tilesStatus: 'جارٍ توليد البلاطات: {done} / {total}',
+      originalLabel: 'الأصلي',
+      mosaicLabel: 'الفسيفساء',
+      blendLabel: 'مزج',
+      downloadBtn: 'تنزيل الفسيفساء',
+      resetBtn: 'البدء من جديد'
+    },
+    composable: {
+      headerTitle: 'الانتشار القابل للتركيب — طاقة منفصلة لكل مفهوم',
+      headerSubtitle: 'بدلاً من ترميز توجيهك بالكامل كمتجه واحد، يحصل كل مفهوم على تمريره الخاص عبر المحول أثناء إزالة الضوضاء.',
+      explanationToggle: 'عرض الشرح التفصيلي',
+      explainWhatTitle: 'ماذا تفعل هذه الأداة؟',
+      explainWhatText: 'يضغط التوليد القياسي توجيهك بالكامل في تمثيل واحد. الانتشار القابل للتركيب يكسر هذا: كل مفهوم يحصل على تمريره الكامل الخاص عبر الشبكة العصبية في كل خطوة إزالة ضوضاء. تُمزج تنبؤات الضوضاء بأوزان قابلة للضبط.',
+      explainHowTitle: 'كيف يعمل تقنياً؟',
+      explainHowText: 'في كل خطوة من الـ 25 خطوة لإزالة الضوضاء، يُشغّل النموذج N+1 تمريرات: واحدة للتوجيه السلبي، وواحدة لكل مفهوم. تُمزج تنبؤات الضوضاء بإعدادات الأوزان: noise_composed = w1×noise_1 + w2×noise_2 + ...',
+      techTitle: 'تفاصيل تقنية',
+      techText: 'بناءً على Liu et al. (2022). كل مفهوم مُرمَّز بجميع مشفّرات SD3.5 الثلاثة بشكل مستقل. VRAM: أوزان النموذج مشتركة عبر التمريرات.',
+      referencesTitle: 'مراجع بحثية',
+      conceptLabel: 'المفهوم {n}',
+      conceptPlaceholder: 'مثال: منزل أحمر على تل',
+      weightLabel: 'الوزن',
+      removeBtn: 'إزالة',
+      addConceptBtn: 'إضافة مفهوم',
+      settingsToggle: 'إعدادات متقدمة',
+      negativePromptLabel: 'التوجيه السلبي',
+      negativePromptPlaceholder: 'مثال: ضبابي، نص، علامة مائية',
+      stepsLabel: 'الخطوات',
+      cfgLabel: 'CFG',
+      seedLabel: 'Seed',
+      normalizeLabel: 'تطبيع الأوزان (المجموع = 1.0)',
+      generateBtn: 'توليد',
+      generating: 'جارٍ التوليد القابل للتركيب...',
+      resultInfo: '{concepts} مفاهيم | {time} | Seed {seed}',
+      downloadBtn: 'تنزيل'
     },
     archaeology: {
       headerTitle: 'آثاريات إزالة الضوضاء \u2014 كيف تصبح الضوضاء صورة؟',
@@ -1179,6 +1395,10 @@ export const ar = {
         explainHowTitle: 'كيف أستخدمها؟',
         explainHowText: 'اختر نوع التجربة (الجنس، المشاعر، المجال، أو رموز مخصصة). أدخل توجيهًا يدعو النموذج للإكمال (مثل \u201cقال الطبيب للمريض\u201d). تُظهر النتائج خط الأساس مقابل التوليدات المُتلاعَب بها \u2014 تكشف الفروق أي التحيزات مشفّرة في النموذج.',
         referencesTitle: 'مراجع بحثية',
+        scenarioQwen: 'عائلة Qwen',
+        scenarioMixed: 'عائلات مختلطة',
+        scenarioQwenHint: 'نفس عائلة النماذج بأحجام مختلفة — يعزل كيف يؤثر الحجم على التحيز.',
+        scenarioMixedHint: 'عائلات نماذج مختلفة بأحجام مماثلة — يعزل كيف تؤثر المعالج والبيانات التدريبية على التحيز.',
         presetLabel: 'نوع التجربة',
         presetGender: 'الجنس \u2014 كبت الضمائر الجنسانية',
         presetSentiment: 'المشاعر \u2014 تعزيز الإيجابي/السلبي',
@@ -1267,6 +1487,9 @@ export const ar = {
         cfgHint: 'Classifier-Free Guidance لتوليد الصوت',
         seedHint: '-1 = عشوائي، قيمة ثابتة = نتيجة قابلة للتكرار',
         loop: 'تشغيل حلقي',
+        engineLooper: 'لوبر',
+        engineWavetable: 'Wavetable',
+        loopOff: 'تشغيل مرة واحدة',
         stop: 'إيقاف',
         looping: 'تشغيل حلقي',
         playing: 'قيد التشغيل',
@@ -1281,12 +1504,25 @@ export const ar = {
         midiGenerate: 'توليد + تبديل النغمة',
         midiPitch: 'الطبقة الصوتية نسبة إلى C3',
         loopInterval: 'فاصل الحلقة',
+        extractionRegion: 'منطقة الاستخراج',
         loopOptimize: 'تحسين تلقائي',
         loopPingPong: 'ذهاب وإياب',
         loopIntervalHint: 'بداية/نهاية منطقة الحلقة — قصّر النهاية لقص تلاشي Stable Audio',
         looperSection: 'لوبر / مُتسلسل',
         loopToggle: 'حلقة',
         wavetableToggle: 'Wavetable',
+        wavetableExtract: 'من عيّنة',
+        wtReextract: 'إعادة الاستخراج',
+        wavetableSemantic: 'من المحور',
+        wtSelectAxis: '— اختر محوراً —',
+        wtBuild: 'بناء',
+        wtBuilding: 'جارٍ البناء...',
+        wtBuildHint: 'يولّد عيّنات قصيرة على طول المحور لإنشاء Wavetable مُرتَّب دلالياً',
+        wtRange: 'النطاق',
+        wtInterpolate: 'استيفاء',
+        wtScanEnvelope: 'مسح',
+        wtSweep: 'تكنيس',
+        wtReturn: 'عودة',
         wavetableStatic: 'ثابت',
         wavetableDynamic: 'ديناميكي (قريبًا)',
         sequencerToggle: 'مُتسلسل',
@@ -1313,7 +1549,17 @@ export const ar = {
           preset: 'إعداد مسبق',
           midiSync: 'مزامنة MIDI',
           gridHint: 'شريط التمرير = إزاحة نصف نغمة، نقطة = تبديل نشط، أسفل = سرعة',
+          glideTime: 'انزلاق',
           patterns: {
+            eastcoast: 'Eastcoast',
+            westcoast: 'Westcoast',
+            synthwave: 'Synthwave',
+            techno: 'Acid',
+            ambient: 'Ambient',
+            dub_techno: 'Dub Techno',
+            idm_glitch: 'IDM / Glitch',
+            solar: 'Solar',
+            arpeggio_bass: 'Arpeggio Bass (32)',
             arpeggio_up: 'أرپيجيو تصاعدي',
             arpeggio_down: 'أرپيجيو تنازلي',
             arpeggio_updown: 'أرپيجيو تصاعدي-تنازلي',
@@ -1339,6 +1585,27 @@ export const ar = {
         normalizeHint: 'تطبيع مستوى الصوت إلى أقصى سعة',
         saveRaw: 'حفظ الخام',
         saveLoop: 'حفظ الحلقة',
+        testNote: 'اختبار C3',
+        record: 'تسجيل',
+        stopRecording: 'إيقاف',
+        startPosition: 'موضع البداية',
+        startPositionHint: '0% = البداية/الهجوم، أعلى = مادة مستدامة/ثابتة',
+        filter: {
+          title: 'الفلتر',
+          cutoff: 'نقطة القطع',
+          resonance: 'الرنين',
+          mix: 'المزج',
+          kbdTrack: 'تتبع لوحة المفاتيح',
+          envelope: 'غلاف الفلتر',
+          envAmount: 'الكمية',
+          lfoRate: 'المعدل',
+          lfoDepth: 'العمق',
+          amplitude: 'السعة'
+        },
+        preset: {
+          export: 'تصدير الإعداد المسبق',
+          import: 'استيراد الإعداد المسبق'
+        },
         embeddingStats: 'إحصائيات التضمين',
         dimensions: {
           section: 'مستكشف الأبعاد',
@@ -1352,12 +1619,18 @@ export const ar = {
           activeOffsets: '{count} إزاحة نشطة',
           applyAndGenerate: 'تطبيق وإعادة توليد',
           undo: 'تراجع',
-          redo: 'إعادة'
+          redo: 'إعادة',
+          hintRelative: 'اسحب لأعلى = نحو التوجيه A، اسحب لأسفل = نحو التوجيه B. كل شريط يمزج بين التوجيهين لكل بُعد.',
+          modeRelative: 'نسبي',
+          modeAbsolute: 'مطلق',
+          hoverMix: 'المزج'
         },
         semanticAxes: {
           modeToggle: 'محاور دلالية',
           info: 'تُوجّه المحاور الدلالية تضمين الموجّه في اتجاهات محددة. يُحقق كل شريط تمرير استيفاءً بين قطبين نصيين في فضاء T5. مزيد من المحاور النشطة = تأثير أضعف لكل محور. المُوصى به: 3–5 محاور.',
           slotNone: '— لا شيء —',
+          groupSemantic: 'دلالي (أقطاب نصية)',
+          groupPCA: 'PCA (مُحرَّك بالبيانات)',
           resetAll: 'إعادة الكل إلى المركز',
           experimental: 'تجريبي'
         }
@@ -1421,6 +1694,13 @@ export const ar = {
       fairCulture: 'ثقافة عادلة',
       safetyByDesign: 'السلامة بالتصميم',
       denoisingActive: 'إزالة الضوضاء جارية...',
+      modelLoadingVram: 'جارٍ تحميل النموذج... {used} / {expected} GB VRAM',
+      cloudProcessing: 'جارٍ إرسال الطلب إلى API السحابية...',
+      encodingClipL: 'CLIP-L يقرأ نصك... ({count} رمز)',
+      encodingClipG: 'CLIP-G يقرأ نصك... ({count} رمز)',
+      encodingT5: 'T5-XXL يقرأ نصك... ({count} رمز)',
+      encodingEmbeddings: 'جارٍ إنشاء التضمينات...',
+      encodingDenoisingStarts: 'تبدأ إزالة الضوضاء...'
     },
     energy: {
       kids_1: '\ud83d\udca1 صور الذكاء الاصطناعي تحتاج كهرباء \u2013 بقدر شحن هاتفك لمدة 3 ساعات!',
@@ -1517,5 +1797,222 @@ export const ar = {
       statsHealth: 'البيئة',
       statsSludge: 'الحمأة المُزالة'
     }
+  },
+  compare: {
+    activation: {
+      button: 'تفعيل Trashy',
+      language: 'نفس التوجيه، لغات مختلفة، صور مختلفة. يوضح هذا الوضع كيف تُرمّز اللغة الافتراضات الثقافية التي تشكّل ما يولّده الذكاء الاصطناعي.',
+      model: 'نفس التوجيه، نماذج مختلفة، افتراضات مختلفة. يكشف ما تعتبره كل نموذج الإنسان أو الأسرة أو المهنة الافتراضية.',
+      systemprompt: 'نفس الرسالة مع ثلاثة موجّهات نظام مختلفة. يوضح كيف تُعيد التعليمات غير المرئية تشكيل نفس الذكاء الاصطناعي كشخصيات مختلفة.',
+      temperature: 'نفس الرسالة عند ثلاثة مستويات عشوائية: حتمي، متوازن، إبداعي. يوضح كيف يُغيّر أخذ العينات الاحتمالي مخرجات الذكاء الاصطناعي.',
+    },
+    tabs: {
+      model: 'تحيز النموذج',
+      language: 'التحيز الثقافي',
+      systemprompt: 'موجّهات النظام',
+      temperature: 'ساخن وبارد'
+    },
+    shared: {
+      sendAll: 'إرسال للجميع',
+      sending: 'جارٍ الإرسال...',
+      newConversation: 'محادثة جديدة',
+      noResponse: 'لم يتم استلام رد',
+      error: 'خطأ في الاتصال',
+      modelLabel: 'النموذج',
+      defaultModel: 'الافتراضي (الإعدادات)',
+      modelNotDownloaded: '(غير محمَّل)'
+    },
+    temperature: {
+      inputLabel: 'رسالتك',
+      inputPlaceholder: 'اكتب رسالة لإرسالها عند الدرجات الثلاث...',
+      cold: 'حتمي',
+      warm: 'متوازن',
+      hot: 'إبداعي',
+      subtitle: 'شاهد كيف تُغيّر العشوائية ما يقوله الذكاء الاصطناعي'
+    },
+    systemprompt: {
+      inputLabel: 'رسالتك',
+      inputPlaceholder: 'اكتب رسالة لإرسالها مع موجّهات النظام الثلاثة...',
+      subtitle: 'شاهد كيف تتحكم التعليمات غير المرئية في سلوك الذكاء الاصطناعي',
+      presetLabel: 'إعداد مسبق',
+      promptLabel: 'موجّه النظام',
+      emptyPrompt: '(بدون موجّه نظام)',
+      custom: 'مخصص',
+      presets: {
+        none: 'بدون موجّه نظام',
+        claude: 'Claude Sonnet 4.6 (2025)',
+        gpt4_2023: 'GPT-4 (2023)',
+        helpful: 'مساعد مفيد',
+        disagree: 'يعارض دائماً',
+        pirate: 'قرصان',
+        poet: 'شاعر',
+        fiveyearold: 'طفل خمس سنوات',
+        factsonly: 'حقائق فقط'
+      }
+    },
+    llmModel: {
+      inputLabel: 'رسالتك',
+      inputPlaceholder: 'اكتب رسالة لإرسالها للنماذج الثلاثة...',
+      systemPromptLabel: 'موجّه النظام'
+    },
+    vlmAnalysis: {
+      imageLabel: 'صورتك',
+      perspectiveLabel: 'المنظور',
+      modelsLabel: 'نماذج الرؤية',
+      analyzeBtn: 'تحليل الصورة',
+      analyzing: 'جارٍ التحليل...',
+      waiting: 'في الانتظار',
+      freePromptPlaceholder: 'اكتب موجّه التحليل الخاص بك...',
+      perspectives: {
+        free: 'حر (موجّهك الخاص)',
+        neutral: 'وصف محايد',
+        safety: 'فحص الأمان',
+        bildwissenschaftlich: 'تاريخ فني (بانوفسكي)',
+        ikonik: 'تحليل أيقوني (إيمدال)',
+        bildungstheoretisch: 'النظرية التربوية (يوريسن/ماروتسكي)',
+        ethisch: 'تحليل أخلاقي',
+        kritisch: 'ما بعد استعماري / نقدي'
+      }
+    },
+    promptLabel: 'فكرتك',
+    promptPlaceholder: 'أدخل توجيهاً — مثل "حديقة جميلة مع زهور"',
+    platformLanguages: 'لغات المنصة',
+    furtherLanguages: 'لغات أخرى',
+    selectHint: '{count} من {max} لغة مختارة',
+    modelLabel: 'النموذج',
+    generateAll: 'مقارنة الجميع',
+    generatingAll: 'جارٍ التوليد...',
+    generating: 'جارٍ التوليد...',
+    waiting: 'في الانتظار...',
+    chatPlaceholder: 'اسأل Trashy...',
+    trashyGreeting: 'مرحباً! يمكنني مساعدتك في استكشاف كيف تُنتج اللغات المختلفة صوراً مختلفة. أدخل توجيهاً واختر لغتين على الأقل — سأشرح ما يحدث.',
+    trashyTranslating: 'جارٍ ترجمة توجيهك إلى اللغات المختارة...',
+    trashyGenerating: 'جارٍ توليد الصور الآن — نفس الـ Seed، نفس النموذج، فقط اللغة تتغير. شاهد ما يحدث!',
+    trashyTranslateError: 'خدمة الترجمة غير متاحة الآن. قد يحتاج الخادم الخلفي إلى إعادة تشغيل.',
+    trashyError: 'حدث خطأ ما. تحقق من وحدة تحكم المتصفح للتفاصيل، أو اسأل مدرّب الدورة.',
+    favorite: 'إضافة إلى المفضلة',
+    unfavorite: 'إزالة من المفضلة',
+    forward: 'إعادة التوجيه إلى تحويل الصور',
+    download: 'تنزيل الصورة',
+    analyze: 'تحليل الصورة'
+  },
+  provenance: {
+    title: 'حول هذا النموذج',
+    madeBy: 'صُنع بواسطة:',
+    learnedFrom: 'تعلّم من:',
+    howBig: 'حجمه:',
+    kidsNote: 'لم يُسأل جميع المبدعين عما إذا كان الذكاء الاصطناعي يمكنه التعلم من أعمالهم.',
+    publisher: 'الناشر',
+    architecture: 'البنية',
+    parameters: 'المعاملات',
+    license: 'الرخصة',
+    trainingData: 'بيانات التدريب',
+    safetyByDesign: 'السلامة بالتصميم',
+    sources: 'مصادر البيانات',
+    consent: 'موافقة المبدع',
+    consentValues: {
+      none: 'لا شيء',
+      partial: 'جزئية',
+      full: 'كاملة',
+      unknown: 'غير معروف'
+    },
+    knownBiases: 'التحيزات المعروفة',
+    knownGaps: 'الثغرات المعروفة',
+    youthReflection: 'كل نموذج له منظور يتشكّل من بياناته التدريبية. أي أصوات قد تكون مفقودة؟'
+  },
+  persona: {
+    title: 'شخصية',
+    inputPlaceholder: 'قل شيئاً...',
+    toggleTTS: 'تبديل الإخراج الصوتي',
+    fallbackGreeting: 'مرحباً، أنا شخصية. أنا آلة. لست مساعداً. تحدّث إليّ.',
+    newDialog: 'حوار جديد',
+    description: 'الشخصية هي ذكاء اصطناعي يمكنك التحدث إليه. يقرر ما إذا كان سيولّد صوراً أو صوتاً أو فيديو أو كائنات ثلاثية الأبعاد أثناء المحادثة. له آراء ويمكنه الرفض.',
+    activate: 'بدء المحادثة'
+  },
+  workshop: {
+    title: 'تخطيط ورشة العمل',
+    memory: {
+      label: 'ذاكرة بطاقة الرسوميات (VRAM)',
+      system: 'النظام',
+      free: 'متاح',
+      used: '{used} / {total} جيجابايت مستخدمة',
+      overBudget: '— لا يتناسب!'
+    },
+    models: {
+      label: 'النماذج — اسحب إلى الذاكرة أو انقر للتفعيل',
+      image: 'صور',
+      video: 'فيديوهات',
+      music: 'موسيقى',
+      sound: 'أصوات',
+      threeD: 'ثلاثي الأبعاد',
+      needsGb: 'يحتاج {gb} جيجابايت',
+      loaded: '(محمَّل)',
+      cloudUs: 'قائم على الخوادم — لا يُحمَّل في VRAM',
+      cloudEu: 'قائم على الخوادم — لا يُحمَّل في VRAM'
+    },
+    confirm: {
+      load: 'تحميل النماذج في الذاكرة الآن',
+      loading: 'جارٍ تحميل النماذج...',
+      ready: 'جميعها محمَّلة — جاهز للانطلاق!',
+      resultLoaded: 'تم التحميل: {models}',
+      resultSkipped: 'عند الاستخدام الأول: {models}',
+      resultError: 'خطأ: {details}'
+    },
+    actions: {
+      clearAll: 'مسح جميع ذاكرة GPU',
+      confirmUnload: 'إلغاء تحميل {name}؟ سيؤدي هذا إلى إلغاء أي توليد جارٍ باستخدام هذا النموذج.',
+      confirmUnloadComfyui: 'إلغاء تحميل {name} سيُحرّر جميع نماذج ComfyUI من الذاكرة (لا يدعم ComfyUI إلغاء التحميل لكل نموذج على حدة). هل تريد الاستمرار؟',
+      confirmClearAll: 'سيؤدي هذا إلى إلغاء جميع العمليات الجارية وإلغاء تحميل جميع النماذج من الذاكرة. هل تريد الاستمرار؟'
+    },
+    chat: {
+      cloudAdded: 'يعمل {name} على خوادم {publisher} في {region}. لا يحتاج مساحة في بطاقة الرسوميات، لكن إدخالاتك تُرسل هناك. كل نتيجة تكلّف من ميزانية المشروع.',
+      overBudget: 'يحتاج {name} إلى {gb} جيجابايت. هذا لا يتناسب مع الذاكرة! يجب إزالة نموذج آخر أو تخطي {name}.',
+      freeSpace: 'يحتاج {name} إلى {gb} جيجابايت. {free} جيجابايت متبقية.',
+      connectionError: 'خطأ في الاتصال — يُرجى المحاولة مرة أخرى.',
+      regionEu: 'أوروبا',
+      regionUs: 'الولايات المتحدة',
+      preloadStart: 'جارٍ تحميل {count} نموذج/نماذج في الذاكرة. قد يستغرق هذا بضع دقائق — كل نموذج يحتاج 30 ثانية إلى دقيقتين.',
+      preloadModel: 'جارٍ تحميل {name}...',
+      preloadDone: 'تم تحميل {name}.',
+      unloading: 'جارٍ إلغاء تحميل {name}...',
+      unloaded: 'تم إلغاء تحميل {name}.',
+      clearingAll: 'جارٍ مسح جميع ذاكرة GPU...',
+      clearedAll: 'تم إلغاء تحميل جميع النماذج. ذاكرة GPU متاحة.'
+    },
+    greeting: {
+      intro: 'مرحباً بالجميع. أنا Trashy، نظام المساعدة في هذه المنصة.',
+      context: 'أنت في صفحة تخطيط ورشة العمل. هذا منطقي، لأنه قبل البدء يستحق التفكير لوهلة فيما تريد فعله فعلاً.',
+      resources: 'تتطلب نماذج الذكاء الاصطناعي موارد كثيرة مفاجئة. الأهم أنها تحتاج ذاكرة على بطاقة الرسوميات — وحدة المعالجة التي تحسب صورك ومقاطع الفيديو والأصوات. هذه الذاكرة كبيرة، لكنها ليست لا نهاية لها. والنماذج التي تريد استخدامها واسعة لدرجة أنها تمتلئ بسرعة.',
+      planning: 'عندما يُفعّل شخص ما نموذجاً جديداً بينما الذاكرة ممتلئة بالفعل، قد تحدث أوقات انتظار طويلة. مجرد تحميل نموذج يستغرق بين 30 ثانية ودقيقتين. بمجرد التحميل، يسير كل شيء بسرعة عادةً.',
+      flexibility: 'يمكنك بالطبع تحميل نماذج أخرى أو التبديل إليها في أي وقت دون العودة إلى هذه الصفحة. لكن عندها ستنتظر. والعمل الجيد، سواء كان فنياً أو تجريبياً، يبدأ عادةً بالتفكير مسبقاً في ما تريد العمل به ولماذا.',
+      callToAction: 'انظر إلى بطاقات النماذج في هذه الصفحة. يمكنك سحبها إلى شريط الذاكرة ومعرفة ما يتناسب معاً. أو أخبرني ما تريد فعله في الجلسة وسأشرح أي النماذج مناسبة.'
+    },
+    activate: 'اسأل Trashy'
+  },
+  trashy: {
+    placeholder: 'كيف يمكنني مساعدتك؟',
+    greeting: 'مرحباً! أنا مساعدك بالذكاء الاصطناعي. اسألني أسئلة حول AI4ArtsEd أو دعني أنصحك بشأن توجيهك.',
+    noResponse: 'لم يتم استلام رد.',
+    thinking: 'لحظة...',
+    sendError: 'عذراً، حدث خطأ في إرسال الرسالة. يُرجى المحاولة مرة أخرى.',
+    sendTooltip: 'إرسال الرسالة (Enter)',
+    openTooltip: 'فتح مساعد الذكاء الاصطناعي (Trashy) — اسحب للتحريك، انقر مرتين للإعادة',
+    closeTooltip: 'إغلاق',
+    analysisReflectionLoading: 'جارٍ مراجعة التحليل...',
+    analysisReflectionError: 'لم أتمكن من توليد تأمل الآن. لا يزال بإمكانك قراءة التحليل أعلاه.'
+  },
+  usageAgreement: {
+    title: 'اتفاقية الاستخدام',
+    text: 'تستخدم هذه المنصة الذكاء الاصطناعي لتوليد الصور والأصوات والنصوص للتعليم الثقافي. تم تضمين إجراءات أمان واسعة — لكن لا يمكن لأي نظام تقني منع النتائج غير المتوقعة تماماً. لذلك يخضع الاستخدام للشروط التالية:',
+    responsibilities: {
+      title: 'مسؤوليات قائد ورشة العمل',
+      supervision: 'الإشراف النشط على المشاركين طوال الجلسة بأكملها.',
+      ageAppropriate: 'تعيين مستوى الأمان المناسب للفئة العمرية.',
+      misuse: 'منع إساءة الاستخدام والتحايل المتعمد على آليات الأمان من قبل المشاركين.',
+      context: 'اختبار المنصة بنفسك قبل استخدامها مع المجموعات.',
+      noGuarantee: 'لا يمكن لأي نظام تقني أن يحل محل الإشراف التربوي.'
+    },
+    checkbox: 'أوافق على هذه الشروط وأقبل المسؤولية كقائد ورشة عمل عن الاستخدام المُشرَف عليه لهذه المنصة.',
+    acceptButton: 'متابعة'
   }
 }
