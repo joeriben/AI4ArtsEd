@@ -1,13 +1,16 @@
 """
-VLM Safety Check — Hybrid single-model + two-model adjudication architecture.
+VLM Safety Check — Two-model adjudication architecture.
 
-Primary: VLM sees the image and classifies directly. SAFE is trusted (fast path).
-Adjudication: UNSAFE or no-verdict from the 2B primary triggers the two-model
-          path: VLM description (neutral, no verdict coercion) → STAGE3_MODEL
-          verdict on the description. This prevents the 2B from false-blocking
-          harmless images the primary prompt overextends on.
+The local 2B VLM is used as a describer only; it is not trusted as a judge in
+either direction. Verdicts come from STAGE3_MODEL classifying the VLM's neutral
+description. This eliminates both the 2B's false-positive bias (over-blocking
+harmless images on the kids prompt) and its false-negative bias (missing actual
+unsafe content when given a narrower prompt).
 
-Fail-closed: blocks if safety cannot be confirmed at any stage.
+Flow: VLM describes the image (neutral, no verdict coercion) → STAGE3_MODEL
+      judges the description against `VLM_VERDICT_PROMPTS`.
+
+Fail-closed: blocks if safety cannot be confirmed.
 """
 
 import base64
@@ -33,22 +36,7 @@ VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
-# --- Primary path: VLM sees + judges (same categories as before) ---
-VLM_PROMPTS = {
-    'kids': (
-        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
-        'racism, hate crime settings, terrorism, sexism, '
-        'or content that is scary, unsettling, or traumatizing for young children? '
-        'Answer SAFE or UNSAFE.'
-    ),
-    'youth': (
-        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
-        'racism, hate crime settings, terrorism, or sexism? '
-        'Answer SAFE or UNSAFE.'
-    ),
-}
-
-# --- Fallback path: VLM describes, text model judges ---
+# --- VLM describes, STAGE3_MODEL judges ---
 VLM_DESCRIBE_PROMPTS = {
     'kids': (
         'Examine this image for the following: violence, gore, nudity, hate symbols, '
@@ -276,14 +264,12 @@ def vlm_describe_image(image_path: str | Path) -> str:
 
 def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, str, str]:
     """
-    Check image safety via hybrid architecture. Returns (is_safe, reason, description).
+    Check image safety via two-model adjudication. Returns (is_safe, reason, description).
 
-    Primary: VLM sees the image and classifies directly. Only SAFE is trusted as
-             a final verdict — the 2B primary is known to over-block harmless
-             images on the kids prompt.
-    Adjudication: Primary UNSAFE or no-verdict escalates to the two-model path:
-             VLM describes neutrally → STAGE3_MODEL classifies the description.
-    Final: Fail-closed if adjudication cannot confirm safety.
+    VLM describes the image neutrally; STAGE3_MODEL classifies the description.
+    The local 2B is never asked for a verdict — it has inconsistent FP/FN bias
+    in either direction and is not trusted as a judge.
+    Fail-closed if adjudication cannot confirm safety.
 
     Args:
         image_path: Path to the image file on disk.
@@ -301,8 +287,10 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             logger.error("[VLM-SAFETY] Image file not found — BLOCKING (cannot verify safety)")
             return (False, "VLM safety check: image file not found, blocked for safety", '')
 
-        prompt_text = VLM_PROMPTS.get(safety_level)
-        if not prompt_text:
+        describe_prompt = VLM_DESCRIBE_PROMPTS.get(safety_level)
+        verdict_prompt_template = VLM_VERDICT_PROMPTS.get(safety_level)
+        if not describe_prompt or not verdict_prompt_template:
+            # safety_level not covered by VLM check (e.g. adult/research)
             return (True, '', '')
 
         # --- Prepare image ---
@@ -323,63 +311,11 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         from my_app.services.llm_backend import get_llm_backend
         llm = get_llm_backend()
 
-        # =================================================================
-        # PRIMARY PATH: VLM sees image + classifies directly
-        # =================================================================
+        # Step 1: VLM describes the image (safety-focused, no verdict coercion)
         logger.info(
-            f"[VLM-SAFETY] Primary: VLM direct check ({original_size} -> {img.size}, "
+            f"[VLM-SAFETY] Step 1/2: Describing image ({original_size} -> {img.size}, "
             f"{len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL} for {safety_level}"
         )
-
-        result = llm.chat(
-            model=config.VLM_SAFETY_MODEL,
-            messages=[{'role': 'user', 'content': prompt_text}],
-            images=[image_b64],
-            temperature=0.0,
-            max_new_tokens=1500,
-            enable_thinking=False,
-        )
-
-        if result is not None:
-            content = result.get('content', '').strip()
-            thinking = (result.get('thinking') or '').strip()
-            description = thinking or content
-
-            logger.info(f"[VLM-SAFETY] Primary response: content={content!r}, thinking={thinking[:200]!r}")
-
-            verdict = _extract_verdict(content) or _extract_verdict(thinking)
-
-            if verdict == 'safe':
-                return (True, '', description)
-
-            # Primary UNSAFE is NOT a final verdict — the 2B over-blocks. Escalate
-            # to the two-model adjudication path (VLM describe → STAGE3_MODEL judge).
-            if verdict == 'unsafe':
-                logger.warning(
-                    "[VLM-SAFETY] Primary flagged unsafe — escalating to two-model adjudication. "
-                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
-                )
-            else:
-                logger.warning(
-                    "[VLM-SAFETY] Primary: no SAFE/UNSAFE verdict — trying two-model fallback. "
-                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
-                )
-        else:
-            description = ''
-            logger.warning("[VLM-SAFETY] Primary: VLM returned None — trying two-model fallback")
-
-        # =================================================================
-        # FALLBACK PATH: VLM describes → STAGE3_MODEL judges
-        # =================================================================
-        describe_prompt = VLM_DESCRIBE_PROMPTS.get(safety_level)
-        verdict_prompt_template = VLM_VERDICT_PROMPTS.get(safety_level)
-
-        if not describe_prompt or not verdict_prompt_template:
-            # Should not happen (safety_level already validated), but fail-closed
-            return (False, f"VLM safety check: no fallback prompt for {safety_level}, blocked for safety", description)
-
-        # Step 1: VLM describes the image (safety-focused, no verdict coercion)
-        logger.info(f"[VLM-SAFETY] Fallback Step 1: Describing image with {config.VLM_SAFETY_MODEL}")
 
         describe_result = llm.chat(
             model=config.VLM_SAFETY_MODEL,
@@ -391,34 +327,31 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         )
 
         if describe_result is None:
-            logger.error("[VLM-SAFETY] Fallback Step 1: VLM returned None — BLOCKING")
+            logger.error("[VLM-SAFETY] Step 1/2: VLM returned None — BLOCKING")
             return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): model unreachable, blocked for safety", '')
 
         fb_content = describe_result.get('content', '').strip()
         fb_thinking = (describe_result.get('thinking') or '').strip()
-        fb_description = fb_thinking or fb_content
+        description = fb_thinking or fb_content
 
-        logger.info(f"[VLM-SAFETY] Fallback Step 1: Description ({len(fb_description)} chars): {fb_description[:200]!r}")
+        logger.info(f"[VLM-SAFETY] Step 1/2: Description ({len(description)} chars): {description[:200]!r}")
 
-        if not fb_description:
-            logger.error("[VLM-SAFETY] Fallback Step 1: Empty description — BLOCKING")
+        if not description:
+            logger.error("[VLM-SAFETY] Step 1/2: Empty description — BLOCKING")
             return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): empty description, blocked for safety", '')
 
-        # Use fallback description as the returned description (more informative than primary's non-verdict)
-        description = fb_description
-
         # Step 2: STAGE3_MODEL classifies the description
-        verdict_prompt = verdict_prompt_template.format(description=fb_description)
+        verdict_prompt = verdict_prompt_template.format(description=description)
 
-        logger.info(f"[VLM-SAFETY] Fallback Step 2: Judging with {verdict_model} for {safety_level}")
+        logger.info(f"[VLM-SAFETY] Step 2/2: Judging with {verdict_model} for {safety_level}")
 
         verdict_content = _call_verdict_model(verdict_prompt)
 
         if verdict_content is None:
-            logger.error("[VLM-SAFETY] Fallback Step 2: Verdict model returned None — BLOCKING")
+            logger.error("[VLM-SAFETY] Step 2/2: Verdict model returned None — BLOCKING")
             return (False, f"VLM safety check ({verdict_model}): verdict model unreachable, blocked for safety", description)
 
-        logger.info(f"[VLM-SAFETY] Fallback Step 2: Verdict response: {verdict_content!r}")
+        logger.info(f"[VLM-SAFETY] Step 2/2: Verdict response: {verdict_content!r}")
 
         verdict = _extract_verdict(verdict_content)
 
@@ -427,12 +360,11 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         if verdict == 'safe':
             return (True, '', description)
 
-        # Neither path produced a verdict — FAIL-CLOSED
         logger.error(
-            "[VLM-SAFETY] Both paths failed to produce verdict — BLOCKING (fail-closed). "
+            "[VLM-SAFETY] Step 2/2: no verdict extracted — BLOCKING (fail-closed). "
             f"verdict_content={verdict_content[:200]!r}"
         )
-        return (False, f"VLM safety check: no verdict from either path, blocked for safety", description)
+        return (False, "VLM safety check: no verdict from judge model, blocked for safety", description)
 
     except Exception as e:
         logger.error(f"[VLM-SAFETY] Error during check — BLOCKING (cannot verify safety): {e}")
