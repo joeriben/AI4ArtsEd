@@ -1209,16 +1209,31 @@ onMounted(async () => {
   const savedImageId = sessionStorage.getItem('i2i_uploaded_image_id')
 
   if (savedImage && !transferDataStr) {  // Only if NOT from transfer
-    console.log('[I2I] Restoring image from sessionStorage')
-    console.log('[I2I] Preview URL:', savedImage.substring(0, 50) + '...')
-    console.log('[I2I] Server Path:', savedImagePath)
+    // Verify the upload is still alive on the backend before restoring.
+    // sessionStorage survives backend restarts and reboots — the file may be gone.
+    let uploadAlive = false
+    if (savedImageId && !savedImageId.startsWith('restored_') && !savedImageId.startsWith('transferred_')) {
+      const apiPrefix = import.meta.env.DEV ? 'http://localhost:17802' : ''
+      try {
+        const res = await fetch(`${apiPrefix}/api/media/uploads/${savedImageId}`, { method: 'HEAD' })
+        uploadAlive = res.ok
+      } catch {
+        uploadAlive = false
+      }
+    }
 
-    uploadedImage.value = savedImage
-    uploadedImagePath.value = savedImagePath || savedImage
-    uploadedImageId.value = savedImageId || `restored_${Date.now()}`
-    executionPhase.value = 'image_uploaded'
-
-    console.log('[I2I] Image restored successfully')
+    if (uploadAlive) {
+      console.log('[I2I] Restoring image from sessionStorage')
+      uploadedImage.value = savedImage
+      uploadedImagePath.value = savedImagePath || savedImage
+      uploadedImageId.value = savedImageId!
+      executionPhase.value = 'image_uploaded'
+    } else {
+      console.log('[I2I] sessionStorage upload is stale — clearing')
+      sessionStorage.removeItem('i2i_uploaded_image')
+      sessionStorage.removeItem('i2i_uploaded_image_path')
+      sessionStorage.removeItem('i2i_uploaded_image_id')
+    }
   }
 })
 
