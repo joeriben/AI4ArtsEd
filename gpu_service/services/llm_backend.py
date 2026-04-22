@@ -93,6 +93,17 @@ MODEL_CONFIGS = {
         "vlm_capable": True,
         "display_name": "Qwen 3 VL 2B",
     },
+    "qwen3-vl:4b": {
+        "model_path": os.path.join(MODEL_DIR, "qwen3-vl-4b", "Qwen3-VL-4B-Instruct-Q4_K_M.gguf"),
+        "mmproj_path": os.path.join(MODEL_DIR, "qwen3-vl-4b", "mmproj-F16.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 4500,
+        "chat_handler": "qwen25vl",  # Qwen25VLChatHandler works for qwen3-vl
+        "chat_capable": False,
+        "vlm_capable": True,
+        "display_name": "Qwen 3 VL 4B",
+    },
 }
 
 # Aliases for backward compatibility with legacy model names
