@@ -19,8 +19,10 @@ CLAUDE_OPTS=(
     -p
     --permission-mode bypassPermissions
     --model sonnet
-    --allowedTools "Read" "Edit" "Write" "Bash" "Glob" "Grep"
+    --allowedTools "Read,Edit,Write,Bash,Glob,Grep"
 )
+# Uncomment for debug output (when troubleshooting hangs):
+# CLAUDE_OPTS+=(--debug --verbose)
 
 # Allow running from within a Claude Code session
 unset CLAUDECODE
