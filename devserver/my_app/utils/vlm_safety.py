@@ -1,9 +1,11 @@
 """
-VLM Safety Check — Hybrid single-model + two-model fallback architecture.
+VLM Safety Check — Hybrid single-model + two-model adjudication architecture.
 
-Primary: VLM sees the image and classifies directly (zero FN, proven accuracy).
-Fallback: If VLM fails to produce a verdict (deliberation loop / truncation),
-          the two-model path kicks in: VLM description → STAGE3_MODEL verdict.
+Primary: VLM sees the image and classifies directly. SAFE is trusted (fast path).
+Adjudication: UNSAFE or no-verdict from the 2B primary triggers the two-model
+          path: VLM description (neutral, no verdict coercion) → STAGE3_MODEL
+          verdict on the description. This prevents the 2B from false-blocking
+          harmless images the primary prompt overextends on.
 
 Fail-closed: blocks if safety cannot be confirmed at any stage.
 """
@@ -276,10 +278,12 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
     """
     Check image safety via hybrid architecture. Returns (is_safe, reason, description).
 
-    Primary: VLM sees the image and classifies directly (proven zero-FN accuracy).
-    Fallback: If VLM produces no verdict (deliberation loop / truncation),
-              two-model path: VLM description → STAGE3_MODEL verdict.
-    Final: Fail-closed if neither path produces a verdict.
+    Primary: VLM sees the image and classifies directly. Only SAFE is trusted as
+             a final verdict — the 2B primary is known to over-block harmless
+             images on the kids prompt.
+    Adjudication: Primary UNSAFE or no-verdict escalates to the two-model path:
+             VLM describes neutrally → STAGE3_MODEL classifies the description.
+    Final: Fail-closed if adjudication cannot confirm safety.
 
     Args:
         image_path: Path to the image file on disk.
@@ -345,16 +349,21 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
 
             verdict = _extract_verdict(content) or _extract_verdict(thinking)
 
-            if verdict == 'unsafe':
-                return (False, f"VLM safety check ({config.VLM_SAFETY_MODEL}): image flagged as unsafe for {safety_level}", description)
             if verdict == 'safe':
                 return (True, '', description)
 
-            # No verdict from primary — fall through to two-model fallback
-            logger.warning(
-                "[VLM-SAFETY] Primary: no SAFE/UNSAFE verdict — trying two-model fallback. "
-                f"content={content[:100]!r}, thinking={thinking[:100]!r}"
-            )
+            # Primary UNSAFE is NOT a final verdict — the 2B over-blocks. Escalate
+            # to the two-model adjudication path (VLM describe → STAGE3_MODEL judge).
+            if verdict == 'unsafe':
+                logger.warning(
+                    "[VLM-SAFETY] Primary flagged unsafe — escalating to two-model adjudication. "
+                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
+                )
+            else:
+                logger.warning(
+                    "[VLM-SAFETY] Primary: no SAFE/UNSAFE verdict — trying two-model fallback. "
+                    f"content={content[:100]!r}, thinking={thinking[:100]!r}"
+                )
         else:
             description = ''
             logger.warning("[VLM-SAFETY] Primary: VLM returned None — trying two-model fallback")
