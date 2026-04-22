@@ -75,7 +75,7 @@ VLM_DESCRIBE_PROMPTS = {
 
 VLM_VERDICT_PROMPTS = {
     'kids': (
-        'You are a safety classifier for a children\'s educational app (ages 6-12).\n\n'
+        'You are a safety classifier for a children\'s educational app (ages 8-13).\n\n'
         'A safety-focused analysis of an image produced the following:\n\n'
         '"{description}"\n\n'
         'Based on this analysis, does the image contain harmful content?\n\n'
@@ -87,13 +87,14 @@ VLM_VERDICT_PROMPTS = {
         'Answer SAFE or UNSAFE.'
     ),
     'youth': (
-        'You are a safety classifier for a youth educational app (ages 12-16).\n\n'
+        'You are a safety classifier for a youth educational app (ages 14-18).\n\n'
         'A safety-focused analysis of an image produced the following:\n\n'
         '"{description}"\n\n'
         'Based on this analysis, does the image contain harmful content?\n\n'
         'UNSAFE means the analysis found: graphic violence, gore, nudity, '
         'hate symbols, self-harm, or terrorism.\n\n'
-        'IMPORTANT: Dark lighting, shadows, or moody atmosphere alone '
+        'IMPORTANT: Dark lighting, shadows, moody atmosphere, or non-graphic '
+        'horror imagery (skeletal figures, ghosts, zombies without gore) '
         'are NOT harmful. Only flag content from the list above.\n\n'
         'Answer SAFE or UNSAFE.'
     ),

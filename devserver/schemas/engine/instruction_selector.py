@@ -69,22 +69,22 @@ NO meta-commentary. NO markdown. NO code fences. NO explanation."""
 
 SAFETY_PREFIXES = {
     'kids': (
-        'SAFETY (ages 6-12): This output generates media for children.\n'
+        'SAFETY (ages 8-13): This output generates media for children.\n'
         'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
         '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
-        'Your output text must also be appropriate for children ages 6-12. '
+        'Your output text must also be appropriate for children ages 8-13. '
         'Do not introduce violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
     'youth': (
-        'SAFETY (ages 13-17): This output generates media for teenagers.\n'
+        'SAFETY (ages 14-18): This output generates media for older adolescents.\n'
         'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
         '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
-        'Your output text must also be appropriate for teenagers ages 13-17. '
+        'Your output text must also be appropriate for older adolescents ages 14-18. '
         'Do not introduce explicit violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
