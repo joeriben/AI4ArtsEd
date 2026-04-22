@@ -61,7 +61,7 @@ _SETTINGS_DEFAULTS = {
     'IMAGE_ANALYSIS_MODEL': '',
     'SAFETY_MODEL': '',
     'DSGVO_VERIFY_MODEL': '',
-    'VLM_SAFETY_MODEL': '',
+    'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
 }
 
 # Pre-initialize module globals for imports (overwritten by reload_user_settings at startup)
@@ -615,6 +615,12 @@ GPU_SERVICE_TIMEOUT_MUSIC = 300       # HeartMuLa
 GPU_SERVICE_TIMEOUT_AUDIO = 300       # Stable Audio
 GPU_SERVICE_TIMEOUT_3D = 300          # Hunyuan3D-2 mesh generation
 GPU_SERVICE_TIMEOUT = GPU_SERVICE_TIMEOUT_DEFAULT  # Backward compat
+
+# Auto-start (analog zu ComfyUI). Timeout > ComfyUI (120s) weil erster
+# llama-cpp-python-Load spürbar langsamer ist.
+GPU_SERVICE_AUTO_START = os.environ.get("GPU_SERVICE_AUTO_START", "true").lower() == "true"
+GPU_SERVICE_STARTUP_TIMEOUT = int(os.environ.get("GPU_SERVICE_STARTUP_TIMEOUT", "180"))
+GPU_SERVICE_HEALTH_CHECK_INTERVAL = float(os.environ.get("GPU_SERVICE_HEALTH_CHECK_INTERVAL", "2.0"))
 
 # --- Blender (headless mesh rendering) ---
 BLENDER_PATH = os.environ.get("BLENDER_PATH", "/usr/bin/blender")

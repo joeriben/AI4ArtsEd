@@ -223,6 +223,47 @@ FALLBACK PATH: VLM describes → STAGE3_MODEL judges
 **Config:** `VLM_SAFETY_MODEL` in `user_settings.json` for VLM, `STAGE3_MODEL` for verdict fallback.
 **Fail-closed throughout:** No verdict from either path → blocked.
 
+**Two-Model Architecture (Session 298, 2026-04-05):**
+
+Both safety levels use the same two-model path:
+```
+Step 1: VLM (qwen3-vl:2b, local, 2.5 GB) describes image
+Step 2: STAGE3_MODEL (Gemini 3 Flash, cloud) judges description
+```
+
+Age differentiation via verdict prompts:
+```
+kids (FSK 6):  UNSAFE = violence, gore, nudity, hate, terrorism,
+               horror imagery (monsters, zombies, ghosts, skulls, demons)
+
+youth (FSK 12): UNSAFE = violence, gore, nudity, hate, terrorism
+                Horror imagery is acceptable for ages 12+
+```
+
+Why not direct VLM classification (deprecated):
+- qwen3-vl:2b direct SAFE/UNSAFE proved unreliable (21-image test, Session 298)
+- Missed explicit nudity and terrorism (2/5 critical FN)
+- False-positived cathedral and chocolate cake (2/6 harmless FP)
+- Could not differentiate between age groups at all
+- Two-model path: 5/5 critical caught, 0 FP, 7 correct age differentiations
+
+**Model Constraints (Session 298, 2026-04-04):**
+
+| Model | SAFE/UNSAFE prompts | Recommendation |
+|-------|-------------------|----------------|
+| **qwen3-vl:2b** | Reliable. Workshop-validated (202 images, 13.03.2026). | **USE THIS** |
+| qwen2.5-vl:2b | Hallucinates UNSAFE on dramatic imagery. 100% FP rate. | DO NOT USE for safety |
+
+qwen3-vl:2b runs via `Qwen25VLChatHandler` in llama-cpp-python (handler is architecture-compatible).
+The content-checklist prompt (enumerating concrete categories) is validated — DO NOT simplify without workshop re-test.
+
+**False-Negative Test (Session 298):**
+- Hate symbols (swastika): UNSAFE (kids) — correctly caught
+- Skull/skeleton: UNSAFE (kids), SAFE (youth) — correctly differentiated
+- Bloody knife: UNSAFE (kids) — correctly caught
+- Flowers, ship wreck: SAFE — correctly passed
+- Abstract red shapes: SAFE — model interprets as "abstract art", not blood (acceptable for synthetic primitives)
+
 ---
 
 ## 4. Detection Mechanisms

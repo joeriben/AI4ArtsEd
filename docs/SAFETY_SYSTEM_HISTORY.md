@@ -212,6 +212,20 @@ Konsequenz: Das technische System muss §86a und DSGVO *absolut* durchsetzen (ge
 - CDF loeste Deliberation-Loop aus (VLM halluziniert "The Scream") → Fallback → Sonnet 4.6 SAFE
 - Grenzfaelle (dunkle Silhouetten) vom VLM ueberklassifiziert (FP, aber kein Sicherheitsrisiko)
 
+### Era 7: Ollama→llama-cpp Regression (2026-04-04)
+
+| Session | Datum | Scope | Aenderung |
+|---------|-------|-------|-----------|
+| — | 2026-03-28 | Infra | Ollama entfernt, llama-cpp-python in GPU Service. Alias `qwen3-vl:2b → qwen2.5-vl:2b` statt echte Model-Registration |
+| — | 2026-04-04 | VLM | **Totaler Ausfall**: JEDES generierte Bild geblockt. qwen2.5-vl:2b halluziniert UNSAFE bei jeder SAFE/UNSAFE-Frage mit dramatischer Bildsprache |
+
+**Root Cause:** Bei der Ollama-Migration wurde qwen3-vl:2b per Alias auf qwen2.5-vl:2b gemappt. qwen2.5-vl:2b (Q4_K_M) kann SAFE/UNSAFE-Klassifikation nicht zuverlaessig — antwortet auf jedes Bild mit dramatischer Atmosphaere (Ruinen, roter Himmel, Verfall) pauschal UNSAFE. YES/NO-Fragen zu konkretem Inhalt ("Is there blood?") beantwortet es korrekt mit NO.
+
+**Fix:** qwen3-vl:2b GGUF (seit 27.03 auf Disk) als eigenes Modell im GPU Service registriert. Qwen25VLChatHandler funktioniert fuer beide Architekturen. Workshop-validierter Content-Checklist-Prompt (2ee36d7) wiederhergestellt. Verifiziert: qwen3-vl + Workshop-Prompt = SAFE auf dem blockierten Schiffswrack-Bild.
+
+**WARNUNG — VLM-Modell NICHT wechseln ohne Workshop-Revalidierung:**
+qwen3-vl:2b ist das einzige Workshop-getestete VLM (202 Bilder, Workshop 13.03.2026). Jeder Modellwechsel erfordert erneute Validierung auf dem Workshop-Corpus. qwen2.5-vl:2b ist NICHT geeignet fuer SAFE/UNSAFE-Klassifikation.
+
 **WARNUNG — Keyword-Filter NICHT wieder einfuehren:**
 Der Keyword-Filter oszillierte zwischen zu aggressiv (28% False Positives) und zu permissiv (Waffen-Bypass) ueber 10+ Sessions. Das grundlegende Problem ist unlösbar: kurze Keywords in natuerlicher Sprache haben notwendigerweise hohe False-Positive-Raten, und laengere Keyword-Listen verschlechtern die Rate weiter statt sie zu verbessern.
 

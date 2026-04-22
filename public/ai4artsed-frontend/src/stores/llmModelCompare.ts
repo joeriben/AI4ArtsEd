@@ -11,9 +11,9 @@ export const useLlmModelCompareStore = defineStore('llmModelCompare', () => {
   let nextMsgId = 0
 
   const columns = ref<LlmModelColumn[]>([
-    { modelId: 'mammouth/claude-sonnet-4-6', messages: [] },
-    { modelId: 'local/deepseek-r1:32b', messages: [] },
-    { modelId: 'local/qwen3:32b', messages: [] },
+    { modelId: 'local/qwen3:4b', messages: [] },
+    { modelId: 'local/phi-3.5-mini', messages: [] },
+    { modelId: 'local/gemma-2-2b', messages: [] },
   ])
 
   const systemPrompt = ref('')

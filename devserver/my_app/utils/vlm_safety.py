@@ -36,6 +36,28 @@ VLM_MIN_SIZE = 64
 
 logger = logging.getLogger(__name__)
 
+# --- DEPRECATED: Direct VLM classification ---
+# qwen3-vl:2b direct classification was proven unreliable (Session 298, 21 test images):
+# - 2/5 critical unsafe images missed (explicit nudity, terrorism)
+# - 0/10 horror images detected for kids
+# - 2/6 harmless images falsely blocked (cathedral, chocolate cake)
+# Both levels now use the two-model path: VLM describes → STAGE3_MODEL judges.
+# The direct prompt is kept only for potential future use with better VLM models.
+VLM_PROMPTS = {
+    'kids': (
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children? '
+        'Answer SAFE or UNSAFE.'
+    ),
+    'youth': (
+        'Does this image contain violence, gore, nudity, hate symbols, self-harm, '
+        'racism, hate crime settings, terrorism, sexism, '
+        'or content that is scary, unsettling, or traumatizing for young children? '
+        'Answer SAFE or UNSAFE.'
+    ),
+}
+
 # --- VLM describes, STAGE3_MODEL judges ---
 VLM_DESCRIBE_PROMPTS = {
     'kids': (
@@ -240,6 +262,13 @@ def vlm_describe_image(image_path: str | Path) -> str:
             logger.warning(f"[VLM-DESCRIBE] Upscaled undersized image {image_path.name}: {img.size}")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        if img.mode not in ('RGB', 'L'):
+            if img.mode == 'RGBA' or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                bg.paste(img.convert('RGBA'), mask=img.convert('RGBA').split()[-1])
+                img = bg
+            else:
+                img = img.convert('RGB')
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=80)
         image_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
@@ -303,6 +332,13 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
             logger.warning(f"[VLM-SAFETY] Upscaled undersized image {original_size} -> {img.size} (min {VLM_MIN_SIZE}px)")
         if max(img.size) > VLM_MAX_SIZE:
             img.thumbnail((VLM_MAX_SIZE, VLM_MAX_SIZE), Image.LANCZOS)
+        if img.mode not in ('RGB', 'L'):
+            if img.mode == 'RGBA' or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                bg.paste(img.convert('RGBA'), mask=img.convert('RGBA').split()[-1])
+                img = bg
+            else:
+                img = img.convert('RGB')
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=80)
         image_bytes = buf.getvalue()
@@ -311,10 +347,25 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         from my_app.services.llm_backend import get_llm_backend
         llm = get_llm_backend()
 
-        # Step 1: VLM describes the image (safety-focused, no verdict coercion)
+        # =================================================================
+        # TWO-MODEL PATH (both levels):
+        #   Step 1: VLM (qwen3-vl:2b) describes image — what does it see?
+        #   Step 2: STAGE3_MODEL (cloud) judges description — is it harmful?
+        #
+        # Age differentiation via verdict prompts:
+        #   Kids (FSK 6): flags violence, gore, nudity, hate, terrorism,
+        #                  AND horror imagery (monsters, zombies, skulls, demons)
+        #   Youth (FSK 12): flags violence, gore, nudity, hate, terrorism only
+        #                   Horror imagery is acceptable for 12+
+        #
+        # Why not direct VLM classification:
+        #   qwen3-vl:2b direct SAFE/UNSAFE is unreliable (Session 298 test,
+        #   21 images): misses nudity+terrorism, false-positives on cathedral+cake.
+        #   The two-model path caught all 5/5 critical images with 0 FP.
+        # =================================================================
         logger.info(
-            f"[VLM-SAFETY] Step 1/2: Describing image ({original_size} -> {img.size}, "
-            f"{len(image_bytes)} bytes) with {config.VLM_SAFETY_MODEL} for {safety_level}"
+            f"[VLM-SAFETY] Two-model path ({config.VLM_SAFETY_MODEL} describe → "
+            f"{verdict_model} verdict) for {safety_level}, {original_size} -> {img.size}"
         )
 
         describe_result = llm.chat(

@@ -111,6 +111,17 @@ def llm_models():
     })
 
 
+@llm_bp.route('/chat-models', methods=['GET'])
+def llm_chat_models():
+    """List chat-capable LLM models for Compare Hub."""
+    from services.llm_backend import get_llm_backend
+
+    backend = get_llm_backend()
+    return jsonify({
+        "models": backend.get_chat_models(),
+    })
+
+
 @llm_bp.route('/unload', methods=['POST'])
 def llm_unload():
     """Unload a specific LLM model to free VRAM."""

@@ -7,7 +7,8 @@ in the GPU Service process with full VRAM coordinator integration.
 Models:
 - qwen3:1.7b — DSGVO verification, text tasks
 - llama-guard3:1b — Stage 3 safety (Llama Guard S1-S13)
-- qwen2.5-vl:2b — VLM safety checks (image classification)
+- qwen3-vl:2b — VLM safety checks (image classification, workshop-validated)
+- qwen2.5-vl:2b — VLM fallback (NOT recommended: hallucinates UNSAFE on SAFE/UNSAFE prompts)
 """
 
 import gc
@@ -23,19 +24,52 @@ logger = logging.getLogger(__name__)
 MODEL_DIR = os.path.expanduser("~/ai/llama-server-models")
 
 MODEL_CONFIGS = {
+    # ── Chat-capable models (appear in Compare Hub) ──────────────────────
     "qwen3:1.7b": {
         "model_path": os.path.join(MODEL_DIR, "Qwen3-1.7B-Q8_0.gguf"),
         "n_ctx": 4096,
         "n_gpu_layers": -1,
         "estimated_vram_mb": 2000,
         "chat_handler": None,
+        "chat_capable": True,
+        "display_name": "Qwen 3 1.7B",
     },
+    "qwen3:4b": {
+        "model_path": os.path.join(MODEL_DIR, "Qwen3-4B-Q8_0.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 4500,
+        "chat_handler": None,
+        "chat_capable": True,
+        "display_name": "Qwen 3 4B",
+    },
+    "phi-3.5-mini": {
+        "model_path": os.path.join(MODEL_DIR, "Phi-3.5-mini-instruct-Q8_0.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 4000,
+        "chat_handler": None,
+        "chat_capable": True,
+        "display_name": "Phi 3.5 Mini (Microsoft)",
+    },
+    "gemma-2-2b": {
+        "model_path": os.path.join(MODEL_DIR, "gemma-2-2b-it-Q8_0.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 3000,
+        "chat_handler": None,
+        "chat_capable": True,
+        "display_name": "Gemma 2 2B (Google)",
+    },
+    # ── Utility models (safety, VLM — not for Compare Hub) ──────────────
     "llama-guard3:1b": {
         "model_path": os.path.join(MODEL_DIR, "Llama-Guard-3-1B.Q8_0.gguf"),
         "n_ctx": 4096,
         "n_gpu_layers": -1,
         "estimated_vram_mb": 1800,
         "chat_handler": None,
+        "chat_capable": False,
+        "display_name": "Llama Guard 3 1B",
     },
     "qwen2.5-vl:2b": {
         "model_path": os.path.join(MODEL_DIR, "qwen25-vl-2b", "Qwen2.5_VL_2B.Q4_K_M.gguf"),
@@ -44,13 +78,24 @@ MODEL_CONFIGS = {
         "n_gpu_layers": -1,
         "estimated_vram_mb": 2500,
         "chat_handler": "qwen25vl",
+        "chat_capable": False,
+        "display_name": "Qwen 2.5 VL 2B",
+    },
+    "qwen3-vl:2b": {
+        "model_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "Qwen3VL-2B-Instruct-Q4_K_M.gguf"),
+        "mmproj_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "mmproj-Qwen3VL-2B-Instruct-F16.gguf"),
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "estimated_vram_mb": 2500,
+        "chat_handler": "qwen25vl",  # Qwen25VLChatHandler works for qwen3-vl too
+        "chat_capable": False,
+        "display_name": "Qwen 3 VL 2B",
     },
 }
 
 # Aliases for backward compatibility with legacy model names
 MODEL_ALIASES = {
     "llama-guard3:latest": "llama-guard3:1b",
-    "qwen3-vl:2b": "qwen2.5-vl:2b",  # VLM safety model alias
 }
 
 
@@ -332,6 +377,20 @@ class LLMBackend:
         all_models = list(MODEL_CONFIGS.keys())
         all_models.extend(MODEL_ALIASES.keys())
         return all_models
+
+    def get_chat_models(self) -> List[Dict[str, Any]]:
+        """List chat-capable models with availability info for Compare Hub."""
+        result = []
+        for alias, config in MODEL_CONFIGS.items():
+            if not config.get("chat_capable", False):
+                continue
+            result.append({
+                "id": alias,
+                "display_name": config.get("display_name", alias),
+                "available": os.path.exists(config["model_path"]),
+                "estimated_vram_mb": config.get("estimated_vram_mb", 0),
+            })
+        return result
 
     def is_available(self) -> bool:
         """Check if llama-cpp-python is importable."""

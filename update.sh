@@ -67,6 +67,7 @@ pip install --upgrade pip > /dev/null 2>&1
 
 # Update dependencies
 if pip install -r requirements.txt; then
+    python scripts/validate_transformers_runtime.py
     echo -e "${GREEN}[✓]${NC} Python dependencies updated"
 else
     echo -e "${RED}[✗]${NC} Failed to update Python dependencies"

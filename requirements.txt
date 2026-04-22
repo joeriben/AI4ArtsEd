@@ -33,7 +33,7 @@ aiohttp==3.12.13
 # HuggingFace ML Stack
 # ============================================================================
 diffusers==0.36.0
-transformers==4.57.0
+transformers==4.57.6
 huggingface_hub==0.36.1
 
 # ============================================================================
@@ -70,6 +70,17 @@ scipy==1.16.0
 # ============================================================================
 spacy==3.8.11
 # Models installed separately via deployment/requirements-spacy.txt
+
+# ============================================================================
+# Local LLM / VLM Inference (in-process, replaces Ollama since Session ~290)
+# ============================================================================
+# Used by gpu_service/services/llm_backend.py for:
+#   - VLM_SAFETY_MODEL (qwen3-vl:2b image safety check)
+#   - DSGVO_VERIFY_MODEL, SAFETY_MODEL and other small local LLMs
+# MUST be built with CUDA support; PyPI default wheels are CPU-only and too slow.
+# Install: CMAKE_ARGS="-DGGML_CUDA=on" pip install --no-binary llama-cpp-python llama-cpp-python==0.3.19
+# Verify libggml-cuda.so exists in llama_cpp/lib/ after install.
+llama-cpp-python==0.3.19
 
 # ============================================================================
 # Image Processing

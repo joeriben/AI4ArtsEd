@@ -1,24 +1,31 @@
-# AI4ArtsEd DevServer
+# UCDCAE AI LAB
 
-**Pedagogical Experimentation Platform for Critical Engagement with Generative AI**
+**Pedagogical-Artistic Experimentation Platform for Critical Engagement with Generative AI**
 
-Version 2.1 | January 2026
+Developed within the **AI4ArtsEd** and **COMeARTS** research projects at the [UNESCO Chair in Digital Culture and Arts in Education](https://cris.fau.de/projects/318044853/) (UCDCAE), Friedrich-Alexander-Universitat Erlangen-Nurnberg.
+
+**Funded by the [Federal Ministry for Family Affairs, Senior Citizens, Women and Youth](https://www.bmfsfj.de/) (BMFSFJ)** as part of the research programme "Kulturelle Bildung in gesellschaftlichen Transformationen" (kubi-meta).
+
+- **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** — Artificial Intelligence for Arts Education
+- **[COMeARTS](https://comearts.eu)** — Community-Based Arts Projects
 
 ---
 
-## What is AI4ArtsEd?
+## What is the UCDCAE AI LAB?
 
-AI4ArtsEd is a pedagogical platform that makes AI transformation transparent by separating the creative process into visible, editable steps. Designed for cultural education (ages 8-17), it treats generative AI not as a tool to be optimized, but as a subject of critical and creative exploration.
+The UCDCAE AI LAB is a pedagogical-artistic experimentation platform for the explorative use of generative artificial intelligence in cultural-aesthetic media education. It makes AI transformation transparent by separating the creative process into visible, editable steps. Designed for cultural education (ages 6-17), it treats generative AI not as a tool to be optimized, but as a subject of critical and creative exploration.
 
 ### Key Features
 
 - **WAS/WIE Separation**: Ideas and transformation rules are entered separately
 - **4-Stage Pipeline**: Visible processing with editable breakpoints (Translation → Interception → Safety → Generation)
 - **LLM as Co-Actor**: AI contributions are visible, not hidden
-- **Multi-Provider LLM Support**: Ollama, OpenRouter, AWS Bedrock, Mistral
-- **SwarmUI Integration**: Professional image generation via ComfyUI workflows
-- **LoRA Training Studio**: Create custom styles
-- **Canvas Workflow System**: Visual node-based AI workflow builder (NEW)
+- **Multi-Provider LLM Support**: Local (llama-cpp-python) and cloud (Mammouth, AWS Bedrock)
+- **GPU Service**: Diffusers-based image generation (SD3.5) + ComfyUI fallback
+- **Music Generation**: HeartMuLa integration for AI music creation
+- **Canvas Workflow System**: Visual node-based AI workflow builder
+- **Latent Lab**: Interactive experiments with diffusion model internals
+- **9 Languages**: DE, EN, TR, KO, UK, FR, ES, HE, AR (with RTL support)
 
 ---
 
@@ -50,27 +57,31 @@ The complete architecture is documented in 24+ parts:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Vue 3 Frontend                        │
-│            (TypeScript, Composition API, i18n)           │
+│         (TypeScript, Composition API, i18n x9)           │
 └─────────────────────────┬───────────────────────────────┘
                           │ HTTP/SSE
 ┌─────────────────────────▼───────────────────────────────┐
 │                  Flask DevServer                         │
-│         (Orchestration, Pipeline Execution)              │
+│      (4-Stage Orchestration, Pipeline Execution)         │
 └──────────┬──────────────────────────────┬───────────────┘
            │                              │
 ┌──────────▼──────────┐      ┌───────────▼────────────────┐
-│    LLM Providers    │      │   SwarmUI (Port 7801)      │
-│  - Ollama (local)   │      │   ┌────────────────────┐   │
-│  - OpenRouter       │      │   │     ComfyUI        │   │
-│  - AWS Bedrock      │      │   │   (Workflows)      │   │
-│  - Mistral          │      │   └────────────────────┘   │
-└─────────────────────┘      └────────────────────────────┘
+│   GPU Service       │      │      ComfyUI               │
+│  (Port 17803)       │      │    (Port 17804)            │
+│  - Diffusers (SD3.5)│      │    (Fallback path)         │
+│  - HeartMuLa (Music)│      └────────────────────────────┘
+│  - LLM (Safety)     │
+│  - Stable Audio     │      ┌────────────────────────────┐
+└─────────────────────┘      │    Cloud LLM Providers     │
+                              │  - Mammouth (DSGVO)       │
+                              │  - AWS Bedrock             │
+                              └────────────────────────────┘
 ```
 
 **Backend**: Python 3.13, Flask, SSE streaming
 **Frontend**: Vue 3, TypeScript, Vite
-**Generation**: SwarmUI + ComfyUI
-**LLMs**: Multi-provider (local + cloud)
+**Generation**: Diffusers (SD3.5 Large) + ComfyUI fallback
+**LLMs**: Local (llama-cpp-python) + Cloud (Mammouth, AWS Bedrock)
 
 ---
 
@@ -204,9 +215,15 @@ See [LICENSE](LICENSE) for full terms.
 
 ## Research & Development
 
-**Institution**: Friedrich-Alexander-Universität Erlangen-Nürnberg
-**Research Group**: AI4ArtsEd
-**Principal Investigator**: Prof. Dr. Benjamin Jörissen
+**Institution**: Friedrich-Alexander-Universitat Erlangen-Nurnberg (FAU)
+**Chair**: UNESCO Chair in Digital Culture and Arts in Education (UCDCAE)
+**Principal Investigator**: Prof. Dr. Benjamin Jorissen
+**Research Associate**: Vanessa Baumann
+
+### Projects
+
+- **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** — Artificial Intelligence for Arts Education. Explores opportunities, conditions, and limits of pedagogical use of AI in culturally diversity-sensitive settings of cultural education.
+- **[COMeARTS](https://comearts.eu)** — Community-Based Arts Projects. European cooperation project for community-based artistic practice with digital media.
 
 ### Publications & Resources
 
@@ -227,16 +244,18 @@ For questions or collaboration inquiries, please contact:
 
 ## Acknowledgments
 
-AI4ArtsEd integrates and builds upon:
-- [SwarmUI](https://github.com/mcmonkeyprojects/SwarmUI) - Stable Diffusion interface
+The UCDCAE AI LAB integrates and builds upon:
 - [ComfyUI](https://github.com/comfyanonymous/ComfyUI) - Node-based workflow system
-- [Ollama](https://ollama.ai/) - Local LLM runtime
+- [Stable Diffusion 3.5](https://huggingface.co/stabilityai/stable-diffusion-3.5-large) - Image generation
+- [HeartMuLa](https://github.com/nichuanfang/heartlib) - Music generation
+- [llama-cpp-python](https://github.com/abetlen/llama-cpp-python) - Local LLM inference
 - [Vue 3](https://vuejs.org/) - Progressive JavaScript framework
+
+## Funding
+
+This project is funded by the **Federal Ministry for Family Affairs, Senior Citizens, Women and Youth (BMFSFJ)** as part of the research programme "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
 
 ---
 
-**Version**: 2.1
-**Last Updated**: January 2026
+**Last Updated**: April 2026
 **Status**: Active Development
-
-<sub>📝 *This README was created during Session 134 (January 2026).*</sub>
