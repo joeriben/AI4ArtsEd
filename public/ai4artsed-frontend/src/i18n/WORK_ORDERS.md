@@ -21,6 +21,17 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-04-22-safety-age-labels-realigned
+- **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
+- **Changed keys** (all MODIFIED):
+  - `settings.general.kids` (MODIFIED): "Kids (8–12)" -> "Kids (8–13)"
+  - `settings.general.youth` (MODIFIED): "Youth (13–17)" -> "Youth (14–18)"
+  - `settings.safety.kidsTitle` (MODIFIED): "Children (8–12)" -> "Children (8–13)"
+  - `settings.safety.youthTitle` (MODIFIED): "Youth (13–17)" -> "Youth (14–18)"
+  - `settings.safety.kidsDesc` (MODIFIED): full description rewritten — see en.ts for new English text
+  - `settings.safety.youthDesc` (MODIFIED): full description rewritten — see en.ts for new English text
+- **Context**: The internal safety filters were re-calibrated so the age labels match actual behaviour. `kids` now covers ages 8–13 with strict protection (no horror imagery, no depicted violence, no nudity). `youth` covers ages 14–18 and blocks only graphic violence, gore, nudity, hate, self-harm, terrorism — non-graphic horror imagery (ghosts, skeletal figures, zombies without gore) is intentionally allowed. The user-facing descriptions must reflect this. IMPORTANT: MUST NOT mention the FSK rating mark or any national rating trademark (trademark-protected); phrase the protection level in neutral language ("age-appropriate", "strict child-appropriate"). Keep the German "§86a" reference literally; localise "DSGVO" to GDPR/RGPD/etc. where the target language already did so.
+
 ### WO-2026-04-06-compare-model-availability
 - **Scope**: en.ts -> de/tr/ko/uk/fr/es/he/ar/bg
 - **Changed keys**:
