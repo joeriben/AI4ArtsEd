@@ -262,12 +262,12 @@ sudo systemctl enable --now cloudflared
 ### Phase 9: systemd Service Units
 
 ```bash
-# GPU Service (Port 17803)
+# GPU Service (Port 17803, always from ai4artsed_development)
 sudo tee /etc/systemd/system/ai4artsed-gpu.service << 'EOF'
 [Unit]
 Description=AI4ArtsEd GPU Service (port 17803)
-After=network.target nvidia-persistenced.service
-Requires=nvidia-persistenced.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -294,8 +294,8 @@ EOF
 sudo tee /etc/systemd/system/ai4artsed-production.service << 'EOF'
 [Unit]
 Description=AI4ArtsEd Production Backend (port 17801)
-After=network-online.target ollama.service nvidia-persistenced.service
-Wants=network-online.target
+After=network-online.target ai4artsed-gpu.service nvidia-persistenced.service
+Wants=network-online.target ai4artsed-gpu.service
 
 [Service]
 Type=simple

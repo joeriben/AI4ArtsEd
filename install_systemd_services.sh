@@ -1,6 +1,6 @@
 #!/bin/bash
 # AI4ArtsEd - Systemd Services Installation
-# Makes backend and cloudflared start automatically on boot
+# Makes GPU service, backend, and cloudflared start automatically on boot
 #
 # REQUIRES: sudo privileges
 # RUN ONCE: After initial setup on production/remote servers
@@ -34,20 +34,34 @@ fi
 # Get script directory (should be repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEVSERVER_DIR="$SCRIPT_DIR/devserver"
+GPU_SERVICE_DIR="$SCRIPT_DIR/gpu_service"
+VENV_PYTHON="$SCRIPT_DIR/venv/bin/python"
+AI_TOOLS_BASE="$(dirname "$SCRIPT_DIR")"
 
 echo -e "${BLUE}=== AI4ArtsEd - Systemd Services Setup ===${NC}"
 echo ""
 echo "This will configure automatic startup on boot for:"
 echo "  - Cloudflared tunnel (if config exists)"
+echo "  - AI4ArtsEd GPU service"
 echo "  - AI4ArtsEd backend"
 echo ""
 echo "Installation directory: $SCRIPT_DIR"
 echo "Running as user: $ACTUAL_USER"
 echo ""
 
-# Verify devserver exists
+# Verify required services exist
 if [ ! -f "$DEVSERVER_DIR/server.py" ]; then
     echo -e "${RED}[✗]${NC} server.py not found in $DEVSERVER_DIR"
+    exit 1
+fi
+
+if [ ! -f "$GPU_SERVICE_DIR/server.py" ]; then
+    echo -e "${RED}[✗]${NC} server.py not found in $GPU_SERVICE_DIR"
+    exit 1
+fi
+
+if [ ! -x "$VENV_PYTHON" ]; then
+    echo -e "${RED}[✗]${NC} Python executable not found at $VENV_PYTHON"
     exit 1
 fi
 
@@ -59,7 +73,7 @@ echo ""
 # ============================================
 # Step 1: Cloudflared Service
 # ============================================
-echo -e "${BLUE}[1/3]${NC} Checking Cloudflared..."
+echo -e "${BLUE}[1/4]${NC} Checking Cloudflared..."
 
 CLOUDFLARED_CONFIG="/etc/cloudflared/config.yml"
 
@@ -104,18 +118,56 @@ else
 fi
 
 # ============================================
-# Step 2: Backend Service
+# Step 2: GPU Service
 # ============================================
 echo ""
-echo -e "${BLUE}[2/3]${NC} Creating AI4ArtsEd backend service..."
+echo -e "${BLUE}[2/4]${NC} Creating AI4ArtsEd GPU service..."
+
+cat > /etc/systemd/system/ai4artsed-gpu.service << EOF
+[Unit]
+Description=AI4ArtsEd GPU Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$ACTUAL_USER
+WorkingDirectory=$GPU_SERVICE_DIR
+Environment=GPU_SERVICE_PORT=17803
+Environment=PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+Environment=AI_TOOLS_BASE=$AI_TOOLS_BASE
+Environment=HOME=/home/$ACTUAL_USER
+Environment=PATH=$SCRIPT_DIR/venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=$VENV_PYTHON $GPU_SERVICE_DIR/server.py
+Restart=on-failure
+RestartSec=15
+TimeoutStartSec=300
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+echo -e "${GREEN}[✓]${NC} GPU service created"
+
+systemctl daemon-reload
+systemctl enable ai4artsed-gpu
+echo -e "${GREEN}[✓]${NC} GPU service enabled for boot"
+
+# ============================================
+# Step 3: Backend Service
+# ============================================
+echo ""
+echo -e "${BLUE}[3/4]${NC} Creating AI4ArtsEd backend service..."
 
 # Determine dependencies
 if [ "$CLOUDFLARED_ENABLED" = true ]; then
-    AFTER_DEPS="After=network-online.target cloudflared.service"
-    WANTS_DEPS="Wants=network-online.target cloudflared.service"
+    AFTER_DEPS="After=network-online.target ai4artsed-gpu.service cloudflared.service"
+    WANTS_DEPS="Wants=network-online.target ai4artsed-gpu.service cloudflared.service"
 else
-    AFTER_DEPS="After=network-online.target"
-    WANTS_DEPS="Wants=network-online.target"
+    AFTER_DEPS="After=network-online.target ai4artsed-gpu.service"
+    WANTS_DEPS="Wants=network-online.target ai4artsed-gpu.service"
 fi
 
 cat > /etc/systemd/system/ai4artsed-backend.service << EOF
@@ -130,7 +182,10 @@ User=$ACTUAL_USER
 WorkingDirectory=$DEVSERVER_DIR
 Environment=PORT=$BACKEND_PORT
 Environment=DISABLE_API_CACHE=false
-ExecStart=/usr/bin/python3 $DEVSERVER_DIR/server.py
+Environment=AI_TOOLS_BASE=$AI_TOOLS_BASE
+Environment=HOME=/home/$ACTUAL_USER
+Environment=PATH=$SCRIPT_DIR/venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=$VENV_PYTHON $DEVSERVER_DIR/server.py
 Restart=always
 RestartSec=5
 
@@ -149,10 +204,10 @@ systemctl enable ai4artsed-backend
 echo -e "${GREEN}[✓]${NC} Backend enabled for boot"
 
 # ============================================
-# Step 3: Summary
+# Step 4: Summary
 # ============================================
 echo ""
-echo -e "${BLUE}[3/3]${NC} Installation complete!"
+echo -e "${BLUE}[4/4]${NC} Installation complete!"
 echo ""
 echo -e "${GREEN}=== Summary ===${NC}"
 echo ""
@@ -165,6 +220,10 @@ else
     echo "  Cloudflared:  not configured"
 fi
 
+echo ""
+echo "  GPU Service:  enabled (starts on boot, port 17803)"
+echo "                sudo systemctl start ai4artsed-gpu"
+echo "                sudo systemctl status ai4artsed-gpu"
 echo ""
 echo "  Backend:      enabled (starts on boot, port $BACKEND_PORT)"
 echo "                sudo systemctl start ai4artsed-backend"

@@ -2,6 +2,16 @@
 
 Complete installation and configuration documentation for deploying AI4ArtsEd DevServer on production Linux servers.
 
+---
+
+## >>> AKTIVER PLAN — Multi-Tier-Installer <<<
+
+**→ [CURRENT_DEPLOYMENT_PLAN.md](CURRENT_DEPLOYMENT_PLAN.md)** (Stand 2026-04-21, nicht umgesetzt)
+
+Die unten aufgeführten Dokumente beschreiben den **heutigen Zustand** (ein Zielrechner: RTX 6000 Blackwell 96 GB). Der oben verlinkte Plan definiert den Multi-Tier-Umbau (Profile B/C/E + Werkraum-Abgrenzung). Vor jeder Änderung an den Installer-Scripts zuerst den Plan lesen.
+
+---
+
 ## Quick Start
 
 ### ⚡ Fastest Path: QUICKSTART.md

@@ -1,7 +1,15 @@
 # AI4ArtsEd DevServer Documentation
 
 **Main Documentation Index**
-**Last Updated:** 2026-01-30
+**Last Updated:** 2026-04-21
+
+---
+
+## >>> AKTIVER PLAN <<<
+
+**→ [docs/installation/CURRENT_DEPLOYMENT_PLAN.md](installation/CURRENT_DEPLOYMENT_PLAN.md)**
+
+Multi-Tier-Installer-Strategie (Profile B/C/E, Werkraum für schwache Rechner, Cloud-Safety-Tradeoff für Profil C). Nicht umgesetzt — wartet auf Implementierungsstart. Vor jeder Änderung an `install.sh`, `check_prerequisites.sh`, `download_models.sh`, `install_systemd_services.sh` **zuerst diesen Plan lesen**.
 
 ---
 
