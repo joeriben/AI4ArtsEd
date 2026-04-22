@@ -43,19 +43,25 @@
           <label class="vlm-selector-label">{{ t('compare.vlmAnalysis.modelsLabel') }}</label>
           <div class="vlm-chips">
             <label
-              v-for="vlm in VLM_MODELS"
+              v-for="vlm in vlmModels"
               :key="vlm.id"
               class="vlm-chip"
-              :class="{ active: selectedModels.includes(vlm.id) }"
+              :class="{ active: selectedModels.includes(vlm.id), disabled: !vlm.available }"
             >
               <input
                 type="checkbox"
                 :value="vlm.id"
                 v-model="selectedModels"
+                :disabled="!vlm.available"
                 class="vlm-chip-input"
               />
-              <span class="vlm-chip-label">{{ vlm.label }}</span>
+              <span class="vlm-chip-label">
+                {{ vlm.label }}<span v-if="!vlm.available" class="vlm-chip-unavailable"> {{ t('compare.shared.modelNotDownloaded') }}</span>
+              </span>
             </label>
+            <span v-if="!vlmLoading && vlmModels.length === 0" class="vlm-empty">
+              {{ t('compare.vlmAnalysis.noModelsInstalled') }}
+            </span>
           </div>
         </div>
 
@@ -106,21 +112,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
+import { useVlmModels } from '@/composables/useVlmModels'
 
 const { t } = useI18n()
 
-// --- VLM Models ---
-const VLM_MODELS = [
-  { id: 'qwen3-vl:2b', label: 'Qwen3-VL 2B' },
-  { id: 'qwen3-vl:4b', label: 'Qwen3-VL 4B' },
-  { id: 'qwen3-vl:32b', label: 'Qwen3-VL 32B' },
-  { id: 'llama3.2-vision:latest', label: 'Llama 3.2 Vision' },
-]
+// --- VLM Models (fetched dynamically from backend) ---
+const { vlmModels, loading: vlmLoading } = useVlmModels()
 
 // --- Analysis Perspectives ---
 const perspectives = [
@@ -145,7 +147,13 @@ const uploadedImage = ref<string | undefined>(undefined)
 const imagePath = ref<string | null>(null)
 const selectedPerspective = ref('neutral')
 const freePrompt = ref('')
-const selectedModels = ref<string[]>(['qwen3-vl:2b', 'qwen3-vl:4b', 'qwen3-vl:32b', 'llama3.2-vision:latest'])
+const selectedModels = ref<string[]>([])
+
+// Pre-select all available VLMs once the list arrives from the backend.
+watch(vlmModels, (models) => {
+  if (selectedModels.value.length > 0) return
+  selectedModels.value = models.filter(m => m.available).map(m => m.id)
+}, { immediate: true })
 const isAnalyzing = ref(false)
 const activeModelIdx = ref(-1)
 const chatRef = ref<InstanceType<typeof ComparisonChat> | null>(null)
@@ -177,7 +185,7 @@ const canAnalyze = computed(() => {
 })
 
 function getModelLabel(modelId: string): string {
-  return VLM_MODELS.find(m => m.id === modelId)?.label ?? modelId
+  return vlmModels.value.find(m => m.id === modelId)?.label ?? modelId
 }
 
 function getBaseUrl(): string {
@@ -433,6 +441,15 @@ async function startAnalysis() {
   border-color: rgba(76, 175, 80, 0.4);
 }
 
+.vlm-chip.disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.vlm-chip.disabled:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .vlm-chip-input {
   display: none;
 }
@@ -443,8 +460,21 @@ async function startAnalysis() {
   white-space: nowrap;
 }
 
+.vlm-chip-unavailable {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
 .vlm-chip.active .vlm-chip-label {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.vlm-empty {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  padding: 0.3rem 0;
 }
 
 

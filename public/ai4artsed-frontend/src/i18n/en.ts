@@ -1739,6 +1739,7 @@ export const en = {
       imageLabel: 'Your Image',
       perspectiveLabel: 'Perspective',
       modelsLabel: 'Vision Models',
+      noModelsInstalled: 'No vision models installed locally.',
       analyzeBtn: 'Analyze Image',
       analyzing: 'Analyzing...',
       waiting: 'waiting',

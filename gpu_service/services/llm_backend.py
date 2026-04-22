@@ -79,6 +79,7 @@ MODEL_CONFIGS = {
         "estimated_vram_mb": 2500,
         "chat_handler": "qwen25vl",
         "chat_capable": False,
+        "vlm_capable": True,
         "display_name": "Qwen 2.5 VL 2B",
     },
     "qwen3-vl:2b": {
@@ -89,6 +90,7 @@ MODEL_CONFIGS = {
         "estimated_vram_mb": 2500,
         "chat_handler": "qwen25vl",  # Qwen25VLChatHandler works for qwen3-vl too
         "chat_capable": False,
+        "vlm_capable": True,
         "display_name": "Qwen 3 VL 2B",
     },
 }
@@ -388,6 +390,22 @@ class LLMBackend:
                 "id": alias,
                 "display_name": config.get("display_name", alias),
                 "available": os.path.exists(config["model_path"]),
+                "estimated_vram_mb": config.get("estimated_vram_mb", 0),
+            })
+        return result
+
+    def get_vlm_models(self) -> List[Dict[str, Any]]:
+        """List VLM-capable models with availability info for Compare Hub."""
+        result = []
+        for alias, config in MODEL_CONFIGS.items():
+            if not config.get("vlm_capable", False):
+                continue
+            model_ok = os.path.exists(config["model_path"])
+            mmproj_ok = os.path.exists(config.get("mmproj_path", ""))
+            result.append({
+                "id": alias,
+                "display_name": config.get("display_name", alias),
+                "available": model_ok and mmproj_ok,
                 "estimated_vram_mb": config.get("estimated_vram_mb", 0),
             })
         return result

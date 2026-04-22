@@ -60,6 +60,31 @@ def chat_models():
     return jsonify({"models": models})
 
 
+@chat_bp.route('/vlm-models', methods=['GET'])
+def chat_vlm_models():
+    """
+    VLM-capable models for Compare Hub "Image Understanding" tab.
+    Returns local VLM models (from GPU Service) with availability.
+    """
+    from config import GPU_SERVICE_URL
+
+    models = []
+
+    try:
+        resp = requests.get(f"{GPU_SERVICE_URL.rstrip('/')}/api/llm/vlm-models", timeout=5)
+        if resp.ok:
+            for m in resp.json().get("models", []):
+                models.append({
+                    "id": f"local/{m['id']}",
+                    "label": f"{m['display_name']} (local)",
+                    "available": m.get("available", False),
+                })
+    except Exception as e:
+        logger.warning(f"[CHAT] Failed to fetch local VLM models: {e}")
+
+    return jsonify({"models": models})
+
+
 # Load interface reference guide
 INTERFACE_REFERENCE = ""
 try:
