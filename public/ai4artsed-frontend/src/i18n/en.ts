@@ -1701,6 +1701,16 @@ export const en = {
       modelLabel: 'Model',
       defaultModel: 'Default (Settings)',
       modelNotDownloaded: '(not downloaded)',
+      install: {
+        downloadCta: 'Download ({mb} MB)',
+        starting: 'Starting download...',
+        downloading: 'Downloading model',
+        done: 'Download complete',
+        failed: 'Download failed',
+        dismiss: 'Dismiss',
+        etaSeconds: '~{s}s left',
+        etaMinutes: '~{m} min left',
+      },
     },
     temperature: {
       inputLabel: 'Your Message',

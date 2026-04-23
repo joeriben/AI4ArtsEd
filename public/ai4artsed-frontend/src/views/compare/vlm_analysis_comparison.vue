@@ -42,23 +42,35 @@
         <div class="vlm-selector">
           <label class="vlm-selector-label">{{ t('compare.vlmAnalysis.modelsLabel') }}</label>
           <div class="vlm-chips">
-            <label
-              v-for="vlm in vlmModels"
-              :key="vlm.id"
-              class="vlm-chip"
-              :class="{ active: selectedModels.includes(vlm.id), disabled: !vlm.available }"
-            >
-              <input
-                type="checkbox"
-                :value="vlm.id"
-                v-model="selectedModels"
-                :disabled="!vlm.available"
-                class="vlm-chip-input"
-              />
-              <span class="vlm-chip-label">
-                {{ vlm.label }}<span v-if="!vlm.available" class="vlm-chip-unavailable"> {{ t('compare.shared.modelNotDownloaded') }}</span>
-              </span>
-            </label>
+            <template v-for="vlm in vlmModels" :key="vlm.id">
+              <label
+                v-if="vlm.available"
+                class="vlm-chip"
+                :class="{ active: selectedModels.includes(vlm.id) }"
+              >
+                <input type="checkbox" :value="vlm.id" v-model="selectedModels" class="vlm-chip-input" />
+                <span class="vlm-chip-label">{{ vlm.label }}</span>
+              </label>
+              <button
+                v-else-if="vlm.installable"
+                type="button"
+                class="vlm-chip vlm-chip-install"
+                :disabled="installActive"
+                @click="triggerInstall(vlm.id, vlm.label)"
+              >
+                <span class="vlm-chip-label">
+                  {{ vlm.label }}
+                  <span class="vlm-chip-install-cta">
+                    ⤓ {{ t('compare.shared.install.downloadCta', { mb: vlm.approxDownloadMb }) }}
+                  </span>
+                </span>
+              </button>
+              <label v-else class="vlm-chip disabled">
+                <span class="vlm-chip-label">
+                  {{ vlm.label }}<span class="vlm-chip-unavailable"> {{ t('compare.shared.modelNotDownloaded') }}</span>
+                </span>
+              </label>
+            </template>
             <span v-if="!vlmLoading && vlmModels.length === 0" class="vlm-empty">
               {{ t('compare.vlmAnalysis.noModelsInstalled') }}
             </span>
@@ -118,11 +130,23 @@ import MediaInputBox from '@/components/MediaInputBox.vue'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
 import { useVlmModels } from '@/composables/useVlmModels'
+import { useModelInstall } from '@/composables/useModelInstall'
 
 const { t } = useI18n()
 
 // --- VLM Models (fetched dynamically from backend) ---
 const { vlmModels, loading: vlmLoading } = useVlmModels()
+
+// --- Install handler ---
+const { install, isActive: installActive } = useModelInstall()
+
+async function triggerInstall(alias: string, label: string): Promise<void> {
+  try {
+    await install(alias, label)
+  } catch (e: any) {
+    console.warn('[vlm_analysis] install did not start:', e)
+  }
+}
 
 // --- Analysis Perspectives ---
 const perspectives = [
@@ -448,6 +472,29 @@ async function startAnalysis() {
 
 .vlm-chip.disabled:hover {
   background: rgba(255, 255, 255, 0.04);
+}
+
+.vlm-chip-install {
+  font: inherit;
+  color: inherit;
+  background: rgba(76, 175, 80, 0.06);
+  border-color: rgba(76, 175, 80, 0.25);
+}
+
+.vlm-chip-install:not(:disabled):hover {
+  background: rgba(76, 175, 80, 0.14);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.vlm-chip-install:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.vlm-chip-install-cta {
+  color: rgba(129, 199, 132, 0.9);
+  font-size: 0.7rem;
+  margin-left: 0.3rem;
 }
 
 .vlm-chip-input {

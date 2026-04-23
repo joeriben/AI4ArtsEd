@@ -40,9 +40,9 @@ def chat_models():
     from config import GPU_SERVICE_URL
 
     models = [
-        {"id": "mammouth/claude-sonnet-4-6", "label": "Claude Sonnet 4.6", "available": True},
-        {"id": "mammouth/claude-opus-4-6", "label": "Claude Opus 4.6", "available": True},
-        {"id": "mammouth/claude-haiku-4-5-20251001", "label": "Claude Haiku 4.5", "available": True},
+        {"id": "mammouth/claude-sonnet-4-6", "label": "Claude Sonnet 4.6", "available": True, "installable": False},
+        {"id": "mammouth/claude-opus-4-6", "label": "Claude Opus 4.6", "available": True, "installable": False},
+        {"id": "mammouth/claude-haiku-4-5-20251001", "label": "Claude Haiku 4.5", "available": True, "installable": False},
     ]
 
     try:
@@ -53,6 +53,8 @@ def chat_models():
                     "id": f"local/{m['id']}",
                     "label": f"{m['display_name']} (local)",
                     "available": m.get("available", False),
+                    "installable": m.get("installable", False),
+                    "approx_download_mb": m.get("approx_download_mb", 0),
                 })
     except Exception as e:
         logger.warning(f"[CHAT] Failed to fetch local chat models: {e}")
@@ -78,11 +80,80 @@ def chat_vlm_models():
                     "id": f"local/{m['id']}",
                     "label": f"{m['display_name']} (local)",
                     "available": m.get("available", False),
+                    "installable": m.get("installable", False),
+                    "approx_download_mb": m.get("approx_download_mb", 0),
                 })
     except Exception as e:
         logger.warning(f"[CHAT] Failed to fetch local VLM models: {e}")
 
     return jsonify({"models": models})
+
+
+@chat_bp.route('/install', methods=['POST'])
+def chat_install():
+    """
+    Install a local GGUF model. SSE passthrough to GPU Service.
+    Frontend strips 'local/' prefix before calling; accepts either form.
+    """
+    from flask import Response, stream_with_context
+    from config import GPU_SERVICE_URL
+
+    data = request.get_json() or {}
+    alias = (data.get("alias") or "").strip()
+    if alias.startswith("local/"):
+        alias = alias[len("local/"):]
+    if not alias:
+        return jsonify({"error": "alias required"}), 400
+
+    def generate():
+        try:
+            upstream = requests.post(
+                f"{GPU_SERVICE_URL.rstrip('/')}/api/llm/install",
+                json={"alias": alias},
+                stream=True,
+                timeout=(5, None),  # connect 5s, read: no limit (long download)
+            )
+            if upstream.status_code != 200:
+                err = f'data: {{"type":"error","alias":"{alias}","message":"GPU service returned {upstream.status_code}"}}\n\n'
+                yield err
+                return
+            for line in upstream.iter_lines(decode_unicode=True):
+                if line:
+                    yield f"{line}\n\n"
+        except requests.RequestException as e:
+            yield f'data: {{"type":"error","alias":"{alias}","message":"GPU service unreachable: {str(e)[:200]}"}}\n\n'
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'X-Accel-Buffering': 'no',
+        },
+    )
+
+
+@chat_bp.route('/install-precheck', methods=['POST'])
+def chat_install_precheck():
+    """Passthrough precheck: can this model be installed right now?"""
+    from config import GPU_SERVICE_URL
+
+    data = request.get_json() or {}
+    alias = (data.get("alias") or "").strip()
+    if alias.startswith("local/"):
+        alias = alias[len("local/"):]
+    if not alias:
+        return jsonify({"ok": False, "reason": "alias required"}), 400
+
+    try:
+        resp = requests.post(
+            f"{GPU_SERVICE_URL.rstrip('/')}/api/llm/install-precheck",
+            json={"alias": alias},
+            timeout=5,
+        )
+        return jsonify(resp.json()), resp.status_code
+    except requests.RequestException as e:
+        return jsonify({"ok": False, "reason": f"GPU service unreachable: {e}"}), 503
 
 
 # Load interface reference guide

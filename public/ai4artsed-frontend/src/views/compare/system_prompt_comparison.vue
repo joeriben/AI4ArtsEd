@@ -5,13 +5,17 @@
       <div class="sp-input-area">
         <div class="model-select-row">
           <label class="model-label">{{ t('compare.shared.modelLabel') }}</label>
-          <select v-model="selectedModel" class="model-select">
+          <select
+            :value="selectedModel"
+            class="model-select"
+            @change="onModelSelect(($event.target as HTMLSelectElement).value)"
+          >
             <option
               v-for="m in chatModels"
               :key="m.id"
               :value="m.id"
-              :disabled="!m.available"
-            >{{ m.label }}{{ !m.available ? ` ${t('compare.shared.modelNotDownloaded')}` : '' }}</option>
+              :disabled="!m.available && !m.installable"
+            >{{ optionLabel(m) }}</option>
           </select>
         </div>
         <MediaInputBox
@@ -112,7 +116,8 @@ import { useI18n } from 'vue-i18n'
 import { useSystemPromptCompareStore } from '@/stores/systemPromptCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
-import { useChatModels } from '@/composables/useChatModels'
+import { useChatModels, type ChatModelOption } from '@/composables/useChatModels'
+import { useModelInstall } from '@/composables/useModelInstall'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
@@ -438,6 +443,30 @@ async function handlePresetSelected(payload: { configId: string; context: string
 }
 
 const { chatModels } = useChatModels()
+const { install } = useModelInstall()
+
+function optionLabel(m: ChatModelOption): string {
+  if (m.available) return m.label
+  if (m.installable) {
+    return `${m.label} ⤓ ${t('compare.shared.install.downloadCta', { mb: m.approxDownloadMb })}`
+  }
+  return `${m.label} ${t('compare.shared.modelNotDownloaded')}`
+}
+
+async function onModelSelect(newId: string): Promise<void> {
+  const model = chatModels.value.find(m => m.id === newId)
+  if (model && !model.available && model.installable) {
+    install(newId, model.label).catch((e: any) =>
+      console.warn('[sys_prompt_compare] install did not start:', e)
+    )
+    const prev = selectedModel.value
+    selectedModel.value = ''
+    await nextTick()
+    selectedModel.value = prev
+    return
+  }
+  selectedModel.value = newId
+}
 
 const COL_CLASSES = ['col-a', 'col-b', 'col-c'] as const
 

@@ -141,6 +141,9 @@
     <ChatOverlay />
     <FooterGallery />
 
+    <!-- Global overlays -->
+    <ModelInstallToast />
+
     <!-- Modals -->
     <DokumentationModal v-model="showDokumentation" />
     <ImpressumModal v-model="showImpressum" />
@@ -165,6 +168,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import ChatOverlay from './components/ChatOverlay.vue'
 import FooterGallery from './components/FooterGallery.vue'
+import ModelInstallToast from './components/ModelInstallToast.vue'
 import DokumentationModal from './components/DokumentationModal.vue'
 import ImpressumModal from './components/ImpressumModal.vue'
 import DatenschutzModal from './components/DatenschutzModal.vue'

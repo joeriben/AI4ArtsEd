@@ -67,8 +67,8 @@
                 v-for="m in chatModels"
                 :key="m.id"
                 :value="m.id"
-                :disabled="!m.available"
-              >{{ m.label }}{{ !m.available ? ` ${t('compare.shared.modelNotDownloaded')}` : '' }}</option>
+                :disabled="!m.available && !m.installable"
+              >{{ optionLabel(m) }}</option>
             </select>
           </div>
           <div class="column-messages" :ref="el => setColRef(idx, el)">
@@ -112,7 +112,8 @@ import { useI18n } from 'vue-i18n'
 import { useLlmModelCompareStore } from '@/stores/llmModelCompare'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
-import { useChatModels } from '@/composables/useChatModels'
+import { useChatModels, type ChatModelOption } from '@/composables/useChatModels'
+import { useModelInstall } from '@/composables/useModelInstall'
 import ComparisonChat from '@/components/ComparisonChat.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
@@ -123,6 +124,15 @@ const store = useLlmModelCompareStore()
 const userPreferences = useUserPreferencesStore()
 const deviceId = useDeviceId()
 const { chatModels } = useChatModels()
+const { install } = useModelInstall()
+
+function optionLabel(m: ChatModelOption): string {
+  if (m.available) return m.label
+  if (m.installable) {
+    return `${m.label} ⤓ ${t('compare.shared.install.downloadCta', { mb: m.approxDownloadMb })}`
+  }
+  return `${m.label} ${t('compare.shared.modelNotDownloaded')}`
+}
 
 // ---------- System prompt presets (short list — full prompts in system_prompt_comparison) ----------
 
@@ -215,7 +225,19 @@ async function handlePresetSelected(payload: { configId: string; context: string
   }
 }
 
-function onModelChange(idx: number, modelId: string) {
+async function onModelChange(idx: number, modelId: string): Promise<void> {
+  const model = chatModels.value.find(m => m.id === modelId)
+  if (model && !model.available && model.installable) {
+    install(modelId, model.label).catch((e: any) =>
+      console.warn('[llm_model_comparison] install did not start:', e)
+    )
+    // Revert the <select> DOM via a two-step reactive update
+    const prev = store.columns[idx]?.modelId || ''
+    store.setModel(idx, '')
+    await nextTick()
+    store.setModel(idx, prev)
+    return
+  }
   store.setModel(idx, modelId)
 }
 

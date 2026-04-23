@@ -4,8 +4,9 @@ LLM Routes — Local LLM inference endpoints.
 Local LLM inference for safety checks, DSGVO verification, VLM safety.
 """
 
+import json
 import logging
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response, stream_with_context
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +132,60 @@ def llm_vlm_models():
     return jsonify({
         "models": backend.get_vlm_models(),
     })
+
+
+@llm_bp.route('/install-precheck', methods=['POST'])
+def llm_install_precheck():
+    """Check whether a model can be installed right now (no side effects)."""
+    from services.install_service import get_install_service
+
+    data = request.get_json() or {}
+    alias = data.get("alias", "").strip()
+    if not alias:
+        return jsonify({"ok": False, "reason": "alias required"}), 400
+
+    svc = get_install_service()
+    result = svc.precheck(alias)
+    result["busy"] = svc.is_busy()
+    result["active_alias"] = svc.active_alias()
+    return jsonify(result)
+
+
+@llm_bp.route('/install', methods=['POST'])
+def llm_install():
+    """
+    Install a MODEL_CONFIGS entry from HuggingFace. SSE stream.
+
+    Request:
+        {"alias": "qwen3:4b"}
+
+    Response: text/event-stream with events:
+        data: {"type": "start",    "alias": "...", "file": "...", "total_mb": 4082}
+        data: {"type": "progress", "alias": "...", "done_mb": 512, "total_mb": 4082, "speed_mb_s": 28.3}
+        data: {"type": "done",     "alias": "...", "elapsed_s": 147}
+        data: {"type": "error",    "alias": "...", "message": "..."}
+    """
+    from services.install_service import get_install_service
+
+    data = request.get_json() or {}
+    alias = data.get("alias", "").strip()
+    if not alias:
+        return jsonify({"error": "alias required"}), 400
+
+    svc = get_install_service()
+
+    def generate():
+        for event in svc.install(alias):
+            yield f"data: {json.dumps(event)}\n\n"
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'X-Accel-Buffering': 'no',
+        },
+    )
 
 
 @llm_bp.route('/unload', methods=['POST'])

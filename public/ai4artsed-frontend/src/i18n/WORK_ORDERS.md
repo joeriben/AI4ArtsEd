@@ -21,6 +21,19 @@ Tags:
   - (MODIFIED) = English text changed, all 5 translations are stale and must be re-done
 -->
 
+### WO-2026-04-23-model-install-toast
+- **Scope**: en.ts -> all targets
+- **Changed keys** (NEW, under `compare.shared.install.*`):
+  - `downloadCta`: "Download ({mb} MB)"
+  - `starting`: "Starting download..."
+  - `downloading`: "Downloading model"
+  - `done`: "Download complete"
+  - `failed`: "Download failed"
+  - `dismiss`: "Dismiss"
+  - `etaSeconds`: "~{s}s left"
+  - `etaMinutes`: "~{m} min left"
+- **Context**: New user-visible strings for the Model Auto-Install feature. Appear in Compare Hub dropdowns (downloadCta) and in a bottom-right progress toast while a local GGUF model is downloading from HuggingFace. Factual tone, no marketing, no emojis. Audience ages 9-17 with educators. Numeric placeholders {mb}, {s}, {m} are plain integers — adjust surrounding wording per language convention.
+
 ### WO-2026-03-20-interception-config-description-tr-ko
 - **Session**: i18n audit
 - **Scope**: 32 JSON files in `devserver/schemas/configs/interception/` → add `tr` and `ko` to `description` field

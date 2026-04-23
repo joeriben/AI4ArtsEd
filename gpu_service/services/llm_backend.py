@@ -33,6 +33,9 @@ MODEL_CONFIGS = {
         "chat_handler": None,
         "chat_capable": True,
         "display_name": "Qwen 3 1.7B",
+        "hf_repo_id": "Qwen/Qwen3-1.7B-GGUF",
+        "hf_filename": "Qwen3-1.7B-Q8_0.gguf",
+        "approx_download_mb": 1749,
     },
     "qwen3:4b": {
         "model_path": os.path.join(MODEL_DIR, "Qwen3-4B-Q8_0.gguf"),
@@ -42,6 +45,9 @@ MODEL_CONFIGS = {
         "chat_handler": None,
         "chat_capable": True,
         "display_name": "Qwen 3 4B",
+        "hf_repo_id": "Qwen/Qwen3-4B-GGUF",
+        "hf_filename": "Qwen3-4B-Q8_0.gguf",
+        "approx_download_mb": 4082,
     },
     "phi-3.5-mini": {
         "model_path": os.path.join(MODEL_DIR, "Phi-3.5-mini-instruct-Q8_0.gguf"),
@@ -51,6 +57,9 @@ MODEL_CONFIGS = {
         "chat_handler": None,
         "chat_capable": True,
         "display_name": "Phi 3.5 Mini (Microsoft)",
+        "hf_repo_id": "bartowski/Phi-3.5-mini-instruct-GGUF",
+        "hf_filename": "Phi-3.5-mini-instruct-Q8_0.gguf",
+        "approx_download_mb": 3873,
     },
     "gemma-2-2b": {
         "model_path": os.path.join(MODEL_DIR, "gemma-2-2b-it-Q8_0.gguf"),
@@ -60,6 +69,9 @@ MODEL_CONFIGS = {
         "chat_handler": None,
         "chat_capable": True,
         "display_name": "Gemma 2 2B (Google)",
+        "hf_repo_id": "bartowski/gemma-2-2b-it-GGUF",
+        "hf_filename": "gemma-2-2b-it-Q8_0.gguf",
+        "approx_download_mb": 2655,
     },
     # ── Utility models (safety, VLM — not for Compare Hub) ──────────────
     "llama-guard3:1b": {
@@ -70,6 +82,9 @@ MODEL_CONFIGS = {
         "chat_handler": None,
         "chat_capable": False,
         "display_name": "Llama Guard 3 1B",
+        "hf_repo_id": "QuantFactory/Llama-Guard-3-1B-GGUF",
+        "hf_filename": "Llama-Guard-3-1B.Q8_0.gguf",
+        "approx_download_mb": 1526,
     },
     "qwen3-vl:2b": {
         "model_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "Qwen3-VL-2B-Instruct-Q4_K_M.gguf"),
@@ -81,6 +96,10 @@ MODEL_CONFIGS = {
         "chat_capable": False,
         "vlm_capable": True,
         "display_name": "Qwen 3 VL 2B",
+        "hf_repo_id": "unsloth/Qwen3-VL-2B-Instruct-GGUF",
+        "hf_filename": "Qwen3-VL-2B-Instruct-Q4_K_M.gguf",
+        "hf_mmproj_filename": "mmproj-F16.gguf",
+        "approx_download_mb": 1837,  # 1056 + 781
     },
     "qwen3-vl:4b": {
         "model_path": os.path.join(MODEL_DIR, "qwen3-vl-4b", "Qwen3-VL-4B-Instruct-Q4_K_M.gguf"),
@@ -92,6 +111,10 @@ MODEL_CONFIGS = {
         "chat_capable": False,
         "vlm_capable": True,
         "display_name": "Qwen 3 VL 4B",
+        "hf_repo_id": "unsloth/Qwen3-VL-4B-Instruct-GGUF",
+        "hf_filename": "Qwen3-VL-4B-Instruct-Q4_K_M.gguf",
+        "hf_mmproj_filename": "mmproj-F16.gguf",
+        "approx_download_mb": 3178,  # 2381 + 797
     },
 }
 
@@ -391,6 +414,8 @@ class LLMBackend:
                 "display_name": config.get("display_name", alias),
                 "available": os.path.exists(config["model_path"]),
                 "estimated_vram_mb": config.get("estimated_vram_mb", 0),
+                "installable": bool(config.get("hf_repo_id")),
+                "approx_download_mb": config.get("approx_download_mb", 0),
             })
         return result
 
@@ -407,6 +432,8 @@ class LLMBackend:
                 "display_name": config.get("display_name", alias),
                 "available": model_ok and mmproj_ok,
                 "estimated_vram_mb": config.get("estimated_vram_mb", 0),
+                "installable": bool(config.get("hf_repo_id")),
+                "approx_download_mb": config.get("approx_download_mb", 0),
             })
         return result
 
