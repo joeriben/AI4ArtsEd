@@ -8,7 +8,7 @@ Models:
 - qwen3:1.7b — DSGVO verification, text tasks
 - llama-guard3:1b — Stage 3 safety (Llama Guard S1-S13)
 - qwen3-vl:2b — VLM safety checks (image classification, workshop-validated)
-- qwen2.5-vl:2b — VLM fallback (NOT recommended: hallucinates UNSAFE on SAFE/UNSAFE prompts)
+- qwen3-vl:4b — larger VLM for Compare Hub Image Understanding tab
 """
 
 import gc
@@ -71,20 +71,9 @@ MODEL_CONFIGS = {
         "chat_capable": False,
         "display_name": "Llama Guard 3 1B",
     },
-    "qwen2.5-vl:2b": {
-        "model_path": os.path.join(MODEL_DIR, "qwen25-vl-2b", "Qwen2.5_VL_2B.Q4_K_M.gguf"),
-        "mmproj_path": os.path.join(MODEL_DIR, "qwen25-vl-2b", "Qwen2.5_VL_2B.mmproj-f16.gguf"),
-        "n_ctx": 4096,
-        "n_gpu_layers": -1,
-        "estimated_vram_mb": 2500,
-        "chat_handler": "qwen25vl",
-        "chat_capable": False,
-        "vlm_capable": True,
-        "display_name": "Qwen 2.5 VL 2B",
-    },
     "qwen3-vl:2b": {
-        "model_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "Qwen3VL-2B-Instruct-Q4_K_M.gguf"),
-        "mmproj_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "mmproj-Qwen3VL-2B-Instruct-F16.gguf"),
+        "model_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "Qwen3-VL-2B-Instruct-Q4_K_M.gguf"),
+        "mmproj_path": os.path.join(MODEL_DIR, "qwen3-vl-2b", "mmproj-F16.gguf"),
         "n_ctx": 4096,
         "n_gpu_layers": -1,
         "estimated_vram_mb": 2500,
