@@ -61,17 +61,17 @@ MODEL_CONFIGS = {
         "hf_filename": "Phi-3.5-mini-instruct-Q8_0.gguf",
         "approx_download_mb": 3873,
     },
-    "gemma-2-2b": {
-        "model_path": os.path.join(MODEL_DIR, "gemma-2-2b-it-Q8_0.gguf"),
+    "gemma-3-4b": {
+        "model_path": os.path.join(MODEL_DIR, "gemma-3-4b-it-Q8_0.gguf"),
         "n_ctx": 4096,
         "n_gpu_layers": -1,
-        "estimated_vram_mb": 3000,
+        "estimated_vram_mb": 5000,
         "chat_handler": None,
         "chat_capable": True,
-        "display_name": "Gemma 2 2B (Google)",
-        "hf_repo_id": "bartowski/gemma-2-2b-it-GGUF",
-        "hf_filename": "gemma-2-2b-it-Q8_0.gguf",
-        "approx_download_mb": 2655,
+        "display_name": "Gemma 3 4B (Google)",
+        "hf_repo_id": "unsloth/gemma-3-4b-it-GGUF",
+        "hf_filename": "gemma-3-4b-it-Q8_0.gguf",
+        "approx_download_mb": 3939,
     },
     # ── Utility models (safety, VLM — not for Compare Hub) ──────────────
     "llama-guard3:1b": {
