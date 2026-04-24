@@ -177,14 +177,17 @@ class InstallService:
         last_time = time.time()
 
         while t.is_alive():
-            # Poll .incomplete file size → bytes downloaded so far
+            # Poll .incomplete file progress → bytes actually written so far.
+            # HF preallocates the .incomplete with the full target size (sparse),
+            # so st_size reads 100 % instantly. Use st_blocks × 512 (actual disk
+            # usage) which tracks the downloaded bytes.
             candidates = glob.glob(incomplete_pattern)
-            # Pick the most recently modified (HF writes one per active download)
             done_bytes = 0
             if candidates:
                 try:
                     newest = max(candidates, key=os.path.getmtime)
-                    done_bytes = os.path.getsize(newest)
+                    st = os.stat(newest)
+                    done_bytes = min(st.st_size, st.st_blocks * 512)
                 except (OSError, ValueError):
                     done_bytes = 0
             done_mb = done_bytes // (1024 * 1024)
