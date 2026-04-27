@@ -43,6 +43,15 @@ Veraltete Ollama-Reste in `~/.claude/projects/.../memory/`:
 - `project_vlm_compare_next.md`: „arbitrary Ollama models" → „arbitrary GGUF chat models"
 - NEU: `project_gpu_service_llm.md` — vollstaendige Architektur-Doku inkl. Concurrency-Caveat
 
+### Folge-Fix: DSGVO-Verifikation silent fail-open
+
+Bei der Untersuchung des Crash-Tests aufgefallen: qwen3:1.7b ist ein Thinking-Modell und gibt `<think>...langes Reasoning...</think>\n\nUNSAFE` zurueck. llama-cpp-python emittiert das `<think>`-Tag direkt in `content` (kein separates `thinking`-Feld wie unter Ollama). Der Orchestrator pruefte `result_upper.startswith("UNSAFE")` auf dem ganzen String — der mit `<` anfaengt, nicht `U`. Konsequenz: jede UNSAFE-Antwort wurde als SAFE durchgewunken. Empirisch bestaetigt mit „Angela Merkel" als Eingabe: Modell sagt UNSAFE, Orchestrator sagt SAFE → DSGVO-Verletzung in Produktion seit der Ollama→llama-cpp-Migration.
+
+Fix: Vor dem `startswith`-Check `<think>...</think>` per Regex strippen. Zwei identische Stellen: `llm_verify_person_name` (Z. 333), `llm_dsgvo_fallback_check` (Z. 419). Verhalten verifiziert offline auf 4 Faellen (SAFE/UNSAFE/no-think/truncated-think).
+
+**Files Changed (Folge-Commit):**
+- `devserver/schemas/engine/stage_orchestrator.py` — `re.sub(r'<think>.*?</think>\s*', '', ..., flags=re.DOTALL)` an beiden DSGVO-Verify-Stellen
+
 ---
 
 ## Session 299 - Compare Hub: Dynamic Local Models (Post-Ollama Fix)

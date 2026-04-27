@@ -330,11 +330,13 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
             )
             return None
 
-        result_upper = result.upper().strip()
+        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT)
+        result_clean = re.sub(r'<think>.*?</think>\s*', '', result, flags=re.DOTALL).strip()
+        result_upper = result_clean.upper()
         # "UNSAFE" must be checked first — "SAFE" is a substring of "UNSAFE"
         is_real_name = result_upper.startswith("UNSAFE")
         logger.info(
-            f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM={result!r} → "
+            f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM={result_clean!r} → "
             f"{'UNSAFE — real person identified' if is_real_name else 'SAFE'} ({duration_ms:.0f}ms)"
         )
         # Cache result for burst deduplication (SAFE and UNSAFE both cached)
@@ -415,10 +417,12 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
             logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({local_model}) returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
             return None
 
-        result_upper = result.upper().strip()
+        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT)
+        result_clean = re.sub(r'<think>.*?</think>\s*', '', result, flags=re.DOTALL).strip()
+        result_upper = result_clean.upper()
         has_names = result_upper.startswith("UNSAFE")
         logger.info(
-            f"[DSGVO-LLM-FALLBACK] LLM={result!r} → "
+            f"[DSGVO-LLM-FALLBACK] LLM={result_clean!r} → "
             f"{'UNSAFE — personal names found' if has_names else 'SAFE'} ({duration_ms:.0f}ms)"
         )
         return has_names
