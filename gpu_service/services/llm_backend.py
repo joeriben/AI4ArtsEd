@@ -138,9 +138,26 @@ class LLMBackend:
         self._model_last_used: Dict[str, float] = {}
         self._model_in_use: Dict[str, int] = {}
         self._load_lock = threading.Lock()
+        # Per-alias inference lock: llama_cpp.Llama is NOT reentrant per instance.
+        # Concurrent create_chat_completion / create_completion on the same Llama
+        # corrupts CUDA / KV-cache state and segfaults the whole process.
+        self._inference_locks: Dict[str, threading.Lock] = {}
+        self._inference_locks_guard = threading.Lock()
 
         self._register_with_coordinator()
         logger.info("[LLM] Initialized: in-process llama-cpp-python backend")
+
+    def _get_inference_lock(self, alias: str) -> threading.Lock:
+        """Lazily create and return a per-alias inference lock."""
+        lock = self._inference_locks.get(alias)
+        if lock is not None:
+            return lock
+        with self._inference_locks_guard:
+            lock = self._inference_locks.get(alias)
+            if lock is None:
+                lock = threading.Lock()
+                self._inference_locks[alias] = lock
+            return lock
 
     def _register_with_coordinator(self):
         """Register with VRAM coordinator for cross-backend eviction."""
@@ -315,7 +332,8 @@ class LLMBackend:
             if repetition_penalty is not None:
                 kwargs["repeat_penalty"] = repetition_penalty
 
-            result = llm.create_chat_completion(**kwargs)
+            with self._get_inference_lock(alias):
+                result = llm.create_chat_completion(**kwargs)
 
             content = result.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
             return {
@@ -348,7 +366,8 @@ class LLMBackend:
             if repetition_penalty is not None:
                 kwargs["repeat_penalty"] = repetition_penalty
 
-            result = llm.create_completion(**kwargs)
+            with self._get_inference_lock(alias):
+                result = llm.create_completion(**kwargs)
 
             text = result.get("choices", [{}])[0].get("text", "").strip()
             return {

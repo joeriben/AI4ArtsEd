@@ -1,5 +1,50 @@
 # Development Log
 
+## Session 300 - GPU Service Crash Fix: llama-cpp Concurrency Lock
+**Date:** 2026-04-27
+**Focus:** GPU Service auf Port 17803 starb 2026-04-26 15:47:34 mitten im Workshop und blieb tot bis manuellem Neustart. Nach dem Tod: alle Endpunkte (Diffusers, HeartMuLa, Stable Audio, Hunyuan3D, LLM) gleichzeitig `Connection refused` → ein Prozess, ein Crash.
+
+### Root Cause
+Drei parallele `qwen3:1.7b` Chat-Calls aus einem DSGVO-NER-Burst (`SAFETY-QUICK` triggert 3× innerhalb von ~3s auf dieselbe Llama-Instanz). `llama_cpp.Llama.create_chat_completion` ist NICHT reentrant pro Instanz — concurrent Calls korrumpieren die KV-Cache- / CUDA-State und segfaulten den ganzen Python-Prozess. Crash-Signatur im Log: alle drei Calls fielen *gleichzeitig* nach 15-19s mit `('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))` um, danach Errno 111 auf 17803.
+
+### Diagnose-Weg
+1. Backend-Log (`Ai4ArstEd backend protocol.txt`) zeigte den Crash-Cluster um 15:47:34
+2. Initiale Hypothese (Ollama-Crash) vom User korrigiert: Ollama wurde komplett eliminiert
+3. Code-Verifikation in `gpu_service/services/llm_backend.py`: GGUF in-process via `llama-cpp-python`, eine `Llama`-Instanz pro Alias, `_load_lock` schuetzt nur das *Loading*, NICHT die Inferenz. `_model_in_use` ist nur Telemetrie-Counter, kein Mutex.
+4. Drei `chat()`-Aufrufe rufen `llm.create_chat_completion()` parallel auf derselben Instanz auf — fertig.
+
+### Fix
+Per-Alias `threading.Lock` in `LLMBackend`, double-checked locking via `_inference_locks_guard`:
+```python
+with self._get_inference_lock(alias):
+    result = llm.create_chat_completion(**kwargs)
+```
+Verschiedene Modelle laufen weiter parallel (qwen3:1.7b und llama-guard3:1b kein Konflikt). Dasselbe Modell serialisiert.
+
+### Verifikation
+Neuer Stresstest `devserver/testfiles/stress_test_llm_concurrency.py` reproduziert den Originaltrigger mit echtem DSGVO-Prompt-Template und der Original-Entitaet `triangular ears`:
+- Phase 1 (3 parallele Calls, exakter Crash-Trigger): 0.30s / 0.58s / 0.85s — saubere ~0.28s-Stufen, alle OK
+- Phase 2 (5x): exakt gleiches Stufenmuster, alle OK
+- Phase 3 (10x mit variierenden Entities): alle OK
+- POST-CHECK nach jeder Phase: GPU Service alive
+
+Stufenmuster ist direkter Beweis, dass der Lock serialisiert.
+
+### Tradeoff
+Tail-Latenz unter Burst-Last steigt linear. Bei DSGVO-Verifikationen mit `max_tokens=500` ~5s/Call → 3 parallele Calls = 15s Worst-Case fuer den letzten. Akzeptabel vs. Total-Crash. Circuit-Breaker (`safety-llm`) faengt extreme Faelle.
+
+### Files Changed
+- `gpu_service/services/llm_backend.py` — Per-Alias Inference Lock (+21/-2)
+- `devserver/testfiles/stress_test_llm_concurrency.py` — Regressionstest (NEU)
+
+### Memory cleaned (parallel)
+Veraltete Ollama-Reste in `~/.claude/projects/.../memory/`:
+- `MEMORY.md`: Session-217-„Current state" auf erfolgreichen 2. Migrationsversuch aktualisiert, qwen3-vl-Quirk auf llama-cpp-Realitaet korrigiert (kein separates `thinking`-Feld), GPU-Service-Scope vervollstaendigt
+- `project_vlm_compare_next.md`: „arbitrary Ollama models" → „arbitrary GGUF chat models"
+- NEU: `project_gpu_service_llm.md` — vollstaendige Architektur-Doku inkl. Concurrency-Caveat
+
+---
+
 ## Session 299 - Compare Hub: Dynamic Local Models (Post-Ollama Fix)
 **Date:** 2026-04-06
 **Focus:** Compare Hub "Model Bias" Tab funktioniert nicht mit lokalen Modellen nach Ollama→llama-cpp-python Migration.
