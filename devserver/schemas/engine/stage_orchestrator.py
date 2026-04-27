@@ -330,11 +330,22 @@ def llm_verify_person_name(text: str, ner_entities: list) -> Optional[bool]:
             )
             return None
 
-        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT)
+        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT).
+        # Truncated <think> (max_tokens hit mid-reasoning, no closing tag) leaves
+        # raw '<think>...' — neither SAFE nor UNSAFE → fail-closed below.
         result_clean = re.sub(r'<think>.*?</think>\s*', '', result, flags=re.DOTALL).strip()
         result_upper = result_clean.upper()
         # "UNSAFE" must be checked first — "SAFE" is a substring of "UNSAFE"
-        is_real_name = result_upper.startswith("UNSAFE")
+        if result_upper.startswith("UNSAFE"):
+            is_real_name = True
+        elif result_upper.startswith("SAFE"):
+            is_real_name = False
+        else:
+            logger.error(
+                f"[DSGVO-LLM-VERIFY] entities={names_str} → unparseable verdict "
+                f"{result_clean[:80]!r} ({duration_ms:.0f}ms) — fail-closed"
+            )
+            return None
         logger.info(
             f"[DSGVO-LLM-VERIFY] entities={names_str} → LLM={result_clean!r} → "
             f"{'UNSAFE — real person identified' if is_real_name else 'SAFE'} ({duration_ms:.0f}ms)"
@@ -417,10 +428,20 @@ def llm_dsgvo_fallback_check(text: str) -> Optional[bool]:
             logger.error(f"[DSGVO-LLM-FALLBACK] LLM ({local_model}) returned EMPTY ({duration_ms:.0f}ms) — fail-closed")
             return None
 
-        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT)
+        # Strip thinking-model reasoning block (qwen3 emits <think>...</think>VERDICT).
+        # Truncated <think> → unparseable → fail-closed below.
         result_clean = re.sub(r'<think>.*?</think>\s*', '', result, flags=re.DOTALL).strip()
         result_upper = result_clean.upper()
-        has_names = result_upper.startswith("UNSAFE")
+        if result_upper.startswith("UNSAFE"):
+            has_names = True
+        elif result_upper.startswith("SAFE"):
+            has_names = False
+        else:
+            logger.error(
+                f"[DSGVO-LLM-FALLBACK] unparseable verdict {result_clean[:80]!r} "
+                f"({duration_ms:.0f}ms) — fail-closed"
+            )
+            return None
         logger.info(
             f"[DSGVO-LLM-FALLBACK] LLM={result_clean!r} → "
             f"{'UNSAFE — personal names found' if has_names else 'SAFE'} ({duration_ms:.0f}ms)"
