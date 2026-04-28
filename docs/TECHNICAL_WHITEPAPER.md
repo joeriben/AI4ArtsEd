@@ -535,27 +535,27 @@ Automatically injected during Stage 4.
 
 ## 11. Additional Features
 
-### Watermarking & Content Credentials
+### AI-Origin Disclosure (EU AI Act Art. 50 Compliance)
 
-All generated images are automatically watermarked for AI provenance tracking.
+**Status: planned / in implementation.** This section describes the target design, not an existing feature. A previous attempt (Session 118, January 2026) was reverted; see `docs/sessions/FAILED_SESSION_118_WATERMARK_ATTEMPT.md` for the post-mortem.
 
-**Invisible Watermark**:
-```python
-# Embedding
-WatermarkService("AI4ArtsEd").embed_watermark(image_bytes)
+The platform addresses the upcoming legal requirement under EU AI Act Article 50 to mark AI-generated visual content in a **machine-readable format**. Because the platform is deployed by arbitrary educational providers, the design is deliberately **vendor-neutral**: it does not embed a "AI4ArtsEd" or any other provider brand. Operators are responsible for their own compliance; the platform supplies the default mechanics.
 
-# Extraction
-result = WatermarkService("AI4ArtsEd").extract_watermark(image_bytes)
-# Returns: {"detected": True, "message": "AI4ArtsEd", "confidence": 0.95}
-```
+**Two layers, separately configurable:**
 
-**Technical Implementation**:
-- **Method**: DWT-DCT (Discrete Wavelet Transform + Discrete Cosine Transform)
-- **Quality Impact**: None (imperceptible embedding)
-- **Robustness**: Survives JPEG compression, resizing, light edits
-- **C2PA Ready**: Content Credentials infrastructure prepared for future activation
+1. **Machine-readable metadata (default ON, the compliance core)**
+   - Images: PNG `iTXt` chunks / JPEG XMP, including `XMP-iptcExt:DigitalSourceType=trainedAlgorithmicMedia` (the ISO/IPTC-standard marker for AI-generated content), `CreateDate`, model name, and optionally prompt hash and seed.
+   - Videos: MP4 container metadata (`creation_time`, `description="AI-generated, model=…"`) via ffmpeg, no re-encode required.
+   - Prompt itself is **not** embedded by default (workshop prompts may be personal data — opt-in only).
 
-**Location**: `devserver/my_app/services/watermark_service.py`
+2. **Visible mark (default OFF, optional per deployment)**
+   - Configurable text (default: "AI-generated"), corner position, opacity.
+   - Implemented via Pillow for images and ffmpeg `drawtext` for videos.
+   - Operators who want a visible KI-Hinweis can enable it; those who only need legal disclosure rely on layer 1.
+
+**Configuration** lives in `user_settings.json` under the `watermark` key. **Implementation location** (planned): `devserver/my_app/services/watermark_service.py`, hooked into `pipeline_recorder.save_entity()` so all generation paths (Diffusers, ComfyUI, OpenAI Images, Mammouth) are covered uniformly.
+
+C2PA Content Credentials are not part of this design.
 
 ### SSE Text Streaming
 
