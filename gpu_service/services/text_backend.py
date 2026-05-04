@@ -233,9 +233,13 @@ class TextBackend:
                 if tokenizer.pad_token is None:
                     tokenizer.pad_token = tokenizer.eos_token
 
-                # Build load kwargs — NO device_map, explicit .to(device) instead
+                # Build load kwargs — NO device_map, explicit .to(device) instead.
+                # attn_implementation="eager" is required by transformers >=4.46 because
+                # Latent Text Lab needs output_attentions=True (get_attention_map),
+                # which is incompatible with the default sdpa kernel.
                 load_kwargs = {
                     "low_cpu_mem_usage": True,
+                    "attn_implementation": "eager",
                 }
 
                 if quantization == "bf16":
