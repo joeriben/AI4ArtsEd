@@ -26,7 +26,6 @@
       <ModelComparison v-else-if="activeTab === 'model'" />
       <SystemPromptComparison v-else-if="activeTab === 'systemprompt'" />
       <VlmAnalysisComparison v-else-if="activeTab === 'vlm-analysis'" />
-      <LlmModelComparison v-else-if="activeTab === 'llm-model'" />
     </KeepAlive>
   </div>
 </template>
@@ -39,11 +38,10 @@ import TemperatureComparison from './compare/temperature_comparison.vue'
 import ModelComparison from './compare/model_comparison.vue'
 import SystemPromptComparison from './compare/system_prompt_comparison.vue'
 import VlmAnalysisComparison from './compare/vlm_analysis_comparison.vue'
-import LlmModelComparison from './compare/llm_model_comparison.vue'
 
 const { t } = useI18n()
 
-type TabId = 'language' | 'temperature' | 'model' | 'systemprompt' | 'vlm-analysis' | 'llm-model'
+type TabId = 'language' | 'temperature' | 'model' | 'systemprompt' | 'vlm-analysis'
 
 const STORAGE_KEY = 'compare_hub_tab'
 
@@ -55,7 +53,6 @@ const tabs: { id: TabId }[] = [
   { id: 'language' },
   { id: 'vlm-analysis' },
   // Text comparisons
-  { id: 'llm-model' },
   { id: 'systemprompt' },
   { id: 'temperature' },
 ]
