@@ -89,6 +89,10 @@ const isActivated = ref(false)
 const messagesRef = ref<HTMLElement | null>(null)
 let nextId = 0
 let runCounter = 0
+// Suppresses concurrent auto-flows. Text views (temperature, systemprompt,
+// llm-model) both mutate comparisonContext AND call triggerAutoComment(),
+// which would otherwise fire the watcher and the explicit trigger in parallel.
+let autoInFlight = false
 
 /** Parse [PROMPT: ...] markers into clickable suggestions */
 function parseSuggestions(content: string): ContentPart[] {
@@ -208,6 +212,8 @@ function onNewRun() {
 
 /** Fetch a proactive greeting with prompt suggestions from the LLM */
 async function fetchProactiveGreeting() {
+  if (autoInFlight) return
+  autoInFlight = true
   isLoading.value = true
   const greetingPrompt = props.compareType === 'model'
     ? 'Greet the user. Explain briefly: this mode compares how different image generation models interpret the same prompt — revealing hidden biases in training data. '
@@ -237,6 +243,7 @@ async function fetchProactiveGreeting() {
   } catch {
     addMessage('assistant', t('compare.trashyGreeting'))
   } finally {
+    autoInFlight = false
     isLoading.value = false
   }
 }
@@ -264,6 +271,8 @@ watch(() => props.comparisonContext, (ctx) => {
 })
 
 async function sendAutoComment(_context: string) {
+  if (autoInFlight) return
+  autoInFlight = true
   isLoading.value = true
   const autoPrompt = props.compareType === 'model'
     ? 'The model comparison run just completed. Analyze the VLM image descriptions in your context. '
@@ -306,6 +315,7 @@ async function sendAutoComment(_context: string) {
   } catch {
     // Silent fail for auto-comments
   } finally {
+    autoInFlight = false
     isLoading.value = false
   }
 }
@@ -323,6 +333,7 @@ function clearMessages() {
   nextId = 0
   runCounter = 0
   isActivated.value = false
+  autoInFlight = false
 }
 
 /** Trigger auto-comment programmatically (for text compare views) */
