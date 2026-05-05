@@ -2249,6 +2249,7 @@ def optimize_pipeline():
             )
 
         # Non-streaming fallback (synchronous)
+        from config import DEFAULT_INTERCEPTION_CONFIG
         schema_name = data.get('schema', DEFAULT_INTERCEPTION_CONFIG)
         input_text = data.get('input_text', '')
         context_prompt = data.get('context_prompt', '')
@@ -4445,6 +4446,7 @@ def legacy_workflow():
         expand_prompt = data.get('expand_prompt', False)
         safety_level = config.DEFAULT_SAFETY_LEVEL
         user_language = data.get('user_language', 'de')
+        device_id = data.get('device_id')
 
         # Surrealizer-specific parameters
         negative_prompt = data.get('negative_prompt')
@@ -4676,7 +4678,6 @@ def legacy_workflow():
             custom_params['scale_add'] = scale_add
         # Composable diffusion parameters
         if composable_concepts is not None:
-            import json
             custom_params['concepts'] = json.dumps(composable_concepts) if isinstance(composable_concepts, list) else composable_concepts
         if composable_normalize is not None:
             custom_params['normalize_weights'] = composable_normalize

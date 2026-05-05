@@ -195,6 +195,16 @@ class LivePipelineRecorder:
         filename = f"{self.sequence_number:02d}_{entity_type}.{ext}"
         filepath = self.final_folder / filename
 
+        # AI-Origin Disclosure (EU AI Act Art. 50): apply watermark to
+        # output_image / output_video bytes before persisting. Service is
+        # fail-open — original bytes returned if anything goes wrong.
+        if isinstance(content, bytes):
+            try:
+                from my_app.services.watermark_service import watermark_media_bytes
+                content = watermark_media_bytes(content, entity_type, metadata or {})
+            except Exception as e:
+                logger.warning(f"[RECORDER] watermark service unavailable ({e}); writing unmarked bytes")
+
         # Write file
         self._write_file(filepath, content)
 

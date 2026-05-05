@@ -54,6 +54,50 @@ Fix: Vor dem `startswith`-Check `<think>...</think>` per Regex strippen. Zwei id
 
 ---
 
+## Session 299b - GPU Service Auto-Start Manager: Eingeführt und zurückgenommen
+**Dates:** 2026-04-19 (eingeführt, `eb301593`) → 2026-04-22 (Integration entfernt, `a07800a8`)
+**Focus:** Mit Commit `2edaca1c` (19. Apr, „remove dead llm_watchdog") fehlte der Plattform jeder Selbsthilfe-Mechanismus für den GPU-Service auf Port 17803. Der entfernte Watchdog war Zombie-Code (zielte auf eine nie existierende `llama-server.service`), aber sein Wegfall war für Fremdrechner-Deployments (Schulen, Hochschulen ohne sudoers-Custom) ein echtes Loch — ohne systemd-Unit blieb der Service nach einem Crash dauerhaft tot.
+
+### Auftrag (Handover)
+`docs/sessions/HANDOVER_gpu_service_manager.md`: Pattern von `ComfyUIManager` 1:1 auf den GPU-Service übertragen — Health-Probe, Lock, `subprocess.Popen` auf `2_start_gpu_service.sh`, Wait-for-Ready. Kein sudo, kein systemd-Zwang. Integration in `llm_client.py` (vor jedem POST) und `model_availability_service.py` (Retry nach gescheiterten Backend-Checks).
+
+### Implementierung (`eb301593`)
+Neue Datei `devserver/my_app/services/gpu_service_manager.py`. Designentscheidung **sync** (nicht async wie `ComfyUIManager`): Hauptcaller `LLMClient._chat/_generate` ist sync (`requests.post`), und alle Callsites von `get_llm_backend()` (vlm_safety, image_analysis, vision_support, schema_pipeline_routes) sind ebenfalls sync. `threading.Lock` mit Double-Check-Locking. Async-Caller (`model_availability_service.get_gpu_service_status`) wrappen via `asyncio.to_thread`. Timeout 180s (vs. ComfyUI 120s) wegen langsamerem llama-cpp-Erstload.
+
+E2E im Labor verifiziert: kill -9 → nächster VLM-Call → Auto-Spawn → 200 OK in ~5s.
+
+### Was im Workshop schiefging
+Im realen Workshop-Betrieb (zwischen 19. und 22. Apr) ging **kein einziger Prompt mehr durch** — alle Anfragen scheiterten an False-Positive-DSGVO-Blocks. Ursachenkette:
+
+1. **Latenter Bug:** `llama_cpp.Llama.create_chat_completion` ist nicht thread-safe pro Instanz. Concurrent DSGVO-NER-Bursts (drei parallele `qwen3:1.7b`-Calls) konnten den GPU-Service-Prozess crashen — segfault, Port 17803 dead bis manueller Neustart. Dieser Bug existierte vor meinem Commit (Reproduktion mit Crash-Datum 26. Apr 15:47 → siehe Session 300).
+2. **Mein Precheck verschärfte den Schaden:** `LLMClient._chat/_generate` rief `ensure_gpu_service_available()` synchron vor jedem POST. Wenn der Health-Check transient fehlschlug (Crash-Window, TCP-Timing, Re-Spawn in Gange), gab `_chat()` `None` zurück.
+3. **DSGVO ist fail-closed:** Der Verifier in `stage_orchestrator.py` interpretiert ein `None` vom LLM-Client als „LLM nicht verfügbar" → Block. Jeder transiente Glitch des GPU-Service wurde zu einem dauerhaften Prompt-Block.
+4. **Rück-Effekt:** Während mein Manager versuchte, einen abgestürzten Service neu zu starten, blockierte er den Request-Thread für bis zu 180s. Unter Last sah das wie „alles hängt, dann alles geblockt" aus.
+
+### Quick-Fix (`a07800a8`, 22. Apr)
+Die Integration in `llm_client.py` (8 Zeilen `_chat`/`_generate`) und `model_availability_service.py` (16 Zeilen Retry) wurde wieder entfernt. Damit fließt ein gescheiterter LLM-Call wieder als „Connection refused"-Exception zum Caller hoch, statt in die DSGVO-fail-closed-Falle zu laufen. Der Workshop war wieder benutzbar.
+
+### Eigentlicher Fix (Session 300, 27. Apr)
+Die Wurzel — concurrent llama-cpp Crashes — wurde erst in Session 300 mit per-alias `threading.Lock` (`c62c3b3c`) sauber gefixt. Robusteres DSGVO-Verdict-Parsing kam in `179f7c0a` (strip `<think>`) und `4e7cc769` (fail-closed bei truncated `<think>` statt fail-open).
+
+### Aktueller Zustand
+- `gpu_service_manager.py` (118 Zeilen) **existiert weiter** als ungenutzte Klasse — kein Backend-Code ruft `ensure_gpu_service_available()` mehr auf.
+- Config-Werte (`GPU_SERVICE_AUTO_START`, `GPU_SERVICE_STARTUP_TIMEOUT`, `GPU_SERVICE_HEALTH_CHECK_INTERVAL`) wurden später bei einer Restrukturierung von `config.py` (auf `_SETTINGS_DEFAULTS`-Pattern) entfernt. Beim heutigen Lookup würde der Manager auf seine Hardcode-Fallbacks im `except ImportError`-Block fallen.
+- Der ursprüngliche Handover-Auftrag (Cold-Start auf Fremdrechnern) ist damit **nicht erledigt**. Mit dem Concurrency-Fix aus Session 300 wäre eine Wiedereinführung sicherer, aber das Integrations-Design müsste anders aussehen: NICHT als synchroner Precheck vor jedem LLM-Call (zu viel Blast-Radius bei transienten Health-Glitches), sondern z.B. nur beim Backend-Boot oder über einen separaten Cron/systemd-Pfad.
+
+### Lessons
+- Synchroner Precheck vor sicherheitskritischen Calls (DSGVO) ist gefährlich, wenn der Caller-Pfad fail-closed ist. Jede Health-Probe-Flackerei wird zur 100%-Blockade.
+- E2E-Test im Labor mit *einem* Kill-Restart-Zyklus deckt die Concurrency-Realität eines Workshops mit gleichzeitigen Requests nicht ab. Stresstest mit parallelen Calls hätte den llama-cpp-Bug damals schon zeigen können.
+- DevLog wurde nicht zeitnah geschrieben — dieser Eintrag rekonstruiert den Vorgang aus Commits `eb301593`, `a07800a8`, `c62c3b3c`, `179f7c0a`, `4e7cc769` nachträglich (28. Apr).
+
+### Files (aktueller Zustand)
+- `devserver/my_app/services/gpu_service_manager.py` — vorhanden, aber nicht eingebunden
+- `devserver/my_app/services/llm_client.py` — Precheck rückgängig (siehe `a07800a8`)
+- `devserver/my_app/services/model_availability_service.py` — Retry rückgängig (siehe `a07800a8`)
+- `devserver/config.py` — Auto-Start-Config-Werte beim späteren `_SETTINGS_DEFAULTS`-Refactor entfallen
+
+---
+
 ## Session 299 - Compare Hub: Dynamic Local Models (Post-Ollama Fix)
 **Date:** 2026-04-06
 **Focus:** Compare Hub "Model Bias" Tab funktioniert nicht mit lokalen Modellen nach Ollama→llama-cpp-python Migration.

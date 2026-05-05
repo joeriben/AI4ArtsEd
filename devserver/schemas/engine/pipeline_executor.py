@@ -207,7 +207,7 @@ class PipelineExecutor:
         logger.info(f"Pipeline for config '{config_name}' completed: {result.status}")
         return result
     
-    async def stream_pipeline(self, config_name: str, input_text: str, user_input: Optional[str] = None, safety_level: Optional[str] = None) -> AsyncGenerator[Tuple[str, Any], None]:
+    async def stream_pipeline(self, config_name: str, input_text: str, user_input: Optional[str] = None, safety_level: Optional[str] = None, run_id: Optional[str] = None) -> AsyncGenerator[Tuple[str, Any], None]:
         """Execute pipeline with streaming updates"""
         if not self._initialized:
             yield ("error", "Pipeline-Executor not initialized")

@@ -1256,9 +1256,10 @@ def execute_workflow_stream():
         })
 
     except Exception as e:
-        logger.error(f"[Canvas Stream] Setup error: {e}")
+        err_msg = str(e)
+        logger.error(f"[Canvas Stream] Setup error: {err_msg}")
         def error_gen():
-            yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+            yield f"event: error\ndata: {json.dumps({'message': err_msg})}\n\n"
         return Response(error_gen(), mimetype='text/event-stream')
 
 
@@ -1515,9 +1516,10 @@ def execute_batch():
         })
 
     except Exception as e:
-        logger.error(f"[Canvas Batch] Setup error: {e}")
+        err_msg = str(e)
+        logger.error(f"[Canvas Batch] Setup error: {err_msg}")
         def error_gen():
-            yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+            yield f"event: error\ndata: {json.dumps({'message': err_msg})}\n\n"
         return Response(error_gen(), mimetype='text/event-stream')
 
 

@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# Pre-commit hook: catch undefined-name bugs (F821/F822/F823) before they ship.
+#
+# Background: We've shipped two production-breaking bugs of this exact class —
+# `device_id` referenced without being defined in legacy_workflow (commit 4d39bee6),
+# and `DEFAULT_INTERCEPTION_CONFIG` used without being imported in optimize_pipeline
+# (commit 5621080f). Both went undetected because the buggy code path triggers
+# only under specific runtime conditions (kids/youth safety level, non-streaming
+# fallback). Static analysis would have caught them at commit time.
+#
+# Install (one-time, per clone):
+#   cp scripts/git-hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Bypass (use sparingly, only when you know what you're doing):
+#   git commit --no-verify
+
+set -euo pipefail
+
+# Collect staged Python files (Added, Copied, Modified, Renamed)
+mapfile -t staged_py < <(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.py$' || true)
+
+if [ ${#staged_py[@]} -eq 0 ]; then
+    exit 0
+fi
+
+if ! command -v ruff >/dev/null 2>&1; then
+    echo "pre-commit: ruff not found in PATH." >&2
+    echo "  Install: pip install ruff   (or: pyenv exec pip install ruff)" >&2
+    echo "  Bypass once: git commit --no-verify" >&2
+    exit 1
+fi
+
+# F821: undefined name
+# F822: undefined name in __all__
+# F823: local variable referenced before assignment
+if ! ruff check --select F821,F822,F823 --no-cache "${staged_py[@]}"; then
+    echo "" >&2
+    echo "pre-commit: undefined-name check failed (see ruff output above)." >&2
+    echo "  These errors will crash at runtime when the code path is hit." >&2
+    echo "  Fix them, re-stage, and commit again." >&2
+    echo "  Bypass (not recommended): git commit --no-verify" >&2
+    exit 1
+fi

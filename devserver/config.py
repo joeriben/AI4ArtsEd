@@ -62,6 +62,24 @@ _SETTINGS_DEFAULTS = {
     'SAFETY_MODEL': '',
     'DSGVO_VERIFY_MODEL': '',
     'VLM_SAFETY_MODEL': 'qwen3-vl:2b',
+    # AI-Origin Disclosure (EU AI Act Art. 50). Nested dict, see watermark_service.py.
+    # Metadata layer is the compliance core (machine-readable AI-origin marker).
+    # Visible layer is optional and deployment-configurable.
+    'WATERMARK': {
+        'metadata_image': True,
+        'metadata_video': True,
+        'metadata_include_model': True,
+        'metadata_include_date': True,
+        'metadata_include_prompt': False,
+        'metadata_include_seed': False,
+        'software_name': '',
+        'visible_image': False,
+        'visible_video': False,
+        'visible_text': 'AI-generated',
+        'visible_position': 'bottom-right',
+        'visible_opacity': 0.3,
+        'invisible_image': False,
+    },
 }
 
 # Pre-initialize module globals for imports (overwritten by reload_user_settings at startup)
