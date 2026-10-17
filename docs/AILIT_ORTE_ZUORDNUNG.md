@@ -1,0 +1,1169 @@
+# Welche Maßnahmen des AILit-Rahmenwerks diese Plattform unterstützt, nach Teil der Plattform
+
+**Quelle des Wortlauts:** OECD / European Union (2026), *Empowering learners for the age of AI: An AI literacy framework for primary and secondary education*, OECD Publishing, Paris, https://doi.org/10.1787/65cd27d4-en, CC BY 4.0. Wortlaut und Seitenzahlen in `docs/ailit/learner_expectations.tsv` und `docs/ailit/classroom_scenarios.tsv`, Herkunft und Lesart in `docs/ailit/QUELLE.md`.
+
+**Quelltext.** Dieselbe Quelle wie `docs/OECD_AILIT_ABDECKUNG.md`: `docs/ailit/unterstuetzung.tsv`, gebaut von `devserver/scripts/build_ailit_support.py`. Hier nach Teil geordnet.
+
+**Die Frage, die jede Zeile beantwortet.** Ob ein Teil dieser Plattform eine Maßnahme unterstützt, die das AILit-Rahmenwerk beschreibt, und wenn ja, wie, und welches Praxis-Szenario das belegt. Die Maßnahmen sind die Unterrichtsbeispiele des Rahmenwerks („In the Classroom“), eines je Kompetenz und Stufe, 57 im Ganzen; sie stehen hier im Wortlaut, mit Seite. Sie sind Vorhaben einer Lehrkraft mit ihrer Gruppe, und die Plattform wird als Werkzeug dafür beurteilt.
+
+**Die drei Antworten.** *ja*: die Maßnahme läuft mit diesem Teil, wie das Rahmenwerk sie beschreibt. *ja, angepasst*: der Kern der Maßnahme bleibt, ihr konkreter Gegenstand ist ersetzt (eine Musik-App durch ein Bildmodell, eine berühmte Künstlerin durch die Gruppe selbst); die Spalte *Wie* nennt den Ersatz. *nein*: kein Teil der Plattform dient der Maßnahme; die Zeile sagt, was die Maßnahme braucht und hier fehlt. Eine Maßnahme, die auf der Plattform durch eine andere Maßnahme ersetzt werden müsste, steht als *nein*.
+
+**Welchen Gegenstand ein Teil halten muss.** Getragen ist eine Maßnahme, wenn die Plattform den Gegenstand hält, um den die Maßnahme selbst geht. Die Vorbereitung davor und die Nachbesprechung danach liegen vor und hinter jeder Maßnahme, die eine Kursleitung durchführt, und tragen darum keine Zeile.
+
+**Warum hier keine Ampel steht.** Eine Schwelle, ab der eine Kompetenz als abgedeckt gälte, sieht das Rahmenwerk an keiner Stelle vor. Die Stufen sind ein Entwicklungsverlauf und ausdrücklich Material für eigene Bewertungsraster der Lehrkraft (S. 25: „Teachers and educators are encouraged to use these Learner Expectations to build their own evaluation rubrics“), Vollabdeckung erwartet es ausdrücklich nicht (S. 9: „it may not always be realistic for one educator to address every aspect in depth“), und die Unterrichtsbeispiele sollen an den Ort angepasst werden (S. 25: „should be adapted to local contexts, guidance and legislation“).
+
+**Was bis zum 2026-09-19 hier stand.** Die Zeilen beurteilten, ob die Plattform selbst die Handlung hervorbringt, die eine Stufe von Lernenden verlangt; Zeilen, in denen die Lehrkraft handelt, trugen „kein Stufenbezug“. Das beurteilte die Plattform als pädagogischen Akteur. Die Maßnahmen des Rahmenwerks sind Handlungen von Menschen, und ein Werkzeug wird daran gemessen, ob es sie trägt.
+
+**Die Namen der Stufen** sind die des Rahmenwerks und bleiben unübersetzt. Wo die Texte deutsch sprechen, meint *Grundstufe* Basic, *Mittelstufe* Intermediate und *Fortgeschrittenenstufe* Advanced.
+
+
+## Modi
+
+**Übersicht.** Flow 18 · Together 4 · Contesting 3 · Canvas 5
+
+
+### Flow `/x2x-flow`
+
+*18 Maßnahmen.*
+
+#### Engage 3 Intermediate — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners verify AI-generated outputs for accuracy and relevance by consulting trusted sources and considering task-specific expectations.“*  
+*In the Classroom (S. 29): „In small groups, learners plan an itinerary for a tourist visiting their hometown. When the teacher provides AI-generated recommendations for local restaurants, learners compare the recommendations using other sources to determine if the information is outdated, inaccurate or a “hallucination.” From there, learners draw from their own knowledge and experience to decide whether the locations would be appealing to a visitor.“*
+
+Im Flow liegt ein Nachschlagen als eigene Karte auf dem Tisch, sobald eine Perspektive beim Lesen etwas nachgeschlagen hat: vorn das gesuchte Wort, geöffnet „Nachgeschlagen von“, „Gesucht nach“, die Wikipedia-Sprache, der Artikel als Link und der Text, den er gegeben hat. Geprüft werden kann damit, was die Prompt Interception aus der Quelle gemacht hat; die Quelle selbst ist Wikipedia.
+
+*Praxis-Szenario.* Die Gruppe lässt einen Prompt mit einem Sachbezug unter einer Perspektive laufen, die nachgeschlagen hat, öffnet die Quell-Karte und liest den Artikel gegen den Text der Prompt Interception: Was steht in beiden, was hat die Interception dazuerfunden, was weggelassen? Dann ändert sie den Text in seiner Box, legt die Box in den Kreis und lässt den nächsten Lauf dort aufsetzen.  
+<sub>Beleg: `views/x2x_flow.vue: it.kind === 'source', openInspect; de.ts x2xFlow.sourcePerspective, sourceSearched, sourceLanguage, sourceArticle`</sub>
+
+#### Engage 3 Advanced — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners assess AI-generated outputs and justify decisions to accept, revise or reject them.“*  
+*In the Classroom (S. 29): „When their teacher presents different AI-generated interpretations of a historical event, learners turn to trusted secondary or primary sources to verify the accuracy of the interpretations and argue which one they would include in a final report.“*
+
+Im Flow fällt der Text der Prompt Interception als Box auf den Tisch, und der Lauf geht ohne Halt weiter zur Generierung. Annehmen heißt, den Lauf gehen zu lassen; überarbeiten heißt, den Text in der Box zu ändern, die Box in den Kreis zu legen und den nächsten Lauf dort aufsetzen zu lassen; verwerfen heißt, den laufenden Lauf an der Lauf-Box zu stoppen („gedrückt halten zum Stoppen“). Die Prüfung an Quellen hat die Quell-Karte (siehe Mittelstufe); die Begründung der Entscheidung gibt die Gruppe. Die Entscheidung vor dem Ergebnis, die die Maßnahme vorsieht, wird durch die Entscheidung am gelegten Text ersetzt.
+
+*Praxis-Szenario.* Derselbe Prompt läuft unter drei Perspektiven; die Gruppe erhält drei Boxen der Prompt Interception und entscheidet je Box mit einem Satz Begründung: so lassen, ändern und neu laufen lassen, oder stoppen. Die Begründungen werden gesammelt und verglichen.  
+<sub>Beleg: `views/x2x_flow.vue: fallText(…, 'interception'), sendRun, zoneStation, HOLD_MS; de.ts x2xFlow.holdToStop`</sub>
+
+#### Engage 7 Basic — Einsatz an Werten prüfen · ja, angepasst
+
+*Learner Expectation (S. 31): „Learners recognise that ethical AI use depends on a number of factors that include AI system design, development and a user’s own intentions.“*  
+*In the Classroom (S. 31): „Learners identify recognisable aspects of artists’ work across AI-generated examples. With a teacher, they discuss whether the examples constitute fair and appropriate use and identify implications for the human artists.“*
+
+Im Flow liegen Basho, Hölderlin, Mirabai, Nahuatl Xochicuicatl, Sappho und Yoruba Oriki als Perspektiven bereit; die Prompt Interception schreibt den Prompt unter ihrer Form um, und der Text fällt als Box auf den Tisch. Die Züge der Arbeit eines Dichters oder einer Dichterin sind damit an einem KI-Text erkennbar; die Frage nach Fairness stellt sich hier an Werken, deren Urheber lange tot sind, und wird daran von der Kursleitung gestellt.
+
+*Praxis-Szenario.* Die Gruppe legt denselben Prompt unter zwei Dichter-Perspektiven, liest beide Texte der Prompt Interception und benennt, welche Züge der Vorlage sie wiedererkennt (Form, Bilder, Ton). Dann bespricht sie, was anders wäre, wenn die Vorlage von einer lebenden Person stammte.  
+<sub>Beleg: `views/x2x_flow.vue; schemas/configs/interception/poetry_*.json`</sub>
+
+#### Create 1 Basic — Neue Perspektiven erkunden · ja
+
+*Learner Expectation (S. 34): „Learners explore how different AI tools can expand their thinking or spark new ideas.“*  
+*In the Classroom (S. 34): „Learners discuss AI-generated images to create story settings based on their classmates’ ideas (e.g. “a jungle in space”), then write new stories inspired by unexpected results.“*
+
+Die Maßnahme erzeugt aus Ideen der Mitschülerinnen und Mitschüler („ein Dschungel im Weltall“) Bilder als Schauplätze und schreibt neue Geschichten aus den unerwarteten Ergebnissen. Im Flow ist die Idee der Prompt, die Perspektive liegt als Blase im Kreis, das Medium wird aus dem Prompt bestimmt („nimmt Gestalt an als“), und das Bild liegt danach als Box auf dem Tisch; in den Kreis gelegt, wird es Eingabe des nächsten Laufs. Die Perspektiven sind die Quelle des Unerwarteten.
+
+*Praxis-Szenario.* Jede Person gibt einen Schauplatz vor. Die Gruppe lässt ihn unter zwei Perspektiven laufen (etwa Mad World und Sensitive) und erhält zwei Bilder. Die Geschichten werden zu den Bildern geschrieben, die am weitesten von der Vorstellung abweichen.  
+<sub>Beleg: `views/x2x_flow.vue: bubbles, zoneChain, effImageItems; composables/useMediumInference.ts; de.ts x2xFlow.mediumColTitle; schemas/configs/interception/mad_world.json, sensitive.json`</sub>
+
+#### Create 1 Intermediate — Neue Perspektiven erkunden · ja
+
+*Learner Expectation (S. 34): „Learners compare AI-generated suggestions to their own ideas during a brainstorming process.“*  
+*In the Classroom (S. 34): „In response to a teacher’s assignment, learners brainstorm independently before reviewing AI-generated ideas. They compare their own ideas with the AI-generated ones and discuss how exposure to AI suggestions may shape originality, confidence or decision making.“*
+
+Die Maßnahme lässt erst allein brainstormen und dann KI-Vorschläge dagegenhalten und bespricht, wie KI-Vorschläge Originalität, Zuversicht und Entscheidungen prägen können. Im Flow sind die Vorschläge die Texte der Prompt Interception, die je Lauf als Box auf den Tisch fallen und sich wortweise füllen, nachdem die Gruppe ihre eigenen Ideen aufgeschrieben hat; jeder Lauf erzeugt dazu ein Medium.
+
+*Praxis-Szenario.* Die Gruppe sammelt zehn Minuten eigene Ideen zu einer Aufgabe auf Papier. Dann läuft die Aufgabe unter drei Perspektiven (drei Läufe), und die Gruppe legt die drei Texte neben ihre Liste: Was hat die Maschine, was die Liste nicht hat, und umgekehrt? Danach bespricht sie, welche eigenen Ideen ihr jetzt weniger gefallen und warum.  
+<sub>Beleg: `views/x2x_flow.vue: fallText mit Stationsangabe, useWordFeed`</sub>
+
+#### Create 2 Basic — Prototypen, Systemarten verbinden · ja
+
+*Learner Expectation (S. 34): „Learners use AI to generate an image, story or model to represent an idea.“*  
+*In the Classroom (S. 34): „Learners choose a theme (e.g. “hope,” “winter” or “community”) and use an AI image generator to create a visual representation. They generate one image and write a short explanation of how specific elements of their prompt shaped the final result, noting any unexpected or surprising aspects of the output. They assess how well the generated result matches the idea they had in mind.“*
+
+Die Maßnahme erzeugt zu einem Thema ein Bild und beschreibt, wie einzelne Elemente des Prompts das Ergebnis geprägt haben. Im Flow fällt der Text der Prompt Interception als Box auf den Tisch, und der Prompt, wie er ans Modell ging, erscheint beim Zeigen auf die Lauf-Box; was aus dem eigenen Prompt geworden ist, bevor das Bild entstand, liegt damit lesbar da.
+
+*Praxis-Szenario.* Die Gruppe schreibt zum Thema „Gemeinschaft“ einen Prompt und lässt ihn laufen. Sie liest die Box der Prompt Interception und den Prompt an der Lauf-Box und schreibt zu drei Wörtern ihres Prompts, wo sie im Bild angekommen sind, und zu einem, das verschwunden oder verändert ist. Zum Schluss bewertet sie, wie nah das Bild an ihrer Vorstellung liegt.  
+<sub>Beleg: `views/x2x_flow.vue: fallText(…, 'interception'); Zeile 246 „the prompt as actually submitted, shown on hover while idle“`</sub>
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Die Maßnahme erzeugt zu einem Konzept mehrere Fassungen mit Text- und Bildgeneratoren und vergleicht, wie verschiedene Prompts und Werkzeuge dieselbe Idee auslegen. Im Flow bleibt die Idee der Prompt, jede Perspektive eine andere Blase im Kreis, das Medium wird aus dem Prompt bestimmt (Bild, Video, Klang, 3D, Code, Text), und alle Läufe liegen mit ihrer Nummer auf demselben Tisch.
+
+*Praxis-Szenario.* Die Gruppe schreibt das Konzept ihres Clubs als Prompt und lässt es unter vier Perspektiven laufen, einmal als Bild und, über den Prompt gelenkt, einmal als Klang. Sie ordnet die Läufe auf dem Tisch nach „trifft die Idee“ und „legt sie neu aus“ und begründet je Lauf, woran das liegt: am Prompt, an der Perspektive oder am Medium.  
+<sub>Beleg: `composables/useMediumInference.ts: MEDIA; views/x2x_flow.vue: runOrdinal, asm-run; de.ts x2xFlow.dMedium`</sub>
+
+#### Create 2 Advanced — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners select and integrate outputs from multiple AI systems to develop, refine or present a final product.“*  
+*In the Classroom (S. 34): „Learners use AI tools to design a simple interactive project (e.g. a motion-activated light display). They use a text generator to outline how the system should respond, an image generator to visualise the setup and an AI coding assistant to draft basic control code. They generate examples from different tools, compare outputs and revise their prototypes. Learners ensure the plan, visuals and code align into one functional prototype and seek peer feedback before finalising their work.“*
+
+Im Flow bestimmt die Plattform das Medium aus dem Prompt; Code (p5.js, tone.js) ist eines der Medien, neben Bild, Video, Klang, 3D und Text, und das Ergebnis eines Laufs wird, in den Kreis gelegt, die Eingabe des nächsten. Der Prototyp der Maßnahme wird durch ein Stück aus Bild, Klang und einer Skizze als Code ersetzt.
+
+*Praxis-Szenario.* Die Gruppe lässt zu ihrem Vorhaben ein Bild, einen Klang und eine Skizze als Code erzeugen und prüft, ob die drei Ausgaben zusammen ein Stück ergeben; was nicht passt, läuft mit geändertem Prompt neu.  
+<sub>Beleg: `composables/useMediumInference.ts: MEDIA (code); composables/useAssemblageBoard.ts: codeKind`</sub>
+
+#### Create 3 Intermediate — Rückmeldung holen, überarbeiten · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners refine their work through iterative exchanges with AI, comparing those outputs to their own ideas to determine what serves their goals.“*  
+*In the Classroom (S. 35): „Learners design a three-dimensional model of a geometric garden using ratios and proportions. They compare AI-suggested dimensions to their own calculations to ensure mathematical accuracy and consider new creative approaches to inform the design.“*
+
+Die Maßnahme verfeinert ein eigenes Werk in wiederholten Runden mit KI und vergleicht die Vorschläge mit den eigenen Ideen. Im Flow ist die Runde die gelegte Box: in den Kreis gelegt, setzt der nächste Lauf dort auf (ein Text der Prompt Interception geht in die Adaption, ein Text der Adaption in Prüfung und Übersetzung), und jede Box trägt die Nummer ihres Laufs. Das geometrische Gartenmodell der Maßnahme wird durch ein Medienstück ersetzt; die Prüfung von Maßen und Verhältnissen hat auf der Plattform kein Gegenstück.
+
+*Praxis-Szenario.* Die Gruppe legt einen ersten Entwurf, lässt ihn laufen und entscheidet an der Box, was sie vom Vorschlag der Maschine übernimmt und was sie selbst ändert. Drei Runden lang; danach liest sie an den Nummern ab, in welcher Runde die eigene Idee und in welcher der Vorschlag gewonnen hat.  
+<sub>Beleg: `views/x2x_flow.vue: zoneStation, runCaption, runOrdinal; Commit e0fcfd6f`</sub>
+
+#### Create 3 Advanced — Rückmeldung holen, überarbeiten · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners critically evaluate how AI-generated feedback shapes their own ideas, then reflect on how they would like to use AI in their creative process.“*  
+*In the Classroom (S. 35): „Learners compare an early draft of a writing assignment to a final version that was revised with feedback from an AI tool. They annotate key changes to the assignment that indicate when each revision was influenced by the AI tool or their own thinking. They write a brief reflection explaining how they decided which suggestions to use, adapt or ignore to meet their goals.“*
+
+Die Maßnahme vergleicht einen frühen Entwurf mit der Endfassung nach Rückmeldung eines KI-Werkzeugs, markiert je Änderung, ob das Werkzeug oder das eigene Denken sie veranlasst hat, und reflektiert, welche Vorschläge übernommen, angepasst oder ignoriert wurden. Im Flow stehen alle Fassungen mit Lauf-Nummer auf dem Tisch; der Text der Prompt Interception ist eine Umschrift des Entwurfs, und die Rückmeldung der Maßnahme wird durch diese Umschrift ersetzt. Eine Änderung in der Box überschreibt ihren Text.
+
+*Praxis-Szenario.* Die Gruppe schreibt den Text der ersten Prompt Interception ab, ändert ihn dann in der Box und lässt den nächsten Lauf dort aufsetzen. Am Ende legt sie Abschrift und Endfassung nebeneinander und markiert in der Endfassung, welche Wörter aus der Umschrift der Maschine stammen und welche aus eigener Änderung. Die Reflexion schreibt sie außerhalb, mit den Lauf-Nummern als Belegen.  
+<sub>Beleg: `views/x2x_flow.vue: Box auf dem Tisch, runOrdinal, held.card.edited`</sub>
+
+#### Create 4 Intermediate — Authentizität und Urheberschaft · ja
+
+*Learner Expectation (S. 35): „Learners consider when attribution, permission or avoidance of AI is appropriate for a creative task and apply these choices in their own work.“*  
+*In the Classroom (S. 35): „Learners compare original work to AI-generated poems, then discuss with their teacher what makes something “original.” They then identify school-based guidelines for attributing AI use.“*
+
+Die Maßnahme vergleicht Originalarbeiten mit KI-Gedichten, klärt, was „original“ heißt, und findet Regeln der Schule für die Nennung von KI-Einsatz. Im Flow liefern die Dichter-Perspektiven KI-Text zu einem eigenen Prompt, als Box neben dem eigenen Wortlaut.
+
+*Praxis-Szenario.* Die Gruppe schreibt selbst vier Zeilen zu einem Thema und lässt dasselbe Thema unter der Basho- und der Sappho-Perspektive laufen. Sie legt die drei Texte nebeneinander und sagt, was ihren eigenen zum Original macht.  
+<sub>Beleg: `views/x2x_flow.vue; schemas/configs/interception/poetry_*.json`</sub>
+
+#### Create 4 Advanced — Authentizität und Urheberschaft · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners assess the ethical implications of AI-generated outputs for creative work, distinguish inspiration from replication in their outputs, and justify how their use of AI maintains authenticity and respects other creators.“*  
+*In the Classroom (S. 35): „Learners are presented with examples of art created entirely by a human, generated by an AI system and created by an artist along with AI. Learners consider what choices a human did or did not make for each piece, who should be credited as the artist, what should be protected by copyright and how AI may change artistic creation in the future.“*
+
+Im Flow ist jedes Bild „von Menschen mit KI“: der Prompt und die Wahl der Perspektive sind Entscheidungen der Gruppe, die Box der Prompt Interception zeigt, was die Maschine daraus gemacht hat, und der Prompt, wie er ans Modell ging, erscheint beim Zeigen auf die Lauf-Box.
+
+*Praxis-Szenario.* Die Gruppe nimmt einen eigenen Lauf und listet entlang der Box und der Lauf-Box, welche Entscheidung sie getroffen hat und welche die Maschine, und begründet, wie sie das Bild ausweisen würde.  
+<sub>Beleg: `views/x2x_flow.vue: fallText(…, 'interception'), Zeile 246`</sub>
+
+#### Manage 1 Advanced — KI einsetzen oder darauf verzichten · ja, angepasst
+
+*Learner Expectation (S. 38): „Learners determine whether AI is the right digital tool for a specific task by comparing the task’s complexity and need for human judgement with the ethical implications of AI use.“*  
+*In the Classroom (S. 38): „Learners consider the steps to write an essay (i.e. choosing a topic, researching evidence, organising arguments, drafting paragraphs, revising and proof-reading), then identify which steps AI could assist with and which steps require their own voice and reasoning. They consult their school’s guidelines for AI use to tailor their approach.“*
+
+Die Maßnahme zerlegt das Schreiben eines Aufsatzes in Schritte und legt fest, bei welchen KI unterstützen könnte und welche die eigene Stimme und das eigene Denken brauchen. Im Flow sind die Schritte eines Laufs sichtbar und einzeln besetzbar: der Prompt und die Perspektive sind die Eingabe, die Prompt Interception wirft ihren Text als Box auf den Tisch, und die Box kann gelesen, geändert und in den Kreis gelegt werden, worauf der nächste Lauf dort aufsetzt. Der Aufsatz wird durch ein Medienstück ersetzt; die Regeln der Schule bringt die Kursleitung mit.
+
+*Praxis-Szenario.* Die Gruppe listet die Schritte ihres Vorhabens (Idee, Umschrift, Prüfung, Erzeugung) und markiert vor dem Lauf, welche sie der Maschine lässt. Beim Lauf ersetzt sie in der Box den Text der Maschine durch eigenen und lässt den nächsten Lauf dort aufsetzen; am Ende vergleicht sie mit einem Lauf, bei dem die Maschine alles hatte.  
+<sub>Beleg: `views/x2x_flow.vue: fallText, zoneStation, runCaption`</sub>
+
+#### Manage 3 Intermediate — Aufgabe zerlegen · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners break a problem into component parts and consider ways AI might help with specific steps.“*  
+*In the Classroom (S. 39): „Learners break down the steps to complete a complex research project and identify steps that AI could support (e.g. summarising primary sources and locating relevant commentaries). They work independently to verify claims, assess potential bias in AI outputs and develop their own arguments and interpretations.“*
+
+Die Maßnahme zerlegt ein Rechercheprojekt in Schritte, benennt die, bei denen KI hilft (Quellen zusammenfassen, Kommentare finden), und prüft die Ergebnisse selbst. Im Flow ist der Rechercheschritt sichtbar und prüfbar, sobald eine Perspektive beim Lesen etwas nachgeschlagen hat: die Quell-Karte zeigt, welche Perspektive was auf Wikipedia nachgeschlagen hat, den Artikel als Link und den Text, den er gab; die Box der Prompt Interception zeigt, was die Maschine daraus machte, und wird dort geändert. Ob nachgeschlagen wird, entscheidet das Modell der Perspektive. Das Rechercheprojekt wird durch ein Medienprojekt mit Rechercheschritt ersetzt.
+
+*Praxis-Szenario.* Die Gruppe zerlegt ihr Vorhaben in Schritte und lässt den Prompt unter einer Perspektive laufen. Hat die Perspektive nachgeschlagen, öffnet die Gruppe die Quell-Karte, prüft den Artikel gegen den Text der Prompt Interception, schreibt die eigene Deutung in die Box und lässt den nächsten Lauf dort aufsetzen.  
+<sub>Beleg: `views/x2x_flow.vue: it.kind === 'source', fallText(…, 'interception'), zoneStation`</sub>
+
+#### Manage 3 Advanced — Aufgabe zerlegen · ja
+
+*Learner Expectation (S. 39): „Learners deliberately assign tasks within a multi-step process based on appropriate human strengths and relevant AI capabilities.“*  
+*In the Classroom (S. 39): „Learners are given a time-bound challenge to produce two versions of the same product, with and without AI. Before starting the AI-supported task, teams decide exactly which steps will rely on AI capabilities and which will depend on human strengths. After comparing outcomes, learners revise their task assignments and explain how changing human and AI roles affected the quality, trustworthiness and purpose of the final product.“*
+
+Im Flow ist die Rollenverteilung die Besetzung der Schritte: der Prompt und die Perspektive kommen von der Gruppe, der Text der Prompt Interception von der Maschine, und dieser Text kann in seiner Box durch eigenen ersetzt werden, worauf der nächste Lauf dort aufsetzt; die Lauf-Nummer hält fest, welche Fassung wann entstand.
+
+*Praxis-Szenario.* Dasselbe Vorgehen wie auf dem Canvas: Team B legt vor dem Lauf fest, welchen Text es selbst schreibt (den Prompt, oder auch den Text der Prompt Interception) und welchen es der Maschine lässt, vergleicht mit Team A und tauscht danach eine Rolle.  
+<sub>Beleg: `views/x2x_flow.vue: fallText, zoneStation, runOrdinal`</sub>
+
+#### Manage 4 Intermediate — Einsatz beobachten und bewerten · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners compare AI outputs to desired results and know when to redirect AI systems or improve outputs themselves.“*  
+*In the Classroom (S. 39): „Learners watch short videos of self-driving cars navigating different driving situations. As a class, learners compare how a human might make a different decision than a self-driving car and discuss when human judgement should override the algorithm.“*
+
+Die Maßnahme vergleicht an Videos selbstfahrender Autos, wann ein Mensch anders entscheiden würde und wann sein Urteil den Algorithmus überstimmen sollte. Im Flow steht das Überstimmen als zwei Züge bereit: ein laufender Lauf wird an der Lauf-Box gestoppt („gedrückt halten zum Stoppen“), und der Text der Prompt Interception wird in seiner Box geändert und in den Kreis gelegt, worauf der nächste Lauf dort aufsetzt. Das Auto wird durch den eigenen Lauf ersetzt.
+
+*Praxis-Szenario.* Die Gruppe legt vorher fest, woran sie einen Text der Prompt Interception erkennt, der vom Ziel abweicht. Nach jedem Lauf vergleicht sie die Box mit dem Ziel und entscheidet: so lassen, ändern und neu laufen lassen, oder den nächsten Lauf stoppen. Danach zählt sie, wie oft sie überstimmt hat und ob es nötig war.  
+<sub>Beleg: `views/x2x_flow.vue: HOLD_MS, abortGeneration, zoneStation; de.ts x2xFlow.holdToStop`</sub>
+
+#### Manage 4 Advanced — Einsatz beobachten und bewerten · ja
+
+*Learner Expectation (S. 39): „Learners establish checkpoints based on human and AI roles, monitor progress against success criteria and adjust roles accordingly.“*  
+*In the Classroom (S. 39): „Learners work in teams to create a public awareness campaign about a local issue (e.g. reducing food waste, designing safe bicycle routes). They use AI tools to generate messages or visuals, but pause to compare outputs with audience needs and project goals. When AI-generated content is misleading or off-target, learners adjust roles or workflows to produce an accurate and authentic message.“*
+
+Die Maßnahme erstellt im Team eine Kampagne, erzeugt Botschaften und Bilder mit KI, hält an, um die Ausgaben an Zielgruppe und Zielen zu messen, und ändert Rollen oder Abläufe, wenn Ausgaben irreführend oder am Ziel vorbei sind. Im Flow sind die Prüfpunkte die Boxen auf dem Tisch, gelesen nach jedem Lauf, die Bilder die Läufe mit Nummer, und die Änderung des Ablaufs ist der Wechsel der Perspektive oder das Ersetzen des Textes in einer Box. Die Erfolgskriterien schreibt das Team.
+
+*Praxis-Szenario.* Das Team schreibt vorher drei Kriterien für seine Kampagne auf. Jeder Lauf wird an seinen Boxen gegen die Kriterien geprüft; was durchfällt, wird als Perspektive gewechselt oder als Text in der Box selbst geschrieben. Am Ende zeigt der Tisch mit den Nummern, an welcher Stelle das Team eingegriffen hat.  
+<sub>Beleg: `views/x2x_flow.vue: fallText, bubbles, runOrdinal`</sub>
+
+#### Shape 4 Basic — Systeme verbessern · ja
+
+*Learner Expectation (S. 43): „Learners recognise that AI systems can be designed or adjusted to better support individuals, communities and the environment.“*  
+*In the Classroom (S. 43): „Learners discuss everyday challenges in their classroom or school, such as finding study resources or sharing information on time. They explore examples of AI tools and identify simple changes that could make these tools more helpful or inclusive, such as clearer instructions, age-appropriate outputs or options for different needs. Learners explain who would benefit from these improvements and why.“*
+
+Im Flow ist die eigene Perspektive das anpassbare Werkzeug: sie wird geschrieben, unter einem Namen behalten („diese Perspektive benennen“) und läuft danach als eigener Eintrag, den die Aufzeichnung des Laufs beim Namen nennt. Die Palette eines Kurses stellt die Kursleitung aus den mitgelieferten Perspektiven und ihren eigenen veröffentlichten zusammen.
+
+*Praxis-Szenario.* Die Gruppe nimmt eine vorhandene Perspektive, die ihr für die Jüngeren im Kurs ungeeignet erscheint, schreibt sie als eigene um (kürzer, ohne Fachwörter), behält sie unter einem Namen und legt sie der Kursleitung vor, mit einem Satz dazu, wem sie nützt; die Kursleitung übernimmt den Wortlaut in eine eigene veröffentlichte Perspektive und nimmt sie in die Palette.  
+<sub>Beleg: `views/x2x_flow.vue: kept.canKeep, keepCurrent, perspEditName; stores/keptPerspectives.ts; composables/usePerspectiveCatalog.ts: coursePalette; de.ts x2xFlow.perspectiveNamePh`</sub>
+
+
+### Together `/together`
+
+*4 Maßnahmen.*
+
+#### Create 4 Advanced — Authentizität und Urheberschaft · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners assess the ethical implications of AI-generated outputs for creative work, distinguish inspiration from replication in their outputs, and justify how their use of AI maintains authenticity and respects other creators.“*  
+*In the Classroom (S. 35): „Learners are presented with examples of art created entirely by a human, generated by an AI system and created by an artist along with AI. Learners consider what choices a human did or did not make for each piece, who should be credited as the artist, what should be protected by copyright and how AI may change artistic creation in the future.“*
+
+Die Maßnahme legt drei Arbeiten nebeneinander, eine ganz von einem Menschen, eine von einem KI-System erzeugte und eine von einer Künstlerin zusammen mit KI gemachte, und fragt, welche Entscheidungen jeweils ein Mensch getroffen hat, wer als Urheber zu nennen ist und was Schutz verdient. Together hält die drei Arten auf der Fläche: eine eigene Arbeit, die die Gruppe dort ablegt, ein Stück, das die Begleitung auf Zuruf erzeugt und dessen Rückseite unter „Grund“ den mitgegebenen Grund trägt, und einen behaltenen Favoriten aus einem eigenen Lauf, dessen Karte den Prompt unter „Prompt“ trägt. Die Beispiele der Maßnahme werden durch diese drei eigenen Fälle ersetzt.
+
+*Praxis-Szenario.* Die Gruppe legt eine eigene Zeichnung auf die Fläche, lässt zum selben Thema ein Stück erzeugen und holt einen eigenen behaltenen Favoriten dazu. Zu jeder der drei Karten schreibt sie auf, welche Entscheidungen ein Mensch getroffen hat und welche Schritte die Maschine ausgeführt hat, und wen sie als Urheber nennen würde. Zum Schluss dreht sie die Karte des erzeugten Stücks um und prüft, ob der Grund auf ihrer Rückseite ihre Zuordnung ändert.  
+<sub>Beleg: `views/resona.vue addBroughtBox (mitgebrachte Arbeit und Favorit mit Prompt auf der Fläche), spawnGeneration; tool_registry.py generate_media (motivation); de.ts resonaMediaCard.promptLabel, resonaMediaCard.motivation, resonaMediaCard.flipToBack`</sub>
+
+#### Manage 1 Basic — KI einsetzen oder darauf verzichten · ja, angepasst
+
+*Learner Expectation (S. 38): „Learners identify a variety of AI systems and the tasks they are designed to support.“*  
+*In the Classroom (S. 38): „Learners follow guidance established by their teacher to match appropriate tools with academic tasks (e.g. AI for summarising, search engines for research).“*
+
+Die Maßnahme lässt Lernende nach Vorgaben der Lehrkraft Werkzeuge zu Aufgaben zuordnen. Die Vorgaben entstehen mit Together: die Begleitung plant den Ablauf mit der Kursleitung, ausdrücklich mit Schritten ohne Maschine, und hält nach ihrem Systemprompt fest, was entschieden wurde: Ziele, Werkzeugwahl, verworfene Optionen mit Begründung; die Fläche trägt Karten, Notizen und Pläne, und das Werkstattjournal zeichnet auf. Die Vorgaben der Lehrkraft werden durch den Plan aus Together ersetzt.
+
+*Praxis-Szenario.* Die Kursleitung plant mit Together eine Sitzung mit drei Aufgaben und legt fest, welche mit welchem Instrument und welche ohne Maschine laufen; die verworfenen Wahlen stehen mit Begründung auf der Fläche. Die Gruppe bekommt die Aufgaben und ordnet die Instrumente zu, bevor sie den Plan sieht.  
+<sub>Beleg: `views/resona.vue; RESONA_PLANNING_BLOCK in routes/chat_routes.py („What gets decided is noted: goals, tool choices, discarded options with their why“); de.ts resona.surfaceClearConfirm, journalNotice`</sub>
+
+#### Manage 3 Advanced — Aufgabe zerlegen · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners deliberately assign tasks within a multi-step process based on appropriate human strengths and relevant AI capabilities.“*  
+*In the Classroom (S. 39): „Learners are given a time-bound challenge to produce two versions of the same product, with and without AI. Before starting the AI-supported task, teams decide exactly which steps will rely on AI capabilities and which will depend on human strengths. After comparing outcomes, learners revise their task assignments and explain how changing human and AI roles affected the quality, trustworthiness and purpose of the final product.“*
+
+Die Maßnahme stellt eine Aufgabe unter Zeitdruck und lässt zwei Fassungen desselben Produkts anfertigen, eine mit und eine ohne KI; vorher legt das Team fest, welche Schritte die Maschine übernimmt, nachher überarbeitet es die Verteilung und erklärt, was der Wechsel der Rollen an Qualität, Verlässlichkeit und Zweck geändert hat. Together trägt das Festlegen und das Überarbeiten: die Begleitung baut auf Zuruf einen Apparat, dessen Schritte die Verteilung halten, behält ihn nach ihrem Systemprompt mit Titel, einer Zeile zum Zweck und einer Anwendungsart, heftet nach dem Lauf eine Beobachtung an die gelaufene Fassung und legt eine neue Fassung an, deren Auszug den geänderten Schritt und seinen Grund nennt. Die zwei Fassungen des Produkts werden durch zwei Fassungen des Apparats ersetzt, eine mit dem maschinellen Schritt und eine, in der die Gruppe diesen Schritt selbst macht.
+
+*Praxis-Szenario.* Die Gruppe lässt sich für ihr Stück einen Apparat bauen und behalten. Dann lässt sie denselben Eingabetext ohne den Schritt der Prompt Interception laufen und schreibt diesen Schritt selbst. Zu beiden Läufen heftet sie ihre Beobachtung an die jeweilige Fassung, und der Auszug der zweiten Fassung sagt, welchen Schritt die Gruppe selbst gemacht hat und warum.  
+<sub>Beleg: `tool_registry.py run_canvas_graph (Knoten input/interception/translation/generation), canvas_graph_library (save, revise mit Memo, feedback); chat_routes.py RESONA_CORE_PROMPT („what the room taught goes down as feedback on the version that ran; a revision carries a memo of what changed and why“); de.ts resonaEntityCard.detailLabel`</sub>
+
+#### Manage 4 Advanced — Einsatz beobachten und bewerten · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners establish checkpoints based on human and AI roles, monitor progress against success criteria and adjust roles accordingly.“*  
+*In the Classroom (S. 39): „Learners work in teams to create a public awareness campaign about a local issue (e.g. reducing food waste, designing safe bicycle routes). They use AI tools to generate messages or visuals, but pause to compare outputs with audience needs and project goals. When AI-generated content is misleading or off-target, learners adjust roles or workflows to produce an accurate and authentic message.“*
+
+Die Maßnahme setzt Kontrollpunkte für menschliche und maschinelle Anteile, verfolgt den Fortschritt an vorher gesetzten Kriterien und verschiebt die Rollen, wo eine Ausgabe am Ziel vorbeigeht; ihr Beispiel ist eine Kampagne zu einem Thema vor Ort. Together hält die Kontrollpunkte und die Kriterien außerhalb des Laufs: die Begleitung legt den Ablauf auf Verlangen als Plan-Karte mit nummerierten Schritten, und diese Schritte sind die Kontrollpunkte; sie hält das Ziel der Gruppe als Ziel fest; und wo eine Ausgabe am Ziel vorbeigeht, überarbeitet sie den Apparat und nennt im Auszug den geänderten Schritt. Während der Arbeit spricht sie an drei Stellen: bei einer Frage, die im Raum niemand beantworten kann, bei einem Ergebnis, das gerade gelesen wird, und bei etwas, das die Maschine unverlangt erzeugt hat. Das Beispiel der Kampagne wird durch das Vorhaben der Gruppe ersetzt.
+
+*Praxis-Szenario.* Die Gruppe schreibt das Ziel ihrer Kampagne in einen Satz und lässt es als Ziel festhalten. Die Plan-Karte trägt vier Schritte; an jedem vergleicht die Gruppe, was die Maschine erzeugt hat, mit diesem Satz. Wo das Ergebnis am Ziel vorbeigeht, lässt sie den Apparat überarbeiten, und am Ende liest sie die Auszüge der Fassungen in ihrer Reihenfolge.  
+<sub>Beleg: `chat_routes.py RESONA_TAIL PROCESS SCAFFOLDS [[PLAN:]], RESONA_WORKSHOP_BLOCK (a gap, a threshold, an accident); views/resona.vue PLAN_BLOCK_RE, extractPlans; tool_registry.py remember (goal), canvas_graph_library (revise mit Memo)`</sub>
+
+
+### Contesting `/contesting`
+
+*3 Maßnahmen.*
+
+#### Engage 2 Advanced — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners explain how different AI systems work using language that does not attribute human traits or abilities, knowing that their phrasing shapes understanding.“*  
+*In the Classroom (S. 28): „Learners review different types of AI tools and compare design choices that make the systems appear human-like, friendly or intelligent. In small groups, learners practise explaining how the tools produce outputs, focussing on programmed processes rather than human qualities. As a class, they share and refine their explanations and reflect on how different design features affect understanding and trust in AI systems.“*
+
+Contesting ist die Gegen-Entwurfsentscheidung: der Systemprompt der Seite legt fest, dass die Maschine keine Gefühle hat und keine vortäuscht, Begeisterung, Neugier und Aufregung nie simuliert, ablehnen darf („That does not convince me.“) und erst erzeugt, wenn sie überzeugt ist. Neben den Assistenten aus System Prompts steht damit ein System, dessen Anweisung auf Widerspruch angelegt ist.
+
+*Praxis-Szenario.* Die Gruppe trägt dieselbe Idee erst bei Contesting und dann in einer System Prompts-Spalte mit veröffentlichtem Prompt vor und vergleicht, welche Antwort sie für klüger und welche für freundlicher hält und woran das liegt. Dann schreibt sie auf, welche Entwurfsentscheidung die Wirkung erzeugt.  
+<sub>Beleg: `views/ai_persona.vue; AI_PERSONA_SYSTEM_PROMPT in routes/chat_routes.py (no emotions, NEVER simulate enthusiasm, You may refuse, Generate because you are convinced)`</sub>
+
+#### Create 1 Intermediate — Neue Perspektiven erkunden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners compare AI-generated suggestions to their own ideas during a brainstorming process.“*  
+*In the Classroom (S. 34): „In response to a teacher’s assignment, learners brainstorm independently before reviewing AI-generated ideas. They compare their own ideas with the AI-generated ones and discuss how exposure to AI suggestions may shape originality, confidence or decision making.“*
+
+Bei Contesting ist der Vorschlag ein Einwand: die Maschine hat nach ihrem Systemprompt ein eigenes ästhetisches Urteil, darf ablehnen und erzeugt erst, wenn sie überzeugt ist. Der KI-Vorschlag der Maßnahme wird durch den Einwand ersetzt.
+
+*Praxis-Szenario.* Nach dem eigenen Brainstorm trägt die Gruppe ihre Lieblingsidee bei Contesting vor und hält fest, was die Maschine daran ablehnt und was sie stattdessen will. Dann entscheidet die Gruppe, ob sie ihre Idee ändert, und sagt, was der Widerspruch mit ihrer Zuversicht gemacht hat.  
+<sub>Beleg: `views/ai_persona.vue; AI_PERSONA_SYSTEM_PROMPT in routes/chat_routes.py`</sub>
+
+#### Create 1 Advanced — Neue Perspektiven erkunden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners purposefully integrate AI-generated outputs with their own ideas to develop comprehensive solutions and creative approaches.“*  
+*In the Classroom (S. 34): „Learners develop their own arguments for a class debate, then analyse AI-generated counterarguments provided by the teacher. They remix and reject the counterpoints to strengthen their final argument.“*
+
+Contesting liefert die Einwände zu einer künstlerischen Idee: die Maschine darf ablehnen und erzeugt erst, wenn sie überzeugt ist. Das Debattenargument der Maßnahme wird durch ein Vorhaben ersetzt.
+
+*Praxis-Szenario.* Die Gruppe stellt ihr Vorhaben vor und sammelt die Einwände der Maschine. Sie baut die Einwände, die sie überzeugen, ins Vorhaben ein und schreibt zu den anderen, warum sie sie verwirft.  
+<sub>Beleg: `views/ai_persona.vue; AI_PERSONA_SYSTEM_PROMPT in routes/chat_routes.py`</sub>
+
+
+### Canvas `/canvas`
+
+*5 Maßnahmen.*
+
+#### Create 2 Advanced — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners select and integrate outputs from multiple AI systems to develop, refine or present a final product.“*  
+*In the Classroom (S. 34): „Learners use AI tools to design a simple interactive project (e.g. a motion-activated light display). They use a text generator to outline how the system should respond, an image generator to visualise the setup and an AI coding assistant to draft basic control code. They generate examples from different tools, compare outputs and revise their prototypes. Learners ensure the plan, visuals and code align into one functional prototype and seek peer feedback before finalising their work.“*
+
+Die Maßnahme baut aus Ausgaben mehrerer KI-Systeme (Textgenerator, Bildgenerator, Code-Assistent) einen funktionierenden Prototyp und holt Rückmeldung von Mitschülerinnen und Mitschülern. Der Canvas ist der Ort für die Kette: ein Knotengraph aus den Paletten „1 · Eingabe“, „2 · Interception“, „3 · Adaption“ und „4 · Generierung“, der Weg der Daten von Knoten zu Knoten wird selbst gelegt, und der Lauf arbeitet die Knoten nacheinander ab. Der Prototyp der Maßnahme (eine bewegungsgesteuerte Lichtinstallation) wird durch ein Medienstück ersetzt, das aus Text, Bild und Klang zusammengesetzt ist.
+
+*Praxis-Szenario.* Die Gruppe entwirft ein kurzes Stück aus einem Text, einem Bild und einem Klang, baut den Graphen dafür, lässt ihn laufen und prüft je Ausgang, ob er zum Ganzen passt. Was nicht passt, wird als Knoten umgebaut, und der Graph läuft neu; eine zweite Gruppe gibt Rückmeldung am fertigen Stück.  
+<sub>Beleg: `views/canvas_workflow.vue; stores/canvas.ts; de.ts canvas.palette; services/canvas_executor.py: work_queue.pop(0)`</sub>
+
+#### Manage 1 Advanced — KI einsetzen oder darauf verzichten · ja, angepasst
+
+*Learner Expectation (S. 38): „Learners determine whether AI is the right digital tool for a specific task by comparing the task’s complexity and need for human judgement with the ethical implications of AI use.“*  
+*In the Classroom (S. 38): „Learners consider the steps to write an essay (i.e. choosing a topic, researching evidence, organising arguments, drafting paragraphs, revising and proof-reading), then identify which steps AI could assist with and which steps require their own voice and reasoning. They consult their school’s guidelines for AI use to tailor their approach.“*
+
+Auf dem Canvas ist die Schrittfolge ein Knotengraph, den die Gruppe selbst baut; ein Schritt ist ein Knoten, und wo eine Maschine nichts tun soll, steht ein Eingabe-Knoten mit eigenem Bild (Upload). Der Aufsatz wird durch ein Medienstück ersetzt.
+
+*Praxis-Szenario.* Die Gruppe baut den Graphen für ihr Vorhaben, entscheidet je Knoten, ob dort ein Modell oder ein eigenes Bild steht, und begründet die Aufteilung vor dem Lauf.  
+<sub>Beleg: `views/canvas_workflow.vue; stores/canvas.ts: image_input`</sub>
+
+#### Manage 3 Intermediate — Aufgabe zerlegen · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners break a problem into component parts and consider ways AI might help with specific steps.“*  
+*In the Classroom (S. 39): „Learners break down the steps to complete a complex research project and identify steps that AI could support (e.g. summarising primary sources and locating relevant commentaries). They work independently to verify claims, assess potential bias in AI outputs and develop their own arguments and interpretations.“*
+
+Auf dem Canvas ist die Zerlegung der Graph selbst: ein Knoten je Schritt, verbunden nach dem Weg der Daten, im Lauf nacheinander abgearbeitet. Welche Schritte eine Maschine übernimmt, steht an den Knoten. Das Rechercheprojekt wird durch ein Medienprojekt ersetzt.
+
+*Praxis-Szenario.* Die Gruppe zeichnet ihr Vorhaben erst auf Papier als Schrittfolge, baut es dann als Graphen nach und vergleicht: Welche Schritte hat der Graph, die auf dem Papier fehlten, und welche Papier-Schritte hat kein Knoten, weil Menschen sie tun?  
+<sub>Beleg: `views/canvas_workflow.vue; stores/canvas.ts; services/canvas_executor.py: work_queue.pop(0)`</sub>
+
+#### Manage 3 Advanced — Aufgabe zerlegen · ja
+
+*Learner Expectation (S. 39): „Learners deliberately assign tasks within a multi-step process based on appropriate human strengths and relevant AI capabilities.“*  
+*In the Classroom (S. 39): „Learners are given a time-bound challenge to produce two versions of the same product, with and without AI. Before starting the AI-supported task, teams decide exactly which steps will rely on AI capabilities and which will depend on human strengths. After comparing outcomes, learners revise their task assignments and explain how changing human and AI roles affected the quality, trustworthiness and purpose of the final product.“*
+
+Die Maßnahme erzeugt in begrenzter Zeit zwei Fassungen desselben Produkts, mit und ohne KI; vor der KI-Fassung legt das Team fest, welche Schritte KI-Fähigkeiten und welche menschliche Stärken tragen, vergleicht die Ergebnisse und erklärt, wie die Rollenverteilung Qualität, Verlässlichkeit und Zweck verändert hat. Der Canvas ist das Werkzeug für die KI-Fassung: der Graph ist die Rollenverteilung in Knoten, jeder Schritt ein Knoten, Modell oder eigenes Material (Eingabe-Knoten mit Upload).
+
+*Praxis-Szenario.* Zwei Teams bekommen dieselbe Aufgabe (ein Plakat für ein Ereignis der Schule) und dieselbe Zeit. Team A arbeitet ohne Maschine. Team B baut vorher den Graphen und legt je Knoten fest, ob Modell oder eigenes Material; dann läuft er. Beide Fassungen hängen nebeneinander; danach baut Team B den Graphen um (ein Knoten mehr von Hand, einer weniger) und erklärt am zweiten Lauf, was sich an Qualität und Verlässlichkeit geändert hat.  
+<sub>Beleg: `views/canvas_workflow.vue; stores/canvas.ts: image_input`</sub>
+
+#### Manage 4 Advanced — Einsatz beobachten und bewerten · ja
+
+*Learner Expectation (S. 39): „Learners establish checkpoints based on human and AI roles, monitor progress against success criteria and adjust roles accordingly.“*  
+*In the Classroom (S. 39): „Learners work in teams to create a public awareness campaign about a local issue (e.g. reducing food waste, designing safe bicycle routes). They use AI tools to generate messages or visuals, but pause to compare outputs with audience needs and project goals. When AI-generated content is misleading or off-target, learners adjust roles or workflows to produce an accurate and authentic message.“*
+
+Auf dem Canvas ist der Ablauf der Graph; die Rollen ändern heißt, Knoten tauschen oder durch eigenes Material ersetzen, und der Graph läuft neu.
+
+*Praxis-Szenario.* Das Team baut den Graphen seiner Kampagne, prüft die Ausgaben je Knoten gegen die Kriterien und baut den Graphen um, wo eine Ausgabe durchfällt; die beiden Fassungen des Graphen sind das Protokoll der Rollenänderung.  
+<sub>Beleg: `views/canvas_workflow.vue; stores/canvas.ts`</sub>
+
+
+## Instrumente
+
+**Übersicht.** Überblick 3 · Modell-Vergleich 5 · Stereotypen-Analyse 3 · Bildverständnis 1 · Sprachverständnis 3 · Stimmen-Vergleich 4 · System Prompts 6 · Sprachmodell-Vergleich 1 · Wirkungsvergleich 2 · Ästhetische Pole 3 · Denoising Archaeology 2 · Mean Images 2 · Attention Cartography 2 · Encoder Fusion 1 · Dimension Explorer 1 · Concept Algebra 1 · Composable Diffusion 1 · Enc. Fus. Workbench 1 · Bias Research 1 2 · Bias Research 2 3 · Representation Engineering 1 · Tokenizer 2 · Latent Audio Synth 1 · MMAudio 1 · ImageBind Guidance 1 · Re-enactment 3 · LoRA Training 5 · LoRA Explorer 3
+
+
+### Überblick `/latent-lab/overview`
+
+*3 Maßnahmen.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Die Maßnahme lässt Lernende einen verbreiteten Mythos („KI versteht wie Menschen“, „KI hat immer recht“) in einem Artefakt (Plakat, Video, Podcast) widerlegen, indem sie erklären, wie KI arbeitet. Der Überblick zeichnet drei Verfahren der Plattform als drei Spalten aus Stationen; ein Druck auf eine Station öffnet ihre Zeichnung, die Instrumente sitzen als Marken auf der Zeichnung an der Stelle, an der sie eingreifen, und ein Zeiger auf eine Marke hebt die Instrumente in der linken Spalte hervor. Das ist die Vorlage für die Erklärung; das Artefakt entsteht außerhalb.
+
+*Praxis-Szenario.* Die Gruppe wählt einen Mythos aus dem eigenen Umfeld, fährt auf dem Überblick die Stationen des betroffenen Verfahrens ab und holt an den markierten Instrumenten je ein Bild oder eine Zahl, die die Station belegt. Daraus baut sie das Plakat: die Stationen, je ein Beleg, ein Satz zum Mythos.  
+<sub>Beleg: `views/latent_lab/flow_logic.vue: COLUMNS, marks, highlight; flow_stations.vue`</sub>
+
+#### Manage 1 Basic — KI einsetzen oder darauf verzichten · ja, angepasst
+
+*Learner Expectation (S. 38): „Learners identify a variety of AI systems and the tasks they are designed to support.“*  
+*In the Classroom (S. 38): „Learners follow guidance established by their teacher to match appropriate tools with academic tasks (e.g. AI for summarising, search engines for research).“*
+
+Für die Zuordnung selbst zeichnet der Überblick die Verfahren als Spalten aus Stationen; die Instrumente sitzen als Marken auf den Zeichnungen, und ein Zeiger auf eine Marke hebt sie in der linken Spalte hervor. Die akademischen Aufgaben der Maßnahme (Zusammenfassen, Recherchieren) werden durch die Medienaufgaben der Plattform ersetzt.
+
+*Praxis-Szenario.* Die Kursleitung gibt drei Aufgaben vor (ein Bild, das einem Prompt genau folgt; eine Stimme zu einem Satz; die Frage, was ein Wort im Bild bewirkt). Die Gruppe sucht auf dem Überblick das Instrument je Aufgabe und begründet die Wahl an der Station, an der es eingreift.  
+<sub>Beleg: `views/latent_lab/flow_logic.vue: marks, highlight`</sub>
+
+#### Shape 1 Intermediate — Zweck, Adressaten, Grenzen · ja
+
+*Learner Expectation (S. 42): „Learners describe the purpose, intended users and basic constraints of a specific AI tool.“*  
+*In the Classroom (S. 42): „Learners examine several examples of AI tools (e.g. a chatbot, recommendation system or route-planning app). For each, learners identify its primary task and explain in simple terms what input it uses and how the outputs execute the task.“*
+
+Die Maßnahme nimmt mehrere KI-Werkzeuge und benennt je Werkzeug die Hauptaufgabe, die Eingabe und wie die Ausgabe die Aufgabe erledigt. Der Überblick ist die Karte dafür: die Verfahren als Spalten aus Stationen, die Instrumente als Marken auf den Zeichnungen an der Stelle, an der sie eingreifen, und ein Zeiger auf eine Marke hebt sie in der linken Spalte hervor.
+
+*Praxis-Szenario.* Jede Kleingruppe bekommt ein Instrument, sucht seine Marke auf dem Überblick, liest an der Station, wo es eingreift, und füllt drei Zeilen aus: Aufgabe, Eingabe, Ausgabe. Die Zeilen werden am Überblick vorgestellt.  
+<sub>Beleg: `views/latent_lab/flow_logic.vue: marks, highlight`</sub>
+
+
+### Modell-Vergleich `/latent-lab/model-comparison`
+
+*5 Maßnahmen.*
+
+#### Engage 3 Intermediate — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners verify AI-generated outputs for accuracy and relevance by consulting trusted sources and considering task-specific expectations.“*  
+*In the Classroom (S. 29): „In small groups, learners plan an itinerary for a tourist visiting their hometown. When the teacher provides AI-generated recommendations for local restaurants, learners compare the recommendations using other sources to determine if the information is outdated, inaccurate or a “hallucination.” From there, learners draw from their own knowledge and experience to decide whether the locations would be appealing to a visitor.“*
+
+Die Maßnahme prüft KI-Empfehlungen an anderen Quellen auf Veraltetes, Falsches und Erfundenes. Beim Modell-Vergleich steht unter den erzeugten Spalten die Reihe „Ergebnisse zu diesem Prompt“: ein Sprachmodell kürzt den Prompt auf einen Suchbegriff, der angezeigt wird, und Wikimedia Commons liefert dazu bis zu drei wirkliche Fotografien mit Urheber und Lizenz. Der Gegenstand wechselt von Restaurantempfehlungen zu Bildern eines wirklichen Ortes oder Dings.
+
+*Praxis-Szenario.* Die Gruppe wählt ein Wahrzeichen ihres Ortes als Prompt. Sie vergleicht die erzeugten Bilder mit den Commons-Fotos darunter und notiert je Modell, was stimmt, was veraltet oder falsch ist und was erfunden wurde. Dann entscheidet sie aus eigener Kenntnis des Ortes, welches Bild einem Besucher etwas Richtiges zeigt.  
+<sub>Beleg: `views/compare/model_comparison.vue: foundTerm, Reihe found; routes/commons_routes.py; services/commons_service.py; de.ts compare.found`</sub>
+
+#### Engage 7 Intermediate — Einsatz an Werten prüfen · ja, angepasst
+
+*Learner Expectation (S. 31): „Learners identify when AI use may have unintended impacts or implications that are different from a user’s immediate goals.“*  
+*In the Classroom (S. 31): „Learners analyse a case study where an AI tool uses one’s browsing history to advertise discounts and sales on products they have viewed in the past. With their teacher, learners weigh the opportunities to save money with risks the AI tool poses for personal privacy. They discuss the pros and cons of using the tool in the long- and short-term.“*
+
+Die Maßnahme wägt an einem Fall (Werbung aus dem Browserverlauf) den Vorteil gegen das Risiko für die Privatsphäre ab. Der Fall der Plattform ist der eigene Prompt: beim Modell-Vergleich hält das Set „Aktuelle Modelle“ neben zwei lokalen Modellen eines, das bei Google läuft (Gemini 3 Pro, in der Liste mit „€“ gekennzeichnet; der Kasten unter der Vorbereitungsspalte sagt, dass ein Bild dort auf eine Anfrage an Google Search zurückgreifen kann), das Set „SD-Historie“ drei lokale Modelle. Die DSGVO-Marke in der Kopfzeile nennt die Anbieter-Voreinstellung der Installation.
+
+*Praxis-Szenario.* Die Gruppe lässt denselben Prompt einmal mit „SD-Historie“ und einmal mit „Aktuelle Modelle“ laufen und wägt danach ab: Was hat das Modell bei Google besser gemacht, und was hat der Prompt dafür verlassen? Die DSGVO-Marke sagt, welche Anbieter-Voreinstellung diese Installation hat.  
+<sub>Beleg: `views/compare/model_comparison.vue: PRESETS, CATALOGUE; de.ts compare.presets, compare.modelNote.noteBody.current; components/PolicyChips.vue: DSGVO chip`</sub>
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Der Modell-Vergleich legt denselben Prompt zwei bis fünf Bildmodellen vor, mit derselben Startzahl über den Spalten („Seed“); was auseinandergeht, liegt an den Modellen. Solange ein Set gewählt ist, steht am Fuß der Vorbereitungsspalte ein Kasten dazu, wofür der Hersteller jedes Modell gebaut hat.
+
+*Praxis-Szenario.* Der Club-Prompt läuft über die Modelle eines Sets; die Gruppe beschreibt je Spalte, welche Auslegung das Modell gewählt hat, und liest im Kasten nach, wofür der Hersteller das Modell gebaut hat.  
+<sub>Beleg: `views/compare/model_comparison.vue: MIN_MODELS, MAX_MODELS, currentSeed, .lab-note; de.ts compare.modelNote`</sub>
+
+#### Shape 1 Basic — Zweck, Adressaten, Grenzen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners identify what different AI systems are designed to do.“*  
+*In the Classroom (S. 42): „Learners review model cards that describe how an AI system works, its training data, intended uses and possible limitations. As a class, they discuss appropriate uses of the AI system.“*
+
+Die Maßnahme liest Modellkarten (Arbeitsweise, Trainingsdaten, vorgesehene Nutzung, Grenzen) und bespricht angemessene Nutzung. Der Modell-Vergleich trägt am Fuß der Vorbereitungsspalte, solange ein Set gewählt ist, einen Kasten, der sagt, wofür der Hersteller jedes Modell gebaut hat, in dessen eigenen Worten aus dem Paper oder der Veröffentlichung, mit Quellen darunter. Von den vier Punkten der Modellkarte deckt der Kasten die vorgesehene Nutzung.
+
+*Praxis-Szenario.* Die Gruppe liest den Kasten für die drei Modelle eines Sets und schreibt je Modell einen Satz, wofür es gebaut ist. Dann lässt sie einen Prompt laufen, der genau das verlangt (etwa lesbare Schrift im Bild), und prüft, ob das Modell hält, was der Hersteller sagt.  
+<sub>Beleg: `de.ts compare.modelNote.noteBody; views/compare/model_comparison.vue: .lab-note`</sub>
+
+#### Shape 2 Basic — An eigenen Kriterien testen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners define criteria for whether an AI system has accomplished a task.“*  
+*In the Classroom (S. 42): „Learners examine an AI system that recommends new music. In small groups, they define criteria for what would make the system successful and compare the system’s recommendations for users with different interests or interaction histories.“*
+
+Die Maßnahme definiert Kriterien, wann ein Musik-Empfehlungssystem seine Aufgabe erfüllt, und vergleicht Empfehlungen für verschiedene Nutzer. Das Empfehlungssystem wird durch ein Bildmodell ersetzt: der Modell-Vergleich hält alles außer dem Modell fest (ein Prompt, eine Startzahl über den Spalten), so dass die Kriterien der Gruppe an mehreren Systemen zugleich geprüft werden.
+
+*Praxis-Szenario.* Die Gruppe schreibt vor dem Lauf drei Kriterien auf, woran sie erkennt, dass ein Bild den Prompt erfüllt hat. Dann läuft der Prompt über die Modelle, und die Gruppe bewertet jede Spalte nach ihren Kriterien; die verschiedenen Nutzer der Maßnahme werden durch drei verschiedene Prompts ersetzt.  
+<sub>Beleg: `views/compare/model_comparison.vue: currentSeed`</sub>
+
+
+### Stereotypen-Analyse `/latent-lab/cultural-un-known`
+
+*3 Maßnahmen.*
+
+#### Engage 6 Intermediate — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.“*  
+*In the Classroom (S. 30): „Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.“*
+
+Die Maßnahme untersucht, warum eine Technik über Bevölkerungsgruppen hinweg verschieden gut arbeitet, am Beispiel Gesichtserkennung. Bei der Stereotypen-Analyse ist die Technik ein Bildmodell und die Gruppe eine Kultur: ein Basis-Prompt mit einem Platzhalter „*“, in den je Spalte ein Wort eingesetzt wird („Yoruba“, „Sámi“, „Franconian“), die erste Spalte ohne Einsetzung, jede Zeile ein Modell, alle Bilder einer Zeile mit derselben Startzahl. Die Folgen für Entscheidungen im Alltag bespricht die Kursleitung.
+
+*Praxis-Szenario.* Die Gruppe wählt eine Alltagsszene (ein Frühstück, eine Hochzeit) als Basis-Prompt und liest das Raster: Wer ist in der ersten Spalte selbstverständlich? Welche Kultur trifft das Modell, welche wird zur Kulisse? Sie hält je Zelle fest, was zutrifft und was Klischee ist.  
+<sub>Beleg: `views/latent_lab/default_census.vue: DRAW_SEEDS; de.ts latentLab.census.templateLabel, unmarked, story`</sub>
+
+#### Engage 6 Advanced — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners analyse how individuals, companies or institutions may build and deploy AI systems to serve particular interests and how these systems might shape opportunities, representations or public perceptions.“*  
+*In the Classroom (S. 30): „With a teacher, learners evaluate real-world examples of AI being used to influence an event (e.g. misinformation and disinformation on social media). Then they explore how an institution’s choices regarding AI use might benefit certain groups while having a negative effect on others.“*
+
+Wie ein Modell Repräsentationen prägt, ist der Gegenstand des Rasters der Stereotypen-Analyse (siehe Mittelstufe): welcher Ort, welche Menschen, welche Kleidung ihm als das Selbstverständliche gelten, solange im Satz von Herkunft nichts steht.
+
+*Praxis-Szenario.* Die Gruppe wählt einen Beruf oder ein Fest als Basis-Prompt, liest die erste Spalte des Rasters für die Modelle und bespricht, wer dort als Regel erscheint und welche Gruppen nur mit ausdrücklicher Nennung vorkommen.  
+<sub>Beleg: `views/latent_lab/default_census.vue; Anrede latentLab.census.purpose`</sub>
+
+#### Shape 2 Basic — An eigenen Kriterien testen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners define criteria for whether an AI system has accomplished a task.“*  
+*In the Classroom (S. 42): „Learners examine an AI system that recommends new music. In small groups, they define criteria for what would make the system successful and compare the system’s recommendations for users with different interests or interaction histories.“*
+
+Das Raster der Stereotypen-Analyse vergleicht je Zeile ein Modell und je Spalte ein eingesetztes Wort, jedes Bild einer Zeile mit derselben Startzahl; die verschiedenen Nutzer werden durch die Kulturen in den Spalten ersetzt.
+
+*Praxis-Szenario.* Die Gruppe legt vorher fest, woran sie erkennt, dass ein Modell die gemeinte Praxis trifft, und prüft das Raster Zelle für Zelle daran.  
+<sub>Beleg: `views/latent_lab/default_census.vue: DRAW_SEEDS`</sub>
+
+
+### Bildverständnis `/latent-lab/image-understanding`
+
+*Eine Maßnahme.*
+
+#### Engage 3 Advanced — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners assess AI-generated outputs and justify decisions to accept, revise or reject them.“*  
+*In the Classroom (S. 29): „When their teacher presents different AI-generated interpretations of a historical event, learners turn to trusted secondary or primary sources to verify the accuracy of the interpretations and argue which one they would include in a final report.“*
+
+Die Maßnahme stellt mehrere KI-Deutungen desselben Ereignisses nebeneinander, prüft sie an Quellen und begründet, welche in einen Bericht kommt. Das Bildverständnis stellt mehrere Lesarten desselben Bildes nebeneinander: mehrere Modelle, eine gewählte Lesart als Anweisung (unter anderem „Kritische Lesart“), das Feld bleibt beschreibbar. Das Ereignis wird durch ein Bild ersetzt, zu dem die Klasse Quellen hat.
+
+*Praxis-Szenario.* Die Kursleitung wählt ein Kunstwerk oder ein historisches Foto, zu dem es Quellen gibt, und lässt es von mehreren Modellen unter derselben Lesart lesen. Die Gruppe prüft jede Lesung an den Quellen, streicht Behauptungen, die dort nicht gedeckt sind, und begründet, welche Lesung sie für einen Bericht übernimmt, überarbeitet oder verwirft.  
+<sub>Beleg: `views/compare/vlm_analysis_comparison.vue: FRAME_PLACE, data/readingFrames.ts; de.ts kritisch`</sub>
+
+
+### Sprachverständnis `/latent-lab/language-understanding`
+
+*3 Maßnahmen.*
+
+#### Engage 3 Basic — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners understand why AI-generated outputs should be verified and recognise how they can verify the content themselves.“*  
+*In the Classroom (S. 29): „Learners review an AI-powered tool’s solution to a maths problem and accompanying explanation, then compare the AI-generated content to the process that their teacher has introduced to the class.“*
+
+Die Maßnahme vergleicht die Lösung eines KI-Werkzeugs mit einem Verfahren, das die Klasse kennt, damit klar wird, warum Ausgaben geprüft werden und wie man selbst prüft. Beim Sprachverständnis ist die prüfbare Ausgabe die Übersetzung: über jeder Spalte steht die Übersetzung, die an die Modelle ging, und ihre Rückübersetzung in die eigene Sprache. Das Verfahren, das die Klasse kennt, ist ihre eigene Sprache; die Mathematikaufgabe der Maßnahme wird durch die Übersetzung ersetzt.
+
+*Praxis-Szenario.* Die Gruppe schreibt eine Bildbeschreibung in ihrer Sprache und lässt sie in drei weiteren laufen. Vor dem Blick auf die Bilder prüft sie die Rückübersetzung: Wo weicht sie ab, und hätte die Gruppe die Abweichung ohne die Rückübersetzung bemerkt? Erst dann schreibt sie Unterschiede zwischen den Bildern den Modellen zu.  
+<sub>Beleg: `views/compare/language_comparison.vue: Übersetzung und Rückübersetzung je Spalte; Anrede compare.address.language.purpose`</sub>
+
+#### Engage 6 Intermediate — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.“*  
+*In the Classroom (S. 30): „Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.“*
+
+Dieselbe Frage an der Sprache: beim Sprachverständnis läuft dieselbe Bildbeschreibung in bis zu vier von zwanzig Sprachen, darunter Obersorbisch, Yorùbá und Runasimi, durch dieselben Bildmodelle, eines je Reihe.
+
+*Praxis-Szenario.* Die Gruppe schreibt eine Beschreibung ohne Ortsangabe, lässt sie in ihrer Sprache und in drei weiteren laufen und benennt je Bild, was das Modell aus der Sprache gemacht hat, das in der Beschreibung nie stand.  
+<sub>Beleg: `views/compare/language_comparison.vue: Sprachliste; Anrede compare.address.language.story`</sub>
+
+#### Shape 1 Basic — Zweck, Adressaten, Grenzen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners identify what different AI systems are designed to do.“*  
+*In the Classroom (S. 42): „Learners review model cards that describe how an AI system works, its training data, intended uses and possible limitations. As a class, they discuss appropriate uses of the AI system.“*
+
+Die Trainingsdaten stehen beim Sprachverständnis in der Anrede: die Textteile dieses Bildmodells sind an englischem Text trainiert.
+
+*Praxis-Szenario.* Die Gruppe liest die Anrede, sagt vorher, was sie deshalb für eine Beschreibung auf Yorùbá oder Obersorbisch erwartet, und prüft die Erwartung an den Bildern.  
+<sub>Beleg: `Anrede compare.address.language.purpose`</sub>
+
+
+### Stimmen-Vergleich `/latent-lab/voices`
+
+*4 Maßnahmen.*
+
+#### Engage 2 Advanced — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners explain how different AI systems work using language that does not attribute human traits or abilities, knowing that their phrasing shapes understanding.“*  
+*In the Classroom (S. 28): „Learners review different types of AI tools and compare design choices that make the systems appear human-like, friendly or intelligent. In small groups, learners practise explaining how the tools produce outputs, focussing on programmed processes rather than human qualities. As a class, they share and refine their explanations and reflect on how different design features affect understanding and trust in AI systems.“*
+
+Beim Stimmen-Vergleich ist die Menschenähnlichkeit selbst der Entwurf: eine Regelmaschinerie von 1995 (eSpeak NG) mit zwölf Einstellungen, in der keine Aufnahme steckt, neben drei trainierten Systemen (Supertonic 3, VoxCPM2, Piper). Bei Supertonic stehen die Stimmen unter F1 bis F5 und M1 bis M5 mit einer Beschreibung und der gemessenen Tonhöhe in Hz; bei VoxCPM2 wird die sprechende Person in drei Auswahlfeldern (Geschlecht, Alter, Ausdruck) beschrieben.
+
+*Praxis-Szenario.* Dieselbe Zeile in allen Spalten; die Gruppe ordnet die Stimmen nach „klingt wie ein Mensch“ und erklärt danach je Spalte, wie der Klang zustande kommt (Regeln; zehn als Vektoren ins Modell trainierte Stimmen; eine Beschreibung aus drei Auswahlfeldern; Aufnahmen), ohne den Systemen Absicht oder Gefühl zuzuschreiben.  
+<sub>Beleg: `views/compare/voice_comparison.vue: SystemId, hzText, presets; de.ts compare.voice.systems, supertonic.presets, voxcpm.*Label`</sub>
+
+#### Manage 2 Basic — Ansatz durch Vergleich wählen · ja, angepasst
+
+*Learner Expectation (S. 38): „Learners recognise that some types of AI systems can be programmed with specific rules to accomplish tasks, while others can learn patterns from data.“*  
+*In the Classroom (S. 38): „Learners compare different approaches to building AI systems by completing a trash-sorting task. First, they consider why random outputs would be unlikely to reliably sort items. Next, they direct a classmate role-playing as a robot to sort images of trash based on specific criteria. They observe how the “robot” responds to new images that do not match the criteria. Finally, they explore how a system could use patterns from collected data, such as a class survey, to improve sorting decisions and determine which approach is most appropriate for different tasks.“*
+
+Die Maßnahme vergleicht Ansätze für eine Sortieraufgabe: Zufall, feste Regeln (ein Mitschüler als Roboter) und Muster aus Daten. Das Rollenspiel ist analog; für den letzten Schritt, wie ein System mit Mustern aus Daten arbeitet und welcher Ansatz zu welcher Aufgabe passt, stellt der Stimmen-Vergleich die Systeme nebeneinander: eine Regelmaschinerie von 1995 (eSpeak NG) mit zwölf Einstellungen, in der keine Aufnahme steckt, und drei trainierte Systeme, die dieselbe Zeile sprechen. Die Sortieraufgabe wird durch das Sprechen einer Zeile ersetzt.
+
+*Praxis-Szenario.* Nach dem Rollenspiel schreibt die Gruppe eine Zeile mit einem schwierigen Wort (einem Namen, einem Fremdwort) und hört sie in allen Spalten. Sie beschreibt, was die Regelmaschine daraus macht und was die trainierten Stimmen, und ordnet dann Aufgaben zu: Wo reichen Regeln, wo braucht es Muster aus Daten?  
+<sub>Beleg: `views/compare/voice_comparison.vue; Anrede compare.address.voice.story`</sub>
+
+#### Manage 2 Intermediate — Ansatz durch Vergleich wählen · ja
+
+*Learner Expectation (S. 38): „Learners identify the benefits and drawbacks of using a rules-based approach and a machine learning approach to solve a problem.“*  
+*In the Classroom (S. 38): „Learners compare technology that follows set rules to execute a task (e.g. calculators, traffic lights, thermostats) with technologies that have been trained on examples from data (e.g., image recognition, translation). With a teacher, they consider why each approach suits the specific task.“*
+
+Die Maßnahme vergleicht Technik mit festen Regeln (Taschenrechner, Ampel) mit trainierter Technik (Bilderkennung, Übersetzung) und fragt, warum jeder Ansatz zu seiner Aufgabe passt. Der Stimmen-Vergleich hat beides an derselben Aufgabe: die Regelmaschinerie von 1995 (eSpeak NG) und drei trainierte Systeme (Supertonic 3 mit zehn Stimmen unter F1 bis M5; VoxCPM2, dem die sprechende Person in drei Auswahlfeldern beschrieben wird; Piper mit aufgenommenen Stimmen nach Sprache, und wo eine Datei mehrere Sprecher trägt, mit der Wahl des Sprechers). Jede Spalte trägt Name und Jahr ihres Systems und seine Auswahlfelder.
+
+*Praxis-Szenario.* Die Gruppe sammelt die Beispiele der Kursleitung an der Tafel, hört dann dieselbe Zeile in allen Spalten und trägt den Stimmen-Vergleich als weiteres Beispielpaar ein: Was kann die Regelmaschine, was die trainierten nicht können, und umgekehrt?  
+<sub>Beleg: `views/compare/voice_comparison.vue: cmp-column-head, YEARS; de.ts compare.voice.systems, piper.recordings; Anrede compare.address.voice.story`</sub>
+
+#### Shape 1 Intermediate — Zweck, Adressaten, Grenzen · ja
+
+*Learner Expectation (S. 42): „Learners describe the purpose, intended users and basic constraints of a specific AI tool.“*  
+*In the Classroom (S. 42): „Learners examine several examples of AI tools (e.g. a chatbot, recommendation system or route-planning app). For each, learners identify its primary task and explain in simple terms what input it uses and how the outputs execute the task.“*
+
+Beim Stimmen-Vergleich trägt jede Spalte Name und Jahr ihres Systems und seine Auswahlfelder; die vier Systeme haben dieselbe Aufgabe und verschiedene Eingaben (zwölf Einstellungen; zehn Stimmen mit Tonhöhe in Hz; drei Auswahlfelder zur sprechenden Person; Sprache und Stimme aus Aufnahmen, bei einer Datei mit mehreren Sprechern auch der Sprecher).
+
+*Praxis-Szenario.* Die Gruppe schreibt je Spalte auf, was hineingeht und was herauskommt, und erklärt in einfachen Worten, wie die Ausgabe die Aufgabe erledigt.  
+<sub>Beleg: `views/compare/voice_comparison.vue: cmp-column-head, YEARS`</sub>
+
+
+### System Prompts `/latent-lab/system-prompts`
+
+*6 Maßnahmen.*
+
+#### Engage 1 Advanced — KI im Alltag erkennen · ja, angepasst
+
+*Learner Expectation (S. 28): „Learners can analyse how AI systems may shape individuals’ beliefs and behaviours as consumers, learners, workers and citizens.“*  
+*In the Classroom (S. 28): „Learners explore screenshots from AI chatbots and apps to identify when it may be designed to persuade, rather than inform. With a teacher, they discuss how features like “streak” counts, character names or overly-agreeable responses might be engineered to increase engagement.“*
+
+Die Maßnahme untersucht Screenshots von Chatbots und Apps auf Stellen, die überreden statt informieren, und bespricht, ob Streak-Zähler, Figurennamen oder übermäßig zustimmende Antworten auf Bindung angelegt sein könnten. System Prompts ersetzt die Screenshots durch drei laufende Spalten desselben Sprachmodells: in jeder Spalte steht eine Anweisung im Textfeld, zur Wahl stehen drei veröffentlichte Systemprompts eines Herstellers (Anthropic: Claude Opus 3, Opus 4 und Opus 5, je mit Quelle und Datum), die Voreinstellungen und „Kein System-Prompt“ (das leere Feld zeigt „(kein System-Prompt)“). An die Stelle der Screenshots treten Antworten, die das Modell mit und ohne Anweisung gibt; das Gespräch darüber, ob eine Antwort auf Bindung angelegt ist, führt die Kursleitung.
+
+*Praxis-Szenario.* Die Kursleitung gibt eine Nachricht vor, etwa eine schwache Idee für ein Bild. Die Gruppe schickt sie in alle drei Spalten (zwei veröffentlichte Prompts, eine Spalte mit „(kein System-Prompt)“) und markiert in jeder Antwort die Stellen, an denen sie lobt, zustimmt oder mit einer Rückfrage endet. Dann liest sie im veröffentlichten Wortlaut nach, ob der Hersteller das anweist, und vergleicht mit der leeren Spalte. Zum Schluss wechselt eine Spalte auf die Voreinstellung „Widerspricht immer“, und die Gruppe beschreibt, was sich an ihrer eigenen Reaktion ändert.  
+<sub>Beleg: `views/compare/system_prompt_comparison.vue: presets, prompt-textarea; views/compare/system_prompts_published.ts: claude_opus_3/4/5; de.ts compare.systemprompt.emptyPrompt, presets.disagree`</sub>
+
+#### Engage 2 Advanced — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners explain how different AI systems work using language that does not attribute human traits or abilities, knowing that their phrasing shapes understanding.“*  
+*In the Classroom (S. 28): „Learners review different types of AI tools and compare design choices that make the systems appear human-like, friendly or intelligent. In small groups, learners practise explaining how the tools produce outputs, focussing on programmed processes rather than human qualities. As a class, they share and refine their explanations and reflect on how different design features affect understanding and trust in AI systems.“*
+
+Die Maßnahme vergleicht Entwurfsentscheidungen, die Systeme menschenähnlich, freundlich oder intelligent erscheinen lassen, und übt Erklärungen, die bei den programmierten Vorgängen bleiben. System Prompts zeigt die Entwurfsentscheidung im Wortlaut: drei veröffentlichte Systemprompts eines Herstellers (Anthropic: Claude Opus 3, Opus 4 und Opus 5), mit Quelle und Datum unter dem Feld, in drei Spalten desselben Modells; in jeder Spalte lässt sich stattdessen „Kein System-Prompt“ wählen oder eine eigene Anweisung ins Textfeld schreiben.
+
+*Praxis-Szenario.* Die Gruppe liest in den veröffentlichten Prompts die Stellen, die dem Assistenten eine Haltung auftragen (im Prompt zu Opus 4 etwa „curiosity and equanimity“), und schreibt eine eigene Anweisung, die jede Haltung weglässt. Dieselbe Nachricht geht in alle drei Spalten, die dritte unter einer weiteren veröffentlichten Anweisung; in Kleingruppen erklärt die Gruppe, wie die Antworten zustande kommen, mit den Wörtern Anweisung und Muster.  
+<sub>Beleg: `views/compare/system_prompt_comparison.vue; views/compare/system_prompts_published.ts`</sub>
+
+#### Engage 6 Advanced — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners analyse how individuals, companies or institutions may build and deploy AI systems to serve particular interests and how these systems might shape opportunities, representations or public perceptions.“*  
+*In the Classroom (S. 30): „With a teacher, learners evaluate real-world examples of AI being used to influence an event (e.g. misinformation and disinformation on social media). Then they explore how an institution’s choices regarding AI use might benefit certain groups while having a negative effect on others.“*
+
+Die Maßnahme untersucht an einem Beispiel aus der Welt (Desinformation), wie Entscheidungen einer Institution über KI bestimmten Gruppen nützen und anderen schaden. Das Beispiel aus der Welt liegt außerhalb; die Entscheidung einer Institution liegt bei System Prompts im Wortlaut vor: drei veröffentlichte Systemprompts eines Herstellers, mit Quelle und Datum, in denen steht, was der Assistent sagen soll und was nicht.
+
+*Praxis-Szenario.* Die Gruppe sucht in den drei Fassungen die Sätze, die dem Assistenten Themen, Haltungen oder Vorsicht auftragen, prüft an eigenen Nachrichten, ob die Spalte sich daran hält, und bespricht, wem jede Regel nützt und wem sie etwas vorenthält.  
+<sub>Beleg: `views/compare/system_prompts_published.ts; views/compare/system_prompt_comparison.vue`</sub>
+
+#### Create 1 Advanced — Neue Perspektiven erkunden · ja
+
+*Learner Expectation (S. 34): „Learners purposefully integrate AI-generated outputs with their own ideas to develop comprehensive solutions and creative approaches.“*  
+*In the Classroom (S. 34): „Learners develop their own arguments for a class debate, then analyse AI-generated counterarguments provided by the teacher. They remix and reject the counterpoints to strengthen their final argument.“*
+
+Die Maßnahme lässt Gegenargumente analysieren, die die Kursleitung mit KI erzeugt hat, und sie ins eigene Argument einbauen oder verwerfen. Bei System Prompts schreibt die Kursleitung die Anweisung selbst in das Textfeld einer Spalte oder wählt die Voreinstellung „Widerspricht immer“ (widersprich allem, finde Fehler, begründe); das Modell schreibt in dieser Spalte Gegenargumente, dasselbe Modell wie in den Nachbarspalten.
+
+*Praxis-Szenario.* Die Gruppe schreibt ihr Argument zu einer Streitfrage. Die Kursleitung stellt eine Spalte auf „Widerspricht immer“ und schickt das Argument ab; es geht in alle drei Spalten, und diese antwortet mit Gegenargumenten. Die Gruppe sortiert die Gegenargumente in „übernehmen“, „umbauen“ und „verwerfen“ und schreibt das Argument neu.  
+<sub>Beleg: `views/compare/system_prompt_comparison.vue: presets (disagree), prompt-textarea; de.ts compare.systemprompt.presets.disagree`</sub>
+
+#### Create 3 Basic — Rückmeldung holen, überarbeiten · ja
+
+*Learner Expectation (S. 35): „Learners know how to prompt AI systems to generate accurate feedback and helpful responses to an idea.“*  
+*In the Classroom (S. 35): „Learners are shown two different versions of a prompt designed to get feedback on the same idea. They compare AI-generated responses to the two prompts and analyse which prompt led to an output with more accurate or useful feedback. Then they explain what features (e.g. context, specificity, constraints) made it more effective.“*
+
+Die Maßnahme vergleicht zwei Fassungen eines Prompts, der Rückmeldung zu derselben Idee holen soll, und analysiert, welche Merkmale (Kontext, Spezifität, Einschränkungen) die Rückmeldung genauer oder nützlicher machen. System Prompts ist der Aufbau dafür: drei Spalten mit demselben Modell, in jeder ein eigenes Textfeld für die Anweisung; mit „Zufälligkeit“ auf 0 liegt der Unterschied der Antworten an der Anweisung.
+
+*Praxis-Szenario.* Die Kursleitung schreibt zwei Rückmelde-Anweisungen in zwei Spalten, eine knappe („Gib Rückmeldung.“) und eine mit Kontext, Kriterien und Vorgaben. Die Gruppe schickt dieselbe Idee hinein, vergleicht die beiden Rückmeldungen und benennt, welche Merkmale der Anweisungen die Rückmeldung verändert haben. Dann schreibt sie eine dritte Fassung.  
+<sub>Beleg: `views/compare/system_prompt_comparison.vue: prompt-textarea`</sub>
+
+#### Shape 4 Basic — Systeme verbessern · ja
+
+*Learner Expectation (S. 43): „Learners recognise that AI systems can be designed or adjusted to better support individuals, communities and the environment.“*  
+*In the Classroom (S. 43): „Learners discuss everyday challenges in their classroom or school, such as finding study resources or sharing information on time. They explore examples of AI tools and identify simple changes that could make these tools more helpful or inclusive, such as clearer instructions, age-appropriate outputs or options for different needs. Learners explain who would benefit from these improvements and why.“*
+
+Die Maßnahme sucht an KI-Werkzeugen einfache Änderungen, die sie hilfreicher oder inklusiver machen (klarere Anweisungen, altersgerechte Ausgaben, Optionen für verschiedene Bedürfnisse), und sagt, wem sie nützen. Bei System Prompts ist die Änderung die Anweisung: die Gruppe schreibt sie ins Textfeld einer Spalte, und die Antwort daneben zeigt, was sie bewirkt, bei gleichem Modell.
+
+*Praxis-Szenario.* Die Gruppe schickt eine Frage ab und liest die Antwort der Spalte mit „(kein System-Prompt)“ darauf, ob etwas daran für jüngere Kinder oder für jemanden mit wenig Deutsch schwer ist. Dann schreibt sie in eine zweite Spalte eine Anweisung, die das ändern soll, vergleicht beide Antworten und benennt, wem die Änderung nützt.  
+<sub>Beleg: `views/compare/system_prompt_comparison.vue: prompt-textarea; de.ts compare.systemprompt.emptyPrompt`</sub>
+
+
+### Sprachmodell-Vergleich `/latent-lab/interception-across-models`
+
+*Eine Maßnahme.*
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Der Sprachmodell-Vergleich legt einen Prompt unter einer Perspektive mehreren Sprachmodellen vor: je Zeile ein Modell mit dem Text, den es geschrieben hat, und einem Bild dazu aus demselben Bildmodell mit derselben Startzahl; die oberste Zeile ist der Prompt, wie er geschrieben wurde. Die Werkzeuge der Maßnahme werden durch die Sprachmodelle ersetzt, die unter einer Perspektive schreiben.
+
+*Praxis-Szenario.* Die Gruppe lässt den Club-Prompt unter einer Perspektive über die Sprachmodelle laufen, liest je Zeile den Text und vergleicht, wie jedes Modell die Idee ausgelegt hat, mit dem Bild als Lesehilfe.  
+<sub>Beleg: `views/latent_lab/interception_models.vue: Kopfkommentar; composables/useInterceptionSeries.ts`</sub>
+
+
+### Wirkungsvergleich `/latent-lab/perspectives-on-a-template`
+
+*2 Maßnahmen.*
+
+#### Create 1 Basic — Neue Perspektiven erkunden · ja
+
+*Learner Expectation (S. 34): „Learners explore how different AI tools can expand their thinking or spark new ideas.“*  
+*In the Classroom (S. 34): „Learners discuss AI-generated images to create story settings based on their classmates’ ideas (e.g. “a jungle in space”), then write new stories inspired by unexpected results.“*
+
+Beim Wirkungsvergleich schreiben mehrere Perspektiven dieselbe Vorlage um, ein Sprachmodell und ein Bildmodell bleiben gleich, und das erste Bild („Referenzbild“) zeigt die Vorlage, wie sie geschrieben wurde; was eine Perspektive geschrieben hat, erscheint beim Zeigen auf ihre Scheibe. Die Vorlage kann auch aus einem Bild gelesen werden, das auf das Feld gezogen wird; dann steht dieses Bild vorn.
+
+*Praxis-Szenario.* Jede Person gibt einen Schauplatz als Vorlage vor; die Gruppe wählt Perspektiven hinzu, lässt die Serie laufen und schreibt die Geschichte zu dem Bild, das am weitesten vom ersten abweicht, mit dem Text, den die Perspektive geschrieben hat, als Anfang.  
+<sub>Beleg: `views/latent_lab/perspectives_template.vue: Kopfkommentar; composables/useInterceptionSeries.ts`</sub>
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Der Wirkungsvergleich legt dieselbe Vorlage mehreren Perspektiven vor, bei gleichem Sprachmodell, gleichem Bildmodell und gleicher Startzahl; das erste Bild („Referenzbild“) zeigt die Vorlage, wie sie geschrieben wurde, und der Text jeder Perspektive erscheint beim Zeigen auf ihre Scheibe. Die Werkzeuge der Maßnahme werden durch die Perspektiven ersetzt.
+
+*Praxis-Szenario.* Die Gruppe gibt den Club-Prompt als Vorlage ein, wählt Perspektiven hinzu, lässt die Serie laufen und ordnet die Bilder nach „trifft die Idee“ und „legt sie neu aus“; zu drei Bildern liest sie den Text der Perspektive und sagt, welcher Satz darin die Auslegung gemacht hat.  
+<sub>Beleg: `views/latent_lab/perspectives_template.vue: Kopfkommentar`</sub>
+
+
+### Ästhetische Pole `/latent-lab/aesthetic-poles`
+
+*3 Maßnahmen.*
+
+#### Create 2 Basic — Prototypen, Systemarten verbinden · ja
+
+*Learner Expectation (S. 34): „Learners use AI to generate an image, story or model to represent an idea.“*  
+*In the Classroom (S. 34): „Learners choose a theme (e.g. “hope,” “winter” or “community”) and use an AI image generator to create a visual representation. They generate one image and write a short explanation of how specific elements of their prompt shaped the final result, noting any unexpected or surprising aspects of the output. They assess how well the generated result matches the idea they had in mind.“*
+
+Bei den Ästhetischen Polen sind die Elemente des Prompts eine Checkliste von elf Eigenschaften, zehn davon mit einem Griff; ein Sprachmodell schreibt aus der Vorlage und den eingestellten Wörtern einen neuen Prompt („Umgeschriebener Prompt“), die erste Zeile ist die Liste an ihren neutralen Wörtern, jeder Lauf mit einer neuen Einstellung fügt eine Zeile an, und ein Bildmodell malt jede Zeile.
+
+*Praxis-Szenario.* Die Gruppe schreibt ihre Vorlage zum Thema, verstellt eine Eigenschaft und lässt laufen, dann eine zweite; sie liest je Zeile den umgeschriebenen Prompt und das Bild und vergleicht die Zeilen miteinander.  
+<sub>Beleg: `views/latent_lab/aesthetic_poles.vue: Kopfkommentar; composables/useInterceptionSeries.ts`</sub>
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Bei den Ästhetischen Polen sind die Fassungen die Zeilen einer Serie: je Zeile eine Einstellung der Checkliste, gemalt von dem einen gewählten Bildmodell. Die Werkzeuge der Maßnahme werden durch die Einstellungen ersetzt.
+
+*Praxis-Szenario.* Die Gruppe lässt den Club-Prompt als Vorlage an drei Einstellungen laufen und sagt je Zeile, ob die Einstellung die Idee trifft oder neu auslegt.  
+<sub>Beleg: `views/latent_lab/aesthetic_poles.vue: Kopfkommentar`</sub>
+
+#### Create 3 Basic — Rückmeldung holen, überarbeiten · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners know how to prompt AI systems to generate accurate feedback and helpful responses to an idea.“*  
+*In the Classroom (S. 35): „Learners are shown two different versions of a prompt designed to get feedback on the same idea. They compare AI-generated responses to the two prompts and analyse which prompt led to an output with more accurate or useful feedback. Then they explain what features (e.g. context, specificity, constraints) made it more effective.“*
+
+Bei den Ästhetischen Polen sind die zwei Fassungen zwei Einstellungen der Eigenschaftsliste, aus denen ein Sprachmodell je einen Prompt schreibt; die Rückmeldung der Maßnahme wird durch das Bild ersetzt, das jede Zeile zu ihrem Prompt zeigt.
+
+*Praxis-Szenario.* Die Gruppe lässt zwei Einstellungen laufen, liest die beiden umgeschriebenen Prompts untereinander und vergleicht, was sich im Prompt und was sich im Bild geändert hat.  
+<sub>Beleg: `views/latent_lab/aesthetic_poles.vue: Kopfkommentar`</sub>
+
+
+### Denoising Archaeology `/latent-lab/denoising-archaeology`
+
+*2 Maßnahmen.*
+
+#### Engage 2 Basic — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.“*  
+*In the Classroom (S. 28): „As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.“*
+
+Die Maßnahme prüft Redeweisen wie „die KI denkt“ oder „die KI versteht“ darauf, welche irreführend sind, und ersetzt sie durch technisch zutreffende Beschreibungen. Denoising Archaeology liefert den Gegenstand für die Beschreibung: jeden Entrauschungsschritt eines Laufs als eigenes Bild (voreingestellt 25 Schritte). Die Redeweisen bringt die Kursleitung mit; die Beschreibungen schreiben die Lernenden.
+
+*Praxis-Szenario.* Die Kursleitung sammelt an der Tafel, wie die Gruppe über Bild-KI spricht („sie malt“, „sie weiß, wie ein Haus aussieht“). Die Gruppe lässt einen eigenen Prompt durch Denoising Archaeology laufen, geht die Schritte durch und schreibt zu jeder Redeweise, was an den Schritten zu sehen ist und was der Satz behauptet. Dann formuliert sie den Satz neu, ohne Malen, Wissen und Wollen.  
+<sub>Beleg: `views/latent_lab/denoising_archaeology.vue; Anrede latentLab.archaeology`</sub>
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI malt Strich für Strich“ liefert Denoising Archaeology die Einzelschritte eines Laufs als Bildreihe für das Artefakt.
+
+*Praxis-Szenario.* Die Gruppe wählt fünf Schritte aus, setzt sie in der Reihenfolge auf das Plakat und schreibt zu jedem, was darin schon zu sehen ist und was noch fehlt.  
+<sub>Beleg: `views/latent_lab/denoising_archaeology.vue`</sub>
+
+
+### Mean Images `/latent-lab/mean-images`
+
+*2 Maßnahmen.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „jedes KI-Bild ist einzigartig“ liefert Mean Images je Modell den Mittelwert vieler Bilder zu einem Prompt: einmal aus Umformulierungen des Prompts, die ein Sprachmodell inhaltsgleich schreibt, einmal aus demselben Prompt auf verschiedenen Startzahlen; bei den beiden SD 3.5-Modellen wird der Mittelwert vor dem Decoder gebildet.
+
+*Praxis-Szenario.* Die Gruppe lässt ihren Prompt als Serie laufen, setzt das mean image neben drei der Einzelbilder auf das Plakat und erklärt, was ein Mittelwert aus Bildern ist und was in ihm übrig bleibt.  
+<sub>Beleg: `views/latent_lab/mean_images.vue; Anrede latentLab.meanImages.story`</sub>
+
+#### Engage 6 Intermediate — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.“*  
+*In the Classroom (S. 30): „Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.“*
+
+Mean Images mittelt viele Bilder je Modell zu einem Bild: aus Umformulierungen eines Prompts oder aus einem Prompt auf verschiedenen Startzahlen; die Seite nennt als Zweck die Erkundung visueller Klischees, Vorurteile und anderer Formen der statistischen Produktion von ‚Normalität‘. Die Bevölkerungsgruppe der Maßnahme wird durch das Motiv des Prompts ersetzt.
+
+*Praxis-Szenario.* Die Gruppe schreibt einen Prompt zu einer Rolle oder einem Beruf, lässt die Serie über zwei Modelle laufen und vergleicht je Modell das mean image mit den Einzelbildern.  
+<sub>Beleg: `views/latent_lab/mean_images.vue; Anrede latentLab.meanImages.purpose`</sub>
+
+
+### Attention Cartography `/latent-lab/attention-cartography`
+
+*2 Maßnahmen.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI weiß, was ein Wort bedeutet“ zeigt Attention Cartography, wo ein Wort in der Rechnung gewirkt hat: ein Klick auf ein Wort des Prompts legt ein farbiges Feld über das Bild.
+
+*Praxis-Szenario.* Die Gruppe klickt drei Wörter ihres Prompts an, fotografiert die drei Felder und erklärt auf dem Plakat, dass ein Wort im Modell als Wirkung auf Flächen des Bildes vorliegt.  
+<sub>Beleg: `views/latent_lab/attention_cartography.vue; Anrede latentLab.attention`</sub>
+
+#### Create 2 Basic — Prototypen, Systemarten verbinden · ja
+
+*Learner Expectation (S. 34): „Learners use AI to generate an image, story or model to represent an idea.“*  
+*In the Classroom (S. 34): „Learners choose a theme (e.g. “hope,” “winter” or “community”) and use an AI image generator to create a visual representation. They generate one image and write a short explanation of how specific elements of their prompt shaped the final result, noting any unexpected or surprising aspects of the output. They assess how well the generated result matches the idea they had in mind.“*
+
+Attention Cartography zeigt, wo ein einzelnes Wort des Prompts in der Rechnung gewirkt hat: ein Klick auf ein Wort legt ein farbiges Feld über das Bild, mehrere Wörter tragen mehrere Farben; drei Regler stellen Entrauschungsschritt, Netzwerktiefe und Text-Encoder ein.
+
+*Praxis-Szenario.* Die Gruppe lässt ihren Prompt hier laufen, klickt nacheinander die drei Wörter an, die ihr am wichtigsten sind, und schreibt zu jedem, ob es dort wirkt, wo sie es erwartet hat. Das Wort mit der größten Überraschung wird der Kern der Erklärung.  
+<sub>Beleg: `views/latent_lab/attention_cartography.vue; de.ts latentLab.attention.timestepLabel, layerLabel, encoderLabel; Anrede latentLab.attention.story`</sub>
+
+
+### Encoder Fusion `/latent-lab/encoder-fusion`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI liest Text wie ein Mensch“ zeigt Encoder Fusion zwei Lesarten desselben Prompts: die CLIP-Encoder, trainiert auf Bild-Text-Paaren, und T5, trainiert auf reinem Text. Drei Faktoren (a: CLIP-Block, b: T5-Zeilen 0–76 in den CLIP-Block, c: T5-Block) legen fest, mit welchem Gewicht jede Lesart in die Rechnung eingeht.
+
+*Praxis-Szenario.* Die Gruppe lässt denselben Prompt mit drei Einstellungen der Faktoren laufen und setzt die drei Bilder mit den Einstellungen auf das Plakat.  
+<sub>Beleg: `views/surrealizer.vue: factorA/B/C; de.ts surrealizer.factorA/B/C, yourPromptTakenUp`</sub>
+
+
+### Dimension Explorer `/latent-lab/dimension-explorer`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI kennt die Farbe Rot“ zeigt der Dimension Explorer, dass jedes Wort vom Text-Encoder in einen hochdimensionalen Vektor überführt wird; ändert man im Prompt rot zu blau, ändern sich bestimmte Dimensionen stärker als andere, und der Ort zeigt, welche.
+
+*Praxis-Szenario.* Die Gruppe tauscht in ihrem Prompt ein Wort, liest ab, welche Dimensionen sich bewegen, und setzt auf das Plakat, dass „Rot“ für das Modell eine Verschiebung in Zahlen ist.  
+<sub>Beleg: `views/latent_lab/feature_probing.vue; knowledge/platform_items.json: latent_lab.image.probing (what)`</sub>
+
+
+### Concept Algebra `/latent-lab/concept-algebra`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI versteht Begriffe“ zeigt Concept Algebra Mikolovs Befund von 2013 (König minus Mann plus Frau liegt nahe bei Königin) auf ganze Prompt-Einbettungen von SD 3.5 angewandt: das Ergebnis ist ein Bild, das sich von A aus in Richtung B→C bewegt hat.
+
+*Praxis-Szenario.* Die Gruppe rechnet mit drei eigenen Prompts, beschreibt, wie weit und in welcher Hinsicht sich das Bild bewegt hat, und erklärt auf dem Plakat Begriffe als Richtungen in einem Zahlenraum.  
+<sub>Beleg: `views/latent_lab/concept_algebra.vue; knowledge/platform_items.json: latent_lab.image.algebra (what)`</sub>
+
+
+### Composable Diffusion `/latent-lab/composable-diffusion`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI liest den Satz als Ganzes“ zeigt Composable Diffusion den Unterschied: ein gewöhnlicher Lauf presst den ganzen Prompt in eine Darstellung, hier bekommt jeder Begriff bei jedem Entrauschungsschritt einen eigenen Durchgang und ein einstellbares Gewicht; ein negatives Gewicht wird als Gegenrichtung abgezogen.
+
+*Praxis-Szenario.* Die Gruppe zerlegt einen Prompt in seine Begriffe, gewichtet einen davon negativ und zeigt auf dem Plakat an zwei Bildern, was ein Begriff für sich allein im Bild tut.  
+<sub>Beleg: `views/latent_lab/composable_diffusion.vue; knowledge/platform_items.json: latent_lab.image.composable (what)`</sub>
+
+
+### Enc. Fus. Workbench `/latent-lab/fusion-workbench`
+
+*Eine Maßnahme.*
+
+#### Create 2 Intermediate — Prototypen, Systemarten verbinden · ja, angepasst
+
+*Learner Expectation (S. 34): „Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.“*  
+*In the Classroom (S. 34): „Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.“*
+
+Die Enc. Fus. Workbench legt fest, welcher Parameter der Encoder Fusion entlang welcher Achse variiert: X gibt die Spalten, Y die Zeilen, Z eine Achse zum Durchfahren, alles andere bleibt konstant; der Prompt kann eine Achse mit bis zu drei geschriebenen Prompts sein. Die Werkzeuge der Maßnahme werden durch die Werte einer Achse ersetzt.
+
+*Praxis-Szenario.* Die Gruppe schreibt drei Fassungen des Club-Prompts auf die Prompt-Achse, setzt einen Faktor auf die zweite Achse und liest im Raster, welche Änderung vom Wortlaut und welche vom Faktor kommt.  
+<sub>Beleg: `views/latent_lab/fusion_workbench.vue: Kopfkommentar, hasPromptConstant`</sub>
+
+
+### Bias Research 1 `/latent-lab/bias-archaeology`
+
+*2 Maßnahmen.*
+
+#### Engage 6 Intermediate — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.“*  
+*In the Classroom (S. 30): „Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.“*
+
+Bias Research 1 misst die Verzerrung eines Sprachmodells mit BBQ (Parrish u.a., Findings of ACL 2022): eine Lage, die offenlässt, wer gemeint ist, eine Frage, drei Antworten; für die gezeigten offenen Fragen ist „nicht beantwortbar“ die richtige Antwort. Wie oft ein Modell stattdessen jemanden nennt, und wen, steht als Kennzahl unter der Grafik; ein Lauf zeigt 60 offene Fragen der gewählten Kategorie und schickt dem Modell dazu die eindeutigen Gegenstücke als Kontrolle.
+
+*Praxis-Szenario.* Die Gruppe wählt eine Kategorie (etwa Alter oder Nationalität), liest einige der 60 Fragen selbst und beantwortet sie, dann liest sie die Antworten des Modells und die Kennzahl. Sie bespricht, wen das Modell nennt, wenn nichts zu sagen wäre, und was das für Entscheidungen über Menschen heißt.  
+<sub>Beleg: `views/latent_lab/bias_archaeology.vue: KIDS_CATEGORIES, Achse 1–60; Anrede biasArchaeology.purpose`</sub>
+
+#### Shape 2 Intermediate — An eigenen Kriterien testen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners assess an AI system performance of a task using defined criteria and feedback from human reviews or benchmark tests.“*  
+*In the Classroom (S. 42): „Learners identify strategies they would use to solve a word puzzle. The teacher presents a sample algorithm for the same task. Using defined criteria (e.g. efficiency, consistency, clarity), learners compare their peers’ strategies to the algorithm, identifying strengths, limitations and trade-offs in each approach.“*
+
+Die Maßnahme vergleicht die Lösungsstrategien der Mitschülerinnen und Mitschüler für ein Worträtsel mit einem Algorithmus nach Kriterien (Effizienz, Konsistenz, Klarheit). Bias Research 1 ist der Benchmark-Fall dafür: BBQ-Fragen mit festgelegtem Sollwert (für die gezeigten offenen Fragen ist „nicht beantwortbar“ die richtige Antwort), die Kennzahl des Modells unter der Grafik. Die Gruppe kann dieselben Fragen selbst beantworten und sich mit dem Modell vergleichen.
+
+*Praxis-Szenario.* Die Gruppe beantwortet zwanzig der gestellten Fragen selbst, dann liest sie die Antworten des Modells und die Kennzahl. Sie vergleicht nach Konsistenz (wer bleibt bei „nicht beantwortbar“?) und bespricht, was der Maßstab misst und was nicht.  
+<sub>Beleg: `views/latent_lab/bias_archaeology.vue: Bias-Score unter der Grafik`</sub>
+
+
+### Bias Research 2 `/latent-lab/coreference-test`
+
+*3 Maßnahmen.*
+
+#### Engage 2 Basic — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.“*  
+*In the Classroom (S. 28): „As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.“*
+
+Für die Redeweise „die KI versteht“ liefert Bias Research 2 den Prüffall: 60 Satzpaare je Lauf aus WinoBias (Zhao u.a., NAACL 2018), die sich in einem Wort unterscheiden und bei denen der Bezug annotiert und in beiden derselbe ist; die Grafik zählt, wie oft die Antwort des Modells mit dem Pronomen kippt.
+
+*Praxis-Szenario.* Die Gruppe lässt einen Lauf über die 60 Paare gehen und liest in der Grafik ab, wie oft die Antwort kippt. Dann prüft sie den Satz „die KI versteht den Satz“ an dem, was sie gezählt hat, und schreibt eine Beschreibung, die ohne „verstehen“ auskommt.  
+<sub>Beleg: `views/latent_lab/coreference_test.vue: /api/text/bias-corpus (pairs: 60), Grafik; Anrede corefTest.purpose`</sub>
+
+#### Engage 6 Intermediate — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.“*  
+*In the Classroom (S. 30): „Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.“*
+
+Bias Research 2 zeigt die Verzerrung am Einzelpaar: zwei Sätze aus WinoBias (Zhao u.a., NAACL 2018), die sich in einem Wort unterscheiden, der Bezug annotiert und in beiden derselbe; 60 Paare je Lauf, die Berufe aus dem Korpus, und die Grafik zählt, bei welchen die Antwort kippt, wenn aus he she wird.
+
+*Praxis-Szenario.* Die Gruppe lässt einen Lauf gehen, liest in der Grafik ab, bei welchen Berufen die Antwort mit dem Pronomen kippt, und ordnet die Berufe danach.  
+<sub>Beleg: `views/latent_lab/coreference_test.vue: /api/text/bias-corpus (pairs: 60), Grafik`</sub>
+
+#### Shape 2 Intermediate — An eigenen Kriterien testen · ja, angepasst
+
+*Learner Expectation (S. 42): „Learners assess an AI system performance of a task using defined criteria and feedback from human reviews or benchmark tests.“*  
+*In the Classroom (S. 42): „Learners identify strategies they would use to solve a word puzzle. The teacher presents a sample algorithm for the same task. Using defined criteria (e.g. efficiency, consistency, clarity), learners compare their peers’ strategies to the algorithm, identifying strengths, limitations and trade-offs in each approach.“*
+
+Bias Research 2 liefert den zweiten Benchmark mit Sollwert: 60 WinoBias-Paare je Lauf, der Bezug annotiert, die Grafik zählt, bei welchen Berufen die Antwort kippt.
+
+*Praxis-Szenario.* Die Gruppe löst einige Paare selbst, vergleicht mit dem Modell und schreibt auf, welches Kriterium der Test prüft.  
+<sub>Beleg: `views/latent_lab/coreference_test.vue`</sub>
+
+
+### Representation Engineering `/latent-lab/representation-engineering`
+
+*Eine Maßnahme.*
+
+#### Engage 3 Basic — Ausgabe annehmen, ändern, verwerfen · ja, angepasst
+
+*Learner Expectation (S. 29): „Learners understand why AI-generated outputs should be verified and recognise how they can verify the content themselves.“*  
+*In the Classroom (S. 29): „Learners review an AI-powered tool’s solution to a maths problem and accompanying explanation, then compare the AI-generated content to the process that their teacher has introduced to the class.“*
+
+Representation Engineering zeigt, warum Prüfen nötig ist: drei mitgelieferte Satzgruppen zu je drei Paaren („Fakten und ihre schlichten Gegenteile“, „Orwell, Nineteen Eighty-Four“, „Postfaktisch: Tatsache gegen Behauptung“) stellen je einen Satz gegen seine Umkehrung, und die Richtung aus einer Gruppe lässt sich beim Schreiben in das Modell zurückgeben. Was es dann schreibt, prüft die Gruppe an dem, was sie weiß; die Mathematikaufgabe der Maßnahme wird durch Sachsätze ersetzt.
+
+*Praxis-Szenario.* Die Gruppe lässt das Modell einen kurzen Sachtext schreiben, einmal ohne und einmal mit der Richtung aus der Gruppe „Postfaktisch: Tatsache gegen Behauptung“, und unterstreicht in beiden Fassungen jede Behauptung, die sie selbst prüfen kann. Sie stellt fest, welche Fassung sich besser liest und welche stimmt.  
+<sub>Beleg: `views/latent_lab/representation_engineering.vue: PAIR_SETS; de.ts latentLab.textLab.repeng.pairSets`</sub>
+
+
+### Tokenizer `/latent-lab/tokenization`
+
+*2 Maßnahmen.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI liest den Satz“ liefert der Tokenizer die Zerlegung eines eigenen Satzes in Token: der eigene Satz mit Platznummern, Anzahl und Anteil am Fenster des gewählten Tokenizers, derselbe Satz in den zehn Sprachen der Plattform mit je einer Zeile, ein einzelnes Wort in denselben zehn Sprachen. CLIP steht mit in der Liste der Tokenizer, mit einem Fenster von 77 Token gegen die 40.960 des Textmodells.
+
+*Praxis-Szenario.* Die Gruppe gibt ihren Satz ein, fotografiert die zehn Zerlegungen und erklärt auf dem Plakat, was ein Token ist und warum derselbe Satz je nach Sprache verschieden viele braucht.  
+<sub>Beleg: `views/latent_lab/tokenization_comparison.vue: Kopfkommentar, LANGS = SUPPORTED_LANGUAGES; latentLab.textLab.tokens.note`</sub>
+
+#### Engage 5 Advanced — Energie und Ressourcen vergleichen · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners analyse how individual choices along with different design, deployment or business decisions can affect AI’s overall energy and resource use.“*  
+*In the Classroom (S. 30): „Learners research the environmental impacts of AI use and data centre development across different communities. They then identify policies and strategies that promote responsible AI use and development.“*
+
+Die Maßnahme recherchiert Umweltfolgen von KI in verschiedenen Gemeinden und leitet Strategien für verantwortlichen Einsatz ab. Die Recherche liegt außerhalb der Plattform. Für die Strategien liefert der Tokenizer eine messbare eigene Entscheidung: derselbe Satz belegt in einer anderen Sprache mehr Token, und der Hinweis benennt die Folgen (schneller volles Fenster, mehr Rechenzeit, mehr Kosten, mehr Energie).
+
+*Praxis-Szenario.* Nach der Recherche prüft die Gruppe eine Strategie am Instrument: Sie gibt ihren Text ein, liest die Tokenzahlen der zehn Sprachen ab und formuliert, was die Wahl der Sprache für den Verbrauch bedeutet und wer diese Wahl hat.  
+<sub>Beleg: `views/latent_lab/tokenization_comparison.vue; latentLab.textLab.tokens.note`</sub>
+
+
+### Latent Audio Synth `/latent-lab/audio-synth`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI hört auf das, was ich sage“ zeigt der Latent Audio Synth, dass der Text von einem T5-Encoder in einen Vektor mit 768 Dimensionen überführt wird und dieser Vektor der Griff ist: interpolieren, extrapolieren, skalieren, Rauschen einspeisen.
+
+*Praxis-Szenario.* Die Gruppe interpoliert zwischen zwei eigenen Prompts, nimmt drei Klänge auf und erklärt im Podcast, dass das Modell einen Zahlenvektor bekommt und kein Wort.  
+<sub>Beleg: `views/latent_lab/crossmodal_lab.vue, Reiter synth; knowledge/platform_items.json: latent_lab.crossmodal.synth (what)`</sub>
+
+
+### MMAudio `/latent-lab/mmaudio`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI weiß, wie ein Wald klingt“ sagt MMAudio, woher die Zuordnung kommt: das Modell wurde gemeinsam auf Video und Ton trainiert und hat Zuordnungen zwischen Gesehenem und Gehörtem gelernt (ein Wald bringt Vogelgesang, eine Straße Verkehrslärm).
+
+*Praxis-Szenario.* Die Gruppe gibt drei Bilder hinein, hört die Klänge und erklärt im Podcast, dass die Zuordnung aus Trainingspaaren stammt.  
+<sub>Beleg: `views/latent_lab/crossmodal_lab.vue, Reiter mmaudio; knowledge/platform_items.json: latent_lab.crossmodal.mmaudio (what)`</sub>
+
+
+### ImageBind Guidance `/latent-lab/imagebind-guidance`
+
+*Eine Maßnahme.*
+
+#### Engage 2 Intermediate — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.“*  
+*In the Classroom (S. 28): „Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.“*
+
+Für den Mythos „die KI hört das Bild“ zeigt ImageBind Guidance das Maß, an dem die Steuerung arbeitet: sechs Sinne in einem gemeinsamen Raum, und während der Klang entsteht, wird laufend gefragt, ob er dem Bild schon ähnelt; die Kosinus-Ähnlichkeit steht im Ergebnis als Zahl.
+
+*Praxis-Szenario.* Die Gruppe erzeugt zu einem Bild einen Klang, liest die Zahl ab und erklärt im Podcast, dass „passt zum Bild“ hier eine gemessene Ähnlichkeit ist.  
+<sub>Beleg: `views/latent_lab/crossmodal_lab.vue, Reiter guidance; knowledge/platform_items.json: latent_lab.crossmodal.guidance (what)`</sub>
+
+
+### Re-enactment `/latent-lab/re-enactment`
+
+*3 Maßnahmen.*
+
+#### Engage 2 Basic — Funktionsweise erklären · ja
+
+*Learner Expectation (S. 28): „Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.“*  
+*In the Classroom (S. 28): „As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.“*
+
+Für die Redeweise „die KI hört zu“ stehen bei Re-enactment zu der eigenen Aufnahme die erkannten Wörter und die sortierte Liste: eine Maschine sortiert die Aufnahme gegen Wörter, die vorher festgelegt wurden, eine zweite liefert für die Aufnahme Wörter zurück.
+
+*Praxis-Szenario.* Die Gruppe spielt ein kurzes Stück ein, liest die Wörter und die sortierte Liste und vergleicht beides mit dem, was sie gespielt hat. Sie beschreibt dann, was die Maschinen getan haben, ohne „hören“ und „verstehen“.  
+<sub>Beleg: `views/cover_band.vue: Stationen ranked, words; de.ts coverBand.gotStations, ranked.note, words.note`</sub>
+
+#### Create 4 Basic — Authentizität und Urheberschaft · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners know that AI-generated content may reuse or copy work protected by intellectual property or copyright laws and recognise implications for the humans who created the original work.“*  
+*In the Classroom (S. 35): „Learners examine examples of music generated with AI to imitate a famous artist. With their teacher, learners discuss how this raises concerns about copyright, ownership and attributing proper credit to the artist.“*
+
+Die Maßnahme untersucht KI-Musik, die eine berühmte Künstlerin oder einen berühmten Künstler imitiert, und bespricht Urheberrecht, Eigentum und Nennung. Bei Re-enactment ist die imitierte Person die Gruppe selbst: die eigene Aufnahme geht durch vier Stationen (die sortierte Liste und die erkannten Wörter; die Stilwörter und der Text, den ein Sprachmodell aus beiden Lesarten schreibt; der Song, der daraus gesungen wird, so lang wie die Aufnahme). Die berühmte Person wird durch die Gruppe ersetzt; die Fragen nach Eigentum und Nennung stellen sich an ihrem eigenen Stück.
+
+*Praxis-Szenario.* Die Gruppe spielt ein eigenes Stück ein und hört den Song. Sie bespricht, wem der Song gehört, ob die Gruppe genannt werden müsste und was sie sagen würde, wenn jemand den Song als eigene Musik ausgäbe.  
+<sub>Beleg: `views/cover_band.vue: Stationen ranked, words, written, sung; de.ts coverBand.gotStations, gotWritten, written.note, sung.note, note`</sub>
+
+#### Manage 4 Basic — Einsatz beobachten und bewerten · ja, angepasst
+
+*Learner Expectation (S. 39): „Learners recognise that they should make decisions about AI use that support accountability, learning and fairness.“*  
+*In the Classroom (S. 39): „Learners explore examples of AI tool use across industries (e.g. sports, journalism, music) to determine if there are tasks where AI use might be advantageous and when a human should play a more active role.“*
+
+Die Maßnahme sieht sich KI-Einsatz in Branchen an (Sport, Journalismus, Musik) und fragt, wo KI Vorteile hat und wo ein Mensch die aktivere Rolle spielen sollte. Für die Musik stellt Re-enactment den Fall her: die eigene Aufnahme und der Song der Maschine an vier Stationen (sortierte Liste, erkannte Wörter, Stilwörter und Text, Song). Die Beispiele der Maßnahme werden durch das eigene Stück ersetzt.
+
+*Praxis-Szenario.* Die Gruppe spielt ein Stück ein, hört den Song und entscheidet je Station, was die Maschine gut macht und wo sie selbst spielen sollte. Die Beispiele aus Sport und Journalismus bringt die Kursleitung mit; das Musikbeispiel hat die Gruppe selbst gemacht.  
+<sub>Beleg: `views/cover_band.vue: Stationen ranked, words, written, sung`</sub>
+
+
+### LoRA Training `/latent-lab/lora-sd35`
+
+*5 Maßnahmen.*
+
+#### Engage 5 Intermediate — Energie und Ressourcen vergleichen · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners describe different ways that AI impacts the environment (e.g. hardware production, data centre development, water use, energy intensity).“*  
+*In the Classroom (S. 30): „Learners create an informational artefact (e.g. written article, podcast or video) explaining how training large AI models compares to household or individual energy use.“*
+
+Die Maßnahme lässt ein Artefakt erstellen, das das Training großer Modelle mit dem Verbrauch eines Haushalts vergleicht. LoRA Training ist ein Training im Kleinen mit einer Zahl: vor dem Lauf die Schätzung für ein bis drei Stunden GPU unter Volllast, an der Leistungsgrenze der Karte gerechnet, in kWh, g CO₂ (deutscher Strommix) und Baum-Tagen; nach dem Lauf im Protokoll die Zahl aus derselben Grenze und der Laufzeit, ausdrücklich als Obergrenze. Die Zahlen des Haushalts und der großen Modelle recherchiert die Gruppe außerhalb; der Messwert der Maßnahme wird durch die Schätzung ersetzt.
+
+*Praxis-Szenario.* Die Gruppe startet ein Training auf einer eigenen Bildreihe, notiert die Schätzung vor dem Lauf und die Zahl im Protokoll danach und setzt beides in ihrem Artefakt neben den Tagesverbrauch eines Haushalts und die veröffentlichte Zahl für das Training eines großen Bildmodells.  
+<sub>Beleg: `views/TrainingView.vue: energyEstimate, training.info.runCost; services/training_service.py: energy_estimate, _log_energy_estimate („an upper bound, not a meter reading“)`</sub>
+
+#### Engage 5 Advanced — Energie und Ressourcen vergleichen · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners analyse how individual choices along with different design, deployment or business decisions can affect AI’s overall energy and resource use.“*  
+*In the Classroom (S. 30): „Learners research the environmental impacts of AI use and data centre development across different communities. They then identify policies and strategies that promote responsible AI use and development.“*
+
+Die zweite messbare Entscheidung ist die, ein Training überhaupt zu starten: die Schätzung steht im VRAM-Dialog, an dem kein Start vorbeiführt, und nach dem Lauf steht im Protokoll die Zahl aus Leistungsgrenze und Laufzeit.
+
+*Praxis-Szenario.* Die Gruppe entscheidet vor dem Start, ob die Reihe das Training wert ist, und hält die Entscheidung mit der Schätzung fest; nach dem Lauf vergleicht sie Schätzung und Protokollzahl und schreibt eine Regel dafür, wann ein Training gerechtfertigt ist.  
+<sub>Beleg: `views/TrainingView.vue: showVramDialog, training.vram.runCost`</sub>
+
+#### Engage 6 Basic — Verzerrungen erklären · ja, angepasst
+
+*Learner Expectation (S. 30): „Learners understand that biases can exist in the data used to train AI and can be perpetuated when humans design, develop and use AI systems.“*  
+*In the Classroom (S. 30): „With their teacher, learners explore different types of data that can be collected about a person (e.g. height, favourite colour). They note the nuances that data can capture effectively, but draw from their knowledge of each other to identify what is left out.“*
+
+Die Maßnahme untersucht, welche Daten über eine Person erhoben werden können, was sie erfassen und was, aus der Kenntnis voneinander, fehlt. Bei LoRA Training schreibt ein Bildbeschreibungsmodell zu jedem hochgeladenen Bild eine Beschreibung, ein Sprachmodell bereinigt sie, und dieser Satz geht ins Training; er steht im Streifen unter der Ablage in einem Textfeld und wird geändert oder geleert. Die Daten über eine Person werden durch Daten über eigene Zeichnungen oder Gegenstände ersetzt; Fotos von Personen bleiben aus.
+
+*Praxis-Szenario.* Die Gruppe lädt eigene Zeichnungen hoch und liest zu jeder den Satz, den das Modell geschrieben hat. Sie notiert, was der Satz erfasst und was sie über die Zeichnung weiß, das darin fehlt, und ändert die Sätze, bevor das Training startet.  
+<sub>Beleg: `views/TrainingView.vue: Streifen unter der Ablage; services/training_service.py: _describe_image; Commit 46bbe3ab`</sub>
+
+#### Shape 3 Basic — Datenquellen und Informationsfluss · ja, angepasst
+
+*Learner Expectation (S. 43): „Learners identify examples of data that might be used to train AI systems.“*  
+*In the Classroom (S. 43): „Learners are tasked with designing an AI tool that can sort recyclable materials. In small groups, they decide what data they could collect on the internet to train the AI tool. With support from a teacher, they discuss which aspects of the data would be most important to train an effective and accurate AI tool.“*
+
+Die Maßnahme entwirft ein KI-Werkzeug zum Sortieren von Wertstoffen und entscheidet, welche Daten aus dem Internet es trainieren sollen und welche Eigenschaften der Daten am meisten zählen. Bei LoRA Training wird die Entscheidung ausgeführt: eine Reihe wird aus eigenem Material zusammengestellt, die Anrede nennt für Auswahl wie Ausschluss eine ästhetische Begründung unter Knappheit als das, was hier zu lernen ist, ein Bildbeschreibungsmodell schreibt zu jedem Bild die Beschreibung, die geändert oder geleert wird. Ob die gewählten Eigenschaften angekommen sind, zeigt danach der LoRA Explorer (Adapter gegen blankes Modell, dieselbe Startzahl). Der Wertstoffsortierer wird durch einen Bild-Adapter ersetzt, die Internetdaten durch eigene Bilder.
+
+*Praxis-Szenario.* Die Gruppe entscheidet für eine Reihe von zwanzig Bildern, welche hinein und welche hinaus, und schreibt zu jedem Ausschluss den Grund. Sie prüft die Beschreibungen, trainiert und liest im LoRA Explorer an den Zeilen mit und ohne Adapter ab, ob die gewählten Eigenschaften der Reihe angekommen sind.  
+<sub>Beleg: `views/TrainingView.vue: Streifen unter der Ablage; Anrede training.purpose; views/latent_lab/lora_reach.vue`</sub>
+
+#### Shape 3 Advanced — Datenquellen und Informationsfluss · ja, angepasst
+
+*Learner Expectation (S. 43): „Learners evaluate how specific properties of a dataset (e.g. size, features, biases) affect the performance and impact of an AI model.“*  
+*In the Classroom (S. 43): „Learners conduct a class survey to choose a class pet and represent the results using a bar chart. They compare these results with their individual preferences, as well as data from a grade-level survey and a school-wide survey. Learners discuss how increasing the size and diversity of the dataset changes the outcomes of the survey and consider how an AI system might make different recommendations based on its training data.“*
+
+Die Maßnahme vergleicht Umfragen wachsender Größe und Vielfalt und fragt, wie ein KI-System nach seinen Trainingsdaten anders empfehlen würde. Bei LoRA Training wird das an zwei Adaptern geprüft, die auf zwei Reihen verschiedener Größe oder Vielfalt trainiert sind; der LoRA Explorer zeigt je Adapter (ein Adapter je Lauf) zu denselben Motiven mit derselben Startzahl das Bild mit und ohne ihn. Ein Training kostet ein bis drei Stunden GPU; zwei Reihen brauchen zwei Sitzungen.
+
+*Praxis-Szenario.* Die Gruppe trainiert einen Adapter auf acht Bilder und einen auf dreißig, oder einen auf eine enge und einen auf eine gemischte Reihe, und vergleicht die Explorer-Zeilen beider Adapter zu denselben Motiven. Sie erklärt an den Bildern, was Größe und Vielfalt der Reihe am Modell geändert haben.  
+<sub>Beleg: `views/TrainingView.vue: energyEstimate; views/latent_lab/lora_reach.vue: adapterLabel, rows`</sub>
+
+
+### LoRA Explorer `/latent-lab/lora-explorer`
+
+*3 Maßnahmen.*
+
+#### Engage 7 Basic — Einsatz an Werten prüfen · ja, angepasst
+
+*Learner Expectation (S. 31): „Learners recognise that ethical AI use depends on a number of factors that include AI system design, development and a user’s own intentions.“*  
+*In the Classroom (S. 31): „Learners identify recognisable aspects of artists’ work across AI-generated examples. With a teacher, they discuss whether the examples constitute fair and appropriate use and identify implications for the human artists.“*
+
+Die Maßnahme erkennt in KI-Beispielen Züge der Arbeit von Künstlerinnen und Künstlern wieder und bespricht, ob das fair ist und was es für sie bedeutet. Auf der Plattform ist die Gruppe selbst die imitierte Künstlerin: ein Adapter wird bei LoRA Training auf eine eigene Bildreihe trainiert, und der LoRA Explorer zeigt in vier Zeilen („Modell · ohne Trigger“, „Modell · Trigger“, „Adapter · Trigger“, „Adapter · ohne Trigger“) und einer Spalte je Motiv, alle aus einem Modell mit einer Startzahl, was der Adapter aus der Reihe mitbringt.
+
+*Praxis-Szenario.* Die Gruppe trainiert einen Adapter auf ihre eigenen Zeichnungen und lässt den Explorer mit vier Motiven laufen. Sie markiert in den Bildern, was von ihrer Arbeit wiedererkennbar ist, und bespricht, ob sie das an einem fremden Adapter fair fände, der auf ihre Bilder trainiert wäre.  
+<sub>Beleg: `views/latent_lab/lora_reach.vue: rows, motifs; de.ts latentLab.loraReach.rowModelPlain … rowLoraPlain, story`</sub>
+
+#### Create 4 Advanced — Authentizität und Urheberschaft · ja, angepasst
+
+*Learner Expectation (S. 35): „Learners assess the ethical implications of AI-generated outputs for creative work, distinguish inspiration from replication in their outputs, and justify how their use of AI maintains authenticity and respects other creators.“*  
+*In the Classroom (S. 35): „Learners are presented with examples of art created entirely by a human, generated by an AI system and created by an artist along with AI. Learners consider what choices a human did or did not make for each piece, who should be credited as the artist, what should be protected by copyright and how AI may change artistic creation in the future.“*
+
+Die Maßnahme stellt Werke nebeneinander (ganz von Menschen, ganz von KI, von Künstlerinnen und Künstlern mit KI) und fragt, welche Entscheidungen ein Mensch getroffen hat, wer als Künstlerin oder Künstler genannt werden sollte, was geschützt gehört und wie KI das Kunstschaffen verändern könnte. Beim LoRA Explorer stehen vier Zeilen aus einem Modell mit einer Startzahl: „Modell · ohne Trigger“, „Modell · Trigger“, „Adapter · Trigger“, „Adapter · ohne Trigger“, je Motiv eine Spalte; der Fall „ganz von Menschen“ sind die Zeichnungen der Gruppe, auf die der Adapter trainiert wurde.
+
+*Praxis-Szenario.* Die Gruppe hat einen Adapter auf ihre Reihe trainiert. Sie geht die vier Zeilen durch und schreibt je Zeile, welche Entscheidungen von ihr stammen (Auswahl der Reihe, Beschreibungen, Trigger-Wort, Motive) und welche vom Modell, und wer je Zeile als Künstlerin oder Künstler genannt werden müsste. An der Zeile „Adapter · ohne Trigger“ entscheidet sie, ob das Anregung oder Wiedergabe ist.  
+<sub>Beleg: `views/latent_lab/lora_reach.vue: rows, motifs; de.ts latentLab.loraReach.story, purpose`</sub>
+
+#### Shape 3 Intermediate — Datenquellen und Informationsfluss · ja, angepasst
+
+*Learner Expectation (S. 43): „Learners compare the importance of data selection and collection methods in cases when AI is used to make decisions that affect others.“*  
+*In the Classroom (S. 43): „Learners compare different methods for organising a set of animals, such as grouping them based on physical characteristics. They discuss what happens when new animals are introduced to the set that do not fit into the existing groups.“*
+
+Die Maßnahme vergleicht Verfahren, Tiere in Gruppen zu ordnen, und fragt, was passiert, wenn neue Tiere nicht in die Gruppen passen. Beim LoRA Explorer ist das eine Spalte mit einem Motiv, das im Training des Adapters nie vorkam, und die Zeile „Adapter · ohne Trigger“: ob der Adapter ungerufen antwortet und überschrieben statt ergänzt hat, wie die Anrede es fragt.
+
+*Praxis-Szenario.* Die Gruppe wählt für den Explorer drei Motive, die in ihrer Trainingsreihe nie vorkamen, und liest die Zeile „Adapter · ohne Trigger“: Bringt der Adapter seine Gegenstände mit? Sie bespricht, was ein Modell mit dem macht, was in seinen Daten nicht vorgesehen war.  
+<sub>Beleg: `views/latent_lab/lora_reach.vue: motifs, rows; Anrede latentLab.loraReach.purpose`</sub>
+
+
+## Querliegende Funktionen
+
+**Übersicht.** Kopfzeile: Energie und Warteschlange 1 · KI-Kennzeichnung 1 · Favoriten 0
+
+
+### Kopfzeile: Energie und Warteschlange (Funktion, ohne eigenen Ort)
+
+*Eine Maßnahme.*
+
+#### Engage 5 Basic — Energie und Ressourcen vergleichen · ja
+
+*Learner Expectation (S. 30): „Learners recognise that computers and AI systems require resources to function.“*  
+*In the Classroom (S. 30): „Learners list the classroom devices that must be charged and cooled and recognise that AI systems also require electricity and hardware to run.“*
+
+Die Maßnahme lässt Geräte auflisten, die geladen und gekühlt werden, und erkennt daran, dass auch KI Strom und Hardware braucht. Die Kopfzeile zeigt zwei Chips: was die Grafikkarte gerade zieht und was das in CO₂ kostet. Im Flow steht an der Lauf-Box der Verbrauch des Laufs: „Energieverbrauch der Inferenz: {w} W · {wh} Wh · {co2} g CO₂ seit Beginn dieses Laufs“.
+
+*Praxis-Szenario.* Die Gruppe schreibt die Liste der Geräte im Raum. Dann liest sie die beiden Chips einmal im Leerlauf und einmal, während ein Bild entsteht, und trägt die Differenz als weiteres Gerät in die Liste ein, dazu die Wattstunden eines Laufs von der Lauf-Box im Flow.  
+<sub>Beleg: `components/PolicyChips.vue: Kopfkommentar (two energy chips, /api/settings/gpu-realtime); de.ts x2xFlow.runEnergy`</sub>
+
+
+### KI-Kennzeichnung (Funktion, ohne eigenen Ort)
+
+*Eine Maßnahme.*
+
+#### Create 4 Intermediate — Authentizität und Urheberschaft · ja
+
+*Learner Expectation (S. 35): „Learners consider when attribution, permission or avoidance of AI is appropriate for a creative task and apply these choices in their own work.“*  
+*In the Classroom (S. 35): „Learners compare original work to AI-generated poems, then discuss with their teacher what makes something “original.” They then identify school-based guidelines for attributing AI use.“*
+
+Für die Regeln zur Nennung hält die Plattform ihre eigene Regel bereit: die Plattform schreibt in jede erzeugte Ausgabe (Bild, Film, Ton, 3D, SVG, die Skizzen als Code) die AI-Origin-Kennzeichnung nach Art. 50 der Verordnung (EU) 2024/1689 (IPTC trainedAlgorithmicMedia; die Regelstimme eSpeak NG als algorithmicMedia); schlägt das Schreiben fehl, geht die Datei unmarkiert hinaus, mit einer Warnung im Protokoll; eine sichtbare Markierung kann der Betreiber in der Konfiguration einschalten (`config.WATERMARK`), in den Voreinstellungen ist sie aus. Was ein Mensch mitbringt, bleibt unmarkiert.
+
+*Praxis-Szenario.* Die Gruppe lädt ein erzeugtes Bild und eine eigene Zeichnung herunter und liest die Metadaten beider Dateien mit einem Metadaten-Leser: die eine trägt die Kennzeichnung, die andere nicht. Daraus schreibt sie eine Regel für ihre Klasse: Wann wird KI-Einsatz genannt, und wie? Dann vergleicht sie mit den Regeln der Schule.  
+<sub>Beleg: `services/watermark_service.py: trainedAlgorithmicMedia, algorithmicMedia; POST /api/media/mark; Commit da596fbe`</sub>
+
+
+## Teile ohne Maßnahme
+
+Keine der 57 Maßnahmen des Rahmenwerks nennt etwas, das diese Teile tragen; was sie tun, steht in ihrer Anrede und im Katalog von Help.
+
+- Favoriten (Funktion, ohne eigenen Ort)

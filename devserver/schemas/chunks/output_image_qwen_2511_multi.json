@@ -1,0 +1,340 @@
+{
+  "name": "output_image_qwen_2511_multi",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "image",
+  "description": "QWEN 2511 Multi-Image Fusion - Combine up to 3 images with AI-guided fusion using TextEncodeQwenImageEditPlus",
+
+  "workflow": {
+    "60": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": ["115:8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "78": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image 1"
+      }
+    },
+    "120": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image 2"
+      }
+    },
+    "121": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image 3"
+      }
+    },
+    "115:75": {
+      "inputs": {
+        "strength": 1,
+        "model": ["115:66", 0]
+      },
+      "class_type": "CFGNorm",
+      "_meta": {
+        "title": "CFGNorm"
+      }
+    },
+    "115:39": {
+      "inputs": {
+        "vae_name": "qwen_image_vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": {
+        "title": "Load VAE"
+      }
+    },
+    "115:38": {
+      "inputs": {
+        "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "type": "qwen_image",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP"
+      }
+    },
+    "115:37": {
+      "inputs": {
+        "unet_name": "qwen_image_edit_2511_fp8mixed.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": {
+        "title": "Load Diffusion Model (2511)"
+      }
+    },
+    "115:110": {
+      "inputs": {
+        "prompt": "",
+        "clip": ["115:38", 0],
+        "vae": ["115:39", 0],
+        "image1": ["115:93", 0],
+        "image2": ["122", 0],
+        "image3": ["123", 0]
+      },
+      "class_type": "TextEncodeQwenImageEditPlus",
+      "_meta": {
+        "title": "TextEncodeQwenImageEditPlus (Negative)"
+      }
+    },
+    "115:66": {
+      "inputs": {
+        "shift": 3,
+        "model": ["115:89", 0]
+      },
+      "class_type": "ModelSamplingAuraFlow",
+      "_meta": {
+        "title": "ModelSamplingAuraFlow"
+      }
+    },
+    "115:111": {
+      "inputs": {
+        "prompt": "",
+        "clip": ["115:38", 0],
+        "vae": ["115:39", 0],
+        "image1": ["115:93", 0],
+        "image2": ["122", 0],
+        "image3": ["123", 0]
+      },
+      "class_type": "TextEncodeQwenImageEditPlus",
+      "_meta": {
+        "title": "TextEncodeQwenImageEditPlus (Positive)"
+      }
+    },
+    "115:112": {
+      "inputs": {
+        "width": 2560,
+        "height": 1440,
+        "batch_size": 1
+      },
+      "class_type": "EmptySD3LatentImage",
+      "_meta": {
+        "title": "EmptySD3LatentImage"
+      }
+    },
+    "115:88": {
+      "inputs": {
+        "pixels": ["115:93", 0],
+        "vae": ["115:39", 0]
+      },
+      "class_type": "VAEEncode",
+      "_meta": {
+        "title": "VAE Encode"
+      }
+    },
+    "115:93": {
+      "inputs": {
+        "upscale_method": "lanczos",
+        "megapixels": 1,
+        "resolution_steps": 1,
+        "image": ["78", 0]
+      },
+      "class_type": "ImageScaleToTotalPixels",
+      "_meta": {
+        "title": "Scale Image 1 (1 Megapixel)"
+      }
+    },
+    "122": {
+      "inputs": {
+        "upscale_method": "lanczos",
+        "megapixels": 1,
+        "resolution_steps": 1,
+        "image": ["120", 0]
+      },
+      "class_type": "ImageScaleToTotalPixels",
+      "_meta": {
+        "title": "Scale Image 2 (1 Megapixel)"
+      }
+    },
+    "123": {
+      "inputs": {
+        "upscale_method": "lanczos",
+        "megapixels": 1,
+        "resolution_steps": 1,
+        "image": ["121", 0]
+      },
+      "class_type": "ImageScaleToTotalPixels",
+      "_meta": {
+        "title": "Scale Image 3 (1 Megapixel)"
+      }
+    },
+    "115:3": {
+      "inputs": {
+        "seed": 1118877715456453,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1,
+        "model": ["115:75", 0],
+        "positive": ["115:111", 0],
+        "negative": ["115:110", 0],
+        "latent_image": ["115:88", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "115:8": {
+      "inputs": {
+        "samples": ["115:3", 0],
+        "vae": ["115:39", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "115:116": {
+      "inputs": {
+        "images": ["115:8", 0]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    },
+    "115:89": {
+      "inputs": {
+        "lora_name": "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors",
+        "strength_model": 1,
+        "model": ["115:37", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": {
+        "title": "LoraLoaderModelOnly (2511 Lightning 4-step)"
+      }
+    }
+  },
+
+  "multi_image_adaptation": {
+    "input_image2": {
+      "remove_nodes": ["120", "122"],
+      "drop_inputs": {"115:110": ["image2"], "115:111": ["image2"]}
+    },
+    "input_image3": {
+      "remove_nodes": ["121", "123"],
+      "drop_inputs": {"115:110": ["image3"], "115:111": ["image3"]}
+    }
+  },
+  "input_mappings": {
+    "input_image1": {
+      "node_id": "78",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE1}}",
+      "required": true,
+      "description": "Path to input image 1 (required)"
+    },
+    "input_image2": {
+      "node_id": "120",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE2}}",
+      "required": false,
+      "description": "Path to input image 2 (optional)"
+    },
+    "input_image3": {
+      "node_id": "121",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE3}}",
+      "required": false,
+      "description": "Path to input image 3 (optional)"
+    },
+    "prompt": {
+      "node_id": "115:111",
+      "field": "inputs.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Positive prompt - describes desired fusion/transformation from Stage 3"
+    },
+    "negative_prompt": {
+      "node_id": "115:110",
+      "field": "inputs.prompt",
+      "default": "",
+      "description": "Negative prompt - what to avoid (typically empty for QWEN)"
+    },
+    "seed": {
+      "node_id": "115:3",
+      "field": "inputs.seed",
+      "default": 1118877715456453,
+      "description": "Seed for reproducibility"
+    },
+    "steps": {
+      "node_id": "115:3",
+      "field": "inputs.steps",
+      "default": 4,
+      "description": "Number of sampling steps (Lightning LoRA optimized for 4 steps)"
+    },
+    "cfg": {
+      "node_id": "115:3",
+      "field": "inputs.cfg",
+      "default": 1,
+      "description": "CFG scale (Lightning uses CFG=1)"
+    },
+    "denoise": {
+      "node_id": "115:3",
+      "field": "inputs.denoise",
+      "default": 1,
+      "description": "Denoise strength (1.0 for full transformation)"
+    },
+    "megapixels": {
+      "node_id": "115:93",
+      "field": "inputs.megapixels",
+      "default": 1.7,
+      "description": "Target image size in megapixels (1.7 = ~1300x1300) - applies to all 3 images via scaling nodes 115:93, 122, 123"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "60",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "SaveImage node that outputs the fused multi-image result"
+  },
+
+  "meta": {
+    "img2img": true,
+    "multi_image": true,
+    "max_images": 3,
+    "estimated_duration_seconds": 25,
+    "quality_rating": 4,
+    "requires_gpu": true,
+    "gpu_vram_mb": 12000,
+    "model_files": {
+      "diffusion_model": "qwen_image_edit_2511_fp8mixed.safetensors",
+      "clip": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "vae": "qwen_image_vae.safetensors",
+      "lora": "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors"
+    },
+    "recommended_resolution": "1 megapixel (~1024x1024)",
+    "supported_resolutions": [
+      "0.5 MP (720x720)",
+      "1 MP (1024x1024)",
+      "1.7 MP (~1300x1300)",
+      "2 MP (1440x1440)"
+    ],
+    "notes": "QWEN 2511 Multi-Image Fusion: Combines up to 3 images using TextEncodeQwenImageEditPlus node. All 3 images are scaled to same megapixel target via ImageScaleToTotalPixels nodes (115:93, 122, 123). Backend dynamically removes unused nodes if only 1 or 2 images provided. Images 2 & 3 are optional. Lightning LoRA provides ultra-fast 4-step inference. CFG=1 optimized.",
+    "optimization_instruction": "Output a direct action command for multi-image fusion. Specify how to combine the images. Use imperative verbs (Combine, Merge, Fuse, Blend, Apply, Transfer). Examples: 'Combine these people into one group photo', 'Apply the style of image 2 to image 1', 'Merge these objects into one scene', 'Use the lighting from image 2 and composition from image 3 on image 1'. Keep it concise (1-3 sentences). For multilingual input, output in the SAME LANGUAGE as input."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 2 Dev",
+    "de": "Flux 2 Dev",
+    "tr": "Flux 2 Dev",
+    "ko": "Flux 2 Dev",
+    "uk": "Flux 2 Dev",
+    "fr": "Flux 2 Dev",
+    "es": "Flux 2 Dev",
+    "he": "Flux 2 Dev",
+    "ar": "Flux 2 Dev",
+    "bg": "Flux 2 Dev"
+  },
+  "description": {
+    "en": "High-quality image generation using Flux 2 Dev with Mistral text encoder via Diffusers.",
+    "de": "Hochwertige Bildgenerierung mit Flux 2 Dev und Mistral Text-Encoder via Diffusers.",
+    "tr": "Diffusers üzerinden Mistral metin kodlayıcılı Flux 2 Dev ile yüksek kaliteli görüntü üretimi.",
+    "ko": "Diffusers를 통해 Mistral 텍스트 인코더를 사용하는 Flux 2 Dev로 고품질 이미지 생성.",
+    "uk": "Високоякісна генерація зображень за допомогою Flux 2 Dev з текстовим кодувальником Mistral через Diffusers.",
+    "fr": "Génération d'images de haute qualité avec Flux 2 Dev et l'encodeur de texte Mistral via Diffusers.",
+    "es": "Generación de imágenes de alta calidad con Flux 2 Dev y el codificador de texto Mistral a través de Diffusers.",
+    "he": "יצירת תמונות איכותית באמצעות Flux 2 Dev עם מקודד הטקסט Mistral דרך Diffusers.",
+    "ar": "توليد صور عالية الجودة باستخدام Flux 2 Dev مع مُرمِّز النص Mistral عبر Diffusers.",
+    "bg": "Висококачествено генериране на изображения с Flux 2 Dev и текстов енкодер Mistral през Diffusers."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2_diffusers",
+    "NEGATIVE_PROMPT": "",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 20,
+    "CFG": 1,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 55000,
+    "estimated_duration_seconds": "15-30",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev via Diffusers GPU service. FP8 transformer + INT8 text encoder with CPU offload (~24GB peak). Quantization controlled by DIFFUSERS_FLUX2_QUANTIZE env var (default: fp8).",
+    "display_name": "FLUX.2 [dev]",
+    "icon": "flash_on",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B Mistral text encoder)",
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
+    "quantization": "FP8 (transformer) + INT8 (text encoder) + BF16 (VAE)",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering",
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "flash_on",
+    "color": "#FF6B35",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 20
+  },
+  "tags": {
+    "en": [
+      "image",
+      "flux",
+      "flux2",
+      "diffusers",
+      "mistral",
+      "fp8"
+    ],
+    "de": [
+      "bild",
+      "flux",
+      "flux2",
+      "diffusers",
+      "mistral",
+      "fp8"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

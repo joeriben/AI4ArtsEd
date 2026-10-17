@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation_recursive",
+  "instruction_type": "chain_translation",
+  "name": {
+    "en": "Chain Translation",
+    "de": "Ketten­übersetzung",
+    "tr": "Kulaktan Kulağa",
+    "ko": "전화 게임",
+    "uk": "Зіпсований телефон",
+    "fr": "Traduction en chaîne",
+    "es": "Teléfono descompuesto",
+    "he": "טלפון שבור",
+    "ar": "التلفون المكسور",
+    "bg": "Развален телефон"
+  },
+  "description": {
+    "en": "Passes your text through 8 random languages, each translation made only from the one before it. Meaning shifts along the chain and comes back changed.",
+    "de": "Schickt deinen Text durch 8 zufällige Sprachen, jede Übersetzung nur aus der vorigen gemacht. Die Bedeutung verschiebt sich entlang der Kette und kommt verändert zurück.",
+    "uk": "Ітеративна трансформація",
+    "fr": "Fait passer ton texte à travers 8 langues aléatoires, chaque traduction faite uniquement à partir de la précédente. Le sens se déplace le long de la chaîne et revient transformé.",
+    "es": "Pasa tu texto por 8 idiomas aleatorios como en un juego de teléfono descompuesto. Crea cambios sorprendentes a medida que el significado se transforma a través de múltiples traducciones.",
+    "he": "מעביר את הטקסט שלך דרך 8 שפות אקראיות כמו משחק טלפון שבור. יוצר שינויים מפתיעים כשהמשמעות משתנה דרך תרגומים מרובים.",
+    "ar": "يمرّر نصك عبر 8 لغات عشوائية كلعبة التلفون المكسور. يخلق تغييرات مفاجئة مع تحوّل المعنى عبر ترجمات متعددة.",
+    "bg": "Прекарва текста ви през 8 произволни езика като игра на развален телефон. Създава изненадващи промени, докато значението се измества през множество преводи.",
+    "tr": "Metninizi kulaktan kulağa oyunu gibi 8 rastgele dil üzerinden geçirir. Anlam birden fazla çeviri boyunca değişirken şaşırtıcı dönüşümler yaratır.",
+    "ko": "전화 게임처럼 텍스트를 8개의 무작위 언어를 통해 전달합니다. 여러 번역을 거치면서 의미가 변화하며 놀라운 변화를 만들어냅니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "semantics"
+  ],
+  "context": {
+    "en": "Translate the input into the target language. Rules: You MUST translate every single word. If you don’t know a translation, you must paraphrase the word. You must NEVER use a word from the original language or create umlaut variants.",
+    "de": "Übersetze den Input in die Zielsprache. Regeln: Du MUSST jedes Wort übersetzen. Wenn Du keine Übersetzung kennst, musst Du das Wort umschreiben. Du darfst auf keinen Fall das Wort der Originalsprache verwenden oder umlauten."
+  },
+  "parameters": {
+    "temperature": 0.7,
+    "iterations": 9,
+    "use_random_languages": true,
+    "final_language": "source"
+  },
+  "media_preferences": {
+    "default_output": "text",
+    "supported_types": [
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/semantics/ai4artsed_StillePost_2506232347.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral-nemo:latest"
+  },
+  "display": {
+    "icon": "💬",
+    "color": "#2196F3",
+    "category": "semantics",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

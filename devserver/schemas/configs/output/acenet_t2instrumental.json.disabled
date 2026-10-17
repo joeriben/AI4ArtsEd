@@ -1,0 +1,113 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "ACE Audio Instrumental",
+    "de": "ACE Audio Instrumental",
+    "tr": "ACE Audio Instrumental",
+    "ko": "ACE Audio Instrumental",
+    "uk": "ACE Audio Instrumental",
+    "fr": "ACE Audio Instrumental",
+    "es": "ACE Audio Instrumental",
+    "he": "ACE Audio Instrumental",
+    "ar": "ACE Audio Instrumental",
+    "bg": "ACE Audio Instrumental"
+  },
+  "description": {
+    "en": "AI music generation using ACE Step model for instrumental tracks via ComfyUI",
+    "de": "KI-Musikgenerierung mit ACE Step Modell für instrumentale Tracks via ComfyUI",
+    "tr": "ComfyUI üzerinden ACE Step modeliyle enstrümantal parçalar için yapay zekâ müzik üretimi",
+    "ko": "ComfyUI를 통해 ACE Step 모델을 사용해 인스트루멘털 트랙을 생성하는 AI 음악 생성",
+    "uk": "Генерація музики за допомогою ШІ з використанням моделі ACE Step для інструментальних треків через ComfyUI",
+    "fr": "Génération musicale par IA utilisant le modèle ACE Step pour des morceaux instrumentaux via ComfyUI",
+    "es": "Generación musical con IA utilizando el modelo ACE Step para pistas instrumentales a través de ComfyUI",
+    "he": "יצירת מוזיקה בבינה מלאכותית באמצעות מודל ACE Step ליצירת רצועות אינסטרומנטליות דרך ComfyUI",
+    "ar": "توليد موسيقى بالذكاء الاصطناعي باستخدام نموذج ACE Step لإنشاء مقطوعات آلية عبر ComfyUI",
+    "bg": "Генериране на музика с ИИ чрез модела ACE Step за инструментални песни през ComfyUI"
+  },
+  "category": {
+    "en": "Music Generation",
+    "de": "Musikgenerierung",
+    "tr": "Müzik Üretimi",
+    "ko": "음악 생성",
+    "uk": "Генерація музики",
+    "fr": "Génération musicale",
+    "es": "Generación de música",
+    "he": "יצירת מוזיקה",
+    "ar": "توليد الموسيقى",
+    "bg": "Генериране на музика"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_audio_acenet",
+    "LYRICS": "[instrumental]",
+    "LYRICS_STRENGTH": 0.99,
+    "SECONDS": 30,
+    "STEPS": 50,
+    "CFG": 5.0,
+    "SAMPLER": "dpmpp_2m_sde_gpu",
+    "SCHEDULER": "simple",
+    "DENOISE": 0.9,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "ace-step-v1.3.5b",
+    "model_file": "ace_step_v1_3.5b.safetensors",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 8500,
+    "estimated_duration_seconds": "10-30",
+    "recommended_duration": 30,
+    "supported_durations": [
+      15,
+      30,
+      45,
+      60
+    ],
+    "notes": "ACE Step v1.3.5b via ComfyUI. Text-to-audio generation for instrumental music. Generates 30-second instrumental tracks. The 'tags' field describes the musical style, genre, instruments, mood, and tempo.",
+    "version": "1.0",
+    "display_name": "ACE-Net",
+    "publisher": "StepFun / ACE Studio (Beijing, CN)",
+    "architecture": "Neural Audio Codec + Transformer",
+    "params": "~1B",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "None documented by manufacturer"
+  },
+  "display": {
+    "icon": "🎵",
+    "color": "#FF5722",
+    "category": "music_generation",
+    "difficulty": 1,
+    "order": 30
+  },
+  "tags": {
+    "en": [
+      "music",
+      "audio",
+      "instrumental",
+      "ace",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "musik",
+      "audio",
+      "instrumental",
+      "ace",
+      "comfyui",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

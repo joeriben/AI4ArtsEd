@@ -1,0 +1,207 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Stable Diffusion 3.5 Large",
+    "de": "Stable Diffusion 3.5 Large",
+    "tr": "Stable Diffusion 3.5 Large",
+    "ko": "Stable Diffusion 3.5 Large",
+    "uk": "Stable Diffusion 3.5 Large",
+    "fr": "Stable Diffusion 3.5 Large",
+    "es": "Stable Diffusion 3.5 Large",
+    "he": "Stable Diffusion 3.5 Large",
+    "ar": "Stable Diffusion 3.5 Large",
+    "bg": "Stable Diffusion 3.5 Large"
+  },
+  "description": {
+    "en": "High-quality image generation using Stable Diffusion 3.5 Large with Dual CLIP text encoding",
+    "de": "Hochwertige Bildgenerierung mit Stable Diffusion 3.5 Large und Dual CLIP Text-Encoding",
+    "tr": "Çift CLIP metin kodlamalı Stable Diffusion 3.5 Large ile yüksek kaliteli görüntü üretimi",
+    "ko": "듀얼 CLIP 텍스트 인코딩을 사용하는 Stable Diffusion 3.5 Large를 통한 고품질 이미지 생성",
+    "uk": "Високоякісна генерація зображень за допомогою Stable Diffusion 3.5 Large з подвійним текстовим кодуванням CLIP",
+    "fr": "Génération d'images de haute qualité avec Stable Diffusion 3.5 Large et encodage de texte CLIP double",
+    "es": "Generación de imágenes de alta calidad con Stable Diffusion 3.5 Large y codificación de texto CLIP dual",
+    "he": "יצירת תמונות איכותית באמצעות Stable Diffusion 3.5 Large עם קידוד טקסט כפול (Dual CLIP)",
+    "ar": "توليد صور عالية الجودة باستخدام Stable Diffusion 3.5 Large مع ترميز نص CLIP مزدوج",
+    "bg": "Висококачествено генериране на изображения с Stable Diffusion 3.5 Large и двойно текстово кодиране CLIP"
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sd35_large",
+    "seed": "random",
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sd3.5_large.safetensors",
+    "lora_base": [
+      "stable-diffusion-3-5-large",
+      "5-large",
+      "stable-diffusion-3-5-large-turbo"
+    ],
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "clip_models": [
+      "clip_g.safetensors",
+      "t5xxl_fp16.safetensors"
+    ],
+    "requires_gpu": true,
+    "gpu_vram_mb": 28000,
+    "estimated_duration_seconds": "20-60",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "512x512",
+      "768x768",
+      "1024x1024",
+      "1280x1280",
+      "1024x768",
+      "768x1024"
+    ],
+    "notes": "SD3.5 Large uses triple text encoding (CLIP-L + CLIP-G + T5-XXL). The interception prompt (translated to English by Stage 3) is passed through unchanged to all three encoders — the regular SD3 path (paper Fig. 2a): the CLIP encoders anchor the global gist, T5 carries the full-length detail beyond CLIP's 77-token window. No per-encoder keyword splitting.",
+    "display_name": "Stable Diffusion 3.5 Large",
+    "icon": "🎨",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "Undisclosed (claimed: synthetic + filtered public data)"
+      ],
+      "training_data_size": "Undisclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "London, UK",
+      "known_biases": [
+        {
+          "en": "CLIP text encoders trained predominantly on English-language web data",
+          "de": "CLIP-Textencoder überwiegend auf englischsprachigen Webdaten trainiert",
+          "tr": "CLIP metin kodlayıcıları ağırlıklı olarak İngilizce web verisiyle eğitildi",
+          "ko": "CLIP 텍스트 인코더는 주로 영어권 웹 데이터로 학습됨",
+          "uk": "Текстові кодувальники CLIP навчені переважно на англомовних веб-даних",
+          "fr": "Encodeurs de texte CLIP entraînés principalement sur des données web en anglais",
+          "es": "Los codificadores de texto CLIP se entrenaron predominantemente con datos web en inglés",
+          "he": "מקודדי הטקסט של CLIP אומנו ברובם על נתוני רשת באנגלית",
+          "ar": "دُرِّبت مُرمِّزات نص CLIP في الغالب على بيانات ويب باللغة الإنجليزية",
+          "bg": "Текстовите енкодери CLIP са обучени предимно с англоезични уеб данни"
+        },
+        {
+          "en": "Western visual aesthetic emphasis (composition, lighting conventions)",
+          "de": "Betonung westlicher visueller Ästhetik (Komposition, Lichtkonventionen)",
+          "tr": "Batılı görsel estetiğe vurgu (kompozisyon, ışıklandırma gelenekleri)",
+          "ko": "서구식 시각적 미학에 대한 편중(구도, 조명 관습)",
+          "uk": "Акцент на західній візуальній естетиці (композиція, конвенції освітлення)",
+          "fr": "Accent mis sur une esthétique visuelle occidentale (composition, conventions d'éclairage)",
+          "es": "Énfasis en una estética visual occidental (composición, convenciones de iluminación)",
+          "he": "דגש על אסתטיקה חזותית מערבית (קומפוזיציה, מוסכמות תאורה)",
+          "ar": "تركيز على الجمالية البصرية الغربية (التكوين، أعراف الإضاءة)",
+          "bg": "Акцент върху западна визуална естетика (композиция, конвенции за осветление)"
+        },
+        {
+          "en": "T5-XXL multilingual but English-dominant (~80% C4 corpus is English)",
+          "de": "T5-XXL mehrsprachig, aber englisch-dominant (~80% des C4-Korpus ist Englisch)",
+          "tr": "T5-XXL çok dilli ama İngilizce ağırlıklı (C4 külliyatının ~%80'i İngilizce)",
+          "ko": "T5-XXL은 다국어를 지원하지만 영어 편중임(C4 코퍼스의 약 80%가 영어)",
+          "uk": "T5-XXL багатомовна, але з домінуванням англійської (~80% корпусу C4 — англійською)",
+          "fr": "T5-XXL multilingue mais dominé par l'anglais (~80 % du corpus C4 est en anglais)",
+          "es": "T5-XXL es multilingüe pero dominado por el inglés (~80% del corpus C4 es inglés)",
+          "he": "T5-XXL רב-לשוני אך נשלט על ידי האנגלית (כ-80% מקורפוס C4 הוא באנגלית)",
+          "ar": "T5-XXL متعدد اللغات لكنه يغلب عليه الإنجليزية (نحو 80% من مجموعة بيانات C4 بالإنجليزية)",
+          "bg": "T5-XXL е многоезичен, но с доминация на английския (~80% от корпуса C4 е на английски)"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "Limited understanding of non-Latin scripts in CLIP encoders",
+          "de": "Eingeschränktes Verständnis nicht-lateinischer Schriften in CLIP-Encodern",
+          "tr": "CLIP kodlayıcılarında Latin olmayan yazı sistemlerinin sınırlı anlaşılması",
+          "ko": "CLIP 인코더에서 비라틴 문자에 대한 이해가 제한적임",
+          "uk": "Обмежене розуміння нелатинських писемностей у кодувальниках CLIP",
+          "fr": "Compréhension limitée des écritures non latines dans les encodeurs CLIP",
+          "es": "Comprensión limitada de escrituras no latinas en los codificadores CLIP",
+          "he": "הבנה מוגבלת של כתבים שאינם לטיניים במקודדי CLIP",
+          "ar": "فهم محدود للأنظمة الكتابية غير اللاتينية في مُرمِّزات CLIP",
+          "bg": "Ограничено разбиране на нелатински писмености в енкодерите на CLIP"
+        },
+        {
+          "en": "Underrepresented: African, Indigenous, Southeast Asian visual traditions",
+          "de": "Unterrepräsentiert: afrikanische, indigene, südostasiatische visuelle Traditionen",
+          "tr": "Yetersiz temsil edilenler: Afrika, yerli ve Güneydoğu Asya görsel gelenekleri",
+          "ko": "충분히 반영되지 않음: 아프리카, 원주민, 동남아시아의 시각적 전통",
+          "uk": "Недостатньо представлені: африканські, корінні та південно-східноазійські візуальні традиції",
+          "fr": "Sous-représentées : traditions visuelles africaines, autochtones et d'Asie du Sud-Est",
+          "es": "Subrepresentadas: tradiciones visuales africanas, indígenas y del sudeste asiático",
+          "he": "מיוצגים בחסר: מסורות חזותיות אפריקאיות, ילידיות ודרום-מזרח אסייתיות",
+          "ar": "ممثَّلة تمثيلاً ناقصاً: التقاليد البصرية الأفريقية والأصلية وجنوب شرق آسيا",
+          "bg": "Недостатъчно представени: африкански, коренни (индигенни) и югоизточноазиатски визуални традиции"
+        },
+        {
+          "en": "No consent from original creators whose work may be in training data",
+          "de": "Keine Zustimmung der ursprünglichen Urheber, deren Werke möglicherweise in den Trainingsdaten sind",
+          "tr": "Eserleri eğitim verisinde bulunabilecek özgün yaratıcıların onayı alınmamış",
+          "ko": "학습 데이터에 포함되었을 수 있는 원저작자의 동의가 없음",
+          "uk": "Немає згоди оригінальних авторів, чиї роботи можуть бути в навчальних даних",
+          "fr": "Aucun consentement des créateurs originaux dont l'œuvre pourrait figurer dans les données d'entraînement",
+          "es": "Sin consentimiento de los creadores originales cuya obra puede estar en los datos de entrenamiento",
+          "he": "אין הסכמה מהיוצרים המקוריים שיצירתם עשויה להימצא בנתוני האימון",
+          "ar": "لا موافقة من المبدعين الأصليين الذين قد تكون أعمالهم ضمن بيانات التدريب",
+          "bg": "Липсва съгласие от оригиналните автори, чиито произведения може да са в данните за обучение"
+        }
+      ]
+    },
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "🎨",
+    "color": "#FF6B6B",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 10
+  },
+  "tags": {
+    "en": [
+      "image",
+      "stable-diffusion",
+      "high-quality",
+      "sd3.5",
+      "comfyui"
+    ],
+    "de": [
+      "bild",
+      "stable-diffusion",
+      "hohe-qualität",
+      "sd3.5",
+      "comfyui"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

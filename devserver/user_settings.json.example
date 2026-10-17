@@ -1,0 +1,18 @@
+{
+  "CHAT_HELPER_MODEL": "openrouter/anthropic/claude-opus-5.5",
+  "CODING_MODEL": "openrouter/anthropic/claude-opus-5.5",
+  "DEFAULT_LANGUAGE": "de",
+  "DEFAULT_SAFETY_LEVEL": "research",
+  "DSGVO_CONFORMITY": false,
+  "EXTERNAL_LLM_PROVIDER": "openrouter",
+  "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:4b",
+  "KNOWLEDGE_PROCESSING_MODEL": "openrouter/z-ai/glm-5.3",
+  "PERSONA_MODEL": "openrouter/anthropic/claude-opus-5.5",
+  "RESONA_MODEL": "openrouter/anthropic/claude-opus-5.5",
+  "SAFETY_MODEL": "shieldstral:3b",
+  "STAGE1_TEXT_MODEL": "openrouter/claude-sonnet-5.5",
+  "STAGE2_INTERCEPTION_MODEL": "openrouter/anthropic/claude-opus-5.5",
+  "STAGE2_OPTIMIZATION_MODEL": "openrouter/z-ai/glm-5.3",
+  "STAGE3_MODEL": "openrouter/openai/gpt-6-luna",
+  "UI_MODE": "expert"
+}

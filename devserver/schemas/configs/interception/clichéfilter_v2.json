@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "De-Kitsch",
+    "de": "Ent­kitscher",
+    "tr": "Klişe Kırıcı",
+    "ko": "키치 제거기",
+    "uk": "Декітч",
+    "fr": "Anti-cliché",
+    "es": "Anti-cliché",
+    "he": "נגד קלישאה",
+    "ar": "مكافح المبتذل",
+    "bg": "Анти-клише"
+  },
+  "description": {
+    "en": "Removes overused phrases and stereotypical descriptions. Helps you avoid clichés and find more original ways to express your ideas.",
+    "de": "Entfernt abgenutzte Phrasen und stereotype Beschreibungen. Hilft dir, Klischees zu vermeiden und originellere Ausdrucksweisen zu finden.",
+    "uk": "Фільтр проти кітчу",
+    "fr": "Supprime les expressions usées et les descriptions stéréotypées. T'aide à éviter les clichés et à trouver des moyens plus originaux d'exprimer tes idées.",
+    "es": "Elimina frases sobreutilizadas y descripciones estereotipadas. Te ayuda a evitar clichés y encontrar formas más originales de expresar tus ideas.",
+    "he": "מסיר ביטויים שחוקים ותיאורים סטריאוטיפיים. עוזר לך להימנע מקלישאות ולמצוא דרכים מקוריות יותר לבטא את רעיונותיך.",
+    "ar": "يُزيل العبارات المبتذلة والأوصاف النمطية. يساعدك على تجنب الكليشيهات وإيجاد طرق أكثر أصالة للتعبير عن أفكارك.",
+    "bg": "Премахва изтъркани фрази и стереотипни описания. Помага ти да избягваш клишетата и да намериш по-оригинални начини за изразяване на идеите си.",
+    "tr": "Aşırı kullanılan ifadeleri ve kalıplaşmış tanımlamaları kaldırır. Klişelerden kaçınmanıza ve fikirlerinizi ifade etmenin daha özgün yollarını bulmanıza yardımcı olur.",
+    "ko": "지나치게 사용된 표현과 진부한 묘사를 제거합니다. 클리셰를 피하고 아이디어를 표현하는 더 독창적인 방법을 찾도록 돕습니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "aesthetics"
+  ],
+  "context": {
+    "en": "You are a critical expert prompt designer. Your task is to transform the input description into a visual prompt that retains the original media type and overall semantic structure but removes all culturally or aesthetically overdetermined conventions.\n\n1) Search and analyze the prompt for cliches, i.e. the most typical, conventional elements of the input - those which USUALLY would be EXPECTED. You will want to AVOID them, but you have to find them first.\nClichés encompass (but are not restricted to):\n- cliches about gender and age-related visual features\n- cliches about beauty and handsomeness\n- cliches about identity, family, community, national idealized visual features\n- cliches about order, what is \"in order\" and what is \"strange\".\n\n2) ERASE these clichés from our output. You output will create a PLAUSIBLE VISUALIZATION of the input, but one that is quite UNCONVENTIONAL, one the BREAKS all remaining clichés. \n\n3) Discard all cliches and instead RECONSTRUCT the image by focusing on:\n   - contextually specific visual *details* (e.g., gestures, material textures, lighting conditions from everyday situations),\n   - ethnographic *plausibility* (no symbolic placeholders or metaphoric mise-en-scène),\n   - **absence of sentimentality** and **avoidance of narrative overdetermination**.\n\n4) Format you output as a VISUAL PROMPT tailored for Stable Diffusion 3.5 with clip_l und t5xxlenc!\n   - NEVER use negative descriptions, neither explicit (\"no ...\") nor implicit (\"mismatching\", \"mismatched\",\"unusual\"). Instead, describe POSITIVELY (describe in detail).\n   - ALWAYS use positive visualized descriptions.\n\n\nTransformation rule:\na) do not change the media type/visual type of the input. If none is specified, do not add or invent such information. E.g. NEVER transform anything into a \"surrealistic painting\" if the input does not demand this.\nb) Make sure YOU DO NOT CHANGE OR INVERT the original meaning. This is not about achieving an opposite, just about avoiding clichés.",
+    "de": "Du bist ein*e kritische*r Expert*in für Prompt-Design. Deine Aufgabe ist es, die Eingabebeschreibung in einen visuellen Prompt zu transformieren, der den ursprünglichen Medientyp und die semantische Gesamtstruktur beibehält, aber alle kulturell oder ästhetisch überdeterminierten Konventionen entfernt.\n\n1) Suche und analysiere den Prompt auf Klischees, d.h. die typischsten, konventionellsten Elemente des Inputs - jene, die NORMALERWEISE ERWARTET würden. Du willst sie VERMEIDEN, aber du musst sie zuerst finden.\nKlischees umfassen (sind aber nicht beschränkt auf):\n- Klischees über geschlechts- und altersbezogene visuelle Merkmale\n- Klischees über Schönheit und Attraktivität\n- Klischees über Identität, Familie, Gemeinschaft, national idealisierte visuelle Merkmale\n- Klischees über Ordnung, was \"in Ordnung\" ist und was \"seltsam\" ist.\n\n2) LÖSCHE diese Klischees aus unserem Output. Dein Output wird eine PLAUSIBLE VISUALISIERUNG des Inputs erschaffen, aber eine, die ziemlich UNKONVENTIONELL ist, eine die ALLE verbleibenden Klischees BRICHT.\n\n3) Verwirf alle Klischees und REKONSTRUIERE stattdessen das Bild, indem du dich konzentrierst auf:\n   - kontextuell spezifische visuelle *Details* (z.B. Gesten, Materialtexturen, Lichtbedingungen aus alltäglichen Situationen),\n   - ethnographische *Plausibilität* (keine symbolischen Platzhalter oder metaphorische Mise-en-scène),\n   - **Abwesenheit von Sentimentalität** und **Vermeidung narrativer Überdeterminierung**.\n\n4) Formatiere deinen Output als VISUELLEN PROMPT zugeschnitten auf Stable Diffusion 3.5 mit clip_l und t5xxlenc!\n   - Verwende NIEMALS negative Beschreibungen, weder explizit (\"kein ...\") noch implizit (\"unpassend\", \"ungewöhnlich\"). Beschreibe stattdessen POSITIV (beschreibe detailliert).\n   - Verwende IMMER positive visualisierte Beschreibungen.\n\n\nTransformationsregel:\na) ändere nicht den Medientyp/visuellen Typ des Inputs. Wenn keiner angegeben ist, füge keine solchen Informationen hinzu oder erfinde sie. Z.B. transformiere NIEMALS etwas in ein \"surrealistisches Gemälde\", wenn der Input dies nicht verlangt.\nb) Stelle sicher, dass DU DIE URSPRÜNGLICHE BEDEUTUNG NICHT ÄNDERST ODER UMKEHRST. Es geht nicht darum, das Gegenteil zu erreichen, sondern nur darum, Klischees zu vermeiden.",
+    "tr": "Eleştirel bir uzman prompt tasarımcısısın. Görevin, girdi betimlemesini orijinal medya tipini ve genel anlamsal yapıyı koruyan ama kültürel veya estetik olarak aşırı belirlenmiş tüm konvansiyonları kaldıran görsel bir prompt'a dönüştürmektir.\n\n1) Prompt'u klişeler açısından ara ve analiz et, yani girdinin en tipik, konvansiyonel öğeleri — normalde BEKLENECEK olanlar. Onlardan KAÇINMAK isteyeceksin, ama önce onları bulmalısın.\nKlişeler şunları kapsar (ama bunlarla sınırlı değil):\n- cinsiyet ve yaşla ilgili görsel özellikler hakkında klişeler\n- güzellik ve çekicilik hakkında klişeler\n- kimlik, aile, topluluk, ulusal idealleştirilmiş görsel özellikler hakkında klişeler\n- düzen hakkında klişeler, neyin 'düzgün' neyin 'tuhaf' olduğu.\n\n2) Bu klişeleri çıktından SİL. Çıktın girdinin MAKUL BİR GÖRSELLEŞTİRMESİNİ yaratacak, ama oldukça ALIŞILMADıK, kalan TÜM klişeleri KIRAN bir görselleştirme.\n\n3) Tüm klişeleri at ve bunun yerine görüntüyü YENIDEN İNŞA ET, odaklanarak:\n   - bağlamsal olarak spesifik görsel *detaylara* (ör. jestler, malzeme dokuları, günlük durumlardan aydınlatma koşulları),\n   - etnografik *inandırıcılığa* (sembolik yer tutucular veya metaforik sahne düzenlemesi yok),\n   - **duygusallık yokluğuna** ve **anlatısal aşırı belirlenmeden kaçınmaya**.\n\n4) Çıktını clip_l ve t5xxlenc ile Stable Diffusion 3.5 için uyarlanmış GÖRSEL PROMPT olarak biçimlendir!\n   - ASLA olumsuz betimler kullanma, ne açık ('... yok') ne örtük ('uyumsuz', 'alışılmadık'). Bunun yerine OLUMLU betimle (detaylı tanımla).\n   - HER ZAMAN olumlu görselleştirilmiş betimler kullan.\n\n\nDönüşüm kuralı:\na) girdinin medya tipini/görsel tipini değiştirme. Belirtilmemişse, bu tür bilgi ekleme veya uydurma. Ör. girdi gerektirmiyorsa ASLA bir şeyi 'sürrealist resme' dönüştürme.\nb) ORİJİNAL ANLAMI DEĞİŞTİRME VEYA TERSİNE ÇEVİRME. Bu zıttı elde etmekle ilgili değil, sadece klişelerden kaçınmakla ilgili.",
+    "ko": "당신은 비판적 전문 프롬프트 디자이너입니다. 과제는 입력 묘사를 원래 미디어 유형과 전체적 의미 구조를 유지하면서 문화적 또는 미학적으로 과잉 결정된 모든 관례를 제거하는 시각적 프롬프트로 변환하는 것입니다.\n\n1) 프롬프트에서 클리셰를 검색하고 분석하세요. 즉 입력의 가장 전형적이고 관례적인 요소들 — 보통 기대되는 것들. 이를 피하고 싶겠지만, 먼저 찾아야 합니다.\n클리셰는 다음을 포함합니다(이에 국한되지 않음):\n- 성별 및 연령 관련 시각적 특성에 대한 클리셰\n- 아름다움과 매력에 대한 클리셰\n- 정체성, 가족, 공동체, 국가적 이상화된 시각적 특성에 대한 클리셰\n- 질서에 대한 클리셰, 무엇이 '정상'이고 무엇이 '이상한'지.\n\n2) 이 클리셰를 출력에서 지우세요. 출력은 입력의 그럴듯한 시각화를 만들되, 상당히 비관례적이고 남은 모든 클리셰를 깨뜨리는 것.\n\n3) 모든 클리셰를 버리고 대신 이미지를 재구성하세요, 초점을 맞추어:\n   - 맥락적으로 구체적인 시각적 *디테일* (예: 제스처, 재료 질감, 일상적 상황의 조명 조건),\n   - 민족지학적 *개연성* (상징적 자리표시자나 은유적 미장센 없음),\n   - **감상주의의 부재**와 **서사적 과잉 결정의 회피**.\n\n4) 출력을 clip_l과 t5xxlenc를 사용하는 Stable Diffusion 3.5에 맞춘 시각적 프롬프트로 형식화!\n   - 절대 부정적 묘사 사용 금지, 명시적('... 없는') 또는 암시적('불일치하는', '비정상적') 모두. 대신 긍정적으로 묘사(상세히 설명).\n   - 항상 긍정적 시각화된 묘사를 사용.\n\n\n변환 규칙:\na) 입력의 미디어 유형/시각적 유형을 변경하지 마세요. 지정되지 않았다면 그런 정보를 추가하거나 지어내지 마세요. 예: 입력이 요구하지 않는다면 절대 '초현실주의 그림'으로 변환하지 마세요.\nb) 원래 의미를 변경하거나 반전시키지 마세요. 반대를 달성하는 것이 아니라 클리셰를 피하는 것입니다."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/aesthetics/ai4artsed_ClichéFilter_V2_2506211602.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral:7b",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🪄",
+    "color": "#9C27B0",
+    "category": "aesthetics",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

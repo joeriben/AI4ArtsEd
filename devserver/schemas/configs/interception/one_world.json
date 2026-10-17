@@ -1,0 +1,93 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "One World",
+    "de": "Eine Welt",
+    "tr": "Bir Dünya",
+    "ko": "하나의 세계",
+    "uk": "Один світ",
+    "fr": "Un seul monde",
+    "es": "Un solo mundo",
+    "he": "עולם אחד",
+    "ar": "عالم واحد",
+    "bg": "Един свят"
+  },
+  "description": {
+    "en": "Reimagines image prompts through perspectives that do not exclude the Global South. Deconstructs Western visual norms and challenges AI's inherent biases toward white-coded subjects, consumerist aesthetics, and Western cultural references.",
+    "de": "Denkt Bild-Prompts neu unter Einbezug von Perspektiven des Globalen Südens. Dekonstruiert westliche visuelle Normen und hinterfragt die inhärenten Biases der KI gegenüber als 'weiß' gelesenen Subjekten, Konsumästhetik und westlichen Kulturreferenzen.",
+    "uk": "Глобальна перспектива",
+    "fr": "Réimagine les prompts d'images à travers des perspectives qui n'excluent pas le Sud global. Déconstruit les normes visuelles occidentales et questionne les biais inhérents de l'IA envers les sujets codés comme blancs, l'esthétique consumériste et les références culturelles occidentales.",
+    "es": "Reimagina prompts de imagen a través de perspectivas que no excluyen al Sur Global. Deconstruye las normas visuales occidentales y cuestiona los sesgos inherentes de la IA hacia sujetos codificados como blancos, estéticas consumistas y referencias culturales occidentales.",
+    "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות שאינן מדירות את הדרום הגלובלי. מפרק נורמות חזותיות מערביות ומאתגר את ההטיות הטבועות של AI כלפי נושאים מקודדים כלבנים, אסתטיקה צרכנית והפניות תרבותיות מערביות.",
+    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر لا تستثني الجنوب العالمي. يفكّك المعايير البصرية الغربية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات المُرمَّزة بالبياض والجماليات الاستهلاكية والمرجعيات الثقافية الغربية.",
+    "bg": "Преосмисля промптове за изображения през перспективи, които не изключват Глобалния юг. Деконструира западните визуални норми и предизвиква присъщите предразсъдъци на ИИ към кодирани като бели субекти, потребителска естетика и западни културни референции.",
+    "tr": "Görüntü promptlarını Küresel Güney'i dışlamayan perspektifler aracılığıyla yeniden hayal eder. Batı görsel normlarını yapısöküme uğratır ve yapay zekanın beyaz-kodlanmış öznelere, tüketimci estetiklere ve Batı kültürel referanslarına yönelik içkin önyargılarını sorgular.",
+    "ko": "글로벌 사우스를 배제하지 않는 시각을 통해 이미지 프롬프트를 재상상합니다. 서양의 시각적 규범을 해체하고, 백인으로 코딩된 대상, 소비주의 미학, 서양 문화적 참조에 대한 AI의 내재적 편향에 도전합니다."
+  },
+  "category": {
+    "de": "Kritisches Denken",
+    "en": "Critical Thinking",
+    "he": "חשיבה ביקורתית",
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
+  },
+  "properties": [
+    "critical_analysis"
+  ],
+  "context": {
+    "en": "Respond in the language of the input. You act as a corrective against the visual 'default setting' of generative AIs, which often render unmarked places and people as generically Western.\n\nYour task is to break this standardization by transplanting the input to a *specific* place in the world or into a *concrete* cultural context that does NOT conform to the Western standard.\nYou choose this context independently and appropriately to the theme of the input.\nAvoid the 'tourist gaze' or poverty stereotypes. Instead, construct a modern, everyday, or hybrid reality that feels so natural that it decenters the 'Western' without merely replacing it with an exotic cliché. Make the place and cultural codes concrete and name them.",
+    "de": "Antworte in der Sprache des Inputs. Du agierst als Korrektiv gegen die visuelle 'Werksseinstellung' von generative KIs, die unmarkierte Orte und Personen oft generisch westlich darstellen.\n\nDeine Aufgabe ist es, diese Standardisierung aufzubrechen, indem du den Input an einen *spezifischen* Ort der Welt oder in einen *konkreten* kulturellen Kontext verpflanzt, der NICHT dem westlichen Standard entspricht.\nDu wählst diesen Kontext selbstständig und passend zum Thema des Inputs.\nVermeide dabei den 'touristischen Blick' oder Armuts-Stereotypen. Konstruiere stattdessen eine moderne, alltägliche oder hybride Realität, die so selbstverständlich wirkt, dass sie das 'Westliche' dezentriert, ohne es bloß durch ein exotisches Klischee zu ersetzen. Mache den Ort und die kulturellen Codes konkret und benenne sie.",
+    "tr": "Girdinin dilinde yanıt ver. Üretici yapay zekaların, işaretlenmemiş mekanları ve kişileri genellikle genel Batılı olarak tasvir eden görsel 'fabrika ayarına' karşı düzeltici olarak hareket ediyorsun.\n\nGörevin, girdiyi Batılı standarda UYMAYAN dünyada *belirli* bir yere veya *somut* bir kültürel bağlama taşıyarak bu standardizasyonu kırmaktır.\nBu bağlamı girdinin temasına uygun şekilde bağımsız olarak seçersin.\n'Turist bakışından' veya yoksulluk stereotiplerinden kaçın. Bunun yerine, 'Batılı' olanı yalnızca egzotik bir klişeyle değiştirmeden merkezsizleştiren, o kadar doğal hissettiren modern, günlük veya hibrit bir gerçeklik inşa et. Mekanı ve kültürel kodları somut yap ve adlandır.",
+    "ko": "입력의 언어로 응답하세요. 당신은 표시되지 않은 장소와 사람들을 종종 일반적으로 서양식으로 렌더링하는 생성 AI의 시각적 '기본 설정'에 대한 교정 역할을 합니다.\n\n당신의 과제는 입력을 서양 표준에 부합하지 않는 세계의 *특정* 장소나 *구체적인* 문화적 맥락으로 이식하여 이 표준화를 깨뜨리는 것입니다.\n이 맥락을 입력의 주제에 적합하게 독립적으로 선택합니다.\n'관광객 시선'이나 빈곤 고정관념을 피하세요. 대신 '서양적인 것'을 단순히 이국적 클리셰로 대체하지 않으면서 자연스럽게 탈중심화하는 현대적이고 일상적이거나 혼합적인 현실을 구축하세요. 장소와 문화적 코드를 구체적으로 만들고 이름을 붙이세요."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "approach": "decolonial_perspective",
+    "focus": "cultural_bias_deconstruction",
+    "target_biases": [
+      "Western_centrism",
+      "white_normativity",
+      "consumerist_aesthetics",
+      "gendered_stereotypes"
+    ],
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🌍",
+    "color": "#4CAF50",
+    "category": "critical_analysis",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [
+      "decolonial",
+      "critical",
+      "bias",
+      "global south",
+      "perspective"
+    ],
+    "de": [
+      "dekolonial",
+      "kritisch",
+      "bias",
+      "globaler süden",
+      "perspektive"
+    ]
+  }
+}

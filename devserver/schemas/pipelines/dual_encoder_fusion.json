@@ -1,0 +1,61 @@
+{
+  "name": "dual_encoder_fusion",
+  "pipeline_type": "dual_encoder_optimization_fusion",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "description": "Dual-encoder T5+CLIP optimization and fusion for image generation",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [
+    "optimize_t5_prompt",
+    "optimize_clip_prompt",
+    "dual_encoder_fusion_image"
+  ],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "dual_encoder_fusion",
+    "reusable": true,
+    "pre_translation": true,
+    "requires_custom_nodes": ["ai4artsed_t5_clip_fusion"],
+    "prompt_structure": {
+      "type": "dual_optimization",
+      "parts": ["t5_expanded", "clip_optimized", "alpha_calculated"],
+      "description": "Two separate prompt optimizations (T5 semantic expansion, CLIP token weighting) with adaptive alpha blending"
+    },
+    "steps": [
+      {
+        "step": 1,
+        "chunk": "optimize_t5_prompt",
+        "description": "T5 prompt optimization: Semantic expansion (max 250 words) + alpha calculation",
+        "output": "t5_prompt_with_alpha"
+      },
+      {
+        "step": 2,
+        "chunk": "optimize_clip_prompt",
+        "description": "CLIP prompt optimization: Token reordering for 75-token limit (max 50 words)",
+        "output": "clip_prompt"
+      },
+      {
+        "step": 3,
+        "chunk": "dual_encoder_fusion_image",
+        "description": "Dual encoding (T5 + CLIP) → Fusion with alpha → Image generation",
+        "inputs": {
+          "t5_prompt": "step_1_output",
+          "clip_prompt": "step_2_output",
+          "alpha": "extracted_from_step_1"
+        },
+        "output": "image"
+      }
+    ],
+    "data_flow": {
+      "input": "user_text",
+      "step_1_output": "t5_expanded_prompt + #a=XX",
+      "step_2_output": "clip_optimized_prompt",
+      "alpha_extraction": "parse #a=XX from step_1",
+      "fusion": "lerp(clip[:77], t5[:77], alpha) + t5[77:]",
+      "output": "image_from_fused_conditioning"
+    }
+  }
+}

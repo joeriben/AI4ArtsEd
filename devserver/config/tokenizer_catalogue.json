@@ -1,0 +1,25 @@
+{
+  "_note": [
+    "The tokenizers the Latent Lab's language-comparison instrument offers",
+    "(views/latent_lab/tokenization_comparison.vue, read by routes/text_routes.py).",
+    "A table, not code: a model id is data (test_no_model_literals.py).",
+    "",
+    "'id' is the Hugging Face repository the tokenizer files are read from, on the",
+    "machine ComfyUI runs on and never from the network; 'label' is a proper noun",
+    "and is never translated; 'role' is a key the surface turns into a sentence",
+    "about what this tokenizer is to this platform.",
+    "",
+    "CLIP belongs in this list, and not as an afterthought: its window is 77",
+    "tokens against Qwen3's 40.960, and that is the whole didactic point - the",
+    "text a picture model may read is shorter than one page, and a language that",
+    "needs twice as many tokens for the same sentence loses twice as much of it."
+  ],
+  "tokenizers": [
+    {"id": "Qwen/Qwen3-4B", "label": "Qwen3-4B", "role": "platform_text"},
+    {"id": "meta-llama/Llama-3.2-3B-Instruct", "label": "Llama 3.2", "role": "other_text"},
+    {"id": "google/gemma-2-2b-it", "label": "Gemma 2", "role": "other_text"},
+    {"id": "microsoft/Phi-3.5-mini-instruct", "label": "Phi 3.5", "role": "other_text"},
+    {"id": "xlm-roberta-base", "label": "XLM-RoBERTa", "role": "multilingual"},
+    {"id": "openai/clip-vit-large-patch14", "label": "CLIP", "role": "image_text"}
+  ]
+}

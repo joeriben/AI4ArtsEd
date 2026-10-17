@@ -1,0 +1,87 @@
+{
+  "name": "output_image_gpt_image_1",
+  "type": "api_output_chunk",
+  "backend_type": "openai",
+  "media_type": "image",
+  "description": "OpenAI GPT-Image-1 - Direct API image generation with advanced text rendering",
+
+  "api_config": {
+    "provider": "openai",
+    "model": "gpt-image-1",
+    "endpoint": "https://api.openai.com/v1/images/generations",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer {{OPENAI_API_KEY}}",
+      "Content-Type": "application/json"
+    },
+    "request_body": {
+      "model": "gpt-image-1",
+      "prompt": "{{PROMPT}}",
+      "n": 1,
+      "size": "1024x1024",
+      "quality": "high",
+      "background": "opaque"
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "field": "request_body.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Image generation prompt"
+    },
+    "model": {
+      "field": "request_body.model",
+      "default": "gpt-image-1",
+      "description": "Model to use (gpt-image-1, dall-e-3, dall-e-2)"
+    },
+    "quality": {
+      "field": "request_body.quality",
+      "default": "high",
+      "description": "Image quality (low, medium, high for gpt-image-1)"
+    },
+    "size": {
+      "field": "request_body.size",
+      "default": "1024x1024",
+      "description": "Image dimensions"
+    },
+    "background": {
+      "field": "request_body.background",
+      "default": "opaque",
+      "description": "Background setting (opaque or transparent)"
+    },
+    "n": {
+      "field": "request_body.n",
+      "default": 1,
+      "description": "Number of images to generate"
+    }
+  },
+
+  "output_mapping": {
+    "type": "images_api_base64",
+    "format": "base64",
+    "extract_path": "data[0].b64_json",
+    "description": "Extract base64 image data from OpenAI Images API response"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "45-60",
+    "quality_rating": 4,
+    "requires_gpu": false,
+    "api_provider": "openai",
+    "model_id": "gpt-image-1",
+    "cost_per_image": "$0.040 per image (1024x1024, high quality)",
+    "supported_sizes": [
+      "1024x1024",
+      "1024x1536",
+      "1536x1024"
+    ],
+    "features": [
+      "Advanced text rendering in images",
+      "High-quality image generation",
+      "Instruction following",
+      "Transparent background support"
+    ],
+    "notes": "GPT-Image-1 via Direct OpenAI API. Requires OPENAI_API_KEY environment variable. Images are downloaded and stored locally."
+  }
+}

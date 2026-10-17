@@ -1,0 +1,121 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "eSpeak NG Voice",
+    "de": "eSpeak-NG-Stimme"
+  },
+  "description": {
+    "en": "Speaks a given text aloud. The text is spoken verbatim — it is not a prompt and is never rewritten. The computer voice from before AI: nothing is trained and nobody was recorded, rules turn the letters into phonemes and every phoneme is played as a few resonances.",
+    "de": "Spricht einen gegebenen Text. Der Text wird wörtlich gesprochen — er ist kein Prompt und wird nicht umgeschrieben. Die Computerstimme von vor der KI: nichts ist trainiert und niemand wurde aufgenommen, Regeln machen aus den Buchstaben Phoneme, und jedes Phonem wird als ein paar Resonanzen gespielt."
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound"
+  },
+  "context": "",
+  "parameters": {
+    "OUTPUT_CHUNK": "output_speech_espeak",
+    "variant": null,
+    "speed": null,
+    "pitch": null
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "espeak",
+    "backend_type": "python",
+    "verbatim_input": true,
+    "skip_stage2": true,
+    "skip_stage3_translation": true,
+    "allowed_safety_levels": [
+      "adult",
+      "research"
+    ],
+    "supported_languages": [
+      "ar",
+      "bg",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "he",
+      "ko",
+      "tr",
+      "uk"
+    ],
+    "unvoiced_platform_languages": [],
+    "display_name": "eSpeak NG",
+    "icon": "🗣️",
+    "publisher": "eSpeak NG project (fork 2015, Reece H. Dunn), from eSpeak by Jonathan Duddington",
+    "architecture": "formant synthesis, rule-based grapheme-to-phoneme; no neural model",
+    "params": "none — nothing is trained",
+    "text_encoders": [
+      "its own rule-based phonemiser"
+    ],
+    "quantization": "n/a",
+    "license": "GPL-3.0 (package: GPL-3.0-only AND GPL-3.0-or-later AND Apache-2.0 AND BSD-2-Clause AND Unicode-DFS-2016 AND CC-BY-SA-3.0)",
+    "provenance": {
+      "training_data_disclosed": true,
+      "training_data_sources": [
+        "none — there is no training data. The voice is rules and formant tables, written by hand, language by language."
+      ],
+      "training_data_consent": "the question does not arise: nobody was recorded",
+      "geographic_origin": "written from 1995 by Jonathan Duddington (Acorn/RISC OS), rewritten as eSpeak in 2007, forked to eSpeak NG in late 2015",
+      "known_biases": [
+        {
+          "en": "Every language's pronunciation rules were written by somebody, and how well they were written differs from language to language. A rule-written pronunciation is a decision about how a language ought to sound, made once and applied to everything.",
+          "de": "Die Aussprache-Regeln jeder Sprache hat jemand geschrieben, und wie gut sie geschrieben sind, unterscheidet sich von Sprache zu Sprache. Eine regelgeschriebene Aussprache ist eine Entscheidung darüber, wie eine Sprache zu klingen habe — einmal getroffen und auf alles angewendet."
+        },
+        {
+          "en": "The twelve variants are named five female and seven male. They are settings of the same machinery, not people, and the naming is the machinery's own.",
+          "de": "Die zwölf Varianten sind als fünf weibliche und sieben männliche benannt. Es sind Einstellungen derselben Maschinerie, keine Personen, und die Benennung stammt von der Maschinerie selbst."
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "It does not sound like a person and does not try to. Its own README: the speech is clear and works at high speeds, but is not as natural or smooth as synthesizers built on human recordings.",
+          "de": "Es klingt nicht wie eine Person und versucht es nicht. Die eigene README: die Sprache ist klar und funktioniert bei hohem Tempo, aber nicht so natürlich oder geschmeidig wie Synthesizer, die auf menschlichen Aufnahmen beruhen."
+        },
+        {
+          "en": "No control over emotion anywhere in it, and nothing that would count as one. Speed, pitch and a variant are numbers on the same machinery.",
+          "de": "Keine Steuerung für Emotion, nirgends, und nichts, was als eine zählen würde. Tempo, Tonhöhe und Variante sind Zahlen an derselben Maschinerie."
+        }
+      ]
+    },
+    "gpu_vram_mb": 0,
+    "note": "Input is content, not a prompt. eSpeak NG is a system package (`dnf install espeak-ng` / `apt install espeak-ng`), a few megabytes for over a hundred languages, and it runs on the CPU. Piper embedded it as its phonemiser."
+  },
+  "display": {
+    "icon": "record_voice_over",
+    "color": "#00897B",
+    "category": "sound",
+    "difficulty": 2,
+    "order": 120
+  },
+  "tags": {
+    "en": [
+      "speech",
+      "voice",
+      "TTS",
+      "formant synthesis",
+      "pre-AI"
+    ],
+    "de": [
+      "Sprache",
+      "Stimme",
+      "TTS",
+      "Formantsynthese",
+      "vor-KI"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 18,
+    "complexity": "intermediate"
+  }
+}

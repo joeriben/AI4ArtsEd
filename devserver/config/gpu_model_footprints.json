@@ -1,0 +1,229 @@
+{
+  "_meta": {
+    "version": 1,
+    "description": "Per-GPU working-VRAM measurements for the workshop model catalog. Each model is measured by tools/measure_workshop_footprints.py: clear GPU → record baseline → load model (preload path) → record peak → working_vram_gb = peak - baseline. Models whose load fails (true OOM) get fits=false. The frontend's workshop_planning.vue uses these values via /api/hardware/model_footprints to render the GPU-shared-resource visualization honestly per detected card. See useGpuStatus.ts."
+  },
+  "models": [
+    {
+      "id": "sd35_large",
+      "name": "Stable Diffusion 3.5 Large",
+      "media_type": "image",
+      "publisher": "Stability AI",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "text-to-image"
+    },
+    {
+      "id": "flux2",
+      "name": "FLUX.2",
+      "media_type": "image",
+      "publisher": "Black Forest Labs",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "text-to-image + image-to-image"
+    },
+    {
+      "id": "qwen_i2i",
+      "name": "Qwen Image",
+      "media_type": "image",
+      "publisher": "Alibaba / Qwen",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "image editing"
+    },
+    {
+      "id": "qwen_multi",
+      "name": "Qwen Image",
+      "media_type": "image",
+      "publisher": "Alibaba / Qwen",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "multi-image fusion"
+    },
+    {
+      "id": "wan22_t2v",
+      "name": "Wan 2.2",
+      "media_type": "video",
+      "publisher": "Wan-AI / Alibaba",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "text-to-video"
+    },
+    {
+      "id": "wan22_i2v",
+      "name": "Wan 2.2",
+      "media_type": "video",
+      "publisher": "Wan-AI / Alibaba",
+      "cloud_region": null,
+      "preloadable": true,
+      "shared_with": "wan22_t2v",
+      "shared_vram_gb": 10,
+      "note": "image-to-video"
+    },
+    {
+      "id": "ltx_video",
+      "name": "LTX Video",
+      "media_type": "video",
+      "publisher": "Lightricks",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "text-to-video"
+    },
+    {
+      "id": "heartmula",
+      "name": "HeartMuLa",
+      "media_type": "music",
+      "publisher": "HeartMuLa Research",
+      "cloud_region": null,
+      "preloadable": true,
+      "note": "lyrics + tags"
+    },
+    {
+      "id": "gemini_3_pro",
+      "name": "Gemini 3 Pro (€)",
+      "media_type": "image",
+      "publisher": "Google via Mammouth AI",
+      "cloud_region": "EU",
+      "preloadable": false,
+      "note": "text-to-image"
+    }
+  ],
+  "footprints": {
+    "NVIDIA RTX PRO 6000 Blackwell": {
+      "total_vram_gb": 96,
+      "measured_at": "2026-03-18",
+      "measurement_notes": "Diffusers residency path (no offload), nvidia-smi peak.",
+      "by_model": {
+        "sd35_large": {
+          "working_vram_gb": 30,
+          "fits": true,
+          "execution_path": "diffusers"
+        },
+        "flux2": {
+          "working_vram_gb": 53,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "qwen_i2i": {
+          "working_vram_gb": 20,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "qwen_multi": {
+          "working_vram_gb": 20,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "wan22_t2v": {
+          "working_vram_gb": 38,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "wan22_i2v": {
+          "working_vram_gb": 38,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "ltx_video": {
+          "working_vram_gb": 24,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "heartmula": {
+          "working_vram_gb": 12,
+          "fits": true,
+          "execution_path": "gpu_service"
+        },
+        "gemini_3_pro": {
+          "working_vram_gb": 0,
+          "fits": true,
+          "execution_path": "cloud"
+        }
+      }
+    },
+    "NVIDIA GeForce RTX 4090": {
+      "total_vram_gb": 24,
+      "measured_at": "2026-06-03",
+      "measurement_notes": "ComfyUI offload path (sequential cpu offload + VAE tiling). To be measured by tools/measure_workshop_footprints.py.",
+      "by_model": {
+        "gemini_3_pro": {
+          "working_vram_gb": 0,
+          "fits": true,
+          "execution_path": "cloud"
+        },
+        "heartmula": {
+          "working_vram_gb": 10,
+          "fits": true,
+          "execution_path": "gpu_service",
+          "measurement_note": "Measured via real generation (3s clip) with 1-second VRAM polling: baseline 1066 MB, peak 10692 MB, delta ≈ 9.4 GB rounded to 10. The preload-based script reports 0 because HEARTMULA_LAZY_LOAD=true defers weight allocation until first inference."
+        },
+        "qwen_i2i": {
+          "working_vram_gb": 11,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "qwen_multi": {
+          "working_vram_gb": null,
+          "fits": false,
+          "execution_path": "comfyui",
+          "error": "ComfyUI rejected workflow"
+        },
+        "ltx_video": {
+          "working_vram_gb": 12,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "wan22_t2v": {
+          "working_vram_gb": 11,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "wan22_i2v": {
+          "working_vram_gb": 11,
+          "fits": true,
+          "execution_path": "comfyui"
+        },
+        "flux2": {
+          "working_vram_gb": 22,
+          "fits": true,
+          "execution_path": "comfyui",
+          "measurement_note": "Measured via real 1024² 20-step generation with 2s VRAM polling: baseline 1066 MB, peak 23640 MB during forward passes, delta ≈ 22.0 GB. The earlier 11 GB number came from the 128² 1-step fake-run preload, which does not exercise the full DiT activation graph. Note: 22 GB working alone + 5.5 GB safety baseline = 27.5 GB > 23.5 GB available, so Flux.2 will trip the workshop over-budget warning whenever safety models are co-resident (which is always in production)."
+        },
+        "sd35_large": {
+          "working_vram_gb": 12,
+          "fits": true,
+          "execution_path": "comfyui",
+          "measurement_note": "Measured via ComfyUI fallback chunk (output_image_sd35_large) — the diffusers residency path would OOM at 28 GB on a 24 GB card. Real generation uses the same ComfyUI fallback."
+        }
+      }
+    },
+    "NVIDIA GeForce RTX 5090": {
+      "total_vram_gb": 32,
+      "measured_at": null,
+      "measurement_notes": "ComfyUI offload path. To be measured.",
+      "by_model": {
+        "gemini_3_pro": {
+          "working_vram_gb": 0,
+          "fits": true,
+          "execution_path": "cloud"
+        }
+      }
+    }
+  },
+  "safety_baseline_gb": 5.5,
+  "safety_models": [
+    {
+      "name": "Llama Guard",
+      "vram_gb": 1.6
+    },
+    {
+      "name": "Safety LLM",
+      "vram_gb": 1.4
+    },
+    {
+      "name": "Safety VLM",
+      "vram_gb": 1.9
+    }
+  ],
+  "comfyui_overhead_gb": 0.6
+}

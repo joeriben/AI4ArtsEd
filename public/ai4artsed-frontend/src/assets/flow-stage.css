@@ -1,0 +1,791 @@
+/*
+ * Flow-as-interface stage system — resolution-aware by construction.
+ *
+ * Loaded from main.ts since 2026-10-10, like compare-stage.css: a surface that
+ * carries these classes and forgot the import looked right to whoever built
+ * it and bare to a visitor who arrived by another door, and thirty components
+ * imported it one by one.
+ *
+ * Single source of truth for flow pages (x2x_flow, surrealizer_flow, …):
+ *  - Type steps (--flow-fs-*) belong to the whole platform and are defined in
+ *    assets/base.css; flow pages read them like every other surface. Text
+ *    NEVER runs through a layout transform — node boxes are computed in
+ *    screen pixels (useFlowStage), while text inside them uses those steps.
+ *  - The map is a FIXED stage (gesture B, pure): its geometry never changes
+ *    with UI state — opening a node only dims the map. Size depends solely
+ *    on window width, capped at the design width; on large screens the map
+ *    stands centered at its design size instead of inflating.
+ */
+:root {
+  /* The seven type steps stand in assets/base.css under the same names, where
+     every surface can reach them. */
+
+  /* Instrument steps: the glyphs and icons that sit *inside* flow nodes. They
+     are drawn, not typed, but they share the type steps' discipline — a clamp
+     per viewport, never a layout transform — so a node cannot outgrow itself. */
+  --flow-glyph-medium: clamp(1.25rem, 1.1vw + 0.75rem, 2.125rem);
+  /* The free fixtures that lie ON the board and belong to no node — the
+     perspective, and the plus that brings material in. ONE step for both, so
+     the two read as one kind of thing. */
+  --flow-glyph-fixture: clamp(3rem, 2.4vw + 1.6rem, 4.125rem);
+  /* The plus drawn at that step reads smaller than the constellation beside it:
+     its ink covers ~58 % of its box, the constellation's ~79 %. One factor on
+     the same step, so the two stand equal. */
+  --flow-glyph-plus: calc(var(--flow-glyph-fixture) * 1.35);
+  --flow-play: clamp(1.75rem, 2.2vw + 0.6rem, 3.25rem);
+
+  /* The global footer gallery is fixed above every page. Instruments that sit at
+     the bottom of a full-viewport canvas must clear it, or it eats their clicks.
+     Split in two parts so screen-space clamps in script can read both terms. */
+  --flow-gutter: 18px;
+  --flow-footer-clear: calc(var(--footer-collapsed-height, 36px) + var(--flow-gutter));
+
+  --flow-map-w: 1000px;
+  --flow-panel-w: min(1240px, 94vw);
+  --flow-panel-h: clamp(24rem, 58vh, 44rem);
+}
+
+/* Fixed stage: width capped at design width, height follows the page's
+   world aspect ratio (set per page via aspect-ratio binding). No state-driven
+   size changes, no viewport-height coupling.
+
+   The cap is the CONTAINER's width, not the window's. A cap of
+   calc(100vw - 32px) holds only as long as every page carrying a band is as
+   wide as the window. Encoder Fusion and Re-enactment stand in the Latent Lab's
+   work area, 240 px narrower than that, and with a window cap the band ran past
+   its right edge into an overflow:hidden — the last node was cut off with
+   nothing to scroll.
+
+   The 16 px on either side that used to be in this line now sit ONCE, in the
+   .map-wrap around it (FlowHeader, and x2x_flow's own copy). The two rules
+   nest, so an inset written in both is taken twice: measured at a 1150 px
+   window the band came out 968 wide where its design width is 1000. */
+.fl-map {
+  position: relative;
+  overflow: hidden;
+  width: min(var(--flow-map-w), 100%);
+  margin: 0 auto;
+}
+
+/* The triangle that starts a run. It is drawn ONCE for the whole platform: the
+   button around it is components/FlowRunButton.vue, and the flow itself draws it
+   inside its op NODE, which is its own control (hold-to-stop, run panel) and so
+   cannot be that button. Both read the size step above. */
+.play {
+  width: var(--flow-play);
+  height: var(--flow-play);
+  color: #7fb2ff;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.fl-panel {
+  width: var(--flow-panel-w);
+  height: var(--flow-panel-h);
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * The reading column of a measuring instrument (Bias Archaeology, Coreference
+ * Test; docs/ELEMENT_STRUCTURE_REGISTRY.md, "Fallfeld"). One place, because
+ * both surfaces had it character for character and docs/ELEMENT_STRUCTURE_REGISTRY.md
+ * forbids the second copy. What differs between them is a number of lines, and
+ * that is a variable.
+ *
+ * Set --lab-case-lines on the column: BBQ's situations run to four lines, so it
+ * asks for five; WinoBias' sentences run to two, so it asks for four. A box
+ * that took its height from its content would move the axis under it with every
+ * case, and a longer one scrolls inside its own box.
+ */
+.lab-col {
+  /* The column scrolls upright when the window is short, and CSS then turns the
+     other axis from `visible` into `auto` on its own. The slider's last word sits
+     centred on the end of its track, so its empty half hangs 33 px past the
+     column — enough for the browser to scroll sideways to it and cut the first
+     letters off every line. `clip` takes the sideways scroll away; the word
+     itself stands well inside and stays whole. */
+  overflow-x: clip;
+  --lab-case-lines: 5;
+  --lab-case-pad: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+.lab-case {
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: var(--lab-case-pad);
+  /* The size stands HERE, not on the line inside: the height below counts in
+     `em`, and `em` is the element's own size. Read from the line, the box was
+     measured against the 15 px the body hands down, so --lab-case-lines never
+     counted lines of the text it holds. */
+  font-size: var(--flow-fs-body);
+  height: calc(var(--lab-case-lines) * 1.45em + 2 * var(--lab-case-pad));
+  overflow-y: auto;
+  box-sizing: content-box;
+}
+
+.lab-line {
+  margin: 0;
+  line-height: 1.45;
+  color: #e2e8f0;
+}
+
+/* The same case in the language of the surface, UNDER the axis and quieter —
+ * same size, so the two readings are one reading; what is MEASURED is the
+ * English above. It stands below the axis because above it its changing height
+ * moved the boxes and the handle under the reader's hand. */
+.lab-tr {
+  margin: 6px 0 0;
+  padding-inline: var(--lab-case-pad);
+  font-size: var(--flow-fs-body);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lab-tr p { margin: 0; }
+
+/* Two classes, because `.lab-tr p` above is a class AND an element and would
+   otherwise keep the margin at zero. The rule this replaced needed !important
+   for the same reason. */
+.lab-tr .lab-tr-next { margin-top: 0.5em; }
+
+/* The axis through the cases, directly under them. */
+.lab-scrub { margin-top: 2px; }
+
+.lab-scrub-label {
+  font-size: var(--flow-fs-sub);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Three classes deep on purpose: MarkedSlider's own rule is .ms-track[data-v-*]
+   and would otherwise win on source order. The scoped rules these replaced were
+   .lab-scrub[data-v-*] .ms-track and outranked it the same way. */
+.lab-col .lab-scrub .ms-track {
+  --ms-inset: 4%;
+  --ms-thumb-color: rgba(226, 232, 240, 0.9);
+  padding-top: 26px;
+}
+
+.lab-col .lab-scrub .ms-marks { height: 16px; }
+.lab-col .lab-scrub .ms-notches { top: 19px; height: 7px; }
+
+/* What all of this is. One box, quiet border, no control in it. It sits at the
+ * foot of the column, and the column stops where the graph's x-axis runs, so
+ * the two close on one line. */
+.lab-note {
+  margin-top: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.lab-note h3 {
+  margin: 0 0 4px;
+  font-size: var(--flow-fs-sub);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Der Fliesstext stand auf 45 % Weiss und die Ueberschrift auf 70 %; auf dem
+   hellsten der vier Hintergruende traegt das nicht mehr, die Schrift ist dann
+   zu dunkel. Der Kasten bleibt der ruhigste Platz der Spalte, aber was in ihm
+   steht, ist zu lesen. */
+.lab-note p {
+  margin: 0;
+  font-size: var(--flow-fs-hint);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* A note that runs to several paragraphs keeps them apart. One paragraph is
+   still flush against the heading; from the second on there is a step, because
+   without it the three paragraphs of Mean Images read as one block of prose. */
+.lab-note p + p { margin-top: 8px; }
+
+/*
+ * The state line at a field — ONE sentence that answers a condition of THIS
+ * input, appearing and disappearing with the condition, with no control of its
+ * own and asking for nothing (docs/ELEMENT_STRUCTURE_REGISTRY.md, `.ef-warn`).
+ *
+ * It stood in `views/surrealizer.vue` as a scoped rule while that page was its
+ * only reader; Mean Images needed the same line for the variants that came back
+ * as repetitions, and a second copy would be the parallel structure that
+ * docs/ELEMENT_STRUCTURE_REGISTRY.md forbids. The wording of such a line is
+ * set per surface; the shape belongs here.
+ *
+ * The platform has ONE amber and it is written as a triplet so the alphas can be
+ * mixed: 255 179 0, the tone `ChipSelect tone-amber` and the comparison surfaces
+ * carry.
+ */
+.ef-warn {
+  margin: 0;
+  border: 1px solid rgb(255 179 0 / 0.4);
+  background: rgb(255 179 0 / 0.07);
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: var(--flow-fs-hint);
+  line-height: 1.5;
+  color: rgba(255, 210, 120, 0.95);
+}
+
+/*
+ * What THIS machine made of the case standing on the axis: the WHOLE bar beats,
+ * exactly one per machine at every question. The beating bar is the indicator
+ * of the model's answer to ONE question. No outline: a hairline on a bar is not
+ * a signal at this size.
+ *
+ * It beats in OPACITY, not in brightness. The first version lifted the bar to
+ * brightness(1.9) saturate(1.5), and on a dark ground that drives all three
+ * mid-tones past the clipping point - #7ec89a arrives at white, #c96a5c and
+ * #c9a15c nearly so. The bar then loses the colour that says WHICH outcome it
+ * is, three washed-out bars next to each other read as a drawing fault rather
+ * than a mark, and because most answers fall in the same outcome the picture
+ * barely changed while scrubbing: measured on the surface, nothing appeared to
+ * move at all. Opacity cannot clip - the hue is carried the whole way down, and
+ * against the dark ground even a shallow swing is unmistakable.
+ *
+ * Quiet on purpose, with less darkening and a quarter of the speed: the bar
+ * drops to 0.62, not to a third, and the beat takes 4.4 s instead of 1.1.
+ * Nothing on this surface is urgent - the mark says
+ * where this machine's answer went, and it is read while scrubbing, not caught.
+ *
+ * Where the machine is asked not to move things, the bar stands at a middle
+ * value, still plainly apart from its two neighbours, which stay at full.
+ */
+/*
+ * ONE oscillator, many bars, all in phase: bars beating out of step with one
+ * another irritate. A CSS animation starts when it is put
+ * on an element, so a per-bar animation would give every bar its own phase - and
+ * worse, a bar newly marked while scrubbing would begin its swing from scratch,
+ * out of step with the ones already beating. Here the swing runs on the CHART,
+ * which is mounted once and stays, and the bars only READ it: --lab-lfo is the
+ * AMOUNT, 0 at rest and 1 at the peak, so whichever bar is marked at a given
+ * moment shows the value the chart is at. All of them beat as one, and a change
+ * of mark is silent.
+ *
+ * The bar beats in OPACITY, between full and 0.3, at half the speed of the
+ * first opacity draft. Two attempts in between, a saturation swing and a
+ * saturation/brightness combination, were measured on the surface and both
+ * failed for the same underlying reason: what the eye
+ * catches at 20 px across a dark plot is a swing in LUMINANCE, and chroma
+ * carries almost none of it. Brightness upward is not the answer either - it was
+ * the original fault, driving all three mid-tones past the clipping point, where
+ * #7ec89a arrives at white and the bar stops saying which outcome it is.
+ * Downward opacity cannot clip and cannot lose the hue.
+ */
+@property --lab-lfo {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes lab-lfo-swing {
+  0%, 100% { --lab-lfo: 0; }
+  50% { --lab-lfo: 1; }
+}
+
+.lab-lfo { animation: lab-lfo-swing 2.2s ease-in-out infinite; }
+
+.lab-hit { opacity: calc(1 - var(--lab-lfo) * 0.7); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-lfo { animation: none; }
+  .lab-hit { --lab-lfo: 0.65; }
+}
+
+/**
+ * The page frame of a measuring instrument (Bias Archaeology, Coreference Test,
+ * Default Census). Same reason as `.lab-col` above: all three carried these
+ * rules character for character, down to the 2.0467 and the 1.509434 %, and
+ * docs/ELEMENT_STRUCTURE_REGISTRY.md forbids the second copy — this one was the
+ * third.
+ *
+ * `.lab-work` is the proportion the Latent Lab uses throughout: what prepares a
+ * run on the left, what came out of it on the right. Its two children get the
+ * min-0/column treatment both need; whatever a single instrument adds on top —
+ * a gap, its own scrolling, the number of lines a case may run to — stays in
+ * that instrument.
+ */
+.lab-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+}
+
+.lab-stage {
+  width: 100%;
+  margin: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lab-work {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 2.0467fr;
+  grid-template-rows: minmax(0, 1fr);
+  column-gap: 1.509434%;
+}
+
+/* Folded, the preparing column is 34 px of handle and the result side gets
+   what it gave up. It is the TRACK that has to give way (components/ColumnFold.vue). */
+.lab-work.folded {
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+
+.lab-work > * {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The counter, in the frame's bar beside the trigger. */
+.lab-prog {
+  font-size: var(--flow-fs-sub);
+  color: #7fb2ff;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* The heading that stands above a control. It NAMES what the control is
+   for, so it is read before the control is used and it carries the label
+   step of the platform's scale rather than the sub step: at the sub step the
+   headings that matter functionally were as tiny and unreadable as the
+   dispensable ones beside them. */
+.lab-pick-label {
+  font-size: var(--flow-fs-label);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/*
+ * The cell of a measuring surface — `.lab-shot` / `.filled` / `-img` / `-note`
+ * — moved into components/MediaGridCell.vue and is gone from this file. What
+ * it was is unchanged and lives there: the
+ * square, the medium shown WHOLE rather than cropped, and a refusal standing IN
+ * the cell rather than as a line over the surface. What it never carried, and
+ * the reason it went, is what a generated medium is owed — the functions the
+ * flow's box has and a back side with the record of its run. The SIZE is still
+ * the page's, at its own grid.
+ */
+
+/**
+ * The picture raster of a measuring surface — heads across the top, a name at
+ * the left end of every row, a square in every field.
+ *
+ * It was built once inside Cultural (Un)Known (`.dc-cols`) and stood there
+ * alone until a second surface needed the same thing: the LoRA Explorer
+ * instrument, whose rows are the four states of one comparison and whose
+ * columns are the motifs. docs/ELEMENT_STRUCTURE_REGISTRY.md forbids the second
+ * copy, so it stands here, and both surfaces keep only what is theirs.
+ *
+ * Heads and series share ONE grid, and a column contributes its two children to
+ * it (`display: contents`) instead of forming a grid of its own. Otherwise a
+ * head that wraps to two lines shortens the series in ITS column only, and the
+ * cells stop standing the same size beside each other — which is the whole
+ * discipline of these surfaces.
+ */
+.lab-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--lab-grid-cols), minmax(0, 1fr));
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 6px 10px;
+}
+
+/* The row names take the width they need and no more; the picture columns share
+   what is left. Without this the names would be one more equal column and every
+   picture would lose that share of its width to a word. */
+.lab-grid.labelled {
+  grid-template-columns: auto repeat(var(--lab-grid-cols), minmax(0, 1fr));
+}
+
+/* A raster whose subject is a TEXT and whose pictures illustrate it: one column
+   between the names and the squares that is read, and it gets the width reading
+   needs while the squares share the rest (`--lab-grid-reading`, in the same
+   `fr` as a picture column so the ratio holds at every width). Added with
+   Interception across Models, whose rows are writing models and whose reading
+   column holds what each of them wrote.
+
+   Everything is still `minmax(0, ...)`: a pixel floor here would stop fitting
+   as soon as enough columns were chosen, and `.lab-plot` clips rather than
+   scrolls — a series that has to be scrolled to is not a series. What choosing
+   a fifth image model costs is the same thing it costs every other raster. */
+.lab-grid.labelled.reading {
+  grid-template-columns:
+    auto
+    minmax(0, var(--lab-grid-reading, 3fr))
+    repeat(var(--lab-grid-cols), minmax(0, 1fr));
+}
+
+.lab-grid-col {
+  display: contents;
+}
+
+.lab-grid-head {
+  font-size: var(--flow-fs-label);
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+  padding-bottom: 2px;
+}
+
+/* A column that is the GROUND of the comparison rather than one of its cases
+   says so more quietly. */
+.lab-grid-head.bare { color: rgba(255, 255, 255, 0.45); font-style: italic; }
+
+/* THE BARE AXIS: a range input in the platform's shape, with no layer of named
+   places over it. Three pixels of track in the surface tone and the round green
+   handle — the same declarations `MarkedSlider` carries, which is why they stand
+   here once instead of in each surface (rule 13). What a caller adds is where
+   the track BEGINS and ENDS: the marked axis insets both ends so an outermost
+   word can stand centred under its handle, a bare one runs the full width.
+   ⚠️ The seed control still carries its own copy of this and has not been
+   folded in — whoever touches it next does that. */
+.lab-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--surface-4);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.lab-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ms-thumb-color, #4CAF50);
+  border: none;
+  cursor: grab;
+}
+
+.lab-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ms-thumb-color, #4CAF50);
+  border: none;
+  cursor: grab;
+}
+
+/* A handle that cannot be moved says so by going the colour of its own track,
+   not by fading the whole axis: the words beside it are still to be read. */
+.lab-range:disabled { cursor: default; }
+.lab-range:disabled::-webkit-slider-thumb { background: var(--surface-4); cursor: default; }
+.lab-range:disabled::-moz-range-thumb { background: var(--surface-4); cursor: default; }
+
+.lab-grid-rowname {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Logical, not physical: the box is placed by `justify-content`, which follows
+     the writing direction, and a `right` beside it would leave the text hugging
+     the far edge in ar/he. Load-bearing as soon as a row head carries more than
+     one line. */
+  text-align: end;
+  font-size: var(--flow-fs-label);
+  color: rgba(255, 255, 255, 0.75);
+  min-height: 0;
+  white-space: nowrap;
+}
+
+/* The rows divide what the surface gives — and the SERIES is capped at what its
+   squares need (`--lab-grid-cell` = the measured column width, s.
+   composables/useGridCellWidth.ts). Where the column is the narrower side the
+   raster is that much shorter and what is left over stands as ONE strip below it
+   instead of as a margin around every picture (empty vertical areas gain
+   nothing: where the width binds, spare height cannot become picture). Without
+   a measurement the cap is
+   several screens tall, so it never binds and nothing collapses. */
+.lab-series {
+  display: grid;
+  grid-template-rows: repeat(var(--lab-grid-rows), minmax(0, 1fr));
+  gap: 6px;
+  min-height: 0;
+  max-height: calc(
+    var(--lab-grid-rows) * var(--lab-grid-cell, 100vh) + (var(--lab-grid-rows) - 1) * 6px
+  );
+}
+
+/* Under a column head: a second line saying what the column holds — the steps a
+   phase covers, the quantity a column keeps still. It stood as `.mi-headsub` in
+   Mean Images while that was the only raster with one; Decomposition's phase
+   heads were the second, and docs/ELEMENT_STRUCTURE_REGISTRY.md forbids the
+   second copy. Mean Images is the only consumer again since the Decomposition
+   left the platform. */
+.lab-grid-headsub {
+  display: block;
+  font-size: var(--flow-fs-hint);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* A row name that carries a second line stacks instead of standing on one — the
+   name over what it covers. Same history as the head sub-line above
+   (`.mi-rowname`, then Decomposition's bands). */
+.lab-grid-rowname.stacked {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+}
+
+/* A raster with a SINGLE row has no series to cap, so its frames would centre
+   their squares and leave a band above AND below each one. Here the leftover
+   stands as ONE strip under the row instead (empty vertical areas gain
+   nothing). Written once, for the surfaces that put a pair of pictures side by
+   side rather than a series - Feature Probing and Concept Algebra, which had
+   the same three declarations under two prefixes. */
+.lab-grid.one-row .instr-frame { align-items: flex-start; }
+
+/* The cell itself is components/MediaGridCell.vue and its SIZE is the square
+   surface of the platform (`.instr-frame` / `.instr-stack`,
+   assets/instrument-surface.css). What the raster adds is that the cell fills
+   the width of its field and can never push its row taller. */
+.lab-series .media-grid-cell {
+  width: 100%;
+  min-height: 0;
+}
+
+/**
+ * The page under the bar of a raster instrument. Cultural (Un)Known and LoRA
+ * Reach carried these five rules character for character under two prefixes
+ * (`.dc-*` and `.lr-*`), which is the duplication docs/ELEMENT_STRUCTURE_REGISTRY.md
+ * forbids; a surface that needs something else says so at its own place and
+ * overrides.
+ */
+
+/* The page itself: a column that fills the work area and never scrolls as a
+   whole — the raster inside it is what has to stay on one screen. */
+.lab-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* The preparing column. It scrolls on its own, because a surface may offer more
+   controls than a short window has room for. */
+.lab-prep {
+  gap: 10px;
+  overflow-y: auto;
+}
+
+/* The note stands at the FOOT of the preparing column, where `.lab-note`'s own
+   `margin-top: auto` puts it: info boxes go to the bottom edge. Nothing here
+   takes the auto back; with it taken back the box would stand directly under
+   the controls it explains. */
+
+/* The small button of a preparing column — a word that does something to the
+   controls beside it rather than starting a run: select all, none, sort, set
+   every cell to one encoder. It stood character for character in Feature
+   Probing and Decomposition, which is the second copy that
+   docs/ELEMENT_STRUCTURE_REGISTRY.md forbids. */
+.mini-btn {
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.mini-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); color: white; }
+.mini-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* The last reason a cell did not come back. Where it stands follows the column:
+   at the FOOT, over the note box, where the column fits the window, and at its
+   HEAD where the column scrolls — which is the case on the three instruments of
+   the Crossmodal Lab, whose preparing columns run 971 to 1234 px against a
+   window of 469 (docs/ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`). */
+.lab-prep-err {
+  margin: 0;
+  font-size: var(--flow-fs-hint);
+  color: #e0a0a0;
+}
+
+/* At the head, the line keeps its room whether or not it has anything to say.
+   As the first flex child of `.lab-prep` with nothing reserved, its appearance
+   pushed every control below it down by one line plus the column's 10 px gap —
+   and with the Latent Audio Synth's drift running that happens on a bar
+   boundary, under a hand that is on a slider and with nobody having pressed
+   anything. So the element stands from the start and only the sentence comes
+   and goes. The two values are one measure: the height kept is the height of
+   the line that will stand there.
+
+   `flex: 0 0 auto` belongs to the `min-height` and cannot be left off. The
+   column is a flex column that OVERFLOWS, so its items shrink, and an explicit
+   `min-height` replaces the `auto` that had been holding a paragraph at its own
+   wrapped height: with it alone a two-line sentence was squeezed back to one
+   line's room and its second line ran across the field label under it (measured
+   1210 x 834). Refusing to shrink, the room kept is a floor and a longer
+   sentence takes what it needs. */
+.lab-prep-err.at-head {
+  flex: 0 0 auto;
+  line-height: 1.45;
+  min-height: calc(var(--flow-fs-hint) * 1.45);
+}
+
+/* The same line about something that is MISSING rather than failed: a list that
+   never arrived, a station that is not reachable. It stands before a run
+   instead of after one, so it stands quietly (the first instrument of Prompt
+   Interception had grown a second hint-line class of its own for exactly
+   this). */
+.lab-prep-err.quiet {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* The ONE line under a control that says what setting it decides - a gloss, not
+   a state: it stands whether or not anything is wrong, it asks for nothing, and
+   it carries no control of its own. Distinct from `.ef-warn` (a condition of the
+   field, appearing and disappearing with it) and from `.lab-prep-err` (the last
+   reason a run did not come back).
+
+   Here because MMAudio and ImageBind Guidance each needed one and a second copy
+   would have been the one docs/ELEMENT_STRUCTURE_REGISTRY.md forbids.
+   `.dc-count` in views/decomposition.vue held these four declarations bar the
+   line-height and was taken over as well; it is the only page-local copy there
+   was.
+   `.fp-selection` in feature_probing is NOT one of them and was named here in
+   error: it is a purple accent line (`rgba(124, 77, 255, 0.85)`) with a margin
+   of its own, and it stays where it is. */
+.lab-hint {
+  margin: 0;
+  font-size: var(--flow-fs-hint);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* A SOUND standing on a plot, where the medium is a player and not a picture.
+   The platform's square surface (`.instr-frame` / `.instr-stack`,
+   assets/instrument-surface.css) takes the SMALLER of its two sides so that a
+   picture stands whole; a player is a bar 54 px high, and in a square of the
+   plot's height it would float in the middle of an empty plate. So a sound gets
+   this instead of that surface.
+
+   The room the record needs is given to the card's FRONT, and the player is
+   centred in it. A card takes the height of its front — its back is absolutely
+   placed and out of the height (components/MediaGridCell.vue), so it has exactly
+   the front's room and scrolls in it. A picture's front is tall enough for both;
+   a player's is 66 px, and the record behind it — the star, the save, the
+   prompt, the seed, the settings, the time — measures 127 px in this width.
+   Giving the CELL the height instead leaves the card at its 66 px in the middle
+   of it: dead ground above and below, and a record readable two lines at a time
+   (measured on latent-lab/mmaudio).
+
+   Here rather than in the two sound instruments because the second copy is the
+   one docs/ELEMENT_STRUCTURE_REGISTRY.md forbids. */
+
+/* The class is doubled in both selectors to outweigh the cell's own square and
+   the card frame's own top alignment, which are scoped rules of their components
+   and are written into the page AFTER this stylesheet. It buys weight, not
+   reach — a scoped rule is a plain class here, and both elements are inside this
+   one. */
+
+/*
+ * The KLAPPE of an instrument: the settings that are rarely touched, folded
+ * away under the controls that are (docs/ELEMENT_STRUCTURE_REGISTRY.md,
+ * `details.advanced-settings`). A summary that opens it, a row of labelled
+ * fields inside, and two widths — the field takes the row, or 72 px where it
+ * holds a number.
+ *
+ * These six rules stood as page-local copies in views/decomposition.vue,
+ * views/latent_lab/feature_probing.vue, concept_algebra, composable_diffusion,
+ * fusion_workbench, mean_images, mmaudio and imagebind_guidance, and were about
+ * to stand in a ninth file when the synth was rebuilt — the second
+ * implementation docs/ELEMENT_STRUCTURE_REGISTRY.md forbids, eight times over.
+ * Character for character in five of the eight: mean_images carried four
+ * of the six, with no `.setting-input` and no `.setting-small`, and the two
+ * textarea surfaces carried two declarations more. `.setting-full` stood in none
+ * of them and arrives with MMAudio's negative field. What a single instrument
+ * needs ON TOP stays
+ * in that instrument: Composable Diffusion and the Fusion Workbench write into
+ * textareas here and keep the two declarations that makes those behave
+ * (`font-family: inherit`, `resize: vertical`).
+ *
+ * Two surfaces carry a klappe with metrics OF THEIR OWN — Denoising
+ * Archaeology and the Surrealizer. Their scoped rules outrank these (a scoped
+ * selector carries the component's attribute), and where one of them left a
+ * property unsaid it says it here. Attention Cartography was the third and is
+ * not one any more: its fold carried `.ac-settings summary`, a character-for-
+ * character copy of the summary rule below that survived only because the
+ * `<details>` went by another class name. It carries `advanced-settings` now.
+ *
+ * ⚠️ These rules are UNSCOPED, which is the whole point of the move and also
+ * its one cost: unlike the page-local versions they replaced, they reach INSIDE
+ * the components a klappe holds. `.settings-grid label` did, and hit
+ * `components/SeedControl.vue`'s own `<label class="seed-random-toggle">`,
+ * which says `display: flex` and leaves `flex-direction` unsaid — the shared
+ * rule supplied `column`, and the random-seed checkbox moved from beside its
+ * words to centred above them on ten surfaces (17.92 px → 35.72 px). Hence the
+ * DIRECT-CHILD form: it still covers every label a klappe writes itself,
+ * `SeedControl`'s root among them, and stops at the component boundary.
+ * Whatever is added here is written the same way.
+ */
+.advanced-settings { margin-top: 0.25rem; }
+
+.advanced-settings summary {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+
+.settings-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.settings-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+}
+
+.setting-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  color: white;
+  font-size: 0.8rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* A number needs the width of a number. */
+.setting-small { width: 72px; }
+
+/* A written line takes the whole row of the klappe instead of a share of it
+   beside two number fields. */
+.setting-full { flex: 1 1 100%; }
+
+/* The whole raster stands on the screen at once — scrolling to the last row
+   would take away what a series is for. So the rows share the height of the
+   surface and a cell is as big as that allows.
+
+   `.lab-work > *` above makes this side a column flex container, so the raster
+   inside it takes the height and shares it out. The ONE plot on the platform
+   whose content is an instrument rather than a raster — the Audio Synth's —
+   overrides both of these at its own place and gives its boxes a floor
+   (`.as-plot`, views/latent_lab/audio_synth.vue). A floor HERE would take the
+   raster's height away from every other one. */
+.lab-plot { overflow: hidden; }

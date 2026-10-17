@@ -1,0 +1,166 @@
+{
+  "id": "gi_fixture",
+  "name": "Perspektive gegen Rohtext",
+  "description": "input → interception ('Sieh es als Ort.') → 2× generation(attention_cartography, attention_cartography) → 2× image_evaluation → comparison_evaluator — zwei Wege auf dasselbe Motiv",
+  "type": "canvas_workflow",
+  "nodes": [
+    {
+      "id": "in",
+      "type": "input",
+      "promptText": "ein Haus am Feldrand",
+      "config": {},
+      "x": 80,
+      "y": 80
+    },
+    {
+      "id": "lens",
+      "type": "interception",
+      "contextPrompt": "Sieh es als Ort.",
+      "config": {},
+      "x": 460,
+      "y": 80,
+      "llmModel": "test/thinking-role"
+    },
+    {
+      "id": "genA",
+      "type": "generation",
+      "configId": "attention_cartography",
+      "config": {},
+      "x": 840,
+      "y": 80
+    },
+    {
+      "id": "genB",
+      "type": "generation",
+      "configId": "attention_cartography",
+      "config": {},
+      "x": 460,
+      "y": 220
+    },
+    {
+      "id": "readA",
+      "type": "image_evaluation",
+      "imageEvaluationPrompt": "Was steht da?",
+      "config": {},
+      "x": 1220,
+      "y": 80,
+      "visionModel": "test/seeing-role",
+      "imageEvaluationPreset": "custom"
+    },
+    {
+      "id": "readB",
+      "type": "image_evaluation",
+      "imageEvaluationPrompt": "Was steht da?",
+      "config": {},
+      "x": 840,
+      "y": 220,
+      "visionModel": "test/seeing-role",
+      "imageEvaluationPreset": "custom"
+    },
+    {
+      "id": "cmp",
+      "type": "comparison_evaluator",
+      "comparisonCriteria": "Was trennt sie?",
+      "config": {},
+      "x": 1600,
+      "y": 80,
+      "comparisonLlmModel": "test/thinking-role"
+    },
+    {
+      "id": "genA__seed",
+      "type": "seed",
+      "seedMode": "fixed",
+      "seedValue": 7,
+      "config": {},
+      "x": 80,
+      "y": 220
+    },
+    {
+      "id": "genB__seed",
+      "type": "seed",
+      "seedMode": "fixed",
+      "seedValue": 7,
+      "config": {},
+      "x": 80,
+      "y": 360
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "config": {},
+      "x": 1980,
+      "y": 80
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "in",
+      "targetId": "lens",
+      "label": null
+    },
+    {
+      "sourceId": "lens",
+      "targetId": "genA",
+      "label": null
+    },
+    {
+      "sourceId": "in",
+      "targetId": "genB",
+      "label": null
+    },
+    {
+      "sourceId": "genA",
+      "targetId": "readA",
+      "label": null
+    },
+    {
+      "sourceId": "genB",
+      "targetId": "readB",
+      "label": null
+    },
+    {
+      "sourceId": "readA",
+      "targetId": "cmp",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "readB",
+      "targetId": "cmp",
+      "label": "input-2"
+    },
+    {
+      "sourceId": "genA__seed",
+      "targetId": "genA",
+      "label": null
+    },
+    {
+      "sourceId": "genB__seed",
+      "targetId": "genB",
+      "label": null
+    },
+    {
+      "sourceId": "genA",
+      "targetId": "collector",
+      "label": null
+    },
+    {
+      "sourceId": "genB",
+      "targetId": "collector",
+      "label": null
+    },
+    {
+      "sourceId": "cmp",
+      "targetId": "collector",
+      "label": null
+    }
+  ],
+  "createdAt": "2026-09-09T00:00:00+00:00",
+  "updatedAt": "2026-09-09T00:00:00+00:00",
+  "resona": {
+    "recorded_at": "2026-09-09T00:00:00+00:00",
+    "intent_id": "gi_fixture",
+    "device_id": "fixture",
+    "motivation": "zwei Wege auf dasselbe Motiv",
+    "summary": "input → interception ('Sieh es als Ort.') → 2× generation(attention_cartography, attention_cartography) → 2× image_evaluation → comparison_evaluator"
+  }
+}

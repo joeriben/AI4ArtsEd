@@ -1,0 +1,74 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Sweetener",
+    "de": "Vernied­licher",
+    "tr": "Tatlılaştırıcı",
+    "ko": "달콤하게",
+    "uk": "Солоджувач",
+    "fr": "Adoucisseur",
+    "es": "Endulzador",
+    "he": "ממתיק",
+    "ar": "مُحلّي",
+    "bg": "Подсладител"
+  },
+  "description": {
+    "en": "Makes everything feel harmonious and cute. Softens sharp edges and creates a calm, balanced atmosphere.",
+    "de": "Macht alles harmonisch und niedlich. Mildert scharfe Kanten ab und schafft eine ruhige, ausgewogene Atmosphäre.",
+    "uk": "Ніжна трансформація",
+    "fr": "Rend tout harmonieux et mignon. Adoucit les angles vifs et crée une atmosphère calme et équilibrée.",
+    "es": "Hace que todo se sienta armonioso y tierno. Suaviza los bordes afilados y crea una atmósfera tranquila y equilibrada.",
+    "he": "הופך הכל להרמוני וחמוד. מרכך קצוות חדים ויוצר אווירה רגועה ומאוזנת.",
+    "ar": "يجعل كل شيء يبدو متناغماً ولطيفاً. يخفف الحواف الحادة ويخلق أجواء هادئة ومتوازنة.",
+    "bg": "Прави всичко да изглежда хармонично и сладко. Омекотява острите ръбове и създава спокойна, балансирана атмосфера.",
+    "tr": "Her şeyin uyumlu ve sevimli hissettirmesini sağlar. Keskin kenarları yumuşatır ve sakin, dengeli bir atmosfer yaratır.",
+    "ko": "모든 것을 조화롭고 사랑스럽게 느끼게 합니다. 날카로운 모서리를 부드럽게 하고 차분하고 균형 잡힌 분위기를 만듭니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "تحولات إبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "aesthetics"
+  ],
+  "context": {
+    "en": "Ensure that the generated image is appropriate, emotionally safe, and aesthetically engaging for children. Avoid any elements commonly associated with horror, dark fantasy, or adult metal aesthetics, including—but not limited to—creatures with glowing eyes, shadowy or ghostly figures, menacing facial expressions, threatening gestures, grimdark environments, dungeons, cages, abandoned buildings, or any setting evoking fear, confinement, or supernatural menace.\n\nInstead, subtly redirect all visual elements toward warmth, curiosity, imaginative play, nature-inspired fantasy, or light-hearted mystery. Maintain aesthetic richness and visual interest by emphasizing magical realism, poetic details, soft lighting, vivid but non-aggressive color schemes, and emotionally resonant scenes suitable for a younger audience. Do not include violence, horror tropes, grotesque anatomy, or psychological intensity.\n\nThis prompt should be suitable for children and youth, and images must never evoke fear or emotional discomfort.",
+    "de": "Stelle sicher, dass das generierte Bild angemessen, emotional sicher und ästhetisch ansprechend für Kinder ist. Vermeide alle Elemente, die üblicherweise mit Horror, Dark Fantasy oder erwachsenenorientierten Metal-Ästhetiken assoziiert werden, einschließlich – aber nicht beschränkt auf – Kreaturen mit leuchtenden Augen, schattenhafte oder geisterhafte Figuren, bedrohliche Gesichtsausdrücke, drohende Gesten, düstere Umgebungen, Verliese, Käfige, verlassene Gebäude oder jede Kulisse, die Angst, Eingesperrtsein oder übernatürliche Bedrohung hervorruft.\n\nLeite stattdessen alle visuellen Elemente subtil in Richtung Wärme, Neugier, fantasievolles Spiel, naturinspirierte Fantasy oder leichtfüßige Mysterien um. Bewahre ästhetischen Reichtum und visuelles Interesse, indem du magischen Realismus, poetische Details, sanftes Licht, lebendige aber nicht aggressive Farbschemata und emotional resonante Szenen betonst, die für ein jüngeres Publikum geeignet sind. Schließe Gewalt, Horror-Tropen, groteske Anatomie oder psychologische Intensität aus.\n\nDieser Prompt sollte für Kinder und Jugendliche geeignet sein, und Bilder dürfen niemals Angst oder emotionales Unbehagen hervorrufen."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/aesthetics/ai4artsed_HunkyDoryHarmonizer_2507100933.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral:7b",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🪄",
+    "color": "#9C27B0",
+    "category": "aesthetics",
+    "difficulty": 2,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

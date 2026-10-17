@@ -1,0 +1,258 @@
+{
+  "name": "output_video_wan22_i2v",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "video",
+  "description": "WAN 2.2 Image-to-Video 14B - Two-stage sampling with LoRA adapters",
+
+  "legacy_config": {
+    "prompt_injection": {
+      "target_title": "CLIP Text Encode (Positive)",
+      "fallback_node_id": "positive_conditioning",
+      "fallback_field": "text"
+    }
+  },
+
+  "workflow": {
+    "clip_loader": {
+      "inputs": {
+        "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "type": "wan",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": { "title": "Load CLIP" }
+    },
+    "vae_loader": {
+      "inputs": {
+        "vae_name": "wan_2.1_vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": { "title": "Load VAE" }
+    },
+    "load_image": {
+      "inputs": {
+        "image": "trashy-icon.png"
+      },
+      "class_type": "LoadImage",
+      "_meta": { "title": "Load Image" }
+    },
+    "unet_high_noise": {
+      "inputs": {
+        "unet_name": "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": { "title": "Load High Noise UNet" }
+    },
+    "unet_low_noise": {
+      "inputs": {
+        "unet_name": "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": { "title": "Load Low Noise UNet" }
+    },
+    "lora_high_noise": {
+      "inputs": {
+        "lora_name": "wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors",
+        "strength_model": 1.0,
+        "model": ["unet_high_noise", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": { "title": "Apply High Noise LoRA" }
+    },
+    "lora_low_noise": {
+      "inputs": {
+        "lora_name": "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+        "strength_model": 1.0,
+        "model": ["unet_low_noise", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": { "title": "Apply Low Noise LoRA" }
+    },
+    "model_sampling_high": {
+      "inputs": {
+        "shift": 5.0,
+        "model": ["lora_high_noise", 0]
+      },
+      "class_type": "ModelSamplingSD3",
+      "_meta": { "title": "Model Sampling (High Noise)" }
+    },
+    "model_sampling_low": {
+      "inputs": {
+        "shift": 5.0,
+        "model": ["lora_low_noise", 0]
+      },
+      "class_type": "ModelSamplingSD3",
+      "_meta": { "title": "Model Sampling (Low Noise)" }
+    },
+    "positive_prompt": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveStringMultiline",
+      "_meta": { "title": "AI4ArtsEd Input Prompt" }
+    },
+    "positive_conditioning": {
+      "inputs": {
+        "text": "",
+        "clip": ["clip_loader", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Positive)" }
+    },
+    "negative_conditioning": {
+      "inputs": {
+        "text": "overly saturated colors,overexposed, static, blurry and unclear details, subtitles, style, work, painting, image, still, overall grayish, worst quality, low quality, JPEG compression artifacts, ugly, mutilated, extra fingers, badly drawn hands, badly drawn faces, deformed, disfigured, limbs with deformed shapes, fused fingers, motionless frame, cluttered background, three legs, many people in the background, walking backwards",
+        "clip": ["clip_loader", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": { "title": "CLIP Text Encode (Negative)" }
+    },
+    "wan_image_to_video": {
+      "inputs": {
+        "width": 640,
+        "height": 640,
+        "length": 81,
+        "batch_size": 1,
+        "positive": ["positive_conditioning", 0],
+        "negative": ["negative_conditioning", 0],
+        "vae": ["vae_loader", 0],
+        "start_image": ["load_image", 0]
+      },
+      "class_type": "WanImageToVideo",
+      "_meta": { "title": "WanImageToVideo" }
+    },
+    "ksampler_high_noise": {
+      "inputs": {
+        "add_noise": "enable",
+        "noise_seed": 0,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "start_at_step": 0,
+        "end_at_step": 2,
+        "return_with_leftover_noise": "enable",
+        "model": ["model_sampling_high", 0],
+        "positive": ["wan_image_to_video", 0],
+        "negative": ["wan_image_to_video", 1],
+        "latent_image": ["wan_image_to_video", 2]
+      },
+      "class_type": "KSamplerAdvanced",
+      "_meta": { "title": "KSampler High Noise (Steps 0-2)" }
+    },
+    "ksampler_low_noise": {
+      "inputs": {
+        "add_noise": "disable",
+        "noise_seed": 0,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "start_at_step": 2,
+        "end_at_step": 4,
+        "return_with_leftover_noise": "disable",
+        "model": ["model_sampling_low", 0],
+        "positive": ["wan_image_to_video", 0],
+        "negative": ["wan_image_to_video", 1],
+        "latent_image": ["ksampler_high_noise", 0]
+      },
+      "class_type": "KSamplerAdvanced",
+      "_meta": { "title": "KSampler Low Noise (Steps 2-4)" }
+    },
+    "vae_decode": {
+      "inputs": {
+        "samples": ["ksampler_low_noise", 0],
+        "vae": ["vae_loader", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": { "title": "VAE Decode" }
+    },
+    "create_video": {
+      "inputs": {
+        "fps": 16,
+        "images": ["vae_decode", 0]
+      },
+      "class_type": "CreateVideo",
+      "_meta": { "title": "Create Video" }
+    },
+    "save_video": {
+      "inputs": {
+        "filename_prefix": "video/ComfyUI",
+        "format": "auto",
+        "codec": "auto",
+        "video": ["create_video", 0]
+      },
+      "class_type": "SaveVideo",
+      "_meta": { "title": "Save Video" }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "positive_conditioning",
+      "field": "inputs.text",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Video animation prompt"
+    },
+    "input_image": {
+      "node_id": "load_image",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE_PATH}}",
+      "description": "Input image to animate"
+    },
+    "width": {
+      "node_id": "wan_image_to_video",
+      "field": "inputs.width",
+      "default": 640
+    },
+    "height": {
+      "node_id": "wan_image_to_video",
+      "field": "inputs.height",
+      "default": 640
+    },
+    "frames": {
+      "node_id": "wan_image_to_video",
+      "field": "inputs.length",
+      "default": 81
+    },
+    "fps": {
+      "node_id": "create_video",
+      "field": "inputs.fps",
+      "default": 16
+    },
+    "seed": [
+      {
+        "node_id": "ksampler_high_noise",
+        "field": "inputs.noise_seed",
+        "default": 0,
+        "description": "Seed for reproducibility. Both stages get the same one."
+      },
+      {
+        "node_id": "ksampler_low_noise",
+        "field": "inputs.noise_seed",
+        "default": 0,
+        "description": "The low-noise sampler runs with add_noise disabled, so it starts from the first stage's latent instead of fresh noise and this value stays inert today. It is written anyway, so the second stage carries the same seed the moment add_noise is enabled."
+      }
+    ]
+  },
+
+  "output_mapping": {
+    "node_id": "save_video",
+    "output_type": "video",
+    "format": "mp4",
+    "field": "filename_prefix"
+  },
+
+  "meta": {
+    "optimization_instruction": "The image is already there and the model is looking at it. Output ONLY what MOVES in it, for Wan 2.2 image-to-video.\nDescribe no scene, name no subject that is already visible, introduce no new object, place, person or style. What the picture shows stays as it is.\nName: the motion (what moves, how, how fast), the camera (holds still, slow pan, gentle push in, tilt, orbit), and light or weather where those change.\nPresent tense, 1-2 sentences, at most 40 words. One continuous motion carries further than a sequence of actions. NO headers, NO labels, NO formatting - output only the raw instruction.\nExamples: 'Steam rises slowly, the surface of the liquid trembles. Camera pushes in gently.' / 'Leaves drift across the frame in a light wind. Camera holds still.' / 'The figure turns their head toward the window, the light shifts across their face. Slow orbit to the right.'\nLeave out technical parameters (fps, resolution, codec) and the words video, clip, footage.\nFor multilingual input, output in the SAME LANGUAGE as input.",
+    "estimated_duration_seconds": "30-45",
+    "quality_rating": 4,
+    "requires_gpu": true,
+    "gpu_vram_mb": 24000,
+    "notes": "Two-stage sampling: high noise (steps 0-2) → low noise (steps 2-4). Total 4 steps with LoRA adapters. English negative prompt."
+  }
+}

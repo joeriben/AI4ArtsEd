@@ -1,0 +1,113 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 2 Dev",
+    "de": "Flux 2 Dev",
+    "tr": "Flux 2 Dev",
+    "ko": "Flux 2 Dev",
+    "uk": "Flux 2 Dev",
+    "fr": "Flux 2 Dev",
+    "es": "Flux 2 Dev",
+    "he": "Flux 2 Dev",
+    "ar": "Flux 2 Dev",
+    "bg": "Flux 2 Dev"
+  },
+  "description": {
+    "en": "High-quality image generation using Flux 2 Dev with Mistral text encoder via ComfyUI.",
+    "de": "Hochwertige Bildgenerierung mit Flux 2 Dev und Mistral Text-Encoder via ComfyUI.",
+    "tr": "ComfyUI üzerinden Mistral metin kodlayıcılı Flux 2 Dev ile yüksek kaliteli görüntü üretimi.",
+    "ko": "ComfyUI를 통해 Mistral 텍스트 인코더를 사용하는 Flux 2 Dev로 고품질 이미지 생성.",
+    "uk": "Високоякісна генерація зображень за допомогою Flux 2 Dev з текстовим кодувальником Mistral через ComfyUI.",
+    "fr": "Génération d'images de haute qualité avec Flux 2 Dev et l'encodeur de texte Mistral via ComfyUI.",
+    "es": "Generación de imágenes de alta calidad con Flux 2 Dev y el codificador de texto Mistral a través de ComfyUI.",
+    "he": "יצירת תמונות איכותית באמצעות Flux 2 Dev עם מקודד הטקסט Mistral דרך ComfyUI.",
+    "ar": "توليد صور عالية الجودة باستخدام Flux 2 Dev مع مُرمِّز النص Mistral عبر ComfyUI.",
+    "bg": "Висококачествено генериране на изображения с Flux 2 Dev и текстов енкодер Mistral през ComfyUI."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "flux2_dev_fp8mixed.safetensors",
+    "lora_base": [
+      "flux2"
+    ],
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 55000,
+    "estimated_duration_seconds": "90-120",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev via ComfyUI (FP8 mixed). 32B DiT + 24B Mistral encoder = ~56B total. Needs ~54GB VRAM for FP8 weights alone.",
+    "version": "1.0",
+    "display_name": "FLUX.2 [dev]",
+    "icon": "⚡",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B text encoder)",
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
+    "quantization": "FP8 mixed precision",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering"
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF6B35",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 20
+  },
+  "tags": {
+    "en": [
+      "image",
+      "flux",
+      "flux2",
+      "comfyui",
+      "mistral"
+    ],
+    "de": [
+      "bild",
+      "flux",
+      "flux2",
+      "comfyui",
+      "mistral"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

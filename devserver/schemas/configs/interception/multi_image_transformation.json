@@ -1,0 +1,58 @@
+{
+  "pipeline": "multi_image_transformation",
+  "instruction_type": "multi_image_transformation",
+  "name": {
+    "en": "Multi-Image Trans­formation",
+    "de": "Mehrfach-Bild-Trans­formation",
+    "tr": "Çoklu Görüntü Dönüşümü",
+    "ko": "다중 이미지 변환",
+    "uk": "Злиття зображень",
+    "fr": "Transformation multi-images",
+    "es": "Transformación multi-imagen",
+    "he": "טרנספורמציה של מספר תמונות",
+    "ar": "تحويل صور متعددة",
+    "bg": "Мулти-изображения трансформация"
+  },
+  "description": {
+    "en": "Fuse multiple images with AI guidance",
+    "de": "Fusioniere mehrere Bilder mit KI-Führung",
+    "uk": "Злиття кількох зображень",
+    "fr": "Fusionne plusieurs images avec guidage IA",
+    "es": "Fusiona múltiples imágenes con guía de IA",
+    "he": "מיזוג מספר תמונות עם הנחיית AI",
+    "ar": "دمج صور متعددة بتوجيه الذكاء الاصطناعي",
+    "bg": "Сливане на множество изображения с ИИ насочване",
+    "tr": "Yapay zeka rehberliğiyle birden fazla görüntüyü birleştir",
+    "ko": "AI 안내로 여러 이미지를 융합합니다"
+  },
+  "category": {
+    "de": "System",
+    "en": "System",
+    "he": "מערכת",
+    "ar": "النظام",
+    "bg": "Система",
+    "tr": "Sistem",
+    "ko": "시스템",
+    "uk": "Система",
+    "fr": "Système",
+    "es": "Sistema"
+  },
+  "properties": [],
+  "context": {},
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ],
+    "output_config": "qwen_2511_multi"
+  },
+  "meta": {
+    "stage": "interception",
+    "skip_stage2": true,
+    "hidden": true,
+    "wikipedia": true
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Stable Diffusion 1.5",
+    "de": "Stable Diffusion 1.5",
+    "tr": "Stable Diffusion 1.5",
+    "ko": "Stable Diffusion 1.5",
+    "uk": "Stable Diffusion 1.5",
+    "fr": "Stable Diffusion 1.5",
+    "es": "Stable Diffusion 1.5",
+    "he": "Stable Diffusion 1.5",
+    "ar": "Stable Diffusion 1.5",
+    "bg": "Stable Diffusion 1.5"
+  },
+  "description": {
+    "en": "The model that started the open-source AI image revolution (2022). 512px, single CLIP encoder.",
+    "de": "Das Modell, das die Open-Source-KI-Bildrevolution startete (2022). 512px, einzelner CLIP-Encoder.",
+    "tr": "Açık kaynak yapay zekâ görüntü devrimini başlatan model (2022). 512px, tek CLIP kodlayıcı.",
+    "ko": "오픈소스 AI 이미지 혁명을 시작한 모델(2022년). 512px, 단일 CLIP 인코더.",
+    "uk": "Модель, що започаткувала революцію відкритого коду в ШІ-зображеннях (2022). 512px, один CLIP-кодувальник.",
+    "fr": "Le modèle qui a lancé la révolution de l'IA open source pour l'image (2022). 512px, encodeur CLIP unique.",
+    "es": "El modelo que inició la revolución de la IA de imágenes de código abierto (2022). 512px, un solo codificador CLIP.",
+    "he": "המודל שהתחיל את מהפכת תמונות הבינה המלאכותית בקוד פתוח (2022). 512px, מקודד CLIP יחיד.",
+    "ar": "النموذج الذي بدأ ثورة صور الذكاء الاصطناعي مفتوحة المصدر (2022). 512px، مُرمِّز CLIP واحد.",
+    "bg": "Моделът, който постави началото на революцията с изображения от изкуствен интелект с отворен код (2022 г.). 512px, единичен CLIP енкодер."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sd15",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sd15.safetensors",
+    "lora_base": [
+      "stable-diffusion-v1",
+      "sd_v1"
+    ],
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 4000,
+    "estimated_duration_seconds": "5-15",
+    "recommended_resolution": "512x512",
+    "supported_resolutions": [
+      "512x512",
+      "512x768",
+      "768x512"
+    ],
+    "version": "1.0",
+    "display_name": "SD 1.5",
+    "publisher": "Stability AI / RunwayML (London, UK)",
+    "architecture": "UNet + VAE (Latent Diffusion)",
+    "params": "~860M (UNet)",
+    "text_encoders": [
+      "CLIP ViT-L/14 (123M)"
+    ],
+    "quantization": "FP16",
+    "license": "CreativeML Open RAIL-M",
+    "fair_culture": "Trained on LAION-5B subset (~2B image-text pairs, web-scraped, no creator consent)",
+    "safety_by_design": "None built-in"
+  },
+  "display": {
+    "color": "#78909C",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 50
+  },
+  "tags": {
+    "en": [
+      "image",
+      "sd15",
+      "stable-diffusion",
+      "comfyui",
+      "historical"
+    ],
+    "de": [
+      "bild",
+      "sd15",
+      "stable-diffusion",
+      "comfyui",
+      "historisch"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

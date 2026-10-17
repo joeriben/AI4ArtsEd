@@ -1,0 +1,2103 @@
+<template>
+  <div class="app-container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="back-btn" @click="handleBack">
+          ← {{ $t('common.back') || 'Zurück' }}
+        </button>
+        <div class="config-info">
+          <div class="config-name">
+            {{ configName }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div v-if="isLoadingPipeline" class="loading-container">
+      <div class="loading-spinner">⚙️</div>
+      <div class="loading-text">{{ $t('common.loading') || 'Lädt...' }}</div>
+    </div>
+
+    <!-- Vector Fusion Interface (for text_semantic_split pipelines) -->
+    <Phase2VectorFusionInterface
+      v-else-if="pipelineType === 'text_semantic_split'"
+      :config-id="route.params.configId as string"
+      :execution-mode="pipelineStore.executionMode"
+      :safety-level="pipelineStore.safetyLevel"
+      @generated="handleVectorFusionGenerated"
+    />
+
+    <!-- Standard Canvas Interface (for all other pipelines) -->
+    <div v-else class="canvas-container">
+      <!-- Particle Background -->
+      <div class="particles" ref="particlesRef"></div>
+
+      <!-- SVG Connections (Rubber Bands) -->
+      <svg class="connections" ref="connectionsRef">
+        <path
+          class="connection-line connection-input-result"
+          ref="line1Ref"
+        />
+        <path
+          class="connection-line connection-meta-result"
+          ref="line2Ref"
+        />
+      </svg>
+
+      <!-- Card Container -->
+      <div class="cards-wrapper">
+        <div class="cards-container">
+        <!-- Card 1: User Input (Idea) - WAS -->
+        <div class="card card-input" ref="inputNodeRef">
+          <div class="card-header">
+            <div class="card-icon">💡</div>
+            <div class="card-title">
+              {{ $t('phase2.yourIdea') || 'Deine Idee: Um WAS soll es hier gehen?' }}
+            </div>
+          </div>
+          <textarea
+            class="card-input-area"
+            v-model="userInput"
+            @input="handleInputChange"
+            :placeholder="$t('phase2.writeYourText') || 'Schreibe deinen Text...'"
+            maxlength="500"
+            ref="inputTextareaRef"
+          ></textarea>
+          <div class="card-footer">
+            <span class="char-count">{{ userInput.length }} / 500</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Instructions/Rules (Clipboard) - WIE -->
+        <div class="card card-rules" ref="metaNodeRef">
+          <div class="card-header">
+            <div class="card-icon">📋</div>
+            <div class="card-title">
+              {{ $t('phase2.rules') || 'Deine Regeln: WIE soll Deine Idee umgesetzt werden?' }}
+            </div>
+          </div>
+          <div class="card-content scrollable">
+            <!-- Editable context for ALL configs -->
+            <textarea
+              v-if="pipelineStore.metaPrompt !== null"
+              class="rules-textarea"
+              v-model="editableMetaPrompt"
+              @input="handleMetaPromptEdit"
+              :placeholder="currentLanguage === 'en'
+                ? 'Edit the transformation rules here. You can modify how the AI transforms your input.\n\nExample:\n- Use the style of...\n- Transform it by...\n- Add elements of...'
+                : 'Bearbeite hier die Transformationsregeln. Du kannst ändern, wie die KI deine Eingabe umwandelt.\n\nBeispiel:\n- Nutze den Stil von...\n- Verwandle es durch...\n- Füge Elemente von... hinzu'"
+            ></textarea>
+            <div v-else class="loading-text">
+              {{ $t('common.loading') || 'Lädt...' }}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Central Stage 1+2 Processing Indicator -->
+      <div class="llm-indicator" v-if="isTransforming">
+        <div class="llm-icon rotating">⚙️</div>
+        <div class="llm-text">
+          <div v-if="transformationStage === 1">{{ $t('phase2.stage1') || 'Stage 1: Übersetzung + Sicherheit...' }}</div>
+          <div v-else-if="transformationStage === 2">{{ $t('phase2.stage2') || 'Stage 2: Transformation...' }}</div>
+          <div v-else>{{ $t('phase2.transforming') || 'Transformiere...' }}</div>
+        </div>
+      </div>
+
+      <!-- Result Panel: Transformed Prompt (Full Width) -->
+      <div
+        class="result-panel"
+        :class="{ 'is-empty': !transformedPrompt, 'is-filled': transformedPrompt }"
+        ref="resultNodeRef"
+      >
+        <div class="result-header">
+          <div class="result-icon">✨</div>
+          <div class="result-title">
+            {{ $t('phase2.transformedPrompt') || 'Transformierter Prompt' }}
+          </div>
+          <div v-if="transformedPrompt" class="char-count">{{ transformedPrompt.length }}</div>
+        </div>
+        <textarea
+          v-if="transformedPrompt"
+          class="result-textarea"
+          :value="transformedPrompt"
+          @input="handleTransformedPromptEdit"
+          @blur="handleTransformedPromptBlur"
+          ref="transformedTextareaRef"
+        ></textarea>
+        <div v-else class="result-empty-with-button">
+          <!-- Transform Button (centered in empty result panel) -->
+          <button
+            class="transform-btn-center"
+            :disabled="!canTransform || isTransforming || !selectedMediaConfig"
+            @mousedown="handleTransformClick"
+            @touchstart="handleTransformTouch"
+          >
+            <span v-if="!isTransforming">
+              ✨ {{ $t('phase2.startAI') || 'Los, KI, bearbeite meine Eingabe!' }}
+            </span>
+            <span v-else>
+              ⚙️ {{ $t('phase2.aiWorking') || 'KI arbeitet...' }}
+            </span>
+          </button>
+          <div v-if="!selectedMediaConfig && !isTransforming" class="transform-hint warning">
+            {{ $t('phase2.selectMediaBeforeTransform') || '⬆️ Zuerst Medium wählen!' }}
+          </div>
+          <div v-if="!isTransforming" class="transform-hint">
+            {{ $t('phase2.stage12Time') || '~5-10 Sekunden' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Example Prompts Panel (Floating Left) - Optional Helper -->
+      <div class="examples-panel" v-if="examplePrompts.length > 0">
+        <div class="panel-title">{{ $t('phase2.examples') || 'Beispiele:' }}</div>
+        <div
+          v-for="(example, index) in examplePrompts"
+          :key="index"
+          class="example-item"
+          @click="setExampleInput(example)"
+        >
+          {{ example }}
+        </div>
+      </div>
+
+      <!-- Re-transform Button (Floating Bottom Right, only after transformation) -->
+      <div class="execute-panel" v-if="transformedPrompt">
+        <button
+          class="secondary-btn retransform-btn"
+          :disabled="isTransforming"
+          @click="handleReTransform"
+        >
+          🔄 {{ $t('phase2.reTransform') || 'Noch mal anders' }}
+        </button>
+      </div>
+
+      <!-- Media Selection Panel (always visible) -->
+      <div class="media-selection-panel media-selection-persistent">
+        <div class="media-section-title">
+          <span v-if="!transformedPrompt">
+            {{ $t('phase2.selectMediaFirst') || 'Wähle zuerst dein Medium, dann Transformation starten:' }}
+          </span>
+          <span v-else>
+            {{ $t('phase2.selectMedia') || 'Wähle dein Medium:' }}
+          </span>
+        </div>
+
+        <!-- All Media in One Row -->
+        <div class="media-cards-row">
+          <!-- IMAGE: SD 3.5 -->
+          <div
+            class="media-card"
+            :class="{ active: selectedMediaConfig === 'sd35_large' }"
+            @mousedown.prevent="selectMediaConfig('sd35_large')"
+            @touchstart.prevent="selectMediaConfig('sd35_large')"
+            title="Stable Diffusion 3.5"
+          >
+            <div class="media-icon">🎨</div>
+            <div class="media-name">SD 3.5</div>
+            <div class="media-type">{{ $t('phase2.mediaImage') || 'Bild' }}</div>
+          </div>
+
+          <!-- IMAGE: GPT Image -->
+          <div
+            class="media-card"
+            :class="{ active: selectedMediaConfig === 'gpt_image_1' }"
+            @mousedown.prevent="selectMediaConfig('gpt_image_1')"
+            @touchstart.prevent="selectMediaConfig('gpt_image_1')"
+            title="GPT Image Generation"
+          >
+            <div class="media-icon">🤖</div>
+            <div class="media-name">GPT Image</div>
+            <div class="media-type">{{ $t('phase2.mediaImage') || 'Bild' }}</div>
+          </div>
+
+          <!-- AUDIO: Stable Audio -->
+          <div
+            class="media-card"
+            :class="{ active: selectedMediaConfig === 'stable_audio_1' }"
+            @mousedown.prevent="selectMediaConfig('stable_audio_1')"
+            @touchstart.prevent="selectMediaConfig('stable_audio_1')"
+            title="Stable Audio"
+          >
+            <div class="media-icon">🎵</div>
+            <div class="media-name">Stable Audio</div>
+            <div class="media-type">{{ $t('phase2.mediaAudio') || 'Sound' }}</div>
+          </div>
+
+          <!-- AUDIO: Ace Step -->
+          <div
+            class="media-card"
+            :class="{ active: selectedMediaConfig === 'acestep_instrumental' }"
+            @mousedown.prevent="selectMediaConfig('acestep_instrumental')"
+            @touchstart.prevent="selectMediaConfig('acestep_instrumental')"
+            title="Ace Step Music"
+          >
+            <div class="media-icon">🎶</div>
+            <div class="media-name">Ace Step</div>
+            <div class="media-type">{{ $t('phase2.mediaAudio') || 'Sound' }}</div>
+          </div>
+
+          <!-- VIDEO (Coming Soon) -->
+          <div class="media-card disabled" title="Coming Soon">
+            <div class="media-icon">📹</div>
+            <div class="media-name">Video</div>
+            <div class="media-type">{{ $t('phase2.comingSoon') || 'Bald' }}</div>
+          </div>
+
+          <!-- 3D (Coming Soon) -->
+          <div class="media-card disabled" title="Coming Soon">
+            <div class="media-icon">🧊</div>
+            <div class="media-name">3D</div>
+            <div class="media-type">{{ $t('phase2.comingSoon') || 'Bald' }}</div>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button
+          class="generate-media-btn"
+          :disabled="!selectedMediaConfig"
+          @mousedown="handleGenerateClick"
+          @touchstart="handleGenerateTouch"
+        >
+          ✨ {{ $t('phase2.generateMedia') || 'Medium generieren' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progressive Image Generation Overlay -->
+  <div v-if="isGenerating || previewImage" class="generation-overlay" @click.self="closeOverlay">
+    <div class="overlay-content">
+      <!-- Close Button -->
+      <button v-if="previewImage" class="close-btn" @click="closeOverlay">✕</button>
+
+      <!-- Preview Image (with progressive opacity) -->
+      <div v-if="previewImage" class="preview-container">
+        <img
+          :src="previewImage"
+          :key="imageRetryKey"
+          class="preview-image"
+          :style="{ opacity: Math.max(0.2, generationProgress / 100) }"
+          alt="Generated image"
+          @error="handleImageLoadError"
+          @load="handleImageLoadSuccess"
+        />
+        <!-- Retry indicator -->
+        <div v-if="imageRetryCount > 0" class="image-retry-indicator">
+          🔄 Retry {{ imageRetryCount }}/{{ MAX_IMAGE_RETRIES }}
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div v-else class="loading-indicator">
+        <SpriteProgressAnimation :progress="generationProgress" />
+        <p class="generating-text">{{ $t('phase3.generating') || 'Bild wird generiert...' }}</p>
+        <p class="loading-hint">{{ $t('phase3.generatingHint') || '~30 Sekunden' }}</p>
+      </div>
+
+      <!-- Pipeline Flow Visualization (shown during and after generation) -->
+      <PipelineFlowVisualization
+        v-if="pipelineVisualization"
+        :input-text="userInput"
+        :pipeline-visualization="pipelineVisualization"
+        :execution-steps="executionSteps"
+        :final-output="mediaOutput"
+        :is-executing="isGenerating"
+        :show-pipeline-type="false"
+      />
+    </div>
+  </div>
+
+  <!-- Error Toast Notification -->
+  <div v-if="error" class="error-toast" @click="error = null">
+    <div class="error-icon">⚠️</div>
+    <div class="error-content">
+      <div class="error-title">{{ $t('common.error') || 'Fehler' }}</div>
+      <div class="error-message">{{ error }}</div>
+    </div>
+    <button class="error-close" @click="error = null">✕</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { usePipelineExecutionStore } from '@/stores/pipelineExecution'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { executePipeline, getPipelineMetadata, type PipelineExecuteRequest } from '@/services/api'
+import axios from 'axios'
+import Phase2VectorFusionInterface from '@/components/Phase2VectorFusionInterface.vue'
+import SpriteProgressAnimation from '@/components/SpriteProgressAnimation.vue'
+import PipelineFlowVisualization from '@/components/PipelineFlowVisualization.vue'
+
+/**
+ * Phase2CreativeFlowView - Organic Force-Based Creative Input Interface
+ *
+ * Implements the "3 Forces" pedagogical concept:
+ * 1. User Input (blue) - Your creative idea
+ * 2. Meta-Prompt (orange) - The transformation instruction
+ * 3. Result (purple) - The synthesis of both forces
+ *
+ * Features:
+ * - Canvas-based spatial layout with circular force nodes
+ * - Animated SVG connections showing flow between forces
+ * - Floating input panel with example prompts
+ * - Floating execute button
+ * - Particle background for ambient atmosphere
+ * - Real-time preview sync
+ *
+ * Pedagogical Goal: Make AI transformation visible as interconnected forces,
+ * not a black-box form submission.
+ */
+
+const route = useRoute()
+const router = useRouter()
+const { t, locale } = useI18n()
+
+// Stores
+const pipelineStore = usePipelineExecutionStore()
+const userPreferences = useUserPreferencesStore()
+
+// Refs
+const particlesRef = ref<HTMLDivElement | null>(null)
+const connectionsRef = ref<SVGElement | null>(null)
+const line1Ref = ref<SVGPathElement | null>(null)
+const line2Ref = ref<SVGPathElement | null>(null)
+const inputNodeRef = ref<HTMLDivElement | null>(null)
+const metaNodeRef = ref<HTMLDivElement | null>(null)
+const resultNodeRef = ref<HTMLDivElement | null>(null)
+const inputTextareaRef = ref<HTMLTextAreaElement | null>(null)
+const transformedTextareaRef = ref<HTMLTextAreaElement | null>(null)
+
+// State
+const pipelineType = ref<string | null>(null)
+const isLoadingPipeline = ref(true)
+const userInput = ref('')
+const isTransforming = ref(false)
+const transformationStage = ref<number>(0) // 0=idle, 1=stage1, 2=stage2
+const error = ref<string | null>(null)
+const selectedMediaConfig = ref<string>('') // Selected output config (e.g., 'sd35_large')
+const editableMetaPrompt = ref('') // Editable meta-prompt for user_defined config
+
+// Media generation overlay state
+const isGenerating = ref(false)
+const generationProgress = ref(0)
+const previewImage = ref<string | null>(null)
+const generationRunId = ref<string | null>(null)
+let pollInterval: number | null = null
+
+// Image retry state
+const imageRetryKey = ref(0) // Force img re-render on retry
+const imageRetryCount = ref(0)
+const MAX_IMAGE_RETRIES = 5
+
+// Pipeline visualization data
+const pipelineVisualization = ref<any>(null)
+const executionSteps = ref<any[]>([])
+const mediaOutput = ref<any>(null)
+
+// Seed management for smart regeneration
+const lastGenerationState = ref<{ text: string; configId: string } | null>(null)
+const lastUsedSeed = ref<number>(123456789) // Start seed
+const currentSeed = ref<number | null>(null) // Seed displayed in overlay
+
+// Get transformed prompt from store
+const transformedPrompt = computed(() => pipelineStore.transformedPrompt)
+
+// Current language for placeholder text
+const currentLanguage = computed(() => userPreferences.language)
+
+// Example prompts (could be loaded from config)
+const examplePrompts = ref<string[]>([
+  'Eine kleine Maus auf einem Fahrrad',
+  'Der alte Mann und das Meer',
+  'Ein Haus steht in einer Landschaft, umgeben von Landwirtschaftlichen Flächen, Natur und Tieren. Es sind einige Menschen zu sehen.',
+])
+
+// ============================================================================
+// COMPUTED
+// ============================================================================
+
+const configName = computed(() => {
+  if (!pipelineStore.selectedConfig) return ''
+  const lang = userPreferences.language
+  return pipelineStore.selectedConfig.name[lang] ||
+         pipelineStore.selectedConfig.name.en ||
+         pipelineStore.selectedConfig.id
+})
+
+const canTransform = computed(() => {
+  return userInput.value.trim().length > 0 && pipelineStore.selectedConfig
+})
+
+const canContinueToMedia = computed(() => {
+  return transformedPrompt.value.trim().length > 0
+})
+
+// ============================================================================
+// LIFECYCLE
+// ============================================================================
+
+onMounted(async () => {
+  const configId = route.params.configId as string
+
+  console.log('========================================')
+  console.log('[Phase2 LIFECYCLE] onMounted() called')
+  console.log('[Phase2 LIFECYCLE] configId:', configId)
+  console.log('[Phase2 LIFECYCLE] Current store.metaPrompt:', pipelineStore.metaPrompt?.substring(0, 50))
+  console.log('========================================')
+  console.log('[Phase2] Mounting with configId:', configId)
+
+  if (!configId) {
+    error.value = 'No config ID provided'
+    isLoadingPipeline.value = false
+    return
+  }
+
+  // Load pipeline metadata to determine UI type
+  try {
+    const metadata = await getPipelineMetadata(configId)
+    pipelineType.value = metadata.pipeline_type
+    console.log('[Phase2] Pipeline type:', pipelineType.value)
+  } catch (err) {
+    console.error('[Phase2] Failed to load pipeline metadata:', err)
+  }
+
+  // Load config and meta-prompt
+  console.log('[Phase2] Loading config...')
+  await pipelineStore.setConfig(configId)
+
+  if (pipelineStore.error) {
+    console.error('[Phase2] Config loading error:', pipelineStore.error)
+    error.value = pipelineStore.error
+    return
+  }
+
+  console.log('[Phase2] Config loaded:', pipelineStore.selectedConfig?.id)
+  console.log('[Phase2] Loading meta-prompt for language:', userPreferences.language)
+
+  await pipelineStore.loadMetaPromptForLanguage(userPreferences.language)
+
+  if (pipelineStore.error) {
+    console.error('[Phase2] Meta-prompt loading error:', pipelineStore.error)
+  }
+
+  console.log('[Phase2] Meta-prompt loaded:', pipelineStore.metaPrompt?.substring(0, 50))
+
+  // Initialize editable meta-prompt for ALL configs
+  editableMetaPrompt.value = pipelineStore.metaPrompt || ''
+
+  // Initialize user input from store if exists
+  if (pipelineStore.userInput) {
+    userInput.value = pipelineStore.userInput
+  }
+
+  // Set default media config from config's media_preferences
+  if (pipelineStore.selectedConfig?.media_preferences?.default_output) {
+    const defaultOutput = pipelineStore.selectedConfig.media_preferences.default_output
+    console.log('[Phase2] Default output from config:', defaultOutput)
+
+    // Map media type to output config
+    // TODO: This should be fetched from output_config_defaults.json or backend
+    const outputConfigMap: Record<string, string> = {
+      image: 'sd35_large',
+      audio: 'stable_audio_1',
+      music: 'acestep_instrumental', // Fixed: matches backend config name
+      video: 'video_default', // Coming soon
+      '3d': '3d_default' // Coming soon
+    }
+
+    selectedMediaConfig.value = outputConfigMap[defaultOutput] || 'sd35_large'
+    console.log('[Phase2] Selected media config:', selectedMediaConfig.value)
+  } else {
+    // Fallback: default to SD 3.5
+    selectedMediaConfig.value = 'sd35_large'
+  }
+
+  // Initialize particles (only for standard UI)
+  if (pipelineType.value !== 'text_semantic_split') {
+    initParticles()
+
+    // Update connections after DOM is ready
+    await nextTick()
+    updateConnections()
+
+    // Update connections on window resize
+    window.addEventListener('resize', updateConnections)
+  }
+
+  isLoadingPipeline.value = false
+})
+
+// ============================================================================
+// METHODS
+// ============================================================================
+
+function initParticles() {
+  if (!particlesRef.value) return
+
+  // Generate 30 floating particles
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div')
+    particle.className = 'particle'
+    particle.style.left = Math.random() * 100 + '%'
+    particle.style.animationDelay = Math.random() * 20 + 's'
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's'
+    particlesRef.value.appendChild(particle)
+  }
+}
+
+function updateConnections() {
+  if (!inputNodeRef.value || !metaNodeRef.value || !resultNodeRef.value) return
+  if (!line1Ref.value || !line2Ref.value) return
+
+  const inputRect = inputNodeRef.value.getBoundingClientRect()
+  const metaRect = metaNodeRef.value.getBoundingClientRect()
+  const resultRect = resultNodeRef.value.getBoundingClientRect()
+
+  // Both lines converge to center top of result panel
+  const xRCenter = resultRect.left + resultRect.width / 2
+  const yRTop = resultRect.top
+
+  // Connection 1: Input (bottom center) → Result panel (center top)
+  const x1 = inputRect.left + inputRect.width / 2
+  const y1 = inputRect.bottom
+  const cx1 = (x1 + xRCenter) / 2
+  const cy1 = (y1 + yRTop) / 2
+  line1Ref.value.setAttribute('d', `M ${x1} ${y1} Q ${cx1} ${cy1} ${xRCenter} ${yRTop}`)
+
+  // Connection 2: Meta (bottom center) → Result panel (center top)
+  const x2 = metaRect.left + metaRect.width / 2
+  const y2 = metaRect.bottom
+  const cx2 = (x2 + xRCenter) / 2
+  const cy2 = (y2 + yRTop) / 2
+  line2Ref.value.setAttribute('d', `M ${x2} ${y2} Q ${cx2} ${cy2} ${xRCenter} ${yRTop}`)
+}
+
+/**
+ * Handle transform button click (mouse) - Phase 1 pattern
+ */
+function handleTransformClick(event: MouseEvent) {
+  event.preventDefault()
+  handleTransform()
+}
+
+/**
+ * Handle transform button tap (touch) - Phase 1 pattern
+ */
+function handleTransformTouch(event: TouchEvent) {
+  event.preventDefault()  // Cancel ghost click
+  handleTransform()
+}
+
+/**
+ * Stage 1+2: Transform user input via backend
+ * - Stage 1: Translation + Safety check
+ * - Stage 2: Prompt interception transformation
+ */
+async function handleTransform() {
+  if (!canTransform.value || !pipelineStore.selectedConfig) return
+
+  isTransforming.value = true
+  transformationStage.value = 1
+  error.value = null
+
+  try {
+    // Update store
+    pipelineStore.updateUserInput(userInput.value)
+
+    console.log('[Phase2] Starting transformation (Stage 1+2)...')
+    console.log('[Phase2] Config:', pipelineStore.selectedConfig.id)
+    console.log('[Phase2] Input:', userInput.value)
+
+    // Call backend API - Stage 1
+    transformationStage.value = 1
+
+    // Build request for new /stage2 endpoint
+    const transformRequest: any = {
+      schema: pipelineStore.selectedConfig.id,
+      input_text: userInput.value,
+      user_language: userPreferences.language,
+      execution_mode: pipelineStore.executionMode,
+      safety_level: pipelineStore.safetyLevel,
+      output_config: selectedMediaConfig.value // Media choice for Stage 2 optimization
+    }
+
+    // Pass edited context if user modified it (RAM-Proxy system)
+    if (pipelineStore.metaPromptModified) {
+      transformRequest.context_prompt = pipelineStore.metaPrompt
+      transformRequest.context_language = userPreferences.language
+      console.log('[Phase2] Passing edited context to backend (RAM-Proxy)')
+    }
+
+    // Use NEW /stage2 endpoint (replaces deprecated /transform)
+    const response = await axios.post('http://localhost:17802/api/schema/pipeline/stage2', transformRequest)
+    const data = response.data
+
+    // Stage 2 animation (backend already completed both stages)
+    transformationStage.value = 2
+    await new Promise(resolve => setTimeout(resolve, 500)) // Brief delay for UX
+
+    if (!data.success) {
+      throw new Error(data.error || 'Transformation failed')
+    }
+
+    console.log('[Phase2] ✅ Transformation complete!')
+    console.log('[Phase2] Stage 2 result:', data.stage2_result)
+    console.log('[Phase2] Model used:', data.model_used, '|', data.backend_used)
+    console.log('[Phase2] Total time:', data.execution_time_ms, 'ms')
+
+    // Store in Pinia for Phase 3 handoff
+    pipelineStore.updateTransformedPrompt(data.stage2_result)
+
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Transformation failed'
+    console.error('[Phase2] Transformation error:', err)
+  } finally {
+    isTransforming.value = false
+    transformationStage.value = 0
+  }
+}
+
+/**
+ * Re-transform: Clear transformed prompt and allow re-execution
+ */
+function handleReTransform() {
+  pipelineStore.clearTransformedPrompt()
+  console.log('[Phase2] Cleared transformed prompt for re-transformation')
+}
+
+/**
+ * Handle generate button click (mouse) - Phase 1 pattern
+ */
+function handleGenerateClick(event: MouseEvent) {
+  event.preventDefault()
+  if (selectedMediaConfig.value) {
+    handleMediaGeneration(selectedMediaConfig.value)
+  }
+}
+
+/**
+ * Handle generate button tap (touch) - Phase 1 pattern
+ */
+function handleGenerateTouch(event: TouchEvent) {
+  event.preventDefault()  // Cancel ghost click
+  if (selectedMediaConfig.value) {
+    handleMediaGeneration(selectedMediaConfig.value)
+  }
+}
+
+/**
+ * Select media output config
+ */
+function selectMediaConfig(outputConfig: string) {
+  selectedMediaConfig.value = outputConfig
+  console.log('[Phase2] Selected media config:', outputConfig)
+}
+
+/**
+ * Start media generation with selected output config
+ * @param outputConfig - Output config name (sd35_large, gpt_image_1, stable_audio_1, acestep_instrumental)
+ */
+async function handleMediaGeneration(outputConfig: string) {
+  console.log('[Phase2] handleMediaGeneration called:', {
+    outputConfig,
+    hasTransformedPrompt: !!transformedPrompt.value,
+    hasSelectedConfig: !!pipelineStore.selectedConfig,
+    transformedPromptLength: transformedPrompt.value?.length
+  })
+
+  if (!transformedPrompt.value || !outputConfig || !pipelineStore.selectedConfig) {
+    console.warn('[Phase2] ❌ Generation blocked - missing requirements:', {
+      transformedPrompt: !!transformedPrompt.value,
+      outputConfig: !!outputConfig,
+      selectedConfig: !!pipelineStore.selectedConfig
+    })
+    return
+  }
+
+  console.log('[Phase2] ✅ Starting media generation:', {
+    outputConfig,
+    transformedPrompt: transformedPrompt.value.substring(0, 100) + '...'
+  })
+
+  // Reset state
+  isGenerating.value = true
+  generationProgress.value = 0
+  previewImage.value = null
+  error.value = null
+  imageRetryCount.value = 0
+  imageRetryKey.value = 0
+
+  // Smart seed management: auto-detect if user wants variation or comparison
+  const currentState = {
+    text: transformedPrompt.value,
+    configId: pipelineStore.selectedConfig.id
+  }
+
+  let seedToUse: number
+  let stage4Only = false
+
+  if (lastGenerationState.value &&
+      lastGenerationState.value.text === currentState.text &&
+      lastGenerationState.value.configId === currentState.configId) {
+    // State identical → generate new seed (new variation) + SKIP Stage 1-3
+    seedToUse = Math.floor(Math.random() * (2**31 - 1))
+    stage4Only = true
+    console.log('[Phase2] Same state → new seed for variation + stage4_only:', seedToUse)
+  } else {
+    // State changed → use last seed (for comparison) + RUN Stage 1-3
+    seedToUse = lastUsedSeed.value
+    stage4Only = false
+    console.log('[Phase2] State changed → reusing seed for comparison + run full pipeline:', seedToUse)
+  }
+
+  currentSeed.value = seedToUse
+
+  // Start progress estimation during API wait (0-90% over ~30 seconds)
+  const estimatedDuration = 30000 // 30 seconds typical generation time
+  const progressUpdateInterval = 300 // Update every 300ms
+  const progressPerUpdate = (90 / estimatedDuration) * progressUpdateInterval // Reach 90% in estimated time
+
+  const progressInterval = setInterval(() => {
+    if (generationProgress.value < 90) {
+      generationProgress.value = Math.min(90, generationProgress.value + progressPerUpdate)
+    }
+  }, progressUpdateInterval)
+
+  try {
+    // Call pipeline execution API (this will block until generation is complete)
+    const response = await executePipeline({
+      schema: pipelineStore.selectedConfig.id,
+      input_text: transformedPrompt.value,  // Always the transformed text
+      user_input: userInput.value,
+      user_language: userPreferences.language,
+      execution_mode: pipelineStore.executionMode,
+      safety_level: pipelineStore.safetyLevel,
+      output_config: outputConfig,
+      stage4_only: stage4Only,  // Simple flag: skip Stage 1-3 or not
+      seed: seedToUse  // Smart seed: new for variations, same for comparisons
+    })
+
+    // Stop estimation progress
+    clearInterval(progressInterval)
+
+    // Backend returns status: 'success' (string), not success: true (boolean)
+    if (response.status !== 'success') {
+      throw new Error(response.error || 'Pipeline execution failed')
+    }
+
+    // Capture pipeline visualization data
+    if (response.pipeline_visualization) {
+      pipelineVisualization.value = response.pipeline_visualization
+    }
+    if (response.execution_steps) {
+      executionSteps.value = response.execution_steps
+    }
+    if (response.media_output) {
+      mediaOutput.value = response.media_output
+    }
+
+    // Get run_id
+    const runId = response.media_output?.run_id
+    if (!runId) {
+      throw new Error('No run_id returned from API')
+    }
+
+    generationRunId.value = runId
+    console.log('[Phase2] Generation complete, run_id:', runId)
+
+    // Complete progress to 100%
+    generationProgress.value = 100
+
+    // Display image using Backend API with progressive opacity (via Vite proxy)
+    previewImage.value = `/api/media/image/${runId}`
+
+    // Keep progress at 100% (opacity will use this value)
+
+    // Update state tracking for next generation
+    lastGenerationState.value = currentState
+    const returnedSeed = response.media_output?.metadata?.seed
+    if (returnedSeed) {
+      lastUsedSeed.value = returnedSeed
+      console.log('[Phase2] Seed from response:', returnedSeed)
+    } else {
+      lastUsedSeed.value = seedToUse
+      console.log('[Phase2] Using local seed:', seedToUse)
+    }
+
+    // Reset generating state after successful generation
+    // (overlay stays visible via previewImage presence)
+    isGenerating.value = false
+
+  } catch (err) {
+    clearInterval(progressInterval)
+    console.error('[Phase2] Media generation error:', err)
+    error.value = err instanceof Error ? err.message : 'Media generation failed'
+    isGenerating.value = false
+  }
+}
+
+function closeOverlay() {
+  isGenerating.value = false
+  previewImage.value = null
+  generationProgress.value = 0
+  imageRetryCount.value = 0
+  imageRetryKey.value = 0
+}
+
+/**
+ * Handle image load error with exponential backoff retry
+ */
+async function handleImageLoadError(event: Event) {
+  console.warn(`[Phase2] Image load failed, attempt ${imageRetryCount.value + 1}/${MAX_IMAGE_RETRIES}`)
+
+  if (imageRetryCount.value >= MAX_IMAGE_RETRIES) {
+    console.error('[Phase2] Image load failed after max retries')
+    error.value = 'Failed to load generated image. Please try again.'
+    isGenerating.value = false
+    previewImage.value = null
+    return
+  }
+
+  imageRetryCount.value++
+
+  // Exponential backoff: 500ms, 1s, 2s, 4s, 8s
+  const delay = Math.min(500 * Math.pow(2, imageRetryCount.value - 1), 8000)
+
+  console.log(`[Phase2] Retrying image load in ${delay}ms...`)
+  await new Promise(resolve => setTimeout(resolve, delay))
+
+  // Cache-bust URL to force reload
+  const timestamp = Date.now()
+  const runId = generationRunId.value
+  if (runId) {
+    previewImage.value = `/api/media/image/${runId}?t=${timestamp}`
+
+    // Force Vue to re-render img element
+    imageRetryKey.value++
+  }
+}
+
+/**
+ * Handle successful image load
+ */
+function handleImageLoadSuccess() {
+  console.log('[Phase2] ✅ Image loaded successfully')
+  if (imageRetryCount.value > 0) {
+    console.log(`[Phase2] Image loaded after ${imageRetryCount.value} retries`)
+  }
+}
+
+function handleInputChange() {
+  // Update store
+  pipelineStore.updateUserInput(userInput.value)
+
+  // Clear transformed prompt when input changes
+  if (transformedPrompt.value) {
+    pipelineStore.clearTransformedPrompt()
+  }
+}
+
+function handleMetaPromptEdit() {
+  // Update meta-prompt in store for user_defined config
+  pipelineStore.updateMetaPrompt(editableMetaPrompt.value)
+  console.log('[Phase2] Meta-prompt edited:', editableMetaPrompt.value.substring(0, 50) + '...')
+}
+
+function handleTransformedPromptEdit(event: Event) {
+  const target = event.target as HTMLTextAreaElement
+  pipelineStore.updateTransformedPrompt(target.value)
+}
+
+function handleTransformedPromptBlur() {
+  console.log('[Phase2] Transformed prompt editing complete')
+}
+
+function setExampleInput(example: string) {
+  userInput.value = example
+  pipelineStore.updateUserInput(example)
+
+  // Clear transformed prompt when changing input
+  pipelineStore.clearTransformedPrompt()
+}
+
+function handleBack() {
+  router.push({ name: 'property-selection' })
+}
+
+function handleVectorFusionGenerated(runId: string) {
+  console.log('[Phase2] Vector Fusion generated:', runId)
+  // TODO: Navigate to Phase 3 with run_id
+  // router.push({ name: 'phase3-entity-flow', params: { runId } })
+}
+
+// ============================================================================
+// WATCHERS
+// ============================================================================
+
+// DEBUG: Watch route.params.configId changes
+watch(
+  () => route.params.configId,
+  (newId, oldId) => {
+    console.log('========================================')
+    console.log('[Phase2 WATCH] route.params.configId changed!')
+    console.log('[Phase2 WATCH] Old configId:', oldId)
+    console.log('[Phase2 WATCH] New configId:', newId)
+    console.log('[Phase2 WATCH] Current editableMetaPrompt:', editableMetaPrompt.value?.substring(0, 50))
+    console.log('[Phase2 WATCH] Current store.metaPrompt:', pipelineStore.metaPrompt?.substring(0, 50))
+    console.log('========================================')
+  }
+)
+
+// Watch language changes and reload meta-prompt
+watch(
+  () => userPreferences.language,
+  async (newLang) => {
+    console.log('[Phase2 WATCH] Language changed to:', newLang)
+    await pipelineStore.loadMetaPromptForLanguage(newLang)
+    // Update editable meta-prompt for ALL configs
+    editableMetaPrompt.value = pipelineStore.metaPrompt || ''
+  }
+)
+
+// Watch metaPrompt changes and sync to editableMetaPrompt for ALL configs
+watch(
+  () => pipelineStore.metaPrompt,
+  (newMetaPrompt, oldMetaPrompt) => {
+    console.log('[Phase2 WATCH] pipelineStore.metaPrompt changed!')
+    console.log('[Phase2 WATCH] Old:', oldMetaPrompt?.substring(0, 50))
+    console.log('[Phase2 WATCH] New:', newMetaPrompt?.substring(0, 50))
+    console.log('[Phase2 WATCH] editableMetaPrompt before sync:', editableMetaPrompt.value?.substring(0, 50))
+
+    if (editableMetaPrompt.value !== newMetaPrompt) {
+      editableMetaPrompt.value = newMetaPrompt
+      console.log('[Phase2 WATCH] → editableMetaPrompt updated')
+    } else {
+      console.log('[Phase2 WATCH] → editableMetaPrompt NOT updated (values equal)')
+    }
+  }
+)
+</script>
+
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+
+/* App Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  overflow: hidden;
+}
+
+/* Top Bar */
+.top-bar {
+  background: rgba(42, 42, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #3a3a3a;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.top-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #4a90e2;
+  color: #4a90e2;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.config-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.config-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Canvas Container */
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Particle Background */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 20s infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* Cards Wrapper (contains cards) */
+.cards-wrapper {
+  position: relative;
+  margin: 40px auto 0;
+  max-width: 1200px;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+/* SVG Connections - Fill viewport for coordinate alignment */
+svg.connections {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.connection-line {
+  stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 2 6;  /* Dotted pattern */
+  animation: flow 3s linear infinite;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.connection-input-result {
+  stroke: rgba(74, 144, 226, 0.6);
+}
+
+.connection-meta-result {
+  stroke: rgba(243, 156, 18, 0.6);
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+
+/* Cards Container (Side by Side) */
+.cards-container {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 12;
+}
+
+/* Card Base Style */
+.card {
+  background: rgba(30, 30, 30, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 500px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-icon {
+  font-size: 32px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* Input Card (💡 Idea) - Blue */
+.card-input {
+  border-color: rgba(74, 144, 226, 0.5);
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(30, 30, 30, 0.95) 50%);
+}
+
+.card-input .card-title {
+  color: #4a90e2;
+}
+
+.card-input .card-header {
+  border-bottom-color: rgba(74, 144, 226, 0.3);
+}
+
+.card-input-area {
+  flex: 1;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  color: #e0e0e0;
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: none;
+  transition: all 0.2s ease;
+}
+
+.card-input-area:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(74, 144, 226, 0.7);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.card-input-area::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+}
+
+.card-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.char-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Rules Card (📋 Clipboard) - Orange */
+.card-rules {
+  border-color: rgba(243, 156, 18, 0.5);
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.05) 0%, rgba(30, 30, 30, 0.95) 50%);
+}
+
+.card-rules .card-title {
+  color: #f39c12;
+}
+
+.card-rules .card-header {
+  border-bottom-color: rgba(243, 156, 18, 0.3);
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content.scrollable {
+  overflow-y: auto;
+  max-height: 350px;
+}
+
+.rules-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #ccc;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(243, 156, 18, 0.2);
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+.rules-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(243, 156, 18, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.7;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.rules-textarea:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(243, 156, 18, 0.7);
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+}
+
+.rules-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+}
+
+.loading-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #888;
+  padding: 12px;
+}
+
+/* LLM Processing Indicator (Central) */
+.llm-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.llm-icon {
+  font-size: 64px;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+}
+
+.llm-icon.rotating {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.llm-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Result Panel (Full Width, Below Cards) - Purple */
+.result-panel {
+  margin: 80px auto 100px;
+  max-width: 1200px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+  transition: all 0.5s ease;
+}
+
+.result-panel.is-empty {
+  opacity: 0.5;
+}
+
+.result-panel.is-filled {
+  opacity: 1;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  background: rgba(155, 89, 182, 0.1);
+  border: 2px solid rgba(155, 89, 182, 0.3);
+  border-radius: 12px 12px 0 0;
+  backdrop-filter: blur(10px);
+}
+
+.result-panel.is-filled .result-header {
+  border-color: rgba(155, 89, 182, 0.5);
+  background: rgba(155, 89, 182, 0.15);
+}
+
+.result-panel.is-empty .result-header {
+  border-style: dashed;
+  border-radius: 12px;
+  margin-bottom: 0;
+}
+
+.result-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 8px rgba(155, 89, 182, 0.4));
+}
+
+.result-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9b59b6;
+  flex: 1;
+}
+
+.result-textarea {
+  width: 100%;
+  min-height: 200px;
+  max-height: 400px;
+  background: rgba(30, 30, 30, 0.9);
+  border: 2px solid rgba(155, 89, 182, 0.5);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
+  color: #e0e0e0;
+  font-size: 15px;
+  line-height: 1.7;
+  font-family: inherit;
+  resize: vertical;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.result-textarea:focus {
+  outline: none;
+  background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(155, 89, 182, 0.7);
+  box-shadow: 0 4px 16px rgba(155, 89, 182, 0.2);
+}
+
+.result-empty {
+  padding: 40px;
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+  color: #666;
+}
+
+/* Empty result panel with centered button */
+.result-empty-with-button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 60px 40px;
+  min-height: 250px;
+}
+
+/* Transform Button (centered in result panel) */
+.transform-btn-center {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 20px 50px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.5);
+  white-space: nowrap;
+}
+
+.transform-btn-center:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+}
+
+.transform-btn-center:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.transform-hint {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+}
+
+/* Examples Panel (Floating Left) - Optional Helper */
+.examples-panel {
+  position: absolute;
+  top: 50%;
+  left: 3%;
+  transform: translateY(-50%);
+  width: 200px;
+  background: rgba(42, 42, 42, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.panel-title {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.example-item {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #aaa;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.example-item:hover {
+  border-color: #4a90e2;
+  background: #2a3a4a;
+}
+
+/* Execute Panel (Floating Bottom Right) */
+.execute-panel {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  background: rgba(42, 42, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid #3a3a3a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.execute-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  white-space: nowrap;
+}
+
+.execute-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+}
+
+.execute-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.transform-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.continue-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #555;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 8px;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  border-color: #888;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.secondary-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.execute-info {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 12px;
+}
+
+/* Media Selection Panel */
+.media-selection-panel {
+  width: 90%;
+  max-width: 1400px;
+  margin: 60px auto;
+  padding: 40px;
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.media-section-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* All media cards in one horizontal row */
+.media-cards-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.media-card {
+  background: rgba(42, 42, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  min-width: 140px;
+  max-width: 180px;
+  flex: 0 1 auto;
+}
+
+.media-card:not(.disabled):hover {
+  transform: translateY(-4px);
+  border-color: rgba(102, 126, 234, 0.6);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+  background: rgba(52, 52, 52, 0.95);
+}
+
+/* Active selected card */
+.media-card.active {
+  border-color: rgba(102, 126, 234, 0.9);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6);
+  transform: scale(1.05);
+}
+
+.media-card.active .media-icon {
+  transform: scale(1.1);
+}
+
+.media-card.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.media-card.disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.media-icon {
+  font-size: 56px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  transition: transform 0.3s ease;
+}
+
+.media-name {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+}
+
+.media-type {
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.media-card.disabled .media-name,
+.media-card.disabled .media-type {
+  color: #555;
+}
+
+/* Generate Media Button */
+.generate-media-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 18px 60px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
+  display: block;
+  margin: 0 auto;
+}
+
+.generate-media-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(102, 126, 234, 0.6);
+}
+
+.generate-media-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 80px);
+  gap: 20px;
+}
+
+.loading-spinner {
+  font-size: 64px;
+  animation: rotate 2s linear infinite;
+}
+
+.loading-text {
+  font-size: 18px;
+  color: #888;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .cards-wrapper {
+    max-width: 1000px;
+  }
+
+  .cards-container {
+    gap: 20px;
+  }
+
+  .card {
+    max-width: 450px;
+  }
+
+  .result-panel {
+    max-width: 1000px;
+  }
+
+  .examples-panel {
+    width: 180px;
+    left: 2%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cards-wrapper {
+    max-width: 600px;
+    padding: 0 16px;
+  }
+
+  .cards-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card {
+    max-width: 100%;
+    min-height: 300px;
+  }
+
+  .result-panel {
+    max-width: 600px;
+    padding: 0 16px;
+  }
+
+  .canvas-container {
+    overflow-y: auto;
+    padding: 20px 0;
+  }
+
+  .examples-panel {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+
+  .execute-panel {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+
+  svg.connections {
+    display: none;
+  }
+
+  .particles {
+    display: none;
+  }
+}
+
+/* ============================================================================
+   PROGRESSIVE IMAGE GENERATION OVERLAY
+   ============================================================================ */
+
+.generation-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.overlay-content {
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Preview Container */
+.preview-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.5s ease;
+}
+
+/* Image Retry Indicator */
+.image-retry-indicator {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 193, 7, 0.95);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.generating-text {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  margin: 0;
+}
+
+.loading-hint {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+/* ============================================================================
+   ERROR TOAST NOTIFICATION
+   ============================================================================ */
+
+.error-toast {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  max-width: 500px;
+  background: rgba(220, 38, 38, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 100, 100, 0.5);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  z-index: 10000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.3s ease;
+  cursor: pointer;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.error-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.error-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.error-message {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.error-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .error-toast {
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    max-width: none;
+  }
+}
+</style>

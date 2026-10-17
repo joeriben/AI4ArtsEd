@@ -1,0 +1,25 @@
+{
+  "name": "latent_lab",
+  "pipeline_type": "passthrough",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "skip_stage2": true,
+  "description": "Latent Lab pipeline — passthrough for deconstructive vector/latent space exploration tools. Bypasses Stage 2 to preserve original prompt for direct model analysis.",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "skip",
+    "reusable": false,
+    "pre_translation": false,
+    "prompt_structure": {
+      "type": "passthrough",
+      "parts": [],
+      "description": "No execution - input passed directly to Stage 3/4 for model analysis"
+    },
+    "use_case": "Latent Lab: deconstructive tools (attention cartography, feature probing, concept algebra, encoder fusion, denoising archaeology). Stage 2 skipped to preserve prompt integrity for direct model introspection."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_image_to_text",
+  "name": "",
+  "preset": {
+    "id": "image_to_text",
+    "kind": "basic",
+    "order": 4,
+    "medium": "text",
+    "name": "canvas.presets.imageToText.name",
+    "description": "canvas.presets.imageToText.description"
+  },
+  "nodes": [
+    {
+      "id": "image",
+      "type": "image_input",
+      "x": 80,
+      "y": 200,
+      "config": {}
+    },
+    {
+      "id": "reading",
+      "type": "image_evaluation",
+      "x": 380,
+      "y": 200,
+      "config": {},
+      "imageEvaluationPreset": "bildungstheoretisch"
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 720,
+      "y": 200,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "image",
+      "targetId": "reading"
+    },
+    {
+      "sourceId": "reading",
+      "targetId": "collector"
+    }
+  ]
+}

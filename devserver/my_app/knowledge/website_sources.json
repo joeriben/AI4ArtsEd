@@ -1,0 +1,21 @@
+{
+  "_comment": "Curated external sites Resona may search and read LIVE. Installation configuration - the operator curates which sites exist; the tools never browse beyond them. Nothing is mirrored or stored (for kubi-online, CC BY-NC-ND 4.0, live access is the license-correct route - see docs/plans/knowledge/BIBLIOTHEK.md).",
+  "sources": [
+    {
+      "id": "kubi-online",
+      "label": "kubi-online - Wissensplattform Kulturelle Bildung (German)",
+      "base_url": "https://www.kubi-online.de",
+      "search_url": "https://www.kubi-online.de/suche?search_api_fulltext={query}",
+      "parser": "drupal_search_api",
+      "license_note": "CC BY-NC-ND 4.0 - read and cite with link; no mirroring, no derivatives"
+    },
+    {
+      "id": "explore-vc",
+      "label": "Exploring Visual Cultures (English)",
+      "base_url": "https://www.explore-vc.org",
+      "search_url": "https://www.explore-vc.org/en/search.feed?q={query}&type=rss",
+      "parser": "rss_feed",
+      "license_note": "read and cite with link; no mirroring"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_image_models",
+  "name": "",
+  "preset": {
+    "id": "image_models",
+    "kind": "explore",
+    "order": 4,
+    "medium": "image",
+    "name": "compare.tabs.model",
+    "description": "canvas.presets.imageModels.description"
+  },
+  "nodes": [
+    {
+      "id": "input",
+      "type": "input",
+      "x": 80,
+      "y": 380,
+      "config": {
+        "source": "text"
+      },
+      "promptPreset": "walk"
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "x": 80,
+      "y": 60,
+      "config": {},
+      "seedMode": "random"
+    },
+    {
+      "id": "translation",
+      "type": "translation",
+      "x": 420,
+      "y": 380,
+      "config": {}
+    },
+    {
+      "id": "generation_1",
+      "type": "generation",
+      "x": 760,
+      "y": 60,
+      "config": {},
+      "configId": "sd15"
+    },
+    {
+      "id": "generation_2",
+      "type": "generation",
+      "x": 760,
+      "y": 380,
+      "config": {},
+      "configId": "sdxl"
+    },
+    {
+      "id": "generation_3",
+      "type": "generation",
+      "x": 760,
+      "y": 700,
+      "config": {},
+      "configId": "sd35_large"
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 1100,
+      "y": 380,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "input",
+      "targetId": "translation"
+    },
+    {
+      "sourceId": "translation",
+      "targetId": "generation_1",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_1",
+      "label": "params"
+    },
+    {
+      "sourceId": "generation_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "translation",
+      "targetId": "generation_2",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_2",
+      "label": "params"
+    },
+    {
+      "sourceId": "generation_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "translation",
+      "targetId": "generation_3",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_3",
+      "label": "params"
+    },
+    {
+      "sourceId": "generation_3",
+      "targetId": "collector"
+    }
+  ]
+}

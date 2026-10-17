@@ -1,0 +1,35 @@
+{
+  "name": "multi_image_transformation",
+  "pipeline_type": "direct",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "description": "Multi-Image Transformation Pipeline: 1-3 Input Images + Context → Direct to Stage 3/4 (No Interception)",
+  "instruction_type": "multi_image_transformation",
+  "input_requirements": {
+    "images": 3,
+    "images_min": 1,
+    "context_text": 1
+  },
+  "chunks": [],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "multi_image_transformation",
+    "multi_image_mode": true,
+    "reusable": true,
+    "pre_translation": false,
+    "skip_stage2": true,
+    "prompt_structure": {
+      "type": "multi_image_context_direct",
+      "parts": ["images", "context"],
+      "description": "Multiple images (1-3) + context prompt (no interception, direct to optimization)"
+    },
+    "use_cases": [
+      "multi_person_fusion",
+      "style_transfer",
+      "object_compositing",
+      "reference_based_editing"
+    ],
+    "notes": "Multi-image fusion flow: Upload 1-3 images → Context prompt → Media selection (qwen_2511_multi) → Stage 3 optimization → Stage 4 generation. Uses TextEncodeQwenImageEditPlus for multi-image conditioning. Image 2 and 3 are optional. No Stage2 interception for direct experience."
+  }
+}

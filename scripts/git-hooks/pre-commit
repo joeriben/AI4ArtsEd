@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+#
+# Pre-commit gates. Each one judges ONLY the commit in front of it.
+#
+# Install (one-time, per clone):
+#   scripts/install-hooks.sh
+# which is simply:
+#   git config core.hooksPath scripts/git-hooks
+#
+# NOT `cp ... .git/hooks/pre-commit`: core.hooksPath REPLACES .git/hooks, so a copy put
+# there is dead the moment the setting is made -- and a copy is what drifted apart from
+# this file for four months.
+#
+# Until 2026-08-21 this versioned file and the hook actually installed in this
+# checkout had drifted apart: this one ran the ruff gate alone, the installed one ran
+# the model gate alone. A fresh clone therefore installed neither of the two gates that
+# were actually being relied on. Every gate now stands here, and this file is the source.
+#
+# Bypass (`git commit --no-verify`) is for the case where the gate itself is broken.
+# A rule that genuinely has to bend is a decision recorded in the commit message, not a flag.
+
+set -uo pipefail
+
+REPO="$(git rev-parse --show-toplevel)"
+PY="$REPO/venv/bin/python"
+[ -x "$PY" ] || PY="$(command -v python3 || true)"
+
+# --------------------------------------------------------------------------------
+# 1. Undefined names (F821/F822/F823) in staged Python.
+#
+# Two production breakages of exactly this class shipped before this gate existed:
+# `device_id` in legacy_workflow (4d39bee6) and `DEFAULT_INTERCEPTION_CONFIG` in
+# optimize_pipeline (5621080f). Both only crash on a path that runs under one safety
+# level, which is why review missed them and static analysis would not have.
+#
+# Missing ruff WARNS and steps aside rather than blocking: several sessions share this
+# checkout, and a gate that stops every commit over its own missing tool gets removed.
+# --------------------------------------------------------------------------------
+mapfile -t staged_py < <(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.py$' || true)
+
+if [ ${#staged_py[@]} -gt 0 ]; then
+    if command -v ruff >/dev/null 2>&1; then
+        if ! ruff check --select F821,F822,F823 --no-cache "${staged_py[@]}"; then
+            echo "" >&2
+            echo "COMMIT BLOCKED -- undefined name (see ruff above). These crash at runtime" >&2
+            echo "when the path is hit. Fix, re-stage, commit again." >&2
+            exit 1
+        fi
+    else
+        echo "pre-commit: ruff not found, undefined-name gate skipped (pip install ruff)" >&2
+    fi
+fi
+
+# Without an interpreter the two policy gates cannot run. Say so, do not block: the
+# larger harm is refusing every commit in the checkout over the gate itself.
+if [ -z "${PY}" ] || [ ! -x "${PY}" ]; then
+    echo "pre-commit: no python interpreter, policy gates skipped" >&2
+    exit 0
+fi
+
+# --------------------------------------------------------------------------------
+# 2. A model identifier is DATA, never a literal in code.
+#    Rule and reasoning: devserver/tests/test_no_model_literals.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_no_model_literals.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 3. An element structure exists ONCE (docs/ELEMENT_STRUCTURE_REGISTRY.md).
+#    Rule and reasoning: devserver/tests/test_element_structure_policy.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_element_structure_policy.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 4. Nobody infers a single bit outside the admission gate.
+#    Rule and reasoning: devserver/tests/test_gpu_admission_coverage.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_gpu_admission_coverage.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 5. A label is the noun of its key (docs/COPY_RULES.md).
+#    Rule and reasoning: devserver/tests/test_i18n_label_grammar.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_i18n_label_grammar.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 6. An address is the exception, and a documented one (docs/COPY_RULES.md).
+#    Rule and reasoning: devserver/tests/test_i18n_direct_address.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_i18n_direct_address.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 7. Filler says nothing (UCD-103; docs/COPY_RULES.md).
+#    Rule and reasoning: devserver/tests/test_i18n_filler_phrases.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_i18n_filler_phrases.py" --staged || exit 1
+
+# --------------------------------------------------------------------------------
+# 8. The Flow page mounts, and its specs pass.
+#
+# bb33dc01 put a `watch` above two declarations it read during setup. The setup
+# threw, and the Flow page stood empty for about an hour and a half. The type
+# check and the build passed; the two Flow specs failed 23 of 23 with exactly
+# that error, and nothing ran them.
+#
+# This gate runs every src/views/__tests__/x2x_flow.*.spec.ts against the STAGED
+# frontend, copied out of the index, not against the working tree: the unstaged
+# edits of other sessions in this shared checkout are theirs, and the commit in
+# front of the gate is judged alone. It runs when the commit touches
+# public/ai4artsed-frontend/src/. Without node_modules it warns and steps aside,
+# as the ruff gate does.
+# --------------------------------------------------------------------------------
+FE="$REPO/public/ai4artsed-frontend"
+if git diff --cached --name-only --diff-filter=ACMRD | grep '^public/ai4artsed-frontend/src/' >/dev/null; then
+    if [ -x "$FE/node_modules/.bin/vitest" ]; then
+        staged_fe="$(mktemp -d "${TMPDIR:-/tmp}/precommit-flow.XXXXXX")"
+        trap 'rm -rf "$staged_fe"' EXIT
+        (cd "$REPO" && git ls-files -z public/ai4artsed-frontend | git checkout-index -z --stdin --prefix="$staged_fe/")
+        ln -s "$FE/node_modules" "$staged_fe/public/ai4artsed-frontend/node_modules"
+        if ! (cd "$staged_fe/public/ai4artsed-frontend" \
+                && ./node_modules/.bin/vitest run --reporter=dot src/views/__tests__/x2x_flow.*.spec.ts); then
+            echo "" >&2
+            echo "COMMIT BLOCKED -- the Flow specs fail on the staged frontend (see vitest above)." >&2
+            echo "An unhandled error counts as a failure: it is how an empty page shows up here." >&2
+            exit 1
+        fi
+    else
+        echo "pre-commit: frontend node_modules missing, Flow spec gate skipped (npm ci in public/ai4artsed-frontend)" >&2
+    fi
+fi
+
+# --------------------------------------------------------------------------------
+# 9. Every config name the code sends or reads resolves (2026-10-01).
+#
+# 58280833 deleted schemas/configs/interception/heartmula.json on 2026-08-07. The
+# Flow's song path posted schema 'heartmula' (until 2026-10-06), and every press
+# of it answered 404 until 2026-10-01. The Canvas lens "De-Kitsch" was named 'clichefilter_v2' for
+# the file clichéfilter_v2.json and ran with an empty context. Neither name was
+# read by a test, and test_output_config_carry_list.py, which reads the output
+# configs' names, ran only when somebody ran the suite.
+#
+# The Canvas presets (schemas/canvas_presets, 2026-10-02) are data that names the
+# same things -- lenses, output configs, lineups, frames, example prompts -- and
+# test_canvas_presets.py reads them, with the preview pictures the ring shows.
+#
+# Runs the tests against the STAGED devserver and frontend, copied out of the
+# index as gate 8 does, when the commit touches devserver/ or
+# public/ai4artsed-frontend/src/. Without pytest it warns and steps aside.
+# --------------------------------------------------------------------------------
+if git diff --cached --name-only --diff-filter=ACMRD | grep -E '^(devserver/|public/ai4artsed-frontend/src/|public/ai4artsed-frontend/public/canvas-presets/)' >/dev/null; then
+    if "$PY" -c "import pytest" 2>/dev/null; then
+        staged_refs="$(mktemp -d "${TMPDIR:-/tmp}/precommit-refs.XXXXXX")"
+        (cd "$REPO" && git ls-files -z devserver public/ai4artsed-frontend/src public/ai4artsed-frontend/public/canvas-presets | git checkout-index -z --stdin --prefix="$staged_refs/")
+        (cd "$staged_refs/devserver" && "$PY" -m pytest -q -p no:cacheprovider \
+            tests/test_config_references_resolve.py tests/test_output_config_carry_list.py \
+            tests/test_canvas_presets.py)
+        refs_status=$?
+        rm -rf "$staged_refs"
+        if [ $refs_status -ne 0 ]; then
+            echo "" >&2
+            echo "COMMIT BLOCKED -- the staged code names a config, lens or chunk that is not there (see pytest above)." >&2
+            exit 1
+        fi
+    else
+        echo "pre-commit: pytest missing, config-reference gate skipped" >&2
+    fi
+fi
+
+# --------------------------------------------------------------------------------
+# 10. The public surface names no person, points to no development session and
+#     carries no path of one installation.
+#     Rule and reasoning: devserver/tests/test_public_surface_clean.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_public_surface_clean.py" --staged || exit 1
+
+exit 0

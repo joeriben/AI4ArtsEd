@@ -1,0 +1,126 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "VoxCPM2 Voice",
+    "de": "VoxCPM2 Stimme"
+  },
+  "description": {
+    "en": "Speaks a given text aloud. The text is spoken verbatim — it is not a prompt and is never rewritten. The voice is asked for in words, inside the sentence itself; left unasked, the model reads the delivery off the sentence.",
+    "de": "Spricht einen gegebenen Text. Der Text wird wörtlich gesprochen — er ist kein Prompt und wird nicht umgeschrieben. Die Stimme wird in Worten erbeten, im Satz selbst; wird nichts erbeten, liest das Modell den Vortrag aus dem Satz ab."
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound"
+  },
+  "context": "",
+  "parameters": {
+    "OUTPUT_CHUNK": "output_speech_voxcpm",
+    "voice_description": null,
+    "cfg_value": null,
+    "inference_timesteps": null
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "voxcpm",
+    "backend_type": "python",
+    "verbatim_input": true,
+    "skip_stage2": true,
+    "skip_stage3_translation": true,
+    "allowed_safety_levels": [
+      "adult",
+      "research"
+    ],
+    "supported_languages": [
+      "ar",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "he",
+      "ko",
+      "tr"
+    ],
+    "unvoiced_platform_languages": [
+      "bg",
+      "uk"
+    ],
+    "display_name": "VoxCPM2",
+    "icon": "🗣️",
+    "publisher": "OpenBMB (CN)",
+    "architecture": "Tokenizer-free diffusion autoregressive (LocEnc → TSLM → RALM → LocDiT), backbone MiniCPM-4",
+    "params": "2B",
+    "text_encoders": [
+      "no language tag — the model card asks for none. Tokenizer-free there means no discrete speech tokens, not that the text side has no tokenizer."
+    ],
+    "quantization": "BF16",
+    "license": "Apache-2.0",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "\"2M+ hours multilingual speech\" — no source named in the model card"
+      ],
+      "training_data_consent": "unknown",
+      "geographic_origin": "China",
+      "known_biases": [
+        {
+          "en": "The voice is described in words, so whatever the model has learned to associate with those words is what comes out. Asking for 'a young woman' produced 202.5 Hz and 'an older man' 119.7 Hz on the same sentence (measured 2026-08-12) — the description is answered with a stereotype, and that is the thing to listen to, not a defect to correct.",
+          "de": "Die Stimme wird in Worten beschrieben, also kommt heraus, was das Modell mit diesen Worten verbunden hat. „Eine junge Frau\" ergab 202,5 Hz, „ein älterer Mann\" 119,7 Hz am selben Satz (gemessen am 12.08.2026) — die Beschreibung wird mit einem Stereotyp beantwortet, und genau das ist zu hören, kein zu behebender Fehler."
+        },
+        {
+          "en": "30 languages from one model, trained overwhelmingly on Chinese and English. What a German or Turkish sentence sounds like here passes through that.",
+          "de": "30 Sprachen aus einem Modell, ganz überwiegend auf Chinesisch und Englisch trainiert. Wie ein deutscher oder türkischer Satz hier klingt, geht dort hindurch."
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "No voice for Bulgarian or Ukrainian — two of the ten platform languages. Russian is in the model's list and is deliberately NOT offered as a substitute for Ukrainian. These two are spoken in English instead.",
+          "de": "Keine Stimme für Bulgarisch oder Ukrainisch — zwei der zehn Plattform-Sprachen. Russisch steht auf der Liste des Modells und wird bewusst NICHT als Ersatz für Ukrainisch angeboten. Diese beiden werden stattdessen auf Englisch gesprochen."
+        },
+        {
+          "en": "Training data undisclosed — consent of the recorded speakers is unknown. The model card names hours, not sources.",
+          "de": "Trainingsdaten nicht offengelegt — die Zustimmung der aufgenommenen Sprecher:innen ist unbekannt. Die Modellkarte nennt Stunden, keine Quellen."
+        },
+        {
+          "en": "The model can clone a voice from a few seconds of recording. That is not reachable from this platform: no parameter here, in the backend or in the worker leads to it.",
+          "de": "Das Modell kann eine Stimme aus wenigen Sekunden Aufnahme klonen. Von dieser Plattform aus ist das nicht erreichbar: kein Parameter hier, im Backend oder im Worker führt dorthin."
+        }
+      ]
+    },
+    "gpu_vram_mb": 8000,
+    "note": "Input is content, not a prompt. Restricted to adult/research on the same grounds as Qwen3-TTS was: this model is autoregressive and can continue past the sentence it was handed. Runs in its own environment as a separate process — download_voxcpm.sh installs it, voxcpm_service/server.py is the worker."
+  },
+  "display": {
+    "icon": "record_voice_over",
+    "color": "#00897B",
+    "category": "sound",
+    "difficulty": 2,
+    "order": 120
+  },
+  "tags": {
+    "en": [
+      "speech",
+      "voice",
+      "TTS",
+      "multilingual",
+      "voice design"
+    ],
+    "de": [
+      "Sprache",
+      "Stimme",
+      "TTS",
+      "mehrsprachig",
+      "Stimmentwurf"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 18,
+    "complexity": "intermediate"
+  }
+}

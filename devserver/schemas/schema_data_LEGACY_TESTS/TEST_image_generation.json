@@ -1,0 +1,17 @@
+{
+  "name": "TEST_image_generation",
+  "description": "Test: Bildgenerierung mit SD 3.5",
+  "workflow_type": "image_generation",
+  "config_mappings": {
+    "prompt_interception_config": "media_prompt_optimization.image_sd35",
+    "comfyui_image_generation_config": "image_generation.sd35_standard"
+  },
+  "meta": {
+    "version": "1.0",
+    "description_de": "Test: Bildgenerierung mit Stable Diffusion 3.5 Large",
+    "description_en": "Test: Image Generation with Stable Diffusion 3.5 Large",
+    "output_type": "image",
+    "model": "sd3.5_large.safetensors",
+    "test_prompt": "Ein Werbeplakat mit der Aufschrift AI4ARTSED auf einer grünen Wiese"
+  }
+}

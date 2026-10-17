@@ -1,0 +1,182 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Supertonic Voice",
+    "de": "Supertonic Stimme",
+    "tr": "Supertonic Ses",
+    "ko": "Supertonic 음성",
+    "uk": "Supertonic Голос",
+    "fr": "Supertonic Voix",
+    "es": "Supertonic Voz",
+    "he": "Supertonic קול",
+    "ar": "Supertonic صوت",
+    "bg": "Supertonic Глас"
+  },
+  "description": {
+    "en": "Speaks a given text aloud. The text is spoken verbatim — it is not a prompt and is never rewritten. Native voices for nine of the ten platform languages.",
+    "de": "Spricht einen gegebenen Text. Der Text wird wörtlich gesprochen — er ist kein Prompt und wird nicht umgeschrieben. Eigene Stimmen für neun der zehn Plattform-Sprachen.",
+    "tr": "Verilen bir metni seslendirir. Metin birebir seslendirilir — bir prompt değildir ve hiçbir zaman yeniden yazılmaz. Platformun on dilinden dokuzu için özgün sesler.",
+    "ko": "주어진 텍스트를 음성으로 냅니다. 텍스트는 그대로 발화됩니다 — 프롬프트가 아니며 다시 쓰이지 않습니다. 플랫폼 10개 언어 중 9개 언어에 대해 고유한 음성을 제공합니다.",
+    "uk": "Озвучує заданий текст. Текст озвучується дослівно — це не промпт, і він ніколи не переписується. Власні голоси для дев'яти з десяти мов платформи.",
+    "fr": "Donne voix à un texte donné. Le texte est restitué mot pour mot — ce n'est pas un prompt et il n'est jamais réécrit. Voix natives pour neuf des dix langues de la plateforme.",
+    "es": "Da voz a un texto dado. El texto se pronuncia literalmente — no es un prompt y nunca se reescribe. Voces nativas para nueve de los diez idiomas de la plataforma.",
+    "he": "משמיע טקסט נתון. הטקסט מושמע כלשונו — הוא אינו פרומפט ולעולם אינו נכתב מחדש. קולות ילידיים לתשע מתוך עשר שפות הפלטפורמה.",
+    "ar": "ينطق بنص معطى. يُنطق النص كما هو حرفيًا — إنه ليس نصًا توجيهيًا (prompt) ولا يُعاد كتابته أبدًا. أصوات أصلية لتسع من لغات المنصة العشر.",
+    "bg": "Озвучава зададен текст. Текстът се озвучава дословно — той не е промпт и никога не се пренаписва. Автентични гласове за девет от десетте езика на платформата."
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound",
+    "tr": "Ses",
+    "ko": "사운드",
+    "uk": "Звук",
+    "fr": "Son",
+    "es": "Sonido",
+    "he": "סאונד",
+    "ar": "صوت",
+    "bg": "Звук"
+  },
+  "context": "",
+  "parameters": {
+    "OUTPUT_CHUNK": "output_speech_supertonic",
+    "voice": null,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "supertonic",
+    "backend_type": "python",
+    "verbatim_input": true,
+    "skip_stage2": true,
+    "skip_stage3_translation": true,
+    "allowed_safety_levels": [
+      "adult",
+      "research"
+    ],
+    "supported_languages": [
+      "ar",
+      "bg",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "ko",
+      "tr",
+      "uk"
+    ],
+    "unvoiced_platform_languages": [
+      "he"
+    ],
+    "display_name": "Supertonic 3",
+    "icon": "🗣️",
+    "publisher": "Supertone Inc. (Seoul, owned by HYBE)",
+    "architecture": "Non-autoregressive: flow-matching text-to-latent plus speech autoencoder, ONNX",
+    "params": "99M",
+    "text_encoders": [
+      "Internal, 31 languages"
+    ],
+    "quantization": "FP32 ONNX",
+    "license": "OpenRAIL-M",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "undisclosed speech corpora"
+      ],
+      "training_data_consent": "unknown",
+      "geographic_origin": "South Korea",
+      "known_biases": [
+        {
+          "en": "The ten preset voices are labelled five male and five female. There is no third category, and no control for register. The platform therefore speaks with a mixture of presets rather than one of them — see DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "de": "Die zehn Preset-Stimmen sind als fünf männliche und fünf weibliche benannt. Eine dritte Kategorie gibt es nicht, und keinen Regler für die Stimmlage. Die Plattform spricht deshalb mit einer Mischung aus Presets statt mit einer von ihnen — siehe DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "tr": "On hazır ses beşi erkek, beşi kadın olarak etiketlenmiştir. Üçüncü bir kategori yoktur ve ses tonu için bir kontrol de yoktur. Bu nedenle platform, hazır seslerden yalnızca birini değil, bir karışımını kullanarak konuşur — bkz. DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "ko": "10개의 프리셋 음성은 남성 5개, 여성 5개로 표시되어 있음. 세 번째 범주는 없으며 음역대를 조절할 수도 없음. 이 때문에 플랫폼은 프리셋 중 하나가 아니라 여러 프리셋을 혼합하여 발화함 — DEVELOPMENT_DECISIONS.md, 2026-08-08 참조.",
+          "uk": "Десять готових голосів позначено як п'ять чоловічих і п'ять жіночих. Третьої категорії немає, як і контролю регістру. Тому платформа говорить сумішшю пресетів, а не якимось одним із них — див. DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "fr": "Les dix voix prédéfinies sont étiquetées cinq masculines et cinq féminines. Il n'existe pas de troisième catégorie, ni de réglage pour la tessiture. La plateforme parle donc avec un mélange de préréglages plutôt qu'avec l'un d'entre eux — voir DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "es": "Las diez voces preestablecidas están etiquetadas como cinco masculinas y cinco femeninas. No existe una tercera categoría, ni control sobre el registro. Por ello, la plataforma habla con una mezcla de preajustes en lugar de con uno solo de ellos — véase DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "he": "עשרת הקולות הקבועים מסומנים כחמישה זכריים וחמישה נקביים. אין קטגוריה שלישית ואין שליטה ברגיסטר הקולי. לכן הפלטפורמה מדברת בתערובת של קולות קבועים ולא באחד מהם — ראו DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "ar": "الأصوات الجاهزة العشرة موسومة بخمسة ذكورية وخمسة أنثوية. لا توجد فئة ثالثة، ولا تحكم في طبقة الصوت. لذلك تتحدث المنصة بمزيج من الأصوات الجاهزة بدلاً من صوت واحد منها — انظر DEVELOPMENT_DECISIONS.md، 2026-08-08.",
+          "bg": "Десетте предварително зададени гласа са обозначени като пет мъжки и пет женски. Няма трета категория и няма контрол върху регистъра. Затова платформата говори със смес от пресети, а не с един от тях — вижте DEVELOPMENT_DECISIONS.md, 2026-08-08."
+        },
+        {
+          "en": "In a mixture the male presets pull disproportionately: equal parts over two male presets lands on the male voice, not in the middle. The female share is therefore held at 60 percent or above, enforced in code.",
+          "de": "In einer Mischung ziehen die männlichen Presets überproportional: Gleichverteilung über zwei männliche Presets landet auf der Männerstimme, nicht in der Mitte. Der weibliche Anteil wird deshalb bei 60 Prozent oder darüber gehalten, im Code erzwungen.",
+          "tr": "Bir karışımda erkek hazır sesler orantısız biçimde ağır basar: iki erkek hazır ses arasında eşit paylaşım, ortada değil erkek seste sonuçlanır. Bu nedenle kadın payı, kodda zorunlu kılınarak yüzde 60 veya üzerinde tutulur.",
+          "ko": "혼합 시 남성 프리셋이 불균형하게 우세함: 두 남성 프리셋을 동일한 비율로 섞어도 중간이 아니라 남성 음성으로 귀결됨. 이 때문에 여성 비율은 코드에서 강제로 60% 이상으로 유지됨.",
+          "uk": "У суміші чоловічі пресети переважають непропорційно: рівні частки двох чоловічих пресетів дають чоловічий голос, а не щось посередині. Тому жіночу частку утримують на рівні 60 відсотків або вище, що закріплено в коді.",
+          "fr": "Dans un mélange, les préréglages masculins tirent de manière disproportionnée : des parts égales entre deux préréglages masculins aboutissent à la voix masculine, pas au milieu. La part féminine est donc maintenue à 60 % ou plus, imposée dans le code.",
+          "es": "En una mezcla, los preajustes masculinos predominan de forma desproporcionada: partes iguales entre dos preajustes masculinos dan como resultado la voz masculina, no un punto intermedio. Por ello, la proporción femenina se mantiene en el 60 % o más, impuesta en el código.",
+          "he": "בתערובת, הקולות הזכריים הקבועים גוברים באופן לא פרופורציונלי: חלקים שווים בין שני קולות זכריים קבועים מובילים לקול הזכרי, לא לאמצע. לכן חלקן של הנשים נשמר על 60 אחוז ומעלה, באכיפת קוד.",
+          "ar": "في المزيج، تطغى الأصوات الجاهزة الذكورية بشكل غير متناسب: توزيع متساوٍ بين صوتين ذكوريين جاهزين يؤدي إلى الصوت الذكوري، لا إلى منتصف الطريق. لذلك تُبقى الحصة الأنثوية عند 60 بالمئة أو أكثر، مفروضة في الكود.",
+          "bg": "В смес мъжките пресети натежават непропорционално: равни дялове между два мъжки пресета дават мъжкия глас, а не нещо по средата. Затова женският дял се поддържа на 60 процента или повече, наложено в кода."
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "No voice for Hebrew — one of the ten platform languages. Hebrew is spoken in English instead. Of the open models only Piper has a Hebrew voice.",
+          "de": "Keine Stimme für Hebräisch — eine der zehn Plattform-Sprachen. Hebräisch wird stattdessen auf Englisch gesprochen. Von den offenen Modellen hat nur Piper eine hebräische Stimme.",
+          "tr": "İbranice için ses yok — platformun on dilinden biri. İbranice bunun yerine İngilizce konuşuluyor. Açık modeller arasında yalnızca Piper'ın İbranice sesi var.",
+          "ko": "히브리어용 음성이 없음 — 플랫폼 10개 언어 중 하나. 히브리어는 대신 영어로 발화됨. 개방형 모델 중에서는 Piper만 히브리어 음성을 제공함.",
+          "uk": "Немає голосу для івриту — однієї з десяти мов платформи. Іврит натомість озвучується англійською. Серед відкритих моделей лише Piper має голос для івриту.",
+          "fr": "Aucune voix pour l'hébreu — l'une des dix langues de la plateforme. L'hébreu est parlé en anglais à la place. Parmi les modèles ouverts, seul Piper dispose d'une voix hébraïque.",
+          "es": "No hay voz para el hebreo — uno de los diez idiomas de la plataforma. El hebreo se habla en inglés en su lugar. De los modelos abiertos, solo Piper tiene una voz en hebreo.",
+          "he": "אין קול לעברית — אחת מעשר שפות הפלטפורמה. עברית מדוברת באנגלית במקום זאת. מבין המודלים הפתוחים, רק ל-Piper יש קול בעברית.",
+          "ar": "لا يوجد صوت للعبرية — إحدى لغات المنصة العشر. تُنطق العبرية بالإنجليزية بدلاً من ذلك. من بين النماذج المفتوحة، Piper وحده يملك صوتاً بالعبرية.",
+          "bg": "Няма глас за иврит — един от десетте езика на платформата. Ивритът вместо това се говори на английски. От отворените модели само Piper има глас на иврит."
+        },
+        {
+          "en": "Training data undisclosed — consent of the recorded speakers is unknown",
+          "de": "Trainingsdaten nicht offengelegt — die Zustimmung der aufgenommenen Sprecher:innen ist unbekannt",
+          "tr": "Eğitim verisi açıklanmamış — kaydedilen konuşmacıların onayı bilinmiyor",
+          "ko": "학습 데이터가 공개되지 않음 — 녹음된 화자의 동의 여부는 알 수 없음",
+          "uk": "Навчальні дані не розкрито — згода записаних мовців невідома",
+          "fr": "Données d'entraînement non divulguées — le consentement des personnes enregistrées est inconnu",
+          "es": "Datos de entrenamiento no revelados — se desconoce el consentimiento de las personas grabadas",
+          "he": "נתוני האימון לא נחשפו — הסכמת הדוברים המוקלטים אינה ידועה",
+          "ar": "بيانات التدريب غير معلنة — موافقة المتحدثين المسجَّلين غير معروفة",
+          "bg": "Данните за обучение не са оповестени — съгласието на записаните говорители е неизвестно"
+        }
+      ]
+    },
+    "gpu_vram_mb": 0,
+    "note": "Runs on the CPU; the GPU stays free for image and video. Input is content, not a prompt. Restricted to adult/research until the safety redesign connects kids/youth — on those levels Stage 2 would rewrite the utterance and Stage 3 would translate it to English.",
+    "voice_presets": [
+      "even",
+      "low",
+      "mid",
+      "clear",
+      "bright"
+    ]
+  },
+  "display": {
+    "icon": "record_voice_over",
+    "color": "#00897B",
+    "category": "sound",
+    "difficulty": 2,
+    "order": 120
+  },
+  "tags": {
+    "en": [
+      "speech",
+      "voice",
+      "TTS",
+      "multilingual"
+    ],
+    "de": [
+      "Sprache",
+      "Stimme",
+      "TTS",
+      "mehrsprachig"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 18,
+    "complexity": "intermediate"
+  }
+}

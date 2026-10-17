@@ -1,0 +1,123 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Wan 2.2 T2V 14B Fast",
+    "de": "Wan 2.2 T2V 14B Schnell",
+    "tr": "Wan 2.2 T2V 14B Hızlı",
+    "ko": "Wan 2.2 T2V 14B 고속",
+    "uk": "Wan 2.2 T2V 14B Швидкий",
+    "fr": "Wan 2.2 T2V 14B Rapide",
+    "es": "Wan 2.2 T2V 14B Rápido",
+    "he": "Wan 2.2 T2V 14B מהיר",
+    "ar": "Wan 2.2 T2V 14B سريع",
+    "bg": "Wan 2.2 T2V 14B Бърз"
+  },
+  "description": {
+    "en": "Fast text-to-video using Wan 2.2 14B FP8 with LightX2V 4-step acceleration",
+    "de": "Schnelle Text-zu-Video-Generierung mit Wan 2.2 14B FP8 und LightX2V 4-Schritt-Beschleunigung",
+    "tr": "Wan 2.2 14B FP8 ve LightX2V 4 adımlı hızlandırmayla hızlı metinden videoya üretim.",
+    "ko": "LightX2V 4단계 가속을 적용한 Wan 2.2 14B FP8 기반 고속 텍스트-투-비디오.",
+    "uk": "Швидка генерація відео з тексту за допомогою Wan 2.2 14B FP8 з прискоренням LightX2V у 4 кроки.",
+    "fr": "Génération rapide de texte vers vidéo avec Wan 2.2 14B FP8 et l'accélération LightX2V à 4 étapes.",
+    "es": "Generación rápida de texto a vídeo con Wan 2.2 14B FP8 y aceleración LightX2V de 4 pasos.",
+    "he": "יצירת טקסט-לווידאו מהירה באמצעות Wan 2.2 14B FP8 עם האצת LightX2V בת 4 שלבים.",
+    "ar": "توليد سريع من نص إلى فيديو باستخدام Wan 2.2 14B FP8 مع تسريع LightX2V بأربع خطوات.",
+    "bg": "Бързо генериране на видео от текст с Wan 2.2 14B FP8 и ускорение LightX2V с 4 стъпки."
+  },
+  "category": {
+    "en": "Video Generation",
+    "de": "Videogenerierung",
+    "tr": "Video Üretimi",
+    "ko": "비디오 생성",
+    "uk": "Генерація відео",
+    "fr": "Génération vidéo",
+    "es": "Generación de vídeo",
+    "he": "יצירת וידאו",
+    "ar": "توليد الفيديو",
+    "bg": "Генериране на видео"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_video_wan22_t2v_fast",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "video",
+    "supported_types": [
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "wan2.2-t2v-14b-fp8-lightx2v",
+    "model_files": {
+      "high_noise_unet": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+      "low_noise_unet": "wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors",
+      "high_noise_lora": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors",
+      "low_noise_lora": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_low_noise.safetensors",
+      "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "vae": "wan2.2_vae.safetensors"
+    },
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 39000,
+    "estimated_duration_seconds": "30-60",
+    "recommended_resolution": "832x480",
+    "supported_resolutions": [
+      "832x480",
+      "640x480",
+      "480x480"
+    ],
+    "recommended_frames": 81,
+    "supported_fps": [
+      16,
+      24
+    ],
+    "notes": "Wan 2.2 T2V 14B FP8 with LightX2V LoRA distillation. Two-stage sampling (4 total steps) for ~10x speedup over vanilla 40-step inference. Quality comparable to full inference at fraction of the time.",
+    "version": "1.0",
+    "display_name": "Wan 2.2 T2V 14B Fast",
+    "icon": "videocam",
+    "publisher": "Wan-AI / Alibaba Group (Hangzhou, CN)",
+    "architecture": "Diffusion Transformer (T2V, MoE 14B, LightX2V 4-step distillation)",
+    "params": "14B active (FP8 quantized)",
+    "text_encoders": [
+      "uMT5-XXL (multilingual, FP8)"
+    ],
+    "quantization": "FP8 (scaled)",
+    "license": "Apache 2.0",
+    "fair_culture": "Trained on ~1.5B videos + 10B images (sources undisclosed)",
+    "safety_by_design": "Optional safety checker in pipeline"
+  },
+  "display": {
+    "icon": "videocam",
+    "color": "#E91E63",
+    "category": "video_generation",
+    "difficulty": 2,
+    "order": 20
+  },
+  "tags": {
+    "en": [
+      "video",
+      "wan",
+      "text-to-video",
+      "comfyui",
+      "fast",
+      "14b",
+      "fp8"
+    ],
+    "de": [
+      "video",
+      "wan",
+      "text-zu-video",
+      "comfyui",
+      "schnell",
+      "14b",
+      "fp8"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

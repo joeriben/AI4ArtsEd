@@ -1,0 +1,237 @@
+{
+  "name": "output_video_ltx",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "video",
+  "description": "LTX-Video - Fast text-to-video generation with Lightricks LTX model",
+
+  "legacy_config": {
+    "prompt_injection": {
+      "target_title": "CLIP Text Encode (Positive Prompt)",
+      "fallback_node_id": "6",
+      "fallback_field": "text"
+    }
+  },
+
+  "workflow": {
+    "6": {
+      "inputs": {
+        "text": "",
+        "clip": ["38", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Positive Prompt)"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": "",
+        "clip": ["38", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Negative Prompt)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["72", 0],
+        "vae": ["44", 2]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "38": {
+      "inputs": {
+        "clip_name": "t5xxl_enconly.safetensors",
+        "type": "ltxv",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP"
+      }
+    },
+    "44": {
+      "inputs": {
+        "ckpt_name": "ltxv-13b-0.9.7-distilled-fp8.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "69": {
+      "inputs": {
+        "frame_rate": 25,
+        "positive": ["6", 0],
+        "negative": ["7", 0]
+      },
+      "class_type": "LTXVConditioning",
+      "_meta": {
+        "title": "LTXVConditioning"
+      }
+    },
+    "70": {
+      "inputs": {
+        "width": 768,
+        "height": 512,
+        "length": 97,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLTXVLatentVideo",
+      "_meta": {
+        "title": "EmptyLTXVLatentVideo"
+      }
+    },
+    "71": {
+      "inputs": {
+        "steps": 6,
+        "max_shift": 2.05,
+        "base_shift": 0.95,
+        "stretch": true,
+        "terminal": 0.1,
+        "latent": ["70", 0]
+      },
+      "class_type": "LTXVScheduler",
+      "_meta": {
+        "title": "LTXVScheduler"
+      }
+    },
+    "72": {
+      "inputs": {
+        "add_noise": true,
+        "noise_seed": 123456789,
+        "cfg": 3,
+        "model": ["44", 0],
+        "positive": ["69", 0],
+        "negative": ["69", 1],
+        "sampler": ["73", 0],
+        "sigmas": ["71", 0],
+        "latent_image": ["70", 0]
+      },
+      "class_type": "SamplerCustom",
+      "_meta": {
+        "title": "SamplerCustom"
+      }
+    },
+    "73": {
+      "inputs": {
+        "sampler_name": "euler"
+      },
+      "class_type": "KSamplerSelect",
+      "_meta": {
+        "title": "KSamplerSelect"
+      }
+    },
+    "78": {
+      "inputs": {
+        "fps": 24,
+        "images": ["8", 0]
+      },
+      "class_type": "CreateVideo",
+      "_meta": {
+        "title": "Create Video"
+      }
+    },
+    "79": {
+      "inputs": {
+        "filename_prefix": "LTXVideo",
+        "format": "auto",
+        "codec": "auto",
+        "video": ["78", 0]
+      },
+      "class_type": "SaveVideo",
+      "_meta": {
+        "title": "Save Video"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "6",
+      "field": "inputs.text",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Video generation prompt"
+    },
+    "negative_prompt": {
+      "node_id": "7",
+      "field": "inputs.text",
+      "default": "",
+      "description": "Negative prompt - what to avoid"
+    },
+    "width": {
+      "node_id": "70",
+      "field": "inputs.width",
+      "default": 768,
+      "description": "Video width (recommended: 768)"
+    },
+    "height": {
+      "node_id": "70",
+      "field": "inputs.height",
+      "default": 512,
+      "description": "Video height (recommended: 512)"
+    },
+    "frames": {
+      "node_id": "70",
+      "field": "inputs.length",
+      "default": 97,
+      "description": "Number of frames (97 frames = ~4 seconds at 25fps)"
+    },
+    "steps": {
+      "node_id": "71",
+      "field": "inputs.steps",
+      "default": 6,
+      "description": "Sampling steps (distilled model uses 6)"
+    },
+    "cfg": {
+      "node_id": "72",
+      "field": "inputs.cfg",
+      "default": 3.0,
+      "description": "Classifier Free Guidance (how closely to follow prompt)"
+    },
+    "fps": {
+      "node_id": "78",
+      "field": "inputs.fps",
+      "default": 24,
+      "description": "Frames per second"
+    },
+    "seed": {
+      "node_id": "72",
+      "field": "inputs.noise_seed",
+      "default": 123456789,
+      "description": "Seed for reproducibility"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "79",
+    "output_type": "video",
+    "format": "mp4",
+    "field": "filename_prefix",
+    "description": "Video output from LTX-Video generation"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "17-30",
+    "quality_rating": 2,
+    "requires_gpu": true,
+    "gpu_vram_mb": 16000,
+    "model_file": "ltxv-13b-0.9.7-distilled-fp8.safetensors",
+    "recommended_resolution": "768x512",
+    "supported_resolutions": [
+      "768x512",
+      "1216x704",
+      "1024x576"
+    ],
+    "recommended_frames": 97,
+    "supported_fps": [24, 25, 30],
+    "notes": "LTX-Video distilled FP8 model is optimized for speed. Generates 4-second videos in ~5-10 seconds on RTX 4090/5090. Uses 6 steps only.",
+    "optimization_instruction": "You will probably receive a description of a static scene, e.g. for an image. Your job is to understand the scenic elements and the inherent story in this description. You are a filmmaker and are always thinking in time, movement, and story. Transform the input into a short scene of just some seconds! Describe the scene, do not tell a story - your output will be a prompt for a generative AI. Analyze the input as a staged spatial scene with potential movement dynamics; identify visible subjects, objects, and environments together with their spatial relations, implied actions, interaction lines, and cinematic vectors; describe the spatial composition (foreground, midground, background, depth, dominant axes), the scenic structure (possible actions, gestures, roles, relational tensions), the movement dynamics (likely directions, temporal progression, camera motion, tempo), the atmospheric parameters (light, color, texture, mood), and the cultural indicators (clothing, architecture, objects, symbols, practices suggesting specific places, times, or social milieus); present the output as a concise, coherent scenic miniature that clearly infers dynamic processes from the image and translates them into a brief filmic or performative continuum, written narratively and precisely without lists."
+  }
+}

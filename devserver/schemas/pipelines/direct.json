@@ -1,0 +1,25 @@
+{
+  "name": "direct",
+  "pipeline_type": "passthrough",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "skip_stage2": true,
+  "description": "Dummy pipeline for skipping Stage 2 execution. Used by configs that want direct prompt access without interception.",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "skip",
+    "reusable": true,
+    "pre_translation": false,
+    "prompt_structure": {
+      "type": "passthrough",
+      "parts": [],
+      "description": "No execution - input passed directly to Stage 3"
+    },
+    "use_case": "Stage 2 configs reference this pipeline to skip Stage 2 execution entirely. Used for vanilla workflows or when Stage 4 handles all optimization (e.g., Surrealization)."
+  }
+}

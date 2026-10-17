@@ -1,0 +1,86 @@
+{
+  "pipeline": "music_generation",
+  "name": {
+    "en": "AceStep LongNarrativePrompts",
+    "de": "AceStep LongNarrativePrompts",
+    "tr": "AceStep LongNarrativePrompts",
+    "ko": "AceStep LongNarrativePrompts",
+    "uk": "AceStep LongNarrativePrompts",
+    "fr": "AceStep LongNarrativePrompts",
+    "es": "AceStep LongNarrativePrompts",
+    "he": "AceStep LongNarrativePrompts",
+    "ar": "AceStep LongNarrativePrompts",
+    "bg": "AceStep LongNarrativePrompts"
+  },
+  "description": {
+    "en": "AceStep LongNarrativePrompts transformation (research-based from legacy workflow)",
+    "de": "AceStep LongNarrativePrompts-Transformation (forschungsbasiert aus Legacy-Workflow)",
+    "tr": "AceStep LongNarrativePrompts dönüşümü (eski iş akışına dayanan araştırma tabanlı)",
+    "ko": "AceStep LongNarrativePrompts 변환(레거시 워크플로우 기반 연구 방식)",
+    "uk": "Трансформація AceStep LongNarrativePrompts (дослідницька, на основі застарілого робочого процесу)",
+    "fr": "Transformation AceStep LongNarrativePrompts (basée sur la recherche, issue d'un flux de travail existant)",
+    "es": "Transformación AceStep LongNarrativePrompts (basada en investigación, procedente de un flujo de trabajo heredado)",
+    "he": "טרנספורמציית AceStep LongNarrativePrompts (מבוססת מחקר, מתהליך עבודה ישן)",
+    "ar": "تحويل AceStep LongNarrativePrompts (قائم على البحث من سير عمل قديم)",
+    "bg": "Трансформация AceStep LongNarrativePrompts (базирана на изследване от стар работен процес)"
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound",
+    "tr": "Ses",
+    "ko": "사운드",
+    "uk": "Звук",
+    "fr": "Son",
+    "es": "Sonido",
+    "he": "שמע",
+    "ar": "صوت",
+    "bg": "Звук"
+  },
+  "context": "synaesthetic expert",
+  "parameters": {
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  "media_preferences": {
+    "default_output": "music",
+    "supported_types": [
+      "music"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend_type": "comfyui",
+    "legacy_source": "workflows_legacy/sound/ai4artsed_AceStep_LongNarrativePrompts_2508101232.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/google/gemma-3-27b-it [translator / $0.10/$0.18]",
+    "display_name": "ACE-Step Long Narrative",
+    "publisher": "StepFun / ACE Studio (Beijing, CN)",
+    "architecture": "Diffusion Transformer (latent audio)",
+    "params": "~3.5B",
+    "text_encoders": [
+      "T5-Large (lyrics + tags)"
+    ],
+    "quantization": "FP32",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "None documented by manufacturer",
+    "gpu_vram_mb": 8500
+  },
+  "display": {
+    "icon": "🎵",
+    "color": "#FF9800",
+    "category": "sound",
+    "difficulty": 3,
+    "order": 100,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 12,
+    "complexity": "intermediate"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "P5.js Code Generation",
+    "de": "P5.js Code-Generierung",
+    "tr": "P5.js Kod Üretimi",
+    "ko": "P5.js 코드 생성",
+    "uk": "P5.js Генерація коду",
+    "fr": "P5.js Génération de code",
+    "es": "P5.js Generación de código",
+    "he": "P5.js יצירת קוד",
+    "ar": "P5.js توليد الكود",
+    "bg": "P5.js Генериране на код"
+  },
+  "description": {
+    "en": "Generates executable P5.js JavaScript code from layered scene descriptions. Creates interactive visual sketches using geometric primitives and additive construction.",
+    "de": "Generiert ausführbaren P5.js JavaScript-Code aus geschichteten Szenenbeschreibungen. Erstellt interaktive visuelle Sketches mit geometrischen Primitiven und additivem Aufbau.",
+    "tr": "Katmanlı sahne açıklamalarından çalıştırılabilir P5.js JavaScript kodu üretir. Geometrik ilkel şekiller ve katmanlı (additive) kurgu kullanarak etkileşimli görsel taslaklar oluşturur.",
+    "ko": "레이어화된 장면 설명으로부터 실행 가능한 P5.js JavaScript 코드를 생성합니다. 기하학적 기본 도형과 가산적 구성을 사용해 인터랙티브한 비주얼 스케치를 만듭니다.",
+    "uk": "Генерує виконуваний JavaScript-код P5.js із багатошарових описів сцени. Створює інтерактивні візуальні ескізи за допомогою геометричних примітивів та адитивної побудови.",
+    "fr": "Génère du code JavaScript P5.js exécutable à partir de descriptions de scène en couches. Crée des croquis visuels interactifs à l'aide de primitives géométriques et d'une construction additive.",
+    "es": "Genera código JavaScript de P5.js ejecutable a partir de descripciones de escena en capas. Crea bocetos visuales interactivos utilizando primitivas geométricas y construcción aditiva.",
+    "he": "יוצר קוד P5.js JavaScript הניתן להרצה מתוך תיאורי סצנה מרובדים. יוצר סקיצות חזותיות אינטראקטיביות באמצעות צורות גאומטריות בסיסיות ובנייה תוספתית.",
+    "ar": "يولّد كود P5.js JavaScript قابلًا للتنفيذ من أوصاف مشهد متعددة الطبقات. يُنشئ رسومات تخطيطية بصرية تفاعلية باستخدام أشكال هندسية أساسية وبناء تراكمي (إضافي).",
+    "bg": "Генерира изпълним P5.js JavaScript код от многослойни описания на сцена. Създава интерактивни визуални скици чрез геометрични примитиви и адитивна конструкция."
+  },
+  "category": {
+    "en": "Vector Graphics",
+    "de": "Vektorbilder",
+    "tr": "Vektör Grafikler",
+    "ko": "벡터 그래픽",
+    "uk": "Векторна графіка",
+    "fr": "Graphiques vectoriels",
+    "es": "Gráficos vectoriales",
+    "he": "גרפיקה וקטורית",
+    "ar": "رسومات متجهة",
+    "bg": "Векторна графика"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_code_p5js",
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "code",
+    "supported_types": [
+      "code"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "optimization_model": "CODING_MODEL",
+    "backend": "dynamic",
+    "backend_type": "config_model",
+    "api_provider": "dynamic",
+    "language": "javascript",
+    "framework": "p5js",
+    "estimated_duration_seconds": "5-15",
+    "display_name": "p5.js Generator",
+    "publisher": "LLM-dependent (configured in config.py)",
+    "architecture": "Large Language Model (text-to-code)",
+    "params": "Varies by configured LLM",
+    "license": "Varies by configured LLM",
+    "fair_culture": "Varies by configured LLM",
+    "safety_by_design": "None (LLM-dependent)",
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "🎨",
+    "color": "#ED225D",
+    "category": "vector_graphics",
+    "difficulty": 3,
+    "order": 50
+  },
+  "tags": {
+    "en": [
+      "code",
+      "p5js",
+      "javascript",
+      "creative-coding",
+      "generative"
+    ],
+    "de": [
+      "code",
+      "p5js",
+      "javascript",
+      "kreatives-programmieren",
+      "generativ"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 12,
+    "complexity": "intermediate"
+  }
+}

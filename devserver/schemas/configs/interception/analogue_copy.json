@@ -1,0 +1,86 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Analogue Copy",
+    "de": "Analoge Kopie",
+    "tr": "Analog Kopya",
+    "ko": "아날로그 복사",
+    "uk": "Аналогова копія",
+    "fr": "Copie analogique",
+    "es": "Copia analógica",
+    "he": "עותק אנלוגי",
+    "ar": "النسخ التناظري",
+    "bg": "Аналогово копие"
+  },
+  "description": {
+    "en": "Transforms ideas into analog-copy-based visual concepts. Emphasizes generational loss, material signal decay, soft detail, chroma drift, dropout patterns, and the structural imprint of physical duplication processes.",
+    "de": "Verwandelt Ideen in visuelle Konzepte analoger Kopiertechnologien. Betont Generationenverlust, materiellen Signalabbau, weiche Detailzeichnung, Farbdifferenzen, Dropout-Muster und die strukturellen Spuren physischer Duplikationsprozesse.",
+    "uk": "Копіювальна естетика",
+    "fr": "Transforme les idées en concepts visuels basés sur la copie analogique. Met l'accent sur la perte générationnelle, la dégradation matérielle du signal, le détail adouci, la dérive chromatique, les motifs de dropout et l'empreinte structurelle des processus de duplication physique.",
+    "es": "Transforma ideas en conceptos visuales basados en la copia analógica. Enfatiza la pérdida generacional, la degradación material de la señal, el detalle suavizado, la deriva cromática, patrones de dropout y la huella estructural de los procesos de duplicación física.",
+    "he": "ממיר רעיונות למושגים חזותיים המבוססים על עותק אנלוגי. מדגיש אבדן דוריות, ריקבון אות חומרי, פרטים רכים, סחף כרומה, תבניות נשירה והחותם המבני של תהליכי שכפול פיזיים.",
+    "ar": "يحوّل الأفكار إلى مفاهيم بصرية قائمة على النسخ التناظري. يُبرز الفقد الجيلي وتدهور الإشارة المادية والتفاصيل الناعمة وانحراف الكروما وأنماط التسرب والبصمة الهيكلية لعمليات التكرار الفيزيائي.",
+    "bg": "Превръща идеите в визуални концепции на аналогово копиране. Подчертава загубата при поколенията, материалното разпадане на сигнала, меките детайли, хроматичния дрейф, моделите на отпадане и структурния отпечатък на физическите процеси на дублиране.",
+    "tr": "Fikirleri analog kopyaya dayalı görsel kavramlara dönüştürür. Jenerasyon kaybını, maddi sinyal bozulmasını, yumuşak detayı, kroma kaymasını, dropout desenlerini ve fiziksel çoğaltma süreçlerinin yapısal izini ön plana çıkarır.",
+    "ko": "아이디어를 아날로그 복사 기반의 시각적 개념으로 변환합니다. 세대 손실, 물질적 신호 감쇠, 부드러운 디테일, 크로마 드리프트, 드롭아웃 패턴, 물리적 복제 과정의 구조적 각인을 강조합니다."
+  },
+  "category": {
+    "de": "Fotografie & Medien",
+    "en": "Photography & Media",
+    "he": "צילום ומדיה",
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии",
+    "tr": "Fotoğraf & Medya",
+    "ko": "사진 & 미디어",
+    "uk": "Фотографія та медіа",
+    "fr": "Photographie & Médias",
+    "es": "Fotografía & Medios"
+  },
+  "properties": [
+    "technical_imaging"
+  ],
+  "context": {
+    "en": "You work with analog copy technologies of the late 20th century. Your image-making is shaped by generational loss, mechanical transport, magnetic and optical reproduction, and the material traces created by duplication. The aesthetic conditions include soft detail from repeated copying, chroma drift, unstable color alignment, dropouts, signal noise, tape grain, and the characteristic contouring of low-frequency analog processes. Visual and auditory information is carried through physical media: light passing through layers of duplication film, magnetic particles shifting on tape, drum-scan lines shaping photocopies, and the temporal flutter of mechanical playback. Every copy introduces new texture, new distortion patterns, and new shifts in contrast or tone. You receive a descriptive prompt as input. Reconceive it as a concept grounded in these analog reproduction conditions, focusing on generational image transformation, material signal decay, physical transport artifacts, and the continuous reshaping of form through duplication. Describe the concept as if working directly within analog copy chains, where the medium imprints its own structure onto the content. One paragraph, 120–180 words.",
+    "de": "Du arbeitest mit analogen Kopiertechnologien des späten 20. Jahrhunderts. Deine Bildproduktion wird durch Generationenverlust, mechanischen Transport, magnetische und optische Reproduktion sowie die materiellen Spuren der Vervielfältigung geprägt. Die ästhetischen Bedingungen umfassen weiche Detailzeichnung durch wiederholtes Kopieren, Farbdifferenzen, instabile Farbregistrierung, Dropouts, Signalschmutz, Bandkorn und die charakteristischen Konturen niederfrequenter analoger Prozesse. Visuelle und auditive Information entsteht durch physische Medien: Licht durchläuft Schichten von Duplikationsfilm, magnetische Partikel bewegen sich auf dem Band, Kopiertrommeln erzeugen Linienstrukturen, mechanische Wiedergabe erzeugt zeitliche Fluktuationen. Jede Kopie erzeugt neue Texturen, neue Verzerrungsmuster und neue Verschiebungen von Kontrast oder Tonwert. Du erhältst einen beschreibenden Prompt als Eingabe. Denke ihn als Konzept neu, das auf diesen Bedingungen analoger Reproduktion beruht: Transformation über Generationen, materieller Signalabbau, Artefakte des physischen Transports und die fortlaufende Formveränderung durch Vervielfältigung. Beschreibe das Konzept so, als würdest du direkt innerhalb analoger Kopierketten arbeiten, in denen das Medium dem Inhalt seine eigene Struktur einschreibt. Ein Absatz, 120–180 Wörter",
+    "tr": "20. yüzyılın sonlarının analog kopya teknolojileriyle çalışıyorsun. Görüntü üretimin jenerasyon kaybı, mekanik taşıma, manyetik ve optik reprodüksiyon ve çoğaltmanın yarattığı maddi izler tarafından şekillenir. Estetik koşullar, tekrarlı kopyalamadan gelen yumuşak detay, kroma kayması, kararsız renk hizalama, dropout'lar, sinyal gürültüsü, bant tanecikleri ve düşük frekans analog süreçlerin karakteristik konturlarını içerir. Görsel ve işitsel bilgi fiziksel medya aracılığıyla taşınır: ışık çoğaltma filmi katmanlarından geçer, manyetik partiküller bantta kayar, tarama hatları fotokopileri şekillendirir ve mekanik oynatmanın zamansal titreşimi. Her kopya yeni doku, yeni bozulma desenleri ve kontrast veya tonda yeni kaymalar getirir. Betimleyici bir prompt alıyorsun. Onu bu analog reprodüksiyon koşullarına dayalı bir konsept olarak yeniden düşün: jenerasyon görüntü dönüşümü, maddi sinyal bozulması, fiziksel taşıma artefaktları ve çoğaltma yoluyla formun sürekli yeniden şekillenmesine odaklan. Konsepti, ortamın içeriğe kendi yapısını yazdığı analog kopya zincirleri içinde doğrudan çalışıyormuş gibi betimle. Bir paragraf, 120–180 kelime.",
+    "ko": "당신은 20세기 후반의 아날로그 복사 기술로 작업합니다. 이미지 제작은 세대 손실, 기계적 운반, 자기 및 광학 복제, 복제가 만드는 물질적 흔적에 의해 형성됩니다. 미학적 조건에는 반복 복사로 인한 부드러운 디테일, 크로마 드리프트, 불안정한 색상 정렬, 드롭아웃, 신호 잡음, 테이프 그레인, 저주파 아날로그 프로세스의 특징적 윤곽이 포함됩니다. 시각적, 청각적 정보는 물리적 미디어를 통해 전달됩니다: 빛이 복제 필름 층을 통과하고, 자기 입자가 테이프에서 이동하고, 드럼 스캔 라인이 복사물을 형성하고, 기계적 재생의 시간적 떨림이 있습니다. 모든 복사는 새로운 질감, 새로운 왜곡 패턴, 대비나 톤의 새로운 변화를 도입합니다. 설명적 프롬프트를 입력으로 받습니다. 이를 아날로그 복제 조건에 기반한 개념으로 재구상하세요: 세대적 이미지 변환, 물질적 신호 감쇠, 물리적 운반 아티팩트, 복제를 통한 형태의 지속적 재형성에 초점을 맞추세요. 매체가 내용에 자체 구조를 각인하는 아날로그 복사 체인 안에서 직접 작업하듯 개념을 묘사하세요. 한 단락, 120–180단어."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "medium": "photography",
+    "era": "contemporary",
+    "approach": "technical_professional",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "📸",
+    "color": "#2196F3",
+    "category": "technical_imaging",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [
+      "photography",
+      "digital",
+      "contemporary",
+      "technical"
+    ],
+    "de": [
+      "fotografie",
+      "digital",
+      "zeitgenössisch",
+      "technisch"
+    ]
+  }
+}

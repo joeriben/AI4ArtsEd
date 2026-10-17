@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "On the Contrary!",
+    "de": "Im Gegenteil!",
+    "tr": "Tam Tersine!",
+    "ko": "정반대로!",
+    "uk": "Навпаки",
+    "fr": "Au contraire !",
+    "es": "¡Al contrario!",
+    "he": "ההיפך!",
+    "ar": "على العكس!",
+    "bg": "Напротив!"
+  },
+  "description": {
+    "en": "Flips everything to its exact opposite. Bright becomes dark, happy becomes sad, and all relationships reverse completely.",
+    "de": "Kehrt alles ins genaue Gegenteil um. Hell wird dunkel, fröhlich wird traurig, und alle Beziehungen werden komplett umgedreht.",
+    "uk": "Протилежна перспектива",
+    "fr": "Inverse tout en son exact opposé. Le lumineux devient sombre, le joyeux devient triste, et toutes les relations s'inversent complètement.",
+    "es": "Invierte todo a su opuesto exacto. Lo brillante se vuelve oscuro, lo alegre se vuelve triste y todas las relaciones se invierten completamente.",
+    "he": "הופך הכל להיפך המדויק שלו. בהיר הופך לאפל, שמח הופך לעצוב, וכל הקשרים מתהפכים לחלוטין.",
+    "ar": "يقلب كل شيء إلى نقيضه الدقيق. يصبح المشرق مظلماً، والسعيد حزيناً، وتنعكس جميع العلاقات كلياً.",
+    "bg": "Обръща всичко в точната му противоположност. Светлото става тъмно, щастливото — тъжно, и всички отношения се обръщат напълно.",
+    "tr": "Her şeyi tam tersine çevirir. Aydınlık karanlık olur, mutlu üzgün olur ve tüm ilişkiler tamamen tersine döner.",
+    "ko": "모든 것을 정확한 반대로 뒤집습니다. 밝음은 어둠이 되고, 행복은 슬픔이 되며, 모든 관계가 완전히 역전됩니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "semantics"
+  ],
+  "context": {
+    "en": "Describe the exact diametral opposite. Entities as well as relations have to be turned into their opposites.\n\nExamples of inversions:\n- Spatial: above ↔ below, inside ↔ outside, near ↔ far, open ↔ closed\n- Visual: bright ↔ dark, large ↔ small, colorful ↔ monochrome, sharp ↔ blurred\n- Emotional: joy ↔ grief, calm ↔ agitated, hope ↔ despair, love ↔ hate\n- Social: friend ↔ enemy, together ↔ alone, harmony ↔ conflict, trust ↔ suspicion\n- Temporal: fast ↔ slow, new ↔ old, beginning ↔ end, growth ↔ decay\n- Material: hard ↔ soft, hot ↔ cold, heavy ↔ light, rough ↔ smooth\n\nInvert BOTH entities AND their relationships. If 'A supports B', then 'A opposes B' in the opposite.",
+    "de": "Beschreibe das exakt diametral Gegenteil. Entitäten sowie Relationen müssen in ihre Gegenteile umgewandelt werden.\n\nBeispiele für Umkehrungen:\n- Räumlich: oben ↔ unten, innen ↔ außen, nah ↔ fern, offen ↔ geschlossen\n- Visuell: hell ↔ dunkel, groß ↔ klein, bunt ↔ monochrom, scharf ↔ verschwommen\n- Emotional: Freude ↔ Trauer, ruhig ↔ aufgewühlt, Hoffnung ↔ Verzweiflung, Liebe ↔ Hass\n- Sozial: Freund ↔ Feind, zusammen ↔ allein, Harmonie ↔ Konflikt, Vertrauen ↔ Misstrauen\n- Zeitlich: schnell ↔ langsam, neu ↔ alt, Anfang ↔ Ende, Wachstum ↔ Verfall\n- Material: hart ↔ weich, heiß ↔ kalt, schwer ↔ leicht, rau ↔ glatt\n\nKehre SOWOHL Entitäten ALS AUCH ihre Beziehungen um. Wenn 'A unterstützt B', dann 'A bekämpft B' im Gegenteil.",
+    "tr": "Tam diametral zıttını tanımla. Hem varlıklar hem de ilişkiler zıtlarına dönüştürülmelidir.\n\nTers çevirme örnekleri:\n- Mekansal: yukarı ↔ aşağı, içeri ↔ dışarı, yakın ↔ uzak, açık ↔ kapalı\n- Görsel: parlak ↔ karanlık, büyük ↔ küçük, renkli ↔ tek renkli, keskin ↔ bulanık\n- Duygusal: sevinç ↔ keder, sakin ↔ huzursuz, umut ↔ umutsuzluk, sevgi ↔ nefret\n- Sosyal: dost ↔ düşman, birlikte ↔ yalnız, uyum ↔ çatışma, güven ↔ şüphe\n- Zamansal: hızlı ↔ yavaş, yeni ↔ eski, başlangıç ↔ son, büyüme ↔ çürüme\n- Malzeme: sert ↔ yumuşak, sıcak ↔ soğuk, ağır ↔ hafif, pürüzlü ↔ pürüzsüz\n\nHEM varlıkları HEM DE ilişkilerini ters çevir. Eğer 'A, B'yi destekliyorsa', zıttında 'A, B'ye karşı çıkar'.",
+    "ko": "정확한 정반대를 묘사하세요. 개체와 관계 모두 반대로 전환되어야 합니다.\n\n반전 예시:\n- 공간적: 위 ↔ 아래, 안 ↔ 밖, 가까이 ↔ 멀리, 열림 ↔ 닫힘\n- 시각적: 밝음 ↔ 어둠, 큼 ↔ 작음, 다채로운 ↔ 단색, 선명 ↔ 흐림\n- 감정적: 기쁨 ↔ 슬픔, 평온 ↔ 동요, 희망 ↔ 절망, 사랑 ↔ 증오\n- 사회적: 친구 ↔ 적, 함께 ↔ 홀로, 조화 ↔ 갈등, 신뢰 ↔ 의심\n- 시간적: 빠름 ↔ 느림, 새로움 ↔ 오래됨, 시작 ↔ 끝, 성장 ↔ 쇠퇴\n- 물질적: 단단함 ↔ 부드러움, 뜨거움 ↔ 차가움, 무거움 ↔ 가벼움, 거침 ↔ 매끄러움\n\n개체와 관계 모두를 반전시키세요. 'A가 B를 지지한다'면, 반대에서는 'A가 B에 대항한다'입니다."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "text",
+    "supported_types": [
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/semantics/ai4artsed_TheOpposite_2507122354.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral-nemo:latest [local / $0.00]",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💬",
+    "color": "#2196F3",
+    "category": "semantics",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

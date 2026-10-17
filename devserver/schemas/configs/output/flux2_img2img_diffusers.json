@@ -1,0 +1,120 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 2 Visual Conditioning",
+    "de": "Flux 2 Visuelle Konditionierung",
+    "tr": "Flux 2 Görsel Koşullandırma",
+    "ko": "Flux 2 시각적 컨디셔닝",
+    "uk": "Flux 2 Візуальне кондиціонування",
+    "fr": "Flux 2 Conditionnement visuel",
+    "es": "Flux 2 Condicionamiento visual",
+    "he": "Flux 2 התניה חזותית",
+    "ar": "Flux 2 التكييف البصري",
+    "bg": "Flux 2 Визуално кондициониране"
+  },
+  "description": {
+    "en": "Image transformation using Flux 2 Dev's native visual conditioning. The reference image guides generation as attention context — creative transformations, not reproductions.",
+    "de": "Bildtransformation mit Flux 2 Devs nativer visueller Konditionierung. Das Referenzbild steuert die Generierung als Attention-Kontext — kreative Transformationen, keine Reproduktionen.",
+    "tr": "Flux 2 Dev'in yerel görsel koşullandırmasını kullanan görüntü dönüştürme. Referans görüntü, üretime dikkat bağlamı olarak rehberlik eder — yeniden üretim değil, yaratıcı dönüşümler.",
+    "ko": "Flux 2 Dev의 네이티브 시각적 컨디셔닝을 사용한 이미지 변환. 참조 이미지가 어텐션 컨텍스트로서 생성을 안내합니다 — 복제가 아닌 창의적 변환입니다.",
+    "uk": "Трансформація зображень за допомогою нативного візуального кондиціонування Flux 2 Dev. Референсне зображення спрямовує генерацію як контекст уваги — творчі трансформації, а не відтворення.",
+    "fr": "Transformation d'images utilisant le conditionnement visuel natif de Flux 2 Dev. L'image de référence guide la génération en tant que contexte d'attention — des transformations créatives, non des reproductions.",
+    "es": "Transformación de imágenes utilizando el condicionamiento visual nativo de Flux 2 Dev. La imagen de referencia guía la generación como contexto de atención — transformaciones creativas, no reproducciones.",
+    "he": "טרנספורמציית תמונה באמצעות ההתניה החזותית הטבעית של Flux 2 Dev. תמונת הייחוס מנחה את היצירה כהקשר קשב — טרנספורמציות יצירתיות, לא שכפולים.",
+    "ar": "تحويل الصور باستخدام التكييف البصري الأصلي لـ Flux 2 Dev. توجّه صورة المرجع عملية التوليد كسياق انتباه — تحويلات إبداعية، وليست إعادة إنتاج.",
+    "bg": "Трансформация на изображения чрез нативното визуално кондициониране на Flux 2 Dev. Референтното изображение насочва генерирането като контекст на внимание — творчески трансформации, а не възпроизвеждания."
+  },
+  "category": {
+    "en": "Image Transformation",
+    "de": "Bildtransformation",
+    "tr": "Görüntü Dönüştürme",
+    "ko": "이미지 변환",
+    "uk": "Трансформація зображень",
+    "fr": "Transformation d'images",
+    "es": "Transformación de imágenes",
+    "he": "טרנספורמציית תמונות",
+    "ar": "تحويل الصور",
+    "bg": "Трансформация на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2_img2img_diffusers",
+    "NEGATIVE_PROMPT": "",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 20,
+    "CFG": 1,
+    "seed": "random"
+  },
+  "capabilities": {
+    "img2img": true,
+    "text2img": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 55000,
+    "estimated_duration_seconds": "30-45",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev visual conditioning via Diffusers. Reference image is VAE-encoded and used as attention context tokens — generation from pure noise with image guidance.",
+    "display_name": "FLUX.2 [dev] Visual Conditioning",
+    "icon": "flash_on",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B Mistral text encoder)",
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
+    "quantization": "FP8 (transformer) + INT8 (text encoder) + BF16 (VAE)",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering",
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "flash_on",
+    "color": "#FF6B35",
+    "category": "image_transformation",
+    "difficulty": 2,
+    "order": 25
+  },
+  "tags": {
+    "en": [
+      "image",
+      "flux",
+      "flux2",
+      "diffusers",
+      "img2img",
+      "visual-conditioning"
+    ],
+    "de": [
+      "bild",
+      "flux",
+      "flux2",
+      "diffusers",
+      "img2img",
+      "visuelle-konditionierung"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

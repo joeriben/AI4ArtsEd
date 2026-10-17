@@ -1,0 +1,73 @@
+{
+  "pipeline": "direct",
+  "instruction_type": "direct_workflow",
+  "name": {
+    "en": "hacking the AI",
+    "de": "die KI hacken"
+  },
+  "description": {
+    "en": "Various ways to hack the AI.",
+    "de": "Verschiedene Möglichkeiten, die KI zu hacken."
+  },
+  "category": {
+    "de": "Forschung",
+    "en": "Research"
+  },
+  "properties": [
+    "research"
+  ],
+  "context": {
+    "en": "This is a system config for direct workflow execution. No prompt transformation is performed.",
+    "de": "Dies ist eine System-Config für direkte Workflow-Ausführung. Keine Prompt-Transformation wird durchgeführt."
+  },
+  "parameters": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_tokens": 1
+  },
+  "media_preferences": {
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "skip_stage2": true,
+    "backend": "none",
+    "workflow_type": "passthrough",
+    "note": "Used by direct.vue for legacy workflow execution. Stage 2 is skipped completely.",
+    "system_config": true
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#2196F3",
+    "category": "technical_imaging",
+    "difficulty": 5,
+    "order": 999,
+    "hidden": false
+  },
+  "tags": {
+    "en": [
+      "direct",
+      "legacy",
+      "passthrough",
+      "system"
+    ],
+    "de": [
+      "direkt",
+      "legacy",
+      "passthrough",
+      "system"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 18,
+    "complexity": "system",
+    "requires": [
+      "ComfyUI backend"
+    ]
+  }
+}

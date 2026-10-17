@@ -1,0 +1,82 @@
+# Paths that are not part of the public repository.
+#
+# One pattern per line, relative to the repository root. A trailing slash marks
+# a directory and everything under it. `*` matches within one path segment,
+# `**` across segments. Lines starting with `#` are comments.
+# scripts/public_export/public_files.py applies the list;
+# devserver/tests/test_public_surface_clean.py checks what remains.
+
+# Working rules and transcripts of the AI coding assistant
+.claude/
+CLAUDE.md
+6_run_i18n_translator.sh
+
+# Development log and genesis material
+DEVELOPMENT_LOG.md
+_record.sh
+archive/
+lora/
+research/
+tests/
+workflows_legacy/
+devserver/archive/
+devserver/schemas/instruction_types.json.OBSOLETE
+fix_hardware_matrix.py
+generate_hardware_matrix.py
+measure_execution_times.py
+update_chunks_with_timing.py
+stage3_timing.json
+timing_results.json
+standard_test_prompt.txt
+test_stage2_claude.py
+test_wan21_video.py
+
+# Documentation that is not architecture or operations: analyses, plans,
+# handovers, findings, reports, drafts and concept papers.
+docs/analysis/
+docs/archive/
+docs/drafts/
+docs/plans/
+docs/technical_reports/
+docs/DEVELOPMENT_LOG.md
+docs/HANDOVER*
+docs/BEFUND_*
+docs/BERICHT_*
+docs/ENTWURF_*
+docs/KONZEPT_*
+docs/MEMO_*
+docs/REVISION_*
+docs/SAFETY_*
+docs/SICHTUNG_*
+docs/TESTSATZ_*
+docs/TODO_*
+docs/UMZUG_*
+docs/ANSPRACHEN_*
+docs/AILIT_FRAMEWORK_MAPPING.md
+docs/MODELLFAMILIEN_*
+docs/00_MAIN_DOCUMENTATION_INDEX.md
+docs/ASYNC_JOB_QUEUE_PROPOSAL.md
+docs/COMFYUI_AUSFALL_2026-09-28.md
+docs/DESIGN_LLM_CHILD_PROCESSES.md
+docs/EDUCATOR_SURFACE_DESIGN_2026-06-05.md
+docs/FLUX2_KLEIN_NACH_UMZUG.md
+docs/GPU_SERVICE_BEFUNDE_2026-09-05.md
+docs/HEARTMULA_ABBRUCH_2026-10-01.md
+docs/HELP_ZIELBESTIMMUNGEN_UND_PRUEFPROTOKOLL.md
+docs/I18N_VIOLATIONS_INVENTORY.md
+docs/INTELLECTUAL_PROPERTY.md
+docs/KARTE_STRECKEN_UND_DIALEKTE.md
+docs/LATENT_AUDIO_SYNTH_MANUAL.md
+docs/LESSONS_LEARNED_FLOW_LOGIC_2026-08-23.md
+docs/LLM_SELECTION_AND_PROMPTING.md
+docs/MINIGAME_CREATION_GUIDE.md
+docs/OFFENE_SETZUNGEN_2026-08-18.md
+docs/PARKED_reflexion_feature_konzept.md
+docs/PLATTFORM_UEBERBLICK.md
+docs/RESONA_PROMPT_KOMPOSITION.md
+docs/RUECKWEG_GPU_DIENST_2026-09-23.md
+docs/STAGE2_PROMPT_QUALITY_CRITERIA.md
+docs/TRANSFORMERS_UPGRADE_TEST_PLAN.md
+docs/WHATS_NEW_2026_01.md
+docs/WORKSHOP_REPLAY_TESTING.md
+docs/latent_lab_instrumente_plan_2026-08-26.md

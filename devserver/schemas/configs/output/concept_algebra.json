@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Concept Algebra",
+    "de": "Konzept-Algebra",
+    "tr": "Kavram Cebiri",
+    "ko": "개념 대수",
+    "uk": "Концепт-алгебра",
+    "fr": "Algèbre de concepts",
+    "es": "Álgebra de conceptos",
+    "he": "אלגברת מושגים",
+    "ar": "جبر المفاهيم",
+    "bg": "Концептуална алгебра"
+  },
+  "description": {
+    "en": "Vector arithmetic on text embeddings: A - B + C.",
+    "de": "Vektor-Arithmetik auf Text-Embeddings: A - B + C.",
+    "tr": "Metin embedding'leri üzerinde vektör aritmetiği: A - B + C.",
+    "ko": "텍스트 임베딩에 대한 벡터 연산: A - B + C.",
+    "uk": "Векторна арифметика над текстовими ембедингами: A - B + C.",
+    "fr": "Arithmétique vectorielle sur les embeddings de texte : A - B + C.",
+    "es": "Aritmética vectorial sobre embeddings de texto: A - B + C.",
+    "he": "אריתמטיקה וקטורית על embeddings של טקסט: A - B + C.",
+    "ar": "حساب متجهي على تضمينات النص (embeddings): A - B + C.",
+    "bg": "Векторна аритметика върху текстови ембединги: A - B + C."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_concept_algebra_comfyui"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "display_name": "Concept Algebra (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 30000,
+    "recommended_resolution": "1024x1024"
+  }
+}

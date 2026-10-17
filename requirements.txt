@@ -1,0 +1,109 @@
+# AI4ArtsEd DevServer — Direct Dependencies (Pinned)
+# Generated: 2026-03-22 | Python 3.13 | CUDA 13.0
+#
+# This file lists ONLY packages directly imported by devserver/ and gpu_service/.
+# Transitive dependencies (e.g. safetensors, accelerate, tokenizers) are resolved
+# automatically by pip from these direct deps.
+#
+# INSTALLATION ORDER:
+#   1. Create venv: python3.13 -m venv venv && source venv/bin/activate
+#   2. PyTorch stack: pip install -r deployment/requirements-torch.txt
+#   3. This file: pip install -r requirements.txt
+#   4. Git packages: pip install -r deployment/requirements-git.txt
+#   5. SpaCy models: pip install -r deployment/requirements-spacy.txt
+#   6. custom_rasterizer: see deployment/INSTALL_GUIDE.md (Phase 4)
+#
+# Full guide: deployment/INSTALL_GUIDE.md
+
+# ============================================================================
+# Web Framework & Server
+# ============================================================================
+Flask==3.1.1
+flask-cors==6.0.1
+Flask-Compress==1.17
+waitress==3.0.2
+SQLAlchemy>=2.0,<3.0  # lab user system
+
+# ============================================================================
+# HTTP Clients
+# ============================================================================
+requests==2.32.4
+aiohttp==3.12.13
+
+# ============================================================================
+# HuggingFace ML Stack
+# ============================================================================
+diffusers==0.37.1
+transformers==4.57.6
+huggingface_hub==0.36.1
+
+# ============================================================================
+# 3D Generation (Hunyuan3D-2)
+# ============================================================================
+hy3dgen==2.0.2
+# Pulls in: trimesh, pygltflib, pymeshlab, xatlas, rembg, onnxruntime,
+#           opencv-python, accelerate, peft, ninja, pybind11, numpy
+# custom_rasterizer — compiled CUDA extension, see INSTALL_GUIDE.md
+
+# ============================================================================
+# HeartMuLa Runtime Deps (heartlib installed with --no-deps, these won't resolve)
+# ============================================================================
+vector-quantize-pytorch==1.27.20    # HeartCodec audio codec
+bitsandbytes==0.49.1                # Quantization support
+modelscope==1.34.0                  # Model hub
+torchtune==0.6.1                    # Fine-tuning utilities
+# einops — already pulled by MMAudio/ImageBind
+
+# ============================================================================
+# Audio Processing
+# ============================================================================
+soundfile==0.13.1
+pydub==0.25.1
+scipy==1.16.0
+
+# ============================================================================
+# NLP / Safety (DSGVO NER)
+# ============================================================================
+spacy==3.8.11
+# Models installed separately via deployment/requirements-spacy.txt
+
+# ============================================================================
+# Local LLM / VLM Inference (in-process, replaces Ollama since Session ~290)
+# ============================================================================
+# Used by gpu_service/services/llm_backend.py for:
+#   - VLM_SAFETY_MODEL (qwen3-vl:2b image safety check)
+#   - DSGVO_VERIFY_MODEL, SAFETY_MODEL and other small local LLMs
+# MUST be built with CUDA support; PyPI default wheels are CPU-only and too slow.
+# Install: CMAKE_ARGS="-DGGML_CUDA=on" pip install --no-binary llama-cpp-python llama-cpp-python==0.3.19
+# Verify libggml-cuda.so exists in llama_cpp/lib/ after install.
+llama-cpp-python==0.3.19
+
+# ============================================================================
+# Image Processing
+# ============================================================================
+pillow==11.3.0
+numpy==2.3.1
+
+# ============================================================================
+# Export (PDF, DOCX)
+# ============================================================================
+weasyprint==65.1
+python-docx==1.2.0
+pypdf==6.19.0
+
+# ============================================================================
+# GPU Monitoring (VRAM Coordinator)
+# ============================================================================
+nvidia-ml-py==13.590.48  # NVML bindings — enables VRAM visibility across all GPU processes
+psutil==7.0.0
+
+# ============================================================================
+# Configuration
+# ============================================================================
+toml==0.10.2
+
+# ============================================================================
+# Optional — Lazy-loaded, not required for core functionality
+# ============================================================================
+# boto3                  # AWS Bedrock LLM calls (only if using AWS)
+# tritonclient[http]     # Triton Inference Server (only if using Triton)

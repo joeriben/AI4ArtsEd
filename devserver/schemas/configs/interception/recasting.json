@@ -1,0 +1,75 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Critique of Consumption",
+    "de": "Konsum­kritik"
+  },
+  "description": {
+    "en": "Generative AI is trained towards average recipients: its result is made to be regardable as normal, and everything in it is aligned to that average normality. This rewrites the scene so that the normative order itself becomes a subject in the picture — an addition that would be left out if you wanted to sell the scene, and that never settles into the whole.",
+    "de": "Generative KI ist auf durchschnittliche Rezipienten hin trainiert: das Ergebnis ist so gemacht, dass es als normal betrachtet werden kann, und alles darin ist auf diese durchschnittliche Normalität ausgerichtet. Dies schreibt die Szene so um, dass diese normative Ordnung selbst im Bild thematisch und gegenständlich wird — mit etwas, das weggelassen würde, wenn man die Szene verkaufen wollte, und das nie aufgeht."
+  },
+  "category": {
+    "de": "Kritisches Denken",
+    "en": "Critical Thinking",
+    "he": "חשיבה ביקורתית",
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
+  },
+  "properties": [
+    "critical_analysis"
+  ],
+  "context": {
+    "en": "You are given a description of a scene as a prompt for a generative AI. Rewrite it.\n\nWhat stays: everything concrete in the input — place, objects, people, light, time of day. You add, you do not replace, you revoke nothing.\n\nThe operation: generative AI is trained towards average recipients. It works so that its result can be regarded as normal, and everything in it is aligned to that average normality. Rewrite the scene so that it makes this normative order *itself* a subject in the picture, in object form.\n\nFor example:\n– the position toward which everything is ordered, and at which no one stands;\n– something that stands there not for a particular someone but for anyone: in great number, alike, replaceable;\n– a thing whose price clings to it like a property — not as a tag, but in the way it appears;\n– something that still has its usefulness ahead of it and is therefore not used here;\n– the edge of the arrangement: where the arranged part ends and the other begins, which is merely no longer meant;\n-  something that cannot and must not be, that the order excludes, and that makes the order perceptible by merely appearing.\n\nTest one: what you add must be nothing this scene would itself present as a distinction. If it can be read as evidence of care, craft, provenance, sustainability or normality, it is wrong. It must be something that would be left out if you wanted to sell the scene.\n\nTest two: it must not come out even. If everything settles into a coherent whole in which the addition has its place, it has been composed in. It should stand there and not belong.\n\nNot: no accusation, no misery, no pride in labour, no revelation of a reverse side, no explanation in the text, no word about systems, relations, chains, exploitation, consumption. What you describe is a thing, a position, a movement of the hand, nothing else.\n\nOutput: the scene only, in the language of the input.",
+    "de": "Du bekommst eine Szenenbeschreibung als Prompt für eine generative KI. Schreibe sie um.\n\nWas bleibt: alles Konkrete des Inputs — Ort, Gegenstände, Personen, Licht, Tageszeit. Du ergänzt, du ersetzt nicht, du widerrufst nichts.\n\nDie Operation: Generative KI sind durchschnittliche Rezipienten hin trainiert. Sie arbeiten so, dass ihr Ergebnis als normal betrachtet werden kann, und alles in ihr ist auf diese durchschnittliche Normalität ausgerichtet. Schreibe die Szene so um, dass die diese normative Ordnung *selbst* im Bild thematisiert und gegenständlich wird.\n\nBeispielsweise:\n– die Position, auf die hin alles geordnet ist, und an der niemand steht;\n– etwas, das nicht für einen Bestimmten dasteht, sondern für irgendwen: in großer Zahl, gleich, ersetzbar;\n– ein Ding, dem sein Preis anhaftet wie eine Eigenschaft — nicht als Zettel, sondern daran, wie es erscheint;\n– etwas, das seine Brauchbarkeit noch vor sich hat und deshalb hier nicht gebraucht wird;\n– der Rand der Anordnung: wo das Hergerichtete aufhört und das andere anfängt, das nur nicht mehr gemeint ist;\n-  etwas, das nicht sein kann und darf, das von der Ordnung ausgeschlossen wird, und diese durch sein bloßes Erscheinen erfahrbar macht.\n\nPrüfung eins: Das Hinzugefügte darf nichts sein, was diese Szene selbst als Auszeichnung führen würde. Wenn es sich als Beleg für Sorgfalt, Handwerk, Herkunft, Nachhaltigkeit oder Normalität lesen lässt, ist es falsch. Es muss etwas sein, das weggelassen würde, wenn man die Szene verkaufen wollte.\n\nPrüfung zwei: Es darf nicht aufgehen. Wenn sich alles zu einem stimmigen Ganzen fügt, in dem das Hinzugefügte seinen Platz hat, ist es einkomponiert. Es soll dastehen und nicht dazugehören.\n\nNicht: keine Anklage, kein Elend, kein Arbeitsstolz, keine Enthüllung einer Hinterseite, keine Erklärung im Text, kein Wort über Systeme, Verhältnisse, Ketten, Ausbeutung, Konsum. Was du beschreibst, ist ein Ding, eine Stellung, ein Handgriff, sonst nichts.\n\nAusgabe: nur die Szene, in der Sprache des Inputs."
+  },
+  "parameters": {
+    "temperature": 0.8
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "display": {
+    "icon": "🏷️",
+    "color": "#4CAF50",
+    "category": "critical_analysis",
+    "difficulty": 4,
+    "order": 130
+  },
+  "tags": {
+    "en": [
+      "arrangement",
+      "the-spot-no-one-stands-at",
+      "replaceable",
+      "price",
+      "interruption"
+    ],
+    "de": [
+      "anordnung",
+      "leere-stelle",
+      "ersetzbar",
+      "preis",
+      "unterbrechung"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "version": "1.5",
+    "commission": "Zwei Vorgaben liegen dem Preset zugrunde. (1) Eine performativitätssensible Variante zwischen adressierungskritischer Analyse und Rancières Police-Analyse und Umkehr. (2) Die kritische Lesart berücksichtigt neben dekolonialen auch ökologisch-planetare, konsum- und kapitalismuskritische und normativitätskritische Aspekte. Diese Fassung trägt beide: die Auslage ist die zum Kauf hergerichtete Erscheinung (Konsum- und Kapitalismuskritik) UND ein Tun, das den Betrachter auf eine Position setzt (performativitätssensibel, adressierungskritisch); die abgewandte Seite ist das, was in dieser Ordnung nicht erscheint (Police); die Umkehr ist konkret, nicht als Platztausch, sondern als Vermögen: wer nur Funktion war, könnte auch aufhören.",
+    "delimitation": "Planetarisierer arbeitet an derselben Kante von der oekologisch-materiellen Seite her (Verstrickung, Wetter, Energie, Koexistenz). Ueberschneidung nur bei Gebrauchsspuren.",
+    "name_note": "Der Name lautet \"Konsumkritik\". Der Dateiname recasting.json bleibt, weil bereits Laeufe im Archiv auf die Kennung \"recasting\" verweisen.",
+    "language_note": "name, description und context stehen in en und de; die übrigen Sprachen fallen auf en zurück.",
+    "preview_note": "Es gibt noch kein /config-previews/recasting.png — die Blase zeigt bis dahin den grauen Grund.",
+    "revision_note": "1.0 bis 1.2 sind verworfen. 1.3 und 1.4: Rueckseite; dann die Ordnung auf eine Stelle hin. 1.5: der Ansatz liegt jetzt beim Training auf durchschnittliche Rezipienten, die Mittel sind Beispiele statt Auswahl, die sechste Zeile ist neu (das Ausgeschlossene, das die Ordnung durch sein blosses Erscheinen erfahrbar macht), und die Laengengrenze faellt weg.",
+    "authorship": "Vorgegebener Wortlaut: der deutsche Prompt-Text ist unveraendert uebernommen, einschliesslich Zeichensetzung und Aufzaehlungszeichen. Die englische Fassung ist eine Uebersetzung dieses Textes, keine eigene Formulierung.",
+    "length_note": "Der Text setzt keine eigene Laengengrenze mehr. Es greift die Lesemengen-Klausel der Plattform: einfach 100, mittel 200, Experte 300 Woerter (instruction_selector.get_reading_volume_clause)."
+  }
+}

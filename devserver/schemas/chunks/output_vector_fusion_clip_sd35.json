@@ -1,0 +1,230 @@
+{
+  "name": "output_vector_fusion_clip_sd35",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "description": "Vector Fusion - Dual CLIP encoding with linear/spherical interpolation using SD3.5 Large",
+
+  "workflow": {
+    "1": {
+      "inputs": {
+        "text": ["10", 0],
+        "clip": ["9", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode Part A"
+      }
+    },
+    "2": {
+      "inputs": {
+        "samples": ["8", 0],
+        "vae": ["5", 2]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "3": {
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": {
+        "title": "Empty Latent Image"
+      }
+    },
+    "4": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": ["2", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "5": {
+      "inputs": {
+        "ckpt_name": "OfficialStableDiffusion/sd3.5_large.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load SD3.5 Large Checkpoint"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": ["11", 0],
+        "clip": ["9", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode Negative"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": ["12", 0],
+        "clip": ["9", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode Part B"
+      }
+    },
+    "8": {
+      "inputs": {
+        "seed": 123456789,
+        "steps": 25,
+        "cfg": 5.5,
+        "sampler_name": "euler",
+        "scheduler": "normal",
+        "denoise": 1,
+        "model": ["5", 0],
+        "positive": ["13", 0],
+        "negative": ["6", 0],
+        "latent_image": ["3", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "9": {
+      "inputs": {
+        "clip_name1": "clip_g.safetensors",
+        "clip_name2": "t5xxl_enconly.safetensors",
+        "type": "sd3",
+        "device": "default"
+      },
+      "class_type": "DualCLIPLoader",
+      "_meta": {
+        "title": "DualCLIPLoader (CLIP-G only for pedagogical clarity)"
+      }
+    },
+    "10": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveString",
+      "_meta": {
+        "title": "prompt_part_a"
+      }
+    },
+    "11": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveString",
+      "_meta": {
+        "title": "negative_prompt"
+      }
+    },
+    "12": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveString",
+      "_meta": {
+        "title": "prompt_part_b"
+      }
+    },
+    "13": {
+      "inputs": {
+        "conditioning_a": ["1", 0],
+        "conditioning_b": ["7", 0],
+        "alpha": 0.5,
+        "interpolation_method": "linear",
+        "steps": 3
+      },
+      "class_type": "ai4artsed_conditioning_fusion",
+      "_meta": {
+        "title": "AI4ArtsEd Conditioning Fusion"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "prompt_part_a": {
+      "node_id": "10",
+      "field": "inputs.value",
+      "source": "{{PART_A}}",
+      "description": "First semantic part of split prompt"
+    },
+    "prompt_part_b": {
+      "node_id": "12",
+      "field": "inputs.value",
+      "source": "{{PART_B}}",
+      "description": "Second semantic part of split prompt"
+    },
+    "negative_prompt": {
+      "node_id": "11",
+      "field": "inputs.value",
+      "default": "",
+      "description": "Negative prompt"
+    },
+    "alpha": {
+      "node_id": "13",
+      "field": "inputs.alpha",
+      "default": 0.5,
+      "description": "Fusion alpha (0.0 = full part_a, 1.0 = full part_b)"
+    },
+    "interpolation_method": {
+      "node_id": "13",
+      "field": "inputs.interpolation_method",
+      "default": "linear",
+      "description": "Interpolation method: linear, spherical, multi_step, latent_aware"
+    },
+    "width": {
+      "node_id": "3",
+      "field": "inputs.width",
+      "default": 1024,
+      "description": "Image width"
+    },
+    "height": {
+      "node_id": "3",
+      "field": "inputs.height",
+      "default": 1024,
+      "description": "Image height"
+    },
+    "steps": {
+      "node_id": "8",
+      "field": "inputs.steps",
+      "default": 25,
+      "description": "Sampling steps"
+    },
+    "cfg": {
+      "node_id": "8",
+      "field": "inputs.cfg",
+      "default": 5.5,
+      "description": "CFG scale"
+    },
+    "seed": {
+      "node_id": "8",
+      "field": "inputs.seed",
+      "default": 123456789,
+      "description": "Random seed"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "4",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "Vector-fused image output"
+  },
+
+  "meta": {
+    "estimated_duration": "30-60s",
+    "requires_gpu": true,
+    "model_file": "sd3.5_large.safetensors",
+    "clip_files": ["clip_g.safetensors", "t5xxl_enconly.safetensors"],
+    "custom_nodes_required": ["ai4artsed_conditioning_fusion"],
+    "pedagogical_note": "Uses CLIP-G only (not T5) for clearer demonstration of vector interpolation effects"
+  }
+}

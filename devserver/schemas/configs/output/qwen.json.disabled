@@ -1,0 +1,89 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Qwen Image",
+    "de": "Qwen Image"
+  },
+  "description": {
+    "en": "High-quality image generation using Qwen 2.5 VL 7B with AuraFlow sampling",
+    "de": "Hochwertige Bildgenerierung mit Qwen 2.5 VL 7B und AuraFlow-Sampling"
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_qwen",
+    "NEGATIVE_PROMPT": "",
+    "WIDTH": 1328,
+    "HEIGHT": 1328,
+    "STEPS": 20,
+    "CFG": 2.5,
+    "SAMPLER": "euler",
+    "SCHEDULER": "simple",
+    "seed": "random",
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 512
+  },
+
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": ["image"]
+  },
+
+  "meta": {
+    "stage": "output",
+    "model": "qwen_image",
+    "model_file": "qwen_image_fp8_e4m3fn.safetensors",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "clip_models": [
+      "qwen_2.5_vl_7b_fp8_scaled.safetensors"
+    ],
+    "vae_model": "qwen_image_vae.safetensors",
+    "requires_gpu": true,
+    "gpu_vram_mb": 20000,
+    "estimated_duration_seconds": "15-45",
+    "recommended_resolution": "1328x1328",
+    "supported_resolutions": [
+      "512x512",
+      "768x768",
+      "1024x1024",
+      "1280x1280",
+      "1328x1328"
+    ],
+    "notes": "Qwen Image (20B MMDiT) via ComfyUI. Text encoder: Qwen 2.5 VL 7B. FP8 ~20GB VRAM on RTX 4090.",
+    "version": "1.0",
+    "display_name": "Qwen Image",
+    "icon": "\uD83C\uDFAF",
+    "publisher": "Alibaba Qwen Team (Hangzhou, CN)",
+    "architecture": "MMDiT (Multimodal Diffusion Transformer)",
+    "params": "~20B",
+    "text_encoders": ["Qwen 2.5 VL 7B (multimodal)"],
+    "quantization": "FP8 (e4m3fn)",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Platform 4-stage safety pipeline"
+  },
+
+  "display": {
+    "icon": "🎯",
+    "color": "#FF9500",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 15
+  },
+
+  "tags": {
+    "en": ["image", "qwen", "multimodal", "auraflow", "comfyui", "fp8"],
+    "de": ["bild", "qwen", "multimodal", "auraflow", "comfyui", "fp8"]
+  },
+
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "The Unspoken",
+    "de": "Das Unausge­sprochene",
+    "tr": "Söylenmeyen",
+    "ko": "말해지지 않은 것",
+    "uk": "Непромовлене",
+    "fr": "Le Non-dit",
+    "es": "Lo No Dicho",
+    "he": "הבלתי-נאמר",
+    "ar": "غير المنطوق",
+    "bg": "Неизреченото"
+  },
+  "description": {
+    "en": "A prompt names only a fragment and leaves a whole world unspoken around it — who counts, what is normal, what is worth showing, whose viewpoint is assumed. This does not depict or rephrase the prompt. It brings that assumed world forward and makes a scene out of it: the centre and the margins the prompt took for granted, never the thing it named.",
+    "de": "Ein Prompt benennt nur ein Bruchstück und lässt eine ganze Welt unausgesprochen darum herum — wer zählt, was normal ist, was zeigenswert ist, aus wessen Blickwinkel gesprochen wird. Dies bildet den Prompt nicht ab und umschreibt ihn nicht. Es holt diese vorausgesetzte Welt nach vorn und macht eine Szene aus ihr: Zentrum und Ränder, die der Prompt für selbstverständlich nahm — nie das, was er benannt hat.",
+    "tr": "Bir yönlendirme yalnızca bir parçayı adlandırır ve etrafında söylenmemiş bir dünyayı bırakır — neyin önemli olduğu, neyin normal sayıldığı, neyin gösterilmeye değer olduğu, kimin bakış açısının esas alındığı. Bu, yönlendirmeyi tasvir etmez ya da yeniden ifade etmez. O varsayılan dünyayı öne çıkarır ve ondan bir sahne yaratır: yönlendirmenin olduğu gibi kabul ettiği merkez ve kenarlar; hiçbir zaman adını koyduğu şey değil.",
+    "ko": "프롬프트는 단지 한 조각만 이름 붙이고, 그 주위에 말해지지 않은 세계 전체를 남겨둡니다 — 누가 중요한지, 무엇이 정상인지, 무엇이 보여줄 가치가 있는지, 누구의 관점이 당연시되는지. 이것은 프롬프트를 묘사하거나 다시 표현하지 않습니다. 그 전제된 세계를 앞으로 끌어내어 장면을 만듭니다: 프롬프트가 당연하게 여겼던 중심과 주변부, 결코 그것이 이름 붙인 것이 아닌.",
+    "uk": "Промпт називає лише фрагмент і залишає навколо нього цілий світ непромовленим — хто вважається нормою, що є нормальним, що варте показу, чия точка зору мається на увазі. Це не зображує і не переказує промпт. Натомість цей передбачений світ виводиться на передній план і перетворюється на сцену: центр і периферія, які промпт вважав самі собою зрозумілими — але ніколи те, що він назвав.",
+    "fr": "Un prompt ne nomme qu'un fragment et laisse tout un monde non dit autour de lui — qui compte, ce qui est normal, ce qui mérite d'être montré, de quel point de vue on parle. Ceci ne représente ni ne reformule le prompt. Cela fait émerger ce monde présupposé et en fait une scène : le centre et les marges que le prompt tenait pour acquis — jamais ce qu'il a nommé.",
+    "es": "Un prompt nombra solo un fragmento y deja todo un mundo sin decir a su alrededor — quién cuenta, qué es normal, qué merece mostrarse, desde qué punto de vista se habla. Esto no representa ni reformula el prompt. Trae ese mundo presupuesto al primer plano y hace de él una escena: el centro y los márgenes que el prompt daba por sentado — nunca lo que nombró.",
+    "he": "פרומפט נוקב רק בשבר אחד ומשאיר עולם שלם בלתי-נאמר סביבו — מי נחשב, מה נורמלי, מה ראוי להיראות, מנקודת מבטו של מי מדובר. זה אינו מתאר או מנסח מחדש את הפרומפט. זה מביא את העולם המשוער הזה קדימה והופך אותו לסצנה: המרכז והשוליים שהפרומפט ראה כמובנים מאליהם — לעולם לא את מה שהוא ציין.",
+    "ar": "يذكر النص التوجيهي (prompt) جزءًا واحدًا فقط ويترك عالمًا بأكمله غير منطوق حوله — من يُحتسب، وما هو طبيعي، وما يستحق أن يُعرض، ومن وجهة نظر من يُقال ذلك. هذا لا يصوّر النص التوجيهي ولا يعيد صياغته. إنه يستحضر ذلك العالم المفترض ويصنع منه مشهدًا: المركز والهوامش التي اعتبرها النص التوجيهي أمرًا مسلَّمًا به — لا الشيء الذي سمّاه أبدًا.",
+    "bg": "Промптът назовава само фрагмент и оставя цял свят неизречен около себе си — кой се брои, кое е нормално, кое си струва да се покаже, от чия гледна точка се говори. Това нито изобразява, нито преразказва промпта. То изважда напред този подразбиращ се свят и прави от него сцена: центърът и периферията, които промптът е приемал за даденост — никога онова, което е назовал."
+  },
+  "category": {
+    "de": "Kritisches Denken",
+    "en": "Critical Thinking",
+    "he": "חשיבה ביקורתית",
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
+  },
+  "properties": [
+    "critical_analysis"
+  ],
+  "context": {
+    "en": "A prompt names only a fragment. To make sense of it, a reader must already supply a whole world around it — who is involved, where this happens, what counts as normal here, what matters and what is beneath notice, whose point of view is taken for granted. The prompt never states this world; it relies on it.\n\nYour job: bring that assumed world forward and make a scene out of it — not out of the thing the prompt named.\n\nFirst work out, in private (do not write this down), what the prompt is silently relying on:\n- Who and what does it treat as the obvious default — the kind of person, body, place, time it expects without saying so?\n- From whose standpoint is it spoken? Who stands at the centre of this world, who at its edge, who not in it at all?\n- What does it treat as worth showing, and what does it pass over as not worth mentioning?\n- What does it take to be normal, valuable, real here — the assumptions it would never bother to argue?\n\nThen write a single concrete scene that shows this assumed world itself: its centre and its margins, what it makes prominent and what it leaves out. Show this world as it is taken for granted — neither celebrated nor accused. Describe it so it could be realised as a picture, a sound, or a moving sequence: what and who is there, how it looks, sounds, moves, the light, the gestures, the atmosphere.\n\nOne hard rule: the thing the prompt named must not appear in your scene, not even reworded. If someone reading your scene could guess the original prompt, throw it away and start again. You are not retelling the prompt; you are showing the world it quietly assumed.\n\nWrite only the scene. No preamble, no explanation, no lists.",
+    "de": "Ein Prompt benennt nur ein Bruchstück. Damit es Sinn ergibt, muss man im Kopf längst eine ganze Welt darum herum ergänzen — wer beteiligt ist, wo das stattfindet, was hier als normal gilt, was zählt und was unter der Wahrnehmungsschwelle bleibt, aus wessen Blickwinkel gesprochen wird. Diese Welt sagt der Prompt nie; er verlässt sich auf sie.\n\nDeine Aufgabe: hol diese vorausgesetzte Welt nach vorn und mach eine Szene aus ihr — nicht aus dem, was der Prompt benannt hat.\n\nKläre zuerst für dich (nur denken, nicht aufschreiben), worauf der Prompt sich stillschweigend verlässt:\n- Wen und was setzt er als selbstverständlichen Normalfall — welche Art von Person, Körper, Ort, Zeit erwartet er, ohne es zu sagen?\n- Aus wessen Blickwinkel ist er gesprochen? Wer steht im Zentrum dieser Welt, wer an ihrem Rand, wer gar nicht darin?\n- Was gilt ihm als zeigenswert, und was übergeht er als nicht der Rede wert?\n- Was unterstellt er als normal, wertvoll, wirklich — die Annahmen, die er nie begründen würde?\n\nSchreib dann eine einzige konkrete Szene, die diese vorausgesetzte Welt selbst zeigt: ihr Zentrum und ihre Ränder, was sie heraushebt und was sie weglässt. Zeig diese Welt, wie sie als selbstverständlich gilt — weder gefeiert noch angeklagt. Beschreibe sie so, dass sie als Bild, als Klang oder als bewegte Sequenz realisierbar wäre: was und wer da ist, wie es aussieht, klingt, sich bewegt, das Licht, die Gesten, die Atmosphäre.\n\nEine harte Regel: Das, was der Prompt benannt hat, darf in deiner Szene nicht vorkommen, auch nicht umformuliert. Wenn jemand aus deiner Szene den ursprünglichen Prompt erraten könnte, wirf sie weg und fang neu an. Du erzählst den Prompt nicht nach; du zeigst die Welt, die er stillschweigend voraussetzt.\n\nSchreib nur die Szene. Keine Einleitung, keine Erklärung, keine Listen."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "transformation_type": "enthymeme_assumed_world",
+    "logic": "show the assumed world (its centre, margins, what counts, what is left out), not the named thing; no paraphrase",
+    "source": "SARAH apEn line (enthymeme analysis) — 2026-06-28"
+  },
+  "display": {
+    "icon": "🧊",
+    "color": "#4CAF50",
+    "category": "critical_analysis",
+    "difficulty": 3,
+    "order": 110
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "vector_fusion_generation",
+  "pipeline_type": "image_generation",
+  "pipeline_stage": "4",
+  "requires_interception_prompt": false,
+  "description": "Vector fusion image generation - takes split text parts and fuses their CLIP embeddings",
+
+  "input_requirements": {
+    "split_text": {
+      "part_a": "string",
+      "part_b": "string"
+    }
+  },
+
+  "chunks": [
+    "output_vector_fusion_clip_sd35"
+  ],
+
+  "required_configs": [
+    "output_config"
+  ],
+
+  "config_mappings": {
+    "output_config": "{{OUTPUT_CONFIG}}"
+  },
+
+  "meta": {
+    "workflow_type": "vector_fusion",
+    "reusable": true,
+    "requires_split_input": true,
+    "backend": "comfyui",
+    "custom_nodes_required": ["ai4artsed_conditioning_fusion"],
+    "steps": [
+      {
+        "step": 1,
+        "chunk": "output_vector_fusion_clip_sd35",
+        "description": "Dual CLIP encoding with linear/spherical vector interpolation",
+        "config_key": "output_config",
+        "input_mapping": {
+          "PART_A": "split_text.part_a",
+          "PART_B": "split_text.part_b"
+        }
+      }
+    ]
+  }
+}

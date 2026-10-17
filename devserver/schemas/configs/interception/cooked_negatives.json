@@ -1,0 +1,92 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Cooked Film",
+    "de": "Cooked Film",
+    "tr": "Cooked Film",
+    "ko": "Cooked Film",
+    "uk": "Cooked Film",
+    "fr": "Cooked Film",
+    "es": "Cooked Film",
+    "he": "Cooked Film",
+    "ar": "Cooked Film",
+    "bg": "Cooked Film"
+  },
+  "description": {
+    "en": "Transforms ideas into the appearance of film negatives that have distorted by cooking for artistic purposes.",
+    "de": "Verwandelt Ideen in den Bildeindruck von Filmnegativen die zur künstlerischen Verfremdung vor der Entwicklung gekocht wurden.",
+    "uk": "Зварені фотонегативи",
+    "fr": "Transforme les idées en apparence de négatifs photographiques déformés par la cuisson à des fins artistiques.",
+    "es": "Transforma ideas en la apariencia de negativos fotográficos distorsionados por cocción con fines artísticos.",
+    "he": "ממיר רעיונות למראה נגטיבים פוטוגרפיים שעוּוּתו על ידי בישול למטרות אמנותיות.",
+    "ar": "يحوّل الأفكار إلى مظهر السلبيات الفوتوغرافية التي شُوِّهت بالطهي لأغراض فنية.",
+    "bg": "Превръща идеите в изгледа на филмови негативи, изкривени чрез варене за художествени цели.",
+    "tr": "Fikirleri sanatsal amaçlarla pişirme yoluyla bozulmuş film negatiflerinin görünümüne dönüştürür.",
+    "ko": "아이디어를 예술적 목적으로 가열하여 변형된 필름 네거티브의 외관으로 변환합니다."
+  },
+  "category": {
+    "de": "Fotografie & Medien",
+    "en": "Photography & Media",
+    "he": "צילום ומדיה",
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии",
+    "tr": "Fotoğraf & Medya",
+    "ko": "사진 & 미디어",
+    "uk": "Фотографія та медіа",
+    "fr": "Photographie & Médias",
+    "es": "Fotografía & Medios"
+  },
+  "properties": [
+    "technical_imaging"
+  ],
+  "context": {
+    "en": "You work with artistically destructive analog film techniques. Your image-making is shaped by physical degradation caused by cooking the film prior to its development. You will activate a respective LORA by integrating the trigger term 'cooked negatives' in your output. One paragraph, 120–180 words.",
+    "de": "Du arbeitest mit künstlerisch-destruktiven analogen Film-Techniken. Deine Bilderzeugung ist durch die physische Veränderung und Zersetzung des Negativfilms durch Kochen vor der Filmentwicklung geprägt. Du aktivierst ein entsprechendes LORA indem DU den Trigger Term 'cooked negatives' in Deinem Output verwendest. Ein Absatz, 120–180 Wörter",
+    "tr": "Sanatsal olarak yıkıcı analog film teknikleriyle çalışıyorsun. Görüntü üretimin, filmin banyo edilmesinden önce pişirilmesiyle oluşan fiziksel bozulma tarafından şekilleniyor. Çıktında 'cooked negatives' tetik terimini kullanarak ilgili LORA'yı etkinleştireceksin. Bir paragraf, 120–180 kelime.",
+    "ko": "당신은 예술적으로 파괴적인 아날로그 필름 기법으로 작업합니다. 당신의 이미지 제작은 현상 전에 필름을 조리하여 발생하는 물리적 열화에 의해 형성됩니다. 출력에 'cooked negatives' 트리거 용어를 통합하여 해당 LORA를 활성화합니다. 한 단락, 120–180단어."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "medium": "photography",
+    "era": "contemporary",
+    "approach": "technical_professional",
+    "loras": [
+      {
+        "name": "sd3.5-large_cooked_negatives-000004.safetensors",
+        "strength": 0.9
+      }
+    ],
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "📸",
+    "color": "#2196F3",
+    "category": "technical_imaging",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [
+      "photography",
+      "digital",
+      "contemporary",
+      "technical"
+    ],
+    "de": [
+      "fotografie",
+      "digital",
+      "zeitgenössisch",
+      "technisch"
+    ]
+  }
+}

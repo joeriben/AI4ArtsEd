@@ -1,0 +1,14 @@
+# AI4ArtsEd — SpaCy NER Models (DSGVO Safety Check)
+# Generated from dev venv: 2026-03-22
+#
+# These are NLP models for Named Entity Recognition, used to detect
+# personal names in user input (DSGVO/GDPR compliance).
+#
+# Usage:
+#   pip install -r deployment/requirements-spacy.txt
+
+# German NER model (primary — platform language)
+de_core_news_lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl#sha256=36fda650e476b54d5e87803635e36dadd1e8e034c4b5962088586d684f4c9fed
+
+# Multilingual NER model (catches names from any language in German text)
+xx_ent_wiki_sm @ https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.8.0/xx_ent_wiki_sm-3.8.0-py3-none-any.whl#sha256=6f3c4b853852ea9e9d2dc76cc950dddb10a7e4c42d813308caefe6c5e8be2f0a

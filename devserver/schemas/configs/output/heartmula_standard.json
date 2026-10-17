@@ -1,0 +1,190 @@
+{
+  "pipeline": "dual_text_media_generation",
+  "name": {
+    "en": "HeartMuLa Music",
+    "de": "HeartMuLa Musik",
+    "tr": "HeartMuLa Müzik",
+    "ko": "HeartMuLa 음악",
+    "uk": "HeartMuLa Музика",
+    "fr": "HeartMuLa Musique",
+    "es": "HeartMuLa Música",
+    "he": "HeartMuLa מוזיקה",
+    "ar": "HeartMuLa موسيقى",
+    "bg": "HeartMuLa Музика"
+  },
+  "description": {
+    "en": "Generate music from lyrics and style tags using HeartMuLa AI - multilingual, including but not limited to English, Chinese, Japanese, Korean and Spanish",
+    "de": "Musik aus Lyrics und Style-Tags mit HeartMuLa AI generieren - unterstützt Englisch, Chinesisch, Japanisch, Koreanisch, Spanisch",
+    "tr": "HeartMuLa AI kullanarak şarkı sözlerinden ve stil etiketlerinden müzik üretin - çok dilli, İngilizce, Çince, Japonca, Korece ve İspanyolca dahil ancak bunlarla sınırlı olmamak üzere",
+    "ko": "HeartMuLa AI를 사용해 가사와 스타일 태그로부터 음악을 생성합니다 - 다국어 지원, 영어·중국어·일본어·한국어·스페인어를 포함하되 이에 국한되지 않습니다",
+    "uk": "Генерування музики з текстів пісень і тегів стилю за допомогою HeartMuLa AI - багатомовна підтримка, включно з англійською, китайською, японською, корейською та іспанською, але не обмежуючись ними",
+    "fr": "Générez de la musique à partir de paroles et de balises de style avec HeartMuLa AI - multilingue, incluant notamment l'anglais, le chinois, le japonais, le coréen et l'espagnol",
+    "es": "Genera música a partir de letras y etiquetas de estilo con HeartMuLa AI - multilingüe, incluyendo entre otros inglés, chino, japonés, coreano y español",
+    "he": "יצירת מוזיקה ממילות שיר ותגיות סגנון באמצעות HeartMuLa AI - רב-לשוני, כולל בין השאר אנגלית, סינית, יפנית, קוריאנית וספרדית",
+    "ar": "توليد الموسيقى من كلمات الأغاني وعلامات الأسلوب باستخدام HeartMuLa AI - متعدد اللغات، بما في ذلك على سبيل المثال لا الحصر الإنجليزية والصينية واليابانية والكورية والإسبانية",
+    "bg": "Генериране на музика от текстове на песни и стилови етикети с HeartMuLa AI - многоезичен, включително, но не само, английски, китайски, японски, корейски и испански"
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound",
+    "tr": "Ses",
+    "ko": "사운드",
+    "uk": "Звук",
+    "fr": "Son",
+    "es": "Sonido",
+    "he": "שמע",
+    "ar": "صوت",
+    "bg": "Звук"
+  },
+  "context": "Write structured song lyrics with markers like [Verse], [Chorus], [Bridge] and provide comma-separated style tags describing genre, mood, instruments, and tempo. Focus on creating poetic, rhythmic lyrics that fit the musical style.",
+  "parameters": {
+    "OUTPUT_CHUNK": "output_music_heartmula",
+    "temperature": 1.0,
+    "topk": 70,
+    "cfg_scale": 3.0,
+    "max_audio_length_ms": 60000
+  },
+  "media_preferences": {
+    "default_output": "music",
+    "supported_types": [
+      "music"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "heartmula",
+    "backend_type": "heartmula",
+    "requires_dual_input": true,
+    "supported_languages": [
+      "en",
+      "zh",
+      "ja",
+      "ko",
+      "es"
+    ],
+    "display_name": "HeartMuLa",
+    "icon": "🎵",
+    "publisher": "HeartMuLa Research (CN)",
+    "architecture": "Flow Matching + MuLa Codec (Global+Local Transformer)",
+    "params": "~3B",
+    "text_encoders": [
+      "Internal tokenizer (lyrics + tags)"
+    ],
+    "quantization": "FP16 / FP32 codec",
+    "license": "Apache 2.0",
+    "fair_culture": "~600K songs + TTS corpora (song sources undisclosed)",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "~600K songs (sources undisclosed)",
+        "TTS corpora"
+      ],
+      "training_data_size": "~600K songs",
+      "training_data_consent": "unknown",
+      "geographic_origin": "China",
+      "known_biases": [
+        {
+          "en": "Language support limited to EN, ZH, JA, KO, ES — other languages produce unpredictable results",
+          "de": "Sprachunterstützung beschränkt auf EN, ZH, JA, KO, ES — andere Sprachen erzeugen unvorhersagbare Ergebnisse",
+          "tr": "Dil desteği EN, ZH, JA, KO, ES ile sınırlı — diğer diller öngörülemez sonuçlar üretir",
+          "ko": "언어 지원이 EN, ZH, JA, KO, ES로 제한됨 — 다른 언어는 예측할 수 없는 결과를 냄",
+          "uk": "Мовна підтримка обмежена EN, ZH, JA, KO, ES — інші мови дають непередбачувані результати",
+          "fr": "Support linguistique limité à EN, ZH, JA, KO, ES — les autres langues produisent des résultats imprévisibles",
+          "es": "Soporte lingüístico limitado a EN, ZH, JA, KO, ES — otros idiomas producen resultados impredecibles",
+          "he": "תמיכת שפות מוגבלת ל-EN, ZH, JA, KO, ES — שפות אחרות מניבות תוצאות בלתי צפויות",
+          "ar": "دعم اللغات مقتصر على EN وZH وJA وKO وES — اللغات الأخرى تُنتج نتائج غير متوقعة",
+          "bg": "Езикова поддръжка, ограничена до EN, ZH, JA, KO, ES — другите езици дават непредвидими резултати"
+        },
+        {
+          "en": "Training data likely skewed toward commercial pop/electronic genres",
+          "de": "Trainingsdaten wahrscheinlich auf kommerzielle Pop-/Elektronik-Genres verzerrt",
+          "tr": "Eğitim verisi büyük olasılıkla ticari pop/elektronik türlere kaymış durumda",
+          "ko": "학습 데이터가 상업적 팝/일렉트로닉 장르로 치우쳤을 가능성이 큼",
+          "uk": "Навчальні дані, ймовірно, зміщені у бік комерційних поп-/електронних жанрів",
+          "fr": "Données d'entraînement probablement biaisées vers les genres pop/électroniques commerciaux",
+          "es": "Los datos de entrenamiento probablemente están sesgados hacia géneros pop/electrónicos comerciales",
+          "he": "נתוני האימון ככל הנראה מוטים לכיוון ז'אנרים מסחריים של פופ/אלקטרוני",
+          "ar": "يُرجَّح أن بيانات التدريب منحازة نحو أنواع البوب/الإلكترونية التجارية",
+          "bg": "Данните за обучение вероятно са изкривени към комерсиални поп/електронни жанрове"
+        },
+        {
+          "en": "Tag system reflects Western genre categories (pop, rock, jazz)",
+          "de": "Tag-System spiegelt westliche Genre-Kategorien wider (Pop, Rock, Jazz)",
+          "tr": "Etiket sistemi Batılı tür kategorilerini yansıtıyor (pop, rock, caz)",
+          "ko": "태그 체계가 서구식 장르 분류를 반영함(팝, 록, 재즈)",
+          "uk": "Система тегів відображає західні жанрові категорії (поп, рок, джаз)",
+          "fr": "Le système d'étiquettes reflète des catégories de genres occidentales (pop, rock, jazz)",
+          "es": "El sistema de etiquetas refleja categorías de género occidentales (pop, rock, jazz)",
+          "he": "מערכת התיוג משקפת קטגוריות ז'אנר מערביות (פופ, רוק, ג'אז)",
+          "ar": "نظام الوسوم يعكس فئات الأنواع الغربية (بوب، روك، جاز)",
+          "bg": "Системата от етикети отразява западни жанрови категории (поп, рок, джаз)"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "Oral and non-notated musical traditions are underrepresented",
+          "de": "Mündliche und nicht-notierte Musiktraditionen sind unterrepräsentiert",
+          "tr": "Sözlü ve notaya dökülmemiş müzik gelenekleri yetersiz temsil ediliyor",
+          "ko": "구전되거나 악보화되지 않은 음악 전통은 충분히 반영되지 않음",
+          "uk": "Усні та ненотовані музичні традиції недостатньо представлені",
+          "fr": "Les traditions musicales orales et non notées sont sous-représentées",
+          "es": "Las tradiciones musicales orales y no notadas están subrepresentadas",
+          "he": "מסורות מוזיקליות שבעל-פה ושאינן כתובות בתווים מיוצגות בחסר",
+          "ar": "التقاليد الموسيقية الشفهية وغير المدوَّنة بالنوتة ممثَّلة تمثيلاً ناقصاً",
+          "bg": "Устните и ненотирани музикални традиции са недостатъчно представени"
+        },
+        {
+          "en": "Microtonal systems (Arabic maqam, Indian raga) not explicitly supported",
+          "de": "Mikrotonale Systeme (arabischer Maqam, indischer Raga) nicht explizit unterstützt",
+          "tr": "Mikrotonal sistemler (Arap makamı, Hint ragası) açıkça desteklenmiyor",
+          "ko": "미분음(마이크로톤) 체계(아랍 마캄, 인도 라가)는 명시적으로 지원되지 않음",
+          "uk": "Мікротональні системи (арабський макам, індійська рага) не підтримуються явно",
+          "fr": "Les systèmes microtonaux (maqam arabe, raga indien) ne sont pas explicitement pris en charge",
+          "es": "Los sistemas microtonales (maqam árabe, raga indio) no están explícitamente soportados",
+          "he": "מערכות מיקרוטונליות (מקאם ערבי, ראגה הודית) אינן נתמכות במפורש",
+          "ar": "الأنظمة الصوتية دون النصف نغمة (المقام العربي، الراغا الهندية) غير مدعومة صراحةً",
+          "bg": "Микротоналните системи (арабски макам, индийска рага) не са изрично поддържани"
+        },
+        {
+          "en": "Song sources undisclosed — consent of original artists unknown",
+          "de": "Songquellen nicht offengelegt — Zustimmung der ursprünglichen Künstler unbekannt",
+          "tr": "Şarkı kaynakları açıklanmamış — özgün sanatçıların onayı bilinmiyor",
+          "ko": "곡의 출처가 공개되지 않음 — 원곡 아티스트의 동의 여부는 알 수 없음",
+          "uk": "Джерела пісень не розкрито — згода оригінальних виконавців невідома",
+          "fr": "Sources des morceaux non divulguées — le consentement des artistes originaux est inconnu",
+          "es": "Fuentes de las canciones no reveladas — se desconoce el consentimiento de los artistas originales",
+          "he": "מקורות השירים לא נחשפו — הסכמת האמנים המקוריים אינה ידועה",
+          "ar": "مصادر الأغاني غير معلنة — موافقة الفنانين الأصليين غير معروفة",
+          "bg": "Източниците на песните не са оповестени — съгласието на оригиналните изпълнители е неизвестно"
+        }
+      ]
+    },
+    "gpu_vram_mb": 12500
+  },
+  "display": {
+    "icon": "music_note",
+    "color": "#9C27B0",
+    "category": "sound",
+    "difficulty": 3,
+    "order": 110
+  },
+  "tags": {
+    "en": [
+      "music",
+      "lyrics",
+      "multilingual",
+      "AI music"
+    ],
+    "de": [
+      "Musik",
+      "Lyrics",
+      "mehrsprachig",
+      "KI-Musik"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 12,
+    "complexity": "intermediate"
+  }
+}

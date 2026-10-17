@@ -1,0 +1,85 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Your Call!",
+    "de": "Du bestimmst!",
+    "tr": "Sen Karar Ver!",
+    "ko": "네가 정해!",
+    "uk": "Ти вирішуєш",
+    "fr": "C'est toi qui décides !",
+    "es": "¡Tú decides!",
+    "he": "אתה מחליט!",
+    "ar": "أنت تقرر!",
+    "bg": "Ти решаваш!"
+  },
+  "description": {
+    "en": "When you make art, you decide what you want to use and how you want to do it. Here, you can tell the AI what to use and what rules to follow.",
+    "de": "Wenn Du Kunst machst, entscheidest Du, was Du benutzen willst und wie Du es machen möchtest. Hier kannst Du der KI sagen, was sie benutzen und nach welchen Regeln sie arbeiten soll.",
+    "uk": "Власна інструкція",
+    "fr": "Quand tu fais de l'art, tu décides ce que tu veux utiliser et comment tu veux le faire. Ici, tu peux dire à l'IA quoi utiliser et quelles règles suivre.",
+    "es": "Cuando haces arte, tú decides qué quieres usar y cómo quieres hacerlo. Aquí puedes decirle a la IA qué usar y qué reglas seguir.",
+    "he": "כשאתה יוצר אמנות, אתה מחליט מה להשתמש בו וכיצד לעשות זאת. כאן תוכל לומר ל-AI מה להשתמש ואילו כללים לפעול לפיהם.",
+    "ar": "عندما تصنع الفن، أنت تقرر ما تريد استخدامه وكيف تريد القيام بذلك. هنا يمكنك إخبار الذكاء الاصطناعي بما يجب استخدامه وأي قواعد يجب اتباعها.",
+    "bg": "Когато правиш изкуство, ти решаваш какво да използваш и как да го направиш. Тук можеш да кажеш на ИИ какво да използва и какви правила да следва.",
+    "tr": "Sanat yaptığında, ne kullanmak istediğine ve nasıl yapmak istediğine sen karar verirsin. Burada, yapay zekaya ne kullanmasını ve hangi kurallara uymasını söyleyebilirsin.",
+    "ko": "예술을 만들 때, 무엇을 사용하고 어떻게 할지는 당신이 결정합니다. 여기서 AI에게 무엇을 사용하고 어떤 규칙을 따를지 알려줄 수 있습니다."
+  },
+  "category": {
+    "de": "Kunst & Kultur",
+    "en": "Art & Culture",
+    "he": "אמנות ותרבות",
+    "ar": "الفن والثقافة",
+    "bg": "Изкуство и култура",
+    "tr": "Sanat ve Kültür",
+    "ko": "예술과 문화",
+    "uk": "Мистецтво та культура",
+    "fr": "Art et Culture",
+    "es": "Arte y Cultura"
+  },
+  "properties": [
+    "freestyle"
+  ],
+  "context": {
+    "en": "",
+    "de": "",
+    "tr": "",
+    "ko": ""
+  },
+  "parameters": {
+    "temperature": 0.8
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video",
+      "music",
+      "3D"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "approaches": [
+      "empowerment",
+      "creativity",
+      "aesthetic judgement",
+      "artistic exploration",
+      "AI literacy"
+    ],
+    "wikipedia": true,
+    "passthrough_when_context_empty": true
+  },
+  "display": {
+    "icon": "🫵",
+    "color": "#FFC107",
+    "category": "freestyle",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

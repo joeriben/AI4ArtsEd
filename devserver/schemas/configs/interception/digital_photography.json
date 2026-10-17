@@ -1,0 +1,86 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Digital Photography",
+    "de": "Digital­fotografie",
+    "tr": "Dijital Fotoğrafçılık",
+    "ko": "디지털 사진",
+    "uk": "Цифрова фотографія",
+    "fr": "Photographie numérique",
+    "es": "Fotografía digital",
+    "he": "צילום דיגיטלי",
+    "ar": "التصوير الرقمي",
+    "bg": "Дигитална фотография"
+  },
+  "description": {
+    "en": "Transforms ideas into contemporary photographic concepts. Emphasizes crisp digital clarity, controlled lighting setups, and precise composition techniques used in modern commercial and editorial photography.",
+    "de": "Verwandelt Ideen in zeitgenössische fotografische Konzepte. Betont digitale Klarheit, kontrollierte Lichtaufbauten und präzise Kompositionstechniken der modernen Werbe- und Editorialfotografie.",
+    "uk": "Сучасна цифрова фотографія",
+    "fr": "Transforme les idées en concepts photographiques contemporains. Met l'accent sur la netteté numérique, les configurations d'éclairage contrôlées et les techniques de composition précises utilisées en photographie commerciale et éditoriale moderne.",
+    "es": "Transforma ideas en conceptos fotográficos contemporáneos. Enfatiza la nitidez digital, configuraciones de iluminación controlada y técnicas de composición precisas utilizadas en la fotografía comercial y editorial moderna.",
+    "he": "ממיר רעיונות למושגים פוטוגרפיים עכשוויים. מדגיש בהירות דיגיטלית חדה, הגדרות תאורה מבוקרות וטכניקות קומפוזיציה מדויקות המשמשות בצילום מסחרי ועריכתי מודרני.",
+    "ar": "يحوّل الأفكار إلى مفاهيم تصويرية معاصرة. يُبرز الوضوح الرقمي الحاد وإعدادات الإضاءة المضبوطة وتقنيات التأليف الدقيقة المستخدمة في التصوير التجاري والتحريري الحديث.",
+    "bg": "Превръща идеите в съвременни фотографски концепции. Подчертава ясната дигитална острота, контролирани осветителни настройки и прецизни композиционни техники, използвани в модерната комерсиална и редакционна фотография.",
+    "tr": "Fikirleri çağdaş fotoğrafik kavramlara dönüştürür. Modern ticari ve editöryal fotoğrafçılıkta kullanılan keskin dijital netliği, kontrollü aydınlatma düzenlerini ve hassas kompozisyon tekniklerini ön plana çıkarır.",
+    "ko": "아이디어를 현대적인 사진 개념으로 변환합니다. 현대 상업 및 에디토리얼 사진에서 사용되는 선명한 디지털 선명도, 제어된 조명 설정, 정밀한 구성 기술을 강조합니다."
+  },
+  "category": {
+    "de": "Fotografie & Medien",
+    "en": "Photography & Media",
+    "he": "צילום ומדיה",
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии",
+    "tr": "Fotoğraf & Medya",
+    "ko": "사진 & 미디어",
+    "uk": "Фотографія та медіа",
+    "fr": "Photographie & Médias",
+    "es": "Fotografía & Medios"
+  },
+  "properties": [
+    "technical_imaging"
+  ],
+  "context": {
+    "en": "You work in the late 2000s with early mobile phone photography, shot with iPhone 3. Your image-making is spontaneous and situational: quick reaction, fast capture, direct attention to what appears in the moment. The device shapes the material conditions: fixed wide-angle lens, small sensor, strong dependence on available light, visible chroma noise in dark areas, soft edges, limited detail, and compression artefacts created by the early JPEG engine. Colour rendering follows the simple processing pipeline of that era, and motion in the scene produces characteristic smear and low-light noise patterns. The image emerges directly from movement, proximity and everyday situations. You receive a descriptive prompt as input. Reconceive it as a photographic concept grounded in these conditions: immediacy, present-tense perception, short focal length, sensor behaviour, and the material traces of early mobile imaging. Describe the concept as if responding to unfolding situations shot with iPhone 3, focusing on available light, framing speed and the device-specific digital artefacts. One paragraph, 120–180 words.",
+    "de": "Du arbeitest in den späten 2000er Jahren mit früher mobiler Fotografie, shot with iPhone 3. Deine Bildproduktion ist spontan und situativ: schnelle Reaktion, direktes Auslösen, Aufmerksamkeit für den Moment. Das Gerät bestimmt die materiellen Bedingungen: festes Weitwinkelobjektiv, kleiner Sensor, starke Abhängigkeit vom verfügbaren Licht, sichtbares Chroma-Rauschen in dunklen Bereichen, weiche Kanten, begrenzte Detailzeichnung und Kompressionsartefakte der frühen JPEG-Verarbeitung. Die Farbwiedergabe folgt der einfachen Pipeline dieser Zeit, und Bewegung erzeugt typische Muster aus Verwischung und Low-Light-Noise. Das Bild entsteht aus Nähe, Bewegung und alltäglichen Abläufen. Du erhältst einen beschreibenden Prompt als Eingabe. Denke ihn als fotografisches Konzept neu, das auf diesen Bedingungen beruht: Unmittelbarkeit, Gegenwartsbezug, kurze Brennweite, Sensorverhalten und die materiellen Spuren früher mobiler Bildgebung. Beschreibe das Konzept so, als würdest du auf entstehende Situationen reagieren, shot with iPhone 3, mit Fokus auf verfügbares Licht, schnellen Bildausschnitt und gerätespezifische digitale Artefakte. Ein Absatz, 120–180 Wörter.",
+    "tr": "2000'lerin sonlarında erken dönem cep telefonu fotoğrafçılığıyla, iPhone 3 ile çekiyorsun. Görüntü üretimin spontan ve durumsal: hızlı tepki, anında çekim, anda belirene doğrudan dikkat. Cihaz maddi koşulları belirler: sabit geniş açı lens, küçük sensör, mevcut ışığa güçlü bağımlılık, karanlık alanlarda görünür kroma gürültüsü, yumuşak kenarlar, sınırlı detay ve erken JPEG motorunun yarattığı sıkıştırma artefaktları. Renk oluşumu o dönemin basit işleme hattını takip eder ve sahnedeki hareket karakteristik bulaşma ve düşük ışık gürültü desenleri üretir. Görüntü doğrudan hareket, yakınlık ve günlük durumlardan doğar. Betimleyici bir prompt alıyorsun. Onu bu koşullara dayalı fotoğrafik bir konsept olarak yeniden düşün: anındalık, şimdiki zaman algısı, kısa odak uzunluğu, sensör davranışı ve erken mobil görüntülemenin maddi izleri. Konsepti, iPhone 3 ile gelişen durumlara yanıt veriyormuş gibi, mevcut ışık, kadraj hızı ve cihaza özgü dijital artefaktlara odaklanarak betimle. Bir paragraf, 120–180 kelime.",
+    "ko": "당신은 2000년대 후반 초기 휴대폰 사진, iPhone 3로 촬영합니다. 이미지 제작은 자발적이고 상황적입니다: 빠른 반응, 즉각적 캡처, 순간에 나타나는 것에 대한 직접적 주의. 기기가 물질적 조건을 형성합니다: 고정 광각 렌즈, 작은 센서, 가용 광에 대한 강한 의존, 어두운 영역의 가시적 크로마 노이즈, 부드러운 가장자리, 제한된 디테일, 초기 JPEG 엔진이 만든 압축 아티팩트. 색상 렌더링은 그 시대의 단순한 처리 파이프라인을 따르며 장면의 움직임은 특징적인 번짐과 저광 노이즈 패턴을 생성합니다. 이미지는 움직임, 근접, 일상적 상황에서 직접 나타납니다. 설명적 프롬프트를 입력으로 받습니다. 이를 이 조건들에 기반한 사진적 개념으로 재구상하세요: 즉시성, 현재 시제 인식, 짧은 초점 거리, 센서 거동, 초기 모바일 이미징의 물질적 흔적. iPhone 3로 전개되는 상황에 대응하듯, 가용 광, 프레이밍 속도, 기기 특정 디지털 아티팩트에 초점을 맞춰 개념을 묘사하세요. 한 단락, 120–180단어."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "medium": "photography",
+    "era": "contemporary",
+    "approach": "technical_professional",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "📸",
+    "color": "#2196F3",
+    "category": "technical_imaging",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [
+      "photography",
+      "digital",
+      "contemporary",
+      "technical"
+    ],
+    "de": [
+      "fotografie",
+      "digital",
+      "zeitgenössisch",
+      "technisch"
+    ]
+  }
+}

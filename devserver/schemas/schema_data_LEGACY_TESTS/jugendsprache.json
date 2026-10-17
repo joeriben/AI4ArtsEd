@@ -1,0 +1,17 @@
+{
+  "name": "jugendsprache",
+  "description": "UK Youth Slang transformation using simple interception pipeline",
+  "workflow_type": "simple_interception",
+  "config_mappings": {
+    "translate_config": "translate.standard",
+    "manipulate_config": "manipulate.jugendsprache"
+  },
+  "meta": {
+    "legacy_source": "workflows_legacy/semantics/ai4artsed_Jugendsprache_2506122317.json",
+    "target_language": "uk_youth_slang",
+    "description_de": "Jugendsprache-Transformation mit Simple-Interception-Pipeline",
+    "description_en": "Youth Language Transformation using Simple Interception Pipeline",
+    "age_group": "13-18",
+    "genres": ["uk_drill", "grime", "trap"]
+  }
+}

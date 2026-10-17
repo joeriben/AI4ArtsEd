@@ -1,0 +1,116 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "CommonCanvas XL C",
+    "de": "CommonCanvas XL C",
+    "tr": "CommonCanvas XL C",
+    "ko": "CommonCanvas XL C",
+    "uk": "CommonCanvas XL C",
+    "fr": "CommonCanvas XL C",
+    "es": "CommonCanvas XL C",
+    "he": "CommonCanvas XL C",
+    "ar": "CommonCanvas XL C",
+    "bg": "CommonCanvas XL C"
+  },
+  "description": {
+    "en": "SDXL-architecture image model (2023), trained only on Creative Commons-licensed images. No scraped or unlicensed data in the training set.",
+    "de": "Bildmodell mit SDXL-Architektur (2023), ausschließlich auf Creative-Commons-lizenzierten Bildern trainiert. Keine gescrapten oder unlizenzierten Daten im Trainingssatz.",
+    "tr": "SDXL mimarisine sahip görsel modeli (2023), yalnızca Creative Commons lisanslı görsellerle eğitildi. Eğitim setinde kazınmış veya lisanssız veri yok.",
+    "ko": "SDXL 아키텍처 이미지 모델(2023), 크리에이티브 커먼즈 라이선스 이미지로만 학습되었습니다. 학습 데이터에 무단 수집되거나 라이선스 없는 데이터가 없습니다.",
+    "uk": "Модель зображень на архітектурі SDXL (2023), навчена виключно на зображеннях під ліцензією Creative Commons. Жодних зібраних без дозволу чи нелегальних даних у навчальному наборі.",
+    "fr": "Modèle d'image à architecture SDXL (2023), entraîné exclusivement sur des images sous licence Creative Commons. Aucune donnée extraite du web ou non licenciée dans le jeu d'entraînement.",
+    "es": "Modelo de imagen con arquitectura SDXL (2023), entrenado exclusivamente con imágenes con licencia Creative Commons. Sin datos extraídos de la web ni sin licencia en el conjunto de entrenamiento.",
+    "he": "מודל תמונות בארכיטקטורת SDXL (2023), מאומן אך ורק על תמונות ברישיון Creative Commons. אין נתונים שנאספו ללא היתר או ללא רישיון בסט האימון.",
+    "ar": "نموذج صور بمعمارية SDXL (2023)، مدرَّب حصريًا على صور مرخّصة بموجب Creative Commons. لا توجد بيانات مُجمَّعة دون إذن أو غير مرخّصة في مجموعة التدريب.",
+    "bg": "Модел за изображения с архитектура SDXL (2023), трениран изключително с изображения, лицензирани под Creative Commons. Без събирани без разрешение или нелицензирани данни в тренировъчния набор."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görsel Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_commoncanvas_xl_c",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "commoncanvas_xl_c.safetensors",
+    "lora_base": [
+      "stable-diffusion-xl-v1-base",
+      "sdxl_base_v1-0"
+    ],
+    "model_id": "common-canvas/CommonCanvas-XL-C",
+    "prompt_window_tokens": 77,
+    "prompt_window_tokenizer": "clip_l",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "estimated_duration_seconds": "15-40",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "1024x1024",
+      "1024x768",
+      "768x1024",
+      "1152x896",
+      "896x1152"
+    ],
+    "version": "1.0",
+    "display_name": "CommonCanvas XL C",
+    "publisher": "MosaicML / Stability AI (research collaboration, 2023)",
+    "architecture": "UNet + VAE (Latent Diffusion, SDXL architecture)",
+    "params": "~3.5B (SDXL UNet)",
+    "text_encoders": [
+      "CLIP ViT-L/14 (123M)",
+      "OpenCLIP ViT-bigG/14 (695M)"
+    ],
+    "quantization": "FP16",
+    "license": "CC-BY-SA 4.0",
+    "fair_culture": "Trained exclusively on ~70M Creative Commons-licensed images (CommonCatalog dataset, arXiv:2310.16825) — a general CC reuse license, not AI-training-specific opt-in consent, but no scraped or unlicensed data, unlike the SDXL base model above. License permits self-hosting and serving output to others (attribution + share-alike).",
+    "safety_by_design": "Not documented in available sources."
+  },
+  "display": {
+    "color": "#66BB6A",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 46
+  },
+  "tags": {
+    "en": [
+      "image",
+      "sdxl",
+      "creative-commons",
+      "fair-training",
+      "comfyui",
+      "historical"
+    ],
+    "de": [
+      "bild",
+      "sdxl",
+      "creative-commons",
+      "faires-training",
+      "comfyui",
+      "historisch"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "§86 StGB admission list for document uploads (UCD-131 Stage A): names of unconstitutional organisations and characteristic propaganda formulas. §86a symbols live in the platform's curated bilingual file (schemas/stage1_86a_critical_bilingual.json) and are matched by the same tested matcher — do NOT duplicate them here. This list is matched EXACT (case-insensitive, word boundaries); no fuzzy matching for multi-word entries (phrase-term fuzziness was the 2026-08-17 'a symbol' lesson). Curation: operator, through ordinary repo review (UCD-124 §10 decision proposal). Legal review of list contents is the operator's responsibility, not part of the code.",
+  "usage": "Matched against the PDF text layer (raw pypdf strings, pre-Docling) by my_app/services/upload_gate.py before any storage or analysis. A hit rejects the upload with the plain-language category, never repeating the term.",
+  "version": 1,
+  "terms": []
+}

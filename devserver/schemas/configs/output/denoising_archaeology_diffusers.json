@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Denoising Archaeology (Diffusers)",
+    "de": "Denoising Archaeology (Diffusers)",
+    "tr": "Denoising Archaeology (Diffusers)",
+    "ko": "Denoising Archaeology (Diffusers)",
+    "uk": "Denoising Archaeology (Diffusers)",
+    "fr": "Denoising Archaeology (Diffusers)",
+    "es": "Denoising Archaeology (Diffusers)",
+    "he": "Denoising Archaeology (Diffusers)",
+    "ar": "Denoising Archaeology (Diffusers)",
+    "bg": "Denoising Archaeology (Diffusers)"
+  },
+  "description": {
+    "en": "Step-by-step denoising visualization.",
+    "de": "Schrittweise Entrauschungs-Visualisierung.",
+    "tr": "Adım adım gürültü giderme (denoising) görselleştirmesi.",
+    "ko": "단계별 디노이징 시각화.",
+    "uk": "Покрокова візуалізація деноізингу.",
+    "fr": "Visualisation du débruitage étape par étape.",
+    "es": "Visualización paso a paso del proceso de eliminación de ruido (denoising).",
+    "he": "הדמיה שלב-אחר-שלב של הסרת הרעש (denoising).",
+    "ar": "تصور خطوة بخطوة لعملية إزالة الضوضاء (denoising).",
+    "bg": "Визуализация стъпка по стъпка на премахването на шума (denoising)."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_denoising_archaeology_diffusers"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "display_name": "Denoising Archaeology (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 30000,
+    "recommended_resolution": "1024x1024"
+  }
+}

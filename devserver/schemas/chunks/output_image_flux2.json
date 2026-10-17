@@ -1,0 +1,232 @@
+{
+  "name": "output_image_flux2",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "requires_workflow": true,
+  "description": "Flux 2 Dev - High quality image generation with dual CLIP encoding (Mistral 3 + CLIP-G)",
+
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 468029244405114,
+        "steps": 20,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "normal",
+        "denoise": 1,
+        "model": ["4", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["5", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "4": {
+      "inputs": {
+        "ckpt_name": "Flux1/flux2_dev_fp8mixed.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Flux2 Checkpoint"
+      }
+    },
+    "5": {
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": {
+        "title": "Empty Latent Image"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": ["26", 0],
+        "clip": ["45", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Positive Prompt)"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": "",
+        "clip": ["45", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Negative Prompt)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["3", 0],
+        "vae": ["41", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "9": {
+      "inputs": {
+        "filename_prefix": "ai4artsed_flux2",
+        "images": ["8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "20": {
+      "inputs": {
+        "clip_name": "clip_g.safetensors",
+        "type": "stable_diffusion",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP-G"
+      }
+    },
+    "41": {
+      "inputs": {
+        "vae_name": "Flux/flux2-vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": {
+        "title": "Load VAE"
+      }
+    },
+    "26": {
+      "inputs": {
+        "value": ["37", 0]
+      },
+      "class_type": "PrimitiveString",
+      "_meta": {
+        "title": "ai4artsed_text_prompt"
+      }
+    },
+    "37": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveStringMultiline",
+      "_meta": {
+        "title": "Prompt Input"
+      }
+    },
+    "45": {
+      "inputs": {
+        "clip_name": "mistral_3_small_flux2_fp8.safetensors",
+        "type": "flux2",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load Mistral 3 CLIP"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "37",
+      "field": "inputs.value",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Main prompt - image description"
+    },
+    "negative_prompt": {
+      "node_id": "7",
+      "field": "inputs.text",
+      "default": "",
+      "description": "Negative prompt - what to avoid"
+    },
+    "width": {
+      "node_id": "5",
+      "field": "inputs.width",
+      "default": 1024,
+      "description": "Image width in pixels"
+    },
+    "height": {
+      "node_id": "5",
+      "field": "inputs.height",
+      "default": 1024,
+      "description": "Image height in pixels"
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 20,
+      "description": "Number of sampling steps"
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 1,
+      "description": "Classifier Free Guidance scale"
+    },
+    "sampler_name": {
+      "node_id": "3",
+      "field": "inputs.sampler_name",
+      "default": "euler",
+      "description": "Sampling algorithm"
+    },
+    "scheduler": {
+      "node_id": "3",
+      "field": "inputs.scheduler",
+      "default": "normal",
+      "description": "Noise scheduling algorithm"
+    },
+    "denoise": {
+      "node_id": "3",
+      "field": "inputs.denoise",
+      "default": 1.0,
+      "description": "Denoise strength"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 468029244405114,
+      "description": "Seed for reproducibility"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "9",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "SaveImage node that outputs the generated image"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "90-120",
+    "quality_rating": 4,
+    "requires_gpu": true,
+    "gpu_vram_mb": 7000,
+    "model_file": "flux2-dev.safetensors",
+    "clip_models": [
+      "mistral_3_small_flux2_fp8.safetensors",
+      "clip_g.safetensors"
+    ],
+    "vae_model": "flux2-vae.safetensors",
+    "recommended_resolution": "1024x2048",
+    "supported_resolutions": [
+      "768x768",
+      "1024x1024",
+      "1024x2048",
+      "2048x1024",
+      "768x1344",
+      "1344x768"
+    ],
+    "notes": "Flux 2 Dev uses dual CLIP encoding (Mistral 3 + CLIP-G) for enhanced text understanding. FP8 optimized for efficiency."
+  }
+}

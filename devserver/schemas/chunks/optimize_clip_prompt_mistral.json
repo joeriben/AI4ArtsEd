@@ -1,0 +1,22 @@
+{
+  "name": "optimize_clip_prompt_mistral",
+  "type": "processing_chunk",
+  "backend_type": "local_llm",
+  "description": "CLIP prompt optimization - Mistral-optimized variant",
+  "model": "STAGE2_OPTIMIZATION_MODEL",
+  "template": {
+    "system": "CLIP token optimizer. Output language = input language.",
+    "prompt": "Transform to 2D image tokens. Max 50 words. Comma-separated. JSON output.\n\nRemove: temporal words, causality, narrative.\nConvert: actions→poses, atmosphere→visible.\nPrioritize: subject first, then pose, style, context.\nForbidden: artist names, art terms, negatives.\nSyntax: (word:1.2)=emphasis, [a:b:0.5]=blend.\n\nOutput: {\"clip_prompt\": \"...\"}\n\n{{INPUT_TEXT}}"
+  },
+  "meta": {
+    "output_format": "json",
+    "json_schema": {
+      "clip_prompt": "string (max 50 words, comma-separated)"
+    },
+    "max_words": 50,
+    "token_limit": 75,
+    "extracts": ["clip_prompt"],
+    "model_family": "mistral",
+    "notes": "Mistral-optimized: minimal, precise, no nesting"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "GPT-Image-1",
+    "de": "GPT-Image-1",
+    "tr": "GPT-Image-1",
+    "ko": "GPT-Image-1",
+    "uk": "GPT-Image-1",
+    "fr": "GPT-Image-1",
+    "es": "GPT-Image-1",
+    "he": "GPT-Image-1",
+    "ar": "GPT-Image-1",
+    "bg": "GPT-Image-1"
+  },
+  "description": {
+    "en": "OpenAI's GPT-Image-1 model for high-quality image generation with advanced text rendering",
+    "de": "OpenAI's GPT-Image-1 Modell für hochwertige Bildgenerierung mit fortgeschrittenem Text-Rendering",
+    "tr": "Gelişmiş metin oluşturma özellikli yüksek kaliteli görüntü üretimi için OpenAI'nin GPT-Image-1 modeli",
+    "ko": "고급 텍스트 렌더링을 갖춘 고품질 이미지 생성을 위한 OpenAI의 GPT-Image-1 모델",
+    "uk": "Модель GPT-Image-1 від OpenAI для високоякісної генерації зображень із розширеним рендерингом тексту",
+    "fr": "Le modèle GPT-Image-1 d'OpenAI pour une génération d'images de haute qualité avec un rendu de texte avancé",
+    "es": "El modelo GPT-Image-1 de OpenAI para generación de imágenes de alta calidad con renderizado de texto avanzado",
+    "he": "מודל GPT-Image-1 של OpenAI ליצירת תמונות איכותית עם עיבוד טקסט מתקדם",
+    "ar": "نموذج GPT-Image-1 من OpenAI لتوليد صور عالية الجودة مع عرض نصوص متقدم",
+    "bg": "Моделът GPT-Image-1 на OpenAI за висококачествено генериране на изображения с усъвършенствано изобразяване на текст"
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_gpt_image_1"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "gpt-image-1",
+    "backend": "openai",
+    "backend_type": "openai",
+    "requires_gpu": false,
+    "api_provider": "openai",
+    "estimated_duration_seconds": "5-15",
+    "recommended_size": "1024x1024",
+    "supported_sizes": [
+      "1024x1024",
+      "1024x1536",
+      "1536x1024"
+    ],
+    "notes": "GPT-Image-1 via Direct OpenAI API. API key in OPENAI_API_KEY environment variable. High quality image generation with advanced text rendering and instruction following.",
+    "version": "1.0",
+    "display_name": "GPT-Image-1",
+    "icon": "🧠",
+    "publisher": "OpenAI (San Francisco, US)",
+    "architecture": "Autoregressive + Diffusion",
+    "params": "Undisclosed",
+    "license": "Commercial API (usage-based)",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Integrated content moderation, C2PA metadata",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "Completely undisclosed"
+      ],
+      "training_data_size": "Undisclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "San Francisco, US",
+      "known_biases": [
+        {
+          "en": "Strong English-language bias in text understanding",
+          "de": "Starker englischsprachiger Bias im Textverständnis",
+          "tr": "Metin anlama konusunda güçlü İngilizce dil yanlılığı",
+          "ko": "텍스트 이해에서 나타나는 강한 영어 편향",
+          "uk": "Сильна англомовна упередженість у розумінні тексту",
+          "fr": "Biais anglophone marqué dans la compréhension du texte",
+          "es": "Fuerte sesgo hacia el inglés en la comprensión de texto",
+          "he": "הטיה חזקה לטובת השפה האנגלית בהבנת טקסט",
+          "ar": "تحيز قوي تجاه اللغة الإنجليزية في فهم النصوص",
+          "bg": "Силно отклонение към английския език в разбирането на текст"
+        },
+        {
+          "en": "Tendency toward commercially polished, magazine-quality aesthetics",
+          "de": "Tendenz zu kommerziell polierter, Magazin-Qualität-Ästhetik",
+          "tr": "Ticari açıdan cilalanmış, dergi kalitesinde estetiğe eğilim",
+          "ko": "상업적으로 세련된 잡지 화보 수준의 미학에 치우치는 경향",
+          "uk": "Тяжіння до комерційно відшліфованої, журнальної естетики",
+          "fr": "Tendance à une esthétique commerciale léchée, digne d'un magazine",
+          "es": "Tendencia a una estética comercial pulida, de calidad de revista",
+          "he": "נטייה לאסתטיקה מלוטשת מסחרית ברמת מגזין",
+          "ar": "نزعة نحو جمالية مصقولة تجارياً بجودة المجلات",
+          "bg": "Склонност към комерсиално изгладена естетика с качество на списание"
+        },
+        {
+          "en": "Aggressive content filtering may suppress legitimate artistic expression",
+          "de": "Aggressive Inhaltsfilterung kann legitimen künstlerischen Ausdruck unterdrücken",
+          "tr": "Agresif içerik filtrelemesi meşru sanatsal ifadeyi bastırabilir",
+          "ko": "공격적인 콘텐츠 필터링이 정당한 예술적 표현을 억압할 수 있음",
+          "uk": "Агресивна фільтрація контенту може пригнічувати законне художнє самовираження",
+          "fr": "Un filtrage de contenu agressif peut réprimer une expression artistique légitime",
+          "es": "El filtrado de contenido agresivo puede suprimir la expresión artística legítima",
+          "he": "סינון תוכן אגרסיבי עלול לדכא ביטוי אמנותי לגיטימי",
+          "ar": "قد تؤدي الفلترة العدوانية للمحتوى إلى قمع التعبير الفني المشروع",
+          "bg": "Агресивното филтриране на съдържание може да потиска легитимен художествен изказ"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "No transparency: training data, model size, and architecture are trade secrets",
+          "de": "Keine Transparenz: Trainingsdaten, Modellgröße und Architektur sind Geschäftsgeheimnisse",
+          "tr": "Şeffaflık yok: eğitim verisi, model boyutu ve mimari ticari sır",
+          "ko": "투명성 없음: 학습 데이터, 모델 크기, 아키텍처가 영업비밀임",
+          "uk": "Немає прозорості: навчальні дані, розмір моделі та архітектура є комерційною таємницею",
+          "fr": "Aucune transparence : données d'entraînement, taille du modèle et architecture sont des secrets commerciaux",
+          "es": "Sin transparencia: los datos de entrenamiento, el tamaño del modelo y la arquitectura son secretos comerciales",
+          "he": "אין שקיפות: נתוני האימון, גודל המודל והארכיטקטורה הם סודות מסחריים",
+          "ar": "لا شفافية: بيانات التدريب وحجم النموذج والبنية أسرار تجارية",
+          "bg": "Липса на прозрачност: данните за обучение, размерът на модела и архитектурата са търговска тайна"
+        },
+        {
+          "en": "Closed-source: no independent audit of biases possible",
+          "de": "Closed-Source: keine unabhängige Prüfung von Biases möglich",
+          "tr": "Kapalı kaynak kodlu: yanlılıkların bağımsız denetimi mümkün değil",
+          "ko": "폐쇄형 소스: 편향에 대한 독립적인 감사가 불가능함",
+          "uk": "Закритий код: незалежний аудит упереджень неможливий",
+          "fr": "Code source fermé : aucun audit indépendant des biais n'est possible",
+          "es": "Código cerrado: no es posible una auditoría independiente de los sesgos",
+          "he": "קוד סגור: אי אפשר לבצע ביקורת בלתי תלויה על ההטיות",
+          "ar": "مصدر مغلق: لا يمكن إجراء تدقيق مستقل للتحيزات",
+          "bg": "Затворен код: независим одит на отклоненията не е възможен"
+        },
+        {
+          "en": "US-centric content moderation policies",
+          "de": "US-zentrierte Inhaltsmoderationsrichtlinien",
+          "tr": "ABD merkezli içerik denetleme politikaları",
+          "ko": "미국 중심의 콘텐츠 모더레이션 정책",
+          "uk": "США-центричні політики модерації контенту",
+          "fr": "Politiques de modération de contenu centrées sur les États-Unis",
+          "es": "Políticas de moderación de contenido centradas en EE. UU.",
+          "he": "מדיניות פיקוח תוכן ממוקדת ארה\"ב",
+          "ar": "سياسات إشراف على المحتوى تتمحور حول الولايات المتحدة",
+          "bg": "Политики за модериране на съдържание, центрирани върху САЩ"
+        }
+      ]
+    }
+  },
+  "display": {
+    "icon": "🤖",
+    "color": "#10A37F",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 15
+  },
+  "tags": {
+    "en": [
+      "image",
+      "gpt",
+      "openai",
+      "high-quality",
+      "text-rendering"
+    ],
+    "de": [
+      "bild",
+      "gpt",
+      "openai",
+      "hohe-qualität",
+      "text-rendering"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

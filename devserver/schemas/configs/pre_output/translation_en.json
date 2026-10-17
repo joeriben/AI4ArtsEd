@@ -1,0 +1,40 @@
+{
+  "pipeline": "translation",
+  "chunks": [
+    "translate"
+  ],
+  "name": {
+    "en": "Pre-Output: Translation to English",
+    "de": "Vor-Ausgabe: Übersetzung ins Englische",
+    "tr": "Çıktı Öncesi: İngilizceye Çeviri",
+    "ko": "출력 전: 영어로 번역",
+    "uk": "Перед виводом: Переклад англійською",
+    "fr": "Pré-sortie : Traduction en anglais",
+    "es": "Pre-Salida: Traducción al inglés",
+    "he": "לפני פלט: תרגום לאנגלית",
+    "ar": "قبل المخرجات: الترجمة إلى الإنجليزية",
+    "bg": "Преди изхода: Превод на английски"
+  },
+  "description": {
+    "en": "Translates text to English before media generation (uses DEFAULT_LANGUAGE from config.py as source) - preserves artistic intent and structure",
+    "de": "Übersetzt Text ins Englische vor Mediengenerierung (nutzt DEFAULT_LANGUAGE aus config.py als Quelle) - bewahrt künstlerische Absicht und Struktur",
+    "tr": "Medya üretiminden önce metni İngilizceye çevirir (kaynak olarak config.py içindeki DEFAULT_LANGUAGE'i kullanır) — sanatsal niyeti ve yapıyı korur.",
+    "ko": "미디어 생성 전 텍스트를 영어로 번역합니다 (원본 언어로 config.py의 DEFAULT_LANGUAGE 사용) — 예술적 의도와 구조를 보존합니다.",
+    "uk": "Перекладає текст англійською перед генерацією медіа (як джерело використовує DEFAULT_LANGUAGE із config.py) — зберігає мистецький задум і структуру.",
+    "fr": "Traduit le texte en anglais avant la génération du média (utilise DEFAULT_LANGUAGE de config.py comme source) — préserve l'intention artistique et la structure.",
+    "es": "Traduce el texto al inglés antes de generar el medio (usa DEFAULT_LANGUAGE de config.py como origen) — conserva la intención artística y la estructura.",
+    "he": "מתרגם טקסט לאנגלית לפני יצירת המדיה (משתמש ב-DEFAULT_LANGUAGE מתוך config.py כמקור) — שומר על הכוונה האמנותית והמבנה.",
+    "ar": "يترجم النص إلى الإنجليزية قبل توليد الوسائط (يستخدم DEFAULT_LANGUAGE من config.py كمصدر) — يحافظ على القصد الفني والبنية.",
+    "bg": "Превежда текста на английски преди генериране на медия (използва DEFAULT_LANGUAGE от config.py като източник) — запазва художествения замисъл и структурата."
+  },
+  "parameters": {
+    "temperature": 0.2,
+    "enable_thinking": false
+  },
+  "meta": {
+    "system_pipeline": true,
+    "stage": "pre_output",
+    "task_type": "translation",
+    "visible_in_browser": false
+  }
+}

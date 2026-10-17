@@ -1,0 +1,252 @@
+{
+  "name": "output_image_qwen_img2img",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "image",
+  "description": "QWEN Image Edit - Fast 4-step image transformation with text-guided editing",
+
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 976480016588017,
+        "steps": 4,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1,
+        "model": ["75", 0],
+        "positive": ["76", 0],
+        "negative": ["77", 0],
+        "latent_image": ["88", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["3", 0],
+        "vae": ["39", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "37": {
+      "inputs": {
+        "unet_name": "qwen_image_edit_fp8_e4m3fn.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": {
+        "title": "Load Diffusion Model"
+      }
+    },
+    "38": {
+      "inputs": {
+        "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "type": "qwen_image",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP"
+      }
+    },
+    "39": {
+      "inputs": {
+        "vae_name": "qwen_image_vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": {
+        "title": "Load VAE"
+      }
+    },
+    "60": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": ["8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "66": {
+      "inputs": {
+        "shift": 3,
+        "model": ["89", 0]
+      },
+      "class_type": "ModelSamplingAuraFlow",
+      "_meta": {
+        "title": "ModelSamplingAuraFlow"
+      }
+    },
+    "75": {
+      "inputs": {
+        "strength": 1,
+        "model": ["66", 0]
+      },
+      "class_type": "CFGNorm",
+      "_meta": {
+        "title": "CFGNorm"
+      }
+    },
+    "76": {
+      "inputs": {
+        "prompt": "",
+        "clip": ["38", 0],
+        "vae": ["39", 0],
+        "image": ["93", 0]
+      },
+      "class_type": "TextEncodeQwenImageEdit",
+      "_meta": {
+        "title": "TextEncodeQwenImageEdit (Positive)"
+      }
+    },
+    "77": {
+      "inputs": {
+        "prompt": "",
+        "clip": ["38", 0],
+        "vae": ["39", 0],
+        "image": ["93", 0]
+      },
+      "class_type": "TextEncodeQwenImageEdit",
+      "_meta": {
+        "title": "TextEncodeQwenImageEdit (Negative)"
+      }
+    },
+    "78": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Input Image"
+      }
+    },
+    "88": {
+      "inputs": {
+        "pixels": ["93", 0],
+        "vae": ["39", 0]
+      },
+      "class_type": "VAEEncode",
+      "_meta": {
+        "title": "VAE Encode"
+      }
+    },
+    "89": {
+      "inputs": {
+        "lora_name": "Qwen-Image-Edit-Lightning-4steps-V1.0-bf16.safetensors",
+        "strength_model": 1,
+        "model": ["37", 0]
+      },
+      "class_type": "LoraLoaderModelOnly",
+      "_meta": {
+        "title": "LoraLoaderModelOnly (Lightning 4-step)"
+      }
+    },
+    "93": {
+      "inputs": {
+        "upscale_method": "lanczos",
+        "megapixels": 1,
+        "resolution_steps": 1,
+        "image": ["78", 0]
+      },
+      "class_type": "ImageScaleToTotalPixels",
+      "_meta": {
+        "title": "ImageScaleToTotalPixels (1 Megapixel)"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "input_image": {
+      "node_id": "78",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE}}",
+      "description": "Path to input image for img2img transformation"
+    },
+    "prompt": {
+      "node_id": "76",
+      "field": "inputs.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Positive prompt - describes desired transformation"
+    },
+    "negative_prompt": {
+      "node_id": "77",
+      "field": "inputs.prompt",
+      "default": "",
+      "description": "Negative prompt - what to avoid (optional for QWEN)"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 976480016588017,
+      "description": "Seed for reproducibility"
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 4,
+      "description": "Number of sampling steps (Lightning LoRA optimized for 4 steps)"
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 1,
+      "description": "CFG scale (Lightning uses CFG=1)"
+    },
+    "denoise": {
+      "node_id": "3",
+      "field": "inputs.denoise",
+      "default": 1,
+      "description": "Denoise strength (1.0 for full transformation)"
+    },
+    "megapixels": {
+      "node_id": "93",
+      "field": "inputs.megapixels",
+      "default": 1.7,
+      "description": "Target image size in megapixels (1.7 = ~1300x1300)"
+    },
+    "resolution_steps": {
+      "node_id": "93",
+      "field": "inputs.resolution_steps",
+      "default": 1,
+      "description": "Resolution step increment for scaling (higher = coarser grid)"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "60",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "SaveImage node that outputs the generated image"
+  },
+
+  "meta": {
+    "img2img": true,
+    "estimated_duration_seconds": 23,
+    "quality_rating": 3,
+    "requires_gpu": true,
+    "gpu_vram_mb": 10000,
+    "model_files": {
+      "diffusion_model": "qwen_image_edit_fp8_e4m3fn.safetensors",
+      "clip": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "vae": "qwen_image_vae.safetensors",
+      "lora": "Qwen-Image-Edit-Lightning-4steps-V1.0-bf16.safetensors"
+    },
+    "recommended_resolution": "1 megapixel (~1024x1024)",
+    "supported_resolutions": [
+      "0.5 MP (720x720)",
+      "1 MP (1024x1024)",
+      "2 MP (1440x1440)"
+    ],
+    "notes": "QWEN Image Edit Lightning: Ultra-fast 4-step image transformation. Uses specialized TextEncodeQwenImageEdit nodes that encode both prompt AND input image together. Auto-resizes to 1 megapixel. Supports text-guided editing (add/remove/transform objects). CFG=1 optimized for Lightning LoRA.",
+    "optimization_instruction": "Output a direct action command for QWEN Image Edit. Use imperative verbs (Transform, Add, Remove, Change, Modify). NO headers, NO labels, NO formatting - output ONLY the raw instruction. Examples: 'Transform into a pencil sketch', 'Add mountains in the background', 'Remove all text elements', 'Change the sky to sunset colors'. Keep it concise (1-2 sentences max). QWEN understands natural language. Preserve semantic intent. For multilingual input, output in the SAME LANGUAGE as input."
+  }
+}

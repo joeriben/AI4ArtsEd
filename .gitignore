@@ -1,0 +1,191 @@
+# -------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# -------------------------------------
+# Editor/IDE-specific files
+.vscode/
+.idea/
+.claude/
+# The working rules for the AI coding assistant stay local to each checkout.
+CLAUDE.md
+*.swp
+*.swo
+
+# -------------------------------------
+# macOS system files
+.DS_Store
+
+# -------------------------------------
+# Python virtual environments
+venv/
+.venv/
+.env/ 
+
+# -------------------------------------
+# Logs, caches, backups, system dumps
+*.log
+*.tmp
+*.bak
+*.orig
+
+# -------------------------------------
+# ComfyUI-specific temp/config paths
+comfyui_temp/
+/output/
+/input/
+# Note: /output/ = root-level only (ComfyUI output dir)
+#       devserver/schemas/configs/output/ is NOT ignored
+
+# -------------------------------------
+# PyInstaller / packaging
+*.spec
+dist/
+build/
+
+# -------------------------------------
+# Jupyter/IPython
+*.ipynb_checkpoints/
+
+# -------------------------------------
+# Windows / system files
+Thumbs.db
+ehthumbs.db
+
+# -------------------------------------
+# API keys / sensitive configuration
+*.key
+api_keys.json
+devserver/api_keys.json
+
+# Machine-specific hardware configuration
+devserver/user_settings.json
+# What the admin set themselves, so a provider switch during an outage is reversible
+devserver/last_user_setting.json
+# Measured per-installation: what a model can actually be handed
+devserver/model_capabilities.json
+devserver/model_capabilities.json.tmp
+
+# -------------------------------------
+# Exported media/research data
+exports/
+
+# -------------------------------------
+# Runtime-generated pipeline data
+devserver/pipeline_runs/  # LivePipelineRecorder output
+media_storage/            # Unified media storage output
+
+# -------------------------------------
+# Source assets / design originals (large binaries, not deployed)
+resources/
+
+# -------------------------------------
+# Documentation: only track essential docs (architecture, decisions, todos)
+# Development history stays local, not in repo
+docs/sessions/
+docs/terminal-savings/
+docs/tmp/
+docs/experiments/
+docs/plans/
+docs/reference/
+
+# -------------------------------------
+# LoRA Training
+# Keep: lora/*.md, lora/*.txt, lora/*.sh (setup files)
+# Ignore: training outputs, backups, temporary files
+lora/venv_backup_*.txt    # Install script backups
+lora/*.safetensors        # Trained LoRA models (should be in Models/Lora/)
+lora/*.ckpt               # Legacy checkpoint format
+lora/training_output/     # Temporary training checkpoints
+lora/logs/                # Training logs
+lora/*.log                # Individual log files
+lora/test_*.py            # Test scripts
+
+# i18n nightly logs
+logs/i18n/
+
+# Temporary config backups
+devserver/schemas/configs/tmp/
+
+# Archived/obsolete files
+**/archive/
+**/*.OBSOLETE
+aws_bedrock.key
+setup_aws_env.sh
+aws_credentials.json
+
+# -------------------------------------
+# GPU Service: model weights & checkpoints (large binaries)
+gpu_service/.checkpoints/
+gpu_service/ext_weights/
+gpu_service/weights/
+
+# -------------------------------------
+# Research: generated data artifacts (tensors, corpora, WAVs)
+research/t5_interpretability/data/
+
+# -------------------------------------
+# Standalone ComfyUI backend (large, cloned separately)
+dlbackend/
+
+# -------------------------------------
+# External AI tools nested in the repo (F12 redesign 2026-05-18).
+# Each is a separate upstream project / large model store.
+# See docs/installation/ for clone/rsync steps.
+heartlib/
+# The llama.cpp clone llama-server is built from — the binary the GPU service
+# spawns its LLM/VLM children with. NO trailing slash: on this machine the entry
+# is a SYMLINK to the clone outside the repo, and a symlink is a file to git, so
+# "llama.cpp/" would match only a real directory and let the symlink through.
+/llama.cpp
+llama-server-models/
+MMAudio/
+kohya_ss_new/
+devserver/data/*.jsonl
+# Translation store for the fixed benchmark corpus. SQLite writes companions
+# beside the file whose names depend on the journal mode it actually got
+# (-wal/-shm, or -journal when WAL is unavailable), so the rule covers the
+# whole family rather than the three names WAL happens to use today.
+devserver/data/*.sqlite3*
+.aider*
+.codex
+.codex/
+research_data/
+
+# Lab user/course system SQLite DB (Phase 0)
+devserver/var/
+
+# -------------------------------------
+# Scratch and generated research artifacts
+# *.bak already ignored above; suffixed backups (foo.py.bak_feature) were not.
+*.bak_*
+scratch_ab/
+# 92 MB research page with 33 embedded base64 PNGs. It sits in the frontend's
+# public/ folder, which Vite copies verbatim into dist/ - keep it out of the
+# repo so it cannot be committed by an `git add -A`.
+public/ai4artsed-frontend/public/kickin.html
+
+# -------------------------------------
+# Claude Code session transcripts do not belong in the repository. A
+# transcript carries the whole dialogue, including whatever was
+# pasted into it. The automatic export name is YYYY-MM-DD-HHMMSS-<slug>.txt —
+# matched here at ANY depth, no leading slash on purpose, because an export can
+# land anywhere. A hand-named transcript is NOT caught by any pattern, which is
+# why nothing in this repo is ever staged with `git add -A`.
+[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]-*.txt
+_session_transcripts/
+# Arcimboldo-Algebra: 2-MB-Quellbild, Output-Verzeichnis bleibt lokal
+research/out_arcimboldo/
+
+# -------------------------------------
+# Piper: the voice files and what documents their speakers (download_piper.sh,
+# 2026-09-19). Every model on this platform is downloaded technology and lives
+# outside the working tree — PIPER_HOME defaults to ~/ai/piper — but the path
+# is configurable, so these patterns cover a model directory that someone
+# points into the tree, and download_piper.sh refuses such a path outright.
+# No leading slash and no trailing slash on purpose: the files, at any depth.
+*.onnx
+*.onnx.json
+*.metainfo.txt

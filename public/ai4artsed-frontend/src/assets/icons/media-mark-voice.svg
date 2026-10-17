@@ -1,0 +1,8 @@
+<!-- Composed, see media-mark-audio.svg: the square frame of font_download with
+     a mouth inside it. DRAWN, not a download: Material Symbols has no mouth
+     glyph. Two shapes: an upper lip whose cupid's bow is what makes it read
+     as a mouth and not as an eye, and a fuller lower lip; the gap between them
+     is the opening. Scaled 1.2 so it fills the square like the note does.
+     What stood here before was voice_selection — a hand with sound waves, the
+     one mark in the set that was not a thing inside a frame. -->
+<svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#e3e3e3"><path d="M140-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h680q24 0 42 18t18 42v680q0 24-18 42t-42 18H140Zm1-60h680v-680H141v680Zm0-680v680-680Z"/><g transform="translate(481 -480) scale(1.2) translate(-481 480)"><path d="M180-500c56-92 132-128 216-112 32 6 60 22 84 42 24-20 52-36 84-42 84-16 160 20 216 112-58-34-124-48-192-40-40 5-77 17-108 33-31-16-68-28-108-33-68-8-134 6-192 40Z"/><path d="M190-452c62 22 148 34 290 34s228-12 290-34c-52 100-158 158-290 158S242-352 190-452Z"/></g></svg>

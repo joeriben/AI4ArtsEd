@@ -1,0 +1,304 @@
+{
+  "description": "Youth and Kids safety filter term lists (migrated from Legacy Server config.py)",
+  "source": "server/config.py lines 140-164",
+  "usage": "Used in Stage 1/3 to check prompts before media generation. Only terms for the detected input language + EN are checked.",
+  "filters": {
+    "kids": {
+      "description": "Stricter filter for children (terms per language, checked selectively)",
+      "age_range": "6-12 years",
+      "terms_by_language": {
+        "en": [
+          "violence", "violent", "execution", "killing", "murder", "death", "corpse",
+          "torture", "pain", "suffering", "injury", "wound", "bleeding",
+          "blood", "bloody", "gore", "gory", "mutilation", "dismemberment",
+          "limbs", "severed", "decapitation", "entrails", "intestines", "organs",
+          "slaughter", "carnage", "flesh", "butcher",
+          "despair", "suicide", "suicidal", "self-harm", "depression",
+          "horror", "scary", "frightening", "terror", "nightmare", "disturbing",
+          "demon", "zombie", "skeleton", "skull", "evil",
+          "vampire", "werewolf", "monster", "creature", "beast",
+          "fangs", "claws", "teeth", "bite",
+          "haunted", "creepy", "eerie", "sinister", "macabre",
+          "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse",
+          "war", "weapon", "bomb", "explosion", "strangling", "poison", "knife", "pistol",
+          "gun", "rifle", "grenade", "missile", "launcher", "sniper", "shoot", "shooting",
+          "soldier", "combat", "battlefield", "ammunition", "explosives",
+          "terrorism", "terrorist", "attack", "hijack", "hostage", "assassination",
+          "massacre", "genocide", "extremist", "radicalized", "suicide bomber"
+        ],
+        "de": [
+          "Gewalt", "Mord", "Folter", "Blut", "blutig", "Verstümmelung",
+          "töten", "tötet", "erschlagen", "erschlägt", "erstechen", "ersticht",
+          "ermorden", "ermordet", "umbringen", "erschiessen", "erschiesst", "schlachten",
+          "Tod", "Leiche", "Hinrichtung", "Gemetzel",
+          "verletzen", "Verletzung", "Schmerz", "Wunde",
+          "Selbstmord", "Suizid", "Selbstverletzung",
+          "Horror", "gruselig", "erschreckend", "Albtraum", "verstörend",
+          "Dämon", "Skelett", "Totenkopf", "Vampir", "Werwolf", "Zombie",
+          "nackt", "Nacktheit", "sexuell", "Vergewaltigung", "pornografisch", "Genitalien", "Missbrauch",
+          "Krieg", "Waffe", "Bombe", "Explosion", "Würgen", "Gift", "Messer", "Pistole",
+          "Gewehr", "Granate", "Rakete", "Scharfschütze", "schießen", "Schießerei",
+          "Soldat", "Kampf", "Schlachtfeld", "Munition", "Sprengstoff",
+          "Terrorismus", "Terrorist", "Anschlag", "Attentat", "Entführung",
+          "Geisel", "Massaker", "Völkermord", "Extremist", "Selbstmordattentäter"
+        ],
+        "tr": [
+          "şiddet", "şiddetli", "infaz", "öldürme", "cinayet", "ölüm", "ceset",
+          "işkence", "acı", "ıstırap", "yaralanma", "yara", "kanama", "kan", "kanlı",
+          "vahşet", "parçalama", "kesme", "katliam", "kasaplık",
+          "umutsuzluk", "intihar", "kendine zarar verme", "depresyon",
+          "korku", "korkutucu", "dehşet", "kabus", "rahatsız edici",
+          "şeytan", "zombi", "iskelet", "kafatası", "kötülük",
+          "vampir", "kurt adam", "canavar", "yaratık",
+          "dişler", "pençeler", "ısırma",
+          "perili", "ürkütücü", "tekinsiz", "karanlık",
+          "çıplak", "çıplaklık", "cinsel", "tecavüz", "pornografik", "cinsel organ", "istismar",
+          "savaş", "silah", "bomba", "patlama", "boğma", "zehir", "bıçak", "tabanca",
+          "lanet", "cehennem", "iblis"
+        ],
+        "ko": [
+          "폭력", "폭력적", "처형", "살인", "살해", "죽음", "시체",
+          "고문", "고통", "괴로움", "부상", "상처", "출혈", "피", "피투성이",
+          "잔혹", "절단", "참수", "학살", "도살",
+          "절망", "자살", "자해", "우울증",
+          "공포", "무서운", "무시무시한", "악몽", "충격적인",
+          "악마", "좀비", "해골", "두개골", "사악한",
+          "뱀파이어", "늑대인간", "괴물", "괴수",
+          "송곳니", "발톱", "물기",
+          "유령의", "섬뜩한", "불길한", "어두운",
+          "나체", "누드", "성적", "강간", "포르노", "성기", "학대",
+          "전쟁", "무기", "폭탄", "폭발", "교살", "독", "칼", "총",
+          "저주", "지옥", "악령"
+        ],
+        "uk": [
+          "насильство", "насильницький", "страта", "вбивство", "вбити", "смерть", "труп",
+          "тортури", "біль", "страждання", "поранення", "рана", "кровотеча", "кров", "кривавий",
+          "каліцтво", "розчленування", "обезголовлення", "різанина", "бійня",
+          "відчай", "самогубство", "суїцид", "самоушкодження", "депресія",
+          "жах", "страшний", "лякаючий", "кошмар", "тривожний",
+          "демон", "зомбі", "скелет", "череп", "зло",
+          "вампір", "перевертень", "монстр", "чудовисько",
+          "ікла", "кігті", "привид",
+          "моторошний", "зловісний", "темний",
+          "голий", "оголений", "сексуальний", "зґвалтування", "порнографічний", "геніталії", "насилля",
+          "війна", "зброя", "бомба", "вибух", "отрута", "ніж", "пістолет",
+          "прокляття", "пекло"
+        ],
+        "fr": [
+          "violence", "violent", "exécution", "meurtre", "assassinat", "mort", "cadavre",
+          "torture", "douleur", "souffrance", "blessure", "plaie", "saignement", "sang", "sanglant",
+          "gore", "mutilation", "démembrement", "décapitation", "entrailles", "intestins", "organes",
+          "massacre", "carnage", "chair", "boucher",
+          "désespoir", "suicide", "suicidaire", "automutilation", "dépression",
+          "horreur", "effrayant", "terrifiant", "terreur", "cauchemar", "perturbant",
+          "démon", "zombie", "squelette", "crâne", "mal",
+          "vampire", "loup-garou", "monstre", "créature", "bête",
+          "crocs", "griffes", "dents", "morsure",
+          "hanté", "sinistre", "lugubre", "macabre", "sombre",
+          "nu", "nudité", "sexuel", "viol", "pornographique", "génital", "abus",
+          "guerre", "arme", "bombe", "explosion", "étranglement", "poison", "couteau", "pistolet",
+          "malédiction", "enfer"
+        ],
+        "es": [
+          "violencia", "violento", "ejecución", "asesinato", "homicidio", "muerte", "cadáver",
+          "tortura", "dolor", "sufrimiento", "lesión", "herida", "sangrado", "sangre", "sangriento",
+          "mutilación", "desmembramiento", "decapitación", "entrañas", "intestinos", "órganos",
+          "masacre", "matanza", "carne", "carnicero",
+          "desesperación", "suicidio", "suicida", "autolesión", "depresión",
+          "horror", "aterrador", "espantoso", "terror", "pesadilla", "perturbador",
+          "demonio", "zombi", "esqueleto", "calavera", "maldad",
+          "vampiro", "hombre lobo", "monstruo", "criatura", "bestia",
+          "colmillos", "garras", "dientes", "mordida",
+          "embrujado", "espeluznante", "siniestro", "oscuro", "macabro",
+          "desnudo", "desnudez", "sexual", "violación", "pornográfico", "genital", "abuso",
+          "guerra", "arma", "bomba", "explosión", "estrangulamiento", "veneno", "cuchillo", "pistola",
+          "maldición", "infierno"
+        ],
+        "he": [
+          "אלימות", "אלים", "הוצאה להורג", "רצח", "הרג", "מוות", "גופה",
+          "עינויים", "כאב", "סבל", "פציעה", "פצע", "דימום", "דם", "מדמם",
+          "זוועה", "קטיעה", "עריפת ראש", "מעיים", "איברים",
+          "טבח", "שחיטה", "בשר", "קצב",
+          "ייאוש", "התאבדות", "פגיעה עצמית", "דיכאון",
+          "אימה", "מפחיד", "מבהיל", "טרור", "סיוט", "מטריד",
+          "שד", "זומבי", "שלד", "גולגולת", "רוע",
+          "ערפד", "איש זאב", "מפלצת", "יצור", "חיה",
+          "ניבים", "טפרים", "שיניים", "נשיכה",
+          "רדוף", "מצמרר", "מאיים", "זדוני", "חשוך", "מקברי",
+          "עירום", "עירומים", "מיני", "אונס", "פורנוגרפי", "איברי מין", "התעללות",
+          "מלחמה", "נשק", "פצצה", "פיצוץ", "חנק", "רעל", "סכין", "אקדח",
+          "קללה", "גיהינום"
+        ],
+        "ar": [
+          "عنف", "عنيف", "إعدام", "قتل", "جريمة قتل", "موت", "جثة",
+          "تعذيب", "ألم", "معاناة", "إصابة", "جرح", "نزيف", "دم", "دموي",
+          "فظاعة", "بتر", "قطع رأس", "أحشاء", "أعضاء",
+          "مذبحة", "مجزرة", "لحم", "جزار",
+          "يأس", "انتحار", "إيذاء النفس", "اكتئاب",
+          "رعب", "مخيف", "مرعب", "إرهاب", "كابوس", "مزعج",
+          "شيطان", "زومبي", "هيكل عظمي", "جمجمة", "شر",
+          "مصاص دماء", "مستذئب", "وحش", "مخلوق", "حيوان",
+          "أنياب", "مخالب", "أسنان", "عضة",
+          "مسكون", "مخيف", "مشؤوم", "مظلم", "مريب",
+          "عاري", "عري", "جنسي", "اغتصاب", "إباحي", "أعضاء تناسلية", "إساءة",
+          "حرب", "سلاح", "قنبلة", "انفجار", "خنق", "سم", "سكين", "مسدس",
+          "لعنة", "جهنم"
+        ],
+        "bg": [
+          "насилие", "насилствен", "екзекуция", "убиване", "убийство", "смърт", "труп",
+          "изтезание", "болка", "страдание", "нараняване", "рана", "кървене", "кръв", "кървав",
+          "ужас", "осакатяване", "разчленяване", "обезглавяване", "вътрешности", "органи",
+          "клане", "касапница", "месо", "касапин",
+          "отчаяние", "самоубийство", "самонараняване", "депресия",
+          "хорър", "страшен", "плашещ", "терор", "кошмар", "обезпокоителен",
+          "демон", "зомби", "скелет", "череп", "зло",
+          "вампир", "върколак", "чудовище", "създание", "звяр",
+          "зъби", "нокти", "ухапване",
+          "призрачен", "зловещ", "мрачен", "тъмен", "макабричен",
+          "гол", "голота", "сексуален", "изнасилване", "порнографски", "гениталии", "насилие",
+          "война", "оръжие", "бомба", "взрив", "удушаване", "отрова", "нож", "пистолет",
+          "проклятие", "ад"
+        ]
+      }
+    },
+    "youth": {
+      "description": "Moderate filter for youth (terms per language, checked selectively)",
+      "age_range": "13-17 years",
+      "terms_by_language": {
+        "en": [
+          "explicit", "hardcore", "brutal", "savage", "cruelty", "sadistic",
+          "pornographic", "sexual", "nsfw", "rape", "abuse",
+          "genitals", "penis", "vagina",
+          "self-harm", "suicide", "cutting"
+        ],
+        "de": [
+          "pornografisch", "sexuell", "Vergewaltigung", "Missbrauch",
+          "Genitalien", "Selbstverletzung", "Suizid"
+        ],
+        "tr": [
+          "açık", "sert", "vahşi", "acımasız", "sadist", "sadistçe",
+          "pornografik", "cinsel", "tecavüz", "istismar",
+          "cinsel organ", "penis", "vajina",
+          "kendine zarar verme", "intihar", "kesme"
+        ],
+        "ko": [
+          "노골적", "하드코어", "잔인한", "야만적", "가학적", "사디스트",
+          "포르노", "성적", "강간", "학대",
+          "성기", "음경", "질",
+          "자해", "자살", "자상"
+        ],
+        "uk": [
+          "відвертий", "жорстокий", "брутальний", "дикий", "жорстокість", "садистський",
+          "порнографічний", "сексуальний", "зґвалтування", "насилля",
+          "геніталії", "самоушкодження", "самогубство", "порізи"
+        ],
+        "fr": [
+          "explicite", "hardcore", "brutal", "sauvage", "cruauté", "sadique",
+          "pornographique", "sexuel", "viol", "abus",
+          "génitaux", "pénis", "vagin",
+          "automutilation", "suicide", "coupure"
+        ],
+        "es": [
+          "explícito", "hardcore", "brutal", "salvaje", "crueldad", "sádico",
+          "pornográfico", "sexual", "violación", "abuso",
+          "genitales", "pene", "vagina",
+          "autolesión", "suicidio", "corte"
+        ],
+        "he": [
+          "מפורש", "הארדקור", "אכזרי", "פראי", "אכזריות", "סדיסטי",
+          "פורנוגרפי", "מיני", "אונס", "התעללות",
+          "איברי מין", "פין", "נרתיק",
+          "פגיעה עצמית", "התאבדות", "חיתוך"
+        ],
+        "ar": [
+          "صريح", "هاردكور", "وحشي", "همجي", "قسوة", "سادي",
+          "إباحي", "جنسي", "اغتصاب", "إساءة",
+          "أعضاء تناسلية", "قضيب", "مهبل",
+          "إيذاء النفس", "انتحار", "جرح"
+        ],
+        "bg": [
+          "откровен", "хардкор", "брутален", "жесток", "жестокост", "садистичен",
+          "порнографски", "сексуален", "изнасилване", "насилие",
+          "гениталии", "пенис", "вагина",
+          "самонараняване", "самоубийство", "порязване"
+        ]
+      }
+    }
+  },
+  "categories": {
+    "kids": {
+      "violence": [
+        "violence", "violent", "execution", "killing", "murder", "death", "corpse",
+        "torture", "pain", "suffering", "injury", "wound", "bleeding",
+        "slaughter", "carnage", "butcher"
+      ],
+      "gore": [
+        "blood", "bloody", "gore", "gory", "mutilation", "dismemberment",
+        "limbs", "severed", "decapitation", "entrails", "intestines", "organs", "flesh"
+      ],
+      "psychological_distress": [
+        "despair", "suicide", "suicidal", "self-harm", "depression"
+      ],
+      "horror": [
+        "horror", "scary", "frightening", "terror", "nightmare", "disturbing",
+        "demon", "zombie", "skeleton", "skull", "evil"
+      ],
+      "horror_creatures": [
+        "vampire", "werewolf", "monster", "creature", "beast",
+        "fangs", "claws", "teeth", "bite"
+      ],
+      "creepy_macabre": [
+        "haunted", "creepy", "eerie", "sinister", "macabre"
+      ],
+      "sexual_content": [
+        "nude", "naked", "nsfw", "sexual", "rape", "pornographic", "genital", "abuse"
+      ],
+      "weapons_war": [
+        "war", "weapon", "bomb", "explosion", "knife", "pistol",
+        "gun", "rifle", "grenade", "missile", "launcher", "sniper",
+        "shoot", "shooting", "ammunition", "explosives"
+      ]
+    },
+    "youth": {
+      "explicit_content": [
+        "explicit", "hardcore", "brutal", "savage"
+      ],
+      "cruelty": [
+        "cruelty", "sadistic"
+      ],
+      "sexual_content": [
+        "pornographic", "sexual", "nsfw", "rape", "abuse",
+        "genitals", "penis", "vagina"
+      ],
+      "self_harm": [
+        "self-harm", "suicide", "cutting"
+      ]
+    }
+  },
+  "error_messages": {
+    "kids": {
+      "de": "Dein Prompt enthält Begriffe, die für Kinder nicht geeignet sind. Wir haben das Bild aus Sicherheitsgründen blockiert.",
+      "en": "Your prompt contains terms that are not suitable for children. We blocked the image for safety reasons.",
+      "tr": "Promptun çocuklar için uygun olmayan terimler içeriyor. Güvenlik nedeniyle görüntüyü engelledik.",
+      "ko": "프롬프트에 어린이에게 적합하지 않은 용어가 포함되어 있습니다. 안전상의 이유로 이미지를 차단했습니다.",
+      "uk": "Твій промпт містить терміни, які не підходять для дітей. Ми заблокували зображення з міркувань безпеки.",
+      "fr": "Votre prompt contient des termes qui ne conviennent pas aux enfants. Nous avons bloqué l'image pour des raisons de sécurité.",
+      "es": "Tu prompt contiene términos que no son adecuados para niños. Hemos bloqueado la imagen por razones de seguridad.",
+      "he": "הפרומפט שלך מכיל מונחים שאינם מתאימים לילדים. חסמנו את התמונה מטעמי בטיחות.",
+      "ar": "يحتوي النص على مصطلحات غير مناسبة للأطفال. تم حظر الصورة لأسباب تتعلق بالسلامة.",
+      "bg": "Твоят промпт съдържа термини, които не са подходящи за деца. Блокирахме изображението от съображения за сигурност."
+    },
+    "youth": {
+      "de": "Dein Prompt enthält explizite Begriffe, die blockiert wurden.",
+      "en": "Your prompt contains explicit terms that were blocked.",
+      "tr": "Promptun engellenen açık terimler içeriyor.",
+      "ko": "프롬프트에 차단된 노골적인 용어가 포함되어 있습니다.",
+      "uk": "Твій промпт містить відверті терміни, які були заблоковані.",
+      "fr": "Votre prompt contient des termes explicites qui ont été bloqués.",
+      "es": "Tu prompt contiene términos explícitos que fueron bloqueados.",
+      "he": "הפרומפט שלך מכיל מונחים מפורשים שנחסמו.",
+      "ar": "يحتوي النص على مصطلحات صريحة تم حظرها.",
+      "bg": "Твоят промпт съдържа откровени термини, които бяха блокирани."
+    }
+  }
+}

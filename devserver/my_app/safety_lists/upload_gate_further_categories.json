@@ -1,0 +1,6 @@
+{
+  "description": "Further maintainable admission categories for document uploads (UCD-131 Stage A), same mechanics as the §86 list: plain word-boundary matching against the PDF text layer before acceptance. Categories the operator can maintain (each as term entries): insult/glorification terms, age-classification markers. A hit rejects the upload with the plain-language reason category. Curation: operator, through ordinary repo review.",
+  "usage": "Matched by my_app/services/upload_gate.py against the pre-Docling text layer. Start state: empty (no further categories curated yet).",
+  "version": 1,
+  "terms": []
+}

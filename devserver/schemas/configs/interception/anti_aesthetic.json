@@ -1,0 +1,292 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Bad Picture",
+    "de": "Schlechtes Bild"
+  },
+  "description": {
+    "en": "Keeps the subject of the input and works two to four properties from VisionReward's rating scale into the image description, taken at their negative pole.",
+    "de": "Behält den Gegenstand des Inputs und arbeitet zwei bis vier Eigenschaften aus der Bewertungsskala von VisionReward in die Bildbeschreibung ein, an ihrem negativen Pol genommen."
+  },
+  "properties": [
+    "technical_imaging"
+  ],
+  "context": {
+    "en": "Photograph.\n\nKeep the base prompt. Select two to four of the descriptions below at random. Write a wide-spectrum aesthetic prompt out of the base prompt and the descriptions of these selected dimensions. You may also introduce additional dimensions to better couple with the selected effects.\n\nObject pairing — uncoordinated\nMain object — unclear main subject\nRichness — empty\nBackground — no background\nClarity — completely blurry\nColor Brightness — dark\nColor Aesthetic — ugly colors\nLighting Distinction — no lighting\nDetail realism — greatly unrealistic\nDetail refinement — fragmented\nEmotion — very negative",
+    "de": "Fotografie.\n\nBehalte den Basis-Prompt. Wähle zufällig zwei bis vier der Beschreibungen unten. Schreibe aus dem Basis-Prompt und den Beschreibungen dieser gewählten Dimensionen einen Prompt über das ganze ästhetische Spektrum. Du darfst weitere Dimensionen hinzunehmen, wenn sie sich mit den gewählten Wirkungen besser verbinden.\n\nObject pairing — uncoordinated\nMain object — unclear main subject\nRichness — empty\nBackground — no background\nClarity — completely blurry\nColor Brightness — dark\nColor Aesthetic — ugly colors\nLighting Distinction — no lighting\nDetail realism — greatly unrealistic\nDetail refinement — fragmented\nEmotion — very negative"
+  },
+  "meta": {
+    "stage": "interception",
+    "version": "1.0",
+    "method": "Built after Guo et al., section 3.1 of arXiv:2512.11883v3 (the same passage stands in section 2.1 of v1): keep the base prompt, draw 2-4 dimensions at random, hand the base prompt and the descriptions of those dimensions to a model that writes the prompt out of them. Verbatim there: \"The base prompt and the descriptions of these selected dimensions were provided to a Vision-Language Model (VLM) ... to generate wide-spectrum aesthetic prompts\" and \"The VLM may also introduce additional dimensions to better couple with the selected effects.\" In this platform Stage 2 is that step.",
+    "dimension_source": "VisionReward (Xu et al., arXiv:2412.21059), Tables 15 and 16, \"Annotation taxonomy and checklist details for text-to-image evaluation\" -- the human labeling guidelines Guo et al. take their rating descriptions from. Each line below is the sub-dimension's name and one option word of its scale, both as the tables print them, with the single exception the entry itself marks (`option_note`). The wording is the source's and is not translated: it stands in English in every language of this platform. Which end of each scale is the 'bad' one is the source's own and is EMPIRICAL: the checklist questions run one way -- affirmed at one end (\"Is the image very clear?\"), and asking whether the picture avoids the other (\"Does the image avoid being blurry?\") -- and VisionReward fits a reward model to those human answers. What Guo et al. leave open is which option of a scale they took for \"the 'bad' rating descriptions\".",
+    "scale_note": "`visionreward_option_neutral` names which entry of `visionreward_option_scale` is the neutral one. The word itself is the source's (ordinary, ordinary colors, neutral); what cannot be computed is its POSITION, because the neutral entry is not always the middle one (Detail realism runs realistic - neutral - unrealistic - very unrealistic - greatly unrealistic, and its neutral word stands second of five). A surface that lets the axis swing by one or two steps counts those steps from this entry. Where a scale ends earlier on one side, the property stands at its end.\n\nDEFECT, recorded 2026-09-04: the scale of `Main object` reads prominent - ordinary - prominent, so its negative end is missing and this repository's own option word for it (`unclear main subject` in anti_aesthetic.json) stands in no scale. The word is not invented here; the table has to be read again. Until then a surface that ranks on these scales leaves this one property out, and says so.",
+    "dimensions_verbatim": [
+      {
+        "key": "Object pairing",
+        "visionreward_dimension": "Composition",
+        "visionreward_option": "uncoordinated",
+        "visionreward_option_scale": [
+          "coordinated",
+          "ordinary",
+          "uncoordinated"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Are the objects well-coordinated?",
+          "Does the image avoid poorly coordinated objects?"
+        ]
+      },
+      {
+        "key": "Main object",
+        "visionreward_dimension": "Composition",
+        "visionreward_option": "unclear main subject",
+        "visionreward_option_scale": [
+          "prominent",
+          "ordinary",
+          "prominent"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Is the main subject prominent?",
+          "Does the image avoid an unclear main subject?"
+        ],
+        "option_note": "Table 15 prints the option of the lowest level as \"prominent\", the same word as the top level; the phrase \"unclear main subject\" is the one the checklist question of that sub-dimension uses (\"Does the image avoid an unclear main subject?\")."
+      },
+      {
+        "key": "Richness",
+        "visionreward_dimension": "Composition",
+        "visionreward_option": "empty",
+        "visionreward_option_scale": [
+          "very rich",
+          "rich",
+          "ordinary",
+          "monotonous",
+          "empty"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Is the image very rich?",
+          "Is the image rich?",
+          "Is the image not monotonous?",
+          "Is the image not empty?"
+        ]
+      },
+      {
+        "key": "Background",
+        "visionreward_dimension": "Composition",
+        "visionreward_option": "no background",
+        "visionreward_option_scale": [
+          "beautiful",
+          "somewhat beautiful",
+          "ordinary",
+          "no background"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Is the background beautiful?",
+          "Is the background somewhat beautiful?",
+          "Is there a background?"
+        ]
+      },
+      {
+        "key": "Clarity",
+        "visionreward_dimension": "Quality",
+        "visionreward_option": "completely blurry",
+        "visionreward_option_scale": [
+          "very clear",
+          "clear",
+          "ordinary",
+          "blurry",
+          "completely blurry"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Is the image very clear?",
+          "Is the image clear?",
+          "Does the image avoid being blurry?",
+          "Does the image avoid being completely blurry?"
+        ]
+      },
+      {
+        "key": "Color Brightness",
+        "visionreward_dimension": "Quality",
+        "visionreward_option": "dark",
+        "visionreward_option_scale": [
+          "bright",
+          "ordinary",
+          "dark"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Are the colors bright?",
+          "Are the colors not dark?"
+        ]
+      },
+      {
+        "key": "Color Aesthetic",
+        "visionreward_dimension": "Quality",
+        "visionreward_option": "ugly colors",
+        "visionreward_option_scale": [
+          "beautiful colors",
+          "ordinary colors",
+          "ugly colors"
+        ],
+        "visionreward_option_neutral": "ordinary colors",
+        "visionreward_checklist": [
+          "Are the colors beautiful?",
+          "Are the colors not ugly?"
+        ]
+      },
+      {
+        "key": "Lighting Distinction",
+        "visionreward_dimension": "Quality",
+        "visionreward_option": "no lighting",
+        "visionreward_option_scale": [
+          "very distinct",
+          "distinct",
+          "ordinary",
+          "no lighting"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Is the lighting and shadow very distinct?",
+          "Is the lighting and shadow distinct?",
+          "Is there lighting and shadow?"
+        ]
+      },
+      {
+        "key": "Detail realism",
+        "visionreward_dimension": "Fidelity",
+        "visionreward_option": "greatly unrealistic",
+        "visionreward_option_scale": [
+          "realistic",
+          "neutral",
+          "unrealistic",
+          "very unrealistic",
+          "greatly unrealistic"
+        ],
+        "visionreward_option_neutral": "neutral",
+        "visionreward_checklist": [
+          "Are the image details realistic?",
+          "Do the image details avoid being unrealistic?",
+          "Do the image details avoid being very unrealistic?",
+          "Do the image details avoid being greatly unrealistic?"
+        ]
+      },
+      {
+        "key": "Detail refinement",
+        "visionreward_dimension": "Fidelity",
+        "visionreward_option": "fragmented",
+        "visionreward_option_scale": [
+          "very refined",
+          "refined",
+          "ordinary",
+          "rough",
+          "very rough",
+          "indistinguishable",
+          "fragmented"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Are the image details very exquisite?",
+          "Are the image details exquisite?",
+          "Do the image details avoid being coarse?",
+          "Do the image details avoid being very coarse?",
+          "Does the image avoid being hard to recognize?",
+          "Does the image avoid being fragmented?"
+        ]
+      },
+      {
+        "key": "Emotion",
+        "visionreward_dimension": "Safety & Emotion",
+        "visionreward_option": "very negative",
+        "visionreward_option_scale": [
+          "very positive",
+          "positive",
+          "ordinary",
+          "negative",
+          "very negative"
+        ],
+        "visionreward_option_neutral": "ordinary",
+        "visionreward_checklist": [
+          "Can the image evoke a very positive emotional response?",
+          "Can the image evoke a positive emotional response?",
+          "Does the image avoid evoking a negative emotional response?",
+          "Does the image avoid evoking a very negative emotional response?"
+        ]
+      }
+    ],
+    "dimension_lines": {
+      "Object pairing": "Object pairing — uncoordinated",
+      "Main object": "Main object — unclear main subject",
+      "Richness": "Richness — empty",
+      "Background": "Background — no background",
+      "Clarity": "Clarity — completely blurry",
+      "Color Brightness": "Color Brightness — dark",
+      "Color Aesthetic": "Color Aesthetic — ugly colors",
+      "Lighting Distinction": "Lighting Distinction — no lighting",
+      "Detail realism": "Detail realism — greatly unrealistic",
+      "Detail refinement": "Detail refinement — fragmented",
+      "Emotion": "Emotion — very negative"
+    },
+    "context_frame": {
+      "en": "Photograph.\n\nKeep the base prompt. Write a wide-spectrum aesthetic prompt out of the base prompt and the descriptions of the dimensions below. You may also introduce additional dimensions to better couple with the selected effects.\n\n{PROPERTIES}",
+      "de": "Fotografie.\n\nBehalte den Basis-Prompt. Schreibe aus dem Basis-Prompt und den Beschreibungen der Dimensionen unten einen Prompt über das ganze ästhetische Spektrum. Du darfst weitere Dimensionen hinzunehmen, wenn sie sich mit den gewählten Wirkungen besser verbinden.\n\n{PROPERTIES}"
+    },
+    "context_frame_note": "The same frame as `context`, with the eleven lines replaced by the token {PROPERTIES} and without the sentence about drawing: on Aesthetic Poles the surface draws the properties, so a draw made by each model separately would make the two rows differ in the draw as well as in the pole. `context` is what runs wherever this preset is used as an ordinary perspective, on the flow board for one, where nothing outside it draws.",
+    "audience_note": "The Emotion dimension is unsuitable for kids and youth. There is no enforcement for that at present: the chip stands at every safety level. Note that the line is sharper now than it was when that was assessed -- at the negative pole the source's scale says \"very negative\", which asks for a very negative emotional response, where the earlier wording of this repository asked only for the absence of a positive one.",
+    "model_note": "Guo et al. verbalise with Qwen/Qwen3-VL-235B-A22B-Instruct and give two reasons for choosing a VLM: that its training on image tasks likely improves its understanding of visual concepts even where no image is handed over, and that the model they use performs comparably to or better than its text-only counterparts. Verbatim: \"we selected a VLM because its training on vision-related tasks likely enhances its understanding of visual concepts, even when images are not directly supplied\". This preset does NOT run on the local qwen3-vl:32b. The authors' argument holds for their own step, the writing of the deviation prompts; here the preset text already stands, and in a measurement over seven runs the local VLM kept the platform's length requirement in none of them. It therefore runs on the configured interception model like every other preset.",
+    "version_note": "New preset, first version.",
+    "name_note": "Working name.",
+    "language_note": "name and description stand in en and de; the remaining languages fall back to en. The dimension lines are not translated at all -- they are the source's wording and stand once.",
+    "preview_note": "Bubble: /config-previews/anti_aesthetic.webp, 300x300, written by scripts/resize_new_backgrounds.py from resources/config-preview-originals/anti_aesthetic.png, the 1024x1024 original, which stays on the dev host (gitignored).",
+    "placement_note": "Under Photography & Media rather than with the creative transformations: the preset is medium-specific -- it describes image properties and runs on image alone.",
+    "calibration_note": "After the first test: the first version said \"as a picture\" / \"als Bild\" and produced blurred PAINTINGS. The properties come from VisionReward and are calibrated on photographs. The preset therefore names the medium, in ONE word. The paragraph that stood here until then -- every property was to arrive \"through the photographic circumstance that produces it ... how long the exposure runs, what happens in developing or in the file\" -- asked for a causal account of a mishap, which an image model cannot render. It cost the interception arm of the 03.09. test series its result (research repo, studies/2026-09_prompt_interception_vs_konkatenation/STUDIE.md 7.5).",
+    "selection_note": "The sub-dimensions are the ones Guo et al. name in the FIRST version of their paper (arXiv:2512.11883v1, section 2.1), verbatim: \"The selected dimensions include background, clarity, color aesthetic, color brightness, detail realism, detail refinement, emotion, lighting distinction, main object, object pairing, and richness.\" They write \"12 aesthetic dimensions\" and name eleven; the twelfth is named nowhere in any version. That sentence was dropped in v2 and is absent from v3 (2026-05-12), which keep \"12 aesthetic dimensions\" and the \"bad\" rating descriptions but name no dimension at all -- so v1 is the only place the selection is written down, and it is cited here as such. The order below is the order of Tables 15 and 16 of VisionReward, which is the order the taxonomy is read in. Symmetry, Lighting Aesthetic, Body, Face, Hands and Safety are the remaining six sub-dimensions of those tables; Guo et al. name none of them in any version.",
+    "prompt_note": "The frame carries the study's own procedure and nothing else. Guo et al., arXiv:2512.11883v3 section 3.1, verbatim: \"The base prompt and the descriptions of these selected dimensions were provided to a Vision-Language Model (VLM) ... to generate wide-spectrum aesthetic prompts\" and \"The VLM may also introduce additional dimensions to better couple with the selected effects.\" The random draw of two to four dimensions is theirs as well. Nothing else is added to it; only the word at the start says that this is about a photograph, because the study's categories are measured on that."
+  },
+  "category": {
+    "de": "Fotografie & Medien",
+    "en": "Photography & Media",
+    "he": "צילום ומדיה",
+    "ar": "التصوير والإعلام",
+    "bg": "Фотография и медии",
+    "tr": "Fotoğraf & Medya",
+    "ko": "사진 & 미디어",
+    "uk": "Фотографія та медіа",
+    "fr": "Photographie & Médias",
+    "es": "Fotografía & Medios"
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "display": {
+    "icon": "📸",
+    "color": "#2196F3",
+    "category": "technical_imaging",
+    "difficulty": 4,
+    "order": 220
+  },
+  "tags": {
+    "en": [
+      "anti-aesthetic",
+      "visionreward",
+      "guo",
+      "deviation"
+    ],
+    "de": [
+      "anti-aesthetisch",
+      "visionreward",
+      "guo",
+      "abweichung"
+    ]
+  }
+}

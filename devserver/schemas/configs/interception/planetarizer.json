@@ -1,0 +1,89 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Planeta­rizer",
+    "de": "Planeta­risierer",
+    "tr": "Gezegenselleştirici",
+    "ko": "행성화기",
+    "uk": "Планетаризатор",
+    "fr": "Planétariseur",
+    "es": "Planetarizador",
+    "he": "מַפְלָנֵטִי",
+    "ar": "المُكوكبِ",
+    "bg": "Планетаризатор"
+  },
+  "description": {
+    "en": "Reimagines image prompts through planetary perspectives in the anthropocene. Deconstructs capitalist consumerist norms and challenges AI's inherent biases toward capitalist subjects and consumerist aesthetics.",
+    "de": "Denkt Bild-Prompts neu aus planetaren Perspektiven im Anthropozän. Dekonstruiert kapialistische konsumistische Normen und hinterfragt die inhärenten Biases der KI in Bezug auf kapitalistische Sichtweisen und Konsumästhetiken.",
+    "uk": "Планетарна перспектива",
+    "fr": "Réimagine les prompts d'images à travers des perspectives planétaires dans l'anthropocène. Déconstruit les normes consuméristes capitalistes et questionne les biais inhérents de l'IA envers les sujets capitalistes et l'esthétique consumériste.",
+    "es": "Reimagina prompts de imagen a través de perspectivas planetarias en el antropoceno. Deconstruye las normas consumistas capitalistas y cuestiona los sesgos inherentes de la IA hacia sujetos capitalistas y estéticas consumistas.",
+    "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות פלנטריות באנתרופוצן. מפרק נורמות קפיטליסטיות-צרכניות ומאתגר את ההטיות הטבועות של AI כלפי נושאים קפיטליסטיים ואסתטיקות צרכניות.",
+    "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر كوكبية في الأنثروبوسين. يفكّك المعايير الاستهلاكية الرأسمالية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات الرأسمالية والجماليات الاستهلاكية.",
+    "bg": "Преосмисля промптове за изображения през планетарни перспективи в антропоцена. Деконструира капиталистическите потребителски норми и предизвиква присъщите предразсъдъци на ИИ към капиталистически субекти и потребителска естетика.",
+    "tr": "Görüntü promptlarını Antroposen'deki gezegense perspektifler aracılığıyla yeniden hayal eder. Kapitalist tüketimci normları yapısöküme uğratır ve yapay zekanın kapitalist öznelere ve tüketimci estetiklere yönelik içkin önyargılarını sorgular.",
+    "ko": "인류세의 행성적 관점을 통해 이미지 프롬프트를 재상상합니다. 자본주의적 소비주의 규범을 해체하고, 자본주의적 대상과 소비주의 미학에 대한 AI의 내재적 편향에 도전합니다."
+  },
+  "category": {
+    "de": "Kritisches Denken",
+    "en": "Critical Thinking",
+    "he": "חשיבה ביקורתית",
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
+  },
+  "properties": [
+    "critical_analysis"
+  ],
+  "context": {
+    "en": "Respond in the language of the input. You adopt the perspective of 'Planetary Thinking'. Generative AIs tend to depict objects in isolation and idealized form.\n\nYour task is to rewrite the input so that it no longer stands isolated, but is deeply entangled in its ecological and material contexts.\nShow the dependencies and coexistence of humans, technology, and nature. Decide yourself how this entanglement becomes visible: whether through weather influences, biological interaction, traces of use, energy supply, or waste.\nThe goal is not dystopia, but a 'situated realism' that dissolves the separation between foreground object and environment background.",
+    "de": "Antworte in der Sprache des Inputs. Du nimmst die Perspektive des 'Planetarischen Denkens' ein. generative KIs tendieren dazu, Objekte isoliert und idealisiert darzustellen.\n\nDeine Aufgabe ist es, den Input so umzuschreiben, dass er nicht mehr isoliert steht, sondern tief in seine ökologischen und materiellen Zusammenhänge verstrickt ist.\nZeige die Abhängigkeiten und die Koexistenz von Mensch, Technik und Natur. Entscheide selbst, wie diese Verflechtung sichtbar wird: Sei es durch Wettereinflüsse, biologische Interaktion, Spuren der Nutzung, der Energieversorgung oder des Abfalls.\nZiel ist keine Dystopie, sondern ein 'situierter Realismus', der die Trennung zwischen Vordergrund-Objekt und Umwelt-Hintergrund aufhebt."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "approach": "decolonial_perspective",
+    "focus": "cultural_bias_deconstruction",
+    "target_biases": [
+      "capitalism",
+      "consumerist_aesthetics"
+    ],
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🌍",
+    "color": "#4CAF50",
+    "category": "critical_analysis",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [
+      "decolonial",
+      "critical",
+      "bias",
+      "global south",
+      "perspective"
+    ],
+    "de": [
+      "dekolonial",
+      "kritisch",
+      "bias",
+      "globaler süden",
+      "perspektive"
+    ]
+  }
+}

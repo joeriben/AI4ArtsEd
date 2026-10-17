@@ -1,0 +1,338 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_language_models",
+  "name": "",
+  "preset": {
+    "id": "language_models",
+    "kind": "explore",
+    "order": 1,
+    "medium": "image",
+    "name": "latentLab.interception.tabs.interception-models.label",
+    "description": "canvas.presets.languageModels.description"
+  },
+  "nodes": [
+    {
+      "id": "input",
+      "type": "input",
+      "x": 80,
+      "y": 540,
+      "config": {
+        "source": "text"
+      },
+      "promptPreset": "house"
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "x": 80,
+      "y": 60,
+      "config": {},
+      "seedMode": "fixed",
+      "seedValue": 123456789
+    },
+    {
+      "id": "translation_0",
+      "type": "translation",
+      "x": 760,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "reference",
+      "type": "generation",
+      "x": 1100,
+      "y": 60,
+      "config": {},
+      "configId": "flux2",
+      "titleKey": "latentLab.interception.models.asWritten"
+    },
+    {
+      "id": "interception_1",
+      "type": "interception",
+      "x": 420,
+      "y": 380,
+      "config": {},
+      "interceptionPreset": "theopposite",
+      "lineup": [
+        "openWeights",
+        0
+      ],
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_1"
+        }
+      }
+    },
+    {
+      "id": "translation_1",
+      "type": "translation",
+      "x": 760,
+      "y": 380,
+      "config": {}
+    },
+    {
+      "id": "generation_1",
+      "type": "generation",
+      "x": 1100,
+      "y": 380,
+      "config": {},
+      "configId": "flux2",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_1"
+        }
+      }
+    },
+    {
+      "id": "interception_2",
+      "type": "interception",
+      "x": 420,
+      "y": 700,
+      "config": {},
+      "interceptionPreset": "theopposite",
+      "lineup": [
+        "openWeights",
+        1
+      ],
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_2"
+        }
+      }
+    },
+    {
+      "id": "translation_2",
+      "type": "translation",
+      "x": 760,
+      "y": 700,
+      "config": {}
+    },
+    {
+      "id": "generation_2",
+      "type": "generation",
+      "x": 1100,
+      "y": 700,
+      "config": {},
+      "configId": "flux2",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_2"
+        }
+      }
+    },
+    {
+      "id": "interception_3",
+      "type": "interception",
+      "x": 420,
+      "y": 1020,
+      "config": {},
+      "interceptionPreset": "theopposite",
+      "lineup": [
+        "openWeights",
+        2
+      ],
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_3"
+        }
+      }
+    },
+    {
+      "id": "translation_3",
+      "type": "translation",
+      "x": 760,
+      "y": 1020,
+      "config": {}
+    },
+    {
+      "id": "generation_3",
+      "type": "generation",
+      "x": 1100,
+      "y": 1020,
+      "config": {},
+      "configId": "flux2",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_3"
+        }
+      }
+    },
+    {
+      "id": "interception_4",
+      "type": "interception",
+      "x": 420,
+      "y": 1340,
+      "config": {},
+      "interceptionPreset": "theopposite",
+      "lineup": [
+        "openWeights",
+        3
+      ],
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_4"
+        }
+      }
+    },
+    {
+      "id": "translation_4",
+      "type": "translation",
+      "x": 760,
+      "y": 1340,
+      "config": {}
+    },
+    {
+      "id": "generation_4",
+      "type": "generation",
+      "x": 1100,
+      "y": 1340,
+      "config": {},
+      "configId": "flux2",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "modelOf": "interception_4"
+        }
+      }
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 1440,
+      "y": 540,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "input",
+      "targetId": "translation_0"
+    },
+    {
+      "sourceId": "translation_0",
+      "targetId": "reference",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "reference",
+      "label": "params"
+    },
+    {
+      "sourceId": "input",
+      "targetId": "interception_1"
+    },
+    {
+      "sourceId": "interception_1",
+      "targetId": "translation_1"
+    },
+    {
+      "sourceId": "translation_1",
+      "targetId": "generation_1",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_1",
+      "label": "params"
+    },
+    {
+      "sourceId": "interception_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "input",
+      "targetId": "interception_2"
+    },
+    {
+      "sourceId": "interception_2",
+      "targetId": "translation_2"
+    },
+    {
+      "sourceId": "translation_2",
+      "targetId": "generation_2",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_2",
+      "label": "params"
+    },
+    {
+      "sourceId": "interception_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "input",
+      "targetId": "interception_3"
+    },
+    {
+      "sourceId": "interception_3",
+      "targetId": "translation_3"
+    },
+    {
+      "sourceId": "translation_3",
+      "targetId": "generation_3",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_3",
+      "label": "params"
+    },
+    {
+      "sourceId": "interception_3",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "input",
+      "targetId": "interception_4"
+    },
+    {
+      "sourceId": "interception_4",
+      "targetId": "translation_4"
+    },
+    {
+      "sourceId": "translation_4",
+      "targetId": "generation_4",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "seed",
+      "targetId": "generation_4",
+      "label": "params"
+    },
+    {
+      "sourceId": "interception_4",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reference",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_3",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_4",
+      "targetId": "collector"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "translation",
+  "pipeline_type": "simple_text",
+  "pipeline_stage": "3",
+  "requires_interception_prompt": false,
+  "description": "Translation Pipeline: Translate text to English (Stage 3 Pre-Output)",
+  "instruction_type": "translation",
+  "chunks": ["translate"],
+  "input_requirements": {
+    "texts": 1
+  },
+  "meta": {
+    "workflow_type": "translation",
+    "reusable": true,
+    "simple_passthrough": true,
+    "description": "Simple translation pipeline - executes chunks from config without overrides"
+  }
+}

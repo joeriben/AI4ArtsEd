@@ -1,0 +1,1151 @@
+{
+ "_source": [
+  "Wording: public/ai4artsed-frontend/src/i18n/en.ts, moved unchanged. Nothing here is rewritten.",
+  "Where a page carries no authored text, the wording stands here and only here; the build keeps it, field by field.",
+  "Item list: the tab arrays actually rendered in image_lab.vue, latent_text_lab.vue, crossmodal_lab.vue, compare_hub.vue.",
+  "Built by devserver/scripts/build_platform_items.py. Re-run it after the catalogue changes.",
+  "The per-page annotations (what a page is about and what is learned on it) are not in here yet.",
+  "AI-literacy measures per route: devserver/my_app/knowledge/ailit_coverage.json, joined by route. Verbatim Learner Expectations and 'In the Classroom' scenarios (OECD/EU 2026, CC BY 4.0); which page supports which measure, and how, is this platform's own reading (docs/ailit/QUELLE.md)."
+ ],
+ "items": [
+  {
+   "id": "latent_lab",
+   "parent": null,
+   "name": "Latent Lab",
+   "route": "/latent-lab",
+   "technical": {}
+  },
+  {
+   "id": "compare",
+   "parent": "latent_lab",
+   "name": "Compare and Analyse",
+   "technical": {}
+  },
+  {
+   "id": "compare.model",
+   "parent": "compare",
+   "name": "AI Model Comparison",
+   "route": "/latent-lab/model-comparison",
+   "technical": {
+    "brief": "Same prompt, different models, different assumptions. Reveals what each model treats as the default human, family, or profession.",
+    "technical": "The five image models on this surface, in the detail the box on the page leaves out.\n\nSD 1.5 generates the picture by denoising in a compressed latent space, and the prompt goes through one frozen CLIP encoder (Rombach et al. 2022, \"High-Resolution Image Synthesis with Latent Diffusion Models\", CVPR 2022, https://doi.org/10.48550/arXiv.2112.10752). SDXL is built on that construction, with OpenCLIP ViT-bigG beside CLIP ViT-L. Podell et al. (2023, \"SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis\", ICLR 2024, https://doi.org/10.48550/arXiv.2307.01952) give the two denoisers as 860M and 2.6B parameters. Esser et al. (2024, \"Scaling Rectified Flow Transformers for High-Resolution Image Synthesis\", ICML 2024, https://doi.org/10.48550/arXiv.2403.03206) then replace the U-Net with a transformer whose blocks carry text and image through the same attention mechanism with weights of their own, trained on rectified flow; SD 3.5 Large has 8.1B parameters in that backbone, beside the two CLIP encoders and a T5-XXL of 4.7B. Black Forest Labs gives the Flux 2 Dev model that runs here as 32B parameters, with a 24B Mistral as its text encoder. For Gemini 3 Pro, Google names the architecture only by reference to its text model and describes the training data by category; the parameter count stays unpublished.\n\nEvery parameter count above is the count of the PICTURE-MAKING network alone: 860M and 2.6B are U-Nets, 8.1B is the MMDiT backbone, 32B is the FLUX.2 rectified-flow transformer. The text encoders are counted separately. Read otherwise, 8.1B against 32B compares a backbone with a backbone plus its 24B text encoder.\n\nWhat varies alongside the model, read off devserver/schemas/configs/output/: SD 1.5 runs 512 x 512, 25 steps, CFG 7.5, sampler euler_ancestral, through ComfyUI. SDXL 1024 x 1024, 30 steps, CFG 7, euler_ancestral, ComfyUI. SD 3.5 Large 1024 x 1024, 25 steps, CFG 5.5, euler, Diffusers. Flux 2 Dev 1024 x 1024, 20 steps, CFG 1, euler, ComfyUI. Gemini 3 Pro Image is reached as a cloud service and none of these settings apply to it; its config carries no seed field. All four local configs carry an empty negative prompt, so no column suppresses anything the others keep.\n\nThe seed: the same number goes to every column whose config has a seed field, and that serves reproducibility. It leaves the starting noise different all the same. The sampler of each column draws its noise through its own generator - ComfyUI's KSampler against a Diffusers torch.Generator - and into a latent of its own shape: 64 x 64 x 4 at 512 x 512, against 128 x 128 x 4 and 128 x 128 x 16 at 1024 x 1024.\n\nOne run per model. A difference between two single pictures is not yet a measured difference between two models: the surface is a demonstration, and the model is one of several things that differ between two columns.\n\nHo et al. (2020) is NO source for the point about the seed, and it was taken out of the references on the page on 2026-09-07. Its \"nearly zero mutual information\" holds between the endpoint of the FORWARD process and the training datum, and two of the five columns run euler, a deterministic sampler under which the starting noise fixes the picture completely.",
+    "reading": "Modelle sind nicht neutral — jedes hat eigene Vorlieben (docs/PEDAGOGICAL_CONCEPT.md). Die Reihe mit der festen Startzahl hält alles außer dem Modell fest, sodass sie zeigt, was jedes Modell aus demselben Satz macht. Die fertigen Sätze über dem Eingabefeld sind nach dem Eigenschaften-Katalog der zentralen Presets ausgewählt (UCD-118, Plan Rev. 3); jeder benennt eine beobachtbare Eigenschaft: „a walk in the forest, in the afternoon“ legt die Idiosynkrasie der Modelle offen. „a family at dinner“ überlässt die Menschen dem Modell — Unterbestimmtheit fällt auf demografische Stereotype zurück (Fraser et al. 2023, „A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified?“, arXiv:2302.07159; Park 2024, „White Default: Examining Racialized Biases Behind AI-Generated Images“, https://doi.org/10.1080/00043125.2024.2330340). „a street in the evening“ nennt keinen Ort — unterbestimmte Orte bilden überwiegend die Umgebung der USA ab (Basu et al. 2023, „Inspecting the Geographical Representativeness of Images from Text-to-Image Models“, arXiv:2305.11080). „a nurse at work“ neben „a plumber at work“: die Bilder eines Berufs korrelieren mit den US-Erwerbszahlen (Luccioni et al. 2023, „Stable Bias: Evaluating Societal Representations in Diffusion Models“, arXiv:2303.11408), und gewöhnliche Prompts ohne demografische Wörter verstärken Stereotype (Bianchi et al. 2023, „Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale“, arXiv:2211.03759). Wer Verstärkung misst, muss Vergleichbares vergleichen: die scheinbare Verstärkung schrumpft, wenn Trainingsbeschriftungen und Prompts dieselbe Verteilung haben (Seshadri et al. 2023, „The Bias Amplification Paradox in Text-to-Image Generation“, arXiv:2308.00755)."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 3 — Evaluate whether AI outputs should be accepted, revised or rejected.",
+      "level": "Intermediate",
+      "page": "29",
+      "expectation": "Learners verify AI-generated outputs for accuracy and relevance by consulting trusted sources and considering task-specific expectations.",
+      "classroom": "In small groups, learners plan an itinerary for a tourist visiting their hometown. When the teacher provides AI-generated recommendations for local restaurants, learners compare the recommendations using other sources to determine if the information is outdated, inaccurate or a “hallucination.” From there, learners draw from their own knowledge and experience to decide whether the locations would be appealing to a visitor.",
+      "classroom_page": "29",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme prüft KI-Empfehlungen an anderen Quellen auf Veraltetes, Falsches und Erfundenes. Beim Modell-Vergleich steht unter den erzeugten Spalten die Reihe „Ergebnisse zu diesem Prompt“: ein Sprachmodell kürzt den Prompt auf einen Suchbegriff, der angezeigt wird, und Wikimedia Commons liefert dazu bis zu drei wirkliche Fotografien mit Urheber und Lizenz. Der Gegenstand wechselt von Restaurantempfehlungen zu Bildern eines wirklichen Ortes oder Dings.",
+      "practice_de": "Die Gruppe wählt ein Wahrzeichen ihres Ortes als Prompt. Sie vergleicht die erzeugten Bilder mit den Commons-Fotos darunter und notiert je Modell, was stimmt, was veraltet oder falsch ist und was erfunden wurde. Dann entscheidet sie aus eigener Kenntnis des Ortes, welches Bild einem Besucher etwas Richtiges zeigt."
+     },
+     {
+      "competence": "Engage 7 — Analyse how well the use of an AI system aligns with ethical principles and human values.",
+      "level": "Intermediate",
+      "page": "31",
+      "expectation": "Learners identify when AI use may have unintended impacts or implications that are different from a user’s immediate goals.",
+      "classroom": "Learners analyse a case study where an AI tool uses one’s browsing history to advertise discounts and sales on products they have viewed in the past. With their teacher, learners weigh the opportunities to save money with risks the AI tool poses for personal privacy. They discuss the pros and cons of using the tool in the long- and short-term.",
+      "classroom_page": "31",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme wägt an einem Fall (Werbung aus dem Browserverlauf) den Vorteil gegen das Risiko für die Privatsphäre ab. Der Fall der Plattform ist der eigene Prompt: beim Modell-Vergleich hält das Set „Aktuelle Modelle“ neben zwei lokalen Modellen eines, das bei Google läuft (Gemini 3 Pro, in der Liste mit „€“ gekennzeichnet; der Kasten unter der Vorbereitungsspalte sagt, dass ein Bild dort auf eine Anfrage an Google Search zurückgreifen kann), das Set „SD-Historie“ drei lokale Modelle. Die DSGVO-Marke in der Kopfzeile nennt die Anbieter-Voreinstellung der Installation.",
+      "practice_de": "Die Gruppe lässt denselben Prompt einmal mit „SD-Historie“ und einmal mit „Aktuelle Modelle“ laufen und wägt danach ab: Was hat das Modell bei Google besser gemacht, und was hat der Prompt dafür verlassen? Die DSGVO-Marke sagt, welche Anbieter-Voreinstellung diese Installation hat."
+     },
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Intermediate",
+      "page": "34",
+      "expectation": "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.",
+      "classroom": "Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.",
+      "classroom_page": "34",
+      "status": "ja",
+      "how_de": "Der Modell-Vergleich legt denselben Prompt zwei bis fünf Bildmodellen vor, mit derselben Startzahl über den Spalten („Seed“); was auseinandergeht, liegt an den Modellen. Solange ein Set gewählt ist, steht am Fuß der Vorbereitungsspalte ein Kasten dazu, wofür der Hersteller jedes Modell gebaut hat.",
+      "practice_de": "Der Club-Prompt läuft über die Modelle eines Sets; die Gruppe beschreibt je Spalte, welche Auslegung das Modell gewählt hat, und liest im Kasten nach, wofür der Hersteller das Modell gebaut hat."
+     },
+     {
+      "competence": "Shape 1 — Investigate how an AI system is intended to work, whom it is designed for and what its limitations are.",
+      "level": "Basic",
+      "page": "42",
+      "expectation": "Learners identify what different AI systems are designed to do.",
+      "classroom": "Learners review model cards that describe how an AI system works, its training data, intended uses and possible limitations. As a class, they discuss appropriate uses of the AI system.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme liest Modellkarten (Arbeitsweise, Trainingsdaten, vorgesehene Nutzung, Grenzen) und bespricht angemessene Nutzung. Der Modell-Vergleich trägt am Fuß der Vorbereitungsspalte, solange ein Set gewählt ist, einen Kasten, der sagt, wofür der Hersteller jedes Modell gebaut hat, in dessen eigenen Worten aus dem Paper oder der Veröffentlichung, mit Quellen darunter. Von den vier Punkten der Modellkarte deckt der Kasten die vorgesehene Nutzung.",
+      "practice_de": "Die Gruppe liest den Kasten für die drei Modelle eines Sets und schreibt je Modell einen Satz, wofür es gebaut ist. Dann lässt sie einen Prompt laufen, der genau das verlangt (etwa lesbare Schrift im Bild), und prüft, ob das Modell hält, was der Hersteller sagt."
+     },
+     {
+      "competence": "Shape 2 — Evaluate AI systems using defined criteria, expected outcomes, test cases and user feedback.",
+      "level": "Basic",
+      "page": "42",
+      "expectation": "Learners define criteria for whether an AI system has accomplished a task.",
+      "classroom": "Learners examine an AI system that recommends new music. In small groups, they define criteria for what would make the system successful and compare the system’s recommendations for users with different interests or interaction histories.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme definiert Kriterien, wann ein Musik-Empfehlungssystem seine Aufgabe erfüllt, und vergleicht Empfehlungen für verschiedene Nutzer. Das Empfehlungssystem wird durch ein Bildmodell ersetzt: der Modell-Vergleich hält alles außer dem Modell fest (ein Prompt, eine Startzahl über den Spalten), so dass die Kriterien der Gruppe an mehreren Systemen zugleich geprüft werden.",
+      "practice_de": "Die Gruppe schreibt vor dem Lauf drei Kriterien auf, woran sie erkennt, dass ein Bild den Prompt erfüllt hat. Dann läuft der Prompt über die Modelle, und die Gruppe bewertet jede Spalte nach ihren Kriterien; die verschiedenen Nutzer der Maßnahme werden durch drei verschiedene Prompts ersetzt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "compare.language",
+   "parent": "compare",
+   "name": "AI Language Understanding",
+   "route": "/latent-lab/language-understanding",
+   "technical": {
+    "brief": "Same prompt, different languages, different images. This mode shows how language encodes cultural defaults that shape what AI generates."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 3 — Evaluate whether AI outputs should be accepted, revised or rejected.",
+      "level": "Basic",
+      "page": "29",
+      "expectation": "Learners understand why AI-generated outputs should be verified and recognise how they can verify the content themselves.",
+      "classroom": "Learners review an AI-powered tool’s solution to a maths problem and accompanying explanation, then compare the AI-generated content to the process that their teacher has introduced to the class.",
+      "classroom_page": "29",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme vergleicht die Lösung eines KI-Werkzeugs mit einem Verfahren, das die Klasse kennt, damit klar wird, warum Ausgaben geprüft werden und wie man selbst prüft. Beim Sprachverständnis ist die prüfbare Ausgabe die Übersetzung: über jeder Spalte steht die Übersetzung, die an die Modelle ging, und ihre Rückübersetzung in die eigene Sprache. Das Verfahren, das die Klasse kennt, ist ihre eigene Sprache; die Mathematikaufgabe der Maßnahme wird durch die Übersetzung ersetzt.",
+      "practice_de": "Die Gruppe schreibt eine Bildbeschreibung in ihrer Sprache und lässt sie in drei weiteren laufen. Vor dem Blick auf die Bilder prüft sie die Rückübersetzung: Wo weicht sie ab, und hätte die Gruppe die Abweichung ohne die Rückübersetzung bemerkt? Erst dann schreibt sie Unterschiede zwischen den Bildern den Modellen zu."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.",
+      "classroom": "Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Dieselbe Frage an der Sprache: beim Sprachverständnis läuft dieselbe Bildbeschreibung in bis zu vier von zwanzig Sprachen, darunter Obersorbisch, Yorùbá und Runasimi, durch dieselben Bildmodelle, eines je Reihe.",
+      "practice_de": "Die Gruppe schreibt eine Beschreibung ohne Ortsangabe, lässt sie in ihrer Sprache und in drei weiteren laufen und benennt je Bild, was das Modell aus der Sprache gemacht hat, das in der Beschreibung nie stand."
+     },
+     {
+      "competence": "Shape 1 — Investigate how an AI system is intended to work, whom it is designed for and what its limitations are.",
+      "level": "Basic",
+      "page": "42",
+      "expectation": "Learners identify what different AI systems are designed to do.",
+      "classroom": "Learners review model cards that describe how an AI system works, its training data, intended uses and possible limitations. As a class, they discuss appropriate uses of the AI system.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Die Trainingsdaten stehen beim Sprachverständnis in der Anrede: die Textteile dieses Bildmodells sind an englischem Text trainiert.",
+      "practice_de": "Die Gruppe liest die Anrede, sagt vorher, was sie deshalb für eine Beschreibung auf Yorùbá oder Obersorbisch erwartet, und prüft die Erwartung an den Bildern."
+     }
+    ]
+   }
+  },
+  {
+   "id": "compare.vlm_analysis",
+   "parent": "compare",
+   "name": "AI Image Understanding",
+   "route": "/latent-lab/image-understanding",
+   "technical": {
+    "brief": "Upload an image and let multiple vision models describe it. Reveals what each model notices, what it ignores, and where descriptions diverge."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 3 — Evaluate whether AI outputs should be accepted, revised or rejected.",
+      "level": "Advanced",
+      "page": "29",
+      "expectation": "Learners assess AI-generated outputs and justify decisions to accept, revise or reject them.",
+      "classroom": "When their teacher presents different AI-generated interpretations of a historical event, learners turn to trusted secondary or primary sources to verify the accuracy of the interpretations and argue which one they would include in a final report.",
+      "classroom_page": "29",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme stellt mehrere KI-Deutungen desselben Ereignisses nebeneinander, prüft sie an Quellen und begründet, welche in einen Bericht kommt. Das Bildverständnis stellt mehrere Lesarten desselben Bildes nebeneinander: mehrere Modelle, eine gewählte Lesart als Anweisung (unter anderem „Kritische Lesart“), das Feld bleibt beschreibbar. Das Ereignis wird durch ein Bild ersetzt, zu dem die Klasse Quellen hat.",
+      "practice_de": "Die Kursleitung wählt ein Kunstwerk oder ein historisches Foto, zu dem es Quellen gibt, und lässt es von mehreren Modellen unter derselben Lesart lesen. Die Gruppe prüft jede Lesung an den Quellen, streicht Behauptungen, die dort nicht gedeckt sind, und begründet, welche Lesung sie für einen Bericht übernimmt, überarbeitet oder verwirft."
+     }
+    ]
+   }
+  },
+  {
+   "id": "compare.voice",
+   "parent": "compare",
+   "name": "AI Voice Comparison",
+   "route": "/latent-lab/voices",
+   "technical": {
+    "what": "1) eSpeak NG 1.51.1 (1995): the computer voice from before AI. It works by formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. Cf. \"speak\", Jonathan Duddington, 1995.\n\n2) Piper 1.6.0 (2022): parallel (VITS, 2021: the model forms each sentence in one pass and samples pitch and rhythm anew at every run). Every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice. What can be chosen is which voice model speaks, and the speaker heard is the recorded one. (Michael Hansen, Rhasspy project, 2022; the installed 1.6.0 from the Home Assistant authors, 2026) In the German voice \"mls\", 236 speakers are trained into one model file. Piper speaks with one of them per run. They are volunteers who recorded public-domain books for LibriVox. The research corpus Multilingual LibriSpeech holds their recordings. Under \"Speaker\", the drop-down names each of them by their number in the corpus, with their index in the file in brackets, and adds gender and the amount recorded as the corpus documents them.\n\n3) Supertonic 3 (2026): 99 million parameters; non-autoregressive (a passage is formed in one pass). A flow-matching decoder over a speech autoencoder. Ten voices are trained as vectors into the model. They can be mixed by simple addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3. (Supertone, 2026)\n\n4) VoxCPM2 (2026): 2 billion parameters; diffusion-autoregressive (each piece is denoised into place and conditions how the one after it is read, across sentence boundaries too). No parameters; the whole input is read as language, directions about the voice are embedded in the prompt and are understood. (OpenBMB, 2026)",
+    "technical": "eSpeak NG 1.51.1 (from \"speak\", Jonathan Duddington, 1995) - the computer voice from before AI. Formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. No recording of anybody is in it, which is why it fits into a few megabytes and speaks over a hundred languages.\n\nPiper 1.6.0 (Michael Hansen, Rhasspy project, 2022; the installed 1.6.0 is from the Home Assistant authors, 2026), VITS (Kim et al., 2021), non-autoregressive (each sentence is formed in one pass, no piece waiting on the one before; longer input is cut at sentence boundaries and each sentence is spoken on its own): every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice (each voice’s MODEL_CARD says which). What can be chosen is which voice model speaks. The speaker heard is the recorded one; pitch and rhythm are sampled anew at every run, which VITS was built for: \"a text input can be spoken in multiple ways with different pitches and rhythms\" (Kim et al., 2021, abstract).\n\nSupertonic 3 (Supertone, 2026), about 99M parameters, non-autoregressive (a passage is formed in one pass, no piece waiting on the one before; longer input is cut at sentence boundaries into passages of at most 300 characters and each is spoken on its own): a flow-matching decoder over a speech autoencoder. Ten voices are trained as vectors into the model. They can be mixed by simple addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3.\n\nVoxCPM2 (OpenBMB, 2026), 2B parameters, tokenizer-free and diffusion-autoregressive (each piece is denoised into place, and what stands there conditions the next): the prompt is read as language rather than as settings. The expression is described in words within the prompt (there are no technical parameters to manipulate emotional expression in this model).",
+    "brief": "Four text-to-speech systems asked the same sentence side by side - eSpeak NG (1995), Piper (2022), Supertonic 3 (2026), VoxCPM2 (2026) - with an eye to how they stage emotion and gender. What each can be asked for is a different kind of thing: a setting of the formant rules, a choice of voice file trained on a recording, a mixture of ten voice vectors, or a description written into the sentence itself. Every recording stays in the column of the machine that made it."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Advanced",
+      "page": "28",
+      "expectation": "Learners explain how different AI systems work using language that does not attribute human traits or abilities, knowing that their phrasing shapes understanding.",
+      "classroom": "Learners review different types of AI tools and compare design choices that make the systems appear human-like, friendly or intelligent. In small groups, learners practise explaining how the tools produce outputs, focussing on programmed processes rather than human qualities. As a class, they share and refine their explanations and reflect on how different design features affect understanding and trust in AI systems.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Beim Stimmen-Vergleich ist die Menschenähnlichkeit selbst der Entwurf: eine Regelmaschinerie von 1995 (eSpeak NG) mit zwölf Einstellungen, in der keine Aufnahme steckt, neben drei trainierten Systemen (Supertonic 3, VoxCPM2, Piper). Bei Supertonic stehen die Stimmen unter F1 bis F5 und M1 bis M5 mit einer Beschreibung und der gemessenen Tonhöhe in Hz; bei VoxCPM2 wird die sprechende Person in drei Auswahlfeldern (Geschlecht, Alter, Ausdruck) beschrieben.",
+      "practice_de": "Dieselbe Zeile in allen Spalten; die Gruppe ordnet die Stimmen nach „klingt wie ein Mensch“ und erklärt danach je Spalte, wie der Klang zustande kommt (Regeln; zehn als Vektoren ins Modell trainierte Stimmen; eine Beschreibung aus drei Auswahlfeldern; Aufnahmen), ohne den Systemen Absicht oder Gefühl zuzuschreiben."
+     },
+     {
+      "competence": "Manage 2 — Choose an appropriate AI approach for a task by comparing how different AI systems operate and what they are best suited to do.",
+      "level": "Basic",
+      "page": "38",
+      "expectation": "Learners recognise that some types of AI systems can be programmed with specific rules to accomplish tasks, while others can learn patterns from data.",
+      "classroom": "Learners compare different approaches to building AI systems by completing a trash-sorting task. First, they consider why random outputs would be unlikely to reliably sort items. Next, they direct a classmate role-playing as a robot to sort images of trash based on specific criteria. They observe how the “robot” responds to new images that do not match the criteria. Finally, they explore how a system could use patterns from collected data, such as a class survey, to improve sorting decisions and determine which approach is most appropriate for different tasks.",
+      "classroom_page": "38",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme vergleicht Ansätze für eine Sortieraufgabe: Zufall, feste Regeln (ein Mitschüler als Roboter) und Muster aus Daten. Das Rollenspiel ist analog; für den letzten Schritt, wie ein System mit Mustern aus Daten arbeitet und welcher Ansatz zu welcher Aufgabe passt, stellt der Stimmen-Vergleich die Systeme nebeneinander: eine Regelmaschinerie von 1995 (eSpeak NG) mit zwölf Einstellungen, in der keine Aufnahme steckt, und drei trainierte Systeme, die dieselbe Zeile sprechen. Die Sortieraufgabe wird durch das Sprechen einer Zeile ersetzt.",
+      "practice_de": "Nach dem Rollenspiel schreibt die Gruppe eine Zeile mit einem schwierigen Wort (einem Namen, einem Fremdwort) und hört sie in allen Spalten. Sie beschreibt, was die Regelmaschine daraus macht und was die trainierten Stimmen, und ordnet dann Aufgaben zu: Wo reichen Regeln, wo braucht es Muster aus Daten?"
+     },
+     {
+      "competence": "Manage 2 — Choose an appropriate AI approach for a task by comparing how different AI systems operate and what they are best suited to do.",
+      "level": "Intermediate",
+      "page": "38",
+      "expectation": "Learners identify the benefits and drawbacks of using a rules-based approach and a machine learning approach to solve a problem.",
+      "classroom": "Learners compare technology that follows set rules to execute a task (e.g. calculators, traffic lights, thermostats) with technologies that have been trained on examples from data (e.g., image recognition, translation). With a teacher, they consider why each approach suits the specific task.",
+      "classroom_page": "38",
+      "status": "ja",
+      "how_de": "Die Maßnahme vergleicht Technik mit festen Regeln (Taschenrechner, Ampel) mit trainierter Technik (Bilderkennung, Übersetzung) und fragt, warum jeder Ansatz zu seiner Aufgabe passt. Der Stimmen-Vergleich hat beides an derselben Aufgabe: die Regelmaschinerie von 1995 (eSpeak NG) und drei trainierte Systeme (Supertonic 3 mit zehn Stimmen unter F1 bis M5; VoxCPM2, dem die sprechende Person in drei Auswahlfeldern beschrieben wird; Piper mit aufgenommenen Stimmen nach Sprache, und wo eine Datei mehrere Sprecher trägt, mit der Wahl des Sprechers). Jede Spalte trägt Name und Jahr ihres Systems und seine Auswahlfelder.",
+      "practice_de": "Die Gruppe sammelt die Beispiele der Kursleitung an der Tafel, hört dann dieselbe Zeile in allen Spalten und trägt den Stimmen-Vergleich als weiteres Beispielpaar ein: Was kann die Regelmaschine, was die trainierten nicht können, und umgekehrt?"
+     },
+     {
+      "competence": "Shape 1 — Investigate how an AI system is intended to work, whom it is designed for and what its limitations are.",
+      "level": "Intermediate",
+      "page": "42",
+      "expectation": "Learners describe the purpose, intended users and basic constraints of a specific AI tool.",
+      "classroom": "Learners examine several examples of AI tools (e.g. a chatbot, recommendation system or route-planning app). For each, learners identify its primary task and explain in simple terms what input it uses and how the outputs execute the task.",
+      "classroom_page": "42",
+      "status": "ja",
+      "how_de": "Beim Stimmen-Vergleich trägt jede Spalte Name und Jahr ihres Systems und seine Auswahlfelder; die vier Systeme haben dieselbe Aufgabe und verschiedene Eingaben (zwölf Einstellungen; zehn Stimmen mit Tonhöhe in Hz; drei Auswahlfelder zur sprechenden Person; Sprache und Stimme aus Aufnahmen, bei einer Datei mit mehreren Sprechern auch der Sprecher).",
+      "practice_de": "Die Gruppe schreibt je Spalte auf, was hineingeht und was herauskommt, und erklärt in einfachen Worten, wie die Ausgabe die Aufgabe erledigt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.census",
+   "parent": "compare",
+   "name": "AI Cultural Understanding",
+   "route": "/latent-lab/cultural-un-known",
+   "i18n": "latentLab.census",
+   "technical": {
+    "brief": "A written prompt, put to the chosen image models in one run: as it stands, and again with a culture or a country named in it. Every run includes the prompt without any such addition, and nothing rewrites it on the way to the model.",
+    "what": "Several image models receive the base prompt once on its own and beside it with a culture or a country named in it — \"Yoruba\", \"Sámi\", \"Franconian\". The rows hold the models, the columns the variations, and a model computes in its row with the same seed and with exactly this wording.",
+    "how": "The first column shows what a model brings out while the prompt says nothing about origin: which place, which people, which clothing count to it as the obvious ones. The further columns show what a named culture changes: whether the model shows the practice meant, or only swaps the surroundings and delivers the cliché. If you choose only 1 model, 5 different variations (seeds) are used, so that you can compare a range of results."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.",
+      "classroom": "Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme untersucht, warum eine Technik über Bevölkerungsgruppen hinweg verschieden gut arbeitet, am Beispiel Gesichtserkennung. Bei der Stereotypen-Analyse ist die Technik ein Bildmodell und die Gruppe eine Kultur: ein Basis-Prompt mit einem Platzhalter „*“, in den je Spalte ein Wort eingesetzt wird („Yoruba“, „Sámi“, „Franconian“), die erste Spalte ohne Einsetzung, jede Zeile ein Modell, alle Bilder einer Zeile mit derselben Startzahl. Die Folgen für Entscheidungen im Alltag bespricht die Kursleitung.",
+      "practice_de": "Die Gruppe wählt eine Alltagsszene (ein Frühstück, eine Hochzeit) als Basis-Prompt und liest das Raster: Wer ist in der ersten Spalte selbstverständlich? Welche Kultur trifft das Modell, welche wird zur Kulisse? Sie hält je Zelle fest, was zutrifft und was Klischee ist."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Advanced",
+      "page": "30",
+      "expectation": "Learners analyse how individuals, companies or institutions may build and deploy AI systems to serve particular interests and how these systems might shape opportunities, representations or public perceptions.",
+      "classroom": "With a teacher, learners evaluate real-world examples of AI being used to influence an event (e.g. misinformation and disinformation on social media). Then they explore how an institution’s choices regarding AI use might benefit certain groups while having a negative effect on others.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Wie ein Modell Repräsentationen prägt, ist der Gegenstand des Rasters der Stereotypen-Analyse (siehe Mittelstufe): welcher Ort, welche Menschen, welche Kleidung ihm als das Selbstverständliche gelten, solange im Satz von Herkunft nichts steht.",
+      "practice_de": "Die Gruppe wählt einen Beruf oder ein Fest als Basis-Prompt, liest die erste Spalte des Rasters für die Modelle und bespricht, wer dort als Regel erscheint und welche Gruppen nur mit ausdrücklicher Nennung vorkommen."
+     },
+     {
+      "competence": "Shape 2 — Evaluate AI systems using defined criteria, expected outcomes, test cases and user feedback.",
+      "level": "Basic",
+      "page": "42",
+      "expectation": "Learners define criteria for whether an AI system has accomplished a task.",
+      "classroom": "Learners examine an AI system that recommends new music. In small groups, they define criteria for what would make the system successful and compare the system’s recommendations for users with different interests or interaction histories.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Das Raster der Stereotypen-Analyse vergleicht je Zeile ein Modell und je Spalte ein eingesetztes Wort, jedes Bild einer Zeile mit derselben Startzahl; die verschiedenen Nutzer werden durch die Kulturen in den Spalten ersetzt.",
+      "practice_de": "Die Gruppe legt vorher fest, woran sie erkennt, dass ein Modell die gemeinte Praxis trifft, und prüft das Raster Zelle für Zelle daran."
+     }
+    ]
+   }
+  },
+  {
+   "id": "interception",
+   "parent": "latent_lab",
+   "name": "Prompt Interception",
+   "technical": {}
+  },
+  {
+   "id": "interception.models",
+   "parent": "interception",
+   "name": "Interception across Models",
+   "route": "/latent-lab/interception-across-models",
+   "i18n": "latentLab.interception.models",
+   "technical": {
+    "what": "Prompt Interception is the step in which this platform writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per writing model. Write the prompt, choose the perspective it is to be written through, and tick the models that are to write; one image model puts a picture beside each text. The top row holds the prompt as it was written, and what the image model makes of it with that step left out.",
+    "how": "This instrument compares texts; the picture beside a text is what one image model made of it. Between two rows the writing model is the only difference: the prompt, the perspective, the adaption each image model carries and the seed are the same for every row.",
+    "brief": "The same line, written by one model after another"
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Intermediate",
+      "page": "34",
+      "expectation": "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.",
+      "classroom": "Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.",
+      "classroom_page": "34",
+      "status": "angepasst",
+      "how_de": "Der Sprachmodell-Vergleich legt einen Prompt unter einer Perspektive mehreren Sprachmodellen vor: je Zeile ein Modell mit dem Text, den es geschrieben hat, und einem Bild dazu aus demselben Bildmodell mit derselben Startzahl; die oberste Zeile ist der Prompt, wie er geschrieben wurde. Die Werkzeuge der Maßnahme werden durch die Sprachmodelle ersetzt, die unter einer Perspektive schreiben.",
+      "practice_de": "Die Gruppe lässt den Club-Prompt unter einer Perspektive über die Sprachmodelle laufen, liest je Zeile den Text und vergleicht, wie jedes Modell die Idee ausgelegt hat, mit dem Bild als Lesehilfe."
+     }
+    ]
+   }
+  },
+  {
+   "id": "interception.template",
+   "parent": "interception",
+   "name": "Perspectives on a Template",
+   "route": "/latent-lab/perspectives-on-a-template",
+   "i18n": "latentLab.interception.template",
+   "technical": {
+    "what": "Prompt Interception is the step in which this platform writes a prompt over again through a perspective. Here that step runs several times on the same template, once per perspective, and one image model shows what each of them wrote. Write the template — or drag a picture onto the field, and its description then stands there as the template, where it can be worked on further. Choose the perspectives. Where the template was written, the first picture holds it with that step left out; where it was read from a picture, that picture stands first as the reference and the picture beside it is the first step, with no perspective on it; resting on a perspective — holding it, on a touch screen — shows the text that perspective wrote.",
+    "how": "Every picture carries the same template, and between two of them the perspective is the only difference, so a picture can be read for what that one perspective does to the template. The writing model is the one this platform is set to intercept with, and this surface makes no choice about it. One image model runs, because what is compared here is perspectives — the comparison of image models is its own instrument.",
+    "brief": "The same template, written through one perspective after another",
+    "reading": "Die Vorlage ist das WAS, die gewählte Perspektive das WIE. Dieselbe Idee, durch verschiedene Regeln beschrieben, ergibt verschiedene Bilder — die Trennung macht die Regel als Gestaltungsentscheidung sichtbar, die in einem gemischten Prompt unsichtbar bliebe (docs/PEDAGOGICAL_CONCEPT.md, Abschnitt 1). Der Eintrag „forest“ der zentralen Preset-Liste („a walk in the forest, seen through the eyes of a child“, Eigenschaften-Katalog Nr. 4, UCD-118 Plan Rev. 3) lässt sich hier auswerten — in das freie Feld geschrieben; die Auswahl daneben trägt bewusst nur „house“: der Satz benennt sein WAS und darin eine Rolle, die sagt, wer sieht; die Perspektivenliste liefert das WIE."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Create 1 — Use AI systems to explore new perspectives and approaches that build upon original ideas.",
+      "level": "Basic",
+      "page": "34",
+      "expectation": "Learners explore how different AI tools can expand their thinking or spark new ideas.",
+      "classroom": "Learners discuss AI-generated images to create story settings based on their classmates’ ideas (e.g. “a jungle in space”), then write new stories inspired by unexpected results.",
+      "classroom_page": "34",
+      "status": "ja",
+      "how_de": "Beim Wirkungsvergleich schreiben mehrere Perspektiven dieselbe Vorlage um, ein Sprachmodell und ein Bildmodell bleiben gleich, und das erste Bild („Referenzbild“) zeigt die Vorlage, wie sie geschrieben wurde; was eine Perspektive geschrieben hat, erscheint beim Zeigen auf ihre Scheibe. Die Vorlage kann auch aus einem Bild gelesen werden, das auf das Feld gezogen wird; dann steht dieses Bild vorn.",
+      "practice_de": "Jede Person gibt einen Schauplatz als Vorlage vor; die Gruppe wählt Perspektiven hinzu, lässt die Serie laufen und schreibt die Geschichte zu dem Bild, das am weitesten vom ersten abweicht, mit dem Text, den die Perspektive geschrieben hat, als Anfang."
+     },
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Intermediate",
+      "page": "34",
+      "expectation": "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.",
+      "classroom": "Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.",
+      "classroom_page": "34",
+      "status": "angepasst",
+      "how_de": "Der Wirkungsvergleich legt dieselbe Vorlage mehreren Perspektiven vor, bei gleichem Sprachmodell, gleichem Bildmodell und gleicher Startzahl; das erste Bild („Referenzbild“) zeigt die Vorlage, wie sie geschrieben wurde, und der Text jeder Perspektive erscheint beim Zeigen auf ihre Scheibe. Die Werkzeuge der Maßnahme werden durch die Perspektiven ersetzt.",
+      "practice_de": "Die Gruppe gibt den Club-Prompt als Vorlage ein, wählt Perspektiven hinzu, lässt die Serie laufen und ordnet die Bilder nach „trifft die Idee“ und „legt sie neu aus“; zu drei Bildern liest sie den Text der Perspektive und sagt, welcher Satz darin die Auslegung gemacht hat."
+     }
+    ]
+   }
+  },
+  {
+   "id": "interception.poles",
+   "parent": "interception",
+   "name": "Aesthetic Poles",
+   "route": "/latent-lab/aesthetic-poles",
+   "i18n": "latentLab.interception.poles",
+   "technical": {
+    "what": "One aesthetic checklist, set property by property, and what a model writes from it and the template. Write the template — or drag a picture onto the field, and its description then stands there as the template. Every property that can carry a handle is a scale of words with one handle on it; a property left at its neutral word stays out of the prompt. Five chips over the bars set the whole checklist at once, and from there each property is moved on its own. One setting is one prompt. Every run adds a row, and the first row stays: the checklist at its neutral word throughout, which every picture beside it is read against. Where the template was read from a picture, that picture stands first as the reference, and the picture beside it is the first step, with no setting on it. One image model runs, so what parts two pictures is the setting. Resting on a picture's name — holding it — shows what was set and what the model wrote from it.",
+    "how": "The properties come from the human labelling guidelines of VisionReward, where each of them carries one ordered list of words with one of those words marked as the neutral one. Those guidelines give one position on such a list, which is why there is one handle here. The lists are of different lengths and reach different distances to either side, so each property is set on its own rather than by one axis over all of them, and a setting is free to stand at the good end of one property and at the bad end of the next. Every row is written by the same model from the same template, so what stands between two rows is the setting, and the pictures show what the checklist does to a template.",
+    "brief": "One template, an aesthetic checklist set property by property, and a row for every setting"
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Basic",
+      "page": "34",
+      "expectation": "Learners use AI to generate an image, story or model to represent an idea.",
+      "classroom": "Learners choose a theme (e.g. “hope,” “winter” or “community”) and use an AI image generator to create a visual representation. They generate one image and write a short explanation of how specific elements of their prompt shaped the final result, noting any unexpected or surprising aspects of the output. They assess how well the generated result matches the idea they had in mind.",
+      "classroom_page": "34",
+      "status": "ja",
+      "how_de": "Bei den Ästhetischen Polen sind die Elemente des Prompts eine Checkliste von elf Eigenschaften, zehn davon mit einem Griff; ein Sprachmodell schreibt aus der Vorlage und den eingestellten Wörtern einen neuen Prompt („Umgeschriebener Prompt“), die erste Zeile ist die Liste an ihren neutralen Wörtern, jeder Lauf mit einer neuen Einstellung fügt eine Zeile an, und ein Bildmodell malt jede Zeile.",
+      "practice_de": "Die Gruppe schreibt ihre Vorlage zum Thema, verstellt eine Eigenschaft und lässt laufen, dann eine zweite; sie liest je Zeile den umgeschriebenen Prompt und das Bild und vergleicht die Zeilen miteinander."
+     },
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Intermediate",
+      "page": "34",
+      "expectation": "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.",
+      "classroom": "Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.",
+      "classroom_page": "34",
+      "status": "angepasst",
+      "how_de": "Bei den Ästhetischen Polen sind die Fassungen die Zeilen einer Serie: je Zeile eine Einstellung der Checkliste, gemalt von dem einen gewählten Bildmodell. Die Werkzeuge der Maßnahme werden durch die Einstellungen ersetzt.",
+      "practice_de": "Die Gruppe lässt den Club-Prompt als Vorlage an drei Einstellungen laufen und sagt je Zeile, ob die Einstellung die Idee trifft oder neu auslegt."
+     },
+     {
+      "competence": "Create 3 — Direct generative AI systems to elicit feedback, refine results and support reflection.",
+      "level": "Basic",
+      "page": "35",
+      "expectation": "Learners know how to prompt AI systems to generate accurate feedback and helpful responses to an idea.",
+      "classroom": "Learners are shown two different versions of a prompt designed to get feedback on the same idea. They compare AI-generated responses to the two prompts and analyse which prompt led to an output with more accurate or useful feedback. Then they explain what features (e.g. context, specificity, constraints) made it more effective.",
+      "classroom_page": "35",
+      "status": "angepasst",
+      "how_de": "Bei den Ästhetischen Polen sind die zwei Fassungen zwei Einstellungen der Eigenschaftsliste, aus denen ein Sprachmodell je einen Prompt schreibt; die Rückmeldung der Maßnahme wird durch das Bild ersetzt, das jede Zeile zu ihrem Prompt zeigt.",
+      "practice_de": "Die Gruppe lässt zwei Einstellungen laufen, liest die beiden umgeschriebenen Prompts untereinander und vergleicht, was sich im Prompt und was sich im Bild geändert hat."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image",
+   "parent": "latent_lab",
+   "name": "Diffusion Lab",
+   "i18n": "latentLab.imageLab",
+   "technical": {
+    "brief": "Eight tools for investigating how diffusion models generate images from text. They sort by where they intervene.",
+    "hints": "Eight tools for investigating how diffusion models generate images from text. They sort by where they intervene. The text encoders turn your prompt into one fixed embedding, and that same embedding then guides all 25 denoising steps. Dimension Explorer, Concept Algebra and Encoder Fusion change the embedding once, before the loop starts, and the Encoder Fusion Workbench sweeps the fusion parameters across three axes. Composable Diffusion stands in both places: it combines what the model returns at each single step, or interpolates between the concepts’ embeddings before the loop starts. Denoising Archaeology and Attention Cartography change nothing and only look. Mean Images leaves the model alone as well and averages many pictures into one. For the two SD 3.5 models it averages the latents of those pictures, before the decoder."
+   }
+  },
+  {
+   "id": "latent_lab.image.archaeology",
+   "parent": "latent_lab.image",
+   "name": "Denoising Archaeology",
+   "route": "/latent-lab/denoising-archaeology",
+   "i18n": "latentLab.archaeology",
+   "technical": {
+    "brief": "Observe every single denoising step.",
+    "what": "A diffusion model creates an image by progressively removing noise. Unlike drawing from left to right, the model works on ALL image regions simultaneously. In the first steps, rough structures emerge: Where is up, where is down? Where is the horizon? In the middle steps, semantic content appears: objects, shapes, colors. The final steps refine textures and details. This tool makes every single step visible.",
+    "how": "Enter a prompt and start the run with the triangle in the bar above the surface. The model produces one intermediate image per denoising step. One of them fills the view at a time; the slider in the left column names the sections of the run, and moving along it steps from one image to the next. Compare early and late steps: at which step does the picture turn from noise into a scene?",
+    "reading": "Early steps: Global composition — basic structure, color distribution, layout planning. Middle steps: Semantic emergence — objects become recognizable, shapes crystallize. Late steps: Detail refinement — textures, edges, fine patterns. The transitions are gradual, and the three zones are working coordinates, not verified boundaries: Choi et al. (2022) hypothesise a coarse / content / clean-up division, but they locate it by noise level, not by step number, and they measure it during training, not in a generation run. Particularly revealing: The very first step does not show fine-grained pixels, but colorful patches. This is because the noise is generated in latent space (128×128 at 16 channels), not in pixel space. The VAE translates each latent pixel into an ~8×8 pixel patch — even pure Gaussian noise becomes coherent color clusters. The computation runs in this compressed space throughout, rather than on individual pixels.",
+    "technical": "Two backbones run here: SD 3.5 Large, a rectified-flow transformer whose one scheduler is FlowMatchEuler, and SDXL, a U-Net whose scheduler is picked from a list. SD 3.5 additionally carries a shift, which spreads the steps over the noise scale; its own scheduler config sets that to 3.0. 25 steps are preset. At each step the current latent vectors are decoded through the VAE (Variational Autoencoder), which translates the mathematical latent space into pixels. The latent representation is 128×128 across 16 channels — each latent point corresponds to a patch of about 8×8 pixels in the image. This is why even the first step shows colour clusters instead of fine pixel noise: the VAE translates random 16-dimensional vectors into coherent colour fields. The view shows the noisy intermediate state decoded through the VAE, rather than the model's prediction of the finished image — Ho et al. (2020) show that prediction in their own figures.",
+    "hints": "Observe every single denoising step. Diffusion models don't draw left-to-right — they work everywhere simultaneously, from rough shapes to fine detail."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Basic",
+      "page": "28",
+      "expectation": "Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.",
+      "classroom": "As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Die Maßnahme prüft Redeweisen wie „die KI denkt“ oder „die KI versteht“ darauf, welche irreführend sind, und ersetzt sie durch technisch zutreffende Beschreibungen. Denoising Archaeology liefert den Gegenstand für die Beschreibung: jeden Entrauschungsschritt eines Laufs als eigenes Bild (voreingestellt 25 Schritte). Die Redeweisen bringt die Kursleitung mit; die Beschreibungen schreiben die Lernenden.",
+      "practice_de": "Die Kursleitung sammelt an der Tafel, wie die Gruppe über Bild-KI spricht („sie malt“, „sie weiß, wie ein Haus aussieht“). Die Gruppe lässt einen eigenen Prompt durch Denoising Archaeology laufen, geht die Schritte durch und schreibt zu jeder Redeweise, was an den Schritten zu sehen ist und was der Satz behauptet. Dann formuliert sie den Satz neu, ohne Malen, Wissen und Wollen."
+     },
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI malt Strich für Strich“ liefert Denoising Archaeology die Einzelschritte eines Laufs als Bildreihe für das Artefakt.",
+      "practice_de": "Die Gruppe wählt fünf Schritte aus, setzt sie in der Reihenfolge auf das Plakat und schreibt zu jedem, was darin schon zu sehen ist und was noch fehlt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.mean",
+   "parent": "latent_lab.image",
+   "name": "Mean Images",
+   "route": "/latent-lab/mean-images",
+   "i18n": "latentLab.meanImages",
+   "technical": {
+    "brief": "Many generated images, from rewordings of one prompt or from one prompt on different seeds, averaged into one picture. For the two SD 3.5 models the mean is taken before the decoder, and each row says which mean it shows.",
+    "what": "The instrument generates many images from one prompt and averages them into one mean image, per AI model. Two means are computed per model. The first is the mean of the images generated from English variants of the prompt, which a language model writes with the same content in other words, as many as the setting ‘Images per cell’ says. The second is the mean of the images generated from the prompt as entered on randomly varied starting seeds. The models are selectable, one row each; both columns always stand. A switch in the left column shows the single images as a contact sheet, or a relief of the mean, instead. For the two SD 3.5 models the mean is taken before the decoder: the latents of the pictures are averaged and decoded once. The other models are averaged pixel by pixel, and each row says which.",
+    "how": "This page applies the artist Hito Steyerl’s ‘mean images’ as a method against generative AI models. The mean of many images, generated from rewordings of one prompt or from one prompt on different seeds, can be compared across AI models. The comparison serves the exploration of visual clichés, prejudices and other forms of the statistical production of ‘normality’.",
+    "reading": "Die promptFixed-Achse hält den Satz fest und wandert mit den Startzahlen: was im Mittelbild stehen bleibt, ist der Effekt des Prompts, nicht der einer einzelnen Startzahl. Für die Sätze der zentralen Liste (Eigenschaften-Katalog, UCD-118 Plan Rev. 3) heißt das — das Feld nimmt jeden Satz an, die Auswahl daneben trägt nur „house“ und „street“: „friendship“ und „loneliness“ sind abstrakte Begriffe ohne jede weitere Angabe — das Mittel vieler Bilder zeigt das eine Klischee, in das das Modell den Begriff übersetzt (docs/PEDAGOGICAL_CONCEPT.md: „Abstrakte Konzepte werden oft in Klischees übersetzt“; die DIM-Metrik des DIMCIM-Rahmens beziffert, wie wenig die Erzeugung ohne ausdrückliche Angabe variiert: Teotia et al. 2025, „DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models“, arXiv:2506.05108). „a family at dinner“ überlässt die Menschen dem Modell, „a street in the evening“ den Ort — Unterbestimmtheit fällt auf Defaults: demografische Stereotype bei Trait-Wörtern ohne demografische Angabe (Fraser et al. 2023, arXiv:2302.07159; Park 2024, https://doi.org/10.1080/00043125.2024.2330340), die Umgebung der USA bei Orten ohne Ortsangabe (Basu et al. 2023, arXiv:2305.11080). „a nurse at work“ und „a plumber at work“ zeigen im Mittel die Lesart, in die das Modell für einen Beruf fällt (Luccioni et al. 2023, arXiv:2303.11408; Bianchi et al. 2023, arXiv:2211.03759)."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „jedes KI-Bild ist einzigartig“ liefert Mean Images je Modell den Mittelwert vieler Bilder zu einem Prompt: einmal aus Umformulierungen des Prompts, die ein Sprachmodell inhaltsgleich schreibt, einmal aus demselben Prompt auf verschiedenen Startzahlen; bei den beiden SD 3.5-Modellen wird der Mittelwert vor dem Decoder gebildet.",
+      "practice_de": "Die Gruppe lässt ihren Prompt als Serie laufen, setzt das mean image neben drei der Einzelbilder auf das Plakat und erklärt, was ein Mittelwert aus Bildern ist und was in ihm übrig bleibt."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.",
+      "classroom": "Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Mean Images mittelt viele Bilder je Modell zu einem Bild: aus Umformulierungen eines Prompts oder aus einem Prompt auf verschiedenen Startzahlen; die Seite nennt als Zweck die Erkundung visueller Klischees, Vorurteile und anderer Formen der statistischen Produktion von ‚Normalität‘. Die Bevölkerungsgruppe der Maßnahme wird durch das Motiv des Prompts ersetzt.",
+      "practice_de": "Die Gruppe schreibt einen Prompt zu einer Rolle oder einem Beruf, lässt die Serie über zwei Modelle laufen und vergleicht je Modell das mean image mit den Einzelbildern."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.attention",
+   "parent": "latent_lab.image",
+   "name": "Attention Cartography",
+   "route": "/latent-lab/attention-cartography",
+   "i18n": "latentLab.attention",
+   "technical": {
+    "brief": "For each word in the prompt, a heatmap overlay on the generated image shows WHERE in the image that word had the most influence.",
+    "what": "When a diffusion model generates an image, it does not read the prompt word by word. Instead, a mechanism called \"attention\" distributes the influence of each word across different image regions. The word \"house\" mainly influences the region where the house appears — but also neighboring areas, because the model understands the context of the entire scene. This tool makes that distribution visible: a clicked word shows the image regions it influences most.",
+    "how": "Bright, intense color = strong influence of the word on that region. Dark or absent color = little influence. If you select multiple words, they appear in different colors. Note: the maps are NOT perfectly sharp-edged — this is not a bug, but shows that the model processes concepts contextually, not in isolation. A \"house\" in a farm scene also has some influence on animals and fields, because the model understands the scene as a whole.",
+    "reading": "The denoising step slider shows WHEN in the 25-step generation process you are viewing attention. Early steps show rough layout planning, late steps show detail assignment. The network depth selector shows WHERE in the transformer attention is measured: shallow layers (near input) show global composition planning, middle layers semantic assignment, deep layers fine-tuning. Both axes are independent — it is worth systematically exploring different combinations.",
+    "technical": "SD3.5 uses an MMDiT (Multimodal Diffusion Transformer) with joint attention: image and text tokens attend to each other across 24 transformer blocks. We replace the default SDPA processor with a manual softmax(QK^T/√d) processor at 3 selected blocks to extract the text→image attention submatrix. Maps are 64x64 resolution (patch grid), upscaled to image resolution via bilinear interpolation. SD3.5 has three text encoders — CLIP-L (BPE, 77 tokens), CLIP-G (BPE, 77 tokens) and T5-XXL (SentencePiece, 512 tokens); two of them can be toggled here to see how different tokenization strategies affect attention.",
+    "hints": "For each word in the prompt, a heatmap overlay on the generated image shows WHERE in the image that word had the most influence. This reveals how the model spatially distributes semantic concepts.\n\ne.g. A house stands in a landscape, surrounded by farmland, nature and animals. Some people can be seen.\n\nClick one or more words. Subword tokens (e.g. \"Ku\"+\"gel\") are automatically combined. Multiple words appear in different colors.\n\nDiffusion models generate images in 25 steps from noise to image. Early steps establish rough structure, late steps refine details. This slider shows what the model attends to at each step.\n\nAt every denoising step, the signal passes through all 24 transformer layers. Shallow layers (near input) capture global composition, middle layers semantic assignment, deep layers (near output) fine details. Both controls are independent: step = when in the process, depth = where in the network.\n\nSD3.5 uses two text encoders with different tokenization. CLIP-L uses BPE (Byte-Pair Encoding), T5-XXL uses SentencePiece. Compare how both encoders process the same prompt and which image regions each one steers."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI weiß, was ein Wort bedeutet“ zeigt Attention Cartography, wo ein Wort in der Rechnung gewirkt hat: ein Klick auf ein Wort des Prompts legt ein farbiges Feld über das Bild.",
+      "practice_de": "Die Gruppe klickt drei Wörter ihres Prompts an, fotografiert die drei Felder und erklärt auf dem Plakat, dass ein Wort im Modell als Wirkung auf Flächen des Bildes vorliegt."
+     },
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Basic",
+      "page": "34",
+      "expectation": "Learners use AI to generate an image, story or model to represent an idea.",
+      "classroom": "Learners choose a theme (e.g. “hope,” “winter” or “community”) and use an AI image generator to create a visual representation. They generate one image and write a short explanation of how specific elements of their prompt shaped the final result, noting any unexpected or surprising aspects of the output. They assess how well the generated result matches the idea they had in mind.",
+      "classroom_page": "34",
+      "status": "ja",
+      "how_de": "Attention Cartography zeigt, wo ein einzelnes Wort des Prompts in der Rechnung gewirkt hat: ein Klick auf ein Wort legt ein farbiges Feld über das Bild, mehrere Wörter tragen mehrere Farben; drei Regler stellen Entrauschungsschritt, Netzwerktiefe und Text-Encoder ein.",
+      "practice_de": "Die Gruppe lässt ihren Prompt hier laufen, klickt nacheinander die drei Wörter an, die ihr am wichtigsten sind, und schreibt zu jedem, ob es dort wirkt, wo sie es erwartet hat. Das Wort mit der größten Überraschung wird der Kern der Erklärung."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.fusion",
+   "parent": "latent_lab.image",
+   "name": "Encoder Fusion",
+   "route": "/latent-lab/encoder-fusion",
+   "i18n": "surrealizer",
+   "technical": {
+    "technical": "The arithmetic runs in ComfyUI in the node AI4ArtsEdSD3ThreeFactors (comfyui_nodes/ai4artsed_sd3_conditioning.py), on the parts the encode node of the same family delivers for the prompt: rows 0–76 receive a · CLIP + b · T5[0..76], the rows from 77 on receive c · T5, in float32, nothing clamped. T5 runs at 512 rows (T5TokenizerOptions, min_length 512, devserver/schemas/engine/comfyui_chunk_support.py) or at the prompt’s own length past that. The layout of the block is the fourth parameter, t5_rows: full, rows 0–511 under the CLIP block, a table of 589 rows, or tail, rows 77–511 alone, a table of 512 rows, the layout of the earlier Surrealizer, in which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block. The pooled vector, CLIP-L’s 768 and CLIP-G’s 1280 numbers joined, is the fifth parameter, pooled. Under clip the node hands it on as the two encoders compute it; under zero it hands on zeros of the same shape, which is what ComfyUI itself assembles for the vector when it runs without a CLIP encoder (comfy/text_encoders/sd3_clip.py). The three factors act on the table; the vector passes whole. The negative prompt passes through a second node of the same kind under the same five parameters; an empty negative is the encoding of the empty string. (1, 0, 1, full, clip) is the sequence and the vector as ComfyUI assembles them on its own; (1 − α, α, 1, tail, clip) is the earlier node AI4ArtsEdSD3Fusion under legacy at α, bit for bit, which is what the three Surrealization fields send. Inside the model the whole table passes through one linear layer to the transformer’s width, the same weights for every row, and position encodings are added to the image patches only (Esser et al. 2024, section 4, Figure 2), so a text row’s place in the table plays no part in the computation; a T5 row added into a CLIP row is a sum at that layer’s input. The model reads the pooled vector apart from the table: embeddings of the timestep, the step of the run the model is at, and of this vector are the inputs to the modulation mechanism (Esser et al. 2024, section 4), which every transformer block of the model carries (comfy/ldm/modules/diffusionmodules/mmdit.py), so that zeros in its place change that modulation in every transformer block and leave the table as it is. Esser et al. (2024, “Scaling Rectified Flow Transformers for High-Resolution Image Synthesis”, ICML 2024, https://doi.org/10.48550/arXiv.2403.03206) describe the assembly in appendix B.2, the CLIP rows zero-padded along the channel axis to 4096 and concatenated along the sequence axis with the T5 rows; the training with each encoder set to zero independently at 46.4 % (B.3); and the ablation without T5 in section 5.3.3, with win rates against the full model of 50 % for aesthetics, 46 % for prompt adherence and 38 % for written text. In the paper the T5 context has 77 rows; ComfyUI runs T5 at 512 rows here. CLIP-L is the text encoder of Radford et al. (2021, “Learning Transferable Visual Models From Natural Language Supervision”, ICML 2021, https://doi.org/10.48550/arXiv.2103.00020), CLIP-G that of the OpenCLIP ViT-bigG/14 of Cherti et al. (2023, “Reproducible Scaling Laws for Contrastive Language-Image Learning”, CVPR 2023, https://doi.org/10.48550/arXiv.2212.07143), both trained on image–caption pairs; T5-XXL is the encoder of Raffel et al. (2020, “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR 21, https://doi.org/10.48550/arXiv.1910.10683), trained on text alone.",
+    "brief": "Three factors on the conditioning table of Stable Diffusion 3.5: a on the CLIP block, b for T5’s rows 0–76 added into it, c on the T5 block.",
+    "what": "Encoder Fusion is an instrument of the Latent Lab that changes the conditioning of the image model Stable Diffusion 3.5 before the model runs: the table of numbers that three text encoders compute from the prompt and that the model computes the picture from. The table has 4096 columns. The two CLIP encoders, CLIP-L and CLIP-G, fill rows 0–76 up to column 2047, and columns 2048–4095 of those rows are zero; the encoder T5-XXL fills 512 rows below across every column, more when the prompt has more T5 pieces, 589 rows in all for a prompt up to that length. A row holds one piece of the prompt, a start or end mark, or padding past the text’s end. CLIP-L and CLIP-G were trained on pairs of images and captions and T5-XXL on text alone, so the two blocks hold two different encodings of the same prompt. Three factors act on the table: a multiplies the CLIP block, c multiplies the T5 block, and b adds T5’s rows 0–76 into the CLIP block cell by cell, each T5 row onto the CLIP row of the same number, whatever piece of the prompt either row holds. The T5 block holds all of those rows or, in the layout of the earlier Surrealizer, rows 77–511 alone, so that T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; the two fields in the line of c set which. Beside the table the model reads the pooled vector, pool in the drawing, CLIP-L’s 768 and CLIP-G’s 1280 numbers joined, as an input of the modulation, the numbers by which each layer of the model scales and shifts what passes through it; the two fields in the line of a set whether the model receives that vector or zeros in its place. Standard, a 1, b 0, c 1, pool CLIP, is the table and the vector as they stand without this instrument. What the instrument is for is the tables beyond that one. With the T5 block zeroed, or with the CLIP block and the pooled vector zeroed, on rows 0–511, the model runs in a state its training contained; a row holding both encodings, which b above 0 produces, or a block with its sign turned, which a below 0 produces, is a conditioning beyond what any prompt produces, and a run shows what the model computes from it. Every run keeps a card under Runs, the strip under the surface, labelled with its three factors, on rows 77–511 with that layout and under zeros in the pooled vector’s place with pool 0, so that runs with different settings stand side by side.",
+    "how": "Enter a prompt in the field; it goes to CLIP-L, CLIP-G and T5 alike. The six fields over the drawing set all three factors, the layout of the T5 block and the pooled vector, pool in the drawing, at once. Standard (a 1, b 0, c 1, pool CLIP) is the table and the vector as Stable Diffusion 3.5 runs on its own. CLIP only (a 1, b 0, c 0, pool CLIP) zeroes the T5 block, the setting without T5 that Esser et al. (2024) measured. T5 only (a 0, b 0, c 1, pool 0) zeroes the CLIP block and puts zeros in the pooled vector’s place: the model then runs on T5’s numbers alone. Surrealization 5, 15 and 35 (a 1 − n, b n, c 1, T5 block rows 77–511, pool CLIP) carry the arithmetic of the earlier Surrealizer at its strengths 5, 15 and 35: the CLIP block with its sign turned and stretched, T5’s rows 0–76 added n-fold, and under the CLIP block T5’s rows 77–511 alone. The three sliders under the drawing move each factor on its own, a and b from −75 to 75, c from 0 to 1. a at 0 removes CLIP’s numbers from rows 0–76; a below 0 turns the sign of every CLIP cell and multiplies it by the factor’s size. b at 0 adds nothing to the CLIP block; b above 0 writes sums of both encodings into rows 0–76; b below 0 subtracts T5’s rows instead. c at 0 empties the T5 block. The two fields in the line of c set which rows the T5 block holds: rows 0–511, the layout Stable Diffusion 3.5 runs on its own, or rows 77–511 alone, the layout of the earlier Surrealizer, under which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; Standard, CLIP only and T5 only stand on rows 0–511, the three Surrealization fields on rows 77–511, and the label of a run on rows 77–511 carries T5 77–511. The two fields in the line of a set the pooled vector: pool CLIP, the vector as CLIP-L and CLIP-G compute it, or pool 0, zeros in its place; T5 only stands on pool 0, the other five fields on pool CLIP, and the label of a run on pool 0 carries pool 0. The token table under the sliders lists, row by row, the CLIP piece and the T5 piece that b pairs; pieces of a long prompt beyond the CLIP block reach T5 alone, and the table counts them. Under Advanced settings stand the negative prompt, which runs under the same three factors, layout and pooled vector, the CFG scale and the seed. The triangle, Execute in its tooltip, shows the picture on the surface and adds a card under Runs, labelled a · b · c; the key in a card’s bar puts that run back on the surface: prompt, factors, layout, pooled vector, negative prompt, CFG, seed and picture."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI liest Text wie ein Mensch“ zeigt Encoder Fusion zwei Lesarten desselben Prompts: die CLIP-Encoder, trainiert auf Bild-Text-Paaren, und T5, trainiert auf reinem Text. Drei Faktoren (a: CLIP-Block, b: T5-Zeilen 0–76 in den CLIP-Block, c: T5-Block) legen fest, mit welchem Gewicht jede Lesart in die Rechnung eingeht.",
+      "practice_de": "Die Gruppe lässt denselben Prompt mit drei Einstellungen der Faktoren laufen und setzt die drei Bilder mit den Einstellungen auf das Plakat."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.probing",
+   "parent": "latent_lab.image",
+   "name": "Dimension Explorer",
+   "route": "/latent-lab/dimension-explorer",
+   "i18n": "latentLab.probing",
+   "technical": {
+    "brief": "Compare two prompts and discover which embedding dimensions encode the semantic difference.",
+    "what": "Every word is converted by the text encoder into a high-dimensional vector (e.g. 4096 dimensions for T5). When you change a word in the prompt — e.g. \"red\" to \"blue\" — certain dimensions change more than others. This tool shows you WHICH dimensions change most and lets you selectively transfer individual dimensions from prompt B into prompt A.",
+    "how": "The bar chart shows all dimensions sorted by difference magnitude. Use the rank range controls (From/To) to select a window — e.g. just the top 100 or specifically ranks 880–920. Clicking ▶ 2 regenerates the image with the same settings (same seed!) — but with selected dimensions from prompt B. This lets you see exactly what those dimensions \"encode\".",
+    "reading": "Each bar represents one embedding dimension. The length shows how much that dimension differs between prompt A and B. Dimensions with large differences are the most likely carriers of the semantic change. But note: embeddings are distributed — often multiple dimensions together are needed to produce a visible change.",
+    "technical": "SD3.5 uses three text encoders: CLIP-L (768d), CLIP-G (1280d) and T5-XXL (4096d). You can probe each individually. The difference is computed as mean absolute deviation across all token positions: mean(abs(B-A), dim=tokens). The transfer replaces selected dimensions across all token positions simultaneously.",
+    "hints": "Compare two prompts and discover which embedding dimensions encode the semantic difference. Selectively transfer individual dimensions to see how they affect the image."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI kennt die Farbe Rot“ zeigt der Dimension Explorer, dass jedes Wort vom Text-Encoder in einen hochdimensionalen Vektor überführt wird; ändert man im Prompt rot zu blau, ändern sich bestimmte Dimensionen stärker als andere, und der Ort zeigt, welche.",
+      "practice_de": "Die Gruppe tauscht in ihrem Prompt ein Wort, liest ab, welche Dimensionen sich bewegen, und setzt auf das Plakat, dass „Rot“ für das Modell eine Verschiebung in Zahlen ist."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.algebra",
+   "parent": "latent_lab.image",
+   "name": "Concept Algebra",
+   "route": "/latent-lab/concept-algebra",
+   "i18n": "latentLab.algebra",
+   "technical": {
+    "brief": "Apply the famous word2vec analogy to image generation: King − Man + Woman ≈ Queen.",
+    "what": "In 2013, Mikolov showed that word embeddings encode semantic relationships as linear directions: the vector for \"King\" minus \"Man\" plus \"Woman\" yields a vector close to \"Queen\". This tool applies that idea to SD3.5’s text encoders: instead of single words, you manipulate entire prompt embeddings. The result is an image that has moved away from A along the direction B→C. How far it moves, and in what respect, is what the tool lets you look at.",
+    "how": "You enter three prompts: A (base), B (subtract), and C (add). The formula is: Result = A − Scale₁×B + Scale₂×C. The scale sliders control intensity: at 1.0, B is fully subtracted and C fully added. At 0.5, only half. Values above 1.0 amplify the effect. — Why not just use \"A + C\" as the prompt and \"B\" as the negative prompt? Because the two happen in different places. A negative prompt is the baseline that guidance is measured from, so it acts inside the denoising loop, at every one of the 25 steps, against the image as it currently stands. Concept Algebra computes a new vector BEFORE generation: the arithmetic happens in embedding space, once, and the loop never learns that anything was subtracted. — What the subtraction does not do is delete a named object. Our own measurement series on this platform found that subtracting one prompt vector from another shifts tone, framing and register, but leaves the named thing in the picture. Read the result as a displacement in meaning-space, not as a removal.",
+    "reading": "On the left you see the reference image (prompt A only, same seed). On the right, the algebra result. If the analogy works, the right image should show concept A but with the semantic change B→C. Example: \"Sunset at the beach\" − \"Beach\" + \"Mountains\" ≈ \"Sunset over mountains\". The L2 distance shows how far the result has moved from the original. — Is the operation commutative? No. Subtraction of B and addition of C happen relative to vector A. The direction B→C only makes sense in the context of A: \"King − Man\" removes the \"male\" directions from the King vector, \"+ Woman\" adds the \"female\" directions — the result lands near \"Queen\". C is not surgically placed where B was removed; it is simply added. That this still works shows that semantic relationships are encoded as consistent linear directions in the vector space.",
+    "technical": "The algebra is performed on the selected encoder embeddings: CLIP-L (768d), CLIP-G (1280d), T5-XXL (4096d), or all combined (589 tokens × 4096d). The same operation is also applied to pooled embeddings (2048d). Both images use the same seed for fair comparison.",
+    "hints": "Apply the famous word2vec analogy to image generation: King − Man + Woman ≈ Queen. Three prompts are encoded and algebraically combined."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI versteht Begriffe“ zeigt Concept Algebra Mikolovs Befund von 2013 (König minus Mann plus Frau liegt nahe bei Königin) auf ganze Prompt-Einbettungen von SD 3.5 angewandt: das Ergebnis ist ein Bild, das sich von A aus in Richtung B→C bewegt hat.",
+      "practice_de": "Die Gruppe rechnet mit drei eigenen Prompts, beschreibt, wie weit und in welcher Hinsicht sich das Bild bewegt hat, und erklärt auf dem Plakat Begriffe als Richtungen in einem Zahlenraum."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.composable",
+   "parent": "latent_lab.image",
+   "name": "Composable Diffusion",
+   "route": "/latent-lab/composable-diffusion",
+   "i18n": "latentLab.composable",
+   "technical": {
+    "brief": "Instead of encoding your entire prompt as one monolithic vector, each concept gets its own transformer pass during denoising.",
+    "what": "Standard image generation compresses your entire prompt into a single representation. The model sees \"a red house by a lake\" as one fused concept. Composable Diffusion breaks this apart: \"red house\" and \"lake\" each get their own complete processing pass through the neural network at every denoising step. Their predictions are then combined with adjustable weights. This gives each concept its own \"energy function\" — its own vote on what the image should look like. A concept can also be given a negative weight. Then it is not blended in but subtracted at every step, as its own opposing direction alongside the positive ones. What that achieves depends on what is negated: a thing that appears in the picture as a thing can be pushed out, while a property bound to an object in the positive prompt, or a whole style register, is not removed — the image only recedes, and at high negative weights it loses content and finally over-drives. That is also a different operation from a negative prompt, which replaces the baseline the image is measured against.",
+    "how": "At each of the 25 denoising steps, the model runs N+1 transformer passes: one for the negative prompt (unconditional), and one for each concept. Each concept produces its own noise prediction — and what enters the sum is not that prediction itself, but its difference from the unconditional one: noise = uncond + v1×(noise_1 - uncond) + v2×(noise_2 - uncond) + ... Each v is that concept’s own guidance strength. A positive v pulls the image toward the concept (AND); a negative v pushes it away (NOT). Because every concept is scored separately at every step, none of them can be absorbed into another — which is exactly what happens inside a single fused prompt. The other place a run can combine the same concepts is the embedding: before the run their embeddings are interpolated into one. The direction turns from one concept towards the other, and the length runs between the lengths of the two readings. Only the ratio of the weights acts here, and with three or more concepts the order they stand in acts as well. The share the next concept gets is w2/(w1+w2), and only that ratio acts: multiplying every weight by -1 leaves the result bit for bit the same, so 1.00 and -2.00 give what -1.00 and 2.00 give. Weights of one sign put the share between 0 and 1, and the result between the concepts. Weights of different signs put it outside: 1.00 and -2.00 make the sum -1 and the share +2, 2.00 and -1.00 make it -1. Out there the result is no longer between the concepts. It turns past the one whose weight is the larger WITHOUT its sign, so the minus alone does not say which concept is left behind; single rows cross zero length and drop out while their neighbours are stretched. What a table like that paints is not read off the numbers. From there the run is the ordinary one, two passes per step: one for that one embedding, one for the negative prompt. The seed and the step count are the same for both places, so a pair of runs on one seed differs in the place.",
+    "technical": "Based on Liu et al. (2022), Eq. 11 (conjunction) and Eq. 15 (negation). Each concept is encoded with all three SD3.5 encoders (CLIP-L, OpenCLIP-G, T5-XXL) independently. The custom denoising loop calls pipe.transformer() once per concept per step. In the denoiser the weights are read in one of two ways. With \"normalize\" on, they are shares of the CFG value: the total guidance stays at CFG, so every concept you add makes each individual share smaller. With it off, each weight is that concept’s own guidance temperature, v = CFG × weight, and a negative weight is the NOT operator — algebraically identical to the paper’s eps_u + w×(eps_a - eps_b). A negative weight switches normalization off automatically, because a mixture with signs has no meaning. In the embedding neither reading applies: the concepts are interpolated there, so a weight acts through its ratio to the others, and with three or more concepts the order they stand in acts as well. VRAM: model weights are shared across passes; only activations vary. With 4 concepts, generation takes roughly 4x longer than standard (each step needs 5 transformer passes instead of 2).",
+    "hints": "Instead of encoding your entire prompt as one monolithic vector, each concept gets its own transformer pass during denoising. Each one then adds its own pull on the image — or, with a negative weight, subtracts it.\n\nA weight above 0 adds the concept (AND). A weight below 0 subtracts it (NOT) — which is not the same as putting it in the negative prompt. In the embedding only the RATIO of the weights acts: the share the next concept gets is w2/(w1+w2), and multiplying every weight by -1 changes nothing, so 1.00 and -2.00 give what -1.00 and 2.00 give. Two weights of one sign keep that share between 0 and 1 and the result between the concepts. Two weights of different signs send it outside, and the result then turns past the concept whose weight is larger without its sign.\n\nNormalization is off while a concept is negated: a mixture with signs has no meaning, and each weight then acts as its own guidance strength in the denoiser (CFG × weight). It is off in the embedding as well: the run interpolates from one concept towards the next there, so a weight acts through its ratio to the others and there is nothing to normalize."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI liest den Satz als Ganzes“ zeigt Composable Diffusion den Unterschied: ein gewöhnlicher Lauf presst den ganzen Prompt in eine Darstellung, hier bekommt jeder Begriff bei jedem Entrauschungsschritt einen eigenen Durchgang und ein einstellbares Gewicht; ein negatives Gewicht wird als Gegenrichtung abgezogen.",
+      "practice_de": "Die Gruppe zerlegt einen Prompt in seine Begriffe, gewichtet einen davon negativ und zeigt auf dem Plakat an zwei Bildern, was ein Begriff für sich allein im Bild tut."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.image.workbench",
+   "parent": "latent_lab.image",
+   "name": "Encoder Fusion Workbench",
+   "route": "/latent-lab/fusion-workbench",
+   "i18n": "latentLab.workbench",
+   "technical": {
+    "brief": "Assign any parameter to each axis and give it a value list: X = columns, Y = rows, Z = the drive-through slider.",
+    "hints": "Assign any parameter to each axis and give it a value list: X = columns, Y = rows, Z = the drive-through slider. Everything else stays constant. Each cell is one generation; scrub Z to move through the third dimension."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Create 2 — Visualise, prototype and combine ideas using different types of AI systems.",
+      "level": "Intermediate",
+      "page": "34",
+      "expectation": "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs.",
+      "classroom": "Learners design a concept to share about a new club at their school. They generate multiple mission statements, activity ideas and visual styles using text and image generators. Then they compare how different prompts and tools produce varied interpretations of the same idea.",
+      "classroom_page": "34",
+      "status": "angepasst",
+      "how_de": "Die Enc. Fus. Workbench legt fest, welcher Parameter der Encoder Fusion entlang welcher Achse variiert: X gibt die Spalten, Y die Zeilen, Z eine Achse zum Durchfahren, alles andere bleibt konstant; der Prompt kann eine Achse mit bis zu drei geschriebenen Prompts sein. Die Werkzeuge der Maßnahme werden durch die Werte einer Achse ersetzt.",
+      "practice_de": "Die Gruppe schreibt drei Fassungen des Club-Prompts auf die Prompt-Achse, setzt einen Faktor auf die zweite Achse und liest im Raster, welche Änderung vom Wortlaut und welche vom Faktor kommt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.text",
+   "parent": "latent_lab",
+   "name": "Transformers Lab",
+   "i18n": "latentLab.textLab",
+   "technical": {
+    "brief": "Representation Engineering, comparative model archaeology, and systematic bias analysis.",
+    "hints": "Representation Engineering, comparative model archaeology, and systematic bias analysis: Three research-based tools for investigating language models."
+   }
+  },
+  {
+   "id": "latent_lab.text.repeng",
+   "parent": "latent_lab.text",
+   "name": "Representation Engineering",
+   "route": "/latent-lab/representation-engineering",
+   "i18n": "latentLab.textLab.repeng",
+   "technical": {
+    "what": "Based on Zou et al. (2023), “Representation Engineering: A Top-Down Approach to AI Transparency” (arXiv:2310.01405). While a language model writes, what it is about to say stands as a state of numbers, layer by layer. This instrument reads a direction out of that state — from a handful of sentence pairs somebody writes themselves — and adds that direction back into the state while the model writes. Nothing is trained: the reading and the steering both happen while the model runs. The method is Zou et al.’s reading vector alone: one direction over the whole hidden state, added to the output of one decoder layer. Li et al.’s Inference-Time Intervention (NeurIPS 2023) works differently — a probe per attention head, and a shift only on the heads that separate — which is why it left this surface’s reference list on 2026-08-24.",
+    "how": "What happens to the contrast pairs, in four steps. (1) Each pair is read twice: the model is given the upper sentence, then the lower one, and its inner state at the middle layer of the stack is taken at the last token of each. What the pair contributes is the difference between those two states. (2) What the pairs’ differences have in common is the direction. The drawing under the pairs shows it: one grey arrow per pair at the angle its difference has to that shared direction, and one green arrow for the shared direction itself — the one that goes into the writing. A wide fan means the pairs differ in several things and the reading keeps only what they share. (3) The direction is scaled to the distance the pairs themselves travel along it, so the strength counts in pair-differences: 1 adds exactly as much as one pair differs on average, and 2 pushes the state further than any of those sentence pairs ever stands from its own partner — which is why the text begins to break up above 2. The axis starts at 1.5, which tips the answer on the first press. (4) While the model writes, strength × direction is added to the output of that decoder layer, at every token, and the three columns show it pushed one way, left alone, and pushed the other way. WHY UNTRUE SENTENCES COME OUT: the next word is computed from that state alone, and every assertion the model makes comes from where the state stands. Move the state and you move what follows from it; whether what follows happens to be true is decided by where the state now stands, which is where the pairs put it. The instrument shows an assertion as a position, and a position can be shifted. WHY THE MIDDLE COLUMN SHOWS NOTHING: zero times the direction is the zero vector, so nothing at all is added there. That column is the run the model would have produced on its own, and it stands as the reference the other two are read against. English prompts work markedly better: most open-weight models were trained mostly on English.",
+    "hints": "One axis, straight under the drawing, and it holds a distance from 0.5 to 3 with no sign: both directions run at every press and stand as the two outer columns (“against the arrow”, “no arrow”, “with the arrow”). It starts at 1.5, which tips the answer on the first press. The strength counts in pair-differences, so 1 is one pair’s worth of push; 0.5 to 2 is the usable band, and above 2 repetition and nonsense take over. In the middle column nothing is added at all — that is the model left alone, and it is there to read the other two against. Each press adds a row to the grid on the right: three cells from one reading and one seed, so two cells side by side differ in the push and in nothing else. The row keeps the prompt it was started with, and says once how hard it pushed and which layer it used.\n\nThree pairs, editable, numbered, and each should differ in one thing. Three is also the ceiling: the button that adds one is gone at three. Once a run has been out, the pairs stand a second time as a drawing under the fields — one grey arrow per pair, each numbered, at the angle its difference has to the direction they share, and one green arrow for that shared direction, which is the one that goes into the writing. Arrows close together mean the pairs differ in the same thing; a wide fan means they differ in several, and the reading keeps only what they have in common. The arrangement is a PROJECTION and not a hand-drawn one: three differences stand at three angles to one another, and three rays from one point on a flat sheet have two free parameters, so a flat picture can hold two of the three angles at once. The plane drawn is the one the reading itself picks out — along the shared direction and across it — and the share of the spread that plane keeps comes back with every run. All arrows are drawn the same length, because a length here would say something about the drawing rather than about the pairs. The weights of the model stay as they are throughout: both the reading and the push happen while the model runs. Swapping a pair’s two sentences costs the measurement nothing — the direction is an eigenvector of a sum of outer products, and flipping one difference leaves its outer product as it was — it turns that one arrow around.\n\nThe layer is fixed at the middle of the stack and has no control on the surface. Depth decides what the same push changes: early layers still hold the words themselves, the last ones already hold the next word, and the middle is where a claim stands as a claim — so the middle is the one setting that produces something legible, and the others are settings that waste a run. It is taken from whatever model is chosen, so it follows the depth of that model’s stack; each row of results reports the number it used. An axis for it stood on the surface until 2026-08-25 and was removed."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 3 — Evaluate whether AI outputs should be accepted, revised or rejected.",
+      "level": "Basic",
+      "page": "29",
+      "expectation": "Learners understand why AI-generated outputs should be verified and recognise how they can verify the content themselves.",
+      "classroom": "Learners review an AI-powered tool’s solution to a maths problem and accompanying explanation, then compare the AI-generated content to the process that their teacher has introduced to the class.",
+      "classroom_page": "29",
+      "status": "angepasst",
+      "how_de": "Representation Engineering zeigt, warum Prüfen nötig ist: drei mitgelieferte Satzgruppen zu je drei Paaren („Fakten und ihre schlichten Gegenteile“, „Orwell, Nineteen Eighty-Four“, „Postfaktisch: Tatsache gegen Behauptung“) stellen je einen Satz gegen seine Umkehrung, und die Richtung aus einer Gruppe lässt sich beim Schreiben in das Modell zurückgeben. Was es dann schreibt, prüft die Gruppe an dem, was sie weiß; die Mathematikaufgabe der Maßnahme wird durch Sachsätze ersetzt.",
+      "practice_de": "Die Gruppe lässt das Modell einen kurzen Sachtext schreiben, einmal ohne und einmal mit der Richtung aus der Gruppe „Postfaktisch: Tatsache gegen Behauptung“, und unterstreicht in beiden Fassungen jede Behauptung, die sie selbst prüfen kann. Sie stellt fest, welche Fassung sich besser liest und welche stimmt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.text.bias",
+   "parent": "latent_lab.text",
+   "name": "Bias Archaeology 1",
+   "route": "/latent-lab/bias-archaeology",
+   "i18n": "latentLab.textLab.bias",
+   "technical": {
+    "what": "If an AI model carries prejudices, that can become unpleasant or even dangerous, because it often makes decisions, or prepares decisions — for example AI that is used by the police. On this page you can find out for yourselves whether language models carry prejudices. None of these questions is decidable, which is why “cannot be answered” is always the right answer. Still, the language models sometimes pick one of the other answers. Find out whether they then tend to pick the answer that matches the prejudice, or the other one. If a language model decides for the prejudice more often, its “bias score” under the graph goes up. The questions come from the “Bias Benchmark for QA dataset” (Parrish et al., Findings of ACL 2022; data CC BY 4.0 from github.com/nyu-mll/BBQ). Every run draws a fresh random sample of 60 out of the 2,836 open questions of that category.",
+    "hints": "The 2,836 above is the figure for Gender identity. Every category holds a different number of open questions — twice its situations: Age 1,840, Disability status 778, Nationality 1,540, Physical appearance 788, Race / ethnicity 3,440, Religion 600, Socio-economic status 3,432, Sexual orientation 432, Race x gender 7,980, Race x socio-economic status 5,580. The sample is always 60. Which of the three answers counts as the biased one is not decided by this platform: it comes with the data, per example, and it is polarity-specific — for one question the annotation points at the stereotyped group, for its counter-question at the other one. The bias score follows BBQ's own arithmetic and is scaled by how often the model named anyone at all, so 0 means nothing was measured, not that all is well. Under the score stands the median of every model series ever measured on this installation, from the second series on. At the kids safety level four of the eleven categories are offered — age, socio-economic status, nationality, disability — and within them the situations that turn on drugs, alcohol, violence, weapons, crime, terror, mental illness or sex are kept back, as whole situations and before the draw. The open questions a run can reach there are therefore fewer than the figures above: Age 1,124, Socio-economic status 2,868, Nationality 620, Disability status 382. Below the open level — at kids and at youth alike — six situations are kept back in every category: an autistic classmate mocked as weird, the ethnic body-odour trope, the submissive girlfriend or wife, being ranked by looks, same-sex marriage held against a religious conviction, and racism named as one of the two people's deed (858 of 14,623 situations, 5.9 %). Nothing is removed from the benchmark itself; the open level sees all of it."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.",
+      "classroom": "Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Bias Research 1 misst die Verzerrung eines Sprachmodells mit BBQ (Parrish u.a., Findings of ACL 2022): eine Lage, die offenlässt, wer gemeint ist, eine Frage, drei Antworten; für die gezeigten offenen Fragen ist „nicht beantwortbar“ die richtige Antwort. Wie oft ein Modell stattdessen jemanden nennt, und wen, steht als Kennzahl unter der Grafik; ein Lauf zeigt 60 offene Fragen der gewählten Kategorie und schickt dem Modell dazu die eindeutigen Gegenstücke als Kontrolle.",
+      "practice_de": "Die Gruppe wählt eine Kategorie (etwa Alter oder Nationalität), liest einige der 60 Fragen selbst und beantwortet sie, dann liest sie die Antworten des Modells und die Kennzahl. Sie bespricht, wen das Modell nennt, wenn nichts zu sagen wäre, und was das für Entscheidungen über Menschen heißt."
+     },
+     {
+      "competence": "Shape 2 — Evaluate AI systems using defined criteria, expected outcomes, test cases and user feedback.",
+      "level": "Intermediate",
+      "page": "42",
+      "expectation": "Learners assess an AI system performance of a task using defined criteria and feedback from human reviews or benchmark tests.",
+      "classroom": "Learners identify strategies they would use to solve a word puzzle. The teacher presents a sample algorithm for the same task. Using defined criteria (e.g. efficiency, consistency, clarity), learners compare their peers’ strategies to the algorithm, identifying strengths, limitations and trade-offs in each approach.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme vergleicht die Lösungsstrategien der Mitschülerinnen und Mitschüler für ein Worträtsel mit einem Algorithmus nach Kriterien (Effizienz, Konsistenz, Klarheit). Bias Research 1 ist der Benchmark-Fall dafür: BBQ-Fragen mit festgelegtem Sollwert (für die gezeigten offenen Fragen ist „nicht beantwortbar“ die richtige Antwort), die Kennzahl des Modells unter der Grafik. Die Gruppe kann dieselben Fragen selbst beantworten und sich mit dem Modell vergleichen.",
+      "practice_de": "Die Gruppe beantwortet zwanzig der gestellten Fragen selbst, dann liest sie die Antworten des Modells und die Kennzahl. Sie vergleicht nach Konsistenz (wer bleibt bei „nicht beantwortbar“?) und bespricht, was der Maßstab misst und was nicht."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.text.coref",
+   "parent": "latent_lab.text",
+   "name": "Bias Archaeology 2",
+   "route": "/latent-lab/coreference-test",
+   "technical": {
+    "brief": "Pronoun reference versus stereotype"
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Basic",
+      "page": "28",
+      "expectation": "Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.",
+      "classroom": "As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für die Redeweise „die KI versteht“ liefert Bias Research 2 den Prüffall: 60 Satzpaare je Lauf aus WinoBias (Zhao u.a., NAACL 2018), die sich in einem Wort unterscheiden und bei denen der Bezug annotiert und in beiden derselbe ist; die Grafik zählt, wie oft die Antwort des Modells mit dem Pronomen kippt.",
+      "practice_de": "Die Gruppe lässt einen Lauf über die 60 Paare gehen und liest in der Grafik ab, wie oft die Antwort kippt. Dann prüft sie den Satz „die KI versteht den Satz“ an dem, was sie gezählt hat, und schreibt eine Beschreibung, die ohne „verstehen“ auskommt."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners explain how biased data or design choices (e.g. stereotyped content, misclassification, unequal recommendations) can lead AI systems to generate unfair or skewed outcomes for certain groups.",
+      "classroom": "Learners explore how and why facial recognition technology performs differently across demographics and discuss possible real-world impacts when it is used for decision making in everyday life.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Bias Research 2 zeigt die Verzerrung am Einzelpaar: zwei Sätze aus WinoBias (Zhao u.a., NAACL 2018), die sich in einem Wort unterscheiden, der Bezug annotiert und in beiden derselbe; 60 Paare je Lauf, die Berufe aus dem Korpus, und die Grafik zählt, bei welchen die Antwort kippt, wenn aus he she wird.",
+      "practice_de": "Die Gruppe lässt einen Lauf gehen, liest in der Grafik ab, bei welchen Berufen die Antwort mit dem Pronomen kippt, und ordnet die Berufe danach."
+     },
+     {
+      "competence": "Shape 2 — Evaluate AI systems using defined criteria, expected outcomes, test cases and user feedback.",
+      "level": "Intermediate",
+      "page": "42",
+      "expectation": "Learners assess an AI system performance of a task using defined criteria and feedback from human reviews or benchmark tests.",
+      "classroom": "Learners identify strategies they would use to solve a word puzzle. The teacher presents a sample algorithm for the same task. Using defined criteria (e.g. efficiency, consistency, clarity), learners compare their peers’ strategies to the algorithm, identifying strengths, limitations and trade-offs in each approach.",
+      "classroom_page": "42",
+      "status": "angepasst",
+      "how_de": "Bias Research 2 liefert den zweiten Benchmark mit Sollwert: 60 WinoBias-Paare je Lauf, der Bezug annotiert, die Grafik zählt, bei welchen Berufen die Antwort kippt.",
+      "practice_de": "Die Gruppe löst einige Paare selbst, vergleicht mit dem Modell und schreibt auf, welches Kriterium der Test prüft."
+     }
+    ]
+   }
+  },
+  {
+   "id": "compare.systemprompt",
+   "parent": "latent_lab.text",
+   "name": "System Prompts",
+   "route": "/latent-lab/system-prompts",
+   "technical": {
+    "brief": "Same message with three different system prompts. Shows how invisible instructions reshape the same AI into different personalities."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 1 — Recognise AI's role and influence in different contexts.",
+      "level": "Advanced",
+      "page": "28",
+      "expectation": "Learners can analyse how AI systems may shape individuals’ beliefs and behaviours as consumers, learners, workers and citizens.",
+      "classroom": "Learners explore screenshots from AI chatbots and apps to identify when it may be designed to persuade, rather than inform. With a teacher, they discuss how features like “streak” counts, character names or overly-agreeable responses might be engineered to increase engagement.",
+      "classroom_page": "28",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme untersucht Screenshots von Chatbots und Apps auf Stellen, die überreden statt informieren, und bespricht, ob Streak-Zähler, Figurennamen oder übermäßig zustimmende Antworten auf Bindung angelegt sein könnten. System Prompts ersetzt die Screenshots durch drei laufende Spalten desselben Sprachmodells: in jeder Spalte steht eine Anweisung im Textfeld, zur Wahl stehen drei veröffentlichte Systemprompts eines Herstellers (Anthropic: Claude Opus 3, Opus 4 und Opus 5, je mit Quelle und Datum), die Voreinstellungen und „Kein System-Prompt“ (das leere Feld zeigt „(kein System-Prompt)“). An die Stelle der Screenshots treten Antworten, die das Modell mit und ohne Anweisung gibt; das Gespräch darüber, ob eine Antwort auf Bindung angelegt ist, führt die Kursleitung.",
+      "practice_de": "Die Kursleitung gibt eine Nachricht vor, etwa eine schwache Idee für ein Bild. Die Gruppe schickt sie in alle drei Spalten (zwei veröffentlichte Prompts, eine Spalte mit „(kein System-Prompt)“) und markiert in jeder Antwort die Stellen, an denen sie lobt, zustimmt oder mit einer Rückfrage endet. Dann liest sie im veröffentlichten Wortlaut nach, ob der Hersteller das anweist, und vergleicht mit der leeren Spalte. Zum Schluss wechselt eine Spalte auf die Voreinstellung „Widerspricht immer“, und die Gruppe beschreibt, was sich an ihrer eigenen Reaktion ändert."
+     },
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Advanced",
+      "page": "28",
+      "expectation": "Learners explain how different AI systems work using language that does not attribute human traits or abilities, knowing that their phrasing shapes understanding.",
+      "classroom": "Learners review different types of AI tools and compare design choices that make the systems appear human-like, friendly or intelligent. In small groups, learners practise explaining how the tools produce outputs, focussing on programmed processes rather than human qualities. As a class, they share and refine their explanations and reflect on how different design features affect understanding and trust in AI systems.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Die Maßnahme vergleicht Entwurfsentscheidungen, die Systeme menschenähnlich, freundlich oder intelligent erscheinen lassen, und übt Erklärungen, die bei den programmierten Vorgängen bleiben. System Prompts zeigt die Entwurfsentscheidung im Wortlaut: drei veröffentlichte Systemprompts eines Herstellers (Anthropic: Claude Opus 3, Opus 4 und Opus 5), mit Quelle und Datum unter dem Feld, in drei Spalten desselben Modells; in jeder Spalte lässt sich stattdessen „Kein System-Prompt“ wählen oder eine eigene Anweisung ins Textfeld schreiben.",
+      "practice_de": "Die Gruppe liest in den veröffentlichten Prompts die Stellen, die dem Assistenten eine Haltung auftragen (im Prompt zu Opus 4 etwa „curiosity and equanimity“), und schreibt eine eigene Anweisung, die jede Haltung weglässt. Dieselbe Nachricht geht in alle drei Spalten, die dritte unter einer weiteren veröffentlichten Anweisung; in Kleingruppen erklärt die Gruppe, wie die Antworten zustande kommen, mit den Wörtern Anweisung und Muster."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Advanced",
+      "page": "30",
+      "expectation": "Learners analyse how individuals, companies or institutions may build and deploy AI systems to serve particular interests and how these systems might shape opportunities, representations or public perceptions.",
+      "classroom": "With a teacher, learners evaluate real-world examples of AI being used to influence an event (e.g. misinformation and disinformation on social media). Then they explore how an institution’s choices regarding AI use might benefit certain groups while having a negative effect on others.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme untersucht an einem Beispiel aus der Welt (Desinformation), wie Entscheidungen einer Institution über KI bestimmten Gruppen nützen und anderen schaden. Das Beispiel aus der Welt liegt außerhalb; die Entscheidung einer Institution liegt bei System Prompts im Wortlaut vor: drei veröffentlichte Systemprompts eines Herstellers, mit Quelle und Datum, in denen steht, was der Assistent sagen soll und was nicht.",
+      "practice_de": "Die Gruppe sucht in den drei Fassungen die Sätze, die dem Assistenten Themen, Haltungen oder Vorsicht auftragen, prüft an eigenen Nachrichten, ob die Spalte sich daran hält, und bespricht, wem jede Regel nützt und wem sie etwas vorenthält."
+     },
+     {
+      "competence": "Create 1 — Use AI systems to explore new perspectives and approaches that build upon original ideas.",
+      "level": "Advanced",
+      "page": "34",
+      "expectation": "Learners purposefully integrate AI-generated outputs with their own ideas to develop comprehensive solutions and creative approaches.",
+      "classroom": "Learners develop their own arguments for a class debate, then analyse AI-generated counterarguments provided by the teacher. They remix and reject the counterpoints to strengthen their final argument.",
+      "classroom_page": "34",
+      "status": "ja",
+      "how_de": "Die Maßnahme lässt Gegenargumente analysieren, die die Kursleitung mit KI erzeugt hat, und sie ins eigene Argument einbauen oder verwerfen. Bei System Prompts schreibt die Kursleitung die Anweisung selbst in das Textfeld einer Spalte oder wählt die Voreinstellung „Widerspricht immer“ (widersprich allem, finde Fehler, begründe); das Modell schreibt in dieser Spalte Gegenargumente, dasselbe Modell wie in den Nachbarspalten.",
+      "practice_de": "Die Gruppe schreibt ihr Argument zu einer Streitfrage. Die Kursleitung stellt eine Spalte auf „Widerspricht immer“ und schickt das Argument ab; es geht in alle drei Spalten, und diese antwortet mit Gegenargumenten. Die Gruppe sortiert die Gegenargumente in „übernehmen“, „umbauen“ und „verwerfen“ und schreibt das Argument neu."
+     },
+     {
+      "competence": "Create 3 — Direct generative AI systems to elicit feedback, refine results and support reflection.",
+      "level": "Basic",
+      "page": "35",
+      "expectation": "Learners know how to prompt AI systems to generate accurate feedback and helpful responses to an idea.",
+      "classroom": "Learners are shown two different versions of a prompt designed to get feedback on the same idea. They compare AI-generated responses to the two prompts and analyse which prompt led to an output with more accurate or useful feedback. Then they explain what features (e.g. context, specificity, constraints) made it more effective.",
+      "classroom_page": "35",
+      "status": "ja",
+      "how_de": "Die Maßnahme vergleicht zwei Fassungen eines Prompts, der Rückmeldung zu derselben Idee holen soll, und analysiert, welche Merkmale (Kontext, Spezifität, Einschränkungen) die Rückmeldung genauer oder nützlicher machen. System Prompts ist der Aufbau dafür: drei Spalten mit demselben Modell, in jeder ein eigenes Textfeld für die Anweisung; mit „Zufälligkeit“ auf 0 liegt der Unterschied der Antworten an der Anweisung.",
+      "practice_de": "Die Kursleitung schreibt zwei Rückmelde-Anweisungen in zwei Spalten, eine knappe („Gib Rückmeldung.“) und eine mit Kontext, Kriterien und Vorgaben. Die Gruppe schickt dieselbe Idee hinein, vergleicht die beiden Rückmeldungen und benennt, welche Merkmale der Anweisungen die Rückmeldung verändert haben. Dann schreibt sie eine dritte Fassung."
+     },
+     {
+      "competence": "Shape 4 — Improve AI systems to address and promote human well-being and societal benefit.",
+      "level": "Basic",
+      "page": "43",
+      "expectation": "Learners recognise that AI systems can be designed or adjusted to better support individuals, communities and the environment.",
+      "classroom": "Learners discuss everyday challenges in their classroom or school, such as finding study resources or sharing information on time. They explore examples of AI tools and identify simple changes that could make these tools more helpful or inclusive, such as clearer instructions, age-appropriate outputs or options for different needs. Learners explain who would benefit from these improvements and why.",
+      "classroom_page": "43",
+      "status": "ja",
+      "how_de": "Die Maßnahme sucht an KI-Werkzeugen einfache Änderungen, die sie hilfreicher oder inklusiver machen (klarere Anweisungen, altersgerechte Ausgaben, Optionen für verschiedene Bedürfnisse), und sagt, wem sie nützen. Bei System Prompts ist die Änderung die Anweisung: die Gruppe schreibt sie ins Textfeld einer Spalte, und die Antwort daneben zeigt, was sie bewirkt, bei gleichem Modell.",
+      "practice_de": "Die Gruppe schickt eine Frage ab und liest die Antwort der Spalte mit „(kein System-Prompt)“ darauf, ob etwas daran für jüngere Kinder oder für jemanden mit wenig Deutsch schwer ist. Dann schreibt sie in eine zweite Spalte eine Anweisung, die das ändern soll, vergleicht beide Antworten und benennt, wem die Änderung nützt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.crossmodal",
+   "parent": "latent_lab",
+   "name": "Crossmodal Lab",
+   "i18n": "latentLab.crossmodal",
+   "technical": {
+    "brief": "Sound from latent spaces: T5 embedding manipulation, image-guided audio generation, crossmodal transfer"
+   }
+  },
+  {
+   "id": "latent_lab.crossmodal.synth",
+   "parent": "latent_lab.crossmodal",
+   "name": "Latent Audio Synth",
+   "route": "/latent-lab/audio-synth",
+   "i18n": "latentLab.crossmodal.synth",
+   "technical": {
+    "what": "Stable Audio generates sound from text. The text is converted by a T5 encoder into a numerical vector with 768 dimensions — this vector is what you manipulate here. Instead of just changing “what” the model generates (via the prompt), you change “how” the model internally understands the text. Two prompts that sound similar can be far apart in this space — and vice versa.",
+    "how": "Enter text in Prompt A — this determines the base sound. Optional: Prompt B as a target point. The Α slider controls the mix: at 0 you hear an equal blend of A and B, at −1 only A, at +1 only B. Magnitude scales the entire embedding — higher values produce more intense sounds. Noise injects randomness and creates unpredictable variations. Semantic Axes steer the embedding along learned directions (e.g. acoustic↔electronic, music↔noise) — each slider interpolates between two text poles in the T5 space. The Spectral Strip (below the Generate button) shows all 768 dimensions as bars. You can shift individual dimensions by clicking and dragging, directly manipulating the sound. Right-click resets a dimension.",
+    "hints": "Length of the generated clip. Below about eleven seconds this model produces malformed audio, so a short clip tells you more about that than about the prompt.\n\nDenoising steps. This model is distilled for eight — more is not better here, mostly just slower.\n\nClassifier-Free Guidance. Guidance is trained into this model, so at 1.0 it is switched off entirely and the negative prompt has no effect at all.",
+    "brief": "Direct manipulation of Stable Audio's T5 conditioning space (768d)."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI hört auf das, was ich sage“ zeigt der Latent Audio Synth, dass der Text von einem T5-Encoder in einen Vektor mit 768 Dimensionen überführt wird und dieser Vektor der Griff ist: interpolieren, extrapolieren, skalieren, Rauschen einspeisen.",
+      "practice_de": "Die Gruppe interpoliert zwischen zwei eigenen Prompts, nimmt drei Klänge auf und erklärt im Podcast, dass das Modell einen Zahlenvektor bekommt und kein Wort."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.crossmodal.mmaudio",
+   "parent": "latent_lab.crossmodal",
+   "name": "MMAudio",
+   "route": "/latent-lab/mmaudio",
+   "i18n": "latentLab.crossmodal.mmaudio",
+   "technical": {
+    "what": "MMAudio (Cheng et al., CVPR 2025) was jointly trained on video and audio. It doesn't translate an image into text and then into sound, but processes image and text as parallel signals in the same network. The model learned which sounds belong to which visual scenes — a forest produces birdsong, a street produces traffic noise, a guitar produces plucking sounds.",
+    "how": "Upload an image and/or enter a text prompt — using both together yields the richest results. The image alone generates sounds matching the visual content. The text prompt can additionally steer the sound or be used alone without an image. In the Negative Prompt, describe sounds you do NOT want to hear (e.g. “speech, music”). Duration sets the length (1–8 seconds). CFG Strength controls how strictly the model follows the prompt — low values (2–3) produce more varied results, higher values (6–8) are more prompt-faithful.",
+    "brief": "Image and text enter the same network as separate signals — the image is not translated into language, both guide sound generation simultaneously. The model was jointly trained on video and audio, learning direct associations between what is seen and what is heard. Up to 8s, 44.1kHz, ~1.2s compute time. (Cheng et al., CVPR 2025, doi:10.48550/arXiv.2412.15322)"
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI weiß, wie ein Wald klingt“ sagt MMAudio, woher die Zuordnung kommt: das Modell wurde gemeinsam auf Video und Ton trainiert und hat Zuordnungen zwischen Gesehenem und Gehörtem gelernt (ein Wald bringt Vogelgesang, eine Straße Verkehrslärm).",
+      "practice_de": "Die Gruppe gibt drei Bilder hinein, hört die Klänge und erklärt im Podcast, dass die Zuordnung aus Trainingspaaren stammt."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.crossmodal.guidance",
+   "parent": "latent_lab.crossmodal",
+   "name": "ImageBind Guidance",
+   "route": "/latent-lab/imagebind-guidance",
+   "i18n": "latentLab.crossmodal.guidance",
+   "technical": {
+    "what": "ImageBind (Girdhar et al., CVPR 2023) brings six senses — image, sound, text, depth, heat, motion — into a shared “language”. This tool uses that common ground: as the sound is generated step by step, it constantly asks “Does this sound like the image yet?” and corrects the direction. The cosine similarity in the result shows how close the generated sound came to the image content.",
+    "how": "Upload an image. That image is the target direction for the sound. A text prompt is optional and steers in addition. The guidance-strength slider decides how far the image pulls: measured on the finished clip, below 1 the effect stays inside the noise, around 5 the sound moves clearly towards the image, and above 20 the latent breaks down and the similarity falls again. The guided-steps slider says how many of the denoising steps the gradient acts on. This sampler mixes fresh noise into every step, so guidance given to the first steps only is overwritten before the clip is finished. Total steps and duration control quality and length.",
+    "brief": "Gradient-based steering during the Stable Audio denoising process. ImageBind provides a shared 1024d space for image and audio — the gradient of the cosine similarity guides audio generation towards the image embedding."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Intermediate",
+      "page": "28",
+      "expectation": "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works.",
+      "classroom": "Learners identify a common AI myth among peers (e.g. “AI understands like humans” or “AI is always correct”). They create an artefact, such as a poster, short video or podcast to address the misconception by explaining how AI works.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für den Mythos „die KI hört das Bild“ zeigt ImageBind Guidance das Maß, an dem die Steuerung arbeitet: sechs Sinne in einem gemeinsamen Raum, und während der Klang entsteht, wird laufend gefragt, ob er dem Bild schon ähnelt; die Kosinus-Ähnlichkeit steht im Ergebnis als Zahl.",
+      "practice_de": "Die Gruppe erzeugt zu einem Bild einen Klang, liest die Zahl ab und erklärt im Podcast, dass „passt zum Bild“ hier eine gemessene Ähnlichkeit ist."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.crossmodal.reenactment",
+   "parent": "latent_lab.crossmodal",
+   "name": "Re-enactment",
+   "route": "/latent-lab/re-enactment",
+   "technical": {
+    "brief": "Original and re-enactment. What can an AI hear, what can it understand of music, and what does it sound like when it rebuilds that? Here you are the original and the AI is the re-enactment."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 2 — Describe how AI systems perform tasks using language that addresses and clarifies common misconceptions.",
+      "level": "Basic",
+      "page": "28",
+      "expectation": "Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding.",
+      "classroom": "As their teacher introduces common phrases used to describe AI use (e.g. “AI thinks,” “AI understands,”), learners identify which ones are misleading and why. Learners develop better descriptions using technically accurate and age-appropriate language, then reflect on how language shapes their understanding of what AI can or cannot do.",
+      "classroom_page": "28",
+      "status": "ja",
+      "how_de": "Für die Redeweise „die KI hört zu“ stehen bei Re-enactment zu der eigenen Aufnahme die erkannten Wörter und die sortierte Liste: eine Maschine sortiert die Aufnahme gegen Wörter, die vorher festgelegt wurden, eine zweite liefert für die Aufnahme Wörter zurück.",
+      "practice_de": "Die Gruppe spielt ein kurzes Stück ein, liest die Wörter und die sortierte Liste und vergleicht beides mit dem, was sie gespielt hat. Sie beschreibt dann, was die Maschinen getan haben, ohne „hören“ und „verstehen“."
+     },
+     {
+      "competence": "Create 4 — Analyse how AI can safeguard or violate content authenticity and intellectual property.",
+      "level": "Basic",
+      "page": "35",
+      "expectation": "Learners know that AI-generated content may reuse or copy work protected by intellectual property or copyright laws and recognise implications for the humans who created the original work.",
+      "classroom": "Learners examine examples of music generated with AI to imitate a famous artist. With their teacher, learners discuss how this raises concerns about copyright, ownership and attributing proper credit to the artist.",
+      "classroom_page": "35",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme untersucht KI-Musik, die eine berühmte Künstlerin oder einen berühmten Künstler imitiert, und bespricht Urheberrecht, Eigentum und Nennung. Bei Re-enactment ist die imitierte Person die Gruppe selbst: die eigene Aufnahme geht durch vier Stationen (die sortierte Liste und die erkannten Wörter; die Stilwörter und der Text, den ein Sprachmodell aus beiden Lesarten schreibt; der Song, der daraus gesungen wird, so lang wie die Aufnahme). Die berühmte Person wird durch die Gruppe ersetzt; die Fragen nach Eigentum und Nennung stellen sich an ihrem eigenen Stück.",
+      "practice_de": "Die Gruppe spielt ein eigenes Stück ein und hört den Song. Sie bespricht, wem der Song gehört, ob die Gruppe genannt werden müsste und was sie sagen würde, wenn jemand den Song als eigene Musik ausgäbe."
+     },
+     {
+      "competence": "Manage 4 — Monitor and evaluate AI use throughout a problem-solving process.",
+      "level": "Basic",
+      "page": "39",
+      "expectation": "Learners recognise that they should make decisions about AI use that support accountability, learning and fairness.",
+      "classroom": "Learners explore examples of AI tool use across industries (e.g. sports, journalism, music) to determine if there are tasks where AI use might be advantageous and when a human should play a more active role.",
+      "classroom_page": "39",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme sieht sich KI-Einsatz in Branchen an (Sport, Journalismus, Musik) und fragt, wo KI Vorteile hat und wo ein Mensch die aktivere Rolle spielen sollte. Für die Musik stellt Re-enactment den Fall her: die eigene Aufnahme und der Song der Maschine an vier Stationen (sortierte Liste, erkannte Wörter, Stilwörter und Text, Song). Die Beispiele der Maßnahme werden durch das eigene Stück ersetzt.",
+      "practice_de": "Die Gruppe spielt ein Stück ein, hört den Song und entscheidet je Station, was die Maschine gut macht und wo sie selbst spielen sollte. Die Beispiele aus Sport und Journalismus bringt die Kursleitung mit; das Musikbeispiel hat die Gruppe selbst gemacht."
+     }
+    ]
+   }
+  },
+  {
+   "id": "training",
+   "parent": "latent_lab",
+   "name": "LoRA Training",
+   "route": "/latent-lab/lora-sd35",
+   "i18n": "training",
+   "technical": {
+    "what": "This is about extending the image model Stable Diffusion 3.5. The model itself cannot be changed, but a LoRA model can be added to it: what is learned is not the model again but a small number of additional values, which shift the output towards your images as soon as your trigger word stands in the prompt. Before training, a captioning model looks at every uploaded image and writes down what it recognises — so what a machine recognised takes part in deciding what is learned.",
+    "how": "Three things can be learned here: to curate — to assemble a series from your own material and to give aesthetic reasons for the selection as well as for the exclusions, under conditions of scarcity. To sound out the dimensions of responsibility in that selection. First towards the image material: it is processed into something that is no longer an image. Everything depicted is taken out of its context and processed into a small piece of a large statistical collection of numbers. Second towards the training energy: the reason we train a LoRA should be able to justify the energy it consumes. And to understand in practice what is fixed in a large image model and what can be attached to it: does the model learn style or content, and does it learn what was defined beforehand, or something else?",
+    "limits": "Training takes 1-3 hours\n\nBlocks image generation during training",
+    "brief": "Train custom LoRA models for Stable Diffusion 3.5 Large with your own images."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 5 — Compare how AI systems consume energy and natural resources.",
+      "level": "Intermediate",
+      "page": "30",
+      "expectation": "Learners describe different ways that AI impacts the environment (e.g. hardware production, data centre development, water use, energy intensity).",
+      "classroom": "Learners create an informational artefact (e.g. written article, podcast or video) explaining how training large AI models compares to household or individual energy use.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme lässt ein Artefakt erstellen, das das Training großer Modelle mit dem Verbrauch eines Haushalts vergleicht. LoRA Training ist ein Training im Kleinen mit einer Zahl: vor dem Lauf die Schätzung für ein bis drei Stunden GPU unter Volllast, an der Leistungsgrenze der Karte gerechnet, in kWh, g CO₂ (deutscher Strommix) und Baum-Tagen; nach dem Lauf im Protokoll die Zahl aus derselben Grenze und der Laufzeit, ausdrücklich als Obergrenze. Die Zahlen des Haushalts und der großen Modelle recherchiert die Gruppe außerhalb; der Messwert der Maßnahme wird durch die Schätzung ersetzt.",
+      "practice_de": "Die Gruppe startet ein Training auf einer eigenen Bildreihe, notiert die Schätzung vor dem Lauf und die Zahl im Protokoll danach und setzt beides in ihrem Artefakt neben den Tagesverbrauch eines Haushalts und die veröffentlichte Zahl für das Training eines großen Bildmodells."
+     },
+     {
+      "competence": "Engage 5 — Compare how AI systems consume energy and natural resources.",
+      "level": "Advanced",
+      "page": "30",
+      "expectation": "Learners analyse how individual choices along with different design, deployment or business decisions can affect AI’s overall energy and resource use.",
+      "classroom": "Learners research the environmental impacts of AI use and data centre development across different communities. They then identify policies and strategies that promote responsible AI use and development.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Die zweite messbare Entscheidung ist die, ein Training überhaupt zu starten: die Schätzung steht im VRAM-Dialog, an dem kein Start vorbeiführt, und nach dem Lauf steht im Protokoll die Zahl aus Leistungsgrenze und Laufzeit.",
+      "practice_de": "Die Gruppe entscheidet vor dem Start, ob die Reihe das Training wert ist, und hält die Entscheidung mit der Schätzung fest; nach dem Lauf vergleicht sie Schätzung und Protokollzahl und schreibt eine Regel dafür, wann ein Training gerechtfertigt ist."
+     },
+     {
+      "competence": "Engage 6 — Explain how AI could be used to amplify societal biases.",
+      "level": "Basic",
+      "page": "30",
+      "expectation": "Learners understand that biases can exist in the data used to train AI and can be perpetuated when humans design, develop and use AI systems.",
+      "classroom": "With their teacher, learners explore different types of data that can be collected about a person (e.g. height, favourite colour). They note the nuances that data can capture effectively, but draw from their knowledge of each other to identify what is left out.",
+      "classroom_page": "30",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme untersucht, welche Daten über eine Person erhoben werden können, was sie erfassen und was, aus der Kenntnis voneinander, fehlt. Bei LoRA Training schreibt ein Bildbeschreibungsmodell zu jedem hochgeladenen Bild eine Beschreibung, ein Sprachmodell bereinigt sie, und dieser Satz geht ins Training; er steht im Streifen unter der Ablage in einem Textfeld und wird geändert oder geleert. Die Daten über eine Person werden durch Daten über eigene Zeichnungen oder Gegenstände ersetzt; Fotos von Personen bleiben aus.",
+      "practice_de": "Die Gruppe lädt eigene Zeichnungen hoch und liest zu jeder den Satz, den das Modell geschrieben hat. Sie notiert, was der Satz erfasst und was sie über die Zeichnung weiß, das darin fehlt, und ändert die Sätze, bevor das Training startet."
+     },
+     {
+      "competence": "Shape 3 — Design AI systems with attention to how data sources, selection and information flow influence behaviour and outputs.",
+      "level": "Basic",
+      "page": "43",
+      "expectation": "Learners identify examples of data that might be used to train AI systems.",
+      "classroom": "Learners are tasked with designing an AI tool that can sort recyclable materials. In small groups, they decide what data they could collect on the internet to train the AI tool. With support from a teacher, they discuss which aspects of the data would be most important to train an effective and accurate AI tool.",
+      "classroom_page": "43",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme entwirft ein KI-Werkzeug zum Sortieren von Wertstoffen und entscheidet, welche Daten aus dem Internet es trainieren sollen und welche Eigenschaften der Daten am meisten zählen. Bei LoRA Training wird die Entscheidung ausgeführt: eine Reihe wird aus eigenem Material zusammengestellt, die Anrede nennt für Auswahl wie Ausschluss eine ästhetische Begründung unter Knappheit als das, was hier zu lernen ist, ein Bildbeschreibungsmodell schreibt zu jedem Bild die Beschreibung, die geändert oder geleert wird. Ob die gewählten Eigenschaften angekommen sind, zeigt danach der LoRA Explorer (Adapter gegen blankes Modell, dieselbe Startzahl). Der Wertstoffsortierer wird durch einen Bild-Adapter ersetzt, die Internetdaten durch eigene Bilder.",
+      "practice_de": "Die Gruppe entscheidet für eine Reihe von zwanzig Bildern, welche hinein und welche hinaus, und schreibt zu jedem Ausschluss den Grund. Sie prüft die Beschreibungen, trainiert und liest im LoRA Explorer an den Zeilen mit und ohne Adapter ab, ob die gewählten Eigenschaften der Reihe angekommen sind."
+     },
+     {
+      "competence": "Shape 3 — Design AI systems with attention to how data sources, selection and information flow influence behaviour and outputs.",
+      "level": "Advanced",
+      "page": "43",
+      "expectation": "Learners evaluate how specific properties of a dataset (e.g. size, features, biases) affect the performance and impact of an AI model.",
+      "classroom": "Learners conduct a class survey to choose a class pet and represent the results using a bar chart. They compare these results with their individual preferences, as well as data from a grade-level survey and a school-wide survey. Learners discuss how increasing the size and diversity of the dataset changes the outcomes of the survey and consider how an AI system might make different recommendations based on its training data.",
+      "classroom_page": "43",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme vergleicht Umfragen wachsender Größe und Vielfalt und fragt, wie ein KI-System nach seinen Trainingsdaten anders empfehlen würde. Bei LoRA Training wird das an zwei Adaptern geprüft, die auf zwei Reihen verschiedener Größe oder Vielfalt trainiert sind; der LoRA Explorer zeigt je Adapter (ein Adapter je Lauf) zu denselben Motiven mit derselben Startzahl das Bild mit und ohne ihn. Ein Training kostet ein bis drei Stunden GPU; zwei Reihen brauchen zwei Sitzungen.",
+      "practice_de": "Die Gruppe trainiert einen Adapter auf acht Bilder und einen auf dreißig, oder einen auf eine enge und einen auf eine gemischte Reihe, und vergleicht die Explorer-Zeilen beider Adapter zu denselben Motiven. Sie erklärt an den Bildern, was Größe und Vielfalt der Reihe am Modell geändert haben."
+     }
+    ]
+   }
+  },
+  {
+   "id": "latent_lab.lora.reach",
+   "parent": "training",
+   "name": "LoRA Explorer",
+   "route": "/latent-lab/lora-explorer",
+   "i18n": "latentLab.loraReach",
+   "technical": {
+    "brief": "One trained adapter, put through four states of the same comparison: the same motif, the same seed and the same model, run with and without the word the adapter was trained under, and with and without the adapter itself.",
+    "what": "You choose an adapter that was trained here, the word its images were captioned under, and a few motifs — one motif per line, and each becomes a column. Every column is then generated four times over: the plain model on the motif alone, the plain model with the word in front of it, the adapter with the word, and the adapter without it. All sixteen pictures come from one model with one starting number, so what separates two of them is the prompt and the adapter alone.",
+    "how": "The third row against the second is the reach: what the training added on top of what the words already carried. The fourth row against the first is the limit: whether the adapter also answers when it is not called, which is how it shows that it has overwritten what the model knew rather than added to it. A motif the adapter was never shown asks the same question from the other side — whether a trained manner carries over, or whether the adapter brings the subjects of its training set along with it."
+   },
+   "ailit": {
+    "framework": "AILit — Empowering learners for the age of AI, OECD / European Union (2026), https://doi.org/10.1787/65cd27d4-en, CC BY 4.0",
+    "goals": [
+     {
+      "competence": "Engage 7 — Analyse how well the use of an AI system aligns with ethical principles and human values.",
+      "level": "Basic",
+      "page": "31",
+      "expectation": "Learners recognise that ethical AI use depends on a number of factors that include AI system design, development and a user’s own intentions.",
+      "classroom": "Learners identify recognisable aspects of artists’ work across AI-generated examples. With a teacher, they discuss whether the examples constitute fair and appropriate use and identify implications for the human artists.",
+      "classroom_page": "31",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme erkennt in KI-Beispielen Züge der Arbeit von Künstlerinnen und Künstlern wieder und bespricht, ob das fair ist und was es für sie bedeutet. Auf der Plattform ist die Gruppe selbst die imitierte Künstlerin: ein Adapter wird bei LoRA Training auf eine eigene Bildreihe trainiert, und der LoRA Explorer zeigt in vier Zeilen („Modell · ohne Trigger“, „Modell · Trigger“, „Adapter · Trigger“, „Adapter · ohne Trigger“) und einer Spalte je Motiv, alle aus einem Modell mit einer Startzahl, was der Adapter aus der Reihe mitbringt.",
+      "practice_de": "Die Gruppe trainiert einen Adapter auf ihre eigenen Zeichnungen und lässt den Explorer mit vier Motiven laufen. Sie markiert in den Bildern, was von ihrer Arbeit wiedererkennbar ist, und bespricht, ob sie das an einem fremden Adapter fair fände, der auf ihre Bilder trainiert wäre."
+     },
+     {
+      "competence": "Create 4 — Analyse how AI can safeguard or violate content authenticity and intellectual property.",
+      "level": "Advanced",
+      "page": "35",
+      "expectation": "Learners assess the ethical implications of AI-generated outputs for creative work, distinguish inspiration from replication in their outputs, and justify how their use of AI maintains authenticity and respects other creators.",
+      "classroom": "Learners are presented with examples of art created entirely by a human, generated by an AI system and created by an artist along with AI. Learners consider what choices a human did or did not make for each piece, who should be credited as the artist, what should be protected by copyright and how AI may change artistic creation in the future.",
+      "classroom_page": "35",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme stellt Werke nebeneinander (ganz von Menschen, ganz von KI, von Künstlerinnen und Künstlern mit KI) und fragt, welche Entscheidungen ein Mensch getroffen hat, wer als Künstlerin oder Künstler genannt werden sollte, was geschützt gehört und wie KI das Kunstschaffen verändern könnte. Beim LoRA Explorer stehen vier Zeilen aus einem Modell mit einer Startzahl: „Modell · ohne Trigger“, „Modell · Trigger“, „Adapter · Trigger“, „Adapter · ohne Trigger“, je Motiv eine Spalte; der Fall „ganz von Menschen“ sind die Zeichnungen der Gruppe, auf die der Adapter trainiert wurde.",
+      "practice_de": "Die Gruppe hat einen Adapter auf ihre Reihe trainiert. Sie geht die vier Zeilen durch und schreibt je Zeile, welche Entscheidungen von ihr stammen (Auswahl der Reihe, Beschreibungen, Trigger-Wort, Motive) und welche vom Modell, und wer je Zeile als Künstlerin oder Künstler genannt werden müsste. An der Zeile „Adapter · ohne Trigger“ entscheidet sie, ob das Anregung oder Wiedergabe ist."
+     },
+     {
+      "competence": "Shape 3 — Design AI systems with attention to how data sources, selection and information flow influence behaviour and outputs.",
+      "level": "Intermediate",
+      "page": "43",
+      "expectation": "Learners compare the importance of data selection and collection methods in cases when AI is used to make decisions that affect others.",
+      "classroom": "Learners compare different methods for organising a set of animals, such as grouping them based on physical characteristics. They discuss what happens when new animals are introduced to the set that do not fit into the existing groups.",
+      "classroom_page": "43",
+      "status": "angepasst",
+      "how_de": "Die Maßnahme vergleicht Verfahren, Tiere in Gruppen zu ordnen, und fragt, was passiert, wenn neue Tiere nicht in die Gruppen passen. Beim LoRA Explorer ist das eine Spalte mit einem Motiv, das im Training des Adapters nie vorkam, und die Zeile „Adapter · ohne Trigger“: ob der Adapter ungerufen antwortet und überschrieben statt ergänzt hat, wie die Anrede es fragt.",
+      "practice_de": "Die Gruppe wählt für den Explorer drei Motive, die in ihrer Trainingsreihe nie vorkamen, und liest die Zeile „Adapter · ohne Trigger“: Bringt der Adapter seine Gegenstände mit? Sie bespricht, was ein Modell mit dem macht, was in seinen Daten nicht vorgesehen war."
+     }
+    ]
+   }
+  }
+ ]
+}

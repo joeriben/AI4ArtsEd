@@ -1,0 +1,66 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Hallucination (Legacy)",
+    "de": "Halluzination (Legacy)",
+    "tr": "Halüsinasyon (Legacy)",
+    "ko": "환각 (Legacy)",
+    "uk": "Галюцинація (Legacy)",
+    "fr": "Hallucination (Legacy)",
+    "es": "Alucinación (Legacy)",
+    "he": "הזיה (Legacy)",
+    "ar": "هلوسة (Legacy)",
+    "bg": "Халюцинация (Legacy)"
+  },
+  "description": {
+    "en": "Complex surrealist image generation using legacy ComfyUI workflow. This workflow cannot be decomposed into DevServer's chunk system due to its intricate node connections and custom processing logic.",
+    "de": "Komplexe surrealistische Bildgenerierung mit Legacy-ComfyUI-Workflow. Dieser Workflow kann nicht in DevServers Chunk-System zerlegt werden aufgrund seiner komplexen Node-Verbindungen und benutzerdefinierten Verarbeitungslogik.",
+    "tr": "Legacy ComfyUI iş akışıyla karmaşık sürrealist görsel üretimi. Bu iş akışı, karmaşık node bağlantıları ve özel işleme mantığı nedeniyle DevServer'ın chunk sistemine ayrıştırılamaz.",
+    "ko": "레거시 ComfyUI 워크플로우를 사용한 복잡한 초현실주의 이미지 생성. 이 워크플로우는 복잡한 노드 연결과 커스텀 처리 로직 때문에 DevServer의 chunk 시스템으로 분해할 수 없습니다.",
+    "uk": "Складна сюрреалістична генерація зображень через legacy-воркфлоу ComfyUI. Цей воркфлоу неможливо розкласти на chunk-систему DevServer через складні з'єднання нод та власну логіку обробки.",
+    "fr": "Génération d'images surréalistes complexes via un workflow ComfyUI legacy. Ce workflow ne peut pas être décomposé dans le système de chunks de DevServer en raison de ses connexions de nœuds complexes et de sa logique de traitement personnalisée.",
+    "es": "Generación de imágenes surrealistas complejas mediante un flujo de trabajo ComfyUI legacy. Este flujo de trabajo no se puede descomponer en el sistema de chunks de DevServer debido a sus conexiones de nodos intrincadas y su lógica de procesamiento personalizada.",
+    "he": "יצירת תמונות סוריאליסטיות מורכבות באמצעות תהליך עבודה legacy של ComfyUI. לא ניתן לפרק תהליך עבודה זה למערכת ה-chunk של DevServer בשל חיבורי הצמתים המורכבים שלו והלוגיקת העיבוד המותאמת אישית.",
+    "ar": "توليد صور سريالية معقدة باستخدام مسار عمل legacy في ComfyUI. لا يمكن تفكيك مسار العمل هذا إلى نظام chunk الخاص بـ DevServer بسبب اتصالات العقد (nodes) المعقدة ومنطق المعالجة المخصص.",
+    "bg": "Сложно сюрреалистично генериране на изображения чрез legacy работен процес на ComfyUI. Този работен процес не може да бъде разложен в chunk системата на DevServer поради сложните си връзки между възли и персонализираната си логика на обработка."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "legacy_surrealization"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "execution_mode": "legacy_workflow",
+    "workflow_type": "complex_multinode",
+    "requires_gpu": true,
+    "estimated_duration_seconds": "30-90",
+    "version": "1.0",
+    "migration_status": "legacy_passthrough",
+    "notes": [
+      "Legacy workflow - uses complete ComfyUI API workflow JSON",
+      "Prompt injection via title-based node search (ai4artsed_text_prompt)",
+      "Downloads ALL workflow outputs (not just first)",
+      "Complete workflow JSON archived for reproducibility"
+    ],
+    "display_name": "Surrealization (Legacy)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming"
+  }
+}

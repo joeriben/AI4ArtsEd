@@ -1,0 +1,191 @@
+/*
+ * Shell — the one page frame.
+ *
+ * All three shell surfaces run through the same centrally configurable CSS.
+ * The three surfaces that carry a bar, a left column and a work area — Canvas,
+ * Latent Lab, Compare — are not three layouts that happen to look alike. They
+ * are one layout, and this file is where it lives. A width or a hairline is
+ * changed here, once, and all three follow.
+ *
+ * The geometry is not new. It is what canvas_workflow.vue already had, moved
+ * out of its scoped block, so the first page to adopt this file is also the
+ * proof that the file is right: Canvas must look as it did before.
+ *
+ * Loaded from main.ts, not from the pages. A page that carries the classes and
+ * forgets the import would render frameless — but only for a visitor who had
+ * not been to another shell page first, so it would look correct to whoever
+ * built it. That is the shape of the bug 51637872 fixed from the other
+ * direction, and it is not worth 3 KB to keep the door open.
+ *
+ * TWO deliberate departures from what Canvas had:
+ *
+ * 1. The hairline. Canvas drew it #334155, a slate blue belonging to no tone of
+ *    the background grid: measured against --surface-1 it carries 1.78 at the
+ *    default tone but 1.08 at the 80 % level, where it disappears. --surface-4
+ *    is the only step that holds across the whole grid (1.24 / 1.46 / 1.82 /
+ *    2.30 from pure to 80 %). Set --shell-line to override it.
+ * 2. .shell-bar takes flex: 0 0 auto and .shell-rail takes flex-shrink: 0.
+ *    Both were no-ops on Canvas, whose work area carries min-width/min-height 0
+ *    and yields first. They are here because a work area that is a grid of
+ *    columns rather than a canvas can push back, and neither the bar nor the
+ *    rail is the thing that gives way.
+ */
+:root {
+  /* The column widens where there is room to widen into. 240px is the reference
+     iPad's 1210x834 window, where the entries are measured to stand on one
+     line; from there it follows whichever of the two dimensions has grown.
+
+     HEIGHT is in that measure because what stands in the column is sized from
+     the column's own height (see ModulePalette's rows mode): a taller window
+     therefore sets bigger type, and type that grows in a column that stays
+     240px wide is type that wraps. A 1210x1000 window did exactly that before
+     28.8vh was in here - two names on two lines, and the column over the fold
+     by two pixels. */
+  --shell-rail-w: clamp(240px, max(18vw, 28.8vh), 340px);
+  --shell-bar-pad: 0.75rem 1rem;
+  /* --shell-line is deliberately NOT declared here. Declared on :root it would
+     substitute var(--surface-4) at :root and hand every element the finished
+     colour, so a subtree that re-tinted --surface-4 would move its panels and
+     leave its hairlines behind. As a fallback at the point of use it resolves
+     on the element, like every other colour in this file. */
+}
+
+/* The page. #app is already a fixed, overflow-hidden flex column with
+   .app-content { flex: 1 }, so height:100% is all a shell needs to stand
+   without a page scrollbar. */
+.shell-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* The favourites strip is fixed over every page (z-index 950). A frame that
+     ends at the window edge therefore ends UNDER it: on Canvas the result
+     surface's header — the only handle that opens it — stood 37 px behind the
+     strip with 3 px showing. The frame ends above it instead. The strip's
+     opened height is a page's own business; this is the standing one - its
+     36 px toggle bar plus the 1 px border above it (components/FooterGallery). */
+  padding-bottom: calc(var(--footer-collapsed-height, 36px) + 1px);
+  box-sizing: border-box;
+  background: var(--bg-base);
+  color: #e2e8f0;
+}
+
+/* The bar runs the full width, above the left column — the left column starts
+   under it. (Canvas draws it this way.) */
+.shell-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: var(--shell-bar-pad, 0.75rem 1rem);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--shell-line, var(--surface-4));
+}
+
+.shell-bar-left,
+.shell-bar-center,
+.shell-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shell-bar-left { flex: 1; }
+
+/* The place an instrument several levels down hangs its own switch, right
+   beside the frame's own: top left, next to the left-panel switch. It is a
+   named anchor rather than an append to .shell-bar-left, because appended the
+   button lands after the page titles.
+   Empty it takes no room, and it inherits the bar's own gap. */
+.shell-bar-slot {
+  display: contents;
+}
+
+/* The middle of the bar, where a page STARTS ITS RUN. Named for the same reason
+   as the slot above: the trigger comes from an instrument several levels down
+   and teleports in, and .shell-bar-center may hold other things beside it.
+   Without it the Latent Lab carried an unused header space while its
+   instruments each reserved 156 px of column height for a band whose only
+   control was that one trigger. Empty it takes no room. */
+.shell-bar-run {
+  display: contents;
+}
+
+/* The trigger is drawn at the flow's own step (--flow-play, 45 px at a 1600 px
+   window). In a bar of 36 px controls that made the bar nine pixels taller than
+   on an instrument that hangs nothing here — so the bar jumped on every
+   instrument switch. It takes the height of the controls it stands among. */
+.shell-bar-center .play {
+  width: 36px;
+  height: 36px;
+}
+/* `min-width: 0` because a flex item does not shrink below its content by
+   default: something long standing here — the Latent Lab writes the running
+   model into it — grew this side past its third and pushed the middle out of
+   the middle, which is the one thing this group exists to prevent. With it the
+   content is what gives way, and .bar-place ellipses instead. */
+.shell-bar-right { flex: 1; min-width: 0; justify-content: flex-end; }
+
+.shell-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* The rail MEASURES ITSELF (`container-type: size`, the same device
+   assets/instrument-surface.css uses), so what stands in it can be written as a
+   fraction of the rail rather than as a pixel count read off one window. The
+   window height is not that measure: the header, the bar and the favourites
+   strip come off it first, and they take a different share of a short window
+   than of a tall one. */
+.shell-rail {
+  width: var(--shell-rail-w, 240px);
+  container-type: size;
+  flex-shrink: 0;
+  background: var(--surface-1);
+  border-right: 1px solid var(--shell-line, var(--surface-4));
+  overflow-y: auto;
+}
+
+/* Everything right of the rail: the work area with the result drawer under it.
+   The drawer is the last child HERE and therefore starts at the rail edge, not
+   at the window edge. A result strip spanning the full width under a rail that
+   runs to the bottom is the arrangement this nesting exists to prevent. */
+.shell-work {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* position:relative because what sits in here anchors to it — floating zoom
+   controls, and (on the instrument pages) the band. */
+.shell-main {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The frame's own control: the buttons that sit in the bar. Canvas drew them
+   first and every surface that adopts the frame needs the same one, starting
+   with the button that folds the rail away. The slate is a deliberate control
+   colour, not a surface, and stays the literal it has always been. */
+.shell-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: #334155;
+  border: none;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.shell-btn:hover:not(:disabled) { background: #475569; }
+.shell-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.shell-icon { width: 20px; height: 20px; opacity: 0.9; }

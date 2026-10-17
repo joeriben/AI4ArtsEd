@@ -1,0 +1,141 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Qwen 2511 Multi-Image Fusion",
+    "de": "Qwen 2511 Multi-Bild-Fusion",
+    "tr": "Qwen 2511 Çoklu Görüntü Füzyonu",
+    "ko": "Qwen 2511 다중 이미지 융합",
+    "uk": "Qwen 2511 Злиття кількох зображень",
+    "fr": "Qwen 2511 Fusion multi-images",
+    "es": "Qwen 2511 Fusión multi-imagen",
+    "he": "Qwen 2511 מיזוג ריבוי תמונות",
+    "ar": "Qwen 2511 دمج متعدد الصور",
+    "bg": "Qwen 2511 Сливане на множество изображения"
+  },
+  "description": {
+    "en": "Combine up to 3 images with AI-guided fusion (multi-person, style transfer, compositing)",
+    "de": "Kombiniere bis zu 3 Bilder mit KI-gesteuerter Fusion (Multi-Person, Stiltransfer, Compositing)",
+    "tr": "Yapay zekâ güdümlü füzyon ile en fazla 3 görüntüyü birleştirin (çoklu kişi, stil aktarımı, kompozisyon)",
+    "ko": "AI 기반 융합으로 최대 3개의 이미지를 결합합니다(다중 인물, 스타일 전송, 합성)",
+    "uk": "Об'єднуйте до 3 зображень за допомогою злиття під керуванням ШІ (кілька людей, перенесення стилю, композитинг)",
+    "fr": "Combinez jusqu'à 3 images grâce à une fusion guidée par IA (plusieurs personnes, transfert de style, composition)",
+    "es": "Combina hasta 3 imágenes con fusión guiada por IA (varias personas, transferencia de estilo, composición)",
+    "he": "שילוב של עד 3 תמונות באמצעות מיזוג מונחה בינה מלאכותית (מספר אנשים, העברת סגנון, הרכבה)",
+    "ar": "دمج ما يصل إلى 3 صور بواسطة دمج موجَّه بالذكاء الاصطناعي (أشخاص متعددون، نقل الأسلوب، التركيب)",
+    "bg": "Комбинирайте до 3 изображения чрез сливане, водено от изкуствен интелект (няколко души, пренос на стил, композитинг)"
+  },
+  "category": {
+    "en": "Image Editing",
+    "de": "Bildbearbeitung",
+    "tr": "Görüntü Düzenleme",
+    "ko": "이미지 편집",
+    "uk": "Редагування зображень",
+    "fr": "Édition d'images",
+    "es": "Edición de imágenes",
+    "he": "עריכת תמונות",
+    "ar": "تحرير الصور",
+    "bg": "Редактиране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_qwen_2511_multi",
+    "steps": 4,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1.0,
+    "megapixels": 1.7,
+    "seed": null,
+    "temperature": 0.7
+  },
+  "parameter_ranges": {
+    "steps": {
+      "min": 4,
+      "max": 8,
+      "default": 4,
+      "description": "Lightning LoRA optimized for 4 steps"
+    },
+    "cfg": {
+      "min": 1,
+      "max": 2,
+      "default": 1,
+      "description": "CFG scale (Lightning uses low CFG)"
+    },
+    "denoise": {
+      "min": 0.8,
+      "max": 1.0,
+      "default": 1.0,
+      "description": "Denoise strength (QWEN uses high denoise)"
+    },
+    "megapixels": {
+      "min": 0.5,
+      "max": 2,
+      "default": 1.7,
+      "description": "Target image size (1.7 MP = ~1300x1300, optimal for QWEN)"
+    }
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend_type": "comfyui",
+    "version": "1.0",
+    "created": "2025-12-28",
+    "last_updated": "2025-12-28",
+    "model_type": "qwen_image_edit_2511",
+    "lightning_optimized": true,
+    "multi_image_support": true,
+    "dsgvo_compliant": true,
+    "local_only": true,
+    "display_name": "Qwen 2511 Multi",
+    "publisher": "Alibaba Qwen Team (Hangzhou, CN)",
+    "architecture": "MMDiT (Multimodal Diffusion Transformer)",
+    "params": "~20B",
+    "text_encoders": [
+      "Qwen 2.5 VL 7B (multimodal)"
+    ],
+    "quantization": "FP8 (e4m3fn)",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Platform 4-stage safety pipeline",
+    "gpu_vram_mb": 12000,
+    "recommended_resolution": "1328x1328"
+  },
+  "display": {
+    "icon": "🎨",
+    "color": "#9B59B6",
+    "category": "image_editing",
+    "difficulty": 3,
+    "order": 55
+  },
+  "tags": {
+    "en": [
+      "image",
+      "multi-image",
+      "fusion",
+      "qwen",
+      "style-transfer",
+      "compositing",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "Bild",
+      "Multi-Bild",
+      "Fusion",
+      "Qwen",
+      "Stiltransfer",
+      "Compositing",
+      "ComfyUI",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
+  }
+}

@@ -1,0 +1,690 @@
+{
+  "entries": [
+    {
+      "arxiv": "1607.06520",
+      "gruppe": "eingriff_embedding",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "bolukbasi-et-al-2016-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings",
+      "url": "https://arxiv.org/abs/1607.06520"
+    },
+    {
+      "arxiv": "2306.03819",
+      "gruppe": "eingriff_embedding",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "belrose-et-al-2023-leace-perfect-linear-concept-erasure-in-closed-form",
+      "url": "https://arxiv.org/abs/2306.03819"
+    },
+    {
+      "arxiv": "2208.01618",
+      "gruppe": "eingriff_embedding",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "gal-et-al-2022-an-image-is-worth-one-word-textual-inversion",
+      "url": "https://arxiv.org/abs/2208.01618"
+    },
+    {
+      "arxiv": "2208.01626",
+      "gruppe": "eingriff_denoiser",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "hertz-et-al-2022-prompt-to-prompt-image-editing-with-cross-attention-control",
+      "url": "https://arxiv.org/abs/2208.01626"
+    },
+    {
+      "arxiv": "2210.10960",
+      "gruppe": "eingriff_denoiser",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "kwon-et-al-2023-diffusion-models-already-have-a-semantic-latent-space-asyrp",
+      "url": "https://arxiv.org/abs/2210.10960"
+    },
+    {
+      "arxiv": "2301.12247",
+      "gruppe": "eingriff_denoiser",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "brack-et-al-2023-sega-instructing-text-to-image-models-using-semantic-guidance",
+      "url": "https://arxiv.org/abs/2301.12247"
+    },
+    {
+      "arxiv": "2211.05105",
+      "gruppe": "eingriff_denoiser",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "ethics"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "schramowski-et-al-2023-safe-latent-diffusion-mitigating-inappropriate-degeneration",
+      "url": "https://arxiv.org/abs/2211.05105"
+    },
+    {
+      "arxiv": "2303.07345",
+      "gruppe": "eingriff_gewichte",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "gandikota-et-al-2023-erasing-concepts-from-diffusion-models-esd",
+      "url": "https://arxiv.org/abs/2303.07345"
+    },
+    {
+      "arxiv": "2308.14761",
+      "gruppe": "eingriff_gewichte",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "gandikota-et-al-2024-unified-concept-editing-in-diffusion-models-uce",
+      "url": "https://arxiv.org/abs/2308.14761"
+    },
+    {
+      "arxiv": "2311.12092",
+      "gruppe": "eingriff_gewichte",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "gandikota-et-al-2024-concept-sliders-lora-adaptors-for-precise-control",
+      "url": "https://arxiv.org/abs/2311.12092"
+    },
+    {
+      "arxiv": "2308.01508",
+      "gruppe": "eingriff_gewichte",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "pham-et-al-2024-circumventing-concept-erasure-methods-for-text-to-image-generative-models",
+      "url": "https://arxiv.org/abs/2308.01508"
+    },
+    {
+      "arxiv": "2308.10248",
+      "gruppe": "aktivierungssteuerung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "turner-et-al-2023-steering-language-models-with-activation-engineering-actadd",
+      "url": "https://arxiv.org/abs/2308.10248"
+    },
+    {
+      "arxiv": "2312.06681",
+      "gruppe": "aktivierungssteuerung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "panickssery-et-al-2024-steering-llama-2-via-contrastive-activation-addition-caa",
+      "url": "https://arxiv.org/abs/2312.06681"
+    },
+    {
+      "arxiv": "2310.01405",
+      "gruppe": "aktivierungssteuerung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "zou-et-al-2023-representation-engineering-a-top-down-approach-to-ai-transparency",
+      "url": "https://arxiv.org/abs/2310.01405"
+    },
+    {
+      "arxiv": "2403.03206",
+      "gruppe": "architektur_memorisierung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "esser-et-al-2024-scaling-rectified-flow-transformers-for-high-resolution-image-synthesis",
+      "url": "https://arxiv.org/abs/2403.03206"
+    },
+    {
+      "arxiv": "2212.03860",
+      "gruppe": "architektur_memorisierung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "somepalli-et-al-2023-diffusion-art-or-digital-forgery-investigating-data-replication",
+      "url": "https://arxiv.org/abs/2212.03860"
+    },
+    {
+      "arxiv": "2301.13188",
+      "gruppe": "architektur_memorisierung",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "ethics"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "carlini-et-al-2023-extracting-training-data-from-diffusion-models",
+      "url": "https://arxiv.org/abs/2301.13188"
+    },
+    {
+      "arxiv": "2503.20240",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "phunyaphibarn-et-al-2026-unconditional-priors-matter-improving-conditional-generation",
+      "url": "https://arxiv.org/abs/2503.20240"
+    },
+    {
+      "arxiv": "2406.02507",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "karras-et-al-2024-guiding-a-diffusion-model-with-a-bad-version-of-itself",
+      "url": "https://arxiv.org/abs/2406.02507"
+    },
+    {
+      "arxiv": "2506.09106",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "zhang-et-al-2025-bias-analysis-in-unconditional-image-generative-models",
+      "url": "https://arxiv.org/abs/2506.09106"
+    },
+    {
+      "arxiv": "2305.06402",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "perera-patel-2023-analyzing-bias-in-diffusion-based-face-generation-models",
+      "url": "https://arxiv.org/abs/2305.06402"
+    },
+    {
+      "arxiv": "2303.11408",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "luccioni-et-al-2023-stable-bias-evaluating-societal-representations-in-diffusion-models",
+      "url": "https://arxiv.org/abs/2303.11408"
+    },
+    {
+      "arxiv": "2211.03759",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "bianchi-et-al-2023-easily-accessible-text-to-image-generation-amplifies-demographic-stereotypes",
+      "url": "https://arxiv.org/abs/2211.03759"
+    },
+    {
+      "arxiv": "2202.04053",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "cho-et-al-2023-dall-eval-probing-the-reasoning-skills-and-social-biases-of-text-to-image-models",
+      "url": "https://arxiv.org/abs/2202.04053"
+    },
+    {
+      "arxiv": "2302.07159",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "fraser-et-al-2023-a-friendly-face-do-text-to-image-systems-rely-on-stereotypes",
+      "url": "https://arxiv.org/abs/2302.07159"
+    },
+    {
+      "arxiv": "2304.06034",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "naik-nushi-2023-social-biases-through-the-text-to-image-generation-lens",
+      "url": "https://arxiv.org/abs/2304.06034"
+    },
+    {
+      "arxiv": "2305.11080",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias",
+        "cultural_diversity"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "basu-et-al-2023-inspecting-the-geographical-representativeness-of-images-from-text-to-image-models",
+      "url": "https://arxiv.org/abs/2305.11080"
+    },
+    {
+      "arxiv": "2308.00755",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "seshadri-et-al-2023-the-bias-amplification-paradox-in-text-to-image-generation",
+      "url": "https://arxiv.org/abs/2308.00755"
+    },
+    {
+      "arxiv": "2506.05108",
+      "gruppe": "prior_bias",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "teotia-et-al-2025-dimcim-default-mode-diversity-and-generalization-in-text-to-image-models",
+      "url": "https://arxiv.org/abs/2506.05108"
+    },
+    {
+      "arxiv": "1806.00035",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "sajjadi-et-al-2018-assessing-generative-models-via-precision-and-recall",
+      "url": "https://arxiv.org/abs/1806.00035"
+    },
+    {
+      "arxiv": "1904.06991",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "kynkaanniemi-et-al-2019-improved-precision-and-recall-metric-for-assessing-generative-models",
+      "url": "https://arxiv.org/abs/1904.06991"
+    },
+    {
+      "arxiv": "2002.09797",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "naeem-et-al-2020-reliable-fidelity-and-diversity-metrics-for-generative-models",
+      "url": "https://arxiv.org/abs/2002.09797"
+    },
+    {
+      "arxiv": "1706.08224",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "arora-zhang-2017-do-gans-actually-learn-the-distribution-an-empirical-study",
+      "url": "https://arxiv.org/abs/1706.08224"
+    },
+    {
+      "arxiv": "2210.02410",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "friedman-dieng-2023-the-vendi-score-a-diversity-evaluation-metric-for-machine-learning",
+      "url": "https://arxiv.org/abs/2210.02410"
+    },
+    {
+      "arxiv": "2410.21719",
+      "gruppe": "metriken",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "truncated-vendi-2024-do-vendi-scores-converge-with-finite-samples",
+      "url": "https://arxiv.org/abs/2410.21719"
+    },
+    {
+      "arxiv": "2211.06323",
+      "gruppe": "paedagogik_theorie",
+      "sparten": [
+        "medial"
+      ],
+      "themen": [
+        "ai",
+        "bias",
+        "aesthetic_education"
+      ],
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "lizenz": "arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform",
+      "doc_id": "offert-phan-2023-a-sign-that-spells-dall-e-2-invisual-images-and-the-racial-politics-of-feature-space",
+      "url": "https://arxiv.org/abs/2211.06323"
+    },
+    {
+      "doc_id": "gonen-goldberg-2019-lipstick-on-a-pig-debiasing-methods-cover-up-systematic-gender-biases",
+      "pdf_url": "https://aclanthology.org/N19-1061.pdf",
+      "gruppe": "eingriff_embedding",
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "sparten": [
+        "uebergreifend"
+      ],
+      "themen": [
+        "ai",
+        "bias"
+      ],
+      "lizenz": "CC BY 4.0 (ACL Anthology) - original not redistributed; this file is a condensation produced on this platform",
+      "meta": {
+        "titel": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them",
+        "autor": "Hila Gonen, Yoav Goldberg",
+        "jahr": 2019,
+        "url": "https://doi.org/10.18653/v1/N19-1061"
+      }
+    },
+    {
+      "doc_id": "pena-james-2016-a-glitch-pedagogy-exquisite-error-and-the-appeal-of-the-accidental",
+      "pdf_url": "https://jcacs.journals.yorku.ca/index.php/jcacs/article/download/40306/36169",
+      "gruppe": "paedagogik_theorie",
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "sparten": [
+        "medial"
+      ],
+      "themen": [
+        "aesthetic_education",
+        "practice",
+        "ai"
+      ],
+      "lizenz": "open-access journal (JCACS) - original not redistributed; this file is a condensation produced on this platform",
+      "meta": {
+        "titel": "A Glitch Pedagogy: Exquisite Error and the Appeal of the Accidental",
+        "autor": "Edmund Adjapong Pena, Kedrick James",
+        "jahr": 2016,
+        "url": "https://doi.org/10.25071/1916-4467.40306"
+      }
+    },
+    {
+      "doc_id": "vartiainen-et-al-2025-enhancing-childrens-understanding-of-algorithmic-biases-in-and-with-text-to-image-generative-ai",
+      "local_pdf": "vartiainen-et-al-2025-enhancing-childrens-understanding-of-algorithmic-biases-in-and-with-text-to-image-generative-ai.pdf",
+      "gruppe": "paedagogik_theorie",
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "sparten": [
+        "medial"
+      ],
+      "themen": [
+        "ai",
+        "bias",
+        "aesthetic_education",
+        "education"
+      ],
+      "lizenz": "All rights reserved - operator copy, local only; this file is a condensation produced on this platform",
+      "meta": {
+        "titel": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI",
+        "autor": "Henriikka Vartiainen, Juho Kahila, Matti Tedre, Sonsoles Lopez-Pernas, Nicolas Pope",
+        "jahr": 2025,
+        "url": "https://doi.org/10.1177/14614448241252820"
+      }
+    },
+    {
+      "doc_id": "park-2024-white-default-examining-racialized-biases-behind-ai-generated-images",
+      "local_pdf": "park-2024-white-default-examining-racialized-biases-behind-ai-generated-images.pdf",
+      "gruppe": "paedagogik_theorie",
+      "mode": "essay",
+      "tier": "R",
+      "sprache": "en",
+      "sparten": [
+        "bildnerisch",
+        "medial"
+      ],
+      "themen": [
+        "ai",
+        "bias",
+        "aesthetic_education",
+        "decolonial"
+      ],
+      "lizenz": "All rights reserved - operator copy, local only; this file is a condensation produced on this platform",
+      "meta": {
+        "titel": "White Default: Examining Racialized Biases Behind AI-Generated Images",
+        "autor": "Yoon Soo Park",
+        "jahr": 2024,
+        "url": "https://doi.org/10.1080/00043125.2024.2330340"
+      }
+    }
+  ]
+}

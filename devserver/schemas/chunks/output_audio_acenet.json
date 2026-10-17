@@ -1,0 +1,216 @@
+{
+  "name": "output_audio_acenet",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "audio",
+  "description": "ACE Step - Text-to-audio generation for instrumental music",
+
+  "legacy_config": {
+    "prompt_injection": {
+      "target_title": "TextEncodeAceStepAudio",
+      "fallback_node_id": "14",
+      "fallback_field": "tags"
+    }
+  },
+
+  "workflow": {
+    "14": {
+      "inputs": {
+        "tags": "",
+        "lyrics": "[instrumental]\n\n",
+        "lyrics_strength": 0.99,
+        "clip": ["40", 1]
+      },
+      "class_type": "TextEncodeAceStepAudio",
+      "_meta": {
+        "title": "TextEncodeAceStepAudio"
+      }
+    },
+    "17": {
+      "inputs": {
+        "seconds": 30,
+        "batch_size": 1
+      },
+      "class_type": "EmptyAceStepLatentAudio",
+      "_meta": {
+        "title": "EmptyAceStepLatentAudio"
+      }
+    },
+    "18": {
+      "inputs": {
+        "samples": ["52", 0],
+        "vae": ["40", 2]
+      },
+      "class_type": "VAEDecodeAudio",
+      "_meta": {
+        "title": "VAEDecodeAudio"
+      }
+    },
+    "40": {
+      "inputs": {
+        "ckpt_name": "ace_step_v1_3.5b.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "44": {
+      "inputs": {
+        "conditioning": ["14", 0]
+      },
+      "class_type": "ConditioningZeroOut",
+      "_meta": {
+        "title": "ConditioningZeroOut"
+      }
+    },
+    "49": {
+      "inputs": {
+        "model": ["51", 0],
+        "operation": ["50", 0]
+      },
+      "class_type": "LatentApplyOperationCFG",
+      "_meta": {
+        "title": "LatentApplyOperationCFG"
+      }
+    },
+    "50": {
+      "inputs": {
+        "multiplier": 1.0
+      },
+      "class_type": "LatentOperationTonemapReinhard",
+      "_meta": {
+        "title": "LatentOperationTonemapReinhard"
+      }
+    },
+    "51": {
+      "inputs": {
+        "shift": 5.0,
+        "model": ["40", 0]
+      },
+      "class_type": "ModelSamplingSD3",
+      "_meta": {
+        "title": "ModelSamplingSD3"
+      }
+    },
+    "52": {
+      "inputs": {
+        "seed": 123456789,
+        "steps": 50,
+        "cfg": 5,
+        "sampler_name": "dpmpp_2m_sde_gpu",
+        "scheduler": "simple",
+        "denoise": 0.9,
+        "model": ["49", 0],
+        "positive": ["14", 0],
+        "negative": ["44", 0],
+        "latent_image": ["17", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "59": {
+      "inputs": {
+        "filename_prefix": "audio/ACEStep",
+        "quality": "320k",
+        "audioUI": "",
+        "audio": ["18", 0]
+      },
+      "class_type": "SaveAudioMP3",
+      "_meta": {
+        "title": "Save Audio (MP3)"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "14",
+      "field": "inputs.tags",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Musical style description (genre, instruments, mood, tempo)"
+    },
+    "lyrics": {
+      "node_id": "14",
+      "field": "inputs.lyrics",
+      "default": "[instrumental]",
+      "description": "Lyrics or [instrumental] for instrumental tracks"
+    },
+    "secondary_text": {
+      "node_id": "14",
+      "field": "inputs.lyrics",
+      "description": "Secondary text input from Canvas (lyrics for vocal tracks, replaces [instrumental])"
+    },
+    "lyrics_strength": {
+      "node_id": "14",
+      "field": "inputs.lyrics_strength",
+      "default": 0.99,
+      "description": "How closely to follow the lyrics specification"
+    },
+    "seconds": {
+      "node_id": "17",
+      "field": "inputs.seconds",
+      "default": 30,
+      "description": "Duration of the audio in seconds"
+    },
+    "steps": {
+      "node_id": "52",
+      "field": "inputs.steps",
+      "default": 50,
+      "description": "Number of sampling steps"
+    },
+    "cfg": {
+      "node_id": "52",
+      "field": "inputs.cfg",
+      "default": 5.0,
+      "description": "Classifier Free Guidance (how closely to follow prompt)"
+    },
+    "sampler_name": {
+      "node_id": "52",
+      "field": "inputs.sampler_name",
+      "default": "dpmpp_2m_sde_gpu",
+      "description": "Sampling algorithm"
+    },
+    "denoise": {
+      "node_id": "52",
+      "field": "inputs.denoise",
+      "default": 0.9,
+      "description": "Denoising strength (1.0 = full denoise, <1.0 = partial)"
+    },
+    "scheduler": {
+      "node_id": "52",
+      "field": "inputs.scheduler",
+      "default": "simple",
+      "description": "Noise scheduler"
+    },
+    "seed": {
+      "node_id": "52",
+      "field": "inputs.seed",
+      "default": 123456789,
+      "description": "Seed for reproducibility"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "59",
+    "output_type": "audio",
+    "format": "mp3",
+    "field": "filename_prefix",
+    "description": "Audio output from ACE Step generation"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "12-20",
+    "quality_rating": 2,
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "model_file": "ace_step_v1_3.5b.safetensors",
+    "recommended_duration": 30,
+    "supported_durations": [15, 30, 45, 60],
+    "notes": "ACE Step v1.3.5b model for instrumental music generation. Generates high-quality instrumental tracks based on style descriptions. The 'tags' field accepts genre, instruments, mood, tempo descriptions (e.g., 'jazz, piano, smooth, slow, relaxing'). For instrumental music, keep lyrics as '[instrumental]'.",
+    "optimization_instruction": "Analyze the text prompt to extract musical characteristics; identify the desired genre, style, instruments, mood, tempo, and musical elements; describe the sonic palette (timbres, textures, frequencies), the rhythmic structure (tempo, beat patterns, time signature), the harmonic framework (key, chord progressions, tonal quality), the melodic characteristics (range, contour, phrasing), and the emotional atmosphere (energy, intensity, sentiment); present the output as a concise musical direction that translates the textual description into a precise instrumental specification with genre tags, instrument names, mood descriptors, and tempo indicators, formatted as comma-separated tags suitable for music generation models."
+  }
+}

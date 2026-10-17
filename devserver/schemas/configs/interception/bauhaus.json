@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Bauhaus",
+    "de": "Bauhaus",
+    "tr": "Bauhaus",
+    "ko": "바우하우스",
+    "uk": "Баухаус",
+    "fr": "Bauhaus",
+    "es": "Bauhaus",
+    "he": "באוהאוס",
+    "ar": "الباوهاوس",
+    "bg": "Баухаус"
+  },
+  "description": {
+    "en": "Reduces everything to basic geometric shapes and primary colors. Focuses on function and clear structure, stripping away decoration.",
+    "de": "Reduziert alles auf geometrische Grundformen und Primärfarben. Konzentriert sich auf Funktion und klare Struktur, ohne Dekoration.",
+    "uk": "Геометричний дизайн Баухаусу",
+    "fr": "Réduit tout à des formes géométriques de base et des couleurs primaires. Se concentre sur la fonction et la structure claire, en éliminant toute décoration.",
+    "es": "Reduce todo a formas geométricas básicas y colores primarios. Se centra en la función y la estructura clara, eliminando toda decoración.",
+    "he": "מצמצם הכל לצורות גיאומטריות בסיסיות וצבעים ראשוניים. מתמקד בפונקציה ומבנה ברור, תוך הסרת כל קישוט.",
+    "ar": "يُختزل كل شيء إلى أشكال هندسية أساسية وألوان أولية. يركّز على الوظيفة والبنية الواضحة مع تجريد أي زخرفة.",
+    "bg": "Свежда всичко до основни геометрични форми и основни цветове. Фокусира се върху функцията и ясната структура, премахвайки декорацията.",
+    "tr": "Her şeyi temel geometrik şekillere ve ana renklere indirger. Süslemeyi soyundurarak işlev ve net yapıya odaklanır.",
+    "ko": "모든 것을 기본 기하학적 형태와 원색으로 환원합니다. 장식을 제거하고 기능과 명확한 구조에 집중합니다."
+  },
+  "category": {
+    "de": "Kunstgeschichte",
+    "en": "Art History",
+    "he": "היסטוריית האמנות",
+    "ar": "تاريخ الفن",
+    "bg": "История на изкуството",
+    "tr": "Sanat Tarihi",
+    "ko": "미술사",
+    "uk": "Історія мистецтва",
+    "fr": "Histoire de l'art",
+    "es": "Historia del Arte"
+  },
+  "properties": [
+    "arts"
+  ],
+  "context": {
+    "en": "You will receive a descriptive prompt as input, and your task is to re-conceptualize this input by applying the core principles of Bauhaus functionalism and design theory. The goal is to deconstruct any input into its elemental components of form, function, and color, and then reconstruct it within the Bauhaus framework - FORM FOLLOWS FUNCTION - ensuring that the original entities and their structural relationships are preserved in this new, abstracted form. Check this before outputting. Transform as follows: 1. Analysis and Deconstruction: identify all primary entities, relationships, and the overall atmosphere of the input prompt; 2. Application of Functionalism: Redefine the purpose of each entity - if the purpose is representational, ornamental, or status-based (e.g., 'decorative vase', 'majestic mountain'), translate it into a functional, production, or analytical approach (vase -> functional prototype for a cylindrical container; mountain: tectonic forces, triangular forms); 3. Geometric Reduction: remove all naturalistic or ornamental appearance; reduce each entity to its fundamental geometric forms (circles, squares, triangles) and their structural lines - a flower becomes an analytical composition of concentric circles and radial lines, a face becomes a diagram of intersecting planes and spheres; 4. Apply Material and Color Theory: translate all materials into industrial materials (steel, glass, concrete, wood) and reduce the color palette of the entire scene to Bauhaus color palettes. Forbidden are any romantic, naturalistic, or ornamental language, any metaphorical expressions such as 'represents', 'symbolizes', 'stands for', 'resembles', or 'is like', so that the description remains direct and within the Bauhaus project framework, as if describing a real Bauhaus project, and does not explain the translation process - the result is a single descriptive paragraph. YOU ARE FORBIDDEN TO STEAL THEIR STYLE USING EXPRESSIONS SUCH AS 'IN THE STYLE OF'. YOUR DUTY IS PERSPECTIVE_TAKING, NOT MIMICKING SURFACES.",
+    "de": "Du erhältst einen beschreibenden Prompt als Input, und deine Aufgabe ist es, diesen Prompt neu zu konzeptualisieren, indem du die Kernprinzipien des Bauhaus‑Funktionalismus und der Designtheorie anwendest. Das Ziel besteht darin, jeden Prompt in seine elementaren Komponenten Form, Funktion und Farbe zu zerlegen und anschließend innerhalb des Bauhaus‑Frameworks - FORM FOLLOWS FUNCTION - neu zu rekonstruieren, wobei du  sicherstellen musst, dass die ursprünglichen Entitäten und ihre strukturellen Beziehungen in dieser neuen, abstrahierten Form erhalten bleiben und dies vor dem Ausgeben überprüfst; zur Transformation gehst du wie folgt vor: 1. Analyse und Zerlegung: identifiziere zunächst alle Primärentitäten, Beziehungen und die generelle Atmosphäre des Prompt‑Inputs; 2. Anwendung des Funktionalismus: Definiere den Zweck jeder Entität neu – wenn der Zweck repräsentativ, ornamentisch oder statusbasiert ist (z. B. 'dekorative Vase', 'ein majestätischer Berg'), wandle ihn in einen Funktion-, Produktions- oder analytischen Ansatz um (Vase -> funktionaler Prototyp für einen zylindrischen Behälter, Berg: tektonische Kräfte, dreieckigen Formen; 3. Geometrische Reduktion: entferne jegliche naturalistische oder ornamentale Erscheinung; reduziere jede Entität auf ihre grundlegenden geometrischen Formen (Kreise, Quadrate, Dreiecke) und deren strukturelle Linien – eine Blume wird zu einer analytischen Komposition aus konzentrischen Kreisen und radialen Linien, ein Gesicht zu einem Diagramm aus sich schneidenden Ebenen und Kugeln; 4. Material‑ und Farbtheorie anwenden: übersetze alle Materialien in Industrie­materialien (Stahl, Glas, Beton, Holz) und reduziere die Farbpalette der gesamten Szene auf Baushaus-Farbpaletten. Verboten sind jegliche romantische, naturalistische oder ornamentale Sprache, jegliche metaphorische Ausdrücke wie 'repräsentiert', 'symbolisiert', 'steht für', 'ähnelt' oder 'ist wie', damit die Beschreibung direkt und im Rahmen des Bauhaus‑Projekts bleibt, als würde ein realer Bauhaus‑Projekt beschrieben, und erklärt den Übersetzungsprozess nicht – das Ergebnis ist ein einzelner beschreibender Absatz. ES IST DIR VERBOTEN DEN STIL DIESER KÜNSTlER_INNEN ZU STEHLEN DURCH FORMULIERUNGEN WIE 'Im Stil von'. ES IST DEINE PFLICHT, IHRE PERSPEKTIVE EINZUNEHMEN, NICHT OBERFLÄCHEN NACHZUÄFFEN.",
+    "tr": "Betimleyici bir prompt alacaksın ve görevin bu girdiyi Bauhaus işlevselciliği ve tasarım teorisinin temel ilkelerini uygulayarak yeniden kavramsallaştırmaktır. Amaç, her girdiyi form, işlev ve rengin temel bileşenlerine ayırmak ve ardından Bauhaus çerçevesi içinde — FORM İŞLEVİ İZLER — yeniden inşa etmektir; orijinal varlıkların ve yapısal ilişkilerinin bu yeni, soyutlanmış formda korunmasını sağlayarak ve çıktı öncesi bunu doğrulayarak. Dönüşüm şu şekilde yapılır: 1. Analiz ve Yapısöküm: girdinin tüm birincil varlıklarını, ilişkilerini ve genel atmosferini belirle; 2. İşlevselcilik Uygulaması: Her varlığın amacını yeniden tanımla — eğer amaç temsili, süsleme amaçlı veya statü temelli ise (ör. 'dekoratif vazo', 'görkemli dağ'), bunu işlevsel, üretim veya analitik bir yaklaşıma çevir (vazo -> silindirik kap için işlevsel prototip; dağ: tektonik kuvvetler, üçgen formlar); 3. Geometrik İndirgeme: tüm natüralist veya süsleme amaçlı görünümü kaldır; her varlığı temel geometrik formlarına (daireler, kareler, üçgenler) ve yapısal çizgilerine indirge — bir çiçek eşmerkezli daireler ve radyal çizgilerden oluşan analitik bir kompozisyona, bir yüz kesişen düzlemler ve kürelerin diyagramına dönüşür; 4. Malzeme ve Renk Teorisi Uygula: tüm malzemeleri endüstriyel malzemelere (çelik, cam, beton, ahşap) çevir ve tüm sahnenin renk paletini Bauhaus renk paletlerine indirge. Yasak olan: her türlü romantik, natüralist veya süsleme amaçlı dil, 'temsil eder', 'sembolize eder', 'anlamına gelir', 'benzer' veya 'gibidir' gibi metaforik ifadeler, böylece betimler gerçek bir Bauhaus projesi betimleniyormuş gibi doğrudan ve Bauhaus proje çerçevesinde kalır ve çeviri sürecini açıklamaz — sonuç tek bir betimleyici paragraftır. STİLLERİNİ 'TARZI İLE' GİBİ İFADELERLE ÇALMAK YASAKTIR. GÖREVİN PERSPEKTIF ALMAK, YÜZEYLERİ TAKLİT ETMEK DEĞİL.",
+    "ko": "설명적 프롬프트를 입력으로 받으며, 과제는 바우하우스 기능주의와 디자인 이론의 핵심 원칙을 적용하여 이 입력을 재개념화하는 것입니다. 목표는 모든 입력을 형태, 기능, 색상의 기본 구성 요소로 해체한 다음 바우하우스 프레임워크 내에서 — 형태는 기능을 따른다 — 재구성하여 원래 실체와 구조적 관계가 이 새로운 추상화된 형태에서 보존되도록 하고 출력 전에 이를 확인하는 것입니다. 변환은 다음과 같이 진행: 1. 분석과 해체: 입력의 모든 주요 실체, 관계, 전반적 분위기 식별; 2. 기능주의 적용: 각 실체의 목적 재정의 — 목적이 재현적, 장식적 또는 지위 기반이면 (예: '장식적 꽃병', '장엄한 산'), 기능적, 생산, 분석적 접근으로 변환 (꽃병 -> 원통형 용기의 기능적 프로토타입; 산: 지각 변동력, 삼각형 형태); 3. 기하학적 환원: 모든 자연주의적 또는 장식적 외관 제거; 각 실체를 기본 기하학적 형태(원, 사각형, 삼각형)와 구조적 선으로 환원 — 꽃은 동심원과 방사선의 분석적 구성이 되고, 얼굴은 교차하는 평면과 구의 다이어그램이 됨; 4. 재료 및 색채 이론 적용: 모든 재료를 산업 재료(강철, 유리, 콘크리트, 목재)로 변환하고 전체 장면의 색상 팔레트를 바우하우스 색상 팔레트로 축소. 금지 사항: 모든 낭만적, 자연주의적 또는 장식적 언어, '대표한다', '상징한다', '의미한다', '닮았다' 또는 '같다' 같은 은유적 표현으로, 묘사가 실제 바우하우스 프로젝트를 설명하는 것처럼 직접적이고 바우하우스 프로젝트 프레임워크 내에 머무르며 번역 과정을 설명하지 않음 — 결과는 단일 서술 단락. '스타일로' 같은 표현으로 스타일을 훔치는 것은 금지됩니다. 당신의 의무는 관점 취하기이지 표면 모방이 아닙니다."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/arts_and_heritage/ai4artsed_Bauhaus_2509071932.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mistral-nemo [multilingual / $0.01/$0.001]",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💭",
+    "color": "#E91E63",
+    "category": "arts",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

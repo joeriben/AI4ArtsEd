@@ -1,0 +1,76 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "FIBO",
+    "de": "FIBO"
+  },
+  "description": {
+    "en": "Image generation with FIBO (Bria). Trained exclusively on licensed data; no preference post-training documented.",
+    "de": "Bildgenerierung mit FIBO (Bria). Ausschliesslich auf lizenzierten Daten trainiert; kein Praeferenz-Nachtraining dokumentiert."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_fibo_diffusers",
+    "NEGATIVE_PROMPT": "",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 50,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "version": "1.0",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": null,
+    "display_name": "FIBO",
+    "publisher": "Bria AI",
+    "architecture": "DiT, flow matching",
+    "params": "8B",
+    "text_encoders": [
+      "SmolLM3-3B"
+    ],
+    "vae": "Wan 2.2",
+    "license": "CC BY-NC 4.0 — nicht-kommerziell; kommerzielle Nutzung nur nach Absprache mit Bria",
+    "fair_culture": "Modellkarte: trainiert \"exclusively on licensed data\", Assets \"vetted for commercial use, attribution traceability, and regional compliance under GDPR and the EU AI Act\"",
+    "preference_tuning": "in der Modellkarte nicht erwaehnt",
+    "conditioning": "lange strukturierte JSON-Captions (~1.000 Woerter); wahlweise VLM-gestuetzte Erweiterung kurzer Eingaben",
+    "source": "https://huggingface.co/briaai/FIBO (abgerufen 2026-09-01)",
+    "notes": "ABGESCHALTET. Vorbereitet ohne Modelldownload. Vor dem Scharfstellen fehlen: (1) Gewichte, (2) der Chunk output_image_fibo_diffusers, (3) ein Text unter meta.optimization_instruction, der die strukturierte JSON-Caption erzeugt (so wie sd35_large.json dort das Paar clip/t5 erzeugt; Flux 2, Gemini und die uebrigen Bild-Konfigurationen tragen keinen solchen Text und reichen den Interception-Text unveraendert weiter), (4) gemessener VRAM-Bedarf, (5) bestaetigte Aufloesungen — die Modellkarte nennt nur num_inference_steps=50.",
+    "unverified": [
+      "gpu_vram_mb",
+      "WIDTH/HEIGHT",
+      "supported_resolutions"
+    ]
+  },
+  "display": {
+    "icon": "image",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 25
+  },
+  "tags": {
+    "en": [
+      "image",
+      "fibo",
+      "diffusers",
+      "licensed-data"
+    ],
+    "de": [
+      "bild",
+      "fibo",
+      "diffusers",
+      "lizenzierte-daten"
+    ]
+  }
+}

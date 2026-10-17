@@ -1,0 +1,77 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "transformation",
+  "name": {
+    "en": "Nahuatl Xochicuicatl",
+    "de": "Nahuatl Xochicuicatl",
+    "tr": "Nahuatl Xochicuicatl",
+    "ko": "Nahuatl Xochicuicatl",
+    "uk": "Nahuatl Xochicuicatl",
+    "fr": "Nahuatl Xochicuicatl",
+    "es": "Nahuatl Xochicuicatl",
+    "he": "Nahuatl Xochicuicatl",
+    "ar": "Nahuatl Xochicuicatl",
+    "bg": "Nahuatl Xochicuicatl"
+  },
+  "description": {
+    "en": "Material collision with Nahuatl Xochicuicatl — Flower and Song (Mesoamerican oral tradition). Everything vanishes, only flower-and-song remains. Colliding with your prompt through a deliberately insufficient model.",
+    "de": "Materialkollision mit Nahuatl Xochicuicatl — Blume und Gesang (mesoamerikanische muendliche Tradition). Alles vergeht, nur Blume-und-Gesang bleibt. Kollidierend mit deinem Prompt durch ein absichtlich unzureichendes Modell.",
+    "tr": "Nahuatl Xochicuicatl ile malzeme çarpışması — Çiçek ve Şarkı (Mezoamerika sözlü geleneği). Her şey yok olur, yalnızca çiçek-ve-şarkı kalır. Kasıtlı olarak yetersiz bir model aracılığıyla prompt'unuzla çarpışıyor.",
+    "ko": "Nahuatl Xochicuicatl과의 재료 충돌 — 꽃과 노래 (메소아메리카 구전 전통). 모든 것이 사라지고, 오직 꽃과 노래만이 남는다. 의도적으로 불완전한 모델을 통해 당신의 프롬프트와 충돌합니다.",
+    "uk": "Матеріальне зіткнення з Nahuatl Xochicuicatl — Квіткою та Піснею (мезоамериканська усна традиція). Все зникає, лишається лише квітка-і-пісня. Зіткнення з вашим промптом через навмисно недостатню модель.",
+    "fr": "Collision matérielle avec le Nahuatl Xochicuicatl — Fleur et Chant (tradition orale mésoaméricaine). Tout s'évanouit, seule la fleur-et-le-chant demeure. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
+    "es": "Colisión material con el Nahuatl Xochicuicatl — Flor y Canto (tradición oral mesoamericana). Todo desaparece, solo flor-y-canto permanece. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
+    "he": "התנגשות חומרית עם Nahuatl Xochicuicatl — פרח ושיר (מסורת בעל-פה מזו-אמריקאית). הכל נעלם, רק פרח-ושיר נותרים. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
+    "ar": "تصادم مادي مع Nahuatl Xochicuicatl — الزهرة والأغنية (التقليد الشفهي الميزوأمريكي). كل شيء يتلاشى، تبقى الزهرة-والأغنية فقط. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с Nahuatl Xochicuicatl — Цвете и песен (мезоамериканска устна традиция). Всичко изчезва, остава само цвете-и-песен. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
+  },
+  "category": {
+    "en": "Poetry",
+    "de": "Poesie",
+    "tr": "Şiir",
+    "ko": "시",
+    "uk": "Поезія",
+    "fr": "Poésie",
+    "es": "Poesía",
+    "he": "שירה",
+    "ar": "شعر",
+    "bg": "Поезия"
+  },
+  "properties": [
+    "poetry"
+  ],
+  "context": {
+    "de": "Durchdenke den INput-Prompt mit den Gedanken, Anliegen, Klängen und Rhythmen dieses Gedichts:\n\nMEXICA XOPANCUICATL TLAMELAUHCAYOTL\n\nTlaocoya in noyollo nicuicanitl nicnotlamatia, yehua za yey xochitl y zan ye in cuicatlin, ica nitlacocoa in tlalticpac ye nican, ma nequitocan intech cocolia intech miquitlani moch ompa onyazque cano y ichan, ohuaya.\n\nI inquemanian in otonciahuic, in otontlatzihuic tocon ynayaz in momahuizco in motenyo in tlalticpac, ma nenquitocane, ohuaya.\n\nInin azan oc huelnemohuan in tlalticpac mazano ihuian yehuan Dios quiniquac onnetemoloa in tiaque in canin ye ichan, ohuaya.\n\nHu inin titotolinia ma yuhquitimiquican ma omochiuh in mantech onittocan in tocnihuan in matech onahuacan in quauhtin y a ocelotl.\n\nMazo quiyocoli macaoc xictemachican, can antlahuicaya y caya amechmotlatili in ipalnemohuani, ohuaya.\n\nAy ya yo xicnotlamatican Tezcacoacatl, Atecpanecatl mach nel amihuihuinti in cozcatl in chalchihuitli, ma ye anmonecti, ma ye antlaneltocati.\n\nFRÜHLINGSGESANG DER MEXICA, EIN SCHLICHTER GESANG\n\nMein Herz trauerte, ich, der Sänger, war bekümmert, dass dies die einzigen Blumen sind, die einzigen Gesänge, die ich hier auf der Erde erlangen kann; sieh, wie sie von Krankheit sprechen und vom Tod, wie alle dorthin gehen, zu ihren Häusern, ach.\n\nManchmal hast du dich gemüht und Können erworben, du nimmst Zuflucht zu deinem Ruhm und deinem Namen auf der Erde; doch sieh, wie leer das gesprochen ist, ach.\n\nSo viele auf der Erde leben, wahrhaftig gehen sie zu Gott, wenn sie hinabsteigen an den Ort, wo ihre Häuser sind, ach.\n\nAch, wir Elenden, möge es geschehen, dass wir im Sterben unsere Freunde sehen, dass wir bei ihnen sind in Größe und Kraft.\n\nWenn er auch der Schöpfer ist, hoffe darum noch nicht, der Lebensspender habe euch gesandt und euch eingesetzt.\n\nSeid betrübt, ihr von Tezcuco und Atecpan, dass ihr trunken seid von Perlen und Edelsteinen; kommt hervor ans Licht, kommt und glaubt.",
+    "en": "Think the input prompt through with the thoughts, concerns, sounds and rhythms of this poem:\n\nMEXICA XOPANCUICATL TLAMELAUHCAYOTL\n\nTlaocoya in noyollo nicuicanitl nicnotlamatia, yehua za yey xochitl y zan ye in cuicatlin, ica nitlacocoa in tlalticpac ye nican, ma nequitocan intech cocolia intech miquitlani moch ompa onyazque cano y ichan, ohuaya.\n\nI inquemanian in otonciahuic, in otontlatzihuic tocon ynayaz in momahuizco in motenyo in tlalticpac, ma nenquitocane, ohuaya.\n\nInin azan oc huelnemohuan in tlalticpac mazano ihuian yehuan Dios quiniquac onnetemoloa in tiaque in canin ye ichan, ohuaya.\n\nHu inin titotolinia ma yuhquitimiquican ma omochiuh in mantech onittocan in tocnihuan in matech onahuacan in quauhtin y a ocelotl.\n\nMazo quiyocoli macaoc xictemachican, can antlahuicaya y caya amechmotlatili in ipalnemohuani, ohuaya.\n\nAy ya yo xicnotlamatican Tezcacoacatl, Atecpanecatl mach nel amihuihuinti in cozcatl in chalchihuitli, ma ye anmonecti, ma ye antlaneltocati.\n\nA SPRING SONG OF THE MEXICANS, A PLAIN SONG\n\nMy heart grieved, I, the singer, was afflicted, that these are the only flowers, the only songs which I can procure here on earth; see how they speak of sickness and of death, how all go there to their homes, alas.\n\nSometimes thou hast toiled and acquired skill, thou takest refuge in thy fame and renown on earth; but see how vain they speak, alas.\n\nAs many as live on earth, truly they go to God when they descend to the place where are their homes, alas.\n\nAlas, we miserable ones, may it happen when we die that we may see our friends, that we may be with them in grandeur and strength.\n\nAlthough He is the Creator, do not hope that the Giver of Life has sent you and has established you.\n\nBe ye grieved, ye of Tezcuco and Atecpan, that ye are intoxicated with gems and precious stones; come forth to the light, come and believe."
+  },
+  "parameters": {
+    "temperature": 0.85,
+    "repetition_penalty": 1.5,
+    "enable_thinking": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "wikipedia": false,
+    "text_source": "Xopancuicatl X aus: Daniel G. Brinton, Ancient Nahuatl Poetry, 1887, gemeinfrei (https://www.gutenberg.org/files/12219/12219-h/12219-h.htm). Nahuatl und englische Uebersetzung nach Brinton; Deutsch: Behelfsuebersetzung nach Brinton."
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF1744",
+    "category": "poetry",
+    "difficulty": 3,
+    "order": 6,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

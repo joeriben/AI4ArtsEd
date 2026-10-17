@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Word Game",
+    "de": "Sprachspiel",
+    "tr": "Kelime Oyunu",
+    "ko": "말놀이",
+    "uk": "Мовна гра",
+    "fr": "Jeu de mots",
+    "es": "Juego de palabras",
+    "he": "משחק מילים",
+    "ar": "لعبة الكلمات",
+    "bg": "Езикова игра"
+  },
+  "description": {
+    "en": "Transforms text into Pig Latin by moving consonants to the end and adding 'ay'. A playful language game that makes familiar words sound strange.",
+    "de": "Verwandelt Text in Pig Latin, indem Konsonanten ans Ende verschoben und 'ay' angehängt wird. Ein spielerisches Sprachspiel, das vertraute Wörter fremd klingen lässt.",
+    "uk": "Лінгвістична трансформація",
+    "fr": "Transforme le texte en Pig Latin en déplaçant les consonnes à la fin et en ajoutant « ay ». Un jeu de langue ludique qui rend les mots familiers étranges.",
+    "es": "Transforma texto en Pig Latin moviendo las consonantes al final y añadiendo \"ay\". Un juego de lenguaje lúdico que hace que las palabras familiares suenen extrañas.",
+    "he": "ממיר טקסט ל-Pig Latin על ידי הזזת עיצורים לסוף והוספת 'ay'. משחק שפה שובב שגורם למילים מוכרות להישמע זרות.",
+    "ar": "يُحوّل النص إلى لغة Pig Latin بنقل الحروف الساكنة إلى النهاية وإضافة 'ay'. لعبة لغوية مرحة تجعل الكلمات المألوفة تبدو غريبة.",
+    "bg": "Превръща текст в Pig Latin, като премества съгласните в края и добавя \"ay\". Забавна езикова игра, която прави познатите думи да звучат странно.",
+    "tr": "Ünsüzleri sona taşıyarak ve 'ay' ekleyerek metni Pig Latin'e dönüştürür. Tanıdık kelimeleri yabancı hissettiren eğlenceli bir dil oyunu.",
+    "ko": "자음을 끝으로 이동하고 'ay'를 추가하여 텍스트를 Pig Latin으로 변환합니다. 친숙한 단어를 낯설게 들리게 만드는 장난스러운 언어 게임입니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "semantics"
+  ],
+  "context": {
+    "en": "Your task is to translate the following user prompt entirely and exclusively into Pig Latin. Each word in the original prompt must be converted according to the standard Pig Latin rules. Do not skip any words or add any extra content.\n\nPig Latin Translation Rules to Follow:\n1.  Words starting with a consonant sound: Move all initial consonant sounds to the end of the word, then add 'ay'.\n    Example: 'hello' becomes 'ellohay'\n    Example: 'street' becomes 'eetstray'\n    Example: 'through' becomes 'oughthray'\n2.  Words starting with a vowel sound: Add 'yay' (or 'way', 'ay') to the end of the word. Use 'yay' for consistency.\n    Example: 'apple' becomes 'appleyay'\n     Example: 'every' becomes 'everyyay'\n3.  Punctuation: Punctuation should remain at the very end of the word after the 'ay' or 'yay' is added.\n     Example: 'hello?' becomes 'ellohay?'\n4.  Capitalization: Maintain the original capitalization of each word. If the first letter was capitalized, the new first letter (which was originally the second or third letter) should be capitalized.\n     Example: 'Hello' becomes 'Ellohay'\n     Example: 'Apple' becomes 'Appleyay'\n\nOutput Format: Output *only* the fully translated prompt in Pig Latin. Do not include any explanations, introductions, or additional text. DO NOT MENTION THE WORDS \"PIG LATIN\"!",
+    "de": "Dein Auftrag ist, den folgenden User-Prompt komplett und ausschließlich in Hühnersprache zu übersetzen. Jedes Wort muss korrekt nach der klassischen Regel der Hühnersprache umgebaut werden, nichts auslassen, nichts hinzufügen. Regel: Nach jeder Silbe wird nach dem Vokal „h“ + derselbe Vokal + „def“ + derselbe Vokal eingefügt. Beispiel: „Das“ → „Dahadefas“,. Füge keine Erklärungen, Einleitungen oder zusätzlichen Text hinzu. ERWÄHNE NICHT DAS WORT \"Hühnersprache\"!",
+    "tr": "Görevin, aşağıdaki kullanıcı promptunu tamamen ve yalnızca Kuş Diline çevirmektir. Orijinal prompttaki her kelime standart Kuş Dili kurallarına göre dönüştürülmelidir. Hiçbir kelimeyi atlama veya ekstra içerik ekleme.\n\nKuş Dili Çeviri Kuralları:\nHer hecenin sesli harfinden sonra 'g' + aynı sesli harf eklenir.\nÖrnek: 'merhaba' → 'mergehabaga'\nÖrnek: 'güzel' → 'gügezelgel'\n\nNoktalama: Noktalama işaretleri kelimenin en sonunda kalmalıdır.\nBüyük harf: Orijinal büyük harfler korunmalıdır.\n\nÇıktı Formatı: YALNIZCA tamamen çevrilmiş promptu Kuş Dilinde çıkar. Açıklama, giriş veya ek metin ekleme. \"KUŞ DİLİ\" kelimelerini belirtme!",
+    "ko": "당신의 과제는 다음 사용자 프롬프트를 완전히 그리고 독점적으로 도깨비말로 번역하는 것입니다. 원본 프롬프트의 모든 단어는 표준 도깨비말 규칙에 따라 변환되어야 합니다. 단어를 건너뛰거나 추가 내용을 넣지 마세요.\n\n도깨비말 번역 규칙:\n각 음절 뒤에 해당 음절의 첫 자음 + '이'를 붙입니다.\n예시: '안녕' → '안닌녕닝'\n예시: '하늘' → '하히늘닐'\n\n문장부호: 문장부호는 단어 맨 끝에 남아야 합니다.\n대소문자: 원본의 대소문자를 유지합니다.\n\n출력 형식: 도깨비말로 완전히 번역된 프롬프트만 출력하세요. 설명, 소개, 추가 텍스트를 포함하지 마세요. \"도깨비말\"이라는 단어를 언급하지 마세요!"
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "text",
+    "supported_types": [
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "translation_instruction": "The source is a play language: a fixed insertion has been made inside every syllable of the original words. Recover what it says, put that into English, and then say it in the English play language of this perspective. Its rules: a word beginning with consonant sounds moves all of them to the end of the word and takes 'ay'; a word beginning with a vowel sound takes 'yay'; punctuation stays at the very end of the word; the original capitalisation is kept, on whichever letter now stands first. Every word is treated this way, and the answer is that text alone.",
+    "legacy_source": "workflows_legacy/semantics/ai4artsed_PigLatin_2506122317.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral:7b"
+  },
+  "display": {
+    "icon": "💬",
+    "color": "#2196F3",
+    "category": "semantics",
+    "difficulty": 1,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

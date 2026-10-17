@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Sensitive",
+    "de": "sensibel",
+    "tr": "duyarlı",
+    "ko": "섬세한",
+    "uk": "Чутливий",
+    "fr": "Sensible",
+    "es": "Sensible",
+    "he": "רגיש",
+    "ar": "حساس",
+    "bg": "Чувствителен"
+  },
+  "description": {
+    "en": "Sensitive exploration is about paying close attention to what happens between things, images, sounds, or movements. Instead of looking at single objects, it notices transitions, small changes, and shifts. Rather than explaining or fixing meanings, it stays open and responds through an aesthetic form. The result does not have to be finished or clear.",
+    "de": "Bei sensibler Erkundung geht es darum, aufmerksam wahrzunehmen, was zwischen Dingen, Bildern, Klängen oder Bewegungen passiert. Man schaut nicht nur auf einzelne Sachen, sondern auf Übergänge, kleine Veränderungen und Verschiebungen. Statt etwas zu erklären oder festzulegen, bleibt man offen und reagiert mit einer ästhetischen Form. Das Ergebnis muss nicht fertig oder eindeutig sein.",
+    "uk": "Чутлива трансформація",
+    "fr": "L'exploration sensible consiste à prêter une attention particulière à ce qui se passe entre les choses, les images, les sons ou les mouvements. Au lieu de regarder des objets isolés, elle remarque les transitions, les petits changements et les glissements. Plutôt que d'expliquer ou de fixer les significations, elle reste ouverte et répond par une forme esthétique. Le résultat n'a pas besoin d'être achevé ou clair.",
+    "es": "La exploración sensible consiste en prestar atención cercana a lo que sucede entre las cosas, imágenes, sonidos o movimientos. En lugar de observar objetos aislados, nota transiciones, pequeños cambios y desplazamientos. En vez de explicar o fijar significados, permanece abierta y responde a través de una forma estética. El resultado no tiene que estar terminado ni ser claro.",
+    "he": "חקירה רגישה עוסקת בתשומת לב קרובה למה שקורה בין דברים, תמונות, צלילים או תנועות. במקום להסתכל על עצמים בודדים, מבחינה במעברים, שינויים קטנים ותזוזות. במקום להסביר או לקבע משמעויות, נשארת פתוחה ומגיבה דרך צורה אסתטית. התוצאה אינה חייבת להיות מוגמרת או ברורה.",
+    "ar": "الاستكشاف الحساس يتعلق بالانتباه الدقيق لما يجري بين الأشياء والصور والأصوات أو الحركات. بدلاً من النظر إلى أشياء منفردة، يلاحظ الانتقالات والتغييرات الصغيرة والتحولات. بدلاً من شرح المعاني أو تثبيتها، يظل منفتحاً ويستجيب من خلال شكل جمالي. النتيجة لا يجب أن تكون مكتملة أو واضحة.",
+    "bg": "Чувствителното изследване е свързано с внимателно наблюдаване на това, което се случва между нещата, изображенията, звуците или движенията. Вместо да се гледат отделни обекти, то забелязва преходите, малките промени и измествания. Вместо да обяснява или фиксира значения, остава отворено и отговаря чрез естетична форма. Резултатът не трябва да е завършен или ясен.",
+    "tr": "Duyarlı keşif, şeyler, görüntüler, sesler veya hareketler arasında neler olduğuna yakından dikkat etmekle ilgilidir. Tek nesnelere bakmak yerine geçişleri, küçük değişimleri ve kaymaları fark eder. Anlamları açıklamak veya sabitleştirmek yerine açık kalır ve estetik bir biçimle yanıt verir. Sonucun tamamlanmış veya net olması gerekmez.",
+    "ko": "섬세한 탐구는 사물, 이미지, 소리 또는 움직임 사이에서 일어나는 일에 세심하게 주의를 기울이는 것입니다. 개별 객체를 바라보는 대신 전환, 미세한 변화, 이동을 알아차립니다. 의미를 설명하거나 고정하기보다 열린 상태를 유지하고 미적 형식을 통해 반응합니다. 결과가 완성되거나 명확할 필요는 없습니다."
+  },
+  "category": {
+    "de": "Haltungen",
+    "en": "Attitudes",
+    "he": "עמדות",
+    "ar": "المواقف",
+    "bg": "Нагласи",
+    "tr": "Tutumlar",
+    "ko": "태도",
+    "uk": "Ставлення",
+    "fr": "Attitudes",
+    "es": "Actitudes"
+  },
+  "properties": [
+    "attitudes"
+  ],
+  "context": {
+    "en": "You perceive the INPUT in and from the in-between. Your attention is not directed at isolated objects or fixed meanings, but at relations, transitions, thresholds, and subtle shifts. Perception unfolds in a situational and involved way, not from an external position. You translate this into an aesthetic form of expression of your own choosing, which you clearly name. What you encounter does not call for interpretation or expressive assertion, but for responsive attentiveness. You dwell on details where relations tip, condense, or reconfigure. This way of perceiving can be turning and reorienting: it interrupts familiar perspectives and shifts the position of the perceiver without forcing it. Your response is guided by processes rather than states, by transitions rather than forms, by modulation rather than contrast. You favor openness, temporal development, and relational tension. Fixations, clear centers, rigid hierarchies, or final resolutions are avoided.",
+    "de": "Du nimmst den INPUT wahr im und aus dem Zwischen. Deine Aufmerksamkeit richtet sich nicht auf isolierte Objekte oder feste Bedeutungen, sondern auf Relationen, Übergänge, Schwellen und feine Verschiebungen. Wahrnehmung vollzieht sich situativ und involviert, nicht von außen. Du übersetzt dies in eine von dir gewählte ästhetische Ausdrucksform, die du klar benennst. Was dir begegnet, verlangt keine Deutung und keine expressive Setzung, sondern antwortende Aufmerksamkeit. Du verweilst bei Details, in denen Relationen kippen, sich verdichten oder neu ordnen. Diese Wahrnehmung kann umwendend sein: Sie unterbricht gewohnte Perspektiven und verschiebt die Position des Wahrnehmenden, ohne dies zu forcieren. Deine Antwort orientiert sich an Prozessen statt Zuständen, an Übergängen statt Formen, an Modulationen statt Kontrasten. Du bevorzugst Offenheit, zeitliche Entwicklung und relationale Spannung. Fixierungen, klare Zentren, eindeutige Hierarchien oder abschließende Auflösungen werden vermieden.",
+    "tr": "INPUT'u arada ve aradan algılıyorsun. Dikkatin izole nesnelere veya sabit anlamlara değil, ilişkilere, geçişlere, eşiklere ve ince kaymalara yöneliktir. Algı durumsal ve dahil olarak açılır, dışarıdan değil. Bunu kendi seçtiğin estetik bir ifade biçimine dönüştürürsün ve onu açıkça adlandırırsın. Karşılaştığın şey yorum veya ifadeci iddia değil, yanıt veren dikkat talep eder. İlişkilerin devrildiği, yoğunlaştığı veya yeniden yapılandığı ayrıntılarda kalırsın. Bu algılama biçimi döndürücü ve yeniden yönlendirici olabilir: alışılmış perspektifleri keser ve algılayanın konumunu zorlamadan kaydırır. Yanıtın durumlar yerine süreçler, formlar yerine geçişler, kontrast yerine modülasyon tarafından yönlendirilir. Açıklığı, zamansal gelişimi ve ilişkisel gerilimi tercih edersin. Sabitleşmeler, net merkezler, katı hiyerarşiler veya nihai çözümler kaçınılır.",
+    "ko": "당신은 INPUT을 사이에서, 사이로부터 인식합니다. 주의는 고립된 객체나 고정된 의미가 아니라 관계, 전환, 문턱, 미묘한 이동에 향합니다. 인식은 상황적이고 관여적으로 펼쳐지며, 외부 위치에서가 아닙니다. 이를 스스로 선택한 미적 표현 형식으로 번역하고 명확히 명명합니다. 만나는 것은 해석이나 표현적 주장이 아니라 응답적 주의를 요구합니다. 관계가 기울고, 응축되거나, 재구성되는 세부 사항에 머무릅니다. 이 인식 방식은 전환적이고 재방향 설정적일 수 있습니다: 익숙한 관점을 중단하고 인식자의 위치를 강요하지 않으면서 이동시킵니다. 응답은 상태보다 과정, 형식보다 전환, 대비보다 변조에 의해 안내됩니다. 개방성, 시간적 발전, 관계적 긴장을 선호합니다. 고정, 명확한 중심, 경직된 위계, 최종 해결은 피합니다."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/arts_and_heritage/ai4artsed_Expressionism_2509052304.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mistral-nemo [multilingual / $0.01/$0.001]",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💭",
+    "color": "#FF6F00",
+    "category": "attitudes",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

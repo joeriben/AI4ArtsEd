@@ -1,0 +1,57 @@
+AI4ARTSED BEDIENUNGSANLEITUNG FUER TRAESHY
+
+PHASE 1: KUNSTRICHTUNG WAEHLEN
+Wenn du AI4ArtsEd startest, siehst du die Hauptseite mit bunten kreisfoermigen Blasen in der Mitte des Bildschirms. Das sind die Kategorien fuer verschiedene Kunstrichtungen und Themen. Es gibt sechs Kategorien, die kreisfoermig angeordnet sind: Semantik (blaue Sprechblase), Aesthetik (lila Zauberstab), Kunst (rosa Pinsel), Kulturerbe (gruener Globus), Freestyle (gelber Zeigefinger in der Mitte), und Technische Fotografie (graue Kamera). Wenn du auf eine dieser Kategorien klickst, erscheinen um diese Blase herum kleinere runde Bilder - das sind die verschiedenen Kunststile, die zu deiner gewaehlten Kategorie passen. Zum Beispiel zeigt die Kunst-Kategorie Stile wie Bauhaus, Renaissance, Impressionismus usw. Jeder dieser kleinen Kreise hat ein Vorschaubild des Stils und einen Namen am unteren Rand. Wenn du auf einen dieser Kunststile klickst, gehst du automatisch weiter zu Phase 2, wo du deine eigene Idee entwickeln kannst. Die Plattform macht dir hier Vorschlaege, welche Kunststile es gibt - aber spaeter kannst du alles selbst anpassen und veraendern. Die Kategorien helfen dir nur dabei, einen guten Startpunkt zu finden.
+
+PHASE 2: DEINE IDEE ENTWICKELN
+In Phase 2 entwickelst du deine kreative Idee Schritt fuer Schritt. Am oberen linken Rand siehst du einen Phase 1 Button - damit kommst du jederzeit zurueck zur Auswahl der Kunststile. Die Seite zeigt dir verschiedene Bereiche, die du nach und nach ausfuellst.
+
+EINGABEBOXEN OBEN
+Ganz oben siehst du zwei grosse Textfelder nebeneinander. Das linke Feld hat ein Gluehbirnen-Symbol und heisst Deine Idee: Worum soll es gehen. Hier schreibst du rein, was du erstellen moechtest, zum Beispiel Ein Fest in meiner Strasse oder Ein Roboter im Wald. Das rechte Feld hat ein Klemmbrett-Symbol und heisst Bestimme Regeln, Material, Besonderheiten. Hier kannst du beschreiben, wie deine Idee aussehen soll oder welche besonderen Regeln gelten. Zum Beispiel koenntest du schreiben Beschreibe alles so, wie es die Voegel auf den Baeumen wahrnehmen oder Alles soll in leuchtenden Neonfarben sein. Wenn du einen Kunststil aus Phase 1 gewaehlt hast, steht hier schon ein Vorschlag drin - aber du kannst das jederzeit aendern und deinen eigenen Text schreiben. Die Plattform hilft dir nur mit Ideen, aber du entscheidest, was du wirklich willst.
+
+ERSTER START-BUTTON
+Unter den beiden Textfeldern siehst du einen grossen schwarzen Button mit gelber Schrift, der Start heisst und blinkende Pfeile auf beiden Seiten hat. Wenn du deine Idee und deine Regeln eingetragen hast, klickst du auf diesen Button. Dann kombiniert die KI automatisch deine Idee mit deinen Regeln und erstellt daraus einen fertigen Prompt (eine Beschreibung fuer die KI). Das Ergebnis erscheint in der grossen gruenen Box darunter mit dem Pfeil-Symbol und der Beschriftung Idee + Regeln = Prompt. Waehrend die KI arbeitet, siehst du einen Ladekreis und einen Text, der erklaert, was gerade passiert. Wenn das fertig ist, kannst du den Text in der Box lesen - und wenn dir etwas nicht gefaellt, kannst du ihn direkt bearbeiten. Du kannst alles selbst anpassen.
+
+MEDIUM AUSWAEHLEN
+Darunter siehst du die Ueberschrift Waehle ein Medium aus in leuchtend gelber Schrift. Hier gibt es vier runde Symbole nebeneinander: ein Bild-Symbol (Bild, gruen), ein Film-Symbol (Video, lila), ein Lautsprecher-Symbol (Sound, orange), und ein Wuerfel-Symbol (3D, tuerkis - aber dieses ist ausgegraut und noch nicht verfuegbar). Klicke auf das Symbol fuer das Medium, das du erstellen moechtest. Wenn du zum Beispiel ein Bild haben willst, klickst du auf das Bild-Symbol. Das Symbol leuchtet dann heller und wird groesser.
+
+KI-MODELL AUSWAEHLEN
+Sobald du ein Medium gewaehlt hast, erscheint darunter die Ueberschrift waehle ein KI-Modell aus und eine Reihe von runden Blasen mit verschiedenen KI-Modellen. Welche Modelle du siehst, haengt davon ab, welches Medium du gewaehlt hast. Fuer Bilder siehst du zum Beispiel: Stable Diffusion (blau mit Logo), GPT Image (gelb mit ChatGPT-Logo, weisser Hintergrund), Gemini 3 Pro (blau), und Qwen (lila mit Logo). Fuer Videos siehst du LTX Video (lila) und Wan 2.2 Video (pink). Fuer Sound siehst du ACE Instrumental (rot) und Stable Audio (tuerkis). Jedes Modell ist ein bisschen anders: Stable Diffusion ist ein klassisches Modell, das sehr gut kuenstlerische Bilder macht. GPT Image ist moderner und macht oft fotorealistischere Bilder. Gemini ist das Modell von Google und kann gut komplexe Beschreibungen verstehen. Qwen ist besonders gut fuer asiatische Kunst und Details. Die Video-Modelle unterscheiden sich in Geschwindigkeit und Qualitaet - LTX ist schneller, Wan 2.2 macht bessere Qualitaet in 720p. Die Sound-Modelle machen entweder Instrumental-Musik (ACE) oder andere Audio-Effekte (Stable Audio). Wichtig: Diese Modell-Blasen sind erst anklickbar, nachdem du oben auf den ersten Start-Button geklickt hast und die KI deinen Prompt erstellt hat. Vorher sind sie ausgegraut.
+
+OPTIMIERTER PROMPT
+Sobald du ein Modell anklickst, erscheint darunter eine grosse orange Box mit einem Stern-Symbol und der Beschriftung Modell-Optimierter Prompt. Hier siehst du wieder einen Ladekreis mit einem Erklaaerungs-Text: Die KI passt deinen Prompt jetzt speziell fuer das gewaehlte Modell an. Jedes KI-Modell versteht Beschreibungen naemlich ein bisschen anders - manche moegen lange detaillierte Texte, andere kurze praezise Anweisungen. Wenn die Optimierung fertig ist, siehst du den angepassten Text in der Box. Auch diesen Text kannst du wieder selbst bearbeiten, wenn du etwas aendern moechtest. Die Plattform schlaegt dir nur vor, wie es am besten funktioniert - aber du hast die Kontrolle.
+
+ZWEITER START-BUTTON UND SAFETY-STEMPEL
+Unter dem optimierten Prompt siehst du wieder einen grossen Start-Button (gleicher Stil wie oben - schwarz mit gelb und blinkenden Pfeilen). Wenn du damit zufrieden bist, wie dein Prompt aussieht, klickst du auf diesen zweiten Start-Button. Dann beginnt die echte Generierung deines Bildes, Videos oder Sounds. Kurz nachdem du geklickt hast, erscheint neben dem Button ein gruener Safety Approved Stempel mit einem Haekchen - das bedeutet, die KI hat ueberprueft, dass dein Prompt keine gefaehrlichen oder unpassenden Inhalte enthaelt.
+
+AUSGABE-BEREICH
+Ganz unten siehst du einen grossen Rahmen - das ist der Ausgabe-Bereich. Solange noch nichts generiert wird, ist dieser Rahmen leer mit gestrichelten Linien. Sobald du auf den zweiten Start-Button geklickt hast, erscheint hier eine Animation mit einem Fortschrittsbalken, der zeigt, wie weit die Generierung ist. Das kann ein paar Sekunden bis zu einer Minute dauern, je nachdem welches Modell du gewaehlt hast. Wenn die Generierung fertig ist, erscheint dein Ergebnis: Bei Bildern siehst du das fertige Bild - wenn du draufklickst, wird es im Vollbild angezeigt. Bei Videos erscheint ein Video-Player mit Play-Button und Lautstaerke-Regler. Bei Audio erscheint ein Audio-Player mit Play-Button. Bei 3D-Modellen (wenn verfuegbar) siehst du ein Download-Symbol und kannst die Datei herunterladen, um sie in Blender oder einem anderen 3D-Programm zu oeffnen.
+
+WICHTIGSTE PRINZIPIEN
+Die Plattform ist so gebaut, dass sie dir hilft, deine eigenen Ideen zu entwickeln - sie uebernimmt nicht das Denken fuer dich. Alle Vorschlaege, die du siehst (Kunststile, Regeln, Prompts), kannst du jederzeit aendern und anpassen. Die Textfelder sind alle editierbar - du kannst einfach reinschreiben. Wenn du mit einem Ergebnis nicht zufrieden bist, kannst du zurueckgehen, den Prompt aendern und nochmal auf Start klicken. Die Plattform merkt sich dabei deine Einstellungen. Du kannst auch verschiedene Modelle ausprobieren, um zu sehen, welches dir am besten gefaellt. Experimentiere ruhig - nichts, was du hier machst, kann etwas kaputt machen.
+
+CANVAS-MODUS FUER FORTGESCHRITTENE
+Neben den drei Hauptmodi (Text, Bild, Multi-Bild) gibt es den Canvas-Modus. Hier baust du deinen eigenen Workflow aus Bausteinen (Nodes), die du mit Linien verbindest. Anders als bei den anderen Modi gelten hier KEINE vorgewaehlten Regeln - du definierst den gesamten Prozess selbst.
+
+WIE CANVAS FUNKTIONIERT
+Du siehst ein Raster mit einer Werkzeugleiste links. Klicke auf Bausteine um sie hinzuzufuegen, ziehe sie an die richtige Position, und verbinde sie mit Linien. Jeder Workflow braucht einen Eingabe-Baustein (wo dein Text reinkommt) und einen Sammler-Baustein (wo die Ergebnisse landen). Dazwischen kannst du beliebig viele Verarbeitungs-Bausteine setzen.
+
+WICHTIGE BAUSTEINE IN CANVAS
+- Eingabe (blau): Hier gibst du deinen Text ein
+- Zufalls-Prompt (pink): Die KI generiert kreative Ideen fuer dich
+- Interception (lila): Hier werden Regeln angewendet (wie bei den anderen Modi)
+- Uebersetzung (bernstein): Uebersetzt in andere Sprachen
+- Modell-Anpassung (tuerkis): Optimiert den Prompt fuer bestimmte KI-Modelle
+- Generierung (gruen): Erstellt das Bild, Video oder Audio
+- Bewertung (bernstein): Die KI beurteilt das Ergebnis nach deinen Kriterien
+- Vorschau (gruen): Zeigt Zwischenergebnisse an
+- Sammler (cyan): Sammelt alle Ergebnisse
+
+WARUM CANVAS?
+Canvas ist fuer systematische Forschung gedacht. Du kannst: mehrere KI-Modelle gleichzeitig vergleichen (Parallel-Generierung), Feedback-Schleifen bauen (Bewertung mit Rueckkopplung), und den kompletten Prozess sichtbar machen. Canvas ist anspruchsvoller als die anderen Modi, gibt dir aber volle Kontrolle.
+
+LATENT LAB (NUR FUER FORTGESCHRITTENE)
+Das Latent Lab arbeitet auf der mathematischen Ebene der KI-Modelle. Es ist in drei Bereiche gegliedert: Image Lab (Bildanalyse und Manipulation auf Embedding-Ebene, z.B. Surrealizer, Attention Maps, Dimension Explorer), Text Lab (wissenschaftliche Untersuchung von Sprachmodellen, z.B. Bias-Experimente, Modell-Vergleiche) und Crossmodal Lab (Klang aus Bildern und Texten erzeugen). Du brauchst die Sicherheitsstufe "Erwachsene" oder "Forschung" um darauf zuzugreifen. Frag deine Lehrperson, wenn du mehr wissen willst.
+
+MUSIKGENERIERUNG
+Du kannst auch Musik erstellen. Waehle Tags (Genre, Stimmung, Instrumente) und schreibe optional Liedtexte. Die KI erzeugt daraus einen Song. Tags werden als Komma-getrennte Woerter eingegeben (z.B. pop,upbeat,piano). Mehrere Sprachen fuer Liedtexte werden unterstuetzt: Englisch, Chinesisch, Japanisch, Koreanisch, Spanisch.
