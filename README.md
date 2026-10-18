@@ -14,7 +14,7 @@ Code, paths and service names carry the identifier `ai4artsed`, after the AI4Art
 
 ## Purpose
 
-The platform was developed for cultural education with children and young people aged 8 to 17; its concept applies generally. It is tried out in workshops with children and young people and developed further on the basis of that experience. Its aim is to make the process of image generation visible, understandable and shapeable, and to treat generative AI as a subject of critical and creative exploration.
+The platform was developed for Culture and Arts Education. It is tried out in workshops with children and young people and developed further on the basis of that experience. Its aim is to make the process of image generation visible, understandable and shapeable, and to treat generative AI as a subject of critical and creative exploration.
 
 The [Pedagogical Concept](docs/PEDAGOGICAL_CONCEPT.md) (German) names six design principles:
 
@@ -227,7 +227,7 @@ Third-party assets: [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)
 
 ### Projects
 
-- **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** — Artificial Intelligence for Arts Education. Explores opportunities, conditions, and limits of pedagogical use of AI in culturally diversity-sensitive settings of cultural education.
+- **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** — Artificial Intelligence for Arts Education. Explores opportunities, conditions, and limits of pedagogical use of AI in culturally diversity-sensitive settings of Culture and Arts Education.
 - **ComeArts Across**, a subproject of [ComeArts](https://comearts.uni-due.de) — responsible only for the cross-aesthetic modules in the Crossmodal Lab of the Latent Lab.
 
 ### Publications
