@@ -4,7 +4,7 @@
 
 Pedagogical-artistic experimentation platform of the [UNESCO Chair in Digital Culture and Arts in Education](https://www.ucdcae.fau.de/) (UCDCAE) at Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), for the explorative use of generative artificial intelligence in cultural-aesthetic media education.
 
-Developed within the research projects **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** (Artificial Intelligence for Arts Education) and **[COMeARTS](https://comearts.eu)** (Community-Based Arts Projects). AI4ArtsEd is funded by the German Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth ([BMBFSFJ](https://www.bmfsfj.de/)), originally by the Federal Ministry of Education and Research (BMBF), within the funding priority "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
+Developed within the research projects **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** (Artificial Intelligence for Arts Education) and **[COMeARTS](https://comearts.uni-due.de)**. AI4ArtsEd is funded by the German Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth ([BMBFSFJ](https://www.bmfsfj.de/)), originally by the Federal Ministry of Education and Research (BMBF), within the funding priority "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
 
 Code, paths and service names carry the identifier `ai4artsed`, after the AI4ArtsEd project in which the platform was developed.
 
@@ -226,7 +226,7 @@ Third-party assets: [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)
 ### Projects
 
 - **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** — Artificial Intelligence for Arts Education. Explores opportunities, conditions, and limits of pedagogical use of AI in culturally diversity-sensitive settings of cultural education.
-- **[COMeARTS](https://comearts.eu)** — Community-Based Arts Projects. European cooperation project for community-based artistic practice with digital media.
+- **[COMeARTS](https://comearts.uni-due.de)** — Consortium of eight universities, most of them universities that train teachers, within the competence centre Music/Art/Sport of the lernen:digital network. It works on the professionalisation of (prospective) teachers for participation in a "Kultur der Digitalität" (culture of digitality).
 
 ### Publications
 
@@ -261,6 +261,8 @@ The models the platform uses are listed with their sources in [MODELS_REQUIRED.m
 ## Funding
 
 AI4ArtsEd is funded by the **German Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth (BMBFSFJ)**, originally by the Federal Ministry of Education and Research (BMBF), within the funding priority "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
+
+COMeARTS is financed by the European Union (NextGenerationEU) and funded by the BMBFSFJ.
 
 ---
 
