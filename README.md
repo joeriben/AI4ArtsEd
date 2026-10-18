@@ -6,7 +6,7 @@ Pedagogical-artistic experimentation platform of the [UNESCO Chair in Digital Cu
 
 Developed within the research project **[AI4ArtsEd](https://kubi-meta.de/ai4artsed)** (Artificial Intelligence for Arts Education). AI4ArtsEd is funded by the German Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth ([BMBFSFJ](https://www.bmfsfj.de/)), originally by the Federal Ministry of Education and Research (BMBF), within the funding priority "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
 
-**ComeArts Across**, a subproject of [ComeArts](https://comearts.uni-due.de), is responsible only for some multimodal modules: the cross-aesthetic modules in the Crossmodal Lab of the Latent Lab.
+**ComeArts Across**, a subproject of [ComeArts](https://comearts.uni-due.de) in the competence network [lernen:digital](https://lernen.digital/), is responsible only for some multimodal modules: the cross-aesthetic modules in the Crossmodal Lab of the Latent Lab.
 
 Code, paths and service names carry the identifier `ai4artsed`, after the AI4ArtsEd project in which the platform was developed.
 
@@ -264,7 +264,7 @@ The models the platform uses are listed with their sources in [MODELS_REQUIRED.m
 
 AI4ArtsEd is funded by the **German Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth (BMBFSFJ)**, originally by the Federal Ministry of Education and Research (BMBF), within the funding priority "Kulturelle Bildung in gesellschaftlichen Transformationen" ([kubi-meta](https://kubi-meta.de)).
 
-ComeArts is financed by the European Union (NextGenerationEU) and funded by the BMBFSFJ.
+ComeArts is part of the competence network [lernen:digital](https://lernen.digital/). It is financed by the European Union (NextGenerationEU) and funded by the BMBFSFJ.
 
 ---
 
