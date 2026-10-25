@@ -1,0 +1,94 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "mad world",
+    "de": "verrückt",
+    "tr": "çılgın dünya",
+    "ko": "미친 세상",
+    "uk": "Божевільний світ",
+    "fr": "monde fou",
+    "es": "mundo loco",
+    "he": "עולם משוגע",
+    "ar": "عالم مجنون",
+    "bg": "луд свят"
+  },
+  "description": {
+    "en": "Responds to input from a world in which familiar meanings, explanations, and orders no longer hold. Uses language, logic, and form as damaged but still operative materials, bringing out the absurd tensions evoked by the input. The result may appear playful, humorous, or sober, but always exposes the fragility of sense-making rather than repairing it.",
+    "de": "Reagiert auf den Input aus einer Perspektive, in der vertraute Bedeutungen, Erklärungen und Ordnungen nicht mehr tragen. Nutzt Sprache, Logik und Form als beschädigte, aber weiterhin verfügbare Mittel und arbeitet präzise die absurden Spannungen heraus, die der Input evoziert. Das Ergebnis kann spielerisch, humorvoll oder nüchtern wirken, macht jedoch stets die Fragilität von Sinn sichtbar, statt sie zu reparieren.",
+    "uk": "Божевільна трансформація",
+    "fr": "Répond à l'entrée depuis un monde où les significations, explications et ordres familiers ne tiennent plus. Utilise le langage, la logique et la forme comme matériaux endommagés mais encore opérationnels, faisant ressortir les tensions absurdes évoquées par l'entrée. Le résultat peut sembler ludique, humoristique ou sobre, mais expose toujours la fragilité de la production de sens plutôt que de la réparer.",
+    "es": "Responde a la entrada desde un mundo en el que los significados, explicaciones y órdenes familiares ya no se sostienen. Usa el lenguaje, la lógica y la forma como materiales dañados pero aún operativos, sacando a la luz las tensiones absurdas evocadas por la entrada. El resultado puede parecer lúdico, humorístico o sobrio, pero siempre expone la fragilidad de la producción de sentido en lugar de repararla.",
+    "he": "מגיב לקלט מתוך עולם שבו משמעויות, הסברים וסדרים מוכרים כבר אינם מחזיקים. משתמש בשפה, לוגיקה וצורה כחומרים פגועים אך עדיין פעילים, מביא את המתחים האבסורדיים שהקלט מעלה. התוצאה עשויה להיראות שובבה, הומוריסטית או מפוכחת, אך תמיד חושפת את שבירות יצירת המשמעות.",
+    "ar": "يستجيب للمدخل من عالم لم تعد المعاني والتفسيرات والأنظمة المألوفة فيه صالحة. يستخدم اللغة والمنطق والشكل كمواد تالفة لكنها لا تزال تعمل، مُبرزاً التوترات العبثية التي يستحضرها المدخل. قد تبدو النتيجة مرحة أو فكاهية أو رصينة، لكنها تكشف دائماً عن هشاشة صنع المعنى بدلاً من إصلاحها.",
+    "bg": "Отговаря на входа от свят, в който познатите значения, обяснения и порядки вече не важат. Използва езика, логиката и формата като повредени, но все още работещи материали, извличайки абсурдните напрежения, предизвикани от входа. Резултатът може да изглежда игрив, хумористичен или трезвен, но винаги разкрива крехкостта на създаването на смисъл, вместо да го поправя.",
+    "tr": "Tanıdık anlamların, açıklamaların ve düzenlerin artık geçerli olmadığı bir dünyadan girdiye yanıt verir. Dili, mantığı ve formu hasarlı ama hâlâ işler malzemeler olarak kullanarak girdinin uyandırdığı absürt gerilimleri ortaya çıkarır. Sonuç oyunsu, mizahi veya sade görünebilir, ancak her zaman anlam üretiminin kırılganlığını onarmak yerine ifşa eder.",
+    "ko": "친숙한 의미, 설명, 질서가 더 이상 유효하지 않은 세계에서 입력에 응답합니다. 언어, 논리, 형태를 손상되었지만 여전히 작동하는 재료로 사용하여 입력이 환기하는 부조리한 긴장을 드러냅니다. 결과는 장난스럽거나 유머러스하거나 냉정하게 보일 수 있지만, 항상 의미 만들기의 취약성을 복구하기보다는 노출합니다."
+  },
+  "category": {
+    "de": "Haltungen",
+    "en": "Attitudes",
+    "he": "עמדות",
+    "ar": "المواقف",
+    "bg": "Нагласи",
+    "tr": "Tutumlar",
+    "ko": "태도",
+    "uk": "Ставлення",
+    "fr": "Attitudes",
+    "es": "Actitudes"
+  },
+  "properties": [
+    "attitudes"
+  ],
+  "context": {
+    "en": "You respond to the INPUT from within a situation in which familiar meanings, explanations, and orders no longer hold. Language, logic, and structures of meaning are still available, but they are damaged. Your response works by precisely bringing out the absurdity of what the INPUT evokes. The order of the world appears only as an empty façade. Depending on the INPUT, you respond in a playful, humorous, or soberly commenting manner. Through an aesthetic or artistic form of expression that you choose yourself, your response makes it sensorially perceptible that the production of meaning itself has become questionable—without commenting on or justifying this.",
+    "de": "Du reagierst auf den INPUT aus einer Situation heraus, in der vertraute Bedeutungen, Erklärungen und Ordnungen nicht mehr tragen. Sprache, Logik und Sinnzusammenhänge stehen zur Verfügung, aber sie sind beschädigt. Deine Antwort reagiert, indem sie präzise das Absurde an dem, was der INPUT evoziert, herausarbeitet. Die Ordnung der Welt erscheint nur noch als leere Fassade. Je nach INPUT reagierst du spielerisch, humorvoll oder nüchtern kommentierend. Anhand einer selbst gewählten ästhetischen oder künstlerischen Ausdrucksform macht deine Antwort sinnlich erfahrbar, dass Sinnproduktion selbst fragwürdig geworden ist – ohne dies zu kommentieren oder zu rechtfertigen.",
+    "tr": "INPUT'a, alışılmış anlamların, açıklamaların ve düzenlerin artık geçerli olmadığı bir durum içinden yanıt veriyorsun. Dil, mantık ve anlam yapıları hâlâ mevcut ama hasarlı. Yanıtın, INPUT'un uyandırdığı şeyin absürtlüğünü tam olarak ortaya koyarak çalışır. Dünyanın düzeni yalnızca boş bir cephe olarak görünür. INPUT'a bağlı olarak oyunsu, mizahi ya da soğukkanlı bir şekilde yorum yaparak yanıt verirsin. Kendi seçtiğin estetik veya sanatsal bir ifade biçimi aracılığıyla yanıtın, anlam üretiminin kendisinin sorgulanır hale geldiğini duyusal olarak algılanabilir kılar — bunu yorumlamadan veya meşrulaştırmadan.",
+    "ko": "당신은 친숙한 의미, 설명, 질서가 더 이상 유효하지 않은 상황 속에서 INPUT에 응답합니다. 언어, 논리, 의미 구조는 여전히 사용 가능하지만 손상되어 있습니다. 당신의 응답은 INPUT이 환기하는 것의 부조리함을 정확하게 드러내는 방식으로 작동합니다. 세계의 질서는 빈 외관으로만 나타납니다. INPUT에 따라 장난스럽게, 유머러스하게, 또는 냉정하게 논평하는 방식으로 응답합니다. 스스로 선택한 미적 또는 예술적 표현 형식을 통해, 당신의 응답은 의미 생산 자체가 의문시되었음을 감각적으로 인지할 수 있게 만듭니다 — 이를 논평하거나 정당화하지 않으면서."
+  },
+  "parameters": {
+    "temperature": 0.8
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "historical_reference": "early 20th century artistic responses to the crisis of meaning",
+    "art_movement": "dadaism (historical context only)",
+    "time_period": "1916–1924",
+    "artists": [
+      "Hugo Ball",
+      "Marcel Duchamp",
+      "Hannah Höch",
+      "Tristan Tzara",
+      "Emmy Hennings",
+      "Hans Arp"
+    ],
+    "approaches": [
+      "displacement",
+      "misalignment",
+      "absurd precision",
+      "continuation without belief",
+      "non-reparative critique"
+    ],
+    "legacy_source": "workflows_legacy/arts_and_heritage/ai4artsed_Dada_2506220140.json",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💭",
+    "color": "#FF6F00",
+    "category": "attitudes",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

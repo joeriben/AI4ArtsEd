@@ -1,0 +1,57 @@
+{
+  "pipeline": "image_transformation",
+  "instruction_type": "image_transformation",
+  "name": {
+    "en": "Image Trans­formation",
+    "de": "Bild-Trans­formation",
+    "tr": "Görüntü Dönüşümü",
+    "ko": "이미지 변환",
+    "uk": "Трансформація зображення",
+    "fr": "Transformation d'image",
+    "es": "Transformación de imagen",
+    "he": "טרנספורמציית תמונה",
+    "ar": "تحويل الصورة",
+    "bg": "Трансформация на изображение"
+  },
+  "description": {
+    "en": "Transform images with AI-guided editing",
+    "de": "Transformiere Bilder mit KI-geführter Bearbeitung",
+    "uk": "Трансформуй завантажене зображення",
+    "fr": "Transforme les images avec l'édition guidée par IA",
+    "es": "Transforma imágenes con edición guiada por IA",
+    "he": "טרנספורמציה של תמונות עם עריכה מונחית AI",
+    "ar": "تحويل الصور بالتحرير الموجَّه بالذكاء الاصطناعي",
+    "bg": "Трансформирай изображения с ИИ-направлявана редакция",
+    "tr": "Yapay zeka rehberliğinde düzenlemeyle görüntüleri dönüştür",
+    "ko": "AI 안내 편집으로 이미지를 변환합니다"
+  },
+  "category": {
+    "de": "System",
+    "en": "System",
+    "he": "מערכת",
+    "ar": "النظام",
+    "bg": "Система",
+    "tr": "Sistem",
+    "ko": "시스템",
+    "uk": "Система",
+    "fr": "Système",
+    "es": "Sistema"
+  },
+  "properties": [],
+  "context": {},
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "skip_stage2": true,
+    "hidden": true,
+    "wikipedia": true
+  }
+}

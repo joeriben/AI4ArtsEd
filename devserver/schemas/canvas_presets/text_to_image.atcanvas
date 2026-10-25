@@ -1,0 +1,86 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_text_to_image",
+  "name": "",
+  "preset": {
+    "id": "text_to_image",
+    "kind": "basic",
+    "order": 1,
+    "medium": "image",
+    "name": "canvas.presets.textToImage.name",
+    "description": "canvas.presets.textToImage.description"
+  },
+  "nodes": [
+    {
+      "id": "input",
+      "type": "input",
+      "x": 80,
+      "y": 200,
+      "config": {
+        "source": "text"
+      },
+      "promptPreset": "house"
+    },
+    {
+      "id": "interception",
+      "type": "interception",
+      "x": 420,
+      "y": 200,
+      "config": {}
+    },
+    {
+      "id": "adaption",
+      "type": "model_adaption",
+      "x": 760,
+      "y": 200,
+      "config": {},
+      "modelAdaptionPreset": "sd35"
+    },
+    {
+      "id": "translation",
+      "type": "translation",
+      "x": 1100,
+      "y": 200,
+      "config": {}
+    },
+    {
+      "id": "generation",
+      "type": "generation",
+      "x": 1440,
+      "y": 200,
+      "config": {},
+      "configId": "sd35_large"
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 1780,
+      "y": 200,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "input",
+      "targetId": "interception"
+    },
+    {
+      "sourceId": "interception",
+      "targetId": "adaption"
+    },
+    {
+      "sourceId": "adaption",
+      "targetId": "translation"
+    },
+    {
+      "sourceId": "translation",
+      "targetId": "generation",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation",
+      "targetId": "collector"
+    }
+  ]
+}

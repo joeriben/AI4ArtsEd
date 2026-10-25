@@ -1,0 +1,58 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Denoising Archaeology",
+    "de": "Denoising Archaeology",
+    "tr": "Denoising Archaeology",
+    "ko": "Denoising Archaeology",
+    "uk": "Denoising Archaeology",
+    "fr": "Denoising Archaeology",
+    "es": "Denoising Archaeology",
+    "he": "Denoising Archaeology",
+    "ar": "Denoising Archaeology",
+    "bg": "Denoising Archaeology"
+  },
+  "description": {
+    "en": "Step-by-step denoising visualization.",
+    "de": "Schrittweise Entrauschungs-Visualisierung.",
+    "tr": "Adım adım gürültü giderme (denoising) görselleştirmesi.",
+    "ko": "단계별 디노이징 시각화.",
+    "uk": "Покрокова візуалізація деноізингу.",
+    "fr": "Visualisation du débruitage étape par étape.",
+    "es": "Visualización paso a paso del proceso de eliminación de ruido (denoising).",
+    "he": "הדמיה שלב-אחר-שלב של הסרת הרעש (denoising).",
+    "ar": "تصور خطوة بخطوة لعملية إزالة الضوضاء (denoising).",
+    "bg": "Визуализация стъпка по стъпка на премахването на шума (denoising)."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_denoising_archaeology_comfyui"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "display_name": "Denoising Archaeology (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16 (ComfyUI partial loading / weight streaming)",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 12000,
+    "recommended_resolution": "1024x1024",
+    "notes": "ComfyUI port of the Diffusers path. Sampling runs in the AI4ArtsEdDenoisingArchaeology custom node, so SD3.5 is loaded under ComfyUI's memory management instead of diffusers' enable_model_cpu_offload(). Step frames are decoded after sampling, not inside the step callback, so the VAE and the MMDiT are never GPU-resident at the same time. Written as the probe for whether SD3.5-Large runs on 24/32 GB cards; since 2026-09-18 the resolver answers Large on every card (docs/DEVELOPMENT_DECISIONS.md)."
+  }
+}

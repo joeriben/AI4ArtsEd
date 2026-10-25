@@ -1,0 +1,199 @@
+/*
+ * Compare surfaces — the stage their columns stand on.
+ *
+ * Lifted out of `views/compare/voice_comparison.vue` when AI Language
+ * Understanding needed the same page frame, the same column box and the same
+ * head row. Two implementations of one behaviour is a bug
+ * (docs/ELEMENT_STRUCTURE_REGISTRY.md), so it stands here once — prefixed
+ * `cmp-`, like `.shell-*` in shell.css and `.fl-*` in flow-stage.css.
+ *
+ * Loaded from main.ts, like assets/shell.css: a surface that carries the
+ * classes and forgets an import would look correct to whoever built it and
+ * frameless to a visitor who arrived by another door.
+ *
+ * What stands HERE is what every comparison column looks like. How a surface
+ * ORDERS its columns stays with the surface, because the orders differ: Voices
+ * runs a five-row subgrid so that four machines line up row by row; Language
+ * Understanding used to run a wall that wrapped at four languages and stands
+ * on the Latent Lab's series grid now (assets/flow-stage.css), taking only
+ * `.cmp-seed` from here.
+ */
+
+/* The surface FILLS the work area, in width and in height: as a rule
+   everything fits on one screen without scrolling, with single exceptions.
+   `container-type` so the grid inside can measure THIS
+   box: the work area is 240 px wider with the instrument column folded away,
+   and a window-width media query cannot see that difference. */
+.cmp-page {
+  container-type: inline-size;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cmp-stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+/*
+ * The ORDER the model comparison and the system-prompt comparison run: what prepares a run at
+ * the left, what came out of it at the right — the proportion the Latent Lab
+ * writes as `.lab-work` (assets/flow-stage.css), in the frame that gives a
+ * comparison its column boxes.
+ *
+ * Language Understanding and the model comparison carried it declaration for
+ * declaration each, down to the comments — the second copy that
+ * docs/ELEMENT_STRUCTURE_REGISTRY.md forbids — and it stands here once. Voices
+ * takes none of it: there the asking column IS one of the stage's columns and
+ * the machines line up beside it in a subgrid. Language Understanding has
+ * since left it for the series grid, which carries the same order as
+ * `.lab-work`.
+ *
+ * What stays with the surface is what fills `.cmp-results`.
+ */
+.cmp-stage.cmp-work {
+  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+/* Folded, the preparing column is 34 px of handle and the columns get what it
+   gave up (components/ColumnFold.vue). */
+.cmp-stage.cmp-work.folded {
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+
+/* The preparing column lays ITSELF out and takes no row from the results: the
+   prompt field can be pulled to any size without moving anything beside it,
+   and what does not fit scrolls here. */
+.cmp-work > .cmp-ask {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+}
+
+/* The starting number stands in the first row beside the preparing column,
+   over the columns it belongs to. */
+.cmp-work > .cmp-seed {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+
+.cmp-work > .cmp-results {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Under 900 px of WORK AREA the columns stack. A container query, not a media
+   query: the instrument column is 240 px and can be folded away, and a
+   window-width query cannot see that difference.
+
+   `max-content` on the rows: the stage keeps the height of the work area, and
+   auto rows in a box of fixed height share that height out between them — the
+   preparing column would take what its content asks for and the results would
+   be left with whatever remains, down to nothing, with no scrollbar anywhere
+   to reach them by. Each row takes the height it needs here, and the stage is
+   the thing that scrolls. */
+@container (max-width: 900px) {
+  .cmp-stage.cmp-work,
+  .cmp-stage.cmp-work.folded {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    overflow-y: auto;
+  }
+
+  .cmp-work > .cmp-ask,
+  .cmp-work > .cmp-seed,
+  .cmp-work > .cmp-results {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  /* Nothing scrolls inside a row here — the whole surface does, and a scroller
+     inside a scroller is a trap on a touch screen. */
+  .cmp-work > .cmp-ask,
+  .cmp-work > .cmp-results {
+    overflow: visible;
+    min-height: auto;
+  }
+}
+
+/* One column: the box and nothing about what stands in it. */
+.cmp-column {
+  min-height: 0;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+}
+
+/* The first row of a column: what it is, and the facts that belong to the
+   whole column rather than to one of its results. It carries no line under
+   the name — the column's own edge already separates it from what stands in
+   it, and a second line there made the head a title bar. */
+.cmp-column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+/* The name of a column: WHICH system this one is. */
+.cmp-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+}
+
+/* How far off a column's turn still is, while the runs go one after another.
+   It goes the moment that column is running or has run. */
+.cmp-queue {
+  font-size: 0.65rem;
+  color: rgba(255, 183, 77, 0.7);
+  background: rgba(255, 183, 77, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 8px;
+}
+
+/* The starting number, which stands ABOVE the columns: every picture of a run
+   is computed from the same noise, and that is what leaves the one difference
+   between two columns as the only difference between two pictures (on the
+   language raster: between two pictures of one ROW; down a
+   column they differ by model). WHERE in the grid it stands is the surface's
+   own business. */
+.cmp-seed {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* The cell is square and the COLUMN gives it its width. No measuring frame
+   (`.instr-frame`) here: that one takes the smaller of its surface's two sides,
+   and here nothing binds the height - a row is as tall as its cells.
+   components/MediaGridCell.vue carries the square itself. */
+.cmp-results .media-grid-cell {
+  width: 100%;
+  min-height: 0;
+}
+
+/* What went wrong while a run was being prepared. One line, in the platform's
+   warm red, under whatever was being prepared. */
+.cmp-err {
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  color: #e07a5f;
+}

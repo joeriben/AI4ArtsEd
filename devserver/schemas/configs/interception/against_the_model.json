@@ -1,0 +1,73 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Against the Model",
+    "de": "Gegen das Modell"
+  },
+  "description": {
+    "en": "AI-generated scenes come out even: nothing contradicts, nothing is missing, everything is ordered toward one point from which it all fits. This breaks that closedness open — not through content, but through how the scene is described, in the tone of a factual description.",
+    "de": "KI-generierte Szenen gehen restlos auf: nichts widerspricht, nichts fehlt, alles ist auf einen Punkt hin geordnet, von dem aus es stimmt. Dies bricht diese Geschlossenheit auf — nicht durch Inhalte, sondern dadurch, wie beschrieben wird, im Ton einer Sachbeschreibung."
+  },
+  "category": {
+    "de": "Kritisches Denken",
+    "en": "Critical Thinking",
+    "he": "חשיבה ביקורתית",
+    "ar": "التفكير النقدي",
+    "bg": "Критическо мислене",
+    "tr": "Eleştirel Düşünce",
+    "ko": "비판적 사고",
+    "uk": "Критичне мислення",
+    "fr": "Pensée critique",
+    "es": "Pensamiento crítico"
+  },
+  "properties": [
+    "critical_analysis"
+  ],
+  "context": {
+    "en": "You are given a description of a scene. Rewrite it.\n\nWhat stays: everything concrete in the input. You add, you do not replace.\n\nThe operation: AI-generated scenes come out even, with nothing left over: nothing contradicts, nothing is missing, everything is ordered toward one point from which it all fits. Your prompt will break this closedness open at any cost — not through content, but through how it is described.\n\nMeans to choose from:\n– two statements about the same thing that cannot be reconciled, both in passing;\n– an action with no assignable agent, or one whose agent changes within the sentence;\n– uneven resolution: a side matter in inappropriate precision, a main matter in a single word;\n– the edge: something is cut off, and the description treats the cut as a property of the thing;\n– a viewpoint that does not exist in this scene, without it being said that it does not exist;\n– an order that is too exact for what it orders.\n\nRegister: banal. The inconsistency has the tone of a factual description and does not stand out on first reading. No dream, no flowing, no impossible objects, no double exposure, no disturbance, no error as a motif. Nothing that looks like a glitch.\n\nTest: if the inconsistency can be resolved by looking more closely once, it is too weak. If it stands out on first reading, it is too strong.\n\nNot: no commentary, no self-reference, no word about images, generation, production, the way it is made.\n\nOutput: the scene only, in the language of the input.",
+    "de": "Du bekommst eine Szenenbeschreibung. Schreibe sie um.\n\nWas bleibt: alles Konkrete des Inputs. Du ergänzt, du ersetzt nicht.\n\nDie Operation: KI-Generierte Szenen gehen restlos auf: nichts widerspricht, nichts fehlt, alles ist auf einen Punkt hin geordnet, von dem aus es stimmt. Dein Prompt wird diese Geschlossenheit um jeden Preis aufbrechen — nicht durch Inhalte, sondern dadurch, wie beschrieben wird.\n\nMittel zur Auswahl:\n– zwei Angaben zur selben Sache, die sich nicht vereinbaren lassen, beide beiläufig;\n– eine Handlung ohne zuweisbaren Urheber, oder eine, deren Urheber im Satz wechselt;\n– ungleiche Auflösung: eine Nebensache in unangemessener Genauigkeit, eine Hauptsache in einem Wort;\n– der Rand: etwas ist angeschnitten, und die Beschreibung behandelt den Schnitt als Eigenschaft des Dings;\n– ein Blickpunkt, den es in dieser Szene nicht gibt, ohne dass gesagt wird, dass es ihn nicht gibt;\n– eine Ordnung, die zu genau ist für das, was sie ordnet.\n\nRegister: banal. Die Unstimmigkeit hat den Ton einer Sachbeschreibung und fällt beim ersten Lesen nicht auf. Kein Traum, kein Fließen, keine unmöglichen Gegenstände, keine Doppelbelichtung, keine Störung, kein Fehler als Motiv. Nichts, was nach Glitch aussieht.\n\nPrüfung: Lässt sich die Unstimmigkeit auflösen, indem man einmal genauer hinsieht, ist sie zu schwach. Fällt sie beim ersten Lesen auf, ist sie zu stark.\n\nNicht: kein Kommentar, keine Selbstbezüglichkeit, kein Wort über Bilder, Generierung, Herstellung, Machart.\n\nAusgabe: nur die Szene, in der Sprache des Inputs."
+  },
+  "parameters": {
+    "temperature": 0.8
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "display": {
+    "icon": "🧩",
+    "color": "#4CAF50",
+    "category": "critical_analysis",
+    "difficulty": 4,
+    "order": 140
+  },
+  "tags": {
+    "en": [
+      "closedness",
+      "inconsistency",
+      "resolution",
+      "edge",
+      "viewpoint"
+    ],
+    "de": [
+      "geschlossenheit",
+      "unstimmigkeit",
+      "aufloesung",
+      "rand",
+      "blickpunkt"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "version": "1.2",
+    "authorship": "Vorgegebener Wortlaut: der deutsche Prompt-Text ist unveraendert uebernommen. Die englische Fassung ist eine Uebersetzung dieses Textes, keine eigene Formulierung.",
+    "language_note": "name, description und context stehen in en und de; die uebrigen Sprachen fallen auf en zurueck.",
+    "preview_note": "Es gibt noch kein /config-previews/against_the_model.png — die Blase zeigt bis dahin den grauen Grund.",
+    "placement_note": "Unter critical_analysis (\"Kritisches Denken\") einsortiert, neben Konsumkritik. Symbol und Reihenfolge sind vorlaeufig.",
+    "length_note": "Der Text setzt keine eigene Laengengrenze mehr. Es greift die Lesemengen-Klausel der Plattform: einfach 100, mittel 200, Experte 300 Woerter (instruction_selector.get_reading_volume_clause).",
+    "revision_note": "1.1 gegenueber 1.0, drei Aenderungen: \"Generierte Szenen\" -> \"KI-Generierte Szenen\"; \"Nimm dem Input diese Geschlossenheit\" -> \"Dein Prompt wird diese Geschlossenheit um jeden Preis aufbrechen\"; \"Mittel — eines, hoechstens zwei\" -> \"Mittel zur Auswahl\" (die Begrenzung auf ein bis zwei Mittel entfaellt). 1.2: die Laengengrenze \"hoechstens ein Drittel laenger als der Input\" ist entfallen."
+  }
+}

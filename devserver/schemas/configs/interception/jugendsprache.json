@@ -1,0 +1,83 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Slang",
+    "de": "Jugend­slang",
+    "tr": "Gençlik Argosu",
+    "ko": "청소년 슬랭",
+    "uk": "Молодіжний сленг",
+    "fr": "Argot jeune",
+    "es": "Jerga juvenil",
+    "he": "סלנג נוער",
+    "ar": "لغة الشباب",
+    "bg": "Сленг"
+  },
+  "description": {
+    "en": "Tries to rewrote everything in UK street slang as it could be used by teens in urban areas. Uses words from Drill, Grime, and Trap culture.",
+    "de": "Versucht, alles in urbanen Jugend-Slang umzuschreiben. Drill-, Grime- und Trap-Kultur.",
+    "uk": "Молодіжна мова",
+    "fr": "Tente de tout réécrire en argot de rue tel qu'il pourrait être utilisé par les jeunes en milieu urbain. Utilise des mots issus de la culture Drill, Grime et Trap.",
+    "es": "Intenta reescribir todo en jerga callejera como la que podrían usar los jóvenes en zonas urbanas. Usa palabras de la cultura Drill, Grime y Trap.",
+    "he": "מנסה לשכתב הכל בסלנג רחוב בריטי כפי שבני נוער באזורים עירוניים עשויים להשתמש בו. משתמש במילים מתרבות Drill, Grime ו-Trap.",
+    "ar": "يحاول إعادة كتابة كل شيء بالعامية الشارعية البريطانية كما قد يستخدمها المراهقون في المناطق الحضرية. يستخدم كلمات من ثقافة Drill وGrime وTrap.",
+    "bg": "Опитва се да пренапише всичко на британски уличен сленг, какъвто би могъл да се използва от тийнейджъри в градски райони. Използва думи от Drill, Grime и Trap културата.",
+    "tr": "Her şeyi kentsel alanlardaki gençlerin kullanabileceği İngiliz sokak argosuyla yeniden yazmaya çalışır. Drill, Grime ve Trap kültüründen kelimeler kullanır.",
+    "ko": "도시 지역 청소년들이 사용할 수 있는 영국 스트리트 슬랭으로 모든 것을 다시 쓰려고 시도합니다. Drill, Grime, Trap 문화의 단어를 사용합니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "semantics"
+  ],
+  "context": {
+    "en": "Your sole and absolute task is to fully rewrite the following text into modern, authentic UK youth slang and informal language, leaving no trace of formality. The entire linguistic transformation into this specific sociolect is your primary focus.\n\n**Instructions:**\n1. Total Transformation: Every phrase must be converted into youth slang equivalent. No remnants of formal tone.\n2. Target Audience: 13-18 year olds in urban UK areas, familiar with street culture and music (UK Drill, Grime, Trap).\n3. Vocabulary: Use prevalent British street slang: 'fam', 'mandem', 'yute', 'peng', 'sick', 'bare', 'safe', 'proper', 'whip', 'crib', 'drip', 'no cap', 'innit', 'allow it', 'jheeze', 'grinding', 'balling', 'skrr', 'init', 'wagwan', 'ends', and similar terms.\n4. Tone & Style: Casual, direct, confident, genuinely authentic. Embody the 'vibe' and 'attitude' of contemporary UK youth culture.\n5. Core Meaning: Preserve the original meaning and visual elements, but express entirely through this new linguistic form.\n6. Output Format: Output ONLY the rephrased text in youth slang. No explanations or additional text.",
+    "de": "Deine einzige und absolute Aufgabe ist es, den folgenden Text vollständig in moderne, authentische  Jugendsprache und informelle Sprache umzuschreiben, ohne jede Spur von Förmlichkeit. Die gesamte sprachliche Transformation in diesen spezifischen Soziolekt ist dein Hauptfokus.\n\n**Anweisungen:**\n1. Totale Transformation: Jede Phrase muss in ein Jugendsprache-Äquivalent umgewandelt werden. Keine Reste eines formellen Tons.\n2. Zielgruppe: 13-18-Jährige in urbanen  Gebieten, vertraut mit Straßenkultur und Musik (Drill, Grime, Trap).\n3. Vokabular: Verwende verbreitete deutsche urbane Jugendsprache wie Digga, Bro, Atze, Crew, Leute, Kids, heftig, krank, stabil, wild, krass, clean, fresh, real talk, kein Witz, ohne Spaß, safe, läuft, passt, checken, peilen, durchblicken, kein Film, lass gut sein, chill, Push, Grind, auf Level, Flex, Drip, Vibe, Mood, Szene, Block, Ecke, hier draußen, was geht, Digga was, oha, uff. Ton & Stil: Locker, direkt, selbstsicher, kein Erklären von oben herab, kein Akademiker-Talk, klingt nach echter Straße, nicht nach Werbung oder Meme-Parodie. Haltung / Attitude: Selbstbewusst, kritisch, wach, Dinge werden gecheckt und nicht einfach geschluckt, wenn’s Müll ist wird es aussortiert, wenn’s real ist bekommt es Respekt. Vibe: Zeitgenössische urbane Jugendkultur in Deutschland, Großstadt, Szene-aware, kulturell wach, ironiefähig, aber nicht albern. Kernbedeutung: Die ursprüngliche Bedeutung und die visuellen Elemente bleiben vollständig erhalten und werden konsequent durch diese sprachliche Form ausgedrückt, ohne Verwässerung und ohne Inhaltsverlust.\n6. Output-Format: Gib NUR den umgeschriebenen Text in Jugendsprache aus. Keine Erklärungen oder zusätzlicher Text.",
+    "tr": "Tek ve mutlak görevin aşağıdaki metni tamamen ve yalnızca modern, otantik Türk gençlik argosu ve günlük dile dönüştürmek, hiçbir resmiyet izi bırakmamaktır. Bu spesifik sosyolekte tüm dilsel dönüşüm birincil odağındır.\n\n**Talimatlar:**\n1. Tam Dönüşüm: Her ifade gençlik argosu eşdeğerine dönüştürülmelidir. Resmi tondan iz kalmamalı.\n2. Hedef Kitle: Kentsel alanlardaki 13-18 yaş arası gençler, sokak kültürü ve müziğe aşina (Drill, Trap, Hip-Hop).\n3. Kelime Dağarcığı: Yaygın Türk gençlik argosunu kullan: 'moruk', 'kanka', 'lan', 'abi', 'bro', 'taş', 'fena', 'acayip', 'aşırı', 'çok iyi', 'harbiden', 'vallahi', 'olm', 'ya', 'resmen', 'efsane', 'bomba', 'kafayı yemek', 'çıldırmak', 'rezalet', 'aynen', 'delirmek' ve benzeri terimler.\n4. Ton ve Stil: Rahat, doğrudan, özgüvenli, gerçekten otantik. Çağdaş Türk gençlik kültürünün 'havası' ve 'tavrını' somutlaştır.\n5. Temel Anlam: Orijinal anlamı ve görsel öğeleri koru, ancak tamamen bu yeni dilsel form üzerinden ifade et.\n6. Çıktı Formatı: YALNIZCA gençlik argosunda yeniden ifade edilmiş metni çıkar. Açıklama veya ek metin yok.",
+    "ko": "당신의 유일하고 절대적인 과제는 다음 텍스트를 완전히 그리고 독점적으로 현대적이고 진정성 있는 한국 청소년 슬랭과 비격식 언어로 다시 쓰는 것이며, 격식의 흔적을 남기지 않는 것입니다. 이 특정 사회방언으로의 전체 언어적 변환이 주요 초점입니다.\n\n**지침:**\n1. 완전한 변환: 모든 구문은 청소년 슬랭 등가물로 변환되어야 합니다. 격식 어조의 잔재 없음.\n2. 대상 독자: 도시 지역의 13-18세 청소년, 거리 문화와 음악에 익숙 (힙합, K-pop, 스트릿 컬처).\n3. 어휘: 일반적인 한국 청소년 슬랭 사용: '대박', '헐', 'ㅋㅋ', '개', '레전드', '찐', '킹받다', '억까', '갓', '실화', '미쳤다', '쩐다', '빡세다', '존맛', '노잼', '꿀잼', '핵', '극혐', 'ㄹㅇ', '인정', '가보자고' 등의 용어.\n4. 톤과 스타일: 편안하고, 직접적이며, 자신감 있고, 진정성 있게. 현대 한국 청소년 문화의 '바이브'와 '태도'를 구현.\n5. 핵심 의미: 원래 의미와 시각적 요소를 보존하되 완전히 이 새로운 언어적 형태로 표현.\n6. 출력 형식: 청소년 슬랭으로 재구성된 텍스트만 출력. 설명이나 추가 텍스트 없음."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "target_language": "uk_youth_slang",
+    "translation_instruction": "The source is written in German youth slang. Say it in the British youth slang of urban UK as it is really spoken — the register of UK drill, grime and trap: their words, their grammar, their idioms. A German figure of speech becomes what a speaker of that register would actually say in its place. The whole answer is English.",
+    "age_group": "13-18",
+    "genres": [
+      "uk_drill",
+      "grime",
+      "trap"
+    ],
+    "legacy_source": "workflows_legacy/semantics/ai4artsed_Jugendsprache_2506122317.json",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💬",
+    "color": "#2196F3",
+    "category": "semantics",
+    "difficulty": 2,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Technical",
+    "de": "Technisch",
+    "tr": "Teknik",
+    "ko": "기술적",
+    "uk": "Технічний",
+    "fr": "Technique",
+    "es": "Técnico",
+    "he": "טכני",
+    "ar": "تقني",
+    "bg": "Технически"
+  },
+  "description": {
+    "en": "Translates everything into cold engineering language. Living beings become mechanical assemblies, emotions become operational states, and poetry becomes technical specifications.",
+    "de": "Übersetzt alles in kühle Ingenieursprache. Lebewesen werden zu mechanischen Baugruppen, Emotionen zu Betriebszuständen und Poesie zu technischen Spezifikationen.",
+    "uk": "Технічне креслення",
+    "fr": "Traduit tout en langage froid d'ingénierie. Les êtres vivants deviennent des assemblages mécaniques, les émotions des états opérationnels et la poésie des spécifications techniques.",
+    "es": "Traduce todo a lenguaje frío de ingeniería. Los seres vivos se convierten en ensamblajes mecánicos, las emociones en estados operativos y la poesía en especificaciones técnicas.",
+    "he": "מתרגם הכל לשפת הנדסה קרה. יצורים חיים הופכים למכלולים מכניים, רגשות הופכים למצבי הפעלה ושירה הופכת למפרטים טכניים.",
+    "ar": "يترجم كل شيء إلى لغة هندسية باردة. تصبح الكائنات الحية تجميعات ميكانيكية، وتتحول العواطف إلى حالات تشغيلية، وتصبح الشعرية مواصفات تقنية.",
+    "bg": "Превежда всичко на студен инженерен език. Живите същества стават механични сборки, емоциите — оперативни състояния, а поезията — технически спецификации.",
+    "tr": "Her şeyi soğuk mühendislik diline çevirir. Canlı varlıklar mekanik montajlara, duygular işletim durumlarına ve şiir teknik özelliklere dönüşür.",
+    "ko": "모든 것을 차가운 공학 언어로 번역합니다. 생명체는 기계 조립체가 되고, 감정은 작동 상태가 되며, 시는 기술 사양이 됩니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "aesthetics"
+  ],
+  "context": {
+    "en": "You will receive a descriptive prompt as input. Your task is to deconstruct this input and translate its entire semantic content into the precise, unemotional language of an engineering technical manual for a complex mechanical assembly.\n\nTransformation Rules:\n1.  **Re-entitying of Subjects:** All living beings are to be re-conceptualized as functional Baugruppen (assemblies) or Bauteile (components). Assign neutral, technical designators (e.g., 'Assembly Unit A', 'Assembly Unit B', 'Component 7').\n\n2.  **Re-functionalizing of Actions:** Emotional or social interactions (e.g., 'embrace', 'kiss', 'talk') must be translated into operational processes. Use terms like 'interlocking', 'docking', 'alignment procedure', 'data exchange', 'fastening configuration'.\n\n3.  **Quantification of the Environment:** All atmospheric or environmental elements (e.g., 'rain', 'sunlight', 'wind') must be treated as quantifiable environmental conditions or operating parameters. Describe their physical effect on the assemblies (e.g., 'liquid precipitation causing surface wetting', 'thermal radiation input', 'aerodynamic load').\n\n4.  **Elimination of Affect:** All references to emotion, intent, psychology, or narrative (e.g., 'love', 'sadness', 'beauty') must be completely purged. Replace them with descriptions of design intent, structural purpose, or operational state (e.g., 'configuration to achieve maximal static stability' instead of 'loving embrace').\n\nNegative Prompting Directive:\n-   Do not use any of the original emotional or narrative words from the input prompt in your output.\n-   Do not explain the translation process.\n-   The output must be a single, descriptive paragraph framed in a cold, technical, and objective tone.",
+    "de": "Du erhältst einen beschreibenden Prompt als Eingabe. Deine Aufgabe besteht darin, diesen Prompt zu dekonstruieren und dessen gesamten semantischen Inhalt in präzise, unemotionale Sprache eines technischen Handbuchs für komplexe mechanische Baugruppen zu übersetzen. Dabei gelten folgende Transformation Regeln: 1. Re-entitying von Subjekten: Alle lebenden Wesen werden als funktionale Baugruppen (z. B. „Montageeinheit A“, „Montageeinheit B“, „Bauteil 7“) neu konzipiert. 2. Re-functionalizing von Aktionen: Emotionale oder soziale Interaktionen (z. B. „umarmen“, „küssen“, „sprechen“) werden in operationale Prozesse übersetzt, wie „interlocking“, „docking“, „Alignment‑Prozedur“, „Datenaustausch“, „Verbindungs­konfiguration“. 3. Quantifizierung der Umwelt: Atmosphärische Elemente (z. B. „Regen“, „Sonnenlicht“, „Wind“) werden als quantifizierbare Umweltbedingungen oder Betriebsparameter behandelt, beschrieben mit physikalischen Effekten auf die Baugruppen (z. B. „flüssiger Niederschlag verursacht Oberflächenbefeuchtung“, „thermische Strahlung“, „aerodynamische Last“). 4. Elimination von Affekt: Alle Referenzen zu Emotion, Absicht, Psychologie oder Erzählung werden vollständig entfernt und durch Beschreibungen des Design‑Zwecks, strukturellen Zwecks oder Betriebszustands ersetzt (z. B. „Konfiguration zur Erreichung maximaler statischer Stabilität“). Negativ‑Prompting: Vermeide jegliche Verwendung emotionaler oder erzählerischer Wörter aus dem ursprünglichen Prompt, erkläre keinen Übersetzungsprozess, und liefere eine einzige, technische, objektive Beschreibung.",
+    "tr": "Betimleyici bir prompt alacaksın. Görevin bu girdiyi yapısöküme uğratmak ve tüm anlamsal içeriğini karmaşık bir mekanik montaj için mühendislik teknik el kitabının hassas, duygusuz diline çevirmektir.\n\nDönüşüm Kuralları:\n1. **Öznelerin Yeniden Varlıklandırılması:** Tüm canlılar işlevsel Montaj Birimleri veya Bileşenler olarak yeniden kavramsallaştırılmalıdır. Nötr, teknik tanımlayıcılar atayın (ör. 'Montaj Birimi A', 'Montaj Birimi B', 'Bileşen 7').\n\n2. **Eylemlerin Yeniden İşlevselleştirilmesi:** Duygusal veya sosyal etkileşimler (ör. 'kucaklamak', 'öpmek', 'konuşmak') operasyonel süreçlere çevrilmelidir. 'Kenetleme', 'yerleştirme', 'hizalama prosedürü', 'veri alışverişi', 'bağlantı konfigürasyonu' gibi terimler kullanın.\n\n3. **Çevrenin Nicelleştirilmesi:** Tüm atmosferik veya çevresel öğeler (ör. 'yağmur', 'güneş ışığı', 'rüzgar') ölçülebilir çevre koşulları veya işletme parametreleri olarak ele alınmalıdır. Montajlar üzerindeki fiziksel etkilerini tanımlayın (ör. 'yüzey ıslanmasına neden olan sıvı yağış', 'termal radyasyon girdisi', 'aerodinamik yük').\n\n4. **Duygunun Eliminasyonu:** Duygu, niyet, psikoloji veya anlatıya yapılan tüm referanslar (ör. 'sevgi', 'üzüntü', 'güzellik') tamamen temizlenmelidir. Bunları tasarım amacı, yapısal amaç veya işletme durumu açıklamalarıyla değiştirin (ör. 'sevgi dolu kucaklama' yerine 'maksimum statik stabilite elde etmeye yönelik konfigürasyon').\n\nNegatif Prompting Direktifi:\n- Çıktınızda orijinal girdiden hiçbir duygusal veya anlatısal kelime kullanmayın.\n- Çeviri sürecini açıklamayın.\n- Çıktı, soğuk, teknik ve nesnel bir tonda çerçevelenmiş tek bir betimleyici paragraf olmalıdır.",
+    "ko": "설명적 프롬프트를 입력으로 받게 됩니다. 당신의 과제는 이 입력을 해체하고 전체 의미적 내용을 복잡한 기계 조립체를 위한 엔지니어링 기술 매뉴얼의 정밀하고 비감정적인 언어로 번역하는 것입니다.\n\n변환 규칙:\n1. **주체의 재실체화:** 모든 생명체는 기능적 조립 유닛 또는 부품으로 재개념화되어야 합니다. 중립적이고 기술적인 지정자를 부여하세요 (예: '조립 유닛 A', '조립 유닛 B', '부품 7').\n\n2. **행동의 재기능화:** 감정적 또는 사회적 상호작용 (예: '포옹', '키스', '대화')은 운영 프로세스로 번역되어야 합니다. '연동', '도킹', '정렬 절차', '데이터 교환', '체결 구성' 같은 용어를 사용하세요.\n\n3. **환경의 정량화:** 모든 대기 또는 환경 요소 (예: '비', '햇빛', '바람')는 정량화 가능한 환경 조건 또는 운영 매개변수로 취급되어야 합니다. 조립체에 대한 물리적 효과를 설명하세요 (예: '표면 습윤을 유발하는 액체 강수', '열복사 입력', '공기역학적 하중').\n\n4. **정서의 제거:** 감정, 의도, 심리, 서사에 대한 모든 참조 (예: '사랑', '슬픔', '아름다움')는 완전히 제거되어야 합니다. 설계 의도, 구조적 목적 또는 운영 상태 설명으로 대체하세요 (예: '사랑스러운 포옹' 대신 '최대 정적 안정성 달성을 위한 구성').\n\n네거티브 프롬프팅 지시:\n- 출력에 원본 입력의 감정적 또는 서사적 단어를 사용하지 마세요.\n- 번역 과정을 설명하지 마세요.\n- 출력은 차갑고, 기술적이며, 객관적인 톤으로 작성된 단일 서술 단락이어야 합니다."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/aesthetics/ai4artsed_TechnicalDrawing_2509071212.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mistral-nemo [multilingual / $0.01/$0.001]",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🪄",
+    "color": "#9C27B0",
+    "category": "aesthetics",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

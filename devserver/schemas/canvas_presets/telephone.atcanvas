@@ -1,0 +1,352 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_telephone",
+  "name": "",
+  "preset": {
+    "id": "telephone",
+    "kind": "explore",
+    "order": 5,
+    "medium": "image",
+    "name": "canvas.presets.telephone.name",
+    "description": "canvas.presets.telephone.description"
+  },
+  "nodes": [
+    {
+      "id": "input",
+      "type": "input",
+      "x": 80,
+      "y": 60,
+      "config": {
+        "source": "text"
+      },
+      "promptPreset": "house",
+      "titleKey": "canvas.presets.titles.sentence"
+    },
+    {
+      "id": "translation_1",
+      "type": "translation",
+      "x": 420,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_1",
+      "type": "generation",
+      "x": 420,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 1
+      }
+    },
+    {
+      "id": "reading_1",
+      "type": "image_evaluation",
+      "x": 420,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 1
+      }
+    },
+    {
+      "id": "translation_2",
+      "type": "translation",
+      "x": 760,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_2",
+      "type": "generation",
+      "x": 760,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 2
+      }
+    },
+    {
+      "id": "reading_2",
+      "type": "image_evaluation",
+      "x": 760,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 2
+      }
+    },
+    {
+      "id": "translation_3",
+      "type": "translation",
+      "x": 1100,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_3",
+      "type": "generation",
+      "x": 1100,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 3
+      }
+    },
+    {
+      "id": "reading_3",
+      "type": "image_evaluation",
+      "x": 1100,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 3
+      }
+    },
+    {
+      "id": "translation_4",
+      "type": "translation",
+      "x": 1440,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_4",
+      "type": "generation",
+      "x": 1440,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 4
+      }
+    },
+    {
+      "id": "reading_4",
+      "type": "image_evaluation",
+      "x": 1440,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 4
+      }
+    },
+    {
+      "id": "translation_5",
+      "type": "translation",
+      "x": 1780,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_5",
+      "type": "generation",
+      "x": 1780,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 5
+      }
+    },
+    {
+      "id": "reading_5",
+      "type": "image_evaluation",
+      "x": 1780,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 5
+      }
+    },
+    {
+      "id": "translation_6",
+      "type": "translation",
+      "x": 2120,
+      "y": 60,
+      "config": {}
+    },
+    {
+      "id": "generation_6",
+      "type": "generation",
+      "x": 2120,
+      "y": 380,
+      "config": {},
+      "configId": "sd35_large",
+      "titleKey": "canvas.presets.titles.linkPicture",
+      "titleArgs": {
+        "n": 6
+      }
+    },
+    {
+      "id": "reading_6",
+      "type": "image_evaluation",
+      "x": 2120,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "titleKey": "canvas.presets.titles.linkReading",
+      "titleArgs": {
+        "n": 6
+      }
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 2460,
+      "y": 380,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "input",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "input",
+      "targetId": "translation_1"
+    },
+    {
+      "sourceId": "translation_1",
+      "targetId": "generation_1",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_1",
+      "targetId": "reading_1"
+    },
+    {
+      "sourceId": "reading_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reading_1",
+      "targetId": "translation_2"
+    },
+    {
+      "sourceId": "translation_2",
+      "targetId": "generation_2",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_2",
+      "targetId": "reading_2"
+    },
+    {
+      "sourceId": "reading_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reading_2",
+      "targetId": "translation_3"
+    },
+    {
+      "sourceId": "translation_3",
+      "targetId": "generation_3",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_3",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_3",
+      "targetId": "reading_3"
+    },
+    {
+      "sourceId": "reading_3",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reading_3",
+      "targetId": "translation_4"
+    },
+    {
+      "sourceId": "translation_4",
+      "targetId": "generation_4",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_4",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_4",
+      "targetId": "reading_4"
+    },
+    {
+      "sourceId": "reading_4",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reading_4",
+      "targetId": "translation_5"
+    },
+    {
+      "sourceId": "translation_5",
+      "targetId": "generation_5",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_5",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_5",
+      "targetId": "reading_5"
+    },
+    {
+      "sourceId": "reading_5",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "reading_5",
+      "targetId": "translation_6"
+    },
+    {
+      "sourceId": "translation_6",
+      "targetId": "generation_6",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation_6",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "generation_6",
+      "targetId": "reading_6"
+    },
+    {
+      "sourceId": "reading_6",
+      "targetId": "collector"
+    }
+  ]
+}

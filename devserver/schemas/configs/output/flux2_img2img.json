@@ -1,0 +1,136 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "FLUX.2 [dev] img2img",
+    "de": "FLUX.2 [dev] img2img",
+    "tr": "FLUX.2 [dev] img2img",
+    "ko": "FLUX.2 [dev] img2img",
+    "uk": "FLUX.2 [dev] img2img",
+    "fr": "FLUX.2 [dev] img2img",
+    "es": "FLUX.2 [dev] img2img",
+    "he": "FLUX.2 [dev] img2img",
+    "ar": "FLUX.2 [dev] img2img",
+    "bg": "FLUX.2 [dev] img2img"
+  },
+  "description": {
+    "en": "High-quality image transformation with Flux2 Dev using ReferenceLatent conditioning (20 steps)",
+    "de": "Hochwertige Bildtransformation mit Flux2 Dev mittels ReferenceLatent-Konditionierung (20 Schritte)",
+    "tr": "ReferenceLatent koşullandırması kullanan Flux2 Dev ile yüksek kaliteli görüntü dönüştürme (20 adım)",
+    "ko": "ReferenceLatent 컨디셔닝을 사용하는 Flux2 Dev를 통한 고품질 이미지 변환(20단계)",
+    "uk": "Високоякісна трансформація зображень за допомогою Flux2 Dev з кондиціонуванням ReferenceLatent (20 кроків)",
+    "fr": "Transformation d'images de haute qualité avec Flux2 Dev utilisant le conditionnement ReferenceLatent (20 étapes)",
+    "es": "Transformación de imágenes de alta calidad con Flux2 Dev utilizando el condicionamiento ReferenceLatent (20 pasos)",
+    "he": "טרנספורמציית תמונה איכותית עם Flux2 Dev באמצעות התניית ReferenceLatent (20 צעדים)",
+    "ar": "تحويل صور عالي الجودة باستخدام Flux2 Dev مع تكييف ReferenceLatent (20 خطوة)",
+    "bg": "Висококачествена трансформация на изображения с Flux2 Dev чрез кондициониране ReferenceLatent (20 стъпки)"
+  },
+  "category": {
+    "en": "Image Editing",
+    "de": "Bildbearbeitung",
+    "tr": "Görüntü Düzenleme",
+    "ko": "이미지 편집",
+    "uk": "Редагування зображень",
+    "fr": "Édition d'images",
+    "es": "Edición de imágenes",
+    "he": "עריכת תמונות",
+    "ar": "تحرير الصور",
+    "bg": "Редактиране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux2_img2img",
+    "steps": 20,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "normal",
+    "denoise": 0.55,
+    "megapixels": 2.5,
+    "seed": null,
+    "temperature": 0.7
+  },
+  "parameter_ranges": {
+    "steps": {
+      "min": 15,
+      "max": 30,
+      "default": 20,
+      "description": "Flux2 Dev optimized for 20 steps"
+    },
+    "cfg": {
+      "min": 1,
+      "max": 2,
+      "default": 1,
+      "description": "CFG scale (Flux2 uses low CFG like 1-2)"
+    },
+    "denoise": {
+      "min": 0.3,
+      "max": 0.9,
+      "default": 0.55,
+      "description": "Denoise strength (0.3=light changes, 0.55=moderate, 0.9=heavy transformation)"
+    },
+    "megapixels": {
+      "min": 1,
+      "max": 4,
+      "default": 2.5,
+      "description": "Target image size (2.5 MP = ~1600x1600, optimal for Flux2)"
+    }
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend_type": "comfyui",
+    "version": "1.0",
+    "created": "2025-12-15",
+    "last_updated": "2025-12-15",
+    "model_type": "flux2_dev",
+    "lightning_optimized": false,
+    "dsgvo_compliant": true,
+    "local_only": true,
+    "display_name": "FLUX.2 [dev] img2img",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Rectified Flow + MMDiT (56 transformer blocks)",
+    "params": "~56B total (32B DiT + 24B text encoder)",
+    "text_encoders": [
+      "Mistral-Small-3.2-24B (24B)"
+    ],
+    "quantization": "FP8 mixed precision",
+    "license": "Non-Commercial (BFL Dev License)",
+    "fair_culture": "Training data undisclosed, NSFW-filtered",
+    "safety_by_design": "NSFW filter + IWF CSAM filtering",
+    "gpu_vram_mb": 55000,
+    "recommended_resolution": "1024x1024"
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF6B35",
+    "category": "image_editing",
+    "difficulty": 2,
+    "order": 50
+  },
+  "tags": {
+    "en": [
+      "image",
+      "img2img",
+      "flux2",
+      "transformation",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "Bild",
+      "img2img",
+      "Flux2",
+      "Transformation",
+      "ComfyUI",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
+  }
+}

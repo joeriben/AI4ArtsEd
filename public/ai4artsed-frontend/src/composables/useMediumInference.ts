@@ -1,0 +1,175 @@
+import { computed, type Ref } from 'vue'
+
+export type MediumId = 'image' | 'video' | 'sound' | '3d' | 'code' | 'text'
+export const MEDIA: MediumId[] = ['image', 'video', 'sound', '3d', 'code', 'text']
+
+/**
+ * The glyph a config's media type is drawn with on the canvas (StageModule,
+ * ConfigSelectorModal): `audio` and `music` are both `sound`; a type with no
+ * glyph answers null and the caller keeps its own mark.
+ */
+export function glyphOfMediaType(mediaType: string | undefined): MediumId | null {
+  switch (mediaType) {
+    case 'image': return 'image'
+    case 'video': return 'video'
+    case 'audio':
+    case 'music': return 'sound'
+    case 'text': return 'text'
+    default: return null
+  }
+}
+
+/**
+ * Medium inference — Stage 1: a fast, client-side catchword pre-filter.
+ *
+ * Deliberately coarse, exactly like the safety check's keyword blocklist. The
+ * small local LLM (Stage 2, coupled to the safety run at the input box) refines
+ * this live and server-side later — same two-tier shape as safety. This tier
+ * runs on every keystroke with zero latency so the medium symbols can light up
+ * ambiently while the learner writes.
+ *
+ * The medium is read, never chosen: the idea (and, once transformed, the reread
+ * version) already carries its mediality. Steering happens through the prompt.
+ */
+const CATCHWORDS: Record<MediumId, string[]> = {
+  image: [
+    'bild', 'gemälde', 'gemaelde', 'foto', 'fotografie', 'zeichnung', 'illustration',
+    'portrait', 'porträt', 'poster', 'plakat', 'malerei', 'collage', 'stillleben',
+    'painting', 'photo', 'photograph', 'image', 'picture', 'drawing', 'still', 'render',
+  ],
+  video: [
+    'video', 'film', 'animation', 'clip', 'bewegt', 'bewegung', 'bewegte', 'fliegt',
+    'fliegen', 'läuft', 'laufen', 'tanz', 'tanzt', 'fährt', 'strömt', 'stroemt', 'szene',
+    'moving', 'motion', 'animated', 'animate', 'flying', 'running', 'flowing', 'sequence',
+  ],
+  sound: [
+    'klang', 'klingt', 'musik', 'sound', 'ton', 'töne', 'toene', 'melodie', 'lied',
+    'song', 'rhythmus', 'geräusch', 'geraeusch', 'hören', 'hoerspiel', 'soundscape',
+    'audio', 'music', 'sonic', 'beat', 'noise', 'echo', 'hall',
+    // The two plurals that do not begin with their singular.
+    'klänge', 'klaenge', 'rhythmen',
+  ],
+  // Deliberately narrow. '3d' is reachable only from an image, so a false
+  // positive here costs a lit glyph that cannot run — not a wrong generation.
+  // Ambiguous words stay out: 'plastik' is also a material, 'figur' also a
+  // character, 'modell' also a person.
+  '3d': [
+    '3d', 'dreidimensional', 'skulptur', 'statue', 'büste', 'bueste', 'relief',
+    'mesh', 'sculpture', 'figurine', 'bust', 'three-dimensional',
+  ],
+  // Two configs write JavaScript rather than a file: p5.js draws, Tone.js
+  // plays. Narrow on purpose — 'programm' and 'muster' are far too common to
+  // carry a medium, and a false positive here would light a glyph over an idea
+  // that meant a picture.
+  code: [
+    'code', 'sketch', 'p5', 'p5.js', 'tone.js', 'tonejs', 'javascript',
+    'generativ', 'generative', 'algorithm', 'algorithmus', 'algorithmisch',
+    'programmiert', 'programmed', 'coded', 'live coding', 'creative coding',
+  ],
+  // Empty, and that is the whole point: text is the one medium this platform
+  // does NOT infer. Every other medium is read out of the idea; asking for a
+  // reading is a decision about how to look, and a decision cannot be guessed
+  // from the words that are to be looked at. Both loops below iterate this
+  // list, so an empty one can never light the glyph and never win `primary`.
+  text: [],
+}
+
+const DEFAULT_MEDIUM: MediumId = 'image'
+
+/**
+ * The catchwords that also count at the END of a word. German puts the medium
+ * last in a compound ("Rockmusik", "Trickfilm", "Kinderlied", "Ölgemälde"),
+ * and a catchword has to begin a word everywhere else (`wordAt`). A word
+ * stands here when the compounds it closes name its medium far more often
+ * than not, with its plural, because a plural does not end in its singular.
+ * Left out on purpose, each for the words it closes: 'ton' ("Karton",
+ * "Beton"), 'töne' ("Farbtöne"), 'klang' ("Einklang"), 'bewegung'
+ * ("Kunstbewegung"), 'szene' ("Straßenszene"), 'tanz' ("Distanz"),
+ * 'zeichnung' ("Bezeichnung"), 'motion' ("emotion"). Taken with its trap:
+ * 'lied' also closes "Mitglied".
+ */
+const HEADS: Record<MediumId, string[]> = {
+  image: [
+    'bild', 'bilder', 'gemälde', 'gemaelde', 'foto', 'fotos', 'fotografie', 'fotografien',
+    'porträt', 'porträts', 'portrait', 'portraits', 'poster', 'plakat', 'plakate',
+    'malerei', 'collage', 'collagen', 'illustration', 'illustrationen',
+  ],
+  video: ['video', 'videos', 'film', 'filme', 'animation', 'animationen', 'clip', 'clips'],
+  sound: [
+    'musik', 'lied', 'lieder', 'melodie', 'melodien', 'geräusch', 'geräusche',
+    'geraeusch', 'geraeusche', 'hoerspiel', 'song', 'songs',
+  ],
+  '3d': [
+    'skulptur', 'skulpturen', 'statue', 'statuen', 'büste', 'büsten', 'bueste', 'buesten',
+    'relief', 'reliefs',
+  ],
+  code: [],
+  text: [],
+}
+
+/** A letter or a digit, in any script: what a catchword may not follow. */
+const WORD_CHAR = /[\p{L}\p{N}]/u
+
+/**
+ * Where `w` first stands in `t` at the start of a word, or -1; with `atEnd`,
+ * also where it closes a word.
+ *
+ * Until 2026-09-27 this was a substring search, so a word only had to CONTAIN
+ * a catchword: in a Prompt Interception text describing gouache and ink "auf
+ * festem Karton", 'ton' in "Karton" stood before 'bild' in "Bildzentrum", and
+ * the flow generated ninety seconds of audio. "Beton", "stone", "cotton",
+ * "Farbtöne", "Einklang" and "emotion" fell into the same trap. A catchword
+ * now has to begin a word: the start of the text or any character that is
+ * neither a letter nor a digit stands before it. What follows it is left
+ * free, which keeps the inflection ("tanzende", "fliegender", "bewegtes")
+ * and the rest of a compound it opens ("Musikstück", "Tonaufnahme"). A
+ * compound that ends in its medium counts through HEADS. What is still lost:
+ * a compound whose last word is not in HEADS ("Bleistiftzeichnung").
+ */
+function wordAt(t: string, w: string, atEnd: boolean): number {
+  for (let p = t.indexOf(w); p >= 0; p = t.indexOf(w, p + 1)) {
+    const opens = !WORD_CHAR.test(t.charAt(p - 1))
+    const closes = !WORD_CHAR.test(t.charAt(p + w.length))
+    if (opens || (atEnd && closes)) return p
+  }
+  return -1
+}
+
+/** Where the medium `m` is first named in `t`, or -1. */
+function firstAt(t: string, m: MediumId): number {
+  let best = -1
+  const take = (p: number) => { if (p >= 0 && (best < 0 || p < best)) best = p }
+  for (const w of CATCHWORDS[m]) take(wordAt(t, w, false))
+  for (const w of HEADS[m]) take(wordAt(t, w, true))
+  return best
+}
+
+export function useMediumInference(text: Ref<string>) {
+  /** all media whose catchwords appear — several can light up at once */
+  const media = computed<Set<MediumId>>(() => {
+    const t = text.value.toLowerCase()
+    const hits = new Set<MediumId>()
+    if (!t.trim()) return hits
+    for (const m of MEDIA) {
+      if (firstAt(t, m) >= 0) hits.add(m)
+    }
+    return hits
+  })
+
+  /** primary = earliest-mentioned medium, else the default (honest "I'd guess image") */
+  const primary = computed<MediumId>(() => {
+    const t = text.value.toLowerCase()
+    let best: MediumId | null = null
+    let bestPos = Infinity
+    for (const m of MEDIA) {
+      const p = firstAt(t, m)
+      if (p >= 0 && p < bestPos) {
+        bestPos = p
+        best = m
+      }
+    }
+    return best ?? DEFAULT_MEDIUM
+  })
+
+  return { media, primary }
+}

@@ -1,0 +1,17 @@
+{
+  "_description": "Central mapping of media types to default Output-Configs",
+  "_note": "DevServer uses this to determine which Output-Config to use for auto-media generation",
+  "_architecture": "Separation of concerns: text manipulation configs suggest media type, this file chooses which model/config",
+
+  "image": "sd35_large",
+
+  "audio": "stableaudio_open",
+
+  "music": "heartmula_standard",
+
+  "_video_note": "Was 'wan22_t2v_diffusers' until 2026-09-07, which is no config at all — corrected to the one Wan text-to-video config there is. Latent until the medium is inferred rather than chosen; from then on it decides every video run nobody picked a model for.",
+
+  "video": "wan22_t2v_video_fast",
+
+  "text": null
+}

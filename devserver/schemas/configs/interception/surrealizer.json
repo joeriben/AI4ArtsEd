@@ -1,0 +1,94 @@
+{
+  "pipeline": "surrealizer",
+  "instruction_type": "surrealizer",
+  "name": {
+    "en": "Surrealizer",
+    "de": "Surreali­sierer",
+    "tr": "Gerçeküstüleştirici",
+    "ko": "초현실화기",
+    "uk": "Сюрреалізатор",
+    "fr": "Surréalisateur",
+    "es": "Surrealizador",
+    "he": "מְסַרְיָאֵל",
+    "ar": "المُسرْيَل",
+    "bg": "Сюрреализатор"
+  },
+  "description": {
+    "en": "Two AI 'brains' (CLIP and T5) each read your text — the slider pushes the image far beyond what either would normally produce, into unexplored territory where surreal, dreamlike compositions emerge.",
+    "de": "Zwei KI-'Gehirne' (CLIP und T5) lesen deinen Text — der Regler schiebt das Bild weit über das hinaus, was beide normalerweise erzeugen würden, in unerforschtes Terrain, in dem surrealistische, traumhafte Kompositionen entstehen.",
+    "uk": "Екстраполяція за межі відомого",
+    "fr": "Deux « cerveaux » d'IA (CLIP et T5) lisent chacun ton texte — le curseur pousse l'image bien au-delà de ce que chacun produirait normalement, dans un territoire inexploré où des compositions surréalistes et oniriques émergent.",
+    "es": "Dos \"cerebros\" de IA (CLIP y T5) leen tu texto — el deslizador empuja la imagen mucho más allá de lo que cualquiera produciría normalmente, hacia territorio inexplorado donde emergen composiciones surreales y oníricas.",
+    "he": "שני 'מוחות' AI (CLIP ו-T5) קוראים כל אחד את הטקסט שלך — המחוון דוחף את התמונה הרחק מעבר למה שכל אחד מהם היה מייצר בדרך כלל, לשטח בלתי מחוקר שבו צצות קומפוזיציות סוריאליסטיות וחלומיות.",
+    "ar": "يقرأ كل من دماغَي الذكاء الاصطناعي (CLIP وT5) نصك — يدفع المنزلق الصورة بعيداً جداً إلى ما هو أبعد مما سيُنتجه أيٌّ منهما عادةً، إلى أراضٍ غير مستكشفة تنبثق منها تأليفات سريالية وحالمة.",
+    "bg": "Два ИИ \"мозъка\" (CLIP и T5) четат текста ви поотделно — плъзгачът избутва изображението далеч отвъд това, което всеки от тях обикновено произвежда, в неизследвана територия, където възникват сюрреалистични, мечтателни композиции.",
+    "tr": "İki yapay zeka 'beyni' (CLIP ve T5) metninizi ayrı ayrı okur — kaydırıcı görüntüyü her birinin normalde üretebileceğinin çok ötesine, gerçeküstü, rüya gibi kompozisyonların ortaya çıktığı keşfedilmemiş alanlara iter.",
+    "ko": "두 개의 AI '두뇌'(CLIP과 T5)가 각각 텍스트를 읽습니다 — 슬라이더는 이미지를 둘 중 어느 쪽이 보통 만들어낼 수 있는 것보다 훨씬 너머로, 초현실적이고 꿈같은 구성이 나타나는 미지의 영역으로 밀어붙입니다."
+  },
+  "category": {
+    "de": "Forschung",
+    "en": "Research",
+    "he": "מחקר",
+    "ar": "البحث",
+    "bg": "Изследвания",
+    "tr": "Araştırma",
+    "ko": "연구",
+    "uk": "Дослідження",
+    "fr": "Recherche",
+    "es": "Investigación"
+  },
+  "properties": [
+    "research"
+  ],
+  "context": {
+    "en": "The Surrealizer encodes your prompt separately through CLIP-L (visual encoder, 77 tokens, 768 dims padded to 4096) and T5-XXL (language encoder, 512 tokens, 4096 dims). First 77 tokens: (1-α)·CLIP-L + α·T5. Positive α extrapolates past T5 into linguistically driven hallucinations. Negative α amplifies CLIP-L and negates T5 — critically, the upper 3328 dimensions (where CLIP-L is zero-padded) receive inverted T5 vectors, flipping cross-attention patterns in the transformer and producing visually driven hallucinations with disrupted semantics. Remaining T5 tokens (78-512) unchanged as semantic anchor. Stage 2 skipped to preserve original prompt.",
+    "de": "Der Surrealisierer kodiert deinen Prompt getrennt durch CLIP-L (visueller Encoder, 77 Tokens, 768 Dim. aufgefüllt auf 4096) und T5-XXL (Sprach-Encoder, 512 Tokens, 4096 Dim.). Erste 77 Tokens: (1-α)·CLIP-L + α·T5. Positives α extrapoliert über T5 hinaus → sprachlich getriebene Halluzinationen. Negatives α verstärkt CLIP-L und negiert T5 — entscheidend: In den oberen 3328 Dimensionen (CLIP-L dort nur Nullen) entstehen invertierte T5-Vektoren, die Cross-Attention-Muster im Transformer umkehren → visuell getriebene Halluzinationen mit gestörter Semantik. Restliche T5-Tokens (78-512) unverändert als semantischer Anker. Stage 2 wird übersprungen, um den Original-Prompt zu erhalten.",
+    "tr": "Gerçeküstüleştirici, promptunuzu CLIP-L (görsel kodlayıcı, 77 token, 768 boyut 4096'ya doldurulmuş) ve T5-XXL (dil kodlayıcısı, 512 token, 4096 boyut) aracılığıyla ayrı ayrı kodlar. İlk 77 token: (1-α)·CLIP-L + α·T5. Pozitif α, T5'in ötesine dilsel olarak yönlendirilmiş halüsinasyonlara ekstrapolasyon yapar. Negatif α, CLIP-L'yi güçlendirir ve T5'i olumsuzlar — kritik olarak, üst 3328 boyut (CLIP-L'nin sıfırla doldurulduğu yer) ters çevrilmiş T5 vektörleri alır, transformerdaki çapraz dikkat kalıplarını tersine çevirir ve bozulmuş semantikle görsel olarak yönlendirilmiş halüsinasyonlar üretir. Kalan T5 tokenleri (78-512) semantik çapa olarak değişmez. Orijinal promptu korumak için Aşama 2 atlanır.",
+    "ko": "초현실화기는 프롬프트를 CLIP-L(시각 인코더, 77 토큰, 768차원을 4096으로 패딩)과 T5-XXL(언어 인코더, 512 토큰, 4096차원)을 통해 별도로 인코딩합니다. 처음 77 토큰: (1-α)·CLIP-L + α·T5. 양수 α는 T5를 넘어 언어적으로 구동되는 환각으로 외삽합니다. 음수 α는 CLIP-L을 증폭하고 T5를 부정합니다 — 결정적으로 상위 3328 차원(CLIP-L이 제로 패딩된 곳)에 반전된 T5 벡터가 수신되어 트랜스포머의 교차 어텐션 패턴을 뒤집고 의미론이 교란된 시각적으로 구동되는 환각을 생성합니다. 나머지 T5 토큰(78-512)은 의미적 앵커로 변경되지 않습니다. 원본 프롬프트를 보존하기 위해 Stage 2는 건너뜁니다."
+  },
+  "parameters": {
+    "temperature": 0.0
+  },
+  "media_preferences": {
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "skip_stage2": true,
+    "backend": "none",
+    "workflow_type": "passthrough",
+    "note": "Surrealizer config. Stage 2 skipped to preserve original prompt for token-level CLIP-L/T5 extrapolation.",
+    "system_config": false,
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🔬",
+    "color": "#FF6F00",
+    "category": "research",
+    "difficulty": 4,
+    "order": 50,
+    "hidden": false
+  },
+  "tags": {
+    "en": [
+      "surreal",
+      "research",
+      "experimental",
+      "T5-CLIP",
+      "extrapolation",
+      "dual-encoder",
+      "advanced"
+    ],
+    "de": [
+      "surreal",
+      "forschung",
+      "experimentell",
+      "T5-CLIP",
+      "Extrapolation",
+      "Dual-Encoder",
+      "fortgeschritten"
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Image to 3D (Hunyuan3D-2)",
+    "de": "Bild zu 3D (Hunyuan3D-2)",
+    "tr": "Görüntüden 3D'ye (Hunyuan3D-2)",
+    "ko": "이미지에서 3D로 (Hunyuan3D-2)",
+    "uk": "Зображення в 3D (Hunyuan3D-2)",
+    "fr": "Image vers 3D (Hunyuan3D-2)",
+    "es": "Imagen a 3D (Hunyuan3D-2)",
+    "he": "מתמונה לתלת-ממד (Hunyuan3D-2)",
+    "ar": "من صورة إلى ثلاثي الأبعاد (Hunyuan3D-2)",
+    "bg": "Изображение в 3D (Hunyuan3D-2)"
+  },
+  "description": {
+    "en": "Generate textured 3D models from images using Hunyuan3D-2",
+    "de": "Texturierte 3D-Modelle aus Bildern generieren mit Hunyuan3D-2",
+    "tr": "Hunyuan3D-2 kullanarak görüntülerden dokulu 3D modeller oluşturun",
+    "ko": "Hunyuan3D-2를 사용해 이미지로부터 텍스처가 적용된 3D 모델을 생성합니다",
+    "uk": "Створюйте текстуровані 3D-моделі із зображень за допомогою Hunyuan3D-2",
+    "fr": "Générez des modèles 3D texturés à partir d'images avec Hunyuan3D-2",
+    "es": "Genera modelos 3D texturizados a partir de imágenes con Hunyuan3D-2",
+    "he": "יצירת מודלים תלת-ממדיים עם מרקם מתוך תמונות באמצעות Hunyuan3D-2",
+    "ar": "توليد نماذج ثلاثية الأبعاد ذات ملمس من الصور باستخدام Hunyuan3D-2",
+    "bg": "Генериране на текстурирани 3D модели от изображения с Hunyuan3D-2"
+  },
+  "category": {
+    "en": "3D Generation",
+    "de": "3D-Generierung",
+    "tr": "3D Üretimi",
+    "ko": "3D 생성",
+    "uk": "3D-генерація",
+    "fr": "Génération 3D",
+    "es": "Generación 3D",
+    "he": "יצירת תלת-ממד",
+    "ar": "توليد ثلاثي الأبعاد",
+    "bg": "3D генериране"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_3d_hunyuan3d",
+    "seed": "random",
+    "num_inference_steps": 50,
+    "guidance_scale": 7.5,
+    "octree_resolution": 256,
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "3d",
+    "supported_types": [
+      "3d"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "tencent/Hunyuan3D-2",
+    "backend": "hunyuan3d",
+    "backend_type": "hunyuan3d",
+    "requires_gpu": true,
+    "gpu_vram_mb": 16000,
+    "estimated_duration_seconds": "180-240",
+    "display_name": "Hunyuan3D-2",
+    "icon": "view_in_ar",
+    "publisher": "Tencent (Shenzhen, China)",
+    "architecture": "DiT Flow Matching (Shape 1.1B) + Paint Network (Texture 1.3B)",
+    "params": "~2.4B total (1.1B Shape + 1.3B Paint)",
+    "quantization": "FP16",
+    "license": "MIT License",
+    "fair_culture": "Training data: Tencent internal 3D dataset (Objaverse-based filtering)",
+    "img2img": true,
+    "safety_by_design": "Image-to-3D inherently limited to input image content",
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "view_in_ar",
+    "color": "#00BCD4",
+    "category": "3d_generation",
+    "difficulty": 2,
+    "order": 40
+  },
+  "tags": {
+    "en": [
+      "3d",
+      "mesh",
+      "hunyuan3d",
+      "image-to-3d"
+    ],
+    "de": [
+      "3d",
+      "mesh",
+      "hunyuan3d",
+      "bild-zu-3d"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

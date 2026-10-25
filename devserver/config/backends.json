@@ -1,0 +1,142 @@
+{
+  "_comment": "Backend-Registry for AI4ArtsEd Workshop-Server. Easily configurable for different hardware setups.",
+
+  "backends": {
+    "diffusers": {
+      "enabled": true,
+      "description": "HuggingFace Diffusers for Image Generation",
+      "media_types": ["image"],
+      "requirements": {
+        "min_vram_gb": 8,
+        "packages": ["diffusers", "transformers", "accelerate"]
+      },
+      "config": {
+        "cache_dir": null,
+        "torch_dtype": "float16",
+        "device": "cuda",
+        "enable_attention_slicing": true,
+        "enable_vae_tiling": false
+      }
+    },
+
+    "heartmula": {
+      "enabled": true,
+      "description": "HeartMuLa Music Generation (lyrics + tags to music)",
+      "media_types": ["music"],
+      "requirements": {
+        "min_vram_gb": 12,
+        "packages": ["heartlib"],
+        "model_path": "~/ai/heartlib/ckpt"
+      },
+      "config": {
+        "device": "cuda",
+        "version": "3B",
+        "lazy_load": true
+      }
+    },
+
+    "stable_audio": {
+      "enabled": true,
+      "description": "Stable Audio 3 (medium) for music and sound effects — multilingual t5gemma encoder, few-step rectified flow",
+      "media_types": ["audio"],
+      "requirements": {
+        "min_vram_gb": 8,
+        "packages": ["stable-audio-tools"],
+        "model_id": "stabilityai/stable-audio-3-medium"
+      },
+      "config": {
+        "torch_dtype": "float32",
+        "device": "cuda",
+        "max_duration_seconds": 47,
+        "default_steps": 8,
+        "default_cfg_scale": 1.0,
+        "sampler_type": "pingpong"
+      }
+    },
+
+    "ltx_video": {
+      "enabled": false,
+      "description": "LTX-Video Text-to-Video & Image-to-Video",
+      "media_types": ["video"],
+      "requirements": {
+        "min_vram_gb": 10,
+        "packages": ["diffusers", "imageio", "imageio-ffmpeg"],
+        "model_id": "Lightricks/LTX-Video"
+      },
+      "config": {
+        "torch_dtype": "bfloat16",
+        "device": "cuda"
+      }
+    },
+
+    "wan_video": {
+      "enabled": true,
+      "description": "Wan 2.1 Video Generation (1.3B/14B, VRAM-tiered)",
+      "media_types": ["video"],
+      "requirements": {
+        "min_vram_gb": 8,
+        "packages": ["diffusers", "imageio", "imageio-ffmpeg"]
+      },
+      "config": {
+        "t2v_14b_model_id": "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+        "t2v_1_3b_model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+        "torch_dtype": "bfloat16",
+        "vae_dtype": "float32",
+        "device": "cuda"
+      }
+    },
+
+    "hunyuan3d": {
+      "enabled": true,
+      "description": "Hunyuan3D-2 Text-to-3D Mesh Generation (Tencent)",
+      "media_types": ["3d"],
+      "requirements": {
+        "min_vram_gb": 16,
+        "packages": ["hy3dgen"]
+      },
+      "config": {
+        "model_id": "tencent/Hunyuan3D-2",
+        "torch_dtype": "float16",
+        "device": "cuda"
+      }
+    },
+
+    "comfyui": {
+      "enabled": true,
+      "description": "ComfyUI Standalone (Fallback for all media types)",
+      "media_types": ["image", "audio", "video", "music"],
+      "requirements": {
+        "external_service": true,
+        "ports": [17804]
+      },
+      "config": {
+        "comfy_port": 17804,
+        "auto_start": true,
+        "startup_timeout": 120
+      }
+    },
+
+    "openrouter": {
+      "enabled": false,
+      "description": "OpenRouter (Gemini, etc.)",
+      "media_types": ["image"],
+      "requirements": {
+        "api_key_file": "openrouter.key"
+      }
+    }
+  },
+
+  "priorities": {
+    "image": ["diffusers", "comfyui"],
+    "music": ["heartmula", "comfyui"],
+    "audio": ["stable_audio", "comfyui"],
+    "video": ["ltx_video", "wan_video", "comfyui"],
+    "3d": ["hunyuan3d"]
+  },
+
+  "settings": {
+    "auto_detect_vram": true,
+    "fallback_to_comfyui": true,
+    "log_backend_selection": true
+  }
+}

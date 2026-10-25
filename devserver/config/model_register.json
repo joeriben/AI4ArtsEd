@@ -1,0 +1,166 @@
+{
+  "_note": [
+    "What a model IS, for the card that shows beside a model chip: who made it, in",
+    "what year, whether its weights are open, and how big it is.",
+    "",
+    "Every entry is a factual claim and carries the page it was read off. A model",
+    "this file says nothing about shows no card -- an unknown fact stays unstated,",
+    "it is never filled in from memory.",
+    "",
+    "Keys are the BARE model name (the part after the last '/') for text models and",
+    "the output config id for image models. Bare, because the same model reaches",
+    "this installation through whichever provider is configured, and a key carrying",
+    "one provider's prefix would go silent the moment the operator switches.",
+    "",
+    "openness: 'open' = weights and training data published; 'weights' = weights",
+    "downloadable, use restricted by the licence; 'closed' = no weights.",
+    "params_b counts BILLIONS, and for an image model it is the image network",
+    "alone -- its text encoder is a separate, exchangeable model. The size class",
+    "shown beside the size (micro / small / large / very large) is read off",
+    "params_b at four bits per weight; the thresholds stand in one place,",
+    "public/ai4artsed-frontend/src/composables/useModelRegister.ts (sizeClass).",
+    "A closed model without a published count is very large;",
+    "any other model without a published count has no class.",
+    "medium: image marks an image network. The size class is read for",
+    "language models only: its thresholds were set from language-model",
+    "examples (small = up to 32 B); on an image network, where 8 B",
+    "is the top of the field, they wrote small beside SD 3.5 Large.",
+    "An image network carries its count alone; a closed one",
+    "without a published count is still very large."
+  ],
+
+  "models": {
+    "smollm3:3b": {
+      "maker": "Hugging Face",
+      "year": 2025,
+      "openness": "open",
+      "params_b": 3,
+      "source": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B"
+    },
+    "qwen3.5:4b": {
+      "maker": "Alibaba",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 4,
+      "source": "https://huggingface.co/Qwen/Qwen3.5-4B"
+    },
+    "qwen3.5:9b": {
+      "maker": "Alibaba",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 9,
+      "source": "https://huggingface.co/Qwen/Qwen3.5-9B"
+    },
+    "qwen3.5:27b": {
+      "maker": "Alibaba",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 27,
+      "source": "https://huggingface.co/Qwen/Qwen3.5-27B"
+    },
+    "glm-5.3": {
+      "maker": "Z.ai",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 753,
+      "source": "https://huggingface.co/zai-org/GLM-5.3"
+    },
+    "kimi-k3": {
+      "maker": "Moonshot AI",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 2800,
+      "source": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    "gemini-3.7-flash": {
+      "maker": "Google DeepMind",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+    },
+    "mistral-large-3": {
+      "maker": "Mistral AI",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 675,
+      "source": "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512"
+    },
+    "deepseek-v4-pro": {
+      "maker": "DeepSeek",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 1600,
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    "claude-sonnet-5": {
+      "maker": "Anthropic",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://platform.claude.com/docs/en/models/sonnet-5/overview"
+    },
+    "gpt-5.6-terra": {
+      "maker": "OpenAI",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-terra"
+    },
+
+    "sd15": {
+      "maker": "Stability AI / RunwayML",
+      "year": 2022,
+      "openness": "weights",
+      "medium": "image",
+      "params_b": 0.86,
+      "source": "https://huggingface.co/runwayml/stable-diffusion-v1-5"
+    },
+    "sdxl": {
+      "maker": "Stability AI",
+      "year": 2023,
+      "openness": "weights",
+      "medium": "image",
+      "params_b": 3.5,
+      "source": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"
+    },
+    "commoncanvas_xl_c": {
+      "maker": "Cornell · Databricks",
+      "year": 2023,
+      "openness": "open",
+      "medium": "image",
+      "params_b": 3.5,
+      "source": "https://huggingface.co/common-canvas/CommonCanvas-XL-C"
+    },
+    "sd35_large": {
+      "maker": "Stability AI",
+      "year": 2024,
+      "openness": "weights",
+      "medium": "image",
+      "params_b": 8.1,
+      "source": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large"
+    },
+    "flux2": {
+      "maker": "Black Forest Labs",
+      "year": 2025,
+      "openness": "weights",
+      "medium": "image",
+      "params_b": 32,
+      "source": "https://bfl.ai/blog/flux-2"
+    },
+    "gemini_3_pro_image": {
+      "maker": "Google DeepMind",
+      "year": 2025,
+      "openness": "closed",
+      "medium": "image",
+      "params_b": null,
+      "source": "https://deepmind.google/models/gemini-image/pro/"
+    }
+  },
+
+  "interception_lineups": {
+    "openWeights": ["mistral-large-3", "deepseek-v4-pro", "glm-5.3", "kimi-k3"],
+    "closedWeights": ["claude-sonnet-5", "gemini-3.7-flash", "gpt-5.6-terra"],
+    "family": ["qwen3.5:4b", "qwen3.5:9b", "qwen3.5:27b"]
+  }
+}

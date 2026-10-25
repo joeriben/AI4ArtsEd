@@ -1,0 +1,215 @@
+{
+  "_note": [
+    "The axes of the Latent Audio Synth (Crossmodal Lab), moved here from",
+    "gpu_service/services/cross_aesthetic_backend.py letter for letter in stage 6",
+    "of the move to ComfyUI. The DevServer",
+    "(routes/cross_aesthetic_routes.py) reads them, frames the neutral prompt and",
+    "the poles with the production frame, and hands the framed poles to the",
+    "package's node ai4artsed_audio_synth, which encodes them with Stable Audio 3's",
+    "text encoder and adds the pole directions to the base embedding.",
+    "",
+    "semantic_axes: each axis is two text poles in the encoder's embedding space;",
+    "'d' is the cosine distance between the encoded poles (higher = more distinct),",
+    "'level' the register the axis names. 21 validated and one experimental.",
+    "",
+    "pca_labels: the ear-validated principal components of the SA3 t5gemma PCA",
+    "(pca_components_sa3.pt, fitted on 392K prompt embeddings, [N, 768] unit",
+    "directions), each keyed by its explicit PC index so omitting one never",
+    "misaligns pcN -> component. Re-derived 2026-07-11. Naming is abstract",
+    "(texture), not content-literal, on purpose: the axis shifts timbre potently but",
+    "does not reproduce content. Each texture pair is grounded in the measured",
+    "acoustic contrast of the two poles (centroid=bright, zcr=rough, onset/s=dense,",
+    "rms=heavy); 'genesis' keeps the content origin visible. Dropped by ear: PC1,",
+    "PC6, PC9; PCs 11+ unvalidated.",
+    "",
+    "production_frame: SA3's conventionalized TrackType frame for the axis",
+    "vocabulary (neutral + poles). t5gemma was trained on captions prefixed with a",
+    "TrackType tag; bare descriptors under-separate under it. Measured (the A3",
+    "screen, screen_semantic_axes_sa3.{py,md}): the typical drawbar's median",
+    "nrel_cos is 0.148 bare vs 0.291 'instrument'. Applied ONLY to the neutral and",
+    "the poles, so the axis directions (pole - neutral) are well separated (the",
+    "identical prefix tokens cancel in the difference). User base prompts are",
+    "deliberately NOT framed: a base is user content, not axis vocabulary."
+  ],
+  "neutral_prompt": "sound",
+  "production_frame": "TrackType: Instrument, ",
+  "pca_file": "pca_components_sa3.pt",
+  "semantic_axes": {
+    "tonal_noisy": {
+      "pole_a": "sound tonal",
+      "pole_b": "sound noisy",
+      "level": "perceptual",
+      "d": 4.806
+    },
+    "rhythmic_sustained": {
+      "pole_a": "sound rhythmic",
+      "pole_b": "sound sustained",
+      "level": "perceptual",
+      "d": 2.604
+    },
+    "ceremonial_everyday": {
+      "pole_a": "ceremonial music",
+      "pole_b": "everyday music",
+      "level": "cultural",
+      "d": 2.391
+    },
+    "improvised_composed": {
+      "pole_a": "improvised music",
+      "pole_b": "composed music",
+      "level": "cultural",
+      "d": 2.109
+    },
+    "acoustic_electronic": {
+      "pole_a": "acoustic music",
+      "pole_b": "electronic music",
+      "level": "cultural",
+      "d": 2.013
+    },
+    "music_noise": {
+      "pole_a": "music",
+      "pole_b": "noise",
+      "level": "critical",
+      "d": 2.058
+    },
+    "complex_simple": {
+      "pole_a": "complex music",
+      "pole_b": "simple music",
+      "level": "critical",
+      "d": 1.914
+    },
+    "sacred_secular": {
+      "pole_a": "sacred music",
+      "pole_b": "secular music",
+      "level": "cultural",
+      "d": 1.756
+    },
+    "refined_raw": {
+      "pole_a": "refined music",
+      "pole_b": "raw music",
+      "level": "critical",
+      "d": 1.735
+    },
+    "solo_ensemble": {
+      "pole_a": "solo music",
+      "pole_b": "ensemble music",
+      "level": "cultural",
+      "d": 1.593
+    },
+    "bright_dark": {
+      "pole_a": "sound bright",
+      "pole_b": "sound dark",
+      "level": "perceptual",
+      "d": 1.281
+    },
+    "traditional_modern": {
+      "pole_a": "traditional music",
+      "pole_b": "modern music",
+      "level": "cultural",
+      "d": 1.213
+    },
+    "beautiful_ugly": {
+      "pole_a": "beautiful music",
+      "pole_b": "ugly music",
+      "level": "critical",
+      "d": 1.097
+    },
+    "loud_quiet": {
+      "pole_a": "sound loud",
+      "pole_b": "sound quiet",
+      "level": "perceptual",
+      "d": 1.024
+    },
+    "professional_amateur": {
+      "pole_a": "professional music",
+      "pole_b": "amateur music",
+      "level": "cultural",
+      "d": 0.965
+    },
+    "smooth_harsh": {
+      "pole_a": "sound smooth",
+      "pole_b": "sound harsh",
+      "level": "perceptual",
+      "d": 0.81
+    },
+    "fast_slow": {
+      "pole_a": "sound fast",
+      "pole_b": "sound slow",
+      "level": "perceptual",
+      "d": 0.8
+    },
+    "close_distant": {
+      "pole_a": "sound close",
+      "pole_b": "sound distant",
+      "level": "perceptual",
+      "d": 0.758
+    },
+    "dense_sparse": {
+      "pole_a": "sound dense",
+      "pole_b": "sound sparse",
+      "level": "perceptual",
+      "d": 0.735
+    },
+    "vocal_instrumental": {
+      "pole_a": "vocal music",
+      "pole_b": "instrumental music",
+      "level": "cultural",
+      "d": 0.673
+    },
+    "authentic_fusion": {
+      "pole_a": "authentic music",
+      "pole_b": "fusion music",
+      "level": "critical",
+      "d": 0.649
+    },
+    "music_soundscape": {
+      "pole_a": "music",
+      "pole_b": "soundscape",
+      "level": "experimental",
+      "d": null
+    }
+  },
+  "pca_labels": [
+    {
+      "pc": 2,
+      "pole_a": "Smooth",
+      "pole_b": "Gritty",
+      "genesis": "sustained vs dense-rough-loud | engines vs laughter/applause/chatter"
+    },
+    {
+      "pc": 3,
+      "pole_a": "Polished",
+      "pole_b": "Tangled",
+      "genesis": "bright-crafted vs dense-wild | instrumental synth/funk vs wind/waves/birds"
+    },
+    {
+      "pc": 4,
+      "pole_a": "Airy",
+      "pole_b": "Leaden",
+      "genesis": "light vs dark-heavy-dense | cafe/canteen vs mechanical hum/vibration"
+    },
+    {
+      "pc": 5,
+      "pole_a": "Swarming",
+      "pole_b": "Still",
+      "genesis": "dense vs sparse-clear | bird flocks vs a single man speaking"
+    },
+    {
+      "pc": 7,
+      "pole_a": "Flowing",
+      "pole_b": "Grainy",
+      "genesis": "continuous vs broken-rough | rain/thunder/storm vs sheep/goats/frog"
+    },
+    {
+      "pc": 8,
+      "pole_a": "Brittle",
+      "pole_b": "Plush",
+      "genesis": "bright-sharp vs dark-full | percussive hit/tap/touch vs orchestra/trad. music"
+    },
+    {
+      "pc": 10,
+      "pole_a": "Piercing",
+      "pole_b": "Murky",
+      "genesis": "bright-light vs dark-heavy | shrill/harsh calls vs steady engine/vehicle idle"
+    }
+  ]
+}

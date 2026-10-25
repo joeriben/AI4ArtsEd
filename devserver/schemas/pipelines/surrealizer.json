@@ -1,0 +1,25 @@
+{
+  "name": "surrealizer",
+  "pipeline_type": "passthrough",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "skip_stage2": true,
+  "description": "Dedicated pipeline for Surrealizer workflow with T5-CLIP vector interpolation. Bypasses Stage 2 to preserve original prompt for surrealization.",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "skip",
+    "reusable": false,
+    "pre_translation": false,
+    "prompt_structure": {
+      "type": "passthrough",
+      "parts": [],
+      "description": "No execution - input passed directly to Stage 3"
+    },
+    "use_case": "Dedicated Surrealizer pipeline. Stage 2 skipped to preserve prompt integrity for T5-CLIP manipulation."
+  }
+}

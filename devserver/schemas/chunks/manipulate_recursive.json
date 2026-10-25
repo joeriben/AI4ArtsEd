@@ -1,0 +1,19 @@
+{
+  "name": "manipulate_recursive",
+  "description": "One link of a chained transformation: reads the PREVIOUS step's output, never the run's original input",
+  "template": "Task:\n{{TASK_INSTRUCTION}}\n\nContext:\n{{CONTEXT}}\n\nTarget language: {{TARGET_LANGUAGE}}\n\nText:\n{{PREVIOUS_OUTPUT}}",
+  "backend_type": "local_llm",
+  "model": "STAGE2_INTERCEPTION_MODEL",
+  "parameters": {
+    "temperature": 0.7,
+    "stream": false
+  },
+  "meta": {
+    "chunk_type": "manipulation",
+    "output_format": "text",
+    "estimated_duration": "fast",
+    "prompt_interception": true,
+    "required_placeholders": ["TASK_INSTRUCTION", "CONTEXT", "TARGET_LANGUAGE", "PREVIOUS_OUTPUT"],
+    "why_not_manipulate": "manipulate reads {{INPUT_TEXT}}, which chunk_builder fills with the text Stage 1 checked -- the same text on every pass. A chain needs the link before it, so this template reads {{PREVIOUS_OUTPUT}} (which falls back to the run input on the first pass) and names the language the step is going into. The safety prefix still rides on {{TASK_INSTRUCTION}}."
+  }
+}

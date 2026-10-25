@@ -1,0 +1,27 @@
+{
+  "name": "image_transformation",
+  "pipeline_type": "direct",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "description": "Image Transformation Pipeline: Input Image + Context → Direct to Stage 3/4 (No Interception)",
+  "instruction_type": "image_transformation",
+  "input_requirements": {
+    "images": 1,
+    "context_text": 1
+  },
+  "chunks": [],
+  "required_configs": [],
+  "config_mappings": {},
+  "meta": {
+    "workflow_type": "image_transformation",
+    "reusable": true,
+    "pre_translation": false,
+    "skip_stage2": true,
+    "prompt_structure": {
+      "type": "image_context_direct",
+      "parts": ["image", "context"],
+      "description": "Image + context prompt (no interception, direct to optimization)"
+    },
+    "notes": "Simplified flow for img2img: Image upload → Context prompt → Media selection → Stage 3 optimization → Stage 4 generation. No Stage2 interception for child-friendly direct experience."
+  }
+}

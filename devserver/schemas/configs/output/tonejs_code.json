@@ -1,0 +1,97 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Tone.js Music Generation",
+    "de": "Tone.js Musik-Generierung",
+    "tr": "Tone.js Müzik Üretimi",
+    "ko": "Tone.js 음악 생성",
+    "uk": "Генерація музики Tone.js",
+    "fr": "Génération musicale Tone.js",
+    "es": "Generación musical Tone.js",
+    "he": "יצירת מוזיקה ב-Tone.js",
+    "ar": "توليد الموسيقى بـ Tone.js",
+    "bg": "Генериране на музика с Tone.js"
+  },
+  "description": {
+    "en": "Generates executable Tone.js JavaScript code for browser-based music. Creates rhythmic, melodic compositions using synths, samples, and temporal patterns.",
+    "de": "Generiert ausfuehrbaren Tone.js JavaScript-Code fuer Browser-basierte Musik. Erstellt rhythmische, melodische Kompositionen mit Synthesizern, Samples und zeitlichen Mustern.",
+    "tr": "Tarayıcı tabanlı müzik için çalıştırılabilir Tone.js JavaScript kodu üretir. Synth'ler, sample'lar ve zamansal örüntülerle ritmik, melodik kompozisyonlar oluşturur.",
+    "ko": "브라우저 기반 음악을 위한 실행 가능한 Tone.js JavaScript 코드를 생성합니다. 신스, 샘플, 시간적 패턴을 사용해 리드미컬하고 선율적인 작곡을 만듭니다.",
+    "uk": "Генерує виконуваний JavaScript-код Tone.js для музики в браузері. Створює ритмічні, мелодичні композиції за допомогою синтезаторів, семплів і часових патернів.",
+    "fr": "Génère du code JavaScript Tone.js exécutable pour de la musique dans le navigateur. Crée des compositions rythmiques et mélodiques à l'aide de synthétiseurs, d'échantillons et de motifs temporels.",
+    "es": "Genera código JavaScript Tone.js ejecutable para música en el navegador. Crea composiciones rítmicas y melódicas mediante sintetizadores, samples y patrones temporales.",
+    "he": "מייצר קוד JavaScript של Tone.js הניתן להרצה למוזיקה מבוססת דפדפן. יוצר קומפוזיציות קצביות ומלודיות באמצעות סינתיסייזרים, סמפלים ותבניות זמן.",
+    "ar": "يولّد كود JavaScript قابلاً للتشغيل بواسطة Tone.js لموسيقى تعمل في المتصفح. ينشئ تأليفات إيقاعية ولحنية باستخدام أجهزة synth وعينات صوتية (samples) وأنماط زمنية.",
+    "bg": "Генерира изпълним JavaScript код с Tone.js за музика в браузъра. Създава ритмични, мелодични композиции чрез синтезатори, семпли и времеви модели."
+  },
+  "category": {
+    "en": "Music & Sound",
+    "de": "Musik & Sound",
+    "tr": "Müzik ve Ses",
+    "ko": "음악과 사운드",
+    "uk": "Музика та звук",
+    "fr": "Musique et son",
+    "es": "Música y sonido",
+    "he": "מוזיקה וסאונד",
+    "ar": "موسيقى وصوت",
+    "bg": "Музика и звук"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_code_tonejs",
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "code",
+    "supported_types": [
+      "code"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "optimization_model": "CODING_MODEL",
+    "backend": "dynamic",
+    "backend_type": "config_model",
+    "api_provider": "dynamic",
+    "language": "javascript",
+    "framework": "tonejs",
+    "estimated_duration_seconds": "5-15",
+    "display_name": "Tone.js Generator",
+    "publisher": "LLM-dependent (configured in config.py)",
+    "architecture": "Large Language Model (text-to-code)",
+    "params": "Varies by configured LLM",
+    "license": "Varies by configured LLM",
+    "fair_culture": "Varies by configured LLM",
+    "safety_by_design": "None (LLM-dependent)",
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "🎵",
+    "color": "#FF4081",
+    "category": "music_sound",
+    "difficulty": 3,
+    "order": 60
+  },
+  "tags": {
+    "en": [
+      "code",
+      "tonejs",
+      "javascript",
+      "music",
+      "audio",
+      "synthesis"
+    ],
+    "de": [
+      "code",
+      "tonejs",
+      "javascript",
+      "musik",
+      "audio",
+      "synthese"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
+  }
+}

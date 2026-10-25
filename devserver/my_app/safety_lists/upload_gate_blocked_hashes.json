@@ -1,0 +1,6 @@
+{
+  "description": "Hash-Sperrliste (blocked document hashes) for upload admission (UCD-131 Stage A). SHA-256 over the RAW BYTES of a forbidden document. Start state: EMPTY — the operator curates entries through ordinary repo review (UCD-124 §10 decision proposal). A hit rejects the upload with the plain-language category 'gesperrtes dokument'; only (docHash, rule category, timestamp) are audited, never content.",
+  "usage": "Matched by my_app/services/upload_gate.py on every knowledge PDF and image upload. Entries: full 64-hex SHA-256, lowercase.",
+  "version": 1,
+  "hashes": []
+}

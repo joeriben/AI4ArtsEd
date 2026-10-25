@@ -1,0 +1,86 @@
+{
+  "pipeline": "music_generation",
+  "name": {
+    "en": "AceStep Simple",
+    "de": "AceStep Simple",
+    "tr": "AceStep Simple",
+    "ko": "AceStep Simple",
+    "uk": "AceStep Simple",
+    "fr": "AceStep Simple",
+    "es": "AceStep Simple",
+    "he": "AceStep Simple",
+    "ar": "AceStep Simple",
+    "bg": "AceStep Simple"
+  },
+  "description": {
+    "en": "AceStep Simple transformation (research-based from legacy workflow)",
+    "de": "AceStep Simple-Transformation (forschungsbasiert aus Legacy-Workflow)",
+    "tr": "AceStep Simple dönüşümü (eski iş akışına dayanan araştırma tabanlı)",
+    "ko": "AceStep Simple 변환(레거시 워크플로우 기반 연구 방식)",
+    "uk": "Трансформація AceStep Simple (дослідницька, на основі застарілого робочого процесу)",
+    "fr": "Transformation AceStep Simple (basée sur la recherche, issue d'un flux de travail existant)",
+    "es": "Transformación AceStep Simple (basada en investigación, procedente de un flujo de trabajo heredado)",
+    "he": "טרנספורמציית AceStep Simple (מבוססת מחקר, מתהליך עבודה ישן)",
+    "ar": "تحويل AceStep Simple (قائم على البحث من سير عمل قديم)",
+    "bg": "Трансформация AceStep Simple (базирана на изследване от стар работен процес)"
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound",
+    "tr": "Ses",
+    "ko": "사운드",
+    "uk": "Звук",
+    "fr": "Son",
+    "es": "Sonido",
+    "he": "שמע",
+    "ar": "صوت",
+    "bg": "Звук"
+  },
+  "context": "Write a prompt for a music generating AI. No remarks or comments, just the description for the Audio/Music AI.",
+  "parameters": {
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  "media_preferences": {
+    "default_output": "music",
+    "supported_types": [
+      "music"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend_type": "comfyui",
+    "legacy_source": "workflows_legacy/sound/ai4artsed_AceStep_Simple_2508101234.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "local/mistral-nemo:latest [local / $0.00]",
+    "display_name": "ACE-Step Simple",
+    "publisher": "StepFun / ACE Studio (Beijing, CN)",
+    "architecture": "Diffusion Transformer (latent audio)",
+    "params": "~3.5B",
+    "text_encoders": [
+      "T5-Large (lyrics + tags)"
+    ],
+    "quantization": "FP32",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "None documented by manufacturer",
+    "gpu_vram_mb": 8500
+  },
+  "display": {
+    "icon": "🎵",
+    "color": "#FF9800",
+    "category": "sound",
+    "difficulty": 3,
+    "order": 100,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 12,
+    "complexity": "intermediate"
+  }
+}

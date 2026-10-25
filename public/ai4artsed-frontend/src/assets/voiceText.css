@@ -1,0 +1,85 @@
+/* The voice's TEXT TREATMENT — the whole appearance of standing words and of
+   the way they arrive and leave. Unscoped on purpose: the sentence DOM is
+   built outside any component's template (see @/lib/voiceText), and every
+   surface that speaks renders the same words.
+
+   What may live here: everything that decides how the words READ.
+   What may not: where they stand. Position, width, docking, threads and host
+   chrome belong to the speaking component — a placement rule written here
+   would silently follow the voice onto surfaces it was never measured for.
+
+   Hosts hook their own rules onto the sentence through their own class (the
+   engine's `extraClass`), never by overwriting these declarations. */
+
+.voice-sent {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 1.12rem;
+  /* The leading is the engine's, and 1.6 is what the platform reads at. A host
+     with less room than the words need may NARROW it -- down to about 1.35,
+     where a serif of this size still reads -- by writing --voice-lead. It may
+     not set a line-height of its own: that would take the treatment out of the
+     engine, and the voice would drift apart from surface to surface. */
+  line-height: var(--voice-lead, 1.6);
+  color: var(--figure-tint, #ede9df);
+  /* Standing words lie over content of any brightness — the shadow is what
+     keeps the line readable there, and it belongs to every surface. */
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.85);
+  transition: opacity 0.6s, filter 0.6s;
+}
+.voice-sent.dim {
+  color: color-mix(in srgb, var(--figure-tint, #ede9df) 58%, #6f6a62);
+  font-size: 0.95rem;
+}
+/* A word is one body: its characters may arrive one after another, but the
+   word may never break between them. */
+.voice-sent .pvl-w {
+  display: inline-block;
+  white-space: nowrap;
+}
+/* Stress. Not louder — set apart, and it takes its time arriving (the longer
+   step is written into the characters, see @/lib/voiceText). Upright rather
+   than italic: this is weight in speech, not a citation. */
+.voice-sent em {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  color: inherit;
+}
+.voice-sent .pvl-ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translate(-7px, 9px) rotate(-4deg);
+  transition: transform 0.62s cubic-bezier(0.18, 1.7, 0.32, 1), opacity 0.36s ease;
+}
+.voice-sent .pvl-ch.on {
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg);
+}
+.voice-sent.whole {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.voice-sent.whole.on {
+  opacity: 1;
+}
+/* A draft the turn took back on its own evidence duty. It STAYS, struck
+   through: what this platform argues for is a different and open way of
+   dealing with generative models, and a model correcting itself against what
+   it has actually read is exactly the moment worth seeing. The checked
+   version stands under it. */
+.voice-sent.withdrawn {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  opacity: 0.42;
+}
+.voice-sent.gone {
+  /* Leaving overrides every other visibility state, including .whole.on. */
+  opacity: 0 !important;
+  transition: opacity 0.32s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .voice-sent .pvl-ch {
+    transition: opacity 0.5s ease;
+    transform: none;
+  }
+}

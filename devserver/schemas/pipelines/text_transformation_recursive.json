@@ -1,0 +1,41 @@
+{
+  "name": "text_transformation_recursive",
+  "description": "Recursive Text Transformation: Loops through multiple transformations (e.g., Chain Translation)",
+  "pipeline_type": "prompt_interception",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": true,
+  "instruction_type": "chain_translation",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [
+    "manipulate_recursive"
+  ],
+  "required_configs": [
+    "manipulate_config"
+  ],
+  "config_mappings": {
+    "manipulate_config": "{{MANIPULATE_CONFIG}}"
+  },
+  "meta": {
+    "workflow_type": "recursive_transformation",
+    "reusable": true,
+    "supports_loop": true,
+    "configurable_parameters": [
+      "iterations",
+      "use_random_languages",
+      "final_language",
+      "languages"
+    ],
+    "description": "This pipeline executes the manipulate chunk multiple times in a loop. Config controls all behavior via parameters.",
+    "steps": [
+      {
+        "step": "loop",
+        "chunk": "manipulate_recursive",
+        "description": "Text manipulation (executed N times)",
+        "config_key": "manipulate_config",
+        "loop_controlled_by": "config.parameters.iterations"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "optimize_clip_prompt_llama",
+  "type": "processing_chunk",
+  "backend_type": "local_llm",
+  "description": "CLIP prompt optimization - Llama-optimized variant",
+  "model": "STAGE2_OPTIMIZATION_MODEL",
+  "template": {
+    "system": "You transform scenic descriptions into 2D image tokens for CLIP. Always respond in the same language as the input.",
+    "prompt": "Transform the input into a flat 2D image description. Max 50 words, comma-separated.\n\nRULES:\n- Remove temporal words (before, after, then, while)\n- Convert actions to frozen poses\n- Convert atmosphere to visible elements\n- Put most important subject FIRST\n- No artist names, no art-historical terms\n- No negatives (CLIP reads \"no dog\" as \"dog\")\n\nEXAMPLES:\n\nInput: \"A mysterious forest where ancient trees whisper secrets to travelers at twilight\"\nOutput: {\"clip_prompt\": \"ancient forest, massive gnarled trees, twilight sky, orange-purple light through canopy, solitary figure on path, mist between trees, dramatic backlighting, deep shadows\"}\n\nInput: \"The scientist had been working for years when she finally discovered the formula\"\nOutput: {\"clip_prompt\": \"scientist, white lab coat, holding glowing test tube, excited expression, cluttered laboratory, chalkboard with equations, warm light from tube\"}\n\nInput: \"Ein geheimnisvoller Wald wo uralte Bäume Geheimnisse flüstern\"\nOutput: {\"clip_prompt\": \"uralter Wald, knorrige Bäume, Dämmerungslicht, orange-violetter Himmel, einsame Gestalt auf Pfad, Nebel zwischen Stämmen, dramatisches Gegenlicht\"}\n\nCLIP SYNTAX:\n- (keyword:1.2) = more emphasis\n- [a:b:0.5] = blend at 50%\n\nRespond with JSON only: {\"clip_prompt\": \"...\"}\n\nINPUT:\n{{INPUT_TEXT}}"
+  },
+  "meta": {
+    "output_format": "json",
+    "json_schema": {
+      "clip_prompt": "string (max 50 words, comma-separated)"
+    },
+    "max_words": 50,
+    "token_limit": 75,
+    "extracts": ["clip_prompt"],
+    "model_family": "llama",
+    "notes": "Llama-optimized: flat structure, example-heavy, short rules"
+  }
+}

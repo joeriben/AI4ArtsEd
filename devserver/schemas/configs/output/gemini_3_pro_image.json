@@ -1,0 +1,113 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Gemini 3 Pro Image (€)",
+    "de": "Gemini 3 Pro Image (€)",
+    "tr": "Gemini 3 Pro Image (€)",
+    "ko": "Gemini 3 Pro Image (€)",
+    "uk": "Gemini 3 Pro Image (€)",
+    "fr": "Gemini 3 Pro Image (€)",
+    "es": "Gemini 3 Pro Image (€)",
+    "he": "Gemini 3 Pro Image (€)",
+    "ar": "Gemini 3 Pro Image (€)",
+    "bg": "Gemini 3 Pro Image (€)"
+  },
+  "description": {
+    "en": "Cloud-based image generation using Google Gemini 3 Pro via Mammouth AI (EU) (multimodal chat model)",
+    "de": "Cloud-basierte Bildgenerierung mit Google Gemini 3 Pro via Mammouth AI (EU) (multimodales Chat-Modell)",
+    "tr": "Mammouth AI (AB) üzerinden Google Gemini 3 Pro kullanan bulut tabanlı görüntü üretimi (çok modlu sohbet modeli)",
+    "ko": "Mammouth AI(EU)를 통해 Google Gemini 3 Pro를 사용하는 클라우드 기반 이미지 생성(멀티모달 채팅 모델)",
+    "uk": "Хмарна генерація зображень за допомогою Google Gemini 3 Pro через Mammouth AI (ЄС) (мультимодальна чат-модель)",
+    "fr": "Génération d'images en cloud avec Google Gemini 3 Pro via Mammouth AI (UE) (modèle de chat multimodal)",
+    "es": "Generación de imágenes en la nube con Google Gemini 3 Pro a través de Mammouth AI (UE) (modelo de chat multimodal)",
+    "he": "יצירת תמונות מבוססת ענן באמצעות Google Gemini 3 Pro דרך Mammouth AI (האיחוד האירופי) (מודל צ'אט מולטימודלי)",
+    "ar": "توليد صور قائم على السحابة باستخدام Google Gemini 3 Pro عبر Mammouth AI (الاتحاد الأوروبي) (نموذج محادثة متعدد الوسائط)",
+    "bg": "Генериране на изображения в облака с Google Gemini 3 Pro през Mammouth AI (ЕС) (мултимодален чат модел)"
+  },
+  "category": {
+    "en": "Image Generation (Cloud)",
+    "de": "Bildgenerierung (Cloud)",
+    "tr": "Görüntü Üretimi (Bulut)",
+    "ko": "이미지 생성 (클라우드)",
+    "uk": "Генерація зображень (хмара)",
+    "fr": "Génération d'images (Cloud)",
+    "es": "Generación de imágenes (nube)",
+    "he": "יצירת תמונות (ענן)",
+    "ar": "توليد الصور (سحابي)",
+    "bg": "Генериране на изображения (облак)"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_gemini_3_pro"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "gemini-3-pro-image",
+    "model_id": "google/gemini-3-pro-image-preview",
+    "provider_model_id": "gemini-3-pro-image-preview",
+    "backend": "mammouth",
+    "backend_type": "mammouth",
+    "requires_gpu": false,
+    "requires_api_key": "MAMMOUTH_API_KEY",
+    "estimated_duration_seconds": "10-20",
+    "cost_model": "api_call",
+    "cost_per_image": "Variable (Mammouth AI pricing)",
+    "frontier_image": true,
+    "context_length": 1000000,
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "features": [
+      "multimodal",
+      "text_rendering",
+      "long_context"
+    ],
+    "notes": "Google Gemini 3 Pro Image via Mammouth AI (EU). Multimodal chat model with image generation. Requires a Mammouth AI key (MAMMOUTH_API_KEY or devserver/mammouth.key).",
+    "version": "1.0",
+    "display_name": "Gemini 3 Pro Image (€)",
+    "icon": "🔷",
+    "publisher": "Google DeepMind (Mountain View, US)",
+    "architecture": "Multimodal Transformer (Gemini)",
+    "params": "Undisclosed",
+    "license": "Commercial API (usage-based via Mammouth AI (EU))",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Google Safety Filters"
+  },
+  "display": {
+    "icon": "🔷",
+    "color": "#4285F4",
+    "category": "image_generation_cloud",
+    "difficulty": 1,
+    "order": 21
+  },
+  "tags": {
+    "en": [
+      "image",
+      "gemini",
+      "google",
+      "cloud",
+      "mammouth",
+      "multimodal"
+    ],
+    "de": [
+      "bild",
+      "gemini",
+      "google",
+      "cloud",
+      "mammouth",
+      "multimodal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

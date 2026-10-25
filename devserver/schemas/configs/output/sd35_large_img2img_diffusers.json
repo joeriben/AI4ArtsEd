@@ -1,0 +1,212 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "SD 3.5 Large Image-to-Image",
+    "de": "SD 3.5 Large Bild-zu-Bild",
+    "tr": "SD 3.5 Large Görüntüden Görüntüye",
+    "ko": "SD 3.5 Large 이미지-투-이미지",
+    "uk": "SD 3.5 Large Зображення-в-зображення",
+    "fr": "SD 3.5 Large Image à image",
+    "es": "SD 3.5 Large Imagen a imagen",
+    "he": "SD 3.5 Large מתמונה לתמונה",
+    "ar": "SD 3.5 Large من صورة إلى صورة",
+    "bg": "SD 3.5 Large Изображение към изображение"
+  },
+  "description": {
+    "en": "Image transformation using Stable Diffusion 3.5 Large. Partially denoises your image and regenerates guided by your prompt — zero extra VRAM via from_pipe().",
+    "de": "Bildtransformation mit Stable Diffusion 3.5 Large. Entrauscht Ihr Bild teilweise und regeneriert mit Prompt-Steuerung — kein zusaetzlicher VRAM durch from_pipe().",
+    "tr": "Stable Diffusion 3.5 Large kullanan görüntü dönüştürme. Görüntünüzü kısmen gürültüden arındırır ve promptunuza göre yeniden üretir — from_pipe() ile ekstra VRAM kullanmadan.",
+    "ko": "Stable Diffusion 3.5 Large를 사용한 이미지 변환. 이미지를 부분적으로 디노이징한 뒤 프롬프트에 따라 다시 생성합니다 — from_pipe()를 통해 추가 VRAM 없이.",
+    "uk": "Трансформація зображень за допомогою Stable Diffusion 3.5 Large. Частково деноізує ваше зображення й регенерує його відповідно до промпту — без додаткового VRAM завдяки from_pipe().",
+    "fr": "Transformation d'images avec Stable Diffusion 3.5 Large. Débruite partiellement votre image et la régénère selon votre prompt — sans VRAM supplémentaire grâce à from_pipe().",
+    "es": "Transformación de imágenes con Stable Diffusion 3.5 Large. Elimina parcialmente el ruido de tu imagen y la regenera guiada por tu prompt — sin VRAM adicional gracias a from_pipe().",
+    "he": "טרנספורמציית תמונה באמצעות Stable Diffusion 3.5 Large. מסיר רעש חלקית מהתמונה שלך ומייצר אותה מחדש בהנחיית הפרומפט שלך — ללא VRAM נוסף בזכות from_pipe().",
+    "ar": "تحويل الصور باستخدام Stable Diffusion 3.5 Large. يزيل الضوضاء جزئيًا من صورتك ويعيد توليدها بتوجيه من وصفك (prompt) — دون أي ذاكرة VRAM إضافية بفضل from_pipe().",
+    "bg": "Трансформация на изображения с Stable Diffusion 3.5 Large. Частично премахва шума от изображението ви и го регенерира, водено от вашата подкана — без допълнителна VRAM благодарение на from_pipe()."
+  },
+  "category": {
+    "en": "Image Transformation",
+    "de": "Bildtransformation",
+    "tr": "Görüntü Dönüştürme",
+    "ko": "이미지 변환",
+    "uk": "Трансформація зображень",
+    "fr": "Transformation d'images",
+    "es": "Transformación de imágenes",
+    "he": "טרנספורמציית תמונות",
+    "ar": "تحويل الصور",
+    "bg": "Трансформация на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_sd35_img2img_diffusers",
+    "NEGATIVE_PROMPT": "",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 25,
+    "CFG": 4.5,
+    "seed": "random"
+  },
+  "capabilities": {
+    "img2img": true,
+    "text2img": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "sd3.5_large.safetensors",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "clip_models": [
+      "clip_g.safetensors",
+      "t5xxl_fp16.safetensors"
+    ],
+    "requires_gpu": true,
+    "gpu_vram_mb": 57000,
+    "estimated_duration_seconds": "15-30",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "512x512",
+      "768x768",
+      "1024x1024",
+      "1280x1280",
+      "1024x768",
+      "768x1024"
+    ],
+    "notes": "SD3.5 Large img2img via from_pipe() — shares all components (VAE, text encoders, transformer) with the t2i pipeline. Strength controls denoising amount (0=no change, 1=full generation).",
+    "display_name": "Stable Diffusion 3.5 Large Image-to-Image",
+    "icon": "replace_image",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "Undisclosed (claimed: synthetic + filtered public data)"
+      ],
+      "training_data_size": "Undisclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "London, UK",
+      "known_biases": [
+        {
+          "en": "CLIP text encoders trained predominantly on English-language web data",
+          "de": "CLIP-Textencoder ueberwiegend auf englischsprachigen Webdaten trainiert",
+          "tr": "CLIP metin kodlayıcıları ağırlıklı olarak İngilizce web verisiyle eğitildi",
+          "ko": "CLIP 텍스트 인코더는 주로 영어권 웹 데이터로 학습됨",
+          "uk": "Текстові кодувальники CLIP навчені переважно на англомовних веб-даних",
+          "fr": "Encodeurs de texte CLIP entraînés principalement sur des données web en anglais",
+          "es": "Los codificadores de texto CLIP se entrenaron predominantemente con datos web en inglés",
+          "he": "מקודדי הטקסט של CLIP אומנו ברובם על נתוני רשת באנגלית",
+          "ar": "دُرِّبت مُرمِّزات نص CLIP في الغالب على بيانات ويب باللغة الإنجليزية",
+          "bg": "Текстовите енкодери CLIP са обучени предимно с англоезични уеб данни"
+        },
+        {
+          "en": "Western visual aesthetic emphasis (composition, lighting conventions)",
+          "de": "Betonung westlicher visueller Aesthetik (Komposition, Lichtkonventionen)",
+          "tr": "Batılı görsel estetiğe vurgu (kompozisyon, ışıklandırma gelenekleri)",
+          "ko": "서구식 시각적 미학에 대한 편중(구도, 조명 관습)",
+          "uk": "Акцент на західній візуальній естетиці (композиція, конвенції освітлення)",
+          "fr": "Accent mis sur une esthétique visuelle occidentale (composition, conventions d'éclairage)",
+          "es": "Énfasis en una estética visual occidental (composición, convenciones de iluminación)",
+          "he": "דגש על אסתטיקה חזותית מערבית (קומפוזיציה, מוסכמות תאורה)",
+          "ar": "تركيز على الجمالية البصرية الغربية (التكوين، أعراف الإضاءة)",
+          "bg": "Акцент върху западна визуална естетика (композиция, конвенции за осветление)"
+        },
+        {
+          "en": "T5-XXL multilingual but English-dominant (~80% C4 corpus is English)",
+          "de": "T5-XXL mehrsprachig, aber englisch-dominant (~80% des C4-Korpus ist Englisch)",
+          "tr": "T5-XXL çok dilli ama İngilizce ağırlıklı (C4 külliyatının ~%80'i İngilizce)",
+          "ko": "T5-XXL은 다국어를 지원하지만 영어 편중임(C4 코퍼스의 약 80%가 영어)",
+          "uk": "T5-XXL багатомовна, але з домінуванням англійської (~80% корпусу C4 — англійською)",
+          "fr": "T5-XXL multilingue mais dominé par l'anglais (~80 % du corpus C4 est en anglais)",
+          "es": "T5-XXL es multilingüe pero dominado por el inglés (~80% del corpus C4 es inglés)",
+          "he": "T5-XXL רב-לשוני אך נשלט על ידי האנגלית (כ-80% מקורפוס C4 הוא באנגלית)",
+          "ar": "T5-XXL متعدد اللغات لكنه يغلب عليه الإنجليزية (نحو 80% من مجموعة بيانات C4 بالإنجليزية)",
+          "bg": "T5-XXL е многоезичен, но с доминация на английския (~80% от корпуса C4 е на английски)"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "Limited understanding of non-Latin scripts in CLIP encoders",
+          "de": "Eingeschraenktes Verstaendnis nicht-lateinischer Schriften in CLIP-Encodern",
+          "tr": "CLIP kodlayıcılarında Latin olmayan yazı sistemlerinin sınırlı anlaşılması",
+          "ko": "CLIP 인코더에서 비라틴 문자에 대한 이해가 제한적임",
+          "uk": "Обмежене розуміння нелатинських писемностей у кодувальниках CLIP",
+          "fr": "Compréhension limitée des écritures non latines dans les encodeurs CLIP",
+          "es": "Comprensión limitada de escrituras no latinas en los codificadores CLIP",
+          "he": "הבנה מוגבלת של כתבים שאינם לטיניים במקודדי CLIP",
+          "ar": "فهم محدود للأنظمة الكتابية غير اللاتينية في مُرمِّزات CLIP",
+          "bg": "Ограничено разбиране на нелатински писмености в енкодерите на CLIP"
+        },
+        {
+          "en": "Underrepresented: African, Indigenous, Southeast Asian visual traditions",
+          "de": "Unterrepraesentiert: afrikanische, indigene, suedostasiatische visuelle Traditionen",
+          "tr": "Yetersiz temsil edilenler: Afrika, yerli ve Güneydoğu Asya görsel gelenekleri",
+          "ko": "충분히 반영되지 않음: 아프리카, 원주민, 동남아시아의 시각적 전통",
+          "uk": "Недостатньо представлені: африканські, корінні та південно-східноазійські візуальні традиції",
+          "fr": "Sous-représentées : traditions visuelles africaines, autochtones et d'Asie du Sud-Est",
+          "es": "Subrepresentadas: tradiciones visuales africanas, indígenas y del sudeste asiático",
+          "he": "מיוצגים בחסר: מסורות חזותיות אפריקאיות, ילידיות ודרום-מזרח אסייתיות",
+          "ar": "ممثَّلة تمثيلاً ناقصاً: التقاليد البصرية الأفريقية والأصلية وجنوب شرق آسيا",
+          "bg": "Недостатъчно представени: африкански, коренни (индигенни) и югоизточноазиатски визуални традиции"
+        },
+        {
+          "en": "No consent from original creators whose work may be in training data",
+          "de": "Keine Zustimmung der urspruenglichen Urheber, deren Werke moeglicherweise in den Trainingsdaten sind",
+          "tr": "Eserleri eğitim verisinde bulunabilecek özgün yaratıcıların onayı alınmamış",
+          "ko": "학습 데이터에 포함되었을 수 있는 원저작자의 동의가 없음",
+          "uk": "Немає згоди оригінальних авторів, чиї роботи можуть бути в навчальних даних",
+          "fr": "Aucun consentement des créateurs originaux dont l'œuvre pourrait figurer dans les données d'entraînement",
+          "es": "Sin consentimiento de los creadores originales cuya obra puede estar en los datos de entrenamiento",
+          "he": "אין הסכמה מהיוצרים המקוריים שיצירתם עשויה להימצא בנתוני האימון",
+          "ar": "لا موافقة من المبدعين الأصليين الذين قد تكون أعمالهم ضمن بيانات التدريب",
+          "bg": "Липсва съгласие от оригиналните автори, чиито произведения може да са в данните за обучение"
+        }
+      ]
+    },
+    "version": "1.0"
+  },
+  "display": {
+    "icon": "replace_image",
+    "color": "#FF6B6B",
+    "category": "image_transformation",
+    "difficulty": 2,
+    "order": 15
+  },
+  "tags": {
+    "en": [
+      "image",
+      "stable-diffusion",
+      "sd3.5",
+      "img2img",
+      "diffusers",
+      "image-transformation"
+    ],
+    "de": [
+      "bild",
+      "stable-diffusion",
+      "sd3.5",
+      "img2img",
+      "diffusers",
+      "bildtransformation"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

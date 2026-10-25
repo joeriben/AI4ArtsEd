@@ -1,0 +1,23 @@
+{
+  "name": "single_text_media_generation",
+  "pipeline_stage": "4",
+  "requires_interception_prompt": false,
+  "description": "Single Text to Media Generation Pipeline: Direct media generation from one text prompt (no text transformation step)",
+  "pipeline_type": "single_text_media_generation",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [
+    "{{OUTPUT_CHUNK}}"
+  ],
+  "meta": {
+    "version": "3.0",
+    "description_de": "Direkte Medien-Generierung aus Text-Prompt (Output-Pipeline ist primitiv - KEIN manipulate!)",
+    "description_en": "Direct Media Generation from Text Prompt (Output-Pipeline is primitive - NO manipulate!)",
+    "input_type": "single_text",
+    "output_types": ["image", "audio", "video"],
+    "backend_agnostic": true,
+    "replaces": ["audio_generation", "image_generation"],
+    "note": "OUTPUT_CHUNK resolved from config parameters at load time by config_loader._resolve_configs()"
+  }
+}

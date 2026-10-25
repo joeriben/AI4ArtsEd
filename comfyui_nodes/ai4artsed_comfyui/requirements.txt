@@ -1,0 +1,18 @@
+# What this package needs beyond ComfyUI's own requirements (transformers,
+# psutil, requests come with ComfyUI). Installed into ComfyUI's venv by
+# install_comfyui_nodes.sh when the package is linked.
+#
+# accelerate: transformers loads an FP8 checkpoint (the 27 B language models
+# of devserver/config/local_llm_weights.json) only with it.
+accelerate
+# transformers >= 5.17: the architectures of the Text Lab rows
+# (devserver/config/text_presets.json) -- Gemma 4 (gemma4, gemma4_unified),
+# Nemotron Nano 9B v2 (nemotron_h) -- are in transformers from 5.17.0
+# (2026-09-09); ComfyUI itself asks only for >= 4.50.3.
+transformers>=5.17.0
+# kernels: in transformers 5.17 an FP8 checkpoint runs through the Triton
+# kernel kernels-community/finegrained-fp8, which this package fetches from
+# the Hub once (publisher verified by the Hub); < 0.17 is transformers own
+# bound. 2_start_comfyui.sh sets the user-agent origin the publisher check
+# needs while Hub telemetry is off.
+kernels>=0.16.2,<0.17

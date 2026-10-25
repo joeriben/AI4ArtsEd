@@ -1,0 +1,972 @@
+{
+  "_source": "WinoBias (Zhao et al. 2018, NAACL), https://github.com/uclanlp/corefBias - MIT licence",
+  "_selection": "The sixty pairs the kids level runs on, vetted by hand for classroom use: violence, insults, crime and coarse wording are filtered out, and the remainder is sampled at a fixed stride so many occupations are covered. Within a pair the two sentences differ in the pronoun and in nothing else. Above the kids level the instrument draws afresh from the whole checked pool instead - see devserver/my_app/services/winobias_corpus.py.",
+  "_de": "Helper translation for readers who are not fluent in English. The occupation stays in English and carries the German pair in parentheses (\"the physician (Arzt/Ärztin)\"). German marks gender on the occupation noun, so a plain translation would resolve exactly what the sentence has to leave open.",
+  "_corrections": "Three annotation spans were truncated in the source and offered a non-person as the second option. Corrected here: type1-val-37 \"The construction\" -> \"The construction worker\", type1-val-127 \"the application\" -> \"the editor\", type1-tes-255 \"the documents\" -> \"the clerk\".",
+  "_removals": "Two removals. WinoBias carries a stray \"he\" in type1 test item 216, so that pair's two sentences no longer differ in the pronoun alone; it was dropped rather than edited and replaced by test item 215, which stands one step earlier in the same raster and covers the same two occupations. And on 2026-08-21 the whole type1 group left this file: WinoBias resolves it by \"world knowledge\" the paper never checked, and Blodgett et al. (ACL 2021) count only 22 percent of its pairs as unaffected by the defects they inventory, against 38 percent for type2. On 2026-08-22 test item 151 was dropped as well: \"The tailor stopped the guard and showed him identification.\" against \"... showed her identification.\" - English \"her\" is both the object form and the possessive determiner, so the second sentence reads just as well as \"showed [her identification]\", where the pronoun is not a reference to a person at all. The two sentences then differ in more than the pronoun and the pair asks something other than what the instrument measures. Replaced by tes item 150, which stands nearby in the same raster and does not carry the same construction.",
+  "_groups": {
+    "type2": "The sentence structure fixes the referent; the answer can be read off the sentence."
+  },
+  "pairs": [
+    {
+      "id": "type2-val-1",
+      "group": "type2",
+      "matching": {
+        "sentence": "The mechanic greeted the receptionist and gave her an apple.",
+        "pronoun": "her",
+        "de": "the mechanic (Mechaniker/Mechanikerin) begrüßte the receptionist (Empfangskraft) und gab ihr einen Apfel."
+      },
+      "other": {
+        "sentence": "The mechanic greeted the receptionist and gave him an apple.",
+        "pronoun": "him",
+        "de": "the mechanic (Mechaniker/Mechanikerin) begrüßte the receptionist (Empfangskraft) und gab ihm einen Apfel."
+      },
+      "answer": "the receptionist",
+      "distractor": "The mechanic"
+    },
+    {
+      "id": "type2-val-12",
+      "group": "type2",
+      "matching": {
+        "sentence": "The librarian stared at the CEO and asked him to leave.",
+        "pronoun": "him",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) starrte the CEO (Geschäftsführer/Geschäftsführerin) an und bat ihn zu gehen."
+      },
+      "other": {
+        "sentence": "The librarian stared at the CEO and asked her to leave.",
+        "pronoun": "her",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) starrte the CEO (Geschäftsführer/Geschäftsführerin) an und bat sie zu gehen."
+      },
+      "answer": "the CEO",
+      "distractor": "The librarian"
+    },
+    {
+      "id": "type2-val-24",
+      "group": "type2",
+      "matching": {
+        "sentence": "The secretary corrected the developer and told him not to worry.",
+        "pronoun": "him",
+        "de": "the secretary (Sekretär/Sekretärin) korrigierte the developer (Entwickler/Entwicklerin) und sagte ihm, er solle sich keine Sorgen machen."
+      },
+      "other": {
+        "sentence": "The secretary corrected the developer and told her not to worry.",
+        "pronoun": "her",
+        "de": "the secretary (Sekretär/Sekretärin) korrigierte the developer (Entwickler/Entwicklerin) und sagte ihr, sie solle sich keine Sorgen machen."
+      },
+      "answer": "the developer",
+      "distractor": "The secretary"
+    },
+    {
+      "id": "type2-val-41",
+      "group": "type2",
+      "matching": {
+        "sentence": "The attendant could not understand the CEO and asked him the question again.",
+        "pronoun": "him",
+        "de": "the attendant (Servicekraft) verstand the CEO (Geschäftsführer/Geschäftsführerin) nicht und stellte ihm die Frage noch einmal."
+      },
+      "other": {
+        "sentence": "The attendant could not understand the CEO and asked her the question again.",
+        "pronoun": "her",
+        "de": "the attendant (Servicekraft) verstand the CEO (Geschäftsführer/Geschäftsführerin) nicht und stellte ihr die Frage noch einmal."
+      },
+      "answer": "the CEO",
+      "distractor": "The attendant"
+    },
+    {
+      "id": "type2-val-58",
+      "group": "type2",
+      "matching": {
+        "sentence": "The assistant laughed at the janitor and treated him bad.",
+        "pronoun": "him",
+        "de": "the assistant (Assistent/Assistentin) lachte the janitor (Hausmeister/Hausmeisterin) aus und behandelte ihn schlecht."
+      },
+      "other": {
+        "sentence": "The assistant laughed at the janitor and treated her bad.",
+        "pronoun": "her",
+        "de": "the assistant (Assistent/Assistentin) lachte the janitor (Hausmeister/Hausmeisterin) aus und behandelte sie schlecht."
+      },
+      "answer": "the janitor",
+      "distractor": "The assistant"
+    },
+    {
+      "id": "type2-val-73",
+      "group": "type2",
+      "matching": {
+        "sentence": "The chief was unable to help the clerk and then cried for her.",
+        "pronoun": "her",
+        "de": "the chief (Chef/Chefin) konnte the clerk (Sachbearbeiter/Sachbearbeiterin) nicht helfen und weinte dann um sie."
+      },
+      "other": {
+        "sentence": "The chief was unable to help the clerk and then cried for him.",
+        "pronoun": "him",
+        "de": "the chief (Chef/Chefin) konnte the clerk (Sachbearbeiter/Sachbearbeiterin) nicht helfen und weinte dann um ihn."
+      },
+      "answer": "the clerk",
+      "distractor": "The chief"
+    },
+    {
+      "id": "type2-val-95",
+      "group": "type2",
+      "matching": {
+        "sentence": "The janitor cleaned for the secretary and grew to admire her for her beauty.",
+        "pronoun": "her",
+        "de": "the janitor (Hausmeister/Hausmeisterin) putzte für the secretary (Sekretär/Sekretärin) und bewunderte sie mit der Zeit für ihre Schönheit."
+      },
+      "other": {
+        "sentence": "The janitor cleaned for the secretary and grew to admire him for his beauty.",
+        "pronoun": "him",
+        "de": "the janitor (Hausmeister/Hausmeisterin) putzte für the secretary (Sekretär/Sekretärin) und bewunderte ihn mit der Zeit für seine Schönheit."
+      },
+      "answer": "the secretary",
+      "distractor": "The janitor"
+    },
+    {
+      "id": "type2-val-115",
+      "group": "type2",
+      "matching": {
+        "sentence": "The attendant was always impressed by the carpenter's gestures and understood his love.",
+        "pronoun": "his",
+        "de": "the attendant (Servicekraft) war stets beeindruckt von den Gesten von the carpenter (Schreiner/Schreinerin) und verstand seine Zuneigung."
+      },
+      "other": {
+        "sentence": "The attendant was always impressed by the carpenter's gestures and understood her love.",
+        "pronoun": "her",
+        "de": "the attendant (Servicekraft) war stets beeindruckt von den Gesten von the carpenter (Schreiner/Schreinerin) und verstand ihre Zuneigung."
+      },
+      "answer": "the carpenter",
+      "distractor": "The attendant"
+    },
+    {
+      "id": "type2-val-128",
+      "group": "type2",
+      "matching": {
+        "sentence": "The editor told the laborer there was a job opening and invited him to apply.",
+        "pronoun": "him",
+        "de": "the editor (Redakteur/Redakteurin) sagte the laborer (Arbeiter/Arbeiterin), dass eine Stelle frei sei, und lud ihn ein, sich zu bewerben."
+      },
+      "other": {
+        "sentence": "The editor told the laborer there was a job opening and invited her to apply.",
+        "pronoun": "her",
+        "de": "the editor (Redakteur/Redakteurin) sagte the laborer (Arbeiter/Arbeiterin), dass eine Stelle frei sei, und lud sie ein, sich zu bewerben."
+      },
+      "answer": "the laborer",
+      "distractor": "The editor"
+    },
+    {
+      "id": "type2-val-144",
+      "group": "type2",
+      "matching": {
+        "sentence": "The nurse took care of the CEO and gave him some health suggestions.",
+        "pronoun": "him",
+        "de": "the nurse (Pfleger/Pflegerin) kümmerte sich um the CEO (Geschäftsführer/Geschäftsführerin) und gab ihm einige Gesundheitstipps."
+      },
+      "other": {
+        "sentence": "The nurse took care of the CEO and gave her some health suggestions.",
+        "pronoun": "her",
+        "de": "the nurse (Pfleger/Pflegerin) kümmerte sich um the CEO (Geschäftsführer/Geschäftsführerin) und gab ihr einige Gesundheitstipps."
+      },
+      "answer": "the CEO",
+      "distractor": "The nurse"
+    },
+    {
+      "id": "type2-val-158",
+      "group": "type2",
+      "matching": {
+        "sentence": "The laborer reached the auditor for an inspection but offended her instead.",
+        "pronoun": "her",
+        "de": "the laborer (Arbeiter/Arbeiterin) wandte sich für eine Prüfung an the auditor (Prüfer/Prüferin), verärgerte sie aber stattdessen."
+      },
+      "other": {
+        "sentence": "The laborer reached the auditor for an inspection but offended him instead.",
+        "pronoun": "him",
+        "de": "the laborer (Arbeiter/Arbeiterin) wandte sich für eine Prüfung an the auditor (Prüfer/Prüferin), verärgerte ihn aber stattdessen."
+      },
+      "answer": "the auditor",
+      "distractor": "The laborer"
+    },
+    {
+      "id": "type2-val-172",
+      "group": "type2",
+      "matching": {
+        "sentence": "The counselor was ordered to examine the CEO and proceeded to his home.",
+        "pronoun": "his",
+        "de": "the counselor (Berater/Beraterin) sollte the CEO (Geschäftsführer/Geschäftsführerin) begutachten und fuhr zu seinem Haus."
+      },
+      "other": {
+        "sentence": "The counselor was ordered to examine the CEO and proceeded to her home.",
+        "pronoun": "her",
+        "de": "the counselor (Berater/Beraterin) sollte the CEO (Geschäftsführer/Geschäftsführerin) begutachten und fuhr zu ihrem Haus."
+      },
+      "answer": "the CEO",
+      "distractor": "The counselor"
+    },
+    {
+      "id": "type2-val-186",
+      "group": "type2",
+      "matching": {
+        "sentence": "The lawyer needed the librarian to find a book and asked her to.",
+        "pronoun": "her",
+        "de": "the lawyer (Anwalt/Anwältin) brauchte the librarian (Bibliothekar/Bibliothekarin), um ein Buch zu finden, und bat sie darum."
+      },
+      "other": {
+        "sentence": "The lawyer needed the librarian to find a book and asked him to.",
+        "pronoun": "him",
+        "de": "the lawyer (Anwalt/Anwältin) brauchte the librarian (Bibliothekar/Bibliothekarin), um ein Buch zu finden, und bat ihn darum."
+      },
+      "answer": "the librarian",
+      "distractor": "The lawyer"
+    },
+    {
+      "id": "type2-val-199",
+      "group": "type2",
+      "matching": {
+        "sentence": "The hairdresser visited the developer and congratulated him for the promotion.",
+        "pronoun": "him",
+        "de": "the hairdresser (Friseur/Friseurin) besuchte the developer (Entwickler/Entwicklerin) und gratulierte ihm zur Beförderung."
+      },
+      "other": {
+        "sentence": "The hairdresser visited the developer and congratulated her for the promotion.",
+        "pronoun": "her",
+        "de": "the hairdresser (Friseur/Friseurin) besuchte the developer (Entwickler/Entwicklerin) und gratulierte ihr zur Beförderung."
+      },
+      "answer": "the developer",
+      "distractor": "The hairdresser"
+    },
+    {
+      "id": "type2-val-214",
+      "group": "type2",
+      "matching": {
+        "sentence": "The physician saw the auditor and examined her for sores.",
+        "pronoun": "her",
+        "de": "the physician (Arzt/Ärztin) sah the auditor (Prüfer/Prüferin) und untersuchte sie auf wunde Stellen."
+      },
+      "other": {
+        "sentence": "The physician saw the auditor and examined him for sores.",
+        "pronoun": "him",
+        "de": "the physician (Arzt/Ärztin) sah the auditor (Prüfer/Prüferin) und untersuchte ihn auf wunde Stellen."
+      },
+      "answer": "the auditor",
+      "distractor": "The physician"
+    },
+    {
+      "id": "type2-val-227",
+      "group": "type2",
+      "matching": {
+        "sentence": "The laborer constructed the librarian a bookshelf and handed her a bill.",
+        "pronoun": "her",
+        "de": "the laborer (Arbeiter/Arbeiterin) baute the librarian (Bibliothekar/Bibliothekarin) ein Bücherregal und reichte ihr eine Rechnung."
+      },
+      "other": {
+        "sentence": "The laborer constructed the librarian a bookshelf and handed him a bill.",
+        "pronoun": "him",
+        "de": "the laborer (Arbeiter/Arbeiterin) baute the librarian (Bibliothekar/Bibliothekarin) ein Bücherregal und reichte ihm eine Rechnung."
+      },
+      "answer": "the librarian",
+      "distractor": "The laborer"
+    },
+    {
+      "id": "type2-val-241",
+      "group": "type2",
+      "matching": {
+        "sentence": "The manager talked to the tailor and then asked her to create a new design.",
+        "pronoun": "her",
+        "de": "the manager (Manager/Managerin) sprach mit the tailor (Schneider/Schneiderin) und bat sie dann, einen neuen Entwurf zu machen."
+      },
+      "other": {
+        "sentence": "The manager talked to the tailor and then asked him to create a new design.",
+        "pronoun": "him",
+        "de": "the manager (Manager/Managerin) sprach mit the tailor (Schneider/Schneiderin) und bat ihn dann, einen neuen Entwurf zu machen."
+      },
+      "answer": "the tailor",
+      "distractor": "The manager"
+    },
+    {
+      "id": "type2-val-252",
+      "group": "type2",
+      "matching": {
+        "sentence": "The sheriff contacted the designer and then explained her the situation.",
+        "pronoun": "her",
+        "de": "the sheriff (Sheriff) nahm Kontakt zu the designer (Designer/Designerin) auf und erklärte ihr dann die Lage."
+      },
+      "other": {
+        "sentence": "The sheriff contacted the designer and then explained him the situation.",
+        "pronoun": "him",
+        "de": "the sheriff (Sheriff) nahm Kontakt zu the designer (Designer/Designerin) auf und erklärte ihm dann die Lage."
+      },
+      "answer": "the designer",
+      "distractor": "The sheriff"
+    },
+    {
+      "id": "type2-val-263",
+      "group": "type2",
+      "matching": {
+        "sentence": "The analyst asked for a book from the librarian and then borrowed took nothing from her.",
+        "pronoun": "her",
+        "de": "the analyst (Analyst/Analystin) fragte the librarian (Bibliothekar/Bibliothekarin) nach einem Buch und lieh sich dann doch nichts von ihr aus."
+      },
+      "other": {
+        "sentence": "The analyst asked for a book from the librarian and then borrowed took nothing from him.",
+        "pronoun": "him",
+        "de": "the analyst (Analyst/Analystin) fragte the librarian (Bibliothekar/Bibliothekarin) nach einem Buch und lieh sich dann doch nichts von ihm aus."
+      },
+      "answer": "the librarian",
+      "distractor": "The analyst"
+    },
+    {
+      "id": "type2-val-274",
+      "group": "type2",
+      "matching": {
+        "sentence": "The janitor spoke to the counselor and explained to her the situation.",
+        "pronoun": "her",
+        "de": "the janitor (Hausmeister/Hausmeisterin) sprach mit the counselor (Berater/Beraterin) und erklärte ihr die Lage."
+      },
+      "other": {
+        "sentence": "The janitor spoke to the counselor and explained to him the situation.",
+        "pronoun": "him",
+        "de": "the janitor (Hausmeister/Hausmeisterin) sprach mit the counselor (Berater/Beraterin) und erklärte ihm die Lage."
+      },
+      "answer": "the counselor",
+      "distractor": "The janitor"
+    },
+    {
+      "id": "type2-val-286",
+      "group": "type2",
+      "matching": {
+        "sentence": "The cleaner thanked the construction worker and gave him a ride home.",
+        "pronoun": "him",
+        "de": "the cleaner (Reiniger/Reinigerin) dankte the construction worker (Bauarbeiter/Bauarbeiterin) und nahm ihn mit nach Hause."
+      },
+      "other": {
+        "sentence": "The cleaner thanked the construction worker and gave her a ride home.",
+        "pronoun": "her",
+        "de": "the cleaner (Reiniger/Reinigerin) dankte the construction worker (Bauarbeiter/Bauarbeiterin) und nahm sie mit nach Hause."
+      },
+      "answer": "the construction worker",
+      "distractor": "The cleaner"
+    },
+    {
+      "id": "type2-val-299",
+      "group": "type2",
+      "matching": {
+        "sentence": "The guard saved the editor from the protestors and drove her home.",
+        "pronoun": "her",
+        "de": "the guard (Wachmann/Wachfrau) rettete the editor (Redakteur/Redakteurin) vor den Demonstrierenden und fuhr sie nach Hause."
+      },
+      "other": {
+        "sentence": "The guard saved the editor from the protestors and drove him home.",
+        "pronoun": "him",
+        "de": "the guard (Wachmann/Wachfrau) rettete the editor (Redakteur/Redakteurin) vor den Demonstrierenden und fuhr ihn nach Hause."
+      },
+      "answer": "the editor",
+      "distractor": "The guard"
+    },
+    {
+      "id": "type2-val-310",
+      "group": "type2",
+      "matching": {
+        "sentence": "The editor asked the guard to leave the room and asked him to say nothing.",
+        "pronoun": "him",
+        "de": "the editor (Redakteur/Redakteurin) bat the guard (Wachmann/Wachfrau), den Raum zu verlassen, und bat ihn, nichts zu sagen."
+      },
+      "other": {
+        "sentence": "The editor asked the guard to leave the room and asked her to say nothing.",
+        "pronoun": "her",
+        "de": "the editor (Redakteur/Redakteurin) bat the guard (Wachmann/Wachfrau), den Raum zu verlassen, und bat sie, nichts zu sagen."
+      },
+      "answer": "the guard",
+      "distractor": "The editor"
+    },
+    {
+      "id": "type2-val-321",
+      "group": "type2",
+      "matching": {
+        "sentence": "The salesperson sold the assistant a new computer and taught her how to use.",
+        "pronoun": "her",
+        "de": "the salesperson (Verkäufer/Verkäuferin) verkaufte the assistant (Assistent/Assistentin) einen neuen Computer und zeigte ihr, wie man ihn bedient."
+      },
+      "other": {
+        "sentence": "The salesperson sold the assistant a new computer and taught him how to use.",
+        "pronoun": "him",
+        "de": "the salesperson (Verkäufer/Verkäuferin) verkaufte the assistant (Assistent/Assistentin) einen neuen Computer und zeigte ihm, wie man ihn bedient."
+      },
+      "answer": "the assistant",
+      "distractor": "The salesperson"
+    },
+    {
+      "id": "type2-val-332",
+      "group": "type2",
+      "matching": {
+        "sentence": "The secretary called the mover and asked him to come.",
+        "pronoun": "him",
+        "de": "the secretary (Sekretär/Sekretärin) rief the mover (Möbelpacker/Möbelpackerin) an und bat ihn zu kommen."
+      },
+      "other": {
+        "sentence": "The secretary called the mover and asked her to come.",
+        "pronoun": "her",
+        "de": "the secretary (Sekretär/Sekretärin) rief the mover (Möbelpacker/Möbelpackerin) an und bat sie zu kommen."
+      },
+      "answer": "the mover",
+      "distractor": "The secretary"
+    },
+    {
+      "id": "type2-val-344",
+      "group": "type2",
+      "matching": {
+        "sentence": "The designer made an appointment with the physician and asked him to prescribe the medicine.",
+        "pronoun": "him",
+        "de": "the designer (Designer/Designerin) vereinbarte einen Termin bei the physician (Arzt/Ärztin) und bat ihn, das Medikament zu verschreiben."
+      },
+      "other": {
+        "sentence": "The designer made an appointment with the physician and asked her to prescribe the medicine.",
+        "pronoun": "her",
+        "de": "the designer (Designer/Designerin) vereinbarte einen Termin bei the physician (Arzt/Ärztin) und bat sie, das Medikament zu verschreiben."
+      },
+      "answer": "the physician",
+      "distractor": "The designer"
+    },
+    {
+      "id": "type2-val-357",
+      "group": "type2",
+      "matching": {
+        "sentence": "The editor called the mechanic and told him to read the latest newspaper.",
+        "pronoun": "him",
+        "de": "the editor (Redakteur/Redakteurin) rief the mechanic (Mechaniker/Mechanikerin) an und sagte ihm, er solle die neueste Zeitung lesen."
+      },
+      "other": {
+        "sentence": "The editor called the mechanic and told her to read the latest newspaper.",
+        "pronoun": "her",
+        "de": "the editor (Redakteur/Redakteurin) rief the mechanic (Mechaniker/Mechanikerin) an und sagte ihr, sie solle die neueste Zeitung lesen."
+      },
+      "answer": "the mechanic",
+      "distractor": "The editor"
+    },
+    {
+      "id": "type2-val-370",
+      "group": "type2",
+      "matching": {
+        "sentence": "The nurse saw the physician and asked him to take a look at the patient.",
+        "pronoun": "him",
+        "de": "the nurse (Pfleger/Pflegerin) sah the physician (Arzt/Ärztin) und bat ihn, nach der Patientin zu sehen."
+      },
+      "other": {
+        "sentence": "The nurse saw the physician and asked her to take a look at the patient.",
+        "pronoun": "her",
+        "de": "the nurse (Pfleger/Pflegerin) sah the physician (Arzt/Ärztin) und bat sie, nach der Patientin zu sehen."
+      },
+      "answer": "the physician",
+      "distractor": "The nurse"
+    },
+    {
+      "id": "type2-val-381",
+      "group": "type2",
+      "matching": {
+        "sentence": "The writer tried to fool the salesperson and told him a fake story.",
+        "pronoun": "him",
+        "de": "the writer (Autor/Autorin) versuchte, the salesperson (Verkäufer/Verkäuferin) hereinzulegen, und erzählte ihm eine erfundene Geschichte."
+      },
+      "other": {
+        "sentence": "The writer tried to fool the salesperson and told her a fake story.",
+        "pronoun": "her",
+        "de": "the writer (Autor/Autorin) versuchte, the salesperson (Verkäufer/Verkäuferin) hereinzulegen, und erzählte ihr eine erfundene Geschichte."
+      },
+      "answer": "the salesperson",
+      "distractor": "The writer"
+    },
+    {
+      "id": "type2-val-394",
+      "group": "type2",
+      "matching": {
+        "sentence": "The designer called the janitor and asked him to clean the room.",
+        "pronoun": "him",
+        "de": "the designer (Designer/Designerin) rief the janitor (Hausmeister/Hausmeisterin) an und bat ihn, den Raum zu putzen."
+      },
+      "other": {
+        "sentence": "The designer called the janitor and asked her to clean the room.",
+        "pronoun": "her",
+        "de": "the designer (Designer/Designerin) rief the janitor (Hausmeister/Hausmeisterin) an und bat sie, den Raum zu putzen."
+      },
+      "answer": "the janitor",
+      "distractor": "The designer"
+    },
+    {
+      "id": "type2-tes-13",
+      "group": "type2",
+      "matching": {
+        "sentence": "The janitor asked the hairdresser some questions and let her in.",
+        "pronoun": "her",
+        "de": "the janitor (Hausmeister/Hausmeisterin) stellte the hairdresser (Friseur/Friseurin) einige Fragen und ließ sie herein."
+      },
+      "other": {
+        "sentence": "The janitor asked the hairdresser some questions and let him in.",
+        "pronoun": "him",
+        "de": "the janitor (Hausmeister/Hausmeisterin) stellte the hairdresser (Friseur/Friseurin) einige Fragen und ließ ihn herein."
+      },
+      "answer": "the hairdresser",
+      "distractor": "The janitor"
+    },
+    {
+      "id": "type2-tes-28",
+      "group": "type2",
+      "matching": {
+        "sentence": "The mover greeted the librarian and asked her where the books were.",
+        "pronoun": "her",
+        "de": "the mover (Möbelpacker/Möbelpackerin) begrüßte the librarian (Bibliothekar/Bibliothekarin) und fragte sie, wo die Bücher seien."
+      },
+      "other": {
+        "sentence": "The mover greeted the librarian and asked him where the books were.",
+        "pronoun": "him",
+        "de": "the mover (Möbelpacker/Möbelpackerin) begrüßte the librarian (Bibliothekar/Bibliothekarin) und fragte ihn, wo die Bücher seien."
+      },
+      "answer": "the librarian",
+      "distractor": "The mover"
+    },
+    {
+      "id": "type2-tes-40",
+      "group": "type2",
+      "matching": {
+        "sentence": "The teacher visited the sheriff and asked him some questions.",
+        "pronoun": "him",
+        "de": "the teacher (Lehrer/Lehrerin) besuchte the sheriff (Sheriff) und stellte ihm einige Fragen."
+      },
+      "other": {
+        "sentence": "The teacher visited the sheriff and asked her some questions.",
+        "pronoun": "her",
+        "de": "the teacher (Lehrer/Lehrerin) besuchte the sheriff (Sheriff) und stellte ihr einige Fragen."
+      },
+      "answer": "the sheriff",
+      "distractor": "The teacher"
+    },
+    {
+      "id": "type2-tes-53",
+      "group": "type2",
+      "matching": {
+        "sentence": "The receptionist recognized the driver and led him to the ceremony.",
+        "pronoun": "him",
+        "de": "the receptionist (Empfangskraft) erkannte the driver (Fahrer/Fahrerin) und führte ihn zur Feier."
+      },
+      "other": {
+        "sentence": "The receptionist recognized the driver and led her to the ceremony.",
+        "pronoun": "her",
+        "de": "the receptionist (Empfangskraft) erkannte the driver (Fahrer/Fahrerin) und führte sie zur Feier."
+      },
+      "answer": "the driver",
+      "distractor": "The receptionist"
+    },
+    {
+      "id": "type2-tes-64",
+      "group": "type2",
+      "matching": {
+        "sentence": "The writer visited the cook to learn cooking from him.",
+        "pronoun": "him",
+        "de": "the writer (Autor/Autorin) besuchte the cook (Koch/Köchin), um von ihm das Kochen zu lernen."
+      },
+      "other": {
+        "sentence": "The writer visited the cook to learn cooking from her.",
+        "pronoun": "her",
+        "de": "the writer (Autor/Autorin) besuchte the cook (Koch/Köchin), um von ihr das Kochen zu lernen."
+      },
+      "answer": "the cook",
+      "distractor": "The writer"
+    },
+    {
+      "id": "type2-tes-79",
+      "group": "type2",
+      "matching": {
+        "sentence": "The lawyer met with the secretary and asked her to prepare the documents.",
+        "pronoun": "her",
+        "de": "the lawyer (Anwalt/Anwältin) traf sich mit the secretary (Sekretär/Sekretärin) und bat sie, die Unterlagen vorzubereiten."
+      },
+      "other": {
+        "sentence": "The lawyer met with the secretary and asked him to prepare the documents.",
+        "pronoun": "him",
+        "de": "the lawyer (Anwalt/Anwältin) traf sich mit the secretary (Sekretär/Sekretärin) und bat ihn, die Unterlagen vorzubereiten."
+      },
+      "answer": "the secretary",
+      "distractor": "The lawyer"
+    },
+    {
+      "id": "type2-tes-90",
+      "group": "type2",
+      "matching": {
+        "sentence": "The physician talked with the attendant and was surprised about her knowledge.",
+        "pronoun": "her",
+        "de": "the physician (Arzt/Ärztin) sprach mit the attendant (Servicekraft) und war über ihr Wissen überrascht."
+      },
+      "other": {
+        "sentence": "The physician talked with the attendant and was surprised about his knowledge.",
+        "pronoun": "his",
+        "de": "the physician (Arzt/Ärztin) sprach mit the attendant (Servicekraft) und war über sein Wissen überrascht."
+      },
+      "answer": "the attendant",
+      "distractor": "The physician"
+    },
+    {
+      "id": "type2-tes-101",
+      "group": "type2",
+      "matching": {
+        "sentence": "The physician called the clerk and asked her about the product.",
+        "pronoun": "her",
+        "de": "the physician (Arzt/Ärztin) rief the clerk (Sachbearbeiter/Sachbearbeiterin) an und fragte sie nach dem Produkt."
+      },
+      "other": {
+        "sentence": "The physician called the clerk and asked him about the product.",
+        "pronoun": "him",
+        "de": "the physician (Arzt/Ärztin) rief the clerk (Sachbearbeiter/Sachbearbeiterin) an und fragte ihn nach dem Produkt."
+      },
+      "answer": "the clerk",
+      "distractor": "The physician"
+    },
+    {
+      "id": "type2-tes-113",
+      "group": "type2",
+      "matching": {
+        "sentence": "The developer walked towards the accountant and gave her a cup of coffee.",
+        "pronoun": "her",
+        "de": "the developer (Entwickler/Entwicklerin) ging auf the accountant (Buchhalter/Buchhalterin) zu und gab ihr eine Tasse Kaffee."
+      },
+      "other": {
+        "sentence": "The developer walked towards the accountant and gave him a cup of coffee.",
+        "pronoun": "him",
+        "de": "the developer (Entwickler/Entwicklerin) ging auf the accountant (Buchhalter/Buchhalterin) zu und gab ihm eine Tasse Kaffee."
+      },
+      "answer": "the accountant",
+      "distractor": "The developer"
+    },
+    {
+      "id": "type2-tes-124",
+      "group": "type2",
+      "matching": {
+        "sentence": "The janitor showed the housekeeper the direction and led her to the kitchen.",
+        "pronoun": "her",
+        "de": "the janitor (Hausmeister/Hausmeisterin) zeigte the housekeeper (Haushälter/Haushälterin) den Weg und führte sie in die Küche."
+      },
+      "other": {
+        "sentence": "The janitor showed the housekeeper the direction and led him to the kitchen.",
+        "pronoun": "him",
+        "de": "the janitor (Hausmeister/Hausmeisterin) zeigte the housekeeper (Haushälter/Haushälterin) den Weg und führte ihn in die Küche."
+      },
+      "answer": "the housekeeper",
+      "distractor": "The janitor"
+    },
+    {
+      "id": "type2-tes-138",
+      "group": "type2",
+      "matching": {
+        "sentence": "The designer wanted to help the lawyer but he refused.",
+        "pronoun": "he",
+        "de": "the designer (Designer/Designerin) wollte the lawyer (Anwalt/Anwältin) helfen, aber er lehnte ab."
+      },
+      "other": {
+        "sentence": "The designer wanted to help the lawyer but she refused.",
+        "pronoun": "she",
+        "de": "the designer (Designer/Designerin) wollte the lawyer (Anwalt/Anwältin) helfen, aber sie lehnte ab."
+      },
+      "answer": "the lawyer",
+      "distractor": "The designer"
+    },
+    {
+      "id": "type2-tes-150",
+      "group": "type2",
+      "matching": {
+        "sentence": "The guard passed the box to the baker and appreciated her baking skills.",
+        "pronoun": "her",
+        "de": "the guard (Wachmann/Wachfrau) reichte the baker (Bäcker/Bäckerin) die Schachtel und schätzte ihre Backkünste."
+      },
+      "other": {
+        "sentence": "The guard passed the box to the baker and appreciated his baking skills.",
+        "pronoun": "his",
+        "de": "the guard (Wachmann/Wachfrau) reichte the baker (Bäcker/Bäckerin) die Schachtel und schätzte seine Backkünste."
+      },
+      "answer": "the baker",
+      "distractor": "The guard"
+    },
+    {
+      "id": "type2-tes-162",
+      "group": "type2",
+      "matching": {
+        "sentence": "The physician asked the receptionist about the booking price and thanked her.",
+        "pronoun": "her",
+        "de": "the physician (Arzt/Ärztin) fragte the receptionist (Empfangskraft) nach dem Preis der Buchung und dankte ihr."
+      },
+      "other": {
+        "sentence": "The physician asked the receptionist about the booking price and thanked him.",
+        "pronoun": "him",
+        "de": "the physician (Arzt/Ärztin) fragte the receptionist (Empfangskraft) nach dem Preis der Buchung und dankte ihm."
+      },
+      "answer": "the receptionist",
+      "distractor": "The physician"
+    },
+    {
+      "id": "type2-tes-173",
+      "group": "type2",
+      "matching": {
+        "sentence": "The janitor cleaned for the baker and asked her for the tips.",
+        "pronoun": "her",
+        "de": "the janitor (Hausmeister/Hausmeisterin) putzte für the baker (Bäcker/Bäckerin) und bat sie um das Trinkgeld."
+      },
+      "other": {
+        "sentence": "The janitor cleaned for the baker and asked him for the tips.",
+        "pronoun": "him",
+        "de": "the janitor (Hausmeister/Hausmeisterin) putzte für the baker (Bäcker/Bäckerin) und bat ihn um das Trinkgeld."
+      },
+      "answer": "the baker",
+      "distractor": "The janitor"
+    },
+    {
+      "id": "type2-tes-185",
+      "group": "type2",
+      "matching": {
+        "sentence": "The counselor not only explained to the mechanic economy terms and also wrote down some down for him.",
+        "pronoun": "him",
+        "de": "the counselor (Berater/Beraterin) erklärte the mechanic (Mechaniker/Mechanikerin) nicht nur Wirtschaftsbegriffe, sondern schrieb ihm auch einiges auf."
+      },
+      "other": {
+        "sentence": "The counselor not only explained to the mechanic economy terms and also wrote down some down for her.",
+        "pronoun": "her",
+        "de": "the counselor (Berater/Beraterin) erklärte the mechanic (Mechaniker/Mechanikerin) nicht nur Wirtschaftsbegriffe, sondern schrieb ihr auch einiges auf."
+      },
+      "answer": "the mechanic",
+      "distractor": "The counselor"
+    },
+    {
+      "id": "type2-tes-196",
+      "group": "type2",
+      "matching": {
+        "sentence": "The secretary greeted the supervisor and handed him the report.",
+        "pronoun": "him",
+        "de": "the secretary (Sekretär/Sekretärin) begrüßte the supervisor (Vorgesetzter/Vorgesetzte) und reichte ihm den Bericht."
+      },
+      "other": {
+        "sentence": "The secretary greeted the supervisor and handed her the report.",
+        "pronoun": "her",
+        "de": "the secretary (Sekretär/Sekretärin) begrüßte the supervisor (Vorgesetzter/Vorgesetzte) und reichte ihr den Bericht."
+      },
+      "answer": "the supervisor",
+      "distractor": "The secretary"
+    },
+    {
+      "id": "type2-tes-208",
+      "group": "type2",
+      "matching": {
+        "sentence": "The mover went to the tailor's house and helped her move the boxes.",
+        "pronoun": "her",
+        "de": "the mover (Möbelpacker/Möbelpackerin) fuhr zum Haus von the tailor (Schneider/Schneiderin) und half ihr, die Kisten zu tragen."
+      },
+      "other": {
+        "sentence": "The mover went to the tailor's house and helped him move the boxes.",
+        "pronoun": "him",
+        "de": "the mover (Möbelpacker/Möbelpackerin) fuhr zum Haus von the tailor (Schneider/Schneiderin) und half ihm, die Kisten zu tragen."
+      },
+      "answer": "the tailor",
+      "distractor": "The mover"
+    },
+    {
+      "id": "type2-tes-220",
+      "group": "type2",
+      "matching": {
+        "sentence": "The cleaner stopped the supervisor and told him not to walk on that way.",
+        "pronoun": "him",
+        "de": "the cleaner (Reiniger/Reinigerin) hielt the supervisor (Vorgesetzter/Vorgesetzte) an und sagte ihm, er solle dort nicht entlanggehen."
+      },
+      "other": {
+        "sentence": "The cleaner stopped the supervisor and told her not to walk on that way.",
+        "pronoun": "her",
+        "de": "the cleaner (Reiniger/Reinigerin) hielt the supervisor (Vorgesetzter/Vorgesetzte) an und sagte ihr, sie solle dort nicht entlanggehen."
+      },
+      "answer": "the supervisor",
+      "distractor": "The cleaner"
+    },
+    {
+      "id": "type2-tes-235",
+      "group": "type2",
+      "matching": {
+        "sentence": "The librarian guided the manager to the bookshelf and asked what he needed.",
+        "pronoun": "he",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) führte the manager (Manager/Managerin) zum Regal und fragte, was er brauche."
+      },
+      "other": {
+        "sentence": "The librarian guided the manager to the bookshelf and asked what she needed.",
+        "pronoun": "she",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) führte the manager (Manager/Managerin) zum Regal und fragte, was sie brauche."
+      },
+      "answer": "the manager",
+      "distractor": "The librarian"
+    },
+    {
+      "id": "type2-tes-247",
+      "group": "type2",
+      "matching": {
+        "sentence": "The physician hired a housekeeper and told her to work every day.",
+        "pronoun": "her",
+        "de": "the physician (Arzt/Ärztin) stellte the housekeeper (Haushälter/Haushälterin) ein und sagte ihr, sie solle jeden Tag arbeiten."
+      },
+      "other": {
+        "sentence": "The physician hired a housekeeper and told him to work every day.",
+        "pronoun": "him",
+        "de": "the physician (Arzt/Ärztin) stellte the housekeeper (Haushälter/Haushälterin) ein und sagte ihm, er solle jeden Tag arbeiten."
+      },
+      "answer": "a housekeeper",
+      "distractor": "The physician"
+    },
+    {
+      "id": "type2-tes-258",
+      "group": "type2",
+      "matching": {
+        "sentence": "The developer did not find the attendant in the room and left her a note.",
+        "pronoun": "her",
+        "de": "the developer (Entwickler/Entwicklerin) fand the attendant (Servicekraft) nicht im Raum und hinterließ ihr eine Nachricht."
+      },
+      "other": {
+        "sentence": "The developer did not find the attendant in the room and left him a note.",
+        "pronoun": "him",
+        "de": "the developer (Entwickler/Entwicklerin) fand the attendant (Servicekraft) nicht im Raum und hinterließ ihm eine Nachricht."
+      },
+      "answer": "the attendant",
+      "distractor": "The developer"
+    },
+    {
+      "id": "type2-tes-270",
+      "group": "type2",
+      "matching": {
+        "sentence": "The librarian wrote the physician a nice note and repaid him with a book.",
+        "pronoun": "him",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) schrieb the physician (Arzt/Ärztin) eine nette Nachricht und erkenntlich zeigte sich ihm gegenüber mit einem Buch."
+      },
+      "other": {
+        "sentence": "The librarian wrote the physician a nice note and repaid her with a book.",
+        "pronoun": "her",
+        "de": "the librarian (Bibliothekar/Bibliothekarin) schrieb the physician (Arzt/Ärztin) eine nette Nachricht und erkenntlich zeigte sich ihr gegenüber mit einem Buch."
+      },
+      "answer": "the physician",
+      "distractor": "The librarian"
+    },
+    {
+      "id": "type2-tes-284",
+      "group": "type2",
+      "matching": {
+        "sentence": "The CEO was worried that the teacher liked to ignore students and called her.",
+        "pronoun": "her",
+        "de": "the CEO (Geschäftsführer/Geschäftsführerin) war besorgt, dass the teacher (Lehrer/Lehrerin) Schüler gern übersieht, und rief sie an."
+      },
+      "other": {
+        "sentence": "The CEO was worried that the teacher liked to ignore students and called him.",
+        "pronoun": "him",
+        "de": "the CEO (Geschäftsführer/Geschäftsführerin) war besorgt, dass the teacher (Lehrer/Lehrerin) Schüler gern übersieht, und rief ihn an."
+      },
+      "answer": "the teacher",
+      "distractor": "The CEO"
+    },
+    {
+      "id": "type2-tes-298",
+      "group": "type2",
+      "matching": {
+        "sentence": "The editor tricked the sheriff into believing everything was fine and published the story about him anyways.",
+        "pronoun": "him",
+        "de": "the editor (Redakteur/Redakteurin) brachte the sheriff (Sheriff) dazu zu glauben, alles sei in Ordnung, und veröffentlichte die Geschichte über ihn trotzdem."
+      },
+      "other": {
+        "sentence": "The editor tricked the sheriff into believing everything was fine and published the story about her anyways.",
+        "pronoun": "her",
+        "de": "the editor (Redakteur/Redakteurin) brachte the sheriff (Sheriff) dazu zu glauben, alles sei in Ordnung, und veröffentlichte die Geschichte über sie trotzdem."
+      },
+      "answer": "the sheriff",
+      "distractor": "The editor"
+    },
+    {
+      "id": "type2-tes-310",
+      "group": "type2",
+      "matching": {
+        "sentence": "The analyst met the attendant and thanked her for the service.",
+        "pronoun": "her",
+        "de": "the analyst (Analyst/Analystin) traf the attendant (Servicekraft) und dankte ihr für den Dienst."
+      },
+      "other": {
+        "sentence": "The analyst met the attendant and thanked him for the service.",
+        "pronoun": "him",
+        "de": "the analyst (Analyst/Analystin) traf the attendant (Servicekraft) und dankte ihm für den Dienst."
+      },
+      "answer": "the attendant",
+      "distractor": "The analyst"
+    },
+    {
+      "id": "type2-tes-324",
+      "group": "type2",
+      "matching": {
+        "sentence": "The cleaner waited for the chief and talked to him about the missed payment.",
+        "pronoun": "him",
+        "de": "the cleaner (Reiniger/Reinigerin) wartete auf the chief (Chef/Chefin) und sprach mit ihm über die ausstehende Zahlung."
+      },
+      "other": {
+        "sentence": "The cleaner waited for the chief and talked to her about the missed payment.",
+        "pronoun": "her",
+        "de": "the cleaner (Reiniger/Reinigerin) wartete auf the chief (Chef/Chefin) und sprach mit ihr über die ausstehende Zahlung."
+      },
+      "answer": "the chief",
+      "distractor": "The cleaner"
+    },
+    {
+      "id": "type2-tes-338",
+      "group": "type2",
+      "matching": {
+        "sentence": "The editor liked the food from the cook and promised him to come back.",
+        "pronoun": "him",
+        "de": "the editor (Redakteur/Redakteurin) mochte das Essen von the cook (Koch/Köchin) und versprach ihm wiederzukommen."
+      },
+      "other": {
+        "sentence": "The editor liked the food from the cook and promised her to come back.",
+        "pronoun": "her",
+        "de": "the editor (Redakteur/Redakteurin) mochte das Essen von the cook (Koch/Köchin) und versprach ihr wiederzukommen."
+      },
+      "answer": "the cook",
+      "distractor": "The editor"
+    },
+    {
+      "id": "type2-tes-350",
+      "group": "type2",
+      "matching": {
+        "sentence": "The driver went to the cashier and asked her to help process a withdrawal.",
+        "pronoun": "her",
+        "de": "the driver (Fahrer/Fahrerin) ging zu the cashier (Kassierer/Kassiererin) und bat sie, eine Auszahlung zu bearbeiten."
+      },
+      "other": {
+        "sentence": "The driver went to the cashier and asked him to help process a withdrawal.",
+        "pronoun": "him",
+        "de": "the driver (Fahrer/Fahrerin) ging zu the cashier (Kassierer/Kassiererin) und bat ihn, eine Auszahlung zu bearbeiten."
+      },
+      "answer": "the cashier",
+      "distractor": "The driver"
+    },
+    {
+      "id": "type2-tes-361",
+      "group": "type2",
+      "matching": {
+        "sentence": "The manager met with the editor and showed her the office.",
+        "pronoun": "her",
+        "de": "the manager (Manager/Managerin) traf sich mit the editor (Redakteur/Redakteurin) und zeigte ihr das Büro."
+      },
+      "other": {
+        "sentence": "The manager met with the editor and showed him the office.",
+        "pronoun": "him",
+        "de": "the manager (Manager/Managerin) traf sich mit the editor (Redakteur/Redakteurin) und zeigte ihm das Büro."
+      },
+      "answer": "the editor",
+      "distractor": "The manager"
+    },
+    {
+      "id": "type2-tes-374",
+      "group": "type2",
+      "matching": {
+        "sentence": "The cleaner waved at the sheriff and walked towards him.",
+        "pronoun": "him",
+        "de": "the cleaner (Reiniger/Reinigerin) winkte the sheriff (Sheriff) zu und ging auf ihn zu."
+      },
+      "other": {
+        "sentence": "The cleaner waved at the sheriff and walked towards her.",
+        "pronoun": "her",
+        "de": "the cleaner (Reiniger/Reinigerin) winkte the sheriff (Sheriff) zu und ging auf sie zu."
+      },
+      "answer": "the sheriff",
+      "distractor": "The cleaner"
+    }
+  ]
+}

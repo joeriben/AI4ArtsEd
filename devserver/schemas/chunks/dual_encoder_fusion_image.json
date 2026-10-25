@@ -1,0 +1,230 @@
+{
+  "name": "dual_encoder_fusion_image",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "description": "Dual-encoder T5+CLIP fusion image generation (requires ai4artsed_t5_clip_fusion custom node)",
+  "workflow": {
+    "1": {
+      "inputs": {
+        "ckpt_name": "OfficialStableDiffusion/sd3.5_large.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "2": {
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": {
+        "title": "Empty Latent Image"
+      }
+    },
+    "3": {
+      "inputs": {
+        "clip_name": "clip_l.safetensors",
+        "type": "sd3",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP (clip_l)"
+      }
+    },
+    "4": {
+      "inputs": {
+        "clip_name": "t5xxl_enconly.safetensors",
+        "type": "sd3",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load CLIP (T5)"
+      }
+    },
+    "5": {
+      "inputs": {
+        "text": "{{CLIP_PROMPT}}",
+        "clip": [
+          "3",
+          0
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (clip_l)"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": "{{T5_PROMPT}}",
+        "clip": [
+          "4",
+          0
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (T5)"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": "",
+        "clip": [
+          "3",
+          0
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode NEGATIVE (clip_l)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "text": "",
+        "clip": [
+          "4",
+          0
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode NEGATIVE (T5)"
+      }
+    },
+    "9": {
+      "inputs": {
+        "alpha": 20,
+        "clip_conditioning": [
+          "5",
+          0
+        ],
+        "t5_conditioning": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "ai4artsed_t5_clip_fusion",
+      "_meta": {
+        "title": "AI4ArtsEd T5-CLIP Fusion POSITIVE"
+      }
+    },
+    "10": {
+      "inputs": {
+        "alpha": 20,
+        "clip_conditioning": [
+          "7",
+          0
+        ],
+        "t5_conditioning": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "ai4artsed_t5_clip_fusion",
+      "_meta": {
+        "title": "AI4ArtsEd T5-CLIP Fusion NEGATIVE"
+      }
+    },
+    "11": {
+      "inputs": {
+        "seed": -1,
+        "steps": 25,
+        "cfg": 5.5,
+        "sampler_name": "euler",
+        "scheduler": "normal",
+        "denoise": 1,
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "9",
+          0
+        ],
+        "negative": [
+          "10",
+          0
+        ],
+        "latent_image": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "12": {
+      "inputs": {
+        "samples": [
+          "11",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "13": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": [
+          "12",
+          0
+        ]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    }
+  },
+  "input_mappings": {
+    "t5_prompt": {
+      "node_id": "6",
+      "field": "inputs.text",
+      "description": "T5-optimized prompt (expanded, semantic)"
+    },
+    "clip_prompt": {
+      "node_id": "5",
+      "field": "inputs.text",
+      "description": "CLIP-optimized prompt (compact, token-weighted)"
+    },
+    "alpha": {
+      "node_id": "9",
+      "field": "inputs.alpha",
+      "description": "Alpha value for T5-CLIP blending (-1.5 to +2)"
+    },
+    "seed": {
+      "node_id": "11",
+      "field": "inputs.seed",
+      "default": "random",
+      "description": "Seed for reproducibility. This chunk had no seed mapping at all until 2026-09-07: its sampler kept the -1 written into the file, which lies below the KSampler minimum of 0, so ComfyUI would have refused the workflow at submission."
+    }
+  },
+  "output_mapping": {
+    "node_id": "13",
+    "output_type": "image",
+    "field": "images"
+  },
+  "meta": {
+    "requires_custom_nodes": ["ai4artsed_t5_clip_fusion"],
+    "checkpoint": "sd3.5_large",
+    "clip_encoders": ["clip_l", "t5xxl"],
+    "fusion_algorithm": "lerp_first_77_tokens_then_concat"
+  }
+}

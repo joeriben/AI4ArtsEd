@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Dimension Explorer",
+    "de": "Dimension Explorer",
+    "tr": "Dimension Explorer",
+    "ko": "Dimension Explorer",
+    "uk": "Dimension Explorer",
+    "fr": "Dimension Explorer",
+    "es": "Dimension Explorer",
+    "he": "Dimension Explorer",
+    "ar": "Dimension Explorer",
+    "bg": "Dimension Explorer"
+  },
+  "description": {
+    "en": "Embedding analysis with selective dimension transfer. Shows which dimensions encode which semantic differences between two prompts.",
+    "de": "Embedding-Analyse mit selektiver Dimensionsübertragung. Zeigt, welche Dimensionen welche semantischen Unterschiede zwischen zwei Prompts kodieren.",
+    "tr": "Seçici boyut aktarımı ile embedding analizi. Hangi boyutların iki prompt arasındaki hangi anlamsal farkları kodladığını gösterir.",
+    "ko": "선택적 차원 전송을 포함한 임베딩 분석. 어떤 차원이 두 프롬프트 간의 어떤 의미적 차이를 인코딩하는지 보여줍니다.",
+    "uk": "Аналіз ембедингів із вибірковим перенесенням вимірів. Показує, які виміри кодують які семантичні відмінності між двома промптами.",
+    "fr": "Analyse des embeddings avec transfert sélectif de dimensions. Montre quelles dimensions encodent quelles différences sémantiques entre deux prompts.",
+    "es": "Análisis de embeddings con transferencia selectiva de dimensiones. Muestra qué dimensiones codifican qué diferencias semánticas entre dos prompts.",
+    "he": "ניתוח embeddings עם העברה סלקטיבית של ממדים. מראה אילו ממדים מקודדים אילו הבדלים סמנטיים בין שני פרומפטים.",
+    "ar": "تحليل التضمينات (embeddings) مع نقل انتقائي للأبعاد. يوضح أي الأبعاد تُرمّز أي فروق دلالية بين وصفين (prompts).",
+    "bg": "Анализ на ембединги с избирателен трансфер на измерения. Показва кои измерения кодират кои семантични разлики между две подкани."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_feature_probing_comfyui"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "display_name": "Dimension Explorer (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 12000,
+    "recommended_resolution": "1024x1024"
+  }
+}

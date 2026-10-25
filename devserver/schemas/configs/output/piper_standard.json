@@ -1,0 +1,121 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Piper Voice",
+    "de": "Piper-Stimme"
+  },
+  "description": {
+    "en": "Speaks a given text aloud. The text is spoken verbatim — it is not a prompt and is never rewritten. Every voice is one file trained on one recorded dataset; the only trained voice here that speaks all ten platform languages, and the only one whose datasets are named and, for some voices, who was recorded.",
+    "de": "Spricht einen gegebenen Text. Der Text wird wörtlich gesprochen — er ist kein Prompt und wird nicht umgeschrieben. Jede Stimme ist eine Datei, trainiert auf einem aufgenommenen Datensatz; die einzige trainierte Stimme hier, die alle zehn Plattform-Sprachen spricht, und die einzige, deren Datensätze benannt sind und, bei einigen Stimmen, wer aufgenommen wurde."
+  },
+  "category": {
+    "en": "Sound",
+    "de": "Sound"
+  },
+  "context": "",
+  "parameters": {
+    "OUTPUT_CHUNK": "output_speech_piper",
+    "voice": null,
+    "emotion": null
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "piper",
+    "backend_type": "python",
+    "verbatim_input": true,
+    "skip_stage2": true,
+    "skip_stage3_translation": true,
+    "allowed_safety_levels": [
+      "adult",
+      "research"
+    ],
+    "supported_languages": [
+      "ar",
+      "bg",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "he",
+      "ko",
+      "tr",
+      "uk"
+    ],
+    "unvoiced_platform_languages": [],
+    "display_name": "Piper",
+    "icon": "🗣️",
+    "publisher": "Michael Hansen, Rhasspy project (2022); since 2025 OHF-Voice/piper1-gpl, the Home Assistant authors (the installed 1.6.0)",
+    "architecture": "VITS with duration predictor (Kim, Kong and Son, 2021), ONNX",
+    "params": "not stated by the makers",
+    "text_encoders": [
+      "espeak-ng phonemes"
+    ],
+    "quantization": "FP32",
+    "license": "code: GPL-3.0-or-later (piper1-gpl); voices: CC0, CC BY 4.0, CC BY-SA 4.0, CC BY-NC-SA 4.0, Apache-2.0, public domain — per voice, see MODELS_REQUIRED.md",
+    "provenance": {
+      "training_data_disclosed": true,
+      "training_data_sources": [
+        "one dataset per voice, named in each voice's MODEL_CARD — see MODELS_REQUIRED.md",
+        "consent to synthesis: stated for SASPEECH (the speaker and the Israeli Public Broadcasting Corporation); PAVOQUE, KSS and SIWIS were recorded for speech synthesis and the Blizzard 2013 audiobooks were provided for it; the other datasets say nothing about it"
+      ],
+      "training_data_consent": "partial",
+      "geographic_origin": "per voice — see MODELS_REQUIRED.md",
+      "known_biases": [
+        {
+          "en": "Every voice is one person. A language is not a voice, and this catalogue makes that unavoidable: 'Arabic' is one voice from Jordan because that is the only Arabic voice there is.",
+          "de": "Jede Stimme ist eine Person. Eine Sprache ist keine Stimme, und dieser Katalog macht das unausweichlich: „Arabisch\" ist eine Stimme aus Jordanien, weil es die einzige arabische Stimme gibt."
+        },
+        {
+          "en": "Many Piper voices were retrained from an English base voice — an English prosody model speaking other sounds. en_US lessac, installed here, is one of those base voices.",
+          "de": "Viele Piper-Stimmen sind aus einer englischen Grundstimme nachtrainiert — ein englisches Prosodiemodell auf anderen Lauten. en_US lessac, hier installiert, ist eine dieser Grundstimmen."
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "No control over emotion or register anywhere in this system, and no way to ask for one. The speaker heard is the recorded one; pitch and rhythm are sampled anew at every run (VITS). Phoneme length and phoneme width noise are the only settings (Piper's --length-scale and --noise-w-scale).",
+          "de": "Keine Steuerung für Emotion oder Register, nirgends in diesem System, und keine Möglichkeit, danach zu fragen. Gehört wird die aufgenommene Person; Tonhöhe und Rhythmus werden bei jedem Lauf neu gezogen (VITS). Phonemlänge und Phonembreiten-Rauschen sind die einzigen Einstellungen (Pipers --length-scale und --noise-w-scale)."
+        },
+        {
+          "en": "One voice per language for most of them, so everything a language says here says it in one person's accent and speech habits. Where the catalogue allows, several are installed instead — three Spanish, two English, two German, two Ukrainian.",
+          "de": "Für die meisten Sprachen eine Stimme, ein Sprecher: alles, was eine Sprache hier sagt, klingt in dessen Aussprache und Sprechgewohnheiten. Wo der Katalog es hergibt, sind mehrere installiert — drei spanische, zwei englische, zwei deutsche, zwei ukrainische."
+        }
+      ]
+    },
+    "gpu_vram_mb": 0,
+    "note": "Input is content, not a prompt. Piper and its voices are downloaded, never part of this repository; download_piper.sh fetches both into their own environment, and the DevServer runs the `piper` binary of that environment as a subprocess on the CPU. Every platform language has at least one installed voice."
+  },
+  "display": {
+    "icon": "record_voice_over",
+    "color": "#00897B",
+    "category": "sound",
+    "difficulty": 2,
+    "order": 120
+  },
+  "tags": {
+    "en": [
+      "speech",
+      "voice",
+      "TTS",
+      "VITS",
+      "recorded voices"
+    ],
+    "de": [
+      "Sprache",
+      "Stimme",
+      "TTS",
+      "VITS",
+      "aufgenommene Stimmen"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 18,
+    "complexity": "intermediate"
+  }
+}

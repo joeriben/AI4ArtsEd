@@ -1,0 +1,77 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "transformation",
+  "name": {
+    "en": "Yoruba Oriki",
+    "de": "Yoruba Oriki",
+    "tr": "Yoruba Oriki",
+    "ko": "Yoruba Oriki",
+    "uk": "Yoruba Oriki",
+    "fr": "Yoruba Oriki",
+    "es": "Yoruba Oriki",
+    "he": "Yoruba Oriki",
+    "ar": "Yoruba Oriki",
+    "bg": "Yoruba Oriki"
+  },
+  "description": {
+    "en": "Material collision with Yoruba Oriki praise poetry (West African oral tradition). Oya — storm, transformation, the one who sweeps the marketplace clean. Colliding with your prompt through a deliberately insufficient model.",
+    "de": "Materialkollision mit Yoruba-Oriki-Preispoesie (westafrikanische muendliche Tradition). Oya — Sturm, Verwandlung, die den Marktplatz leerfegt. Kollidierend mit deinem Prompt durch ein absichtlich unzureichendes Modell.",
+    "tr": "Yoruba Oriki övgü şiiriyle malzeme çarpışması (Batı Afrika sözlü geleneği). Oya — fırtına, dönüşüm, çarşıyı temizleyen. Kasıtlı olarak yetersiz bir model aracılığıyla prompt'unuzla çarpışıyor.",
+    "ko": "Yoruba Oriki 찬양시와의 재료 충돌 (서아프리카 구전 전통). Oya — 폭풍, 변환, 시장을 깨끗이 쓸어버리는 자. 의도적으로 불완전한 모델을 통해 당신의 프롬프트와 충돌합니다.",
+    "uk": "Матеріальне зіткнення з хвалебною поезією Yoruba Oriki (усна традиція Західної Африки). Oya — буря, перетворення, та, що вимітає ринок. Зіткнення з вашим промптом через навмисно недостатню модель.",
+    "fr": "Collision matérielle avec la poésie de louange Yoruba Oriki (tradition orale d'Afrique de l'Ouest). Oya — tempête, transformation, celle qui balaie le marché. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
+    "es": "Colisión material con la poesía de alabanza Yoruba Oriki (tradición oral de África Occidental). Oya — tormenta, transformación, la que barre el mercado. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
+    "he": "התנגשות חומרית עם שירת שבח Yoruba Oriki (מסורת בעל-פה של מערב אפריקה). Oya — סערה, התמרה, זו שמטאטאת את השוק. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
+    "ar": "تصادم مادي مع شعر المديح Yoruba Oriki (التقليد الشفهي لغرب أفريقيا). Oya — العاصفة، التحول، التي تكنس السوق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с хвалебствената поезия Yoruba Oriki (западноафриканска устна традиция). Oya — буря, трансформация, тази, която измита пазара. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
+  },
+  "category": {
+    "en": "Poetry",
+    "de": "Poesie",
+    "tr": "Şiir",
+    "ko": "시",
+    "uk": "Поезія",
+    "fr": "Poésie",
+    "es": "Poesía",
+    "he": "שירה",
+    "ar": "شعر",
+    "bg": "Поезия"
+  },
+  "properties": [
+    "poetry"
+  ],
+  "context": {
+    "de": "Durchdenke den INput-Prompt mit den Gedanken, Anliegen, Klängen und Rhythmen dieses Gedichts:\n\nYeepa oya o\nOya ma bami ja o\nN o lowo ebo nile\nOya orolu\nOosa merindinlogun ti n se aya sango\nOlukoso abape\nOya lo lopere o\nOya dakun ma bawa ja\nA o lowo ebo nile o\nOya orolu\nOya dakun ma bawa ja\nAlafefe ina\nObinrin tororo eko elo\nOya ma bami ja\nMa bami ja\nN o lowo ebo nile\nOya orolu\nOosa merindinlogun ti n se aya sango\nEepe oya!\n\nYeepa, Ọya!\nỌya, streite nicht mit mir.\nIch habe kein Geld für das Opfer im Haus.\nỌya Orolu.\nUnter den sechzehn Orisa jene, die Sangos Frau ist.\nOlukoso Abape.\nỌya ist es, der Opere gehört.\nỌya, ich bitte dich, streite nicht mit uns.\nWir haben kein Geld für das Opfer im Haus.\nỌya Orolu.\nỌya, ich bitte dich, streite nicht mit uns.\nHerrin des feurigen Windes.\nObinrin tororo eko elo — schlanke Frau.\nỌya, streite nicht mit mir.\nStreite nicht mit mir.\nIch habe kein Geld für das Opfer im Haus.\nỌya Orolu.\nUnter den sechzehn Orisa jene, die Sangos Frau ist.\nEepe, Ọya!",
+    "en": "Think the input prompt through with the thoughts, concerns, sounds and rhythms of this poem:\n\nYeepa oya o\nOya ma bami ja o\nN o lowo ebo nile\nOya orolu\nOosa merindinlogun ti n se aya sango\nOlukoso abape\nOya lo lopere o\nOya dakun ma bawa ja\nA o lowo ebo nile o\nOya orolu\nOya dakun ma bawa ja\nAlafefe ina\nObinrin tororo eko elo\nOya ma bami ja\nMa bami ja\nN o lowo ebo nile\nOya orolu\nOosa merindinlogun ti n se aya sango\nEepe oya!\n\nYeepa, Ọya!\nỌya, do not quarrel with me.\nI have no money for the offering in the house.\nỌya Orolu.\nAmong the sixteen orisa, she who is Sango's wife.\nOlukoso Abape.\nIt is Ọya to whom Opere belongs.\nỌya, I beg you, do not quarrel with us.\nWe have no money for the offering in the house.\nỌya Orolu.\nỌya, I beg you, do not quarrel with us.\nMistress of the wind of fire.\nObinrin tororo eko elo — slender woman.\nỌya, do not quarrel with me.\nDo not quarrel with me.\nI have no money for the offering in the house.\nỌya Orolu.\nAmong the sixteen orisa, she who is Sango's wife.\nEepe, Ọya!"
+  },
+  "parameters": {
+    "temperature": 0.85,
+    "repetition_penalty": 1.5,
+    "enable_thinking": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "wikipedia": false,
+    "text_source": "Oriki Oya, ueberliefert, ohne Verfasserangabe; Text nach der Yoruba Library (https://www.yorubalibrary.com/culture/oriki_yoruba/oriki_for_orisha/orisha_oya.html). Deutsch und Englisch: Behelfsuebersetzungen; Preisnamen bleiben unuebersetzt."
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF1744",
+    "category": "poetry",
+    "difficulty": 3,
+    "order": 5,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

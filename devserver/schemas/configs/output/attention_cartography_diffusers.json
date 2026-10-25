@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Attention Cartography (Diffusers)",
+    "de": "Attention Cartography (Diffusers)",
+    "tr": "Attention Cartography (Diffusers)",
+    "ko": "Attention Cartography (Diffusers)",
+    "uk": "Attention Cartography (Diffusers)",
+    "fr": "Attention Cartography (Diffusers)",
+    "es": "Attention Cartography (Diffusers)",
+    "he": "Attention Cartography (Diffusers)",
+    "ar": "Attention Cartography (Diffusers)",
+    "bg": "Attention Cartography (Diffusers)"
+  },
+  "description": {
+    "en": "Image generation with cross-attention map extraction. Shows which prompt tokens influence which image regions at different layers and timesteps.",
+    "de": "Bildgenerierung mit Cross-Attention-Map-Extraktion. Zeigt, welche Prompt-Tokens welche Bildbereiche in verschiedenen Layern und Zeitschritten beeinflussen.",
+    "tr": "Çapraz-dikkat (cross-attention) haritası çıkarımı ile görüntü üretimi. Hangi prompt token'larının hangi görüntü bölgelerini farklı katmanlarda ve zaman adımlarında etkilediğini gösterir.",
+    "ko": "크로스 어텐션 맵 추출을 포함한 이미지 생성. 어떤 프롬프트 토큰이 서로 다른 레이어와 타임스텝에서 어떤 이미지 영역에 영향을 주는지 보여줍니다.",
+    "uk": "Генерація зображень з видобуванням карт крос-уваги (cross-attention). Показує, які токени промпту впливають на які області зображення на різних шарах і часових кроках.",
+    "fr": "Génération d'images avec extraction de cartes d'attention croisée. Montre quels tokens du prompt influencent quelles régions de l'image, à différentes couches et différents pas de temps.",
+    "es": "Generación de imágenes con extracción de mapas de atención cruzada. Muestra qué tokens del prompt influyen en qué regiones de la imagen en distintas capas y pasos temporales.",
+    "he": "יצירת תמונות עם חילוץ מפות קשב צולב (cross-attention). מראה אילו טוקנים בפרומפט משפיעים על אילו אזורים בתמונה בשכבות ובצעדי זמן שונים.",
+    "ar": "توليد الصور مع استخراج خرائط الانتباه المتقاطع (cross-attention). يوضح أي رموز (tokens) من الوصف تؤثر على أي مناطق في الصورة عبر الطبقات وخطوات الزمن المختلفة.",
+    "bg": "Генериране на изображения с извличане на карти на кръстосаното внимание (cross-attention). Показва кои токени от подканата влияят върху кои области на изображението в различни слоеве и времеви стъпки."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_attention_cartography_diffusers"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "display_name": "Attention Cartography (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder)",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 30000,
+    "recommended_resolution": "1024x1024"
+  }
+}

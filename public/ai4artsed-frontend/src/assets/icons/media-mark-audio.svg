@@ -1,0 +1,6 @@
+<!-- Composed, not a plain Material Symbols download: the square frame of
+     font_download (same stroke, same corner radius) with the note of
+     music_video inside it, scaled 1.18 so it fills the square like the "A"
+     does. music_video's own frame is 680x520 and was the one wide mark among
+     four square ones. -->
+<svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#e3e3e3"><path d="M140-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h680q24 0 42 18t18 42v680q0 24-18 42t-42 18H140Zm1-60h680v-680H141v680Zm0-680v680-680Z"/><g transform="translate(481 -480) scale(1.18) translate(-484 480)"><path d="M494-316.5q26-26.5 26-63.5v-218h108v-72H484v216q-10-7-25.5-11.5T430-470q-37.8 0-63.9 26.5T340-380q0 37 26.14 63.5t64 26.5Q468-290 494-316.5Z"/></g></svg>

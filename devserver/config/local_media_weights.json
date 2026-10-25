@@ -1,0 +1,290 @@
+{
+  "_note": [
+    "The media stations of the platform and where their weights come from: Stable",
+    "Audio 3, ImageBind, MMAudio, HeartMuLa, Hunyuan3D 2 and the media readers",
+    "(the audio describer, the lyrics transcriber, the music taggers). ONE table,",
+    "the way config/local_llm_weights.json is one for the language models: the",
+    "installer (services/local_media_install) downloads from it, the ComfyUI",
+    "clients resolve an alias to a weights folder with it, the backend status of",
+    "the settings page reads it. Until stage 6 of",
+    "the move to ComfyUI the same knowledge stood in",
+    "gpu_service/config.py and in the backends of the GPU service.",
+    "",
+    "'stations' names the folder under <ComfyUI>/models/ each station lists (the",
+    "node package registers the same name, comfyui_nodes/ai4artsed_comfyui/_card.py)",
+    "and the library the station imports. 'models' are the weights, keyed by the",
+    "platform's alias; 'station' says which folder, 'dir' the sub-folder the",
+    "weights are written to and the name the node lists. Whether that folder",
+    "holds a whole model is decided in the node package, once for both sides",
+    "(comfyui_nodes/ai4artsed_comfyui/_whole.py). 'kind' says how the installer fetches:",
+    "'snapshot' a Hugging Face repository (with 'ignore' patterns left out),",
+    "'files' single files of a repository, 'url' one file from a URL, 'parts'",
+    "several repositories into sub-folders. 'cached' names repositories the",
+    "library loads by name from the Hugging Face cache beside the weights; the",
+    "installer fetches them into that cache. size_gb is what the download",
+    "fetches, in GB, read off the files on 2026-09-14.",
+    "",
+    "The reading block is the media-analysis station's own knowledge, moved",
+    "here from gpu_service/services/media_analysis_backend.py (struck 2026-10-10) letter for letter:",
+    "which reader answers which task ('local/' names an entry of",
+    "local_llm_weights.json), the prompts the readers are given, the vocabulary",
+    "the music taggers score, and whether the label embeddings are centered.",
+    "",
+    "The stable_audio block is the tier policy of gpu_service/services/",
+    "stable_audio_model.py: one machine-local decision, medium on a card with",
+    "medium_min_vram_gb or more, else the small variant of the kind asked for;",
+    "env AI4ARTSED_STABLE_AUDIO_MODEL=medium|small overrides it",
+    "(services/stable_audio_tier)."
+  ],
+  "stations": {
+    "stable_audio": {
+      "folder": "stable_audio",
+      "display_name": "Stable Audio 3",
+      "library": "stable_audio_tools"
+    },
+    "imagebind": {
+      "folder": "imagebind",
+      "display_name": "ImageBind",
+      "library": "imagebind"
+    },
+    "mmaudio": {
+      "folder": "mmaudio",
+      "display_name": "MMAudio",
+      "library": "mmaudio"
+    },
+    "heartmula": {
+      "folder": "heartmula",
+      "display_name": "HeartMuLa",
+      "library": "heartlib"
+    },
+    "hunyuan3d": {
+      "folder": "hunyuan3d",
+      "display_name": "Hunyuan3D 2",
+      "library": "hy3dgen"
+    },
+    "media_reading": {
+      "folder": "media_reading",
+      "display_name": "Media readers",
+      "library": "transformers"
+    }
+  },
+  "models": {
+    "stable-audio-3-medium": {
+      "station": "stable_audio",
+      "kind": "snapshot",
+      "repo": "stabilityai/stable-audio-3-medium",
+      "dir": "stabilityai--stable-audio-3-medium",
+      "display_name": "Stable Audio 3 Medium",
+      "size_gb": 10.4,
+      "gated": true
+    },
+    "stable-audio-3-small-music": {
+      "station": "stable_audio",
+      "kind": "snapshot",
+      "repo": "stabilityai/stable-audio-3-small-music",
+      "dir": "stabilityai--stable-audio-3-small-music",
+      "display_name": "Stable Audio 3 Small (music)",
+      "size_gb": 3.5,
+      "gated": true
+    },
+    "stable-audio-3-small-sfx": {
+      "station": "stable_audio",
+      "kind": "snapshot",
+      "repo": "stabilityai/stable-audio-3-small-sfx",
+      "dir": "stabilityai--stable-audio-3-small-sfx",
+      "display_name": "Stable Audio 3 Small (SFX)",
+      "size_gb": 3.5,
+      "gated": true
+    },
+    "imagebind-huge": {
+      "station": "imagebind",
+      "kind": "url",
+      "url": "https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth",
+      "file": "imagebind_huge.pth",
+      "dir": "imagebind_huge",
+      "display_name": "ImageBind Huge",
+      "size_gb": 4.8
+    },
+    "mmaudio-large-44k-v2": {
+      "station": "mmaudio",
+      "kind": "files",
+      "repo": "hkchengrex/MMAudio",
+      "files": [
+        "weights/mmaudio_large_44k_v2.pth",
+        "ext_weights/v1-44.pth",
+        "ext_weights/synchformer_state_dict.pth"
+      ],
+      "dir": "large_44k_v2",
+      "variant": "large_44k_v2",
+      "display_name": "MMAudio Large 44k v2",
+      "size_gb": 6.3,
+      "cached": [
+        "apple/DFN5B-CLIP-ViT-H-14-384"
+      ]
+    },
+    "heartmula-3b": {
+      "station": "heartmula",
+      "kind": "parts",
+      "parts": {
+        ".": "HeartMuLa/HeartMuLaGen",
+        "HeartMuLa-oss-3B": "HeartMuLa/HeartMuLa-RL-oss-3B-20260123",
+        "HeartCodec-oss": "HeartMuLa/HeartCodec-oss-20260123"
+      },
+      "dir": "heartmula-3b",
+      "version": "3B",
+      "display_name": "HeartMuLa 3B",
+      "size_gb": 22.4,
+      "cached": [
+        "OpenMuQ/MuQ-MuLan-large",
+        "OpenMuQ/MuQ-large-msd-iter",
+        "xlm-roberta-base"
+      ]
+    },
+    "hunyuan3d-2": {
+      "station": "hunyuan3d",
+      "kind": "snapshot",
+      "repo": "tencent/Hunyuan3D-2",
+      "dir": "tencent--Hunyuan3D-2",
+      "display_name": "Hunyuan3D 2",
+      "size_gb": 14.4,
+      "ignore": [
+        "assets/*",
+        "*-fast/*",
+        "*-turbo/*",
+        "hunyuan3d-vae-*/*",
+        "*.ckpt",
+        "hunyuan3d-dit-v2-0/model.safetensors",
+        "hunyuan3d-paint-v2-0/unet/*.bin",
+        "hunyuan3d-paint-v2-0/vae/*.bin"
+      ],
+      "also": "rembg fetches its u2net.onnx (176 MB) into ~/.u2net on the first background removal"
+    },
+    "midashenglm:7b": {
+      "station": "media_reading",
+      "kind": "snapshot",
+      "repo": "mispeech/midashenglm-7b",
+      "dir": "mispeech--midashenglm-7b",
+      "display_name": "MiDashengLM 7B",
+      "size_gb": 33.2,
+      "trust_remote_code": true
+    },
+    "hearttranscriptor": {
+      "station": "media_reading",
+      "kind": "snapshot",
+      "repo": "HeartMuLa/HeartTranscriptor-oss",
+      "dir": "HeartMuLa--HeartTranscriptor-oss",
+      "display_name": "HeartTranscriptor",
+      "size_gb": 3.1
+    },
+    "muq-mulan": {
+      "station": "media_reading",
+      "kind": "snapshot",
+      "repo": "OpenMuQ/MuQ-MuLan-large",
+      "dir": "OpenMuQ--MuQ-MuLan-large",
+      "display_name": "MuQ-MuLan Large",
+      "size_gb": 2.7,
+      "cached": [
+        "OpenMuQ/MuQ-large-msd-iter",
+        "xlm-roberta-base"
+      ]
+    },
+    "clap-music-speech": {
+      "station": "media_reading",
+      "kind": "snapshot",
+      "repo": "laion/larger_clap_music_and_speech",
+      "dir": "laion--larger_clap_music_and_speech",
+      "display_name": "CLAP (music and speech)",
+      "size_gb": 0.8
+    }
+  },
+  "stable_audio": {
+    "medium_min_vram_gb": 50,
+    "medium": "stable-audio-3-medium",
+    "small": {
+      "music": "stable-audio-3-small-music",
+      "sfx": "stable-audio-3-small-sfx"
+    }
+  },
+  "reading": {
+    "readers": {
+      "audio": "midashenglm:7b",
+      "video": "local/qwen3-vl:8b",
+      "image": "local/qwen3-vl:8b",
+      "lyrics": "hearttranscriptor",
+      "music_tags": "clap-music-speech"
+    },
+    "prompts": {
+      "audio_system": "You describe audio recordings precisely.",
+      "audio": "Report only what is present in this audio. Name an instrument only if you can identify it; if you cannot, say so. Do not name a genre unless it is unambiguous. Do not describe the person of any speaker or singer. Do not fill gaps. If there is nothing, say there is nothing.",
+      "video": "Report only what is present in this video, and when it happens. Name a thing only if you can identify it; if you cannot, say so. Do not describe the person of anyone visible. Do not fill gaps. If there is nothing, say there is nothing.",
+      "image": "Report only what is present in this image. Name a thing only if you can identify it; if you cannot, say so. Do not describe the person of anyone visible. Do not fill gaps. If there is nothing, say there is nothing."
+    },
+    "_prompts_note": [
+      "The prompts ask for restraint on purpose; they were measured (2026-08-05,",
+      "four settings on two recordings, recorded in the GPU service's backend and",
+      "in docs/analysis), and the audio system prompt is part of the same setting:",
+      "changing one without the other changes the result. 'precisely' is the",
+      "working ingredient. No instruction to be comprehensive, rich or flowing,",
+      "and the model is never addressed as a listener or a viewer."
+    ],
+    "music_tag_vocabulary": [
+      "a single voice singing alone",
+      "several voices singing together",
+      "a voice speaking, not singing",
+      "humming without words",
+      "no voice at all",
+      "solo piano",
+      "acoustic guitar",
+      "electric guitar",
+      "violin",
+      "cello",
+      "flute",
+      "drum kit",
+      "hand drums",
+      "synthesizer",
+      "brass instruments",
+      "accordion",
+      "arabic maqam on oud",
+      "turkish saz",
+      "hindustani raga on sitar",
+      "carnatic vocal music",
+      "javanese gamelan",
+      "west african drum ensemble",
+      "andean panpipes",
+      "chinese guqin",
+      "japanese shakuhachi",
+      "flamenco",
+      "balkan brass band",
+      "throat singing",
+      "pop song",
+      "rock band",
+      "hip hop",
+      "electronic dance music",
+      "jazz",
+      "classical orchestra",
+      "folk song",
+      "metal",
+      "reggae",
+      "country",
+      "happy and upbeat",
+      "sad and slow",
+      "calm and quiet",
+      "loud and aggressive",
+      "a clean studio recording",
+      "a rough recording made in a room",
+      "noise, not music",
+      "silence"
+    ],
+    "_vocabulary_note": [
+      "The label set is the platform's, not the model's: the taggers embed any",
+      "English string and score its cosine similarity against the recording, so",
+      "a result is always the best match within this list, never what the music",
+      "is, and there is no abstain. The strings are model inputs and stay",
+      "English. clap-music-speech is the reader; muq-mulan stays installed as a",
+      "second opinion (measured 2026-08-06, docs/analysis/RANKING_MODEL_2026-08-06.md).",
+      "center_label_embeddings subtracts the mean label embedding before scoring;",
+      "off, because it was measured to make every measure slightly worse."
+    ],
+    "center_label_embeddings": false
+  }
+}

@@ -1,0 +1,15 @@
+# Offline ingest dependencies for the knowledge library (Tier F).
+# NOT devserver runtime deps — install into a SEPARATE venv:
+#
+#   python3 -m venv ~/ai/venvs/knowledge
+#   ~/ai/venvs/knowledge/bin/pip install -r devserver/scripts/requirements_knowledge.txt
+#
+# Docling (IBM, Apache-2.0 code + models) does PDF -> structured Markdown.
+# It pulls torch + a layout/OCR model stack; large, GPU-host only. The running
+# devserver never imports any of this — only the produced Markdown + the SQLite
+# index built from it reach runtime (which needs stdlib sqlite3 + FTS5 only).
+#
+# The LLM context/card/glossary passes call the GPU service over HTTP
+# (urllib, stdlib) — no OpenAI/torch client needed here.
+
+docling>=2.0

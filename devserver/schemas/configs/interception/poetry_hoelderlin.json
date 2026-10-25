@@ -1,0 +1,77 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "transformation",
+  "name": {
+    "en": "Hoelderlin",
+    "de": "Hoelderlin",
+    "tr": "Hoelderlin",
+    "ko": "Hoelderlin",
+    "uk": "Hoelderlin",
+    "fr": "Hoelderlin",
+    "es": "Hoelderlin",
+    "he": "Hoelderlin",
+    "ar": "Hoelderlin",
+    "bg": "Hoelderlin"
+  },
+  "description": {
+    "en": "Material collision with Hoelderlin's 'Der Gang aufs Land' (1800). An invitation into the open despite grey skies — language finding itself, the heart opening, colliding with your prompt.",
+    "de": "Materialkollision mit Hoelderlins 'Der Gang aufs Land' (1800). Eine Einladung ins Offene trotz grauem Himmel — die Sprache findet sich, das Herz geht auf, kollidierend mit deinem Prompt.",
+    "tr": "Hoelderlin'in 'Der Gang aufs Land' (1800) adli siiriyle malzeme carpismasi. Gri gokyuzune ragmen aciga bir davet — dil kendini buluyor, kalp aciliyor, prompt'unuzla carpisiyor.",
+    "ko": "횔덜린의 '시골로의 산책'(1800)과의 재료 충돌. 잿빛 하늘에도 불구하고 열린 곳으로의 초대 — 언어가 스스로를 찾고, 마음이 열리며, 당신의 프롬프트와 충돌합니다.",
+    "uk": "Матеріальне зіткнення з «Прогулянкою на село» Гельдерліна (1800). Запрошення у відкритість попри сіре небо — мова знаходить себе, серце розкривається, зіткнення з вашим промптом.",
+    "fr": "Collision materielle avec 'Der Gang aufs Land' de Hoelderlin (1800). Une invitation vers l'ouvert malgre le ciel gris — la langue se trouve, le coeur s'ouvre, entrant en collision avec votre prompt.",
+    "es": "Colision material con 'Der Gang aufs Land' de Hoelderlin (1800). Una invitacion a lo abierto pese al cielo gris — el lenguaje se encuentra, el corazon se abre, chocando con tu prompt.",
+    "he": "התנגשות חומרית עם 'הליכה אל הכפר' של הלדרלין (1800). הזמנה אל הפתוח למרות שמיים אפורים — השפה מוצאת את עצמה, הלב נפתח, מתנגשת עם הפרומפט שלך.",
+    "ar": "تصادم مادي مع قصيدة هولدرلين 'المسير الى الريف' (1800). دعوة الى المفتوح رغم السماء الرمادية — اللغة تجد نفسها، القلب ينفتح، تتصادم مع موجهك.",
+    "bg": "Материален сблъсък с 'Der Gang aufs Land' на Хьолдерлин (1800). Покана към откритото въпреки сивото небе — езикът се намира, сърцето се отваря, сблъсквайки се с вашия промпт."
+  },
+  "category": {
+    "en": "Poetry",
+    "de": "Poesie",
+    "tr": "Şiir",
+    "ko": "시",
+    "uk": "Поезія",
+    "fr": "Poésie",
+    "es": "Poesía",
+    "he": "שירה",
+    "ar": "شعر",
+    "bg": "Поезия"
+  },
+  "properties": [
+    "poetry"
+  ],
+  "context": {
+    "de": "Durchdenke den INput-Prompt mit den Gedanken, Anliegen, Klängen und Rhythmen dieses Gedichts:\n\nKomm! ins Offene, Freund! zwar glänzt ein Weniges heute\nNur herunter und eng schließet der Himmel uns ein.\nWeder die Berge sind noch aufgegangen des Waldes\nGipfel nach Wunsch und leer ruht von Gesange die Luft.\nTrüb ists heut, es schlummern die Gäng' und die Gassen und fast will\nMir es scheinen, es sei, als in der bleiernen Zeit.\nDennoch gelinget der Wunsch, Rechtglaubige zweifeln an Einer\nStunde nicht und der Lust bleibe geweihet der Tag.\nDenn nicht wenig erfreut, was wir vom Himmel gewonnen,\nWenn ers weigert und doch gönnet den Kindern zulezt.\nNur daß solcher Reden und auch der Schritt und der Mühe\nWerth der Gewinn und ganz wahr das Ergözliche sei.\nDarum hoff ich sogar, es werde, wenn das Gewünschte\nWir beginnen und erst unsere Zunge gelöst,\nUnd gefunden das Wort, und aufgegangen das Herz ist,\nUnd von trunkener Stirn' höher Besinnen entspringt,\nMit der unsern zugleich des Himmels Blüthe beginnen,\nUnd dem offenen Blik offen der Leuchtende seyn.\n\nDenn nicht Mächtiges ists, zum Leben aber gehört es,\nWas wir wollen, und scheint schiklich und freudig zugleich.\nAber kommen doch auch der seegenbringenden Schwalben\nImmer einige noch, ehe der Sommer ins Land.\nNemlich droben zu weihn bei guter Rede den Boden,\nWo den Gästen das Haus baut der verständige Wirth;\nDaß sie kosten und schaun das Schönste, die Fülle des Landes,\nDaß, wie das Herz es wünscht, offen, dem Geiste gemäß\nMahl und Tanz und Gesang und Stutgards Freude gekrönt sei,\nDeßhalb wollen wir heut wünschend den Hügel hinauf.\nMög' ein Besseres noch das menschenfreundliche Mailicht\nDrüber sprechen, von selbst bildsamen Gästen erklärt,\nOder, wie sonst, wenns andern gefällt, denn alt ist die Sitte,\nUnd es schauen so oft lächelnd die Götter auf uns,\nMöge der Zimmermann vom Gipfel des Daches den Spruch thun,\nWir, so gut es gelang, haben das Unsre gethan.\n\nAber schön ist der Ort, wenn in Feiertagen des Frühlings\nAufgegangen das Thal, wenn mit dem Nekar herab\nWeiden grünend und Wald und all die grünenden Bäume\nZahllos, blühend weiß, wallen in wiegender Luft\nAber mit Wölkchen bedekt an Bergen herunter der Weinstok\nDämmert und wächst und erwarmt unter dem sonnigen Duft.",
+    "en": "Think the input prompt through with the thoughts, concerns, sounds and rhythms of this poem:\n\nKomm! ins Offene, Freund! zwar glänzt ein Weniges heute\nNur herunter und eng schließet der Himmel uns ein.\nWeder die Berge sind noch aufgegangen des Waldes\nGipfel nach Wunsch und leer ruht von Gesange die Luft.\nTrüb ists heut, es schlummern die Gäng' und die Gassen und fast will\nMir es scheinen, es sei, als in der bleiernen Zeit.\nDennoch gelinget der Wunsch, Rechtglaubige zweifeln an Einer\nStunde nicht und der Lust bleibe geweihet der Tag.\nDenn nicht wenig erfreut, was wir vom Himmel gewonnen,\nWenn ers weigert und doch gönnet den Kindern zulezt.\nNur daß solcher Reden und auch der Schritt und der Mühe\nWerth der Gewinn und ganz wahr das Ergözliche sei.\nDarum hoff ich sogar, es werde, wenn das Gewünschte\nWir beginnen und erst unsere Zunge gelöst,\nUnd gefunden das Wort, und aufgegangen das Herz ist,\nUnd von trunkener Stirn' höher Besinnen entspringt,\nMit der unsern zugleich des Himmels Blüthe beginnen,\nUnd dem offenen Blik offen der Leuchtende seyn.\n\nDenn nicht Mächtiges ists, zum Leben aber gehört es,\nWas wir wollen, und scheint schiklich und freudig zugleich.\nAber kommen doch auch der seegenbringenden Schwalben\nImmer einige noch, ehe der Sommer ins Land.\nNemlich droben zu weihn bei guter Rede den Boden,\nWo den Gästen das Haus baut der verständige Wirth;\nDaß sie kosten und schaun das Schönste, die Fülle des Landes,\nDaß, wie das Herz es wünscht, offen, dem Geiste gemäß\nMahl und Tanz und Gesang und Stutgards Freude gekrönt sei,\nDeßhalb wollen wir heut wünschend den Hügel hinauf.\nMög' ein Besseres noch das menschenfreundliche Mailicht\nDrüber sprechen, von selbst bildsamen Gästen erklärt,\nOder, wie sonst, wenns andern gefällt, denn alt ist die Sitte,\nUnd es schauen so oft lächelnd die Götter auf uns,\nMöge der Zimmermann vom Gipfel des Daches den Spruch thun,\nWir, so gut es gelang, haben das Unsre gethan.\n\nAber schön ist der Ort, wenn in Feiertagen des Frühlings\nAufgegangen das Thal, wenn mit dem Nekar herab\nWeiden grünend und Wald und all die grünenden Bäume\nZahllos, blühend weiß, wallen in wiegender Luft\nAber mit Wölkchen bedekt an Bergen herunter der Weinstok\nDämmert und wächst und erwarmt unter dem sonnigen Duft."
+  },
+  "parameters": {
+    "temperature": 0.85,
+    "repetition_penalty": 1.5,
+    "enable_thinking": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "wikipedia": false,
+    "text_source": "Friedrich Hoelderlin, 'Der Gang aufs Land', 1800, gemeinfrei; eingesetzt am 19.03.2026 (b2b0687f)."
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF1744",
+    "category": "poetry",
+    "difficulty": 3,
+    "order": 2,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

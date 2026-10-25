@@ -1,0 +1,38 @@
+{
+  "name": "text_transformation",
+  "pipeline_type": "prompt_interception",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": true,
+  "description": "Text Transformation Pipeline: Input Text → Manipulated Text (Prompt Interception)",
+  "instruction_type": "artistic_transformation",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [
+    "manipulate"
+  ],
+  "required_configs": [
+    "manipulate_config"
+  ],
+  "config_mappings": {
+    "manipulate_config": "{{MANIPULATE_CONFIG}}"
+  },
+  "meta": {
+    "workflow_type": "text_transformation",
+    "reusable": true,
+    "pre_translation": true,
+    "prompt_structure": {
+      "type": "three_part_interception",
+      "parts": ["task_instruction", "context", "prompt"],
+      "description": "Three-part prompt structure: TASK (how to transform) + CONTEXT (artistic attitude) + PROMPT (user input)"
+    },
+    "steps": [
+      {
+        "step": 1,
+        "chunk": "manipulate",
+        "description": "Prompt Interception: Cultural/artistic transformation",
+        "config_key": "manipulate_config"
+      }
+    ]
+  }
+}

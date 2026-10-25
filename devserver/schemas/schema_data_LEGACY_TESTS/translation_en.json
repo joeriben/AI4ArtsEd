@@ -1,0 +1,17 @@
+{
+  "name": "translation_en",
+  "description": "English translation using Prompt Interception",
+  "workflow_type": "prompt_interception_single",
+  "config_mappings": {
+    "prompt_interception_config": "prompt_interception.translation_en"
+  },
+  "meta": {
+    "legacy_source": "config.py.TRANSLATION_PROMPT",
+    "target_language": "english",
+    "description_de": "Englisch-Übersetzung mit Prompt Interception",
+    "description_en": "English translation using Prompt Interception",
+    "context": "English",
+    "system_pipeline": true,
+    "purpose": "pre_pipeline_translation"
+  }
+}

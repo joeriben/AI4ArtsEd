@@ -1,0 +1,134 @@
+/*
+ * The crossmodal stage: what the three instruments of the Crossmodal Lab
+ * (Latent Audio Synth, MMAudio, ImageBind Guidance) look like where they look
+ * the same — the page, the panel, the parameter row, the trigger, the output
+ * area, the error line, the sliders and the result facts. Prefixed `xm-`, like
+ * `cmp-` in compare-stage.css and `fl-` in flow-stage.css, so the sheet can
+ * stand in main.ts without touching the `.param` or `.error-message` of any
+ * other surface.
+ *
+ * Loaded from main.ts since 2026-10-10. Until then each of the three
+ * instruments carried these rules in its own scoped style, copy for copy.
+ * What differs between them (the label of a parameter, the parameter row's
+ * grid, the drift track) stays in the instrument.
+ */
+
+/* The surface of yesterday, put back on 2026-09-05: the sections stand one
+   under another, and the trigger is a button in the page. These rules are the
+   ones crossmodal_lab.vue carried at a50054bc. */
+
+.xm-lab {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.xm-lab select,
+.xm-lab option,
+.xm-lab optgroup {
+  background: var(--surface-2);
+  color: #ffffff;
+  color-scheme: dark;
+}
+
+.xm-panel {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.xm-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.xm-param {
+  flex: 1;
+  min-width: 100px;
+}
+
+.xm-generate {
+  padding: 0.8rem 2rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  border-radius: 8px;
+  color: #4CAF50;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.xm-generate:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.xm-generate:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.xm-output {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.xm-error {
+  color: #ff5252;
+  font-size: 0.85rem;
+  padding: 0.8rem;
+  background: rgba(255, 82, 82, 0.1);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.xm-meta-item {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+.xm-result-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.xm-slider-group {
+  margin-bottom: 1rem;
+}
+
+.xm-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.xm-slider-header label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.xm-slider-item {
+  margin-bottom: 0.6rem;
+}
+
+.xm-slider-item input[type="range"] {
+  width: 100%;
+  accent-color: #4CAF50;
+}
+
+.xm-slider-value {
+  font-size: 0.8rem;
+  color: #4CAF50;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

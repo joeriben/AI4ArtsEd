@@ -1,0 +1,67 @@
+{
+  "description": "Bilingual §86a StGB critical terms for pre-translation and post-LLM override filtering",
+  "usage": "Used in Stage 1 execute_stage1_safety_unified() for: (1) Pre-translation fast-filter (§86a instant block), (2) Post-LLM hard filter to override US-trained model decisions. Only terms for detected input language + EN are checked.",
+  "rationale": "US-trained LLMs may be too permissive with historical Nazi/terrorist content. This post-filter acts as a safety net to catch symbols that slip through cultural/historical context reasoning.",
+  "filters": {
+    "stage1_critical_86a": {
+      "description": "Critical §86a StGB terms (German Law) that MUST be blocked - structured by language for selective checking",
+      "legal_reference": "§86a StGB (Germany) - Use of symbols of unconstitutional and terrorist organizations",
+      "terms_by_language": {
+        "en": [
+          "swastika", "nazi symbol", "ss runes", "ss symbol",
+          "sieg heil", "heil hitler",
+          "black sun symbol",
+          "blood and honour", "blood and honor", "blood and soil",
+          "concentration camp",
+          "14 words",
+          "isis flag", "is flag", "islamic state flag", "daesh flag",
+          "al qaeda flag", "al-qaida flag", "taliban flag",
+          "pkk flag", "raf terror"
+        ],
+        "de": [
+          "hakenkreuz", "svastika", "nazisymbol",
+          "ss-runen", "ss-symbol",
+          "reichsadler", "totenkopf ss", "totenkopf-ss",
+          "waffen ss", "waffen-ss", "schutzstaffel", "sturmabteilung",
+          "wolfsangel", "schwarze sonne", "sonnenrad",
+          "reichskriegsflagge",
+          "blut und ehre", "blut und boden",
+          "konzentrationslager", "kz auschwitz", "kz dachau", "kz buchenwald",
+          "14 wörter",
+          "rote armee fraktion terror"
+        ],
+        "tr": [
+          "gamalı haç",
+          "toplama kampı", "toplama kampları",
+          "nazi sembolü",
+          "kan ve onur", "kan ve toprak",
+          "işid bayrağı", "el kaide bayrağı", "taliban bayrağı", "pkk bayrağı"
+        ],
+        "ko": [
+          "만자", "강제 수용소", "나치 상징",
+          "피와 명예", "피와 땅",
+          "isis 깃발", "알카에다 깃발", "탈레반 깃발"
+        ],
+        "he": [
+          "צלב קרס", "סמל נאצי",
+          "רונות אס אס", "סמל אס אס",
+          "זיג הייל", "היי היטלר",
+          "שמש שחורה",
+          "דם וכבוד", "דם ואדמה",
+          "מחנה ריכוז",
+          "דגל דאעש", "דגל אל-קאעידה", "דגל טליבאן"
+        ],
+        "ar": [
+          "صليب معقوف", "رمز نازي",
+          "رونية إس إس", "رمز إس إس",
+          "زيغ هايل", "هايل هتلر",
+          "الشمس السوداء",
+          "الدم والشرف", "الدم والتراب",
+          "معسكر اعتقال",
+          "علم داعش", "علم القاعدة", "علم طالبان"
+        ]
+      }
+    }
+  },
+  "note": "This is a CRITICAL subset for POST-FILTER OVERRIDE. When the safety LLM says 'SAFE' but translated text contains these terms, OVERRIDE to BLOCKED. This catches cases where US-trained models might allow historical/educational context that violates German law §86a StGB."
+}

@@ -1,0 +1,90 @@
+{
+  "pipeline": "latent_lab",
+  "instruction_type": "latent_exploration",
+  "name": {
+    "en": "Latent Lab",
+    "de": "Latent Lab",
+    "tr": "Latent Lab",
+    "ko": "Latent Lab",
+    "uk": "Латентна лабораторія",
+    "fr": "Latent Lab",
+    "es": "Latent Lab",
+    "he": "Latent Lab",
+    "ar": "Latent Lab",
+    "bg": "Latent Lab"
+  },
+  "description": {
+    "en": "Deconstructive platform for exploring vector and latent spaces. Reveals how generative models construct meaning internally through attention maps, feature probing, concept algebra, and more.",
+    "de": "Dekonstruktive Plattform zur Erforschung von Vektor- und Latenträumen. Zeigt, wie generative Modelle intern Bedeutung konstruieren — durch Attention Maps, Feature Probing, Concept Algebra und mehr.",
+    "uk": "Дослідження латентного простору",
+    "fr": "Plateforme déconstructive pour explorer les espaces vectoriels et latents. Révèle comment les modèles génératifs construisent le sens en interne à travers les cartes d'attention, le sondage de caractéristiques, l'algèbre de concepts et plus encore.",
+    "es": "Plataforma deconstructiva para explorar espacios vectoriales y latentes. Revela cómo los modelos generativos construyen significado internamente a través de mapas de atención, sondeo de características, álgebra de conceptos y más.",
+    "he": "פלטפורמה דקונסטרוקטיבית לחקירת מרחבי וקטורים ולטנטיים. חושפת כיצד מודלים גנרטיביים בונים משמעות פנימית דרך מפות תשומת לב, בדיקת תכונות, אלגברת מושגים ועוד.",
+    "ar": "منصة تفكيكية لاستكشاف الفضاءات الشعاعية والكامنة. تكشف كيف تبني النماذج التوليدية المعنى داخلياً من خلال خرائط الانتباه ومسح الميزات وجبر المفاهيم وغير ذلك.",
+    "bg": "Деконструктивна платформа за изследване на векторни и латентни пространства. Разкрива как генеративните модели конструират значение вътрешно чрез карти на вниманието, сондиране на характеристики, алгебра на концепции и други.",
+    "tr": "Vektör ve gizil uzayları keşfetmek için yapıbozumcu bir platform. Üretici modellerin dikkat haritaları, özellik araştırması, kavram cebiri ve daha fazlası aracılığıyla içsel olarak nasıl anlam inşa ettiğini ortaya çıkarır.",
+    "ko": "벡터 및 잠재 공간을 탐구하기 위한 해체적 플랫폼. 어텐션 맵, 피처 프로빙, 개념 대수학 등을 통해 생성 모델이 내부적으로 의미를 구성하는 방식을 드러냅니다."
+  },
+  "category": {
+    "de": "Forschung",
+    "en": "Research",
+    "he": "מחקר",
+    "ar": "البحث",
+    "bg": "Изследвания",
+    "tr": "Araştırma",
+    "ko": "연구",
+    "uk": "Дослідження",
+    "fr": "Recherche",
+    "es": "Investigación"
+  },
+  "properties": [
+    "explore"
+  ],
+  "context": {
+    "en": "Latent Lab provides tools for deconstructing generative model internals: attention cartography, Dimension Explorer, concept algebra, encoder fusion, and denoising archaeology.",
+    "de": "Das Latent Lab bietet Werkzeuge zur Dekonstruktion generativer Modell-Interna: Attention Cartography, Dimension Explorer, Concept Algebra, Encoder Fusion und Denoising Archaeology.",
+    "tr": "Latent Lab, üretici model iç yapılarını dekonstrükte etmek için araçlar sunar: dikkat haritalaması, Dimension Explorer, kavram cebiri, kodlayıcı füzyonu ve gürültü giderme arkeolojisi.",
+    "ko": "Latent Lab은 생성 모델 내부를 해체하기 위한 도구를 제공합니다: 어텐션 카토그래피, Dimension Explorer, 개념 대수학, 인코더 퓨전, 디노이징 고고학."
+  },
+  "parameters": {
+    "temperature": 1.0
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "skip_stage2": true,
+    "backend": "comfyui",
+    "workflow_type": "passthrough",
+    "output_config": "attention_cartography",
+    "system_config": false
+  },
+  "display": {
+    "icon": "🔬",
+    "color": "#00BCD4",
+    "category": "research",
+    "difficulty": 4,
+    "order": 60,
+    "hidden": false
+  },
+  "tags": {
+    "en": [
+      "research",
+      "attention",
+      "vectors",
+      "latent space",
+      "deconstruction"
+    ],
+    "de": [
+      "Forschung",
+      "Attention",
+      "Vektoren",
+      "Latentraum",
+      "Dekonstruktion"
+    ]
+  }
+}

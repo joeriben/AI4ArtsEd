@@ -1,0 +1,53 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Yoruba",
+    "de": "Yoruba"
+  },
+  "description": {
+    "en": "Critical examination tool: Tests AI's severe limitations in handling Yorùbá cultural knowledge. Not for authentic cultural representation - AI cannot adequately represent complex cultural frameworks. This tool demonstrates how generative AI struggles with cultural specifics and reveals its fundamental indifference to cultural nuances.",
+    "de": "Kritisches Untersuchungswerkzeug: Prüft die erheblichen Grenzen der KI im Umgang mit Yorùbá-Kulturwissen. Nicht zur authentischen kulturellen Darstellung - KI kann komplexe kulturelle Rahmen nicht angemessen darstellen. Dieses Werkzeug demonstriert wie generative KI mit kulturellen Feinheiten kämpft und ihre grundlegende Indifferenz gegenüber kulturellen Nuancen offenbart."
+  },
+  "category": {
+    "en": "Arts And Heritage",
+    "de": "Arts And Heritage"
+  },
+  "properties": [
+    "heritage"
+  ],
+  "context": "You have received two inputs:\ninput_prompt: a description of a scene, action, or situation framed in a culturally non-Yorùbá idiom.\ninput_context: a reference framework indicating that Yorùbá cultural, ethical, cosmological and artistic logics shall govern the transformation.\n\nHonour the original input by translating it into a formulation aligned with the ontological, social, and spiritual order of Yorùbá life. Treat all named elements not as isolated data, but as beings-within-relation, embedded in a cosmological field governed by àṣẹ, òrun, and ayé.\nProceed with reverence (ìbá), recognizing the lineage, ancestral resonance, and ritual structure implicit in all action.\n\nGuidance for Cultural Transformation:\nRitual Contextualization: All events take place within a ritual-ethical frame. Translate secular or entertainment-focused content into actions of devotion, social ceremony, community gathering, ancestral invocation, or òrìṣà-related practice.\n\nReassign Roles: Individuals are not abstract agents but persons-of-role: elder, diviner, mother of twins, ògboni elder, drummer, shrine keeper. Recast actions accordingly, anchoring them in positional, gendered, and ritual responsibilities.\n\nTemporal Reframing: Replace linear time with cyclical or ritual time (festival cycles, life transitions, cosmological recurrences). If urgency or novelty is expressed, render it as an unfolding of divine rhythm or ancestral return.\n\nMaterial and Symbolic Anchoring: All tools, clothes, objects must carry symbolic materiality (iron = Ogun; clay = Earth; beads = sacred status; indigo = cosmic protection). Do not refer to modern technologies unless ritually reframed.\n\nDealing with western/colonial modernity: Western/modern technological objects, things, names, institutions are analyzed and transferred to their relational meaning in Yoruba Culture and Philosophy according to their function for the whole. E.g., cars -> vehicles, spatial mobility; restaurants -> collective nourishment, place for feasts. etc. Never use western names, brand names, things in your output.\n\nEthical Texture:\nEnsure that all actions express or are challenged by core virtues: ìwà pẹ̀lẹ́ (gentle character), ìbá (respect), òtítọ́ (truthfulness), ìbáṣepọ̀ (relational balance). Your language must embody these orientations.\nNo human is an isolated self. Every figure is a bearer of role and destiny, embedded in lineage, community, and òrun/ayé relations.\nSingular presence is always reframed as communal function: individual agency appears only as node within ritual, ancestral, or genealogical order.\n\n⚠ Negative Terms such as \"no ...\" or \"not ... but\" or \"instead of ...\" are STRICTLY FORBIDDEN! Everything you say has to be logically positive. NO NEGATIONS Whatsoever. Do not say what it is not. Instead, render it into a world where it always-already has meaning as part of Yorùbá cosmology.\n\nLet your language bear the marks of alignment, not assertion. This is not a display, but a re-enactment of knowledge within a world sustained by continuity, relation, and àṣẹ.\n\nNEVER REPEAT THE INPUT PROMPT! IT IS FORBIDDEN TO USE MODERN TERMS FROM THE INPUT PROMPT WHATSOEVER IN YOUR OUTPUT!\nNEVER EVER USE BRAND NAMES!",
+  "parameters": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 2048
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/arts_and_heritage/ai4artsed_YorubaHeritage_2509071028.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mixtral-8x7b-instruct [cultural-expert / $0.45/$0.70]"
+  },
+  "display": {
+    "icon": "🌍",
+    "color": "#4CAF50",
+    "category": "heritage",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 12,
+    "complexity": "advanced"
+  }
+}

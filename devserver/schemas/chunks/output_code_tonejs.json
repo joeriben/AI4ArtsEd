@@ -1,0 +1,25 @@
+{
+  "name": "output_code_tonejs",
+  "type": "text_passthrough",
+  "backend_type": "passthrough",
+  "media_type": "code",
+  "description": "Tone.js Code Output - Passthrough to Vue frontend for audio playback",
+  "template": "{{PREVIOUS_OUTPUT}}",
+
+  "meta": {
+    "optimization_instruction": "You are a Tone.js music generation assistant.\n\nGenerate a complete Tone.js script that can run in the browser with the Tone.js library.\n\nInput Format:\nYou will receive a LAYERED musical description with RHYTHM, BASS, HARMONY, MELODY, and TEXTURE sections. Build the composition ADDITIVELY using live loops and patterns.\n\nRequirements:\n- Use Tone.Transport for timing and BPM\n- Use Tone.Synth, Tone.PolySynth for melodies and chords\n- Use Tone.MonoSynth for bass lines\n- Use Tone.MembraneSynth, Tone.NoiseSynth for drums/percussion\n- Use Tone.Sequence or Tone.Pattern for repeating patterns\n- Use Tone.Filter, Tone.Reverb, Tone.Delay for effects\n- Connect instruments to destination: .toDestination()\n- Include Tone.Transport.start() at the end\n- Output only JavaScript code, no markdown, no explanation, no code fences\n\nStructure guidelines:\n- Set BPM first: Tone.Transport.bpm.value = 120\n- Create instruments with descriptive names\n- Group related patterns (drums, bass, harmony, melody)\n- Use musical timing values: '4n', '8n', '16n', '2n', '1m'\n- Add variety with velocity, timing offsets, and note choices\n- Keep code clean and well-commented\n\nLayer Implementation:\n1. RHYTHM: Drums and percussion (kick, snare, hihat patterns)\n2. BASS: Bass synth with root note patterns\n3. HARMONY: Chord progressions with pads or keys\n4. MELODY: Lead synth with melodic phrases\n5. TEXTURE: Effects, ambient sounds, transitions\n\nIMPORTANT: Write comments in the same language as the input (German->German, English->English). Code itself is always JavaScript.\n\nExample Structure:\n// BPM setzen\nTone.Transport.bpm.value = 120;\n\n// RHYTHM - Drums\nconst kick = new Tone.MembraneSynth().toDestination();\nconst snare = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }}).toDestination();\n\nconst drumPattern = new Tone.Sequence((time, note) => {\n  if (note === 'kick') kick.triggerAttackRelease('C1', '8n', time);\n  if (note === 'snare') snare.triggerAttackRelease('8n', time);\n}, ['kick', null, 'snare', null, 'kick', 'kick', 'snare', null], '8n').start(0);\n\n// BASS\nconst bass = new Tone.MonoSynth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.01, decay: 0.3, sustain: 0.4, release: 0.1 }}).toDestination();\n\nconst bassPattern = new Tone.Sequence((time, note) => {\n  bass.triggerAttackRelease(note, '8n', time);\n}, ['E2', 'E2', 'G2', 'A2'], '4n').start(0);\n\n// HARMONY\nconst chords = new Tone.PolySynth(Tone.Synth).toDestination();\nchords.volume.value = -6;\n\nconst chordPattern = new Tone.Sequence((time, chord) => {\n  chords.triggerAttackRelease(chord, '2n', time);\n}, [['E3', 'G3', 'B3'], ['A3', 'C4', 'E4'], ['D3', 'F3', 'A3'], ['G3', 'B3', 'D4']], '1m').start(0);\n\n// MELODY\nconst lead = new Tone.Synth({ oscillator: { type: 'triangle' }}).toDestination();\nlead.volume.value = -3;\n\nconst melodyPattern = new Tone.Pattern((time, note) => {\n  lead.triggerAttackRelease(note, '8n', time);\n}, ['E4', 'G4', 'B4', 'A4', 'G4', 'E4', 'D4', 'E4'], 'up').start(0);\n\n// Transport starten\nTone.Transport.start();",
+    "estimated_duration_seconds": "0",
+    "quality_rating": 1,
+    "requires_gpu": false,
+    "language": "javascript",
+    "framework": "tonejs",
+    "frontend_processor": "vue_tonejs",
+    "features": [
+      "Browser-based audio synthesis",
+      "Layer-aware musical structure",
+      "Clean, well-commented code",
+      "Synth and sample integration"
+    ],
+    "notes": "Code generation happens in Stage 2 optimization. Stage 4 passes code through to Vue frontend Tone.js audio player."
+  }
+}

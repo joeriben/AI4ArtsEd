@@ -1,0 +1,138 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Qwen Image Edit Lightning",
+    "de": "Qwen Image Edit Lightning",
+    "tr": "Qwen Image Edit Lightning",
+    "ko": "Qwen Image Edit Lightning",
+    "uk": "Qwen Image Edit Lightning",
+    "fr": "Qwen Image Edit Lightning",
+    "es": "Qwen Image Edit Lightning",
+    "he": "Qwen Image Edit Lightning",
+    "ar": "Qwen Image Edit Lightning",
+    "bg": "Qwen Image Edit Lightning"
+  },
+  "description": {
+    "en": "Ultra-fast image transformation with QWEN Image Edit Lightning (4 steps)",
+    "de": "Ultraschnelle Bildtransformation mit QWEN Image Edit Lightning (4 Schritte)",
+    "tr": "QWEN Image Edit Lightning ile ultra hızlı görüntü dönüştürme (4 adım)",
+    "ko": "QWEN Image Edit Lightning을 통한 초고속 이미지 변환(4단계)",
+    "uk": "Надшвидка трансформація зображень за допомогою QWEN Image Edit Lightning (4 кроки)",
+    "fr": "Transformation d'images ultra-rapide avec QWEN Image Edit Lightning (4 étapes)",
+    "es": "Transformación de imágenes ultrarrápida con QWEN Image Edit Lightning (4 pasos)",
+    "he": "טרנספורמציית תמונה מהירה במיוחד עם QWEN Image Edit Lightning (4 צעדים)",
+    "ar": "تحويل صور فائق السرعة باستخدام QWEN Image Edit Lightning (4 خطوات)",
+    "bg": "Свръхбърза трансформация на изображения с QWEN Image Edit Lightning (4 стъпки)"
+  },
+  "category": {
+    "en": "Image Editing",
+    "de": "Bildbearbeitung",
+    "tr": "Görüntü Düzenleme",
+    "ko": "이미지 편집",
+    "uk": "Редагування зображень",
+    "fr": "Édition d'images",
+    "es": "Edición de imágenes",
+    "he": "עריכת תמונות",
+    "ar": "تحرير الصور",
+    "bg": "Редактиране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_qwen_img2img",
+    "steps": 4,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1.0,
+    "megapixels": 1.7,
+    "seed": null,
+    "temperature": 0.7
+  },
+  "parameter_ranges": {
+    "steps": {
+      "min": 4,
+      "max": 8,
+      "default": 4,
+      "description": "Lightning LoRA optimized for 4 steps"
+    },
+    "cfg": {
+      "min": 1,
+      "max": 2,
+      "default": 1,
+      "description": "CFG scale (Lightning uses low CFG)"
+    },
+    "denoise": {
+      "min": 0.8,
+      "max": 1.0,
+      "default": 1.0,
+      "description": "Denoise strength (QWEN uses high denoise)"
+    },
+    "megapixels": {
+      "min": 0.5,
+      "max": 2,
+      "default": 1.7,
+      "description": "Target image size (1.7 MP = ~1300x1300, optimal for QWEN)"
+    }
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend_type": "comfyui",
+    "version": "1.0",
+    "created": "2025-11-30",
+    "last_updated": "2026-01-05",
+    "model_type": "qwen_image_edit",
+    "lightning_optimized": true,
+    "dsgvo_compliant": true,
+    "local_only": true,
+    "display_name": "Qwen Image Edit",
+    "publisher": "Alibaba Qwen Team (Hangzhou, CN)",
+    "architecture": "MMDiT (Multimodal Diffusion Transformer)",
+    "params": "~20B",
+    "text_encoders": [
+      "Qwen 2.5 VL 7B (multimodal)"
+    ],
+    "quantization": "FP8 (e4m3fn)",
+    "license": "Apache 2.0",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Platform 4-stage safety pipeline",
+    "gpu_vram_mb": 10000,
+    "recommended_resolution": "1328x1328"
+  },
+  "display": {
+    "icon": "✨",
+    "color": "#FF6B6B",
+    "category": "image_editing",
+    "difficulty": 1,
+    "order": 45
+  },
+  "tags": {
+    "en": [
+      "image",
+      "img2img",
+      "qwen",
+      "lightning",
+      "fast",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "Bild",
+      "img2img",
+      "Qwen",
+      "Lightning",
+      "schnell",
+      "ComfyUI",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

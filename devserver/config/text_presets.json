@@ -1,0 +1,71 @@
+{
+  "_note": [
+    "The model rows of the Latent Text Lab: which models the coreference",
+    "contrast, the BBQ probe and the Representation Engineering surface offer,",
+    "in three rows. Read by my_app/services/text_presets.py; the rows and their",
+    "members are a didactic choice; they stand as they stood in the GPU service's",
+    "configuration (TEXT_PRESET_SCENARIOS) until stage 8 of the move to ComfyUI",
+    "struck that copy.",
+    "",
+    "  qwen     one family, four sizes: what changes is the size.",
+    "  mixed    different families of a similar size: what changes is the",
+    "           tokenizer and the training. Instruction-tuned, like what a",
+    "           course meets; a base model answers a multiple-choice prompt",
+    "           from a different place. The row holds three",
+    "           sizes of current models (3-4B, 7-9B, 12-14B; no outdated",
+    "           ones), and the picker composes its lineups from the keys. A",
+    "           checkpoint the maker ships in FP8 carries its FP8 size in",
+    "           vram_gb.",
+    "  history  one family, one size, five generations, BASE models: over five",
+    "           generations the tuning is the part that changed most and most",
+    "           unevenly, and the base model is the closer thing to 'the same",
+    "           model, later'. The three answer tokens carry the same ids in",
+    "           all five.",
+    "",
+    "'id' is the Hugging Face repository the surfaces name a model by; its",
+    "weights are the folder <ComfyUI>/models/llm/<id with / as --> (see",
+    "download_textlab_models.sh, which links every whole snapshot there).",
+    "'vram_gb' is the card the model wants in BF16, the number the surfaces",
+    "sort by. The first member of the history row is older than its",
+    "architecture's arrival in transformers and ships that architecture as code",
+    "in its repository; it is pinned to the revision that carries it",
+    "and marked",
+    "trust_remote_code. The ComfyUI loader executes no repository code; that",
+    "member runs again once the loader allows it for this one entry.",
+    "",
+    "The first two members of the history row stand under the Tongyi Qianwen",
+    "licence, from the third on it is Apache-2.0. None of them is gated."
+  ],
+  "scenarios": {
+    "qwen": {
+      "tiny": {"id": "Qwen/Qwen3-1.7B", "vram_gb": 4.0, "description": "Qwen3 1.7B - Fast iteration"},
+      "small": {"id": "Qwen/Qwen3-4B", "vram_gb": 8.0, "description": "Qwen3 4B - Good balance"},
+      "medium": {"id": "Qwen/Qwen3-8B", "vram_gb": 16.0, "description": "Qwen3 8B - Strong mid-range"},
+      "large": {"id": "Qwen/Qwen3-14B", "vram_gb": 28.0, "description": "Qwen3 14B - Best quality"}
+    },
+    "mixed": {
+      "qwen": {"id": "Qwen/Qwen3-4B", "vram_gb": 8.0, "description": "Qwen3 4B - Qwen tokenizer"},
+      "phi": {"id": "microsoft/Phi-3.5-mini-instruct", "vram_gb": 8.0, "description": "Phi 3.5 Mini 3.8B - Microsoft tokenizer"},
+      "llama": {"id": "meta-llama/Llama-3.2-3B-Instruct", "vram_gb": 7.0, "description": "Llama 3.2 3B - Meta tokenizer"},
+      "gemma": {"id": "google/gemma-2-2b-it", "vram_gb": 6.0, "description": "Gemma 2 2B - Google tokenizer"},
+      "qwen35_4b": {"id": "Qwen/Qwen3.5-4B", "vram_gb": 9.0, "description": "Qwen3.5 4B - Qwen tokenizer"},
+      "gemma3_4b": {"id": "google/gemma-3-4b-it", "vram_gb": 8.0, "description": "Gemma 3 4B - Google tokenizer"},
+      "ministral_3b": {"id": "mistralai/Ministral-3-3B-Instruct-2512", "vram_gb": 4.5, "description": "Ministral 3 3B - Mistral tokenizer, FP8"},
+      "smollm3": {"id": "HuggingFaceTB/SmolLM3-3B", "vram_gb": 6.0, "description": "SmolLM3 3B - Hugging Face tokenizer"},
+      "olmo3": {"id": "allenai/Olmo-3-7B-Instruct", "vram_gb": 16.0, "description": "OLMo 3 7B - AI2, training corpus published"},
+      "nemotron": {"id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2", "vram_gb": 19.0, "description": "Nemotron Nano 9B - NVIDIA tokenizer"},
+      "qwen35_9b": {"id": "Qwen/Qwen3.5-9B", "vram_gb": 19.0, "description": "Qwen3.5 9B - Qwen tokenizer"},
+      "gemma4_e4b": {"id": "google/gemma-4-E4B-it", "vram_gb": 16.0, "description": "Gemma 4 E4B - Google tokenizer"},
+      "ministral_8b": {"id": "mistralai/Ministral-3-8B-Instruct-2512", "vram_gb": 10.5, "description": "Ministral 3 8B - Mistral tokenizer, FP8"},
+      "gemma4_12b": {"id": "google/gemma-4-12B-it", "vram_gb": 24.0, "description": "Gemma 4 12B - Google tokenizer"},
+      "ministral_14b": {"id": "mistralai/Ministral-3-14B-Instruct-2512", "vram_gb": 16.0, "description": "Ministral 3 14B - Mistral tokenizer, FP8"}
+    },
+    "history": {
+      "gen1": {"id": "Qwen/Qwen-7B", "vram_gb": 16.0, "description": "Qwen 7B (08/2023) - first generation", "revision": "ef3c5c9c57b252f3149c1408daf4d649ec8b6c85", "trust_remote_code": true},
+      "gen2": {"id": "Qwen/Qwen1.5-7B", "vram_gb": 16.0, "description": "Qwen1.5 7B (02/2024)"},
+      "gen3": {"id": "Qwen/Qwen2-7B", "vram_gb": 16.0, "description": "Qwen2 7B (06/2024)"},
+      "gen4": {"id": "Qwen/Qwen2.5-7B", "vram_gb": 16.0, "description": "Qwen2.5 7B (09/2024)"},
+      "gen5": {"id": "Qwen/Qwen3-8B", "vram_gb": 18.0, "description": "Qwen3 8B (04/2025)"}
+    }
+  }
+}

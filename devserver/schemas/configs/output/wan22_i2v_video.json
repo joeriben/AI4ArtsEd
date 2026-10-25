@@ -1,0 +1,121 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Wan 2.2 Image-to-Video (14B)",
+    "de": "Wan 2.2 Bild-zu-Video (14B)",
+    "tr": "Wan 2.2 Görselden Videoya (14B)",
+    "ko": "Wan 2.2 이미지에서 비디오로 (14B)",
+    "uk": "Wan 2.2 Зображення у відео (14B)",
+    "fr": "Wan 2.2 Image vers vidéo (14B)",
+    "es": "Wan 2.2 Imagen a vídeo (14B)",
+    "he": "Wan 2.2 תמונה לווידאו (14B)",
+    "ar": "Wan 2.2 من صورة إلى فيديو (14B)",
+    "bg": "Wan 2.2 Изображение във видео (14B)"
+  },
+  "description": {
+    "en": "Transform static images into dynamic 5-second videos using WAN 2.2 14B i2v model",
+    "de": "Verwandle statische Bilder in dynamische 5-Sekunden-Videos mit WAN 2.2 14B i2v Modell",
+    "tr": "WAN 2.2 14B i2v modeliyle durağan görselleri dinamik 5 saniyelik videolara dönüştürür.",
+    "ko": "WAN 2.2 14B i2v 모델을 사용해 정적 이미지를 역동적인 5초 분량의 비디오로 변환합니다.",
+    "uk": "Перетворює статичні зображення на динамічні 5-секундні відео за допомогою моделі WAN 2.2 14B i2v.",
+    "fr": "Transforme des images statiques en vidéos dynamiques de 5 secondes à l'aide du modèle WAN 2.2 14B i2v.",
+    "es": "Transforma imágenes estáticas en vídeos dinámicos de 5 segundos usando el modelo WAN 2.2 14B i2v.",
+    "he": "הופך תמונות סטטיות לסרטוני וידאו דינמיים באורך 5 שניות באמצעות מודל WAN 2.2 14B i2v.",
+    "ar": "يحوّل الصور الثابتة إلى مقاطع فيديو ديناميكية مدتها 5 ثوانٍ باستخدام نموذج WAN 2.2 14B i2v.",
+    "bg": "Превръща статични изображения в динамични 5-секундни видеа с модела WAN 2.2 14B i2v."
+  },
+  "category": {
+    "en": "Image-to-Video",
+    "de": "Bild-zu-Video",
+    "tr": "Görselden Videoya",
+    "ko": "이미지에서 비디오로",
+    "uk": "Зображення у відео",
+    "fr": "Image vers vidéo",
+    "es": "Imagen a vídeo",
+    "he": "תמונה לווידאו",
+    "ar": "من صورة إلى فيديو",
+    "bg": "Изображение във видео"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_video_wan22_i2v",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "video",
+    "supported_types": [
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "wan2.2-i2v-14b",
+    "model_files": {
+      "high_noise_unet": "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+      "low_noise_unet": "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
+      "high_noise_lora": "wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors",
+      "low_noise_lora": "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+      "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "vae": "wan2.2_vae.safetensors"
+    },
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "requires_gpu": true,
+    "gpu_vram_mb": 39000,
+    "estimated_duration_seconds": "30-45",
+    "recommended_resolution": "640x640",
+    "supported_resolutions": [
+      "640x640",
+      "512x512",
+      "768x768"
+    ],
+    "recommended_frames": 81,
+    "supported_fps": [
+      16,
+      24
+    ],
+    "notes": "WAN 2.2 14B i2v uses two-stage sampling (high noise → low noise) with 4 total steps and LoRA adapters. Generates ~5 second videos at 16fps. Requires input image. English negative prompt.",
+    "version": "1.0",
+    "display_name": "Wan 2.2 I2V 14B",
+    "icon": "🎬",
+    "publisher": "Wan-AI / Alibaba Group (Hangzhou, CN)",
+    "architecture": "Diffusion Transformer (I2V, MoE, two-stage sampling)",
+    "params": "~27B total / 14B active (MoE)",
+    "text_encoders": [
+      "uMT5-XXL (multilingual, FP8)"
+    ],
+    "quantization": "FP8 (+ LightX2V LoRA adapters)",
+    "license": "Apache 2.0",
+    "fair_culture": "Trained on ~1.5B videos + 10B images (sources undisclosed)",
+    "safety_by_design": "Optional safety checker in pipeline"
+  },
+  "display": {
+    "icon": "🎬",
+    "color": "#9C27B0",
+    "category": "video_generation",
+    "difficulty": 2,
+    "order": 22
+  },
+  "tags": {
+    "en": [
+      "video",
+      "image-to-video",
+      "wan",
+      "i2v",
+      "comfyui",
+      "local"
+    ],
+    "de": [
+      "video",
+      "bild-zu-video",
+      "wan",
+      "i2v",
+      "comfyui",
+      "lokal"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 12,
+    "complexity": "intermediate"
+  }
+}

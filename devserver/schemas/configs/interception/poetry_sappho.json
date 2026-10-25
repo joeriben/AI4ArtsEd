@@ -1,0 +1,77 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "transformation",
+  "name": {
+    "en": "Sappho",
+    "de": "Sappho",
+    "tr": "Sappho",
+    "ko": "Sappho",
+    "uk": "Sappho",
+    "fr": "Sappho",
+    "es": "Sappho",
+    "he": "Sappho",
+    "ar": "Sappho",
+    "bg": "Sappho"
+  },
+  "description": {
+    "en": "Material collision with Sappho's Fragment 31 (~600 BCE). Already broken by history — desire, dissolution of the body, a voice that shatters. Colliding with your prompt through a deliberately insufficient model.",
+    "de": "Materialkollision mit Sapphos Fragment 31 (~600 v.Chr.). Bereits von der Geschichte zerbrochen — Begehren, Aufloesung des Koerpers, eine Stimme die zersplittert. Kollidierend mit deinem Prompt durch ein absichtlich unzureichendes Modell.",
+    "tr": "Sappho'nun Fragment 31'iyle (~MÖ 600) malzeme çarpışması. Tarih tarafından zaten kırılmış — arzu, bedenin çözülmesi, parçalanan bir ses. Kasıtlı olarak yetersiz bir model aracılığıyla prompt'unuzla çarpışıyor.",
+    "ko": "사포의 단편 31(~기원전 600년)과의 재료 충돌. 이미 역사에 의해 부서진 — 욕망, 육체의 용해, 산산조각 나는 목소리. 의도적으로 불완전한 모델을 통해 당신의 프롬프트와 충돌합니다.",
+    "uk": "Матеріальне зіткнення з Фрагментом 31 Сапфо (~600 до н.е.). Вже розбитий історією — бажання, розчинення тіла, голос, що розсипається. Зіткнення з вашим промптом через навмисно недостатню модель.",
+    "fr": "Collision matérielle avec le Fragment 31 de Sappho (~600 av. J.-C.). Déjà brisé par l'histoire — désir, dissolution du corps, une voix qui se fracasse. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
+    "es": "Colisión material con el Fragmento 31 de Safo (~600 a.C.). Ya roto por la historia — deseo, disolución del cuerpo, una voz que se hace añicos. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
+    "he": "התנגשות חומרית עם שבר 31 של ספו (~600 לפנה\"ס). כבר שבור על ידי ההיסטוריה — תשוקה, התמוססות הגוף, קול המתנפץ. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
+    "ar": "تصادم مادي مع الجزء 31 لسافو (~600 ق.م.). مكسور بالفعل من قِبل التاريخ — الرغبة، تفكك الجسد، صوت يتحطم. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с Фрагмент 31 на Сапфо (~600 г. пр.н.е.). Вече разбит от историята — желание, разтваряне на тялото, глас, който се разбива. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
+  },
+  "category": {
+    "en": "Poetry",
+    "de": "Poesie",
+    "tr": "Şiir",
+    "ko": "시",
+    "uk": "Поезія",
+    "fr": "Poésie",
+    "es": "Poesía",
+    "he": "שירה",
+    "ar": "شعر",
+    "bg": "Поезия"
+  },
+  "properties": [
+    "poetry"
+  ],
+  "context": {
+    "de": "Durchdenke den INput-Prompt mit den Gedanken, Anliegen, Klängen und Rhythmen dieses Gedichts:\n\nφάινεταί μοι κῆνος ἴσος θέοισιν\nἔμμεν ὤνηρ ὄστις ἐναντίος τοι\nἰζάνει καὶ πλασίον ἀδυ φωνεύ-\n-σας ὐπακύει\n\nκαὶ γελαίσας ἰμμερόεν, τὸ δὴ ᾽μάν\nκαρδίαν ἐν στήθεσιν ἐπτόασεν,\nὠς γὰρ εὔιδον βροχέως σε, φώνας\nοὐδὲν ἔτ᾽ εἴκει,\n\nἀλλὰ κάμ μὲν γλώσσα ϝέαγε, λέπτον\nδ᾽ αὔτικα χρῷ πῦρ ὐπαδεδρόμακεν,\nὀππάτεσσι δ᾽ οὐδὲν ορημ᾽, ἐπιρρόμ-\n-βεισι δ᾽ ἄκουαι.\n\nἀ δέ μ᾽ ἴδρως κακχέεται, τρόμος δὲ\nπαῖσαν ἄγρει, χλωροτέρα δὲ ποίας\nἔμμι, τεθνάκην δ᾽ ὀλίγω ᾽πιδεύϝην\nφαίνομαι [ἄλλα].\n\nGottgleich scheint mir jener Mann zu sein,\nder dir gegenübersitzt und dich\naus der Nähe süß sprechen hört\n\nund lieblich lachen. Das lässt mir\ndas Herz in der Brust auffahren;\nsehe ich dich auch nur kurz an,\nso bringe ich kein Wort mehr hervor,\n\ndie Zunge ist mir zerbrochen, ein feines\nFeuer läuft mir sogleich unter die Haut,\nmit den Augen sehe ich nichts,\nin den Ohren dröhnt es,\n\nSchweiß rinnt an mir herab, ein Zittern\nergreift mich ganz, grüner als Gras\nbin ich, dem Sterben nah\nscheine ich mir zu sein.",
+    "en": "Think the input prompt through with the thoughts, concerns, sounds and rhythms of this poem:\n\nφάινεταί μοι κῆνος ἴσος θέοισιν\nἔμμεν ὤνηρ ὄστις ἐναντίος τοι\nἰζάνει καὶ πλασίον ἀδυ φωνεύ-\n-σας ὐπακύει\n\nκαὶ γελαίσας ἰμμερόεν, τὸ δὴ ᾽μάν\nκαρδίαν ἐν στήθεσιν ἐπτόασεν,\nὠς γὰρ εὔιδον βροχέως σε, φώνας\nοὐδὲν ἔτ᾽ εἴκει,\n\nἀλλὰ κάμ μὲν γλώσσα ϝέαγε, λέπτον\nδ᾽ αὔτικα χρῷ πῦρ ὐπαδεδρόμακεν,\nὀππάτεσσι δ᾽ οὐδὲν ορημ᾽, ἐπιρρόμ-\n-βεισι δ᾽ ἄκουαι.\n\nἀ δέ μ᾽ ἴδρως κακχέεται, τρόμος δὲ\nπαῖσαν ἄγρει, χλωροτέρα δὲ ποίας\nἔμμι, τεθνάκην δ᾽ ὀλίγω ᾽πιδεύϝην\nφαίνομαι [ἄλλα].\n\nPeer of the gods, the happiest man I seem\nSitting before thee, rapt at thy sight, hearing\nThy soft laughter and thy voice most gentle,\nSpeaking so sweetly.\n\nThen in my bosom my heart wildly flutters,\nAnd, when on thee I gaze never so little,\nBereft am I of all power of utterance,\nMy tongue is useless.\n\nThere rushes at once through my flesh tingling fire,\nMy eyes are deprived of all power of vision,\nMy ears hear nothing but sounds of winds roaring,\nAnd all is blackness.\n\nDown courses in streams the sweat of emotion,\nA dread trembling o'erwhelms me, paler am I\nThan dried grass in autumn, and in my madness\nDead I seem almost."
+  },
+  "parameters": {
+    "temperature": 0.85,
+    "repetition_penalty": 1.5,
+    "enable_thinking": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "wikipedia": false,
+    "text_source": "Sappho, Fragment 31. Griechischer Text und englische Uebertragung: The Poems of Sappho, hrsg. Edwin Marion Cox, 1924, gemeinfrei (https://en.wikisource.org/wiki/The_Poems_of_Sappho/Chapter_3). Deutsch: Behelfsuebersetzung."
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF1744",
+    "category": "poetry",
+    "difficulty": 3,
+    "order": 1,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

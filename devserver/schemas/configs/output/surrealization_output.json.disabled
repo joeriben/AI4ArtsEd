@@ -1,0 +1,75 @@
+{
+  "pipeline": "dual_encoder_fusion",
+  "name": {
+    "en": "Surrealization Output",
+    "de": "Surrealization Output"
+  },
+  "description": {
+    "en": "Advanced image generation using separate T5 semantic and CLIP visual prompt optimization with adaptive alpha blending. Combines semantic depth with literal precision for superior image quality.",
+    "de": "Erweiterte Bildgenerierung mit separater T5-semantischer und CLIP-visueller Prompt-Optimierung mit adaptivem Alpha-Blending. Kombiniert semantische Tiefe mit wörtlicher Präzision für überlegene Bildqualität."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung"
+  },
+
+  "parameters": {
+    "output_chunk": "dual_encoder_fusion_image",
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 2048
+  },
+
+  "meta": {
+    "stage": "output",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "model": "sd3.5_large",
+    "model_file": "sd3.5_large.safetensors",
+    "clip_models": [
+      "clip_l.safetensors",
+      "t5xxl_enconly.safetensors"
+    ],
+    "requires_custom_nodes": ["ai4artsed_t5_clip_fusion"],
+    "installation_url": "https://github.com/joeriben/ai4artsed_comfyui",
+    "vector_operation": "dual_encoder_fusion",
+    "encoders": ["t5xxl", "clip_l"],
+    "fusion_algorithm": "lerp_first_77_tokens_then_concat_remainder",
+    "alpha_range": [-1.5, 2.0],
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "estimated_duration_seconds": "30-90",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "512x512",
+      "768x768",
+      "1024x1024",
+      "1280x1280",
+      "1024x768",
+      "768x1024"
+    ],
+    "notes": "Multi-step pipeline: 1) T5 semantic optimization (250 words) with alpha calculation, 2) CLIP token optimization (75 tokens), 3) Dual-encoder fusion with adaptive blending. Best for complex prompts requiring both semantic understanding and visual precision.",
+    "legacy_source": "workflows_legacy/vector/ai4artsed_Surrealization_2506092253.json",
+    "extracted_date": "2025-10-19",
+    "version": "1.0"
+  },
+
+  "display": {
+    "icon": "🔬",
+    "color": "#4CAF50",
+    "category": "image_generation",
+    "difficulty": 5,
+    "order": 30
+  },
+
+  "tags": {
+    "en": ["image", "stable-diffusion", "dual-encoder", "t5", "clip", "fusion", "advanced", "sd3.5", "comfyui"],
+    "de": ["bild", "stable-diffusion", "dual-encoder", "t5", "clip", "fusion", "erweitert", "sd3.5", "comfyui"]
+  },
+
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 14,
+    "complexity": "expert"
+  }
+}

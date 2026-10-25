@@ -1,0 +1,32 @@
+{
+  "name": "dual_text_media_generation",
+  "description": "Dual text input → Media output (music, future: other dual-text backends)",
+  "pipeline_type": "passthrough",
+  "skip_stage2": true,
+  "requires_interception_prompt": false,
+
+  "input_requirements": {
+    "texts": 2
+  },
+
+  "chunks": ["{{OUTPUT_CHUNK}}"],
+
+  "required_configs": [],
+  "config_mappings": {},
+
+  "meta": {
+    "workflow_type": "skip",
+    "reusable": true,
+    "pre_translation": false,
+    "input_type": "dual_text",
+    "output_types": ["music"],
+    "backend_agnostic": true,
+    "design_note": "No Proxy-Chunk - OUTPUT_CHUNK comes directly from Config",
+    "architecture_compliance": "Chunk name from Config, no routing indirection",
+    "prompt_structure": {
+      "type": "passthrough",
+      "parts": [],
+      "description": "No Stage 2 execution - dual input passed directly to Stage 4 output chunk"
+    }
+  }
+}

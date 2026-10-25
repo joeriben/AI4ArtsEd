@@ -1,0 +1,54 @@
+{
+  "pipeline": "text_transformation",
+  "name": {
+    "en": "Test Dada (User Config)",
+    "de": "Test Dada (Benutzer-Config)"
+  },
+  "description": {
+    "en": "A test user-created Dada config",
+    "de": "Eine Test-Benutzer-erstellte Dada-Config"
+  },
+  "category": {
+    "en": "User Experiments",
+    "de": "Benutzer-Experimente"
+  },
+  "context": "You are testing the user config system. Transform text in a Dadaist style, but keep it simple and fun.",
+  "parameters": {
+    "temperature": 0.8
+  },
+  "media_preferences": {
+    "default_output": "text",
+    "supported_types": [
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "created_by": "doej",
+    "test_config": true
+  },
+  "display": {
+    "icon": "🧪",
+    "color": "#9C27B0",
+    "category": "user_experiments",
+    "difficulty": 2,
+    "order": 999
+  },
+  "tags": {
+    "en": [
+      "test",
+      "user-created",
+      "dada"
+    ],
+    "de": [
+      "test",
+      "benutzererst ellt",
+      "dada"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": false,
+    "min_age": 12,
+    "complexity": "beginner"
+  }
+}

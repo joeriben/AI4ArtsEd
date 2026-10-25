@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Composable Diffusion (Diffusers)",
+    "de": "Composable Diffusion (Diffusers)",
+    "tr": "Composable Diffusion (Diffusers)",
+    "ko": "Composable Diffusion (Diffusers)",
+    "uk": "Composable Diffusion (Diffusers)",
+    "fr": "Composable Diffusion (Diffusers)",
+    "es": "Composable Diffusion (Diffusers)",
+    "he": "Composable Diffusion (Diffusers)",
+    "ar": "Composable Diffusion (Diffusers)",
+    "bg": "Composable Diffusion (Diffusers)"
+  },
+  "description": {
+    "en": "Per-concept noise prediction blending during denoising.",
+    "de": "Konzeptweise Überblendung der Rauschvorhersage beim Entrauschen.",
+    "tr": "Gürültü giderme (denoising) sırasında kavram başına gürültü tahmini harmanlaması.",
+    "ko": "디노이징 중 개념별 노이즈 예측 블렌딩.",
+    "uk": "Змішування прогнозів шуму для кожного концепту під час деноізингу.",
+    "fr": "Fusion des prédictions de bruit par concept pendant le débruitage.",
+    "es": "Mezcla de predicciones de ruido por concepto durante el proceso de eliminación de ruido (denoising).",
+    "he": "מיזוג תחזיות רעש לפי מושג במהלך הסרת הרעש (denoising).",
+    "ar": "مزج تنبؤات الضوضاء لكل مفهوم أثناء إزالة الضوضاء (denoising).",
+    "bg": "Смесване на прогнозите за шум за всяка концепция по време на премахването на шума (denoising)."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_composable_diffusion_diffusers"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "display_name": "Composable Diffusion (SD 3.5)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified Flow + MMDiT (triple text encoder) — custom denoising loop",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + ~0.4B CLIP",
+    "text_encoders": [
+      "CLIP-L (124M)",
+      "OpenCLIP-G (354M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Stability Community License (<$1M)",
+    "fair_culture": "Training data undisclosed (\"synthetic + filtered public\")",
+    "safety_by_design": "Filtered training data, structured red-teaming",
+    "gpu_vram_mb": 30000,
+    "recommended_resolution": "1024x1024"
+  }
+}

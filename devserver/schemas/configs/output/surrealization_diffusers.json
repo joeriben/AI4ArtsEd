@@ -1,0 +1,56 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Hallucination (Diffusers)",
+    "de": "Halluzination (Diffusers)",
+    "tr": "Halüsinasyon (Diffusers)",
+    "ko": "환각 (Diffusers)",
+    "uk": "Галюцинація (Diffusers)",
+    "fr": "Hallucination (Diffusers)",
+    "es": "Alucinación (Diffusers)",
+    "he": "הזיה (Diffusers)",
+    "ar": "هلوسة (Diffusers)",
+    "bg": "Халюцинация (Diffusers)"
+  },
+  "description": {
+    "en": "Surreal image generation via CLIP-L/T5 token-level extrapolation on Diffusers. Alpha controls how far the embedding is pushed beyond the T5 encoder's representation.",
+    "de": "Surrealistische Bildgenerierung via CLIP-L/T5 Token-Level-Extrapolation auf Diffusers. Alpha steuert, wie weit das Embedding über die T5-Encoder-Repräsentation hinaus geschoben wird.",
+    "tr": "Diffusers üzerinde CLIP-L/T5 token düzeyinde ekstrapolasyon yoluyla sürreal görsel üretimi. Alpha, embedding'in T5 kodlayıcının temsilinin ne kadar ötesine itildiğini kontrol eder.",
+    "ko": "Diffusers 상에서 CLIP-L/T5 토큰 수준 외삽을 통한 초현실적 이미지 생성. Alpha는 임베딩이 T5 인코더의 표현을 얼마나 넘어서 밀리는지를 제어합니다.",
+    "uk": "Сюрреалістична генерація зображень через CLIP-L/T5 екстраполяцію на рівні токенів у Diffusers. Alpha визначає, наскільки далеко embedding зміщується за межі репрезентації T5-енкодера.",
+    "fr": "Génération d'images surréalistes via une extrapolation CLIP-L/T5 au niveau des tokens sur Diffusers. Alpha contrôle jusqu'où l'embedding est poussé au-delà de la représentation de l'encodeur T5.",
+    "es": "Generación de imágenes surrealistas mediante extrapolación CLIP-L/T5 a nivel de token en Diffusers. Alpha controla cuánto se empuja el embedding más allá de la representación del codificador T5.",
+    "he": "יצירת תמונות סוריאליסטיות באמצעות אקסטרפולציה ברמת הטוקן של CLIP-L/T5 על Diffusers. Alpha קובע עד כמה ה-embedding נדחף מעבר לייצוג של מקודד ה-T5.",
+    "ar": "توليد صور سريالية عبر الاستقراء على مستوى الرموز (tokens) لـ CLIP-L/T5 على Diffusers. يتحكم Alpha في مدى دفع embedding إلى ما هو أبعد من تمثيل مُرمِّز T5.",
+    "bg": "Сюрреалистично генериране на изображения чрез CLIP-L/T5 екстраполация на ниво токен върху Diffusers. Alpha определя доколко embedding-ът е избутан отвъд представянето на T5 енкодера."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_surrealizer_diffusers"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "display_name": "Surrealization",
+    "icon": "🌀",
+    "publisher": "AI4ArtsEd (Custom, Erlangen, DE)",
+    "architecture": "CLIP-L/T5 Token-Level Extrapolation + SD3.5 MMDiT",
+    "params": "~8.1B (MMDiT) + ~4.7B T5-XXL + extrapolation",
+    "text_encoders": [
+      "CLIP-L (768d, 124M)",
+      "T5-XXL (4.7B)"
+    ],
+    "quantization": "FP16",
+    "license": "Research (SD3.5 Community License)",
+    "fair_culture": "Based on SD3.5 training data (see above)",
+    "safety_by_design": "Platform 4-stage safety pipeline",
+    "gpu_vram_mb": 30000
+  }
+}

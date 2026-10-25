@@ -1,0 +1,86 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_text_to_video",
+  "name": "",
+  "preset": {
+    "id": "text_to_video",
+    "kind": "basic",
+    "order": 2,
+    "medium": "video",
+    "name": "canvas.presets.textToVideo.name",
+    "description": "canvas.presets.textToVideo.description"
+  },
+  "nodes": [
+    {
+      "id": "input",
+      "type": "input",
+      "x": 80,
+      "y": 200,
+      "config": {
+        "source": "text"
+      },
+      "promptPreset": "street"
+    },
+    {
+      "id": "interception",
+      "type": "interception",
+      "x": 420,
+      "y": 200,
+      "config": {}
+    },
+    {
+      "id": "adaption",
+      "type": "model_adaption",
+      "x": 760,
+      "y": 200,
+      "config": {},
+      "modelAdaptionPreset": "video"
+    },
+    {
+      "id": "translation",
+      "type": "translation",
+      "x": 1100,
+      "y": 200,
+      "config": {}
+    },
+    {
+      "id": "generation",
+      "type": "generation",
+      "x": 1440,
+      "y": 200,
+      "config": {},
+      "configId": "wan22_t2v_video_fast"
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 1780,
+      "y": 200,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "input",
+      "targetId": "interception"
+    },
+    {
+      "sourceId": "interception",
+      "targetId": "adaption"
+    },
+    {
+      "sourceId": "adaption",
+      "targetId": "translation"
+    },
+    {
+      "sourceId": "translation",
+      "targetId": "generation",
+      "label": "input-1"
+    },
+    {
+      "sourceId": "generation",
+      "targetId": "collector"
+    }
+  ]
+}

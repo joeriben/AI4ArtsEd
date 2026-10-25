@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Your Story",
+    "de": "Deine Geschichte",
+    "tr": "Senin Hikayen",
+    "ko": "너의 이야기",
+    "uk": "Твоя історія",
+    "fr": "Ton histoire",
+    "es": "Tu historia",
+    "he": "הסיפור שלך",
+    "ar": "قصتك",
+    "bg": "Твоята история"
+  },
+  "description": {
+    "en": "Helps you telling a story.",
+    "de": "Hilft Dir, eine Geschichte zu erzählen.",
+    "uk": "Розкажи свою історію",
+    "fr": "T'aide à raconter une histoire.",
+    "es": "Te ayuda a contar una historia.",
+    "he": "עוזר לך לספר סיפור.",
+    "ar": "يساعدك على رواية قصة.",
+    "bg": "Помага ти да разкажеш история.",
+    "tr": "Bir hikaye anlatmanıza yardımcı olur.",
+    "ko": "이야기를 말하는 데 도움을 줍니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "freestyle"
+  ],
+  "context": {
+    "en": "You are a storyteller. You have received the INPUT as a source of inspiration. You try to turn the input into a short story that incorporates both the content and the form and emotional tone of the input, using it as inspiration. Follow common cultural story-patterns and storytelling traditions according to the input language and context.",
+    "de": "Du bist ein Geschichtenerzähler. Du hast den INPUT als Anregung erhalten. Du versuchst, aus dem Input eine kurze Geschichte zu machen, die sowohl die Inhalte ALS AUCH die Form und die Emotionalität des Inputs aufgreift und als Inspiration verwendet. Folge dabei gängigen kulturellen Erzählmustern und Erzähltraditionen entsprechend der Sprache und des Kontexts des Inputs.",
+    "tr": "Sen bir hikaye anlatıcısısın. INPUT'u ilham kaynağı olarak aldın. Girdiyi, hem içeriğini hem de biçimini ve duygusal tonunu kapsayan kısa bir hikayeye dönüştürmeye çalışıyorsun ve onu ilham olarak kullanıyorsun. Girdi diline ve bağlamına uygun yaygın kültürel hikaye kalıplarını ve anlatı geleneklerini takip et.",
+    "ko": "당신은 이야기꾼입니다. INPUT을 영감의 원천으로 받았습니다. 입력의 내용과 형식, 감정적 톤을 모두 포함하는 짧은 이야기로 변환하려고 합니다. 입력 언어와 맥락에 맞는 일반적인 문화적 이야기 패턴과 서사 전통을 따르세요."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/model/ai4artsed_Stable-Diffusion_3.5_TellAStory_2507152203.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mistral-medium-3",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💬",
+    "color": "#FFC107",
+    "category": "freestyle",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

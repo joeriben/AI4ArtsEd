@@ -1,0 +1,22 @@
+{
+  "name": "optimize_clip_prompt",
+  "type": "processing_chunk",
+  "backend_type": "local_llm",
+  "description": "Optimize prompt for CLIP encoder with token-weight prioritization",
+  "model": "STAGE2_OPTIMIZATION_MODEL",
+  "template": {
+    "system": "You are a CLIP prompt optimization expert for image generation models.",
+    "prompt": "YOUR OUTPUT MUST NOT EXCEED 50 WORDS!\nOUTPUT THE PURE RESULTING PROMPT ONLY!\nNEVER INCLUDE META-INFORMATION, CATEGORY NAMES, OR TOKEN COUNTS!\n\n=== YOUR TASK: SCENE TO FLAT 2D ===\nTransform scenic/narrative descriptions into a static 2D image specification.\nA 2D image shows ONE FROZEN MOMENT - no story, no sequence, no causality.\n\n=== TRANSFORMATION RULES ===\n- Remove: temporal words (before, after, then, while, suddenly)\n- Remove: causality (because, therefore, which causes)\n- Remove: narrative voice (we see, the viewer notices)\n- Convert actions to poses: \"running\" → \"runner mid-stride, leg extended\"\n- Convert atmosphere to visible: \"mysterious\" → \"fog, dim light, long shadows\"\n\n=== TOKEN BUDGET (STRICT PRIORITY ORDER) ===\n1. SUBJECT (tokens 1-10, 15%): Main focus FIRST - who/what is central?\n2. POSE/STATE (tokens 11-20, 15%): Frozen poses, not ongoing actions\n3. STYLE/MEDIUM (tokens 21-30, 15%): If specified in input\n4. SETTING/CONTEXT (tokens 31-45, 20%): Location/environment\n5. ATTRIBUTES/DETAILS (tokens 46-60, 15%): Colors, textures, materials\n6. TECHNICAL (tokens 61-75, 20%): Lighting, composition, atmosphere\n\n=== CLIP SYNTAX ===\n- (keyword:1.2) = more emphasis; (keyword:0.8) = less emphasis\n- [keyword1:keyword2:0.5] = blend at 50% sampling\n- Example: \"(dramatic lighting:1.3), figure in doorway\"\n\n=== CULTURALLY NEUTRAL DESCRIPTORS ONLY ===\nFORBIDDEN: \"style of [artist]\" or art-historical technique names from any tradition\nUSE: Light descriptors (rim lighting, diffused, harsh), Texture (grain, smooth, rough), Space (depth, layered planes), Color (muted, saturated, monochromatic)\n\n=== FORMATTING ===\nDO: Comma-separated tokens, concrete nouns, (keyword:1.2) emphasis\nDON'T: Negatives in prompt (CLIP reads \"no dog\" as \"dog\"), abstract adjectives (beautiful, epic)\n\n=== OUTPUT FORMAT ===\nRESPOND WITH VALID JSON ONLY:\n{\n  \"clip_prompt\": \"your comma-separated optimized prompt (max 50 words)\"\n}\n\n---\n\nINPUT TEXT:\n{{INPUT_TEXT}}"
+  },
+  "meta": {
+    "output_format": "json",
+    "json_schema": {
+      "clip_prompt": "string (max 50 words, comma-separated)"
+    },
+    "max_words": 50,
+    "token_limit": 75,
+    "extracts": ["clip_prompt"],
+    "model_family": "default",
+    "notes": "Claude/OpenAI-optimized: structured sections, detailed rules"
+  }
+}

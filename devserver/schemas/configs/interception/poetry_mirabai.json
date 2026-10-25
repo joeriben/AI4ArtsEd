@@ -1,0 +1,77 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "transformation",
+  "name": {
+    "en": "Mirabai",
+    "de": "Mirabai",
+    "tr": "Mirabai",
+    "ko": "Mirabai",
+    "uk": "Mirabai",
+    "fr": "Mirabai",
+    "es": "Mirabai",
+    "he": "Mirabai",
+    "ar": "Mirabai",
+    "bg": "Mirabai"
+  },
+  "description": {
+    "en": "Material collision with Mirabai's bhajans (~1500). Ecstatic devotion, poison drunk laughing, a princess who left her palace for the road. Colliding with your prompt through a deliberately insufficient model.",
+    "de": "Materialkollision mit Mirabais Bhajans (~1500). Ekstatische Hingabe, Gift lachend getrunken, eine Prinzessin die ihren Palast fuer die Strasse verliess. Kollidierend mit deinem Prompt durch ein absichtlich unzureichendes Modell.",
+    "tr": "Mirabai'nin bhajan'larıyla (~1500) malzeme çarpışması. Coşkulu adanmışlık, gülerek içilen zehir, sarayını yol için terk eden bir prenses. Kasıtlı olarak yetersiz bir model aracılığıyla prompt'unuzla çarpışıyor.",
+    "ko": "미라바이의 바잔(~1500)과의 재료 충돌. 황홀한 헌신, 웃으며 마신 독, 궁전을 버리고 길을 택한 공주. 의도적으로 불완전한 모델을 통해 당신의 프롬프트와 충돌합니다.",
+    "uk": "Матеріальне зіткнення з бхаджанами Мірабай (~1500). Екстатична відданість, отрута випита зі сміхом, принцеса, що залишила палац заради дороги. Зіткнення з вашим промптом через навмисно недостатню модель.",
+    "fr": "Collision matérielle avec les bhajans de Mirabai (~1500). Dévotion extatique, poison bu en riant, une princesse qui a quitté son palais pour la route. Entrant en collision avec votre prompt à travers un modèle délibérément insuffisant.",
+    "es": "Colisión material con los bhajans de Mirabai (~1500). Devoción extática, veneno bebido riendo, una princesa que abandonó su palacio por el camino. Chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
+    "he": "התנגשות חומרית עם הבהג'אנים של מיראבאי (~1500). מסירות נלהבת, רעל שנשתה בצחוק, נסיכה שעזבה את ארמונה למען הדרך. מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
+    "ar": "تصادم مادي مع أغاني البهجان لميرابائي (~1500). تفانٍ متحمس، سُم يُشرب ضاحكاً، أميرة تركت قصرها من أجل الطريق. يتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
+    "bg": "Материален сблъсък с бхаджаните на Мирабай (~1500). Екстатична преданост, отрова, изпита със смях, принцеса, напуснала двореца си за пътя. Сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
+  },
+  "category": {
+    "en": "Poetry",
+    "de": "Poesie",
+    "tr": "Şiir",
+    "ko": "시",
+    "uk": "Поезія",
+    "fr": "Poésie",
+    "es": "Poesía",
+    "he": "שירה",
+    "ar": "شعر",
+    "bg": "Поезия"
+  },
+  "properties": [
+    "poetry"
+  ],
+  "context": {
+    "de": "Durchdenke den INput-Prompt mit den Gedanken, Anliegen, Klängen und Rhythmen dieses Gedichts:\n\nमेरे तो गिरधर गोपाल दूसरो न कोई।।\nजाके सिर मोर मुकुट मेरो पति सोई।\nतात मात भ्रात बंधु आपनो न कोई।।\nछांडि दई कुलकी कानि कहा करिहै कोई।\nसंतन ढिग बैठि बैठि लोकलाज खोई।।\nचुनरी के किये टूक ओढ़ लीन्ही लोई।\nमोती मूंगे उतार बनमाला पोई।।\nअंसुवन जल सीचि सीचि प्रेम बेलि बोई।\nअब तो बेल फैल गई आंणद फल होई।।\nदूध की मथनियाँ बड़े प्रेम से बिलोई।\nमाखन जब काढ़ि लियो छाछ पिये कोई।।\nभगति देखि राजी हुई जगत देखि रोई।\nदासी मीरा लाल गिरधर तारो अब मोही।।\n\nMein ist Giridhar Gopal, ein anderer keiner.\nDer die Pfauenkrone auf dem Haupt trägt, der ist mein Gemahl.\nVater, Mutter, Bruder, Verwandtschaft — mein ist keiner davon.\nDie Ehre der Sippe habe ich fahren lassen; was soll einer noch tun.\nBei den Heiligen sitzend habe ich die Scham vor den Leuten verloren.\nDas feine Tuch riss ich in Stücke und legte den groben Umhang an.\nPerlen und Korallen legte ich ab und reihte einen Kranz aus Waldblumen.\nMit dem Wasser der Tränen begoss ich die Ranke der Liebe, die ich gesät hatte.\nNun hat die Ranke sich ausgebreitet, und die Frucht ist Freude.\nDie Milch im Topf habe ich mit großer Liebe gequirlt.\nAls die Butter herausgenommen war, mag die Buttermilch trinken, wer will.\nDie Hingabe sehend wurde ich froh, die Welt sehend weinte ich.\nDie Dienerin Mira sagt: geliebter Giridhar, trage mich nun hinüber.",
+    "en": "Think the input prompt through with the thoughts, concerns, sounds and rhythms of this poem:\n\nमेरे तो गिरधर गोपाल दूसरो न कोई।।\nजाके सिर मोर मुकुट मेरो पति सोई।\nतात मात भ्रात बंधु आपनो न कोई।।\nछांडि दई कुलकी कानि कहा करिहै कोई।\nसंतन ढिग बैठि बैठि लोकलाज खोई।।\nचुनरी के किये टूक ओढ़ लीन्ही लोई।\nमोती मूंगे उतार बनमाला पोई।।\nअंसुवन जल सीचि सीचि प्रेम बेलि बोई।\nअब तो बेल फैल गई आंणद फल होई।।\nदूध की मथनियाँ बड़े प्रेम से बिलोई।\nमाखन जब काढ़ि लियो छाछ पिये कोई।।\nभगति देखि राजी हुई जगत देखि रोई।\nदासी मीरा लाल गिरधर तारो अब मोही।।\n\nMine is Giridhar Gopal, no one else.\nHe with the peacock crown upon his head, he is my husband.\nFather, mother, brother, kin — none of them are mine.\nI have let the honour of the family go; what can anyone do.\nSitting among the saints I have lost my shame before people.\nI tore the fine cloth to pieces and put on the coarse blanket.\nI took off pearls and corals and strung a garland of wild flowers.\nWith the water of tears I watered the creeper of love that I had sown.\nNow the creeper has spread, and the fruit of it is joy.\nI churned the milk in the pot with great love.\nWhen the butter was taken out, let whoever wants drink the buttermilk.\nSeeing devotion I grew glad; seeing the world I wept.\nThe servant Mira says: beloved Giridhar, carry me over now."
+  },
+  "parameters": {
+    "temperature": 0.85,
+    "repetition_penalty": 1.5,
+    "enable_thinking": false
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "wikipedia": false,
+    "text_source": "Mirabai, Pad 'Mere to Giridhar Gopal', 16. Jh., gemeinfrei; Text nach Kavita Kosh (https://kavitakosh.org/kk/मेरे_तो_गिरधर_गोपाल_दूसरो_न_कोई_/_मीराबाई). Deutsch und Englisch: Behelfsuebersetzungen."
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF1744",
+    "category": "poetry",
+    "difficulty": 3,
+    "order": 4,
+    "hidden": true
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "type": "canvas_workflow",
+  "formatVersion": 1,
+  "id": "preset_image_understanding",
+  "name": "",
+  "preset": {
+    "id": "image_understanding",
+    "kind": "explore",
+    "order": 3,
+    "medium": "text",
+    "name": "compare.tabs.vlm-analysis",
+    "description": "canvas.presets.imageUnderstanding.description"
+  },
+  "nodes": [
+    {
+      "id": "image",
+      "type": "image_input",
+      "x": 80,
+      "y": 380,
+      "config": {}
+    },
+    {
+      "id": "reading_1",
+      "type": "image_evaluation",
+      "x": 380,
+      "y": 60,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "visionModel": "local/qwen3-vl:8b",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "visionOf": "reading_1"
+        }
+      }
+    },
+    {
+      "id": "reading_2",
+      "type": "image_evaluation",
+      "x": 380,
+      "y": 380,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "visionModel": "local/qwen3-vl:4b",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "visionOf": "reading_2"
+        }
+      }
+    },
+    {
+      "id": "reading_3",
+      "type": "image_evaluation",
+      "x": 380,
+      "y": 700,
+      "config": {},
+      "imageEvaluationPreset": "descriptive",
+      "visionModel": "local/qwen3-vl:2b",
+      "titleKey": "canvas.presets.titles.model",
+      "titleArgs": {
+        "model": {
+          "visionOf": "reading_3"
+        }
+      }
+    },
+    {
+      "id": "collector",
+      "type": "collector",
+      "x": 720,
+      "y": 380,
+      "config": {}
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "image",
+      "targetId": "reading_1"
+    },
+    {
+      "sourceId": "reading_1",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "image",
+      "targetId": "reading_2"
+    },
+    {
+      "sourceId": "reading_2",
+      "targetId": "collector"
+    },
+    {
+      "sourceId": "image",
+      "targetId": "reading_3"
+    },
+    {
+      "sourceId": "reading_3",
+      "targetId": "collector"
+    }
+  ]
+}

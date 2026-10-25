@@ -1,0 +1,179 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "SA3 SFX",
+    "de": "SA3 SFX",
+    "tr": "SA3 SFX",
+    "ko": "SA3 SFX",
+    "uk": "SA3 SFX",
+    "fr": "SA3 SFX",
+    "es": "SA3 SFX",
+    "he": "SA3 SFX",
+    "ar": "SA3 SFX",
+    "bg": "SA3 SFX"
+  },
+  "description": {
+    "en": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "de": "Stable Audio 3 (medium) für Klang statt Musik — das Ziel, auf das die Nachspiel-Kette routet, wenn sie weder Sprache noch Musik gehört hat.",
+    "tr": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "ko": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "uk": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "fr": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "es": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "he": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "ar": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music.",
+    "bg": "Stable Audio 3 (medium) for sound rather than music — the target the re-enactment chain routes to when it heard neither speech nor music."
+  },
+  "category": {
+    "en": "Audio Generation",
+    "de": "Audiogenerierung",
+    "tr": "Ses Üretimi",
+    "ko": "오디오 생성",
+    "uk": "Генерація аудіо",
+    "fr": "Génération audio",
+    "es": "Generación de audio",
+    "he": "יצירת אודיו",
+    "ar": "توليد الصوت",
+    "bg": "Генериране на аудио"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_audio_stableaudio_diffusers",
+    "NEGATIVE_PROMPT": "",
+    "SECONDS": 12.0,
+    "STEPS": 8,
+    "CFG": 1.0,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "audio",
+    "supported_types": [
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "media_model": "stable-audio-3-medium",
+    "backend": "stable_audio",
+    "backend_type": "stable_audio",
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "estimated_duration_seconds": "5-15",
+    "recommended_duration": 12.0,
+    "max_duration": 240,
+    "quality_note": "Few-step rectified-flow model: 8 steps, CFG 1.0 (guidance is adversarially distilled into the model, so CFG≈1.0 and the negative prompt is largely inert). Good for music and sound effects.",
+    "notes": "Stable Audio 3 medium via the GPU service (stable-audio-tools, t5gemma conditioner, pingpong sampler). Split off from stableaudio_open, which stays the platform audio default (schemas/output_config_defaults.json). Model: https://huggingface.co/stabilityai/stable-audio-3-medium — Split off so the re-enactment chain can route to a NAMED target. The model draws no line between music and sound effects: it takes one text and a length, and these two configs hand it the same chunk with the same steps and the same guidance. They differ in their default length and in the name a page can show. From the re-enactment page they differ in the NAME ALONE, because that page overwrites SECONDS with the length of the recording and hands both the same prompt; the line between music and sound is drawn one station earlier, by what was heard.",
+    "version": "3.0-medium",
+    "display_name": "SA3 SFX",
+    "icon": "media-sound.svg",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "Rectified-Flow DiT (Audio, 44.1kHz stereo)",
+    "params": "~1.4B (DiT)",
+    "text_encoders": [
+      "t5gemma-b-b-ul2 (768d, multilingual)"
+    ],
+    "quantization": "FP32",
+    "license": "Stability AI Community License (<$1M) + Gemma Terms of Use (t5gemma)",
+    "fair_culture": "Multilingual t5gemma encoder broadens language coverage, BUT training-data attribution is NOT published (regression vs. Stable Audio Open 1.0)",
+    "safety_by_design": "Not publicly documented for SA3 (SA1 disclosed PANNs + Audible Magic copyright filtering)",
+    "provenance": {
+      "training_data_disclosed": false,
+      "training_data_sources": [
+        "Licensed data (sources not disclosed)",
+        "Creative Commons data (sources not disclosed)"
+      ],
+      "training_data_size": "Not disclosed",
+      "training_data_consent": "unknown",
+      "geographic_origin": "London, UK",
+      "known_biases": [
+        {
+          "en": "t5gemma is multilingual — a clear improvement over SA1's English-only T5-Base — but its training-data language distribution is undisclosed, so non-English coverage cannot be verified",
+          "de": "t5gemma ist mehrsprachig — eine klare Verbesserung gegenüber SA1's rein englischem T5-Base — aber die Sprachverteilung der Trainingsdaten ist nicht offengelegt, sodass nicht-englische Abdeckung nicht überprüfbar ist",
+          "tr": "t5gemma çok dilli — SA1'in yalnızca İngilizce olan T5-Base modeline göre açık bir gelişme — ancak eğitim verisinin dil dağılımı açıklanmadığından İngilizce dışı kapsamın doğrulanması mümkün değil",
+          "ko": "t5gemma는 다국어를 지원함 — SA1의 영어 전용 T5-Base 대비 뚜렷한 개선이지만, 학습 데이터의 언어 분포가 공개되지 않아 영어 외 언어의 지원 수준은 검증할 수 없음",
+          "uk": "t5gemma багатомовна — очевидне покращення порівняно з англомовним лише T5-Base з SA1 — але мовний розподіл її навчальних даних не розкрито, тому неможливо перевірити якість покриття неанглійських мов",
+          "fr": "t5gemma est multilingue — une nette amélioration par rapport au T5-Base uniquement anglophone de SA1 — mais la répartition linguistique de ses données d'entraînement n'est pas divulguée, si bien que la couverture non anglophone ne peut être vérifiée",
+          "es": "t5gemma es multilingüe — una clara mejora respecto al T5-Base solo en inglés de SA1 — pero la distribución de idiomas de sus datos de entrenamiento no se ha revelado, por lo que no se puede verificar la cobertura de idiomas distintos del inglés",
+          "he": "t5gemma הוא רב-לשוני — שיפור ברור לעומת T5-Base של SA1 שהיה באנגלית בלבד — אך התפלגות השפות בנתוני האימון שלו לא נחשפה, כך שאי אפשר לאמת את הכיסוי בשפות שאינן אנגלית",
+          "ar": "t5gemma متعدد اللغات — تحسّن واضح مقارنةً بـ T5-Base الخاص بـ SA1 المقتصر على الإنجليزية — لكن توزيع لغات بيانات تدريبه غير معلن، لذا لا يمكن التحقق من تغطيته للغات غير الإنجليزية",
+          "bg": "t5gemma е многоезичен — ясно подобрение спрямо T5-Base на SA1, който е само на английски — но езиковото разпределение на неговите данни за обучение не е оповестено, така че покритието извън английския не може да бъде проверено"
+        },
+        {
+          "en": "With training data undisclosed, cultural and genre biases cannot be audited from the source data",
+          "de": "Da die Trainingsdaten nicht offengelegt sind, können kulturelle und Genre-Verzerrungen nicht anhand der Quelldaten geprüft werden",
+          "tr": "Eğitim verisi açıklanmadığından kültürel ve tür yanlılıkları kaynak veriden denetlenemiyor",
+          "ko": "학습 데이터가 공개되지 않아 문화적, 장르적 편향을 원본 데이터로 검증할 수 없음",
+          "uk": "Оскільки навчальні дані не розкрито, культурні та жанрові упередження неможливо перевірити за вихідними даними",
+          "fr": "Les données d'entraînement n'étant pas divulguées, les biais culturels et de genre ne peuvent être audités à partir des données sources",
+          "es": "Al no revelarse los datos de entrenamiento, los sesgos culturales y de género no pueden auditarse a partir de los datos fuente",
+          "he": "מאחר שנתוני האימון לא נחשפו, אי אפשר לבקר הטיות תרבותיות וז'אנריות מתוך נתוני המקור",
+          "ar": "بما أن بيانات التدريب غير معلنة، لا يمكن تدقيق التحيزات الثقافية والنوعية انطلاقاً من البيانات المصدرية",
+          "bg": "Тъй като данните за обучение не са оповестени, културните и жанровите отклонения не могат да бъдат одитирани от изходните данни"
+        }
+      ],
+      "known_gaps": [
+        {
+          "en": "TRANSPARENCY REGRESSION: SA3 does NOT publish a training-data attribution list. Stable Audio Open 1.0 published full attribution (7,300h CC audio: Freesound + FMA) and was the most transparent model in our system.",
+          "de": "TRANSPARENZ-RÜCKSCHRITT: SA3 veröffentlicht KEINE Attributionsliste der Trainingsdaten. Stable Audio Open 1.0 veröffentlichte vollständige Attribution (7.300h CC-Audio: Freesound + FMA) und war das transparenteste Modell in unserem System.",
+          "tr": "ŞEFFAFLIKTA GERİLEME: SA3, eğitim verisi kaynak listesi YAYINLAMIYOR. Stable Audio Open 1.0 tam bir kaynak listesi yayınlamıştı (7.300 saat CC ses: Freesound + FMA) ve sistemimizdeki en şeffaf modeldi.",
+          "ko": "투명성 후퇴: SA3는 학습 데이터 출처 목록을 공개하지 않음. Stable Audio Open 1.0은 전체 출처(CC 오디오 7,300시간: Freesound + FMA)를 공개했으며 우리 시스템에서 가장 투명한 모델이었음.",
+          "uk": "РЕГРЕС ПРОЗОРОСТІ: SA3 НЕ публікує список атрибуції навчальних даних. Stable Audio Open 1.0 публікувала повну атрибуцію (7300 год аудіо CC: Freesound + FMA) і була найпрозорішою моделлю в нашій системі.",
+          "fr": "RÉGRESSION DE TRANSPARENCE : SA3 ne publie PAS de liste d'attribution des données d'entraînement. Stable Audio Open 1.0 publiait une attribution complète (7 300 h d'audio CC : Freesound + FMA) et était le modèle le plus transparent de notre système.",
+          "es": "RETROCESO DE TRANSPARENCIA: SA3 NO publica una lista de atribución de los datos de entrenamiento. Stable Audio Open 1.0 publicó una atribución completa (7300 h de audio CC: Freesound + FMA) y fue el modelo más transparente de nuestro sistema.",
+          "he": "נסיגה בשקיפות: SA3 אינו מפרסם רשימת ייחוס לנתוני האימון. Stable Audio Open 1.0 פרסם ייחוס מלא (7,300 שעות אודיו CC: Freesound ו-FMA) והיה המודל השקוף ביותר במערכת שלנו.",
+          "ar": "تراجع في الشفافية: لا يَنشر SA3 قائمة إسناد لبيانات التدريب. نشر Stable Audio Open 1.0 إسناداً كاملاً (7300 ساعة صوت CC: Freesound وFMA) وكان الأكثر شفافية في نظامنا.",
+          "bg": "РЕГРЕС В ПРОЗРАЧНОСТТА: SA3 НЕ публикува списък с приписване на данните за обучение. Stable Audio Open 1.0 публикуваше пълно приписване (7300 часа CC аудио: Freesound + FMA) и беше най-прозрачният модел в нашата система."
+        },
+        {
+          "en": "\"Licensed and Creative Commons data\" is Stability's own description; the specific datasets, consent basis, and CC license breakdown are not public",
+          "de": "\"Lizenzierte und Creative-Commons-Daten\" ist Stabilitys eigene Beschreibung; die konkreten Datensätze, die Einwilligungsgrundlage und die CC-Lizenz-Aufschlüsselung sind nicht öffentlich",
+          "tr": "\"Lisanslı ve Creative Commons verisi\" ifadesi Stability'nin kendi tanımıdır; somut veri kümeleri, onay dayanağı ve CC lisans dağılımı kamuya açık değildir",
+          "ko": "\"라이선스 및 크리에이티브 커먼즈 데이터\"는 Stability 측의 자체 설명일 뿐, 구체적인 데이터셋과 동의 근거, CC 라이선스 구성 내역은 공개되지 않음",
+          "uk": "«Ліцензовані дані та дані Creative Commons» — це власний опис Stability; конкретні набори даних, підстава для згоди та розподіл ліцензій CC не є публічними",
+          "fr": "« Données sous licence et Creative Commons » est la description donnée par Stability elle-même ; les jeux de données précis, la base du consentement et la répartition des licences CC ne sont pas rendus publics",
+          "es": "\"Datos con licencia y Creative Commons\" es la descripción propia de Stability; los conjuntos de datos concretos, la base del consentimiento y el desglose de licencias CC no son públicos",
+          "he": "\"נתונים מורשים ונתוני Creative Commons\" הוא תיאור עצמי של Stability; מערכי הנתונים הספציפיים, בסיס ההסכמה ופירוט רישיונות ה-CC אינם פומביים",
+          "ar": "\"بيانات مرخَّصة وبيانات Creative Commons\" وصفٌ خاص بشركة Stability نفسها؛ مجموعات البيانات المحددة وأساس الموافقة وتفصيل تراخيص CC غير معلنة للعموم",
+          "bg": "„Лицензирани данни и данни с Creative Commons“ е собственото описание на Stability; конкретните набори от данни, основанието за съгласие и разбивката на CC лицензите не са публични"
+        }
+      ]
+    }
+  },
+  "display": {
+    "icon": "media-sound.svg",
+    "color": "#00BCD4",
+    "category": "audio_generation",
+    "difficulty": 2,
+    "order": 33
+  },
+  "tags": {
+    "en": [
+      "audio",
+      "sound",
+      "music",
+      "ambient",
+      "stable-audio",
+      "stable-audio-3",
+      "multilingual",
+      "local",
+      "sfx",
+      "field-recording"
+    ],
+    "de": [
+      "audio",
+      "klang",
+      "musik",
+      "ambient",
+      "stable-audio",
+      "stable-audio-3",
+      "mehrsprachig",
+      "lokal",
+      "sfx",
+      "field-recording"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "intermediate"
+  }
+}

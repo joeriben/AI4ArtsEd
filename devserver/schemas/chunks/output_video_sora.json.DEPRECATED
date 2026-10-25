@@ -1,0 +1,93 @@
+{
+  "name": "output_video_sora",
+  "type": "api_output_chunk",
+  "backend_type": "openai",
+  "media_type": "video",
+  "description": "OpenAI Sora - Direct API video generation with advanced motion and scene understanding",
+
+  "api_config": {
+    "provider": "openai",
+    "model": "sora",
+    "endpoint": "https://api.openai.com/v1/video/generations",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer {{OPENAI_API_KEY}}",
+      "Content-Type": "application/json"
+    },
+    "request_body": {
+      "model": "sora",
+      "prompt": "{{PROMPT}}",
+      "resolution": "720p",
+      "duration": 4,
+      "aspect_ratio": "16:9"
+    },
+    "async_polling": {
+      "enabled": true,
+      "status_endpoint": "https://api.openai.com/v1/video/generations/{job_id}",
+      "poll_interval_seconds": 5,
+      "max_poll_duration_seconds": 300,
+      "status_field": "status",
+      "completed_status": "completed",
+      "failed_status": "failed",
+      "in_progress_statuses": ["queued", "in_progress", "generating"]
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "field": "request_body.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Video generation prompt"
+    },
+    "model": {
+      "field": "request_body.model",
+      "default": "sora",
+      "description": "Model to use (sora, sora-2)"
+    },
+    "resolution": {
+      "field": "request_body.resolution",
+      "default": "720p",
+      "description": "Video resolution (720p, 1080p)"
+    },
+    "duration": {
+      "field": "request_body.duration",
+      "default": 4,
+      "description": "Video duration in seconds (4, 8, or 12)"
+    },
+    "aspect_ratio": {
+      "field": "request_body.aspect_ratio",
+      "default": "16:9",
+      "description": "Aspect ratio (16:9, 9:16)"
+    }
+  },
+
+  "output_mapping": {
+    "type": "video_api_async",
+    "format": "url",
+    "extract_path": "video.url",
+    "job_id_path": "id",
+    "description": "Extract video URL from completed async job response (downloaded and stored locally)"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "60-90",
+    "requires_gpu": false,
+    "api_provider": "openai",
+    "model_id": "sora",
+    "cost_per_video": "$0.10-$0.50 per second (pricing varies by duration and resolution)",
+    "supported_resolutions": [
+      "720p",
+      "1080p"
+    ],
+    "supported_durations": [4, 8, 12],
+    "async_api": true,
+    "features": [
+      "Advanced motion generation",
+      "Scene understanding and continuity",
+      "High-quality video output",
+      "Multiple aspect ratios (16:9, 9:16)",
+      "Async job-based generation"
+    ],
+    "notes": "Sora via Direct OpenAI API. Requires OPENAI_API_KEY environment variable. Uses async job-based workflow: create job → poll status → download video. Videos are downloaded and stored locally. Generation takes ~80-90 seconds for 4-second 1080p video."
+  }
+}

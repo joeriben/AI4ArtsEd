@@ -1,0 +1,272 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+  --vt-c-white: #ffffff;
+  --vt-c-white-soft: #f8f8f8;
+  --vt-c-white-mute: #f2f2f2;
+
+  --vt-c-black: #181818;
+  --vt-c-black-soft: #222222;
+  --vt-c-black-mute: #282828;
+
+  --vt-c-indigo: #2c3e50;
+
+  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
+  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
+  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+
+  --vt-c-text-light-1: var(--vt-c-indigo);
+  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
+  --vt-c-text-dark-1: var(--vt-c-white);
+  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--vt-c-white);
+  --color-background-soft: var(--vt-c-white-soft);
+  --color-background-mute: var(--vt-c-white-mute);
+
+  --color-border: var(--vt-c-divider-light-2);
+  --color-border-hover: var(--vt-c-divider-light-1);
+
+  --color-heading: var(--vt-c-text-light-1);
+  --color-text: var(--vt-c-text-light-1);
+
+  /* Page background base tone. Single source of truth for every full-surface
+     background in the app. Overridden at runtime by the userPreferences store
+     (localStorage key: ai4artsed_bg_tint). Always a near-black tone -- the
+     elevated surfaces (#141414 / #1a1a1a / #2a2a2a) are still hardcoded and
+     would collapse against a lighter base. */
+  --bg-base: #0a0a0a;
+
+  /* Elevated surfaces, derived from --bg-base and written alongside it:
+     surface-1 = panels, surface-2 = menus and cards, surface-3 = raised
+     elements and hairline borders, surface-4 = inputs and strong borders.
+     The literals here are the pre-JS fallback and equal the values the
+     neutral 96% tone produces -- i.e. what used to be hardcoded per
+     component. The -rgb triplets exist for the places that need an alpha:
+     rgb(var(--surface-1-rgb) / 0.9). */
+  --surface-1: #141414;
+  --surface-2: #1a1a1a;
+  --surface-3: #2a2a2a;
+  --surface-4: #333333;
+
+  --bg-base-rgb: 10 10 10;
+  --surface-1-rgb: 20 20 20;
+  --surface-2-rgb: 26 26 26;
+  --surface-3-rgb: 42 42 42;
+  --surface-4-rgb: 51 51 51;
+
+  /* Figure tint — the colour the theatre-masks sign (FigureMask) takes wherever
+     the platform shows a presence. It says something about the modality of the
+     situation the figure stands in; it never says who the figure is, and it is
+     never a status signal. One sign, tinted by where it stands.
+
+     A workshop pigment, not a signal colour, and named for the material:
+
+       blueprint    #5c8cb0  help — and with it the DEFAULT, since a page that
+                             names no situation of its own is one where the
+                             figure is help. It lives as the fallback inside
+                             FigureMask, which is why the route table in App.vue
+                             names it without having to set it.
+
+     The three further tints once defined here (verdigris for advice, iron
+     oxide for contesting, ochre for the figure beside a comparison) had no
+     reader and were struck on 2026-10-10; the route table in App.vue never
+     set them.
+
+     Work light (#ffb300), the amber that is already everywhere on the platform,
+     is no longer any mask's colour. It stays what it was on everything else —
+     chips, borders, the existing accents.
+
+     The tint carries on the mask and the mask's own outline and NOWHERE else:
+     never a surface, a panel, a background, a page border. The low-stimulus
+     surface is what makes concentrated work possible, and the colour is there
+     for orientation, not for atmosphere. */
+  /* The platform reads in ONE typeface: Source Sans 3. Every surface takes it
+     from here — writing, standing words, panels, chips, headings, the lot. It
+     comes with the build (see main.ts), so it looks the same on a workshop
+     machine with no line out as it does here, and asks nothing of anyone else's
+     server to do it.
+
+     What it carries: Latin, Latin-ext (Turkish), Greek, Cyrillic (Ukrainian)
+     and Vietnamese, at any weight from 200 to 900. What it does NOT carry is
+     Korean — that text falls through to the system stack behind it, and giving
+     it a face of its own is a separate decision about a separate typeface.
+
+     Code and machine-readable strings are the one thing that stays monospace:
+     there the fixed width is the information, and no text face replaces it.
+
+     THREE FACES, AND NO OTHERS:
+       Regular 400          running text and small captions
+       Regular 400 italic   emphasis and quotations
+       Bold 700             emphasis and headlines
+     Everything between them is gone from the platform: what used to be set at
+     300, 500 or 600 now reads as text or as set apart, because those are the
+     only two things the type says. A weight written outside 400 and 700 is a
+     fourth face nobody chose. */
+  --font-sans:
+    'Source Sans 3 Variable',
+    'Source Sans 3',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+
+  /* THE TYPE STEPS OF THE PLATFORM. Moved here from assets/flow-stage.css:
+     they are the platform's steps, not one stage's, and every box stands on
+     the steps of the system. A surface can only stand on them if
+     they are always there — until 2026-10-10 flow-stage.css was imported by
+     a handful of components and never by main.ts, so a box taking its size
+     from there would have lost it on every page that did not pull that file
+     in; since then main.ts loads it once, and the steps stay here anyway.
+
+     rem-based clamps: they respect the reader's own font setting and grow
+     GENTLY with the window (0.25 to 0.9 vw across the whole set). Text never
+     runs through a layout transform. A size written as a literal is a step
+     nobody chose. */
+  --flow-fs-label: clamp(0.6875rem, 0.35vw + 0.55rem, 0.875rem);
+  --flow-fs-sub: clamp(0.625rem, 0.3vw + 0.5rem, 0.75rem);
+  --flow-fs-head: clamp(0.75rem, 0.3vw + 0.62rem, 0.9375rem);
+  /* --flow-fs-body is the READING step: running text a person reads on the
+     surface, and with it EVERY output box — what a model wrote, a
+     transcript, a translation. An output box carries no size of its own.
+     Below it a text is decoration; the machine's answer is the object. */
+  --flow-fs-body: clamp(0.8125rem, 0.35vw + 0.68rem, 1.0625rem);
+  --flow-fs-mono: clamp(0.8125rem, 0.3vw + 0.66rem, 1rem);
+  --flow-fs-display: clamp(1.125rem, 0.9vw + 0.85rem, 1.75rem);
+  --flow-fs-hint: clamp(0.6875rem, 0.25vw + 0.58rem, 0.8125rem);
+
+
+  --figure-tint-blueprint: #5c8cb0;
+
+  --section-gap: 160px;
+
+  /* Layout dimensions - shared across components */
+  --footer-collapsed-height: 36px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--vt-c-black);
+    --color-background-soft: var(--vt-c-black-soft);
+    --color-background-mute: var(--vt-c-black-mute);
+
+    --color-border: var(--vt-c-divider-dark-2);
+    --color-border-hover: var(--vt-c-divider-dark-1);
+
+    --color-heading: var(--vt-c-text-dark-1);
+    --color-text: var(--vt-c-text-dark-2);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* A form control takes no type from the page it stands on: the browser gives it
+   a face of its own (Arial, at a size of its own), which is how a handful of
+   buttons in the header stayed outside the platform's typeface while everything
+   around them changed. Only the FACE is taken back here — size and weight stay
+   with whatever sets them, so nothing moves. */
+button,
+input,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------------------------------------------------------------------------
+   The hold in progress.
+
+   One gesture runs on four objects of this platform, and it is silent until a
+   finger is on it: nothing stands at the object while it rests, because the
+   hold means the same thing everywhere and is learnt once (composables/
+   useHold.ts). What the object owes is the answer that the press has arrived —
+   a hairline running once round its edge over the 450 ms, gone the moment the
+   finger lifts, so letting go early is visibly the way out.
+
+   The ring inherits the radius and therefore follows whatever shape it is put
+   on — today the rounded rectangle of a card, which is the one host left: the
+   discs of the flow board used to answer a press with the InfoCard beside
+   them, and a press drags them now. On a shape that
+   is not square it sweeps by ANGLE about the centre, so it covers a long edge
+   faster than a short one; what it reports is how much of the press is done,
+   and that is read from how much of the ring is drawn, not from where the head
+   of it stands. The host must already be positioned; every consumer is.
+
+   It runs in CSS, not in JavaScript. A frame loop writing a ref would have run
+   on every press of every consumer of the gesture, including the three that
+   draw nothing with it, on a 120 Hz screen, and it can never paint the full
+   ring: its last frame lands before the timer does. The keyframes reach 1 at
+   exactly the moment the hold fires, and the duration below is the one in
+   `composables/useHold.ts` — the two numbers belong together. */
+@property --hold-ring {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@keyframes hold-sweep {
+  from { --hold-ring: 0; }
+  to { --hold-ring: 1; }
+}
+/* The ring belongs to the thing being held. A positioned pseudo-element on a
+   host that is no stacking context climbs out of it and paints across whatever
+   lies over the host — on the flow board the arc ran straight over a card
+   lying on the disc. */
+.hold-progress {
+  isolation: isolate;
+}
+.hold-progress::after {
+  /* One frame of the press is spent patching this class on, and the timer in
+     useHold started before that. The negative delay gives the frame back, so
+     the ring closes as the hold fires instead of a few degrees short of it. */
+  animation: hold-sweep 450ms linear -16ms forwards;
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    rgba(255, 255, 255, 0.85) calc(var(--hold-ring, 0) * 360deg),
+    transparent 0
+  );
+  /* The host carries a picture: the front of a card is the medium it made. A
+     white hairline on a bright picture is not there at all, so the arc carries
+     its own dark edge. */
+  filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.9));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}

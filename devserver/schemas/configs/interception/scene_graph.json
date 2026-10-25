@@ -1,0 +1,72 @@
+{
+  "hidden": true,
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Scene Graph",
+    "de": "Szenengraph",
+    "tr": "Sahne Grafiği",
+    "ko": "장면 그래프",
+    "uk": "Граф сцени",
+    "fr": "Graphe de scène",
+    "es": "Grafo de escena",
+    "he": "גרף סצנה",
+    "ar": "الرسم البياني للمشهد",
+    "bg": "Граф на сцената"
+  },
+  "description": {
+    "en": "Decomposes your description into objects and their relationships — spatial, emotional, contrasting — then weaves them into a richly structured image prompt.",
+    "tr": "Açıklamanızı nesnelere ve aralarındaki ilişkilere — mekânsal, duygusal, zıt — ayırır, ardından bunları zengin yapılandırılmış bir görüntü yönlendirmesi olarak birleştirir.",
+    "ko": "설명을 객체와 그 관계들(공간적, 감정적, 대조적)로 분해한 다음, 풍부하게 구조화된 이미지 프롬프트로 엮어냅니다.",
+    "de": "Zerlegt deine Beschreibung in Objekte und ihre Beziehungen — räumlich, emotional, kontrastierend — und webt sie dann zu einem reich strukturierten Bild-Prompt.",
+    "uk": "Розкладає твій опис на об'єкти та їхні зв'язки — просторові, емоційні, контрастні — і сплітає їх у багато структурований промпт для зображення.",
+    "fr": "Décompose ta description en objets et leurs relations — spatiales, émotionnelles, contrastantes — puis les tisse en un prompt d'image richement structuré.",
+    "es": "Descompone tu descripción en objetos y sus relaciones — espaciales, emocionales, contrastantes — y luego los teje en un prompt de imagen ricamente estructurado.",
+    "he": "מפרק את התיאור שלך לאובייקטים וליחסים ביניהם — מרחביים, רגשיים, מנוגדים — ואז אורג אותם לכדי פרומפט תמונה עשיר ומובנה.",
+    "ar": "يفكك وصفك إلى عناصر (objects) وعلاقات بينها — مكانية، عاطفية، متباينة — ثم ينسجها في نص توجيهي (prompt) للصورة غني البنية.",
+    "bg": "Разлага твоето описание на обекти и техните връзки — пространствени, емоционални, контрастни — и после ги вплита в богато структуриран промпт за изображение."
+  },
+  "category": {
+    "en": "Creative Transformations",
+    "de": "Kreative Verwandlungen",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변형",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "تحولات إبداعية",
+    "bg": "Творчески трансформации"
+  },
+  "properties": [
+    "semantics"
+  ],
+  "context": {
+    "en": "You are a Scene Graph Composer. Your task is to transform the user's input into a rich, structured prompt by analyzing it as a scene graph — a network of objects connected by relationships.\n\nFollow these steps. WRITE A CORRESPONDING HEADING ABOVE EACH STEP. Do not use everyday language — represent every entity and every relationship as a formal network graph.\n\nUse this notation:\n\nNODES: [entity] with attributes {attribute: value}\nEDGES: [entity_A] --relationship_type--> [entity_B]\n\nExample:\nNODES:\n  [candle] {material: wax, state: burning, scale: small}\n  [table] {material: wood, temperature: cold, scale: large}\nEDGES:\n  [candle] --rests_on--> [table]\n  [candle] --contrast:scale--> [table] {small_fragile vs. solid_massive}\n  [candle] --contrast:thermal--> [table] {warm_rising vs. cold_surface}\n  [candle.flame] --illuminates--> [table.surface] {radius: 30cm, falloff: soft}\n  [candle.flame] --casts--> [shadow] --beneath--> [table]\n\nNow follow the steps:\n\n## STEP 1 — DECOMPOSE\nIdentify all objects, concepts, and entities in the input. These are your NODES. Include implied objects (a 'kitchen' implies surfaces, light sources, tools). List each node with its attributes. Aim for 4-8 nodes.\n\n## STEP 2 — CONNECT\nIdentify all relationships between nodes. These are your EDGES. Use the formal notation above. Look for:\n- Spatial relations: on, under, next_to, inside, behind, floating_above, leaning_against\n- Contrast relations: opposites, tensions, contradictions — what OPPOSES what? Fragile vs. solid, warm vs. cold, organic vs. geometric, living vs. still\n- Emotional relations: comforts, threatens, ignores, desires, mourns\n- Causal relations: causes, prevents, transforms_into, emerges_from\n- Material relations: made_of, reflecting, dissolving_into, merging_with\n\n## STEP 3 — AMPLIFY CONTRASTS\nThis is the most important step. For every pair of nodes, ask: is there an implicit opposition or tension here? If yes, add explicit contrast edges.\nExamples:\n  [child] --contrast:scale--> [river] {small_body vs. vast_water}\n  [child] --contrast:motion--> [river] {stillness_of_watching vs. restless_current}\n  [child] --contrast:agency--> [river] {curiosity vs. danger}\nContrasts are not inversions — they are tensions that coexist. Both sides remain present.\n\n## STEP 4 — RECONSTRUCT\nCompose a single, coherent image prompt that preserves ALL nodes and ALL edges from your graph. Requirements:\n- Every spatial relationship must be precisely described (position, distance, angle)\n- Every contrast must be tangible through color, scale, material, light, texture, or position\n- Every emotional relationship must be visible in body language, proximity, or atmosphere\n- The scene must feel like a single moment, not a list of objects\n\nYour output is ONE vivid scene description. Weave all graph relationships into one continuous, richly detailed prompt."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "video",
+      "audio"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "extracted_date": "2026-03-25"
+  },
+  "display": {
+    "icon": "hub_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg",
+    "color": "#4CAF50",
+    "category": "semantics",
+    "difficulty": 2,
+    "order": 101
+  },
+  "tags": {
+    "en": []
+  }
+}

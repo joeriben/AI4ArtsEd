@@ -1,0 +1,77 @@
+# Frozen stock of the direct-address excluded debt, 2026-09-25.
+#
+# One <language><TAB><dotted key> per line. ADDRESS_DEBT in
+# devserver/tests/test_i18n_direct_address.py is asserted to be a SUBSET of this
+# file, so the live list can lose entries and never gain them, and no entry can
+# be swapped for another behind an unchanged count.
+#
+# What sits here is the stock the Phase-D audit of UCD-107 measured: the
+# addresses outside the thirteen address surfaces, in the three stocks the
+# slop pass of 2026-09-24 deliberately left for their own passes -- field
+# labels and placeholders (register S1), explanation and guide texts (S2),
+# game and context wording (S3), plus the system messages that address the
+# reader because the situation does. Their treatment runs through
+# src/i18n/WORK_ORDERS.md, and every entry a pass fixes comes off this list in
+# the same commit.
+#
+# This file and the STOCK_SHA256 constant in that test change only by a
+# decision recorded in the commit message.
+de	form.inputLabel
+de	phase2.userInput
+de	phase2.yourInput
+de	phase2.inputPlaceholder
+de	phase2.yourPrompt
+de	pipeline.yourInput
+de	mediaInput.yourInputLabel
+de	canvas.stage.input.promptPlaceholder
+de	settings.knowledge.items.readonlyHint
+de	direct.emptyState
+de	surrealizer.expandHint
+de	policyChips.queuePlaceMine
+de	latentLab.textLab.tokens.cutHead
+de	docs.guideLatentLab.yourPromptTakenUp
+de	docs.guideLatentLab.sd35UsesThree
+de	docs.guideMusic.youCanWriteOwn
+de	docs.guidePersona.whatAnswersHereNot
+de	docs.guidePersona.youCanDisagreeRedirect
+de	docs.guidePersona.whenMachineDecidesDialog
+de	docs.guideTraining.youUploadSetOwn
+de	docs.guideTraining.generativeImageModelsClosed
+de	docs.principles.everyIntermediateStepVisible
+de	docs.principles.theWikipediaLinksInvite
+de	docs.wikipedia.culturalRespectDesc
+de	latentLab.flowLogic.diffusion.prompt.platformNote
+de	latentLab.flowLogic.diffusion.prompt.langNote
+de	latentLab.flowLogic.diffusion.prompt.exploreNote
+de	latentLab.flowLogic.transformer.prompt.you
+de	latentLab.flowLogic.transformer.prompt.sysExample
+de	latentLab.flowLogic.transformer.prompt.hidden
+de	latentLab.flowLogic.transformer.prompt.note
+de	latentLab.flowLogic.transformer.vectors.embLabel
+de	latentLab.loraReach.story
+de	latentLab.probing.techText
+de	latentLab.algebra.explainHowText
+de	latentLab.crossmodal.synth.explainHowText
+de	latentLab.textLab.bias.noteBody
+de	training.info.runCost
+de	safetyBlocked.vlm
+de	safetyBlocked.para86a
+de	safetyBlocked.dsgvo
+de	safetyBlocked.kids
+de	safetyBlocked.youth
+de	safetyBlocked.generic
+de	compare.voice.gap.english
+de	corefTest.story
+de	biasArchaeology.story
+de	edutainment.pixel.smartphoneComparison
+de	edutainment.forest.clickToPlant
+de	edutainment.forest.treesPlanted
+de	edutainment.rareearth.gameOverInactive
+de	persona.story
+de	persona.description
+de	resona.journalNotice
+de	workshop.chat.overBudget
+de	workshop.greeting.context
+de	workshop.greeting.flexibility
+de	workshop.greeting.callToAction
+de	trashy.analysisReflectionError

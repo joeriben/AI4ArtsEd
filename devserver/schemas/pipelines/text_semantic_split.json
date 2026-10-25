@@ -1,0 +1,33 @@
+{
+  "name": "text_semantic_split",
+  "pipeline_type": "text_semantic_split",
+  "pipeline_stage": "2",
+  "requires_interception_prompt": false,
+  "description": "Semantic text splitting without transformation - splits prompt into two semantic parts",
+  "input_requirements": {
+    "texts": 1
+  },
+  "chunks": [
+    "text_split"
+  ],
+  "required_configs": [
+    "split_config"
+  ],
+  "config_mappings": {
+    "split_config": "{{SPLIT_CONFIG}}"
+  },
+  "meta": {
+    "workflow_type": "text_split",
+    "reusable": true,
+    "pre_translation": true,
+    "output_structure": "split_text",
+    "steps": [
+      {
+        "step": 1,
+        "chunk": "text_split",
+        "description": "LLM-based semantic text splitting into two parts",
+        "config_key": "split_config"
+      }
+    ]
+  }
+}

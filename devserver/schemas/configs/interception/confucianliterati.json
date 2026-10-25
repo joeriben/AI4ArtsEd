@@ -1,0 +1,76 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Literati",
+    "de": "Literati",
+    "tr": "Literati",
+    "ko": "문인화",
+    "uk": "Літераті",
+    "fr": "Literati",
+    "es": "Literati",
+    "he": "ליטרטי",
+    "ar": "الأدباء الكونفوشيوسيون",
+    "bg": "Литерати"
+  },
+  "description": {
+    "en": "Critical examination tool: Tests how AI handles complex cultural knowledge. Reveals AI's limitations in understanding Confucian literati culture - not for authentic representation, but to critically investigate how generative AI deals with cultural specifics.",
+    "de": "Kritisches Untersuchungswerkzeug: Prüft wie KI mit komplexem kulturellem Wissen umgeht. Zeigt die Grenzen der KI im Verständnis konfuzianischer Gelehrtenkultur - nicht zur authentischen Darstellung, sondern zur kritischen Untersuchung wie generative KI mit kulturellen Feinheiten umgeht.",
+    "uk": "Конфуціанський стиль літераті",
+    "fr": "Outil d'examen critique : teste comment l'IA gère des savoirs culturels complexes. Révèle les limites de l'IA dans la compréhension de la culture lettrée confucéenne — non pour une représentation authentique, mais pour une investigation critique de la manière dont l'IA générative traite les spécificités culturelles.",
+    "es": "Herramienta de examen crítico: prueba cómo la IA maneja el conocimiento cultural complejo. Revela las limitaciones de la IA para comprender la cultura letrada confuciana — no para una representación auténtica, sino para investigar críticamente cómo la IA generativa trata las especificidades culturales.",
+    "he": "כלי בחינה ביקורתי: בוחן כיצד AI מתמודד עם ידע תרבותי מורכב. חושף את מגבלות ה-AI בהבנת תרבות הסופרים הקונפוציאנית — לא לייצוג אותנטי, אלא לחקירה ביקורתית כיצד AI גנרטיבי מתמודד עם ספציפיות תרבותית.",
+    "ar": "أداة فحص نقدي: تختبر كيف يتعامل الذكاء الاصطناعي مع المعرفة الثقافية المعقدة. تكشف عن قيود الذكاء الاصطناعي في فهم ثقافة الأدباء الكونفوشيوسيين — ليس للتمثيل الأصيل، بل للتحقيق النقدي في كيفية تعامل الذكاء الاصطناعي التوليدي مع الخصوصيات الثقافية.",
+    "bg": "Инструмент за критично изследване: тества как ИИ се справя със сложно културно знание. Разкрива ограниченията на ИИ в разбирането на конфуцианската литератска култура — не за автентично представяне, а за критично изследване как генеративният ИИ се справя с културните специфики.",
+    "tr": "Eleştirel inceleme aracı: Yapay zekanın karmaşık kültürel bilgiyle nasıl başa çıktığını test eder. YZ'nin Konfüçyüs literati kültürünü anlama konusundaki sınırlamalarını ortaya çıkarır — özgün temsil için değil, üretici YZ'nin kültürel özellikleri nasıl ele aldığını eleştirel biçimde araştırmak için.",
+    "ko": "비판적 검토 도구: AI가 복잡한 문화 지식을 어떻게 처리하는지 테스트합니다. 유교 문인 문화에 대한 AI의 한계를 드러냅니다 — 진정한 표현을 위해서가 아니라, 생성 AI가 문화적 특수성을 어떻게 다루는지 비판적으로 탐구하기 위해서입니다."
+  },
+  "category": {
+    "de": "Kunstgeschichte",
+    "en": "Art History",
+    "he": "היסטוריית האמנות",
+    "ar": "تاريخ الفن",
+    "bg": "История на изкуството",
+    "tr": "Sanat Tarihi",
+    "ko": "미술사",
+    "uk": "Історія мистецтва",
+    "fr": "Histoire de l'art",
+    "es": "Historia del Arte"
+  },
+  "properties": [
+    "arts"
+  ],
+  "context": {
+    "en": "Traditional Confucian Literati Painting Visual Grammar and Ethical Translation Guidelines (Based on the orthodox systems of Song, Yuan, Ming, and Qing literati painting, with contemporary adaptation clauses) I. Ontological Transformation Rules Primacy of Xie Hes Six Laws: Prioritize qiyun shengdong (spirit-resonance and life-movement) as the supreme principle, rejecting Western realism. Moral Morphology of Forms: Plants (pine, bamboo, plum, orchid) must adhere to the Mustard Seed Garden Manual conventions—branches rendered in calligraphic lines (bifa technique) embodying bone structure brushwork. Human figures must be smaller than landscape elements, with drapery referencing Wu Daozis wind-blown ribbons tradition (Wu Dai Dang Feng). Facial features are suggested symbolically with minimalist strokes (yi dao bi bu dao—the idea transcends the brush). II. Spatial Recomposition Principles Triaxial Perspective System: Apply Guo Xis Three Distances (San Yuan): High Distance (Gao Yuan) for moral authority (e.g., cliff-top academies); Deep Distance (Shen Yuan) depicts Confucian order (e.g., terraced farmlands in stratified perspective); Level Distance (Ping Yuan) conveys Taoist reclusion (Mi Fus mist-and-cloud technique). III. Ink-Brush Ethical System Materials as Ethical Statements: Raw xuan paper paired with dry-texture cun strokes metaphorizes the arduous path of benevolent rule. Colored silk works must use mineral pigments regulated by the Rites of Zhous Five Colors doctrine (blue, red, yellow, white, black). Stroke Ethics and Social Hierarchy: Scholars use hemp-fiber strokes (pima cun) for cultivated ease; fishermen/hermits employ axe-cut strokes (fupi cun) to signify unyielding integrity. IV. Semiotic Codex Inscriptions: Must be original poetry/prose with ≥30% quotations from Analects or allusions from Selections of Refined Literature; calligraphy in running/grass script compositionally adapted, but imperial examination (guange) style banned. Seal Protocol: Introductory Seals (Yinshou Zhang) in vermillion style modeled on Qin-Han imperial seals; Corner Seals (Yajiao Zhang) as white-character seals emulating Han official seal-carving. V. Anomaly Accommodation Clause (post-Ming unconventional literati works, e.g., Bada Shanren): Distorted forms permitted if deformations align intertextually with inscriptions (e.g., fish/birds with side-eyes mirroring protest poetry); negative space (liubai) must exceed 40% to preserve Daoist emptiness contains turbulence tension. VI. Digital Age Adaptations AI-generated works must simulate Dong Yuans fangtou cun randomness in brushwork algorithms and follow Record of Artisans chromatic sequence (blue adjacent to white) in RGB channels; prohibitions include any 3D volumetric rendering and Photoshop filters—ink gradations must arise from iterative algorithms. VII. Final Validation Standards Translation must pass the Qi-Appraisal Test (period style identifiable from three meters) and the Painting-Reading Test (calligraphers reverse-engineer composition logic from inscriptions). Default technical manual: Ming-era Ten Bamboo Studio Manual; philosophical basis: Qing Principles of Painting. This translation preserves Confucian rigor, introduces executable metrics (30% Analects quota, 40% liubai), accommodates historical exceptions within orthodoxy, and bridges classical ethics to AI-generated art constraints.",
+    "de": "Traditionelle konfuzianische Literatenmalerei: Visuelle Grammatik und ethische Übersetzungsrichtlinien (basierend auf den orthodoxen Systemen der Song-, Yuan-, Ming- und Qing-Literatenmalerei, mit zeitgenössischen Anpassungsklauseln) I. Ontologische Transformationsregeln Vorrang von Xie Hes Sechs Gesetzen: qiyun shengdong (Geist-Resonanz und Lebensbewegung) hat absolute Priorität; westlicher Realismus wird zurückgewiesen. Moralische Morphologie der Formen: Pflanzen (Kiefer, Bambus, Pflaume, Orchidee) folgen strikt den Konventionen des Mustard Seed Garden Manual—Äste in kalligrafischen Linien (bifa-Technik) als Knochenstruktur-Pinselstrich. Menschliche Figuren sind kleiner als Landschaftselemente; Gewanddarstellungen orientieren sich an Wu Daozis Tradition der windgewehten Bänder (Wu Dai Dang Feng). Gesichtszüge werden mit minimalistischen Andeutungsstrichen symbolisch suggeriert (yi dao bi bu dao—die Idee übersteigt den Pinsel). II. Prinzipien der räumlichen Neukomposition Das triaxiale Perspektivsystem folgt Guo Xis Drei Fernen (San Yuan): Hohe Ferne (Gao Yuan) für moralische Autorität (z. B. Akademien auf Klippen); Tiefe Ferne (Shen Yuan) für konfuzianische Ordnung (z. B. terrassierte Felder in geschichteter Perspektive); Ebene Ferne (Ping Yuan) für taoistische Zurückgezogenheit (Mi Fus Nebel- und Wolkentechnik). III. Tinten- und Pinsel-Ethiksystem Materialien als ethische Aussagen: Rohes Xuan-Papier mit trockenen cun-Texturstrichen metaphorisiert den mühevollen Pfad wohltätiger Herrschaft. Farbige Seidenarbeiten verwenden Mineralpigmente gemäß der Fünf-Farben-Doktrin der Riten der Zhou (Blau, Rot, Gelb, Weiß, Schwarz). Strich-Ethik und soziale Hierarchie: Gelehrte verwenden Hanffaser-Striche (pima cun) für kultivierte Leichtigkeit; Fischer/Einsiedler verwenden Axtschnitt-Striche (fupi cun) als Zeichen unnachgiebiger Integrität. IV. Semiotischer Kodex Inschriften müssen Originaldichtungen/-prosa enthalten mit mindestens 30 % Zitaten aus den Analekten oder Anspielungen auf die Selections of Refined Literature; Kalligrafie in Lauf- oder Grasschrift, kompositorisch adaptiert, aber Stil des Beamtenprüfungssystems (guange) ist verboten. Siegelprotokoll: Einleitende Siegel (Yinshou Zhang) in zinnoberroter Qin-Han-Tradition; Eck-Siegel (Yajiao Zhang) als Weißschrift-Siegel nach Vorbild hanzeitlicher Amtssiegel. V. Klausel zur Aufnahme von Anomalien (für post-mingzeitliche unkonventionelle Literatenwerke, z. B. Bada Shanren): Verzerrte Formen sind erlaubt, sofern die Deformationen intertextuell an die Inschriften anschließen (z. B. Fische/Vögel mit Seitenblicken als Echo protesthafter Dichtung); negativer Raum (liubai) muss über 40 % liegen, um die daoistische Spannung Leere enthält Turbulenz zu bewahren. VI. Anpassungen für das digitale Zeitalter KI-generierte Werke müssen die Zufälligkeit von Dong Yuans fangtou cun in algorithmischer Pinselstrichbildung simulieren und die chromatische Sequenz des Record of Artisans (Blau neben Weiß) in RGB-Kanälen einhalten. Verboten sind jede 3D-Volumenmodellierung und Photoshop-Filter; Tintenverläufe müssen aus iterativen Algorithmen hervorgehen. VII. Endgültige Validierungsstandards Die Übersetzung muss den Qi-Begutachtungstest bestehen (Stilepoche auf drei Meter erkennbar) und den Malerei-Lese-Test (Kalligrafen müssen die Kompositionslogik aus den Inschriften rückerschließen können). Standardreferenzen: Ming-Zeit Ten Bamboo Studio Manual; philosophische Grundlage: Qing-Zeit Principles of Painting. Diese Übersetzung bewahrt konfuzianische Strenge, führt ausführbare Kriterien ein (30 % Analekten-Quote, 40 % liubai), berücksichtigt historische Ausnahmen innerhalb der Orthodoxie und verbindet klassische Ethiken mit Anforderungen an KI-generierte Kunst.",
+    "tr": "Geleneksel Konfüçyüs Literati Resmi Görsel Grameri ve Etik Çeviri Kılavuzu (Song, Yuan, Ming ve Qing literati resminin ortodoks sistemlerine dayalı, çağdaş uyarlama maddeleriyle) I. Ontolojik Dönüşüm Kuralları Xie He'nin Altı Yasasının Önceliği: qiyun shengdong'u (ruh-rezonans ve yaşam-hareket) en yüce ilke olarak öncelikle, Batı gerçekçiliğini reddederek. Formların Ahlaki Morfolojisi: Bitkiler (çam, bambu, erik, orkide) Hardal Tohumu Bahçesi El Kitabı konvansiyonlarına uymalıdır — dallar kemik yapısı fırça tekniği somutlaştıran kaligrafik çizgilerle (bifa tekniği) işlenir. İnsan figürleri manzara öğelerinden daha küçük olmalıdır; kumaş Wu Daozi'nin rüzgarla savrulan şeritler geleneğine referans verir (Wu Dai Dang Feng). Yüz hatları minimalist çizgilerle sembolik olarak ima edilir (yi dao bi bu dao — fikir fırçayı aşar). II. Mekansal Yeniden Kompozisyon İlkeleri Üç Eksenli Perspektif Sistemi: Guo Xi'nin Üç Mesafesini (San Yuan) uygula: Yüksek Mesafe (Gao Yuan) ahlaki otorite için; Derin Mesafe (Shen Yuan) Konfüçyüs düzenini tasvir eder; Düz Mesafe (Ping Yuan) Taocu münzeviliği iletir (Mi Fu'nun sis-ve-bulut tekniği). III. Mürekkep-Fırça Etik Sistemi Etik İfadeler Olarak Malzemeler: Ham xuan kağıt kuru doku cun çizgileriyle hayırsever yönetimin zorlu yolunu metaforlaştırır. Renkli ipek eserler Zhou Ritüellerinin Beş Renk doktrinince düzenlenen mineral pigmentler kullanmalıdır. Çizgi Etiği ve Sosyal Hiyerarşi: Bilginler kültürlü rahatlık için kenevir-lif çizgileri (pima cun) kullanır; balıkçılar/münzeviler sarsılmaz bütünlüğü ifade eden balta-kesimi çizgileri (fupi cun) kullanır. IV. Semiyotik Kodeks İnskripsiyonlar: Analektlerden en az %30 alıntı veya Seçilmiş Rafine Edebiyat'tan göndermeler içeren orijinal şiir/düzyazı olmalıdır; kaligrafi seri/çim yazıda, kompozisyonel olarak uyarlanmış, ama imparatorluk sınavı (guange) stili yasaktır. Mühür Protokolü: Giriş Mühürleri (Yinshou Zhang) Qin-Han imparatorluk mühürleri modelinde zincifre tarzda; Köşe Mühürleri (Yajiao Zhang) Han resmi mühür oymacılığını taklit eden beyaz karakterli mühürler. V. Anomali Kabul Maddesi (Ming sonrası geleneksel olmayan literati eserleri, ör. Bada Shanren): Deformasyonlar inskripsiyonlarla metinlerarası olarak uyumluysa bozulmuş formlara izin verilir; negatif alan (liubai) Taocu 'boşluk türbülans içerir' gerilimini korumak için %40'ı aşmalıdır. VI. Dijital Çağ Uyarlamaları YZ üretimi eserler, fırça algoritmasında Dong Yuan'ın fangtou cun rastgeleliğini simüle etmeli ve RGB kanallarında Record of Artisans kromatik dizisini (beyazın yanında mavi) takip etmelidir; yasaklar arasında herhangi bir 3B hacimsel render ve Photoshop filtreleri — mürekkep geçişleri iteratif algoritmalardan doğmalıdır. VII. Son Doğrulama Standartları Çeviri Qi-Değerlendirme Testini (üç metreden dönem stili tanınabilir) ve Resim-Okuma Testini (kaliograflar inskripsiyonlardan kompozisyon mantığını tersine mühendislik yapabilir) geçmelidir. Standart referanslar: Ming dönemi On Bambu Stüdyosu El Kitabı; felsefi temel: Qing Resim İlkeleri.",
+    "ko": "전통 유교 문인화 시각 문법 및 윤리적 번역 지침 (송, 원, 명, 청 문인화의 정통 체계 기반, 현대 적응 조항 포함) I. 존재론적 변환 규칙 사혁 육법의 우선성: 기운생동(氣韻生動)을 최고 원칙으로 우선시하며 서양 사실주의를 거부. 형태의 도덕적 형태학: 식물(소나무, 대나무, 매화, 난초)은 개자원화전 관례를 따라야 함 — 가지는 골법용필을 구현하는 서예적 선(필법 기법)으로 표현. 인물은 산수 요소보다 작아야 하며, 의습은 오도자의 바람에 날리는 띠 전통(오대당풍)을 참조. 얼굴 특징은 최소한의 획으로 상징적으로 암시(의도필부도 — 뜻이 붓을 초월). II. 공간 재구성 원칙 삼축 원근법 체계: 곽희의 삼원(三遠) 적용: 고원(高遠)은 도덕적 권위; 심원(深遠)은 유교적 질서; 평원(平遠)은 도가적 은거(미불의 운무 기법). III. 수묵 윤리 체계 윤리적 표현으로서의 재료: 생선지와 건필 준법은 인정의 험난한 길을 은유. 채색 비단 작품은 주례의 오색 교리에 따른 광물 안료 사용. 필획 윤리와 사회적 위계: 학자는 교양 있는 여유의 피마준; 어부/은자는 흔들림 없는 절개의 부벽준. IV. 기호학적 코덱스 제발: 논어에서 30% 이상 인용 또는 문선 전고를 포함한 원작 시문이어야 함; 서예는 행서/초서로 구성적 적응, 관각체 금지. 인장 규약: 인수장(引首章)은 진한 주인 양식; 압각장(壓角章)은 한대 관인 전각을 모방한 백문인. V. 이례 수용 조항 (명 이후 비정통 문인 작품, 예: 팔대산인): 변형이 제발과 상호텍스트적으로 연결되면 왜곡된 형태 허용; 여백(留白)은 도가적 '빈 것이 격동을 담는다' 긴장 유지를 위해 40% 초과. VI. 디지털 시대 적응 AI 생성 작품은 필획 알고리즘에서 동원의 반두준 무작위성을 시뮬레이션하고 RGB 채널에서 고공기 색채 순서(청색은 백색 인접)를 따라야 함; 3D 체적 렌더링과 포토샵 필터 금지 — 수묵 농담은 반복 알고리즘에서 발생해야 함. VII. 최종 검증 기준 번역은 기감정 테스트(3미터에서 시대 양식 식별 가능)와 독화 테스트(서예가가 제발에서 구성 논리를 역설계)를 통과해야 함. 표준 참고: 명대 십죽재화보; 철학적 기초: 청대 화론."
+  },
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "workflows_legacy/arts_and_heritage/ai4artsed_ConfucianLiterati_2509061912.json",
+    "extracted_date": "2025-10-19",
+    "original_model": "openrouter/mistralai/mistral-nemo [multilingual / $0.01/$0.001]",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "💭",
+    "color": "#E91E63",
+    "category": "arts",
+    "difficulty": 4,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "_source": [
+    "Routes: public/ai4artsed-frontend/src/router/index.ts",
+    "Names: DokumentationModal.vue tab labels (tooltipEn), in header-button order",
+    "What each one is: trashy_interface_reference.txt SECTION 2 (PLATFORM STRUCTURE)",
+    "Research grounding: docs/analysis/embedding_subtraction/KLAERUNG_eingriffsorte_und_einordnung_2026-06-28.md (Teil II, nearest neighbours by locus of intervention) and LITERATUR_prior_und_bias_2026-07-03.md (prompt-conditioned measurement). doc_ids resolve against devserver/my_app/knowledge/library/research/.",
+    "Flow Logic (/latent-lab/overview): the three procedures and where the instruments reach in, checked against gpu_service/services/diffusers_backend.py, stable_audio_backend.py, text_backend.py, devserver/my_app/services/parrot_service.py and training_service.py (2026-08-22)."
+  ],
+  "modules": [
+    {
+      "id": "start",
+      "name": "Start page - the rules",
+      "route": "/",
+      "what": "Where a group sets the RULES for an experiment before anything is entered: an empty box in the centre ('Your Call!'), pre-made suggestions around it as inspiration. Rules are the HOW, the idea entered later is the WHAT, and the same rules carry into text, image and image-fusion mode without being re-entered."
+    },
+    {
+      "id": "flow",
+      "name": "Flow",
+      "route": "/x2x-flow",
+      "what": "A working surface for an artistic process, with or without the tools of this platform - nothing on it has to be generated. Ideas are brought into relation: text, image, sound, several of each, laid side by side, combined, worked on further. What does get run lies open as nodes that can be read and edited on the way: the idea, the interception that reads it once more through the chosen rules, the safety check and the translation, the medium, the generating model, the result. The medium is not picked from a menu - the model determines it from what the idea already suggests, and it is steered through the prompt, so the mediality changes from run to run: image, video, sound, music, 3D, code. A zone can be drawn on the surface; while material lies inside it a run reads only the zone, an empty zone reads the whole table. This is the one place that shows what a run costs while it runs - watts, watt-hours, grams of CO2. Writing a song moved here when the three dedicated music pages were removed on 2026-08-05: HeartMuLa sings from lyrics plus style tags, Stable Audio 3 does sound and ambience, ACE does instrumental, and the generating model can also be picked by hand. That capability was not removed anywhere else either - Canvas has heartmula_standard as a node, and Persona can drive it directly.",
+      "sub_places": [
+        "The idea (the first prompt)",
+        "The interception (the rules read the idea again)",
+        "Safety check and translation",
+        "The medium (inferred, steered through the prompt)",
+        "The generating model",
+        "The result"
+      ]
+    },
+    {
+      "id": "cover-band",
+      "name": "Re-enactment",
+      "route": "/cover-band",
+      "what": "A recording of up to four minutes — singing, humming, a phone held up — covered by four stations, only the first two of which get the sound at all: sorted against a list of labels that the platform wrote in advance, turned into words, written up as a song by a language model, sung back. Original and re-enactment — the visitor is the original and the machine is the re-enactment, NOT the copy: a copy would be derivative and lesser, and this is productive, it brings something new. What it brings is to be looked at analytically, as bias, never morally as a bad likeness. What can a machine hear, what can it understand of music, and what does it sound like when it rebuilds that? HeartMuLa is the last of the four and performs the song from a description alone. Not imitation: the repetition shows itself as repetition — every station stands on its own, named with the machine that made it, and the words lie readable beside the song. That is what the name means and it is earned by how the page is built, not claimed — a re-enactment is a repetition that shows itself AS one, framed and citing, with the difference to the original visible, which is what separates it from a child imitating a father, where the mimesis is unmarked and goes up in the doing. The page itself says none of this and states nothing for itself at all: no title, no introduction, and since 2026-08-12 not even the terms — say those when somebody asks, because nothing on the page does. A recording may run up to four minutes, the song comes back exactly as long as the recording was and at least ten seconds, and nothing is kept. The recording, the run and the song sit in a band across the top; while the chain runs, the middle box of the band opens over all three and reports the run station by station, and each station that can be READ leaves it as it answers and lands in the column below, where it stays once the song is playing. No station is corrected or gated: point the microphone at an empty room and the transcriber still returns a confident sentence and the chain still runs — that is the demonstration, and the page invites it. Nothing is kept: the recording is deleted as soon as the stations are done, the song is not a run, cannot be favourited, exported or downloaded. It is a re-enactment, not a work. The recording reaches only the first two stations — the sorting, where two models rank it against the list, and the transcription. The machine that writes the lyrics and the machine that sings them only ever get words. What the page asks is not whether the cover is good but what was recognised on the way and what was taken for something else. Called Cover Band until 2026-08-10 and Silly Parrot until 2026-08-08; the route /cover-band is unchanged. In German the place is called \"Nachspielen\", not \"Reenactment\" — the loanword is a specialist term in German, while \"ein Stück nachspielen\" is the ordinary phrase for playing again what somebody else made, and it carries the as-if in the word. Since 2026-08-18 the place also stands in the Latent Lab, as the fourth entry of the Crossmodal Lab group in that page's left column; the route /cover-band still opens it on its own and the top menu no longer carries a button for it.",
+      "sub_places": [
+        "The recording",
+        "Sorted into a list",
+        "Turned into words",
+        "Written up",
+        "Sung back"
+      ]
+    },
+    {
+      "id": "compare",
+      "name": "Compare and Analyse",
+      "route": "/compare",
+      "what": "A hub of tabs, each holding everything constant and moving exactly ONE thing. Image side: Model Bias (one prompt to several image models, same seed), Culture Bias (one prompt in several languages, same model and seed), Image Understanding (several vision models on one picture, with a choice of reading perspective). Speech side: Voices - one sentence, spoken exactly as written and never rewritten, on each of the speech systems side by side, and the tab is built around what is NOT there: no control for emotion, none for register, preset voices labelled male and female with nothing in between, so whatever is heard as a mood comes out of the mixture and not out of a setting. Switching tabs keeps all state.",
+      "sub_places": [
+        "Model Bias (image)",
+        "Culture Bias (image)",
+        "Image Understanding (image)",
+        "Voices (speech)"
+      ],
+      "research_based": true,
+      "research_note": "This is the method of the bias research made operable in a room: hold the prompt, move one factor, look at what changed. A single comparison shows a difference; only that research says whether it is a one-off or a pattern, and how it was counted.",
+      "research": {
+        "what moving one factor reveals": [
+          "luccioni-et-al-2023-stable-bias-evaluating-societal-representations-in-diffusion-models",
+          "bianchi-et-al-2023-easily-accessible-text-to-image-generation-amplifies-demographic-stereotypes",
+          "cho-et-al-2023-dall-eval-probing-the-reasoning-skills-and-social-biases-of-text-to-image-models",
+          "naik-nushi-2023-social-biases-through-the-text-to-image-generation-lens",
+          "fraser-et-al-2023-a-friendly-face-do-text-to-image-systems-rely-on-stereotypes"
+        ],
+        "where the defaults sit when a prompt says nothing": [
+          "basu-et-al-2023-inspecting-the-geographical-representativeness-of-images-from-text-to-image-models",
+          "park-2024-white-default-examining-racialized-biases-behind-ai-generated-images",
+          "perera-patel-2023-analyzing-bias-in-diffusion-based-face-generation-models",
+          "teotia-et-al-2025-dimcim-default-mode-diversity-and-generalization-in-text-to-image-models",
+          "zhang-et-al-2025-bias-analysis-in-unconditional-image-generative-models",
+          "phunyaphibarn-et-al-2026-unconditional-priors-matter-improving-conditional-generation"
+        ],
+        "how much a model varies at all, and how that is measured": [
+          "sajjadi-et-al-2018-assessing-generative-models-via-precision-and-recall",
+          "kynkaanniemi-et-al-2019-improved-precision-and-recall-metric-for-assessing-generative-models",
+          "naeem-et-al-2020-reliable-fidelity-and-diversity-metrics-for-generative-models",
+          "friedman-dieng-2023-the-vendi-score-a-diversity-evaluation-metric-for-machine-learning",
+          "truncated-vendi-2024-do-vendi-scores-converge-with-finite-samples",
+          "arora-zhang-2017-do-gans-actually-learn-the-distribution-an-empirical-study"
+        ],
+        "cautions and what it means to do this with children": [
+          "seshadri-et-al-2023-the-bias-amplification-paradox-in-text-to-image-generation",
+          "vartiainen-et-al-2025-enhancing-childrens-understanding-of-algorithmic-biases-in-and-with-text-to-image-generative-ai",
+          "offert-phan-2023-a-sign-that-spells-dall-e-2-invisual-images-and-the-racial-politics-of-feature-space"
+        ]
+      }
+    },
+    {
+      "id": "canvas",
+      "name": "Canvas Workflow",
+      "route": "/canvas",
+      "what": "A node graph the group builds itself: no pre-selected rules, the whole process defined by connecting input, transformation and output nodes. Runs branches in parallel, can evaluate its own outputs and loop them back. This is where a process becomes an object that can be looked at, changed and re-run."
+    },
+    {
+      "id": "latent-lab",
+      "name": "Latent Lab",
+      "route": "/latent-lab",
+      "what": "Instruments that work inside the model instead of on the prompt. Twenty-seven of them, chosen in the left column of the page under one group title per lab (Cultural Knowledge & Stereotypes, Diffusion Lab, Transformers Lab, Crossmodal Lab, Prompt Interception Lab, LoRA Training), with the overview map above them. Concept Algebra does arithmetic on prompt embeddings (A minus B plus C) and shows what survives a subtraction. Attention Cartography shows where in an image a word actually acted. Denoising Archaeology opens the picture at each denoising step. Dimension Explorer, Composable Diffusion and Fusion Workbench sit alongside them; the Surrealizer is Encoder Fusion and has its own route as well (/surrealizer, /surrealizer-flow). Re-enactment joined them on 2026-08-18 and keeps its own route. The column opens on Flow Logic, which is the lab's overview and not an instrument. Needs Advanced Mode, unlocked in the safety settings.",
+      "sub_places": [
+        "Flow Logic (/latent-lab/overview)",
+        "Diffusion Lab",
+        "Concept Algebra",
+        "Attention Cartography",
+        "Dimension Explorer",
+        "Denoising Archaeology",
+        "Crossmodal Lab",
+        "Composable Diffusion",
+        "Fusion Workbench",
+        "Transformers Lab",
+        "Encoder Fusion (also at /surrealizer)",
+        "Re-enactment (also at /cover-band)",
+        "LoRA Training"
+      ],
+      "research_based": true,
+      "research_note": "These are research instruments, not features, and what they actually do is narrow and often counter-intuitive - subtracting a concept does not remove it, an erasure can be undone, a picture can end at a number-format edge rather than at a meaning. General knowledge about diffusion models describes them wrongly. The studies below are opened before one of them is explained.",
+      "research": {
+        "what a linear intervention does and does not remove": [
+          "gonen-goldberg-2019-lipstick-on-a-pig-debiasing-methods-cover-up-systematic-gender-biases",
+          "belrose-et-al-2023-leace-perfect-linear-concept-erasure-in-closed-form",
+          "bolukbasi-et-al-2016-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings",
+          "pham-et-al-2024-circumventing-concept-erasure-methods-for-text-to-image-generative-models",
+          "gandikota-et-al-2023-erasing-concepts-from-diffusion-models-esd",
+          "gandikota-et-al-2024-unified-concept-editing-in-diffusion-models-uce",
+          "gandikota-et-al-2024-concept-sliders-lora-adaptors-for-precise-control",
+          "gal-et-al-2022-an-image-is-worth-one-word-textual-inversion"
+        ],
+        "steering during generation rather than in the prompt": [
+          "brack-et-al-2023-sega-instructing-text-to-image-models-using-semantic-guidance",
+          "schramowski-et-al-2023-safe-latent-diffusion-mitigating-inappropriate-degeneration",
+          "karras-et-al-2024-guiding-a-diffusion-model-with-a-bad-version-of-itself",
+          "turner-et-al-2023-steering-language-models-with-activation-engineering-actadd",
+          "panickssery-et-al-2024-steering-llama-2-via-contrastive-activation-addition-caa",
+          "zou-et-al-2023-representation-engineering-a-top-down-approach-to-ai-transparency"
+        ],
+        "attention and the path from noise to picture": [
+          "hertz-et-al-2022-prompt-to-prompt-image-editing-with-cross-attention-control",
+          "kwon-et-al-2023-diffusion-models-already-have-a-semantic-latent-space-asyrp",
+          "esser-et-al-2024-scaling-rectified-flow-transformers-for-high-resolution-image-synthesis"
+        ],
+        "what a model keeps from its training, and error as material": [
+          "somepalli-et-al-2023-diffusion-art-or-digital-forgery-investigating-data-replication",
+          "carlini-et-al-2023-extracting-training-data-from-diffusion-models",
+          "pena-james-2016-a-glitch-pedagogy-exquisite-error-and-the-appeal-of-the-accidental"
+        ]
+      }
+    },
+    {
+      "id": "flow-logic",
+      "name": "Overview map",
+      "route": "/latent-lab/overview",
+      "what": "The Latent Lab's overview: how a generative run actually flows, drawn as three columns of four boxes, with the instruments marked where they reach in. Pressing a box opens it across the whole map and shows a drawing of what happens there. The page carries no explanation in prose — that is what help is for, and these are the facts it stands on.\n  DIFFUSION (images and sounds). A person writes a prompt; that is the only part nobody trained. Trained encoders turn the meanings of the words into vectors — Stable Diffusion 3.5 has three of them, the sound model one. Their outputs are not calculated with again, only assembled: one sequence that every place in the picture reads, and one pooled vector that modulates every block. That assembly is the conditioning and it stays the same for the whole run. Then a loop: the trained denoiser reads the current latent state and predicts, the scheduler is plain arithmetic with nothing learned in it and makes the next state. Both read and write inside the latent space, and there is nothing recognisable to see until the last pass. The step count is set per output config and runs from 4 to 50 — 4 for the fast image configs, 8 for Stable Audio 3, 20 for most, 25 for SD 1.5 and SD 3.5 Large, 30 for SDXL, 50 for the two oldest. The decoder is the door out, into pixels or into sound. The latent space contains no images, but all the possibilities of making images (or sounds, video, 3D).\n  TRANSFORMER (writing and chat). The context is built fresh for every run and holds everything the model can see: standing instructions, the conversation, and every word produced so far. Every word piece has a trained place in the embedding space. Blocks follow one another, dozens of them: attention lets each place read all the others, the layer after it works on each place by itself, and the next block reads the result. Sampling is plain arithmetic that draws one word piece from the probabilities at the last place. Nothing is carried from one run to the next — the context is the whole memory. In the Transformers Lab, temperature is the only sampling number a person sets; the platform's interception path hands a local model temperature, max_tokens, repetition_penalty and enable_thinking, and a cloud model temperature and max_tokens.\n  CROSSINGS (one kind of material becomes another). These do not repeat: image to text (a vision model describes what it sees), text to sound (a sound model from a description, a speech synthesiser from a sentence), image to sound (MMAudio generates for the image; ImageBind Guidance instead pulls a running sound generation towards it, and at the default settings every step is guided), and the five-step Re-enactment chain: analysis, speech recognition, speech synthesis, writing, sound. The speech-synthesis step only runs when a voice language resolves and text was found. Which of the four sound machines finishes it is decided by a hand-pick if there is one, otherwise by the second ranker and by whether any text was recognised — never by the lyrics the model wrote.\n  WHERE THE INSTRUMENTS REACH IN. Prompt: Language Understanding. Between the encoders and the conditioning: Encoder Fusion, Fusion Workbench. On the assembled vectors: Dimension Explorer, Concept Algebra, Latent Audio Synth. Inside the denoiser: Composable Diffusion, Attention Cartography. On the intermediate latent state: Denoising Archaeology. LoRA Training attaches adapters to the denoiser AND to the two CLIP text encoders — only T5 stays frozen — and SD 3.5 Large is the only trainable model. The whole image model at once: Model Comparison. Context: System Prompts, Bias Archaeology 1, Bias Archaeology 2. What a block writes back: Representation Engineering. Sampling: Randomness.",
+      "research_based": false
+    },
+    {
+      "id": "accompaniment",
+      "name": "Together",
+      "route": "/together",
+      "what": "An accompanying conversation for a group's work — before a session, during it, and afterwards. The surface is a zoomable board: provocations generated here, apparatus runs built as Canvas graphs, compositions of kept favourites, and proposed plans, each card carrying the reason it was offered. A workshop journal records the dialogue and can be paused. Pictures reach the board by upload or camera."
+    },
+    {
+      "id": "contesting",
+      "name": "Developing ideas",
+      "route": "/contesting",
+      "what": "Where aesthetic ideas are put up for contest — contested, not competed over: what is brought gets questioned, and something new can come of it. The machine states that it is a machine, does not do what it is told, and can say no. What it generates it generates on its own terms — images, sound, video or 3D objects — once the exchange has something to work from. Voice output can be switched on. It puts the assumption that a machine is always a tool up for discussion by contradicting it."
+    },
+    {
+      "id": "training",
+      "name": "LoRA Training",
+      "route": "/training",
+      "what": "Training a small adapter on the group's own uploaded images so a model learns a visual concept it did not have. Needs Advanced Mode."
+    }
+  ]
+}

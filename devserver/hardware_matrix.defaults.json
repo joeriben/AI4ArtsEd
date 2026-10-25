@@ -1,0 +1,246 @@
+{
+  "_note": "Shipped recommendation set. hardware_matrix.json is the live, UI-editable copy; this file is what the Settings UI restores when you press \"Reset to our recommendations\". Keys starting with _ are stripped on reset.",
+  "vision_presets": {
+    "vram_96": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3.8:27b"
+    },
+    "vram_48": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3.8:27b"
+    },
+    "vram_32": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:32b"
+    },
+    "vram_24": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:8b"
+    },
+    "vram_16": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:4b"
+    },
+    "vram_8": {
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:2b"
+    }
+  },
+  "llm_presets": {
+    "mistral": {
+      "label": "Mistral AI EU",
+      "EXTERNAL_LLM_PROVIDER": "mistral",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "mistral/mistral-large-latest",
+        "STAGE2_INTERCEPTION_MODEL": "mistral/mistral-large-latest",
+        "STAGE2_OPTIMIZATION_MODEL": "mistral/mistral-large-latest",
+        "STAGE3_MODEL": "mistral/mistral-large-latest",
+        "CHAT_HELPER_MODEL": "mistral/mistral-large-latest",
+        "RESONA_MODEL": "mistral/mistral-large-latest",
+        "PERSONA_MODEL": "mistral/mistral-large-latest",
+        "CODING_MODEL": "mistral/codestral-latest"
+      },
+      "DSGVO_NOTE": "Recorded as compliant. Source: provider data processing addendum, https://legal.mistral.ai/terms/data-processing-addendum",
+      "FALLBACK_ENABLED": true
+    },
+    "anthropic": {
+      "label": "Anthropic Direct API",
+      "EXTERNAL_LLM_PROVIDER": "anthropic",
+      "DSGVO_CONFORMITY": false,
+      "models": {
+        "STAGE1_TEXT_MODEL": "anthropic/claude-sonnet-5",
+        "STAGE2_INTERCEPTION_MODEL": "anthropic/claude-sonnet-5",
+        "STAGE2_OPTIMIZATION_MODEL": "anthropic/claude-sonnet-5",
+        "STAGE3_MODEL": "anthropic/claude-sonnet-5",
+        "CHAT_HELPER_MODEL": "anthropic/claude-sonnet-5",
+        "RESONA_MODEL": "anthropic/claude-sonnet-5",
+        "PERSONA_MODEL": "anthropic/claude-opus-5",
+        "CODING_MODEL": "anthropic/claude-sonnet-5"
+      },
+      "DSGVO_NOTE": "Recorded as not compliant: processing in the US, no EU processing arrangement filed here.",
+      "FALLBACK_ENABLED": false
+    },
+    "openai": {
+      "label": "OpenAI Direct API",
+      "EXTERNAL_LLM_PROVIDER": "openai",
+      "DSGVO_CONFORMITY": false,
+      "models": {
+        "STAGE1_TEXT_MODEL": "openai/gpt-5.6-terra",
+        "STAGE2_INTERCEPTION_MODEL": "openai/gpt-5.6-terra",
+        "STAGE2_OPTIMIZATION_MODEL": "openai/gpt-5.6-terra",
+        "STAGE3_MODEL": "openai/gpt-5.6-terra",
+        "CHAT_HELPER_MODEL": "openai/gpt-5.6-terra",
+        "RESONA_MODEL": "openai/gpt-5.6-terra",
+        "PERSONA_MODEL": "openai/gpt-5.6-terra",
+        "CODING_MODEL": "openai/gpt-5.6-terra"
+      },
+      "DSGVO_NOTE": "Recorded as not compliant: processing in the US, no EU processing arrangement filed here.",
+      "FALLBACK_ENABLED": false
+    },
+    "ionos": {
+      "label": "IONOS AI Model Hub (EU, DSGVO)",
+      "EXTERNAL_LLM_PROVIDER": "ionos",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "ionos/openai/gpt-oss-120b",
+        "STAGE2_INTERCEPTION_MODEL": "ionos/openai/gpt-oss-120b",
+        "STAGE2_OPTIMIZATION_MODEL": "ionos/openai/gpt-oss-120b",
+        "STAGE3_MODEL": "ionos/openai/gpt-oss-120b",
+        "CHAT_HELPER_MODEL": "ionos/openai/gpt-oss-120b",
+        "RESONA_MODEL": "ionos/openai/gpt-oss-120b",
+        "PERSONA_MODEL": "ionos/openai/gpt-oss-120b",
+        "CODING_MODEL": "ionos/openai/gpt-oss-120b"
+      },
+      "DSGVO_NOTE": "Recorded as compliant: IONOS AI Model Hub, servers in Berlin. No source document is filed here -- replace this line with one.",
+      "FALLBACK_ENABLED": false
+    },
+    "mammouth": {
+      "label": "Mammouth AI (EU, DSGVO)",
+      "EXTERNAL_LLM_PROVIDER": "mammouth",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "mammouth/claude-sonnet-5",
+        "STAGE2_INTERCEPTION_MODEL": "mammouth/claude-sonnet-5",
+        "STAGE2_OPTIMIZATION_MODEL": "mammouth/claude-sonnet-5",
+        "STAGE3_MODEL": "mammouth/claude-sonnet-5",
+        "CHAT_HELPER_MODEL": "mammouth/claude-sonnet-5",
+        "RESONA_MODEL": "mammouth/claude-sonnet-5",
+        "PERSONA_MODEL": "mammouth/claude-opus-5",
+        "CODING_MODEL": "mammouth/qwen3-coder-plus"
+      },
+      "chat_fallback_models": [
+        "gemini-3.6-flash",
+        "glm-5.2"
+      ],
+      "DSGVO_NOTE": "Recorded as compliant. Source: provider privacy policy, https://info.mammouth.ai/docs/privacy-policy/",
+      "FALLBACK_ENABLED": true,
+      "chat_models": [
+        "mammouth/mistral-large-3",
+        "mammouth/deepseek-v4-pro",
+        "mammouth/glm-5.3",
+        "mammouth/kimi-k3",
+        "mammouth/claude-sonnet-5",
+        "mammouth/gemini-3.7-flash",
+        "mammouth/gpt-5.6-terra"
+      ]
+    },
+    "openrouter": {
+      "label": "OpenRouter (NOT DSGVO, EU routing available)",
+      "EXTERNAL_LLM_PROVIDER": "openrouter",
+      "DSGVO_CONFORMITY": false,
+      "models": {
+        "STAGE1_TEXT_MODEL": "openrouter/~google/gemini-flash-latest",
+        "STAGE2_INTERCEPTION_MODEL": "openrouter/~google/gemini-flash-latest",
+        "STAGE2_OPTIMIZATION_MODEL": "openrouter/~google/gemini-flash-latest",
+        "STAGE3_MODEL": "openrouter/~google/gemini-flash-latest",
+        "CHAT_HELPER_MODEL": "openrouter/~anthropic/claude-sonnet-latest",
+        "RESONA_MODEL": "openrouter/~anthropic/claude-sonnet-latest",
+        "PERSONA_MODEL": "openrouter/~anthropic/claude-opus-latest",
+        "CODING_MODEL": "openrouter/qwen/qwen3-coder-plus"
+      },
+      "DSGVO_NOTE": "Recorded as not compliant: US company. EU server routing is configurable, but is not configured here.",
+      "FALLBACK_ENABLED": false
+    },
+    "bedrock": {
+      "label": "AWS Bedrock",
+      "EXTERNAL_LLM_PROVIDER": "bedrock",
+      "DSGVO_CONFORMITY": null,
+      "DSGVO_NOTE": "AWS Bedrock is compliant only if the AWS account is restricted to European regions -- otherwise it is not. This platform cannot see that account, so nothing is recorded here in either direction. Record the status once the account is set up that way.",
+      "models": {},
+      "FALLBACK_ENABLED": false
+    }
+  },
+  "local_llm_presets": {
+    "vram_96": {
+      "label": "Local (96 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:27b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:27b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:27b",
+        "STAGE3_MODEL": "local/qwen3.5:27b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:27b",
+        "RESONA_MODEL": "local/qwen3.5:27b",
+        "PERSONA_MODEL": "local/qwen3.5:27b",
+        "CODING_MODEL": "local/devstral:24b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    },
+    "vram_48": {
+      "label": "Local (48 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:27b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:27b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:27b",
+        "STAGE3_MODEL": "local/qwen3.5:27b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:27b",
+        "RESONA_MODEL": "local/qwen3.5:27b",
+        "PERSONA_MODEL": "local/qwen3.5:27b",
+        "CODING_MODEL": "local/devstral:24b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    },
+    "vram_32": {
+      "label": "Local (32 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:27b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:27b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:27b",
+        "STAGE3_MODEL": "local/qwen3.5:27b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:27b",
+        "RESONA_MODEL": "local/qwen3.5:27b",
+        "PERSONA_MODEL": "local/qwen3.5:27b",
+        "CODING_MODEL": "local/devstral:24b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    },
+    "vram_24": {
+      "label": "Local (24 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:9b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:9b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:9b",
+        "STAGE3_MODEL": "local/qwen3.5:9b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:9b",
+        "RESONA_MODEL": "local/qwen3.5:9b",
+        "PERSONA_MODEL": "local/qwen3.5:9b",
+        "CODING_MODEL": "local/qwen3.5:9b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    },
+    "vram_16": {
+      "label": "Local (16 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:9b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:9b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:9b",
+        "STAGE3_MODEL": "local/qwen3.5:9b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:9b",
+        "RESONA_MODEL": "local/qwen3.5:9b",
+        "PERSONA_MODEL": "local/qwen3.5:9b",
+        "CODING_MODEL": "local/qwen3.5:9b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    },
+    "vram_8": {
+      "label": "Local (8 GB VRAM)",
+      "EXTERNAL_LLM_PROVIDER": "none",
+      "DSGVO_CONFORMITY": true,
+      "models": {
+        "STAGE1_TEXT_MODEL": "local/qwen3.5:4b",
+        "STAGE2_INTERCEPTION_MODEL": "local/qwen3.5:4b",
+        "STAGE2_OPTIMIZATION_MODEL": "local/qwen3.5:4b",
+        "STAGE3_MODEL": "local/qwen3.5:4b",
+        "CHAT_HELPER_MODEL": "local/qwen3.5:4b",
+        "RESONA_MODEL": "local/qwen3.5:4b",
+        "PERSONA_MODEL": "local/qwen3.5:4b",
+        "CODING_MODEL": "local/qwen3.5:4b"
+      },
+      "DSGVO_NOTE": "Runs on this machine. Nothing leaves the installation."
+    }
+  }
+}

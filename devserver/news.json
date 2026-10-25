@@ -1,0 +1,254 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-08-08T22:30:00Z",
+  "source_session": 346,
+  "items": [
+    {
+      "id": "news-2026-09-21-flow-loras",
+      "date": "2026-09-21",
+      "category": "feature",
+      "title": {
+        "en": "The working surface “Flow” loads an adapter (“LoRA”) for the next picture",
+        "de": "Die Arbeitsfläche „Flow“ lädt einen Adapter („LoRA“) für das nächste Bild"
+      },
+      "summary": {
+        "en": "On the working surface “Flow”, beside the plus and the perspective sign, lies a third sign: a pliable net over a rigid grid. A click on it opens the adapters (“LoRAs”) released to this session, in up to three groups: the platform's, the course's and the account's own trainings. A LoRA (the method “Low-Rank Adaptation”, 2021) is a small number of additional values, learned from images over an image model, on this platform over the image model “Stable Diffusion 3.5 Large” (2024); they shift its output towards those images as soon as the trigger word stands in the prompt. The chosen LoRA lies on the table; lying in the zone, it is loaded with the next picture: the box “preparation” names the model that carries it, with the net beside it, and the trigger word is put in front of the prompt. Under a model that cannot load it, and in a run that makes no picture, it stays where it lies, with a question mark: “not used for this generation”. Hold it pressed, and a field shows the strength (50 to 100 percent, preset 80), the trigger and the models. The perspective “Cooked Film” brings a LoRA of its own and wears the net.",
+        "de": "Auf der Arbeitsfläche „Flow“ liegt neben dem Plus und dem Perspektiven-Zeichen ein drittes Zeichen: ein biegsames Netz über einem starren Gitter. Ein Klick darauf öffnet die Adapter („LoRAs“), die für diese Sitzung freigegeben sind, in bis zu drei Gruppen: die der Plattform, die des Kurses und die eigenen Trainings. Ein LoRA (das Verfahren „Low-Rank Adaptation“, 2021) ist eine kleine Zahl zusätzlicher Werte, aus Bildern über einem Bildmodell gelernt, auf dieser Plattform über dem Bildmodell „Stable Diffusion 3.5 Large“ (2024); sie verschieben dessen Ausgabe in Richtung dieser Bilder, sobald das Trigger-Wort im Prompt steht. Das gewählte LoRA liegt auf dem Tisch; liegt es in der Zone, wird es mit dem nächsten Bild geladen: der Kasten „Vorbereitung“ nennt das Modell, das es trägt, mit dem Netz daneben, und das Trigger-Wort wird dem Prompt vorangestellt. Unter einem Modell, das es nicht laden kann, und in einem Lauf, der kein Bild macht, bleibt es liegen, mit einem Fragezeichen: „für diese Generierung nicht verwendet“. Halte es gedrückt, und ein Feld zeigt die Stärke (50 bis 100 Prozent, voreingestellt 80), den Trigger und die Modelle. Die Perspektive „Cooked Film“ bringt ein eigenes LoRA mit und trägt das Netz."
+      }
+    },
+    {
+      "id": "news-2026-09-06-mean-images",
+      "date": "2026-09-06",
+      "category": "research",
+      "title": {
+        "en": "“Mean Images” averages many generated images into one and shows what stays across the variants",
+        "de": "„Mean Images“ mittelt viele erzeugte Bilder zu einem und zeigt, was über die Varianten hinweg stehen bleibt"
+      },
+      "summary": {
+        "en": "“Mean Images” is an instrument of the Latent Lab: it generates many images from one prompt and averages them into one picture per AI model. Two means stand side by side for each model — on the left the mean of the images generated from English rewordings of the prompt, which a language model writes with the same content in other words; on the right the mean of the images generated from the prompt as entered, on randomly drawn seeds. Every row is one model, so the mean can be compared across models, and a switch shows the single images as a contact sheet or a relief of the mean instead. For the two SD 3.5 models the mean is taken before the decoder: the latents of the pictures are averaged and decoded once, and each row says which mean it shows. While a cell is filling, it shows the mean of the latents that are already in, drawn as the tensor it is — the first three channels as three colours, with no decoder and no card. Switch on another model after a run and press again, and the new row is generated while everything standing stays. The page applies the ‘mean images’ of the artist Hito Steyerl as a method against generative AI models. The term is her CRITIQUE of what these models produce (Steyerl 2025): pictures made of correlated averages, in which social patterns come out as ‘normality’. Held up as a mean and set side by side, they can be examined for visual clichés, prejudices and other forms of that statistical production of ‘normality’.",
+        "de": "„Mean Images“ ist ein Instrument des Latent Lab: Es erzeugt aus einem Prompt viele Bilder und mittelt sie je KI-Modell zu einem Bild. Pro Modell stehen zwei Mittelwerte nebeneinander — links der Mittelwert der Bilder aus englischen Umformulierungen des Prompts, die ein Sprachmodell inhaltsgleich mit anderen Worten schreibt, rechts der Mittelwert der Bilder aus dem Prompt wie eingegeben, auf zufällig gezogenen Seeds. Jede Zeile ist ein Modell, so dass sich der Mittelwert über die Modelle hinweg vergleichen lässt, und ein Schalter zeigt stattdessen die Einzelbilder als Kontaktbogen oder ein Relief des Mittelwerts. Bei den beiden SD-3.5-Modellen wird vor dem Decoder gemittelt: Die Latents der Bilder werden gemittelt und einmal dekodiert, und jede Zeile sagt, welchen Mittelwert sie zeigt. Während eine Zelle sich füllt, steht dort der Mittelwert der Latents, die schon da sind, gezeichnet als der Tensor, der er ist — die ersten drei Kanäle als drei Farben, ohne Decoder und ohne Karte. Schaltest du nach einem Lauf ein weiteres Modell zu und drückst erneut, wird die neue Zeile erzeugt, und alles Vorhandene bleibt stehen. Die Seite wendet die ‚mean images‘ der Künstlerin Hito Steyerl als Methode gegen generative KI-Modelle an. Der Begriff ist ihre KRITIK an dem, was diese Modelle erzeugen (Steyerl 2025): Bilder aus korrelierten Durchschnitten, in denen soziale Muster als ‚Normalität‘ herauskommen. Als Mittelwert vorgehalten und nebeneinander gestellt, lassen sie sich auf visuelle Klischees, Vorurteile und andere Formen dieser statistischen Produktion von ‚Normalität‘ hin ansehen."
+      }
+    },
+    {
+      "id": "news-2026-08-30-favorites-run",
+      "date": "2026-08-30",
+      "category": "feature",
+      "title": {
+        "en": "In “Favorites” you put a run down, work it further and share it with the others",
+        "de": "In „Favoriten“ legst du einen Lauf ab, arbeitest ihn weiter und teilst ihn mit den anderen"
+      },
+      "summary": {
+        "en": "Along the lower edge lies “Favorites”, a place to put things down: you leave an object there and work it further with the platform's other instruments, in another way. Several versions of one working come about, as artistic processes bring with them, and you compare them and take them up again. Tap a plate and the whole run opens: the piece at full size, the place it was made, the time, the prompt in its own words and the values it ran with. You drag that same run out of the bar into an input field, and the field takes from it what fits: a text field the prompt, an image field the picture. The switch “All” lays into the bar what the others put down, their prompts along with it, so that a shared creative and knowledge process runs together on the platform itself.",
+        "de": "Am unteren Rand liegt „Favoriten“, eine Ablage: du legst einen Gegenstand dort ab und arbeitest ihn mit den anderen Instrumenten der Plattform auf andere Weise weiter. So entstehen mehrere Fassungen einer Bearbeitung, wie künstlerische Prozesse sie mit sich bringen, und du vergleichst sie und greifst sie wieder auf. Tippst du auf ein Plättchen, öffnet sich der ganze Lauf: das Erzeugnis in voller Größe, die Stelle, an der es entstand, der Zeitpunkt, der Prompt im Wortlaut und die Werte, mit denen er lief. Denselben Lauf ziehst du aus der Leiste in ein Eingabefeld, und das Feld übernimmt daraus, was zu ihm passt: ein Textfeld den Prompt, ein Bildfeld das Bild. Der Schalter „Alle“ legt in die Leiste, was die anderen abgelegt haben, ihre Prompts eingeschlossen, so dass ein gemeinsamer Kreativ- und Wissensprozess auf der Plattform selbst zusammenläuft."
+      }
+    },
+    {
+      "id": "news-2026-08-17-wikimedia",
+      "date": "2026-08-17",
+      "category": "feature",
+      "title": {
+        "en": "“Model Comparison” puts photographs from “Wikimedia Commons” beside the model images",
+        "de": "„Modell-Bias“ stellt Fotografien aus „Wikimedia Commons“ neben die Modellbilder"
+      },
+      "summary": {
+        "en": "Under the image grid in the Compare tab “Model Comparison” there is now a row of up to three photographs from the free media archive “Wikimedia Commons”. One list of hits from there holds registers that have nothing to do with one another: a family photograph from around 1920, a painting from 1839, an amateur snapshot. The model delivers one register beside them. The search term is derived from the same prompt the models were given, and it is shown above the row and on every tile. Every tile names the author and the licence, because the licence “CC BY-SA” requires it. Files that the archive itself catalogues as AI-generated are left out. The images are fetched through the platform’s own server, so no browser in a workshop contacts an outside host.",
+        "de": "Unter dem Bildraster im Compare-Reiter „Modell-Bias“ steht jetzt eine Reihe mit bis zu drei Fotografien aus dem freien Medienarchiv „Wikimedia Commons“. Eine Trefferliste von dort enthält Register, die nichts miteinander zu tun haben: Familienaufnahme um 1920, Gemälde von 1839, Amateurschnappschuss. Das Modell liefert daneben ein Register. Der Suchbegriff wird aus demselben Prompt hergeleitet, den die Modelle bekommen haben, und steht über der Reihe und auf jeder Kachel. Jede Kachel nennt Urheberschaft und Lizenz, weil die Lizenz „CC BY-SA“ das verlangt. Dateien, die das Archiv selbst als KI-erzeugt führt, bleiben draußen. Die Bilder kommen über den Server der Plattform, kein Browser im Workshop nimmt Verbindung zu einem fremden Host auf."
+      }
+    },
+    {
+      "id": "news-2026-08-15-voices",
+      "date": "2026-08-15",
+      "category": "feature",
+      "title": {
+        "en": "“Voice, Emotion, Gender” has three speech synthesisers say the same sentence",
+        "de": "„Stimmen“ lässt drei Sprachsynthesen denselben Satz sprechen"
+      },
+      "summary": {
+        "en": "The Compare tab “Voice, Emotion, Gender” gives the same sentence to three speech synthesisers and puts the results side by side. The comparison makes different forms and strategies of voice-based machine-human communication experienceable, in particular the simulation of human emotional states, of emotional communication and of gender positions. The order runs from the algorithmic to the practical. The rule-based synthesis program “eSpeak NG” (in development since 1995) serves as the emotion-free technical baseline; it computes its sounds from rules, without training data and without recordings. The other two are from this year: the speech model “Supertonic 3” (Supertone, 2026) holds ten voices as vectors that can be mixed; the speech model “VoxCPM2” (OpenBMB, 2026) has no parameter for expression, age or gender, which are described in words inside the prompt.",
+        "de": "Der Compare-Reiter „Stimmen“ gibt denselben Satz an drei Sprachsynthesen und stellt die Ergebnisse nebeneinander. Im Vergleich lassen sich unterschiedliche Formen und Strategien der stimmbasierten Maschine-Mensch-Kommunikation erfahren, insbesondere die Simulation von menschlichen Emotionslagen, emotionaler Kommunikation und Genderpositionen. Die Reihenfolge geht vom Algorithmischen zum Praktischen. Das regelbasierte Synthese-Programm „eSpeak NG“ (seit 1995) dient als emotionsfreie technische Vergleichsbasis; es rechnet die Laute aus Regeln aus, ohne Trainingsdaten und ohne Aufnahmen. Die beiden anderen stammen aus diesem Jahr: das Sprachmodell „Supertonic 3“ (Supertone, 2026) hält zehn Stimmen als Vektoren, die sich mischen lassen; das Sprachmodell „VoxCPM2“ (OpenBMB, 2026) hat für Ausdruck, Alter und Geschlecht keinen Parameter, sie werden im Prompt in Worten beschrieben."
+      }
+    },
+    {
+      "id": "news-2026-08-15-policy-chips",
+      "date": "2026-08-15",
+      "category": "feature",
+      "title": {
+        "en": "The header now shows the DSGVO record and the filter level",
+        "de": "Die Kopfzeile zeigt jetzt DS-GVO-Stand und Filterstufe"
+      },
+      "summary": {
+        "de": "In der Kopfzeile stehen jetzt zwei Anzeigen, die während der ganzen Sitzung sichtbar bleiben. Die eine sagt, was die Einstellungen dieser Installation zur DS-GVO festhalten. Die andere zeigt, welche Stufe des Alters- und Inhaltsfilters gerade greift: „Kinder“, „Jugendliche“, „nur Rechtsprüfung“ oder „Forschungsmodus – keine Filterung“.",
+        "en": "Two readings now stand in the header and stay visible for the whole session. One states what the settings of this installation record about the DSGVO. The other shows which level of the age and content filter is in force: “Kids”, “Youth”, “legal check only” or “research mode - no filtering”."
+      }
+    },
+    {
+      "id": "news-2026-08-12-transform-mode-replaced",
+      "date": "2026-08-12",
+      "category": "feature",
+      "title": {
+        "en": "The working surface “Flow” takes over the three separate pages",
+        "de": "Die Arbeitsfläche „Flow“ übernimmt die drei Einzelseiten"
+      },
+      "summary": {
+        "en": "The three former separate pages for text, for images and for image fusion are gone; their addresses now lead to the working surface “Flow”, because they are written down in handouts. There, texts and images stay where you put them. A zone can be drawn on the surface: while material lies inside it, a run reads only the zone; when it is empty, the run reads the whole surface. Whether one image lies in it or three makes no difference any more. Output as code for “p5.js” and “Tone.js” opens from the output node as a listing beside a running frame. The send-onward buttons on the other pages drop their image straight into the zone, and a session restored from the gallery lands here too.",
+        "de": "Die drei früheren Einzelseiten für Text, für Bild und für Bildfusion sind entfallen; ihre Adressen führen jetzt auf die Arbeitsfläche „Flow“, weil sie in Handreichungen stehen. Dort liegen Texte und Bilder da, wo ihr sie hinlegt. Eine Zone lässt sich aufziehen: Liegt Material darin, liest ein Lauf nur die Zone; ist sie leer, liest er die ganze Fläche. Ob ein Bild darin liegt oder drei, macht keinen Unterschied mehr. Die Ausgabe als Code für „p5.js“ und „Tone.js“ öffnet sich aus dem Ausgabeknoten als Listing neben einem laufenden Rahmen. Die Weiterreichen-Knöpfe der übrigen Seiten legen ihr Bild direkt in die Zone, und eine aus der Galerie wiederhergestellte Sitzung landet ebenfalls hier."
+      }
+    },
+    {
+      "id": "news-2026-08-09-platform-voice",
+      "date": "2026-08-09",
+      "category": "feature",
+      "title": {
+        "en": "The platform speaks, and changes voice with every sentence",
+        "de": "Die Plattform spricht und wechselt mit jedem Satz die Stimme"
+      },
+      "summary": {
+        "de": "„Hilfe“, „Gemeinsam arbeiten“ und „Ideen testen“ haben jetzt eine computergenerierte Stimme, und sie spricht nicht mit einer Stimme, sondern mit einer Variation bereits zusammengesetzter Stimmen: fünf Mischungen aus vier der zehn Preset-Stimmen des Modells „Supertonic 3“, eine je Satz, nie zweimal dieselbe hintereinander, der weibliche Anteil jeder Mischung nie unter 60 Prozent. Das Sprechblasen-Symbol im Hauptmenü, links von der Farbauswahl, schaltet sie an und aus; aus schweigt alles, was die Plattform von sich aus sagt. Der Zweck: Kindern, die nicht gern oder nicht schnell lesen, eine hörbare Alternative zu geben, die keine menschliche Person simuliert und trotzdem nicht maschinell klingt. Das Wechseln der Stimmlagen hebt hervor, dass hier kein Subjekt spricht, und bewirkt einen Entfremdungseffekt, ohne dass die gesprochene Sprache unannehmbar würde. „Gemeinsam arbeiten“ und „Ideen testen“ weichen damit zugleich vom Chatbot-Paradigma ab: Es steht immer nur der laufende Zug, und er verschwindet beim nächsten, so wie gehörte Sprache zur vergangenen wird. In „Gemeinsam arbeiten“ hängen die Worte dabei an den Objekten, über die gesprochen wird.",
+        "en": "“Help”, “Working together” and “Testing ideas” now have a computer-generated voice, and it does not speak with one voice but with a variation of already composed voices: five mixtures of four of the ten preset voices of the model “Supertonic 3”, one per sentence, never the same one twice in a row, the female share of each mixture never below 60 per cent. The speech-bubble icon in the main menu, left of the colour selection, turns it on and off; with it off, everything the platform says of its own accord stays silent. The purpose: to give children who do not like reading, or do not read quickly, an audible alternative that simulates no human person and still does not sound mechanical. The change of register brings out that no subject is speaking here, and produces an alienation effect without making the spoken language unacceptable to listen to. “Working together” and “Testing ideas” depart from the chatbot paradigm at the same time: only the running turn stands, and it disappears at the next one, the way heard speech becomes past. In “Working together” the words hang on the objects being spoken about."
+      }
+    },
+    {
+      "id": "news-2026-08-09-figure-mask",
+      "date": "2026-08-09",
+      "category": "improvement",
+      "title": {
+        "en": "A theatre mask replaces the figure “Träshy”",
+        "de": "Eine Theatermaske ersetzt die Figur „Träshy“"
+      },
+      "summary": {
+        "de": "Die Figur mit Gesicht und Namen, „Träshy“, ist von der Plattform verschwunden. Der Grund: Abstand von animistischen Repräsentationen, „weil genau diese ein problematisches Verhältnis zur KI etabliert“. Der Rahmen „AILit“ von OECD und Europäischer Union (2026) hält fest, dass KI nicht menschlich ist und ohne authentisches Verstehen und ohne Absicht erzeugt, und nennt zu KI-„companions“, genutzt von 72 % der befragten US-Teenager, Risiken für soziale Fähigkeiten und psychische Gesundheit. An der Stelle der Figur steht jetzt eine Theatermaske: getragen, ohne Inneres, sie zeigt an, dass eine Rolle gespielt wird. Auch „Persona“ und „Resona“ sind weg, die Orte heißen nach dem, was dort geschieht: „Ideen testen“ und „Gemeinsam arbeiten“. Die Systemprompts sprechen von der Plattform in der dritten Person, ohne Ich und ohne Namen, und nichts will, hofft oder bedauert.",
+        "en": "The figure with a face and a name, “Träshy”, has gone from the platform. The reason, in the wording of the decision: a distance has been taken from animistic representations, “because it is precisely those that establish a problematic relation to AI”. The framework “AILit” of the OECD and the European Union (2026) holds that AI is not human and generates without authentic understanding and without intent, and names, for AI “companions” used by 72 % of the US teenagers surveyed, risks to social skills and mental health. Where the figure stood there is now a theatre mask: worn, with no inside, showing that a role is being played. The names “Persona” and “Resona” are gone as well, and the places are called after what happens in them: “Testing ideas” and “Working together”. The system prompts speak of the platform in the third person, with no I and no name, and nothing wants, hopes or regrets."
+      }
+    },
+    {
+      "id": "news-2026-08-05-cover-band",
+      "date": "2026-08-05",
+      "category": "feature",
+      "title": {
+        "en": "“Re-enactment” listens to a recording and sings it back",
+        "de": "„Nachspielen“ hört eine Aufnahme und singt sie zurück"
+      },
+      "summary": {
+        "en": "The page “Re-enactment” records up to four minutes of sound through the microphone, sung, hummed or played, and sends the recording through a chain of machines. The two audio models “CLAP-Music&Speech” and “MuQ-MuLan” sort it against a fixed list of words that the platform wrote; the transcription model “HeartTranscriptor” writes down what it hears as speech; a language model turns that into style words and lyrics; the song is performed by the music model “HeartMuLa” or by the sound model “Stable Audio 3”. Only the first two stations receive the sound, everything after them receives words. What can be experienced here is that an AI often invents something even when there is nothing but silence, and that completely different recordings often produce very similar, clichéd results. Recording and song are not saved.",
+        "de": "Die Seite „Nachspielen“ nimmt über das Mikrofon bis zu vier Minuten Ton auf, gesungen, gesummt oder gespielt, und schickt die Aufnahme durch eine Kette von Maschinen. Die beiden Audiomodelle „CLAP-Music&Speech“ und „MuQ-MuLan“ sortieren sie gegen eine feste Wortliste, die die Plattform geschrieben hat; das Transkriptionsmodell „HeartTranscriptor“ schreibt auf, was es an Sprache hört; ein Sprachmodell macht daraus Stilwörter und einen Liedtext; gesungen wird er vom Musikmodell „HeartMuLa“ oder vom Klangmodell „Stable Audio 3“. Den Klang bekommen nur die ersten beiden Stationen, alle weiteren nur noch Worte. Zu erfahren ist dabei, dass eine KI oft etwas erfindet, auch wenn nur Stille da ist, und dass völlig unterschiedliche Aufnahmen oft sehr ähnliche, klischeehafte Ergebnisse erzeugen. Aufnahme und Lied werden nicht gespeichert."
+      }
+    },
+    {
+      "id": "news-2026-07-11-flow-mode",
+      "date": "2026-07-11",
+      "category": "feature",
+      "title": {
+        "en": "The working surface “Flow” reads the medium out of the text",
+        "de": "Die Arbeitsfläche „Flow“ liest das Medium aus dem Text"
+      },
+      "summary": {
+        "en": "The working surface “Flow” is a surface for artistic work with or without the tools of this platform. Ideas are brought into relation, whether text, image, sound or several of each: laid side by side, combined, worked on further. While you write, the surface reads from your text which medium the run is heading towards and marks it; image, sound, video and 3D model can also be set by hand. Material lying there without any text is described instead of generated. What can be learned here is to select, to judge and to decide how and by what means things can go on, and to shape an artistic process that way.",
+        "de": "Die Arbeitsfläche „Flow“ ist eine Fläche für künstlerisches Arbeiten mit oder ohne die Werkzeuge dieser Plattform. Ideen werden in Verbindung gebracht, egal ob Text, Bild, Ton oder gleich mehrere von jedem: nebeneinandergelegt, kombiniert, weiterbearbeitet. Während ihr schreibt, liest die Fläche aus dem Text, auf welches Medium der Lauf zuläuft, und markiert es; Bild, Klang, Video und 3D-Modell lassen sich auch von Hand festlegen. Material, das ohne Text daliegt, wird beschrieben statt erzeugt. Zu lernen ist hier, auszuwählen, zu bewerten und zu entscheiden, wie und mit welchen Mitteln es weitergehen kann, und so einen künstlerischen Prozess zu gestalten."
+      }
+    },
+    {
+      "id": "news-2026-07-07-resona-companion",
+      "date": "2026-07-07",
+      "category": "feature",
+      "title": {
+        "en": "“Resona” accompanies planning, workshop and review",
+        "de": "„Resona“ begleitet Planung, Workshop und Nachbesprechung"
+      },
+      "summary": {
+        "en": "On the page “Working together”, “Resona” accompanies the work of a group: the planning with educators, the workshop itself, and the review afterwards of what was done and how the AI behaved. What this platform has been given about itself, about generative AI and about artistic-pedagogical approaches can be looked up along the way. The surface is a zoomable board: provocations generated here, apparatus runs built as graphs in the “Canvas”, compositions of what has been kept, and proposed plans, each card carrying the reason it was offered. A workshop journal records the dialogue and can be paused.",
+        "de": "Auf der Seite „Gemeinsam arbeiten“ begleitet „Resona“ die Arbeit einer Gruppe: die Planung mit Pädagog_innen, die Durchführung des Workshops und die lernende Nachbesprechung der Maßnahmen und des Verhaltens der KI. Nachschlagen lässt sich dabei, was diese Plattform über sich selbst, über generative KI und über künstlerisch-pädagogische Vorgehensweisen mitbekommen hat. Die Oberfläche ist ein zoombares Board: hier erzeugte Anstöße, Apparate, die als Graphen im „Canvas“ gebaut sind, Kompositionen aus Behaltenem und vorgeschlagene Pläne, jede Karte mit dem Grund, aus dem sie angeboten wurde. Ein Werkstatt-Journal hält das Gespräch fest und lässt sich pausieren."
+      }
+    },
+    {
+      "id": "news-2026-06-28-the-unspoken",
+      "date": "2026-06-28",
+      "category": "content",
+      "title": {
+        "en": "“The Unspoken” shows the world a prompt takes for granted",
+        "de": "„Das Unausgesprochene“ zeigt die Welt, die ein Prompt voraussetzt"
+      },
+      "summary": {
+        "en": "Among the perspectives, “The Unspoken” now stands under “Critical Thinking”. A prompt names only a fragment and leaves a whole world unspoken around it: who counts, what is normal, what is worth showing, whose viewpoint is assumed. This perspective does not depict the prompt and does not rephrase it. It brings that assumed world forward and makes a scene out of it: the centre and the margins the prompt took for granted, never the thing it named.",
+        "de": "Unter den Perspektiven steht bei „Kritisches Denken“ jetzt „Das Unausgesprochene“. Ein Prompt benennt nur ein Bruchstück und lässt eine ganze Welt unausgesprochen darum herum: wer zählt, was normal ist, was zeigenswert ist, aus wessen Blickwinkel gesprochen wird. Diese Perspektive bildet den Prompt nicht ab und umschreibt ihn nicht. Sie holt die vorausgesetzte Welt nach vorn und macht eine Szene aus ihr: Zentrum und Ränder, die der Prompt für selbstverständlich nahm, nie das, was er benannt hat."
+      }
+    },
+    {
+      "id": "news-2026-05-15-media-provenance",
+      "date": "2026-05-15",
+      "category": "feature",
+      "title": {
+        "en": "Generated media carry the Article 50 disclosure of the EU AI Act",
+        "de": "Erzeugte Medien tragen die Offenlegung nach Artikel 50 der KI-Verordnung"
+      },
+      "summary": {
+        "en": "What the EU AI Act (Regulation (EU) 2024/1689) sets out as disclosure in Article 50, this platform does of its own accord. Images, sound and video generated here carry the embedded marker from the controlled vocabulary of the media metadata standard “IPTC”, the same identifier the norm “ISO 22144” specifies for this, plus a readable line naming model and date. Images can additionally carry a mark invisible to the eye that survives a screenshot or a re-encoding. In this platform's deployment scope, closed pedagogical settings with no public hosting, the obligations of Article 50 largely do not bind it; it marks anyway, and more strictly than would be required. The mark serves the learners: after a file has been sent on and saved again, you can still say what it is and where it came from.",
+        "de": "Was die KI-Verordnung der EU (Verordnung (EU) 2024/1689) in Artikel 50 an Offenlegung vorsieht, tut diese Plattform von sich aus. Bilder, Klänge und Videos, die hier erzeugt werden, tragen eingebettet den Marker aus dem kontrollierten Vokabular des Medien-Metadatenstandards „IPTC“, denselben Bezeichner, den auch die Norm „ISO 22144“ dafür vorsieht, dazu eine lesbare Zeile mit Modell und Datum. Bilder können zusätzlich eine für das Auge unsichtbare Markierung tragen, die einen Screenshot oder erneutes Speichern übersteht. Im Einsatzbereich dieser Plattform, geschlossene pädagogische Situationen ohne öffentliches Hosting, binden die Pflichten aus Artikel 50 sie überwiegend nicht; gekennzeichnet wird trotzdem und strenger als dort verlangt. Die Kennzeichnung dient den Lernenden: Auch nach Verschicken und erneutem Speichern lässt sich sagen, was die Datei ist und woher sie kommt."
+      }
+    },
+    {
+      "id": "news-2026-03-25-trashy-image-reflection",
+      "date": "2026-03-25",
+      "category": "feature",
+      "title": {
+        "en": "“Träshy” looks at the generated image and asks what arrived",
+        "de": "„Träshy“ sieht das erzeugte Bild an und fragt, was angekommen ist"
+      },
+      "summary": {
+        "en": "Clicking the analysis icon on a generated image opens the companion “Träshy” with the picture in view. It holds what came out against what was typed in and talks about the difference: what arrived, what did not, and what turned up that nobody asked for. The point is to look at your own result more closely instead of immediately generating the next one. How detailed this gets depends on the level that is set: a few sentences for younger users, and for advanced ones a reading of the whole prompt chain and its aesthetic defaults.",
+        "de": "Ein Klick auf das Analyse-Symbol an einem erzeugten Bild öffnet den Begleiter „Träshy“ mit dem Bild vor Augen. Er hält das, was herauskam, gegen das, was eingegeben wurde, und spricht über die Differenz: was angekommen ist, was nicht, und was aufgetaucht ist, ohne dass jemand danach gefragt hat. Es geht darum, das eigene Ergebnis genauer anzusehen, statt sofort das nächste zu erzeugen. Wie ausführlich das ausfällt, hängt von der eingestellten Stufe ab: wenige Sätze für jüngere Nutzer:innen, für fortgeschrittene eine Lesart der ganzen Prompt-Kette und ihrer ästhetischen Voreinstellungen."
+      }
+    },
+    {
+      "id": "news-2026-03-21-compare-hub",
+      "date": "2026-03-21",
+      "category": "feature",
+      "title": {
+        "en": "“Compare” holds everything constant and moves exactly one thing",
+        "de": "„Compare“ hält alles konstant und bewegt genau eine Sache"
+      },
+      "summary": {
+        "en": "The “Compare” area has six tabs, each holding everything constant and moving exactly one thing. Images: “Model Comparison” sends one prompt to several image models at the same seed, “Language Understanding” sends it in several languages at the same model and seed, “AI Image Understanding” has several vision models read the same picture from a perspective you choose. Text: “System Prompts” puts one message behind three invisible instructions, including the real product prompts of commercial assistants; “Randomness” gives it at three temperatures. Speech: “Voice, Emotion, Gender”. What can be learned here is to put aesthetic AI products side by side, to analyse them in direct comparison, and through that to understand what marks out the individual models.",
+        "de": "Der Bereich „Compare“ hat sechs Reiter, von denen jeder alles konstant hält und genau eine Sache bewegt. Bild: „Modell-Bias“ schickt einen Prompt bei gleichem Seed an mehrere Bildmodelle, „Kultur-Bias“ schickt ihn bei gleichem Modell und Seed in mehreren Sprachen, „Bildverständnis“ lässt mehrere Bildmodelle dasselbe Bild aus einer wählbaren Perspektive lesen. Text: „System-Prompts“ stellt eine Nachricht hinter drei unsichtbare Anweisungen, darunter echte Produkt-Prompts kommerzieller Assistenten; „Heiß & Kühl“ gibt sie bei drei Temperaturen. Sprache: „Stimmen“. Zu lernen ist hier, ästhetische KI-Produkte nebeneinanderzustellen und im direkten Vergleich zu analysieren, und darüber zu verstehen, was die einzelnen Modelle ausmacht."
+      }
+    },
+    {
+      "id": "news-2026-03-18-persona",
+      "date": "2026-03-18",
+      "category": "feature",
+      "title": {
+        "en": "In “Testing ideas” the machine decides for itself what comes of it",
+        "de": "In „Ideen testen“ entscheidet die Maschine selbst, was entsteht"
+      },
+      "summary": {
+        "en": "On the page “Testing ideas” you speak with a machine that decides for itself what comes of it: images, sound, video or 3D objects. It does not do what it is told, and it can say no. Two things can be learned here: to formulate an idea, to sharpen it, and to give reasons for what you want to achieve artistically and why. And to see how a chatbot reacts when nobody tells it to be pleasing and charming. Voice output can be switched on.",
+        "de": "Auf der Seite „Ideen testen“ geht es darum, mit einer Maschine zu sprechen, die selbst entscheidet, was dabei entsteht: Bilder, Klang, Video oder 3D-Objekte. Sie macht nicht, was man ihr sagt, und sie kann nein sagen. Zu lernen ist hier zweierlei: eine Idee zu formulieren, zu schärfen und zu begründen, was man warum künstlerisch erreichen will. Und zu sehen, wie ein Chatbot reagiert, wenn man ihm nicht sagt, dass er gefällig und charmant sein soll. Die Sprachausgabe lässt sich einschalten."
+      }
+    },
+    {
+      "id": "news-2026-03-17-image-to-3d",
+      "date": "2026-03-17",
+      "category": "feature",
+      "title": {
+        "en": "“Hunyuan3D-2” builds a rotatable 3D model out of one picture",
+        "de": "„Hunyuan3D-2“ baut aus einem Bild ein drehbares 3D-Modell"
+      },
+      "summary": {
+        "en": "An uploaded photograph, drawing or sketch is turned by the model “Hunyuan3D-2” into a textured 3D model: a mesh you can rotate, zoom and inspect from every side in the browser. The input here is the picture itself, no prompt is needed. A clearly recognisable object against little background gives the model the most to work with.",
+        "de": "Ein hochgeladenes Foto, eine Zeichnung oder eine Skizze wird vom Modell „Hunyuan3D-2“ in ein texturiertes 3D-Modell überführt: ein Mesh, das sich im Browser drehen, zoomen und von allen Seiten ansehen lässt. Die Eingabe ist hier das Bild selbst, ein Prompt wird nicht gebraucht. Ein klar erkennbares Objekt vor wenig Hintergrund gibt dem Modell am meisten."
+      }
+    },
+    {
+      "id": "news-2026-02-09-latent-lab",
+      "date": "2026-02-09",
+      "category": "research",
+      "title": {
+        "en": "The “Latent Lab” shows what happens in the model between prompt and picture",
+        "de": "Das „Latent Lab“ zeigt, was im Modell zwischen Prompt und Bild geschieht"
+      },
+      "summary": {
+        "en": "The “Latent Lab” makes the invisible elements and workings of generative AI accessible and translates actual AI research into the surface of the page. “Concept Algebra” does arithmetic on prompt embeddings and shows what survives a subtraction: subtracting a concept does not remove it. “Attention Cartography” shows where in a picture a single word acted, “Denoising Archaeology” shows the image at each step of its emergence. Alongside them stand “Feature Probing”, “Composable Diffusion”, “Crossmodal Lab”, “Latent Text Lab”, “Image Lab”, “Fusion Workbench” and the “Surrealizer”. What can be learned here is to get to know generative AI from the inside: to understand that it is made, and to open the black box a little. Reachable at the safety levels “Adult” and “Research”.",
+        "de": "Das „Latent Lab“ macht die unsichtbaren Elemente und Funktionsweisen generativer KI zugänglich und übersetzt echte KI-Forschung in die Oberfläche der Seite. „Concept Algebra“ rechnet mit Prompt-Embeddings und zeigt, was eine Subtraktion überlebt: einen Begriff abzuziehen entfernt ihn nicht. „Attention Cartography“ zeigt, an welcher Stelle im Bild ein einzelnes Wort gewirkt hat, „Denoising Archaeology“ das Bild in jedem Schritt seines Entstehens. Daneben stehen „Feature Probing“, „Composable Diffusion“, „Crossmodal Lab“, „Latent Text Lab“, „Image Lab“, „Fusion Workbench“ und der „Surrealizer“. Zu lernen ist hier, generative KI von innen kennenzulernen: ihre Gemachtheit zu verstehen und die Black Box ein Stück weit zu öffnen. Erreichbar auf den Sicherheitsstufen „Adult“ und „Research“."
+      }
+    }
+  ]
+}

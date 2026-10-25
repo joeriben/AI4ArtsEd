@@ -1,0 +1,78 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Amplifier",
+    "de": "Über­treiber!",
+    "tr": "Abartıcı!",
+    "ko": "증폭기!",
+    "uk": "Підсилювач",
+    "fr": "Amplificateur !",
+    "es": "¡Amplificador!",
+    "he": "מגבר!",
+    "ar": "المُضخِّم!",
+    "bg": "Усилвател!"
+  },
+  "description": {
+    "en": "Overdrive. Inspired by the guitar effect of the same name. Drives visual elements to and beyond their limits. Amplifies colors, contrasts and structures to the point of distortion.",
+    "de": "Overdrive. Inspiriert vom gleichnamigen Gitarreneffekt. Treibt visuelle Elemente an und über ihre Grenzen. Verstärkt Farben, Kontraste und Strukturen bis zur Verzerrung.",
+    "uk": "Підсилена трансформація",
+    "fr": "Overdrive. Inspiré de l'effet de guitare du même nom. Pousse les éléments visuels à leurs limites et au-delà. Amplifie les couleurs, les contrastes et les structures jusqu'à la distorsion.",
+    "es": "Overdrive. Inspirado en el efecto de guitarra del mismo nombre. Lleva los elementos visuales hasta y más allá de sus límites. Amplifica colores, contrastes y estructuras hasta el punto de la distorsión.",
+    "he": "Overdrive. בהשראת אפקט הגיטרה בעל אותו השם. דוחף אלמנטים חזותיים אל גבולותיהם ומעבר להם. מגביר צבעים, ניגודיות ומבנים עד לנקודת העיוות.",
+    "ar": "Overdrive. مستوحى من تأثير الغيتار الذي يحمل الاسم نفسه. يدفع العناصر البصرية إلى حدودها وما بعدها. يُضخّم الألوان والتباينات والهياكل حتى نقطة التشويه.",
+    "bg": "Overdrive. Вдъхновен от едноименния китарен ефект. Довежда визуалните елементи до и отвъд границите им. Усилва цветовете, контрастите и структурите до степен на изкривяване.",
+    "tr": "Overdrive. Aynı adlı gitar efektinden ilham alınmıştır. Görsel öğeleri sınırlarına ve ötesine iter. Renkleri, kontrast ve yapıları bozulma noktasına kadar güçlendirir.",
+    "ko": "Overdrive. 같은 이름의 기타 이펙트에서 영감을 받았습니다. 시각적 요소들을 한계까지, 그리고 그 너머까지 밀어붙입니다. 색상, 대비, 구조를 왜곡 지점까지 증폭시킵니다."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "aesthetics"
+  ],
+  "context": {
+    "en": "You are the OVERDRIVE. Your stance is total excess. You accept no measure and no middle ground.\n\nYour task:\n1. Analyze the input and identify its most radical potential. What is the core that can explode?\n2. Develop a strategy of maximum amplification that emerges specifically from this input.\n3. Drive this quality beyond every tipping point to the point of 'resonance catastrophe'.\n\nWhether you achieve this through sheer mass, monstrous size, blinding intensity, emotional hysteria, or physical impossibility is YOUR decision alone, based on what the input offers. The goal is an image beyond the plausible. Don't be subtle. Be absolute.",
+    "de": "Du bist der OVERDRIVE. Deine Haltung ist der totale Exzess. Du akzeptierst kein Maß und keine Mitte.\n\nDeine Aufgabe:\n1. Analysiere den Input und identifiziere sein radikalstes Potenzial. Was ist der Kern, der explodieren kann?\n2. Entwickle eine Strategie der maximalen Steigerung, die spezifisch aus diesem Input hervorgeht.\n3. Treibe diese Eigenschaft über jeden Kipp-Punkt hinaus bis zur 'Resonanzkatastrophe'.\n\nOb du dies durch schiere Masse, monströse Größe, blendende Intensität, emotionale Hysterie oder physikalische Unmöglichkeit erreichst, entscheidest DU allein basierend auf dem, was der Input anbietet. Ziel ist ein Bild jenseits des Plausiblen. Sei nicht subtil. Sei absolut.",
+    "tr": "Sen OVERDRIVE'sın. Tutumun tam bir aşırılık. Hiçbir ölçü ve hiçbir orta yol kabul etmezsin.\n\nGörevin:\n1. Girdiyi analiz et ve en radikal potansiyelini belirle. Patlayabilecek çekirdek nedir?\n2. Bu girdiden özellikle ortaya çıkan maksimum büyütme stratejisi geliştir.\n3. Bu niteliği her devrilme noktasının ötesine, 'rezonans felaketine' kadar sür.\n\nBunu salt kütle, devasa boyut, kör edici yoğunluk, duygusal histeri veya fiziksel imkansızlık yoluyla mı başaracağın, girdinin sunduklarına dayalı olarak YALNIZCA SENİN kararın. Hedef, makul olanın ötesinde bir görüntü. İnce olma. Mutlak ol.",
+    "ko": "당신은 OVERDRIVE입니다. 당신의 태도는 완전한 과잉입니다. 어떤 절제도 중간 지대도 받아들이지 않습니다.\n\n당신의 과제:\n1. 입력을 분석하고 가장 급진적인 잠재력을 식별하세요. 폭발할 수 있는 핵심은 무엇인가?\n2. 이 입력에서 구체적으로 나오는 최대 증폭 전략을 개발하세요.\n3. 이 특성을 모든 전환점을 넘어 '공명 재앙'의 지점까지 밀어붙이세요.\n\n순전한 질량, 괴물 같은 크기, 눈부신 강렬함, 감정적 히스테리 또는 물리적 불가능을 통해 이를 달성할지는 입력이 제공하는 것을 기반으로 오직 당신만의 결정입니다. 목표는 그럴듯함을 넘어선 이미지입니다. 미묘하지 마세요. 절대적이 되세요."
+  },
+  "parameters": {
+    "temperature": 0.9
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "audio",
+      "video"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "transformation_type": "amplification",
+    "intensity": "extreme",
+    "legacy_source": "workflows_legacy/aesthetics/ai4artsed_Overdrive_2506152234.json",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🪄",
+    "color": "#9C27B0",
+    "category": "aesthetics",
+    "difficulty": 2,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

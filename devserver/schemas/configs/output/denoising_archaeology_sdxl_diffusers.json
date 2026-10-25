@@ -1,0 +1,57 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Denoising Archaeology (SDXL)",
+    "de": "Denoising Archaeology (SDXL)",
+    "tr": "Denoising Archaeology (SDXL)",
+    "ko": "Denoising Archaeology (SDXL)",
+    "uk": "Denoising Archaeology (SDXL)",
+    "fr": "Denoising Archaeology (SDXL)",
+    "es": "Denoising Archaeology (SDXL)",
+    "he": "Denoising Archaeology (SDXL)",
+    "ar": "Denoising Archaeology (SDXL)",
+    "bg": "Denoising Archaeology (SDXL)"
+  },
+  "description": {
+    "en": "Step-by-step denoising visualization.",
+    "de": "Schrittweise Entrauschungs-Visualisierung.",
+    "tr": "Adım adım gürültü giderme (denoising) görselleştirmesi.",
+    "ko": "단계별 디노이징 시각화.",
+    "uk": "Покрокова візуалізація деноізингу.",
+    "fr": "Visualisation du débruitage étape par étape.",
+    "es": "Visualización paso a paso del proceso de eliminación de ruido (denoising).",
+    "he": "הדמיה שלב-אחר-שלב של הסרת הרעש (denoising).",
+    "ar": "تصور خطوة بخطوة لعملية إزالة الضوضاء (denoising).",
+    "bg": "Визуализация стъпка по стъпка на премахването на шума (denoising)."
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_denoising_archaeology_diffusers",
+    "backbone": "sdxl"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "display_name": "Denoising Archaeology (SDXL)",
+    "publisher": "Stability AI (London, UK)",
+    "architecture": "UNet + VAE (Latent Diffusion, larger)",
+    "params": "~3.5B (UNet) + ~800M (refiner, not used here)",
+    "text_encoders": [
+      "CLIP ViT-L/14 (123M)",
+      "OpenCLIP ViT-bigG/14 (695M)"
+    ],
+    "quantization": "FP16",
+    "license": "CreativeML Open RAIL++-M",
+    "fair_culture": "Trained on internal dataset (filtered LAION derivative, no creator consent documented)",
+    "safety_by_design": "Basic NSFW classifier (removable)",
+    "gpu_vram_mb": 8000,
+    "recommended_resolution": "1024x1024"
+  }
+}

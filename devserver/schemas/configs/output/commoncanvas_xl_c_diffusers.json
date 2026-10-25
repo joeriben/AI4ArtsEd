@@ -1,0 +1,122 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "CommonCanvas XL C (Diffusers)",
+    "de": "CommonCanvas XL C (Diffusers)",
+    "tr": "CommonCanvas XL C (Diffusers)",
+    "ko": "CommonCanvas XL C (Diffusers)",
+    "uk": "CommonCanvas XL C (Diffusers)",
+    "fr": "CommonCanvas XL C (Diffusers)",
+    "es": "CommonCanvas XL C (Diffusers)",
+    "he": "CommonCanvas XL C (Diffusers)",
+    "ar": "CommonCanvas XL C (Diffusers)",
+    "bg": "CommonCanvas XL C (Diffusers)"
+  },
+  "description": {
+    "en": "SDXL-architecture image model (2023), trained only on Creative Commons-licensed images. No scraped or unlicensed data in the training set.",
+    "de": "Bildmodell mit SDXL-Architektur (2023), ausschließlich auf Creative-Commons-lizenzierten Bildern trainiert. Keine gescrapten oder unlizenzierten Daten im Trainingssatz.",
+    "tr": "SDXL mimarisine sahip görsel modeli (2023), yalnızca Creative Commons lisanslı görsellerle eğitildi. Eğitim setinde kazınmış veya lisanssız veri yok.",
+    "ko": "SDXL 아키텍처 이미지 모델(2023), 크리에이티브 커먼즈 라이선스 이미지로만 학습되었습니다. 학습 데이터에 무단 수집되거나 라이선스 없는 데이터가 없습니다.",
+    "uk": "Модель зображень на архітектурі SDXL (2023), навчена виключно на зображеннях під ліцензією Creative Commons. Жодних зібраних без дозволу чи нелегальних даних у навчальному наборі.",
+    "fr": "Modèle d'image à architecture SDXL (2023), entraîné exclusivement sur des images sous licence Creative Commons. Aucune donnée extraite du web ou non licenciée dans le jeu d'entraînement.",
+    "es": "Modelo de imagen con arquitectura SDXL (2023), entrenado exclusivamente con imágenes con licencia Creative Commons. Sin datos extraídos de la web ni sin licencia en el conjunto de entrenamiento.",
+    "he": "מודל תמונות בארכיטקטורת SDXL (2023), מאומן אך ורק על תמונות ברישיון Creative Commons. אין נתונים שנאספו ללא היתר או ללא רישיון בסט האימון.",
+    "ar": "نموذج صور بمعمارية SDXL (2023)، مدرَّب حصريًا على صور مرخّصة بموجب Creative Commons. لا توجد بيانات مُجمَّعة دون إذن أو غير مرخّصة في مجموعة التدريب.",
+    "bg": "Модел за изображения с архитектура SDXL (2023), трениран изключително с изображения, лицензирани под Creative Commons. Без събирани без разрешение или нелицензирани данни в тренировъчния набор."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görsel Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_commoncanvas_diffusers",
+    "NEGATIVE_PROMPT": "ugly, blurry, deformed, watermark, text, low quality",
+    "WIDTH": 1024,
+    "HEIGHT": 1024,
+    "STEPS": 30,
+    "CFG": 7,
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_id": "common-canvas/CommonCanvas-XL-C",
+    "lora_base": [
+      "stable-diffusion-xl-v1-base",
+      "sdxl_base_v1-0"
+    ],
+    "prompt_window_tokens": 77,
+    "prompt_window_tokenizer": "clip_l",
+    "backend": "diffusers",
+    "backend_type": "diffusers",
+    "requires_gpu": true,
+    "gpu_vram_mb": 8000,
+    "estimated_duration_seconds": "15-40",
+    "recommended_resolution": "1024x1024",
+    "supported_resolutions": [
+      "1024x1024",
+      "1024x768",
+      "768x1024",
+      "1152x896",
+      "896x1152"
+    ],
+    "version": "1.0",
+    "display_name": "CommonCanvas XL C (Diffusers)",
+    "publisher": "MosaicML / Stability AI (research collaboration, 2023)",
+    "architecture": "UNet + VAE (Latent Diffusion, SDXL architecture)",
+    "params": "~3.5B (SDXL UNet)",
+    "text_encoders": [
+      "CLIP ViT-L/14 (123M)",
+      "OpenCLIP ViT-bigG/14 (695M)"
+    ],
+    "quantization": "FP16 (cast at load; the repository ships FP32 weights)",
+    "license": "CC-BY-SA 4.0",
+    "fair_culture": "Trained exclusively on ~70M Creative Commons-licensed images (CommonCatalog dataset, arXiv:2310.16825) — a general CC reuse license, not AI-training-specific opt-in consent, but no scraped or unlicensed data, unlike the SDXL base model above. License permits self-hosting and serving output to others (attribution + share-alike).",
+    "safety_by_design": "Not documented in available sources.",
+    "notes": "The same weights as the ComfyUI route, loaded through the GPU service in diffusers format. It exists because a U-Net a Latent Lab instrument can reach has to be loaded this way; a single-file checkpoint cannot be. Steps, cfg and negative prompt are held equal to the ComfyUI route, the sampler is not -- ComfyUI runs euler_ancestral, this pipeline its own Euler default, so the two are comparable in output and not reproducible seed for seed.",
+    "model_repo": "common-canvas/CommonCanvas-XL-C"
+  },
+  "display": {
+    "color": "#66BB6A",
+    "category": "image_generation",
+    "difficulty": 1,
+    "order": 47
+  },
+  "tags": {
+    "en": [
+      "image",
+      "sdxl",
+      "creative-commons",
+      "fair-training",
+      "historical",
+      "diffusers"
+    ],
+    "de": [
+      "bild",
+      "sdxl",
+      "creative-commons",
+      "faires-training",
+      "historisch",
+      "diffusers"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

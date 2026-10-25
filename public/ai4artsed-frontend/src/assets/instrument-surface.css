@@ -1,0 +1,56 @@
+/*
+ * Instrument surfaces — what the Latent Lab's instruments share below the bar.
+ *
+ * Created when the four instruments that stood under a band gave it up and
+ * two of them independently grew the same construction: a SQUARE that
+ * takes the smaller of its surface's two sides. Denoising Archaeology measured
+ * it first (an image of the run's step, with the axis under it); Encoder Fusion
+ * needed the same thing a day later for its result. Two implementations of one
+ * behaviour is a bug (docs/ELEMENT_STRUCTURE_REGISTRY.md), so it stands here
+ * once.
+ *
+ * Why it cannot be done with width/height alone — both directions were tried
+ * and both failed, measured on the surface:
+ *  - Led by WIDTH, an image in a 900x1200 cell came out 1024 px high in a
+ *    602 px surface and drew straight over what was under it.
+ *  - Led by HEIGHT, the caption hung 127 px below the image in empty space,
+ *    because it was anchored to the surface and not to the picture.
+ * So the surface measures ITSELF (`container-type: size`) and the stack inside
+ * takes `min(100cqw, 100cqh − what else is in the stack)`.
+ *
+ * Loaded from main.ts, like assets/shell.css — a page that carries the classes
+ * and forgets an import would look correct to whoever built it and broken to a
+ * visitor who arrived by another door.
+ */
+
+/* The surface the square stands in. It measures itself, and the square is
+   centred in whatever it does not use. */
+.instr-frame {
+  flex: 1;
+  min-height: 0;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+ * The square and whatever stands WITH it — a caption, an axis — as one column
+ * as wide as the square. What the rest of the stack needs in height has to come
+ * off the square first, or the stack stands taller than the surface; the page
+ * says how much through `--instr-reserve`.
+ */
+.instr-stack {
+  --instr-reserve: 0px;
+  width: min(100cqw, calc(100cqh - var(--instr-reserve)));
+  display: flex;
+  flex-direction: column;
+}
+
+/* The square itself. A caption that belongs to the PICTURE and not to the
+   surface is positioned against this box, which is why it is its own element
+   and not the image. */
+.instr-square {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
