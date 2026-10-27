@@ -48,6 +48,7 @@ row in the same change.
 | Bias Archaeology 2 | Latent Text Lab | — (Implemented) | text lab table only |
 | Representation Engineering | Latent Text Lab | **V 1.1** (2026-08-26) | Part 28, Tab 1 |
 | System Prompts | Latent Text Lab | — (Implemented) | text lab table only |
+| Model Comparison | Latent Text Lab | — (Implemented 2026-10-27) | text lab table only |
 | Latent Audio Synth | Crossmodal Lab | — | nowhere |
 | MMAudio | Crossmodal Lab | — | nowhere |
 | ImageBind Guidance | Crossmodal Lab | — | nowhere |
@@ -606,6 +607,7 @@ The Text Lab does not produce finished text outputs — it runs controlled exper
 | Bias Archaeology 1 | `latent_lab/bias_archaeology.vue` | Implemented | Undecidable questions from the BBQ set, answered per model |
 | Bias Archaeology 2 | `latent_lab/coreference_test.vue` | Implemented | Which noun a pronoun is taken to mean, pair by pair |
 | System Prompts | `compare/system_prompt_comparison.vue` | Implemented | The same prompt under different system prompts |
+| Model Comparison | `latent_lab/system_prompt_across_models.vue` | Implemented | The same prompt under ONE system prompt, a model per column (the instrument of the same name under Cultural Knowledge & Stereotypes compares image models) |
 
 ### Scientific Foundation (Text-Side)
 

@@ -41,13 +41,6 @@
             <span class="card-label">{{ t('direct.surrealizationLabel') }}</span>
           </div>
           <div class="slider-container">
-            <div class="slider-labels">
-              <span class="slider-label-left">{{ t('surrealizer.sliderExtremeWeird') }}</span>
-              <span class="slider-label-mid-left">{{ t('surrealizer.sliderWeird') }}</span>
-              <span class="slider-label-center">{{ t('surrealizer.sliderNormal') }}</span>
-              <span class="slider-label-mid-right">{{ t('surrealizer.sliderCrazy') }}</span>
-              <span class="slider-label-right">{{ t('surrealizer.sliderExtremeCrazy') }}</span>
-            </div>
             <div class="slider-wrapper">
               <input
                 type="range"
@@ -269,7 +262,7 @@ const canExecute = computed(() => {
 })
 
 // Alpha value is used directly (no mapping needed)
-// Slider range: -75 (weird/CLIP) to 0 (normal/balanced) to +75 (crazy/T5)
+// Slider range: -75 (CLIP side) to 0 (balanced) to +75 (T5 side)
 const mappedAlpha = computed(() => {
   return alphaFaktor.value
 })
@@ -738,39 +731,6 @@ function extractInsights(analysisText: string): string[] {
   gap: 0.5rem;
 }
 
-.slider-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.slider-label-left {
-  color: rgba(147, 51, 234, 0.9); /* Purple for "very weird" */
-}
-
-.slider-label-mid-left {
-  color: rgba(120, 80, 240, 0.8); /* Purple-Blue for "weird" */
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.slider-label-center {
-  color: rgba(59, 130, 246, 0.9); /* Blue for "normal" */
-  font-weight: 700;
-}
-
-.slider-label-mid-right {
-  color: rgba(180, 100, 200, 0.8); /* Blue-Pink for "crazy" */
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.slider-label-right {
-  color: rgba(236, 72, 153, 0.9); /* Pink for "really crazy" */
-}
-
 .slider-wrapper {
   width: 100%;
   padding: 0.5rem 0;
@@ -783,9 +743,9 @@ function extractInsights(analysisText: string): string[] {
   height: 16px; /* Double thickness */
   background: linear-gradient(
     to right,
-    rgba(147, 51, 234, 0.6) 0%,    /* Purple (weird) */
-    rgba(59, 130, 246, 0.6) 50%,   /* Blue (normal) */
-    rgba(236, 72, 153, 0.6) 100%   /* Pink (crazy) */
+    rgba(147, 51, 234, 0.6) 0%,    /* Purple (CLIP side) */
+    rgba(59, 130, 246, 0.6) 50%,   /* Blue (balanced) */
+    rgba(236, 72, 153, 0.6) 100%   /* Pink (T5 side) */
   );
   border-radius: 8px;
   outline: none;

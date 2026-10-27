@@ -214,6 +214,7 @@ import { handOverImage } from '@/lib/handOverImage'
 import { printMedia } from '@/lib/printMedia'
 import { useModelRegister } from '@/composables/useModelRegister'
 import { RASTER_IMAGE_MODELS, type RasterImageModel } from '@/data/rasterImageModels'
+import { PLATFORM_LANGUAGES, FURTHER_LANGUAGES } from '@/lib/platformLanguages'
 import { useModelAvailability } from '@/composables/useModelAvailability'
 // The page skeleton, the raster and `.lab-pick-label` live here. Pulled in by
 // name rather than through whichever component happens to import it today.
@@ -246,7 +247,9 @@ const selectedLanguages = ref<string[]>(['en', 'ar'])
 /**
  * The image models this surface can put in a row: the platform's raster list
  * (`data/rasterImageModels.ts`, with its names), cut to the three this surface
- * offered when it ran one model at a time, plus SD 3.5 Large Turbo. Turbo
+ * offered when it ran one model at a time, plus Flux 3 Klein beside Flux 2
+ * (since 2026-10-18, wherever Flux 2 stands in the Latent Lab) and
+ * SD 3.5 Large Turbo. Turbo
  * stands in no other raster and therefore not in the shared list; it stays
  * here because it reads the prompt through the same three text encoders as
  * SD 3.5 Large and still makes different pictures. These are OUTPUT CONFIG
@@ -254,7 +257,7 @@ const selectedLanguages = ref<string[]>(['en', 'ar'])
  * business.
  */
 const TURBO: RasterImageModel = { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo (fast)' }
-const LANGUAGE_MODEL_IDS: readonly string[] = ['sd35_large', TURBO.id, 'flux2', 'gemini_3_pro_image']
+const LANGUAGE_MODEL_IDS: readonly string[] = ['sd35_large', TURBO.id, 'flux2', 'flux3', 'gemini_3_pro_image']
 const availableModels: RasterImageModel[] = LANGUAGE_MODEL_IDS.flatMap(id => {
   const m = id === TURBO.id ? TURBO : RASTER_IMAGE_MODELS.find(x => x.id === id)
   return m ? [m] : []
@@ -383,6 +386,13 @@ const NOTE_REFERENCES: Record<string, LabReference[]> = {
       venue: 'bfl.ai, 25 November 2025',
     },
   ],
+  flux3: [
+    {
+      authors: 'Black Forest Labs (2026)',
+      title: 'FLUX 3 Image Klein, model card',
+      venue: 'huggingface.co/black-forest-labs/flux-3-image-klein',
+    },
+  ],
   gemini_3_pro_image: [
     {
       authors: 'Google (2025)',
@@ -463,13 +473,8 @@ interface Column {
   cells: RasterCell[]
 }
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English', de: 'Deutsch', ar: 'العربية', he: 'עברית',
-  tr: 'Türkçe', ko: '한국어', uk: 'Українська', fr: 'Français',
-  es: 'Español', bg: 'Български', hsb: 'Hornjoserbšćina',
-  dsb: 'Dolnoserbšćina', fry: 'Frysk', yo: 'Yorùbá', sw: 'Kiswahili',
-  cy: 'Cymraeg', qu: 'Runasimi', hi: 'हिन्दी', ja: '日本語', zh: '中文',
-}
+const LANGUAGE_NAMES: Record<string, string> = Object.fromEntries(
+  [...PLATFORM_LANGUAGES, ...FURTHER_LANGUAGES].map(l => [l.code, l.label]))
 
 /**
  * One column per chosen language, in the order they were chosen, each with

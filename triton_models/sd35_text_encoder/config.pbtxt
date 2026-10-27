@@ -1,0 +1,28 @@
+name: "sd35_text_encoder"
+backend: "python"
+max_batch_size: 8
+input [
+  {
+    name: "prompt"
+    data_type: TYPE_STRING
+    dims: [1]
+  }
+]
+output [
+  {
+    name: "encoder_hidden_states"
+    data_type: TYPE_FP16
+    dims: [-1, 4096]
+  },
+  {
+    name: "pooled_projections"
+    data_type: TYPE_FP16
+    dims: [2048]
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]

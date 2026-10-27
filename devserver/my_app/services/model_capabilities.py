@@ -60,8 +60,10 @@ logger = logging.getLogger(__name__)
 
 
 # Per-installation, therefore gitignored -- and deliberately NOT a key inside
-# user_settings.json: POST /api/settings/ rewrites that file from the keys the form
-# renders, so anything else stored there is deleted on the next save.
+# user_settings.json: POST /api/settings/ writes that file from the keys the form
+# renders and keeps of the rest only the settings config declares
+# (settings_routes._file_after_save), so anything else stored there is deleted on the
+# next save.
 STORE_FILE = Path(__file__).resolve().parent.parent.parent / "model_capabilities.json"
 
 # The vocabulary of things a role can need from its model. Fixed order, because the

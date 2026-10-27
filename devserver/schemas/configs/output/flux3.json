@@ -1,0 +1,105 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Flux 3 Klein",
+    "de": "Flux 3 Klein",
+    "tr": "Flux 3 Klein",
+    "ko": "Flux 3 Klein",
+    "uk": "Flux 3 Klein",
+    "fr": "Flux 3 Klein",
+    "es": "Flux 3 Klein",
+    "he": "Flux 3 Klein",
+    "ar": "Flux 3 Klein",
+    "bg": "Flux 3 Klein"
+  },
+  "description": {
+    "en": "Image generation with FLUX 3 Image Klein and the Qwen3-VL-4B text encoder via ComfyUI.",
+    "de": "Bildgenerierung mit FLUX 3 Image Klein und dem Text-Encoder Qwen3-VL-4B via ComfyUI.",
+    "tr": "ComfyUI üzerinden Qwen3-VL-4B metin kodlayıcılı FLUX 3 Image Klein ile görüntü üretimi.",
+    "ko": "ComfyUI를 통해 Qwen3-VL-4B 텍스트 인코더를 사용하는 FLUX 3 Image Klein으로 이미지 생성.",
+    "uk": "Генерація зображень за допомогою FLUX 3 Image Klein з текстовим кодувальником Qwen3-VL-4B через ComfyUI.",
+    "fr": "Génération d'images avec FLUX 3 Image Klein et l'encodeur de texte Qwen3-VL-4B via ComfyUI.",
+    "es": "Generación de imágenes con FLUX 3 Image Klein y el codificador de texto Qwen3-VL-4B a través de ComfyUI.",
+    "he": "יצירת תמונות באמצעות FLUX 3 Image Klein עם מקודד הטקסט Qwen3-VL-4B דרך ComfyUI.",
+    "ar": "توليد الصور باستخدام FLUX 3 Image Klein مع مُرمِّز النص Qwen3-VL-4B عبر ComfyUI.",
+    "bg": "Генериране на изображения с FLUX 3 Image Klein и текстов енкодер Qwen3-VL-4B през ComfyUI."
+  },
+  "category": {
+    "en": "Image Generation",
+    "de": "Bildgenerierung",
+    "tr": "Görüntü Üretimi",
+    "ko": "이미지 생성",
+    "uk": "Генерація зображень",
+    "fr": "Génération d'images",
+    "es": "Generación de imágenes",
+    "he": "יצירת תמונות",
+    "ar": "توليد الصور",
+    "bg": "Генериране на изображения"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_flux3",
+    "seed": "random"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "DEFAULT",
+    "model_file": "flux3-image-klein-bf16.safetensors",
+    "backend": "comfyui",
+    "backend_type": "comfyui",
+    "clip_models": [
+      "qwen3vl_4b_bf16.safetensors"
+    ],
+    "requires_gpu": true,
+    "gpu_vram_mb": 31000,
+    "estimated_duration_seconds": "2-10",
+    "recommended_resolution": "1024x1024",
+    "notes": "FLUX 3 Image Klein, distilled checkpoint, BF16, via ComfyUI (>= 0.41.0). 16 steps, cfg 1. The prompt goes to the Qwen3-VL-4B text encoder as the platform hands it over: BFL's prompt upsampler (a Qwen3.5 9B that rewrites every prompt before the image model sees it) is not in the workflow, although the model card says: \"Do not use the model without a prompt upsampler.\" The config carries no optimization_instruction. The undistilled base checkpoint (flux3-image-klein-base-bf16, 50 steps, cfg 3.5; download_flux3.sh --base) has no config. gpu_vram_mb is the model card's figure: peak GPU memory with BFL's reference code, B200, 1024x1024, prompt upsampler off, 31 GB in BF16; the ComfyUI run here was not measured with nvidia-smi.",
+    "version": "1.0",
+    "display_name": "FLUX 3 Image Klein",
+    "icon": "⚡",
+    "publisher": "Black Forest Labs (Freiburg, DE)",
+    "architecture": "Image transformer, distilled checkpoint",
+    "params": "5.6B image transformer + Qwen3-VL-4B text encoder",
+    "text_encoders": [
+      "Qwen3-VL-4B-Instruct"
+    ],
+    "quantization": "BF16",
+    "license": "FLUX Kommunity License v.1.0: non-commercial use, plus commercial output generation by Qualifying Users with less than US$5M in gross annualized revenue, including affiliates, subject to the license terms (BFL model card)",
+    "fair_culture": "Training data undisclosed",
+    "safety_by_design": "Risks evaluated and mitigated before release, incl. CSAM and NCII (BFL model card)"
+  },
+  "display": {
+    "icon": "⚡",
+    "color": "#FF6B35",
+    "category": "image_generation",
+    "difficulty": 2,
+    "order": 21
+  },
+  "tags": {
+    "en": [
+      "image",
+      "flux",
+      "flux3",
+      "comfyui",
+      "qwen"
+    ],
+    "de": [
+      "bild",
+      "flux",
+      "flux3",
+      "comfyui",
+      "qwen"
+    ]
+  },
+  "audience": {
+    "workshop_suitable": true,
+    "min_age": 10,
+    "complexity": "beginner"
+  }
+}

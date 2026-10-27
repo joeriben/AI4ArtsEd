@@ -380,8 +380,13 @@ export interface CanvasNode {
   contextPrompt?: string
 
   // === Translation node config ===
-  /** Translation prompt/instructions */
+  /** Translation prompt/instructions; unset or empty is lib/translationDefaults.ts */
   translationPrompt?: string
+  /** Target language: a code of lib/platformLanguages.ts, or a language named in
+   *  free text ('' while that text is still to be written). Unset, an own
+   *  translationPrompt names the language itself; with the default instruction
+   *  it is lib/translationDefaults.ts */
+  translationLanguage?: string
 
   // === Input node config ===
   /** User's prompt text (input node) */

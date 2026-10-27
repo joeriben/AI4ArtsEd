@@ -17,11 +17,11 @@
     "list says why it is short -- and its entries under 'reach' are what",
     "the last run that reached it wrote, from the day 'kept_from' names."
   ],
-  "generated": "2026-09-12",
+  "generated": "2026-10-27",
   "providers": {
     "openrouter": {
       "answered": true,
-      "catalogue_size": 59
+      "catalogue_size": 67
     },
     "anthropic": {
       "answered": false,
@@ -29,19 +29,19 @@
     },
     "openai": {
       "answered": false,
-      "reason": "catalogue answered HTTP 401"
+      "reason": "no credential on this machine"
     },
     "mistral": {
-      "answered": true,
-      "catalogue_size": 50
+      "answered": false,
+      "reason": "catalogue unreachable: HTTPSConnectionPool(host='api.eu.mistral.ai', port=443): Max retries exceeded with url: /v1/models (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7f958577ee90>, 'Connection to api.eu.mistral.ai timed out. (connect timeout=10)'))"
     },
     "ionos": {
       "answered": false,
-      "reason": "catalogue answered HTTP 401"
+      "reason": "no credential on this machine"
     },
     "mammouth": {
       "answered": true,
-      "catalogue_size": 98
+      "catalogue_size": 107
     }
   },
   "reach": {
@@ -68,6 +68,66 @@
     "gpt-5.6-terra": {
       "openrouter": "openai/gpt-5.6-terra",
       "mammouth": "gpt-5.6-terra"
+    },
+    "mixtral-8x22b-instruct": {
+      "openrouter": "mistralai/mixtral-8x22b-instruct"
+    },
+    "mistral-nemo": {
+      "openrouter": "mistralai/mistral-nemo"
+    },
+    "mistral-large-2407": {
+      "openrouter": "mistralai/mistral-large-2407"
+    },
+    "mistral-medium-3.1": {
+      "openrouter": "mistralai/mistral-medium-3.1",
+      "mammouth": "mistral-medium-3.1"
+    },
+    "mistral-large-4-0": {
+      "openrouter": "mistralai/mistral-large-4-0"
+    },
+    "gpt-4o": {
+      "mammouth": "gpt-4o"
+    },
+    "gpt-4.1": {
+      "openrouter": "openai/gpt-4.1",
+      "mammouth": "gpt-4.1"
+    },
+    "gpt-5": {
+      "openrouter": "openai/gpt-5"
+    },
+    "gpt-6-sol": {
+      "openrouter": "openai/gpt-6-sol",
+      "mammouth": "gpt-6-sol"
+    },
+    "gpt-oss-120b": {
+      "openrouter": "openai/gpt-oss-120b"
+    },
+    "claude-sonnet-4.5": {
+      "openrouter": "anthropic/claude-sonnet-4.5"
+    },
+    "claude-opus-5.5": {
+      "openrouter": "anthropic/claude-opus-5.5"
+    },
+    "llama-4-maverick": {
+      "mammouth": "llama-4-maverick"
+    },
+    "gemini-2.5-pro": {
+      "mammouth": "gemini-2.5-pro"
+    },
+    "qwen3.5-397b-a17b": {
+      "mammouth": "qwen3.5-397b-a17b"
+    },
+    "deepseek-r1-0528": {
+      "mammouth": "deepseek-r1-0528"
+    },
+    "deepseek-v3.2": {
+      "mammouth": "deepseek-v3.2"
+    },
+    "glm-5": {
+      "mammouth": "glm-5"
+    },
+    "minimax-m3": {
+      "mammouth": "minimax-m3"
     }
   },
   "declared": {
@@ -78,8 +138,9 @@
     },
     "mistral-large-3": {
       "_source": "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512",
-      "_note": "Mistral ships the model as mistral-large-2512; the model card names it Mistral Large 3. Its catalogue does not say so. OpenRouter stood here too, with mistralai/mistral-large-2512, and the EU host this installation is bound to lists no such id: its mistralai/mistral-large and mistralai/mistral-large-2407 are Mistral Large 2 by OpenRouter's own description of both. The line was removed on 2026-09-22 rather than pointed at either, because naming a different model here is the one thing this block exists to prevent.",
-      "mistral": "mistral-large-2512"
+      "_note": "Mistral ships the model as mistral-large-2512; the model card names it Mistral Large 3. Its catalogue does not say so. OpenRouter stood here too, with mistralai/mistral-large-2512, and the EU host this installation is bound to lists no such id: its mistralai/mistral-large and mistralai/mistral-large-2407 are Mistral Large 2 by OpenRouter's own description of both. The line was removed on 2026-09-22 rather than pointed at either, because naming a different model here is the one thing this block exists to prevent. On 2026-10-27 the EU host's catalogue (https://eu.openrouter.ai/api/v1/models) lists mistralai/mistral-large-2512, and OpenRouter describes it there as \"Mistral Large 3 2512\" with \"675B total\" parameters, which is the model card's model; the line stands again.",
+      "mistral": "mistral-large-2512",
+      "openrouter": "mistralai/mistral-large-2512"
     }
   }
 }

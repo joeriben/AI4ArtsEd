@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shared by the model download scripts (download_models.sh, download_flux2.sh,
-# download_qwen.sh). Source it after SCRIPT_DIR is set:
+# download_flux3.sh, download_qwen.sh). Source it after SCRIPT_DIR is set:
 #
 #   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #   source "$SCRIPT_DIR/_lib.sh"
@@ -70,11 +70,11 @@ check_model() {
     local path="$1"
     local name="$2"
 
-    if [ -f "$path" ]; then
-        SIZE=$(du -h "$path" | cut -f1)
+    if [ -s "$path" ]; then
+        SIZE=$(du -hL "$path" | cut -f1)
         echo -e "${GREEN}✓${NC} $name ($SIZE)"
     else
-        echo -e "${RED}✗${NC} $name (missing)"
+        echo -e "${RED}✗${NC} $name (missing or empty)"
         MODELS_OK=false
     fi
 }

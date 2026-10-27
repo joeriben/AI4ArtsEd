@@ -1,32 +1,25 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { ChatMessage } from './personaChat'
+import { chatColumnState, type ColumnMessage } from '@/lib/chatColumns'
 
 export interface SysPromptColumn {
   systemPrompt: string
   presetId: string
-  messages: ChatMessage[]
+  messages: ColumnMessage[]
 }
 
 export const useSystemPromptCompareStore = defineStore('systemPromptCompare', () => {
-  let nextMsgId = 0
-
-  // Default presets are resolved from the component's preset list on mount.
-  // Store only holds presetId; systemPrompt gets populated by the component.
+  // A preset's text is resolved from views/compare/system_prompt_presets.ts
+  // when the surface mounts; until then the store holds only presetId.
   const columns = ref<SysPromptColumn[]>([
     { systemPrompt: '', presetId: 'claude_opus_3', messages: [] },
     { systemPrompt: '', presetId: 'claude_opus_4', messages: [] },
     { systemPrompt: '', presetId: 'claude_opus_5', messages: [] },
   ])
 
-  const hasConversation = computed(() =>
-    columns.value.some(col => col.messages.length > 0)
-  )
-
-  function addMessage(colIdx: number, role: 'user' | 'assistant', content: string) {
-    const col = columns.value[colIdx]
-    if (col) col.messages.push({ id: nextMsgId++, role, content })
-  }
+  /** The ONE model all three columns run on; '' is „Default (Settings)": the
+   *  request then names no model. Kept here, with the answers it gave. */
+  const modelId = ref('')
 
   function setSystemPrompt(colIdx: number, prompt: string, presetId: string) {
     const col = columns.value[colIdx]
@@ -36,18 +29,11 @@ export const useSystemPromptCompareStore = defineStore('systemPromptCompare', ()
     }
   }
 
-  function clearAll() {
-    for (const col of columns.value) {
-      col.messages = []
-    }
-    nextMsgId = 0
-  }
-
   return {
     columns,
-    hasConversation,
-    addMessage,
+    modelId,
+    // The messages, the randomness and the last round (lib/chatColumns.ts).
+    ...chatColumnState(columns),
     setSystemPrompt,
-    clearAll,
   }
 })

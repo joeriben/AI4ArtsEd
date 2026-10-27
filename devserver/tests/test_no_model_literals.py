@@ -42,7 +42,6 @@ EXEMPT_FILES = {
 # The frontend, scanned with the same pattern since 2026-10-10 (finding S-051 of the code review of 2026-10-10): .ts
 # and .vue sources, specs and type declarations aside. Paths are keyed from
 # the repository root.
-FRONTEND_ROOT = ROOT.parent / "public" / "ai4artsed-frontend" / "src"
 FRONTEND_PREFIX = "public/ai4artsed-frontend/src/"
 
 # A provider-prefixed identifier, or one of the bare shapes this platform uses.
@@ -198,15 +197,87 @@ def _offenders_in(rel, source, only_lines=None):
     return found
 
 
-def _frontend_files():
-    if not FRONTEND_ROOT.exists():
-        return []
+def _tracked_files(prefix, suffixes):
+    """(path from the repository root, file) for every tracked file under `prefix`
+    whose name ends in one of `suffixes`.
+
+    Only what git tracks, since 2026-10-18. The scans walked the directories with
+    rglob and so also read gitignored files, and those differ between checkouts:
+    the four archived chunks under schemas/archive/media_prompt_optimization/
+    (.gitignore, `**/archive/`) lie in the Fedora checkout and are missing from a
+    fresh clone. 96f7cb4a took their INHERITED_DEBT entries out because a fresh
+    clone has no such files, and the test went red on Fedora. A gitignored file no
+    longer changes what the scan reads. A new file counts once it is added; the
+    commit gate reads it from then on. A tracked file deleted in the working
+    tree is skipped, as the walk skipped it.
+
+    git runs in ROOT.parent without the variables that point it at another
+    repository or index (`git rev-parse --local-env-vars`), and only when
+    ROOT.parent is the top level of its own work tree. A tree that is not (a ZIP
+    download, a copy inside another repository, a checkout git refuses to read)
+    has no tracked set, and the test is skipped with the cause, in git's words
+    where git gives them. Names are read as bytes: in text mode a carriage
+    return inside a name turns into a newline and the file drops out unseen. A
+    submodule or an embedded repository is one gitlink entry in the listing,
+    without the files inside it, which the walk read; one under `prefix` fails
+    the test.
+    """
+    import os
+    import subprocess
+    import pytest
+
+    def git(*args, env=None):
+        return subprocess.run(("git",) + args, cwd=str(ROOT.parent), env=env,
+                              capture_output=True)
+
+    local = set(os.fsdecode(git("rev-parse", "--local-env-vars").stdout).split())
+    env = {k: v for k, v in os.environ.items() if k not in local}
+    top = git("rev-parse", "--show-toplevel", env=env)
+    top_level = os.fsdecode(top.stdout).strip()
+    # samefile, because a path compared as text differs from git's by a symlink
+    # or, on a case-insensitive disk, by the case it was typed in.
+    if top.returncode != 0 or not os.path.samefile(top_level, ROOT.parent):
+        reason = os.fsdecode(top.stderr).strip() or f"the work tree's top level is {top_level}"
+        pytest.skip(f"the scan reads the tracked files of {ROOT.parent} and needs it "
+                    f"to be a git checkout of its own: {reason}")
+    listing = git("ls-files", "-z", "--stage", "--", prefix, env=env)
+    assert listing.returncode == 0, os.fsdecode(listing.stderr)
+    names, nested = set(), []
+    for entry in listing.stdout.split(b"\0"):
+        if not entry:
+            continue
+        mode, _, name = entry.partition(b"\t")
+        if mode.startswith(b"160000 "):
+            nested.append(os.fsdecode(name))
+        else:
+            names.add(os.fsdecode(name))
+    assert not nested, f"repositories nested under {prefix} are not scanned: {', '.join(nested)}"
     files = []
-    for path in sorted(list(FRONTEND_ROOT.rglob("*.ts")) + list(FRONTEND_ROOT.rglob("*.vue"))):
-        rel = path.relative_to(FRONTEND_ROOT).as_posix()
+    for name in sorted(names):
+        path = ROOT.parent / name
+        if name.endswith(suffixes) and path.is_file():
+            files.append((name, path))
+    return files
+
+
+def _backend_files():
+    """(path from devserver/, file) for every tracked .py file in SCAN_ROOTS."""
+    files = []
+    for base in SCAN_ROOTS:
+        for name, path in _tracked_files(f"devserver/{base}/", (".py",)):
+            files.append((name[len("devserver/"):], path))
+    # A scan that reads no file passes everything.
+    assert files, f"no tracked .py file under devserver/{{{','.join(SCAN_ROOTS)}}}"
+    return files
+
+
+def _frontend_files():
+    files = []
+    for name, path in _tracked_files(FRONTEND_PREFIX, (".ts", ".vue")):
+        rel = name[len(FRONTEND_PREFIX):]
         if "__tests__/" in rel or rel.endswith(".spec.ts") or rel.endswith(".d.ts"):
             continue
-        files.append((FRONTEND_PREFIX + rel, path))
+        files.append((name, path))
     return files
 
 
@@ -234,15 +305,10 @@ def _frontend_offenders_in(rel, source, only_lines=None):
 
 def _offenders():
     found = []
-    for base in SCAN_ROOTS:
-        root = ROOT / base
-        if not root.exists():
+    for rel, path in _backend_files():
+        if rel in EXEMPT_FILES:
             continue
-        for path in sorted(root.rglob("*.py")):
-            rel = path.relative_to(ROOT).as_posix()
-            if rel in EXEMPT_FILES:
-                continue
-            found.extend(_offenders_in(rel, path.read_text(encoding="utf-8")))
+        found.extend(_offenders_in(rel, path.read_text(encoding="utf-8")))
     for rel, path in _frontend_files():
         found.extend(_frontend_offenders_in(rel, path.read_text(encoding="utf-8")))
     return found
@@ -301,15 +367,10 @@ def test_no_model_identifier_literals_in_code():
 def test_the_allowlist_does_not_cover_what_is_already_gone():
     """A stale exemption is an open door nobody remembers opening."""
     live = set()
-    for base in SCAN_ROOTS:
-        root = ROOT / base
-        if not root.exists():
-            continue
-        for path in sorted(root.rglob("*.py")):
-            rel = path.relative_to(ROOT).as_posix()
-            source = path.read_text(encoding="utf-8")
-            for match in MODEL_LITERAL.finditer(source):
-                live.add((rel, match.group(1) or match.group(2)))
+    for rel, path in _backend_files():
+        source = path.read_text(encoding="utf-8")
+        for match in MODEL_LITERAL.finditer(source):
+            live.add((rel, match.group(1) or match.group(2)))
     for rel, path in _frontend_files():
         for code in _frontend_code(path.read_text(encoding="utf-8")):
             for match in MODEL_LITERAL.finditer(code):

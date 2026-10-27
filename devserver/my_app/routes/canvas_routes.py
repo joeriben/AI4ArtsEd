@@ -22,6 +22,9 @@ from my_app.services.canvas_executor import CanvasWorkflowExecutor, as_seed
 from my_app.services.pipeline_recorder import generate_run_id
 from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.streaming_response import events_with_heartbeat
+from my_app.services.translation_instruction import (
+    CANVAS_TRANSLATION_INSTRUCTION, CANVAS_TRANSLATION_LANGUAGE,
+)
 import config
 
 logger = logging.getLogger(__name__)
@@ -159,6 +162,18 @@ def _load_config_summaries(config_type: str) -> list:
 
     logger.info(f"Loaded {len(summaries)} {config_type} configs")
     return summaries
+
+
+@canvas_bp.route('/api/canvas/translation', methods=['GET'])
+def get_translation_defaults():
+    """What a translation node shows, and the executor sends, where the node
+    leaves its instruction empty: the platform's instruction, and English where
+    no language is chosen either."""
+    return jsonify({
+        'status': 'success',
+        'instruction': CANVAS_TRANSLATION_INSTRUCTION,
+        'language': CANVAS_TRANSLATION_LANGUAGE,
+    })
 
 
 @canvas_bp.route('/api/canvas/llm-models', methods=['GET'])

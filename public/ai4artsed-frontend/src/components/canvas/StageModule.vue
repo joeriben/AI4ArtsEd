@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { CanvasNode, CollectorOutputItem, LLMModelSummary, RandomPromptPreset, PhotoFilmType, ModelAdaptionPreset, InterceptionPreset } from '@/types/canvas'
 import { getNodeTypeDefinition, RANDOM_PROMPT_PRESETS, PHOTO_FILM_TYPES, INTERCEPTION_PRESETS } from '@/types/canvas'
 import { localized } from '@/i18n'
 import { lensContext } from '@/lib/lensContext'
+import { PLATFORM_LANGUAGES, FURTHER_LANGUAGES } from '@/lib/platformLanguages'
+import { translationDefaults, translationDefaultsError, loadTranslationDefaults } from '@/lib/translationDefaults'
 import { READING_FRAMES } from '@/data/readingFrames'
 import { safetyBlockKeyForEvent } from '@/composables/useGenerationStream'
 import { uploadImageFile, quickImageSafetyCheck } from '@/composables/useMaterialIntake'
@@ -58,7 +60,8 @@ const emit = defineEmits<{
   'select-config': []
   'update-llm': [llmModel: string]
   'update-context-prompt': [prompt: string]
-  'update-translation-prompt': [prompt: string]
+  'update-translation-prompt': [prompt: string | undefined]
+  'update-translation-language': [language: string | undefined]
   'update-prompt-text': [text: string]
   'update-size': [width: number, height: number]
   // Unified evaluation events
@@ -178,6 +181,8 @@ const isConfigured = computed(() => {
   if (isGeneration.value) return !!props.node.configId
   if (isRandomPrompt.value) return !!(props.node.randomPromptModel && props.node.randomPromptPreset)
   if (isComparisonEvaluator.value) return !!props.node.comparisonLlmModel
+  // A language chosen as free text and not yet written blocks the run (stores/canvas.ts).
+  if (isTranslation.value) return !!props.node.llmModel && ownText(props.node.translationLanguage)?.trim() !== ''
   if (needsLLM.value) return !!props.node.llmModel
   return true
 })
@@ -245,7 +250,99 @@ async function onInterceptionPresetChange(event: Event) {
 
 function onTranslationPromptChange(event: Event) {
   const textarea = event.target as HTMLTextAreaElement
+  // Writing into the default instruction keeps the language the select shows:
+  // the default names none, and an own instruction with no language chosen
+  // goes without a language line (canvas_executor._execute_translation).
+  if (!hasOwnInstruction.value && ownLanguage.value === undefined && translationDefaults.value.language) {
+    emit('update-translation-language', translationDefaults.value.language)
+  }
   emit('update-translation-prompt', textarea.value)
+}
+
+// The translation node shows what runs where it leaves a field empty
+// (lib/translationDefaults.ts). An instruction emptied while the field has the
+// focus stays empty until it loses it, so that a new one can be typed; then it
+// is set back to undefined, and the default stands in the field again. Focus
+// lost to another window is kept: the field still has it when the window
+// comes back.
+if (props.node.type === 'translation') loadTranslationDefaults()
+
+/** A field's own text, where it holds one; a saved or authored node can carry anything there. */
+function ownText(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined
+}
+
+const ownInstruction = computed(() => ownText(props.node.translationPrompt))
+const hasOwnInstruction = computed(() => !!ownInstruction.value?.trim())
+
+const editingInstruction = ref(false)
+/** The default as it stood when the field took the focus; one arriving later
+ *  does not fill in under the cursor. */
+const defaultAtFocus = ref('')
+
+const translationInstructionShown = computed(() => {
+  const own = ownInstruction.value
+  if (editingInstruction.value) return own ?? defaultAtFocus.value
+  return own?.trim() ? own : translationDefaults.value.instruction
+})
+
+function settleTranslationPrompt() {
+  const own = props.node.translationPrompt
+  if (own !== undefined && !ownText(own)?.trim()) emit('update-translation-prompt', undefined)
+}
+
+function onTranslationPromptFocus() {
+  loadTranslationDefaults()
+  if (editingInstruction.value) return
+  settleTranslationPrompt()
+  defaultAtFocus.value = translationDefaults.value.instruction
+  editingInstruction.value = true
+}
+
+function onTranslationPromptBlur(event: FocusEvent) {
+  if (document.activeElement === event.target) return
+  editingInstruction.value = false
+  settleTranslationPrompt()
+}
+
+/** The select's values for a language written in free text, and for the one an
+ *  own instruction names itself. */
+const OTHER_LANGUAGE = '__other__'
+const FROM_PROMPT = '__prompt__'
+const LISTED_LANGUAGES = new Set([...PLATFORM_LANGUAGES, ...FURTHER_LANGUAGES].map(l => l.code))
+
+const ownLanguage = computed(() => ownText(props.node.translationLanguage))
+/** Chosen „Other Language…“ or typed into its field: the field stays open while
+ *  the name is written, also where its first letters spell a listed code ("es"
+ *  of "Estonian"). */
+const writingOtherLanguage = ref(false)
+
+// A board loaded in place of this one can bring a node of the same id (the
+// presets do); what was being written on the old node does not carry over.
+watch(() => props.node, () => {
+  writingOtherLanguage.value = false
+  editingInstruction.value = false
+})
+
+const translationLanguageChoice = computed(() => {
+  if (writingOtherLanguage.value) return OTHER_LANGUAGE
+  const language = ownLanguage.value
+  // With no language chosen, an own instruction names its language itself and
+  // the default one goes with English (canvas_executor._execute_translation).
+  if (language === undefined) return hasOwnInstruction.value ? FROM_PROMPT : translationDefaults.value.language
+  return LISTED_LANGUAGES.has(language) ? language : OTHER_LANGUAGE
+})
+
+function onTranslationLanguageChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value
+  writingOtherLanguage.value = value === OTHER_LANGUAGE
+  if (value === OTHER_LANGUAGE) emit('update-translation-language', '')
+  else emit('update-translation-language', value === FROM_PROMPT ? undefined : value)
+}
+
+function onOtherLanguageInput(event: Event) {
+  writingOtherLanguage.value = true
+  emit('update-translation-language', (event.target as HTMLInputElement).value)
 }
 
 function onPromptTextChange(event: Event) {
@@ -812,15 +909,51 @@ const nodeHeight = computed(() => {
           </select>
         </div>
         <div class="field-group">
+          <label class="field-label">{{ t('canvas.stage.translation.targetLanguageLabel') }}</label>
+          <select
+            class="llm-select"
+            :value="translationLanguageChoice"
+            @change="onTranslationLanguageChange"
+            @mousedown.stop
+          >
+            <option v-if="hasOwnInstruction" :value="FROM_PROMPT">{{ t('canvas.stage.translation.promptLanguageOption') }}</option>
+            <optgroup :label="t('compare.platformLanguages')">
+              <option v-for="language in PLATFORM_LANGUAGES" :key="language.code" :value="language.code">
+                {{ language.label }}
+              </option>
+            </optgroup>
+            <optgroup :label="t('compare.furtherLanguages')">
+              <option v-for="language in FURTHER_LANGUAGES" :key="language.code" :value="language.code">
+                {{ language.label }}
+              </option>
+            </optgroup>
+            <option :value="OTHER_LANGUAGE">{{ t('canvas.stage.translation.otherLanguageOption') }}</option>
+          </select>
+          <input
+            v-if="translationLanguageChoice === OTHER_LANGUAGE"
+            class="llm-select language-other"
+            type="text"
+            :value="ownLanguage ?? ''"
+            :placeholder="t('canvas.stage.translation.otherLanguagePlaceholder')"
+            @input="onOtherLanguageInput"
+            @mousedown.stop
+          />
+        </div>
+        <div class="field-group">
           <label class="field-label">{{ $t('canvas.stage.translation.translationPromptLabel') }}</label>
           <textarea
             class="prompt-textarea"
-            :value="node.translationPrompt || ''"
+            :value="translationInstructionShown"
             :placeholder="$t('canvas.stage.translation.translationPromptPlaceholder')"
-            rows="2"
+            rows="5"
             @input="onTranslationPromptChange"
+            @focus="onTranslationPromptFocus"
+            @blur="onTranslationPromptBlur"
             @mousedown.stop
           />
+          <p v-if="translationDefaultsError" class="module-error error-text" role="status">
+            {{ t('canvas.stage.translation.defaultsUnavailable', { cause: translationDefaultsError }) }}
+          </p>
         </div>
       </template>
 
@@ -1382,6 +1515,11 @@ const nodeHeight = computed(() => {
 .llm-select:focus {
   outline: none;
   border-color: var(--node-color);
+}
+
+.language-other {
+  margin-top: 0.25rem;
+  cursor: text;
 }
 
 .prompt-textarea {

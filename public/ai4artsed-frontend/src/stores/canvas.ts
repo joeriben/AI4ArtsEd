@@ -26,6 +26,12 @@ import {
   isValidConnection
 } from '@/types/canvas'
 
+/** A target language chosen as free text and not yet written; a saved or
+ *  authored node can carry anything in the field. */
+function languageUnwritten(node: CanvasNode): boolean {
+  return typeof node.translationLanguage === 'string' && !node.translationLanguage.trim()
+}
+
 /**
  * Pinia Store for Canvas Workflow Builder
  *
@@ -236,9 +242,10 @@ export const useCanvasStore = defineStore('canvas', () => {
     const interceptionNodes = workflow.value.nodes.filter(n => n.type === 'interception')
     const allInterceptionConfigured = interceptionNodes.every(n => n.llmModel)
 
-    // Check all translation nodes have LLM selected
+    // Check all translation nodes have LLM selected, and a language where one
+    // is to be written in free text
     const translationNodes = workflow.value.nodes.filter(n => n.type === 'translation')
-    const allTranslationConfigured = translationNodes.every(n => n.llmModel)
+    const allTranslationConfigured = translationNodes.every(n => n.llmModel && !languageUnwritten(n))
 
     // Check all random_prompt nodes have preset and LLM selected
     const randomPromptNodes = workflow.value.nodes.filter(n => n.type === 'random_prompt')
@@ -303,6 +310,9 @@ export const useCanvasStore = defineStore('canvas', () => {
     translationNodes.forEach(n => {
       if (!n.llmModel) {
         errors.push(`Translation node needs LLM selection`)
+      }
+      if (languageUnwritten(n)) {
+        errors.push(`Translation node needs a target language`)
       }
     })
 
@@ -910,6 +920,9 @@ export const useCanvasStore = defineStore('canvas', () => {
           }
         },
         {
+          // The run lives on the server and outlasts the stream: a torn stream
+          // re-attaches and collects the rest, `complete` with the collector.
+          reconnect: true,
           onEvent: (event) => {
             console.log(`[Canvas SSE] ${event.type}:`, event.data)
 

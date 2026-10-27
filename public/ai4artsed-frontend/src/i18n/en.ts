@@ -354,9 +354,9 @@ export const en = {
       spanishEs: 'Spanish (es)'
     },
     safety: {
-      kidsTitle: 'Children (8–13)',
+      kidsTitle: 'Children',
       kidsDesc: 'All filters active: §86a, GDPR, strict child-appropriate content protection (no horror imagery, no depicted violence, no nudity), VLM image check',
-      youthTitle: 'Youth (14–18)',
+      youthTitle: 'Youth',
       youthDesc: 'All filters active: §86a, GDPR, age-appropriate content protection for older adolescents (graphic violence, gore, nudity, hate, self-harm and terrorism blocked; non-graphic horror imagery allowed), VLM image check',
       adultTitle: 'Adults',
       adultDesc: '§86a + DSGVO active. No youth protection, no VLM image check.',
@@ -1228,6 +1228,11 @@ export const en = {
         contextPromptPlaceholder: 'Interception instructions...'
       },
       translation: {
+        targetLanguageLabel: 'Target Language',
+        otherLanguageOption: 'Other Language…',
+        otherLanguagePlaceholder: 'Language name',
+        promptLanguageOption: 'From Prompt',
+        defaultsUnavailable: 'Loading the default instruction failed: {cause}',
         translationPromptLabel: 'Translation Prompt',
         translationPromptPlaceholder: 'Translation instructions...'
       },
@@ -1293,7 +1298,7 @@ export const en = {
   },
   about: {
     title: 'About the UCDCAE AI LAB',
-    intro: 'The UCDCAE AI LAB is a pedagogical-artistic experimentation platform of the UNESCO Chair in Digital Culture and Arts in Education for the explorative use of generative artificial intelligence in cultural-aesthetic media education. It was developed within the AI4ArtsEd and COMeARTS projects.',
+    intro: 'The UCDCAE AI LAB is a pedagogical-artistic experimentation platform of the UNESCO Chair in Digital Culture and Arts in Education for the explorative use of generative artificial intelligence in cultural-aesthetic media education. It was developed within the AI4ArtsEd project. ComeArts Across is responsible for its cross-aesthetic modules.',
     project: {
       title: 'The Project',
       description: 'AI is transforming society and the world of work; it is increasingly becoming a subject of education. The project explores opportunities, conditions, and limits of the pedagogical use of artificial intelligence (AI) in culturally diversity-sensitive settings of cultural education.',
@@ -2045,7 +2050,6 @@ export const en = {
     m3d: '3d',
     prefilterNote: 'quick keyword reading; a small local model refines it live, like the safety check',
     mediumColTitle: 'taking shape as',
-    nCreate: 'preparation',
     bringMaterial: 'add material',
     bringText: 'text',
     bringImage: 'image',
@@ -2171,17 +2175,11 @@ export const en = {
     purposeText: 'Enter a prompt in the field; it goes to CLIP-L, CLIP-G and T5 alike. The six fields over the drawing set all three factors, the layout of the T5 block and the pooled vector, pool in the drawing, at once. Standard (a 1, b 0, c 1, pool CLIP) is the table and the vector as Stable Diffusion 3.5 runs on its own. CLIP only (a 1, b 0, c 0, pool CLIP) zeroes the T5 block, the setting without T5 that Esser et al. (2024) measured. T5 only (a 0, b 0, c 1, pool 0) zeroes the CLIP block and puts zeros in the pooled vector’s place: the model then runs on T5’s numbers alone. Surrealization 5, 15 and 35 (a 1 − n, b n, c 1, T5 block rows 77–511, pool CLIP) carry the arithmetic of the earlier Surrealizer at its strengths 5, 15 and 35: the CLIP block with its sign turned and stretched, T5’s rows 0–76 added n-fold, and under the CLIP block T5’s rows 77–511 alone. The three sliders under the drawing move each factor on its own, a and b from −75 to 75, c from 0 to 1. a at 0 removes CLIP’s numbers from rows 0–76; a below 0 turns the sign of every CLIP cell and multiplies it by the factor’s size. b at 0 adds nothing to the CLIP block; b above 0 writes sums of both encodings into rows 0–76; b below 0 subtracts T5’s rows instead. c at 0 empties the T5 block. The two fields in the line of c set which rows the T5 block holds: rows 0–511, the layout Stable Diffusion 3.5 runs on its own, or rows 77–511 alone, the layout of the earlier Surrealizer, under which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; Standard, CLIP only and T5 only stand on rows 0–511, the three Surrealization fields on rows 77–511, and the label of a run on rows 77–511 carries T5 77–511. The two fields in the line of a set the pooled vector: pool CLIP, the vector as CLIP-L and CLIP-G compute it, or pool 0, zeros in its place; T5 only stands on pool 0, the other five fields on pool CLIP, and the label of a run on pool 0 carries pool 0. The token table under the sliders lists, row by row, the CLIP piece and the T5 piece that b pairs; pieces of a long prompt beyond the CLIP block reach T5 alone, and the table counts them. Under Advanced settings stand the negative prompt, which runs under the same three factors, layout and pooled vector, the CFG scale and the seed. The triangle, Execute in its tooltip, shows the picture on the surface and adds a card under Runs, labelled a · b · c; the key in a card’s bar puts that run back on the surface: prompt, factors, layout, pooled vector, negative prompt, CFG, seed and picture.',
     techText: 'The arithmetic runs in ComfyUI in the node AI4ArtsEdSD3ThreeFactors (comfyui_nodes/ai4artsed_sd3_conditioning.py), on the parts the encode node of the same family delivers for the prompt: rows 0–76 receive a · CLIP + b · T5[0..76], the rows from 77 on receive c · T5, in float32, nothing clamped. T5 runs at 512 rows (T5TokenizerOptions, min_length 512, devserver/schemas/engine/comfyui_chunk_support.py) or at the prompt’s own length past that. The layout of the block is the fourth parameter, t5_rows: full, rows 0–511 under the CLIP block, a table of 589 rows, or tail, rows 77–511 alone, a table of 512 rows, the layout of the earlier Surrealizer, in which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block. The pooled vector, CLIP-L’s 768 and CLIP-G’s 1280 numbers joined, is the fifth parameter, pooled. Under clip the node hands it on as the two encoders compute it; under zero it hands on zeros of the same shape, which is what ComfyUI itself assembles for the vector when it runs without a CLIP encoder (comfy/text_encoders/sd3_clip.py). The three factors act on the table; the vector passes whole. The negative prompt passes through a second node of the same kind under the same five parameters; an empty negative is the encoding of the empty string. (1, 0, 1, full, clip) is the sequence and the vector as ComfyUI assembles them on its own; (1 − α, α, 1, tail, clip) is the earlier node AI4ArtsEdSD3Fusion under legacy at α, bit for bit, which is what the three Surrealization fields send. Inside the model the whole table passes through one linear layer to the transformer’s width, the same weights for every row, and position encodings are added to the image patches only (Esser et al. 2024, section 4, Figure 2), so a text row’s place in the table plays no part in the computation; a T5 row added into a CLIP row is a sum at that layer’s input. The model reads the pooled vector apart from the table: embeddings of the timestep, the step of the run the model is at, and of this vector are the inputs to the modulation mechanism (Esser et al. 2024, section 4), which every transformer block of the model carries (comfy/ldm/modules/diffusionmodules/mmdit.py), so that zeros in its place change that modulation in every transformer block and leave the table as it is. Esser et al. (2024, “Scaling Rectified Flow Transformers for High-Resolution Image Synthesis”, ICML 2024, https://doi.org/10.48550/arXiv.2403.03206) describe the assembly in appendix B.2, the CLIP rows zero-padded along the channel axis to 4096 and concatenated along the sequence axis with the T5 rows; the training with each encoder set to zero independently at 46.4 % (B.3); and the ablation without T5 in section 5.3.3, with win rates against the full model of 50 % for aesthetics, 46 % for prompt adherence and 38 % for written text. In the paper the T5 context has 77 rows; ComfyUI runs T5 at 512 rows here. CLIP-L is the text encoder of Radford et al. (2021, “Learning Transferable Visual Models From Natural Language Supervision”, ICML 2021, https://doi.org/10.48550/arXiv.2103.00020), CLIP-G that of the OpenCLIP ViT-bigG/14 of Cherti et al. (2023, “Reproducible Scaling Laws for Contrastive Language-Image Learning”, CVPR 2023, https://doi.org/10.48550/arXiv.2212.07143), both trained on image–caption pairs; T5-XXL is the encoder of Raffel et al. (2020, “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR 21, https://doi.org/10.48550/arXiv.1910.10683), trained on text alone.',
     sliderLabel: 'Extrapolation (α)',
-    sliderNormal: 'normal',
-    sliderWeird: 'weird',
-    sliderCrazy: 'crazy',
-    sliderExtremeWeird: 'super weird',
     sliderCfBothFull: 'both full',
     sliderCfClipAlone: 'CLIP alone',
     sliderCfT5Alone: 'T5 alone',
     sliderCfClipInverted: 'CLIP inverted',
     sliderCfT5Inverted: 'T5 inverted',
-    sliderExtremeCrazy: 'super crazy',
-    sliderHint: "α<0: past CLIP {'|'} α=0: pure CLIP {'|'} α=1: pure T5 {'|'} α>1: past T5",
     // The three factors on the conditioning table (Encoder Fusion since
     // 2026-09-15). The letters a, b, c stand in the drawing and in the record
     // and are not translated; „CLIP", „T5" are the names of the encoders.
@@ -2260,7 +2258,6 @@ export const en = {
       note: 'Inside the circle the picture is 1:1; outside, the radius is compressed so that the end of the slider lands exactly on the rim — ±75 for Legacy and Dual Alpha, where fp16 turns the image black, ±2 for Centered Fade. Schematic 2D projection from 4096 dimensions; CLIP ⊥ T5 is measured (cos ≈ 0.02).',
     },
     flow: {
-      flowTag: 'the flow is the interface',
       classic: 'classic view',
       nPrompt: 'Prompt',
       nMix: 'α-mix',
@@ -2268,7 +2265,6 @@ export const en = {
       nImage: 'image',
       run: 'run',
       running: 'running…',
-      dPrompt: 'The entry of the flow.',
       dReader: 'One of the three readers of your prompt.',
       dReaderClip: 'CLIP — reads short, associatively (77 tokens).',
       dReaderT5: 'T5-XXL — reads long, grammatically (up to 512 tokens).',
@@ -3496,6 +3492,18 @@ export const en = {
         tokens: { label: 'Tokenizer', short: 'Token cost by language' },
         systemprompt: { label: 'System Prompts' },
       },
+      // The strings of the Transformers Lab's Model Comparison that are its
+      // own; its name is that of the image models' Model Comparison
+      // (`compare.tabs.model`, read in views/latent_lab.vue). Its other words are keys that already
+      // stood: System Prompts' (`compare.systemprompt`, `compare.shared`,
+      // `compare.ask.sign`, `latentLab.runLine.answer`) and the GPU line of
+      // views/latent_lab/interception_models.vue
+      // (`latentLab.textLab.error.gpuUnreachable`).
+      systempromptModels: {
+        inputPlaceholder: 'Type a message to send to all three models...',
+        noModel: 'No model chosen',
+        modelsUnavailable: 'The list of models did not arrive.',
+      },
       repeng: {
         referencesTitle: 'Research References',
         promptExamples: {
@@ -3612,7 +3620,7 @@ export const en = {
         small: 'small models',
         smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1.7B and 4B',
         large: 'large models',
-        largeNote: 'OLMo 3 7B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7 to 14B',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7 to 14B',
         family: 'model family',
         familyNote: 'the sizes of the Qwen family, 1.7B to 14B',
         history: 'model over time',
@@ -4321,6 +4329,7 @@ export const en = {
         sd35_large: 'SD 3.5 Large reads the prompt through three text encoders: CLIP-L and CLIP-G, trained on pairs of pictures and captions (Radford et al. 2021; Cherti et al. 2023), and T5-XXL, trained on text alone (Raffel et al. 2020). Stability AI\'s paper on the architecture (Esser et al. 2024) reports the design as “improving text comprehension, typography, and human preference ratings”. In the paper\'s evaluation, typography is how accurately the picture shows written text.',
         sd35_large_turbo: 'SD 3.5 Large Turbo reads the prompt through the same three text encoders as SD 3.5 Large, CLIP-L, CLIP-G and T5-XXL (Stability AI 2024, model card). What Stability AI wanted from Turbo stands in the release: “A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps” (Stability AI 2024, release page).',
         flux2: 'Flux 2 reads the prompt through the language model of a vision-language model (VLM). Black Forest Labs states what the VLM adds: “The VLM brings real world knowledge and contextual understanding” (Black Forest Labs 2025).',
+        flux3: 'Flux 3 Klein reads the prompt through Qwen3-VL-4B-Instruct, which Black Forest Labs names as its text encoder. Among the key features of the model, Black Forest Labs lists “Text rendering within generated images” (Black Forest Labs 2026, model card).',
         gemini_3_pro_image: 'Gemini 3 Pro Image is Google\'s image model “Nano Banana Pro”. Google states: “Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.” (Google 2025).',
       },
       referencesTitle: 'Sources',
@@ -4583,6 +4592,12 @@ export const en = {
     analyzed: 'Analysed {date}',
     duplicate: 'This document has already been analysed in this session. The capsules that exist keep standing.',
     analysisFailed: 'The document analysis did not complete. The file stays with whoever brought it; nothing was kept.',
+    // Status line under the title of a document card while its analysis runs
+    // (x2x_flow.vue `sceneStatus`), one stage after the other.
+    progressUpload: 'Upload',
+    progressQueued: 'In the queue behind another document',
+    progressReading: 'Text recognition',
+    progressUnits: 'Section {done} of {total} read, {capsules} of at most {max} capsules',
     unavailable: 'The document could not be taken in because of a technical fault. Nothing was judged; please try again in a moment.',
     rejectTitle: 'Document not accepted',
     rej: {

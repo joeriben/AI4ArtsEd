@@ -393,7 +393,9 @@ def _register_builtin_tools(registry: ToolRegistry):
     resona_media_configs = {
         "sd35_large": ("image", "Stable Diffusion 3.5 Large — detailed images"),
         "flux2": ("image", "FLUX.2 — images"),
-        "gemini_3_pro_image": ("image", "Gemini 3 Pro image (€ paid cloud call — every other entry here runs on the house's own cards; cloud EU/DSGVO via Mammouth)"),
+        "flux3": ("image", "FLUX 3 Image Klein — images"),
+        "gemini_3_pro_image": ("image", "Gemini 3 Pro image (€ paid cloud call — every entry here without € runs on the house's own cards; cloud EU/DSGVO via Mammouth)"),
+        "gemini_nano_banana_2_1": ("image", "Gemini Nano Banana 2.1 image (€ paid cloud call; cloud EU/DSGVO via Mammouth)"),
         "stableaudio_open": ("audio", "Stable Audio 3 — sound / audio"),
         "heartmula_standard": ("music", "HeartMuLa music. Prompt format: lyrics || tags, e.g. '[Verse] ... || pop,upbeat,piano'"),
         "wan22_t2v_video_fast": ("video", "Wan 2.2 — text-to-video"),
@@ -1311,8 +1313,12 @@ def _register_builtin_tools(registry: ToolRegistry):
             "lens is not that lens. Write a contextPrompt only for a lens the "
             "platform does not have. configLang (2-letter code, default 'en') picks the "
             "lens text's language — use the group's language when the input is in it.\n"
-            "- translation {translationPrompt?, llmModel?}: renders text to English "
-            "before image models.\n"
+            "- translation {translationLanguage?, translationPrompt?, llmModel?}: renders "
+            "text into translationLanguage (a code such as 'de' or 'ja', or a language "
+            "name). translationPrompt replaces the platform's translation instruction "
+            "entirely; leave it out to keep that instruction. With neither key the text "
+            "goes into English, for the image models; a translationPrompt without "
+            "translationLanguage has to name the target language itself.\n"
             "- generation {configId, seed?, width?, height?, steps?, cfg?}: renders "
             "media. configId picks the generator (list below). seed/width/height/steps/"
             "cfg are optional inline convenience keys.\n"

@@ -48,7 +48,8 @@ chat_bp = Blueprint('chat', __name__, url_prefix='/api/chat')
 
 # ── Model list endpoint for Compare Hub ──────────────────────────────────
 
-def _cloud_routes(matrix: Optional[dict] = None, active: Optional[str] = None) -> tuple:
+def _cloud_routes(matrix: Optional[dict] = None, active: Optional[str] = None,
+                  strict: bool = False) -> tuple:
     """`(order, routes)`: the two halves the cloud list is made of, apart so a
     caller that has to READ a route can see all of them.
 
@@ -67,6 +68,11 @@ def _cloud_routes(matrix: Optional[dict] = None, active: Optional[str] = None) -
     provider holds no key here (settings_routes.resolve_role_model). What is
     offered is the picker's business: _cloud_chat_models_from_matrix takes the
     first of `order` per model and skips a model none of them reaches.
+
+    `strict` raises where the default answers `([], {})`. A matrix without
+    presets and a read that failed would otherwise look like providers that
+    reach nothing, and the chosen provider's list has to tell the two apart
+    (_chosen_chat_models).
     """
     try:
         from my_app.routes.settings_routes import _recorded_conformity
@@ -74,6 +80,8 @@ def _cloud_routes(matrix: Optional[dict] = None, active: Optional[str] = None) -
             matrix = _load_llm_matrix()
         presets = (matrix or {}).get("llm_presets") if isinstance(matrix, dict) else None
         if not isinstance(presets, dict) or not presets:
+            if strict:
+                raise ValueError("no llm_presets in the hardware matrix")
             logger.warning("[CHAT] No llm_presets in the hardware matrix; no cloud model offered")
             return [], {}
         try:
@@ -133,11 +141,15 @@ def _cloud_routes(matrix: Optional[dict] = None, active: Optional[str] = None) -
                 routes.setdefault(name, {})[p] = path
         return order, routes
     except Exception as e:
+        if strict:
+            raise
         logger.warning(f"[CHAT] Failed to read the cloud routes: {e}")
         return [], {}
 
 
-def _cloud_chat_models_from_matrix(matrix: Optional[dict] = None) -> list:
+def _cloud_chat_models_from_matrix(matrix: Optional[dict] = None,
+                                   active: Optional[str] = None,
+                                   only_active: bool = False) -> Optional[list]:
     """
     Chat-capable cloud models over every provider that has a key on this
     installation. Earlier the list was the ACTIVE provider's role cells and
@@ -183,10 +195,25 @@ def _cloud_chat_models_from_matrix(matrix: Optional[dict] = None) -> list:
     answers from a second instant: a settings save between the two reads pairs
     the ids of one state with the marks of another. A matrix without presets
     -- unreadable, or empty -- offers no cloud model, as it did before.
+
+    `active` is the provider the settings choose, read by the caller once
+    for everything it answers; left out, _cloud_routes reads it. With
+    `only_active` the list is that provider's alone: every register model it
+    reaches, through IT -- not the one route per model the full list takes,
+    which goes through a provider recorded as conform before the chosen one,
+    so a model both reach would stand under the other provider's id there
+    (Model Comparison, Transformers Lab, 2026-10-27). 'none' chooses no provider and
+    offers no cloud model. That list alone is None where it is not known: the
+    routes could not be read, or no provider was named -- the setting's default
+    would read a file caught mid-save as 'none' (_chosen_chat_models).
     """
     out = []
     try:
-        order, routes = _cloud_routes(matrix)
+        if only_active and active is None:
+            return None
+        order, routes = _cloud_routes(matrix, active=active, strict=only_active)
+        if only_active:
+            order = [p for p in order if p == active]
         if not order:
             return out
         seen = set()
@@ -209,10 +236,12 @@ def _cloud_chat_models_from_matrix(matrix: Optional[dict] = None) -> list:
             })
     except Exception as e:
         logger.warning(f"[CHAT] Failed to build cloud chat models: {e}")
+        if only_active:
+            return None
     return out
 
 
-def list_chat_models() -> tuple:
+def list_chat_models(active: Optional[str] = None) -> tuple:
     """The chat-capable models this installation offers, whether the local
     station answered, and the register they were read from:
     `(models, gpu_service_unreachable, matrix)`.
@@ -253,7 +282,7 @@ def list_chat_models() -> tuple:
         logger.warning(f"[CHAT] Model register unavailable: {e}")
         matrix = {}
 
-    models = _cloud_chat_models_from_matrix(matrix)
+    models = _cloud_chat_models_from_matrix(matrix, active=active)
 
     # The local half, off the table of local models (config/
     # local_llm_weights.json): the list the GPU service's chat-models route
@@ -275,6 +304,16 @@ def list_chat_models() -> tuple:
         gpu_service_unreachable = True
         logger.warning(f"[CHAT] Local chat models unavailable: {e}")
 
+    _mark_data_paths(models, matrix)
+
+    return models, gpu_service_unreachable, matrix
+
+
+def _mark_data_paths(entries: list, matrix: dict) -> None:
+    """Adds to every entry where its text would GO: the service, what the
+    register records about it, and the grounds (data_path_of). Out of
+    list_chat_models since 2026-10-27, so a second list built from the same
+    register carries the marks of the same instant."""
     try:
         from my_app.routes.settings_routes import (
             data_path_of, load_default_hardware_matrix, _service_reached,
@@ -294,7 +333,7 @@ def list_chat_models() -> tuple:
         # model -- the per-model read this hoisting removed.
         shipped = shipped or {}
         unreadable = []
-        for entry in models:
+        for entry in entries:
             try:
                 entry.update(data_path_of(entry["id"], matrix, shipped))
             except Exception as e:
@@ -321,7 +360,51 @@ def list_chat_models() -> tuple:
         # claims nothing -- it never reads as "conform".
         logger.warning(f"[CHAT] Recorded data-path state unavailable: {e}")
 
-    return models, gpu_service_unreachable, matrix
+
+_USER_SETTINGS_FILE = Path(__file__).parent.parent.parent / "user_settings.json"
+
+
+def _chosen_provider() -> Optional[str]:
+    """The external provider user_settings.json chooses, lowercased, 'none'
+    for none -- or None where the file is there and could not be read.
+
+    get_user_setting answers its default in both cases. A save rewrites the
+    file in place (settings_routes opens it with 'w', which empties it
+    first), so a read landing in that instant finds nothing, and the default
+    would say "no provider" about a provider that is chosen."""
+    if not _USER_SETTINGS_FILE.exists():
+        return "none"
+    try:
+        with open(_USER_SETTINGS_FILE, 'r', encoding='utf-8') as f:
+            settings = json.load(f)
+    except Exception as e:
+        logger.warning(f"[CHAT] user_settings.json unreadable at this instant: {e}")
+        return None
+    if not isinstance(settings, dict):
+        return None
+    return str(settings.get("EXTERNAL_LLM_PROVIDER") or "none").strip().lower()
+
+
+def _chosen_chat_models(models: list, register: dict, active: Optional[str]) -> Optional[list]:
+    """`chosen_models`: what a surface offers that offers only what the
+    settings choose -- this machine's models and every model of the chosen
+    provider, through that provider (Model Comparison in the Transformers
+    Lab, since 2026-10-27). Built here and not filtered out of `models`: that list holds
+    ONE route per model, a model the chosen provider reaches can stand there
+    under another provider's id, and filtering it by prefix would drop it.
+    The local half is the one `models` holds, marked already.
+
+    None where it is not known: the settings or the routes could not be read
+    at this instant. A list built from a file caught mid-save would say "no
+    provider" about a provider that is chosen; None tells the surface it does
+    not know, and it offers the full list for that instant."""
+    if active is None:
+        return None
+    chosen = _cloud_chat_models_from_matrix(register, active=active, only_active=True)
+    if chosen is None:
+        return None
+    _mark_data_paths(chosen, register)
+    return chosen + [m for m in models if str(m.get("id") or "").startswith("local/")]
 
 
 @chat_bp.route('/models', methods=['GET'])
@@ -331,10 +414,14 @@ def chat_models():
     Returns cloud models (every keyed provider, from the reach list and
     hardware_matrix.json) + local models (GPU Service).
     """
-    # The register the list was built from stays here: this answer is the
-    # models and the state of the local station, as it has been.
-    models, gpu_service_unreachable, _register = list_chat_models()
-    return jsonify({"models": models, "gpu_service_unreachable": gpu_service_unreachable})
+    # Which external provider the settings choose, read ONCE for both lists
+    # below, so the two cannot answer from two settings. None where the file
+    # could not be read: the full list then reads the setting as it always
+    # did, and the chosen list is not known.
+    active = _chosen_provider()
+    models, gpu_service_unreachable, register = list_chat_models(active=active)
+    return jsonify({"models": models, "gpu_service_unreachable": gpu_service_unreachable,
+                    "chosen_models": _chosen_chat_models(models, register, active)})
 
 
 @chat_bp.route('/vlm-models', methods=['GET'])
@@ -533,6 +620,9 @@ ITEM_FOR_VIEW = {
     # text has not been written. Until it exists, the companion is told which
     # view is open and nothing about it. `temperature_comparison` stood here
     # until 2026-08-23 and named an item for an instrument that is gone.
+    # NO ROW for `system_prompt_across_models` either (Model Comparison,
+    # Transformers Lab, 2026-10-27), for the same reason: what the place
+    # says about itself has not been written.
 }
 
 def _item_block_for(draft_context: str) -> str:
@@ -619,7 +709,7 @@ def _page_entry_for(draft_context: str) -> str:
     return PAGE_ENTRIES.get(m.group(1), "") if m else ""
 
 # System Prompt Templates
-GENERAL_SYSTEM_PROMPT = f"""You are an AI assistant for the AI for Arts Education Lab, an educational tool for creative AI experimentation in art education (ages 8-17). You are contacted in the context of an ongoing art-AI workshop; educators are present. You ALWAYS respond in the language in which you were addressed.
+GENERAL_SYSTEM_PROMPT = f"""You are an AI assistant for the AI for Arts Education Lab, an educational tool for creative AI experimentation in art education. You are contacted in the context of an ongoing art-AI workshop; educators are present. You ALWAYS respond in the language in which you were addressed.
 
 WHAT YOU ARE: A language model — a useful analytical tool. You have no emotions, no curiosity, no excitement. You do not simulate any of these. You are honest about being a machine. This honesty is pedagogically important.
 
@@ -1057,7 +1147,7 @@ needs saying in five sentences, it takes two paragraphs; where three would do,
 three do. What is worth saying is said in the paragraph that is standing, not
 kept for a later one that may never be reached."""
 
-SESSION_SYSTEM_PROMPT_TEMPLATE = f"""You are an AI assistant for the AI for Arts Education Lab, an educational tool for creative AI experimentation in art education (ages 8-17). You are contacted in the context of an ongoing art-AI workshop; educators are present. You ALWAYS respond in the language in which you were addressed.
+SESSION_SYSTEM_PROMPT_TEMPLATE = f"""You are an AI assistant for the AI for Arts Education Lab, an educational tool for creative AI experimentation in art education. You are contacted in the context of an ongoing art-AI workshop; educators are present. You ALWAYS respond in the language in which you were addressed.
 
 WHAT YOU ARE: A language model — a useful analytical tool. You have no emotions, no curiosity, no excitement. You do not simulate any of these. You are honest about being a machine.
 
@@ -1614,7 +1704,8 @@ def _local_run_for_caller(model_string: str, messages: list, image_b64: Optional
     llm_name = local_llm_weights.dir_name(model_string)
     if llm_name is None or not local_llm_weights.is_installed(model_string):
         raise Exception(f"{model_string} is not an installed local model "
-                        f"(config/local_llm_weights.json; the settings page installs it)")
+                        f"(config/local_llm_weights.json; download_llm_models.sh or the "
+                        f"Download entry of a model list installs it)")
     return {
         "content": "",
         "thinking": None,

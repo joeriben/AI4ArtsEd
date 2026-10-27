@@ -24,24 +24,24 @@ Complete inventory of all AI models used by the platform.
 
 | Category | Size | Purpose |
 |----------|------|---------|
-| **Local language models** (`<repo>/dlbackend/ComfyUI/models/llm/`) | ~232 GB if every alias in the table is kept locally | Stage 1–3 LLM, image reading, Compare Hub |
-| **Safety classifier** (`<repo>/llama-server-models/shieldstral-3b/`) | 4.2 GB | Every safety check of prompts, images and person names |
+| **Local language models** (`<repo>/dlbackend/ComfyUI/models/llm/`) | ~232 GB if every alias in the table is kept locally | Stage 1–3 LLM, image reading, the model lists of System Prompts and Image Understanding |
+| **Safety classifier** (`<repo>/llama-server-models/shieldstral-3b/`) | 4.5 GB | The safety checks of prompts, images and person names |
 | **HuggingFace cache** (`~/.cache/huggingface/hub/`) | ~119 GB | Diffusers image and video generation, encoders (auto-downloaded on first use) |
-| **HuggingFace text models** (`~/.cache/huggingface/hub/`) | ~215 GB | Bias Archaeology 1 + 2 / Latent Text Lab |
-| **ComfyUI models** (`<repo>/dlbackend/ComfyUI/models/`) | ~450 GB | ComfyUI generation pipeline |
+| **HuggingFace text models** (`~/.cache/huggingface/hub/`) | ~235 GB | Bias Archaeology 1 + 2 / Latent Text Lab |
+| **ComfyUI models** (`<repo>/dlbackend/ComfyUI/models/`) | ~500 GB | ComfyUI generation pipeline |
 | **Media stations** (`<repo>/dlbackend/ComfyUI/models/<station>/`) | ~105 GB for every alias of the table, plus ~16 GB in the HF cache | Stable Audio 3, ImageBind, MMAudio, HeartMuLa, Hunyuan3D 2, the media readers (section 1a) |
 | **GPU Service Weights** (`gpu_service/weights/`, `ext_weights/`) | ~6 GB | MMAudio, the GPU service's copy (section 4; until stage 8) |
 | **HeartMuLa** (`~/ai/heartlib/ckpt/`) | ~21 GB | Music generation checkpoint, the GPU service's copy (section 3; until stage 8) |
 | **Speech synthesis** (`~/.cache/supertonic3/`, HF cache, `~/ai/piper/`) | ~10 GB | Four text-to-speech systems: the platform's voice and three heard against it |
-| **Total** (worst case, all models present) | **~700 GB** | |
+| **Total** (worst case, all models present) | **~750 GB** | |
 
 A minimal install with one chat model + the safety classifier + an image reader + only
 the configs you actually plan to run is far smaller (typically 50–200 GB).
 
 **None of this belongs in the repository.** Every model and every third-party
-technology on this list is fetched — by a script, by the Settings UI, or on
-first use — and lives outside the working tree. That holds regardless of size
-or licence: what can be downloaded is downloaded, never vendored.
+technology on this list is fetched — by a script, by the Download entry of a
+model list in the interface, or on first use — and lives outside the working tree. That holds
+regardless of size or licence: what can be downloaded is downloaded, never vendored.
 
 ---
 
@@ -70,10 +70,12 @@ capability 8.9 gets the weights dequantised to BF16 by transformers, at BF16 siz
 
 The table below is the whole of `devserver/config/local_llm_weights.json`, which is
 the single source of truth: an alias that is not there cannot be installed or run,
-and a new one added there appears in the Settings UI installer and in the model
-lists by itself. **The third column is the folder ComfyUI lists.**
+and a chat model or an image reader added there appears by itself, with its Download
+entry, in the model list of System Prompts (Latent Lab, Transformers Lab) or of Image
+Understanding (Latent Lab, under Cultural Knowledge & Stereotypes). **The third
+column is the folder ComfyUI lists.**
 
-### Chat-capable models (Compare Hub, Stage 1–3 LLM, interception)
+### Chat-capable models (System Prompts, Stage 1–3 LLM, interception)
 
 | Alias | HuggingFace repo | Folder under `models/llm/` | Size | Notes |
 |-------|------------------|----------------------------|-----:|-------|
@@ -91,7 +93,7 @@ lists by itself. **The third column is the folder ComfyUI lists.**
 | `eurollm:1.7b` | `utter-project/EuroLLM-1.7B-Instruct` | `utter-project--EuroLLM-1.7B-Instruct` | 3.3 GB |  |
 | `granite3.1:2b` | `ibm-granite/granite-3.1-2b-instruct` | `ibm-granite--granite-3.1-2b-instruct` | 5.1 GB |  |
 
-### Utility models (image reading, not exposed in Compare Hub)
+### Image readers, and the former safety model
 
 | Alias | HuggingFace repo | Folder under `models/llm/` | Size | Notes |
 |-------|------------------|----------------------------|-----:|-------|
@@ -101,25 +103,37 @@ lists by itself. **The third column is the folder ComfyUI lists.**
 | `qwen3-vl:2b` | `Qwen/Qwen3-VL-2B-Instruct` | `Qwen--Qwen3-VL-2B-Instruct` | 4.3 GB | reads images |
 | `llama-guard3:1b` | `meta-llama/Llama-Guard-3-1B` | `meta-llama--Llama-Guard-3-1B` | 3.0 GB | gated: needs `HF_TOKEN` |
 
-`llama-guard3:latest` is a second name for `llama-guard3:1b` (the table's `aliases`).
-`llama-guard3:1b` was the safety model until 2026-09-24; no check asks it any more.
+The `qwen3-vl` rows are offered in Image Understanding.
+`llama-guard3:1b` is in no comparison list; where it is installed, the role fields of
+the settings page's model table and the Canvas still offer it, as they offer every
+installed alias.
+`llama-guard3:latest` is a second name for
+`llama-guard3:1b` (the table's `aliases`). `llama-guard3:1b` was the safety model until
+2026-09-24. A check asks the model `SAFETY_MODEL` names, and the GPU service answers only
+a model its registry declares a classifier: where `SAFETY_MODEL` still names
+`llama-guard3:1b` or `llama-guard3:latest`, every check that asks the classifier blocks
+without its answer (the Wikimedia Commons row drops the picture instead). Set it to
+`shieldstral:3b` (below).
 All entries together are 232 GB; a working install holds a few of them.
 
 ### Safety classifier (GPU service, not in this table)
 
-Every check of prompts, images and person names asks one model, `SAFETY_MODEL` =
+The safety checks of prompts, images and person names ask one model, `SAFETY_MODEL` =
 `shieldstral:3b`: Shieldstral 1.0 3B (`mistralai/Shieldstral-1.0-3B`), a Q8_0 GGUF
-plus its image projector `mmproj-F16.gguf`, 4.2 GB together. ComfyUI does not run
+plus its image projector `mmproj-F16.gguf`, 4.5 GB together. ComfyUI does not run
 it. The GPU service starts it as a `llama-server` child from
 `<repo>/llama-server-models/shieldstral-3b/` (registry entry in
-`gpu_service/services/llm_backend.py`). Without the two files every check comes
-back without a verdict and the run is blocked.
+`gpu_service/services/llm_backend.py`). Without the two files every check that asks
+the classifier comes back without a verdict and blocks the run; the Wikimedia Commons
+row drops the picture instead.
 
 The Hugging Face repository holds the model as safetensors only; the two GGUF files
 were converted from it with the pinned llama.cpp clone (comment on the registry
-entry; the pinned revision is in [`SOFTWARE_VERSIONS.md`](SOFTWARE_VERSIONS.md)). The
-GPU service's installer therefore cannot fetch them: its download of
-`Shieldstral-1.0-3B-Q8_0.gguf` ends in "Entry Not Found". Copy the folder from an
+entry; the pinned revision is in [`SOFTWARE_VERSIONS.md`](SOFTWARE_VERSIONS.md)).
+Nothing installs them: the GPU service's install route (`POST /api/llm/install`, which
+no page calls) ends in "Entry Not Found" on `Shieldstral-1.0-3B-Q8_0.gguf`, and the
+Download entry in the interface (`POST /api/chat/install`, below) installs from the
+table above, which does not hold the classifier. Copy the folder from an
 installation that has it. `SAFETY_MODEL` itself is set on the settings page, section
 "Local Safety Model".
 
@@ -127,12 +141,23 @@ installation that has it. `SAFETY_MODEL` itself is set on the settings page, sec
 
 Three ways, all reading the same table:
 
-- **Settings UI**: the Install button next to a local model in the model lists
-  (`POST /api/chat/install`, progress streamed).
+- **In the interface**: the Download entry of a local model that is not installed,
+  "⤓ Download (N MB)": an option in the Model selector of System Prompts (Latent Lab,
+  Transformers Lab; chat models), a button on the model's chip in Image Understanding
+  (Latent Lab, under Cultural Knowledge & Stereotypes; models that read images).
+  `POST /api/chat/install` streams the progress;
+  `POST /api/chat/install-precheck`, which no page calls, says beforehand what
+  stands in the way — an unknown alias, a model already installed, a gated
+  repository without a Hugging Face token (`HF_TOKEN`, or the one a login
+  saved), a folder in the model's place that holds no whole snapshot, another
+  install that is running, too little disk.
 - **Script**: `./download_llm_models.sh` installs every local model a model role of
-  the settings names, and the model the look at images runs on (`qwen3-vl:4b`, or
-  `RESONA_VIEW_VLM_MODEL`); `./download_llm_models.sh qwen3:1.7b llama-guard3:1b`
-  the aliases given. Idempotent; an interrupted download resumes.
+  the settings names, except `SAFETY_MODEL`'s, and the model the look at images runs
+  on (`qwen3-vl:4b`, or the one `RESONA_VIEW_VLM_MODEL` names in
+  `devserver/user_settings.json`); the safety classifier is not in this table at all
+  ("Safety classifier" above).
+  `./download_llm_models.sh qwen3:1.7b qwen3-vl:8b` installs the aliases given.
+  Idempotent; an interrupted download resumes.
 - **By hand**: `huggingface-cli download <repo> --local-dir
   dlbackend/ComfyUI/models/llm/<folder>` with the folder from the third column.
 
@@ -149,9 +174,11 @@ needs a Hugging Face account that accepted the model's licence and its token as
 
 A working production deploy needs at least:
 
-- One chat-capable model that is set as the default for Stages 1–3 (e.g. `qwen3:4b`)
-- `llama-guard3:1b` (Stage 1/3 content filtering, fail-closed safety gate)
-- `qwen3-vl:2b` (post-generation image safety check, kids/youth)
+- One chat-capable model that is set as the default for Stages 1–3 (e.g. `qwen3:4b`).
+  The Stage 3 model also judges generated code that the pattern filter flags.
+- The safety classifier `shieldstral:3b`, with `SAFETY_MODEL` set to it ("Safety
+  classifier" above). Every check that asks it blocks without its answer; the
+  Wikimedia Commons row drops the picture instead.
 
 All other aliases are optional and can be installed on demand.
 
@@ -293,15 +320,16 @@ config:
 | Qwen3 1.7B      | `Qwen/Qwen3-1.7B`                  | ~4 GB |
 | Qwen3 4B        | `Qwen/Qwen3-4B`                    | ~8 GB |
 
-### "large models" — five makers, 7B to 12B
+### "large models" — six makers, 7B to 14B
 
 | Model | HF ID | Size (bf16) |
 |-------|-------|-------------|
-| OLMo 2 7B          | `allenai/OLMo-2-1124-7B-Instruct`    | ~14 GB |
-| OLMo 3 7B          | `allenai/Olmo-3-7B-Instruct`         | ~14 GB |
-| Nemotron Nano 9B   | `nvidia/NVIDIA-Nemotron-Nano-9B-v2`  | ~18 GB |
-| DeepSeek 7B        | `deepseek-ai/deepseek-llm-7b-chat`   | ~14 GB |
-| Mistral NeMo 12B   | `mistralai/Mistral-Nemo-Instruct-2407` | ~25 GB |
+| OLMo 3 7B          | `allenai/Olmo-3-7B-Instruct`             | ~14 GB |
+| Apertus 8B         | `swiss-ai/Apertus-8B-Instruct-2509`       | ~16 GB |
+| Nemotron Nano 9B   | `nvidia/NVIDIA-Nemotron-Nano-9B-v2`      | ~18 GB |
+| Qwen3.5 9B         | `Qwen/Qwen3.5-9B`                         | ~18 GB |
+| Gemma 4 12B        | `google/gemma-4-12B-it`                   | ~24 GB |
+| Ministral 3 14B    | `mistralai/Ministral-3-14B-Instruct-2512` | ~14 GB (FP8) |
 
 ### "model family" — one family across its sizes
 
@@ -326,7 +354,7 @@ is what changed most and most unevenly, so the base model is the closer thing to
 | Qwen2.5 7B (09/2024) | `Qwen/Qwen2.5-7B` | ~15 GB |
 | Qwen3 8B (04/2025)   | `Qwen/Qwen3-8B`   | ~16 GB |
 
-**Total unique: 16 repositories, ~215 GB bf16** (Qwen3 4B and 8B each stand in two
+**Total unique: 17 repositories, ~235 GB bf16** (Qwen3 4B and 8B each stand in two
 lineups and are fetched once).
 
 ### Two repositories need something beyond the script
@@ -622,7 +650,7 @@ Diffusers GPU service is unavailable.
 | `clip_l.safetensors` | 235 MB |
 | (+ smaller) | |
 
-### diffusion_models/ (~118 GB)
+### diffusion_models/ (~140 GB)
 
 | File | Size |
 |------|------|
@@ -632,6 +660,15 @@ Diffusers GPU service is unavailable.
 | `wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors` | 14 GB |
 | `wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors` | 14 GB |
 | `wan2.2_ti2v_5B_fp16.safetensors` | 9.4 GB |
+| `flux3-image-klein-bf16.safetensors` | 11.1 GB |
+| `flux3-image-klein-base-bf16.safetensors` (optional) | 11.1 GB |
+
+### text_encoders/ (~28 GB)
+
+| File | Size |
+|------|------|
+| `qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` (optional) | 18.8 GB |
+| `qwen3vl_4b_bf16.safetensors` | 8.9 GB |
 
 ### vae/ (~5.4 GB)
 
@@ -679,6 +716,28 @@ The remaining Flux files listed in the tables above are **not** in
   production paths; FP16 is a custom convert for niche workflows.
 - `loras/flux2_berthe_morisot.safetensors`: workshop-specific LoRA,
   no canonical public source.
+
+### FLUX 3 Image Klein — canonical sources
+
+FLUX 3 Image Klein (Black Forest Labs, 15 October 2026; 5.6B image transformer)
+comes repackaged for ComfyUI by Black Forest Labs itself at
+[`black-forest-labs/flux-3-image-klein-comfy`](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy).
+The repository is gated (FLUX Kommunity License v1.0): the account behind the
+Hugging Face token has to accept the licence on that page before
+`./download_flux3.sh` can fetch anything. It needs ComfyUI >= 0.41.0.
+
+| File | Size | Notes |
+|------|------|-------|
+| `diffusion_models/flux3-image-klein-bf16.safetensors` | 11.1 GB | Distilled checkpoint; what the output config `flux3` loads (16 steps, cfg 1) |
+| `text_encoders/qwen3vl_4b_bf16.safetensors` | 8.9 GB | Qwen3-VL-4B-Instruct, loaded with `CLIPLoader` type `flux3` |
+| `vae/Flux/flux2-vae.safetensors` | 321 MB | FLUX.2's VAE, the same file the Flux 2 workflows load, byte-identical to the VAE in BFL's own `black-forest-labs/flux-3-image-klein`. Where it is missing, `./download_flux3.sh` fetches it from [Comfy-Org/flux2-dev](https://huggingface.co/Comfy-Org/flux2-dev/blob/main/split_files/vae/flux2-vae.safetensors), as `./download_flux2.sh` does |
+| `diffusion_models/flux3-image-klein-base-bf16.safetensors` | 11.1 GB | Optional (`--base`): undistilled, 50 steps, cfg 3.5; no output config uses it |
+| `text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` | 18.8 GB | Optional (`--upsampler`): BFL's prompt upsampler; no output config uses it |
+
+The repository also holds smaller variants: int8 for both transformers
+(`*-int8-convrot`), the text encoder and the upsampler (`*_int8_convrot`), NVFP4
+for both transformers (`*-nvfp4`, Blackwell only), and w4a8 for the upsampler.
+The script fetches none of them.
 
 ### Video generation — COMPLETE model set (all three video configs)
 
@@ -772,7 +831,9 @@ re-query availability with `force_refresh=true`.
 **and the complete Wan 2.2 14B video stack** (~110 GB total) directly into
 `<repo>/dlbackend/ComfyUI/models/`. After it finishes, all three video output
 configs (`ltx_video`, `wan22_t2v_video_fast`, `wan22_i2v_video`) have every
-file they need. For Flux 2, run `./download_flux2.sh` (adds ~70 GB). Everything
+file they need. For Flux 2, run `./download_flux2.sh` (adds ~70 GB); for
+FLUX 3 Image Klein, `./download_flux3.sh` (adds ~20 GB, ~50 GB with `--base`
+and `--upsampler`). Everything
 else (Qwen Image, ACE-Step, decorative LoRAs, Wan 2.2 TI2V-5B) is downloaded
 manually based on which output_configs you plan to enable.
 

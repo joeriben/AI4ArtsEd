@@ -10,14 +10,17 @@ BACKEND_PORT=17801
 # Get directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Record the terminal output into a protocol file where the installation has _record.sh
 RECORD_SERVICE_NAME="backend"
-source "$SCRIPT_DIR/_record.sh"
+if [ -f "$SCRIPT_DIR/_record.sh" ]; then
+    source "$SCRIPT_DIR/_record.sh"
+fi
 
-# Safety check: Only run from 'production' directory
-if [[ ! "$SCRIPT_DIR" =~ "production" ]]; then
-    echo "❌ ERROR: This production script can only be run from a directory containing 'production' in its path."
+# Safety check: the development branch is not served on the production port
+if [ "$(git -C "$SCRIPT_DIR" symbolic-ref --short -q HEAD 2>/dev/null)" = "develop" ]; then
+    echo "❌ ERROR: This production script does not run on the branch 'develop'."
     echo "   Current directory: $SCRIPT_DIR"
-    echo "   Expected: Path must contain 'production' (e.g., ~/ai/ai4artsed_production)"
+    echo "   Expected: a checkout of 'main', the production branch"
     exit 1
 fi
 

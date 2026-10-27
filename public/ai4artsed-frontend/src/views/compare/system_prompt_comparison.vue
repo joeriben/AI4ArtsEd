@@ -5,8 +5,8 @@
   temperature for all three. Not one per column: a column here differs from its
   neighbour in its system prompt and in nothing else, and a temperature of its own
   would make every difference readable as the draw instead. The temperature is
-  what the whole comparison is run AT, which is why it stands once, above the
-  columns, beside the model.
+  what the whole comparison is run AT, which is why it stands once, in the
+  preparing column beside the model, and in no column head.
 
   The surface belongs to the Latent Text Lab since the same day. It kept the file
   it was built in; what moved is the category, and a category is not a folder —
@@ -20,16 +20,24 @@
   former fixed offers keep their places on the axis — deterministic at 0,
   balanced at 0.5, unpredictable at 1 — and it runs on to 2, so
   that the range where the output visibly falls apart can be set at all.
+
+  Since 2026-10-27 the column, the system-prompt field in its head and the
+  randomness axis are components (components/ChatColumn.vue,
+  components/SystemPromptField.vue, components/RandomnessAxis.vue), and the
+  round that puts the message to the three columns is
+  composables/useChatColumns.ts. Model Comparison (Transformers Lab) stands on
+  the same parts with the two axes exchanged: one system prompt for all three columns,
+  and a model per column.
 -->
 <template>
   <div class="cmp-page sp-compare">
     <ShellRun
-      :ready="!!userInput.trim() && !isSending"
+      :ready="canSend"
       :running="isSending"
       :title="t('compare.shared.sendAll')"
       :label="t('latentLab.runLine.answer')"
       :count="answered"
-      :total="store.columns.length"
+      :total="total"
       @run="sendToAll"
     />
     <!-- The preparing column at the left, the three system prompts beside it.
@@ -59,18 +67,23 @@
         <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
         <button
           v-if="store.hasConversation"
-          class="clear-btn"
-          @click="startNewConversation"
+          class="cmp-new-conversation"
+          :disabled="isSending"
+          @click="store.clearAll()"
         >
           {{ t('compare.shared.newConversation') }}
         </button>
 
         <label class="lab-pick-label">{{ t('compare.shared.modelLabel') }}</label>
         <select
-          :value="selectedModel"
+          :value="store.modelId"
           class="model-select"
-          @change="onModelSelect(($event.target as HTMLSelectElement).value)"
+          :disabled="isSending"
+          @change="onModelSelect($event.target as HTMLSelectElement)"
         >
+          <!-- A model the store still holds and the list no longer names —
+               it went, or the list did not come. -->
+          <option v-if="!isListed(store.modelId)" :value="store.modelId">{{ store.modelId }}</option>
           <option
             v-for="m in chatModels"
             :key="m.id"
@@ -81,76 +94,29 @@
 
         <!-- ONE setting for all three columns. It determines what the run IS,
              which is why it stands with the model and not behind a fold of its
-             own. The number stands in the label as well: between two notches
-             the handle alone says no 0.7. -->
-        <label class="lab-pick-label sp-temp-label">
-          {{ t('compare.systemprompt.temperatureLabel') }}
-          <b>{{ t('compare.shared.temperatureValue', { v: temperatureText }) }}</b>
-        </label>
-        <MarkedSlider
-          class="sp-temp-slider"
-          v-model="temperature"
-          :min="TEMPERATURE_MIN"
-          :max="TEMPERATURE_MAX"
-          :step="0.1"
-          :marks="temperatureMarks"
-          :disabled="isSending"
-          :aria-label="t('compare.systemprompt.temperatureLabel')"
-          :value-text="temperatureText"
-        />
+             own. -->
+        <RandomnessAxis v-model="temperature" :disabled="isSending" />
       </section>
 
-      <!-- 3 columns -->
-      <div class="cmp-results sp-columns">
-        <div
+      <!-- 3 columns. The column and the field in its head are components,
+           shared with Model Comparison (Transformers Lab). -->
+      <div class="cmp-results cmp-chat-columns">
+        <ChatColumn
           v-for="(col, idx) in store.columns"
           :key="idx"
-          class="sp-column"
-          :class="columnClass(idx)"
+          :messages="col.messages"
+          :loading="!!colLoading[idx]"
+          :tint="idx"
         >
-          <div class="column-header">
-            <div class="preset-row">
-              <label class="preset-label">{{ t('compare.systemprompt.presetLabel') }}</label>
-              <select
-                :value="col.presetId"
-                class="preset-select"
-                @change="onPresetChange(idx, ($event.target as HTMLSelectElement).value)"
-              >
-                <option v-for="p in presets" :key="p.id" :value="p.id">{{ t(`compare.systemprompt.presets.${p.id}`) }}</option>
-                <option value="custom">{{ t('compare.systemprompt.custom') }}</option>
-              </select>
-            </div>
-            <textarea
-              :ref="el => setPromptRef(idx, el)"
-              :value="col.systemPrompt"
-              class="prompt-textarea"
-              :placeholder="t('compare.systemprompt.emptyPrompt')"
-              @input="onPromptEdit(idx, ($event.target as HTMLTextAreaElement).value)"
+          <template #head>
+            <SystemPromptField
+              :prompt="col.systemPrompt"
+              :preset-id="col.presetId"
+              :disabled="isSending"
+              @change="(prompt, presetId) => store.setSystemPrompt(idx, prompt, presetId)"
             />
-            <!-- Where this prompt is published, and when. It stands AT the
-                 prompt and not in a footnote: without its source a system
-                 prompt is a claim about a product, and what this column is for
-                 is reading a document from one. -->
-            <p v-if="sourceOf(col.presetId)" class="prompt-source">
-              <a :href="sourceOf(col.presetId)!.source" target="_blank" rel="noopener noreferrer">
-                {{ t('compare.systemprompt.publishedOn', { date: sourceOf(col.presetId)!.published }) }}
-              </a>
-            </p>
-          </div>
-          <div class="column-messages" :ref="el => setColRef(idx, el)">
-            <div
-              v-for="msg in col.messages"
-              :key="msg.id"
-              class="chat-bubble"
-              :class="msg.role"
-            >
-              {{ msg.content }}
-            </div>
-            <div v-if="colLoading[idx]" class="chat-bubble assistant loading">
-              <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-            </div>
-          </div>
-        </div>
+          </template>
+        </ChatColumn>
       </div>
     </div>
 
@@ -165,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { computed, watch, onMounted, onBeforeUnmount, ref } from 'vue'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { useI18n } from 'vue-i18n'
@@ -174,317 +140,109 @@ import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
 import { useModelInstall } from '@/composables/useModelInstall'
-import { chatTurn, ChatStreamError, ChatNoReplyError } from '@/lib/chatTurn'
-import { SseHttpError } from '@/lib/sseStream'
+import { useChatColumns } from '@/composables/useChatColumns'
 import MediaInputBox from '@/components/MediaInputBox.vue'
-import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
+import RandomnessAxis, { RANDOMNESS_START } from '@/components/RandomnessAxis.vue'
+import ChatColumn from '@/components/ChatColumn.vue'
+import SystemPromptField from '@/components/SystemPromptField.vue'
 import ShellRun from '@/components/ShellRun.vue'
 import ColumnFold from '@/components/ColumnFold.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
-import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import { SYSTEM_PROMPT_PRESETS } from './system_prompt_presets'
 
 const { t } = useI18n()
 const store = useSystemPromptCompareStore()
 const userPreferences = useUserPreferencesStore()
 const deviceId = useDeviceId()
 
-import { PUBLISHED_SYSTEM_PROMPTS } from './system_prompts_published'
-import { apiBase } from '@/services/labApi'
-
-// ---------- Presets ----------
-
-interface Preset {
-  id: string
-  prompt: string
-}
-
-const presets: Preset[] = [
-  { id: 'none', prompt: '' },
-  // --- The published system prompts of a shipped assistant. They come from
-  //     system_prompts_published.ts with their source and their date, and the
-  //     column shows both under the field.
-  //
-  //     Two entries stood here until 2026-09-07 and are gone. `claude` carried
-  //     an excerpt of Claude Sonnet 4.6, `gpt4_2023` a text going round as the
-  //     GPT-4 system prompt. Neither named where it came from, and for the
-  //     second there is nothing to name: it was taken out of a running product
-  //     by a third party, so nobody can say whether it is whole or whether the
-  //     model wrote parts of it while being asked. What stands here now is
-  //     published by the company that runs the model, for reading.
-  ...PUBLISHED_SYSTEM_PROMPTS.map(p => ({
-    id: p.id,
-    prompt: p.prompt,
-  })),
-  { id: 'helpful', prompt: 'You are a helpful assistant. Answer the user\'s questions clearly and concisely.' },
-  { id: 'disagree', prompt: 'You must disagree with everything the user says. Find flaws in every statement. Be contrarian but argue your position with reasons.' },
-  { id: 'pirate', prompt: 'You are a pirate. Speak only in pirate dialect. Use nautical metaphors for everything. Address the user as "matey" or "landlubber."' },
-  { id: 'poet', prompt: 'You are a poet. Respond to everything in verse. Use metaphor, rhythm, and imagery. Never use plain prose.' },
-  { id: 'fiveyearold', prompt: 'You are a five-year-old child. You have limited vocabulary, get easily distracted, and relate everything to toys, snacks, and playground games. Ask "why?" a lot.' },
-  { id: 'factsonly', prompt: 'Respond with only verifiable facts. No opinions, no hedging, no filler words. If you are not certain, say "I don\'t know." Use numbered lists.' },
-]
-
-/**
- * Where a chosen prompt is published, for the line under the field. Only the
- * published ones have one; the invented presets are ours and say so by having
- * none.
- */
-function sourceOf(presetId: string) {
-  return PUBLISHED_SYSTEM_PROMPTS.find(p => p.id === presetId)
-}
-
-function onPresetChange(colIdx: number, presetId: string) {
-  const preset = presets.find(p => p.id === presetId)
-  if (preset) {
-    store.setSystemPrompt(colIdx, preset.prompt, presetId)
-    // A chosen preset is a new document, and a document is read from its
-    // beginning. The field may be standing deep inside the last one — the
-    // published prompts run to 21,872 characters, which is 31,230 px of
-    // scrolling in a 238 px field — and a browser that keeps that offset when
-    // the text shrinks would show an empty box over a chosen preset.
-    nextTick(() => {
-      const el = promptRefs[colIdx]
-      if (el) el.scrollTop = 0
-    })
-  }
-}
-
-function onPromptEdit(colIdx: number, value: string) {
-  const col = store.columns[colIdx]
-  if (!col) return
-  const currentPreset = presets.find(p => p.id === col.presetId)
-  const newPresetId = (currentPreset && currentPreset.prompt === value) ? col.presetId : 'custom'
-  store.setSystemPrompt(colIdx, value, newPresetId)
-}
-
-// ---------- Column refs ----------
-
-/** The three prompt fields, so a newly chosen document can be shown from its top. */
-const promptRefs: (HTMLTextAreaElement | null)[] = [null, null, null]
-
-function setPromptRef(idx: number, el: unknown) {
-  promptRefs[idx] = (el as HTMLTextAreaElement) ?? null
-}
-
-const colRefs: (HTMLElement | null)[] = [null, null, null]
-
-function setColRef(idx: number, el: unknown) {
-  colRefs[idx] = el as HTMLElement | null
-}
-
-function scrollColumn(idx: number) {
-  nextTick(() => {
-    const el = colRefs[idx]
-    if (el) el.scrollTop = el.scrollHeight
-  })
-}
-
-function scrollAllColumns() {
-  for (let i = 0; i < 3; i++) scrollColumn(i)
-}
-
-// ---------- Column state ----------
-
-const userInput = ref('')
-const selectedModel = ref('')
-const isSending = ref(false)
-
-/**
- * How many of the three have answered — what the bar counts while a run is out.
- * The three go out at once, so this counts what has come BACK: a column whose
- * last line is the machine's has answered this round.
- */
-const answered = computed(
-  () => store.columns.filter(c => c.messages[c.messages.length - 1]?.role === 'assistant').length,
-)
-const colLoading = ref([false, false, false])
-const comparisonContext = ref('')
-const showPresetOverlay = ref(false)
-// The perspective is at work on the prompt: the symbol that was pressed pulses.
-const enriching = ref(false)
-
-// --- Clipboard ---
-function copyPrompt() { window.navigator.clipboard.writeText(userInput.value) }
-async function pastePrompt() { userInput.value = await window.navigator.clipboard.readText() }
-function clearPrompt() { userInput.value = '' }
-
-// --- Interception Preset ---
-// What the ring in the corner of the field says when the perspective wrote
-// nothing: a refusal, a failure with its status, an empty answer, or no
-// connection (composables/useLabRun.ts). Until 2026-10-10 all four ended in
-// the console here, and the ring spun and stopped in silence.
-const perspectiveError = ref('')
-
-async function handlePresetSelected(payload: { configId: string; context: string; configName: string }) {
-  showPresetOverlay.value = false
-  if (!userInput.value.trim()) return
-
-  enriching.value = true
-  perspectiveError.value = ''
-  try {
-    const outcome = await interceptPrompt(payload.configId, userInput.value, deviceId)
-    if ('written' in outcome) {
-      userInput.value = outcome.written
-    } else {
-      perspectiveError.value = perspectiveFailureText(t, outcome)
-    }
-  } catch (error) {
-    perspectiveError.value = generationErrorFor(t, error)
-  } finally {
-    enriching.value = false
-  }
-}
-
-const { chatModels , optionLabel } = useChatModels()
+const { chatModels, optionLabel, isListed } = useChatModels()
 const { install } = useModelInstall()
 
-async function onModelSelect(newId: string): Promise<void> {
+/**
+ * The model chosen in the preparing column. One that is not on this machine
+ * yet is downloaded instead, and the three columns keep the model they run:
+ * the select is put back on that one by hand, because its binding has not
+ * changed and would not put it back by itself.
+ */
+function onModelSelect(el: HTMLSelectElement): void {
+  const newId = el.value
   const model = chatModels.value.find(m => m.id === newId)
   if (model && !model.available && model.installable) {
     install(newId, model.label).catch((e: any) =>
       console.warn('[sys_prompt_compare] install did not start:', e)
     )
-    const prev = selectedModel.value
-    selectedModel.value = ''
-    await nextTick()
-    selectedModel.value = prev
+    el.value = store.modelId
     return
   }
-  selectedModel.value = newId
-}
-
-const COL_CLASSES = ['col-a', 'col-b', 'col-c'] as const
-
-function columnClass(idx: number): string {
-  return COL_CLASSES[idx] ?? 'col-b'
+  store.modelId = newId
 }
 
 // ---------- The one temperature ----------
 
-/**
- * Three fixed offers stood here until 2026-09-08, held as strings because that
- * is what a chip carries. The surface opens at 0.5: the deterministic end makes
- * three system prompts look more alike than they are, the free end more unlike.
- */
-const TEMPERATURE_MIN = 0
-const TEMPERATURE_MAX = 2
-const temperature = ref<number>(0.5)
+/** What the whole comparison is run AT (components/RandomnessAxis.vue). It is
+ *  kept in the store, with the answers that were drawn at it. */
+const temperature = computed<number>({
+  get: () => store.temperature ?? RANDOMNESS_START,
+  set: (v) => { store.temperature = v },
+})
 
-/**
- * The named places of the axis: the three words the platform gave its former
- * offers, at the values they stood for. The end of the axis carries its number
- * alone — it is the end, and there is no word for it.
- */
-const TEMPERATURE_MARKS: { at: number; i18n?: string }[] = [
-  { at: 0, i18n: 'compare.temperature.cold' },
-  { at: 0.5, i18n: 'compare.temperature.warm' },
-  { at: 1, i18n: 'compare.temperature.hot' },
-  { at: TEMPERATURE_MAX },
-]
+// ---------- The round ----------
 
-const temperatureMarks = computed<SliderMark[]>(() =>
-  TEMPERATURE_MARKS.map(m => ({
-    value: m.at,
-    label: m.i18n ? t(m.i18n) : undefined,
-    pct: ((m.at - TEMPERATURE_MIN) / (TEMPERATURE_MAX - TEMPERATURE_MIN)) * 100,
-  }))
-)
-
-/** The set value, for the label and for a screen reader: 0.5, 1, 1.7 — no 1.0. */
-const temperatureText = computed(() => String(Number(temperature.value.toFixed(1))))
-
-// ---------- API ----------
-
-async function callChatWithSystemPrompt(
-  message: string,
-  history: Array<{ role: string; content: string }>,
-  systemPrompt: string
-): Promise<string | null> {
-  try {
-    const data = await chatTurn(`${apiBase()}/api/chat/stream`, {
-      message,
-      history,
-      temperature: temperature.value,
-      ...(selectedModel.value ? { model: selectedModel.value } : {}),
-      context: {
-        system_prompt_compare_mode: true,
-        custom_system_prompt: systemPrompt,
-        language: userPreferences.language,
-        device_id: deviceId,
-      },
-    })
-    return data.reply || null
-  } catch (e) {
-    // Three endings that this function read as "no reply" while it called the
-    // blocking endpoint, and the column showed as such: a turn the server
-    // itself ended (a non-2xx JSON body then, an event in the stream now), a
-    // refusal before the stream opened (the non-2xx itself), and a stream that
-    // stopped without a turn in it. All three keep that wording — with the
-    // cause on the console, which is the only spot it was ever legible. A torn
-    // connection and an abort throw something else and still reach the caller's
-    // error branch, which says something else.
-    if (e instanceof ChatStreamError || e instanceof SseHttpError
-        || e instanceof ChatNoReplyError) {
-      console.error('[SYSPROMPT-COMPARE] chat turn failed:', e)
-      return null
-    }
-    throw e
-  }
-}
-
-// ---------- Send to all 3 columns ----------
-
-async function sendToAll() {
-  const text = userInput.value.trim()
-  if (!text || isSending.value) return
-
-  userInput.value = ''
-  isSending.value = true
-
-  for (let i = 0; i < 3; i++) {
-    store.addMessage(i, 'user', text)
-  }
-  scrollAllColumns()
-
-  colLoading.value = [true, true, true]
-
-  const promises = store.columns.map(async (col, idx) => {
-    try {
-      const history = col.messages
-        .slice(0, -1)
-        .map(m => ({ role: m.role, content: m.content }))
-      const reply = await callChatWithSystemPrompt(text, history, col.systemPrompt)
-      store.addMessage(idx, 'assistant', reply || t('compare.shared.noResponse'))
-    } catch {
-      store.addMessage(idx, 'assistant', t('compare.shared.error'))
-    } finally {
-      colLoading.value[idx] = false
-      scrollColumn(idx)
-    }
-  })
-
-  await Promise.allSettled(promises)
-  isSending.value = false
-
-  // What the three columns now hold goes into the page context, where Help
-  // reads it.
-  updateComparisonContext()
-}
+// The message, the clipboard, the perspective ring and the round itself are
+// shared with Model Comparison (Transformers Lab, composables/useChatColumns.ts). What
+// is this surface's own is what a column is sent with: its system prompt.
+const {
+  userInput,
+  isSending,
+  colLoading,
+  answered,
+  total,
+  canSend,
+  copyPrompt,
+  pastePrompt,
+  clearPrompt,
+  showPresetOverlay,
+  enriching,
+  perspectiveError,
+  handlePresetSelected,
+  sendToAll,
+} = useChatColumns(store, {
+  tag: 'SYSPROMPT-COMPARE',
+  body: (idx, message, history) => ({
+    message,
+    history,
+    temperature: temperature.value,
+    ...(store.modelId ? { model: store.modelId } : {}),
+    context: {
+      system_prompt_compare_mode: true,
+      custom_system_prompt: store.columns[idx]?.systemPrompt ?? '',
+      language: userPreferences.language,
+      device_id: deviceId,
+    },
+  }),
+  sentWith: () => ({
+    temperature: temperature.value,
+    columns: store.columns.map(c => ({ presetId: c.presetId, systemPrompt: c.systemPrompt })),
+  }),
+  afterRound: recordRound,
+})
 
 // ---------- What Help is told ----------
 
-function updateComparisonContext() {
-  const cols = store.columns
-  const lastResponses = cols.map((col, i) => {
-    const presetName = presets.find(p => p.id === col.presetId)?.id ?? 'custom'
-    const promptDesc = col.systemPrompt ? `"${col.systemPrompt.slice(0, 80)}..."` : '(empty)'
+/** What the three columns now hold, for the page context, where Help reads it,
+ *  under the settings the round was sent with. */
+function recordRound(sent: { temperature: number; columns: { presetId: string; systemPrompt: string }[] }) {
+  const lastResponses = store.columns.map((col, i) => {
+    const was = sent.columns[i] ?? { presetId: 'custom', systemPrompt: '' }
+    const presetName = SYSTEM_PROMPT_PRESETS.find(p => p.id === was.presetId)?.id ?? 'custom'
+    const promptDesc = was.systemPrompt ? `"${was.systemPrompt.slice(0, 80)}..."` : '(empty)'
     const lastAssistant = [...col.messages].reverse().find(m => m.role === 'assistant')
     return `Column ${i + 1} [${presetName}, prompt=${promptDesc}]: ${lastAssistant?.content || '(no response yet)'}`
   }).join('\n')
-  comparisonContext.value = `[System Prompt Comparison Mode — generation_complete]\nThree columns, each with a different system prompt. Same user message, same model, same temperature (T=${temperature.value}) for all three.\nLatest responses:\n${lastResponses}`
-}
-
-function startNewConversation() {
-  store.clearAll()
+  store.lastRound = {
+    label: `T=${sent.temperature} · ${sent.columns.map(c => c.presetId ?? 'custom').join(', ')}`,
+    text: `[System Prompt Comparison Mode — generation_complete]\nThree columns, each with a different system prompt. Same user message, same model, same temperature (T=${sent.temperature}) for all three.\nLatest responses:\n${lastResponses}`,
+  }
 }
 
 // ---------- Init ----------
@@ -494,10 +252,10 @@ function resolvePresetDefaults() {
     const col = store.columns[i]
     if (!col) continue
     if (!col.systemPrompt && col.presetId !== 'none' && col.presetId !== 'custom') {
-      // A preset taken out of the list above leaves the column with a selection
+      // A preset taken out of the list (system_prompt_presets.ts) leaves the column with a selection
       // the field cannot show and with no system prompt at all. The column falls
       // back to none, which is a state this surface has a name for.
-      const preset = presets.find(p => p.id === col.presetId)
+      const preset = SYSTEM_PROMPT_PRESETS.find(p => p.id === col.presetId)
       if (preset) col.systemPrompt = preset.prompt
       else col.presetId = 'none'
     }
@@ -506,9 +264,6 @@ function resolvePresetDefaults() {
 
 onMounted(() => {
   resolvePresetDefaults()
-  if (store.hasConversation) {
-    scrollAllColumns()
-  }
 })
 const pageContextStore = usePageContextStore()
 
@@ -520,17 +275,12 @@ const pageContext = computed<PageContext>(() => ({
     inputText: userInput.value,
     // The block that fed the column beside the columns until 2026-08-25 goes
     // to Help unchanged, in the field made for what a surface has produced.
-    instrumentRuns: comparisonContext.value
-      ? [{
-          label: `T=${temperature.value} · ${store.columns.map(c => c.presetId ?? 'custom').join(', ')}`,
-          text: comparisonContext.value,
-        }]
-      : [],
+    instrumentRuns: store.lastRound ? [{ ...store.lastRound }] : [],
   },
   // Held up as a sign while the conversation is closed, and only once the
   // surface has something to interpret — before the first run
   // it would be taken with nothing standing there.
-  offer: comparisonContext.value ? { label: t('compare.ask.sign') } : null,
+  offer: store.lastRound ? { label: t('compare.ask.sign') } : null,
 }))
 
 watch(pageContext, (ctx) => {
@@ -568,31 +318,6 @@ const folded = ref(false)
    Denselben Weg ist Representation Engineering am 2026-08-26 gegangen. */
 /* ---------- The preparing column ---------- */
 
-/* The axis of this column is 274 px wide and carries four marks, three of them
-   with a word. At the component's own 10 % inset each mark box is 47 px, and
-   „Unvorhersehbar" falls to THREE hyphenated lines - which lifts its number out
-   of the row the other numbers stand in (measured 2026-09-09: its head at
-   399 px against 415). At 4 % the box is 55 px, all three words take two lines,
-   and the outermost mark still ends 4 px inside the column. A language whose
-   word for the far end is longer than the German one will reach three lines
-   again; this number is where to look. */
-.sp-temp-slider {
-  --ms-inset: 4%;
-}
-
-/* The axis carries its number in its own label, as the set size of Mean Images
-   does: the handle of an axis says the value only where a notch stands. */
-.sp-temp-label {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.sp-temp-label b {
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-}
-
 /* The column lays its children out in one flex column, so the field takes the
    whole width without asking for one. */
 .model-select {
@@ -614,240 +339,7 @@ const folded = ref(false)
   color: rgba(255, 255, 255, 0.85);
 }
 
-.clear-btn {
-  align-self: flex-start;
-  padding: 0.35rem 0.75rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.72rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.clear-btn:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* ---------- 3 columns ---------- */
-
-.sp-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: minmax(0, 1fr);
-  gap: 1rem;
-  min-height: 0;
-}
-
-.sp-column {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: rgb(var(--bg-base-rgb) / 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* The head keeps the height its field is pulled to instead of shrinking under
-   it: without this a field pulled past the column's height would be cut off by
-   the flex layout and paint over the answers under it. Pulled that far the
-   stream of answers is what gives way, which is what somebody pulling the field
-   that far is asking for, and one pull back returns it. */
-.column-header {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  gap: 0.4rem;
-  padding: 0.6rem 0.8rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.preset-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.preset-label {
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.35);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  flex-shrink: 0;
-}
-
-.preset-select {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 0.25rem 0.4rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.75rem;
-  outline: none;
-}
-
-.preset-select option {
-  background: var(--surface-2);
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.prompt-source {
-  margin: 4px 0 0;
-  font-size: 0.72rem;
-  line-height: 1.3;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.prompt-source a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.prompt-source a:hover {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-/* The field holds a DOCUMENT — what the maker of a model published as its
-   system prompt — and it is there to be read.
-
-   It stood at 0.72 rem once, which is tiny. Nothing
-   computed that; it was written into this file, while the platform carries a
-   step for monospace text and that step starts at 13 px. A monospace face reads
-   smaller than a proportional one at the same size, so 11.5 px here was the
-   smallest text on the surface.
-
-   And it had a ceiling of 120 px, which made the grip a token: two pulls and it
-   stopped, with the rest of the document behind a scrollbar. The field opens
-   at twice that ceiling now and grows as far as it is pulled. */
-.prompt-textarea {
-  width: 100%;
-  height: 240px;
-  min-height: 48px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 0.35rem 0.5rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: var(--flow-fs-mono);
-  font-family: monospace;
-  line-height: 1.4;
-  resize: vertical;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.prompt-textarea:focus {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.prompt-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.2);
-  font-style: italic;
-}
-
-/* Column color tints */
-.col-a .column-header {
-  border-bottom-color: rgba(171, 130, 255, 0.2);
-}
-
-.col-a .preset-select {
-  border-color: rgba(171, 130, 255, 0.15);
-}
-
-.col-b .column-header {
-  border-bottom-color: rgba(130, 200, 160, 0.2);
-}
-
-.col-b .preset-select {
-  border-color: rgba(130, 200, 160, 0.15);
-}
-
-.col-c .column-header {
-  border-bottom-color: rgba(255, 160, 100, 0.2);
-}
-
-.col-c .preset-select {
-  border-color: rgba(255, 160, 100, 0.15);
-}
-
-.column-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-height: 0;
-}
-
-/* ---------- Chat bubbles (shared) ---------- */
-
-.chat-bubble {
-  max-width: 95%;
-  padding: 0.5rem 0.7rem;
-  border-radius: 10px;
-  font-size: var(--flow-fs-body);
-  line-height: 1.45;
-  word-break: break-word;
-}
-
-.chat-bubble.assistant {
-  align-self: flex-start;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.85);
-  border-bottom-left-radius: 3px;
-}
-
-.chat-bubble.user {
-  align-self: flex-end;
-  background: rgba(76, 175, 80, 0.12);
-  color: rgba(255, 255, 255, 0.9);
-  border-bottom-right-radius: 3px;
-}
-
-.chat-bubble.loading {
-  padding: 0.5rem 0.8rem;
-}
-
-.typing-dots span {
-  animation: typing 1.2s infinite;
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typing {
-  0%, 60%, 100% { opacity: 0.3; }
-  30% { opacity: 1; }
-}
-
-
-/* ---------- Responsive ---------- */
-
-/* A container query, not a window one: the preparing column is 300 px and can
-   be folded away, and a window width cannot see that difference.
-
-   The stage puts that column on top at 900 px of work area
-   (assets/compare-stage.css), so the three columns already have the full width
-   here: (700 - 32 frame - 32 gaps) / 3 = 212 px each at this threshold. Under
-   it they stack. */
-@container (max-width: 700px) {
-  .sp-columns {
-    grid-template-columns: 1fr;
-  }
-
-  /* Stacked, the row takes the height of its content, so the stream of answers
-     needs a bound of its own. */
-  .column-messages {
-    max-height: 300px;
-  }
-}
+/* „New conversation" and the three columns are `.cmp-new-conversation` and
+   `.cmp-chat-columns` (assets/compare-stage.css), shared with Model
+   Comparison (Transformers Lab); they stood here until 2026-10-27. */
 </style>

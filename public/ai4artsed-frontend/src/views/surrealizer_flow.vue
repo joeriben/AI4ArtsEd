@@ -1,7 +1,7 @@
 <template>
   <div class="flow-view" :class="{ embedded }">
     <div class="topbar">
-      <span class="tt">Surrealizer · {{ t('surrealizer.flow.flowTag') }}</span>
+      <span class="tt">Surrealizer</span>
       <span class="hint">{{ t('surrealizer.flow.openHint') }}</span>
       <router-link v-if="!embedded" to="/surrealizer" class="legacy">{{ t('surrealizer.flow.classic') }} ↗</router-link>
     </div>
@@ -51,7 +51,6 @@
 
       <div class="pbody">
         <div v-if="open === 'prompt'">
-          <div class="dh">{{ t('surrealizer.flow.dPrompt') }}</div>
           <textarea class="ta" v-model="inputText" :placeholder="t('surrealizer.flow.nPrompt')"></textarea>
         </div>
 

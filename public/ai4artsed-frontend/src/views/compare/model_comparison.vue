@@ -216,11 +216,14 @@ type PresetKey = keyof typeof PRESETS
  * in above.
  *
  * Which models a surface offers is a didactic decision and not a catalogue
- * listing, so nothing is added here without one. Every entry but one stands
- * in a set above. CommonCanvas XL C is the exception, ordered after SDXL,
+ * listing, so nothing is added here without one. Every entry but two stands
+ * in a set above. CommonCanvas XL C is one exception, ordered after SDXL,
  * whose architecture it shares: it is
  * trained on ~70 million Creative Commons-licensed images and on nothing
  * else (CommonCatalog, arXiv:2310.16825), where the SDXL beside it is not.
+ * Flux 3 Klein is the other, ordered after Flux 2: FLUX 3 Image Klein, Black
+ * Forest Labs' model of 2026, offered since 2026-10-18 wherever Flux 2 stands
+ * in the Latent Lab, with Flux 2 kept beside it.
  */
 const CATALOGUE: { id: string; label: string }[] = [
   { id: 'sd15', label: 'SD 1.5 (2022)' },
@@ -228,6 +231,7 @@ const CATALOGUE: { id: string; label: string }[] = [
   { id: 'commoncanvas_xl_c', label: 'CommonCanvas XL C (2023)' },
   { id: 'sd35_large', label: 'SD 3.5 Large (2024)' },
   { id: 'flux2', label: 'Flux 2' },
+  { id: 'flux3', label: 'Flux 3 Klein' },
   { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro (\u20AC)' },
 ]
 

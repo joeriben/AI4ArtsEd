@@ -111,18 +111,47 @@ export async function uploadSceneDocument(file: File, journalId: string): Promis
   throw new Error(data?.error || 'scene upload failed')
 }
 
-/** The worker's public job view, reduced to what a surface waits on. */
+/** How far a running analysis is: units of the document read, capsules kept. */
+export interface SceneJobProgress {
+  unitsDone: number
+  unitsTotal: number
+  capsules: number
+  capsulesMax: number
+}
+
+/**
+ * The worker's public job view, reduced to what a surface waits on. `gone`
+ * is a job the server does not know (404): the worker keeps its jobs in
+ * memory, so a backend restart ends every one that was running, and none
+ * of them comes back.
+ */
 export interface SceneJobState {
-  state: 'queued' | 'running' | 'done' | 'error' | 'cancelled' | string
+  state: 'queued' | 'running' | 'done' | 'error' | 'cancelled' | 'gone' | string
   docId?: string
   message?: string
+  /** Present once the pipeline knows its units; absent while the job waits or reads. */
+  progress?: SceneJobProgress
 }
 
 export async function fetchSceneJob(jobId: string): Promise<SceneJobState> {
   const res = await fetch(`/api/scene/jobs/${jobId}`)
+  if (res.status === 404) return { state: 'gone' }
   const data = await res.json()
   if (!res.ok || !data) throw new Error('scene job fetch failed')
-  return { state: String(data.state), docId: data.doc_id, message: data.message }
+  const p = data.progress
+  return {
+    state: String(data.state),
+    docId: data.doc_id,
+    message: data.message,
+    progress: p
+      ? {
+          unitsDone: Number(p.units_done) || 0,
+          unitsTotal: Number(p.units_total) || 0,
+          capsules: Number(p.capsules) || 0,
+          capsulesMax: Number(p.capsules_max) || 0,
+        }
+      : undefined,
+  }
 }
 
 /**

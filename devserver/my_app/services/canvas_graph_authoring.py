@@ -3,8 +3,9 @@ Canvas Graph Authoring — validation + expansion for Resona-authored workflow g
 
 Resona ("Resona spricht Graphen") authors a small experimental apparatus as a
 graph of steps that this platform executes: input carries a text, interception
-transforms it under an instruction Resona writes, translation renders it English
-before image models, generation renders media, evaluation has a result read,
+transforms it under an instruction Resona writes, translation renders it into
+another language (English by default, before image models), generation renders
+media, evaluation has a result read,
 comparison_evaluator sets results side by side. This module turns a compact
 Resona-authored graph into an executor-ready payload for
 CanvasWorkflowExecutor (devserver/my_app/services/canvas_executor.py).
@@ -38,12 +39,14 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # --- Allow-list of generation configIds Resona may wire into a graph ---------
 # Terse labels; keys MUST have a matching devserver/schemas/configs/output/<id>.json.
-# The 8 shipped text->media configs plus the 6 pedagogical Latent-Lab experiments.
+# The 10 shipped text->media configs plus the 6 pedagogical Latent-Lab experiments.
 RESONA_CANVAS_CONFIGS: Dict[str, str] = {
     # Shipped text->media configs
     "sd35_large": "SD3.5 Large — detailed images",
     "flux2": "FLUX.2 — images",
+    "flux3": "FLUX 3 Image Klein — images",
     "gemini_3_pro_image": "Gemini 3 Pro image (€ paid cloud call, cloud)",
+    "gemini_nano_banana_2_1": "Gemini Nano Banana 2.1 image (€ paid cloud call, cloud)",
     "stableaudio_open": "Stable Audio — sound",
     "heartmula_standard": "HeartMuLa — music (lyrics || tags)",
     "wan22_t2v_video_fast": "Wan 2.2 — text-to-video",
@@ -96,10 +99,10 @@ _MAX_SHARED_SEED = 2**31 - 1  # value range for the auto-shared comparison seed
 # The node FIELDS need no translation whatsoever. This module was written
 # against the executor and the executor reads the Canvas's own camelCase keys,
 # so every key an authored or synthesised node carries — configId, promptText,
-# contextPrompt, llmModel, translationPrompt, evaluationPrompt,
-# imageEvaluationPrompt, visionModel, comparisonCriteria, comparisonLlmModel,
-# seedMode, seedValue, resolutionPreset, resolutionWidth, resolutionHeight,
-# qualitySteps, qualityCfg — already sits on CanvasNode
+# contextPrompt, llmModel, translationPrompt, translationLanguage,
+# evaluationPrompt, imageEvaluationPrompt, visionModel, comparisonCriteria,
+# comparisonLlmModel, seedMode, seedValue, resolutionPreset, resolutionWidth,
+# resolutionHeight, qualitySteps, qualityCfg — already sits on CanvasNode
 # (public/ai4artsed-frontend/src/types/canvas.ts). configLang is the one
 # exception: the executor reads it, the Canvas has no field for it, and it
 # travels through untouched.

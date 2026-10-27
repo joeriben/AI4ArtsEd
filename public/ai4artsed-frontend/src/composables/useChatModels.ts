@@ -52,32 +52,47 @@ const _gpuServiceUnreachable = ref(false)
  * neither models nor a reason says nothing about either.
  */
 const _loadFailed = ref(false)
+/**
+ * What a surface offers that offers only what the settings choose: this
+ * machine's models and every model of the ONE external provider set there
+ * (`EXTERNAL_LLM_PROVIDER`), through that provider. The server builds it
+ * (`chosen_models`): the full list holds one route per model, and a model the
+ * chosen provider reaches can stand there under another provider's id. null
+ * while it is not known -- the list did not come, came from a server that
+ * does not build it yet, or the server caught the settings mid-save.
+ */
+const _chosenModels = ref<ChatModelOption[] | null>(null)
 
 // Auto-refresh when any model install completes.
 onInstallDone(() => {
   _fetchPromise = _fetchModels()
 })
 
+function toOption(m: {
+  id: string; label: string; register?: string; available?: boolean
+  installable?: boolean; approx_download_mb?: number; service?: string
+  dsgvo_recorded?: boolean | null; dsgvo_note?: string
+}): ChatModelOption {
+  return {
+    id: m.id,
+    label: m.label,
+    register: m.register || bareName(m.id),
+    available: m.available !== false,
+    installable: m.installable === true,
+    approxDownloadMb: m.approx_download_mb || 0,
+    service: m.service || '',
+    dsgvoRecorded: typeof m.dsgvo_recorded === 'boolean' ? m.dsgvo_recorded : null,
+    dsgvoNote: m.dsgvo_note || '',
+  }
+}
+
 async function _fetchModels(): Promise<void> {
   try {
     const res = await fetch(`${apiBase()}/api/chat/models`)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
-    _models.value = (data.models || []).map((m: {
-      id: string; label: string; register?: string; available?: boolean
-      installable?: boolean; approx_download_mb?: number; service?: string
-      dsgvo_recorded?: boolean | null; dsgvo_note?: string
-    }) => ({
-      id: m.id,
-      label: m.label,
-      register: m.register || bareName(m.id),
-      available: m.available !== false,
-      installable: m.installable === true,
-      approxDownloadMb: m.approx_download_mb || 0,
-      service: m.service || '',
-      dsgvoRecorded: typeof m.dsgvo_recorded === 'boolean' ? m.dsgvo_recorded : null,
-      dsgvoNote: m.dsgvo_note || '',
-    }))
+    _models.value = (data.models || []).map(toOption)
+    _chosenModels.value = Array.isArray(data.chosen_models) ? data.chosen_models.map(toOption) : null
     _gpuServiceUnreachable.value = data.gpu_service_unreachable === true
     _loadFailed.value = false
   } catch (e) {
@@ -87,6 +102,7 @@ async function _fetchModels(): Promise<void> {
     console.warn('[useChatModels] Failed to fetch models, offering the configured default only:', e)
     _models.value = []
     _loadFailed.value = true
+    _chosenModels.value = null
     // What the station said is untouched: the whole answer is missing, so
     // whether the LOCAL half is reachable is not something this knows either
     // way, and claiming it in either direction would name the wrong cause.
@@ -130,6 +146,8 @@ export function useChatModels() {
   /** The list did not arrive. Cleared as soon as one does. */
   const loadFailed = computed(() => _loadFailed.value)
   const gpuServiceUnreachable = computed(() => _gpuServiceUnreachable.value)
+  /** What the settings choose; the whole list while that is not known. */
+  const chosenModels = computed<ChatModelOption[]>(() => _chosenModels.value ?? _models.value)
 
   async function refresh(): Promise<void> {
     _fetchPromise = _fetchModels()
@@ -163,5 +181,18 @@ export function useChatModels() {
     return parts.join(' · ')
   }
 
-  return { chatModels, models, loading, loadFailed, gpuServiceUnreachable, refresh, optionLabel }
+  /**
+   * Whether the list names this id. '' is the row „Default (Settings)" and is
+   * always there. A surface that keeps a chosen id across a refetch shows the
+   * id itself where this is false — otherwise its select stands blank over
+   * a choice that is still sent.
+   */
+  function isListed(id: string): boolean {
+    return !id || _models.value.some(m => m.id === id)
+  }
+
+  return {
+    chatModels, models, chosenModels, loading, loadFailed, gpuServiceUnreachable,
+    refresh, optionLabel, isListed,
+  }
 }

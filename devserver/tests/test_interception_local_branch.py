@@ -65,14 +65,20 @@ def offline_engine(monkeypatch):
     return _with
 
 
-def _run(engine, prompt="Translate this: Nebel soll weg sein", model="local/a-model:9b",
+# The platform's standard test prompt (standard_test_prompt.txt) and its translation.
+PROMPT = ("Ein Haus steht in einer Landschaft, umgeben von landwirtschaftlichen Flächen, "
+          "Natur und Tieren. Es sind einige Menschen zu sehen.")
+TRANSLATION = "A house stands in a landscape, surrounded by farmland, nature and animals. Some people can be seen."
+
+
+def _run(engine, prompt="Translate this: " + PROMPT, model="local/a-model:9b",
          parameters=None):
     return asyncio.run(engine.process_request(engine_module.PromptInterceptionRequest(
         input_prompt="", prebuilt_prompt=prompt, model=model, parameters=parameters,
     )))
 
 
-def _answer(content="There should be no fog", thinking=None, finish_reason="stop"):
+def _answer(content=TRANSLATION, thinking=None, finish_reason="stop"):
     return {"content": content, "thinking": thinking, "tool_calls": None,
             "finish_reason": finish_reason}
 
@@ -151,13 +157,13 @@ class TestWhatIsNotAnAnswerIsRefused:
         assert "empty" not in response.error
 
     def test_an_answer_that_reached_the_window_is_refused(self, offline_engine):
-        engine, _ = offline_engine(_answer(content="There should be no", finish_reason="length"))
+        engine, _ = offline_engine(_answer(content="A house stands in a", finish_reason="length"))
         response = _run(engine)
         assert not response.success
         assert "finish_reason=length" in response.error
 
     def test_an_answer_stopped_for_looping_is_refused(self, offline_engine):
-        engine, _ = offline_engine(_answer(content="fog fog fog fog", finish_reason="repetition"))
+        engine, _ = offline_engine(_answer(content="house house house house", finish_reason="repetition"))
         response = _run(engine)
         assert not response.success
         assert "finish_reason=repetition" in response.error
@@ -186,7 +192,7 @@ class TestTheTranslationAsksForNoReasoning:
             self, translation_on_a_local_model):
         backend = translation_on_a_local_model
         result = asyncio.run(executor.execute_pipeline("pre_output/translation_en",
-                                                       "Nebel soll weg sein"))
+                                                       PROMPT))
         assert result.success, result.error
         assert backend.generate_calls == []
         assert len(backend.chat_calls) == 1
@@ -205,6 +211,6 @@ class TestTheTranslationAsksForNoReasoning:
         params.pop("enable_thinking", None)
         monkeypatch.setattr(resolved, "parameters", params)
         result = asyncio.run(executor.execute_pipeline("pre_output/translation_en",
-                                                       "Nebel soll weg sein"))
+                                                       PROMPT))
         assert result.success, result.error
         assert "enable_thinking" not in backend.chat_calls[0]

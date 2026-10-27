@@ -54,7 +54,7 @@
           <img src="/logos/ai4artsed_wordmark.png" alt="AI4ArtsEd" class="project-wordmark-img" />
           <img src="/logos/ai4artsed_logo.jpg" alt="" class="project-logo" />
         </a>
-        <a href="https://comearts.eu" target="_blank" rel="noopener noreferrer">
+        <a href="https://comearts.uni-due.de" target="_blank" rel="noopener noreferrer">
           <img src="/logos/comearts_logo.jpg" alt="COMeARTS" class="project-logo" />
         </a>
       </div>

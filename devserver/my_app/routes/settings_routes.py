@@ -708,8 +708,9 @@ DSGVO_REVIEWED_FIELDS = (
 # record is what makes that switch reversible.
 #
 # Its own file, for the same reason model_capabilities.py keeps one: POST /api/settings/
-# rewrites user_settings.json from the keys the form renders, config knows only the
-# settings it declares, and a record that survives a save must not depend on either.
+# writes user_settings.json from the keys the form renders and keeps of the rest only
+# the settings config declares (_file_after_save), and a record that survives a save
+# must not depend on either.
 LAST_USER_SETTING_FILE = Path(__file__).parent.parent.parent / "last_user_setting.json"
 
 # The roles the model matrix shows -- the ones a column click can overwrite. The local
@@ -829,6 +830,49 @@ def _read_settings_file() -> dict:
     except Exception as e:
         logger.warning(f"[SETTINGS] {SETTINGS_FILE.name} not readable: {e}")
         return {}
+
+
+def _file_after_save(previous: dict, data: dict) -> dict:
+    """What user_settings.json holds after a save: of the file as it was, the
+    settings config declares (_SETTINGS_DEFAULTS), with what the save carries
+    written over them.
+
+    The page sends back GET's `current` as the form left it. Some keys it
+    does not send are set in the file by hand -- RESONA_VIEW_VLM_MODEL, the
+    override of the look's model, which llm_service.view_vlm_model reads from
+    this file and the installer follows; a WATERMARK block;
+    KNOWLEDGE_QUERY_TRANSLATION_MODEL -- and writing the save over the file
+    deleted them at every save, without a word.
+
+    Any other key goes with the save, as every key did before, since nothing
+    else would ever remove it: one the load passes over with a warning
+    (reload_user_settings), for example VLM_SAFETY_MODEL, which the page no
+    longer shows; and one the load does apply although it is no setting --
+    static configuration such as PORT, the address of the GPU service (where
+    the file's value wins over the environment's), or the name of a function
+    of config.
+    A provider key is never carried over: keys live in their own files, and
+    one that an old file still holds goes with the first save. The route
+    names in the log what a written save left out (_log_left_out). A file
+    that cannot be read (_read_settings_file logs it and answers {}) is
+    replaced by what the save carries, as before; what was set in it by hand
+    is lost."""
+    key_vars = {(provider_entry(name) or {}).get("env_var") for name in provider_names()}
+    kept = {k: v for k, v in previous.items()
+            if k in config._SETTINGS_DEFAULTS and k not in key_vars}
+    kept.update(data)
+    return kept
+
+
+def _log_left_out(previous: dict, written: dict) -> None:
+    """The keys of the file as it was that a written save left out, by name,
+    never by value. Called once the file holds the save, so that a save that
+    fails names nothing. A file that could not be read came in as {}, and
+    what it held goes unnamed."""
+    dropped = sorted(set(previous) - set(written))
+    if dropped:
+        logger.warning(f"[SETTINGS] The save left out of {SETTINGS_FILE.name}, as no setting "
+                       f"config declares or as a provider key: {', '.join(dropped)}")
 
 
 def _dsgvo_review():
@@ -1188,9 +1232,11 @@ def save_settings():
             })
 
         # Write all other settings to user_settings.json
+        data = _file_after_save(previous, data)
         SETTINGS_FILE.parent.mkdir(exist_ok=True)
         with open(SETTINGS_FILE, 'w') as f:
             json.dump(data, f, indent=2)
+        _log_left_out(previous, data)
 
         logger.info(f"[SETTINGS] Saved {len(data)} settings to {SETTINGS_FILE.name}")
 

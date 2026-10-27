@@ -44,6 +44,9 @@ export const RASTER_IMAGE_MODELS: readonly RasterImageModel[] = [
   { id: 'commoncanvas_xl_c', label: 'CommonCanvas XL C' },
   { id: 'sd35_large', label: 'SD 3.5 Large' },
   { id: 'flux2', label: 'Flux 2' },
+  // FLUX 3 Image Klein, Black Forest Labs' model of 2026, stands after Flux 2,
+  // the same maker's model of 2025, which stays in the list beside it.
+  { id: 'flux3', label: 'Flux 3 Klein' },
   // Gemini 3 Pro stands in NO preselection that a press multiplies, because
   // every run of it costs money, and its name carries the € everywhere it can
   // be chosen.
@@ -71,11 +74,11 @@ export const RASTER_IMAGE_MODEL_SETS = {
 /**
  * Where the picture is a CHECK on what something else did, rather than the
  * subject of the comparison. For Interception Scope the model choice is
- * limited to SD 3.5 and Flux 2.
+ * limited to SD 3.5, Flux 2 and Flux 3 Klein.
  */
-export const RASTER_IMAGE_MODELS_EFFECT_CHECK: readonly string[] = ['sd35_large', 'flux2']
+export const RASTER_IMAGE_MODELS_EFFECT_CHECK: readonly string[] = ['sd35_large', 'flux2', 'flux3']
 
-/** The three that run on this platform's own cards. */
+/** Three that run on this platform's own cards. */
 export const RASTER_IMAGE_MODELS_DEFAULT: readonly string[] = ['sdxl', 'sd35_large', 'flux2']
 
 /**

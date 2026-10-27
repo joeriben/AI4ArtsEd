@@ -20,6 +20,9 @@
 
   The bibliography is NOT i18n: authors, titles and venues are the same in every
   language and are passed as `items` from the view. Only the summary is a key.
+  A translated edition is a title of its own: where one language's copy quotes
+  it, with its pages, the view passes that language its own list
+  (views/latent_lab/mean_images.vue).
 -->
 <template>
   <!-- ONE list, two wrappers. Flat, it is a heading over an open list and sits

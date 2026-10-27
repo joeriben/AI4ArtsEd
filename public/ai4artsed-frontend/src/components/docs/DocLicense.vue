@@ -6,13 +6,13 @@
       <a href="https://github.com/joeriben/ai4artsed/blob/main/LICENSE.md" target="_blank" rel="noopener" class="license-github-link">
         {{ t('docs.license.onGithub') }}
       </a>
-      <p style="margin-top: 0.5rem;">UCDCAE AI Lab License v1.0</p>
+      <p style="margin-top: 0.5rem;">UCDCAE AI Lab License v1.1</p>
     </div>
 
     <!-- GERMAN VERSION -->
     <template v-if="locale === 'de'">
       <h3 class="license-title">Lizenz — AI Lab des UNESCO Chair in Digital Culture and Arts in Education</h3>
-      <p class="license-version">Version 1.0 — Februar 2026</p>
+      <p class="license-version">Version 1.1 — Oktober 2026</p>
       <p class="license-note"><em>Deutsche Fassung (rechtlich maßgeblich)</em></p>
 
       <div class="license-section">
@@ -54,7 +54,7 @@
         <p><strong>(b) Keine Redistribution ohne Autorisierung:</strong> Die Software darf nicht weiterverbreitet, veröffentlicht, gespiegelt oder auf andere Weise Dritten zugänglich gemacht werden, es sei denn, der Urheber hat dies schriftlich genehmigt. Hiervon ausgenommen ist die interne Bereitstellung innerhalb einer einzelnen nicht-kommerziellen Bildungseinrichtung.</p>
         <p><strong>(c) Kommerzielle Nutzung nur nach Vereinbarung:</strong> Kommerzielle Nutzung bedarf einer gesonderten schriftlichen Vereinbarung mit dem Urheber.</p>
         <p><strong>(d) Namensnennung:</strong> Bei jeder Nutzung ist der Urheber und die Bezeichnung „AI Lab des UNESCO Chair in Digital Culture and Arts in Education" in angemessener Form zu nennen.</p>
-        <p><strong>(e) Pädagogisches Sicherheitssystem und Forschungsmodus:</strong> Die Software enthält ein mehrstufiges Sicherheitssystem zum Schutz von Lernenden. Der Forschungsmodus deaktiviert sämtliche Sicherheitsmechanismen und darf ausschließlich von anerkannten Forschungseinrichtungen zu dokumentierten wissenschaftlichen Zwecken aktiviert werden. Ungefilterte Ausgaben dürfen niemals Minderjährigen oder Lernenden präsentiert werden.</p>
+        <p><strong>(e) Pädagogisches Sicherheitssystem und Forschungsmodus:</strong> Die Software enthält ein mehrstufiges Sicherheitssystem zum Schutz von Lernenden. Der Forschungsmodus deaktiviert sämtliche Sicherheitsmechanismen und darf ausschließlich von anerkannten Forschungseinrichtungen zu dokumentierten wissenschaftlichen Zwecken aktiviert werden. Ungefilterte Ausgaben dürfen niemals Minderjährigen oder Lernenden präsentiert werden. Wer den Forschungsmodus außerhalb der Forschung verwendet, verletzt die Lizenz, verliert das unentgeltliche Nutzungsrecht und hat mit einer erheblichen Nutzungsgebührenforderung zu rechnen, zusätzlich zu weiteren rechtlichen Konsequenzen.</p>
       </div>
 
       <div class="license-section">
@@ -98,7 +98,7 @@
     <!-- ENGLISH VERSION -->
     <template v-else>
       <h3 class="license-title">License — AI Lab of the UNESCO Chair in Digital Culture and Arts in Education</h3>
-      <p class="license-version">Version 1.0 — February 2026</p>
+      <p class="license-version">Version 1.1 — October 2026</p>
       <p class="license-note"><em>English translation (for reference only — the German version is legally binding)</em></p>
 
       <div class="license-section">
@@ -140,7 +140,7 @@
         <p><strong>(b) No redistribution without authorization:</strong> The software may not be redistributed, published, mirrored, or otherwise made available to third parties unless the author has granted written permission. Excepted is internal provision within a single non-commercial educational institution.</p>
         <p><strong>(c) Commercial use only by agreement:</strong> Commercial use requires a separate written agreement with the author.</p>
         <p><strong>(d) Attribution:</strong> Any use must credit the author and include the designation "AI Lab of the UNESCO Chair in Digital Culture and Arts in Education" in an appropriate manner.</p>
-        <p><strong>(e) Pedagogical Safety System and Research Mode:</strong> The software contains a multi-stage safety system to protect learners. Research Mode disables all safety mechanisms and may only be activated by recognized research institutions for documented scientific purposes. Unfiltered outputs must never be presented to minors or learners.</p>
+        <p><strong>(e) Pedagogical Safety System and Research Mode:</strong> The software contains a multi-stage safety system to protect learners. Research Mode disables all safety mechanisms and may only be activated by recognized research institutions for documented scientific purposes. Unfiltered outputs must never be presented to minors or learners. Anyone who uses Research Mode outside research breaches the license, loses the royalty-free right of use and must expect a substantial claim for usage fees, in addition to further legal consequences.</p>
       </div>
 
       <div class="license-section">

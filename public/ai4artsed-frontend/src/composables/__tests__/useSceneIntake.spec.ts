@@ -103,6 +103,19 @@ describe('fetchSceneJob / fetchSceneDocument / listSceneDocuments', () => {
     expect(await fetchSceneJob('j1')).toEqual({ state: 'running', docId: 'd1', message: 'queued' })
   })
 
+  it('carries how far the analysis is, once the pipeline reports it', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({
+      state: 'running', doc_id: 'd1', message: 'szenen-pipeline',
+      progress: { units_done: 7, units_total: 35, capsules: 18, capsules_max: 30 },
+    }))
+    expect((await fetchSceneJob('j1')).progress).toEqual({ unitsDone: 7, unitsTotal: 35, capsules: 18, capsulesMax: 30 })
+  })
+
+  it('says a job the server no longer knows is gone, and does not throw', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ error: 'unknown job' }, false, 404))
+    expect(await fetchSceneJob('j1')).toEqual({ state: 'gone' })
+  })
+
   it('turns a document into capsules, counts and provenance', async () => {
     fetchMock.mockResolvedValueOnce(jsonResponse({
       doc_id: 'd1',

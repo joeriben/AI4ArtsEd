@@ -73,7 +73,7 @@ alike.
 | `deployment/requirements-git.txt` | heartlib / mmaudio / imagebind commits |
 | `deployment/requirements-spacy.txt` | SpaCy NER model wheels |
 | `public/ai4artsed-frontend/package-lock.json` | Frontend dependency tree |
-| `dlbackend/ComfyUI/` (git checkout, not pinned) | ComfyUI backend + custom nodes; the installed state is whatever `git -C dlbackend/ComfyUI log -1` reports |
+| `dlbackend/ComfyUI/` (git checkout, not pinned) | ComfyUI backend + custom nodes; the installed state is whatever `git -C dlbackend/ComfyUI log -1` reports. Floor: v0.41.0, the first release that loads FLUX 3 (`output_image_flux3`). Since v0.38.0 ComfyUI's `requirements.txt` no longer lists `torchaudio`; install it next to it (see `UBUNTU_SERVER_FRESH_INSTALL.md`, Phase 5) |
 
 ---
 

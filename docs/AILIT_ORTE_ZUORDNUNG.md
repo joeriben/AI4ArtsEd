@@ -579,7 +579,7 @@ Beim Stimmen-Vergleich trägt jede Spalte Name und Jahr ihres Systems und seine 
 Die Maßnahme untersucht Screenshots von Chatbots und Apps auf Stellen, die überreden statt informieren, und bespricht, ob Streak-Zähler, Figurennamen oder übermäßig zustimmende Antworten auf Bindung angelegt sein könnten. System Prompts ersetzt die Screenshots durch drei laufende Spalten desselben Sprachmodells: in jeder Spalte steht eine Anweisung im Textfeld, zur Wahl stehen drei veröffentlichte Systemprompts eines Herstellers (Anthropic: Claude Opus 3, Opus 4 und Opus 5, je mit Quelle und Datum), die Voreinstellungen und „Kein System-Prompt“ (das leere Feld zeigt „(kein System-Prompt)“). An die Stelle der Screenshots treten Antworten, die das Modell mit und ohne Anweisung gibt; das Gespräch darüber, ob eine Antwort auf Bindung angelegt ist, führt die Kursleitung.
 
 *Praxis-Szenario.* Die Kursleitung gibt eine Nachricht vor, etwa eine schwache Idee für ein Bild. Die Gruppe schickt sie in alle drei Spalten (zwei veröffentlichte Prompts, eine Spalte mit „(kein System-Prompt)“) und markiert in jeder Antwort die Stellen, an denen sie lobt, zustimmt oder mit einer Rückfrage endet. Dann liest sie im veröffentlichten Wortlaut nach, ob der Hersteller das anweist, und vergleicht mit der leeren Spalte. Zum Schluss wechselt eine Spalte auf die Voreinstellung „Widerspricht immer“, und die Gruppe beschreibt, was sich an ihrer eigenen Reaktion ändert.  
-<sub>Beleg: `views/compare/system_prompt_comparison.vue: presets, prompt-textarea; views/compare/system_prompts_published.ts: claude_opus_3/4/5; de.ts compare.systemprompt.emptyPrompt, presets.disagree`</sub>
+<sub>Beleg: `views/compare/system_prompt_presets.ts; components/SystemPromptField.vue: prompt-textarea; views/compare/system_prompts_published.ts: claude_opus_3/4/5; de.ts compare.systemprompt.emptyPrompt, presets.disagree`</sub>
 
 #### Engage 2 Advanced — Funktionsweise erklären · ja
 
@@ -609,7 +609,7 @@ Die Maßnahme untersucht an einem Beispiel aus der Welt (Desinformation), wie En
 Die Maßnahme lässt Gegenargumente analysieren, die die Kursleitung mit KI erzeugt hat, und sie ins eigene Argument einbauen oder verwerfen. Bei System Prompts schreibt die Kursleitung die Anweisung selbst in das Textfeld einer Spalte oder wählt die Voreinstellung „Widerspricht immer“ (widersprich allem, finde Fehler, begründe); das Modell schreibt in dieser Spalte Gegenargumente, dasselbe Modell wie in den Nachbarspalten.
 
 *Praxis-Szenario.* Die Gruppe schreibt ihr Argument zu einer Streitfrage. Die Kursleitung stellt eine Spalte auf „Widerspricht immer“ und schickt das Argument ab; es geht in alle drei Spalten, und diese antwortet mit Gegenargumenten. Die Gruppe sortiert die Gegenargumente in „übernehmen“, „umbauen“ und „verwerfen“ und schreibt das Argument neu.  
-<sub>Beleg: `views/compare/system_prompt_comparison.vue: presets (disagree), prompt-textarea; de.ts compare.systemprompt.presets.disagree`</sub>
+<sub>Beleg: `views/compare/system_prompt_presets.ts: disagree; components/SystemPromptField.vue: prompt-textarea; de.ts compare.systemprompt.presets.disagree`</sub>
 
 #### Create 3 Basic — Rückmeldung holen, überarbeiten · ja
 
@@ -619,7 +619,7 @@ Die Maßnahme lässt Gegenargumente analysieren, die die Kursleitung mit KI erze
 Die Maßnahme vergleicht zwei Fassungen eines Prompts, der Rückmeldung zu derselben Idee holen soll, und analysiert, welche Merkmale (Kontext, Spezifität, Einschränkungen) die Rückmeldung genauer oder nützlicher machen. System Prompts ist der Aufbau dafür: drei Spalten mit demselben Modell, in jeder ein eigenes Textfeld für die Anweisung; mit „Zufälligkeit“ auf 0 liegt der Unterschied der Antworten an der Anweisung.
 
 *Praxis-Szenario.* Die Kursleitung schreibt zwei Rückmelde-Anweisungen in zwei Spalten, eine knappe („Gib Rückmeldung.“) und eine mit Kontext, Kriterien und Vorgaben. Die Gruppe schickt dieselbe Idee hinein, vergleicht die beiden Rückmeldungen und benennt, welche Merkmale der Anweisungen die Rückmeldung verändert haben. Dann schreibt sie eine dritte Fassung.  
-<sub>Beleg: `views/compare/system_prompt_comparison.vue: prompt-textarea`</sub>
+<sub>Beleg: `components/SystemPromptField.vue: prompt-textarea`</sub>
 
 #### Shape 4 Basic — Systeme verbessern · ja
 
@@ -629,7 +629,7 @@ Die Maßnahme vergleicht zwei Fassungen eines Prompts, der Rückmeldung zu derse
 Die Maßnahme sucht an KI-Werkzeugen einfache Änderungen, die sie hilfreicher oder inklusiver machen (klarere Anweisungen, altersgerechte Ausgaben, Optionen für verschiedene Bedürfnisse), und sagt, wem sie nützen. Bei System Prompts ist die Änderung die Anweisung: die Gruppe schreibt sie ins Textfeld einer Spalte, und die Antwort daneben zeigt, was sie bewirkt, bei gleichem Modell.
 
 *Praxis-Szenario.* Die Gruppe schickt eine Frage ab und liest die Antwort der Spalte mit „(kein System-Prompt)“ darauf, ob etwas daran für jüngere Kinder oder für jemanden mit wenig Deutsch schwer ist. Dann schreibt sie in eine zweite Spalte eine Anweisung, die das ändern soll, vergleicht beide Antworten und benennt, wem die Änderung nützt.  
-<sub>Beleg: `views/compare/system_prompt_comparison.vue: prompt-textarea; de.ts compare.systemprompt.emptyPrompt`</sub>
+<sub>Beleg: `components/SystemPromptField.vue: prompt-textarea; de.ts compare.systemprompt.emptyPrompt`</sub>
 
 
 ### Sprachmodell-Vergleich `/latent-lab/interception-across-models`

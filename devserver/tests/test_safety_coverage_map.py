@@ -402,6 +402,7 @@ CHUNK_MAP = {
     "output_image_commoncanvas_xl_c.json": "comfyui",
     "output_image_flux2.json": "comfyui",
     "output_image_flux2_img2img.json": "comfyui",
+    "output_image_flux3.json": "comfyui",
     "output_image_qwen.json": "comfyui",
     "output_image_qwen_2511_multi.json": "comfyui",
     "output_image_qwen_img2img.json": "comfyui",
@@ -418,6 +419,7 @@ CHUNK_MAP = {
     "output_video_wan22_t2v_fast.json": "comfyui",
     # cloud surface (work order decision 3 pending)
     "output_image_gemini_3_pro.json": "cloud-api",
+    "output_image_gemini_nano_banana_2_1.json": "cloud-api",
     "output_image_gpt_image_1.json": "cloud-api",
     # passthrough: the "generation" is the stage-2 output itself (code path)
     "output_code_p5js.json": "passthrough",

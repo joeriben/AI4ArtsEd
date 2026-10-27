@@ -232,8 +232,22 @@ Canvas serves those ready for deeper, systematic exploration - including generat
 **Purpose**: Language translation with custom prompt.
 
 **Configuration**:
-- `llmModel`: Selected LLM model
-- `translationPrompt`: Translation instructions (e.g., "Translate to French")
+- `llmModel`: Selected LLM model (unset: the `STAGE3_MODEL` setting)
+- `translationLanguage` (since 2026-10-24): Target language, a code of
+  `lib/platformLanguages.ts` or a language named in free text. Unset, the
+  default instruction goes with English, and an own `translationPrompt` names
+  the language itself. Writing into the default instruction in the Canvas sets
+  the language the select shows (English), so an edited default keeps its
+  language line.
+- `translationPrompt`: Translation instruction. The field shows the platform's
+  instruction (`services/translation_instruction.py`, served by
+  `GET /api/canvas/translation`) with "the target language" in place of a
+  language; a text of the user's own replaces it entirely.
+
+**Prompt sent to the model** (`canvas_executor._execute_translation`): the
+instruction; `Target language: <name>` where a language is chosen or the
+default instruction stands (the English name of a listed code, a free-text name
+as written); `Text:` with the input.
 
 **Connectors**:
 - Input: 1 (text)
@@ -704,6 +718,7 @@ interface CanvasNode {
 
   // Translation
   translationPrompt?: string
+  translationLanguage?: string
 
   // Input
   promptText?: string

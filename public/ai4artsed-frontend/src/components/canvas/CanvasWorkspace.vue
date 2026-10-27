@@ -66,7 +66,8 @@ const emit = defineEmits<{
   'select-config': [nodeId: string]
   'update-node-llm': [nodeId: string, llmModel: string]
   'update-node-context-prompt': [nodeId: string, prompt: string]
-  'update-node-translation-prompt': [nodeId: string, prompt: string]
+  'update-node-translation-prompt': [nodeId: string, prompt: string | undefined]
+  'update-node-translation-language': [nodeId: string, language: string | undefined]
   'update-node-prompt-text': [nodeId: string, text: string]
   'update-node-size': [nodeId: string, width: number, height: number]
   // Unified evaluation events
@@ -618,6 +619,7 @@ onUnmounted(() => {
         @update-llm="emit('update-node-llm', node.id, $event)"
         @update-context-prompt="emit('update-node-context-prompt', node.id, $event)"
         @update-translation-prompt="emit('update-node-translation-prompt', node.id, $event)"
+        @update-translation-language="emit('update-node-translation-language', node.id, $event)"
         @update-prompt-text="emit('update-node-prompt-text', node.id, $event)"
         @update-size="(width, height) => emit('update-node-size', node.id, width, height)"
         @update-evaluation-type="emit('update-node-evaluation-type', node.id, $event)"

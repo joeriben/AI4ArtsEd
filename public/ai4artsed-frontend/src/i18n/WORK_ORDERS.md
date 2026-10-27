@@ -178,5 +178,19 @@ Betroffen: de, tr, ko, uk, fr, es, he, ar, bg.
 
 Betroffen: de (liegt vor, Referenz), tr, ko, uk, fr, es, he, ar, bg.
 
+### WO-2026-10-18-A (Language Understanding: the note for Flux 3 Klein)
+
+Language Understanding offers FLUX 3 Image Klein beside Flux 2. Its note body
+is new; the quotation inside the curly quotes is Black Forest Labs' own wording
+from the model card and stays in English, verbatim, in every language. Only the
+platform's sentences around it are translated; "Qwen3-VL-4B-Instruct",
+"Black Forest Labs" and "Flux 3 Klein" are names and stay as they are.
+
+| Key | English | Context |
+|---|---|---|
+| `compare.languageNote.noteBody.flux3` | Flux 3 Klein reads the prompt through Qwen3-VL-4B-Instruct, which Black Forest Labs names as its text encoder. Among the key features of the model, Black Forest Labs lists “Text rendering within generated images” (Black Forest Labs 2026, model card). | Info box under the model fields of Language Understanding, shown when Flux 3 Klein is one of the rows; same form as `noteBody.flux2`. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
 ## Completed
 

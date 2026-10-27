@@ -10,14 +10,6 @@ BACKEND_DEV_PORT=17802
 # Get directory where this script lives (repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Safety check: Only run from 'develop' directory
-if [[ ! "$SCRIPT_DIR" =~ "develop" ]]; then
-    echo "❌ ERROR: This development script can only be run from a directory containing 'develop' in its path."
-    echo "   Current directory: $SCRIPT_DIR"
-    echo "   Expected: Path must contain 'develop' (e.g., ~/ai/ai4artsed_development)"
-    exit 1
-fi
-
 # Frontend is in public/ai4artsed-frontend relative to repo root
 FRONTEND_DIR="$SCRIPT_DIR/public/ai4artsed-frontend"
 

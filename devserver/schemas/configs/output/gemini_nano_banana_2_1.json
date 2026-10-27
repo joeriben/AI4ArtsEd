@@ -1,0 +1,105 @@
+{
+  "pipeline": "single_text_media_generation",
+  "name": {
+    "en": "Gemini Nano Banana 2.1 (€)",
+    "de": "Gemini Nano Banana 2.1 (€)",
+    "tr": "Gemini Nano Banana 2.1 (€)",
+    "ko": "Gemini Nano Banana 2.1 (€)",
+    "uk": "Gemini Nano Banana 2.1 (€)",
+    "fr": "Gemini Nano Banana 2.1 (€)",
+    "es": "Gemini Nano Banana 2.1 (€)",
+    "he": "Gemini Nano Banana 2.1 (€)",
+    "ar": "Gemini Nano Banana 2.1 (€)",
+    "bg": "Gemini Nano Banana 2.1 (€)"
+  },
+  "description": {
+    "en": "Cloud-based image generation using Google Gemini Nano Banana 2.1 via Mammouth AI (EU)",
+    "de": "Cloud-basierte Bildgenerierung mit Google Gemini Nano Banana 2.1 via Mammouth AI (EU)",
+    "tr": "Mammouth AI (AB) üzerinden Google Gemini Nano Banana 2.1 kullanan bulut tabanlı görüntü üretimi",
+    "ko": "Mammouth AI(EU)를 통해 Google Gemini Nano Banana 2.1을 사용하는 클라우드 기반 이미지 생성",
+    "uk": "Хмарна генерація зображень за допомогою Google Gemini Nano Banana 2.1 через Mammouth AI (ЄС)",
+    "fr": "Génération d'images en cloud avec Google Gemini Nano Banana 2.1 via Mammouth AI (UE)",
+    "es": "Generación de imágenes en la nube con Google Gemini Nano Banana 2.1 a través de Mammouth AI (UE)",
+    "he": "יצירת תמונות מבוססת ענן באמצעות Google Gemini Nano Banana 2.1 דרך Mammouth AI (האיחוד האירופי)",
+    "ar": "توليد صور قائم على السحابة باستخدام Google Gemini Nano Banana 2.1 عبر Mammouth AI (الاتحاد الأوروبي)",
+    "bg": "Генериране на изображения в облака с Google Gemini Nano Banana 2.1 през Mammouth AI (ЕС)"
+  },
+  "category": {
+    "en": "Image Generation (Cloud)",
+    "de": "Bildgenerierung (Cloud)",
+    "tr": "Görüntü Üretimi (Bulut)",
+    "ko": "이미지 생성 (클라우드)",
+    "uk": "Генерація зображень (хмара)",
+    "fr": "Génération d'images (Cloud)",
+    "es": "Generación de imágenes (nube)",
+    "he": "יצירת תמונות (ענן)",
+    "ar": "توليد الصور (سحابي)",
+    "bg": "Генериране на изображения (облак)"
+  },
+  "parameters": {
+    "OUTPUT_CHUNK": "output_image_gemini_nano_banana_2_1"
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image",
+      "text"
+    ]
+  },
+  "meta": {
+    "stage": "output",
+    "model": "gemini-nano-banana-2.1",
+    "model_id": "google/gemini-nano-banana-2.1",
+    "provider_model_id": "gemini-nano-banana-2.1",
+    "backend": "mammouth",
+    "backend_type": "mammouth",
+    "requires_gpu": false,
+    "requires_api_key": "MAMMOUTH_API_KEY",
+    "cost_model": "api_call",
+    "cost_per_image": "Variable (Mammouth AI pricing)",
+    "frontier_image": true,
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "features": [
+      "multimodal",
+      "text_rendering"
+    ],
+    "notes": "Google Gemini Nano Banana 2.1 via Mammouth AI (EU). Google's model page (ai.google.dev, gemini-nano-banana-2.1) names it an update to Nano Banana 2 (Gemini 3.1 Flash Image), latest update October 2026. Mammouth is the route: the platform's OpenRouter connection uses OpenRouter's EU host, whose catalogue held no image model on 2026-10-18, and OpenRouter serves this model through Google AI Studio only. Requires a Mammouth AI key (MAMMOUTH_API_KEY or devserver/mammouth.key).",
+    "version": "1.0",
+    "display_name": "Gemini Nano Banana 2.1 (€)",
+    "icon": "🔷",
+    "publisher": "Google DeepMind (London, UK)",
+    "params": "Undisclosed",
+    "license": "Commercial API (usage-based via Mammouth AI (EU))",
+    "fair_culture": "Training data undisclosed"
+  },
+  "display": {
+    "icon": "🔷",
+    "color": "#4285F4",
+    "category": "image_generation_cloud",
+    "difficulty": 1,
+    "order": 22
+  },
+  "tags": {
+    "en": [
+      "image",
+      "gemini",
+      "nano-banana",
+      "google",
+      "cloud",
+      "mammouth",
+      "multimodal"
+    ],
+    "de": [
+      "bild",
+      "gemini",
+      "nano-banana",
+      "google",
+      "cloud",
+      "mammouth",
+      "multimodal"
+    ]
+  }
+}

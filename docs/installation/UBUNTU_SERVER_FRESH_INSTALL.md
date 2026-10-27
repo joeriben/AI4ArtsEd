@@ -530,7 +530,9 @@ have every file they need.
 > Section 5 of `MODELS_REQUIRED.md` (diagnose via
 > `/api/models/availability?force_refresh=true`).
 
-For Flux 2, run `./download_flux2.sh` (~70 GB). For the full ComfyUI inventory
+For Flux 2, run `./download_flux2.sh` (~70 GB); for FLUX 3 Image Klein,
+`./download_flux3.sh` (~20 GB; the licence has to be accepted first, see
+Section 5 of `MODELS_REQUIRED.md`). For the full ComfyUI inventory
 (Qwen Image, Wan 2.2 TI2V-5B, Hunyuan3D, etc.) see Section 5 of
 `MODELS_REQUIRED.md`.
 
@@ -689,8 +691,21 @@ cd ~/ai/ai4artsed_development/dlbackend
 git clone https://github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
 python3.13 -m venv venv
-./venv/bin/python -m pip install -r requirements.txt
+./venv/bin/python -m pip install -r requirements.txt torchaudio
 ```
+
+`torchaudio` is named here because ComfyUI's own `requirements.txt` dropped it with
+v0.38.0, while code in this venv still imports it: Stable Audio 3 (through
+`stable_audio_tools`), HeartMuLa and its transcriptor (through `heartlib`),
+ImageBind, and the image-guided sound of the Crossmodal Lab (`_stable_audio.py`).
+From 2.11.0 on, torchaudio's wheels declare no torch version, and on PyPI
+torchaudio stands at 2.11.0 while torch stands at 2.14.1 (2026-10-18); this
+command installs that pair, and that pair was not tested. The ComfyUI venv on the
+development machine holds torch 2.12.0 and torchaudio 2.11.0 from the same
+nightly (dev20260225, cu130); Stable Audio 3, HeartMuLa and the image-guided
+sound of the Crossmodal Lab (with ImageBind) ran on it on 2026-10-18, the
+transcriptor was not run. How torch and torchaudio drift apart on the nightly
+index is recorded in `DEPLOYMENT_REPORT_2026-05-17.md`, F14a.
 
 Custom nodes: the foreign packages were rsync'd in Phase 4 step 5; the own
 nodes are linked by the installer, which also installs missing Python

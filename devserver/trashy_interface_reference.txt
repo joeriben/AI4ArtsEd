@@ -233,7 +233,7 @@ Workshop Planning and Developing Ideas are separate pages with their own purpose
    IMAGE TABS:
 
    Tab 1: MODEL BIAS (image)
-   - Same prompt to different image generation models (SD 1.5, SDXL, SD 3.5, Flux 2, Gemini)
+   - Same prompt to different image generation models (SD 1.5, SDXL, CommonCanvas XL C, SD 3.5, Flux 2, Flux 3 Klein, Gemini)
    - Two presets: "Current top models" or "SD History" (evolution from 2022-2024)
    - Same seed, but each model has its own latent space → different results
    - Pedagogy: probes 12 bias dimensions — gender & gender roles, age, disability & body norms, phenotype & skin tone, ethnicity & cultural origin, socioeconomic status, body size & weight, beauty standards, sexual orientation & family forms, Global North default, religious & cultural symbolism, professional roles & occupations
@@ -249,19 +249,16 @@ Workshop Planning and Developing Ideas are separate pages with their own purpose
    - Multiple vision models describe what they see → reveals what each model notices and misses
    - Perspectives include Panofsky (art-historical), Imdahl (iconic), Joerissen/Marotzki (educational theory)
 
-   TEXT TABS:
-
-   Tab 4: MODEL BIAS (text/LLM)
-   - Same message to 3 different LLM models simultaneously
-   - Each column has its own model selector + shared system prompt (selectable preset or custom)
-   - Reveals how different training data, safety policies, and cultural perspectives produce different answers
-
-   NOT COMPLETE: the hub holds a further tab that is not described above, and
-   there is nothing here to say about it. Do not fill the gap by guessing.
+   NOT COMPLETE: the hub holds two further tabs that are not described above,
+   and there is nothing here to say about them. Do not fill the gap by guessing.
    Two entries stood here until 2026-08-23 and had to go: SYSTEM PROMPTS is a
    Latent Text Lab instrument since 2026-08-22 (route /latent-lab/system-prompts)
    and no longer a comparison tab, and HOT & COOL was taken apart on the same
-   day — its address redirects and the instrument does not exist.
+   day — its address redirects and the instrument does not exist. A third
+   entry went on 2026-10-27: MODEL BIAS (text/LLM), listed here as the text tab,
+   is not routed and was marked deprecated on 2026-08-11. One message put to
+   several language models side by side is now MODEL COMPARISON in the
+   Transformers Lab (route /latent-lab/system-prompt-across-models).
 
 8. PERSONA (ai_persona.vue, route /persona)
    Icon: Smart toy / robot head
@@ -291,8 +288,12 @@ Workshop Planning and Developing Ideas are separate pages with their own purpose
      returns at each single step; Mean Images leaves the model alone as well
      and averages many finished pictures into one
    - LATENT TEXT LAB — Representation Engineering (find a concept direction in
-     an LLM's activations and steer generation along it), Model Comparison (two
-     LLMs layer by layer), Bias Archaeology
+     an LLM's activations and steer generation along it), Bias Archaeology
+   - MODEL COMPARISON (Transformers Lab, since 2026-10-27; the image instrument
+     of the same name stands under Cultural Knowledge & Stereotypes) — the same
+     message to three language models at once, a model chosen per column, under
+     ONE system prompt (a preset, a published one, or written) and one
+     randomness setting for all three
    - CROSSMODAL LAB — Latent Audio Synth (manipulate Stable Audio's T5
      conditioning space), MMAudio (image and text enter one network as separate
      signals), ImageBind Guidance (gradient steering during denoising)
@@ -469,7 +470,8 @@ Workshop Planning and Developing Ideas are separate pages with their own purpose
       random seeds) holds pictures made from the prompt as entered, each on a
       different seed
     - Set size 2 to 50 pictures per cell, on a slider. Models in rows, fastest
-      first: SD 3.5 Large Turbo, CommonCanvas XL C, SD 3.5 Large, Flux 2
+      first: SD 3.5 Large Turbo, CommonCanvas XL C, Flux 3 Klein, SD 3.5 Large,
+      Flux 2
     - Three views of every cell: the mean, a relief (the mean of the pictures'
       fine detail: the texture the set shares, at a scale the mean itself
       blurs) and a contact sheet of the single pictures
@@ -533,7 +535,9 @@ The platform is MULTIMODAL - not just images, but also:
 AVAILABLE IMAGE MODELS:
 - Stable Diffusion 3.5 Large (sd35_large) - blue, local, has prompt adaptation
 - FLUX.2 (flux2) - orange, local, NO prompt adaptation
+- FLUX 3 Image Klein (flux3) - orange, local, NO prompt adaptation
 - Gemini 3 Pro Image (gemini_3_pro_image) - blue, cloud (EU, DSGVO via Mammouth AI)
+- Gemini Nano Banana 2.1 (gemini_nano_banana_2_1) - blue, cloud (EU, DSGVO via Mammouth AI)
 - QWEN (qwen) - purple, vision-capable, local
 
 VIDEO MODELS:

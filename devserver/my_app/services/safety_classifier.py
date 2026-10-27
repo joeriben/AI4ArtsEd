@@ -29,6 +29,7 @@ Three rules hold at every call:
     is how a taxonomy gets smuggled back in.
 """
 
+import json
 import logging
 from typing import List, Optional
 
@@ -129,6 +130,25 @@ def model_name() -> str:
 _model = model_name
 
 
+def _one_line(text: str, limit: int = 200) -> str:
+    """`text` on one line, as the journal is to show it: every character
+    that is not printable -- a line break, a tab, a terminal's escape -- and
+    the backslash written as Python writes them in a string, so that a line
+    break and a backslash before an n do not read alike; and no more than
+    `limit` characters as written, a character whose writing would go past
+    them left out, with all after it. The backend logs to stderr, which the
+    journal reads line by line: after a line break, the rest of a record
+    would come as an entry of its own, without the level and the tag."""
+    out = []
+    for c in text:
+        piece = c if c.isprintable() and c != "\\" else c.encode("unicode_escape").decode("ascii")
+        limit -= len(piece)
+        if limit < 0:
+            break
+        out.append(piece)
+    return "".join(out)
+
+
 def score(instruct: str, query: str, document: str,
           images: Optional[List[str]] = None) -> Optional[float]:
     """The probability that the classifier answers yes, or None for no answer.
@@ -168,16 +188,36 @@ def score(instruct: str, query: str, document: str,
     if response.status_code != 200:
         detail = ""
         try:
-            detail = str((response.json() or {}).get("error", ""))[:200]
-        except ValueError:
-            detail = response.text[:200]
+            error = response.json().get("error", "")
+            # An error that is no text -- null, true, a number, an object --
+            # as JSON writes it, not as Python does (None, True).
+            detail = error if isinstance(error, str) else json.dumps(error, ensure_ascii=False)
+        except (ValueError, AttributeError, RecursionError):
+            # Not JSON, JSON that is no object -- null, false, 0 and an empty
+            # list or string as well -- and so has no "error" to read, or
+            # JSON nested deeper than the decoder goes: the text is read as
+            # requests decodes it. Where the charset's codec takes no
+            # replacement at all (idna), requests fails on every body that is
+            # not empty, JSON as well; the bytes are read then, as UTF-8 with
+            # replacement.
+            try:
+                detail = response.text
+            except ValueError:
+                detail = bytes(response.content or b"")[:200].decode("utf-8", "replace")
         logger.error("[SAFETY-CLASSIFIER] %s answered %s (%s) -- no verdict",
-                     model, response.status_code, detail)
+                     model, response.status_code, _one_line(detail))
         return None
 
     try:
-        value = float((response.json() or {})["score"])
-    except (ValueError, KeyError, TypeError) as e:
+        value = (response.json() or {})["score"]
+        # A JSON number only: float() reads false as 0.0, a pass, and the
+        # string "0" as 0.0 as well.
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError(f"a {type(value).__name__}, not a number")
+        value = float(value)
+    except (ValueError, KeyError, TypeError, OverflowError, RecursionError) as e:
+        # OverflowError: an integer too large for a float; RecursionError:
+        # JSON nested deeper than the decoder goes.
         logger.error("[SAFETY-CLASSIFIER] %s sent no readable score (%s) -- "
                      "no verdict", model, e)
         return None

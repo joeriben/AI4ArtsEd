@@ -1,0 +1,38 @@
+name: "sd35_unet"
+platform: "tensorrt_plan"
+max_batch_size: 4
+input [
+  {
+    name: "hidden_states"
+    data_type: TYPE_FP16
+    dims: [16, -1, -1]
+  },
+  {
+    name: "encoder_hidden_states"
+    data_type: TYPE_FP16
+    dims: [-1, 4096]
+  },
+  {
+    name: "pooled_projections"
+    data_type: TYPE_FP16
+    dims: [2048]
+  },
+  {
+    name: "timestep"
+    data_type: TYPE_FP16
+    dims: [1]
+  }
+]
+output [
+  {
+    name: "sample"
+    data_type: TYPE_FP16
+    dims: [16, -1, -1]
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]

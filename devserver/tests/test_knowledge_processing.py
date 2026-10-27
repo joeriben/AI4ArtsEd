@@ -153,6 +153,41 @@ def test_process_document_shape_and_mittellage():
     assert res.n_missing_sections == 0
 
 
+def test_map_side_by_side_gives_the_same_file_and_reports_progress():
+    """map_workers > 1 (the flow's document summary) overlaps the waiting and
+    nothing else: the same digests in the document's order, the same file,
+    and one progress report per unit after the first."""
+    import re
+
+    def _strip_time(md):
+        return re.sub(r"^analyzed_at:.*$", "", md, flags=re.MULTILINE)
+
+    one = kp.process_document(_standard_raw(), _fm(), llm=_stub, mode="standard")
+    reports = []
+    many = kp.process_document(_standard_raw(), _fm(), llm=_stub, mode="standard",
+                               map_workers=4,
+                               on_progress=lambda d, t: reports.append((d, t)))
+    assert _strip_time(many.markdown) == _strip_time(one.markdown)
+    total = one.n_content_sections
+    assert total > 1
+    assert reports == [(i, total) for i in range(total + 1)]
+
+
+def test_map_side_by_side_honours_cancel():
+    calls = []
+
+    def _cancel():
+        return len(calls) >= 1
+
+    def _counting(system, user, max_tokens):
+        calls.append(1)
+        return _stub(system, user, max_tokens)
+
+    with pytest.raises(kp.ProcessingCancelled):
+        kp.process_document(_standard_raw(), _fm(), llm=_counting, mode="standard",
+                            map_workers=2, cancel_check=_cancel)
+
+
 def test_mittellage_rule_constant_is_in_map_prompt():
     """The Mittellage rule is the core instruction; it must reach the Map prompt
     verbatim (a guard against silent prompt drift). Selection-not-paraphrase and

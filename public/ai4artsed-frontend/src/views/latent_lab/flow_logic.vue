@@ -242,6 +242,10 @@ const NODES: LogicNode[] = [
 
   {
     id: 'transformer.prompt', col: 1, row: 0, kind: 'mix', breakBefore: true,
+    // Model Comparison (Transformers Lab, 2026-10-27) sets the system prompt as well,
+    // and the randomness at `transformer.sampling` below, and is a host at
+    // neither: what it puts side by side is the model. Whether the overview
+    // links to it here has not been decided.
     marks: [{ at: 'provider', hosts: ['systemprompt'] }],
   },
   {

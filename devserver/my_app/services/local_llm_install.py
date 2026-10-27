@@ -1,4 +1,6 @@
-"""Installing a local language model from the settings page.
+"""Installing a local language model, for the Download entry of the model
+lists of System Prompts and Image Understanding (POST /api/chat/install) and
+for download_llm_models.sh.
 
 The alias names a row of config/local_llm_weights.json (services/
 local_llm_weights); the row names the Hugging Face repository, and the
@@ -213,13 +215,19 @@ def _role_models() -> list:
     (llm_service.view_vlm_model). It used to be installed only because the
     image check's role, VLM_SAFETY_MODEL, happened to name the same model;
     that role went with the move to one classifier, whose weights belong to
-    the GPU service and stand outside this table."""
+    the GPU service and stand outside this table.
+
+    SAFETY_MODEL is left out for that reason. On an installation whose
+    setting still names llama-guard3:1b (or llama-guard3:latest), the table
+    knows that name, and this list fetched the gated model into ComfyUI,
+    where no check reads it: the checks ask SAFETY_MODEL at the GPU service,
+    which refuses a guard as not a classifier."""
     import config
     from my_app.routes.chat_routes import get_user_setting
     from my_app.routes.settings_routes import DSGVO_REVIEWED_FIELDS
     from my_app.services.llm_service import llm_service
     values = [get_user_setting(key, default=getattr(config, key, "")) or ""
-              for key in DSGVO_REVIEWED_FIELDS]
+              for key in DSGVO_REVIEWED_FIELDS if key != "SAFETY_MODEL"]
     values.append(llm_service.view_vlm_model())
     aliases = []
     for value in values:
@@ -233,7 +241,8 @@ def _role_models() -> list:
 def main(argv: list) -> int:
     """`python -m my_app.services.local_llm_install [alias ...]` from devserver/:
     installs the aliases named, or, with none, every local model a model role
-    of the settings names and the look's model (_role_models). One line per
+    of the settings other than SAFETY_MODEL names, and the look's model
+    (_role_models). One line per
     second while a download runs; the
     exit code is the number of aliases that were not installed."""
     aliases = [a[len(weights.LOCAL_PREFIX):] if a.startswith(weights.LOCAL_PREFIX) else a

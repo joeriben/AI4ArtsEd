@@ -179,6 +179,14 @@
       "vision": false,
       "size_gb": 3.0,
       "gated": true
+    },
+    "apertus:8b": {
+      "repo": "swiss-ai/Apertus-8B-Instruct-2509",
+      "dir": "swiss-ai--Apertus-8B-Instruct-2509",
+      "display_name": "Apertus 8B",
+      "chat_capable": true,
+      "vision": false,
+      "size_gb": 16.1
     }
   },
   "aliases": {

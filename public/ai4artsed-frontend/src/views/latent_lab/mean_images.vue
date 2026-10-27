@@ -156,7 +156,12 @@
               <h3>{{ t('latentLab.imageLab.tabs.mean.label') }}</h3>
               <!-- Steyerl's own account of the mean image. It stands as soon as
                    there is a text for it. -->
-              <p v-if="steyerlText">{{ steyerlText }}</p>
+              <p v-if="steyerlText">
+                <template v-for="(part, i) in steyerlParts" :key="i">
+                  <em v-if="i % 2 === 1">{{ part }}</em>
+                  <template v-else>{{ part }}</template>
+                </template>
+              </p>
               <p>
                 <template v-for="(part, i) in originParts" :key="i">
                   <em v-if="i % 2 === 1">{{ part }}</em>
@@ -166,7 +171,7 @@
 
               <LabReferences
                 :title="t('latentLab.meanImages.referencesTitle')"
-                :items="REFERENCES"
+                :items="references"
                 flat
               />
             </aside>
@@ -242,7 +247,13 @@ import { useI18n } from 'vue-i18n'
 import { usePictureTemplate } from '@/composables/usePictureTemplate'
 import axios from 'axios'
 import { postDirectRun, postStreamedRun } from '@/services/directRun'
-import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import {
+  generationErrorFor,
+  generationErrorKeyFor,
+  interceptPrompt,
+  perspectiveFailureText,
+  type GenerationErrorKey,
+} from '@/composables/useLabRun'
 import ShellRun from '@/components/ShellRun.vue'
 import ChipSelect from '@/components/ChipSelect.vue'
 import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
@@ -272,7 +283,7 @@ import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { apiBase } from '@/services/labApi'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const deviceId = useDeviceId()
 const favoritesStore = useFavoritesStore()
@@ -295,6 +306,19 @@ const REFERENCES: LabReference[] = [
 ]
 
 /**
+ * The German page quotes the German edition, with that edition's pages, and
+ * names it here. Every other language cites the English edition.
+ */
+const REFERENCES_DE: LabReference[] = [
+  {
+    authors: 'Steyerl, H. (2025)',
+    title: '„Gemeine Durchschnittsbilder“',
+    venue: 'in: Medium Hot: Bilder in Zeiten der Hitze. Übers. von Sabine Schulz. Diaphanes',
+  },
+]
+const references = computed(() => (locale.value === 'de' ? REFERENCES_DE : REFERENCES))
+
+/**
  * The two axes a set is made along: one quantity held still, the other moved.
  * Both stand on every raster — the instrument IS the comparison of the two, so
  * there is nothing to pick between them and no chips over them.
@@ -311,7 +335,7 @@ type View = 'images' | 'mean' | 'relief'
 
 /**
  * The models a row can be, in the shape Model Comparison holds them (`PRESETS`,
- * views/compare/model_comparison.vue). All four run on this place's own cards.
+ * views/compare/model_comparison.vue). All five run on this place's own cards.
  *
  * NO PAID MODEL STANDS HERE. Gemini 3
  * Pro Image was offered for a day and is gone: one press on this surface asks for
@@ -330,18 +354,19 @@ type View = 'images' | 'mean' | 'relief'
 interface ModelOption { id: string; label: string }
 const MODELS: ModelOption[] = [
   // The two SD 3.5 rows are the ones whose chunks honour `keep_latent`, so
-  // they carry the latent mean this surface is for. The other two are
+  // they carry the latent mean this surface is for. The others are
   // averaged in pixels.
   { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo' },
   { id: 'commoncanvas_xl_c', label: 'CommonCanvas XL C' },
+  { id: 'flux3', label: 'Flux 3 Klein' },
   { id: 'sd35_large', label: 'SD 3.5 Large' },
   { id: 'flux2', label: 'Flux 2' },
 ]
 /**
  * What stands marked when the surface opens: the fastest row, alone. One
  * press asks every
- * marked row for a whole set per column, so four rows marked by default make a
- * press of up to four hundred generations out of a surface nobody has touched.
+ * marked row for a whole set per column, so five rows marked by default make a
+ * press of up to five hundred generations out of a surface nobody has touched.
  * The other rows are marked by hand, for the comparison they are there for.
  */
 const OPENING_MODELS = [MODELS[0]!.id]
@@ -494,6 +519,12 @@ const steyerlText = computed(() => {
   return text === key ? '' : text.trim()
 })
 
+/**
+ * The German paragraph quotes the German edition with its italics, marked *so*
+ * in the string as in the second paragraph.
+ */
+const steyerlParts = computed(() => steyerlText.value.split('*'))
+
 /** Two lines this platform already offers elsewhere, and no third one here. */
 const promptExamples = usePromptPresets(['house', 'street'])
 
@@ -552,6 +583,16 @@ async function handlePresetSelected(payload: { configId: string; context: string
 const translationEn = ref('')
 const variants = ref<string[]>([])
 const shortfall = ref(0)
+/**
+ * The variants are written while the pictures of the prompt as entered are
+ * already being made. `variantsPending` says the call is still out, so a row
+ * with one column in does not read as done; `variantsFailed` is the reason
+ * where the call came back with nothing, and the column that varies the text
+ * says it instead of a set. The reason is kept as the key of its sentence, so
+ * a run read back says it in the reader's language.
+ */
+const variantsPending = ref(false)
+const variantsFailed = ref<GenerationErrorKey | null>(null)
 /** The seed the run actually worked with; the automatic writes it into the box. */
 const runSeed = ref(OPENING_SEED)
 
@@ -873,9 +914,10 @@ let alive = true
 /**
  * Which press is the current one. `useRasterRun` guards the picture LOOP with a
  * token of its own, but that token is taken when `start()` is called — and by
- * then the translation and the variants have already been waited for. Leaving
+ * then the translation has already been waited for, and the variants come
+ * back while the loop runs. Leaving
  * the instrument during that first call, or pressing again, would come back to a
- * fresh token and set the whole plan going: up to three hundred and ninety-six
+ * fresh token and set the whole plan going: up to four hundred and ninety-five
  * generations on a card nobody is watching.
  */
 let press = 0
@@ -1011,6 +1053,10 @@ function cellNote(model: string, axis: Axis): string {
   const overlayRefusal = overlayBlocked.value[cellKey(model, axis)]
   if (overlayRefusal) return t(overlayRefusal)
   const set = singlesFor(model, axis)
+  // The variants never came back, so this column has no set in this press.
+  if (!set.length && axis === 'seedFixed' && variantsFailed.value) {
+    return variantsFailedText(variantsFailed.value)
+  }
   if (!set.length) return ''
   const states = set
     .map(s => singles.value[s.key])
@@ -1038,7 +1084,8 @@ function headSub(axis: Axis): string {
     // What RAN, not what was asked for: a model that answered with fewer
     // distinct variants makes a shorter set, and the head is what the reader
     // counts the pictures against.
-    const n = variants.value.length || perCellCount.value
+    // Variants that did not come back ran nothing.
+    const n = variantsFailed.value ? 0 : (variants.value.length || perCellCount.value)
     return t('latentLab.meanImages.colSub.seedFixed', { n })
   }
   return t('latentLab.meanImages.colSub.promptFixed', { n: seedList.value.length || perCellCount.value })
@@ -1064,7 +1111,11 @@ function rowState(model: string): string {
   for (const axis of columns) {
     for (const s of singlesFor(model, axis)) keys.add(s.key)
   }
-  const total = keys.size
+  // While the variants are still being written, the column that varies the
+  // text has no set yet, and a row whose other column is in would read as done.
+  // It counts as the set that was asked for: the variants less the first, which
+  // is the picture both columns share.
+  const total = keys.size + (variantsPending.value ? perCellCount.value - 1 : 0)
   if (!total) return t('latentLab.meanImages.rowState.waiting')
   const back = [...keys].filter(k => singles.value[k]).length
   if (!back) return t('latentLab.meanImages.rowState.waiting')
@@ -1183,7 +1234,16 @@ function completingPress(): boolean {
   // field cannot be typed into, so the number itself is not read.
   if (madeRandom !== randomSeed.value) return false
   if (!randomSeed.value && runSeed.value !== seed.value) return false
-  if (columns.includes('seedFixed') && !variants.value.length) return false
+  // A record that kept no variants while means of them stand: the variants
+  // those means were made from are gone, and anything added would be made from
+  // others. Such a press is a fresh run.
+  if (columns.includes('seedFixed') && !variants.value.length && rows.value.some(row => {
+    const key = cellKey(row.id, 'seedFixed')
+    return composites.value[key] || overlayBlocked.value[key]
+  })) return false
+  // Variants that never came back do not make the press a fresh run: they are
+  // asked for again from the run's own English text, and the column of the
+  // prompt as entered stays as it is (`wantsVariants` in `startRun`).
   return rows.value.some(row => columns.some(axis => !cellDone(row.id, axis)))
 }
 
@@ -1256,6 +1316,11 @@ function requestMessage(err: unknown): string {
   return generationErrorFor(t, err)
 }
 
+/** The line for variants that did not come back, in the reader's language. */
+function variantsFailedText(cause: GenerationErrorKey): string {
+  return t('latentLab.meanImages.runFailed', { m: t(cause.key, cause.params) })
+}
+
 async function startRun(): Promise<void> {
   if (!canRun.value) return
   errorMessage.value = ''
@@ -1266,6 +1331,7 @@ async function startRun(): Promise<void> {
   // What the raster on the surface will have been made from, once this press
   // has brought a picture.
   const pressInputs = inputsKey()
+  const pressPrompt = promptText.value
   // The drawings belong to the press and not to the raster: a cell being filled
   // now must not open with the last press's picture of a different set.
   previews.value = {}
@@ -1276,8 +1342,14 @@ async function startRun(): Promise<void> {
   // The raster on the screen stops being the run that was written the moment
   // this press starts. Held, the star would stand lit over cells the stored run
   // does not contain, and pressing it would favourite the raster WITHOUT the row
-  // being added. The run this press makes gets its own id when it is written.
+  // being added. The run this press makes gets its own id when it is written;
+  // a press that writes nothing gives the star back to the run it found.
+  const runBefore = labRunId.value
   labRunId.value = null
+  // A press asks for the variants again where they did not come, so the
+  // reason of the last call goes with it.
+  variantsPending.value = false
+  variantsFailed.value = null
   if (!completing) {
     composites.value = {}
     storedCells.value = {}
@@ -1308,41 +1380,51 @@ async function startRun(): Promise<void> {
   // On a completion nothing else of the material moves — text, variants, seeds,
   // the seed itself — because what is added stands beside what is there.
 
-  // What the counter counts, before anything is asked for. The translation and
-  // the variants take a model call of their own, and until they are back the bar
-  // would otherwise read 0 / 0 while plainly running. `start()` sets the exact
-  // number a moment later, off the plan it actually builds.
+  // What the counter counts, before anything is asked for. The translation
+  // takes a model call of its own, and until it is back the bar would otherwise
+  // read 0 / 0 while plainly running. `start()` sets the exact number a moment
+  // later, off the plan it actually builds; where the variants are still being
+  // written, `stepsAsTheyCome` sets it when they are back.
   expected.value = perCellCount.value * rows.value.reduce(
     (n, row) => n + columns.filter(axis => !completing || !cellDone(row.id, axis)).length,
     0,
   )
 
-  // The English text FIRST, and the variants with it. Every row is made from
-  // one and the same text, so a difference between two rows is the model.
+  // The English text FIRST. Every row is made from one and the same text, so a
+  // difference between two rows is the model.
   preparing.value = true
   const mine = ++press
+  // The variants of that text are written beside the first pictures, not
+  // before them (`writeVariants`). A large set is collected in rounds, one
+  // model call each, and waiting for the whole list left the card idle for as
+  // long as the rounds took, while the column of the prompt as entered needs
+  // nothing but the translation. A completion asks for them only where the
+  // call of its run came back with nothing, from that run's English text.
+  const wantsVariants = columns.includes('seedFixed') && perCellCount.value > 1 && !variants.value.length
   try {
     // The sitting is opened before the first picture, so the run it is written
     // into belongs to the press that made it.
     await startSession()
     // A completion asks no model for material: the text and the variants of the
     // run it completes ARE its material, and new ones would make the added rows
-    // a second run standing in the same raster.
+    // a second run standing in the same raster. Variants the run never got are
+    // the exception: there are none standing that new ones could differ from.
     if (!completing) {
-      const wantsVariants = columns.includes('seedFixed')
-      // Answered as a stream, because a large set is collected in rounds and
-      // every round is a model call: measured on 2026-09-04, one press was out
-      // for 21 min 50 s and the tunnel in front of the server had cut the POST
-      // after about 100 s. The client resolves and throws like the `axios.post`
-      // it replaces, so everything below and in the catch reads exactly as
-      // before.
+      // The translation alone (a set of one). Answered as a stream all the
+      // same, because the route is one that can take minutes: measured on
+      // 2026-09-04, one press for a large set was out for 21 min 50 s and the
+      // tunnel in front of the server had cut the POST after about 100 s. The
+      // client resolves and throws like the `axios.post` it replaces.
       const { data } = await postStreamedRun('/api/latent-lab/mean-images/variants', {
-        prompt: promptText.value,
-        n: wantsVariants ? perCellCount.value : 1,
+        prompt: pressPrompt,
+        n: 1,
       }, { baseUrl })
+      // A press that overtook this one, or a run brought in from the gallery
+      // while the call was out, owns the text now.
+      if (!alive || mine !== press) return
       translationEn.value = data?.translation_en || ''
-      variants.value = Array.isArray(data?.variants) ? data.variants : []
-      shortfall.value = Number(data?.shortfall) || 0
+      // Where no variants are asked for, this IS the material of the column.
+      if (!wantsVariants) variants.value = Array.isArray(data?.variants) ? data.variants : []
     }
   } catch (err) {
     // Nothing will run, so the bar stops counting towards a number it will never
@@ -1364,6 +1446,10 @@ async function startRun(): Promise<void> {
     errorMessage.value = t('latentLab.meanImages.runFailed', { m: t('latentLab.meanImages.noEnglishText') })
     return
   }
+
+  const variantsOut = wantsVariants
+    ? writeVariants(mine, pressPrompt, translationEn.value, perCellCount.value)
+    : null
 
   // One picture at a time, model by model, so a card holds one model's weights
   // for a whole row instead of exchanging them at every second picture. A
@@ -1401,7 +1487,11 @@ async function startRun(): Promise<void> {
   // pictures, and needs no step of its own.
   for (const row of rows.value) {
     if (asked.has(row.id)) continue
-    if (columns.some(axis => !cellDone(row.id, axis))) plan.push({ kind: 'close', model: row.id })
+    // A column still waiting for its variants has no set yet; its pictures
+    // join the run when the variants are back.
+    if (columns.some(axis => !cellDone(row.id, axis) && singlesFor(row.id, axis).length)) {
+      plan.push({ kind: 'close', model: row.id })
+    }
   }
   // AFTER the plan, because the plan is built from what is done. A cell that is
   // being asked for pictures again has a composite resting on the set as it was
@@ -1411,9 +1501,9 @@ async function startRun(): Promise<void> {
   // no longer matches, and it is laid over again with everything that is in.
   // Its bytes stay in `fresh` until the raster is written, so a laying-over that
   // fails again still stores the picture the cell had.
+  let dropped = false
   if (completing) {
     const kept = { ...composites.value }
-    let dropped = false
     for (const row of rows.value) {
       for (const axis of columns) {
         const key = cellKey(row.id, axis)
@@ -1425,8 +1515,13 @@ async function startRun(): Promise<void> {
     if (dropped) composites.value = kept
   }
 
-  await start(plan, step => runStep(step))
-  inFlight.value = ''
+  // A plan still being written has no length to count from: the pictures of the
+  // variants count as the set that was asked for until they are back.
+  if (variantsOut) expected.value = plan.length + rows.value.length * (perCellCount.value - 1)
+  await start(variantsOut ? stepsAsTheyCome(plan, seen, variantsOut, mine) : plan, step => runStep(step))
+  // A press given up while its variants were out comes back here only once they
+  // are, and by then the marker may be a newer press's.
+  if (mine === press) inFlight.value = ''
   // A raster to which this press brought a picture is the one the next press is
   // compared with. Pictures a completion inherited do not count.
   const brought = plan.some(step => step.kind === 'picture' && !!singles.value[step.single.key]?.runId)
@@ -1436,7 +1531,128 @@ async function startRun(): Promise<void> {
   // silently in that case, so the two things that say it are the tab itself and
   // the counter: a finished run has every step of its plan behind it.
   if (!alive || mine !== press || done.value < expected.value) return
+  // Nothing new to write and nothing taken off the surface, as after a
+  // completion whose variants failed again: what stands is the run that was
+  // read back, and the star and Help belong to it again.
+  if (!fresh.size && !dropped && !brought) {
+    labRunId.value = runBefore
+    return
+  }
   await writeRun(mine)
+}
+
+/**
+ * The variants of a fresh press, asked for while its first pictures are made.
+ *
+ * The English text goes back to the route with the request, so the variants
+ * are written from the very sentence the other column runs on: `variants[0]`
+ * IS that sentence, and the first picture of the two columns stays one request.
+ * It never throws. A call that comes back with nothing leaves its reason with
+ * the column that varies the text, and the rest of the run goes on.
+ */
+async function writeVariants(mine: number, prompt: string, translation: string, n: number): Promise<void> {
+  variantsPending.value = true
+  try {
+    const { data } = await postStreamedRun('/api/latent-lab/mean-images/variants', {
+      prompt,
+      translation_en: translation,
+      n,
+    }, { baseUrl })
+    if (!alive || mine !== press) return
+    const got: string[] = Array.isArray(data?.variants) ? data.variants : []
+    // A backend from before `translation_en` translates the prompt again, and
+    // the list may then open with another English sentence: the shared first
+    // picture is made a second time. Said in the console, as the transport says
+    // a deploy mismatch (services/directRun.ts); the list is used as it came.
+    if (got.length && got[0] !== translation) {
+      console.warn(
+        '[mean images] The variants came back from another English sentence than the one ' +
+        'sent. The bundle in this browser and the backend are probably not the same deploy.',
+      )
+    }
+    variants.value = got
+    shortfall.value = Number(data?.shortfall) || 0
+  } catch (err) {
+    if (!alive || mine !== press) return
+    variantsFailed.value = generationErrorKeyFor(err)
+    errorMessage.value = variantsFailedText(variantsFailed.value)
+  } finally {
+    if (mine === press) variantsPending.value = false
+  }
+}
+
+/**
+ * The plan of a fresh press, handed to the loop one step at a time while the
+ * variants are still being written.
+ *
+ * At the press the plan holds the pictures of the prompt as entered; the
+ * pictures of the variants join the moment the variants are back. Until then
+ * the run goes on through what IS planned and waits only where nothing else is
+ * left. The next step is one for the model of the step before, where there is
+ * one, so variants that come back in the middle of a row are made before the
+ * run moves on. A row the run has already left loads its model once more for
+ * its variants.
+ *
+ * Every step added is also written into `plan`, so what the press asked for
+ * can be read off the plan afterwards, as it can for a list.
+ */
+async function* stepsAsTheyCome(
+  plan: PlanStep[],
+  seen: Set<string>,
+  variantsOut: Promise<void>,
+  mine: number,
+): AsyncGenerator<PlanStep> {
+  const order = rows.value.map(row => row.id)
+  const pending = [...plan]
+  let back = false
+  let taken = false
+  void variantsOut.finally(() => { back = true })
+  let last = ''
+  while (alive && mine === press) {
+    if (back && !taken) {
+      taken = true
+      for (const model of order) {
+        const set = singlesFor(model, 'seedFixed')
+        let added = false
+        for (const single of set) {
+          if (seen.has(single.key)) continue
+          seen.add(single.key)
+          // A picture the raster already holds is not made again: on a
+          // completion, the one the two columns share.
+          const state = singles.value[single.key]
+          if (state?.runId || state?.blockedKey) continue
+          const step: PlanStep = { kind: 'picture', model, axis: 'seedFixed', single }
+          plan.push(step)
+          pending.push(step)
+          added = true
+        }
+        // A set with nothing left to make: the variants came back as the
+        // translation alone, whose picture the other column already has. It is
+        // laid over as a step of its own, or it would wait for a picture of this
+        // model that never comes.
+        if (set.length && !added && !cellDone(model, 'seedFixed')) {
+          const step: PlanStep = { kind: 'close', model }
+          plan.push(step)
+          pending.push(step)
+        }
+      }
+      // The rows in the order of the raster; within a row, the order planned.
+      pending.sort((a, b) => order.indexOf(a.model) - order.indexOf(b.model))
+      expected.value = plan.length
+    }
+    if (pending.length) {
+      const at = Math.max(0, pending.findIndex(step => step.model === last))
+      const step = pending.splice(at, 1)[0]!
+      last = step.model
+      yield step
+      continue
+    }
+    if (taken) return
+    // Nothing is left but what the variants will bring, and no cell is being
+    // worked on while they are written.
+    inFlight.value = ''
+    await variantsOut
+  }
 }
 
 async function runStep(step: PlanStep): Promise<void> {
@@ -1812,7 +2028,10 @@ async function storeRun(mine: number): Promise<void> {
       variants: [...variants.value],
       seeds: [...seedList.value],
     },
-    results: { cells: cellRecords, shortfall: shortfall.value },
+    // Where the variants call came back with nothing, its reason travels with
+    // the run as the key of its sentence, so a raster read back says why the
+    // column is empty, in the language it is read in.
+    results: { cells: cellRecords, shortfall: shortfall.value, variants_failed: variantsFailed.value },
     outputs,
   })
 
@@ -1928,6 +2147,19 @@ function applyInstrumentRun(
   // when its pictures came (`startRun`).
   if (!ownRun) seedAutomatic.laidBack(readWhole ? inputsKey() : null, storedSeed)
   variants.value = Array.isArray(p.variants) ? (p.variants as string[]) : []
+  variantsPending.value = false
+  const variantsSaid = (obj.results as Record<string, unknown> | undefined)?.variants_failed as
+    | { key?: unknown; params?: unknown }
+    | null
+    | undefined
+  variantsFailed.value = typeof variantsSaid?.key === 'string'
+    ? {
+        key: variantsSaid.key,
+        params: variantsSaid.params && typeof variantsSaid.params === 'object'
+          ? (variantsSaid.params as Record<string, unknown>)
+          : {},
+      }
+    : null
   seedList.value = Array.isArray(p.seeds)
     ? (p.seeds as unknown[]).map(Number).filter(n => Number.isFinite(n))
     : []
@@ -2123,7 +2355,7 @@ function cellPlace(row: ModelOption, axis: Axis): string {
 // ---------------------------------------------------------------------------
 /**
  * How many runs this surface names at once. The chat lists at most twelve, and
- * four models by two columns is the largest raster there is — so a full raster
+ * five models by two columns is the largest raster there is — so a full raster
  * fits and nothing is silently dropped at the other end.
  */
 const SURFACE_RUNS_LISTED = 12

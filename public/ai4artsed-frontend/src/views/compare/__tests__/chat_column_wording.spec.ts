@@ -10,13 +10,18 @@
  * "Connection error" instead — a different thing said to a room about a model
  * that had in fact been asked and had in fact not answered.
  *
- * The classification lives inside a `<script setup>` block and cannot be
- * imported, so it is read here from the source. What is held is that the view
+ * The classification is read here from the source. What is held is that it
  * still hands all three endings to the "no response" path, and that a torn
  * connection is not among them: a column claiming a model said nothing, when
  * nothing ever reached the model, is the failure this must not trade for the
- * other. (The two sister views that shared this logic, the language-model and
- * the temperature comparison, were removed on 2026-10-10 as unrouted.)
+ * other.
+ *
+ * Since 2026-10-27 the turn of System Prompts and of Model Comparison
+ * (Transformers Lab) is taken in one place, composables/useChatColumns.ts, and both
+ * surfaces are held to taking it there. The language-model comparison
+ * (llm_model_comparison.vue) is unrouted, marked deprecated on 2026-08-11 and
+ * frozen, and still carries a turn of its own; the temperature comparison was
+ * removed on 2026-10-10.
  */
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
@@ -26,7 +31,17 @@ import { en } from '../../../i18n/en'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 
-const VIEWS = ['llm_model_comparison.vue', 'system_prompt_comparison.vue']
+// Where a turn is taken, relative to views/compare.
+const VIEWS = [
+  'llm_model_comparison.vue',
+  '../../composables/useChatColumns.ts',
+]
+
+// The surfaces that take their turns through the composable above.
+const ROUND_SURFACES = [
+  'system_prompt_comparison.vue',
+  '../latent_lab/system_prompt_across_models.vue',
+]
 
 /** The `catch` block of the view's own chat call, source and all. */
 function chatCatch(source: string): string {
@@ -43,6 +58,14 @@ describe('the two words a comparison column has for a column that failed', () =>
     expect(en.compare.shared.error).toBeTruthy()
     expect(en.compare.shared.noResponse).not.toBe(en.compare.shared.error)
   })
+
+  for (const view of ROUND_SURFACES) {
+    it(`${view} takes its turns through useChatColumns and nowhere else`, () => {
+      const source = readFileSync(resolve(HERE, '..', view), 'utf8')
+      expect(source).toContain('useChatColumns(store,')
+      expect(source).not.toContain('chatTurn(')
+    })
+  }
 
   for (const view of VIEWS) {
     describe(view, () => {

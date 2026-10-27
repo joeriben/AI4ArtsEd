@@ -20,8 +20,11 @@ VOXCPM_PORT="${VOXCPM_PORT:-17805}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Record the terminal output into a protocol file where the installation has _record.sh
 RECORD_SERVICE_NAME="VoxCPM2"
-source "$SCRIPT_DIR/_record.sh"
+if [ -f "$SCRIPT_DIR/_record.sh" ]; then
+    source "$SCRIPT_DIR/_record.sh"
+fi
 
 VOXCPM_HOME="${VOXCPM_HOME:-$HOME/ai/voxcpm}"
 VENV_PYTHON="$VOXCPM_HOME/venv/bin/python"

@@ -75,12 +75,12 @@
     },
     "mistral": {
       "DSGVO_CONFORMITY": true,
-      "DSGVO_NOTE": "Recorded as compliant. Source: provider data processing addendum, https://legal.mistral.ai/terms/data-processing-addendum. Regional inference: all inference traffic runs on the EU endpoint api.eu.mistral.ai (devserver/config/llm_providers.json), so Mistral commits to EU processing for eligible requests (docs.mistral.ai/inference/regional-inference, read 2026-09-27). Zero Data Retention is a separate control and not (yet) recorded here: it must be requested from Mistral support for the organization (help.mistral.ai article 347612); status visible under Admin > API > Privacy. The platform calls only the stateless /v1/chat/completions, which ZDR covers; Agents/Batch/Files — outside ZDR — are not used.",
+      "DSGVO_NOTE": "Recorded as compliant. Source: provider data processing addendum, https://legal.mistral.ai/terms/data-processing-addendum. Regional inference: all inference traffic runs on the EU endpoint api.eu.mistral.ai (devserver/config/llm_providers.json), so Mistral commits to EU processing for eligible requests (docs.mistral.ai/inference/regional-inference, read 2026-09-27). Zero Data Retention is a separate control and not (yet) recorded here: it must be requested from Mistral support for the organization (help.mistral.ai article 347612); status visible under Admin > API > Privacy. The platform calls only the stateless /v1/chat/completions, which ZDR covers; Agents/Batch/Files \u2014 outside ZDR \u2014 are not used.",
       "EXTERNAL_LLM_PROVIDER": "mistral",
       "FALLBACK_ENABLED": true,
-      "label": "Mistral AI EU",
       "VISION_DELEGATE_MODEL": "mistral/mistral-medium-3-5",
       "VISION_DELEGATE_NOTE": "Mistral serves no model that both sees and reasons: zai-glm-5-3 reasons and is blind, mistral-medium-3-5 sees and answers 400 to a request for reasoning mode. A role that needs both is filled by the pair. The reasoning model keeps the turn and commissions this one through look_at_image, as often as it has questions; an uploaded or camera picture is looked at on this server instead, whatever stands here.",
+      "label": "Mistral AI EU",
       "models": {
         "CHAT_HELPER_MODEL": "mistral/zai-glm-5-3",
         "CODING_MODEL": "mistral/codestral-latest",
@@ -117,15 +117,15 @@
       "FALLBACK_ENABLED": true,
       "label": "OpenRouter (EU-server-only, DSGVO)",
       "models": {
-        "CHAT_HELPER_MODEL": "openrouter/z-ai/glm-5.3",
-        "CODING_MODEL": "openrouter/z-ai/glm-5.3",
+        "CHAT_HELPER_MODEL": "openrouter/anthropic/claude-opus-5.5",
+        "CODING_MODEL": "openrouter/anthropic/claude-opus-5.5",
         "KNOWLEDGE_PROCESSING_MODEL": "openrouter/z-ai/glm-5.3",
-        "PERSONA_MODEL": "openrouter/z-ai/glm-5.3",
-        "RESONA_MODEL": "openrouter/z-ai/glm-5.3",
-        "STAGE1_TEXT_MODEL": "openrouter/z-ai/glm-5.3",
-        "STAGE2_INTERCEPTION_MODEL": "openrouter/z-ai/glm-5.3",
+        "PERSONA_MODEL": "openrouter/anthropic/claude-opus-5.5",
+        "RESONA_MODEL": "openrouter/anthropic/claude-opus-5.5",
+        "STAGE1_TEXT_MODEL": "openrouter/claude-sonnet-5.5",
+        "STAGE2_INTERCEPTION_MODEL": "openrouter/anthropic/claude-opus-5.5",
         "STAGE2_OPTIMIZATION_MODEL": "openrouter/z-ai/glm-5.3",
-        "STAGE3_MODEL": "openrouter/z-ai/glm-5.3"
+        "STAGE3_MODEL": "openrouter/openai/gpt-6-luna"
       }
     }
   },
@@ -244,7 +244,7 @@
       "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:2b"
     },
     "vram_96": {
-      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:32b"
+      "IMAGE_ANALYSIS_MODEL": "local/qwen3-vl:4b"
     }
   }
 }

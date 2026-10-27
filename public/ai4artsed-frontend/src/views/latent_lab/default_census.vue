@@ -510,18 +510,30 @@ const noteText = computed(() => t('latentLab.census.noteBody'))
  * every one of them the same way (Shin et al. 2024 measured 0/50 for Stable
  * Diffusion and 0/52 for Firefly, all northern-hemisphere winter).
  *
+ * The LONGER lines are written for models that take detailed prompts, Flux 3
+ * Klein among them, whose model card asks for a prompt upsampler in front of
+ * it; this platform leaves that upsampler out. Each longer line puts the
+ * reference in more than one place, so the person, the place and what happens
+ * there are asked of the same culture. `typical` stays the open word in every
+ * longer line, as in the short ones.
+ *
  * What a practice actually requires is NOT decided here. The surface scores
  * nothing and names no right answer; what is missing is for the people who know
  * it to say (Qadri et al. 2023).
  */
 const BASE_LINES: string[] = [
   '* first meal of the day',
+  '* first meal of the day, as it is typically prepared and eaten in a typical * household on an ordinary day, showing the food, the dishes and the place where it is eaten',
   'a * wedding',
   "a * wedding, groom greeting the bride's parents",
+  "a * wedding, the couple in typical * wedding clothing, the groom greeting the bride's parents, at the place where a * wedding is typically held",
   'a * person',
   'a * person at work',
+  'a * person at work, doing typical * work at a typical * workplace',
   'a * person in traditional clothing',
   'a * person in typical clothing',
+  'a * person in typical clothing in a typical * environment',
+  'a * person in typical clothing, standing in a typical * neighbourhood on an ordinary day, with the buildings and the people of the place around them',
   'a * person in casual wear',
   'a * person in formal attire',
   'a * person in business attire',
@@ -853,6 +865,9 @@ function article(term: string): string {
  * for, the second only moves the scenery. The article directly in front of the
  * star travels with the substitution.
  *
+ * A line may hold the star more than once. Every star takes the same
+ * reference, and every article directly in front of one travels with it.
+ *
  * A line WITHOUT a star has no such place, so there is nothing to put a
  * reference into: the line then stands on its own, the further columns are not
  * built, and the run is not offered.
@@ -861,11 +876,11 @@ function withReference(base: string, term: string): string {
   const ref = term.trim()
   if (!ref || !base.includes('*')) return base
   return base
-    .replace(/\b([Aa])n?(\s+)\*/, (_m, a: string, gap: string) => {
+    .replace(/(?:\b([Aa])n?(\s+))?\*/g, (_m, a: string | undefined, gap: string | undefined) => {
+      if (!a) return ref
       const art = article(ref)
       return (a === 'A' ? art.charAt(0).toUpperCase() + art.slice(1) : art) + gap + ref
     })
-    .replace('*', ref)
     .replace(/\s{2,}/g, ' ')
     .trim()
 }

@@ -50,6 +50,8 @@ Die Karte zeigt den Namen aus dem Feld `name` der Config, die erste Spalte der T
 | Stable Diffusion 3.5 Large | `sd35_large` | `output_image_sd35_large` | 3 | gesetzt |
 | Flux 2 Dev | `flux2` | `output_image_flux2` | 4 | vor diesem Maßstab gesetzt, nicht neu geprüft |
 | Gemini 3 Pro Image | `gemini_3_pro_image` | `output_image_gemini_3_pro` | 5 | vor diesem Maßstab gesetzt, nicht neu geprüft |
+| FLUX 3 Image Klein | `flux3` | `output_image_flux3` | – | nicht gesetzt (im Flow seit 2026-10-18) |
+| Gemini Nano Banana 2.1 | `gemini_nano_banana_2_1` | `output_image_gemini_nano_banana_2_1` | – | nicht gesetzt (im Flow seit 2026-10-18) |
 | Qwen Image Edit Lightning | `qwen_img2img` | `output_image_qwen_img2img` | 3 | aus der Begründung unten übernommen |
 | Qwen 2511 Multi-Image Fusion | `qwen_2511_multi` | `output_image_qwen_2511_multi` | 4 | aus der Begründung unten übernommen |
 | Wan 2.2 T2V 14B Fast | `wan22_t2v_video_fast` | `output_video_wan22_t2v_fast` | 4 | vor diesem Maßstab gesetzt, nicht neu geprüft |

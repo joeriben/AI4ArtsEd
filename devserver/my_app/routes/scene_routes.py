@@ -1,9 +1,10 @@
-"""Szenen-Kapsel-Pipeline — HTTP-Routen (UCD-132).
+"""Zusammenfassungen im Flow — HTTP-Routen (from UCD-132).
 
 /api/scene/* — the BACKEND surface of UCD-132 (no "+"-Integration; that is
 UCD-133's own scope). The upload route runs the Stage-A gate (UCD-131,
 synchronously, BEFORE storage/enqueue — rejected files cost nothing), then
-stages the PDF into a job temp dir and enqueues the scene pipeline job.
+stages the PDF into a job temp dir and enqueues the summary job
+(scene_ingest_service: the library's condensation, then the safety check).
 
 Session scoping: the caller supplies the resona journal id (the session
 idiom of the flow surface). The document space verfällt mit der Sitzung;
@@ -19,6 +20,7 @@ second analysis (acceptance 5).
 from __future__ import annotations
 
 import logging
+import re
 import tempfile
 from pathlib import Path
 
@@ -124,10 +126,9 @@ def upload_document():
                 "success": False,
                 "duplicate": True,
                 "doc_id": doc_id,
-                "n_capsules": existing.get("n_capsules", 0),
                 "error": (
                     "Dieses Dokument wurde in dieser Sitzung bereits analysiert"
-                    + (f" — bestehende Kapseln: '{doc_id}'." if doc_id else ".")
+                    + (f" — bestehende Zusammenfassung: '{doc_id}'." if doc_id else ".")
                     + provenance
                 ),
             }), 409
@@ -140,12 +141,24 @@ def upload_document():
 
         title = (request.form.get("title") or "").strip() or Path(file.filename).stem
         doc_id = f"doc-{raw_hash[:12]}"
+        # The summary is written in the language of the surface it came from;
+        # a code the form does not carry falls back to the library default.
+        from my_app.services.knowledge_processing import DEFAULT_ANALYSIS_LANG
+        from my_app.services.safety_level_resolver import resolve_safety_level
+
+        lang = (request.form.get("lang") or "").strip().lower()
+        if not re.fullmatch(r"[a-z]{2}", lang):
+            lang = DEFAULT_ANALYSIS_LANG
         job_id = jobs.enqueue_scene_ingest(
             journal_id=journal_id,
             title=title,
             staged_pdf=staged_pdf,
             raw_hash=raw_hash,
             doc_id=doc_id,
+            lang=lang,
+            # Resolved HERE, at the request boundary: the worker thread has
+            # no session and would get the strictest level.
+            safety_level=resolve_safety_level(),
         )
         logger.info("[SZENE] queued scene job %s for %s (journal %s)",
                     job_id, doc_id, journal_id)
@@ -178,7 +191,7 @@ def cancel_job(job_id):
 @scene_bp.route("/documents", methods=["GET"])
 def list_documents():
     """All analysed documents of one session (counts only — the surface
-    lists; single documents carry the capsules)."""
+    lists; single documents carry the summary)."""
     journal_id = (request.args.get("journal_id") or "").strip()
     if not journal_id:
         return jsonify({"error": "journal_id fehlt."}), 400
@@ -187,8 +200,8 @@ def list_documents():
 
 @scene_bp.route("/documents/<doc_id>", methods=["GET"])
 def get_document(doc_id):
-    """One document with its capsules + segment digests (the agent question
-    base) and provenance."""
+    """One document with its summary (profile, sections, glossary) and
+    provenance."""
     journal_id = (request.args.get("journal_id") or "").strip()
     if not journal_id:
         return jsonify({"error": "journal_id fehlt."}), 400

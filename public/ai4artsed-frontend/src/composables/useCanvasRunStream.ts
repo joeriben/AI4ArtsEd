@@ -48,7 +48,7 @@ export interface CanvasRunStreamOptions {
   /** Prefix for every endpoint. Default ''. resona passes its dev base URL. */
   baseUrl?: string
   /** Enable torn-stream reconnect (GET execute-stream/<runId>?after=<cursor>,
-   *  gated by status polls). Default false — canvas store behavior. */
+   *  gated by status polls). Default false. */
   reconnect?: boolean
   /** Reconnect backoff schedule in ms. Default [1000, 2000, 4000, 8000, 15000]. */
   reconnectBackoffsMs?: number[]
@@ -69,6 +69,18 @@ export interface CanvasRunHandle {
 }
 
 const DEFAULT_RECONNECT_BACKOFFS_MS = [1000, 2000, 4000, 8000, 15000]
+
+// Network-tear wording differs across browsers (Safari "Load failed",
+// Chrome "Failed to fetch"). Only Error instances match.
+function isStreamTear(e: unknown): boolean {
+  const rawMsg = e instanceof Error ? e.message : ''
+  return (
+    e instanceof TypeError ||
+    rawMsg === 'Load failed' ||
+    rawMsg === 'Failed to fetch' ||
+    rawMsg.includes('NetworkError')
+  )
+}
 
 export function startCanvasRun(
   payload: CanvasRunStartPayload,
@@ -139,7 +151,19 @@ export function startCanvasRun(
       })
       if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`)
 
-      let outcome: ConsumeOutcome = await consume(response)
+      // A tear thrown while reading the live stream loses the stream, not the
+      // run: the run goes on server-side. With reconnect enabled and the run_id
+      // in hand it enters the reconnect loop like a clean EOF; the thrown error
+      // stays attached in case the loop cannot get the run back.
+      let outcome: ConsumeOutcome
+      let thrownTear: Error | undefined
+      try {
+        outcome = await consume(response)
+      } catch (e) {
+        if (!options.reconnect || !runId || signal.aborted || !isStreamTear(e)) throw e
+        thrownTear = e as Error
+        outcome = 'torn'
+      }
 
       if (options.reconnect) {
         // Reconnect loop: on a torn stream, re-attach by run_id from the last
@@ -171,21 +195,14 @@ export function startCanvasRun(
 
       if (outcome === 'complete') return { kind: 'complete' }
       if (outcome === 'server_error') return { kind: 'server_error' }
-      return { kind: 'torn' }
+      return thrownTear ? { kind: 'torn', error: thrownTear } : { kind: 'torn' }
     } catch (e) {
       if ((e as { name?: string })?.name === 'AbortError' || signal.aborted) {
         return { kind: 'aborted' }
       }
-      // Network-tear wording differs across browsers (Safari "Load failed",
-      // Chrome "Failed to fetch"). A thrown tear does NOT enter the reconnect
-      // loop (legacy semantics: consumers go straight to partial recovery).
-      const rawMsg = e instanceof Error ? e.message : ''
-      const streamTorn =
-        e instanceof TypeError ||
-        rawMsg === 'Load failed' ||
-        rawMsg === 'Failed to fetch' ||
-        rawMsg.includes('NetworkError')
-      if (streamTorn) return { kind: 'torn', error: e as Error }
+      // A tear that reaches here came before the run_id or on a consumer
+      // without reconnect: consumers go straight to partial recovery.
+      if (isStreamTear(e)) return { kind: 'torn', error: e as Error }
       // RAW thrown value, never wrapped (consumers re-derive their fallbacks).
       return { kind: 'transport_error', error: e }
     }

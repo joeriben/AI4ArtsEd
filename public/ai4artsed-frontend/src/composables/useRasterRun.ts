@@ -64,14 +64,24 @@ export interface RasterRun {
   /**
    * What the counter counts, fixed when the run starts: what is still to do
    * shrinks as the pictures arrive, and a denominator walking down with the
-   * numerator would read 1/1 all the way through.
+   * numerator would read 1/1 all the way through. A plan handed over as a
+   * stream of steps has no length to read it from; the surface that writes the
+   * stream keeps this number itself.
    */
   expected: Ref<number>
   /**
    * Run a plan, one step at a time and in the order given. Returns when the
    * plan is through or when the run was dropped.
+   *
+   * The plan is a list, or a stream of steps the surface is still writing while
+   * the first of them run: Mean Images makes the pictures of the prompt as
+   * entered while a language model writes the variants the other column needs,
+   * and the steps for those join the run when the variants are back. A stream
+   * notices a drop when it hands over its next step, so one that is waiting
+   * returns only then. Steps are plain values: a step that is a promise would
+   * be awaited.
    */
-  start: <S>(plan: S[], runOne: (step: S) => Promise<void>) => Promise<void>
+  start: <S>(plan: S[] | AsyncIterable<S>, runOne: (step: S) => Promise<void>) => Promise<void>
   /**
    * Whether the run a step belongs to is still the current one — the same
    * question the loop asks between two steps. A step that itself makes more
@@ -126,15 +136,15 @@ export function useRasterRun(): RasterRun {
     cells.value = { ...cells.value, [cell.key]: cell }
   }
 
-  async function start<S>(plan: S[], runOne: (step: S) => Promise<void>): Promise<void> {
+  async function start<S>(plan: S[] | AsyncIterable<S>, runOne: (step: S) => Promise<void>): Promise<void> {
     if (running.value) return
     const mine = ++runToken
     activeToken = mine
     running.value = true
     done.value = 0
-    expected.value = plan.length
+    if (Array.isArray(plan)) expected.value = plan.length
     try {
-      for (const step of plan) {
+      for await (const step of plan) {
         if (mine !== runToken) return
         await runOne(step)
         if (mine !== runToken) return

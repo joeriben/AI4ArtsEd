@@ -24,8 +24,7 @@
         :output-attrs="{ class: { failed: status.sung === 'failed' } }"
         :active-target="activeTarget"
       >
-        <!-- The flow's input node, with the flow's own name (x2xFlow.nCreate,
-             „Vorbereitung"): the glyph row — one glyph deep, sound, because this
+        <!-- The flow's input node: the glyph row — one glyph deep, sound, because this
              page makes nothing else — and under it the machines this page
              offers, ALL FOUR OF THEM, named in the node. The set is fixed, so
              it is shown rather than hidden behind a click that nothing
@@ -44,7 +43,6 @@
              material is taken in the box the whole platform takes it in, and
              that box is below. -->
         <template #create>
-          <div class="lbl">{{ t('x2xFlow.nCreate') }}</div>
           <div class="cr-media">
             <MediumGlyph id="sound" class="g primary" />
           </div>

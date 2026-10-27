@@ -291,6 +291,31 @@ class ChunkBuilder:
             logger.error(f"Unexpected template type for '{chunk_name}': {type(template.template)}")
             processed_template = str(template.template)
 
+        # A star standing on its own in the text this step is handed keeps its
+        # place (instruction_selector.PLACEHOLDER_CLAUSE). Interception only,
+        # like the reading volume below; unlike it, chained links get the clause
+        # too. It is appended to the template, and both interception chunks end
+        # on the text, so it stands after the text and the task instruction
+        # still ends on its own last line. The single step writes the text
+        # under "Prompt:" from INPUT_TEXT, the chained link under "Text:" from
+        # PREVIOUS_OUTPUT; the clause names the label in front of the mark.
+        if (isinstance(processed_template, str) and isinstance(template.template, str)
+                and (resolved_config.meta or {}).get('stage') == 'interception'):
+            from .instruction_selector import get_placeholder_clause
+            for mark, key in (('INPUT_TEXT', 'input_text'), ('PREVIOUS_OUTPUT', 'previous_output')):
+                if '{{' + mark + '}}' not in template.template:
+                    continue
+                label = re.search(r'(\w+):\s*\{\{' + mark + r'\}\}', template.template)
+                placeholder_clause = get_placeholder_clause(context.get(key),
+                                                            label.group(1) if label else '')
+                if placeholder_clause and not label:
+                    logger.warning(f"[CHUNK-BUILD] Placeholder: '{chunk_name}' writes {mark} "
+                                   f"under no label, so the clause is left out")
+                elif placeholder_clause:
+                    processed_template += placeholder_clause
+                    logger.info(f"[CHUNK-BUILD] Placeholder: the {label.group(1)} carries *")
+                    break
+
         # Reading volume — last line of what THIS function returns. It is not
         # the last line of what reaches the model: pipeline_executor appends the
         # Wikipedia block afterwards on every interception step, ~490 words, so

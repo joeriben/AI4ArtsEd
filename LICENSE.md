@@ -1,6 +1,6 @@
 # Lizenz — AI Lab des UNESCO Chair in Digital Culture and Arts in Education
 
-**Version 1.0 — Februar 2026**
+**Version 1.1 — Oktober 2026**
 
 *Deutsche Fassung (rechtlich maßgeblich) | English version below*
 
@@ -70,7 +70,7 @@ Bei jeder Nutzung gemäß §2 und bei jeder genehmigten kommerziellen Nutzung ge
 
 **(e) Pädagogisches Sicherheitssystem und Forschungsmodus:**
 
-Die Software enthält ein mehrstufiges Sicherheitssystem zum Schutz von Lernenden, insbesondere von Kindern und Jugendlichen. Dieses System umfasst strafrechtliche Filter (§86a StGB), datenschutzrechtliche Prüfungen (DSGVO), altersgerechte Inhaltsfilterung sowie KI-gestützte Inhaltsanalyse. Die Sicherheitsstufen der Software sind: **Kids** (8–12), **Youth** (13–17), **Adult** und **Research**.
+Die Software enthält ein mehrstufiges Sicherheitssystem zum Schutz von Lernenden, insbesondere von Kindern und Jugendlichen. Dieses System umfasst strafrechtliche Filter (§86a StGB), datenschutzrechtliche Prüfungen (DSGVO), altersgerechte Inhaltsfilterung sowie KI-gestützte Inhaltsanalyse. Die Sicherheitsstufen der Software sind: **Kids**, **Youth**, **Adult** und **Research**.
 
 Der **Forschungsmodus** (Research) deaktiviert sämtliche Sicherheitsmechanismen. Seine Aktivierung ist ausschließlich unter folgenden Bedingungen zulässig:
 
@@ -80,6 +80,8 @@ Der **Forschungsmodus** (Research) deaktiviert sämtliche Sicherheitsmechanismen
 4. Ungefilterte Ausgaben aus dem Forschungsmodus dürfen **niemals** Minderjährigen oder Lernenden in einem Bildungskontext präsentiert werden.
 
 Die Nutzung des Forschungsmodus zur Umgehung der Sicherheitsmechanismen für nicht-wissenschaftliche Zwecke, zur Erzeugung rechtswidriger Inhalte oder zur Erstellung von Trainingsdaten für Modelle, die schädliche Inhalte generieren sollen, ist untersagt und stellt einen Verstoß gegen diese Lizenz im Sinne von §7 dar.
+
+**Nutzung außerhalb der Forschung.** Außerhalb der Forschung wird der Forschungsmodus verwendet, wenn die Bedingungen 1 bis 4 nicht sämtlich erfüllt sind oder wenn er einem der im vorigen Absatz untersagten Zwecke dient. Wer den Forschungsmodus außerhalb der Forschung verwendet, verletzt diese Lizenz, verliert nach §7 das unentgeltliche Nutzungsrecht aus §2 und hat mit einer erheblichen Nutzungsgebührenforderung zu rechnen, zusätzlich zu weiteren rechtlichen Konsequenzen.
 
 Die zweckwidrige Deaktivierung des Sicherheitssystems stellt darüber hinaus eine Beeinträchtigung der wissenschaftlichen Integrität der Software im Sinne von §4 dar.
 
@@ -142,7 +144,7 @@ E-Mail: benjamin.joerissen@fau.de
 
 # License — AI Lab of the UNESCO Chair in Digital Culture and Arts in Education
 
-**Version 1.0 — February 2026**
+**Version 1.1 — October 2026**
 
 *English translation (for reference only — the German version is legally binding)*
 
@@ -212,7 +214,7 @@ Any use pursuant to Section 2 and any approved commercial use pursuant to Sectio
 
 **(e) Pedagogical Safety System and Research Mode:**
 
-The software contains a multi-stage safety system designed to protect learners, particularly children and young people. This system comprises criminal law filters (§86a StGB), data protection checks (GDPR/DSGVO), age-appropriate content filtering, and AI-assisted content analysis. The safety levels of the software are: **Kids** (ages 8–12), **Youth** (ages 13–17), **Adult**, and **Research**.
+The software contains a multi-stage safety system designed to protect learners, particularly children and young people. This system comprises criminal law filters (§86a StGB), data protection checks (GDPR/DSGVO), age-appropriate content filtering, and AI-assisted content analysis. The safety levels of the software are: **Kids**, **Youth**, **Adult**, and **Research**.
 
 The **Research mode** disables all safety mechanisms. Its activation is permitted exclusively under the following conditions:
 
@@ -222,6 +224,8 @@ The **Research mode** disables all safety mechanisms. Its activation is permitte
 4. Unfiltered outputs generated in Research mode must **never** be presented to minors or to learners in an educational setting.
 
 Using Research mode to circumvent safety mechanisms for non-scientific purposes, to generate content that violates applicable law, or to create training data for models intended to produce harmful content is prohibited and constitutes a breach of this license within the meaning of Section 7.
+
+**Use outside research.** Research mode is used outside research whenever conditions 1 to 4 are not all met, or whenever it serves one of the purposes prohibited in the preceding paragraph. Anyone who uses Research mode outside research breaches this license, loses the royalty-free right of use under Section 2 by operation of Section 7, and must expect a substantial claim for usage fees, in addition to further legal consequences.
 
 The improper deactivation of the safety system furthermore constitutes an impairment of the scientific integrity of the software within the meaning of Section 4.
 

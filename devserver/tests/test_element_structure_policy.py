@@ -206,7 +206,11 @@ def _is_instrument_surface(text: str) -> bool:
 # three rules.
 #
 # THREE entries since 2026-09-03, and every one of them is a FINDING AWAITING A
-# DECISION rather than a settled case; the list may shrink, never grow. The first came
+# DECISION rather than a settled case; the list may shrink, never grow. A FOURTH
+# came on 2026-10-27 and is the same finding a second time: Model Comparison
+# (Transformers Lab) was ordered as a copy of System Prompts and inherits its missing ready
+# list. It is not a decision either; it is decided together with the System
+# Prompts entry and goes with it. The first came
 # with the widening of the trigger to `<ShellRun` (above), which brought five surfaces
 # inside the gate that had stood outside it; four satisfy the rule already, and the
 # Tokenizer
@@ -225,6 +229,12 @@ ALLOWED: set = {
     # both entries go the moment they are decided.
     ("views/compare/system_prompt_comparison.vue", "examples"),
     ("views/latent_lab/representation_engineering.vue", "perspective"),
+    # The same open decision as System Prompts', not a second one: Model
+    # Comparison (Transformers Lab) was ordered on 2026-10-27 as a copy of System Prompts with
+    # the two axes exchanged, and takes its message field as that
+    # surface has it. Whether the two carry ready-made messages, and which, is
+    # decided for both at once; the two entries go together.
+    ("views/latent_lab/system_prompt_across_models.vue", "examples"),
 }
 
 

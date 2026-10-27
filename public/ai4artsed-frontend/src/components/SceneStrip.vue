@@ -30,6 +30,7 @@
     <div class="ss-head">
       <span class="ss-kind">{{ t('resonaScene.kind') }}</span>
       <span class="ss-title">{{ doc.title }}</span>
+      <span v-if="status" class="ss-status" role="status">{{ status }}</span>
     </div>
 
     <div class="ss-strip" role="listbox" :aria-label="t('resonaScene.stripLabel')">
@@ -79,7 +80,8 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SceneDocument } from '@/composables/useSceneIntake'
 
-const props = defineProps<{ doc: SceneDocument }>()
+/** `status`: how far the analysis behind the card is, while it runs (the view says it). */
+const props = defineProps<{ doc: SceneDocument; status?: string }>()
 defineEmits<{ carry: [prompt: string] }>()
 
 const { t } = useI18n()
@@ -105,6 +107,7 @@ const activeCapsule = computed(() => (active.value === null ? null : props.doc.c
   color: rgba(230, 230, 230, 0.45);
 }
 .ss-title { font-size: 0.85rem; font-weight: 300; overflow-wrap: anywhere; }
+.ss-status { font-size: 0.75rem; color: rgba(230, 230, 230, 0.85); }
 
 /* The strip: the capsules side by side, the one under the hand standing out.
    It scrolls when a document carries many capsules; the card shell above it

@@ -24,6 +24,7 @@ from my_app.routes import model_register_routes as R
 REGISTER = json.loads(R._REGISTER_FILE.read_text(encoding='utf-8'))
 MODELS = REGISTER['models']
 LINEUPS = REGISTER['interception_lineups']
+MAKERS = REGISTER.get('makers', {})
 
 OPENNESS = {'open', 'weights', 'closed'}
 
@@ -44,7 +45,8 @@ class TestEveryEntryCarriesItsSource:
     @pytest.mark.parametrize('key', sorted(MODELS))
     def test_it_says_nothing_it_cannot_say(self, key):
         entry = MODELS[key]
-        assert set(entry) <= {'maker', 'year', 'openness', 'params_b', 'medium', 'source'}, entry
+        assert set(entry) <= {'name', 'maker', 'country', 'year', 'openness', 'params_b', 'medium',
+                              'source'}, entry
         # The one mark the register carries besides the facts: an image network,
         # which shows its count without a size class (useModelRegister.sizeClass).
         if 'medium' in entry:
@@ -58,6 +60,37 @@ class TestEveryEntryCarriesItsSource:
         # zero would print as a model of no size at all.
         if 'params_b' in entry and entry['params_b'] is not None:
             assert entry['params_b'] > 0, entry
+
+
+class TestEveryLanguageModelSaysWhereItComesFrom:
+    """A list of language models shows each one as its name, its maker's
+    country and year, and its size (useModelRegister.modelLabel).
+
+    The country is a fact about the maker, so it is recorded once per maker with
+    the page it was read off, and an entry's country is its maker's. A language
+    model without one would stand in the list without the place its makers'
+    law and language come from.
+    """
+
+    LANGUAGE = sorted(k for k, m in MODELS.items() if m.get('medium') != 'image')
+
+    @pytest.mark.parametrize('key', LANGUAGE)
+    def test_it_carries_a_name_and_its_makers_country(self, key):
+        entry = MODELS[key]
+        assert entry.get('name'), f'{key} has no name to be listed under'
+        maker = MAKERS.get(entry.get('maker'))
+        assert maker, f'{key}: the maker {entry.get("maker")!r} is not in makers'
+        assert entry.get('country') == maker['country'], (key, entry.get('country'), maker['country'])
+
+    @pytest.mark.parametrize('name', sorted(MAKERS))
+    def test_a_maker_names_its_page_and_a_code(self, name):
+        maker = MAKERS[name]
+        assert set(maker) == {'country', 'source'}, maker
+        assert maker['source'].startswith('https://'), f'{name} carries no source'
+        # A code, never a word: the surface names it in the reader's language
+        # (Intl.DisplayNames). ISO 3166 alpha-2, or a UN M49 region ('150').
+        code = maker['country']
+        assert (len(code) == 2 and code.isalpha() and code.isupper()) or (len(code) == 3 and code.isdigit()), code
 
 
 class TestTheRegisterHoldsNoWordsForTheReader:

@@ -199,7 +199,7 @@ def journal_delete(journal_id: str):
         except Exception:
             logger.warning("[RESONA-ROUTES] clearing the cut-sentence notice failed", exc_info=True)
 
-        # UCD-132: the journal's session document space (scene capsules of
+        # UCD-132: the journal's session document space (the summaries of
         # documents the group brought in) verfällt MIT der Sitzung — drop it
         # with the journal, best-effort (a missing space is not an error).
         try:

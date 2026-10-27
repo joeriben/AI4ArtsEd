@@ -1732,7 +1732,7 @@ class TestTheModelListSurvivesOneBadEntry:
         entries = [{"id": f"{PROVIDER}/first-model", "label": "First", "available": True},
                    {"id": f"{PROVIDER}/second-model", "label": "Second", "available": True}]
         monkeypatch.setattr(chat_routes, "_cloud_chat_models_from_matrix",
-                            lambda matrix: [dict(e) for e in entries])
+                            lambda matrix, **_: [dict(e) for e in entries])
 
         def _no_local_table(*args, **kwargs):
             raise RuntimeError("the table of local models is not read in a test")
@@ -1792,7 +1792,7 @@ class TestTheShippedRegisterIsReadOnce:
         monkeypatch.setattr(settings_routes, "get_hardware_matrix",
                             lambda: {'llm_presets': {}, 'local_llm_presets': {}})
         monkeypatch.setattr(chat_routes, "_cloud_chat_models_from_matrix",
-                            lambda matrix: [])
+                            lambda matrix, **_: [])
 
         models, unreachable, register = chat_routes.list_chat_models()
         assert unreachable is False

@@ -27,14 +27,13 @@
              What material is brought in is NOT decided here: the plus lies on
              the surface, where the material is to land. -->
         <div class="nd mix" :class="{ compact: isCompact(RMAP.create) }" :style="rectStyle(RMAP.create)">
-          <div class="lbl">{{ nodeLabel('create') }}</div>
           <div class="cr-media">
             <MediumGlyph
               v-for="m in MEDIA"
               :key="m"
               :id="m"
               class="g"
-              :class="{ lit: inferredMedia.has(m) && activeMedium !== m, primary: activeMedium === m, manual: manualMedium === m }"
+              :class="{ lit: inferredMedia.has(m) && activeMedium !== m, primary: activeMedium === m && mediumClaimed, manual: manualMedium === m }"
               :title="mediumLabel(m)"
               @click.stop="onMediumClick(m)"
               @pointerdown.stop="startHold(m)"
@@ -218,7 +217,7 @@
           >
             {{ t('x2xFlow.inspectCode') }}
           </button>
-          <div v-else class="lbl">{{ nodeLabel('output') }}</div>
+          <div v-else class="lbl">{{ t('x2xFlow.nOutput') }}</div>
         </div>
       </div>
 
@@ -330,7 +329,7 @@
           @resize-down="startCardResize($event, s, { mode: 'free' })"
           @close="removeSceneStrip(s.id)"
         >
-          <SceneStrip :doc="s.doc" @carry="carryScenePrompt" />
+          <SceneStrip :doc="s.doc" :status="sceneStatus(s)" @carry="carryScenePrompt" />
         </FlowCard>
 
         <!-- The box is FlowCard; where it sits and how wide it is stays here,
@@ -891,6 +890,7 @@ import {
   fetchSceneDocument,
   listSceneDocuments,
   type SceneDocument,
+  type SceneJobState,
 } from '@/composables/useSceneIntake'
 import SceneStrip from '@/components/SceneStrip.vue'
 import { wordFeed, type WordFeed } from '@/composables/useWordFeed'
@@ -920,6 +920,14 @@ interface BoardSceneStrip extends BoardItem {
   doc: SceneDocument
   /** The analysis is still running (see `intakeSceneDocument`). */
   uploading?: boolean
+  /**
+   * The analysis job the card stands behind, from the upload to the settled
+   * document: kept with the card in the session copy, so a return to the
+   * page follows it on (`restoreSceneStrips`).
+   */
+  job?: { id: string; docId: string }
+  /** What the job reported last (`sceneStatus` reads it). */
+  jobState?: SceneJobState
 }
 /** What a strip card measures when it lands. The corner sizes it from there. */
 const SCENE_STRIP_W = 340
@@ -1014,17 +1022,6 @@ const edgeLines = computed(() =>
     on: activeTarget.value === b,
   }))
 )
-
-function nodeLabel(id: NodeId): string {
-  switch (id) {
-    case 'create':
-      return t('x2xFlow.nCreate')
-    case 'gen':
-      return t('x2xFlow.nGen')
-    case 'output':
-      return t('x2xFlow.nOutput')
-  }
-}
 
 // --- Assemblage board: the material, floating straight on the viewport ---
 const canvasEl = ref<HTMLElement | null>(null)
@@ -1632,7 +1629,7 @@ const drift = {
  * prompt box of a fresh surface with them: under the left end of the band,
  * the signs as a triangle with the plus on top, the LoRA sign lower left of it
  * and the perspective sign lower right, the prompt box under the three. The
- * places are fractions of the width and height of the box "Vorbereitung"
+ * places are fractions of the width and height of the create box
  * (`restingPlaces`), so the arrangement holds at every viewport, only scaled;
  * `flowRestLayout.spec.ts` shows for every window width that none of the four
  * comes near another.
@@ -1924,9 +1921,8 @@ async function intakeSceneDocument(file: File) {
       await refreshSceneStrips()
       return
     }
-    const doc = await followSceneJob(outcome.jobId, outcome.docId)
-    if (doc) settleSceneStrip(pending, doc)
-    else removeSceneStrip(pending.id)
+    pending.job = { id: outcome.jobId, docId: outcome.docId }
+    await followSceneStrip(pending)
   } catch (e) {
     removeSceneStrip(pending.id)
     console.error('[X2X] Scene document intake failed:', e)
@@ -1945,30 +1941,161 @@ function pendingSceneDoc(file: File): SceneDocument {
 }
 
 /**
- * Wait for the analysis job and read the document out of the session space.
- * Polling is the jobs route's own contract; a lost poll leaves the document
- * retrievable — refreshSceneStrips picks it up on the next restore. Null is
- * every way this ends without a document, and the caller takes the card down.
+ * Follow the card's analysis job to its end: the card settles into the
+ * document, or goes, and the voice says the analysis did not complete.
+ * Polling is the jobs route's own contract, and it has no deadline: the card
+ * once waited ten minutes and then went while the worker went on (2026-09-28).
+ * A poll that does not come through is asked again; a job the server no
+ * longer knows ends the
+ * wait (`gone`). Leaving the page, closing the card, or clearing the board
+ * ends the following and leaves the job running.
  */
-async function followSceneJob(jobId: string, docId: string): Promise<SceneDocument | null> {
-  const deadline = Date.now() + 10 * 60_000
-  while (Date.now() < deadline) {
-    let job: Awaited<ReturnType<typeof fetchSceneJob>>
+async function followSceneStrip(strip: BoardSceneStrip) {
+  const job = strip.job
+  if (!job) return
+  const stopped = () =>
+    sceneDisposed || strip.job !== job || !sceneStrips.value.some(s => s.id === strip.id)
+  for (;;) {
+    if (stopped()) return
     try {
-      job = await fetchSceneJob(jobId)
+      const state = await fetchSceneJob(job.id)
+      if (stopped()) return
+      strip.jobState = state
+      if (state.state === 'done') {
+        const doc = await fetchSceneDocument(deviceId!, job.docId)
+        if (stopped()) return
+        if (doc) settleSceneStrip(strip, doc)
+        else failSceneStrip(strip)
+        return
+      }
+      if (state.state === 'error' || state.state === 'cancelled' || state.state === 'gone') {
+        failSceneStrip(strip)
+        return
+      }
     } catch {
-      await new Promise(r => setTimeout(r, 3000))
-      continue
+      // Asked again below.
     }
-    if (job.state === 'done') break
-    if (job.state === 'error' || job.state === 'cancelled') {
-      platformVoice.value?.speak(t('resonaScene.analysisFailed'))
-      return null
-    }
-    await new Promise(r => setTimeout(r, 2000))
+    await new Promise(r => setTimeout(r, 2500))
   }
-  return await fetchSceneDocument(deviceId!, docId)
 }
+
+/** The analysis ended without a document: the card goes, and the voice says so. */
+function failSceneStrip(strip: BoardSceneStrip) {
+  removeSceneStrip(strip.id)
+  platformVoice.value?.speak(t('resonaScene.analysisFailed'))
+}
+
+/**
+ * The line under a busy card's title: where its analysis stands. The upload
+ * comes first, then the queue behind another document (the worker takes one
+ * at a time), then the text recognition, then the units read and the
+ * capsules kept; the pipeline stops at the capsule limit, which is why the
+ * limit stands in the line.
+ */
+function sceneStatus(s: BoardSceneStrip): string {
+  if (!s.uploading) return ''
+  const j = s.jobState
+  if (!j) return t('resonaScene.progressUpload')
+  if (j.state === 'queued') return t('resonaScene.progressQueued')
+  const p = j.progress
+  if (!p) return t('resonaScene.progressReading')
+  return t('resonaScene.progressUnits', {
+    done: p.unitsDone,
+    total: p.unitsTotal,
+    capsules: p.capsules,
+    max: p.capsulesMax,
+  })
+}
+
+/** The follow loops end with the page (`followSceneStrip`); the jobs do not. */
+let sceneDisposed = false
+onBeforeUnmount(() => {
+  sceneDisposed = true
+})
+
+/** A strip as the session copy keeps it (`t2i_scene_strips`). */
+interface SavedSceneStrip {
+  docId?: string
+  title?: string
+  job?: { id: string; docId: string }
+  x: number
+  y: number
+  w: number
+  h: number
+}
+/**
+ * The strips the board held when the page was left, back where they stood:
+ * an analysed document is read again from the session space, a running
+ * analysis stands busy again and is followed on. A document the space no
+ * longer holds (the session of another day) stays away. Until 2026-09-28 a
+ * strip left the board with the page and came back only with a second
+ * upload of the same file.
+ */
+async function restoreSceneStrips() {
+  const jid = deviceId
+  if (!jid) return
+  let saved: SavedSceneStrip[] = []
+  try {
+    saved = JSON.parse(sessionStorage.getItem('t2i_scene_strips') || '[]')
+  } catch {
+    return
+  }
+  if (!Array.isArray(saved) || !saved.length) return
+  // Read in parallel and stood up together, in the order they were kept: a
+  // board built one strip at a time would be written to the session copy
+  // half-built, and a page left in between would keep only that half.
+  const docs = await Promise.all(
+    saved.map(async (s) => {
+      if (s.job?.id || !s.docId) return null
+      try {
+        return await fetchSceneDocument(jid, s.docId)
+      } catch {
+        return null
+      }
+    })
+  )
+  if (sceneDisposed) return
+  const following: BoardSceneStrip[] = []
+  saved.forEach((s, i) => {
+    const place = { x: Number(s.x) || 60, y: Number(s.y) || 60, w: Number(s.w) || SCENE_STRIP_W, h: Number(s.h) || SCENE_STRIP_H }
+    if (s.job?.id && s.job.docId) {
+      const strip = standSceneStrip(
+        { docId: '', title: String(s.title || ''), capsules: [], flagged: 0, discarded: 0, meta: {} },
+        place
+      )
+      strip.uploading = true
+      strip.job = { id: String(s.job.id), docId: String(s.job.docId) }
+      following.push(strip)
+    } else {
+      const doc = docs[i]
+      if (doc && !sceneStrips.value.some(o => o.doc.docId === doc.docId)) standSceneStrip(doc, place)
+    }
+  })
+  for (const strip of following) void followSceneStrip(strip)
+}
+onMounted(() => {
+  void restoreSceneStrips()
+})
+watch(
+  sceneStrips,
+  () => {
+    const kept: SavedSceneStrip[] = sceneStrips.value.map(s => ({
+      docId: s.doc.docId,
+      title: s.doc.title,
+      job: s.job,
+      x: s.x,
+      y: s.y,
+      w: s.w,
+      h: s.h,
+    }))
+    try {
+      sessionStorage.setItem('t2i_scene_strips', JSON.stringify(kept))
+    } catch {
+      /* quota — the strips stay live, they just will not survive a reload */
+    }
+  },
+  { deep: true }
+)
 
 /**
  * Stand a strip on the board, once per document: on the free place nearest the
@@ -1977,31 +2104,42 @@ async function followSceneJob(jobId: string, docId: string): Promise<SceneDocume
  * re-read version of itself.
  */
 function addSceneStrip(doc: SceneDocument, uploading = false): BoardSceneStrip {
-  const known = doc.docId ? sceneStrips.value.find(s => s.doc.docId === doc.docId) : undefined
+  // A card still following this document's analysis counts as it too: it
+  // settles here, and its following ends with its job (`followSceneStrip`).
+  const known = doc.docId
+    ? sceneStrips.value.find(s => s.doc.docId === doc.docId || s.job?.docId === doc.docId)
+    : undefined
   if (known) {
     known.doc = doc
     known.uploading = uploading
+    if (!uploading) {
+      known.job = undefined
+      known.jobState = undefined
+    }
     return known
   }
-  sceneSeq += 1
-  const strip: BoardSceneStrip = {
-    id: `scene-${sceneSeq}`,
-    doc,
-    uploading,
-    x: 60,
-    y: 60,
-    w: SCENE_STRIP_W,
-    h: SCENE_STRIP_H,
-  }
-  sceneStrips.value = [...sceneStrips.value, strip]
-  // The card as the list holds it: a write on the object it was built from
-  // triggers no render, so the settled document and the end of `uploading`
-  // stayed unseen and the card stayed busy.
-  const live = sceneStrips.value[sceneStrips.value.length - 1]!
+  const live = standSceneStrip(doc, { x: 60, y: 60, w: SCENE_STRIP_W, h: SCENE_STRIP_H })
+  live.uploading = uploading
   // After it is in the list and before it is drawn: the placement reads the
   // cards standing on the board, and this one is not one of them yet.
   landFromPlus(live)
   return live
+}
+
+/**
+ * Put a strip into the board's list at a given place and hand back the card
+ * as the list holds it: a write on the object it was built from triggers no
+ * render, so the settled document and the end of `uploading` stayed unseen
+ * and the card stayed busy.
+ */
+function standSceneStrip(
+  doc: SceneDocument,
+  place: { x: number; y: number; w: number; h: number }
+): BoardSceneStrip {
+  sceneSeq += 1
+  const strip: BoardSceneStrip = { id: `scene-${sceneSeq}`, doc, ...place }
+  sceneStrips.value = [...sceneStrips.value, strip]
+  return sceneStrips.value[sceneStrips.value.length - 1]!
 }
 
 /**
@@ -2011,6 +2149,8 @@ function addSceneStrip(doc: SceneDocument, uploading = false): BoardSceneStrip {
 function settleSceneStrip(strip: BoardSceneStrip, doc: SceneDocument) {
   strip.doc = doc
   strip.uploading = false
+  strip.job = undefined
+  strip.jobState = undefined
 }
 
 /** Re-read every strip's document from the session space. */
@@ -2835,7 +2975,9 @@ const configsByMedium: Record<MediumId, OutputConfig[]> = {
     { id: 'sd35_large_turbo', label: 'Stable Diffusion\nTurbo', description: 'Four steps instead of thirty, distilled from SD 3.5 Large' },
     { id: 'sd35_large', label: 'Stable\nDiffusion', description: 'Klassische Bildgenerierung' },
     { id: 'flux2', label: 'Flux 2', description: 'Hochwertige Bildgenerierung mit Flux 2 Dev' },
+    { id: 'flux3', label: 'Flux 3\nKlein', description: 'FLUX 3 Image Klein (Black Forest Labs, 2026), without the prompt upsampler' },
     { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro (€)', description: 'Google Gemini 3 Pro via Mammouth AI (EU)' },
+    { id: 'gemini_nano_banana_2_1', label: 'Nano Banana\n2.1 (€)', description: 'Google Gemini Nano Banana 2.1 via Mammouth AI (EU)' },
   ],
   video: [
     { id: 'wan22_t2v_video_fast', label: 'Wan 2.2\n14B Fast', description: 'Schnelle 14B Videogenerierung (4 Steps)' },
@@ -3178,6 +3320,20 @@ const route = computed(() =>
 )
 // Medium after clamping (≥2 images ⇒ image) drives the glyphs and config.
 const activeMedium = computed<MediumId>(() => route.value.medium)
+
+// No glyph claims a medium that nothing backs (UCD-260): the default guess
+// stays a guess — quiet, like the note under a dropped pick — while a signal
+// in the text, a pick by hand, the two-text constellation or the material
+// itself (images route somewhere real) each are an occasion. The create box
+// still names the machine that will run, so nothing is hidden; only the claim
+// is withheld until the text or the table gives one.
+const mediumClaimed = computed(
+  () =>
+    manualMedium.value !== null ||
+    !!musicRoles.value ||
+    inferredMedia.value.has(activeMedium.value) ||
+    effImageItems.value.length > 0
+)
 const resolvedConfigId = computed<string>(() => route.value.outputConfigId)
 /**
  * A hand-picked model that the material actually lets run. The mark under the
@@ -4065,7 +4221,7 @@ const activeTarget = computed<NodeId | null>(() => {
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'x2x_flow',
   pageDescription:
-    'Der x2x-Fluss. Oben stehen drei Knoten nebeneinander: Vorbereitung (die sechs Medienzeichen Bild, Video, Klang, 3D, Code und Text, und das aufgelöste Modell; Text ist das eine Medium, das nicht erschlossen, sondern nur gewählt wird, und bedeutet, dass der Lauf das Material liest, statt etwas zu machen), Generieren (führt die Verwandlung aus und zeigt Prüfung, Fortschritt und Fehler) und Ausgabe (zeigt das fertige Medium). Der lange Druck liegt auf jedem der sechs Medienzeichen und öffnet die Modelle, die für dieses Medium eingetragen sind; bei Text stehen dort die fünf Deutungsrahmen statt eines Modells. In den Listen von Bild und Video stehen zusätzlich die Wege, die ein Bild als Eingang nehmen und dafür ein oder zwei Bilder auf dem Tisch verlangen. Ein Modell, das die Verfügbarkeitsabfrage als abwesend meldet, steht in der Liste und bleibt unwählbar. Sobald von Hand gewählt wurde, steht „auto" obenan in jeder dieser Listen und gibt die Wahl zurück; ein über Dateiwahl oder Ablegen hereingeholtes Bild gibt sie ebenfalls zurück, außer bei gewähltem Text, und eine Skizze gibt sie in jedem Fall zurück. Fehlen einer Hand-Wahl hier die Voraussetzungen — etwa ein Weg, der zwei Bilder verlangt, bei einem Bild auf dem Tisch —, tritt die automatische an ihre Stelle, und der Generieren-Knoten sagt im Ruhezustand, welche genommen wurde; 3D allein bleibt bestehen, weil es dorthin keinen zweiten Weg gibt: dann macht der Lauf zuerst das Bild und daraus das Gitter. Während der Generieren-Knoten läuft, zeigt er die Position in der Warteschlange, meist samt geschätzter Wartezeit, die Zahl der Schritte des Modells, den Fortschritt in Prozent und den Verbrauch, den die Grafikkarte währenddessen meldet, in Watt und Wattstunden, aufgeklappt zusätzlich in Gramm CO₂ — bei einem auswärtigen Dienst steht dort, dass es dafür keine Zahlen gibt, und bei Kompositionsläufen bleibt die Anzeige leer. Solange er aufgeklappt ist und ein lokales Bildmodell läuft, sagt er außerdem, dass die Wörter zu Zahlen werden, und bei einem zu langen Prompt, wie viele davon CLIP nie erreichen. Den Schritt von n zeigt der Ausgabe-Knoten. Ein langer Druck auf den Generieren-Knoten hält einen laufenden Lauf an. Darunter liegt der Tisch, verschieb- und zoombar, auf dem das Material frei liegt. Auf dem Tisch liegt ein grünes Plus; ein Klick darauf fächert die vier Wege auf, Material hereinzuholen — Text, Bild, Skizze, Dokument —, und was dabei entsteht, fällt dorthin, wo das Plus steht; das Plus selbst lässt sich verschieben. Ein Klick auf eine Bildkarte zeigt sie in voller Größe, ein langer Druck dreht sie auf ihre Rückseite; bei Klang und Video führt der Doppelklick zur vollen Größe, während der einfache Klick den Spieler bedient, und eine Quellenkarte öffnet mit einem Klick gleich ihre Rückseite. Eine Skizze öffnet sich zum Lesen, Ändern und erneuten Laufenlassen. Ein hereingeholtes Bild wird auf seinen Inhalt geprüft; ob eine Datei sich selbst als KI-erzeugt ausweist, steht auf der Rückseite der Karten, die aus einem Lauf dieser Plattform stammen. Was in der Zone liegt und beim Weg zum Modell übrig bleibt, wird für diesen Lauf in Worte gelesen und trägt dafür ein Zeichen; bei einem lesenden Lauf trägt überzähliger Text das Zeichen, dass er ungenutzt bleibt. Ergebnisse lassen sich herunterladen, Bilder auch drucken; Klang und Video lassen sich von der Ausgabe auf den Tisch ziehen, die übrigen fallen am Ende des Laufs von selbst dorthin. Sobald Material in der Zone liegt — dem Kreis auf dem Tisch —, liest der nächste Lauf nur die Zone; eine leere Zone liest den ganzen Tisch. Liegt Bild, Klang oder Video dort, steht neben der Zone eine Lupe: sie liest, was gerade gilt, statt etwas zu machen — ein Stück wird beschrieben, zwei werden verglichen, mehr werden nacheinander gelesen und aneinandergehängt; die Lupe liest ohne Perspektive, auch wenn eine im Kreis liegt. Ein pulsendes Zeichen auf dem Tisch öffnet die Perspektiven; eine Perspektive in der Zone wird im erzeugenden Lauf auf das angewendet, was aus dem Material an Worten geworden ist, mehrere nacheinander in der Reihenfolge, in der sie hineingelegt wurden. Eine Perspektive lässt sich auch selbst schreiben: ein Klick auf ihre Blase öffnet sie zum Lesen und Ändern, und wer angemeldet ist, legt sie unter einem Namen im eigenen Konto ab; eine bereits eigene lässt sich zusätzlich als zweite daneben stellen. Ein Lauf hält fest, welche Perspektive ihn eröffnet hat, und erkennt daran die eigene. Während der Prompt Interception kann eine Perspektive in Wikipedia nachschlagen; was sie fand, liegt danach als eigene Karte auf dem Tisch, die vorn das Wikipedia-Zeichen und den Suchbegriff trägt und auf der Rückseite Sprache, Grund des Nachschlagens, Artikel und Anfangs-Zusammenfassung. Medium und Modell werden aus dem Material erschlossen, nicht ausgewählt; eine Wahl von Hand überschreibt das und wird gehalten. Ein drittes Zeichen auf dem Tisch, ein biegsames Netz über einem starren Gitter, öffnet die LoRAs: Adapter, die über einem Bildmodell aus einer Reihe von Bildern trainiert sind und dessen Ausgabe in Richtung dieser Bilder verschieben, sobald ihr Trigger-Wort im Prompt steht. Angeboten wird, was das Register dieser Sitzung freigibt, in bis zu drei Gruppen: die der Plattform, die des Kurses und die eigenen Trainings; ist nichts freigegeben, sagt die Auswahl das. Das gewählte LoRA liegt als Kachel auf dem Tisch; liegt es in der Zone, lädt der nächste Lauf, der ein Bild macht, es unter dem Modell, das es trägt: die Automatik wählt dieses Modell (heute für jedes LoRA im Register Stable Diffusion 3.5 Large), der Knoten Vorbereitung zeigt neben dem Modell das Netz, der Server stellt das Trigger-Wort dem Prompt voran, wo der Prompt es noch nicht trägt, und die Rückseite der fertigen Karte nennt unter „LoRA“ den Adapter mit seiner Stärke. Ein Klick auf die Kachel öffnet ihre Stärke, 50 bis 100 Prozent der trainierten, voreingestellt 80, daneben Trigger und tragende Modelle; das × entfernt sie. Eine Wahl von Hand bleibt stehen: kann das gewählte Modell das LoRA nicht laden, oder macht der Lauf kein Bild, bleibt die Kachel liegen und trägt das Fragezeichen „für diese Generierung nicht verwendet“; nichts wird unwählbar. Die Perspektive „Cooked Film“ bringt einen eigenen Adapter mit und trägt dafür das Netz an ihrer Blase; unter einem Modell, das ihn nicht trägt, dasselbe Fragezeichen. Welche LoRAs angeboten werden, steht im LoRA-Register der Einstellungen (Admin): Datei, Name, Trigger, tragende Modelle, Freigabe an die Plattform, an einen Kurs oder an niemanden; ein Training von der Seite LoRA Training wird dort eingetragen, bevor es irgendwo angeboten wird.',
+    'Der x2x-Fluss. Oben stehen drei Knoten nebeneinander: der erste Knoten (die sechs Medienzeichen Bild, Video, Klang, 3D, Code und Text, und das aufgelöste Modell; Text ist das eine Medium, das nicht erschlossen, sondern nur gewählt wird, und bedeutet, dass der Lauf das Material liest, statt etwas zu machen), Generieren (führt die Verwandlung aus und zeigt Prüfung, Fortschritt und Fehler) und Ausgabe (zeigt das fertige Medium). Der lange Druck liegt auf jedem der sechs Medienzeichen und öffnet die Modelle, die für dieses Medium eingetragen sind; bei Text stehen dort die fünf Deutungsrahmen statt eines Modells. In den Listen von Bild und Video stehen zusätzlich die Wege, die ein Bild als Eingang nehmen und dafür ein oder zwei Bilder auf dem Tisch verlangen. Ein Modell, das die Verfügbarkeitsabfrage als abwesend meldet, steht in der Liste und bleibt unwählbar. Sobald von Hand gewählt wurde, steht „auto" obenan in jeder dieser Listen und gibt die Wahl zurück; ein über Dateiwahl oder Ablegen hereingeholtes Bild gibt sie ebenfalls zurück, außer bei gewähltem Text, und eine Skizze gibt sie in jedem Fall zurück. Fehlen einer Hand-Wahl hier die Voraussetzungen — etwa ein Weg, der zwei Bilder verlangt, bei einem Bild auf dem Tisch —, tritt die automatische an ihre Stelle, und der Generieren-Knoten sagt im Ruhezustand, welche genommen wurde; 3D allein bleibt bestehen, weil es dorthin keinen zweiten Weg gibt: dann macht der Lauf zuerst das Bild und daraus das Gitter. Während der Generieren-Knoten läuft, zeigt er die Position in der Warteschlange, meist samt geschätzter Wartezeit, die Zahl der Schritte des Modells, den Fortschritt in Prozent und den Verbrauch, den die Grafikkarte währenddessen meldet, in Watt und Wattstunden, aufgeklappt zusätzlich in Gramm CO₂ — bei einem auswärtigen Dienst steht dort, dass es dafür keine Zahlen gibt, und bei Kompositionsläufen bleibt die Anzeige leer. Solange er aufgeklappt ist und ein lokales Bildmodell läuft, sagt er außerdem, dass die Wörter zu Zahlen werden, und bei einem zu langen Prompt, wie viele davon CLIP nie erreichen. Den Schritt von n zeigt der Ausgabe-Knoten. Ein langer Druck auf den Generieren-Knoten hält einen laufenden Lauf an. Darunter liegt der Tisch, verschieb- und zoombar, auf dem das Material frei liegt. Auf dem Tisch liegt ein grünes Plus; ein Klick darauf fächert die vier Wege auf, Material hereinzuholen — Text, Bild, Skizze, Dokument —, und was dabei entsteht, fällt dorthin, wo das Plus steht; das Plus selbst lässt sich verschieben. Ein Klick auf eine Bildkarte zeigt sie in voller Größe, ein langer Druck dreht sie auf ihre Rückseite; bei Klang und Video führt der Doppelklick zur vollen Größe, während der einfache Klick den Spieler bedient, und eine Quellenkarte öffnet mit einem Klick gleich ihre Rückseite. Eine Skizze öffnet sich zum Lesen, Ändern und erneuten Laufenlassen. Ein hereingeholtes Bild wird auf seinen Inhalt geprüft; ob eine Datei sich selbst als KI-erzeugt ausweist, steht auf der Rückseite der Karten, die aus einem Lauf dieser Plattform stammen. Was in der Zone liegt und beim Weg zum Modell übrig bleibt, wird für diesen Lauf in Worte gelesen und trägt dafür ein Zeichen; bei einem lesenden Lauf trägt überzähliger Text das Zeichen, dass er ungenutzt bleibt. Ergebnisse lassen sich herunterladen, Bilder auch drucken; Klang und Video lassen sich von der Ausgabe auf den Tisch ziehen, die übrigen fallen am Ende des Laufs von selbst dorthin. Sobald Material in der Zone liegt — dem Kreis auf dem Tisch —, liest der nächste Lauf nur die Zone; eine leere Zone liest den ganzen Tisch. Liegt Bild, Klang oder Video dort, steht neben der Zone eine Lupe: sie liest, was gerade gilt, statt etwas zu machen — ein Stück wird beschrieben, zwei werden verglichen, mehr werden nacheinander gelesen und aneinandergehängt; die Lupe liest ohne Perspektive, auch wenn eine im Kreis liegt. Ein pulsendes Zeichen auf dem Tisch öffnet die Perspektiven; eine Perspektive in der Zone wird im erzeugenden Lauf auf das angewendet, was aus dem Material an Worten geworden ist, mehrere nacheinander in der Reihenfolge, in der sie hineingelegt wurden. Eine Perspektive lässt sich auch selbst schreiben: ein Klick auf ihre Blase öffnet sie zum Lesen und Ändern, und wer angemeldet ist, legt sie unter einem Namen im eigenen Konto ab; eine bereits eigene lässt sich zusätzlich als zweite daneben stellen. Ein Lauf hält fest, welche Perspektive ihn eröffnet hat, und erkennt daran die eigene. Während der Prompt Interception kann eine Perspektive in Wikipedia nachschlagen; was sie fand, liegt danach als eigene Karte auf dem Tisch, die vorn das Wikipedia-Zeichen und den Suchbegriff trägt und auf der Rückseite Sprache, Grund des Nachschlagens, Artikel und Anfangs-Zusammenfassung. Medium und Modell werden aus dem Material erschlossen, nicht ausgewählt; eine Wahl von Hand überschreibt das und wird gehalten. Ein drittes Zeichen auf dem Tisch, ein biegsames Netz über einem starren Gitter, öffnet die LoRAs: Adapter, die über einem Bildmodell aus einer Reihe von Bildern trainiert sind und dessen Ausgabe in Richtung dieser Bilder verschieben, sobald ihr Trigger-Wort im Prompt steht. Angeboten wird, was das Register dieser Sitzung freigibt, in bis zu drei Gruppen: die der Plattform, die des Kurses und die eigenen Trainings; ist nichts freigegeben, sagt die Auswahl das. Das gewählte LoRA liegt als Kachel auf dem Tisch; liegt es in der Zone, lädt der nächste Lauf, der ein Bild macht, es unter dem Modell, das es trägt: die Automatik wählt dieses Modell (heute für jedes LoRA im Register Stable Diffusion 3.5 Large), der Knoten mit den Medienzeichen zeigt neben dem Modell das Netz, der Server stellt das Trigger-Wort dem Prompt voran, wo der Prompt es noch nicht trägt, und die Rückseite der fertigen Karte nennt unter „LoRA“ den Adapter mit seiner Stärke. Ein Klick auf die Kachel öffnet ihre Stärke, 50 bis 100 Prozent der trainierten, voreingestellt 80, daneben Trigger und tragende Modelle; das × entfernt sie. Eine Wahl von Hand bleibt stehen: kann das gewählte Modell das LoRA nicht laden, oder macht der Lauf kein Bild, bleibt die Kachel liegen und trägt das Fragezeichen „für diese Generierung nicht verwendet“; nichts wird unwählbar. Die Perspektive „Cooked Film“ bringt einen eigenen Adapter mit und trägt dafür das Netz an ihrer Blase; unter einem Modell, das ihn nicht trägt, dasselbe Fragezeichen. Welche LoRAs angeboten werden, steht im LoRA-Register der Einstellungen (Admin): Datei, Name, Trigger, tragende Modelle, Freigabe an die Plattform, an einen Kurs oder an niemanden; ein Training von der Seite LoRA Training wird dort eingetragen, bevor es irgendwo angeboten wird.',
   pageContent: {
     inputText: effCombinedText.value,
     interceptionResult: interceptionResult.value,

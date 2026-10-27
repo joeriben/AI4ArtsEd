@@ -22,7 +22,7 @@ Generative KI-Systeme wie Stable Diffusion, DALL-E oder Midjourney sind zu mäch
 
 ### Die Antwort
 
-AI4ArtsEd ist eine Experimentierplattform, die diese Probleme adressiert. Sie wurde entwickelt für die kulturelle Bildung mit Kindern und Jugendlichen (8-17 Jahre), ist aber in ihrem Konzept allgemeingültig.
+AI4ArtsEd ist eine Experimentierplattform, die diese Probleme adressiert. Sie wurde entwickelt für die kulturelle Bildung mit Kindern und Jugendlichen, ist aber in ihrem Konzept allgemeingültig.
 
 Die Plattform verfolgt nicht das Ziel, "bessere Bilder" zu erzeugen. Sie verfolgt das Ziel, den Prozess der Bilderzeugung sichtbar, verstehbar und gestaltbar zu machen. Generative KI wird dabei nicht als Werkzeug betrachtet, das man möglichst effizient bedienen sollte, sondern als Gegenstand kritischer und kreativer Auseinandersetzung.
 

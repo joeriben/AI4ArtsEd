@@ -1,0 +1,203 @@
+{
+  "name": "output_image_flux3",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "media_type": "image",
+  "requires_workflow": true,
+  "description": "FLUX 3 Image Klein (distilled) - image generation with the Qwen3-VL-4B text encoder. The prompt reaches the text encoder as the platform hands it over; BFL's prompt upsampler (Qwen3.5 9B) is not in this workflow.",
+
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 605452029419059,
+        "steps": 16,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1,
+        "model": ["37", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["58", 0]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": ["75", 0],
+        "clip": ["38", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Positive Prompt)"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": "",
+        "clip": ["38", 0]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Negative Prompt)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "samples": ["3", 0],
+        "vae": ["39", 0]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "37": {
+      "inputs": {
+        "unet_name": "flux3-image-klein-bf16.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": {
+        "title": "Load Diffusion Model"
+      }
+    },
+    "38": {
+      "inputs": {
+        "clip_name": "qwen3vl_4b_bf16.safetensors",
+        "type": "flux3",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load Qwen3-VL-4B Text Encoder"
+      }
+    },
+    "39": {
+      "inputs": {
+        "vae_name": "Flux/flux2-vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": {
+        "title": "Load VAE"
+      }
+    },
+    "58": {
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "class_type": "EmptyFlux2LatentImage",
+      "_meta": {
+        "title": "Empty Flux 2 Latent"
+      }
+    },
+    "60": {
+      "inputs": {
+        "filename_prefix": "ai4artsed_flux3",
+        "images": ["8", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "75": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveStringMultiline",
+      "_meta": {
+        "title": "Ai4ArtsEd Prompt Input"
+      }
+    }
+  },
+
+  "input_mappings": {
+    "prompt": {
+      "node_id": "75",
+      "field": "inputs.value",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Main prompt - image description"
+    },
+    "negative_prompt": {
+      "node_id": "7",
+      "field": "inputs.text",
+      "default": "",
+      "description": "Negative prompt - without effect at cfg 1 (distilled checkpoint)"
+    },
+    "width": {
+      "node_id": "58",
+      "field": "inputs.width",
+      "default": 1024,
+      "description": "Image width in pixels"
+    },
+    "height": {
+      "node_id": "58",
+      "field": "inputs.height",
+      "default": 1024,
+      "description": "Image height in pixels"
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 16,
+      "description": "Number of sampling steps (distilled checkpoint: 16, BFL model card)"
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 1,
+      "description": "Classifier Free Guidance scale (distilled checkpoint: 1; the BFL model card lists its guidance as none)"
+    },
+    "sampler_name": {
+      "node_id": "3",
+      "field": "inputs.sampler_name",
+      "default": "euler",
+      "description": "Sampling algorithm"
+    },
+    "scheduler": {
+      "node_id": "3",
+      "field": "inputs.scheduler",
+      "default": "simple",
+      "description": "Noise scheduling algorithm"
+    },
+    "denoise": {
+      "node_id": "3",
+      "field": "inputs.denoise",
+      "default": 1.0,
+      "description": "Denoise strength"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 605452029419059,
+      "description": "Seed for reproducibility"
+    }
+  },
+
+  "output_mapping": {
+    "node_id": "60",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "SaveImage node that outputs the generated image"
+  },
+
+  "meta": {
+    "estimated_duration_seconds": "2-10",
+    "requires_gpu": true,
+    "gpu_vram_mb": 31000,
+    "model_file": "flux3-image-klein-bf16.safetensors",
+    "clip_models": [
+      "qwen3vl_4b_bf16.safetensors"
+    ],
+    "vae_model": "flux2-vae.safetensors",
+    "recommended_resolution": "1024x1024",
+    "notes": "Workflow after ComfyUI template image_flux3_klein_distilled_t2i (comfyui_workflow_templates 0.11.87): UNETLoader + CLIPLoader type flux3 + EmptyFlux2LatentImage, KSampler euler/simple, 16 steps, cfg 1. ComfyUI >= 0.41.0. The template's prompt upsampler branch (TextGenerate with BFL's Qwen3.5 9B, switched on in the template) is left out, against the model card's instruction: \"Do not use the model without a prompt upsampler.\" The prompt reaches the text encoder as the platform hands it over. The VAE is the file the flux2 chunk loads (Comfy-Org/flux2-dev), byte-identical to vae/diffusion_pytorch_model.safetensors in black-forest-labs/flux-3-image-klein; download_flux3.sh fetches it from Comfy-Org/flux2-dev where it is missing. gpu_vram_mb is the model card's figure: peak GPU memory with BFL's reference code, B200, 1024x1024, prompt upsampler off, 31 GB in BF16; the ComfyUI run here was not measured with nvidia-smi. estimated_duration_seconds from five runs on 2026-10-18 on the RTX PRO 6000: 2.3 s warm, 7.3 to 9.7 s with the weights loading."
+  }
+}

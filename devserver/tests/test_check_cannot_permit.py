@@ -13,6 +13,7 @@ Run: python3 -m pytest devserver/tests/test_check_cannot_permit.py -q
 """
 import asyncio
 import builtins
+import logging
 import sys
 import types
 from pathlib import Path
@@ -204,6 +205,157 @@ class TestTheClassifierCannotReportASafetyItDidNotGet:
 
     def test_a_body_that_is_not_json_is_no_verdict(self, monkeypatch):
         assert self._post(monkeypatch, raises=True) is None
+
+    @pytest.mark.parametrize('status', [200, 503])
+    @pytest.mark.parametrize('body', [['a list'], 'a string', 7])
+    def test_a_body_that_is_json_but_no_object_is_no_verdict(self, monkeypatch, status, body):
+        """JSON that is no object (a list, a string, a number) has no `.get`:
+        on a status other than 200, the error detail raised AttributeError,
+        which left score() instead of its None."""
+        assert self._post(monkeypatch, status=status, body=body, text=str(body)) is None
+
+    def _decoded(self, monkeypatch, status, content, encoding='utf-8'):
+        """score() on a real requests.Response, which decodes the body itself."""
+        import requests
+        from my_app.services import safety_classifier as sc
+        response = requests.Response()
+        response.status_code = status
+        response._content = content
+        response.encoding = encoding
+        monkeypatch.setattr(requests, 'post', lambda *a, **k: response)
+        monkeypatch.setattr(sc, '_model', lambda: 'a-model')
+        monkeypatch.setattr(sc, 'model_name', lambda: 'a-model')
+        return sc.score('i', 'q', 'd')
+
+    @pytest.mark.parametrize('content', [
+        b'{"score": false}',
+        b'{"score": true}',
+        b'{"score": "0"}',
+        b'{"score": " 0.0 "}',
+        b'{"score": 1' + b'0' * 400 + b'}',
+        b'[' * 100000 + b']' * 100000,
+    ], ids=['false', 'true', 'a string', 'a string with spaces',
+            'an integer too large for a float', 'nested too deep'])
+    def test_an_answer_that_holds_no_number_is_no_verdict(self, monkeypatch, content):
+        """float() read a JSON false as 0.0, a pass, true as 1.0, a rating,
+        and a string as the number written in it; a 401-digit integer raised
+        OverflowError, and a body nested deeper than the decoder goes raised
+        RecursionError, both out of score() instead of its None."""
+        assert self._decoded(monkeypatch, 200, content) is None
+
+    @pytest.mark.parametrize('content,encoding', [
+        (b'[' * 100000 + b']' * 100000, 'utf-8'),
+        (b'{"error": "no room"}', 'idna'),
+        (b'<html><body>' + b'x' * 187 + '\u00fc'.encode() + b'</body></html>', 'utf-8'),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode('latin-1'), 'latin-1'),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode('latin-1'), None),
+        (None, 'utf-8'),
+    ], ids=['nested too deep', 'a charset whose codec refuses replacement',
+            'a character cut at byte 200', 'Latin-1 with its charset',
+            'Latin-1 without a charset', 'no raw stream'])
+    def test_an_error_body_that_cannot_be_read_is_no_verdict(self, monkeypatch, content, encoding):
+        """On a status other than 200 the body is read only for the journal.
+        A body nested too deep raised RecursionError there, and a charset
+        whose codec takes no replacement at all (idna) raised UnicodeError
+        from requests' .text, which it does for every body that is not
+        empty, both out of score() instead of its None. The other bodies
+        read through .text as before: one that is no UTF-8, with its charset
+        or without, one cut inside a character at its 200th byte, and a
+        Response without a raw stream, which has None there -- a stand-in;
+        requests gives b"" for an empty body."""
+        assert self._decoded(monkeypatch, 503, content, encoding) is None
+
+    @pytest.mark.parametrize('content,encoding,detail', [
+        (b'<html>' + b'y' * 5000 + b'</html>', 'utf-8', '<html>' + 'y' * 194),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode(), 'utf-8',
+         'Fehler: kein Platz f\u00fcr das Modell'),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode('latin-1'), 'latin-1',
+         'Fehler: kein Platz f\u00fcr das Modell'),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode('latin-1'), 'utf-8',
+         'Fehler: kein Platz f\ufffdr das Modell'),
+        (b'{"error": "no room"}', 'idna', '{"error": "no room"}'),
+        ('Fehler: kein Platz f\u00fcr das Modell'.encode('latin-1'), 'idna',
+         'Fehler: kein Platz f\ufffdr das Modell'),
+        (b'x' * 500, 'idna', 'x' * 200),
+        (('\u00fc' * 150).encode(), 'idna', '\u00fc' * 100),
+        (None, 'utf-8', ''),
+        (b'<html>\r\n<body>\x1b[31mno room\x00</body>', 'utf-8',
+         '<html>\\r\\n<body>\\x1b[31mno room\\x00</body>'),
+        (b'C:\\models\\new', 'utf-8', 'C:\\\\models\\\\new'),
+        (b'\x00' * 300, 'utf-8', '\\x00' * 50),
+        (b'x' * 199 + b'\x1b', 'utf-8', 'x' * 199),
+        (b'a\tb', 'utf-8', 'a\\tb'),
+        ('Preis: 5 \u20ac'.encode('cp1252'), 'latin-1', 'Preis: 5 \\x80'),
+    ], ids=['a long body', 'UTF-8', 'Latin-1 with its charset', 'Latin-1 sent as UTF-8',
+            'a charset whose codec refuses replacement',
+            'a charset whose codec refuses replacement, a body that is no UTF-8',
+            'a charset whose codec refuses replacement, a long body',
+            'a charset whose codec refuses replacement, a long body of two-byte characters', 'no raw stream',
+            'line breaks and control characters', 'backslashes',
+            'a long body of control characters', 'an escape that does not fit at the end', 'a tab',
+            'a character beyond ASCII that is not printable'])
+    def test_the_journal_shows_the_start_of_an_error_body_that_is_no_json(
+            self, monkeypatch, caplog, content, encoding, detail):
+        """What the journal says of an error body that is no JSON: at most 200
+        characters of it, as requests decodes it, with U+FFFD for what its
+        charset cannot decode; with a charset whose codec takes no
+        replacement at all (idna), on which requests fails for every body
+        that is not empty, JSON as well, its first 200 bytes as UTF-8, with
+        U+FFFD for what is no UTF-8; and nothing for a Response without a
+        raw stream. A character that is not printable -- a tab, a line break,
+        a terminal's escape, and one beyond ASCII as well (U+0080, the euro
+        sign of cp1252 read as Latin-1) -- and the backslash are written as
+        Python writes them in a string, so that the record stays one line --
+        a line break started an entry of its own in the journal -- and a
+        backslash before an n does not read as a line break; and of what is
+        written no more than 200 characters, without a character cut in
+        half."""
+        with caplog.at_level(logging.ERROR, logger='my_app.services.safety_classifier'):
+            assert self._decoded(monkeypatch, 503, content, encoding) is None
+        said = [r.getMessage() for r in caplog.records if 'answered 503' in r.getMessage()]
+        assert said == [f'[SAFETY-CLASSIFIER] a-model answered 503 ({detail}) -- no verdict']
+
+    @pytest.mark.parametrize('content,detail', [
+        (b'{"error": "no room"}', 'no room'),
+        (b'{"error": "' + b'e' * 500 + b'"}', 'e' * 200),
+        (b'{"error": 7}', '7'),
+        (b'{}', ''),
+        (b'null', 'null'),
+        (b'false', 'false'),
+        (b'0', '0'),
+        (b'[]', '[]'),
+        (b'""', '""'),
+        (b'{"error": null}', 'null'),
+        (b'{"error": true}', 'true'),
+        (b'{"error": {"code": 5, "why": "no room"}}', '{"code": 5, "why": "no room"}'),
+        (b'{"error": "line one\\nline two"}', 'line one\\nline two'),
+        (b'{"error": {"why": "kein Platz f\\u00fcr das Modell"}}', '{"why": "kein Platz f\u00fcr das Modell"}'),
+        (b'{"error": "a\\\\nb"}', 'a\\\\nb'),
+        (b'{"error": {"why": "' + b'e' * 500 + b'"}}', '{"why": "' + 'e' * 191),
+        (b'{"error": {"why": "no room", "code": 5}}', '{"why": "no room", "code": 5}'),
+        (b'{"error": "\\u202e\\u0085"}', '\\u202e\\x85'),
+    ], ids=['an error', 'a long error', 'an error that is a number', 'an object without an error',
+            'null', 'false', 'zero', 'an empty list', 'an empty string', 'an error that is null',
+            'an error that is true', 'an error that is an object', 'an error with a line break',
+            'an error that is an object, with a character that is no ASCII',
+            'an error with a backslash before an n', 'a long error that is an object',
+            'an error that is an object, its keys not in order',
+            'an error with characters beyond ASCII that are not printable'])
+    def test_the_journal_shows_the_error_of_a_json_body(self, monkeypatch, caplog, content, detail):
+        """What the journal says of an error body that is JSON: the first 200
+        characters of an object's "error", as text, an error that is no text
+        as JSON writes it, its keys in their order and a character that is
+        no ASCII as it is -- where it is printable -- and nothing for an
+        object without one; JSON that is no object has its text shown, as a
+        body that is no JSON does. null, false, 0 and an
+        empty list or string showed nothing: `or {}` read them as an object
+        without an error. An error that was null showed as None, and a line
+        break in one began an entry of its own in the journal; a backslash
+        before an n is written escaped, so that it does not read as one."""
+        with caplog.at_level(logging.ERROR, logger='my_app.services.safety_classifier'):
+            assert self._decoded(monkeypatch, 503, content) is None
+        said = [r.getMessage() for r in caplog.records if 'answered 503' in r.getMessage()]
+        assert said == [f'[SAFETY-CLASSIFIER] a-model answered 503 ({detail}) -- no verdict']
 
     @pytest.mark.parametrize('bad', [-0.1, 1.5, float('nan')])
     def test_a_score_outside_the_range_is_no_verdict(self, monkeypatch, bad):

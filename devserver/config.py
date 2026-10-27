@@ -159,6 +159,13 @@ _SETTINGS_DEFAULTS = {
     'CODING_MODEL': '',
     'IMAGE_ANALYSIS_MODEL': '',
     'SAFETY_MODEL': '',
+    # The model of Resona's look at images, where it is not the look's own
+    # default. llm_service.view_vlm_model reads it straight from
+    # user_settings.json; it stands here so the load applies the key instead of
+    # passing it over as unknown, and so a save from the settings page, which
+    # does not show it, keeps it (settings_routes._file_after_save). Empty: the
+    # default.
+    'RESONA_VIEW_VLM_MODEL': '',
     # AI-Origin Disclosure (EU AI Act Art. 50). Nested dict, see watermark_service.py.
     # Metadata layer is the compliance core (machine-readable AI-origin marker).
     # Visible layer is optional and deployment-configurable.

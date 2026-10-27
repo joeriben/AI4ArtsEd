@@ -285,3 +285,141 @@ def test_the_shipped_reach_list_names_only_table_providers_and_register_models()
         assert name in register["models"], f"{name}: not in the register"
         for p in per_provider:
             assert p in TABLE, f"{name}: {p} is not a provider of the table"
+
+
+# ---------------------------------------- the chosen provider's list alone
+
+
+def _chosen(matrix, active):
+    return chat_routes._cloud_chat_models_from_matrix(matrix, active=active, only_active=True)
+
+
+def test_the_chosen_list_goes_through_the_chosen_provider_where_the_full_list_does_not(world):
+    """The full list takes ONE route per model, a conform one before the
+    chosen provider; a surface that offers only what the settings choose
+    would lose the model if it filtered that list by prefix. Its own list
+    goes through the chosen provider (Model Comparison, Transformers Lab)."""
+    world["reach"] = GLM
+    world["keyed"] = {"openrouter", "mammouth"}
+    world["active"] = "openrouter"
+    matrix = _presets(openrouter=None, mammouth=True)
+    assert [m["id"] for m in _list(matrix)] == ["mammouth/glm-5.3"]
+    assert [m["id"] for m in _chosen(matrix, "openrouter")] == ["openrouter/z-ai/glm-5.3"]
+
+
+def test_the_chosen_list_holds_no_other_provider(world):
+    world["reach"] = {**GLM, "kimi-k3": {"mammouth": "kimi-k3"}}
+    world["keyed"] = {"openrouter", "mammouth"}
+    world["active"] = "openrouter"
+    assert [m["id"] for m in _chosen(_presets(openrouter=True, mammouth=True), "openrouter")] == [
+        "openrouter/z-ai/glm-5.3"]
+
+
+def test_choosing_no_provider_offers_no_cloud_model_in_the_chosen_list(world):
+    world["reach"] = GLM
+    world["keyed"] = {"openrouter", "mammouth"}
+    world["active"] = "none"
+    assert _chosen(_presets(openrouter=True, mammouth=True), "none") == []
+
+
+def test_a_chosen_provider_without_a_key_offers_nothing(world):
+    world["reach"] = GLM
+    world["keyed"] = {"mammouth"}
+    world["active"] = "openrouter"
+    assert _chosen(_presets(openrouter=True, mammouth=True), "openrouter") == []
+
+
+# ------------------------------- not known is not the same as not offered
+
+
+def test_an_unreadable_register_leaves_the_chosen_list_unknown(world):
+    """A matrix without presets is what a read caught mid-save returns
+    (load_hardware_matrix answers {}). The full list offers no cloud model
+    there, as it always did; the chosen list says it does not know, so the
+    surface keeps the columns' choices instead of clearing them."""
+    world["reach"] = GLM
+    world["keyed"] = {"openrouter"}
+    assert _list({}) == []
+    assert _chosen({}, active="openrouter") is None
+
+
+def test_the_chosen_list_without_a_named_provider_is_not_known(world):
+    """The setting is the caller's to read: read here, its default would take
+    a file caught mid-save for 'none'."""
+    world["reach"] = GLM
+    world["keyed"] = {"openrouter"}
+    world["active"] = "openrouter"
+    assert _chosen(_presets(openrouter=True), None) is None
+
+
+def test_an_exception_while_the_routes_are_read_leaves_the_chosen_list_unknown(world, monkeypatch):
+    def broken():
+        raise OSError("unreadable")
+    monkeypatch.setattr(chat_routes, "provider_names", broken)
+    world["keyed"] = {"openrouter"}
+    matrix = _presets(openrouter=True)
+    assert _list(matrix) == []
+    assert _chosen(matrix, active="openrouter") is None
+
+
+def test_the_setting_read_tells_no_provider_from_an_unreadable_file(tmp_path, monkeypatch):
+    """A save empties user_settings.json before it writes it again; the
+    default of get_user_setting would read that instant as 'none'."""
+    f = tmp_path / "user_settings.json"
+    monkeypatch.setattr(chat_routes, "_USER_SETTINGS_FILE", f)
+    assert chat_routes._chosen_provider() == "none"
+    f.write_text("")
+    assert chat_routes._chosen_provider() is None
+    f.write_text('{"EXTERNAL_LLM_PROVIDER": " OpenRouter "}')
+    assert chat_routes._chosen_provider() == "openrouter"
+    f.write_text('{"EXTERNAL_LLM_PROVIDER": null}')
+    assert chat_routes._chosen_provider() == "none"
+    f.write_text('[1]')
+    assert chat_routes._chosen_provider() is None
+
+
+def test_the_answer_holds_the_chosen_cloud_half_marked_and_the_local_half_as_listed(world, monkeypatch):
+    world["reach"] = GLM
+    world["keyed"] = {"openrouter", "mammouth"}
+    marked = []
+    monkeypatch.setattr(chat_routes, "_mark_data_paths",
+                        lambda entries, matrix: marked.append([e["id"] for e in entries]))
+    local = {"id": "local/qwen3.5:4b", "register": "qwen3.5:4b"}
+    models = [{"id": "mammouth/glm-5.3", "register": "glm-5.3"}, local]
+    matrix = _presets(openrouter=None, mammouth=True)
+    chosen = chat_routes._chosen_chat_models(models, matrix, "openrouter")
+    assert [m["id"] for m in chosen] == ["openrouter/z-ai/glm-5.3", "local/qwen3.5:4b"]
+    assert chosen[1] is local
+    # The local entries come marked from `models`; only the cloud half is marked here.
+    assert marked == [["openrouter/z-ai/glm-5.3"]]
+    assert chat_routes._chosen_chat_models(models, matrix, None) is None
+    assert chat_routes._chosen_chat_models(models, {}, "openrouter") is None
+
+
+def test_the_route_answers_not_known_while_the_settings_are_mid_save(tmp_path, monkeypatch):
+    """The route reads the setting once, strictly: an emptied file gives
+    `chosen_models` null and leaves the full list as it was."""
+    from flask import Flask
+    f = tmp_path / "user_settings.json"
+    f.write_text("")
+    monkeypatch.setattr(chat_routes, "_USER_SETTINGS_FILE", f)
+    models = [{"id": "local/qwen3.5:4b"}]
+    asked = []
+
+    def listed(active=None):
+        asked.append(active)
+        return models, False, _presets(openrouter=True)
+
+    monkeypatch.setattr(chat_routes, "list_chat_models", listed)
+    with Flask(__name__).app_context():
+        body = chat_routes.chat_models().get_json()
+    assert body == {"models": models, "gpu_service_unreachable": False, "chosen_models": None}
+    assert asked == [None]
+
+    f.write_text('{"EXTERNAL_LLM_PROVIDER": "OpenRouter"}')
+    monkeypatch.setattr(chat_routes, "_chosen_chat_models",
+                        lambda listed_models, register, active: [active, len(listed_models)])
+    with Flask(__name__).app_context():
+        body = chat_routes.chat_models().get_json()
+    assert body["chosen_models"] == ["openrouter", 1]
+    assert asked == [None, "openrouter"]

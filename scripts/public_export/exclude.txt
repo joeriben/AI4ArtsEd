@@ -21,6 +21,7 @@ tests/
 workflows_legacy/
 devserver/archive/
 devserver/schemas/instruction_types.json.OBSOLETE
+devserver/testfiles/
 fix_hardware_matrix.py
 generate_hardware_matrix.py
 measure_execution_times.py
@@ -79,4 +80,5 @@ docs/STAGE2_PROMPT_QUALITY_CRITERIA.md
 docs/TRANSFORMERS_UPGRADE_TEST_PLAN.md
 docs/WHATS_NEW_2026_01.md
 docs/WORKSHOP_REPLAY_TESTING.md
+docs/WORK_ORDER_CONTENT_CHECKING.md
 docs/latent_lab_instrumente_plan_2026-08-26.md

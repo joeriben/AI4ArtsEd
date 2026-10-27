@@ -150,22 +150,39 @@ export function generationErrorFor(
   t: (key: string, values?: Record<string, unknown>) => string,
   failure: unknown,
 ): string {
+  const { key, params } = generationErrorKeyFor(failure)
+  return t(key, params)
+}
+
+/** A sentence of `generationErrorFor`, as its key and its values. */
+export interface GenerationErrorKey {
+  key: string
+  params: Record<string, unknown>
+}
+
+/**
+ * The reading of `generationErrorFor`, kept as the key of its sentence. A
+ * surface that stores the cause with a run says it in the language of whoever
+ * reads the run back, the way refusals travel (`refusalKeyOf`).
+ */
+export function generationErrorKeyFor(failure: unknown): GenerationErrorKey {
   const message = failureMessageOf(failure)
   const status = failureStatusOf(failure)
+  const said = (key: string): GenerationErrorKey => ({ key, params: {} })
   // The sentence for a cause the classifier has no sentence for: the status
   // where the server sent one, and the platform's plain line where the failure
   // never reached a status at all.
-  const unread = () => status === null
-    ? t('generationError.unknown')
-    : t('generationError.withStatus', { status })
+  const unread = (): GenerationErrorKey => status === null
+    ? said('generationError.unknown')
+    : { key: 'generationError.withStatus', params: { status } }
   if (!message) return unread()
   switch (classifyError(message)) {
-    case 'busy': return t('generationError.busy')
-    case 'offline': return t('generationError.offline')
-    case 'missing': return t('generationError.notHere')
-    case 'text_not_image': return t('generationError.textNotImage')
-    case 'rate_limited': return t('generationError.causeRateLimited')
-    case 'repetition': return t('generationError.causeRepetition')
+    case 'busy': return said('generationError.busy')
+    case 'offline': return said('generationError.offline')
+    case 'missing': return said('generationError.notHere')
+    case 'text_not_image': return said('generationError.textNotImage')
+    case 'rate_limited': return said('generationError.causeRateLimited')
+    case 'repetition': return said('generationError.causeRepetition')
     default: return unread()
   }
 }

@@ -200,7 +200,8 @@ class LLMClient:
                               f"(config/local_llm_weights.json)")
         if not local_llm_weights.is_installed(model):
             raise LookupError(f"{model} is not installed under {local_llm_weights.models_root()} "
-                              f"(the settings page installs it)")
+                              f"(download_llm_models.sh or the Download entry of a model list "
+                              f"installs it)")
         inputs: Dict[str, Any] = {
             "llm_name": dir_name,
             "messages": prompt if prompt is not None else json.dumps(messages, ensure_ascii=False),

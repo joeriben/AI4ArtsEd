@@ -866,7 +866,9 @@ function buildAvailableConfigs(): string {
   return [
     'sd35_large — Stable Diffusion 3.5 Large (image)',
     'flux2 — FLUX.2 (image)',
+    'flux3 — FLUX 3 Image Klein (image)',
     'gemini_3_pro_image — Gemini 3 Pro image generation (cloud, EU, DSGVO via Mammouth)',
+    'gemini_nano_banana_2_1 — Gemini Nano Banana 2.1 image generation (paid cloud call; cloud, EU, DSGVO via Mammouth)',
     'stableaudio_open — Stable Audio 3 (audio/sound)',
     'heartmula_standard — HeartMuLa (music, dual input: lyrics || tags, e.g. [GENERATE: heartmula_standard | [Verse] Hello world... || pop,upbeat,piano])',
 'wan22_t2v_video_fast — Wan 2.2 video (video)',

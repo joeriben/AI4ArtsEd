@@ -522,6 +522,57 @@ def test_variants_of_one_asks_no_model_for_variants(client, no_model):
     assert no_model["calls"] == []
 
 
+def test_variants_from_a_given_translation_translate_nothing(client, no_model, monkeypatch):
+    """
+    The surface hands back the English text the column of the prompt as entered
+    already runs on. The variants are written from that sentence, and it stands
+    first in the list.
+    """
+    import my_app.routes.schema_pipeline_routes as schema_routes
+
+    def translated_again(*args, **kwargs):
+        raise AssertionError("the prompt was translated a second time")
+
+    monkeypatch.setattr(schema_routes, "translate_one", translated_again)
+    res = client.post('/api/latent-lab/mean-images/variants', json={
+        "prompt": "eine Strasse", "translation_en": "a street", "n": 3,
+    })
+    assert res.status_code == 200
+    body = res.get_json()
+    assert body["translation_en"] == "a street"
+    assert body["variants"] == ["a street", "a second line", "a third line"]
+    # The round was asked about the given sentence.
+    assert "a street" in no_model["calls"][0][0][1]["content"]
+
+
+@pytest.mark.parametrize("given", ["", "   ", 7, ["a street"], {"text": "a street"}])
+def test_variants_reject_a_given_translation_without_text(client, no_model, given):
+    res = client.post('/api/latent-lab/mean-images/variants', json={
+        "prompt": "eine Strasse", "translation_en": given, "n": 3,
+    })
+    assert res.status_code == 400
+    assert "translation_en" in res.get_json()["error"]
+    assert no_model["calls"] == []
+
+
+def test_variants_from_a_null_translation_translate_the_prompt(client, no_model):
+    res = client.post('/api/latent-lab/mean-images/variants', json={
+        "prompt": "eine Strasse", "translation_en": None, "n": 3,
+    })
+    assert res.status_code == 200
+    assert res.get_json()["variants"][0] == "EN: eine Strasse"
+
+
+def test_a_given_translation_heads_the_list_trimmed(client, no_model):
+    """The surface keys the picture both columns share by this sentence."""
+    res = client.post('/api/latent-lab/mean-images/variants', json={
+        "prompt": "eine Strasse", "translation_en": "  a street  ", "n": 3,
+    })
+    body = res.get_json()
+    assert body["translation_en"] == "a street"
+    assert body["variants"][0] == "a street"
+
+
 def test_variants_of_more_than_one_does_ask(no_model, client):
     """The counter the test above rests on moves when a call is in fact made."""
     client.post('/api/latent-lab/mean-images/variants', json={"prompt": "a street", "n": 3})

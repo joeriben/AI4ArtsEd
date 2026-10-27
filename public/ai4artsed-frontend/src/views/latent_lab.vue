@@ -284,6 +284,13 @@ const GROUPS: { id: GroupId; items: { id: string; i18n?: string; root?: string; 
     // by swapping a pronoun.
     items: [
       { id: 'systemprompt', icons: [TEXT_ICON] },
+      // System Prompts with the two axes exchanged (2026-10-27): one system
+      // prompt, and the models that answer under it. It stands directly under
+      // the instrument it was copied from, and it carries the name of the
+      // Model Comparison above, which puts image models side by side as this
+      // one puts language models (`compare.tabs.model`, translated in every
+      // language).
+      { id: 'systemprompt-models', i18n: 'compare.tabs.model', icons: [TEXT_ICON] },
       // Text geht hinein, Text kommt heraus - und nichts davon laeuft auf der
       // Grafikkarte: die Zerlegung liest eine Vokabeldatei (2026-08-26).
       { id: 'tokens', icons: [TEXT_ICON] },
@@ -371,6 +378,7 @@ const SLUGS: Record<string, string> = {
   // now: Randomness was taken apart into Guidance and Temperature on
   // 2026-08-22, and that instrument was removed in turn a day later.
   systemprompt: 'system-prompts',
+  'systemprompt-models': 'system-prompt-across-models',
   voice: 'voices',
   // The name settled in three steps on 2026-08-23 and the address followed
   // each time; IDS below keeps every earlier one arriving here.

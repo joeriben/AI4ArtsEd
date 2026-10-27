@@ -29,12 +29,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ChipGroups, { type ChipGroup } from '@/components/ChipGroups.vue'
-
-interface LanguageOption {
-  code: string
-  label: string
-  description?: string
-}
+import { PLATFORM_LANGUAGES, FURTHER_LANGUAGES } from '@/lib/platformLanguages'
 
 interface Props {
   modelValue: string[]
@@ -47,31 +42,35 @@ const props = withDefaults(defineProps<Props>(), { max: 4, disabled: false })
 const emit = defineEmits<{ 'update:modelValue': [langs: string[]] }>()
 const { t } = useI18n()
 
-const platformLanguages = computed<LanguageOption[]>(() => [
-  { code: 'en', label: 'English', description: t('languageChips.description.en') },
-  { code: 'de', label: 'Deutsch', description: t('languageChips.description.de') },
-  { code: 'ar', label: 'العربية', description: t('languageChips.description.ar') },
-  { code: 'he', label: 'עברית', description: t('languageChips.description.he') },
-  { code: 'tr', label: 'Türkçe', description: t('languageChips.description.tr') },
-  { code: 'ko', label: '한국어', description: t('languageChips.description.ko') },
-  { code: 'uk', label: 'Українська', description: t('languageChips.description.uk') },
-  { code: 'fr', label: 'Français', description: t('languageChips.description.fr') },
-  { code: 'es', label: 'Español', description: t('languageChips.description.es') },
-  { code: 'bg', label: 'Български', description: t('languageChips.description.bg') },
-])
+// The list is lib/platformLanguages.ts; what it says on hover is this component's.
+const descriptions = computed<Record<string, string>>(() => ({
+  en: t('languageChips.description.en'),
+  de: t('languageChips.description.de'),
+  ar: t('languageChips.description.ar'),
+  he: t('languageChips.description.he'),
+  tr: t('languageChips.description.tr'),
+  ko: t('languageChips.description.ko'),
+  uk: t('languageChips.description.uk'),
+  fr: t('languageChips.description.fr'),
+  es: t('languageChips.description.es'),
+  bg: t('languageChips.description.bg'),
+  hsb: t('languageChips.description.hsb'),
+  dsb: t('languageChips.description.dsb'),
+  fry: t('languageChips.description.fry'),
+  yo: t('languageChips.description.yo'),
+  sw: t('languageChips.description.sw'),
+  cy: t('languageChips.description.cy'),
+  qu: t('languageChips.description.qu'),
+  hi: t('languageChips.description.hi'),
+  ja: t('languageChips.description.ja'),
+  zh: t('languageChips.description.zh'),
+}))
 
-const furtherLanguages = computed<LanguageOption[]>(() => [
-  { code: 'hsb', label: 'Hornjoserbšćina', description: t('languageChips.description.hsb') },
-  { code: 'dsb', label: 'Dolnoserbšćina', description: t('languageChips.description.dsb') },
-  { code: 'fry', label: 'Frysk', description: t('languageChips.description.fry') },
-  { code: 'yo', label: 'Yorùbá', description: t('languageChips.description.yo') },
-  { code: 'sw', label: 'Kiswahili', description: t('languageChips.description.sw') },
-  { code: 'cy', label: 'Cymraeg', description: t('languageChips.description.cy') },
-  { code: 'qu', label: 'Runasimi', description: t('languageChips.description.qu') },
-  { code: 'hi', label: 'हिन्दी', description: t('languageChips.description.hi') },
-  { code: 'ja', label: '日本語', description: t('languageChips.description.ja') },
-  { code: 'zh', label: '中文', description: t('languageChips.description.zh') },
-])
+const platformLanguages = computed(() =>
+  PLATFORM_LANGUAGES.map(l => ({ ...l, description: descriptions.value[l.code] })))
+
+const furtherLanguages = computed(() =>
+  FURTHER_LANGUAGES.map(l => ({ ...l, description: descriptions.value[l.code] })))
 
 const platformOptions = computed(() =>
   platformLanguages.value.map(l => ({

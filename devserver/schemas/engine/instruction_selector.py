@@ -13,6 +13,8 @@ schemas/engine/archive/instruction_selector_original.txt and differs from
 what it replaced; the restored text is read out of the history instead.
 """
 
+import re
+
 # The platform's rule on how cultures may be rendered. ONE source: the two
 # instruction types below are composed from it, and get_instruction() appends
 # it to a task instruction written by a person, which replaces the type's own
@@ -270,6 +272,40 @@ GIVEN_PICTURE_CLAUSE = (
     "to show: it already shows it, and you cannot see it.\n"
     "- Stay an instruction. A finished scene description is the one thing this must not become."
 )
+
+
+# A `*` standing on its own in the text an interception is handed is a
+# placeholder that the surface fills in afterwards: the Default Census
+# (views/latent_lab/default_census.vue) puts a reference at every such star of
+# its base prompt, one column per reference, and the perspective ring on that
+# field writes the intercepted text back into it. A model writing the text
+# afresh drops the stars, makes a thing of them ("a slot marked *"), or moves
+# and multiplies them into places the reference no longer fits ("All of * has
+# drained away", written for "a person feeling *"). The clause asks for the
+# same number of stars, each where the same word fits.
+#
+# A star touching a word or another star is no placeholder: emphasis
+# ("*very*"), bold ("**"), a product ("3*4"). Those leave the prompt as it is,
+# and so does every text without a star. The clause names the label the text
+# stands under ("Prompt" in the single step and on the Canvas, "Text" in the
+# chained link), since the Context of several perspectives carries stars of
+# its own.
+PLACEHOLDER_STAR = re.compile(r'(?<![\w*])\*(?![\w*])')
+
+PLACEHOLDER_CLAUSE = (
+    "\n\nPLACEHOLDER: each * in the {mark} stands for a word that is put in later. "
+    "Keep every * as the bare character *, in a place where that same word fits as "
+    "it does in the {mark}, and add no * of your own. Never replace a * with a word, "
+    "explain it or leave it out."
+)
+
+
+def get_placeholder_clause(text, mark: str) -> str:
+    """PLACEHOLDER_CLAUSE for the text under the label `mark` where it carries a
+    star standing on its own, '' otherwise."""
+    if not isinstance(text, str) or not PLACEHOLDER_STAR.search(text):
+        return ''
+    return PLACEHOLDER_CLAUSE.format(mark=mark)
 
 
 # Reading volume (Lesemenge): how much text the reader this interface is set

@@ -95,6 +95,41 @@ def test_the_local_defaults_are_in_the_table():
             assert w.entry(value) is not None, f"config.{key} = {value!r} is not in the table"
 
 
+def test_the_looks_model_is_in_the_table():
+    """The look at images runs on a model no role names
+    (llm_service.view_vlm_model), and download_llm_models.sh finds it only
+    through this table (local_llm_install._role_models), which skips a name
+    the table lacks without a word. Pinned on what the look runs where
+    user_settings.json names no other model for it."""
+    from unittest import mock
+    from my_app.services import local_llm_weights as w
+    from my_app.services.llm_service import llm_service
+    with mock.patch("pathlib.Path.exists", return_value=False):
+        model = llm_service.view_vlm_model()
+    assert w.entry(model) is not None, f"the look's model {model!r} is not in the table"
+
+
+def test_the_installer_leaves_the_safety_model_out(monkeypatch):
+    """SAFETY_MODEL names the classifier, which the GPU service runs from its
+    own store. Where the setting still names a guard the table holds,
+    download_llm_models.sh fetched that gated model into ComfyUI, where no
+    check reads it. An alias another role names as well is still listed."""
+    from my_app.routes import chat_routes
+    from my_app.routes.settings_routes import DSGVO_REVIEWED_FIELDS
+    from my_app.services import local_llm_install as inst
+    from my_app.services import local_llm_weights as w
+    from my_app.services.llm_service import llm_service
+    alias = next(iter(w.models()))
+    other = next(f for f in DSGVO_REVIEWED_FIELDS if f != "SAFETY_MODEL")
+    # On the class: undoing a patch of the shared instance would leave the
+    # bound method behind as an instance attribute.
+    monkeypatch.setattr(type(llm_service), "view_vlm_model", lambda self: "")
+    for fields, expected in ((("SAFETY_MODEL",), []), (("SAFETY_MODEL", other), [alias])):
+        monkeypatch.setattr(chat_routes, "get_user_setting",
+                            lambda key, default=None, f=fields: alias if key in f else "")
+        assert inst._role_models() == expected, fields
+
+
 def test_resolution_and_listing_shape():
     from my_app.services import local_llm_weights as w
     alias = next(iter(w.models()))

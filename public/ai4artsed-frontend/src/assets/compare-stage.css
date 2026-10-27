@@ -197,3 +197,100 @@
   font-size: 0.8rem;
   color: #e07a5f;
 }
+
+/* ---------- Chat comparisons ----------
+   System Prompts (views/compare/system_prompt_comparison.vue) and Model
+   Comparison (Transformers Lab, views/latent_lab/system_prompt_across_models.vue):
+   three conversations side by side (components/ChatColumn.vue), what sets a
+   column apart in its head. Until 2026-10-27 these rules stood scoped in
+   System Prompts, and the second surface would have had to carry them a
+   second time. */
+
+/* The three columns. `.cmp-results` in the selector so that the grid keeps its
+   `min-height: 0` against `.cmp-work > .cmp-results` above, as it did while it
+   stood scoped in the surface.
+
+   A container query, not a window one: the preparing column is 300 px and can
+   be folded away, and a window width cannot see that difference. The stage
+   puts that column on top at 900 px of work area (above), so the three columns
+   already have the full width here: (700 - 32 gaps) / 3 = 223 px each at this
+   threshold (the query measures `.cmp-page` inside its padding). Under it they stack, a row takes the height of its
+   content, and the stream of answers needs a bound of its own, which the
+   column reads from `--chat-column-max-h`. */
+.cmp-results.cmp-chat-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 1rem;
+  min-height: 0;
+}
+
+@container (max-width: 700px) {
+  .cmp-results.cmp-chat-columns {
+    grid-template-columns: 1fr;
+    --chat-column-max-h: 300px;
+  }
+}
+
+/* A drop-down with its name in front of it, on one line: the name in small
+   capitals, the list taking the rest. In a column's head the list takes the
+   column's tint for its border (`--chat-column-tint`, components/ChatColumn.vue).
+   The preset of a system prompt (components/SystemPromptField.vue) and the
+   model of a column of Model Comparison (Transformers Lab). */
+.cmp-pick-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cmp-pick-row > label {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.cmp-pick-row > select {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--chat-column-tint, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  padding: 0.25rem 0.4rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  outline: none;
+}
+
+.cmp-pick-row > select option {
+  background: var(--surface-2);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* „New conversation", under the message field. Not `.clear-btn`: that is the
+   name of the field's own clear button (components/MediaInputBox.vue), and a
+   rule under it here would reach in there. It stays where it is while a round
+   is out, and does nothing: an emptied column would take the late answers of
+   the round before. */
+.cmp-new-conversation {
+  align-self: flex-start;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.cmp-new-conversation:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cmp-new-conversation:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

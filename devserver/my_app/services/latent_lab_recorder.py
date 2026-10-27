@@ -250,10 +250,26 @@ class LatentLabRecorder:
             })
 
         metadata["total_entities"] = len(metadata["entities"])
-        (run_folder / "metadata.json").write_text(
-            json.dumps(metadata, indent=2, ensure_ascii=False),
-            encoding='utf-8',
-        )
+        # Written beside it and moved into place, as _amend_entity_meta and
+        # the pipeline and canvas recorders do: the run folder is made at the
+        # start of this method, so a reader listing runs can arrive while the
+        # record is being written, and finds it whole or not at all.
+        metadata_path = run_folder / "metadata.json"
+        tmp = metadata_path.with_name(f"{metadata_path.name}.{uuid.uuid4().hex}.tmp")
+        try:
+            tmp.write_text(
+                json.dumps(metadata, indent=2, ensure_ascii=False),
+                encoding='utf-8',
+            )
+            os.replace(str(tmp), str(metadata_path))
+        except BaseException:
+            # BaseException, not only Exception: whatever exception ends the
+            # write, the temporary file does not stay behind.
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
+            raise
 
         logger.info(
             f"[LAB_RECORDER] {self.latent_lab_tool} run {run_id} "

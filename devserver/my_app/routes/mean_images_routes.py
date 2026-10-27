@@ -93,10 +93,17 @@ def variants():
     """
     The English sentence, and n-1 variants of it.
 
-    Request: {"prompt": "...", "n": 5, "enable_streaming": true?}
+    Request: {"prompt": "...", "n": 5, "translation_en": "..."?,
+              "enable_streaming": true?}
     Answer:  {"status": "success", "translation_en": "...",
               "variants": ["...", ...],   # n entries, [0] IS the translation
               "shortfall": 0}
+
+    Where the surface wants variants it asks twice: for the translation alone
+    (n = 1), so the column of the prompt as entered can start on it, and then
+    for the variants, handing that translation back as `translation_en`. The
+    variants are then written from the very sentence the other column runs on,
+    and the prompt is not translated a second time.
 
     `shortfall` is how many of the asked-for variants the model did not deliver
     as distinct sentences. It is reported and never filled in: a padded list
@@ -156,16 +163,30 @@ def _run_variants(data: Any):
             'error': f'n must lie between 1 and {MAX_PER_CELL}, received {n}',
         }, 400
 
+    # The English sentence, where the surface already holds it. A second
+    # translation would be a second reading: it runs at a temperature above
+    # zero, and `variants[0]` would then be a sentence the column of the prompt
+    # as entered was never generated from.
+    given = data.get('translation_en')
+    if given is not None and (not isinstance(given, str) or not given.strip()):
+        return {
+            'status': 'error',
+            'error': 'translation_en must carry text where it is given',
+        }, 400
+
     from my_app.routes.schema_pipeline_routes import translate_one
     from my_app.routes.chat_routes import call_chat_helper
 
-    try:
-        translation = translate_one(prompt, 'en')
-    except Exception as exc:
-        logger.error(f"[MEAN-IMAGES] translation failed: {exc}")
-        return {'status': 'error', 'error': f'Translation failed: {exc}'}, 502
-    if not translation:
-        return {'status': 'error', 'error': 'Translation came back empty'}, 502
+    if given is not None:
+        translation = given.strip()
+    else:
+        try:
+            translation = translate_one(prompt, 'en')
+        except Exception as exc:
+            logger.error(f"[MEAN-IMAGES] translation failed: {exc}")
+            return {'status': 'error', 'error': f'Translation failed: {exc}'}, 502
+        if not translation:
+            return {'status': 'error', 'error': 'Translation came back empty'}, 502
 
     wanted = n - 1
     if wanted == 0:

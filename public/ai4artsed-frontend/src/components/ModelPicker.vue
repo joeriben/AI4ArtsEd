@@ -54,7 +54,7 @@ const props = defineProps<{
 const emit = defineEmits<{ 'update:modelValue': [Member[]] }>()
 
 type Scenario = 'qwen' | 'mixed' | 'history'
-interface Preset { id: string; description: string; vram_gb: number }
+interface Preset { id: string; description: string; vram_gb: number; params_b?: number }
 
 const SCENARIOS: Scenario[] = ['mixed', 'qwen', 'history']
 
@@ -73,7 +73,7 @@ const PRESETS: { id: string; i18n: string; note: string; members: [Scenario, str
     id: 'large',
     i18n: 'latentLab.textLab.models.large',
     note: 'latentLab.textLab.models.largeNote',
-    members: [['mixed', 'olmo3'], ['mixed', 'nemotron'], ['mixed', 'qwen35_9b'], ['mixed', 'gemma4_12b'], ['mixed', 'ministral_14b']],
+    members: [['mixed', 'olmo3'], ['mixed', 'apertus'], ['mixed', 'nemotron'], ['mixed', 'qwen35_9b'], ['mixed', 'gemma4_12b'], ['mixed', 'ministral_14b']],
   },
   {
     id: 'family',
@@ -98,17 +98,20 @@ const presetChoices = computed(() =>
 
 /** The lineup a preset stands for, smallest first. Missing members are skipped:
  *  what the service does not offer is not compared, and saying so is the
- *  service's business, not a gap this row invents a model for. */
+ *  service's business, not a gap this row invents a model for. Smallest is
+ *  said in parameters (params_b), not in the card the model wants: a maker
+ *  that ships FP8 fits more parameters on less card, and the large row
+ *  holds one of those. */
 function membersOf(preset: typeof PRESETS[number]): Member[] {
   return preset.members
     .map(([scenario, key]) => catalogue.value[scenario]?.[key])
     .filter((p): p is Preset => !!p)
+    .sort((a, b) => (a.params_b ?? a.vram_gb) - (b.params_b ?? b.vram_gb))
     .map(p => ({
       id: p.id,
       label: (p.description.split(' - ')[0] ?? p.description).trim(),
       vram: p.vram_gb,
     }))
-    .sort((a, b) => a.vram - b.vram)
 }
 
 function applyPreset(id: string) {

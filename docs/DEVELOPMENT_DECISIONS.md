@@ -7,6 +7,45 @@
 
 ---
 
+## 2026-10-18: `flux3` has no Adaption instruction
+
+**Anlass:** The model card of FLUX 3 Image Klein says: "Do not use the model without a prompt upsampler." The system prompt of BFL's upsampler was checked part by part against the Adaption, which leaves the content of the Interception as it is (59eab5a8, SD 3.5). Justifiable as Adaption were its fidelity rules, its restrictions and three translations of a stated wish into the model's reading: a negation as what is present, "realistic" as a photograph, a time of day as light. Its expansion into a scene description and its content decisions are not: everything left open decided as one plan, a photograph where no style is given, a profile of every person in focus with ethnicity, gender, age range and skin tone, text written where none is given. A probe on 2026-10-18 ran five recorded Interception texts on the standard test prompt through Stage 3 (as the Flow sends them, `force_translation`) and `flux3` without an Adaption, with two seeds each. One negation became an object ("the potatoes lie under the surface", both seeds); no time of day became writing, and no image carried writing.
+
+**Entschieden:** `flux3` carries no `optimization_instruction`. The Interception text reaches FLUX 3 Image Klein as Stage 3 hands it over, as for SD 3.5 and Flux 2.
+
+**Begründung:** In the probe the justifiable parts would have caught one case. The other cases in the probe are metaphors taken literally ("a thin fire begins to run beneath the skin" as flames on the meadow, "makes the clay glow" as a glowing streak on the wall). They fall under the upsampler's rule to turn moods into observable physical facts, which is a content decision.
+
+**Betroffene Dateien:** none; `devserver/schemas/chunks/output_image_flux3.json` and `devserver/schemas/configs/output/flux3.json` carry no instruction.
+
+## 2026-10-18: FLUX 3 Image Klein and Gemini Nano Banana 2.1 stand in the Flow, on the Canvas and with the agents; Nano Banana 2.1 runs through Mammouth AI
+
+**Anlass:** The instruction of 2026-10-18 was to add FLUX 3 to the Flow and the Canvas and to make it available to the agents, and to make Gemini 3.1 available as far as the provider configuration allows, with the question whether OpenRouter allows it on the EU side. The model linked with it is Google's Gemini Nano Banana 2.1, which Google's model page names "An update to Nano Banana 2 (Gemini 3.1 Flash Image)".
+
+**Entschieden:**
+- `flux3` and the new config `gemini_nano_banana_2_1` stand in the Flow's image choice, after Flux 2 and after Gemini 3 Pro, in the three config lists of the agents (Resona's tool, Resona's canvas authoring, Persona) and in Trashy's reference. The Canvas generation node lists every output config, and so both.
+- `gemini_nano_banana_2_1` runs through Mammouth AI (`/v1/images/generations`, model `gemini-nano-banana-2.1`), as Gemini 3 Pro Image does. Its config is marked `frontier_image`: without a usable Mammouth account it is switched off in the Flow, and Settings shows it with its own rows under the API keys.
+- Neither config has a quality stage; the Flow card shows no quality line for them.
+
+**Begründung:** The platform reaches OpenRouter only on its EU host (`devserver/config/llm_providers.json`). That host's catalogue held no model with image output on 2026-10-18, and OpenRouter serves Nano Banana 2.1 through Google AI Studio only. Mammouth AI carries the model, and it is the platform's recorded GDPR route for Gemini 3 Pro Image (entry of 2026-09-23).
+
+**Abweichung:** The entry of 2026-09-23 sets one notice of four rows in Settings, for one frontier image model. With a second config marked `frontier_image`, Settings shows two blocks of four rows, and the Mammouth balance stands in both.
+
+**Offen:** No image has been generated with `gemini_nano_banana_2_1`; that Mammouth answers this model on `/v1/images/generations` with `data[0].b64_json` is not tested. On 2026-10-18 the Mammouth account of the development server had no credit, and both Gemini configs were switched off in the Flow. Workshop planning and preloading list neither new config. Google's Additional Terms for the Gemini API say "You must be 18 years of age or older to use the APIs" and exclude services "directed towards or ... likely to be accessed by individuals under the age of 18"; whether they bind the platform through Mammouth is not known. The new config carries no `audience` block.
+
+**Betroffene Dateien:** `devserver/schemas/chunks/output_image_gemini_nano_banana_2_1.json`, `devserver/schemas/configs/output/gemini_nano_banana_2_1.json`, `devserver/config/model_register.json`, `devserver/my_app/services/tool_registry.py`, `devserver/my_app/services/canvas_graph_authoring.py`, `devserver/trashy_interface_reference.txt`, `devserver/tests/test_output_config_carry_list.py`, `devserver/tests/test_safety_coverage_map.py`, `public/ai4artsed-frontend/src/views/x2x_flow.vue`, `public/ai4artsed-frontend/src/views/ai_persona.vue`, `public/ai4artsed-frontend/src/composables/useModelAvailability.ts`, `docs/QUALITAETSSTUFEN_MODELLE.md`
+
+## 2026-10-18: FLUX 3 Image Klein stands in the Latent Lab beside Flux 2
+
+**Anlass:** Black Forest Labs released FLUX 3 Image Klein on 2026-10-15. The instruction of 2026-10-18 was to install it, to keep Flux 2, also for the historical side of the Latent Lab, and to offer FLUX 3 wherever Flux 2 stands in the Latent Lab.
+
+**Entschieden:** The output config `flux3` runs the distilled FLUX 3 Image Klein checkpoint in BF16 on ComfyUI, which loads it from v0.41.0 on. "Flux 3 Klein" is selectable wherever Flux 2 is selectable in the Latent Lab, after Flux 2 in each list; no default selection and no set changed. Flux 2 stays.
+
+**Begründung:** The instruction above.
+
+**Offen:** The workflow leaves out BFL's prompt upsampler, although the model card says: "Do not use the model without a prompt upsampler." The prompt reaches the text encoder as the platform hands it over, and the config carries no `optimization_instruction`. The upsampler's system prompt gives every person in focus an ethnicity, a gender, an age range and a skin tone. `flux3` gets no Adaption instruction of the platform's own (entry "`flux3` has no Adaption instruction", 2026-10-18).
+
+**Betroffene Dateien:** `devserver/schemas/chunks/output_image_flux3.json`, `devserver/schemas/configs/output/flux3.json`, `devserver/config/model_register.json`, `devserver/tests/test_safety_coverage_map.py`, `public/ai4artsed-frontend/src/data/rasterImageModels.ts`, `public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`, `public/ai4artsed-frontend/src/views/compare/model_comparison.vue`, `public/ai4artsed-frontend/src/views/compare/language_comparison.vue`, `public/ai4artsed-frontend/src/i18n/en.ts`, `devserver/trashy_interface_reference.txt`, `devserver/my_app/knowledge/platform_items.json`, `download_flux3.sh`
+
 ## 2026-10-10: The halt at the prompt is cancelled, and its machinery is removed
 
 **Anlass:** The entry of 2026-09-03 had cancelled the halt of 2026-08-28 (the older entry says so itself), and `x2x_flow.vue` still carried the halt: the docstring over `runGenerate` and the page description claimed the halt, the code set `heldRun` and continued it in the same synchronous step, so the halt face of the generate box was never rendered (code review 2026-10-10, finding S-014).
@@ -1066,7 +1105,7 @@
 - **Sampling temperature on Representation Engineering is held at the backend default 0.7 and not offered.** The three cells of a row must differ in alpha and nothing else, and a row must stay reproducible from its seed. (`public/ai4artsed-frontend/src/views/latent_lab/representation_engineering.vue`)
 - **Three contrast pairs are the whole set on Representation Engineering.** Three suffice for a common direction, and a fourth ray clutters the drawing. (`public/ai4artsed-frontend/src/views/latent_lab/representation_engineering.vue`)
 - **No paid model is offered on Mean Images.** One press asks for a whole set per row, up to fifty calls; the platform keeps paid models out of anything a press multiplies. (`public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`)
-- **Model rows on Mean Images are ordered fastest to slowest, and only the fastest row is marked when the surface opens.** Four rows marked by default would be up to four hundred generations from an untouched surface. (`public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`)
+- **Model rows on Mean Images are ordered fastest to slowest, and only the fastest row is marked when the surface opens.** Five rows marked by default would be up to five hundred generations from an untouched surface. (`public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`)
 - **A press on Mean Images extends the existing run; a complete regeneration happens only where everything on the surface is already generated.** A row switched on later costs that row alone. (`public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`)
 - **Every control on the one-plus-three column surfaces stands in the left column.** It is the uniform layout rule of the Latent Lab instruments. (`public/ai4artsed-frontend/src/views/latent_lab/mean_images.vue`)
 - **Flow Logic runs downward in three columns, one per procedure.** The procedures are parallel. (`public/ai4artsed-frontend/src/views/latent_lab/flow_logic.vue`)
@@ -1108,7 +1147,7 @@
 
 **Compare**
 
-- **Effect-check surfaces (Interception Scope) limit the image models to SD 3.5 and Flux 2.** The picture is a check and no subject. (`public/ai4artsed-frontend/src/data/rasterImageModels.ts`)
+- **Effect-check surfaces (Interception Scope) limit the image models to SD 3.5, Flux 2 and, since 2026-10-18, Flux 3 Klein.** The picture is a check and no subject. (`public/ai4artsed-frontend/src/data/rasterImageModels.ts`)
 - **The voice test sentences hold one tale per language and never a translation; Korean is the exception and carries the German tale translated.** Prosody is a property of a language, and no accessible public-domain Korean rendering by a Korean author exists. (`public/ai4artsed-frontend/src/data/voiceTestSentences.ts`)
 
 **Resona and Help**

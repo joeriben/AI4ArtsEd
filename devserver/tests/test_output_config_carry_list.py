@@ -11,7 +11,7 @@ one of them fails differently when the config is renamed, retired or replaced:
   4. LATENT_LAB_CHUNKS                    — test_latent_lab_model_policy.py
   5. the seed the chunk receives          — test_python_chunk_seed_policy.py
   6. output_config_defaults.json          — here
-  7. the eight configs the two agents may run, which stand three times — here
+  7. the configs the two agents may run, which stand three times — here
 
 Four of the six already had a guard. This file holds the ones that did not, plus
 the spine they all rest on: that a config actually leads to a chunk that exists.
@@ -390,7 +390,7 @@ def test_the_exception_list_holds_no_stale_entries():
         f"is a config now. Remove the entry.")
 
 # ---------------------------------------------------------------------------
-# 7. The eight text->media configs an agent may run, which stand three times.
+# 7. The text->media configs an agent may run, which stand three times.
 # ---------------------------------------------------------------------------
 # Resona reaches them through a tool, Persona through a line of prompt text, and
 # the canvas author through a dict — three shapes of the same permission, none
@@ -434,7 +434,7 @@ def _persona_configs():
     return _PERSONA_ENTRY.findall(text[start:end])
 
 
-def test_the_two_agents_and_the_canvas_offer_the_same_eight_configs():
+def test_the_two_agents_and_the_canvas_offer_the_same_configs():
     """Point 7. The tool registry is the copy the run actually validates
     against, so it sets the count; the other two have to match it."""
     tool = _dict_keys(TOOL_REGISTRY, "resona_media_configs")

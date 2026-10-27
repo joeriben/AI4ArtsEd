@@ -26,86 +26,550 @@
     "examples (small = up to 32 B); on an image network, where 8 B",
     "is the top of the field, they wrote small beside SD 3.5 Large.",
     "An image network carries its count alone; a closed one",
-    "without a published count is still very large."
+    "without a published count is still very large.",
+    "",
+    "name and country are what a list of language models shows a model as:",
+    "'Qwen 3.8 (China 2026) 27b' (useModelRegister.modelLabel). name is the",
+    "model's own name without its size, which follows it from params_b.",
+    "country is the maker's, and 'makers' at the end records it with the page",
+    "it was read off: the seat of the maker or of the group it belongs to",
+    "(Google DeepMind: Google LLC), as an ISO 3166 code; a consortium across",
+    "several European countries is '150', the UN code for Europe. The surface",
+    "names it in the reader's language (Intl.DisplayNames), so no word for",
+    "the reader stands here."
   ],
 
   "models": {
     "smollm3:3b": {
+      "name": "SmolLM3",
       "maker": "Hugging Face",
+      "country": "US",
       "year": 2025,
       "openness": "open",
       "params_b": 3,
       "source": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B"
     },
     "qwen3.5:4b": {
+      "name": "Qwen 3.5",
       "maker": "Alibaba",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 4,
       "source": "https://huggingface.co/Qwen/Qwen3.5-4B"
     },
     "qwen3.5:9b": {
+      "name": "Qwen 3.5",
       "maker": "Alibaba",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 9,
       "source": "https://huggingface.co/Qwen/Qwen3.5-9B"
     },
     "qwen3.5:27b": {
+      "name": "Qwen 3.5",
       "maker": "Alibaba",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 27,
       "source": "https://huggingface.co/Qwen/Qwen3.5-27B"
     },
     "glm-5.3": {
+      "name": "GLM-5.3",
       "maker": "Z.ai",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 753,
       "source": "https://huggingface.co/zai-org/GLM-5.3"
     },
     "kimi-k3": {
+      "name": "Kimi K3",
       "maker": "Moonshot AI",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 2800,
       "source": "https://huggingface.co/moonshotai/Kimi-K3"
     },
     "gemini-3.7-flash": {
+      "name": "Gemini 3.7 Flash",
       "maker": "Google DeepMind",
+      "country": "US",
       "year": 2026,
       "openness": "closed",
       "params_b": null,
       "source": "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
     },
     "mistral-large-3": {
+      "name": "Mistral Large 3",
       "maker": "Mistral AI",
+      "country": "FR",
       "year": 2025,
       "openness": "weights",
       "params_b": 675,
       "source": "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512"
     },
     "deepseek-v4-pro": {
+      "name": "DeepSeek V4 Pro",
       "maker": "DeepSeek",
+      "country": "CN",
       "year": 2026,
       "openness": "weights",
       "params_b": 1600,
       "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
     },
     "claude-sonnet-5": {
+      "name": "Claude Sonnet 5",
       "maker": "Anthropic",
+      "country": "US",
       "year": 2026,
       "openness": "closed",
       "params_b": null,
       "source": "https://platform.claude.com/docs/en/models/sonnet-5/overview"
     },
     "gpt-5.6-terra": {
+      "name": "GPT-5.6 Terra",
       "maker": "OpenAI",
+      "country": "US",
       "year": 2026,
       "openness": "closed",
       "params_b": null,
       "source": "https://developers.openai.com/api/docs/models/gpt-5.6-terra"
+    },
+    "mixtral-8x22b-instruct": {
+      "name": "Mixtral 8x22B",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 141,
+      "source": "https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1"
+    },
+    "mistral-nemo": {
+      "name": "Mistral NeMo",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 12,
+      "source": "https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407"
+    },
+    "mistral-large-2407": {
+      "name": "Mistral Large 2407",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 123,
+      "source": "https://huggingface.co/mistralai/Mistral-Large-Instruct-2407"
+    },
+    "mistral-small-24b-instruct-2501": {
+      "name": "Mistral Small 3",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 24,
+      "source": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501"
+    },
+    "mistral-medium-3.1": {
+      "name": "Mistral Medium 3.1",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://docs.mistral.ai/models/mistral-medium-3-1-25-08"
+    },
+    "mistral-large-4-0": {
+      "name": "Mistral Large 4",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": 1000,
+      "source": "https://mistral.ai/news/mistral-large-4"
+    },
+    "gpt-3.5-turbo-0613": {
+      "name": "GPT-3.5 Turbo 0613",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2023,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    "gpt-4": {
+      "name": "GPT-4",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2023,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://cdn.openai.com/papers/gpt-4.pdf"
+    },
+    "gpt-4o": {
+      "name": "GPT-4o",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2024,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/changelog"
+    },
+    "gpt-4.1": {
+      "name": "GPT-4.1",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/changelog"
+    },
+    "gpt-5": {
+      "name": "GPT-5",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/changelog"
+    },
+    "gpt-6-sol": {
+      "name": "GPT-6 Sol",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://developers.openai.com/api/docs/changelog"
+    },
+    "gpt-oss-120b": {
+      "name": "gpt-oss",
+      "maker": "OpenAI",
+      "country": "US",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 117,
+      "source": "https://huggingface.co/openai/gpt-oss-120b"
+    },
+    "claude-opus-4.1": {
+      "name": "Claude Opus 4.1",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://www.anthropic.com/news/claude-opus-4-1"
+    },
+    "claude-sonnet-4.5": {
+      "name": "Claude Sonnet 4.5",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://www.anthropic.com/news/claude-sonnet-4-5"
+    },
+    "claude-opus-5.5": {
+      "name": "Claude Opus 5.5",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://platform.claude.com/docs/en/models/opus-5-5/overview"
+    },
+    "llama-3.1-70b-instruct": {
+      "name": "Llama 3.1",
+      "maker": "Meta",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 70,
+      "source": "https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct"
+    },
+    "llama-3.3-70b-instruct": {
+      "name": "Llama 3.3",
+      "maker": "Meta",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 70,
+      "source": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+    },
+    "llama-4-maverick": {
+      "name": "Llama 4 Maverick",
+      "maker": "Meta",
+      "country": "US",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 402,
+      "source": "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct"
+    },
+    "gemma-2-27b-it": {
+      "name": "Gemma 2",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 27,
+      "source": "https://huggingface.co/google/gemma-2-27b-it"
+    },
+    "gemini-2.5-pro": {
+      "name": "Gemini 2.5 Pro",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/"
+    },
+    "gemma-4-31b-it": {
+      "name": "Gemma 4",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 30.7,
+      "source": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    "qwen-2.5-72b-instruct": {
+      "name": "Qwen 2.5",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 72.7,
+      "source": "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct"
+    },
+    "qwen3-235b-a22b-2507": {
+      "name": "Qwen 3 2507",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 235,
+      "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507"
+    },
+    "qwen3.5-397b-a17b": {
+      "name": "Qwen 3.5",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 397,
+      "source": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
+    },
+    "qwen3.8-max-0902": {
+      "name": "Qwen 3.8 Max",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": 2400,
+      "source": "https://www.alibabagroup.com/document-2021044032125272064"
+    },
+    "deepseek-v3": {
+      "name": "DeepSeek V3",
+      "maker": "DeepSeek",
+      "country": "CN",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 671,
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+    },
+    "deepseek-r1-0528": {
+      "name": "DeepSeek R1 0528",
+      "maker": "DeepSeek",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 685,
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-R1-0528"
+    },
+    "deepseek-v3.2": {
+      "name": "DeepSeek V3.2",
+      "maker": "DeepSeek",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 685,
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2"
+    },
+    "glm-4.5": {
+      "name": "GLM-4.5",
+      "maker": "Z.ai",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 355,
+      "source": "https://huggingface.co/zai-org/GLM-4.5"
+    },
+    "glm-5": {
+      "name": "GLM-5",
+      "maker": "Z.ai",
+      "country": "CN",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 744,
+      "source": "https://huggingface.co/zai-org/GLM-5"
+    },
+    "kimi-k2": {
+      "name": "Kimi K2",
+      "maker": "Moonshot AI",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 1000,
+      "source": "https://huggingface.co/moonshotai/Kimi-K2-Instruct"
+    },
+    "minimax-01": {
+      "name": "MiniMax-Text-01",
+      "maker": "MiniMax",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 456,
+      "source": "https://huggingface.co/MiniMaxAI/MiniMax-Text-01"
+    },
+    "minimax-m3": {
+      "name": "MiniMax M3",
+      "maker": "MiniMax",
+      "country": "CN",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 428,
+      "source": "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+    },
+    "qwen3.8:27b": {
+      "name": "Qwen 3.8",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 27,
+      "source": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    "qwen3:4b": {
+      "name": "Qwen 3",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 4,
+      "source": "https://huggingface.co/Qwen/Qwen3-4B"
+    },
+    "qwen3:1.7b": {
+      "name": "Qwen 3",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 1.7,
+      "source": "https://huggingface.co/Qwen/Qwen3-1.7B"
+    },
+    "qwen3-vl:32b": {
+      "name": "Qwen 3 VL",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 33.4,
+      "source": "https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct"
+    },
+    "qwen3-vl:8b": {
+      "name": "Qwen 3 VL",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 8.8,
+      "source": "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct"
+    },
+    "qwen3-vl:4b": {
+      "name": "Qwen 3 VL",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 4.4,
+      "source": "https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct"
+    },
+    "qwen3-vl:2b": {
+      "name": "Qwen 3 VL",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 2.1,
+      "source": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct"
+    },
+    "devstral:24b": {
+      "name": "Devstral Small 2",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 24,
+      "source": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512"
+    },
+    "ministral3:3b": {
+      "name": "Ministral 3",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 3.8,
+      "source": "https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512"
+    },
+    "gemma-3-4b": {
+      "name": "Gemma 3",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 4.3,
+      "source": "https://huggingface.co/google/gemma-3-4b-it"
+    },
+    "llama3.2:3b": {
+      "name": "Llama 3.2",
+      "maker": "Meta",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 3.21,
+      "source": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct"
+    },
+    "eurollm:1.7b": {
+      "name": "EuroLLM",
+      "maker": "Unbabel et al.",
+      "country": "150",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 1.7,
+      "source": "https://huggingface.co/utter-project/EuroLLM-1.7B-Instruct"
+    },
+    "granite3.1:2b": {
+      "name": "Granite 3.1",
+      "maker": "IBM",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 2.5,
+      "source": "https://huggingface.co/ibm-granite/granite-3.1-2b-instruct"
+    },
+    "apertus:8b": {
+      "name": "Apertus",
+      "maker": "ETH Zurich · EPFL",
+      "country": "CH",
+      "year": 2025,
+      "openness": "open",
+      "params_b": 8,
+      "source": "https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509"
     },
 
     "sd15": {
@@ -148,6 +612,22 @@
       "params_b": 32,
       "source": "https://bfl.ai/blog/flux-2"
     },
+    "gemini_nano_banana_2_1": {
+      "maker": "Google DeepMind",
+      "year": 2026,
+      "openness": "closed",
+      "medium": "image",
+      "params_b": null,
+      "source": "https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1"
+    },
+    "flux3": {
+      "maker": "Black Forest Labs",
+      "year": 2026,
+      "openness": "weights",
+      "medium": "image",
+      "params_b": 5.6,
+      "source": "https://bfl.ai/blog/flux-3-image-klein"
+    },
     "gemini_3_pro_image": {
       "maker": "Google DeepMind",
       "year": 2025,
@@ -162,5 +642,23 @@
     "openWeights": ["mistral-large-3", "deepseek-v4-pro", "glm-5.3", "kimi-k3"],
     "closedWeights": ["claude-sonnet-5", "gemini-3.7-flash", "gpt-5.6-terra"],
     "family": ["qwen3.5:4b", "qwen3.5:9b", "qwen3.5:27b"]
+  }
+,
+
+  "makers": {
+    "Alibaba": {"country": "CN", "source": "https://en.wikipedia.org/wiki/Alibaba_Group"},
+    "Anthropic": {"country": "US", "source": "https://www.anthropic.com/legal/consumer-terms"},
+    "DeepSeek": {"country": "CN", "source": "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html"},
+    "ETH Zurich · EPFL": {"country": "CH", "source": "https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509"},
+    "Google DeepMind": {"country": "US", "source": "https://policies.google.com/terms?hl=en&gl=us"},
+    "Hugging Face": {"country": "US", "source": "https://en.wikipedia.org/wiki/Hugging_Face"},
+    "IBM": {"country": "US", "source": "https://en.wikipedia.org/wiki/IBM"},
+    "Meta": {"country": "US", "source": "https://en.wikipedia.org/wiki/Meta_Platforms"},
+    "MiniMax": {"country": "CN", "source": "https://platform.minimaxi.com/protocol/privacy-policy"},
+    "Mistral AI": {"country": "FR", "source": "https://legal.mistral.ai/terms/commercial-terms-of-service"},
+    "Moonshot AI": {"country": "CN", "source": "https://www.moonshot.cn/"},
+    "OpenAI": {"country": "US", "source": "https://en.wikipedia.org/wiki/OpenAI"},
+    "Unbabel et al.": {"country": "150", "source": "https://huggingface.co/utter-project/EuroLLM-1.7B-Instruct"},
+    "Z.ai": {"country": "CN", "source": "https://en.wikipedia.org/wiki/Z.ai"}
   }
 }

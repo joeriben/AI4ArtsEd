@@ -4,6 +4,9 @@
  * festem Karton" had lit the sound glyph through the 'ton' inside "Karton", and
  * the flow generated audio for a picture. Whole words alone would have lost
  * every inflected form and every compound; both are held here.
+ *
+ * Since 2026-10-16 (UCD-260) a medium word also outweighs any number of scene
+ * words, German painting vocabulary is read, and the drawing compounds close.
  */
 import { describe, it, expect } from 'vitest'
 import { ref } from 'vue'
@@ -50,6 +53,7 @@ describe('medium inference', () => {
     for (const text of [
       'Karton', 'Beton', 'a stone wall', 'cotton', 'Gliedmaßen', 'warme Farbtöne',
       'im Einklang', 'eine Straßenszene', 'die Kunstbewegung', 'Distanz', 'emotion',
+      'die Bezeichnung der Farben',
     ]) {
       expect(read(text).media, text).toEqual([])
     }
@@ -78,9 +82,14 @@ describe('medium inference', () => {
       ['ein Kurzfilm über Freundschaft', 'video'],
       ['Videospiel', 'video'],
       ['Filmmusik für einen Western', 'video'],
-      ['Tanzmusik', 'video'],
+      // Since 2026-10-16: the medium word 'musik' closes the compound, and the
+      // scene word 'tanz' that opens it no longer outweighs it — Tanzmusik is
+      // music (UCD-260).
+      ['Tanzmusik', 'sound'],
       ['ein Ölgemälde', 'image'],
       ['eine Holzskulptur', '3d'],
+      ['Bleistiftzeichnung eines Hundes, der läuft', 'image'],
+      ['Kohlezeichnungen eines Baumes', 'image'],
     ]
     for (const [text, medium] of cases) expect(read(text).primary, text).toBe(medium)
   })
@@ -100,5 +109,18 @@ describe('medium inference', () => {
   it('names the earliest medium, and the picture when none is named', () => {
     expect(read('ein Lied über ein Bild').primary).toBe('sound')
     expect(read('ein roter Kreis').primary).toBe('image')
+  })
+
+  it('keeps a named picture a picture, however much moves in it (UCD-260)', () => {
+    const cases: Array<[string, string]> = [
+      ['Kinder laufen über eine Wiese, gemalt als Aquarell', 'image'],
+      ['Kinder malen ein Haus, tanzt im Wind', 'image'],
+      ['Landschaft in Aquarell, Wolken ziehen langsam', 'image'],
+      ['Ein Bild von Kindern, die über eine Wiese laufen', 'image'],
+      ['Ein Foto von Vögeln, die fliegen', 'image'],
+      ['ein Gemälde, in dem Kinder laufen, tanzen und fliegen', 'image'],
+      ['Video einer Landschaft', 'video'],
+    ]
+    for (const [text, medium] of cases) expect(read(text).primary, text).toBe(medium)
   })
 })

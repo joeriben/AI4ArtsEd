@@ -205,10 +205,16 @@ class LLMService:
         Public because the installer asks it too (local_llm_install._role_models):
         no role on the settings page names this model.
         """
-        # Dedicated channel model: the platform's IMAGE_ANALYSIS_MODEL (qwen3-vl:32b)
-        # OOMs through the GPU-service chat route (ollama default context), while
-        # qwen3-vl:4b is description-equivalent (probe25/G1 series, 4b/32b kappa 0.896).
-        # Override via RESONA_VIEW_VLM_MODEL in user_settings.json; _chat strips "local/".
+        # A model of its own rather than IMAGE_ANALYSIS_MODEL. On the primary
+        # category of 120 images, qwen3-vl:4b agreed with qwen3-vl:32b in 93.3 %
+        # (kappa 0.896; series G1-G2, 2026-07-02; the data are in
+        # joeriben/ai4artsed_research since 2026-09-06). The 32b failed on the
+        # GPU service's chat route on 2026-07-03 (HTTP 500), which the look no
+        # longer takes: _chat goes through LLMClient to ComfyUI.
+        # Override via RESONA_VIEW_VLM_MODEL in user_settings.json, read here
+        # rather than from config because the installer runs in a process that
+        # never loads the settings; a "local/" prefix is accepted
+        # (local_llm_weights.resolve_alias).
         model = "qwen3-vl:4b"
         try:
             import json as _json

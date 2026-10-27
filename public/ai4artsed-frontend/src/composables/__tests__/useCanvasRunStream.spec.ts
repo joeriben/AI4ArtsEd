@@ -206,6 +206,46 @@ describe('startCanvasRun', () => {
     expect(handle.lastEventIndex).toBe(3)
   })
 
+  it('reconnects a stream that throws a network tear mid-run and collects the completion', async () => {
+    const events: CanvasSSEEvent[] = []
+    const encoder = new TextEncoder()
+    let sent = false
+    // the live stream delivers run_started, then the browser throws a tear
+    const tornResponse = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      body: {
+        getReader: () => ({
+          read: () => {
+            if (!sent) {
+              sent = true
+              return Promise.resolve({ done: false, value: encoder.encode(frame('run_started', { run_id: 'r9' }, 0)) })
+            }
+            return Promise.reject(new TypeError('network error'))
+          },
+          cancel: () => Promise.resolve(),
+        }),
+      },
+    } as unknown as Response
+    fetchMock.mockImplementation((input) => {
+      const url = String(input)
+      if (url === '/api/canvas/execute-stream') return Promise.resolve(tornResponse)
+      if (url === '/api/canvas/runs/r9/status') return Promise.resolve(jsonResponse({ state: 'complete' }))
+      if (url === '/api/canvas/execute-stream/r9?after=0') {
+        return Promise.resolve(sseResponse([frame('complete', {}, 1)]))
+      }
+      return Promise.reject(new Error('unexpected fetch: ' + url))
+    })
+    const handle = startCanvasRun(PAYLOAD, {
+      reconnect: true,
+      reconnectBackoffsMs: [1, 1],
+      onEvent: (e) => events.push(e),
+    })
+    expect(await handle.done).toEqual({ kind: 'complete' })
+    expect(events.map((e) => e.type)).toEqual(['run_started', 'complete'])
+  })
+
   it('does not reconnect past a server-side hard stop (interrupted)', async () => {
     fetchMock.mockImplementation((input) => {
       const url = String(input)

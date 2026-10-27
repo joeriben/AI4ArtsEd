@@ -1,0 +1,59 @@
+name: "sd35_pipeline"
+backend: "python"
+max_batch_size: 1
+input [
+  {
+    name: "prompt"
+    data_type: TYPE_STRING
+    dims: [1]
+  },
+  {
+    name: "negative_prompt"
+    data_type: TYPE_STRING
+    dims: [1]
+    optional: true
+  },
+  {
+    name: "num_inference_steps"
+    data_type: TYPE_INT32
+    dims: [1]
+    optional: true
+  },
+  {
+    name: "guidance_scale"
+    data_type: TYPE_FP32
+    dims: [1]
+    optional: true
+  },
+  {
+    name: "width"
+    data_type: TYPE_INT32
+    dims: [1]
+    optional: true
+  },
+  {
+    name: "height"
+    data_type: TYPE_INT32
+    dims: [1]
+    optional: true
+  },
+  {
+    name: "seed"
+    data_type: TYPE_INT64
+    dims: [1]
+    optional: true
+  }
+]
+output [
+  {
+    name: "image"
+    data_type: TYPE_UINT8
+    dims: [-1, -1, 3]
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]

@@ -23,6 +23,9 @@ from typing import Dict, List, Any, Optional, Generator, Tuple
 from my_app.services.safety_level_resolver import STRICTEST
 
 from schemas.engine.prompt_interception_engine import PromptInterceptionEngine, PromptInterceptionRequest
+from my_app.services.translation_instruction import (
+    CANVAS_TRANSLATION_INSTRUCTION, CANVAS_TRANSLATION_LANGUAGE, language_name,
+)
 
 
 def _configured_canvas_model(config_attr: str) -> str:
@@ -117,6 +120,11 @@ def _load_interception_context(config_id: str, lang: Optional[str] = None) -> Tu
 
 
 logger = logging.getLogger(__name__)
+
+
+def _field_text(value) -> str:
+    """A node's text field, stripped; a saved or authored node can carry anything there."""
+    return value.strip() if isinstance(value, str) else ''
 
 
 def as_seed(value) -> Optional[int]:
@@ -819,12 +827,16 @@ class CanvasWorkflowExecutor:
         # The interception node is the Canvas's Stage 2, so it gets what Stage 2
         # gets: the platform's task instruction, and with it the cultural-respect
         # rule and the safety prefix for this run's level. Without it the lens
-        # text stood alone as the instruction (2026-09-07).
-        from schemas.engine.instruction_selector import get_instruction
+        # text stood alone as the instruction (2026-09-07). A star standing on
+        # its own in the text keeps its place, as it does in Stage 2
+        # (PLACEHOLDER_CLAUSE); here the clause rides on the instruction, since
+        # the engine assembles this prompt itself and writes the Context last.
+        from schemas.engine.instruction_selector import get_instruction, get_placeholder_clause
         req = PromptInterceptionRequest(
             input_prompt=input_data, style_prompt=context_prompt,
-            task_instruction=get_instruction('transformation',
-                                             safety_level=self.safety_level),
+            task_instruction=(get_instruction('transformation',
+                                              safety_level=self.safety_level)
+                              + get_placeholder_clause(input_data, 'Prompt')),
             model=llm_model, debug=True
         )
         response = asyncio.run(self.engine.process_request(req))
@@ -851,14 +863,29 @@ class CanvasWorkflowExecutor:
 
     def _execute_translation(self, node: Dict[str, Any], node_id: str, input_data: Any) -> Tuple[str, str, None]:
         llm_model = node.get('llmModel') or _configured_canvas_model('STAGE3_MODEL')
-        translation_prompt = node.get('translationPrompt', 'Translate to English:')
+        instruction = _field_text(node.get('translationPrompt'))
+        language = _field_text(node.get('translationLanguage'))
+        # A field left empty is the default the node shows in it. An own
+        # instruction with no language chosen names its language itself, as
+        # every one did before the node had a language (2026-10-24).
+        if not instruction:
+            instruction = CANVAS_TRANSLATION_INSTRUCTION
+            language = language or CANVAS_TRANSLATION_LANGUAGE
 
         if not input_data:
             self.results[node_id] = {'type': 'translation', 'output': '', 'error': 'No input'}
             return '', 'text', None
 
+        # Built here, not by the engine: the engine's own assembly appends its
+        # rules for running prose, among them "reply in the language of the
+        # input", the opposite of a translation.
+        parts = [instruction]
+        if language:
+            parts.append(f"Target language: {language_name(language)}")
+        parts.append(f"Text:\n{str(input_data).strip()}")
+        prompt = "\n\n".join(parts)
         req = PromptInterceptionRequest(
-            input_prompt=input_data, style_prompt=translation_prompt,
+            input_prompt=input_data, prebuilt_prompt=prompt,
             model=llm_model, debug=True
         )
         response = asyncio.run(self.engine.process_request(req))

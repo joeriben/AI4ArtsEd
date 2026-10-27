@@ -220,6 +220,8 @@ if $MODELS_OK; then
     echo "Next: ./download_qwen.sh  (~51 GB — Qwen Image Edit + 2511 multi, required"
     echo "                            for qwen_img2img and qwen_2511_multi configs)"
     echo "      ./download_flux2.sh  (~70 GB — Flux 2 dev + Mistral text encoder)"
+    echo "      ./download_flux3.sh  (~20 GB — FLUX 3 Image Klein + Qwen3-VL-4B text encoder;"
+    echo "                            gated, needs ComfyUI >= 0.41.0)"
     echo "      ./download_llm_models.sh    (the local language models, models/llm/)"
     echo "      ./download_media_models.sh  (~105 GB — Stable Audio 3, ImageBind, MMAudio,"
     echo "                                   HeartMuLa, Hunyuan3D 2, the media readers,"

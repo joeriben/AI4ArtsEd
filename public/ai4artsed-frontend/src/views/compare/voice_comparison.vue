@@ -1681,7 +1681,7 @@ onBeforeUnmount(() => {
 }
 
 /* The platform's drop-down (registry: Klapplisten), formed like
-   `.preset-select` in system_prompt_comparison.vue: the 236 speakers of the
+   `.cmp-pick-row > select` in assets/compare-stage.css: the 236 speakers of the
    German corpus file, a list no row of fields could hold. */
 .vc-select {
   width: 100%;

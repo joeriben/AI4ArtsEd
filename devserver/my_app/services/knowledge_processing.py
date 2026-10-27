@@ -90,6 +90,10 @@ _LANG_DISPLAY_NAMES: Dict[str, str] = {
     "tr": "TURKISH",
     "ko": "KOREAN",
     "uk": "UKRAINIAN",
+    "es": "SPANISH",
+    "ar": "ARABIC",
+    "bg": "BULGARIAN",
+    "he": "HEBREW",
 }
 
 
@@ -1644,6 +1648,46 @@ def _validate(doc_id: str, markdown: str, raw_chars: int,
 # Orchestration
 # ===========================================================================
 
+def _map_units_side_by_side(units: List[Unit], budgets: List[int], llm: LlmFn, *,
+                            mode: str, target_lang: str, workers: int,
+                            cancelled: Callable[[], bool],
+                            log: Callable[[str], None],
+                            report: Callable[[int], None]) -> List[SectionDigest]:
+    """The Map step of process_document with `workers` calls in flight at once.
+
+    Each unit is its own _map_unit call with its own budget, as in the
+    one-at-a-time loop, and the digests are returned in the document's order.
+    The cancel check is read whenever calls return: the calls not yet started
+    are dropped, the ones in flight finish on their threads and are discarded.
+    """
+    from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+
+    results: List[Optional[SectionDigest]] = [None] * len(units)
+    pool = ThreadPoolExecutor(max_workers=workers, thread_name_prefix="kp-map")
+    try:
+        index = {
+            pool.submit(_map_unit, unit, budget, llm, mode=mode,
+                        target_lang=target_lang): i
+            for i, (unit, budget) in enumerate(zip(units, budgets))
+        }
+        log(f"verdichte {len(units)} Einheiten, {workers} zugleich")
+        pending = set(index)
+        done_n = 0
+        while pending:
+            finished, pending = wait(pending, return_when=FIRST_COMPLETED)
+            for fut in finished:
+                i = index[fut]
+                results[i] = fut.result()
+                done_n += 1
+                log(f"verdichtet {done_n}/{len(units)} (~{budgets[i]} W): {units[i].heading}")
+                report(done_n)
+            if cancelled():
+                raise ProcessingCancelled(units_done=done_n)
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
+    return [r for r in results if r is not None]
+
+
 def process_document(
     raw_md: str,
     front_matter: Dict[str, Any],
@@ -1652,6 +1696,8 @@ def process_document(
     mode: str = "auto",
     target_lang: str = DEFAULT_ANALYSIS_LANG,
     cancel_check: Optional[Callable[[], bool]] = None,
+    on_progress: Optional[Callable[[int, int], None]] = None,
+    map_workers: int = 1,
 ) -> ProcessingResult:
     """Process ONE raw Docling Markdown into a compact knowledge file.
 
@@ -1672,6 +1718,18 @@ def process_document(
     sits at the unit boundary (the coarsest place where an in-flight LLM call has
     just returned), so an abort takes effect within one Map call, never mid-call.
     Default None keeps every existing caller (CLI, tests) unchanged.
+
+    `on_progress(units_done, units_total)`, when given, is called once the
+    units are known and after every Map call: the numbers a surface shows
+    while the run goes on, where `progress` carries the same steps as log
+    lines. The PROFIL Reduce follows the last of them.
+
+    `map_workers` > 1 runs that many Map calls at once. The units are
+    independent of one another, each call keeps its own budget, and the
+    digests come back in the document's order, so the result is the one the
+    one-at-a-time loop produces; only the waiting overlaps. The library
+    runs one at a time (default 1); the flow's document summary runs
+    several (scene_ingest_service), because a group waits at the board.
 
     mode:
       * "auto" (default): detect_mode() picks standard vs essay from structure
@@ -1803,20 +1861,37 @@ def process_document(
     if _cancelled():
         raise ProcessingCancelled(units_done=0)
 
+    def _unit_budget(unit: Unit) -> int:
+        if mode == "essay":
+            return max(unit_floor, int(total_budget / n_units))
+        return max(unit_floor, int(total_budget * unit.chars / total_unit_chars))
+
+    def _report(done: int) -> None:
+        if on_progress is None:
+            return
+        try:
+            on_progress(done, len(units))
+        except Exception:  # noqa: BLE001 - a display must never break a run
+            pass
+
     # 3) Map — one call per unit, each with its share of the budget. The cancel
     # check sits at the unit boundary: an operator abort takes effect after the
     # current unit's LLM call returns, never mid-call (the coarsest safe point).
+    _report(0)
     digests: List[SectionDigest] = []
-    for i, unit in enumerate(units, 1):
-        if mode == "essay":
-            unit_budget = max(unit_floor, int(total_budget / n_units))
-        else:
-            unit_budget = max(unit_floor,
-                              int(total_budget * unit.chars / total_unit_chars))
-        _log(f"verdichte Einheit {i}/{len(units)} (~{unit_budget} W): {unit.heading}")
-        digests.append(_map_unit(unit, unit_budget, llm, mode=mode, target_lang=target_lang))
-        if _cancelled():
-            raise ProcessingCancelled(units_done=i)
+    if map_workers > 1 and len(units) > 1:
+        digests = _map_units_side_by_side(
+            units, [_unit_budget(u) for u in units], llm, mode=mode,
+            target_lang=target_lang, workers=map_workers,
+            cancelled=_cancelled, log=_log, report=_report)
+    else:
+        for i, unit in enumerate(units, 1):
+            unit_budget = _unit_budget(unit)
+            _log(f"verdichte Einheit {i}/{len(units)} (~{unit_budget} W): {unit.heading}")
+            digests.append(_map_unit(unit, unit_budget, llm, mode=mode, target_lang=target_lang))
+            _report(i)
+            if _cancelled():
+                raise ProcessingCancelled(units_done=i)
 
     # 4) Reduce — one call for the PROFIL.
     _log("erzeuge PROFIL (Reduce)")

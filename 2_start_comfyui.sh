@@ -13,8 +13,11 @@ COMFYUI_PORT=17804
 # Get directory where this script lives (repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Record the terminal output into a protocol file where the installation has _record.sh
 RECORD_SERVICE_NAME="ComfyUI"
-source "$SCRIPT_DIR/_record.sh"
+if [ -f "$SCRIPT_DIR/_record.sh" ]; then
+    source "$SCRIPT_DIR/_record.sh"
+fi
 
 # ComfyUI location (standalone installation, overridable via env)
 COMFYUI_DIR="${COMFYUI_DIR:-$SCRIPT_DIR/dlbackend/ComfyUI}"

@@ -189,8 +189,12 @@ function handleUpdateNodeContextPrompt(nodeId: string, prompt: string) {
   canvasStore.updateNode(nodeId, { contextPrompt: prompt })
 }
 
-function handleUpdateNodeTranslationPrompt(nodeId: string, prompt: string) {
+function handleUpdateNodeTranslationPrompt(nodeId: string, prompt: string | undefined) {
   canvasStore.updateNode(nodeId, { translationPrompt: prompt })
+}
+
+function handleUpdateNodeTranslationLanguage(nodeId: string, language: string | undefined) {
+  canvasStore.updateNode(nodeId, { translationLanguage: language })
 }
 
 function handleUpdateNodePromptText(nodeId: string, text: string) {
@@ -800,6 +804,7 @@ onUnmounted(() => {
             @update-node-llm="handleUpdateNodeLLM"
             @update-node-context-prompt="handleUpdateNodeContextPrompt"
             @update-node-translation-prompt="handleUpdateNodeTranslationPrompt"
+            @update-node-translation-language="handleUpdateNodeTranslationLanguage"
             @update-node-prompt-text="handleUpdateNodePromptText"
             @update-node-size="handleUpdateNodeSize"
             @update-node-evaluation-type="handleUpdateNodeEvaluationType"

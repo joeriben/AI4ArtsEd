@@ -1,0 +1,46 @@
+{
+  "name": "output_image_gemini_nano_banana_2_1",
+  "type": "api_output_chunk",
+  "backend_type": "mammouth",
+  "media_type": "image",
+  "description": "Google Gemini Nano Banana 2.1 via Mammouth AI (EU)",
+  "api_config": {
+    "provider": "mammouth",
+    "model": "gemini-nano-banana-2.1",
+    "endpoint": "https://api.mammouth.ai/v1/images/generations",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "request_body": {
+      "model": "gemini-nano-banana-2.1",
+      "prompt": "{{PROMPT}}",
+      "n": 1,
+      "size": "1024x1024"
+    }
+  },
+  "input_mappings": {
+    "prompt": {
+      "field": "request_body.prompt",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "Image generation prompt"
+    },
+    "size": {
+      "field": "request_body.size",
+      "default": "1024x1024",
+      "description": "Image dimensions"
+    }
+  },
+  "output_mapping": {
+    "type": "images_api_base64",
+    "format": "base64",
+    "extract_path": "data[0].b64_json",
+    "description": "Extract base64 image data from OpenAI-compatible Images API response"
+  },
+  "meta": {
+    "requires_gpu": false,
+    "api_provider": "mammouth",
+    "model_id": "gemini-nano-banana-2.1",
+    "notes": "Google Gemini Nano Banana 2.1 via Mammouth AI (EU), on the OpenAI-compatible images/generations endpoint the Gemini 3 Pro Image chunk uses. Google's model page names it an update to Nano Banana 2 (Gemini 3.1 Flash Image), latest update October 2026. No estimated duration and no quality rating: neither has been measured or set for this model."
+  }
+}

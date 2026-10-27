@@ -12,6 +12,11 @@ Commit-Historie nachweisbar.
 
 ### Geändert
 
+- Die Lizenz, nun Version 1.1, benennt die Folge des Research-Modus außerhalb
+  der Forschung: Lizenzverstoß, Verlust des kostenlosen Nutzungsrechts und eine
+  erhebliche Nutzungsgebühren-Forderung. LICENSE.md führt den Absatz in §3(e)
+  in deutscher und englischer Fassung; die Lizenzseite und das README tragen
+  die Folge je in einem Satz (dd37b62a).
 - Code-Kommentare, Dokumentation und das Entscheidungsprotokoll
   `docs/DEVELOPMENT_DECISIONS.md` nennen keine Personen, zitieren keine
   Gespräche und verweisen auf keine Entwicklungssitzungen mehr. Skripte leiten
@@ -22,10 +27,26 @@ Commit-Historie nachweisbar.
 
 ### Hinzugefügt
 
+- Der Übersetzungsknoten im Canvas wählt die Zielsprache: ein Aufklappmenü
+  mit den Sprachen der Plattform, als letzte Option eine frei geschriebene
+  Sprache und, wo der Übersetzungs-Prompt der eigene ist, die Wahl aus dem
+  Prompt; eine Zeile meldet, wenn sich die Standard-Anweisung nicht laden
+  ließ (807ccbd5, 3775bf34).
+- Die Safety-Kriterien je Stufe stehen als interne Unterlage mit Quelle und
+  Datum je Kriterium und den Entscheidungen, auf denen sie ruhen; ein
+  Quellenverzeichnis löst die Kurznamen auf. Der öffentliche Export schließt
+  sie aus (66169d56, 934c426c).
 - `scripts/public_export/` erzeugt die öffentliche Fassung des Repositories
   aus einer Ausschlussliste. `devserver/tests/test_public_surface_clean.py`
   prüft die mitgelieferten Dateien auf Personenzuschreibungen,
   Sitzungsverweise und private Pfade (Gate 10 im Pre-Commit-Hook).
+
+### Behoben
+
+- Reißt im Canvas der Lauf-Stream vor dem Ende ab, verbindet sich die Seite
+  neu, und die Ausgabe erhält den beendeten Lauf. Bisher öffnete die
+  Canvas-Seite den Stream ohne Wiederverbindung; der Server beendete den Lauf,
+  die Ausgabe blieb im Wartezustand (f5bc08fe, 322883a7).
 
 ## [v2.0.0-beta.1] — 2026-10-01
 

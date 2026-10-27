@@ -1,33 +1,43 @@
-"""Szenen-Kapsel-Pipeline — FIFO-Job-Service (UCD-132).
+"""Document summaries in the flow — FIFO job service.
 
-The pipeline's own single-FIFO job runner, mirroring
-knowledge_ingest_service.py's tested idiom (keyed status registry + circular
-log buffer + one worker thread), with the PDF lifecycle of plan §6:
+A PDF the flow's plus brings in is summarised the way the knowledge library
+condenses a document: Docling turns it into raw Markdown, and
+knowledge_processing.process_document condenses that into a profile, the
+condensed sections and a glossary. The library procedure runs unchanged,
+with two differences: several Map calls run at once (map_workers), and the
+summary is written in the language of the surface it was brought in from.
+Until 2026-09-28 this job turned a document into image-prompt "scene
+capsules" (UCD-132); that was never commissioned, and it was removed.
+
+The runner mirrors knowledge_ingest_service.py's tested idiom (keyed status
+registry + circular log buffer + one worker thread):
 
   1. Stage-A gate (UCD-131) runs in the UPLOAD ROUTE, before any enqueue —
      rejected files are never stored, never queued.
   2. Docling -> raw MD, into a JOB-SCOPED workdir (a temp dir owned by this
-     job, NOT the durable originals dir — the flow document space keeps no
-     source files, plan §6).
-  3. Segment-Map with Stufe-B fields + capsule-Reduce with the fail-closed
-     capsule gate (scene_capsule_pipeline.process_document_to_capsules,
-     in-process, provider-routed like the library Verdichtung).
-  4. Persist into the SESSION document space (scene_document_space):
-     capsules.json, segments.json, document.json (provenance incl. docHash).
+     job; the flow's document space keeps no source files).
+  3. The library's condensation (process_document), in-process,
+     provider-routed like the library run (role KNOWLEDGE_PROCESSING_MODEL).
+  4. The safety check over what the card shows: the profile, each condensed
+     section and the glossary are checked one by one, with the question the
+     platform asks for the safety level the route resolved, and against the
+     curated lists of the upload gate. A part that fails is withheld and
+     only counted. A check that gives no answer ends the job as a technical
+     fault, never as a verdict, and nothing is stored.
   5. Lifecycle: at job end — success, error, cancel, ANY outcome — the raw
-     PDF bytes AND the extracted full-text MD are DELETED (acceptance 3).
-     What remains: capsules + segment digests + hash-index entry + audit.
+     PDF bytes AND the extracted full-text MD are DELETED.
+  6. Persist into the SESSION document space (scene_document_space):
+     summary.json + document.json (provenance incl. docHash).
 
-Hash-index protection (§5 layer 1): the route consults the session space's
-own hash map before enqueue; a re-upload of the SAME document within the
-session gets a 409-style duplicate answer with the existing doc_id and
-provenance — no second analysis, no second cost (acceptance 5).
+Hash-index protection: the route consults the session space's own hash map
+before enqueue; a re-upload of the SAME document within the session gets a
+409-style duplicate answer with the existing doc_id — no second run.
 
 The GPU slot (CLAUDE.md rule 15, UCD-141): step 2 holds the plant-wide lease
 "docling" for as long as the Docling process runs — the same venv, and the same
 finding, as knowledge_ingest_service: Docling's OCR and layout models select
 cuda:0 wherever they find a card (UCD-132 E2E, 2026-09-27). The conflict
-behaviour is the gate's own: a capsule job that starts while a generation runs
+behaviour is the gate's own: a summary job that starts while a generation runs
 WAITS in the gate's queue until the generation ends, and a generation that
 starts while a conversion runs waits the same way for the conversion. Only the
 gate's own refusals end the job instead of queueing it — a full queue, a wait
@@ -38,6 +48,7 @@ holds on that path too: the raw PDF is deleted before the job goes to `error`.
 from __future__ import annotations
 
 import logging
+import re
 import subprocess
 import threading
 import uuid
@@ -45,13 +56,20 @@ from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 from queue import Queue
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from my_app.services import scene_document_space as space
 
 logger = logging.getLogger(__name__)
 
 _LOG_MAX = 1000
+
+# How many Map calls of the condensation run at once. The library runs them
+# one after another; a document of 35 sections took eleven minutes that way
+# on 2026-09-28, with a group waiting at the board. The calls go to the
+# provider of KNOWLEDGE_PROCESSING_MODEL, whose fallback chain answers when
+# one provider refuses.
+SUMMARY_MAP_WORKERS = 6
 
 _JOBS: Dict[str, Dict[str, Any]] = {}
 _JOBS_LOCK = threading.Lock()
@@ -144,12 +162,15 @@ def enqueue_scene_ingest(
     staged_pdf: Path,
     raw_hash: str,
     doc_id: str,
-    max_capsules: int = 30,
+    lang: str,
+    safety_level: str,
 ) -> str:
-    """Register a scene-pipeline job and return its job_id. The route has
-    ALREADY run the Stage-A gate and staged the PDF into a job temp dir; the
-    worker moves it into its own job-scoped workdir and deletes ALL raw
-    artefacts at job end (§6)."""
+    """Register a summary job and return its job_id. The route has ALREADY
+    run the Stage-A gate and staged the PDF into a job temp dir; the worker
+    deletes ALL raw artefacts at job end. `lang` is the language the summary
+    is written in (the surface's), `safety_level` the level the route
+    resolved at the request boundary: the worker thread has no session to
+    resolve it from (safety_level_resolver)."""
     job_id = uuid.uuid4().hex[:12]
     with _JOBS_LOCK:
         _JOBS[job_id] = {
@@ -163,6 +184,9 @@ def enqueue_scene_ingest(
             "created_at": _now(),
             "started_at": None,
             "finished_at": None,
+            # Sections condensed / total, once the condensation knows its
+            # units (on_progress); None while the job waits or converts.
+            "progress": None,
             "_log": deque(maxlen=_LOG_MAX),
             "_cancel": threading.Event(),
             "_proc": None,
@@ -172,7 +196,8 @@ def enqueue_scene_ingest(
                 "title": title,
                 "staged_pdf": str(staged_pdf),
                 "raw_hash": raw_hash,
-                "max_capsules": max_capsules,
+                "lang": lang,
+                "safety_level": safety_level,
             },
         }
     _ensure_worker()
@@ -210,6 +235,7 @@ def _public_view(job: Dict[str, Any], log_tail: int) -> Dict[str, Any]:
         "created_at": job["created_at"],
         "started_at": job["started_at"],
         "finished_at": job["finished_at"],
+        "progress": job.get("progress"),
         "log_tail": log,
     }
 
@@ -290,6 +316,7 @@ def _run_docling(job_id: str, pdf_path: Path, raw_out: Path) -> int:
                         "finishes first)…")
     with gpu_lease_sync(kind="docling", model_id="docling", required_mb=0,
                         label="Docling: scene-" + job_id):
+        _set(job_id, message="docling")
         if _is_cancelled(job_id):
             # The cancel arrived while this job stood in the gate's queue, where
             # there was no process to terminate. Do not start one now; the caller
@@ -323,6 +350,95 @@ def _delete_raw(workdir: Path) -> List[str]:
     return removed
 
 
+def summary_from_markdown(md: str) -> Dict[str, Any]:
+    """The parts of a library condensation the document card shows: the
+    profile, the condensed sections, the glossary. Read with the library's
+    own section readers (knowledge_library), the file format being theirs."""
+    from my_app.services import knowledge_library as kl
+
+    top = kl._admin_top_sections(md)
+    return {
+        "profile": top.get("PROFIL", "").strip(),
+        "sections": _wissen_sections(top.get("WISSEN", "")),
+        "glossary": [
+            {"term": g["term"], "definition": g["definition"]}
+            for g in kl._admin_parse_glossary(top.get("GLOSSAR", ""))
+        ],
+    }
+
+
+_WISSEN_HEADING_RE = re.compile(r"^###\s+(.*\S)\s*$")
+_QUELLE_RE = re.compile(r"<!--\s*quelle:.*?-->", re.DOTALL)
+
+
+def _wissen_sections(wissen: str) -> List[Dict[str, str]]:
+    """The ### subsections of WISSEN as heading + body. The review anchors
+    (<!-- quelle: … -->) are curation plumbing and stay out, as in the
+    library's own read-only view (KnowledgeLibraryTab.vue parseWissenSections)."""
+    out: List[Dict[str, str]] = []
+    heading: Optional[str] = None
+    body: List[str] = []
+
+    def _flush() -> None:
+        text = _QUELLE_RE.sub("", "\n".join(body)).strip()
+        if heading or text:
+            out.append({"heading": (heading or "").strip(), "body": text})
+
+    for line in (wissen or "").splitlines():
+        m = _WISSEN_HEADING_RE.match(line)
+        if m:
+            _flush()
+            heading, body = m.group(1), []
+        else:
+            body.append(line)
+    _flush()
+    return out
+
+
+def _check_summary(summary: Dict[str, Any],
+                   safety_level: str) -> Tuple[Dict[str, Any], int]:
+    """The safety check over every part the card shows, each part on its own:
+    the profile, each condensed section (heading and text), the glossary.
+
+    The question is the platform's (llm_service.check_safety: the classifier's
+    question for the level; adult and research return before it), and the
+    curated lists of the upload gate are scanned too, at every level. A part
+    that fails is withheld and counted, never shown. A check that gives no
+    answer raises: a technical fault is never a verdict, and the caller ends
+    the job without storing anything.
+    """
+    from my_app.services import upload_gate
+    from my_app.services.llm_service import llm_service
+
+    def _passes(text: str) -> bool:
+        if not text.strip():
+            return True
+        if upload_gate.scan_text_layer(text.lower()) is not None:
+            return False
+        verdict = llm_service.check_safety(text, safety_level)
+        if verdict.get("unavailable"):
+            raise RuntimeError(str(verdict.get("reason") or "no verdict"))
+        return bool(verdict.get("is_safe"))
+
+    withheld = 0
+    profile = summary["profile"]
+    if profile and not _passes(profile):
+        profile = ""
+        withheld += 1
+    sections: List[Dict[str, str]] = []
+    for s in summary["sections"]:
+        if _passes(f"{s['heading']}\n\n{s['body']}"):
+            sections.append(s)
+        else:
+            withheld += 1
+    glossary = summary["glossary"]
+    if glossary and not _passes(
+            "\n".join(f"{g['term']}: {g['definition']}" for g in glossary)):
+        glossary = []
+        withheld += 1
+    return {"profile": profile, "sections": sections, "glossary": glossary}, withheld
+
+
 def _run_job(job_id: str) -> None:
     with _JOBS_LOCK:
         job = _JOBS.get(job_id)
@@ -346,7 +462,9 @@ def _run_job(job_id: str) -> None:
     pdf_path = Path(spec["staged_pdf"])
     raw_out = workdir / "raw.md"
 
-    _set(job_id, state="running", message="docling", started_at=_now())
+    # "gpu-wait" until the gate admits the conversion (_run_docling), then
+    # "docling": the card on the board names the two steps apart.
+    _set(job_id, state="running", message="gpu-wait", started_at=_now())
 
     # --- step 1: Docling -> raw MD (subprocess, Docling venv) ---------------
     from my_app.services.gpu_lease_client import GpuBusyError
@@ -373,87 +491,106 @@ def _run_job(job_id: str) -> None:
              message=f"docling failed (code {rc})", returncode=rc, finished_at=_now())
         _append_log(job_id, f"docling failed; Arbeitsverzeichnis bereinigt ({len(removed)} Dateien)")
         return
-    _append_log(job_id, "docling OK; running Szenen-Pipeline in-process…")
+    _append_log(job_id, "docling OK; running the library condensation in-process…")
 
-    # --- step 2+3: segment map (Stufe B) + capsule reduce (gate) ------------
-    _set(job_id, message="szenen-pipeline")
-    from my_app.services import scene_capsule_pipeline as scp
+    # --- step 3: the library's condensation (knowledge_processing) ---------
+    _set(job_id, message="summary")
+    from my_app.services import knowledge_processing as kp
 
     cancel_check: Callable[[], bool] = lambda: _is_cancelled(job_id)
     try:
         raw_md = raw_out.read_text(encoding="utf-8")
-        result = scp.process_document_to_capsules(
+        result = kp.process_document(
             raw_md,
-            doc_id=spec["doc_id"],
+            {"id": spec["doc_id"], "titel": spec["title"]},
             progress=lambda m: _append_log(job_id, m),
+            target_lang=spec["lang"],
             cancel_check=cancel_check,
-            max_capsules=int(spec.get("max_capsules", 30)),
+            on_progress=lambda done, total: _set(
+                job_id, progress={"units_done": done, "units_total": total}),
+            map_workers=SUMMARY_MAP_WORKERS,
         )
     except Exception as e:  # noqa: BLE001
         # ProcessingCancelled (operator abort) lands here too — the raw files
-        # die either way (§6: the job ends with a bereinigtes Arbeitsverzeichnis).
-        from my_app.services import knowledge_processing as kp
-
+        # die either way: the job ends with a cleaned workdir.
         cancelled = isinstance(e, kp.ProcessingCancelled)
         removed = _delete_raw(workdir)
         _append_log(job_id, f"Arbeitsverzeichnis bereinigt ({len(removed)} Dateien: PDF-Rohbytes + Volltext-MD)")
         if cancelled:
             _set(job_id, state="cancelled", message="cancelled", finished_at=_now())
         else:
-            logger.exception("[SZENE-JOB] pipeline failed on %s", job_id)
-            _append_log(job_id, f"pipeline error: {e}")
-            _set(job_id, state="error", message=f"pipeline failed: {e}", finished_at=_now())
+            logger.exception("[SZENE-JOB] summary failed on %s", job_id)
+            _append_log(job_id, f"summary error: {e}")
+            _set(job_id, state="error", message=f"summary failed: {e}", finished_at=_now())
         return
 
-    if result["fatal"]:
-        for reason in result["fatal"]:
+    if result.fatal:
+        for reason in result.fatal:
             _append_log(job_id, f"FATAL: {reason}")
         removed = _delete_raw(workdir)
         _set(job_id, state="error",
-             message=f"pipeline failed sanity check: {result['fatal'][0]}",
+             message=f"summary failed sanity check: {result.fatal[0]}",
              finished_at=_now())
         return
 
-    # --- step 4: persist into the SESSION document space --------------------
+    # --- step 4: the safety check over what the card shows -----------------
+    try:
+        summary = summary_from_markdown(result.markdown)
+    except Exception as e:  # noqa: BLE001
+        removed = _delete_raw(workdir)
+        logger.exception("[SZENE-JOB] summary unreadable on %s", job_id)
+        _set(job_id, state="error", message=f"summary unreadable: {e}", finished_at=_now())
+        return
+    _set(job_id, message="check")
+    try:
+        summary, n_withheld = _check_summary(summary, spec["safety_level"])
+    except Exception as e:  # noqa: BLE001
+        # No answer from the check is a technical fault, never a verdict
+        # (safety_classifier): nothing is stored, and the card says so.
+        removed = _delete_raw(workdir)
+        logger.error("[SZENE-JOB] safety check gave no answer on %s: %s", job_id, e)
+        _append_log(job_id, f"safety check gave no answer: {e}; "
+                            f"Arbeitsverzeichnis bereinigt ({len(removed)} Dateien)")
+        _set(job_id, state="error", message="check-unavailable", finished_at=_now())
+        return
+
     from my_app.services import upload_gate
 
     md_h = upload_gate.md_hash(raw_md)
 
-    # --- step 5: §6 lifecycle — PDF-Rohbytes + Volltext-MD löschen -----------
+    # --- step 5: lifecycle — PDF-Rohbytes + Volltext-MD löschen ------------
     removed = _delete_raw(workdir)
     _append_log(
         job_id,
         f"Rohdaten gelöscht ({', '.join(removed) if removed else 'nichts'}): "
-        "PDF-Rohbytes und Volltext-MD; Kapseln + Segment-Verdichtungen bleiben.",
+        "PDF-Rohbytes und Volltext-MD; die Zusammenfassung bleibt.",
     )
 
+    # --- step 6: persist into the SESSION document space -------------------
     meta = {
         "doc_id": spec["doc_id"],
         "title": spec["title"],
         "journal_id": spec["journal_id"],
         "doc_hash": spec["raw_hash"],
         "md_hash": md_h,
-        "analyzed_at": result.get("analyzed_at") or _now(),
-        "analysis_model": ", ".join(dict.fromkeys(result.get("models_used", []))),
-        "analysis_lang": result.get("analysis_lang", "de"),
-        "n_flagged_segments": result["n_flagged_segments"],
-        "n_discarded_capsules": result["n_discarded_capsules"],
-        "mode": result.get("mode", "standard"),
+        "analyzed_at": result.analyzed_at or _now(),
+        "analysis_model": result.analysis_model,
+        "analysis_lang": result.analysis_lang,
+        "safety_level": spec["safety_level"],
+        "n_withheld": n_withheld,
         "job_id": job_id,
     }
-    d = space.store_document(
-        spec["journal_id"], spec["doc_id"],
-        capsules=result["capsules"], segments=result["segments"], meta=meta,
-    )
+    d = space.store_document(spec["journal_id"], spec["doc_id"],
+                             summary=summary, meta=meta)
     if d is None:
         _set(job_id, state="error", message="document space id unusable",
              finished_at=_now())
         return
     _append_log(
         job_id,
-        f"fertig: {len(result['capsules'])} Kapseln, "
-        f"{len(result['segments'])} Segment-Verdichtungen, "
-        f"{result['n_flagged_segments']} Abschnitte ausgeschlossen (Schutzgründe), "
-        f"{result['n_discarded_capsules']} Kapseln verworfen (Kapsel-Gate)",
+        f"fertig: Profil {'da' if summary['profile'] else 'zurückgehalten'}, "
+        f"{len(summary['sections'])} Abschnitte, "
+        f"{len(summary['glossary'])} Glossar-Begriffe, "
+        f"{n_withheld} Teile von der Prüfung zurückgehalten",
     )
     _set(job_id, state="done", message="done", returncode=0, finished_at=_now())

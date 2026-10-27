@@ -1,7 +1,9 @@
-"""Szenen-Kapsel-Pipeline at the ROUTE level (UCD-132) — acceptance 5 and the
-admission surface:
+"""The flow's document summary at the ROUTE level (from UCD-132) — the
+duplicate answer and the admission surface:
 
-  * a PDF upload with journal_id enqueues a scene job (after the Stage-A gate),
+  * a PDF upload with journal_id enqueues a summary job (after the Stage-A
+    gate), with the surface's language and the safety level resolved at the
+    request,
   * a REJECTED file (Stage-A hit) never enqueues, never stages — audit only,
   * the SAME document re-uploaded within the session gets the 409 duplicate
     answer with provenance and NO second job (acceptance 5),
@@ -78,6 +80,20 @@ class TestSceneUploadRoute:
         assert body["doc_id"].startswith("doc-")
         assert len(enqueued) == 1
         assert enqueued[0]["journal_id"] == "j-1"
+        # No language in the form: the library default.
+        assert enqueued[0]["lang"] == "en"
+        assert enqueued[0]["safety_level"] in ("kids", "youth", "open", "adult", "research")
+
+    def test_the_surface_language_reaches_the_job(self, app_client):
+        client, enqueued, tmp = app_client
+        r = client.post(
+            "/api/scene/upload",
+            data={"document": (io.BytesIO(mk_pdf()), "doc.pdf"), "journal_id": "j",
+                  "lang": "de"},
+            content_type="multipart/form-data",
+        )
+        assert r.status_code == 200, r.get_json()
+        assert enqueued[0]["lang"] == "de"
 
     def test_rejected_pdf_never_enqueues(self, app_client):
         client, enqueued, tmp = app_client
@@ -124,20 +140,18 @@ class TestDuplicateWithinSession:
         raw_hash = ug.sha256_hex(pdf)
         space.store_document(
             "j-dup", f"doc-{raw_hash[:12]}",
-            capsules=[{"scene": "x", "prompt": "y",
-                      "safety": {"verdict": "pass", "categories": []},
-                      "anchor": {"chapter": "k", "probe": "p"}}],
-            segments=[],
+            summary={"profile": "P", "sections": [{"heading": "H", "body": "B"}],
+                     "glossary": []},
             meta={"doc_id": f"doc-{raw_hash[:12]}", "doc_hash": raw_hash,
                   "title": "T", "analyzed_at": "2026-09-27T12:00:00+00:00",
                   "analysis_model": "stub/model", "analysis_lang": "de",
-                  "n_flagged_segments": 0, "n_discarded_capsules": 0},
+                  "n_withheld": 0},
         )
         r2 = _upload(client, pdf, journal_id="j-dup")
         assert r2.status_code == 409, r2.get_json()
         body = r2.get_json()
         assert body["duplicate"] is True
-        assert body["n_capsules"] == 1
+        assert body["doc_id"] == f"doc-{raw_hash[:12]}"
         assert "bereits analysiert" in body["error"]
         # NO second analysis
         assert len(enqueued) == 1

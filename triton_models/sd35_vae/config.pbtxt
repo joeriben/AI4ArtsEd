@@ -1,0 +1,23 @@
+name: "sd35_vae"
+platform: "tensorrt_plan"
+max_batch_size: 4
+input [
+  {
+    name: "latent"
+    data_type: TYPE_FP16
+    dims: [16, -1, -1]
+  }
+]
+output [
+  {
+    name: "sample"
+    data_type: TYPE_FP16
+    dims: [3, -1, -1]
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]
