@@ -3458,8 +3458,11 @@ export const de = {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Die Seite nimmt ein Bild entgegen, hochgeladen oder hier gezeichnet, und bietet darunter sechs Perspektiven an: zwei Beschreibungen, eine kunsthistorische, eine bildungstheoretische, eine ethische, eine kritische. Die Seite trägt die gewählte Perspektive als Auftrag in das Feld darunter ein. Mehrere Vision-Modelle führen den Auftrag aus; alle bekommen dasselbe Bild.',
-        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Der Vergleich mit dem Bild trennt in einer Lesart, was sie beschreibt, was sie deutet und was sie hinzusetzt. Eine Lesart kann Dinge nennen, die im Bild fehlen, etwa eine Farbe in einer Schwarzweiß-Fotografie. Dasselbe Bild in zwei Läufen unter zwei Perspektiven zeigt, was die Perspektive an der Lesart ändert: die Form, manchmal auch die Tatsachenbehauptungen.',
+        // 2026-11-15: Sätze 1 und 2 stehen wieder, wie sie bis zum 2026-11-08 standen; die Projektleitung hat
+        // sie am 2026-11-15 bestätigt, sie bleiben wörtlich. Satz 1 hielt der Quellkommentar in
+        // pageAddress.ts. Die Sätze danach: gestrichen und berichtigt, nicht neu geschrieben
+        // (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Hier geht es nicht darum, die Arbeit der Bildinterpretation abzunehmen: Die maschinellen Interpretationen sind selbst der Gegenstand. Maschinelle Bildauswertung entscheidet über Menschen: Aus ihr folgen Diagnosen, Festnahmen, Zurückweisungen an der Grenze — Menschen sind verhaftet worden, weil ein System ihr Gesicht einem Bild zugeordnet hat, und die Auswertung selbst bekommen die Betroffenen selten zu sehen. Der Vergleich mit dem Bild trennt in einer Lesart, was sie beschreibt, was sie deutet und was sie hinzusetzt. Eine Lesart kann Dinge nennen, die im Bild fehlen, etwa eine Farbe in einer Schwarzweiß-Fotografie. Dasselbe Bild in zwei Läufen unter zwei Perspektiven zeigt, was die Perspektive an der Lesart ändert: die Form, manchmal auch die Tatsachenbehauptungen.',
       },
       language: {
         // Address, German authored, English set after it (2026-11-07).

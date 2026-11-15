@@ -103,6 +103,11 @@ psutil==7.0.0
 toml==0.10.2
 
 # ============================================================================
+# Packaging
+# ============================================================================
+setuptools==80.9.0  # ImageBind imports pkg_resources, which setuptools 81 removed
+
+# ============================================================================
 # Optional — Lazy-loaded, not required for core functionality
 # ============================================================================
 # boto3                  # AWS Bedrock LLM calls (only if using AWS)

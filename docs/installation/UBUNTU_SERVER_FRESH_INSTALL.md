@@ -359,6 +359,13 @@ cmake -S ~/ai/ai4artsed_development/llama.cpp -B ~/ai/ai4artsed_development/llam
 cmake --build ~/ai/ai4artsed_development/llama.cpp/build --target llama-server -j "$(nproc)"
 ```
 
+On Ubuntu 26.04 (glibc 2.43) the `nvcc` of CUDA 13.0 stops in glibc's `mathcalls.h` with
+"exception specification is incompatible with that of previous function \"rsqrt\"", and so
+does the build of Hunyuan3D's `custom_rasterizer` (3.6, `install_comfyui_media_libs.sh`). The
+`nvcc` of CUDA 13.2 builds both: configure llama.cpp with
+`CUDACXX=/usr/local/cuda-13.2/bin/nvcc` and run the media installer with
+`CUDA_HOME=/usr/local/cuda-13.2` (seen on 2026-11-15).
+
 Verify — this is also what `check_prerequisites.sh` probes:
 
 ```bash

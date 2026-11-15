@@ -106,8 +106,13 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
     noteKey: 'compare.ask.note',
   },
   // Image Understanding. First half: the picture, the six perspectives and
-  // the field they fill; second half: what a reading describes, interprets
-  // and adds, and the rules of the critical perspective.
+  // the field they fill. Second half: the machine readings are themselves the
+  // matter of study, and the sentence that says so stays, because a surface
+  // that has models read pictures invites exactly the opposite reading; then
+  // why that weighs, since machine image analysis already decides about
+  // people. The project lead confirmed both sentences on 2026-11-15, and they
+  // stay word for word. After them: what a reading describes, interprets and
+  // adds, and what a second perspective changes in it.
   '/latent-lab/image-understanding': {
     storyKey: 'compare.address.vlm-analysis.story',
     purposeKey: 'compare.address.vlm-analysis.purpose',

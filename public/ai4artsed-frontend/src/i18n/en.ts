@@ -4098,8 +4098,11 @@ export const en = {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'The page takes in a picture, uploaded or drawn here, and offers six perspectives underneath: two descriptions, an art-historical one, an educational-theory one, an ethical one, a critical one. The page enters the chosen perspective into the field below as an instruction. Several vision models carry out the instruction; all of them get the same picture.',
-        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'The comparison with the picture separates, in a reading, what it describes, what it interprets and what it adds. A reading can name things missing from the picture, for instance a colour in a black-and-white photograph. The same picture in two runs under two perspectives shows what the perspective changes in the reading: the form, and sometimes the claims of fact.',
+        // 2026-11-15: sentences 1 and 2 stand again as they stood until 2026-11-08; the project lead
+        // confirmed them on 2026-11-15, they stay word for word. The source comment in pageAddress.ts
+        // held sentence 1. The sentences after them: struck and corrected, nothing newly written
+        // (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'This is not here to take the work of interpreting a picture off anyone\'s hands: the machine\'s interpretations are themselves the matter. Machine image analysis decides about people: diagnoses, arrests and refusals at a border follow from it — people have been arrested because a system matched their face to a picture, and those affected rarely get to see the analysis itself. The comparison with the picture separates, in a reading, what it describes, what it interprets and what it adds. A reading can name things missing from the picture, for instance a colour in a black-and-white photograph. The same picture in two runs under two perspectives shows what the perspective changes in the reading: the form, and sometimes the claims of fact.',
       },
       language: {
         // Address, German authored, English set after it (2026-11-07).

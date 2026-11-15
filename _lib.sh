@@ -47,10 +47,27 @@ download_file() {
         echo "Downloading: $(basename "$output")"
     fi
 
+    # A gated repository (SD 3.5 Large Turbo, FLUX 3) answers 401 to a request
+    # without the account's token. The token comes from HF_TOKEN, else from
+    # the file huggingface-cli login writes (HF_TOKEN_PATH, else $HF_HOME/token).
+    local auth=()
+    case "$url" in
+        https://huggingface.co/*)
+            local token="${HF_TOKEN:-}"
+            local token_file="${HF_TOKEN_PATH:-${HF_HOME:-$HOME/.cache/huggingface}/token}"
+            if [ -z "$token" ] && [ -r "$token_file" ]; then
+                token="$(tr -d '[:space:]' < "$token_file")"
+            fi
+            if [ -n "$token" ]; then
+                auth=(--header="Authorization: Bearer $token")
+            fi
+            ;;
+    esac
+
     if [ "$DOWNLOADER" = "aria2c" ]; then
-        aria2c -c -x 16 -s 16 -d "$(dirname "$output")" -o "$(basename "$part")" "$url"
+        aria2c -c -x 16 -s 16 "${auth[@]}" -d "$(dirname "$output")" -o "$(basename "$part")" "$url"
     else
-        wget -c "$url" -O "$part"
+        wget -c "${auth[@]}" "$url" -O "$part"
     fi || {
         echo -e "${RED}✗${NC} Failed to download: $(basename "$output") (what arrived stays in $(basename "$part") for the next run)"
         return 1

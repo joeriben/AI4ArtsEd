@@ -13,9 +13,9 @@
 
 --extra-index-url https://download.pytorch.org/whl/nightly/cu130
 
-torch==2.14.0.dev20260810+cu130
-torchaudio==2.11.0.dev20260811+cu130
-torchvision==0.29.0.dev20260811+cu130
+torch @ https://download.pytorch.org/whl/nightly/cu130/torch-2.14.0.dev20260810%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+torchaudio @ https://download.pytorch.org/whl/nightly/cu130/torchaudio-2.11.0.dev20260811%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+torchvision @ https://download.pytorch.org/whl/nightly/cu130/torchvision-0.29.0.dev20260811%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
 torchao==0.15.0
 #
 # NOTE (2026-10-09): the old pins (dev20260203) were removed from the nightly
@@ -24,3 +24,9 @@ torchao==0.15.0
 # test: CUDA available, DevServer and all four voice systems green.
 # torch is dev20260810, torchaudio/torchvision dev20260811 — the closest
 # same-generation builds the index offered at install time.
+#
+# NOTE (2026-11-15): the nightly index stops listing a build after about two
+# months, while its wheel files stay on download.pytorch.org. The three pins
+# above therefore name the files directly (Python 3.13, x86_64): a fresh
+# install on 2026-11-15 failed on the plain version pins of the same builds
+# and succeeded with these URLs.
