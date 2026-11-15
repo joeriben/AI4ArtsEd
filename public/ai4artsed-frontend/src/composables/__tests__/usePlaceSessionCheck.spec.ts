@@ -14,6 +14,7 @@ const { auth, push, order } = vi.hoisted(() => {
       user: null as unknown,
       fetchMe: vi.fn(async () => { order.push('fetchMe') }),
       checkPlaceSession: vi.fn(async () => {}),
+      checkLeaderSession: vi.fn(async () => {}),
       dismissEndedPlace: vi.fn(() => { order.push('dismiss') }),
     },
     push: vi.fn(async (to: unknown) => { order.push(`push ${JSON.stringify(to)}`) }),
@@ -52,6 +53,7 @@ beforeEach(() => {
   order.length = 0
   auth.fetchMe.mockClear()
   auth.checkPlaceSession.mockClear()
+  auth.checkLeaderSession.mockClear()
   auth.dismissEndedPlace.mockClear()
   push.mockClear()
 })
@@ -79,6 +81,9 @@ describe('usePlaceSessionCheck', () => {
     vi.advanceTimersByTime(PLACE_CHECK_MS)
     expect(auth.checkPlaceSession).toHaveBeenCalledTimes(1)
     expect(auth.checkPlaceSession).toHaveBeenLastCalledWith(true)
+    // the same interval asks for a leader's course (2026-11-14)
+    expect(auth.checkLeaderSession).toHaveBeenCalledTimes(1)
+    expect(auth.checkLeaderSession).toHaveBeenLastCalledWith(true)
     vi.advanceTimersByTime(PLACE_CHECK_MS)
     expect(auth.checkPlaceSession).toHaveBeenCalledTimes(2)
     visibility = 'hidden'
@@ -93,6 +98,7 @@ describe('usePlaceSessionCheck', () => {
     toFront('visible')
     expect(auth.checkPlaceSession).toHaveBeenCalledTimes(1)
     expect(auth.checkPlaceSession).toHaveBeenLastCalledWith()
+    expect(auth.checkLeaderSession).toHaveBeenCalledTimes(1)
     window.dispatchEvent(new Event('focus'))
     expect(auth.checkPlaceSession).toHaveBeenCalledTimes(2)
     expect(auth.checkPlaceSession).toHaveBeenLastCalledWith()
@@ -106,6 +112,7 @@ describe('usePlaceSessionCheck', () => {
     toFront('visible')
     window.dispatchEvent(new Event('focus'))
     expect(auth.checkPlaceSession).not.toHaveBeenCalled()
+    expect(auth.checkLeaderSession).not.toHaveBeenCalled()
   })
 
   it('"Sign in" closes the row, takes over what the server says, and then opens the login', async () => {

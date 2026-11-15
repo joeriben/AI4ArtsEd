@@ -11,7 +11,8 @@
     "es": "Latent Lab",
     "he": "Latent Lab",
     "ar": "Latent Lab",
-    "bg": "Latent Lab"
+    "bg": "Latent Lab",
+    "zh-hant": "Latent Lab"
   },
   "description": {
     "en": "Deconstructive platform for exploring vector and latent spaces. Reveals how generative models construct meaning internally through attention maps, feature probing, concept algebra, and more.",
@@ -22,6 +23,7 @@
     "he": "פלטפורמה דקונסטרוקטיבית לחקירת מרחבי וקטורים ולטנטיים. חושפת כיצד מודלים גנרטיביים בונים משמעות פנימית דרך מפות תשומת לב, בדיקת תכונות, אלגברת מושגים ועוד.",
     "ar": "منصة تفكيكية لاستكشاف الفضاءات الشعاعية والكامنة. تكشف كيف تبني النماذج التوليدية المعنى داخلياً من خلال خرائط الانتباه ومسح الميزات وجبر المفاهيم وغير ذلك.",
     "bg": "Деконструктивна платформа за изследване на векторни и латентни пространства. Разкрива как генеративните модели конструират значение вътрешно чрез карти на вниманието, сондиране на характеристики, алгебра на концепции и други.",
+    "zh-hant": "用於探索向量空間與潛在空間的解構式平臺。揭示生成式模型如何透過注意力圖、特徵探測、概念代數等方式，在內部建構意義。",
     "tr": "Vektör ve gizil uzayları keşfetmek için yapıbozumcu bir platform. Üretici modellerin dikkat haritaları, özellik araştırması, kavram cebiri ve daha fazlası aracılığıyla içsel olarak nasıl anlam inşa ettiğini ortaya çıkarır.",
     "ko": "벡터 및 잠재 공간을 탐구하기 위한 해체적 플랫폼. 어텐션 맵, 피처 프로빙, 개념 대수학 등을 통해 생성 모델이 내부적으로 의미를 구성하는 방식을 드러냅니다."
   },
@@ -31,6 +33,7 @@
     "he": "מחקר",
     "ar": "البحث",
     "bg": "Изследвания",
+    "zh-hant": "研究",
     "tr": "Araştırma",
     "ko": "연구",
     "uk": "Дослідження",

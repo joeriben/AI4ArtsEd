@@ -52,9 +52,10 @@ import { useRasterRun, type RasterCell } from '@/composables/useRasterRun'
 import { postStreamedRun } from '@/services/directRun'
 import {
   failureKey,
-  safetyBlockKey,
+  safetyBlockKeyForEvent,
   useGenerationStream,
   type GenerationResult,
+  type SafetyBlock,
 } from '@/composables/useGenerationStream'
 import { STANDARD_SEED } from '@/composables/useSeedAutomatic'
 import { apiBase } from '@/services/labApi'
@@ -89,13 +90,14 @@ export interface Stage2Answer {
   error?: string
   /** What a refusal refused FOR, in the route's own vocabulary. */
   cause?: string
-  blocked_at_stage?: number
   /**
-   * WHICH text the gate refused: `input_text`, the line the visitor wrote, or
-   * `context_prompt`, the perspective the surface sent with the row. The two
-   * are different facts and are said differently.
+   * The block message of a refusal. Its `field` says WHICH text the gate
+   * refused: `input_text`, the line the visitor wrote, or the row's
+   * perspective: `context_prompt`, the text the surface sent with the row, or
+   * `context_text` and `task_instruction`, the text of a saved perspective the
+   * row names. The two are different facts and are said differently.
    */
-  blocked_on?: string
+  safety_block?: SafetyBlock
 }
 
 /** What the route answers when an output config has adapted a text. */
@@ -103,6 +105,8 @@ export interface OptimizeAnswer {
   success?: boolean
   optimized_prompt?: string
   error?: string
+  /** Where the route refused the text or withheld what the adaption wrote. */
+  safety_block?: SafetyBlock
 }
 
 export interface RowResult {
@@ -495,6 +499,9 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
    */
   async function runWriting(): Promise<string> {
     const todo = pendingRows.value.slice()
+    // The language the press was made in, for every row of it: one switched in
+    // the header while it writes would write the rows after it in another.
+    const language = locale.value
     let blockedKey = ''
     if (!todo.length) return blockedKey
     writing.value = true
@@ -503,7 +510,7 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
     try {
       for (const row of todo) {
         if (!alive) return blockedKey
-        const blocked = await intercept(row)
+        const blocked = await intercept(row, language)
         if (blocked && !blockedKey) blockedKey = blocked
         if (!alive) return blockedKey
         writingDone.value++
@@ -523,7 +530,7 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
     if (status === 403) {
       return blockedOnContext(body)
         ? 'latentLab.interception.models.refusedPerspective'
-        : safetyBlockKey(body?.error, body?.blocked_at_stage)
+        : safetyBlockKeyForEvent({ block: body?.safety_block })
     }
     const named = typeof body?.cause === 'string' ? REFUSED[body.cause] : ''
     if (named) return named
@@ -539,9 +546,14 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
     return failureKey('error', typeof body?.error === 'string' ? body.error : '')
   }
 
-  /** Whether a refusal was about the PERSPECTIVE this row carries. */
+  /** Whether a refusal was about the PERSPECTIVE this row carries: the text the
+   *  surface sent with it, or the text of the saved perspective it names
+   *  (`context_text`, one language of it as `context_text[de]`, or
+   *  `task_instruction`). */
   function blockedOnContext(body: Stage2Answer | null): boolean {
-    return body?.blocked_on === 'context_prompt'
+    const field = body?.safety_block?.field ?? ''
+    return field === 'context_prompt' || field === 'task_instruction'
+      || field === 'context_text' || field.startsWith('context_text[')
   }
 
   /**
@@ -553,7 +565,7 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
    * MODEL's, under this row's perspective and prefix (the backend answers it
    * as a block since 2026-10-10): it belongs to its row too.
    */
-  async function intercept(row: SeriesRow): Promise<string> {
+  async function intercept(row: SeriesRow, language: string): Promise<string> {
     const request = row.request
     if (!request) return ''
     const key = row.key
@@ -587,7 +599,7 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
       const res = await postStreamedRun<Stage2Answer | null>('/api/schema/pipeline/stage2', {
         schema: request.schema,
         input_text: options.line().trim(),
-        user_language: locale.value,
+        user_language: language,
         ...(request.interceptionModel ? { interception_model: request.interceptionModel } : {}),
         ...(request.contextPrompt ? { context_prompt: request.contextPrompt } : {}),
         device_id: deviceId,
@@ -596,7 +608,10 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
       if (res.status >= 400) {
         const why = refusalKey(res.status, data)
         putResult(key, { ...empty, failedKey: why })
-        return res.status === 403 && !blockedOnContext(data) && data?.blocked_at_stage !== 2 ? why : ''
+        // Only the gate's refusal of the LINE holds the run back: a block
+        // before the model or the model's own refusal belongs to this row.
+        return res.status === 403 && !blockedOnContext(data)
+          && data?.safety_block?.checkpoint === 'intake' ? why : ''
       }
       const text = String(data?.interception_result || data?.stage2_result || '').trim()
       if (!data?.success || !text) {
@@ -671,6 +686,20 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
       const j = res.data ?? null
       if (res.status < 400) {
         if (j?.success && typeof j.optimized_prompt === 'string') prepared = j.optimized_prompt.trim()
+      } else if (res.status === 403 && j?.safety_block) {
+        // Refused at the intake or withheld at the result: the cell says so the
+        // way a refused picture does, and the rest of the run goes on.
+        grid.value = {
+          ...grid.value,
+          [key]: {
+            key,
+            seed: SERIES_SEED,
+            url: '',
+            blockedKey: safetyBlockKeyForEvent({ block: j.safety_block }),
+            failed: false,
+          },
+        }
+        return
       } else {
         // What refused the adaption is read the way a refused generation is read,
         // so a full queue and a service that went silent say so here as well.
@@ -733,7 +762,7 @@ export function useInterceptionSeries(options: InterceptionSeriesOptions): Inter
             key,
             seed: SERIES_SEED,
             url: '',
-            blockedKey: safetyBlockKey(result.blocked_reason, result.blocked_stage),
+            blockedKey: safetyBlockKeyForEvent({ block: result.safety_block }),
             failed: false,
           },
         }

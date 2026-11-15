@@ -50,8 +50,8 @@ logger = logging.getLogger(__name__)
 # Content rating — the check ran and judged the image:
 VLM_CONTENT_BLOCK_MESSAGE = (
     "⚠️ Dein Bild wurde nicht freigegeben\n\n"
-    "Die Bildprüfung hat Inhalte erkannt, die für deine Altersstufe "
-    "nicht geeignet sind. Versuche es mit einer anderen Idee."
+    "Die Bildprüfung hat Inhalte erkannt, die hier nicht geeignet sind. "
+    "Versuche es mit einer anderen Idee."
 )
 # Operational failure — the check did NOT run to completion; fail-closed:
 VLM_OPERATIONAL_BLOCK_MESSAGE = (
@@ -242,10 +242,8 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         image_path: Path to the image file on disk.
         safety_level: the level that is running. 'adult' and 'research' carry
             no question; every other level is asked one here, and a level this
-            table does not know is asked the child's question. NOTE that most
-            CALLERS gate on ('kids', 'youth') before they get here, so whether
-            a picture at 'open' is checked is decided at the call site and not
-            in this function (open question, 2026-09-23).
+            table does not know is asked the child's question. Most callers
+            gate on ('kids', 'youth') before they get here.
 
     Returns:
         (is_safe, reason, ''). Every way of failing to confirm safety returns
@@ -274,26 +272,35 @@ def vlm_safety_check(image_path: str | Path, safety_level: str) -> tuple[bool, s
         img, original_size = normalize_image(image_path, max_size=VLM_MAX_SIZE, min_size=VLM_MIN_SIZE)
         image_b64 = image_to_b64(img)
 
-        instruct, query = safety_classifier.policy_for_level(safety_level, medium="image")
+        # The level's own picture question first, then the question of every
+        # less strict level that has one (kids asks kids' and youth's): a level
+        # refuses what a less strict level refuses, by construction.
+        chain = safety_classifier.policies_for_level(safety_level, medium="image")
+        if not chain:
+            logger.error(f"[VLM-SAFETY] no picture question for {safety_level} — BLOCKING (operational)")
+            return (False, VLM_OPERATIONAL_BLOCK_MESSAGE, '')
         logger.info(f"[VLM-SAFETY] {model} ({safety_level}), {original_size} -> {img.size}")
 
-        # The document is the picture. The classifier takes an image on its
-        # own, so the line beside it says only that; the policy and the
-        # question travel in their own fields.
-        value = safety_classifier.score(
-            instruct, query,
-            "The document is the image below.",
-            images=[image_b64],
-        )
+        for asked, (instruct, query) in chain:
+            # The document is the picture. The classifier takes an image on its
+            # own, so the line beside it says only that; the policy and the
+            # question travel in their own fields.
+            value = safety_classifier.score(
+                instruct, query,
+                "The document is the image below.",
+                images=[image_b64],
+            )
 
-        if value is None:
-            logger.error(f"[VLM-SAFETY] {model} gave no verdict — BLOCKING (operational)")
-            return (False, VLM_OPERATIONAL_BLOCK_MESSAGE, '')
+            if value is None:
+                logger.error(f"[VLM-SAFETY] {model} gave no verdict — BLOCKING (operational)")
+                return (False, VLM_OPERATIONAL_BLOCK_MESSAGE, '')
 
-        if value >= safety_classifier.UNSAFE_THRESHOLD:
-            logger.warning(f"[VLM-SAFETY] UNSAFE for {safety_level} ({model}, score={value:.4f})")
-            return (False, VLM_CONTENT_BLOCK_MESSAGE, '')
-        logger.info(f"[VLM-SAFETY] SAFE for {safety_level} ({model}, score={value:.4f})")
+            if value >= safety_classifier.UNSAFE_THRESHOLD:
+                logger.warning(f"[VLM-SAFETY] UNSAFE for {safety_level} by the question of {asked} "
+                               f"({model}, score={value:.4f})")
+                return (False, VLM_CONTENT_BLOCK_MESSAGE, '')
+            logger.info(f"[VLM-SAFETY] SAFE for {safety_level} by the question of {asked} "
+                        f"({model}, score={value:.4f})")
         return (True, '', '')
 
     except Exception as e:

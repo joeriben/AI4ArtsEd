@@ -86,6 +86,46 @@ def split_provider(model_id: str) -> Tuple[Optional[str], str]:
     return provider, model_id[len(provider) + 1:]
 
 
+# The marker a caller sets on a text block of a message to have the prefix of
+# the request up to and including that block cached by the provider
+# (Anthropic's prompt caching; OpenRouter takes the same field on a content
+# part and passes it on to the models that cache).
+CACHE_MARKER = "cache_control"
+
+
+def takes_cache_markers(name: Optional[str]) -> bool:
+    """Whether the connection takes CACHE_MARKER on a text block: the table's
+    "prompt_cache": true. None ('local/', a bare name) takes none."""
+    p = provider(name) if name else None
+    return bool(p and p.get("prompt_cache"))
+
+
+def without_cache_markers(messages: list) -> list:
+    """The messages as a connection that takes no cache marker gets them.
+
+    A message whose content list carries a marker loses the marker; where
+    every block of that list is text, the blocks are joined into one string,
+    in order and as they stand, so a connection that has never been sent a
+    content list (the node on this machine, an endpoint that refuses a field
+    it does not know) gets the text it would have got without caching. A
+    message without a marker is passed on untouched: what other callers send
+    does not change here."""
+    out = []
+    for m in messages:
+        content = m.get("content") if isinstance(m, dict) else None
+        if not (isinstance(content, list)
+                and any(isinstance(b, dict) and CACHE_MARKER in b for b in content)):
+            out.append(m)
+            continue
+        blocks = [{k: v for k, v in b.items() if k != CACHE_MARKER} if isinstance(b, dict) else b
+                  for b in content]
+        if all(isinstance(b, dict) and b.get("type") == "text" for b in blocks):
+            out.append({**m, "content": "".join(b.get("text") or "" for b in blocks)})
+        else:
+            out.append({**m, "content": blocks})
+    return out
+
+
 def key_file_path(name: str) -> Optional[Path]:
     """Where the provider's key file sits, or None for one that keeps no key file."""
     p = provider(name)

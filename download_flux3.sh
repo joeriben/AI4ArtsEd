@@ -8,9 +8,11 @@
 # (`hf auth login`, or HF_TOKEN in the environment) has to have accepted the
 # FLUX Kommunity License on the model page first.
 #
-# Default (what the output config `flux3` loads):
+# Default (what the output configs `flux3` and `flux3_multi` load):
 #   diffusion_models/flux3-image-klein-bf16.safetensors   11.1 GB  (distilled checkpoint)
 #   text_encoders/qwen3vl_4b_bf16.safetensors              8.9 GB  (Qwen3-VL-4B-Instruct)
+#   text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors 18.8 GB
+#       (BFL's prompt upsampler; `flux3_multi` runs it, `flux3` does not)
 #   vae/Flux/flux2-vae.safetensors                         0.3 GB  (only if missing)
 #       FLUX 3 decodes with FLUX.2's VAE, and the flux3 chunk loads the file
 #       the flux2 chunk loads. Where it is missing, this script fetches it
@@ -18,8 +20,6 @@
 # Optional:
 #   --base        diffusion_models/flux3-image-klein-base-bf16.safetensors  11.1 GB
 #                 (undistilled, 50 steps, cfg 3.5; no output config uses it)
-#   --upsampler   text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors 18.8 GB
-#                 (BFL's prompt upsampler; no output config uses it)
 #
 # ComfyUI loads the files from version 0.41.0 on (native FLUX 3 support,
 # Comfy-Org/ComfyUI#17064). The download runs with the platform venv's
@@ -46,12 +46,12 @@ BFL="black-forest-labs/flux-3-image-klein-comfy"
 FILES=(
     "${BFL}|diffusion_models/flux3-image-klein-bf16.safetensors|diffusion_models/flux3-image-klein-bf16.safetensors"
     "${BFL}|text_encoders/qwen3vl_4b_bf16.safetensors|text_encoders/qwen3vl_4b_bf16.safetensors"
+    "${BFL}|text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors|text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors"
 )
 for arg in "$@"; do
     case "$arg" in
         --base)      FILES+=("${BFL}|diffusion_models/flux3-image-klein-base-bf16.safetensors|diffusion_models/flux3-image-klein-base-bf16.safetensors") ;;
-        --upsampler) FILES+=("${BFL}|text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors|text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors") ;;
-        *) echo -e "${RED}Unknown option:${NC} $arg (known: --base, --upsampler)"; exit 1 ;;
+        *) echo -e "${RED}Unknown option:${NC} $arg (known: --base)"; exit 1 ;;
     esac
 done
 FILES+=("Comfy-Org/flux2-dev|split_files/vae/flux2-vae.safetensors|vae/Flux/flux2-vae.safetensors")

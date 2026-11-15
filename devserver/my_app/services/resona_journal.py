@@ -165,6 +165,53 @@ def _truncate(value: str, limit: int) -> str:
     return value[:limit] if len(value) > limit else value
 
 
+def _level(value) -> Optional[str]:
+    """A safety level as the resolver names it, or None for anything else."""
+    from my_app.services.safety_gate import SAFETY_LEVELS_STRICTEST_FIRST
+    if isinstance(value, str) and value.strip().lower() in SAFETY_LEVELS_STRICTEST_FIRST:
+        return value.strip().lower()
+    return None
+
+
+def _with_level(normalized: dict, payload: dict) -> dict:
+    """The level of the turn that wrote a dialog line, a memory note or a media
+    intent goes with it (see events_at)."""
+    level = _level(payload.get("safety_level"))
+    if level is not None:
+        normalized["safety_level"] = level
+    return normalized
+
+
+_LEVELLED_TYPES = ("dialog", "memory", "media_intent")
+
+
+def events_at(events: list, level) -> list:
+    """The events of a journal that may go to whoever reads at `level`.
+
+    A dialog line, a memory note and a media intent hold text a chat model or
+    a person wrote at the level of their turn, which they carry since
+    2026-11-14. A device can move into a course at a stricter level and keep
+    its journal; at kids and youth only the events of the same level or a
+    stricter one go on, and none written before events carried a level
+    (safety_gate.run_opens_at). A media result goes with its intent where both
+    are read together. The other events hold no such text.
+    """
+    from my_app.services.safety_gate import normalise_level, run_opens_at
+    level = normalise_level(level)
+    out, hidden = [], set()
+    for evt in events:
+        payload = evt.get("payload") or {}
+        etype = evt.get("type")
+        if etype in _LEVELLED_TYPES and not run_opens_at(payload.get("safety_level"), level):
+            if etype == "media_intent" and payload.get("intent_id"):
+                hidden.add(payload["intent_id"])
+            continue
+        if etype == "media_result" and payload.get("intent_id") in hidden:
+            continue
+        out.append(evt)
+    return out
+
+
 def _validate_payload(event_type: str, payload: dict) -> Tuple[Optional[dict], Optional[str]]:
     """
     Validate + normalize (truncate) a payload for a given event type.
@@ -192,7 +239,7 @@ def _validate_payload(event_type: str, payload: dict) -> Tuple[Optional[dict], O
         if isinstance(model, str) and model.strip():
             # Optional provenance: which LLM actually produced an assistant turn.
             normalized["model"] = _truncate(model, 200)
-        return normalized, None
+        return _with_level(normalized, payload), None
 
     if event_type == "journal":
         action = (payload.get("action") or "").strip().lower()
@@ -215,10 +262,10 @@ def _validate_payload(event_type: str, payload: dict) -> Tuple[Optional[dict], O
         content = payload.get("content")
         if not isinstance(content, str) or not content.strip():
             return None, "memory payload requires non-empty content"
-        return {
+        return _with_level({
             "kind": _truncate(kind, 64),
             "content": _truncate(content, MAX_OTHER_CHARS),
-        }, None
+        }, payload), None
 
     if event_type == "media_intent":
         intent_id = (payload.get("intent_id") or "").strip()
@@ -241,7 +288,7 @@ def _validate_payload(event_type: str, payload: dict) -> Tuple[Optional[dict], O
         dialog_ref = payload.get("dialog_ref")
         if isinstance(dialog_ref, int) and not isinstance(dialog_ref, bool) and dialog_ref > 0:
             normalized["dialog_ref"] = dialog_ref
-        return normalized, None
+        return _with_level(normalized, payload), None
 
     if event_type == "media_result":
         intent_id = (payload.get("intent_id") or "").strip()
@@ -513,7 +560,7 @@ def append_event(journal_id: str, event_type: str, payload: dict, device_id: str
         return seqs[0] if seqs else None
 
 
-def append_dialog_batch(journal_id: str, turns: List[Tuple[str, str]], device_id: str, lang: Optional[str] = None, assistant_model: Optional[str] = None, media_intents: Optional[List[dict]] = None) -> List[Optional[int]]:
+def append_dialog_batch(journal_id: str, turns: List[Tuple[str, str]], device_id: str, lang: Optional[str] = None, assistant_model: Optional[str] = None, media_intents: Optional[List[dict]] = None, safety_level: Optional[str] = None) -> List[Optional[int]]:
     """
     Append multiple dialog turns as one atomic batch under a single lock
     acquisition (used by chat_routes.py to write the user+assistant turn of
@@ -532,6 +579,9 @@ def append_dialog_batch(journal_id: str, turns: List[Tuple[str, str]], device_id
     Returns the list of assigned seqs for the DIALOG turns in order (None
     entries for any turn that failed validation — e.g. bad role or empty
     content — the rest of the batch still proceeds).
+
+    safety_level: the level of the chat round; every dialog turn and media
+    intent of the batch carries it (events_at).
     """
     safe = _sanitize_journal_id(journal_id)
     if not safe:
@@ -539,7 +589,8 @@ def append_dialog_batch(journal_id: str, turns: List[Tuple[str, str]], device_id
 
     pairs = []
     for role, content in turns:
-        payload = {"role": role, "content": content, "lang": lang}
+        payload = {"role": role, "content": content, "lang": lang,
+                   "safety_level": safety_level}
         if role == "assistant" and assistant_model:
             payload["model"] = assistant_model
         pairs.append(("dialog", payload))
@@ -561,6 +612,7 @@ def append_dialog_batch(journal_id: str, turns: List[Tuple[str, str]], device_id
                     "config_id": (mi or {}).get("config_id"),
                     "prompt": (mi or {}).get("prompt"),
                     "motivation": (mi or {}).get("motivation"),
+                    "safety_level": safety_level,
                 }
                 if assistant_seq is not None:
                     intent_payload["dialog_ref"] = assistant_seq

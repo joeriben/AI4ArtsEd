@@ -81,8 +81,14 @@
            the boxes; it stands in the documentation now (Compare guide,
            section Voices), which held nothing on this surface at all. -->
       <aside class="lab-note vc-about">
-        <h3>{{ t('compare.voice.about.title') }}</h3>
+        <h3>{{ t('compare.tabs.voice') }}</h3>
         <p>{{ t('compare.voice.about.body') }}</p>
+
+        <LabReferences
+          flat
+          :title="t('compare.voice.referencesTitle')"
+          :items="REFERENCES"
+        />
       </aside>
     </section>
 
@@ -373,6 +379,7 @@ import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import { sentencesFor, type TestAxis, type TestSentence } from '@/data/voiceTestSentences'
 import {
@@ -391,10 +398,74 @@ import FlowRunButton from '@/components/FlowRunButton.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
-import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import {
+  generationErrorFor,
+  interceptPrompt,
+  perspectiveFailureText,
+  refusalKeyOf,
+  reportRefusal,
+} from '@/composables/useLabRun'
 import { apiBase } from '@/services/labApi'
 
 const { t, te, locale } = useI18n()
+
+/**
+ * The titles the note box names, flat under its text (LabReferences): the
+ * paper and repository of each of the four systems, the corpus of the German
+ * Piper voice "mls", and the report the note's framing of emotion and gender
+ * rests on. Forms as checked in
+ * docs/analysis/ERKLAERKAESTEN_GRUNDLAGEN_2026-11-07.md, section 4.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Kim et al. (2025)',
+    title: '"SupertonicTTS: Towards Highly Efficient and Streamlined Text-to-Speech System"',
+    venue: 'arXiv:2503.23108',
+    doi: 'https://doi.org/10.48550/arXiv.2503.23108',
+  },
+  {
+    authors: 'Supertone Inc. (2026)',
+    title: '"Supertonic 3"',
+    venue: 'software repository',
+    doi: 'https://github.com/supertone-inc/supertonic',
+  },
+  {
+    authors: 'Zhou et al., VoxCPM Team, OpenBMB (2026)',
+    title: '"VoxCPM2 Technical Report"',
+    venue: 'arXiv:2606.06928',
+    doi: 'https://doi.org/10.48550/arXiv.2606.06928',
+  },
+  {
+    authors: 'Kim, Kong & Son (2021)',
+    title: '"Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech"',
+    venue: 'ICML 2021',
+    doi: 'https://doi.org/10.48550/arXiv.2106.06103',
+  },
+  {
+    authors: 'Hansen, Rhasspy / Open Home Foundation (2026)',
+    title: '"Piper"',
+    venue: 'software repository, version 1.6.0',
+    doi: 'https://github.com/OHF-Voice/piper1-gpl',
+  },
+  {
+    authors: 'Pratap et al. (2020)',
+    title: '"MLS: A Large-Scale Multilingual Dataset for Speech Research"',
+    venue: 'Interspeech 2020',
+    doi: 'https://doi.org/10.48550/arXiv.2012.03411',
+  },
+  {
+    authors: 'eSpeak NG',
+    title: '"espeak-ng"',
+    venue: 'software repository',
+    doi: 'https://github.com/espeak-ng/espeak-ng',
+  },
+  {
+    authors: 'West, Kraut & Chew (2019)',
+    title: '"I\'d blush if I could: closing gender divides in digital skills through education"',
+    venue: 'UNESCO / EQUALS Skills Coalition',
+    doi: 'https://unesdoc.unesco.org/ark:/48223/pf0000367416',
+  },
+]
 
 type SystemId = 'supertonic' | 'voxcpm' | 'espeak' | 'piper'
 
@@ -518,7 +589,7 @@ async function handlePresetSelected(payload: { configId: string; context: string
     // this platform goes, so it is explained rather than looking like a
     // machine that did nothing.
     if ('refusedKey' in outcome) {
-      safetyStore.reportBlock(outcome.blockedAtStage || 1, outcome.reason || t('mediaInput.contentBlocked'), [])
+      safetyStore.reportBlock(outcome.block)
       return
     }
     // The interception alone, never the adaptation to an image model: this text
@@ -527,8 +598,9 @@ async function handlePresetSelected(payload: { configId: string; context: string
     if ('written' in outcome && !outcome.structured && outcome.written.trim()) {
       utterance.value = outcome.written.trim()
       // Written by a model, and on its way to being spoken: the check that runs
-      // over typed text runs over this too. Stage 2 checks what went IN, and
-      // there is no Stage 3 on this path.
+      // over typed text runs over this too. The stage-2 route checked what went
+      // in at the intake and what its model wrote at the result; /api/speech
+      // checks the text again before the voice model.
       await nextTick()
       sentenceBox.value?.checkSafety()
     } else if ('written' in outcome) {
@@ -1177,7 +1249,9 @@ async function speakInto(card: TrioCard, shared: Record<string, unknown>) {
       let reason = ''
       try {
         const data = await response.json()
-        reason = data?.error || ''
+        // A refusal of the platform's checks goes to the safety window as
+        // well, and the card says it in the reader's language.
+        reason = reportRefusal(data) ? t(refusalKeyOf(data)) : data?.error || ''
       } catch {
         reason = ''
       }

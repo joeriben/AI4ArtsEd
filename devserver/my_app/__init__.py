@@ -340,11 +340,13 @@ def create_app():
 
     # Enable CORS with session support
     # Must explicitly set origins when using credentials (cannot use wildcard)
+    # Content-Disposition: a page on another origin (the Vite dev server) reads
+    # `_ai_generated` out of it when it saves a file (lib/downloadMedia.ts).
     CORS(app,
          supports_credentials=True,
          origins=CORS_ALLOWED_ORIGINS,
          allow_headers=['Content-Type'],
-         expose_headers=['Set-Cookie'])
+         expose_headers=['Set-Cookie', 'Content-Disposition'])
 
     # gzip/brotli compression for large responses (e.g. attention_maps: 50MB → ~3MB)
     Compress(app)

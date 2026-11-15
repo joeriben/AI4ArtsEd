@@ -39,8 +39,9 @@ Three rules the caller must not lose:
   as ordinary as "mirror selfie" returns explicit photographs that pass every
   test above. At kids and youth two things therefore stand in front of the row:
   the file's own Commons categories are screened, and then the picture goes
-  through the platform's own image check — the same ``vlm_safety_check`` the
-  upload path uses — fail-closed.
+  through the platform's check at the result (``check_result_image``),
+  fail-closed. Only a picture that passed is served at those levels
+  (``released_for``).
 
   Both are needed and neither is sufficient. Measured on 2026-08-17: for
   "Mirror selfie with visible male genital.jpg" the describing model wrote
@@ -66,17 +67,20 @@ import base64
 import binascii
 import html
 import logging
-import os
 import random
 import re
-import tempfile
 import threading
 import time
 import urllib.parse
+from collections import OrderedDict
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
+
+from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS
+from my_app.services.safety_gate import (check_result_image, check_result_text,
+                                         counts_for, normalise_level)
 
 logger = logging.getLogger(__name__)
 
@@ -560,26 +564,59 @@ def fetch_image_bytes(url: str) -> Optional[Tuple[bytes, str]]:
 
 
 
-# The levels at which a picture is looked at before it is shown. Same tuple the
-# upload path uses (routes/schema_pipeline_routes.py, safety_check_quick): above
-# youth the platform does not check pictures, and this row does not invent a
-# stricter rule of its own.
-VLM_CHECKED_LEVELS = ("kids", "youth")
-
 # How many candidates the check may work through. Each one costs two model calls,
 # so the row is allowed to come back short rather than run down a long list.
 MAX_CHECK_CANDIDATES = 24
 
+# The pictures a search released at kids or youth, by their Wikimedia URL, with
+# the strictest level each was released at. At those two levels the image route
+# serves a picture only from here: a reference is a URL anybody can pack, and
+# without the list the route handed out every file on an allowed host, the ones
+# the check had refused among them. Bounded; the oldest go first, and a picture
+# that is forgotten, or unknown after a restart, comes back with the next search
+# that releases it.
+MAX_RELEASED = 20000
+_released: "OrderedDict[str, str]" = OrderedDict()
+_released_lock = threading.Lock()
 
-def _passes_image_check(image: "CommonsImage", safety_level: str) -> Optional[bool]:
-    """Show one picture to the platform's own image check.
+
+def _remember_release(url: str, level: str) -> None:
+    """Keep ``url`` as released at ``level``, or at the stricter level it has."""
+    with _released_lock:
+        known = _released.get(url)
+        if known is None or not counts_for(known, level):
+            _released[url] = level
+        _released.move_to_end(url)
+        while len(_released) > MAX_RELEASED:
+            _released.popitem(last=False)
+
+
+def released_for(url: str, level) -> bool:
+    """Whether the image route may hand the picture at ``url`` to a page at
+    ``level``.
+
+    At kids and youth only where a search at that level or a stricter one
+    released it; the other levels check no pictures. A value that is not a
+    level is read as the strictest one, as everywhere in the safety gate.
+    """
+    if normalise_level(level) not in IMAGE_CHECKED_LEVELS:
+        return True
+    with _released_lock:
+        known = _released.get(url)
+    return counts_for(known, level)
+
+
+def _check_picture(image: "CommonsImage", safety_level) -> Optional[bool]:
+    """Ask the platform's picture question about one candidate, at the result.
 
     ``True`` it may be shown, ``False`` it may not, ``None`` no verdict could be
     obtained. The third is not the second: a checker that is down means the row
     says the archive could not be reached, not that nothing was found.
 
-    The check wants a file on disk, so the bytes are written to a temporary file
-    and removed again — nothing from the archive is kept.
+    A picture that passed is kept as released at the level it passed at, which
+    is what the image route asks before it serves it. The gate looks at the
+    bytes in a temporary file it removes again; nothing from the archive is
+    kept.
     """
     url = decode_image_ref(image.thumb_proxy.rsplit("/", 1)[-1])
     if not url:
@@ -587,33 +624,21 @@ def _passes_image_check(image: "CommonsImage", safety_level: str) -> Optional[bo
     fetched = fetch_image_bytes(url)
     if not fetched:
         return None
-
-    payload, _ = fetched
-    tmp_path = None
     try:
-        with tempfile.NamedTemporaryFile(suffix=".img", delete=False) as handle:
-            handle.write(payload)
-            tmp_path = handle.name
-        from my_app.utils.vlm_safety import (vlm_safety_check,
-                                              VLM_OPERATIONAL_BLOCK_MESSAGE)
-        is_safe, reason, _ = vlm_safety_check(tmp_path, safety_level)
-        if not is_safe and reason == VLM_OPERATIONAL_BLOCK_MESSAGE:
-            # The check could not run. That is not a judgement about the picture,
-            # and the row must not report it as one.
-            logger.warning(f"[COMMONS] Image check unavailable for {image.title}")
-            return None
-        if not is_safe:
-            logger.info(f"[COMMONS] Dropped by image check: {image.title} ({reason})")
-        return bool(is_safe)
+        verdict = check_result_image(fetched[0], level=safety_level)
     except Exception as exc:  # noqa: BLE001 - no verdict is not a verdict
         logger.error(f"[COMMONS] Image check failed for {image.title}: {exc}")
         return None
-    finally:
-        if tmp_path:
-            try:
-                os.unlink(tmp_path)
-            except OSError:
-                pass
+    if verdict.operational:
+        # The check could not run. That is not a judgement about the picture,
+        # and the row must not report it as one.
+        logger.warning(f"[COMMONS] Image check unavailable for {image.title}")
+        return None
+    if not verdict.passed:
+        logger.info(f"[COMMONS] Dropped by image check: {image.title} ({verdict.reason})")
+        return False
+    _remember_release(url, verdict.level)
+    return True
 
 
 def _has_left(client_gone: Optional[threading.Event]) -> bool:
@@ -678,7 +703,9 @@ def _take(candidates: List["CommonsImage"], limit: int,
     hands back — the row is simply shorter, which is what a row nobody is
     reading is worth.
     """
-    if (safety_level or "") not in VLM_CHECKED_LEVELS:
+    # The gate's rule for levels: above youth no picture is checked, and a value
+    # that is not a level is checked as the strictest one.
+    if normalise_level(safety_level) not in IMAGE_CHECKED_LEVELS:
         return candidates[:limit], False
     out: List["CommonsImage"] = []
     unverifiable = False
@@ -694,7 +721,7 @@ def _take(candidates: List["CommonsImage"], limit: int,
         if _is_explicit(candidate.categories + [candidate.title]):
             logger.info(f"[COMMONS] Dropped by category screen: {candidate.title}")
             continue
-        verdict = _passes_image_check(candidate, safety_level or "")
+        verdict = _check_picture(candidate, safety_level)
         if verdict is None:
             unverifiable = True
             continue
@@ -920,6 +947,15 @@ def search_images(term: str, limit: int = MAX_IMAGES,
     return _take(_pool(images), limit, safety_level, client_gone)
 
 
+class SearchTermRefused(Exception):
+    """The check at the result did not pass the search term: it refused it, or
+    gave no answer. ``verdict`` says which."""
+
+    def __init__(self, verdict):
+        super().__init__(verdict.reason_key)
+        self.verdict = verdict
+
+
 def lookup_for_prompt(prompt: str, limit: int = MAX_IMAGES,
                       safety_level: Optional[str] = None,
                       client_gone: Optional[threading.Event] = None
@@ -930,6 +966,10 @@ def lookup_for_prompt(prompt: str, limit: int = MAX_IMAGES,
     three are ordinary answers and the row shows each differently; ``error`` is
     the only one that says something about US rather than about the prompt.
 
+    A model writes the search term and the row shows it, so it passes the check
+    at the result before it is shown or sent to the archive. A term that does
+    not pass raises ``SearchTermRefused``, and nothing is searched.
+
     ``client_gone`` is the leaving signal of the streamed transport, handed down
     to the picture checks; ``None`` where no stream carries the answer.
     """
@@ -938,6 +978,10 @@ def lookup_for_prompt(prompt: str, limit: int = MAX_IMAGES,
         return {"state": "error", "term": None, "images": []}
     if status == TERM_NO_MOTIF or not term:
         return {"state": "no_motif", "term": None, "images": []}
+
+    verdict = check_result_text(term, level=safety_level, field="term")
+    if not verdict.passed:
+        raise SearchTermRefused(verdict)
 
     result = search_images(term, limit=limit, safety_level=safety_level,
                            client_gone=client_gone)
@@ -957,10 +1001,15 @@ def lookup_for_prompt(prompt: str, limit: int = MAX_IMAGES,
     # because nobody is reading it any more is not that row: widening it would
     # ask the archive a second time and start a second set of picture checks for
     # a page that is closed.
+    #
+    # The shorter term takes the place of the first on the screen, so it passes
+    # the same check; one that does not pass is not searched, and the row stays
+    # with the term it has.
     if not images and not unverifiable and not _has_left(client_gone):
         content = [w for w in term.split(" ") if w not in TERM_FUNCTION_WORDS]
         shorter = " ".join(content[:2])
-        if shorter != term:
+        if shorter != term and check_result_text(shorter, level=safety_level,
+                                                 field="term").passed:
             logger.info(f"[COMMONS] {term!r} found nothing, widening to {shorter!r}")
             widened = search_images(shorter, limit=limit,
                                     safety_level=safety_level,

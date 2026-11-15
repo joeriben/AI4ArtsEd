@@ -10,7 +10,8 @@
     "es": "Stable Diffusion 1.5",
     "he": "Stable Diffusion 1.5",
     "ar": "Stable Diffusion 1.5",
-    "bg": "Stable Diffusion 1.5"
+    "bg": "Stable Diffusion 1.5",
+    "zh-hant": "Stable Diffusion 1.5"
   },
   "description": {
     "en": "The model that started the open-source AI image revolution (2022). 512px, single CLIP encoder.",
@@ -22,7 +23,8 @@
     "es": "El modelo que inició la revolución de la IA de imágenes de código abierto (2022). 512px, un solo codificador CLIP.",
     "he": "המודל שהתחיל את מהפכת תמונות הבינה המלאכותית בקוד פתוח (2022). 512px, מקודד CLIP יחיד.",
     "ar": "النموذج الذي بدأ ثورة صور الذكاء الاصطناعي مفتوحة المصدر (2022). 512px، مُرمِّز CLIP واحد.",
-    "bg": "Моделът, който постави началото на революцията с изображения от изкуствен интелект с отворен код (2022 г.). 512px, единичен CLIP енкодер."
+    "bg": "Моделът, който постави началото на революцията с изображения от изкуствен интелект с отворен код (2022 г.). 512px, единичен CLIP енкодер.",
+    "zh-hant": "開啟開源 AI 圖像革命的模型（2022）。512px，單一 CLIP 編碼器。"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_sd15",

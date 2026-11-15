@@ -19,7 +19,7 @@
           <!-- The case: ONE picture, ONE reading frame, and the readers that
                get both. Two columns side by side therefore differ in the model
                and in nothing else — the discipline of every comparison here. -->
-          <section class="vla-case lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column vla-case lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- Die schlanke Form, wie sie die Laborflaechen tragen: die
@@ -70,16 +70,30 @@
             />
             <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
 
+            <!-- Two lineups from the register (model_register.json), as on
+                 Interception across Models: three makers at one size, and one
+                 family over its sizes. Headed and laid out as the sets of
+                 Model Comparison. The single readers stay under them; a hand
+                 that changes them leaves the lineup, and its chip goes dark. -->
+            <label class="lab-pick-label">{{ t('compare.setsLabel') }}</label>
+            <ChipSelect
+              :model-value="lineupInForce"
+              :options="lineupChoices"
+              :columns="2"
+              :disabled="isAnalyzing"
+              @update:model-value="v => applyLineup(v as string)"
+            />
+
             <label class="lab-pick-label">{{ t('compare.vlmAnalysis.modelsLabel') }}</label>
             <div class="vlm-chips">
-              <template v-for="vlm in vlmModels" :key="vlm.id">
+              <template v-for="vlm in orderedVlmModels" :key="vlm.id">
                 <label
                   v-if="vlm.available"
                   class="vlm-chip"
                   :class="{ active: selectedModels.includes(vlm.id) }"
                 >
                   <input type="checkbox" :value="vlm.id" v-model="selectedModels" class="vlm-chip-input" />
-                  <span class="vlm-chip-label">{{ vlm.label }}</span>
+                  <span class="vlm-chip-label">{{ vlmLabel(vlm) }}</span>
                 </label>
                 <button
                   v-else-if="vlm.installable"
@@ -89,7 +103,7 @@
                   @click="triggerInstall(vlm.id, vlm.label)"
                 >
                   <span class="vlm-chip-label">
-                    {{ vlm.label }}
+                    {{ vlmLabel(vlm) }}
                     <span class="vlm-chip-install-cta">
                       ⤓ {{ t('compare.shared.install.downloadCta', { mb: vlm.approxDownloadMb }) }}
                     </span>
@@ -97,7 +111,7 @@
                 </button>
                 <label v-else class="vlm-chip disabled">
                   <span class="vlm-chip-label">
-                    {{ vlm.label }}<span class="vlm-chip-unavailable"> {{ t('compare.shared.modelNotDownloaded') }}</span>
+                    {{ vlmLabel(vlm) }}<span class="vlm-chip-unavailable"> {{ t('compare.shared.modelNotDownloaded') }}</span>
                   </span>
                 </label>
               </template>
@@ -105,6 +119,24 @@
                 {{ t('compare.vlmAnalysis.noModelsInstalled') }}
               </span>
             </div>
+
+            <!-- The explanation box at the foot of the preparing column, the
+                 platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+                 heading is the menu title of this surface, its text is
+                 `compare.vlmAnalysis.noteBody`, cut into paragraphs at the blank line,
+                 and the titles it cites stand under it in LabReferences. -->
+            <aside class="lab-note">
+              <h3>{{ t('compare.tabs.vlm-analysis') }}</h3>
+              <p
+                v-for="(para, i) in t('compare.vlmAnalysis.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                :title="t('compare.vlmAnalysis.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
+            </aside>
           </section>
 
           <!-- One column per reader, all of them the same width: what is read
@@ -112,25 +144,25 @@
                be wider than another. Before the first press the chosen readers
                already stand there, darkened, with their heads — an empty
                surface says nothing about what a press would do. -->
-          <section class="vla-plot">
-            <div class="vla-cols" :style="{ '--vla-cols': columns.length }">
+          <section class="lab-plot">
+            <div class="lab-grid" :style="{ '--lab-grid-cols': columns.length }">
               <div
                 v-for="col in columns"
                 :key="col.model"
-                class="vla-col"
+                class="lab-grid-col lab-readcol"
                 :class="{ 'is-preview': col.state === 'preview', 'is-waiting': col.state === 'waiting' }"
               >
-                <div class="vla-col-head">
-                  <span class="vla-col-name">{{ col.label }}</span>
-                  <span v-if="col.latency != null" class="vla-col-latency">{{ col.latency }}s</span>
+                <div class="lab-readcol-head">
+                  <span class="lab-readcol-name">{{ col.label }}</span>
+                  <span v-if="col.latency != null" class="lab-readcol-time">{{ col.latency }}s</span>
                   <span v-else-if="col.state === 'active'" class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-                  <span v-else-if="col.state === 'waiting'" class="vla-col-waiting">{{ t('compare.vlmAnalysis.waiting') }}</span>
+                  <span v-else-if="col.state === 'waiting'" class="lab-readcol-wait">{{ t('compare.vlmAnalysis.waiting') }}</span>
                 </div>
                 <!-- The reading scrolls in its own column. A surface that grew
                      with the longest of them would push the fourth reader below
                      the window, and reading them against each other is the
                      whole point of standing them side by side. -->
-                <div class="vla-cell">
+                <div class="lab-readcell">
                   <p v-if="col.description" class="vla-reading">{{ col.description }}</p>
                   <p v-if="col.note" class="vla-note">{{ col.note }}</p>
                   <p v-if="col.error" class="vla-error">{{ col.error }}</p>
@@ -153,6 +185,7 @@
 
 <script setup lang="ts">
 import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
@@ -161,15 +194,57 @@ import MediaInputBox from '@/components/MediaInputBox.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import ShellRun from '@/components/ShellRun.vue'
-import { useVlmModels } from '@/composables/useVlmModels'
+import ChipSelect from '@/components/ChipSelect.vue'
+import { useVlmModels, type VlmModelOption } from '@/composables/useVlmModels'
+import { bareName, fillableLineup, isLocalModel, lineupMembers, useModelRegister } from '@/composables/useModelRegister'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useModelInstall } from '@/composables/useModelInstall'
 import { READING_FRAMES, type ReadingFrame } from '@/data/readingFrames'
 import { readSseFrames } from '@/lib/sseStream'
+import { safetyBlockMessageKey, safetyBlockOf } from '@/composables/useGenerationStream'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
 import { apiBase } from '@/services/labApi'
 
 const { t, locale } = useI18n()
+
+/**
+ * The titles the explanation box cites: two architectures of image-reading
+ * models, the image encoder one of them projects from, and two measurements
+ * of what captioning models write.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Li et al. (2023)',
+    title: '"BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models"',
+    venue: 'ICML 2023, PMLR 202, 19730–19742',
+    doi: 'https://arxiv.org/abs/2301.12597',
+  },
+  {
+    authors: 'Liu et al. (2023)',
+    title: '"Visual Instruction Tuning"',
+    venue: 'NeurIPS 2023',
+    doi: 'https://arxiv.org/abs/2304.08485',
+  },
+  {
+    authors: 'Radford et al. (2021)',
+    title: '"Learning Transferable Visual Models From Natural Language Supervision"',
+    venue: 'ICML 2021, PMLR 139, 8748–8763',
+    doi: 'https://arxiv.org/abs/2103.00020',
+  },
+  {
+    authors: 'Rohrbach et al. (2018)',
+    title: '"Object Hallucination in Image Captioning"',
+    venue: 'EMNLP 2018',
+    doi: 'https://arxiv.org/abs/1809.02156',
+  },
+  {
+    authors: 'Zhao, Wang & Russakovsky (2021)',
+    title: '"Understanding and Evaluating Racial Biases in Image Captioning"',
+    venue: 'ICCV 2021',
+    doi: 'https://arxiv.org/abs/2106.08503',
+  },
+]
 
 // --- VLM Models (fetched dynamically from backend) ---
 const { vlmModels, loading: vlmLoading } = useVlmModels()
@@ -301,12 +376,55 @@ const imagePath = ref<string | null>(null)
 const analysisPrompt = ref('')
 const selectedModels = ref<string[]>([])
 
-// Pre-select the small readers once the list arrives from the backend. The
-// large one is offered, not switched on: it holds 19 GB for as long as it is
-// loaded, and on a smaller card that pushes the image model off.
-watch(vlmModels, (models) => {
-  if (selectedModels.value.length > 0) return
-  selectedModels.value = models.filter(m => m.available && m.backend === 'llm').map(m => m.id)
+// The lineups this surface offers, in the order of their chips. Which models
+// each one stands for is data (devserver/config/model_register.json); a member
+// this installation does not offer is left out rather than replaced.
+const LINEUPS = ['sameSize', 'family'] as const
+const DEFAULT_LINEUP = 'sameSize'
+
+/** The readers as the lineups are written: under the register's bare name. */
+const lineupList = computed(() =>
+  vlmModels.value.map(m => ({ id: m.id, register: bareName(m.id), available: m.available })),
+)
+
+function membersOf(id: string): string[] {
+  return lineupMembers(id, lineupList.value)
+}
+
+const lineupChoices = computed(() =>
+  LINEUPS.map(id => ({
+    value: id,
+    label: t(`compare.vlmAnalysis.lineups.${id}`),
+    title: t(`compare.vlmAnalysis.lineups.${id}Note`),
+    disabled: membersOf(id).length === 0,
+  })),
+)
+
+/** The lineup whose members are exactly the chosen readers, '' for a choice
+ *  made by hand. */
+const lineupInForce = computed(() =>
+  LINEUPS.find(id => {
+    const members = membersOf(id)
+    return members.length > 0 &&
+      members.length === selectedModels.value.length &&
+      members.every(m => selectedModels.value.includes(m))
+  }) ?? '',
+)
+
+function applyLineup(id: string): void {
+  const members = membersOf(id)
+  if (members.length) selectedModels.value = members
+}
+
+// The surface opens on ONE lineup of three, not on every reader installed:
+// ten readings side by side are a catalogue, and each of them costs a load.
+// The reader list and the register arrive separately, so this waits until a
+// lineup can be filled, and fills it once.
+let preselected = false
+watch(() => membersOf(fillableLineup(DEFAULT_LINEUP, lineupList.value, LINEUPS)), (members) => {
+  if (preselected || members.length === 0) return
+  preselected = true
+  if (selectedModels.value.length === 0) selectedModels.value = members
 }, { immediate: true })
 const isAnalyzing = ref(false)
 const activeModelIdx = ref(-1)
@@ -326,6 +444,7 @@ interface AnalysisResult {
 }
 
 const results = ref<AnalysisResult[]>([])
+const safetyStore = useSafetyEventStore()
 
 /** What stands in the columns: the readings once a press has been made, and
  *  before that the chosen readers as darkened heads over empty cells. */
@@ -341,7 +460,7 @@ interface ReadingColumn {
 
 const columns = computed<ReadingColumn[]>(() => {
   if (results.value.length === 0) {
-    return selectedModels.value.map(model => ({
+    return selectedInListOrder.value.map(model => ({
       model,
       label: getModelLabel(model),
       latency: null,
@@ -376,8 +495,33 @@ const canAnalyze = computed(() => {
   return true
 })
 
+// A model is offered under the line every list of language models on the
+// platform gives it (useModelRegister.modelLabel).
+const register = useModelRegister()
+function vlmLabel(m: VlmModelOption): string {
+  return register.modelLabel(
+    m.id, m.label, locale.value,
+    isLocalModel(m.id) ? t('compare.shared.localModel') : '',
+  )
+}
+
+/** In the order every list of models offers them in (useModelRegister.ordered). */
+const orderedVlmModels = computed(() => register.ordered(
+  vlmModels.value,
+  m => ({ local: isLocalModel(m.id), key: m.id, label: vlmLabel(m) }),
+  locale.value,
+))
+
+/** The chosen readers in that order: the columns and the run follow it, as
+ *  the chips above them do. One the list no longer names stands at the end. */
+const selectedInListOrder = computed(() => [
+  ...orderedVlmModels.value.map(m => m.id).filter(id => selectedModels.value.includes(id)),
+  ...selectedModels.value.filter(id => !vlmModels.value.some(m => m.id === id)),
+])
+
 function getModelLabel(modelId: string): string {
-  return vlmModels.value.find(m => m.id === modelId)?.label ?? modelId
+  const m = vlmModels.value.find(v => v.id === modelId)
+  return m ? vlmLabel(m) : modelId
 }
 
 function onImageUploaded(data: { image_path: string; preview_url: string }) {
@@ -401,7 +545,7 @@ function onImageRemoved() {
  *
  * The backend hands the reading over piece by piece; the frames are found by
  * the platform's own reader (lib/sseStream), and the events inside them are
- * token / done / error. A card that stops without either has lost its
+ * token / done / error / blocked. A card that stops without any of them has lost its
  * connection mid-sentence -- what arrived stays, and the card says so.
  */
 async function readReadingStream(
@@ -438,6 +582,13 @@ async function readReadingStream(
       } else if (ev.type === 'error') {
         card().error = ev.error || t('generationError.unknown')
         card().loading = false
+      } else if (ev.type === 'blocked') {
+        // A paragraph the check held back ends the reading: what passed before
+        // it stays, and the card says why the rest does not come.
+        const block = safetyBlockOf(ev)
+        card().error = t(block ? safetyBlockMessageKey(block) : 'safetyBlocked.generic')
+        card().description = card().description.trim()
+        card().loading = false
       }
     }
   } catch {
@@ -459,7 +610,7 @@ async function startAnalysis() {
   comparisonContext.value = ''
 
   const prompt = analysisPrompt.value.trim()
-  const models = [...selectedModels.value]  // Snapshot — won't change mid-loop
+  const models = [...selectedInListOrder.value]  // Snapshot — won't change mid-loop
 
   // Initialize result cards with loading state
   results.value = models.map(model => ({
@@ -496,6 +647,38 @@ async function startAnalysis() {
       }
 
       const data = await resp.json()
+      const refused = resp.status === 403 ? safetyBlockOf(data) : null
+      if (refused?.checkpoint === 'intake') {
+        // The instruction itself was refused, and every further model would be
+        // asked the same: the run stops, every card left says why, and the
+        // companion explains.
+        const said = t(safetyBlockMessageKey(refused))
+        for (let rest = idx; rest < models.length; rest++) {
+          results.value[rest] = {
+            model: models[rest]!,
+            description: '',
+            latency_s: null,
+            loading: false,
+            error: said,
+            note: null,
+          }
+        }
+        safetyStore.reportBlock(refused)
+        break
+      }
+      if (refused) {
+        // This model's reading was held back at the result; the next model
+        // reads the picture as before.
+        results.value[idx] = {
+          model,
+          description: '',
+          latency_s: null,
+          loading: false,
+          error: t(safetyBlockMessageKey(refused)),
+          note: null,
+        }
+        continue
+      }
       if (data.status === 'success') {
         results.value[idx] = {
           model,
@@ -563,7 +746,7 @@ const pageContext = computed<PageContext>(() => ({
     // to Help now, in the field made for what a surface has produced.
     instrumentRuns: comparisonContext.value
       ? [{
-          label: `${selectedModels.value.map(m => getModelLabel(m)).join(', ')} · ${frameLabel.value}`,
+          label: `${results.value.map(r => getModelLabel(r.model)).join(', ')} · ${frameLabel.value}`,
           text: comparisonContext.value,
         }]
       : [],
@@ -683,71 +866,10 @@ const folded = ref(false)
 }
 
 
-/* Heads and cells share ONE grid, and a column contributes its two children to
-   it (`display: contents`) instead of forming a grid of its own — the same
-   arrangement Cultural (Un)Known uses. A head that wraps to two lines would
-   otherwise shorten the cell in ITS column only. */
-.vla-plot { overflow: hidden; }
-
-.vla-cols {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(var(--vla-cols), minmax(0, 1fr));
-  grid-template-rows: auto minmax(0, 1fr);
-  grid-auto-flow: column;
-  gap: 6px 10px;
-}
-
-.vla-col { display: contents; }
-
-.vla-col-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  min-width: 0;
-}
-
-.vla-col-name {
-  font-size: var(--flow-fs-label);
-  color: rgba(255, 255, 255, 0.8);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.vla-col-latency {
-  margin-left: auto;
-  font-size: var(--flow-fs-hint);
-  color: rgba(76, 175, 80, 0.7);
-  font-variant-numeric: tabular-nums;
-}
-
-.vla-col-waiting {
-  margin-left: auto;
-  font-size: var(--flow-fs-hint);
-  color: rgba(255, 255, 255, 0.25);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* The cell takes the height the surface gives it and scrolls inside — see the
-   note in the template. Its ground is the surface stack, never a literal. */
-.vla-cell {
-  min-height: 0;
-  overflow-y: auto;
-  background: var(--surface-2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 10px 12px;
-}
-
-.vla-col.is-preview .vla-col-head,
-.vla-col.is-preview .vla-cell { opacity: 0.45; }
-
-.vla-col.is-waiting .vla-cell { opacity: 0.5; }
+/* The columns, their heads and their cells are the shared reading columns —
+   `.lab-readcol` on the raster `.lab-grid` in assets/flow-stage.css, which
+   started on this surface.
+   What stands below is what a cell of THIS surface holds. */
 
 .vla-reading {
   margin: 0;

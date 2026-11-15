@@ -152,7 +152,7 @@ def test_chain_chunk_reads_the_previous_link_and_names_the_language():
 
 # --- the assembled prompt --------------------------------------------------
 
-def _build(loader, safety_level="open"):
+def _build(loader, safety_level="adult"):
     cfg = loader.get_config(CONFIG)
     return ChunkBuilder(SCHEMAS).build_chunk(
         chunk_name=cfg.chunks[0],
@@ -214,7 +214,7 @@ def _run_chain(loader, fake_step, context_language="de"):
     try:
         return asyncio.run(PE.PipelineExecutor(SCHEMAS)._execute_recursive_pipeline_steps(
             CONFIG, steps, ctx, None, resolved_config=cfg,
-            safety_level="open", run_id="t", context_language=context_language,
+            safety_level="adult", run_id="t", context_language=context_language,
         ))
     finally:
         PE.PipelineExecutor._execute_single_step = original
@@ -296,7 +296,7 @@ def test_a_link_that_answers_with_nothing_fails_the_run(loader):
 # call the loop actually made.
 
 
-def _capture_first_link(loader, safety_level="open", context_language="de",
+def _capture_first_link(loader, safety_level="adult", context_language="de",
                         seed_previous=None):
     """Run the real loop until it asks for a prompt; return what it asked with."""
     captured = {}
@@ -398,7 +398,7 @@ def test_the_assembled_prompt_is_what_the_model_is_asked(loader):
     ctx.custom_placeholders["TARGET_LANGUAGE_CODE"] = "ja"
 
     out = asyncio.run(ex._execute_single_step(
-        step, ctx, resolved_config=cfg, safety_level="open",
+        step, ctx, resolved_config=cfg, safety_level="adult",
         context_language="de"))
 
     assert out == "Ein Haus am Fluss."
@@ -424,7 +424,7 @@ def test_a_single_call_preset_keeps_its_instruction(loader):
     ctx.custom_placeholders["_SKIP_WIKIPEDIA"] = True
     try:
         asyncio.run(ex._execute_single_step(
-            step, ctx, resolved_config=cfg, safety_level="open",
+            step, ctx, resolved_config=cfg, safety_level="adult",
             context_language="de"))
     except SystemExit:
         pass

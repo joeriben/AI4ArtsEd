@@ -181,7 +181,7 @@ GET /api/schema/<name>
   "run_id": "812ccc30-5de8-416e-bfe7-10e913916672",
   "status": "in_progress",  // or "completed", "failed"
   "current_stage": 3,
-  "current_step": "pre_output_safety",
+  "current_step": "before_model",
   "progress": "4/6",
   "start_time": "2025-11-04T21:15:30",
   "elapsed_time": 8.5
@@ -225,7 +225,7 @@ GET /api/schema/<name>
 ### GET `/api/pipeline/<run_id>/entity/<entity_type>`
 
 **Parameters:**
-- `entity_type`: input, translation, safety, interception, safety_pre_output, output_image, etc.
+- `entity_type`: input, interception, translation_en, output_image, etc.
 
 **Response:** Binary file with appropriate MIME type
 - Text entities: `text/plain; charset=utf-8`
@@ -344,6 +344,10 @@ English nouns: who, what, where. The frontend never composes it.
 
 **413** if the prompt exceeds `MAX_PROMPT_CHARS`.
 
+**403** with the block message (`safety_block`) when the intake stops the prompt
+(`check_intake()`), or the check at the result stops the search term a model wrote
+(`check_result_text()`). Nothing is searched then.
+
 Each image carries `title`, `thumb_proxy`, `width`, `height`, `author`, `licence`,
 `file_page`, `categories`. Author and licence are always rendered — for CC BY-SA the
 attribution is a condition of use.
@@ -353,9 +357,12 @@ attribution is a condition of use.
    excluded (`AI_EXCLUDED_CATEGORIES`, `AI_CATEGORY_MARKERS`), as are explicitly
    catalogued ones. The archive describes its own holdings, so this runs BEFORE the
    image check and is cheaper and more reliable than looking.
-2. `vlm_safety_check` at levels `kids` and `youth`. The safety level is resolved at the
-   request boundary (`resolve_safety_level()`) and passed down — never resolved inside a
-   worker thread.
+2. The check at the result (`check_result_image()`) at levels `kids` and `youth`. The
+   safety level is resolved at the request boundary (`resolve_safety_level()`) and passed
+   down — never resolved inside a worker thread. A picture that passed is remembered as
+   released for its level. At `kids` and `youth`, `GET /api/commons/image/<ref>` serves
+   only a picture released for the level of whoever asks, and answers 403 with the block
+   message otherwise.
 
 ### GET `/api/commons/image/<path:ref>`
 
@@ -394,14 +401,15 @@ pipeline_recorder = LivePipelineRecorder(run_id)  # The one recording system (Ex
 ```
 exports/
 ├── json/                    # LivePipelineRecorder
-│   └── {run_id}/            # Primary storage location
+│   └── {date}/{device_id}/{run_id}/
 │       ├── metadata.json
-│       ├── 01_input.txt
-│       ├── 02_translation.txt
-│       ├── 03_safety.json
-│       ├── 04_interception.txt
-│       ├── 05_safety_pre_output.json
-│       └── 06_output_image.png
+│       ├── final/           # the entities in the order saved, e.g. /pipeline/interception:
+│       │   ├── 01_config_used.json
+│       │   ├── 02_input.txt
+│       │   ├── 03_interception.txt
+│       │   ├── 04_translation_en.txt   # where the model receives a translation
+│       │   └── 05_output_image.png
+│       └── prompting_process/
 │
 └── pipeline_runs/           # Execution History
     └── exec_*.json          # Research data export format

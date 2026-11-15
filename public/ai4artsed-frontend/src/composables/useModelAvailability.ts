@@ -10,11 +10,9 @@ import { providerName } from '@/data/providers'
  * The Flow, Mean Images and the model choice of five instruments (Model
  * Comparison, Language Understanding, Stereotype Analysis, Language Model
  * Comparison, Aesthetic Poles) all ask here (docs/ARCHITECTURE PART 08).
- * Gemini 3 Pro Image and Gemini Nano Banana 2.1 run through Mammouth AI
- * whatever the external LLM provider is set to. They are switched off in the
- * Flow and in those choices where that account holds no key, and where it
- * holds no credit
- * (docs/DEVELOPMENT_DECISIONS.md). A second copy of the asking is the
+ * A cloud config is switched off in the Flow and in those choices where the
+ * provider its chunk names holds no key, refuses it, or holds no credit
+ * (services/provider_account.py). A second copy of the asking is the
  * parallel structure docs/ELEMENT_STRUCTURE_REGISTRY.md forbids.
  *
  * The answer is shared between the surfaces. A question asked while another

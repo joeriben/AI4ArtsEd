@@ -304,6 +304,10 @@ class LLMClient:
             "finish_reason": _first(out.get("finish_reason")) or "stop",
             "prompt_tokens": _first(out.get("prompt_tokens")),
             "completion_tokens": _first(out.get("completion_tokens")),
+            # An answer the node's repetition guard stopped, up to where it
+            # began to repeat, with what repeated standing in it once; "" for
+            # any other answer (RepetitionGuard.once).
+            "once": _first(out.get("once")) or "",
         }
 
     @classmethod
@@ -320,10 +324,12 @@ class LLMClient:
 
     @classmethod
     def run_node_files(cls, class_type: str, inputs: Dict[str, Any],
-                       workload: Optional[str] = None) -> Tuple[Dict[str, Any], list]:
+                       workload: Optional[str] = None) -> Tuple[Dict[str, Any], list, str]:
         """`run_node`, with the files the node announced beside what it
         wrote: (the ui outputs, [comfyui_ws_client.MediaFile] in the order
-        of the announcement). The media stations answer this way -- a sound
+        of the announcement, the model the run loaded as
+        comfyui_ws_client.models_in_workflow names it, which a chunk reports
+        as `model_used`). The media stations answer this way -- a sound
         under "audio", a mesh under "3d" (ANNOUNCED_FILES): the tracking
         fetches each file off /view before the run's history entry is taken
         out, so the bytes outlive the entry. `workload` as in `run_node`; a
@@ -335,7 +341,7 @@ class LLMClient:
         if not out:
             raise RuntimeError(f"the run {result.prompt_id} ended without the node's answer in its outputs")
         return ({k: _first(v) if isinstance(v, list) else v for k, v in out.items()},
-                list(result.media_files or []))
+                list(result.media_files or []), result.model_used)
 
 
     def _chat(self, model: str, messages: list, images: Optional[List[str]] = None,
@@ -354,19 +360,26 @@ class LLMClient:
             # id itself cannot say that (see `note_dispatch`).
             note_dispatch(model, local=True)
             answer = self._answer(self._run(workflow))
-            return {
+            chat = {
                 "content": answer["content"],
                 "thinking": answer["thinking"],
                 "tool_calls": None,
                 "finish_reason": answer["finish_reason"],
             }
+            if answer["once"]:
+                chat["once"] = answer["once"]
+            return chat
         except Exception as e:
             # Nothing is at this model any more, and that is said rather than
             # left standing: a run goes on after a call that failed, and the
             # bar would otherwise carry the name until a later dispatch
             # replaced it (`note_dispatch` in services/streaming_response.py).
             note_dispatch(None, local=True)
-            logger.error(f"[LLM-CLIENT] Chat failed ({model}): {_said(e)}")
+            from my_app.services.generation_abort import current_run_aborted
+            if current_run_aborted():
+                logger.info(f"[LLM-CLIENT] Chat ended with its run ({model}): {_said(e)}")
+            else:
+                logger.error(f"[LLM-CLIENT] Chat failed ({model}): {_said(e)}")
             return None
 
     def _generate(self, model: str, prompt: str,
@@ -584,7 +597,9 @@ class LLMClient:
         """Messages-based chat.
 
         Returns {"content": str, "thinking": str|None, "tool_calls": None,
-        "finish_reason": str} or None on failure.
+        "finish_reason": str} or None on failure; with "once" as well when the
+        node's repetition guard stopped the answer and the node gave its once
+        form (RepetitionGuard.once).
 
         `enable_thinking` reaches the node and, through it, the model's chat
         template: False closes the think block in the prompt where the

@@ -152,6 +152,43 @@ def app():
     return app
 
 
+@pytest.fixture(autouse=True)
+def checks_pass(monkeypatch):
+    """The platform's checks, answered here without a model: every text and
+    picture passes, at the level the view resolved. What the checks decide is
+    the matter of test_sound_checks.py, test_workbench_checks.py,
+    test_media_reading_checks.py and test_commons_checks.py; this file is about
+    the way back."""
+    from my_app.services.safety_gate import Verdict
+    for routes in (cross_aesthetic_routes, fusion_workbench_routes):
+        monkeypatch.setattr(routes, "resolve_safety_level", lambda: "kids")
+        monkeypatch.setattr(routes, "check_intake_texts",
+                            lambda fields, *, level: Verdict(True, "intake", level))
+        monkeypatch.setattr(routes, "check_before_model",
+                            lambda texts, *, level, **_: Verdict(True, "before_model", level))
+    monkeypatch.setattr(fusion_workbench_routes, "check_result_image",
+                        lambda picture, *, level, **_: Verdict(True, "result", level))
+    monkeypatch.setattr(fusion_workbench_routes, "check_result_text",
+                        lambda text, *, level, **_: Verdict(True, "result", level))
+    # The three media readings: the picture's pass, the comparison's intake,
+    # and every reading at the result.
+    monkeypatch.setattr(media_routes, "resolve_safety_level", lambda: "kids")
+    monkeypatch.setattr(media_routes, "check_intake",
+                        lambda material, *, level, kind, field: Verdict(True, "intake", level))
+    monkeypatch.setattr(media_routes, "check_before_model",
+                        lambda texts, *, level, **_: Verdict(True, "before_model", level))
+    monkeypatch.setattr(media_routes, "check_result_text",
+                        lambda text, *, level, **_: Verdict(True, "result", level))
+    # The found-pictures row: the prompt's intake, the search term and every
+    # picture at the result.
+    monkeypatch.setattr(commons_routes, "check_intake",
+                        lambda material, *, level, kind, field: Verdict(True, "intake", level))
+    monkeypatch.setattr(commons_service, "check_result_text",
+                        lambda text, *, level, **_: Verdict(True, "result", level))
+    monkeypatch.setattr(commons_service, "check_result_image",
+                        lambda picture, *, level, **_: Verdict(True, "result", level))
+
+
 def nothing_may_buffer_this(response) -> None:
     """The two headers, asserted on every streamed answer this file drives.
 
@@ -319,13 +356,15 @@ def recorded_audio(tmp_path, monkeypatch):
 class Made:
     """What a media station hands back since it is ComfyUI (llm_client
     `_track`): the run, as much of it as the station clients read -- the
-    node's ui output under its node id, and the files the node announced."""
+    node's ui output under its node id, the files the node announced, and the
+    model the run loaded (comfyui_ws_client.GenerationResult.model_used)."""
 
     def __init__(self, ui, files=()):
         from my_app.services.llm_client import NODE_ID
         self.prompt_id = "stand-in-prompt"
         self.outputs_metadata = {NODE_ID: {k: [v] for k, v in ui.items()}}
         self.media_files = list(files)
+        self.model_used = "stand-in-model"
 
 
 class Broke:
@@ -1161,10 +1200,10 @@ def test_the_commons_lookup_takes_its_safety_level_where_the_session_is(
     answers it with the STRICTEST level plus a warning — correct, and it means a
     resolve left inside the run would check every room's pictures at `kids`
     while the room worked at another level, silently. Driven with the
-    installation at `open` and no course pinned, over the STREAM, which is the
+    installation at `adult` and no course pinned, over the STREAM, which is the
     only way back that has such a worker at all.
     """
-    monkeypatch.setattr(config, "DEFAULT_SAFETY_LEVEL", "open")
+    monkeypatch.setattr(config, "DEFAULT_SAFETY_LEVEL", "adult")
     held = hold_the_lookup(monkeypatch).opened()
 
     streamed = app.test_client().post('/api/commons/lookup',
@@ -1173,7 +1212,7 @@ def test_the_commons_lookup_takes_its_safety_level_where_the_session_is(
     nothing_may_buffer_this(streamed)
     assert answer(streamed.get_data(as_text=True))[1] == 200
 
-    assert held.seen[0][1]["safety_level"] == "open", \
+    assert held.seen[0][1]["safety_level"] == "adult", \
         "the level was resolved on the worker, which owes the strictest one"
 
 
@@ -1252,9 +1291,13 @@ class TestTheRowStopsWhereItsReaderLeft:
         commons_service._term_cache.clear()
         commons_service._search_cache.set(self.TERM, [
             asdict(commons_service.CommonsImage(
-                title=f"A house {n}.jpg",
+                # One subject and one author per candidate: _pool() keeps one
+                # picture per first two title words and one per author
+                # (f2f7233a), so twenty-four "A house" by "somebody" would
+                # reach the checks as a single candidate.
+                title=f"House{n} field{n}.jpg",
                 thumb_proxy=f"/api/commons/image/ref{n}",
-                width=800, height=600, author="somebody",
+                width=800, height=600, author=f"somebody {n}",
                 licence="CC BY-SA 4.0",
                 file_page="https://commons.wikimedia.org/wiki/File:House.jpg",
                 categories=["Houses"]))
@@ -1283,7 +1326,7 @@ class TestTheRowStopsWhereItsReaderLeft:
 
     def a_row_being_checked(self, monkeypatch):
         checks = self.OnePictureAtATime(None)
-        monkeypatch.setattr(commons_service, "_passes_image_check", checks)
+        monkeypatch.setattr(commons_service, "_check_picture", checks)
         return checks
 
     def watched(self, monkeypatch):

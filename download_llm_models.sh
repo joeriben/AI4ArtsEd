@@ -25,6 +25,8 @@
 # resumes. A gated repository (the table says which) needs HF_TOKEN in the
 # environment, from a Hugging Face account that accepted the model's licence.
 # ComfyUI lists a new folder at its next validation; no restart.
+# For the models ComfyUI implements itself (Qwen 3.5 and 3.8) run
+# ./convert_llm_weights.sh afterwards; until then they answer through transformers.
 
 set -e
 

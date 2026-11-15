@@ -141,6 +141,58 @@ class ProgressEvent:
     total_nodes: int
     current_node: Optional[str] = None
     preview_base64: Optional[str] = None  # denoising preview (JPEG base64)
+    # Where the sampling stands, counted over the whole schedule the sampler
+    # was given (run_step); 0 and 0 where no count is known.
+    step: int = 0
+    max_steps: int = 0
+    # What the node now executing does in a generation (node_phase), or None
+    # while a node runs that no phase names.
+    phase: Optional[str] = None
+
+
+def node_phase(node: Optional[dict]) -> Optional[str]:
+    """What a workflow node does in a generation, read from its class: the
+    phase a progress view can name. "load" reads model files from disk (to the
+    card or to RAM; ComfyUI moves them to the card when they are first used),
+    "encode" turns the prompt into embeddings, "encode_images" does that with
+    input images beside the prompt, "encode_image" turns an input image into a
+    latent, "denoise" runs the sampler steps, "decode" is the VAE turning the
+    latent into the medium, "save" writes the file. Any other node (an empty
+    latent, a resize, the sampler selection, the platform's own nodes) returns
+    None: no phase is named while it runs."""
+    if not isinstance(node, dict):
+        return None
+    class_type = str(node.get("class_type") or "")
+    inputs = node.get("inputs") if isinstance(node.get("inputs"), dict) else {}
+    if class_type in ("KSampler", "KSamplerAdvanced") or class_type.startswith("SamplerCustom"):
+        return "denoise"
+    if class_type.startswith("VAEDecode"):
+        return "decode"
+    if class_type.startswith("VAEEncode") or class_type == "WanImageToVideo":
+        return "encode_image"
+    if "TextEncode" in class_type:
+        return "encode_images" if any(k.startswith("image") for k in inputs) else "encode"
+    if "Loader" in class_type:
+        return "load"
+    if class_type.startswith("Save"):
+        return "save"
+    return None
+
+
+def run_step(node: Optional[dict], value: int, maximum: int) -> tuple:
+    """The step a sampler node reports, counted over the whole schedule.
+
+    ComfyUI counts a node's own steps only. A KSamplerAdvanced that runs steps
+    2 to 4 of 4 (the second of Wan 2.2's two experts) reports 1 and 2 of 2;
+    its `start_at_step` and `steps` give 3 and 4 of 4. Every other node is
+    counted as it reports itself. Inputs that are links, not numbers, leave
+    the node's own count standing."""
+    if isinstance(node, dict) and node.get("class_type") == "KSamplerAdvanced":
+        inputs = node.get("inputs") or {}
+        start, steps = inputs.get("start_at_step"), inputs.get("steps")
+        if isinstance(start, int) and isinstance(steps, int) and steps > 0:
+            return min(start + value, steps), steps
+    return value, maximum
 
 
 # The step the card is on, for the readers that ask by polling:
@@ -192,6 +244,9 @@ class GenerationResult:
     media_files: list  # List[MediaFile]
     execution_time: float
     outputs_metadata: dict = field(default_factory=dict)  # Raw ComfyUI outputs dict
+    # The models the workflow generated with, as models_in_workflow names
+    # them: what a chunk reports as `model_used`.
+    model_used: str = ""
 
 
 @dataclass
@@ -239,31 +294,71 @@ def _checkpoint_of(workflow) -> str:
     that, any node that names a model file. Deterministic: sorted by node id,
     so the same workflow always yields the same name.
     """
-    if not isinstance(workflow, dict):
-        return "comfyui"
     best = None
+    for _node_id, cls, _field, name in _named_models(workflow):
+        if any(h in cls for h in _LOADER_HINTS):
+            return name
+        if best is None:
+            best = name
+    return best or "comfyui"
+
+
+def models_in_workflow(workflow) -> str:
+    """The models this workflow generates with, as one name.
+
+    What a run reports as `model_used`: the file each loader node loads
+    (CheckpointLoaderSimple, UNETLoader), or, for a node of the platform's
+    own package, the model its `model_name` or `llm_name` names. Several are
+    joined with " + " (the two experts of Wan 2.2), in node order. Text
+    encoders, VAE and LoRA load beside the model and are not named. Empty
+    where no node loads a model. `_checkpoint_of` picks one name off the
+    same walk, the one that decides a swap.
+    """
+    names, named = [], set()
+    for node_id, cls, field_name, name in _named_models(workflow):
+        # A loader names its file in the first of _CHECKPOINT_FIELDS it has;
+        # a node of the platform's own package names its model itself.
+        if node_id in named or not (
+                any(h in cls for h in _LOADER_HINTS)
+                or (cls.startswith("ai4artsed_") and field_name in ("model_name", "llm_name"))):
+            continue
+        named.add(node_id)
+        if name not in names:
+            names.append(name)
+    return " + ".join(names)
+
+
+def _named_models(workflow):
+    """(node id, class lowercased, field, name) for every input of the
+    workflow that names a model file: by node id, so the same workflow always
+    yields the same order, and per node in the order of _CHECKPOINT_FIELDS,
+    each under the name `_model_name` gives it. The one walk over a
+    workflow's models; `_checkpoint_of` and `models_in_workflow` select from
+    it."""
+    if not isinstance(workflow, dict):
+        return
     for node_id in sorted(workflow.keys(), key=str):
         node = workflow.get(node_id)
-        if not isinstance(node, dict):
+        if not isinstance(node, dict) or not isinstance(node.get("inputs"), dict):
             continue
         cls = str(node.get("class_type", "")).lower()
-        inputs = node.get("inputs")
-        if not isinstance(inputs, dict):
-            continue
         for f in _CHECKPOINT_FIELDS:
-            v = inputs.get(f)
+            v = node["inputs"].get(f)
             if isinstance(v, str) and v:
-                if f == "llm_name":
-                    v = _local_model_id(v)
-                elif f == "model_name" and cls == "ai4artsed_media_reading":
-                    v = _reader_id(v)
-                elif f == "model_name" and cls.startswith("ai4artsed_"):
-                    v = _local_media_id(v)
-                if any(h in cls for h in _LOADER_HINTS):
-                    return v
-                if best is None:
-                    best = v
-    return best or "comfyui"
+                yield node_id, cls, f, _model_name(cls, f, v)
+
+
+def _model_name(cls: str, field_name: str, value: str) -> str:
+    """The name a model a node loads goes by: a local language model and a
+    media model of the platform's own package by their platform id, every
+    other file by its own name. `cls` is the node's class, lowercased."""
+    if field_name == "llm_name":
+        return _local_model_id(value)
+    if field_name == "model_name" and cls == "ai4artsed_media_reading":
+        return _reader_id(value)
+    if field_name == "model_name" and cls.startswith("ai4artsed_"):
+        return _local_media_id(value)
+    return value
 
 
 def _local_model_id(dir_name: str) -> str:
@@ -643,6 +738,7 @@ class ComfyUIWebSocketClient:
                 on_progress=on_progress,
                 start_time=start_time,
                 on_event=on_event,
+                nodes=workflow,
             )
         except TimeoutError:
             # Cancel the zombie job in ComfyUI before propagating
@@ -671,6 +767,7 @@ class ComfyUIWebSocketClient:
             media_files=media_files,
             execution_time=execution_time,
             outputs_metadata=outputs_metadata,
+            model_used=models_in_workflow(workflow),
         )
 
     # ------------------------------------------------------------------
@@ -789,10 +886,13 @@ class ComfyUIWebSocketClient:
         on_progress: Optional[Callable],
         start_time: float,
         on_event: Optional[Callable[[str, dict], None]] = None,
+        nodes: Optional[Dict[str, Any]] = None,
     ):
         """Track workflow execution via WebSocket events, on the socket that
         was opened under this request's client id before the prompt was
-        submitted (submit_and_track)."""
+        submitted (submit_and_track). `nodes` is the workflow as submitted:
+        its node ids name the phase and the step count a progress event
+        reports (node_phase, run_step)."""
         # Race condition guard: check if execution already completed before WS connected
         if await self._check_already_completed(prompt_id):
             # Finished before the socket was up. Step 4 downloads the
@@ -811,6 +911,9 @@ class ComfyUIWebSocketClient:
         nodes_done = 0
         current_step = 0
         max_steps = 1
+        current_phase: Optional[str] = None
+        shown_step, shown_total = 0, 0
+        workflow_nodes = nodes if isinstance(nodes, dict) else {}
         our_execution_started = False
 
         while True:
@@ -842,6 +945,9 @@ class ComfyUIWebSocketClient:
                         nodes_done=nodes_done,
                         total_nodes=total_nodes,
                         preview_base64=preview_b64,
+                        step=shown_step,
+                        max_steps=shown_total,
+                        phase=current_phase,
                     ))
                 continue
 
@@ -899,6 +1005,12 @@ class ComfyUIWebSocketClient:
                     nodes_done += 1
                     current_step = 0
                     max_steps = 1
+                    executing = workflow_nodes.get(node)
+                    current_phase = node_phase(executing)
+                    # A sampler starting names where its schedule begins: 0
+                    # for the first, 2 of 4 for Wan's second expert.
+                    shown_step, shown_total = (run_step(executing, 0, 0)
+                                               if current_phase == "denoise" else (0, 0))
                     if on_progress:
                         overall = nodes_done / total_nodes if total_nodes > 0 else 0
                         on_progress(ProgressEvent(
@@ -907,6 +1019,9 @@ class ComfyUIWebSocketClient:
                             nodes_done=nodes_done,
                             total_nodes=total_nodes,
                             current_node=node,
+                            step=shown_step,
+                            max_steps=shown_total,
+                            phase=current_phase,
                         ))
 
             elif msg_type == "execution_cached":
@@ -918,6 +1033,11 @@ class ComfyUIWebSocketClient:
                 current_step = data.get("value", 0)
                 max_steps = data.get("max", 1)
                 note_step(prompt_id, current_step, max_steps)
+                # ComfyUI names the stepping node in the message itself.
+                stepping = workflow_nodes.get(data.get("node"))
+                if stepping is not None:
+                    current_phase = node_phase(stepping)
+                shown_step, shown_total = run_step(stepping, current_step, max_steps)
                 if on_progress:
                     step_progress = current_step / max_steps if max_steps > 0 else 0
                     overall = (nodes_done + step_progress) / total_nodes if total_nodes > 0 else 0
@@ -926,6 +1046,9 @@ class ComfyUIWebSocketClient:
                         current_percent=step_progress,
                         nodes_done=nodes_done,
                         total_nodes=total_nodes,
+                        step=shown_step,
+                        max_steps=shown_total,
+                        phase=current_phase,
                     ))
 
             elif msg_type == "execution_error":
@@ -1386,7 +1509,7 @@ class ComfyUIWebSocketClient:
         return None
 
 
-    async def cancel_job(self, prompt_id: str) -> None:
+    async def cancel_job(self, prompt_id: str) -> bool:
         """Cancel a specific job: remove it from the queue if pending,
         interrupt it if running.
 
@@ -1396,24 +1519,42 @@ class ComfyUIWebSocketClient:
         gap: a prompt the worker took between the two requests was skipped
         by the interrupt (not running yet) and missed by the delete (no
         longer pending), and ran to its end for nobody.
+
+        Each request on its own: a queue that answers late keeps no interrupt
+        back from a prompt that is running.
+
+        Answers whether ComfyUI took both requests. One it refused or could
+        not be reached for is logged with its cause, and the caller decides
+        whether to ask again. Taken says only that ComfyUI read them: it
+        answers both with 200 whether or not they found the prompt.
         """
-        try:
-            async with aiohttp.ClientSession() as session:
-                # Remove from pending queue
-                await session.post(
-                    f"{self.base_url}/queue",
-                    json={"delete": [prompt_id]},
-                    timeout=aiohttp.ClientTimeout(total=5),
-                )
-                # Interrupt if currently executing
-                await session.post(
-                    f"{self.base_url}/interrupt",
-                    json={"prompt_id": prompt_id},
-                    timeout=aiohttp.ClientTimeout(total=5),
-                )
-                logger.info(f"[COMFYUI-WS] Cancelled job: {prompt_id}")
-        except Exception as e:
-            logger.debug(f"[COMFYUI-WS] Cancel job best-effort failed: {e}")
+        cause = await self.try_cancel_job(prompt_id)
+        if cause:
+            logger.warning(f"[COMFYUI-WS] Cancel of {prompt_id} not taken: {cause}")
+            return False
+        logger.info(f"[COMFYUI-WS] Cancelled job: {prompt_id}")
+        return True
+
+    async def try_cancel_job(self, prompt_id: str) -> Optional[str]:
+        """`cancel_job` without its log: None where ComfyUI took both
+        requests, otherwise the cause. For a caller that asks again and
+        logs a cancel not taken once (`generation_abort`'s watcher).
+        """
+        failed = []
+        async with aiohttp.ClientSession() as session:
+            for path, body in (("queue", {"delete": [prompt_id]}),
+                               ("interrupt", {"prompt_id": prompt_id})):
+                try:
+                    async with session.post(
+                        f"{self.base_url}/{path}",
+                        json=body,
+                        timeout=aiohttp.ClientTimeout(total=5),
+                    ) as response:
+                        if response.status >= 400:
+                            failed.append(f"/{path}: HTTP {response.status}")
+                except Exception as e:
+                    failed.append(f"/{path}: {e!r}")
+        return "; ".join(failed) or None
 
     # ------------------------------------------------------------------
     # Legacy compatibility helpers

@@ -315,9 +315,13 @@ surcharge is charged only when the model is not resident, and then at the **long
 load**, not the mean (a load whose model is already there returns at once and is recorded
 too, which drags the mean far below any load that really happens).
 
-**Unknown travels, and never becomes a zero.** A run that has outlived its estimate reports
-`expected_remaining_s: null`, not `0` — telling a room "about to start" about a video that
-was quoted 10 s and has been running for 200 is worse than saying the number is not known.
+**Unknown travels, and never becomes a zero.** The running operation is quoted at its
+measured duration plus a buffer (`GPU_ADMISSION_FORECAST_BUFFER_SHARE` of the measurement, at
+least `GPU_ADMISSION_FORECAST_BUFFER_MIN_S`), and the countdown runs to that figure; queued
+runs are quoted at their measurement alone, so the margin does not stack along the chain. A
+run that has outlived its quote reports `expected_remaining_s: null`, not `0` — telling a
+room "about to start" about a video that was quoted 10 s and has been running for 200 is
+worse than saying the number is not known.
 The same rule runs the length of the chain: an unknown remaining time on the running job
 makes every `expected_start_in_s` behind it `null`; a queued run whose own model has no
 usable measurement reports `expected_run_s: null` **and** blanks the start times of everyone
@@ -393,11 +397,13 @@ rule 13):
 
 ## Configuration
 
-All in `gpu_service/config.py`, all overridable by environment variable.
+All in `devserver/config.py`, all overridable by environment variable.
 
 | Variable | Default | Meaning |
 |---|---|---|
 | `GPU_ADMISSION_ACQUIRE_TIMEOUT_S` | 5400 | how long a caller waits before giving up |
+| `GPU_ADMISSION_FORECAST_BUFFER_SHARE` | 0.25 | margin the forecast adds to the running operation's measured duration, as a share of it |
+| `GPU_ADMISSION_FORECAST_BUFFER_MIN_S` | 15 | the least margin, in seconds |
 | `GPU_ADMISSION_MAX_WAITERS` | 40 | queue length past which `GpuBusy` is raised |
 | `GPU_ADMISSION_MAX_HOLD_S` | 2400 | a wedged holder is released after this |
 | `GPU_ADMISSION_HEARTBEAT_TIMEOUT_S` | 120 | remote lease without heartbeat is reaped |

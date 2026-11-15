@@ -52,14 +52,18 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="ct-text lab-col col-fold-host" :class="{ folded }" :style="{ paddingBottom: axisFromBottom + 'px' }">
+          <section class="cmp-column ct-text lab-col col-fold-host" :class="{ folded }" :style="{ marginBottom: axisFromBottom + 'px' }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The models that did not answer, each named with its cause. The
                  run goes on with the next model, so the other rows still fill.
                  At the head: this column scrolls at 1210 x 834 (docs/
-                 ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`). -->
-            <p ref="failLine" class="lab-prep-err at-head">{{ failures.join(' ') }}</p>
+                 ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`).
+                 Since 2026-11-07 the line stands only while it has something
+                 to say; empty, it held one line of room at the head, and the
+                 picker and the slider under it are disabled while a run goes, so
+                 what the line pushes down is the rest of the column. -->
+            <p v-if="failures.length" ref="failLine" class="lab-prep-err at-head">{{ failures.join(' ') }}</p>
 
             <!-- Which models are asked. It stood in the band's first node as an
                  interactive FlowNodeHead until 2026-08-21; here it is the
@@ -149,14 +153,14 @@
                     <rect :x="b.x" :y="b.y" :width="b.w" :height="b.h" :class="['ct-bar', b.k, { 'lab-hit': b.hit }]" />
                     <text v-if="s.seen > 0" :x="b.cx" :y="b.y - 5" class="ct-count" text-anchor="middle">{{ b.v }}</text>
                   </g>
-                  <text :x="sx(si)" :y="PLOT_B + 18" class="ct-name" text-anchor="middle">{{ s.label }}</text>
+                  <ModelAxisLabel :x="sx(si)" :y="PLOT_B + 18" :label="s.label" />
                   <!-- The measure, and on a SECOND line what it is: at five
                        models a slot is 166 px wide, and the two together ran
                        into the next model's. -->
-                  <text v-if="s.seen > 0" :x="sx(si)" :y="PLOT_B + 36" class="ct-score" text-anchor="middle">
+                  <text v-if="s.seen > 0" :x="sx(si)" :y="PLOT_B + 36 + nameDrop" class="ct-score" text-anchor="middle">
                     {{ t('latentLab.textLab.coref.score', { v: signed(netScore(s)), n: s.seen }) }}
                   </text>
-                  <text v-if="s.seen > 0" :x="sx(si)" :y="PLOT_B + 52" class="ct-score-note" text-anchor="middle">
+                  <text v-if="s.seen > 0" :x="sx(si)" :y="PLOT_B + 52 + nameDrop" class="ct-score-note" text-anchor="middle">
                     {{ t('latentLab.textLab.coref.scoreNote') }}
                   </text>
                 </g>
@@ -179,8 +183,12 @@ import ShellRun from '@/components/ShellRun.vue'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 
 import ModelPicker from '@/components/ModelPicker.vue'
+import ModelAxisLabel from '@/components/ModelAxisLabel.vue'
+import { modelLabelDrop } from '@/lib/modelAxisLabel'
 import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
 import { useSafetyLevelStore } from '@/stores/safetyLevel'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { safetyBlockOf } from '@/composables/useGenerationStream'
 import { bringFailureIntoView, generationErrorFor } from '@/composables/useLabRun'
 
 /**
@@ -203,7 +211,8 @@ const { t, locale } = useI18n()
    Which models are compared. The row itself is `components/ModelPicker.vue` —
    it stood here and in Bias Archäologie 1 in the same shape, and since
    2026-08-22 it carries presets over a selection instead of fixed sets. What
-   arrives here is only the lineup, smallest first.
+   arrives here is only the lineup, smallest first or, for the generations,
+   in their order.
    --------------------------------------------------------------------------- */
 interface Member { id: string; label: string; vram: number }
 
@@ -231,6 +240,7 @@ function setMembers(next: Member[]) {
 interface Pair { id: string; group: string; matching: { sentence: string }; other: { sentence: string } }
 
 const safety = useSafetyLevelStore()
+const safetyStore = useSafetyEventStore()
 
 const groupPairs = ref<Pair[]>([])
 const poolSize = ref(0)
@@ -311,12 +321,15 @@ function scrubTo(v: number) {
    language reaches no model, whether it was drawn or vetted. A translation that
    fails leaves the English standing.
    --------------------------------------------------------------------------- */
-const uiLang = computed(() => String(locale.value || 'en').split('-')[0] ?? 'en')
+const uiLang = computed(() => String(locale.value || 'en'))
 const translations = ref<Record<string, string[]>>({})
 /* One request per case, not one per reason to want it: the store is only
    written when the answer arrives, so mount and watcher fired six calls for
    the first case. */
 const pending = new Set<string>()
+/* A case whose translation the server held back is not asked for again in
+   this language: the answer would be the same refusal, said once more. */
+const withheld = new Set<string>()
 
 const shownTranslation = computed(() => translations.value[shown.value?.id ?? ''] ?? null)
 const needsTranslation = computed(() => uiLang.value !== 'en' && !!shownTranslation.value)
@@ -324,7 +337,8 @@ const shownFirstTr = computed(() => shownTranslation.value?.[0] ?? '')
 const shownSecondTr = computed(() => shownTranslation.value?.[1] ?? '')
 
 async function ensureTranslation(p: Pair | null) {
-  if (!p || uiLang.value === 'en' || translations.value[p.id] || pending.has(p.id)) return
+  if (!p || uiLang.value === 'en' || translations.value[p.id] || pending.has(p.id)
+    || withheld.has(p.id)) return
   pending.add(p.id)
   const parts = [p.matching.sentence, p.other.sentence]
   try {
@@ -344,15 +358,22 @@ async function ensureTranslation(p: Pair | null) {
     if (Array.isArray(out) && out.length === 2 && out[0] && out[1] && out[0] !== out[1]) {
       translations.value = { ...translations.value, [p.id]: out }
     }
-  } catch {
-    /* The English stands. A missing reading is not a failed run. */
+  } catch (e) {
+    // The English stands. A missing reading is not a failed run; one the server
+    // held back is said where every block on this platform is said, while its
+    // pair is still the one on screen.
+    const refused = safetyBlockOf(e)
+    if (refused) {
+      withheld.add(p.id)
+      if (shown.value?.id === p.id) safetyStore.reportBlock(refused)
+    }
   } finally {
     pending.delete(p.id)
   }
 }
 
 watch(shown, p => { ensureTranslation(p) })
-watch(uiLang, () => { translations.value = {}; ensureTranslation(shown.value) })
+watch(uiLang, () => { translations.value = {}; withheld.clear(); ensureTranslation(shown.value) })
 
 /* ---------------------------------------------------------------------------
    The run. Each model is asked in batches, so the graph has something to draw
@@ -396,11 +417,16 @@ const VH = ref(420)
 let ro: ResizeObserver | null = null
 
 const PAD_L = 34, PAD_R = 16, PLOT_T = 14
-/* Room under the axis for the name and TWO lines: the measure and what it is. */
-const PLOT_B = computed(() => Math.max(PLOT_T + 40, VH.value - 62))
+/* Room under the axis for the name and TWO lines: the measure and what it is;
+   and for the second line of a name where one of the lineup has it (the date
+   of a generation; `lib/modelAxisLabel.ts`). */
+const nameDrop = computed(() => modelLabelDrop(series.value.map(s => s.label)))
+const PLOT_B = computed(() => Math.max(PLOT_T + 40, VH.value - 62 - nameDrop.value))
 
-/* Where the axis runs, measured from the foot of the surface — the left column
-   is padded by the same amount, so its note ends on that line. */
+/* Where the axis runs, measured from the foot of the surface — the left
+   column's box stops short by the same amount (a margin since the column box
+   of 2026-11-07; padding until then, when its note ended on the line), so its
+   edge closes on that line. */
 const axisFromBottom = computed(() => Math.round(VH.value - PLOT_B.value))
 
 function yScale(v: number) {
@@ -642,7 +668,6 @@ const folded = ref(false)
 .ct-ax { stroke: rgba(255, 255, 255, 0.18); }
 .ct-grid { stroke: rgba(255, 255, 255, 0.05); }
 .ct-tick { fill: rgba(255, 255, 255, 0.36); font-size: var(--flow-fs-sub); }
-.ct-name { fill: rgba(255, 255, 255, 0.75); font-size: var(--flow-fs-label); }
 .ct-count { fill: rgba(255, 255, 255, 0.42); font-size: var(--flow-fs-sub); }
 .ct-score { fill: rgba(255, 255, 255, 0.62); font-size: var(--flow-fs-sub); }
 .ct-score-note { fill: rgba(255, 255, 255, 0.34); font-size: var(--flow-fs-hint); }

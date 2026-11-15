@@ -759,7 +759,10 @@ def test_tool_revise_happy_and_errors():
 def test_tool_feedback_happy_and_errors():
     registry = get_tool_registry()
     sid = _save_via_tool(registry)
-    store.add_version(sid, _linear_graph(), memo="v2")
+    # Written at the level the tool asks at below (none: the strictest). A
+    # version written without a level leaves the strategy's level unknown, and
+    # the tool then opens it above youth only.
+    store.add_version(sid, _linear_graph(), memo="v2", safety_level="kids")
 
     # happy: default latest (v2)
     ok = registry.execute(
@@ -794,7 +797,8 @@ def test_tool_feedback_happy_and_errors():
 def test_tool_get_with_version_returns_that_workflow():
     registry = get_tool_registry()
     sid = _save_via_tool(registry)  # v1 uses sd35_large
-    store.add_version(sid, _linear_graph(config_id="flux2"), memo="to flux2")
+    store.add_version(sid, _linear_graph(config_id="flux2"), memo="to flux2",
+                      safety_level="kids")
 
     got_v1 = registry.execute(
         "canvas_graph_library", {"action": "get", "workflow_id": sid, "version": 1}
@@ -1045,14 +1049,15 @@ def test_fach_kompass_composes_into_resona_prompt():
     assert "WORKING POSITION" in p
 
 
-def test_planning_block_receives_before_proposing():
+def test_planning_block_makes_the_educators_idea_the_axis():
     """No unasked finished plans, no pseudo-question batteries, no empty
-    caveats: the educator's artistic-pedagogical idea is the axis."""
+    caveats: the educator's artistic-pedagogical idea is the axis. The
+    paragraph that opened "First movement: receive" left the prompt on
+    2026-11-07 (f707d3f2); nothing here asks for it."""
     from my_app.routes.chat_routes import RESONA_CORE_PROMPT, RESONA_PLANNING_BLOCK
 
-    # planning: receive first; the educator's idea is the axis
+    # planning: the educator's idea is the axis
     assert "the educator's own artistic-pedagogical idea" in RESONA_PLANNING_BLOCK
-    assert "First movement: receive" in RESONA_PLANNING_BLOCK
     assert "never as an opening bid" in RESONA_PLANNING_BLOCK
     # the old commands that produced instant unasked plans are gone
     assert "Never open with questions" not in RESONA_PLANNING_BLOCK

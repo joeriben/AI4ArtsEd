@@ -50,14 +50,18 @@ def serve_exports(path):
     # serve, reached by walking the directory instead of naming the entity. It
     # is asked the same question, at the same place. Shape of the folder:
     # <date>/<device_id>/<run_id>/final/<filename> (pipeline_recorder.py).
-    # Two shapes: `<date>/<device>/<run>/final/<file>` for current runs, and
-    # `<date>/<device>/<run>/<file>` for the runs recorded before the final/
-    # subfolder existed, which is the shape the session detail view still
-    # builds URLs in for those runs.
+    # Three shapes: `<date>/<device>/<run>/final/<file>` for current runs,
+    # `<date>/<device>/<run>/prompting_process/<file>` for the parts a Latent
+    # Lab run keeps on its way to the result (its entities name them with the
+    # folder), and `<date>/<device>/<run>/<file>` for the runs recorded before
+    # the final/ subfolder existed, which is the shape the session detail view
+    # still builds URLs in for those runs.
     parts = [p for p in path.split('/') if p]
     run_id = filename = None
     if len(parts) >= 3 and parts[-2] == 'final':
         run_id, filename = parts[-3], parts[-1]
+    elif len(parts) >= 3 and parts[-2] == 'prompting_process':
+        run_id, filename = parts[-3], f"prompting_process/{parts[-1]}"
     elif len(parts) >= 2 and parts[-1].count('.') and parts[-2].startswith('run_'):
         run_id, filename = parts[-2], parts[-1]
     if run_id:
@@ -75,8 +79,9 @@ def serve_exports(path):
             if file_path.suffix.lower() in ('.png', '.jpg', '.jpeg', '.webp', '.gif'):
                 return "Blocked", 403
         else:
+            from my_app.services.safety_level_resolver import resolve_safety_level
             try:
-                recorder.checked_path_for_filename(filename)
+                recorder.checked_path_for_filename(filename, resolve_safety_level())
             except SafetyRefusal:
                 return "Blocked", 403
 

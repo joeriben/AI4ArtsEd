@@ -262,7 +262,7 @@ def test_the_node_class_takes_the_flag_and_thinking_is_its_default(llm, monkeypa
     def fake_generate(dir_name, **kw):
         seen.update(kw)
         return {"content": "ok", "thinking": None, "finish_reason": "stop",
-                "prompt_tokens": 1, "completion_tokens": 1}
+                "prompt_tokens": 1, "completion_tokens": 1, "once": ""}
 
     monkeypatch.setattr(node_mod, "generate", fake_generate)
     node().run("Some--Model", "hello", 0.7, 1)
@@ -366,3 +366,18 @@ def test_the_media_reader_stops_at_the_same_tokens(llm, monkeypatch):
     assert seen["eos_token_id"] == [5, 9]
     reader._answer(model, tok, inputs, 64, 1, 1, "Some--Model")
     assert "eos_token_id" not in seen or seen["eos_token_id"] == [5, 9]
+
+
+def test_the_node_class_hands_the_once_form_to_its_outputs(llm, monkeypatch):
+    # The DevServer reads it off /history (llm_client._answer).
+    mod, torch = llm
+    package = Path(__file__).resolve().parents[2] / "comfyui_nodes" / "ai4artsed_comfyui"
+    node_mod = load_module("ai4artsed_comfyui.ai4artsed_local_llm",
+                           package / "ai4artsed_local_llm.py")
+    monkeypatch.setattr(node_mod, "installed_dirs", lambda: ["Some--Model"])
+    monkeypatch.setattr(node_mod, "generate", lambda dir_name, **kw: {
+        "content": "kuyu, kanki, kuyu, kanki,", "thinking": None, "finish_reason": "repetition",
+        "prompt_tokens": 1, "completion_tokens": 9, "once": "kuyu, kanki,"})
+    out = node_mod.ai4artsed_local_llm().run("Some--Model", "hello", 0.7, 1)
+    assert out["ui"]["once"] == ["kuyu, kanki,"]
+    assert out["ui"]["finish_reason"] == ["repetition"]

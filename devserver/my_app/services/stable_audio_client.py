@@ -15,7 +15,7 @@ stable_audio chunk, the cover band's availability check).
 
 import logging
 import random
-from typing import Optional
+from typing import Optional, Tuple
 
 from my_app.services.gpu_lease_client import GpuBusyError, BackendGenerationError
 from my_app.utils.response_reason import reason_line
@@ -69,8 +69,9 @@ class StableAudioClient:
         seed: int = -1,
         output_format: str = "wav",
         kind: str = "music",
-    ) -> bytes:
-        """The sound as bytes in `output_format`. A run that ended without
+    ) -> Tuple[bytes, str]:
+        """(The sound as bytes in `output_format`, the model the run loaded,
+        which the chunk reports as `model_used`). A run that ended without
         one raises BackendGenerationError with the node's own sentence, and
         a card the gate holds for someone else raises GpuBusyError, as the
         service's answers did: the router reads "out of memory" and "device
@@ -95,8 +96,8 @@ class StableAudioClient:
             "output_format": output_format,
         }
         try:
-            _out, files = LLMClient.run_node_files(NODE_CLASS, inputs,
-                                                   workload=CURRENT_OUTPUT_CONFIG.get() or None)
+            _out, files, model_used = LLMClient.run_node_files(
+                NODE_CLASS, inputs, workload=CURRENT_OUTPUT_CONFIG.get() or None)
         except GpuBusyError:
             raise
         except Exception as e:
@@ -109,7 +110,7 @@ class StableAudioClient:
         if sound is None:
             logger.error(f"[STABLE-AUDIO-CLIENT] the run ended without a sound ({model_dir})")
             raise BackendGenerationError(f"the run of {NODE_CLASS} ({model_dir}) ended without a sound")
-        return sound.data
+        return sound.data, model_used
 
     async def generate_audio(
         self,
@@ -127,12 +128,13 @@ class StableAudioClient:
         cfg_scale: float = 1.0,
         seed: int = -1,
         output_format: str = "wav",
-    ) -> Optional[bytes]:
+    ) -> Tuple[bytes, str]:
         """
         Generate audio from a text prompt, on ComfyUI.
 
         Returns:
-            Audio bytes; a failed run raises, see generate_audio_sync
+            (audio bytes, the model the run loaded); a failed run raises, see
+            generate_audio_sync
         """
         import asyncio
         return await asyncio.to_thread(

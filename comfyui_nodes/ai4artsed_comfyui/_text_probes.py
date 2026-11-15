@@ -168,10 +168,21 @@ def option_scores(dir_name: str, prompts: List[str], options: List[str]) -> Dict
 # Representation Engineering (Zou et al. 2023)
 
 def _decoder_layers(model: torch.nn.Module) -> Optional[List[torch.nn.Module]]:
-    """The decoder stack, for the architectures the Text Lab runs."""
+    """The decoder stack, for the architectures the Text Lab runs.
+
+    Two shapes under `model`: a text-only `*ForCausalLM` keeps the stack at
+    `model.layers`; the multimodal `*ForConditionalGeneration` classes of
+    transformers 5 that the Text Lab's rows carry keep their text stack at
+    `model.language_model.layers`. `_layers_in` already reads the
+    count of the latter from the text_config, so the count check in
+    `_hidden_states` holds for both shapes unchanged.
+    """
     inner = getattr(model, "model", None)
     if inner is not None and hasattr(inner, "layers"):
         return list(inner.layers)
+    language_model = getattr(inner, "language_model", None) if inner is not None else None
+    if language_model is not None and hasattr(language_model, "layers"):
+        return list(language_model.layers)
     transformer = getattr(model, "transformer", None)
     if transformer is not None and hasattr(transformer, "h"):
         return list(transformer.h)
@@ -374,8 +385,12 @@ def steered(built: Built, hf: torch.nn.Module, device, text: str,
     """
     enc = _encode(built, text, device)
     prompt_len = int(enc["input_ids"].shape[1])
-    model_dtype = next(hf.parameters()).dtype
-    dir_vec = direction_raw.to(device=device, dtype=model_dtype).unsqueeze(0).unsqueeze(0)
+    # The direction stays float32 here and takes the dtype of the hidden state
+    # it is added to, at hook time. The dtype of the model's first parameter is
+    # no measure of the dtype its stack computes in: a model may keep single
+    # parameters in another precision, and an FP8 checkpoint keeps its linear
+    # layers in FP8 while its activations are bf16.
+    dir_vec = direction_raw.to(device=device, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
     decoder_layers = _decoder_layers(hf)
     # hidden_states has N+1 entries ([0] = embedding), decoder_layers has N:
     # hidden_states[layer_idx] is the output of decoder_layers[layer_idx - 1].
@@ -389,9 +404,11 @@ def steered(built: Built, hf: torch.nn.Module, device, text: str,
 
     def make_hook(strength: float):
         def hook_fn(module, module_input, output):
+            hidden = output[0] if isinstance(output, tuple) else output
+            moved = hidden + strength * dir_vec.to(hidden.dtype)
             if isinstance(output, tuple):
-                return (output[0] + strength * dir_vec,) + output[1:]
-            return output + strength * dir_vec
+                return (moved,) + output[1:]
+            return moved
         return hook_fn
 
     generations = []

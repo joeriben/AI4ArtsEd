@@ -115,6 +115,7 @@ class ai4artsed_local_llm:
                 "finish_reason": [finish],
                 "prompt_tokens": [answer["prompt_tokens"]],
                 "completion_tokens": [answer["completion_tokens"]],
+                "once": [answer["once"]],
             },
             "result": (content, thinking, finish),
         }

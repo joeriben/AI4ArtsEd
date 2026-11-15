@@ -132,29 +132,36 @@ async def synth(
 
 `POST /api/cross_aesthetic/synth` — Request/response passes through `gpu_service/routes/cross_aesthetic_routes.py`. The `dimension_offsets` dict arrives with string keys from JSON; the backend converts to int on application.
 
-### Frontend: Synth Tab Layout
+### Frontend: Synth Layout
 
-The synth tab in `crossmodal_lab.vue` is organized top-to-bottom:
+The synth is its own view, `views/latent_lab/audio_synth.vue`, split out of `crossmodal_lab.vue` on 2026-09-05. Since 2026-11-02 it stands in the frame of the Latent Lab instruments (`assets/flow-stage.css`), as MMAudio and ImageBind Guidance do:
 
-1. **Prompts** — Prompt A (required) + Prompt B (optional, for interpolation)
-2. **Sliders** — Alpha (-2..3), Magnitude (0.1..5), Noise (0..1)
-3. **Parameters** — Duration, Steps, CFG, Seed. A press of Generate takes its seed from the platform's seed automatic (`composables/useSeedAutomatic.ts`, since 2026-10-03): the same seed after a change, a new one when nothing changed, a typed one as typed, and the seed goes into the field. An imported preset that carries a seed of 0 or above gives the next run that seed. The regeneration in time with the beat takes the number in the field.
-4. **Action Row** — Generate, Loop toggle, Stop, Play
-5. **Dimension Explorer** (open by default)
-6. **Looper Widget** (always visible, disabled state when no audio)
-7. **MIDI Section** (collapsed by default)
+- **Bar** — the run trigger (`components/ShellRun.vue`), ready while Prompt A holds text and no run started from the surface is out (the regeneration in time with the beat does not hold it). The two "Apply and regenerate" buttons, the reset of all offsets and an imported preset start a run through the same gate.
+- **Preparing column** (left; scrolls on its own; folds to a handle, `components/ColumnFold.vue`):
+  1. the line that says why a run did not come back, at the head of the column under the fold handle, keeping its room when it is empty; a failed run somebody pressed for unfolds a folded column
+  2. example prompts, Prompt A (required), Prompt B (optional, for interpolation)
+  3. sliders: Alpha (-2..2), Magnitude (0.1..5), Noise (0..1)
+  4. klappe "Advanced settings": Duration, Steps, CFG, Seed with the random-variation tick (`components/SeedControl.vue`). A run takes its seed from the platform's seed automatic (`composables/useSeedAutomatic.ts`, since 2026-10-03): the same seed after a change, a new one when nothing changed, a typed one as typed, a new one on every run while the tick is set, and the seed goes into the field. An imported preset that carries a seed of 0 or above gives the next run that seed and takes the tick off. The regeneration in time with the beat takes the number in the field.
+  5. Semantic Axes (closed by default) and Dimension Explorer (open by default), which open one at a time: opening one closes the other
+- **Right side** (`.as-plot`; scrolls on its own):
+  1. Looper / Sequencer (open by default, disabled while no audio is loaded), with "Test C3" in its status row; with 32 steps the sequencer row scrolls sideways in itself
+  2. record, save and preset row
+  3. MIDI (closed by default)
+- Below 640 px of page width the two sides stack and the page scrolls.
+
+The spectral strip takes the width of the preparing column, measured 2026-11-03 with the instrument rail open: 350 px at 1440 × 900, 277 px at 1194 × 834, so a dimension has less than half a pixel. Folded, the column hides it. The looper's waveform and the wavetable frame take the width of the right side. All three are redrawn when their side changes width (`ResizeObserver` on both sides), which happens with the window, the rail and the fold, and when their section is opened. Until 2026-11-02 the synth was laid out top to bottom, with the strip across the full width of its one panel (2026-09-05, `f233e31c`); `docs/DEVELOPMENT_DECISIONS.md` records the change.
 
 ### Dimension Explorer: Canvas Spectral Strip
 
 **Rendering** (`drawSpectralStrip()`):
-- Single `<canvas>` element, 120px tall, full width
+- Single `<canvas>` element, 120px tall, as wide as the explorer section in the preparing column
 - **Zero-line** at vertical center
 - **768 bars**, each `containerWidth / 768` pixels wide
 - Positive activations extend **upward**, negative **downward**
 - Bar height: `abs(value) / maxActivation * halfHeight`
 - **Activation layer**: muted green `rgba(76, 175, 80, 0.35)`
 - **Offset overlay**: bright green `rgba(102, 187, 106, 0.8)`, extends from activation endpoint
-- Redraws via `watch(embeddingStats)` and after any offset change
+- Redraws via `watch(embeddingStats)`, after any offset change, when the preparing column changes width and when the section is opened
 
 **Interaction** (Vital-style spectral painting):
 - **Click+drag vertically** = set offset (-3 to +3, mapped from cursor y-position)
@@ -202,20 +209,19 @@ Result: `AudioBufferSourceNode.loop` wraps imperceptibly because the head region
 
 ### MIDI Integration (`useWebMidi.ts`)
 
-**CC Mappings** (defined in crossmodal_lab.vue):
+**CC Mappings** (defined in `views/latent_lab/audio_synth.vue`):
 | CC | Parameter | Range |
 |---|---|---|
-| CC1 | Alpha | -2.0 to 3.0 |
+| CC1 | Alpha | -2.0 to 2.0 |
 | CC2 | Magnitude | 0.1 to 5.0 |
 | CC3 | Noise | 0.0 to 1.0 |
+| CC5 | Wavetable scan position | 0.0 to 1.0 |
 | CC64 | Loop toggle | >0.5 = on |
 
 **Note Handling:**
 - Reference note: C3 (MIDI 60) = 0 semitones
 - Every note-on: `looper.setTranspose(note - 60)` (always, instant via cache)
-- Generation: only if `synthFingerprint() !== lastSynthFingerprint` (prevents redundant GPU calls)
-
-**Fingerprint** includes all synth params + `dimensionOffsets` → CC knob turns or offset painting triggers regeneration on next note, but repeated notes at same pitch don't.
+- A note never starts a run (`midi.onNote`); it plays the loaded sound at its pitch. While the sequencer is switched on, notes are ignored.
 
 ---
 
@@ -244,7 +250,7 @@ Result: `AudioBufferSourceNode.loop` wraps imperceptibly because the head region
 | `gpu_service/services/cross_aesthetic_backend.py` | Embedding manipulation + stats | ~255 |
 | `gpu_service/services/stable_audio_backend.py` | Prompt encoding + Stable Audio generation | ~803 |
 | `gpu_service/routes/cross_aesthetic_routes.py` | REST endpoint `/api/cross_aesthetic/synth` | ~147 |
-| `public/.../views/latent_lab/crossmodal_lab.vue` | Full synth UI + canvas + MIDI | ~1950 |
+| `public/.../views/latent_lab/audio_synth.vue` | Full synth UI + canvas + MIDI | ~4800 |
 | `public/.../composables/useAudioLooper.ts` | Web Audio looper + OLA + pitch cache | ~590 |
 | `public/.../composables/useWebMidi.ts` | Web MIDI API wrapper | ~143 |
 | `public/.../src/i18n.ts` | DE + EN translations (`latentLab.crossmodal.synth.*`) | — |

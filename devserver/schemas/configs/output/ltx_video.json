@@ -10,7 +10,8 @@
     "es": "LTX Video",
     "he": "LTX Video",
     "ar": "LTX Video",
-    "bg": "LTX Video"
+    "bg": "LTX Video",
+    "zh-hant": "LTX Video"
   },
   "description": {
     "en": "Fast video generation using Lightricks LTX-Video model via ComfyUI",
@@ -22,7 +23,8 @@
     "es": "Generación rápida de vídeo con el modelo Lightricks LTX-Video a través de ComfyUI",
     "he": "יצירת וידאו מהירה באמצעות מודל Lightricks LTX-Video דרך ComfyUI",
     "ar": "توليد فيديو سريع باستخدام نموذج Lightricks LTX-Video عبر ComfyUI",
-    "bg": "Бързо генериране на видео с модела Lightricks LTX-Video през ComfyUI"
+    "bg": "Бързо генериране на видео с модела Lightricks LTX-Video през ComfyUI",
+    "zh-hant": "透過 ComfyUI 使用 Lightricks LTX-Video 模型快速生成影片"
   },
   "category": {
     "en": "Video Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de vídeo",
     "he": "יצירת וידאו",
     "ar": "توليد الفيديو",
-    "bg": "Генериране на видео"
+    "bg": "Генериране на видео",
+    "zh-hant": "影片生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_video_ltx",

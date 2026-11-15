@@ -44,7 +44,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -183,6 +183,11 @@
             </template>
 
             <aside class="lab-note">
+              <h3>{{ t('latentLab.imageLab.tabs.composable.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.composable.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
               <LabReferences
                 flat
                 :title="t('latentLab.composable.referencesTitle')"
@@ -253,13 +258,29 @@ import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
 import ChipSelect, { type ChipOption } from '@/components/ChipSelect.vue'
 import { apiBase } from '@/services/labApi'
 
-/** The composition this surface runs is Liu et al.'s, term for term. */
+/**
+ * The composition this surface runs is Liu et al.'s, term for term; Ho and
+ * Salimans for the guidance each term is, Du, Li and Mordatch for the
+ * composition of energy-based models it builds on.
+ */
 const REFERENCES: LabReference[] = [
   {
     authors: 'Liu et al. (2022)',
     title: '"Compositional Visual Generation with Composable Diffusion Models"',
     venue: 'ECCV 2022',
     doi: 'https://doi.org/10.1007/978-3-031-19803-8_12',
+  },
+  {
+    authors: 'Ho & Salimans (2022)',
+    title: '"Classifier-Free Diffusion Guidance"',
+    venue: 'NeurIPS 2021 Workshop on Deep Generative Models and Downstream Applications',
+    doi: 'https://arxiv.org/abs/2207.12598',
+  },
+  {
+    authors: 'Du, Li & Mordatch (2020)',
+    title: '"Compositional Visual Generation and Inference with Energy Based Models"',
+    venue: 'NeurIPS 2020',
+    doi: 'https://arxiv.org/abs/2004.06030',
   },
 ]
 

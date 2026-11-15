@@ -1,6 +1,7 @@
-import { ref, computed } from 'vue'
+import { ref, computed, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useLabAuthStore } from './labAuth'
 import type { InstrumentRun } from '@/composables/useLatentLabRecorder'
 
 /**
@@ -17,10 +18,23 @@ import type { InstrumentRun } from '@/composables/useLatentLabRecorder'
 // TYPE DEFINITIONS
 // ============================================================================
 
+/** The server's own sentence for a refusal, where it gave one. */
+function causeOf(e: unknown, fallback: string): string {
+  if (axios.isAxiosError(e)) {
+    const said = (e.response?.data as { error?: string } | undefined)?.error
+    if (said) return said
+  }
+  return e instanceof Error ? e.message : fallback
+}
+
 /** Favorite item from backend */
 export interface FavoriteItem {
   run_id: string
-  device_id?: string  // Per-user favorites (optional for backward compat)
+  /** Whether whoever asks may remove it or change its note. The server says
+   *  so (favorites_routes.py, `_may_change`): a favourite belongs to the
+   *  account it was kept under, or, kept without one, to the device, and
+   *  neither is in what a page receives (2026-11-14). */
+  may_change?: boolean
   added_at: string
   thumbnail_url: string
   media_type:
@@ -189,9 +203,74 @@ export const useFavoritesStore = defineStore('favorites', () => {
   /** Total number of favorites */
   const totalFavorites = computed(() => favorites.value.length)
 
-  /** Check if a run is favorited */
+  /**
+   * Whether a run is kept by whoever asks: in the list, and theirs to take
+   * back (`may_change`). In the "All" view the list holds the favourites of
+   * other accounts and devices; their stars stay dark, since taking one back
+   * could only be refused. Every star on the platform reads this, so a
+   * sign-in or a sign-out, which changes whose the list is, reaches them all.
+   */
   const isFavorited = (runId: string): boolean => {
-    return favorites.value.some((f) => f.run_id === runId)
+    return favorites.value.some((f) => f.run_id === runId && f.may_change === true)
+  }
+
+  /** The load whose answer the list takes: the last one asked. */
+  let loads = 0
+  /** The last load asked, for whoever waits on what the list now holds. */
+  let latest: Promise<void> = Promise.resolve()
+  /**
+   * A count of the starts and ends of the adds and removes. An answer to a
+   * load is put in place only where none started or ended while the load was
+   * out: the server may have read the store before it stored the change, and
+   * the answer then took a new star off again or put back the one just taken
+   * away. The list then asks again.
+   */
+  let edits = 0
+  /**
+   * The adds and removes out for whoever the list is now: by run, the entry an
+   * add put in, or null for a remove. A second press on the same run is
+   * refused until the first is answered: the two answers can arrive in either
+   * order, and the list could not tell which one stands. An answer to a load
+   * is put in place with these laid over it (`withEditsOut`): the server may
+   * have read the store before an edit still out was stored. A load does not
+   * wait for them; an add that never came back held the strip as it was.
+   */
+  let pending = new Map<string, FavoriteItem | null>()
+  /** Counts the changes of whose the list is (a sign-in, a sign-out). */
+  let owners = 0
+
+  /** An add, with the entry it put in, or a remove (null) goes out; the
+   *  function it returns marks its answer. */
+  function beginEdit(runId: string, entry: FavoriteItem | null, deviceId?: string): () => void {
+    const out = pending
+    out.set(runId, entry)
+    edits++
+    let open = true
+    return () => {
+      if (!open) return
+      open = false
+      out.delete(runId)
+      edits++
+      if (out !== pending) {
+        // Asked before the list changed owner. What it changed can still be
+        // in the new owner's list: an account reaches what its browser kept
+        // that day without one.
+        void loadFavorites(deviceId)
+      }
+    }
+  }
+
+  /** A load's answer with the edits still out laid over it: the entry an add
+   *  put in stands where the answer lacks its run, and a run whose removal is
+   *  out is left out. */
+  function withEditsOut(listed: FavoriteItem[]): FavoriteItem[] {
+    const kept = listed.filter((f) => pending.get(f.run_id) !== null)
+    // Newest first, as an add puts its entry in.
+    const added: FavoriteItem[] = []
+    pending.forEach((entry, runId) => {
+      if (entry && !kept.some((f) => f.run_id === runId)) added.unshift(entry)
+    })
+    return [...added, ...kept]
   }
 
   // ============================================================================
@@ -202,9 +281,24 @@ export const useFavoritesStore = defineStore('favorites', () => {
    * Load all favorites from backend
    *
    * @param deviceId - Optional device ID for filtering (per_user mode)
+   * @param afresh - Whose the list is has changed (a sign-in, a sign-out): the
+   *   list of the one before is taken down at once, so no star of theirs stays
+   *   lit while the answer is out.
    */
-  async function loadFavorites(deviceId?: string): Promise<void> {
+  function loadFavorites(deviceId?: string, afresh = false): Promise<void> {
+    const load = ++loads
+    if (afresh) {
+      favorites.value = []
+      owners++
+      pending = new Map()
+    }
     isLoading.value = true
+    latest = fetchFavorites(load, deviceId)
+    return latest
+  }
+
+  async function fetchFavorites(load: number, deviceId?: string): Promise<void> {
+    const editsAsked = edits
     error.value = null
 
     try {
@@ -219,7 +313,12 @@ export const useFavoritesStore = defineStore('favorites', () => {
 
       const response = await axios.get<FavoritesResponse>(`/api/favorites?${params.toString()}`)
 
-      favorites.value = response.data.favorites
+      // A sign-in or a sign-out changes whose favourites these are. The answer
+      // to a load asked before it would put the list of the one before back.
+      if (load !== loads) return latest
+      if (editsAsked !== edits) return loadFavorites(deviceId)
+
+      favorites.value = withEditsOut(response.data.favorites)
       mode.value = response.data.mode
 
       console.log(
@@ -227,11 +326,13 @@ export const useFavoritesStore = defineStore('favorites', () => {
           `(backend mode: ${mode.value}, view mode: ${viewMode.value})`
       )
     } catch (e) {
+      if (load !== loads) return latest
       console.error('[Favorites] Failed to load favorites:', e)
-      error.value = e instanceof Error ? e.message : 'Failed to load favorites'
-      favorites.value = []
+      error.value = causeOf(e, 'Failed to load favorites')
+      // The list stays as it was: a load that failed says nothing about what
+      // is kept, and an empty strip would say that nothing is.
     } finally {
-      isLoading.value = false
+      if (load === loads) isLoading.value = false
     }
   }
 
@@ -250,12 +351,22 @@ export const useFavoritesStore = defineStore('favorites', () => {
     userId: string = 'anonymous',
     sourceView?: string
   ): Promise<boolean> {
+    if (pending.has(runId)) return false
     error.value = null
+
+    // Already in the list: kept by whoever asks, or by somebody else, whose
+    // entry an optimistic star and its rollback would cover and then take
+    // out of the strip.
+    const listed = favorites.value.find((f) => f.run_id === runId)
+    if (listed) {
+      if (listed.may_change === true) return true
+      error.value = 'This run is kept by another account or device'
+      return false
+    }
 
     // Optimistic update
     const tempFavorite: FavoriteItem = {
       run_id: runId,
-      device_id: deviceId,
       added_at: new Date().toISOString(),
       // A workflow has no picture and no file the media routes serve.
       thumbnail_url: mediaType === 'canvas'
@@ -265,11 +376,13 @@ export const useFavoritesStore = defineStore('favorites', () => {
       user_id: userId,
       user_note: '',
       source_view: sourceView,
-      exists: true
+      exists: true,
+      may_change: true
     }
 
     // Add to beginning (most recent first)
     favorites.value.unshift(tempFavorite)
+    const settle = beginEdit(runId, tempFavorite, deviceId)
 
     try {
       console.log(`[Favorites] Adding favorite: ${runId} (${mediaType})`)
@@ -280,9 +393,12 @@ export const useFavoritesStore = defineStore('favorites', () => {
         user_id: userId,
         source_view: sourceView
       })
+      settle()
 
-      // Update with server response
-      const index = favorites.value.findIndex((f) => f.run_id === runId)
+      // Update with server response. The entry this add put in is gone only
+      // where the list was taken down for another owner (a sign-in, a
+      // sign-out); their own list follows.
+      const index = favorites.value.findIndex((f) => toRaw(f) === tempFavorite)
       if (index >= 0) {
         // `exists` is not in the add answer, and the strip draws no picture
         // without it — a freshly kept image showed the grey placeholder until
@@ -294,18 +410,26 @@ export const useFavoritesStore = defineStore('favorites', () => {
       console.log(`[Favorites] Successfully added favorite: ${runId}`)
       return true
     } catch (e) {
-      // Rollback optimistic update
-      favorites.value = favorites.value.filter((f) => f.run_id !== runId)
+      settle()
+      // Rollback optimistic update: the entry this add put in, and no other.
+      favorites.value = favorites.value.filter((f) => toRaw(f) !== tempFavorite)
 
       if (axios.isAxiosError(e) && e.response?.status === 409) {
-        // TWO different refusals share this code: the run is already kept, and
-        // the run holds nothing of that kind to keep. Reported as success alike,
-        // the second lit a star the server never took — which is how a sketch
-        // kept as a picture came back +1 and then -1 under the finger. The list
-        // decides: after the reload the run is either in it or it is not.
+        // Three refusals share this code: the run is already kept by whoever
+        // asks, it is kept by somebody else, and it holds nothing of that kind
+        // to keep. Reported as success alike, the last lit a star the server
+        // never took — which is how a sketch kept as a picture came back +1 and
+        // then -1 under the finger. The list decides: after the reload the run
+        // is either kept by whoever asks or it is not.
         await loadFavorites(deviceId)
-        const kept = favorites.value.some((f) => f.run_id === runId)
-        if (!kept) {
+        // The entry of a second press on the run, made while this reload was
+        // out, is no answer to this one.
+        const second = pending.get(runId)
+        const kept = favorites.value.some(
+          (f) => f.run_id === runId && f.may_change === true && toRaw(f) !== second
+        )
+        // A reload that failed has said why already.
+        if (!kept && !error.value) {
           const said = (e.response?.data as { error?: string } | undefined)?.error
           error.value = said || 'This run cannot be kept'
           console.warn(`[Favorites] Refused: ${runId} — ${error.value}`)
@@ -314,8 +438,10 @@ export const useFavoritesStore = defineStore('favorites', () => {
       }
 
       console.error(`[Favorites] Failed to add favorite: ${runId}`, e)
-      error.value = e instanceof Error ? e.message : 'Failed to add favorite'
+      error.value = causeOf(e, 'Failed to add favorite')
       return false
+    } finally {
+      settle()
     }
   }
 
@@ -326,14 +452,17 @@ export const useFavoritesStore = defineStore('favorites', () => {
    * @param deviceId - Optional device ID for ownership validation
    */
   async function removeFavorite(runId: string, deviceId?: string): Promise<boolean> {
+    if (pending.has(runId)) return false
     error.value = null
 
     // Store for potential rollback
-    const removed = favorites.value.find((f) => f.run_id === runId)
     const originalIndex = favorites.value.findIndex((f) => f.run_id === runId)
+    const removed = originalIndex >= 0 ? favorites.value[originalIndex] : undefined
+    const ownersAsked = owners
 
     // Optimistic update
     favorites.value = favorites.value.filter((f) => f.run_id !== runId)
+    const settle = beginEdit(runId, null, deviceId)
 
     try {
       console.log(`[Favorites] Removing favorite: ${runId}`)
@@ -344,19 +473,56 @@ export const useFavoritesStore = defineStore('favorites', () => {
       // Every caller already passes it.
       const query = deviceId ? `?device_id=${encodeURIComponent(deviceId)}` : ''
       await axios.delete<RemoveFavoriteResponse>(`/api/favorites/${runId}${query}`)
+      settle()
 
       console.log(`[Favorites] Successfully removed favorite: ${runId}`)
       return true
     } catch (e) {
-      // Rollback optimistic update
-      if (removed && originalIndex >= 0) {
-        favorites.value.splice(originalIndex, 0, removed)
+      settle()
+      const status = axios.isAxiosError(e) ? e.response?.status : undefined
+      if (status === 404) {
+        // Gone already: taken back on another machine of the same account, or
+        // by whoever kept it. What the press asked for is the case.
+        console.warn(`[Favorites] Already gone: ${runId}`)
+        return true
       }
-
       console.error(`[Favorites] Failed to remove favorite: ${runId}`, e)
-      error.value = e instanceof Error ? e.message : 'Failed to remove favorite'
+      error.value = causeOf(e, 'Failed to remove favorite')
+      if (status === 403) {
+        // Not theirs to take back: a place whose sign-in has ended before the
+        // page learnt of it. The list says whose it is now, and the page asks
+        // at once who is signed in: the plate leaves the strip, and without
+        // the question the header showed the place for up to half a minute
+        // more, with nothing to say why the plate went.
+        void loadFavorites(deviceId)
+        const auth = useLabAuthStore()
+        void auth.checkPlaceSession(true)
+        void auth.checkLeaderSession(true)
+        return false
+      }
+      // Rollback: the entry goes back where whose the list is has not changed,
+      // and where nothing has put it back since.
+      if (removed && ownersAsked === owners && !favorites.value.some((f) => f.run_id === runId)) {
+        favorites.value.splice(Math.min(originalIndex, favorites.value.length), 0, removed)
+      }
       return false
+    } finally {
+      settle()
     }
+  }
+
+  /**
+   * Who keeps a run, asked of the server: nobody, whoever asks, or somebody
+   * else. The "Mine" view holds whoever asks alone and cannot say so. A
+   * surface that writes into a run before keeping it asks here first.
+   */
+  async function keeperOf(runId: string, deviceId: string): Promise<'nobody' | 'asker' | 'another'> {
+    const params = new URLSearchParams({ device_id: deviceId })
+    const response = await axios.get<{ kept: boolean; may_change: boolean }>(
+      `/api/favorites/${runId}/keeper?${params.toString()}`
+    )
+    if (!response.data.kept) return 'nobody'
+    return response.data.may_change ? 'asker' : 'another'
   }
 
   /**
@@ -470,6 +636,7 @@ export const useFavoritesStore = defineStore('favorites', () => {
     addFavorite,
     removeFavorite,
     toggleFavorite,
+    keeperOf,
     getRestoreData,
     setViewMode,  // Toggle per_user/global view
     toggleGallery,

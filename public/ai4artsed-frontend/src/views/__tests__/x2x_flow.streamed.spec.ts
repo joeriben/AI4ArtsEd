@@ -31,8 +31,25 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import i18n from '@/i18n'
-import { safetyBlockKey } from '@/composables/useGenerationStream'
+import { safetyBlockMessageKey, type SafetyBlock } from '@/composables/useGenerationStream'
 import X2X from '../x2x_flow.vue'
+
+/** The block message the server sends with a refusal (`safety_block`). */
+const BLOCK: SafetyBlock = { checkpoint: 'intake', field: 'input_text', reason_key: 'symbol', reason: 'gesperrt' }
+/** The block message of an adaption the server withheld at the result. */
+const WITHHELD: SafetyBlock = {
+  checkpoint: 'result',
+  field: 'optimized_prompt',
+  reason_key: 'content',
+  reason: 'withheld',
+}
+/** The answer of a route that withheld it. */
+const WITHHELD_ANSWER = {
+  success: false,
+  status: 'blocked',
+  error: 'withheld',
+  safety_block: WITHHELD,
+}
 
 // What jsdom does not bring and the flow stage asks for on mount. Assigned
 // rather than stubbed, so a timer the view left behind still finds them after
@@ -192,8 +209,7 @@ async function theSurface() {
   const box = w.find('.gi')
   return {
     safetyState: vm.safetyState as string,
-    blockedReason: vm.blockedReason as string,
-    blockedStage: vm.blockedStage as number | null,
+    blockMessage: vm.blockMessage as SafetyBlock | null,
     error: vm.generationErrorMessage as string,
     /** The info face of the generation box, empty where it is not shown. */
     text: box.exists() ? box.text() : '',
@@ -234,7 +250,9 @@ describe('recaption — the caption for the text that is actually going', () => 
       })
     )
 
-    expect(await vm.recaption('a house at the edge of a field', 'sd35_large')).toBe('a house')
+    expect(await vm.recaption('a house at the edge of a field', 'sd35_large')).toEqual({
+      clip: 'a house',
+    })
 
     expect(sentTo(OPTIMIZE).body).toEqual({
       input_text: 'a house at the edge of a field',
@@ -249,7 +267,7 @@ describe('recaption — the caption for the text that is actually going', () => 
     // The status resolves and the body is read, which is what this call did
     // when it read `res.json()` without looking at `res.ok`.
     answerOn(OPTIMIZE, streamed({ success: false, error: 'no model' }, 500))
-    expect(await vm.recaption('a house', 'sd35_large')).toBe('')
+    expect(await vm.recaption('a house', 'sd35_large')).toEqual({ clip: '' })
   })
 
   it('takes the caption out of a body the status refused', async () => {
@@ -265,17 +283,24 @@ describe('recaption — the caption for the text that is actually going', () => 
       OPTIMIZE,
       streamed({ triple_prompt: { clip: 'a house', t5: 'a house at the edge of a field' } }, 500)
     )
-    expect(await vm.recaption('a house at the edge of a field', 'sd35_large')).toBe('a house')
+    expect(await vm.recaption('a house at the edge of a field', 'sd35_large')).toEqual({
+      clip: 'a house',
+    })
   })
 
   it('hands back nothing when the stream never opened', async () => {
     answerOn(OPTIMIZE, refusedBeforeTheStream(503, { error: 'no GPU' }))
-    expect(await vm.recaption('a house', 'sd35_large')).toBe('')
+    expect(await vm.recaption('a house', 'sd35_large')).toEqual({ clip: '' })
   })
 
   it('hands back nothing when the connection tore', async () => {
     answerOn(OPTIMIZE, new TypeError('Failed to fetch'))
-    expect(await vm.recaption('a house', 'sd35_large')).toBe('')
+    expect(await vm.recaption('a house', 'sd35_large')).toEqual({ clip: '' })
+  })
+
+  it('hands back the block message where the server withheld the caption', async () => {
+    answerOn(OPTIMIZE, streamed(WITHHELD_ANSWER, 403))
+    expect(await vm.recaption('a house', 'sd35_large')).toEqual({ clip: '', block: WITHHELD })
   })
 })
 
@@ -313,6 +338,17 @@ describe('adaptFor — the adaption every run goes through', () => {
 
     await vm.adaptFor('make it rain', 'qwen_img2img', token, true)
     expect(sentTo(OPTIMIZE).body).toMatchObject({ has_input_image: true })
+  })
+
+  it('hands the pictures to an adaption that reads them', async () => {
+    answerOn(OPTIMIZE, streamed({ success: true, optimized_prompt: 'a caption' }))
+    const token = vm.beginRun()
+
+    await vm.adaptFor('make it rain', 'flux3_multi', token, true, {
+      input_image1: 'a.png',
+      input_image2: 'b.png',
+    })
+    expect(sentTo(OPTIMIZE).body).toMatchObject({ input_image1: 'a.png', input_image2: 'b.png' })
   })
 
   it('takes an unchanged answer as a plain prompt with no halves', async () => {
@@ -356,12 +392,75 @@ describe('adaptFor — the adaption every run goes through', () => {
     expect(vm.adapting).toBe(false)
   })
 
+  it('says why, where an adaption that reads the pictures gave no caption', async () => {
+    answerOn(OPTIMIZE, streamed({ success: false, error: 'the card said no' }, 500))
+    const token = vm.beginRun()
+
+    const out = await vm.adaptFor('a house', 'flux3_multi', token, true, { input_image1: 'a.png' })
+    expect(out.prompt).toBe('')
+    expect(out.failure).toEqual({ raw: 'the card said no', busy: undefined })
+  })
+
+  it('keeps the state the gate named, where the card was busy', async () => {
+    const busy = { reason: 'queue_full', holder_kind: '', waiting: 3 }
+    answerOn(OPTIMIZE, streamed({ success: false, error: 'queue full', code: 'gpu_busy', busy }, 500))
+    const token = vm.beginRun()
+
+    const out = await vm.adaptFor('a house', 'flux3_multi', token, true, { input_image1: 'a.png' })
+    expect(out.failure).toEqual({ raw: 'queue full', kind: 'busy', busy })
+  })
+
+  it('says a picture is gone, where the server no longer has its file', async () => {
+    answerOn(OPTIMIZE, streamed({ success: false, code: 'image_gone', error: 'gone' }, 400))
+    const token = vm.beginRun()
+
+    const out = await vm.adaptFor('a house', 'flux3_multi', token, true, { input_image1: 'a.png' })
+    expect(out.failure?.imageGone).toBe(true)
+  })
+
+  it('takes an answer with no body for an unreachable server', async () => {
+    answerOn(OPTIMIZE, refusedBeforeTheStream(502, null))
+    const token = vm.beginRun()
+
+    const out = await vm.adaptFor('a house', 'flux3_multi', token, true, { input_image1: 'a.png' })
+    expect(out.failure).toMatchObject({ raw: 'HTTP 502', kind: 'offline' })
+  })
+
+  it('says the tear too, where the pictures went with it', async () => {
+    answerOn(OPTIMIZE, new TypeError('Failed to fetch'))
+    const token = vm.beginRun()
+
+    const out = await vm.adaptFor('a house', 'flux3_multi', token, true, { input_image1: 'a.png' })
+    expect(out.failure?.raw).toBe('Failed to fetch')
+  })
+
+  it('goes on from the words where no picture went with the adaption', async () => {
+    answerOn(OPTIMIZE, streamed({ success: false, error: 'the model said no' }, 500))
+    const token = vm.beginRun()
+
+    expect((await vm.adaptFor('a house', 'sd35_large', token)).failure).toBeUndefined()
+  })
+
   it('answers nothing at all where the run has moved on', async () => {
     answerOn(OPTIMIZE, streamed({ success: true, optimized_prompt: 'a house' }))
     const stale = vm.beginRun()
     vm.beginRun()
 
     expect(await vm.adaptFor('a house', 'sd35_large', stale)).toBeNull()
+  })
+
+  it('hands back the block message where the server refused the adaption', async () => {
+    // The stance text does not go on in its place: the caller stops on it.
+    answerOn(OPTIMIZE, streamed(WITHHELD_ANSWER, 403))
+    const token = vm.beginRun()
+
+    expect(await vm.adaptFor('a house', 'sd35_large', token)).toEqual({
+      prompt: '',
+      halves: null,
+      condensed: '',
+      block: WITHHELD,
+    })
+    expect(vm.adapting).toBe(false)
   })
 })
 
@@ -407,20 +506,19 @@ describe('runMusic — the song, the longest run on this page', () => {
     expect(query.get('secondary_text')).toBe('')
   })
 
-  it('leaves the refusal standing, with the stage it was refused at', async () => {
-    generationFrames = [['blocked', { stage: 1, reason: 'gesperrt', found_terms: [] }]]
+  it('leaves the refusal standing, with its block message', async () => {
+    generationFrames = [['blocked', { safety_block: BLOCK, found_terms: [] }]]
 
     await vm.runMusic({ lyrics: LYRICS, style: 'slow, sparse' })
     const surface = await theSurface()
 
     expect(surface.safetyState).toBe('blocked')
-    expect(surface.blockedReason).toBe('gesperrt')
-    expect(surface.blockedStage).toBe(1)
+    expect(surface.blockMessage).toEqual(BLOCK)
     // And on the box, which is where somebody has to be able to read it. The
     // backend writes its reasons in German and only in German, so the surface
     // shows the platform's own sentence for this one, never the raw string.
     expect(surface.text).toContain(i18n.global.t('x2xFlow.blocked'))
-    expect(surface.text).toContain(i18n.global.t(safetyBlockKey('gesperrt', 1)))
+    expect(surface.text).toContain(i18n.global.t(safetyBlockMessageKey(BLOCK)))
     // A refusal is not a failure, and nothing of the song reached the table.
     expect(surface.error).toBe('')
     expect(vm.mediaUrl).toBe('')
@@ -475,7 +573,7 @@ describe('runMusic — the song, the longest run on this page', () => {
     // The other half of the claim above. A judgement is about the board as it
     // stood, so a board that is another one answers it — and without this test
     // a run whose judgement simply never arrived would pass the three above.
-    generationFrames = [['blocked', { stage: 3, reason: 'gesperrt', found_terms: [] }]]
+    generationFrames = [['blocked', { safety_block: { ...BLOCK, checkpoint: 'before_model' }, found_terms: [] }]]
 
     await vm.runMusic({ lyrics: LYRICS, style: '' })
     expect((await theSurface()).safetyState).toBe('blocked')
@@ -484,7 +582,6 @@ describe('runMusic — the song, the longest run on this page', () => {
     const after = await theSurface()
 
     expect(after.safetyState).toBe('idle')
-    expect(after.blockedReason).toBe('')
-    expect(after.blockedStage).toBeNull()
+    expect(after.blockMessage).toBeNull()
   })
 })

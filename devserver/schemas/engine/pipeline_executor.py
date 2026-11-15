@@ -15,6 +15,7 @@ import json
 from .config_loader import config_loader, ResolvedConfig
 from .chunk_builder import ChunkBuilder
 from .backend_router import BackendRouter, BackendRequest, BackendResponse, BackendType
+from .multi_image_params import MULTI_IMAGE_KEYS
 from .wikipedia_processor import extract_markers, format_wiki_content, remove_markers
 
 logger = logging.getLogger(__name__)
@@ -160,9 +161,7 @@ class PipelineExecutor:
         context_override: Optional[PipelineContext] = None,  # Multi-stage: Pre-populated context
         seed_override: Optional[int] = None,  # Phase 4: Intelligent seed for media generation
         input_image: Optional[str] = None,  # IMG2IMG support - path to input image
-        input_image1: Optional[str] = None,  # Multi-image support - path to image 1
-        input_image2: Optional[str] = None,  # Multi-image support - path to image 2 (optional)
-        input_image3: Optional[str] = None,  # Multi-image support - path to image 3 (optional)
+        multi_images: Optional[Dict[str, str]] = None,  # Multi-image support - input_image1, input_image2, ...
         alpha_factor: Optional[float] = None,  # Surrealizer: T5-CLIP fusion alpha factor
         run_id: Optional[str] = None,  # Per-request key for WIKIPEDIA_STATUS isolation
         context_language: Optional[str] = None  # Detected INPUT language for i18n context variant (Stage 2)
@@ -249,15 +248,9 @@ class PipelineExecutor:
             logger.info(f"[IMG2IMG] Added input_image to context: {input_image}")
 
         # Add multi-image paths to context if provided
-        if input_image1 is not None:
-            context.custom_placeholders['input_image1'] = input_image1
-            logger.info(f"[MULTI-IMG] Added input_image1 to context: {input_image1}")
-        if input_image2 is not None:
-            context.custom_placeholders['input_image2'] = input_image2
-            logger.info(f"[MULTI-IMG] Added input_image2 to context: {input_image2}")
-        if input_image3 is not None:
-            context.custom_placeholders['input_image3'] = input_image3
-            logger.info(f"[MULTI-IMG] Added input_image3 to context: {input_image3}")
+        for key, path in (multi_images or {}).items():
+            context.custom_placeholders[key] = path
+            logger.info(f"[MULTI-IMG] Added {key} to context: {path}")
 
         # Surrealizer: Add alpha_factor to context if provided (T5-CLIP fusion)
         if alpha_factor is not None:
@@ -332,7 +325,11 @@ class PipelineExecutor:
                 step.error = str(e)
                 completed_steps.append(step)
 
-                logger.error(f"Step {step.step_id} failed: {e}")
+                from my_app.services.generation_abort import current_run_aborted
+                if current_run_aborted():
+                    logger.info(f"Step {step.step_id} ended with its run: {e}")
+                else:
+                    logger.error(f"Step {step.step_id} failed: {e}")
 
                 return PipelineResult(
                     config_name=config_name,
@@ -366,7 +363,7 @@ class PipelineExecutor:
             # taken pixel by pixel, because the latent stopped at this line.
             # A key that has to reach a run is named in THREE places: the chunk
             # that returns it, the route that writes it down, and here.
-            for key in ['image_paths', 'seed', 'voice', 'model', 'media_type', 'parameters', 'filesystem_path', 'prompt_id', 'workflow_completed', 'legacy_workflow', 'media_files', 'outputs_metadata', 'workflow_json', 'download_all', 'chunk_name', 'chunk_type', 'image_data', 'audio_data', 'audio_format', 'video_data', 'video_format', 'mesh_data', 'mesh_format', 'size_bytes', 'model_id', 'backend', 'attention_data', 'probing_data', 'algebra_data', 'composable_data', 'reference_image', 'result_image', 'archaeology_data', 'f0_hz', 'latent_data', 'latent_meta']:
+            for key in ['image_paths', 'seed', 'voice', 'model_used', 'media_type', 'parameters', 'filesystem_path', 'prompt_id', 'workflow_completed', 'legacy_workflow', 'media_files', 'outputs_metadata', 'workflow_json', 'download_all', 'chunk_name', 'chunk_type', 'image_data', 'audio_data', 'audio_format', 'video_data', 'video_format', 'mesh_data', 'mesh_format', 'size_bytes', 'backend', 'attention_data', 'probing_data', 'algebra_data', 'composable_data', 'reference_image', 'result_image', 'archaeology_data', 'f0_hz', 'latent_data', 'latent_meta']:
                 if key in last_step_metadata:
                     result_metadata[key] = last_step_metadata[key]
 
@@ -378,7 +375,7 @@ class PipelineExecutor:
         try:
             from my_app.services.watermark_service import watermark_result_metadata
             watermark_result_metadata(result_metadata, {
-                'model': result_metadata.get('model') or result_metadata.get('model_id'),
+                'model': result_metadata.get('model_used'),
                 'seed': result_metadata.get('seed'),
             })
         except Exception as e:
@@ -712,8 +709,7 @@ class PipelineExecutor:
                 logger.info(f"[IMG2IMG] Injected input_image into chunk parameters: {image_path}")
 
             # Add multi-image paths to parameters if present in context
-            for i in range(1, 4):
-                key = f'input_image{i}'
+            for key in MULTI_IMAGE_KEYS:
                 if key in context.custom_placeholders:
                     image_path = context.custom_placeholders[key]
                     chunk_request['parameters'][key] = image_path
@@ -795,8 +791,10 @@ class PipelineExecutor:
                     # Build lookup terms with language resolution + deduplication
                     lookup_terms = []
                     # The model's own reason for each lookup, by term. Passed to
-                    # the UI verbatim and never checked — it is what makes the
-                    # model's estimate of its own limits readable.
+                    # the UI verbatim — it is what makes the model's estimate of
+                    # its own limits readable. The check at the result reads it
+                    # with its term and lets it through or withholds it; it
+                    # never rewrites it.
                     lookup_reasons = {}
                     # What THIS answer already asks for. fetched_terms carries the
                     # earlier iterations; within one answer nothing carried, so a
@@ -914,7 +912,9 @@ class PipelineExecutor:
                                 # the card could only link, not show.
                                 'extract': r.extract,
                                 # And why the model went looking. Its own words,
-                                # unchecked — that is the point of showing it.
+                                # never rewritten — that is the point of showing
+                                # them. They are shown once the check at the
+                                # result has let them through.
                                 'why': lookup_reasons.get(r.term.lower(), '')
                             }
                             for r in results

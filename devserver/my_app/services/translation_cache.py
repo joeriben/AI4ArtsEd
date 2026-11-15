@@ -25,6 +25,11 @@ the questions do not come from the request either: they come from
 every string it serves. A piece nobody was ever given is not kept - so the
 store holds benchmark text or nothing, whoever is posting.
 
+The same record says what is the platform's own. A set of pieces this server
+handed out is corpus text, not anything a caller wrote, so the translate
+endpoint lets it past the intake without asking (served()). What a model writes
+from it is still checked at the result, like every translation.
+
 This is not about anything a person writes. Nothing a person writes goes near
 here: the store sits in the list branch of the translate endpoint, whose only
 caller is Bias Archaeology; the pages carrying what people type use the
@@ -120,6 +125,23 @@ def _all_admitted(scope: str, texts: Sequence[str]) -> bool:
     with _lock:
         known = _admitted.get(scope) or set()
         return all(_piece(t) in known for t in texts)
+
+
+def served(scope: str, texts: Sequence[str]) -> bool:
+    """Whether every piece is one this server handed out itself, under scope.
+
+    The translate endpoint reads this to tell the platform's own corpus from
+    what a caller wrote. Like what may be kept, it is lost on restart: a set
+    served before then goes through the intake until it has been served again.
+    Every error here answers "not served".
+    """
+    if scope not in ALLOWED_SCOPES or not _acceptable(texts):
+        return False
+    try:
+        return _all_admitted(scope, texts)
+    except Exception as exc:
+        logger.warning(f"[TRANSLATION-CACHE] could not read what was served: {exc}")
+        return False
 
 
 # The table carries its schema generation in its name: CREATE TABLE IF NOT

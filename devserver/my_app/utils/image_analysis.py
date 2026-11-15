@@ -20,6 +20,8 @@ def analyze_image(
     model: Optional[str] = None,
     index: Optional[int] = None,
     lang: Optional[str] = None,
+    *,
+    level,
 ) -> str:
     """
     Analyze image using vision model via LLMClient.
@@ -43,6 +45,8 @@ def analyze_image(
         lang: Language the reading is written in. Only read when `prompt` is
               None, since a prompt handed in already says what it wants.
               None means the instance language.
+        level: The level of whoever asks. A run's picture is read only where
+               delivery hands it to that level.
 
     Returns:
         Analysis text from vision model
@@ -70,7 +74,7 @@ def analyze_image(
     if isinstance(image_ref, str) and image_ref.startswith('data:image'):
         image_data = strip_data_url(image_ref)
     else:
-        image_data = load_image_b64(image_ref, index=index)
+        image_data = load_image_b64(image_ref, index=index, level=level)
 
     # Step 2: Get prompt with fallback cascade
     if prompt is None:
@@ -117,7 +121,9 @@ def analyze_image(
 def analyze_image_from_run(
     run_id: str,
     prompt: Optional[str] = None,
-    analysis_type: str = 'bildwissenschaftlich'
+    analysis_type: str = 'bildwissenschaftlich',
+    *,
+    level,
 ) -> str:
     """
     Convenience function: Analyze image from LivePipelineRecorder run_id
@@ -126,15 +132,17 @@ def analyze_image_from_run(
         run_id: Run ID from LivePipelineRecorder
         prompt: Analysis prompt (optional, uses default if None)
         analysis_type: Analysis framework (bildungstheoretisch/bildwissenschaftlich/ethisch/kritisch)
+        level: The level of whoever asks
 
     Returns:
         Analysis text
 
     Raises:
-        MediaRefError (a FileNotFoundError): run not found, or no image in it
+        MediaRefError (a FileNotFoundError): run not found, no image in it, or
+            its image withheld from that level
     """
     from my_app.utils.media_ref import resolve_media_ref
 
-    image_path = resolve_media_ref(run_id, kind='image')
+    image_path = resolve_media_ref(run_id, kind='image', level=level)
     logger.info(f"[IMAGE-ANALYSIS] Loading image from run {run_id}: {image_path}")
-    return analyze_image(str(image_path), prompt, analysis_type)
+    return analyze_image(str(image_path), prompt, analysis_type, level=level)

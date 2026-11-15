@@ -10,7 +10,8 @@
     "es": "Wan 2.2 Imagen a vídeo (14B)",
     "he": "Wan 2.2 תמונה לווידאו (14B)",
     "ar": "Wan 2.2 من صورة إلى فيديو (14B)",
-    "bg": "Wan 2.2 Изображение във видео (14B)"
+    "bg": "Wan 2.2 Изображение във видео (14B)",
+    "zh-hant": "Wan 2.2 圖片轉影片（14B）"
   },
   "description": {
     "en": "Transform static images into dynamic 5-second videos using WAN 2.2 14B i2v model",
@@ -22,7 +23,8 @@
     "es": "Transforma imágenes estáticas en vídeos dinámicos de 5 segundos usando el modelo WAN 2.2 14B i2v.",
     "he": "הופך תמונות סטטיות לסרטוני וידאו דינמיים באורך 5 שניות באמצעות מודל WAN 2.2 14B i2v.",
     "ar": "يحوّل الصور الثابتة إلى مقاطع فيديو ديناميكية مدتها 5 ثوانٍ باستخدام نموذج WAN 2.2 14B i2v.",
-    "bg": "Превръща статични изображения в динамични 5-секундни видеа с модела WAN 2.2 14B i2v."
+    "bg": "Превръща статични изображения в динамични 5-секундни видеа с модела WAN 2.2 14B i2v.",
+    "zh-hant": "使用 WAN 2.2 14B i2v 模型，把靜態圖片變成動態的 5 秒影片"
   },
   "category": {
     "en": "Image-to-Video",
@@ -34,7 +36,8 @@
     "es": "Imagen a vídeo",
     "he": "תמונה לווידאו",
     "ar": "من صورة إلى فيديو",
-    "bg": "Изображение във видео"
+    "bg": "Изображение във видео",
+    "zh-hant": "圖片轉影片"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_video_wan22_i2v",

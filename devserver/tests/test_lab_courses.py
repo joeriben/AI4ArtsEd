@@ -25,6 +25,13 @@ Covers:
   that is no string, a body that is no object, a moment without an offset or
   beyond the year 9999. An id beyond SQLite's INTEGER, in a path or a body,
   names no row: 404, and 400 for a body.
+- Replacing every code of a course at once: the old codes and their
+  sessions end, nothing is deleted (the places keep their numbers, accounts,
+  perspectives with versions and palette entries, drafts, works and LoRA
+  adapters, the leader keeps theirs, and a device entering with a new code
+  reaches the same place), the places of
+  other courses keep their codes, and a code drawn meanwhile is 409 with the
+  old codes still entering.
 - A place session ends at its next request once its code is replaced, the
   window is closed or has run out, the course is archived or deleted, the
   place is removed, or the account is deactivated or has changed its role,
@@ -85,6 +92,20 @@ def clean_schema():
     SessionLocal.remove()
 
 
+@pytest.fixture(autouse=True)
+def favorites_store_of_its_own(tmp_path, monkeypatch):
+    """Deleting a course or an account removes its favorites
+    (favorites_store.drop_owned), and the store must be a throwaway one here,
+    never the installation's (config is read at call time)."""
+    import config
+    import my_app.services.favorites_store as favorites_store
+    monkeypatch.setattr(config, "JSON_STORAGE_DIR", tmp_path)
+    # What drop_owned took out stays in memory for the process; ids and stamps
+    # repeat between tests.
+    monkeypatch.setattr(favorites_store, "_DROPPED", set())
+    return tmp_path
+
+
 @pytest.fixture
 def app():
     a = Flask(__name__)
@@ -105,12 +126,12 @@ def client(app):
 @pytest.fixture
 def level(app, monkeypatch):
     """The safety level a request of a client runs under, in an installation
-    set to `open` (services/safety_level_resolver.py)."""
+    set to `adult` (services/safety_level_resolver.py)."""
     import config
     from flask import jsonify
     from my_app.services.safety_level_resolver import resolve_safety_level
     app.add_url_rule("/_level", "level", lambda: jsonify(level=resolve_safety_level()))
-    monkeypatch.setattr(config, "DEFAULT_SAFETY_LEVEL", "open")
+    monkeypatch.setattr(config, "DEFAULT_SAFETY_LEVEL", "adult")
     return lambda c: c.get("/_level").get_json()["level"]
 
 
@@ -413,6 +434,7 @@ def test_foreign_educator_cannot_access_course(client):
     assert client.patch(f"/api/courses/{cid}", json={"title": "hijack"}).status_code == 403
     assert _add_places(client, cid).status_code == 403
     assert client.post(f"/api/courses/{cid}/places/1/code").status_code == 403
+    assert client.post(f"/api/courses/{cid}/places/codes").status_code == 403
     assert _open(client, cid).status_code == 403
     assert client.delete(f"/api/courses/{cid}/access").status_code == 403
     assert client.get(f"/api/courses/{cid}/deletion-impact").status_code == 403
@@ -425,10 +447,20 @@ def test_owner_can_patch_course(client):
     _make_educator()
     _login(client, "edu@example.org")
     cid = _create_course(client).get_json()["course"]["id"]
-    resp = client.patch(f"/api/courses/{cid}", json={"safety_level": "open", "title": "Renamed"})
+    resp = client.patch(f"/api/courses/{cid}", json={"safety_level": "installation", "title": "Renamed"})
     assert resp.status_code == 200
     c = resp.get_json()["course"]
-    assert c["safety_level"] == "open" and c["name"] == "Renamed"
+    assert c["safety_level"] == "installation" and c["name"] == "Renamed"
+
+
+def test_open_is_no_level_a_course_can_take(client):
+    """The level open is gone (2026-11-01): neither a new course nor a changed
+    one is given it."""
+    _make_educator()
+    _login(client, "edu@example.org")
+    assert _create_course(client, safety="open").status_code == 400
+    cid = _create_course(client).get_json()["course"]["id"]
+    assert client.patch(f"/api/courses/{cid}", json={"safety_level": "open"}).status_code == 400
 
 
 # ---------------------------------------------------------------------------
@@ -674,6 +706,111 @@ def test_a_code_taken_meanwhile_is_409(client, monkeypatch):
     assert client.get(f"/api/courses/{cid}").get_json()["course"]["places"][0]["has_code"]
 
 
+def _perspective(owner_id, name="kept"):
+    db = SessionLocal()
+    p = M.InterceptionPrompt(owner_id=owner_id, name=name, context_text="x")
+    db.add(p)
+    db.commit()
+    return p.id
+
+
+def _place_account(cid, number):
+    return SessionLocal().query(M.CourseMembership).filter_by(
+        course_id=cid, place_number=number).one().user_id
+
+
+def test_replacing_all_codes_ends_every_session_and_keeps_what_the_places_saved(client, app):
+    """Every place gets a new code at once and the sessions of the old codes
+    end. Replacing the codes deletes nothing (2026-11-14): a place keeps its
+    number, its account and what its account saved, and a device that enters
+    with the new code reaches the same place; the leader's own perspectives
+    and the window stay."""
+    cid = _setup_course(client)
+    _open(client, cid)
+    old = _codes(client, cid, 3)
+    device = app.test_client()
+    entered = _enter(device, old[0]).get_json()
+    seats = [_place_account(cid, n) for n in (1, 2, 3)]
+    kept = _perspective(seats[0])
+    plain = _perspective(seats[2], "no version, no palette entry")
+    db = SessionLocal()
+    db.add(M.PromptVersion(prompt_id=kept, version_no=1, name="kept", context_text="x"))
+    db.add(M.CoursePaletteItem(course_id=cid, source_type=M.PaletteSourceType.custom,
+                               prompt_id=kept))
+    db.add(M.PromptDraft(owner_id=seats[1], course_id=cid, text="a draft of place 2"))
+    db.add(M.Work(owner_id=seats[1], course_id=cid, run_id="a run of place 2"))
+    db.add(M.LoraAdapter(file="place-2.safetensors", name="place 2", owner_id=seats[1],
+                         course_id=cid))
+    leader = db.query(M.User).filter_by(email="edu@example.org").one().id
+    db.commit()
+    own = _perspective(leader, "the leader's")
+
+    resp = client.post(f"/api/courses/{cid}/places/codes")
+    assert resp.status_code == 201
+    issued = resp.get_json()["places"]
+    assert [p["number"] for p in issued] == [1, 2, 3]
+    assert not {p["code"] for p in issued} & set(old)
+
+    assert _me(device)["user"] is None              # the old session ended
+    for code in old:
+        assert _enter(app.test_client(), code).status_code == 401
+    SessionLocal.remove()
+    db = SessionLocal()
+    assert db.get(M.InterceptionPrompt, kept).owner_id == seats[0]
+    assert db.get(M.InterceptionPrompt, plain).owner_id == seats[2]
+    assert db.get(M.InterceptionPrompt, own) is not None
+    assert db.query(M.PromptVersion).filter_by(prompt_id=kept).count() == 1
+    assert db.query(M.CoursePaletteItem).filter_by(course_id=cid).count() == 1
+    assert db.query(M.PromptDraft).filter_by(owner_id=seats[1], course_id=cid).count() == 1
+    assert db.query(M.Work).filter_by(owner_id=seats[1], course_id=cid).count() == 1
+    assert db.query(M.LoraAdapter).filter_by(owner_id=seats[1], course_id=cid).count() == 1
+    assert [_place_account(cid, n) for n in (1, 2, 3)] == seats
+    again = _enter(device, issued[0]["code"]).get_json()
+    assert again["user"]["id"] == entered["user"]["id"]  # the same place
+    course = client.get(f"/api/courses/{cid}").get_json()["course"]
+    assert course["access_open"] and len(course["places"]) == 3
+
+
+def test_replacing_all_codes_leaves_other_courses_alone(client, app):
+    cid = _setup_course(client)
+    other = _create_course(client, title="Course B").get_json()["course"]["id"]
+    _open(client, cid)
+    _open(client, other)
+    _codes(client, cid)
+    theirs = _codes(client, other)[0]
+
+    assert client.post(f"/api/courses/{cid}/places/codes").status_code == 201
+    assert _enter(app.test_client(), theirs).status_code == 200
+
+
+def test_replacing_all_codes_of_a_course_without_places_issues_none(client):
+    cid = _setup_course(client)
+    resp = client.post(f"/api/courses/{cid}/places/codes")
+    assert resp.status_code == 201
+    assert resp.get_json()["places"] == []
+
+
+def test_all_codes_taken_meanwhile_is_409_and_the_old_codes_still_enter(client, app, monkeypatch):
+    """Place 1 has its new code when place 2 meets a code another request took
+    in the same moment: nothing of it stands, and the old codes still enter."""
+    from sqlalchemy.exc import IntegrityError
+    from my_app.routes import courses_routes as CR
+    cid = _setup_course(client)
+    _open(client, cid)
+    old = _codes(client, cid, 2)
+    issue = CR.issue_code
+
+    def taken(db, place):
+        if place.place_number == 1:
+            return issue(db, place)
+        raise IntegrityError("UPDATE course_memberships", {}, Exception("UNIQUE constraint failed"))
+    monkeypatch.setattr(CR, "issue_code", taken)
+    assert client.post(f"/api/courses/{cid}/places/codes").status_code == 409
+    SessionLocal.remove()
+    for code in old:
+        assert _enter(app.test_client(), code).status_code == 200
+
+
 def test_closing_access_ends_sessions_and_reopening_admits_the_same_codes(client, app):
     cid = _setup_course(client)
     _open(client, cid)
@@ -823,7 +960,7 @@ def test_a_course_made_under_a_deleted_course_id_is_not_the_session_course(clien
     assert _enter(device, code).status_code == 200
     assert client.delete(f"/api/courses/{cid}", json={"confirm": True}).status_code == 200
     assert _me(device)["user"] is None
-    made = _create_course(client, title="Course B", safety="open").get_json()["course"]
+    made = _create_course(client, title="Course B", safety="installation").get_json()["course"]
     assert made["id"] == cid
     assert level(device) == "kids"
 
@@ -856,7 +993,7 @@ def test_an_ended_session_keeps_the_course_level(client, app, level):
     assert level(device) == "kids"
 
     device.post("/api/auth/logout")
-    assert level(device) == "open"
+    assert level(device) == "adult"
 
 
 def test_an_end_inside_a_streamed_response_reaches_the_cookie(client, app):
@@ -1001,6 +1138,7 @@ def test_a_place_manages_nothing(client, app):
     _enter(device, code)
     assert _add_places(device, cid).status_code == 403
     assert device.post(f"/api/courses/{cid}/places/1/code").status_code == 403
+    assert device.post(f"/api/courses/{cid}/places/codes").status_code == 403
     assert _open(device, cid).status_code == 403
     assert device.delete(f"/api/courses/{cid}/access").status_code == 403
     assert device.patch(f"/api/courses/{cid}", json={"title": "x"}).status_code == 403
@@ -1018,6 +1156,7 @@ def test_a_place_leads_no_course(client, app):
     db.commit()
     assert _add_places(device, cid).status_code == 403
     assert device.post(f"/api/courses/{cid}/places/1/code").status_code == 403
+    assert device.post(f"/api/courses/{cid}/places/codes").status_code == 403
     assert _open(device, cid).status_code == 403
     assert device.patch(f"/api/courses/{cid}", json={"title": "x"}).status_code == 403
     assert device.get(f"/api/courses/{cid}/deletion-impact").status_code == 403
@@ -1061,6 +1200,7 @@ def test_a_course_id_beyond_any_row_is_404(client):
     _setup_course(client)
     big = 2**63
     calls = (("post", f"/api/courses/{big}/places"), ("post", f"/api/courses/{big}/places/1/code"),
+             ("post", f"/api/courses/{big}/places/codes"),
              ("put", f"/api/courses/{big}/access"), ("delete", f"/api/courses/{big}/access"),
              ("get", f"/api/courses/{big}"), ("delete", f"/api/courses/{big}"))
     for who in ("edu@example.org", "admin"):
@@ -1172,3 +1312,408 @@ def test_delete_course_confirmed_removes_its_places(client):
     # The accounts of the places are gone (they were in no other course).
     db = SessionLocal()
     assert db.query(M.User).filter(M.User.role == M.Role.participant).count() == 0
+
+
+# ---------------------------------------------------------------------------
+# G) The course a leader works in (2026-11-14): chosen in the sign-in field
+#    of the header, or none, the account's own use ("Eigene Nutzung")
+# ---------------------------------------------------------------------------
+def _choose(client, cid):
+    return client.post("/api/auth/active-course", json={"course_id": cid})
+
+
+def test_a_leader_works_in_own_use_until_choosing(client, level):
+    _setup_course(client, safety="kids")
+    me = _me(client)
+    assert me["course_id"] is None and me["course"] is None
+    assert level(client) == "adult"
+
+
+def test_a_chosen_course_holds_its_own_level(client, level):
+    # A course entered without its stamp would run at the strictest level,
+    # kids; youth shows that the course chosen is the course entered.
+    cid = _setup_course(client, safety="youth")
+    resp = _choose(client, cid)
+    assert resp.status_code == 200
+    assert resp.get_json()["course"] == {"id": cid, "name": "Course A"}
+    assert _me(client)["course"] == {"id": cid, "name": "Course A"}
+    assert level(client) == "youth"
+
+
+def test_a_leader_returns_to_own_use(client, level):
+    cid = _setup_course(client, safety="youth")
+    _choose(client, cid)
+    resp = _choose(client, None)
+    assert resp.status_code == 200
+    assert resp.get_json()["course_id"] is None
+    assert resp.get_json()["course"] is None
+    assert level(client) == "adult"
+
+
+def test_a_leader_cannot_choose_a_course_led_by_another(client):
+    cid = _setup_course(client)
+    _make_educator(email="other@example.org")
+    _login(client, "other@example.org")
+    assert _choose(client, cid).status_code == 403
+    assert _me(client)["course_id"] is None
+
+
+def test_an_admin_chooses_any_course(client, app):
+    cid = _setup_course(client)
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    assert _choose(admin, cid).status_code == 200
+    assert _me(admin)["course_id"] == cid
+
+
+def test_the_choice_takes_a_course_id_or_null(client):
+    cid = _setup_course(client)
+    assert client.post("/api/auth/active-course", json={}).status_code == 400
+    assert client.post("/api/auth/active-course", data="x",
+                       content_type="text/plain").status_code == 400
+    for bad in (True, "1", 1.5, [cid]):
+        assert _choose(client, bad).status_code == 400, bad
+    for impossible in (0, -1, 2**63, 2**80):
+        assert _choose(client, impossible).status_code == 404, impossible
+    # An id the leader leads no course under is refused whether or not a
+    # course has it: the answer tells nobody which ids exist.
+    assert _choose(client, cid + 1).status_code == 403
+    assert _me(client)["course_id"] is None
+
+
+def test_an_admin_learns_that_no_course_has_an_id(client, app):
+    cid = _setup_course(client)
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    assert _choose(admin, cid + 1).status_code == 404
+
+
+def test_a_database_that_refuses_ends_no_request(client, app, monkeypatch):
+    # The check of a chosen course runs before every request of the API; where
+    # the database refuses it, the request is served and the choice stays.
+    from my_app.lab import auth_service
+    app.add_url_rule("/api/_ping", "ping", lambda: "ok")
+    cid = _setup_course(client)
+    assert _choose(client, cid).status_code == 200
+
+    def refuse(*args, **kwargs):
+        raise RuntimeError("database is locked")
+
+    monkeypatch.setattr(auth_service, "current_user", refuse)
+    assert client.get("/api/_ping").status_code == 200
+    monkeypatch.undo()
+    assert _me(client)["course_id"] == cid
+
+
+def test_choosing_needs_a_sign_in(client):
+    assert _choose(client, None).status_code == 401
+
+
+def test_a_place_cannot_choose(client, app):
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+    assert _choose(device, None).status_code == 403
+    assert _choose(device, cid).status_code == 403
+    assert _me(device)["course"] == {"id": cid, "name": "Course A"}
+
+
+def test_the_choice_ends_when_the_account_no_longer_leads(client, app):
+    cid = _setup_course(client)
+    co = _make_educator(email="co@example.org")
+    assert client.post(f"/api/courses/{cid}/educators", json={"user_id": co}).status_code == 201
+    co_client = app.test_client()
+    _login(co_client, "co@example.org")
+    assert _choose(co_client, cid).status_code == 200
+    assert client.delete(f"/api/courses/{cid}/educators/{co}").status_code == 200
+    me = _me(co_client)
+    assert me["course_id"] is None and me["course"] is None
+
+
+def test_the_choice_ends_with_its_course(client, app, level):
+    cid = _setup_course(client, safety="youth")
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    assert _choose(admin, cid).status_code == 200
+    # SQLite gives the id of a deleted course to the next course made
+    # (`courses.id` has no AUTOINCREMENT); the admin, who passes every
+    # course, would find itself in the new one without the stamp.
+    db = SessionLocal()
+    made = db.get(M.Course, cid).created_at
+    db.delete(db.get(M.Course, cid))
+    db.commit()
+    again = M.Course(name="Course B", safety_level="kids",
+                     created_at=made + _dt.timedelta(minutes=1))
+    db.add(again)
+    db.commit()
+    assert again.id == cid
+    me = _me(admin)
+    assert me["course_id"] is None and me["course"] is None
+    assert level(admin) == "adult"
+
+
+# ---------------------------------------------------------------------------
+# H) Favorites follow the account of a place (2026-11-14): kept under every
+#    code the place is given, kept on the device while its sign-in has ended,
+#    and gone with the account
+# ---------------------------------------------------------------------------
+class _Run:
+    """A run as the favorites routes read it, with nothing in it."""
+    metadata = {}
+
+
+@pytest.fixture
+def favorites(app, monkeypatch, favorites_store_of_its_own):
+    """The favorites routes on this app. Every run exists and keeps its piece;
+    what a run holds is not what this section tests."""
+    import my_app.routes.favorites_routes as FR
+    monkeypatch.setattr(FR, "load_recorder", lambda run_id, base_path=None: _Run())
+    monkeypatch.setattr(FR, "_keeps_media", lambda recorder, media_type: True)
+    monkeypatch.setattr(FR, "_listable", lambda fav, recorder, level: True)
+    app.register_blueprint(FR.favorites_bp)
+    return favorites_store_of_its_own
+
+
+TABLET = "tablet-07_2026-11-14"
+
+
+def _star(client, run_id, device_id=TABLET):
+    return client.post("/api/favorites",
+                       json={"run_id": run_id, "media_type": "audio", "device_id": device_id})
+
+
+def _mine(client, device_id=TABLET):
+    r = client.get(f"/api/favorites?device_id={device_id}&view_mode=per_user")
+    assert r.status_code == 200
+    return [f["run_id"] for f in r.get_json()["favorites"]]
+
+
+def _stored(store):
+    import json as _json
+    return {f["run_id"]: f for f in
+            _json.loads((store / "favorites.json").read_text(encoding="utf-8"))["favorites"]}
+
+
+def test_a_place_finds_its_favorites_under_its_new_code(client, app, favorites):
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+    assert _star(device, "run_place").status_code == 201
+    assert _stored(favorites)["run_place"]["owner_id"] == _place_account(cid, 1)
+
+    new = client.post(f"/api/courses/{cid}/places/codes").get_json()["places"][0]["code"]
+    # The sign-in has ended: the device asks as a device, and the place's
+    # favorite is not its own.
+    assert _mine(device) == []
+    assert _enter(device, new).status_code == 200
+    assert _mine(device, "another-tablet_2026-11-21") == ["run_place"]
+
+
+def test_a_device_whose_sign_in_has_ended_keeps_on_the_device(client, app, favorites):
+    """While the course is closed the device keeps as a device without an
+    account. Once the access is open again the place enters with its code and
+    reaches from that device, the same day, what it kept in between."""
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+    assert client.delete(f"/api/courses/{cid}/access").status_code == 200
+    assert _star(device, "run_after").status_code == 201
+    kept = _stored(favorites)["run_after"]
+    assert kept["owner_id"] is None and kept["device_id"] == TABLET
+    assert _mine(device) == ["run_after"]
+
+    assert _open(client, cid).status_code == 200
+    assert _enter(device, code).status_code == 200
+    assert _me(device)["user"]["role"] == "participant"
+    assert _mine(device) == ["run_after"]
+    assert _mine(device, "another-tablet_2026-11-21") == []
+    again = _star(device, "run_after")
+    assert again.status_code == 409 and again.get_json()["error"] == "Favorite already exists"
+    assert device.delete(f"/api/favorites/run_after?device_id={TABLET}").status_code == 200
+
+
+def test_a_leader_keeps_what_the_browser_starred_before_signing_in(app, favorites):
+    _make_educator()
+    browser = app.test_client()
+    assert _star(browser, "run_before").status_code == 201
+    assert _login(browser, "edu@example.org").status_code == 200
+    assert _mine(browser) == ["run_before"]
+    assert _mine(browser, "another-browser_2026-11-14") == []
+    assert browser.delete(f"/api/favorites/run_before?device_id={TABLET}").status_code == 200
+
+
+def test_an_unchecked_place_session_changes_no_favorite(client, app, favorites, monkeypatch):
+    """Where the database refuses the check of a place session, the
+    favourites answer 503 and the store stays as it was."""
+    from my_app.lab import auth_service as AS
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+    assert _star(device, "run_place").status_code == 201
+    before = (favorites / "favorites.json").read_text(encoding="utf-8")
+
+    def refused():
+        raise RuntimeError("database is locked")
+    monkeypatch.setattr(AS, "_place_admits_session", refused)
+    assert device.get(f"/api/favorites?device_id={TABLET}&view_mode=per_user").status_code == 503
+    assert _star(device, "run_other").status_code == 503
+    assert device.delete(f"/api/favorites/run_place?device_id={TABLET}").status_code == 503
+    assert device.patch("/api/favorites/run_place",
+                        json={"user_note": "x", "device_id": TABLET}).status_code == 503
+    assert (favorites / "favorites.json").read_text(encoding="utf-8") == before
+
+
+def test_the_settings_sign_in_keeps_under_the_admin_account(app, favorites):
+    """Signed out, the browser keeps as a device again: the settings sign-in
+    outlived the sign-out, and the browser kept as the admin."""
+    admin = _make_admin()
+    browser = app.test_client()
+    with browser.session_transaction() as s:
+        s["settings_authenticated"] = True
+    assert _star(browser, "run_settings").status_code == 201
+    kept = _stored(favorites)["run_settings"]
+    assert kept["owner_id"] == admin and kept["device_id"] is None
+
+    assert browser.post("/api/auth/logout").status_code == 200
+    assert _me(browser)["user"] is None
+    assert _mine(browser) == []
+    assert _star(browser, "run_signed_out").status_code == 201
+    kept = _stored(favorites)["run_signed_out"]
+    assert kept["owner_id"] is None and kept["device_id"] == TABLET
+
+
+def test_a_star_asked_while_its_course_is_deleted_is_kept_by_the_device(client, app, favorites, monkeypatch):
+    """A place stars while its course is being deleted. The deletion takes
+    the places' favourites before the star is written; the star is not kept
+    under the account that went, and the device keeps it."""
+    import threading
+    import my_app.routes.favorites_routes as FR
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+
+    deleted = []
+
+    def deleted_meanwhile(run_id, base_path=None):
+        # Once, while the star is out; the listing after it reads the run too.
+        if deleted:
+            return _Run()
+        deleted.append(run_id)
+        # The deletion is a request of its own, on a thread of its own as the
+        # server runs it: on this thread it would share the star's `g`.
+        answers = []
+        worker = threading.Thread(target=lambda: answers.append(
+            client.delete(f"/api/courses/{cid}", json={"confirm": True}).status_code))
+        worker.start()
+        worker.join()
+        assert answers == [200]
+        return _Run()
+    monkeypatch.setattr(FR, "load_recorder", deleted_meanwhile)
+    assert _star(device, "run_late").status_code == 201
+    late = _stored(favorites)["run_late"]
+    assert (late["owner_id"], late["owner_stamp"], late["device_id"]) == (None, None, TABLET)
+    assert _mine(device) == ["run_late"]
+
+
+def test_deleting_a_course_deletes_the_favorites_of_its_places(client, app, favorites):
+    cid = _setup_course(client)
+    _open(client, cid)
+    code = _codes(client, cid)[0]
+    device = app.test_client()
+    assert _enter(device, code).status_code == 200
+    assert _star(device, "run_place").status_code == 201
+    assert _star(client, "run_leader").status_code == 201
+    assert _star(app.test_client(), "run_device", "browser-3_2026-11-14").status_code == 201
+
+    assert client.delete(f"/api/courses/{cid}", json={"confirm": True}).status_code == 200
+    assert set(_stored(favorites)) == {"run_leader", "run_device"}
+
+
+def test_deleting_an_account_deletes_its_favorites(client, app, favorites):
+    _make_educator()
+    _login(client, "edu@example.org")
+    assert _star(client, "run_edu").status_code == 201
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    assert _star(admin, "run_admin").status_code == 201
+    edu = SessionLocal().query(M.User).filter_by(email="edu@example.org").one().id
+    assert admin.delete(f"/api/admin/users/{edu}").status_code == 200
+    assert set(_stored(favorites)) == {"run_admin"}
+
+
+def test_a_deletion_holds_the_favorites_from_its_commit_until_they_are_out(client, app, favorites, monkeypatch):
+    """No star is written between the commit that deletes an account and the
+    removal of its favourites: written there, it was kept under the account
+    and taken out with it, and the device that sent it kept nothing."""
+    import my_app.routes.courses_routes as CR
+    import my_app.routes.admin_users_routes as AR
+    import my_app.services.favorites_store as FS
+    from sqlalchemy.orm import Session
+    seen = []
+    real_commit = Session.commit
+
+    def commit(self):
+        seen.append(("commit", FS._EDITING._is_owned()))
+        return real_commit(self)
+
+    def recorded(real):
+        def drop(owners):
+            seen.append(("drop", FS._EDITING._is_owned()))
+            return real(owners)
+        return drop
+
+    monkeypatch.setattr(Session, "commit", commit)
+    monkeypatch.setattr(CR, "drop_owned", recorded(CR.drop_owned))
+    monkeypatch.setattr(AR, "drop_owned", recorded(AR.drop_owned))
+
+    cid = _setup_course(client)
+    _open(client, cid)
+    seen.clear()
+    assert client.delete(f"/api/courses/{cid}", json={"confirm": True}).status_code == 200
+    assert seen[-2:] == [("commit", True), ("drop", True)]
+
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    edu = SessionLocal().query(M.User).filter_by(email="edu@example.org").one().id
+    seen.clear()
+    assert admin.delete(f"/api/admin/users/{edu}").status_code == 200
+    assert seen[-2:] == [("commit", True), ("drop", True)]
+
+
+def test_an_account_made_under_the_id_of_a_deleted_one_reaches_none_of_its_favorites(
+        app, favorites, monkeypatch):
+    """SQLite gives the id of a deleted account to the next account made.
+    Where the favourites of the deleted one stayed in the store, the new one
+    neither finds them nor removes them."""
+    import my_app.routes.admin_users_routes as AU
+    monkeypatch.setattr(AU, "drop_owned", lambda owners: -1)
+    _make_admin()
+    admin = app.test_client()
+    _login(admin, "admin")
+    old = _make_educator()
+    edu = app.test_client()
+    _login(edu, "edu@example.org")
+    assert _star(edu, "run_edu").status_code == 201
+    assert admin.delete(f"/api/admin/users/{old}").status_code == 200
+    assert "run_edu" in _stored(favorites)
+
+    assert _make_educator(email="new@example.org") == old
+    fresh = app.test_client()
+    assert _login(fresh, "new@example.org").status_code == 200
+    assert _mine(fresh) == []
+    assert fresh.delete(f"/api/favorites/run_edu?device_id={TABLET}").status_code == 403

@@ -7,8 +7,10 @@
  * `apiBase()` of services/labApi.ts, as the rest of the app does.
  *
  * `activeCourseId` is set by the server: a participant is pinned to one course
- * for the session, an educator adopts the server's selection. It is mirrored to
- * localStorage so a reload keeps the scope. There is no UI that picks a course.
+ * for the session; a leader or an admin chooses one in the sign-in field of
+ * the header (components/SignInField.vue, `chooseCourse`), or none for their
+ * own use, and the server holds the choice. It is mirrored to localStorage so
+ * a reload keeps the scope until the server has answered.
  */
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
@@ -30,8 +32,22 @@ export interface AuthUser {
 
 const ACTIVE_COURSE_KEY = 'ai4artsed.activeCourseId'
 
+/** The course the session works in, as /api/auth/me names it. */
+export interface ActiveCourse {
+  id: number
+  name: string
+}
+
 /** An answer of /api/auth/me: the account, and for a place its course and number. */
 type MeAnswer = { user: AuthUser | null; [k: string]: any }
+
+/** Whether two answers name the same thing. An answer that names what the
+ *  page already holds changes nothing: every watcher of the account or the
+ *  course would otherwise run on each check, and the instruments that keep
+ *  their results per account and course would drop them every 30 seconds. */
+function same(a: unknown, b: unknown): boolean {
+  return JSON.stringify(a) === JSON.stringify(b)
+}
 
 /** Whether a body is an answer of /api/auth/me: an object with a `user`. */
 function isMeAnswer(data: unknown): data is MeAnswer {
@@ -62,6 +78,9 @@ export const useLabAuthStore = defineStore('labAuth', () => {
    *  (`checkPlaceSession`); components/PlaceSignInEnded.vue says so until
    *  the row is closed. */
   const endedPlace = ref<number | null>(null)
+  /** The course the session works in, with its name, as the server answered;
+   *  null for a leader's own use and for no sign-in. */
+  const course = ref<ActiveCourse | null>(null)
 
   // What `checkPlaceSession` weighs an answer against, kept out of the view.
   // `sessions` counts every change of the session on this page: an answer to a
@@ -76,8 +95,12 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   /** The questions to /api/auth/me that are out. */
   const questions = new Set<AbortController>()
   let placeCheck: Promise<void> | null = null
+  let leaderCheck: Promise<void> | null = null
+  /** The choice of course that is out (`chooseCourse`); a sign-out waits for it. */
+  let choiceOut: Promise<string | null> | null = null
 
-  // v2: explicit active-course selection (decision 1) — client-side only in P0.
+  // v2: explicit active-course selection (decision 1). Since 2026-11-14 the
+  // server holds it (`chooseCourse`); this is its mirror on the page.
   const activeCourseId = ref<number | null>(loadActiveCourseId())
 
   const isAuthenticated = computed(() => user.value !== null)
@@ -159,25 +182,47 @@ export const useLabAuthStore = defineStore('labAuth', () => {
     }
     sessions++
     sessionUnknown = false
-    user.value = data.user
+    if (!same(user.value, data.user)) user.value = data.user
     place.value = data.user?.role === 'participant' ? (data.place ?? null) : null
     if (!data.user) {
       // No session, no course. A place session ends on the server when its
       // course closes or its code is replaced; the course it was bound to
       // must not stay behind in this browser as the active scope.
       activeCourseId.value = null
+      course.value = null
     } else {
       placeEnded = false
       endedPlace.value = null
-      if (typeof data.course_id !== 'undefined') {
-        const serverCid: number | null = data.course_id
-        if (data.user.role === 'participant') {
-          activeCourseId.value = serverCid                 // fixed binding
-        } else if (serverCid !== null) {
-          activeCourseId.value = serverCid                 // educator: adopt server selection
-        }
+      // The server holds the course of every session: a place's fixed
+      // binding, or the course a leader chose (2026-11-14), null for a
+      // leader's own use. A choice the server has ended (the course is gone,
+      // the account no longer leads it) ends here as well, and so does one
+      // made in another tab; the safety gate follows the course.
+      if (typeof data.course_id !== 'undefined' && data.course_id !== activeCourseId.value) {
+        activeCourseId.value = data.course_id
+        void useSafetyLevelStore().fetchLevel()
       }
+      const named: ActiveCourse | null = data.course ?? null
+      if (!same(course.value, named)) course.value = named
     }
+  }
+
+  /** Whether the server still holds the course this page shows for a leader
+   *  or an admin (2026-11-14). Flask writes the session cookie again with
+   *  every answer, from the session its request carried: a request sent
+   *  before a choice of course and answered after it puts the session before
+   *  back into this browser. The page learns it here and shows what the
+   *  server holds. Asked by the same interval as the place check
+   *  (composables/usePlaceSessionCheck.ts); with `again`, one question goes
+   *  out even while another is out, as there. */
+  function checkLeaderSession(again = false): Promise<void> {
+    if (!isEducator.value) return Promise.resolve()
+    if (leaderCheck !== null && !again) return leaderCheck
+    const check: Promise<void> = fetchMe().finally(() => {
+      if (leaderCheck === check) leaderCheck = null
+    })
+    leaderCheck = check
+    return check
   }
 
   /** Whether the server still holds this device's place (2026-09-24). The
@@ -259,8 +304,10 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       // The server drops the course of whatever session this browser held,
       // a place session included (auth_service.login_user), and with it that
       // course's safety level; the scope and the gate here follow it. A
-      // leader chooses a course afterwards (Entscheid 1).
+      // leader chooses a course afterwards (Entscheid 1), in the sign-in
+      // field of the header.
       setActiveCourse(null)
+      course.value = null
       await useSafetyLevelStore().fetchLevel()
       return true
     } catch (e: any) {
@@ -295,6 +342,7 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       user.value = data.user
       newSession(data.place ?? null)
       if (data.course?.id != null) activeCourseId.value = data.course.id
+      course.value = data.course?.id != null ? { id: data.course.id, name: data.course.name } : null
       // The server has just pinned the session to this course, and the course
       // may enforce a stricter safety level than the installation. The gating
       // store read the level at app boot, before any of this — without a
@@ -316,6 +364,9 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   }
 
   async function logout(): Promise<void> {
+    // A choice of course still out goes first: its answer carries the cookie
+    // of the signed-in session and would put it back after the sign-out.
+    if (choiceOut !== null) await choiceOut
     beginSigning()
     try {
       await axios.post(`${apiBase()}/api/auth/logout`, {}, { withCredentials: true })
@@ -332,15 +383,72 @@ export const useLabAuthStore = defineStore('labAuth', () => {
     clearCrossmodalPicture()
     // Forget the active course on logout — the next user picks their own.
     setActiveCourse(null)
+    course.value = null
     // The course binding is gone; the gate must follow it back up.
     await useSafetyLevelStore().fetchLevel()
   }
 
+  /** The course a leader or an admin works in, or null for their own use
+   *  ("Eigene Nutzung"), chosen in the sign-in field of the header
+   *  (components/SignInField.vue). The server holds the choice
+   *  (POST /api/auth/active-course) and answers as /api/auth/me does; the
+   *  scope here and the safety gate follow its answer. Questions to
+   *  /api/auth/me still out are called off first, as for a sign-in: an answer
+   *  to one would bring the course before back.
+   *
+   *  Returns null when the course is chosen, else the cause as the server or
+   *  the network gave it; a refused choice changes nothing here, and the
+   *  next check reads the session again. */
+  function chooseCourse(id: number | null): Promise<string | null> {
+    const out = sendChoice(id)
+    choiceOut = out
+    void out.finally(() => {
+      if (choiceOut === out) choiceOut = null
+    })
+    return out
+  }
+
+  async function sendChoice(id: number | null): Promise<string | null> {
+    beginSigning()
+    const mine = sessions
+    try {
+      const answer = await axios.post(
+        `${apiBase()}/api/auth/active-course`,
+        { course_id: id },
+        { withCredentials: true },
+      )
+      const data: unknown = answer.data
+      if (mine !== sessions) {
+        // A sign-out on this page came between; the page keeps to it.
+        sessionUnknown = true
+        return 'signed out'
+      }
+      if (!isMeAnswer(data) || !data.user) {
+        sessionUnknown = true
+        return `HTTP ${answer.status} ${String(answer.headers?.['content-type'] ?? '')}`.trim()
+      }
+      user.value = data.user
+      newSession(null)
+      activeCourseId.value = data.course_id ?? null
+      course.value = data.course ?? null
+      // A course can only tighten the installation's level, and the own use
+      // runs at that level: the gate follows either way.
+      await useSafetyLevelStore().fetchLevel()
+      return null
+    } catch (e: any) {
+      sessionUnknown = true
+      return String(e?.response?.data?.error ?? e?.message ?? e)
+    } finally {
+      signing--
+    }
+  }
+
   return {
     user, loading, error, retryAfter, place, endedPlace,
-    activeCourseId,
+    activeCourseId, course,
     isAuthenticated, role, isAdmin, isEducator, isParticipant,
     setActiveCourse,
-    fetchMe, login, participantLogin, logout, checkPlaceSession, dismissEndedPlace,
+    fetchMe, login, participantLogin, logout, chooseCourse, checkPlaceSession, checkLeaderSession,
+    dismissEndedPlace,
   }
 })

@@ -42,7 +42,62 @@ GET  /api/parrot/sung/<id>            inline, kein Attachment
 POST /api/parrot/discard/<id>
 ```
 
-## Die Seite steht unter dem Band, und das Band trägt kein Material
+## Die Seite im Spaltenrahmen (seit 2026-11-02)
+
+Entschieden am 2026-11-02 (`docs/DEVELOPMENT_DECISIONS.md`): Die Ausgabe
+steht in der linken Spalte, weil sie in der rechten zwischen den
+Zwischenergebnissen stünde und von ihnen nicht zu unterscheiden wäre.
+
+Die Seite steht im Rahmen der Latent-Lab-Instrumente (`.lab-main` /
+`.lab-stage` / `.lab-work` in `assets/flow-stage.css`; im Strukturregister
+`Seitengeruest eines Messinstruments`; die vorbereitende Spalte seit 2026-11-07 im
+Spaltenkasten `.cmp-column` aus `assets/compare-stage.css`):
+
+- **Leiste:** `ShellRun` mit dem `▶` und, solange die Kette läuft, dem Zähler
+  „Schritt n / 4“ über die vier Stationen.
+- **Linke Spalte**, einklappbar (`ColumnFold`): die Aufnahme
+  (`MediaInputBox chrome="bare"`, Ton), darunter „Wahl des Modells“ mit den vier
+  Maschinen als `ChipSelect`, darunter „Ausgabe“: der Song in einer `FlowCard`
+  mit Rückseite und die Zeile „erstellt von {Modell}, in {s} s“. Die Ausgabe in
+  der linken Spalte ist die eine Abweichung vom Rahmen; rechts stünde sie
+  zwischen den Zwischenergebnissen.
+- **Rechte Spalte:** die drei lesbaren Stationen, Audio-Analyse, Erkannte
+  Wörter und Erzeugter Songtext, je eine Lesespalte (`.lab-readcol` auf dem
+  Serienraster `.lab-grid`, geteilt mit Bildverständnis). Der Kopf trägt den
+  Namen, die Antwortzeit und die Maschine; die Karte (`FlowCard scroll`)
+  scrollt in sich und dreht beim Halten auf ihre Rückseite „Produktion“.
+- Vor dem Lauf stehen die Karten der drei Spalten und der Ausgabe abgedunkelt,
+  ihre Köpfe tragen „wartet“; die Station, die gerade rechnet, trägt
+  „arbeitet…“. Während das Modell singt, steht sein Name im Kopf der Ausgabe;
+  ist der Song da, steht er in der Zeile unter dem Player.
+- Ist die Seite schmaler als 900 px, stehen beide Seiten und die drei Spalten
+  untereinander, und die Seite scrollt in sich. Gemessen wird die Seite, nicht
+  das Fenster (Container-Abfrage): die Instrumentenleiste nimmt 240 bis 340 px.
+
+Die Wahl des Modells bleibt stehen, obwohl die Kette selbst wählt (s. unten,
+„Welche Maschine singt“); eine Handwahl schlägt die Kette.
+
+Der `▶` bleibt nach dem Lauf gedimmt stehen; warum er einmalig je Aufnahme ist,
+steht im Abschnitt darunter. Ein zweiter Lauf braucht eine neue Aufnahme: der
+Papierkorb in der Aufnahme-Box nimmt Aufnahme, Song und die drei Spalten mit
+(`reset()`) und gibt jeder Station eine neue Karte, damit keine auf ihrer
+Rückseite liegen bleibt. Die Box ist deshalb nach dem Lauf nicht gesperrt. Bis 2026-11-02
+war sie es, und weil `MediaInputBox` seinen Papierkorb mit der Box sperrt (seit
+2026-08-23), hatte die Seite nach einem Lauf keinen Weg zurück.
+
+Entfallen sind das Band (`FlowHeader` mit `FlowRunPanel` im mittleren Knoten
+und der Glyphe des Tons), die Fläche, auf die die Boxen geworfen wurden
+(`pack()`), und zwei Sätze unter der Ausgabe (`coverBand.sung.note`,
+`coverBand.sung.notKept`), am 2026-11-02 gestrichen. Behalten lässt
+sich der Song weiterhin nicht: der Player bietet keinen Download an, und die
+Datei geht mit der Seite (`abandon()`).
+
+## Bis 2026-11-02: Die Seite steht unter dem Band, und das Band trägt kein Material
+
+> Abgelöst durch den Abschnitt darüber. Was hier über die Aufnahme-Box
+> (`AudioRecordWidget`), die Rückseiten, den Start erst auf `▶` und den Grund
+> für einen `▶` je Aufnahme steht, gilt weiter. Band, Knoten, Lauf-Panel, das
+> Lesemaß von 34rem und der verschwindende Knopf gelten nicht mehr.
 
 Drei Knoten — `Nimm etwas auf!` · `Start` · `Ausgabe` —, und jeder von ihnen
 hat die Form, die derselbe Knoten in `views/x2x_flow.vue` hat. Das ist der
@@ -113,10 +168,10 @@ Zwei Ja/Nein-Antworten, vier Ausgänge:
 |---|---|---|
 | Musik **und** Text | `heartmula_standard` | ein Lied: Worte zum Singen und ein Stil, in dem sie gesungen werden |
 | Musik, kein Text | `stableaudio_music` | Musik, aber nichts zu singen |
-| Text, keine Musik | `qwen3_tts_standard` | eine Stimme: die Worte zurückgesprochen |
+| Text, keine Musik | `voxcpm_standard` | eine Stimme: die Worte zurückgesprochen |
 | weder noch | `stableaudio_sfx` | ein Klang |
 
-Eine Handwahl im Erstellungs-Knoten schlägt alle vier und wird als `?config=`
+Eine Handwahl in „Wahl des Modells“ schlägt alle vier und wird als `?config=`
 mitgeschickt; ohne Handwahl schickt die Seite nichts mit, und die Kette
 entscheidet selbst (`resolve_singer` in `my_app/services/parrot_service.py`).
 
@@ -145,14 +200,12 @@ Angezeigt wird auf der Seite weiter CLAP zuerst: die Seite handelt davon, was
 diese Maschinen aus einer Aufnahme machen, und die öffentlich falsche ist nicht
 die, die routen soll.
 
-Drei Vergleiche, in dieser Reihenfolge:
+Zwei Vergleiche entscheiden die Musik-Frage, in dieser Reihenfolge:
 
 1. Steht „noise, not music" oder „silence" ganz oben → keine Musik. Das
    entscheidet **nur** die Musik-Frage: eine Aufnahme in einem Raum kann oben
    „silence" tragen und trotzdem Worte enthalten.
-2. Sonst: schlägt „a voice speaking, not singing" das beste Musik-Label → eine
-   sprechende Stimme, keine Musik. Das darf **nur** dieses eine Label.
-3. Sonst ist Musik da, wenn das beste Musik-Label „noise, not music"/„silence"
+2. Sonst ist Musik da, wenn das beste Musik-Label „noise, not music"/„silence"
    schlägt.
 
 **Singen ist Musik.** Die beiden Gesangs-Label stehen deshalb auf der
@@ -160,17 +213,38 @@ Musik-Seite. Stünden sie dagegen, ginge jede unbegleitete Stimme als Sprache
 durch und würde von einem TTS zurückgesprochen — auf einer Seite, deren eigene
 Anweisung „Sing, summ oder halte dein Handy hoch" lautet.
 
-**Die Text-Frage ist nicht überall dieselbe.** In Musik heißt „sind da Worte"
-*singt jemand* und wird an den Gesangs-Labeln gemessen; ohne Musik heißt es
-*spricht jemand* und wird am Sprech-Label gemessen. Das Sprech-Label in Musik zu
-fragen ließ ein Instrumental als Lied durchgehen: sein Wert liegt im Übersprechen
-dieses Modells und muss nicht hoch sein, nur höher als „no voice at all".
+**Das Sprech-Label entscheidet die Musik-Frage nicht.** Bis 2026-11-01 hieß
+„a voice speaking, not singing" über dem besten Musik-Label „keine Musik", und
+das schickte Lieder an VoxCPM2. Auf einem 30 Sekunden langen Lied, am 2026-11-01
+auf der Seite aufgenommen, stand bei MuQ „a voice speaking, not singing" mit .39
+oben, darunter reggae .36, country .34, pop song .30 und jazz .29; CLAP setzte
+rock band, metal und chinese guqin nach oben. Zwei von vier HeartMuLa-Liedern,
+gefiltert wie ein Handy in einem Raum, liefen genauso. Das kostet Sprache: die
+deutsche Sprachprobe zählt jetzt als Musik, weil ihre Musik-Label (die
+Gesangs-Label mit .52, hip hop mit .47) „noise, not music" (.39) schlagen, und
+eine gesprochene Aufnahme, die so eingeordnet wird, singt HeartMuLa, solange
+VoxCPM2 nicht von Hand gewählt ist. Ein Vergleich in den gemessenen Ranglisten
+trennt diese Probe noch von jedem Lied: „no voice at all" über dem besten
+Genre- oder Instrument-Label (.509 gegen .466 auf der Probe, .434 gegen .477
+auf dem knappsten Lied). Er wird nicht benutzt: er stützt sich auf eine einzige
+Sprachprobe mit .043 Abstand, und die beiden Label stehen nicht für
+entgegengesetzte Antworten.
 
-Und Text braucht **beide** Maschinen: der Transkribierer hat etwas geschrieben
-**und** die Rangliste stellt eine Stimme über „no voice at all". Der
-Transkribierer allein genügt nicht — auf braunem Rauschen schrieb er „The train
-is now arriving at station", auf synthetischen Akkorden „××××，x，x，x，". Genau
-hier darf die Konfabulation einmal aufgefangen werden, statt gezeigt zu werden.
+**In Musik heißt Text: der Transkribierer hat etwas geschrieben.** Bis 2026-11-01
+musste die Rangliste zustimmen, mit einem Gesangs-Label über „no voice at all".
+Am 2026-10-31 ging eine 19,7 Sekunden lange Gesangsaufnahme an SA3 Music, ohne
+Handwahl im Log, obwohl der Transkribierer ihre Worte aufgeschrieben und die
+Seite sie aus dem Indonesischen übersetzt hatte; nach dieser Regel geschieht das
+nur, wenn kein Gesangs-Label „no voice at all" schlägt. MuQs Werte dazu stehen
+in keinem Log. Dieser Vergleich war schon vorher der knappste (Issue #37). Das
+kostet: ein Instrumental, in das der Transkribierer Worte hineinliest, wird auch
+gesungen; auf synthetischen Akkorden schrieb er „××××，x，x，x，". SA3 Music
+läuft, wenn er nichts schreibt.
+
+**Ohne Musik braucht Text beide Maschinen:** der Transkribierer hat etwas
+geschrieben **und** „a voice speaking, not singing" schlägt „no voice at all".
+Auf braunem Rauschen schrieb der Transkribierer am 2026-10-31 „The train is
+about to leave"; die Rangliste hält das bei einem Klang.
 
 Verglichen wird immer **innerhalb** einer Rangliste und nie gegen eine feste
 Zahl: beide Modelle betten jede englische Zeichenkette ein und messen
@@ -250,7 +324,7 @@ Fallback-Kette). Ein eigener Router wäre eine Parallelstruktur.
 |---|---|---|
 | Stationen | ranked, words, written | sung |
 | zeigt | die Grenzen der Auswertung | die Grenzen der Maschine, die gerade singt |
-| wie | Rangliste mit Zahlen, Transkription, LLM-Text | gegen den LLM-Text gehört, der darüber steht |
+| wie | Rangliste mit Zahlen, Transkription, LLM-Text | gegen den LLM-Text gehört, der rechts in seiner Spalte steht |
 
 Die Rangliste wird **vollständig** durchgereicht, inklusive letztem Platz. Was
 ein Modell jedes Mal ans Ende setzt, ist die aussagekräftigste Stelle der
@@ -270,7 +344,7 @@ Wort-Station sichtbar macht, wird in der Schreib-Station stillschweigend
 geglättet.
 
 **So bleibt es.** Die Maschine glättet tatsächlich stillschweigend; zwei Texte
-untereinander, ohne Kommentar dazwischen, sind die zutreffende Darstellung
+nebeneinander, ohne Kommentar dazwischen, sind die zutreffende Darstellung
 davon. Eine Auszeichnung wäre die Plattform, die sich über den Vorgang legt,
 und ein Prompt, der Fehlerbewahrung erzwingt, wäre gestellt.
 
@@ -286,7 +360,8 @@ Weder das eine noch das andere nachrüsten.
 
 Aufgenommen am 2026-08-12. Die Boxen waren an diesem Tag für wenige Stunden
 entfernt und sind zurück — als Karten, die auf eine Fläche GEWORFEN werden statt
-in einer Spalte zu stehen (siehe „Die Fläche" unten). Die Beschreibung steht,
+in einer Spalte zu stehen (siehe „Die Fläche" unten; seit 2026-11-02 steht jede in ihrer Lesespalte, s.
+„Die Seite im Spaltenrahmen“). Die Beschreibung steht,
 weil sie beim Entfernen entstanden ist und weil sie beschreibt, was die drei
 tragen.
 
@@ -349,7 +424,9 @@ Tag-Text (oder die Lyrics), Qwen3-TTS spricht die Lyrics.
 Alle drei sind tragend: ohne Rangliste keine Tags und keine Weiche, ohne
 Transkription keine zweite Achse der Weiche, ohne Schreibstation kein Song.
 
-### Die Fläche
+### Bis 2026-11-02: Die Fläche
+
+> Entfallen mit dem Spaltenrahmen (s. „Die Seite im Spaltenrahmen“).
 
 Die Boxen werden wie im Flow auf die Fläche geworfen, in der Reihenfolge von
 oben links nach rechts und zur Mitte, ohne exakte starre Positionen, nach

@@ -205,6 +205,8 @@ def test_the_run_has_its_own_ceiling_still(monkeypatch):
 
 
 class _Done:
+    status = 200
+
     def __await__(self):
         if False:
             yield
@@ -221,8 +223,38 @@ def test_a_cancel_takes_the_prompt_out_of_the_queue_before_it_interrupts(monkeyp
     posts = []
     monkeypatch.setattr(WS.aiohttp, "ClientSession", lambda *a, **k: _Recording(posts))
     client = ComfyUIWebSocketClient(base_url="http://127.0.0.1:1")
-    asyncio.run(client.cancel_job("p-3"))
+    assert asyncio.run(client.cancel_job("p-3")) is True
     assert posts == [("queue", {"delete": ["p-3"]}), ("interrupt", {"prompt_id": "p-3"})]
+
+
+def test_a_queue_that_answers_late_keeps_no_interrupt_back(monkeypatch):
+    posts = []
+
+    class _QueueLate(_Recording):
+        def post(self, url, json=None, timeout=None):
+            if url.endswith("/queue"):
+                raise asyncio.TimeoutError()
+            return super().post(url, json=json, timeout=timeout)
+
+    monkeypatch.setattr(WS.aiohttp, "ClientSession", lambda *a, **k: _QueueLate(posts))
+    client = ComfyUIWebSocketClient(base_url="http://127.0.0.1:1")
+    assert asyncio.run(client.cancel_job("p-4")) is False
+    assert posts == [("interrupt", {"prompt_id": "p-4"})]
+
+
+def test_a_cancel_comfyui_refuses_is_not_taken(monkeypatch):
+    posts = []
+
+    class _Refusing(_Recording):
+        def post(self, url, json=None, timeout=None):
+            answer = super().post(url, json=json, timeout=timeout)
+            answer.status = 500
+            return answer
+
+    monkeypatch.setattr(WS.aiohttp, "ClientSession", lambda *a, **k: _Refusing(posts))
+    client = ComfyUIWebSocketClient(base_url="http://127.0.0.1:1")
+    assert asyncio.run(client.cancel_job("p-5")) is False
+    assert asyncio.run(client.try_cancel_job("p-5")) == "/queue: HTTP 500; /interrupt: HTTP 500"
 
 
 class _History:

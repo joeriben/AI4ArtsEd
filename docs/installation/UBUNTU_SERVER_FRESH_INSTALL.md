@@ -531,7 +531,7 @@ have every file they need.
 > `/api/models/availability?force_refresh=true`).
 
 For Flux 2, run `./download_flux2.sh` (~70 GB); for FLUX 3 Image Klein,
-`./download_flux3.sh` (~20 GB; the licence has to be accepted first, see
+`./download_flux3.sh` (~39 GB; the licence has to be accepted first, see
 Section 5 of `MODELS_REQUIRED.md`). For the full ComfyUI inventory
 (Qwen Image, Wan 2.2 TI2V-5B, Hunyuan3D, etc.) see Section 5 of
 `MODELS_REQUIRED.md`.

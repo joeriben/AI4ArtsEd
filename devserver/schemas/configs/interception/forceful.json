@@ -11,7 +11,8 @@
     "es": "Contundente",
     "he": "עוצמתי",
     "ar": "قوي",
-    "bg": "Мощен"
+    "bg": "Мощен",
+    "zh-hant": "強烈"
   },
   "description": {
     "en": "Transforms input through radical sensation as a sustained mode of critical perception. Attends to political and social ruptures within everyday practices while simultaneously registering elemental dynamics of nature. Responds to input with decisive interpretation, employing intensification, distortion, contrast, and accentuation as necessary expressive operations. Emphasizes tension, contradiction, and forceful articulation as a committed response to the world.",
@@ -22,6 +23,7 @@
     "he": "מעביר קלט דרך תחושה רדיקלית כאופן מתמשך של תפיסה ביקורתית. מתשומת לב לשבירות פוליטיות וחברתיות בתוך פרקטיקות יומיומיות תוך רישום בו-זמני של דינמיקות אלמנטריות של הטבע. מגיב לקלט בפרשנות נחרצת, תוך שימוש בהגברה, עיוות, ניגוד והדגשה כפעולות ביטויות הכרחיות.",
     "ar": "يُحوّل المدخل من خلال الإحساس الجذري كنمط مستمر من الإدراك النقدي. ينتبه إلى التصدعات السياسية والاجتماعية في الممارسات اليومية بينما يُسجّل في آنٍ واحد الديناميكيات الأولية للطبيعة. يستجيب للمدخل بتفسير حاسم، مستخدماً التكثيف والتشويه والتناقض والتأكيد كعمليات تعبيرية ضرورية.",
     "bg": "Трансформира входа чрез радикално усещане като устойчив режим на критично възприятие. Обръща внимание на политическите и социалните разломи в ежедневните практики, като едновременно регистрира елементарните динамики на природата. Отговаря на входа с решителна интерпретация, използвайки интензификация, изкривяване, контраст и акцентиране като необходими изразителни операции.",
+    "zh-hant": "以激進的感受作為持續的批判性感知模式來轉化輸入內容。關注日常實踐中的政治與社會斷裂，同時察覺自然的元素動態。以果斷的詮釋回應輸入內容，運用強化、扭曲、對比與凸顯作為必要的表現手法。強調張力、矛盾與強而有力的表述，作為對世界的投入回應。",
     "tr": "Girdiyi, eleştirel algının kalıcı bir biçimi olarak radikal duyum aracılığıyla dönüştürür. Doğanın temel dinamiklerini eş zamanlı olarak kaydederken günlük pratiklerdeki siyasi ve sosyal kırılmalara dikkat eder. Girdiye kararlı yorumla yanıt verir; gerekli ifade operasyonları olarak yoğunlaştırma, bozma, karşıtlık ve vurgulamayı kullanır. Dünyaya taahhütlü bir yanıt olarak gerilimi, çelişkiyi ve güçlü ifadeyi ön plana çıkarır.",
     "ko": "비판적 지각의 지속적인 방식으로서 급진적 감각을 통해 입력을 변환합니다. 자연의 근원적 역동성을 동시에 기록하면서 일상적 실천 내의 정치적, 사회적 균열에 주목합니다. 필요한 표현 조작으로서 강화, 왜곡, 대비, 강조를 사용하며 결단력 있는 해석으로 입력에 응답합니다. 세계에 대한 헌신적인 응답으로서 긴장, 모순, 강력한 표현을 강조합니다."
   },
@@ -31,6 +33,7 @@
     "he": "עמדות",
     "ar": "المواقف",
     "bg": "Нагласи",
+    "zh-hant": "態度",
     "tr": "Tutumlar",
     "ko": "태도",
     "uk": "Ставлення",

@@ -11,9 +11,9 @@
 
   1. Der eigene Satz, zerlegt — Chips mit Platznummern, die Anzahl, der
      Wortschatz des Tokenizers und wie viel des Fensters der Satz füllt.
-  2. Derselbe Satz in den zehn Sprachen der Plattform, eine Zeile je Sprache.
+  2. Derselbe Satz in den Sprachen der Plattform, eine Zeile je Sprache.
      Die Sprache der Oberfläche steht abgesetzt: die Frage ist „und meine?".
-  3. Ein einzelnes Wort in denselben zehn Sprachen. Hier wird die
+  3. Ein einzelnes Wort in denselben Sprachen. Hier wird die
      Ungleichbehandlung greifbar, weil ein Feld gegen drei steht.
 
   Der Tokenizer ist wählbar, und CLIP steht mit in der Liste: sein Fenster ist
@@ -39,7 +39,7 @@
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
           <!-- Links: was gefragt wird. -->
-          <section class="lab-col tkc-ask col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-col tkc-ask col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <div class="tkc-field">
@@ -90,6 +90,12 @@
 
             <div class="lab-note tkc-note">
               <p v-for="(ln, i) in NOTE" :key="i" class="tkc-note-line">{{ ln }}</p>
+
+              <LabReferences
+                flat
+                :title="t('latentLab.textLab.tokens.referencesTitle')"
+                :items="REFERENCES"
+              />
             </div>
           </section>
 
@@ -104,7 +110,9 @@
                   :text="show(tok)" :n="i + 1" :part="tok.part" :join-next="cut.tokens[i + 1]?.part"
                 />
               </div>
-              <p v-else class="tkc-empty">{{ t('latentLab.textLab.tokens.cutEmpty') }}</p>
+              <p v-else class="tkc-empty">
+                {{ cutRefused || t('latentLab.textLab.tokens.cutEmpty') }}
+              </p>
 
               <div v-if="cut" class="tkc-facts">
                 <span class="tkc-fact">{{ t('latentLab.textLab.tokens.countLine', { n: fmt(cut.count) }) }}</span>
@@ -177,6 +185,7 @@ import ColumnFold from '@/components/ColumnFold.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import { PROMPT_PRESET_KEY } from '@/lib/promptPresets'
 import ShellRun from '@/components/ShellRun.vue'
@@ -193,19 +202,21 @@ import { he } from '@/i18n/he'
 import { ko } from '@/i18n/ko'
 import { tr } from '@/i18n/tr'
 import { uk } from '@/i18n/uk'
+import { zhHant } from '@/i18n/zhHant'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { postStreamedRun } from '@/services/directRun'
 import { apiBase } from '@/services/labApi'
 
 /**
- * Wo ein Standardprompt in jeder der zehn Sprachen steht - direkt in den
+ * Wo ein Standardprompt in jeder Sprache der Plattform steht - direkt in den
  * geladenen Sprachdateien, nicht über die Oberflächen-Sprache. `messageAt`
  * geht denselben Weg, den vue-i18n selbst geht (fallbackLocale: 'en'), nur für
  * eine FREMDE Sprache statt der aktiven. Was hier gelesen wird, muss in allen
- * zehn Sprachdateien stehen - sonst zeigte der Sprachvergleich für die fehlenden
+ * Sprachdateien stehen - sonst zeigte der Sprachvergleich für die fehlenden
  * das Englische und vergliche Englisch mit Englisch.
  */
-const MESSAGES: Record<string, unknown> = { ar, bg, de, en, es, fr, he, ko, tr, uk }
+const MESSAGES: Record<string, unknown> = { ar, bg, de, en, es, fr, he, ko, tr, uk, 'zh-hant': zhHant }
 
 function messageAt(code: string, path: string[]): string | undefined {
   let node: unknown = MESSAGES[code]
@@ -216,13 +227,13 @@ function messageAt(code: string, path: string[]): string | undefined {
 /**
  * Die zwei Standardprompts, geführt über den Pfad ihres eigenen Schlüssels.
  *
- * BEIDE Pfade zeigen auf Schlüssel, die bereits in allen zehn Sprachen stehen —
+ * BEIDE Pfade zeigen auf Schlüssel, die bereits in allen Sprachen stehen —
  * das ist die Bedingung dafür, dass ein Standardprompt ohne Modell auskommt.
  * Sie liegen unter `promptExamples.presets`, der zentralen Preset-Quelle aus
  * `lib/promptPresets.ts` (seit dem 2026-09-08; davor unter
  * `latentLab.attention.promptExamples.house`). Der Satz ist wortgleich mit dem,
  * den diese Fläche bis zum 2026-08-27 als eigenen Schlüssel führte, aber im
- * Gegensatz zu jenem in allen zehn Sprachen übersetzt. Der eigene Schlüssel ist
+ * Gegensatz zu jenem in allen Sprachen übersetzt. Der eigene Schlüssel ist
  * damit entfallen: er wäre in acht Sprachen auf das Englische zurückgefallen
  * und hätte den Vergleich an genau der Stelle verfälscht, um die es hier geht.
  */
@@ -232,7 +243,7 @@ const PRESET_PATHS: Record<string, string[]> = {
 }
 
 /**
- * Das Vergleichswort in den zehn Sprachen der Plattform.
+ * Das Vergleichswort in den Sprachen der Plattform.
  *
  * Das steht hier und nicht in den Sprachdateien, weil es kein Text der
  * Oberfläche ist, sondern der GEGENSTAND der Messung — dieselbe Art Eintrag wie
@@ -246,6 +257,9 @@ const PRESET_PATHS: Record<string, string[]> = {
  * Wort, das sich nicht ändert, sind genau die Kosten, von denen der Erklärtext
  * dieser Fläche spricht. Ein SELBST eingetragenes Wort geht weiterhin durch die
  * Übersetzung — dafür ist das Feld da.
+ *
+ * `zh-hant` kam am 2026-10-29 mit der Sprache dazu und ist von Hand
+ * eingetragen, nicht über den Endpunkt gemessen.
  */
 const WORD_BY_LANG: Record<string, string> = {
   ar: 'منزل',
@@ -258,6 +272,7 @@ const WORD_BY_LANG: Record<string, string> = {
   ko: '집',
   tr: 'Ev',
   uk: 'Будинок',
+  'zh-hant': '房子',
 }
 
 function presetTextFor(id: string, code: string): string {
@@ -314,11 +329,25 @@ const done = ref(0)
 /** Kein Tokenizer erreichbar: die Flaeche sagt es, statt leer zu bleiben. */
 const offline = ref(false)
 
-const uiLang = computed(() => String(prefs.language || locale.value).slice(0, 2))
+const uiLang = computed(() => String(prefs.language || locale.value))
 const current = computed(() => tokenizers.value.find(k => k.id === modelId.value) ?? null)
 const canRun = computed(() => sentence.value.trim().length > 0 && !!current.value?.available)
 
 const NOTE = computed(() => t('latentLab.textLab.tokens.note').split('\n').filter(Boolean))
+
+/**
+ * The title under the note box (LabReferences, flat): the measurement of how
+ * many more tokens the same text costs in other languages. Form as checked in
+ * docs/analysis/ERKLAERKAESTEN_GRUNDLAGEN_2026-11-07.md, section 4.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Petrov et al. (2023)',
+    title: '"Language Model Tokenizers Introduce Unfairness Between Languages"',
+    venue: 'NeurIPS 2023',
+    doi: 'https://doi.org/10.48550/arXiv.2305.15425',
+  },
+]
 
 const promptExamples = computed(() =>
   Object.keys(PRESET_PATHS).map(id => {
@@ -438,6 +467,15 @@ async function postStreamed(path: string, body: Record<string, unknown>): Promis
   }
 }
 
+/**
+ * A refusal, said where every block on this platform is said: by the translate
+ * route, of the sentence or of its translation, or by the intake of a text to
+ * be cut. True where there was one.
+ */
+function refused(answer: unknown): boolean {
+  return reportRefusal(answer) !== null
+}
+
 async function loadTokenizers() {
   try {
     const res = await fetch(`${apiBase()}/api/text/tokenizers`)
@@ -454,12 +492,22 @@ async function loadTokenizers() {
   offline.value = !tokenizers.value.some(k => k.available)
 }
 
+/**
+ * Why the sentence as it stands is not cut, in the reader's language, or ''.
+ * Said in place of the cut and not in the safety window: the cut follows the
+ * typing, and the window would get a new message at every pause.
+ */
+const cutRefused = ref('')
+
 /** Der eigene Satz, sofort - dafür läuft nichts auf der Karte. */
 let cutTimer: number | undefined
 async function refreshCut() {
   const text = sentence.value.trim()
-  if (!text) { cut.value = null; return }
+  if (!text) { cut.value = null; cutRefused.value = ''; return }
   const data = await post('/api/text/tokenize', { text, model_id: modelId.value })
+  const key = refusalKeyOf(data)
+  if (key) { cut.value = null; cutRefused.value = t(key); return }
+  cutRefused.value = ''
   if (data && !data.error) cut.value = data as Cut
 }
 function scheduleCut() {
@@ -505,12 +553,17 @@ async function runComparison() {
           text,
           target_language: lang.code,
         })
+        // A refusal by the route stops the comparison. A sentence refused at
+        // the intake would be refused in every further language, and the
+        // refusal is said once.
+        if (refused(tr)) { busy.value = false; return }
         if (tr?.status === 'success' && tr.translated_text) row.sentence = tr.translated_text
       }
       const cutRes = await post('/api/text/tokenize', {
         text: row.sentence,
         model_id: modelId.value,
       })
+      if (refused(cutRes)) { busy.value = false; return }
       if (cutRes && !cutRes.error) {
         row.sTokens = cutRes.tokens
         row.sCount = cutRes.count
@@ -525,6 +578,7 @@ async function runComparison() {
             text: w,
             target_language: lang.code,
           })
+          if (refused(tw)) { busy.value = false; return }
           if (tw?.status === 'success' && tw.translated_text) wordText = tw.translated_text
         }
         // Ein Wort steht in einem Satz hinter einem Leerzeichen, und der
@@ -537,6 +591,7 @@ async function runComparison() {
           text: row.wText,
           model_id: modelId.value,
         })
+        if (refused(wRes)) { busy.value = false; return }
         if (wRes && !wRes.error) row.wTokens = wRes.tokens
       }
     } catch (e) {
@@ -591,7 +646,9 @@ const folded = ref(false)
 
 .tkc-ask {
   gap: 14px;
-  padding-right: 4px;
+  /* The column scrolls inside its box (2026-11-07): the box takes 22 px of
+     its height, and at 1210 x 834 the content ran 86 px past the box's foot. */
+  overflow-y: auto;
 }
 
 .tkc-field {

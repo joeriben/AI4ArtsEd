@@ -241,7 +241,7 @@ async def execute(
     logger.info(f"[CHUNK:stable_audio] Generating: prompt='{audio_prompt[:100]}...', duration={duration_seconds}s")
     logger.info(f"[CHUNK:stable_audio] Parameters: steps={steps}, cfg={cfg_scale}, seed={actual_seed}")
 
-    audio_bytes = await backend.generate_audio(
+    audio_bytes, model_used = await backend.generate_audio(
         prompt=audio_prompt,
         negative_prompt=negative_prompt,
         duration_seconds=duration_seconds,
@@ -262,6 +262,7 @@ async def execute(
         "chunk_name": "output_audio_stableaudio_diffusers",
         "media_type": "audio",
         "backend": "stable_audio",
+        "model_used": model_used,
         "seed": actual_seed,
         "audio_data": base64.b64encode(audio_bytes).decode('utf-8'),
         "audio_format": output_format,

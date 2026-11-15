@@ -10,6 +10,8 @@ import logging
 from pathlib import Path
 
 from my_app.services.pipeline_recorder import load_recorder, SafetyRefusal
+from my_app.services.safety_gate import delivery_block
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
 
@@ -101,9 +103,10 @@ def get_file_by_name(run_id: str, filename: str):
 
         # Files are in final/ subfolder
         try:
-            file_path = recorder.checked_path_for_filename(filename)
+            file_path = recorder.checked_path_for_filename(filename, resolve_safety_level())
         except SafetyRefusal as refusal:
             return jsonify({'error': 'safety_blocked', 'detail': refusal.reason,
+                            'safety_block': delivery_block(refusal.reason, refusal.field),
                             'run_id': run_id}), 403
         if not file_path.exists():
             return jsonify({'error': f'File {filename} not found in run {run_id}'}), 404
@@ -161,15 +164,18 @@ def get_entity(run_id: str, entity_type: str):
         if not recorder:
             return jsonify({'error': f'Run {run_id} not found'}), 404
 
-        # Get entity file path — asked with its verdict, so that a refusal can
-        # say so instead of arriving as a missing file.
+        # Get entity file path — asked with its verdict, at the level of whoever
+        # asks, so that a refusal can say so instead of arriving as a missing file.
+        level = resolve_safety_level()
         entity_path = None
         for candidate in recorder.metadata.get('entities', []):
             if candidate.get('type') == entity_type:
                 try:
-                    entity_path = recorder.checked_entity_path(candidate)
+                    entity_path = recorder.checked_entity_path(candidate, level)
                 except SafetyRefusal as refusal:
                     return jsonify({'error': 'safety_blocked', 'detail': refusal.reason,
+                                    'safety_block': delivery_block(refusal.reason,
+                                                                   refusal.field),
                                     'run_id': run_id}), 403
                 break
         if not entity_path or not entity_path.exists():

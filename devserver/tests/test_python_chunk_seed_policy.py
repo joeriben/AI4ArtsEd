@@ -181,7 +181,12 @@ SEED_INPUTS = ("seed", "noise_seed")
 # ComfyUI chunks with no sampler at all. Named rather than skipped silently.
 # None at present: the template chunk comfyui_image_generation went with the
 # image_generation pipeline no config named (2026-10-10).
-NO_SAMPLER_CHUNKS: set = set()
+# Chunks whose workflow draws no noise, each with the reason it is one.
+NO_SAMPLER_CHUNKS: set = {
+    # The adaption of Flux 3 Multi: a vision model writes the caption off the
+    # pictures the run hands on. No sampler, so no seed to write.
+    "adaption_image_flux3_upsampler",
+}
 
 
 def _comfyui_chunks():

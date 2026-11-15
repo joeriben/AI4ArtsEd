@@ -13,7 +13,9 @@
  * Only the transport changed. What the row SAYS is the thing to keep: three of
  * its four states are findings about the participant's prompt and the fourth is
  * about this platform, and an outage may never be shown as one of the first
- * three. Every one of them is driven here.
+ * three. Every one of them is driven here. A fifth says that the safety check
+ * stopped the search; it is neither a finding nor an outage, and the search
+ * term it stopped is not shown.
  *
  * Nothing here reaches Wikimedia or a model: `fetch` is a stand-in throughout.
  */
@@ -22,6 +24,7 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import i18n from '@/i18n'
 import ModelComparison from '../model_comparison.vue'
+import WikimediaFoundRow from '@/components/WikimediaFoundRow.vue'
 
 class NoWatcher {
   observe() {}
@@ -294,5 +297,49 @@ describe('the found-pictures row', () => {
 
     expect(vm.foundState).toBe('idle')
     expect(vm.foundImages).toEqual([])
+  })
+
+  it('says a search the safety check stopped as stopped, and shows no term', async () => {
+    // The search term a model made of the prompt, refused at the result. It
+    // must not reach the screen, and the row must read neither as an outage
+    // nor as "nothing found".
+    answerOn(LOOKUP, streamed({
+      success: false,
+      error: 'safety_blocked',
+      safety_block: { checkpoint: 'result', field: 'term', reason_key: 'content', reason: '' },
+    }, 403))
+
+    await vm.lookupFoundImages(PROMPT)
+
+    expect(vm.foundState).toBe('blocked')
+    expect(vm.foundTerm).toBeNull()
+    expect(vm.foundImages).toEqual([])
+  })
+
+  it('says a check that gave no answer as the outage it is', async () => {
+    // Withheld all the same, but as a fault of this platform, never as a
+    // rating of the prompt.
+    answerOn(LOOKUP, streamed({
+      success: false,
+      error: 'safety_blocked',
+      safety_block: { checkpoint: 'intake', field: 'prompt', reason_key: 'unavailable', reason: '' },
+    }, 403))
+
+    await vm.lookupFoundImages(PROMPT)
+
+    expect(vm.foundState).toBe('error')
+  })
+})
+
+describe('the row, where the safety check stopped its search', () => {
+  it('says so in its own sentence and shows no search term', () => {
+    const row = mount(WikimediaFoundRow, {
+      props: { state: 'blocked', term: 'tall house', images: [] },
+      global: { plugins: [i18n] },
+    })
+
+    expect(row.text()).toContain(String(i18n.global.t('compare.found.blocked')))
+    expect(row.text()).not.toContain('tall house')
+    row.unmount()
   })
 })

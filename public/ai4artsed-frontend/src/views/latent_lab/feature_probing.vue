@@ -49,7 +49,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- A PAIR, not two offers: what this instrument shows is the
@@ -182,6 +182,24 @@
 
             <p v-if="errorMessage" class="lab-prep-err">{{ errorMessage }}</p>
             <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
+
+            <!-- The explanation box at the foot of the preparing column, the
+                 platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+                 heading is the menu title of this surface, its text is
+                 `latentLab.probing.noteBody`, cut into paragraphs at the blank line,
+                 and the titles it cites stand under it in LabReferences. -->
+            <aside class="lab-note">
+              <h3>{{ t('latentLab.imageLab.tabs.probing.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.probing.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                :title="t('latentLab.probing.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
+            </aside>
           </section>
 
           <!-- What came out, at one seed: the picture prompt A makes, the same
@@ -268,6 +286,7 @@
 
 <script setup lang="ts">
 import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { postDirectRun, postStreamedRun } from '@/services/directRun'
@@ -294,6 +313,43 @@ import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { apiBase } from '@/services/labApi'
 
 const { t } = useI18n()
+
+/**
+ * The titles the explanation box cites: distributed representation and
+ * superposition, the dimensions of very large variance in language models, and
+ * the interchange intervention the second run performs.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Hinton, McClelland & Rumelhart (1986)',
+    title: '"Distributed Representations"',
+    venue: 'In: Rumelhart & McClelland (eds.), Parallel Distributed Processing, Vol. 1, Ch. 3, 77–109, MIT Press',
+  },
+  {
+    authors: 'Elhage et al. (2022)',
+    title: '"Toy Models of Superposition"',
+    venue: 'Transformer Circuits Thread',
+    doi: 'https://arxiv.org/abs/2209.10652',
+  },
+  {
+    authors: 'Timkey & van Schijndel (2021)',
+    title: '"All Bark and No Bite: Rogue Dimensions in Transformer Language Models Obscure Representational Quality"',
+    venue: 'EMNLP 2021',
+    doi: 'https://arxiv.org/abs/2109.04404',
+  },
+  {
+    authors: 'Kovaleva et al. (2021)',
+    title: '"BERT Busters: Outlier Dimensions that Disrupt Transformers"',
+    venue: 'Findings of ACL 2021',
+    doi: 'https://arxiv.org/abs/2105.06990',
+  },
+  {
+    authors: 'Geiger, Richardson & Potts (2020)',
+    title: '"Neural Natural Language Inference Models Partially Embed Theories of Lexical Entailment and Negation"',
+    venue: 'BlackboxNLP 2020, 163–173',
+    doi: 'https://doi.org/10.18653/v1/2020.blackboxnlp-1.16',
+  },
+]
 const pageContextStore = usePageContextStore()
 const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const deviceId = useDeviceId()

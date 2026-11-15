@@ -53,6 +53,11 @@ docs/TESTSATZ_*
 docs/TODO_*
 docs/UMZUG_*
 docs/ANSPRACHEN_*
+docs/ARBEITSAUFTRAG_*
+docs/*_RECHERCHE_*
+docs/use_reports/ANSPRACHEN_*
+docs/use_reports/LUECKEN_*
+docs/ailit/ZWECK_JE_TEIL.md
 docs/AILIT_FRAMEWORK_MAPPING.md
 docs/MODELLFAMILIEN_*
 docs/00_MAIN_DOCUMENTATION_INDEX.md

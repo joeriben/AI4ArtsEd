@@ -46,7 +46,7 @@
           <!-- Left: what the run is asked with, and what the finished map is
                read with. Both are the hand's business; the right surface is the
                picture and nothing else. -->
-          <section class="ac-text lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column ac-text lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -309,7 +309,9 @@ import { useLatentLabRecorder, type InstrumentRun } from '@/composables/useLaten
 import { useInstrumentRuns } from '@/composables/useInstrumentRuns'
 import { useDetailsState } from '@/composables/useDetailsState'
 import { useDeviceId } from '@/composables/useDeviceId'
+import { safetyBlockOf } from '@/composables/useGenerationStream'
 import { usePageContextStore } from '@/stores/pageContext'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { useGenerationSteps } from '@/composables/useGenerationSteps'
 import { apiBase } from '@/services/labApi'
@@ -346,6 +348,7 @@ const { record: labRecord } = useLatentLabRecorder('attention_cartography')
 const OUTPUT_CONFIG = 'attention_cartography'
 const { isOpen: advancedOpen, onToggle: onAdvancedToggle } = useDetailsState('ll_attention_advanced')
 const deviceId = useDeviceId()
+const safetyStore = useSafetyEventStore()
 const showPresetOverlay = ref(false)
 const isEnriching = ref(false)
 
@@ -773,10 +776,21 @@ async function writeReadingBeforeKeep(item: DrawerItem): Promise<void> {
   // all — its picture failed to come together when it was written — and keeping
   // it would put the bare render behind a card whose back names a reading. The
   // status travels with the message, because the causes are different things:
-  // 403 another device's run, 413 too large, 500 the write itself.
+  // 403 another device's run or a refusal of the platform's check, 413 too
+  // large, 500 the write itself.
   if (!res.ok) {
-    let reason = ''
-    try { reason = (await res.json())?.reason || '' } catch { /* no body */ }
+    let body: { reason?: string } | null = null
+    try { body = await res.json() } catch { /* no body */ }
+    // A refusal of the check goes where every surface sends one: the safety
+    // window. The plate is this instrument's own picture, and is said as one.
+    const block = safetyBlockOf(body)
+    if (block) {
+      safetyStore.reportBlock(block, {
+        operational: block.reason_key === 'unavailable',
+        generated: true,
+      })
+    }
+    const reason = block?.reason_key || body?.reason || ''
     throw new Error(`The plate of ${item.runId} was not set (${res.status}${reason ? ` ${reason}` : ''})`)
   }
 
@@ -1497,7 +1511,13 @@ const folded = ref(false)
 .word-group.color-7.selected { color: #b844ff; background: rgba(184, 68, 255, 0.15); }
 
 /* Controls. The column is narrower than the page this instrument used to be,
-   so a row that no longer fits beside its label wraps under it. */
+   so a row that no longer fits beside its label wraps under it. Inside the
+   column box (2026-11-07) a row has 277 px at 1210 x 834: a slider row (label
+   of at least 80 px, 1 rem gap, 200 px floor) wraps under its label there and
+   stands beside it again where the row holds the label at its own width, the
+   gap and the floor. The range input itself may shrink (`min-width: 0`),
+   so the value beside it is never pushed past the column's edge; with a 180 px
+   floor and the input's own 129 px minimum the value stood 30 px past it. */
 .control-row {
   display: flex;
   align-items: flex-start;
@@ -1515,7 +1535,7 @@ const folded = ref(false)
 
 .slider-container {
   flex: 1;
-  min-width: 180px;
+  min-width: 200px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -1523,6 +1543,7 @@ const folded = ref(false)
 
 .control-slider {
   flex: 1;
+  min-width: 0;
   -webkit-appearance: none;
   appearance: none;
   height: 6px;

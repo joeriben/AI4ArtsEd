@@ -10,7 +10,8 @@
     "es": "GPT-Image-1",
     "he": "GPT-Image-1",
     "ar": "GPT-Image-1",
-    "bg": "GPT-Image-1"
+    "bg": "GPT-Image-1",
+    "zh-hant": "GPT-Image-1"
   },
   "description": {
     "en": "OpenAI's GPT-Image-1 model for high-quality image generation with advanced text rendering",
@@ -22,7 +23,8 @@
     "es": "El modelo GPT-Image-1 de OpenAI para generación de imágenes de alta calidad con renderizado de texto avanzado",
     "he": "מודל GPT-Image-1 של OpenAI ליצירת תמונות איכותית עם עיבוד טקסט מתקדם",
     "ar": "نموذج GPT-Image-1 من OpenAI لتوليد صور عالية الجودة مع عرض نصوص متقدم",
-    "bg": "Моделът GPT-Image-1 на OpenAI за висококачествено генериране на изображения с усъвършенствано изобразяване на текст"
+    "bg": "Моделът GPT-Image-1 на OpenAI за висококачествено генериране на изображения с усъвършенствано изобразяване на текст",
+    "zh-hant": "OpenAI 的 GPT-Image-1 模型，用於高品質圖像生成，具備進階的文字渲染能力"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_gpt_image_1"
@@ -88,7 +91,8 @@
           "es": "Fuerte sesgo hacia el inglés en la comprensión de texto",
           "he": "הטיה חזקה לטובת השפה האנגלית בהבנת טקסט",
           "ar": "تحيز قوي تجاه اللغة الإنجليزية في فهم النصوص",
-          "bg": "Силно отклонение към английския език в разбирането на текст"
+          "bg": "Силно отклонение към английския език в разбирането на текст",
+          "zh-hant": "文字理解上強烈偏向英語"
         },
         {
           "en": "Tendency toward commercially polished, magazine-quality aesthetics",
@@ -100,7 +104,8 @@
           "es": "Tendencia a una estética comercial pulida, de calidad de revista",
           "he": "נטייה לאסתטיקה מלוטשת מסחרית ברמת מגזין",
           "ar": "نزعة نحو جمالية مصقولة تجارياً بجودة المجلات",
-          "bg": "Склонност към комерсиално изгладена естетика с качество на списание"
+          "bg": "Склонност към комерсиално изгладена естетика с качество на списание",
+          "zh-hant": "傾向商業化、精緻、雜誌品質的美學"
         },
         {
           "en": "Aggressive content filtering may suppress legitimate artistic expression",
@@ -112,7 +117,8 @@
           "es": "El filtrado de contenido agresivo puede suprimir la expresión artística legítima",
           "he": "סינון תוכן אגרסיבי עלול לדכא ביטוי אמנותי לגיטימי",
           "ar": "قد تؤدي الفلترة العدوانية للمحتوى إلى قمع التعبير الفني المشروع",
-          "bg": "Агресивното филтриране на съдържание може да потиска легитимен художествен изказ"
+          "bg": "Агресивното филтриране на съдържание може да потиска легитимен художествен изказ",
+          "zh-hant": "嚴苛的內容過濾可能壓抑正當的藝術表達"
         }
       ],
       "known_gaps": [
@@ -126,7 +132,8 @@
           "es": "Sin transparencia: los datos de entrenamiento, el tamaño del modelo y la arquitectura son secretos comerciales",
           "he": "אין שקיפות: נתוני האימון, גודל המודל והארכיטקטורה הם סודות מסחריים",
           "ar": "لا شفافية: بيانات التدريب وحجم النموذج والبنية أسرار تجارية",
-          "bg": "Липса на прозрачност: данните за обучение, размерът на модела и архитектурата са търговска тайна"
+          "bg": "Липса на прозрачност: данните за обучение, размерът на модела и архитектурата са търговска тайна",
+          "zh-hant": "缺乏透明度：訓練資料、模型大小與架構都是商業機密"
         },
         {
           "en": "Closed-source: no independent audit of biases possible",
@@ -138,7 +145,8 @@
           "es": "Código cerrado: no es posible una auditoría independiente de los sesgos",
           "he": "קוד סגור: אי אפשר לבצע ביקורת בלתי תלויה על ההטיות",
           "ar": "مصدر مغلق: لا يمكن إجراء تدقيق مستقل للتحيزات",
-          "bg": "Затворен код: независим одит на отклоненията не е възможен"
+          "bg": "Затворен код: независим одит на отклоненията не е възможен",
+          "zh-hant": "閉源：無法對偏見進行獨立稽核"
         },
         {
           "en": "US-centric content moderation policies",
@@ -150,7 +158,8 @@
           "es": "Políticas de moderación de contenido centradas en EE. UU.",
           "he": "מדיניות פיקוח תוכן ממוקדת ארה\"ב",
           "ar": "سياسات إشراف على المحتوى تتمحور حول الولايات المتحدة",
-          "bg": "Политики за модериране на съдържание, центрирани върху САЩ"
+          "bg": "Политики за модериране на съдържание, центрирани върху САЩ",
+          "zh-hant": "以美國為中心的內容審查政策"
         }
       ]
     }

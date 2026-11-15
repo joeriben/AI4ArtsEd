@@ -5,12 +5,13 @@ Two settings look alike and are not the same thing:
   UI_MODE               installation-wide, decides what the interface SHOWS.
   DEFAULT_SAFETY_LEVEL  installation-wide, decides what the pipeline ENFORCES.
 
-A course carries its own ``safety_level`` (kids | youth | open). Until this
-module existed the column was never read at generation time, so a kids course
-inside an ``open`` installation ran at ``open``.
+A course carries its own ``safety_level``: kids or youth, or
+COURSE_USES_INSTALLATION for a course that runs at the installation's level.
+Until this module existed the column was never read at generation time, so a
+kids course ran at the installation's level.
 
 The rule: a course may only TIGHTEN. It can never
-loosen what the installation set, so an ``open`` course inside a ``kids``
+loosen what the installation set, so a ``youth`` course inside a ``kids``
 installation still runs at ``kids``.
 
 Fail-safe: every path that cannot see the session, or cannot make sense of what
@@ -68,11 +69,12 @@ def _off_the_request_thread() -> bool:
         return True
 
 # Strictest first. This order is the whole semantics of "only tighten":
-#   kids     translation + safety prefix + Llama-Guard
-#   youth    Llama-Guard, original language
-#   open     Llama-Guard, adult reader
-#   adult    no Llama-Guard
+#   kids     the checks with the children's questions
+#   youth    the checks with the young people's questions
+#   adult    the checks with the question for adult; no picture is checked
 #   research no checks at all
+# (services/safety_gate.py). Until 2026-11-01 a level open stood between
+# youth and adult.
 #
 # KEINE Lesemenge. Sie stand hier bis 2026-09-07 als Wirkung der Stufe, mit
 # 80/150/250 Woertern -- beides falsch: die Klausel haengt seit 2026-08-05 an
@@ -80,9 +82,14 @@ def _off_the_request_thread() -> bool:
 # Interception, wie auch immer die Oberflaeche eingerichtet war), und ihre
 # Zahlen sind 100/200/300. Sie steht in instruction_selector.READING_VOLUME_WORDS.
 # Diese Datei ist die, deren Aufgabe die Trennung der beiden Einstellungen ist.
-SAFETY_LEVELS_STRICTEST_FIRST = ('kids', 'youth', 'open', 'adult', 'research')
+SAFETY_LEVELS_STRICTEST_FIRST = ('kids', 'youth', 'adult', 'research')
 _RANK = {name: i for i, name in enumerate(SAFETY_LEVELS_STRICTEST_FIRST)}
 STRICTEST = SAFETY_LEVELS_STRICTEST_FIRST[0]
+
+# What a course stores when it sets no level of its own: it runs at the
+# installation's level. It is no level and has no place in the order. A course
+# that carried the level open carries this since 2026-11-01 (lab/db.py).
+COURSE_USES_INSTALLATION = 'installation'
 
 # Memo attribute. It goes on the REQUEST object, not on flask.g: g lives on the
 # app context, and a request context reuses an app context that is already
@@ -202,6 +209,9 @@ def _resolve() -> str:
             course_id, STRICTEST,
         )
         return STRICTEST
+
+    if isinstance(course_level, str) and course_level.strip().lower() == COURSE_USES_INSTALLATION:
+        return base
 
     course_rank = _rank(course_level)
     if course_rank is None:

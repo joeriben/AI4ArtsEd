@@ -134,7 +134,7 @@
           @drop.prevent="onDrop"
           @click="triggerFilePick"
         >
-          <input ref="dropFileInput" type="file" accept=".pdf,.md" multiple class="hidden-file" @change="onFilePick" />
+          <input ref="dropFileInput" type="file" accept=".pdf,.docx,.md" multiple class="hidden-file" @change="onFilePick" />
           <div class="dropzone-label">
             {{ dropzone.uploading ? $t('settings.knowledge.dropzone.uploading') : $t('settings.knowledge.dropzone.label') }}
           </div>
@@ -182,6 +182,9 @@
             <td>
               <span :class="['status-badge', 'status-' + it.status]">{{ it.status }}</span>
               <span v-if="it.readonly" class="ro-lock" :title="$t('settings.knowledge.items.readonlyHint')" aria-hidden="true">🔒</span>
+              <span v-if="it.status_reason" class="gate-reason">{{ $t('settings.knowledge.gate.reasonLabel') }}: {{ draftReason(it.status_reason) }}</span>
+              <span v-if="it.checks" class="gate-reason">{{ $t('settings.knowledge.gate.checksLabel') }}: {{ it.checks }}</span>
+              <span v-if="it.review" class="gate-reason">{{ $t('settings.knowledge.gate.reviewLabel') }}: {{ it.review }}</span>
             </td>
             <td>{{ it.titel }}<br /><span class="doc-id">{{ it.doc_id }}</span></td>
             <td>{{ it.jahr || '—' }}</td>
@@ -243,6 +246,12 @@
           <span :class="['job-badge', 'state-' + job.state]">{{ jobStateLabel(job.state) }}</span>
           <span class="job-title">{{ job.title || job.doc_id }}</span>
           <span class="job-msg">{{ job.message }}</span>
+          <template v-if="job.outcome">
+            <span :class="['status-badge', 'status-' + job.outcome.status]">{{ job.outcome.status }}</span>
+            <span v-if="job.outcome.status_reason" class="gate-reason">{{ $t('settings.knowledge.gate.reasonLabel') }}: {{ draftReason(job.outcome.status_reason) }}</span>
+            <span v-if="job.outcome.checks" class="gate-reason">{{ $t('settings.knowledge.gate.checksLabel') }}: {{ job.outcome.checks }}</span>
+            <span v-if="job.outcome.review" class="gate-reason">{{ $t('settings.knowledge.gate.reviewLabel') }}: {{ job.outcome.review }}</span>
+          </template>
           <button class="link-btn" @click="toggleJobLog(job.job_id)">
             {{ expandedJobs.has(job.job_id) ? $t('settings.knowledge.jobs.hideLog') : $t('settings.knowledge.jobs.showLog') }}
           </button>
@@ -692,6 +701,10 @@ interface JobView {
   title: string
   message: string
   returncode: number | null
+  // The gate's decision for the written file, why it is a draft, and the
+  // labels of the checks and the review (knowledge_ingest_service._run_verdichtung);
+  // null until there is a file.
+  outcome?: { status: string; status_reason?: string; checks: string; review: string } | null
   log_tail?: string[]
 }
 const jobs = ref<JobView[]>([])
@@ -703,6 +716,18 @@ let pollTimer: number | null = null
 
 function jobStateLabel(state: string): string {
   return t(`settings.knowledge.jobs.state.${state}`)
+}
+
+// Why a file is a draft: comma-separated codes of knowledge_processing.gate_status
+// (checks, review, no_review, release, operator), each shown by its label.
+const DRAFT_REASONS = ['checks', 'review', 'no_review', 'release', 'operator']
+function draftReason(codes: string): string {
+  return codes
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .map((c) => (DRAFT_REASONS.includes(c) ? t(`settings.knowledge.gate.reason.${c}`) : c))
+    .join(', ')
 }
 
 function toggleJobLog(jobId: string) {
@@ -807,6 +832,12 @@ interface ItemRow {
   // before this feature -- rendered as a muted "never analyzed" marker.
   analyzed_at?: string
   analysis_lang?: string
+  // Why the status is what it is: the draft's reasons (gate_status codes), the
+  // checks' label and the review's label as the analysis recorded them ('' on
+  // documents analysed before 2026-11-13).
+  status_reason?: string
+  checks?: string
+  review?: string
   readonly?: boolean // Tier-F (UNESCO) rows are view-only — no curation actions
 }
 const areaItems = ref<ItemRow[]>([])
@@ -1765,6 +1796,17 @@ onUnmounted(() => {
 
 .status-published { background: #2e7d32; }
 .status-draft { background: #ef6c00; }
+
+.gate-reason {
+  display: block;
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 3px;
+}
+.job-head .gate-reason {
+  display: inline;
+  margin-top: 0;
+}
 
 .actions-cell {
   display: flex;

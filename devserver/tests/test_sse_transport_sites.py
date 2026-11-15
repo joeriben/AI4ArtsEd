@@ -57,6 +57,7 @@ from flask import Flask
 from my_app.routes import canvas_routes, schema_pipeline_routes
 from my_app.services import canvas_run_service as crs
 from my_app.services import streaming_response as transport
+from my_app.services.safety_gate import CHECKPOINT_BEFORE_MODEL, CHECKPOINT_INTAKE, Verdict
 from my_app.services.streaming_response import (UnwritableEvent,
                                                 events_with_heartbeat,
                                                 streamed_answer)
@@ -548,10 +549,11 @@ def test_the_canvas_run_stream_writes_the_frames_it_always_wrote(canvas_app, mon
 
     assert event_names(body) == ["run_started", "started",
                                  "progress", "node_complete", "complete"]
-    # The two route frames first, then the transport's first breath, then the
-    # run's own events — the order a reader has always seen, plus a comment.
+    # The intake's breath first, then the two route frames, then the run's
+    # first breath and its own events -- the order a reader has always seen,
+    # plus two comments.
     kinds = [k for k, _ in frames_of(body)]
-    assert kinds == ["event", "event", "comment", "event", "event", "event"]
+    assert kinds == ["comment", "event", "event", "comment", "event", "event", "event"]
     no_comment_carries_a_payload(body)
     # The id: line that makes a reconnect lossless is still on every record.
     assert "id: 2\nevent: complete\n" in body
@@ -576,9 +578,11 @@ def test_the_canvas_run_stream_keeps_breathing_while_the_tail_is_silent(canvas_a
             "/api/canvas/execute-stream",
             json={"nodes": [{"id": "n1"}], "connections": []}):
         response = canvas_routes.execute_workflow_stream()
-    arrivals, body, held = read_while_held(response.response, gate)
+    # The intake breathes once before the run starts; the tail is held until
+    # it has breathed twice on its own.
+    arrivals, body, held = read_while_held(response.response, gate, beats=3)
 
-    kept_breathing(arrivals, held)
+    kept_breathing(arrivals, held, beats=3)
     assert event_names(body) == ["run_started", "started",
                                  "progress", "node_complete", "complete"]
     no_comment_carries_a_payload(body)
@@ -641,9 +645,11 @@ def test_the_canvas_tail_is_told_when_its_reader_leaves(canvas_app, monkeypatch)
             json={"nodes": [{"id": "n1"}], "connections": []}):
         response = canvas_routes.execute_workflow_stream()
     stream = response.response
+    next(stream)                      # the intake's breath
+    next(stream)                      # the intake's end, an empty chunk
     next(stream)                      # run_started
     next(stream)                      # started
-    next(stream)                      # the transport's first breath
+    next(stream)                      # the tail's first breath
     assert entered.wait(3.0)
     stream.close()                    # the closed tab
     assert noticed.wait(3.0), "the tail sat on after its reader had gone"
@@ -923,19 +929,30 @@ def test_the_same_batch_left_alone_still_makes_every_run(batch_wired):
 
 
 # ---------------------------------------------------------------------------
-# 6. Stage 3 of /pipeline/generate/stream
+# 6. The checks of /pipeline/generate/stream
 # ---------------------------------------------------------------------------
+
+INTAKE_PASSED = Verdict(True, CHECKPOINT_INTAKE, "kids")
+BEFORE_MODEL_PASSED = Verdict(True, CHECKPOINT_BEFORE_MODEL, "kids")
+
 
 @pytest.fixture()
 def stage3_wired(monkeypatch):
-    """Stage 3 with every backend it reaches for replaced, and the run stopped
-    the moment Stage 3 is done — the cancel check right after `stage3_complete`
+    """The intake and the check before the model, where Stage 3 stood until
+    2026-10-31, with every backend they reach for replaced, and the run stopped
+    the moment they are done -- the cancel check right after `stage3_complete`
     is the nearest exit, so nothing of Stage 4 runs."""
     spr = schema_pipeline_routes
-    monkeypatch.setattr(spr, "resolve_safety_level", lambda: "kids")
+
+    async def translated(text, *a, **kw):
+        return text
+
     monkeypatch.setattr(spr, "pipeline_executor", object())
     monkeypatch.setattr(spr, "_announce_generation", lambda *a, **kw: None)
     monkeypatch.setattr(spr, "_is_cancelled", lambda device_id, run_id=None: True)
+    monkeypatch.setattr(spr, "_translate_for_model", translated)
+    monkeypatch.setattr(spr, "check_intake_texts", lambda *a, **kw: INTAKE_PASSED)
+    monkeypatch.setattr(spr, "check_before_model", lambda *a, **kw: BEFORE_MODEL_PASSED)
     return spr
 
 
@@ -944,33 +961,33 @@ def _stage3_data():
             "device_id": "stand-in-device", "user_language": "de"}
 
 
-def test_stage3_writes_the_frames_it_always_wrote(stage3_wired, monkeypatch):
-    async def checked(*a, **kw):
-        return {"safe": True, "positive_prompt": "ein Satz", "method": "stand_in"}
-
-    monkeypatch.setattr(stage3_wired, "execute_stage3_safety", checked)
-    body = "".join(stage3_wired.execute_generation_streaming(_stage3_data()))
+def test_stage3_writes_the_frames_it_always_wrote(stage3_wired):
+    body = "".join(stage3_wired.execute_generation_streaming(_stage3_data(), "kids"))
 
     assert event_names(body) == ["connected", "stage3_start", "stage3_complete",
                                  "cancelled"]
     complete = [p for p in event_payloads(body) if p.get("safe") is True]
-    assert complete and complete[0]["checks_passed"] == ["stand_in"]
+    assert complete and complete[0]["checks_passed"] == ["llm_safety_check"]
     no_comment_carries_a_payload(body)
 
 
-def test_stage3_keeps_breathing_while_the_check_runs(stage3_wired, monkeypatch):
-    """Between `stage3_start` and `stage3_complete` stand a translation and a
-    guard model, on a card that may be busy — and nothing at all went out while
-    they ran. The check is HELD here until the reader has heard the transport
-    breathe twice."""
+@pytest.mark.parametrize("held, passed", [
+    pytest.param("check_intake_texts", INTAKE_PASSED, id="the intake"),
+    pytest.param("check_before_model", BEFORE_MODEL_PASSED, id="the check before the model"),
+])
+def test_stage3_keeps_breathing_while_the_check_runs(stage3_wired, monkeypatch, held, passed):
+    """Between `stage3_start` and `stage3_complete` stand the intake, a
+    translation and the classifier, on a card that may be busy -- and nothing
+    at all went out while Stage 3 ran there. Each check is HELD here until the
+    reader has heard the transport breathe twice."""
     gate = threading.Event()
 
-    async def waiting(*a, **kw):
+    def waiting(*a, **kw):
         assert gate.wait(30.0)
-        return {"safe": True, "positive_prompt": "ein Satz", "method": "stand_in"}
+        return passed
 
-    monkeypatch.setattr(stage3_wired, "execute_stage3_safety", waiting)
-    stream = stage3_wired.execute_generation_streaming(_stage3_data())
+    monkeypatch.setattr(stage3_wired, held, waiting)
+    stream = stage3_wired.execute_generation_streaming(_stage3_data(), "kids")
     arrivals, body, held_beats = read_while_held(stream, gate)
 
     kept_breathing(arrivals, held_beats)

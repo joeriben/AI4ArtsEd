@@ -39,7 +39,7 @@
             :preview-image="box.stream?.previewImage.value ?? null"
             :model-meta="box.stream?.modelMeta.value ?? null"
             :stage4-duration-ms="box.stream?.stage4DurationMs.value ?? null"
-            :is-favorited="box.isFavorited"
+            :is-favorited="starOf(box)"
             @image-click="showBox(box)"
           />
           <template #back="{ flipped }">
@@ -170,40 +170,6 @@
         </FlowCard>
       </div>
 
-      <div v-if="speechAvailable" class="voice-mode-switch" @pointerdown.stop>
-        <button
-          :class="{ on: voiceMode === 'voice' }"
-          :title="t('resona.modeVoice')"
-          :aria-label="t('resona.modeVoice')"
-          @click="setVoiceMode('voice')"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="6.4" />
-          </svg>
-        </button>
-        <button
-          :class="{ on: voiceMode === 'both' }"
-          :title="t('resona.modeBoth')"
-          :aria-label="t('resona.modeBoth')"
-          @click="setVoiceMode('both')"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="8" cy="12" r="4.4" />
-            <path d="M15 9h6M15 12.5h6M15 16h4" />
-          </svg>
-        </button>
-        <button
-          :class="{ on: voiceMode === 'text' }"
-          :title="t('resona.modeText')"
-          :aria-label="t('resona.modeText')"
-          @click="setVoiceMode('text')"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h11" />
-          </svg>
-        </button>
-      </div>
-
       <div class="view-tools" @pointerdown.stop>
         <button title="+" @click="zoomBy(1.2)">+</button>
         <button title="-" @click="zoomBy(1 / 1.2)">-</button>
@@ -236,12 +202,11 @@
       :anchors="voiceAnchors"
       :lift-label="t('resona.lift')"
       :zoom="zoom"
-      :words="showWords"
       :sounding="isSounding"
       :preparing="isPreparing"
       :blocked="isBlocked"
       :tap-label="t('resona.tapToHear')"
-      :can-replay="voiceMode !== 'text'"
+      :can-replay="speechAvailable"
       :replay-label="t('resona.hearAgain')"
       :coupling="voiceCoupling"
       :line-empty="!userInput && !isLoading"
@@ -379,15 +344,16 @@ import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useLabAuthStore } from '@/stores/labAuth'
 import { sseEvents } from '@/lib/sseStream'
+import { ChatStreamError } from '@/lib/chatTurn'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useGenerationStream } from '@/composables/useGenerationStream'
 import { startCanvasRun, fetchCanvasPartial, type CanvasRunHandle } from '@/composables/useCanvasRunStream'
 import { usePanZoom, type BoardItem } from '@/composables/usePanZoom'
 import {
   useMaterialIntake,
-  uploadImageFile,
-  uploadImageFromUrl,
-  quickImageSafetyCheck,
+  uploadCheckedImage,
+  uploadCheckedImageFromUrl,
   quickTextSafetyCheck,
   type QuickSafetyResult,
 } from '@/composables/useMaterialIntake'
@@ -437,8 +403,6 @@ const platformVoiceAnchors: PlatformVoiceAnchor[] = [
   { id: 'compose', selector: '.write-line', words: ['eingabe', 'input', 'schreib', 'textfeld', 'frage'] },
   // Werkstatt-Journal notice with its pause / new-dialog buttons
   { id: 'journal', selector: '.fixture-gear', words: ['journal', 'aufzeichnung', 'mitschrift', 'protokoll'] },
-  // Voice / both / text switch on the right edge
-  { id: 'speech-mode', selector: '.voice-mode-switch', words: ['stimme', 'sprachausgabe', 'gesprochen', 'voice', 'spoken', 'speech'] },
   // Zoom and 1:1 controls of the workshop board
   { id: 'view-tools', selector: '.view-tools', words: ['zoom', 'maßstab', 'massstab', 'vergrößer', 'verkleiner'] },
 ]
@@ -459,6 +423,9 @@ interface ChatMsg {
    *  "The answer did not arrive. Please send it again." — the line above it
    *  said exactly that, and the model read it as the house style. */
   notice?: string
+  /** A message the intake refused. It stays on the board and is not sent
+   *  again as history. */
+  refused?: boolean
 }
 
 /** Put a platform notice on a line, under whatever already stands there. */
@@ -477,7 +444,7 @@ const isLoading = ref(false)
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'resona',
   pageDescription:
-    'Die Werkstatt-Seite mit Resona, einer Begleitung für Workshops. Ein verschieb- und zoombares Brett trägt, was im Gespräch entsteht: Medien, die Resona erzeugt, Läufe von Canvas-Graphen, die sie selbst geschrieben hat, Bild-Ton-Kompositionen und Pläne, die sie vorschlägt; aus Gesagtem lassen sich Notizzettel auf das Brett heben. Resona spricht auf dem Brett selbst, nicht in einem Chatfenster; die Sprachausgabe steht wahlweise auf Stimme, auf Stimme und Text oder nur auf Text. Unten steht die Schreibzeile mit Bildanhang und Kamera, darüber der Hinweis auf das Werkstatt-Journal, das mitschreibt und pausiert oder verworfen werden kann.',
+    'Die Seite Together, eine Begleitung für Workshops. Eine verschieb- und zoombare Fläche trägt: Medien, die diese Plattform erzeugt, Läufe von Apparaten, die ein Sprachmodell geschrieben hat, Bild+Klang-Kompositionen, Video+Klang-Kompositionen und Pläne, die ein Sprachmodell vorschlägt; aus den Antworten dieser Plattform lassen sich Notizen auf die Fläche heben. Die Antworten stehen auf der Fläche selbst. Unten steht die Schreibzeile mit Bildanhang und Kamera; die Einstellungen der Fläche enthalten den Hinweis auf das Werkstattjournal, das aufzeichnet und sich pausieren oder verwerfen lässt.',
   pageContent: {
     inputText: userInput.value,
   },
@@ -1004,13 +971,19 @@ function closeFullscreen() {
   fullscreenImage.value = null
 }
 
+/** Whether the run of a box is kept by whoever asks. The store says so
+ *  (`isFavorited`), and it follows a sign-in or a sign-out. */
+function starOf(box: MediaBox): boolean {
+  return !!box.runId && favoritesStore.isFavorited(box.runId)
+}
+
 /** The record of a box: on its card's back and beside its picture, one object. */
 function backOf(box: MediaBox): MediaBack {
   return {
     mediaType: box.mediaType,
     runId: box.runId,
     mediaUrl: box.outputUrl || undefined,
-    isFavorited: box.isFavorited,
+    isFavorited: starOf(box),
     motivation: box.motivation,
     prompt: box.prompt,
     configId: box.configId,
@@ -1475,9 +1448,10 @@ async function toggleFavorite(box: MediaBox) {
   // the backend refuses a foreign delete (favorites_routes `_may_change`), so
   // this is no longer the only thing standing in the way — it stays because a
   // dropped foreign favorite is view-only, and a toggle that can only come
-  // back as a 403 is not worth offering.
+  // back as a 403 is not worth offering. Whose it is the server says
+  // (`may_change`): a favourite belongs to the account it was kept under.
   const rec = favoritesStore.favorites.find(f => f.run_id === box.runId)
-  if (rec && rec.device_id && rec.device_id !== deviceId) return
+  if (rec && rec.may_change !== true) return
   const success = await favoritesStore.toggleFavorite(
     box.runId,
     box.mediaType as 'image' | 'video' | 'audio' | 'music' | '3d',
@@ -1486,7 +1460,7 @@ async function toggleFavorite(box: MediaBox) {
     'resona'
   )
   if (success) {
-    box.isFavorited = !box.isFavorited
+    box.isFavorited = starOf(box)
     triggerRef(mediaBoxes)
   }
 }
@@ -1511,12 +1485,6 @@ const DROP_NODE_SIZES: Record<string, { w: number; h: number }> = {
   video: { w: 280, h: 220 },
   audio: { w: 280, h: 140 },
   music: { w: 280, h: 140 },   // music favorites keep mediaType 'music' but render the slim audio player
-}
-
-/** A favorite record this device owns (the global view can hold foreign favorites). */
-function isOwnFavorite(runId: string): boolean {
-  const rec = favoritesStore.favorites.find(f => f.run_id === runId)
-  return !!rec && (!rec.device_id || rec.device_id === deviceId)
 }
 
 /** Screen -> world through the live pan/zoom (inverse of voiceSpot's mapping). */
@@ -1548,7 +1516,7 @@ function addBroughtBox(
     mediaType,
     runId,
     error: false,
-    isFavorited: runId ? isOwnFavorite(runId) : false,
+    isFavorited: runId ? favoritesStore.isFavorited(runId) : false,
     intentId: null,               // governance: journal reporters must skip this box
     motivation: null,
     prompt: meta?.prompt ?? '',
@@ -1586,7 +1554,7 @@ function broughtBoxHandle(box: MediaBox, kind: AsmItem['kind']): AsmItem {
     get runId() { return box.runId ?? undefined },
     set runId(v: string | undefined) {
       box.runId = v ?? null
-      box.isFavorited = v ? isOwnFavorite(v) : false
+      box.isFavorited = v ? favoritesStore.isFavorited(v) : false
       triggerRef(mediaBoxes)
     },
     get failed() { return box.error },
@@ -1607,7 +1575,7 @@ async function holdUnlessChecked(card: MemoCard, text: string) {
   if (safety.safe) return
   if (!memoCards.value.some(c => c.id === card.id)) return
   memoCards.value = memoCards.value.filter(c => c.id !== card.id)
-  safetyStore.reportBlock(1, safety.errorMessage || '', [], undefined, safety.operational)
+  safetyStore.reportBlock(safety.block, { operational: safety.operational })
 }
 
 /** World -> memo-layer coords (memos live in a screen-space layer). */
@@ -1711,29 +1679,25 @@ const { onDrop: intakeDrop } = useMaterialIntake({
       // which in a room reads as a dropped gesture and is dropped again.
       const box = addBroughtBox('image', url, runId, meta, at)
       try {
-        const up = await uploadImageFromUrl(url, `${runId || 'favorite'}.png`)
-        const safety = await quickImageSafetyCheck(up.path)
+        const { up, safety } = await uploadCheckedImageFromUrl(url, `${runId || 'favorite'}.png`)
         // The board may have moved on: the box taken away by hand, or this page
         // left. Then this answer belongs to nothing.
         if (!mediaBoxes.value.some(b => b.id === box.id)) return
-        if (safety.safe) {
+        if (up && safety.safe) {
           if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
           return
         }
         removeBroughtBox(box.id)
-        safetyStore.reportBlock(
-          'vlm_input',
-          safety.errorMessage || '',
-          [],
-          safety.vlmDescription,
-          safety.operational,
-        )
+        safetyStore.reportBlock(safety.block, {
+          vlmDescription: safety.vlmDescription,
+          operational: safety.operational,
+        })
       } catch {
         // The picture could not be got as far as a verdict — its run cleaned up,
-        // the upload refused, the connection gone. Unjudged is unjudged, and the
+        // the upload failed, the connection gone. Unjudged is unjudged, and the
         // box travels in every turn of this conversation, so it comes off.
         removeBroughtBox(box.id)
-        safetyStore.reportBlock('vlm_input', '', [], undefined, true)
+        safetyStore.reportBlock(null, { operational: true })
       }
     },
     placeArtifactMedia: (kind, src, runId, meta, at) => {
@@ -1744,16 +1708,13 @@ const { onDrop: intakeDrop } = useMaterialIntake({
     // Safety surface = the platform-global safetyEvent store -> ChatOverlay.
     // That overlay is Träshy, a different agent — nothing reaches Resona.
     reportSafetyBlocked: (r: QuickSafetyResult) =>
-      safetyStore.reportBlock(
-        'vlm_input',
-        r.errorMessage || t('safetyBlocked.inputImage'),
-        [],
-        r.vlmDescription,
+      safetyStore.reportBlock(r.block, {
+        vlmDescription: r.vlmDescription,
         // Whether the check judged the picture or could not run at all. The
         // window says a different sentence for each, and it must not have to
         // read that out of the wording.
-        r.operational,
-      ),
+        operational: r.operational,
+      }),
     reportSafetyAnalysis: (d: string) => safetyStore.reportAnalysis(d, true),
   },
 })
@@ -1782,16 +1743,13 @@ const isUploading = ref(false)
 async function uploadImageBlob(blob: Blob, filename: string) {
   isUploading.value = true
   try {
-    const up = await uploadImageFile(new File([blob], filename, { type: blob.type || 'image/jpeg' }))
-    const safety = await quickImageSafetyCheck(up.path)
-    if (!safety.safe) {
-      safetyStore.reportBlock(
-        'vlm_input',
-        safety.errorMessage || t('safetyBlocked.inputImage'),
-        [],
-        safety.vlmDescription,
-        safety.operational,
-      )
+    const { up, safety } = await uploadCheckedImage(
+      new File([blob], filename, { type: blob.type || 'image/jpeg' }))
+    if (!up || !safety.safe) {
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
+        operational: safety.operational,
+      })
       return
     }
     if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
@@ -1931,10 +1889,6 @@ const voiceAnchors = computed<VoiceAnchor[]>(() => {
 const voiceSpotWorld = ref<{ x: number; y: number } | null>(null)
 function voiceTurnWorldSize() {
   const cw = canvasEl.value?.clientWidth ?? 1280
-  // Voice only: a row of chips with the human's line beneath it, not a
-  // standing paragraph. Reserving the paragraph's footprint is what pushed that
-  // small block into the corner of a box three times its size.
-  if (!showWords.value) return { w: Math.min(360, cw * 0.28), h: 150 }
   // ~ .turn width min(56ch, 40vw) at 1.12rem, plus a few standing lines.
   const px = Math.min(590, cw * 0.4)
   // The turn scales with the board (ResonaVoice's zoom prop), so its screen size
@@ -2025,23 +1979,7 @@ const speakState = computed<SpeakState>(() => (isLoading.value ? 'listening' : '
 /** Which line is still being written, by index into messages. */
 const streamingIdx = ref<number | null>(null)
 
-// ---------- How Resona is present: heard, read, or both ----------
-//
-// Voice only is the default: nothing of hers is written and what she says is
-// heard. In that mode she is present as sound and as what she makes, and
-// nothing else — the turn keeps only the way back to the line and the way to
-// keep it (see ResonaVoice).
-// Where a platform language has no voice in the model it is
-// spoken in English, so voice only would leave nothing at all in the workshop's
-// own language — there the default is writing instead. Since the move to
-// Supertonic 3 (2026-08-08) that is Hebrew alone; before it, it was five
-// languages. Which ones is never written down here: the default asks
-// `speaksInFallback()`, which reads /api/speech/status, so swapping the model
-// moves the line by itself. The choice is the human's either way and is
-// remembered per browser.
-type VoiceMode = 'voice' | 'both' | 'text'
-const VOICE_MODE_KEY = 'resona_voice_mode'
-
+// Whether Together is heard is `useSpeech().isAvailable`: the installation can speak and the main-menu switch is on; the words always stand.
 const {
   isAvailable: speechAvailable,
   speakingKey,
@@ -2052,24 +1990,8 @@ const {
   speak: speakAloud,
   stop: stopSpeech,
   resume: resumeSpeech,
-  speaksInFallback,
 } = useSpeech()
 
-const chosenVoiceMode = ref<VoiceMode | null>(
-  (localStorage.getItem(VOICE_MODE_KEY) as VoiceMode | null) || null
-)
-const voiceMode = computed<VoiceMode>(() => {
-  if (!speechAvailable.value) return 'text'
-  return chosenVoiceMode.value ?? (speaksInFallback(locale.value) ? 'text' : 'voice')
-})
-function setVoiceMode(mode: VoiceMode) {
-  // Choosing to be spoken to is itself the gesture that opens the ear.
-  if (mode !== 'text') primeSpeech()
-  chosenVoiceMode.value = mode
-  localStorage.setItem(VOICE_MODE_KEY, mode)
-  if (mode === 'text') stopSpeech()
-}
-const showWords = computed(() => voiceMode.value !== 'voice')
 // ---------- The open line ----------
 //
 // Nothing in the corner stands for this agent. It is present in what it says,
@@ -2121,10 +2043,10 @@ const isBlocked = computed(() => blockedKey.value !== null)
  *  and unset when it has settled, one way or the other. See the speak watcher. */
 const askedKey = ref<number | null>(null)
 
-// The voice sets the pace of the words: where Resona is heard AND read, a
-// sentence stands up when its piece begins to sound. Being read alone has no
-// voice to follow and being heard alone writes nothing, so both hand over
-// nothing and the words keep the rhythm they have always had.
+// The voice sets the pace of the words: where Resona is heard, a sentence
+// stands up when its piece begins to sound. With the voice switched off there
+// is no voice to follow, nothing is handed over, and the words keep reading
+// pace.
 //
 // The fields are ACCESSORS, not the values they had when this object was made.
 // The turn's own words are handed to the voice component in a render, and the
@@ -2135,7 +2057,7 @@ const askedKey = ref<number | null>(null)
 // the object then never changes is worth having on a board this size: a piece
 // starting to sound no longer re-renders the entire workshop.
 const voiceCoupling = computed(() => {
-  if (voiceMode.value !== 'both') return null
+  if (!speechAvailable.value) return null
   return {
     get piece() { return soundingPiece.value },
     get askedKey() { return askedKey.value },
@@ -2153,10 +2075,6 @@ const voiceCoupling = computed(() => {
 // back to the room on page load. Only what is said from here on is spoken.
 const speakFromIdx = ref(Number.POSITIVE_INFINITY)
 
-// Switching modes changes the voice's footprint; without this the chip row
-// keeps the paragraph's box (or the other way round) until the next turn.
-watch(showWords, () => { if (voiceSpotWorld.value) placeVoiceSpot() }, { flush: 'post' })
-
 // Watched together with the writing: the line is pushed empty and grows, so
 // its INDEX no longer changes when the turn becomes speakable. What says the
 // turn is whole is the writing being over.
@@ -2168,13 +2086,12 @@ watch([lastSaidIdx, streamingIdx], ([idx, streaming]) => {
   // clip exists, and voice and writing then run side by side, which is wrong:
   // the sentences must not arrive in parallel.
   const speakable =
-    idx >= 0 && idx >= speakFromIdx.value && voiceMode.value !== 'text' && speechAvailable.value
+    idx >= 0 && idx >= speakFromIdx.value && speechAvailable.value
   if (streaming !== null) {
     if (speakable && idx === streaming) askedKey.value = idx
     return
   }
-  speechTrace(`Resona-Zug ${idx}: mode=${voiceMode.value}, ab=${speakFromIdx.value}, `
-    + `gewaehlt=${chosenVoiceMode.value ?? '—'}, verfuegbar=${speechAvailable.value}`)
+  speechTrace(`Resona-Zug ${idx}: ab=${speakFromIdx.value}, verfuegbar=${speechAvailable.value}`)
   // Asked while it was arriving and not spoken after all: the words are
   // released rather than left waiting for a voice that never comes.
   const stay = (why: string) => {
@@ -2185,7 +2102,7 @@ watch([lastSaidIdx, streamingIdx], ([idx, streaming]) => {
   if (idx < 0 || idx < speakFromIdx.value) {
     return stay('aelter als der Sitzungsanfang (wiederhergestellt)')
   }
-  if (voiceMode.value === 'text') return stay('Schreib-Modus')
+  if (!speechAvailable.value) return stay('Stimme aus oder nicht verfuegbar')
   const msg = messages.value[idx]
   if (!msg) return stay('kein Zug an diesem Platz')
   const said = stripSpoken(msg.content)
@@ -2237,7 +2154,7 @@ function onVoiceLift(u: VoiceUtterance) { liftToMemo(u.text) }
 // reading did not apply — restored history included. Clicking while it is
 // still sounding stops it.
 function onVoiceReplay(u: VoiceUtterance) {
-  if (voiceMode.value === 'text') return
+  if (!speechAvailable.value) return
   // A held-back utterance goes first: this tap is the gesture it was missing.
   if (blockedKey.value !== null) { resumeSpeech(); return }
   if (speakingKey.value === u.id || pendingKey.value === u.id) {
@@ -2463,10 +2380,10 @@ async function callChat(
         resona_mode: true,
         language: userPreferences.language,
         device_id: deviceId,
-        // Whether this turn will be heard or read. Chosen here, per browser,
-        // so the server cannot know it otherwise — and GIVEN VOICE states it
-        // as a fact rather than guessing.
-        voice_mode: voiceMode.value,
+        // Whether this turn is heard as well as read: the voice switch in the
+        // main menu, which lives in this browser and reaches the server only
+        // with a chat request. GIVEN VOICE states it as a fact rather than guessing.
+        voice_mode: speechAvailable.value ? 'both' : 'text',
         // Active course as factual context for Resona (P-R). The server
         // is authoritative: for participants it ignores this and uses the
         // session-pinned course; for educators it validates leadership.
@@ -2502,7 +2419,8 @@ async function callChat(
       for (const g of ev.generated_graphs || []) spawnGraphRun(g)
       for (const c of ev.generated_compositions || []) addComposition(c)
       for (const w of ev.worked_entities || []) spawnEntity(w)
-      throw new Error(ev.details || ev.error || 'chat stream error')
+      throw new ChatStreamError(ev.details || ev.error || 'chat stream error', ev.status,
+        ev.safety_block)
     }
   }
   if (!done) throw new Error('the reply stream ended without a reply')
@@ -2519,7 +2437,7 @@ async function sendMessage() {
   // Speaking to her is the gesture that lets her answer be heard: the reply
   // sounds seconds from now, far outside this click, and without this the
   // browser refuses it.
-  if (voiceMode.value !== 'text') primeSpeech()
+  if (speechAvailable.value) primeSpeech()
 
   // The page's address is what stands at the door: it says what this surface is
   // before anything has happened on it. The moment somebody writes, it has been
@@ -2527,6 +2445,7 @@ async function sendMessage() {
   // ground the exchange stands on.
   platformVoice.value?.clear()
 
+  const sentIdx = messages.value.length
   messages.value.push({ role: 'user', content: text || (imagePath ? '🖼️' : '') })
   userInput.value = ''
   removeAttachment()
@@ -2555,7 +2474,7 @@ async function sendMessage() {
   try {
     const history = messages.value
       .slice(0, -2)
-      .filter(m => m.role === 'user' || m.content.trim())
+      .filter(m => (m.role === 'user' || m.content.trim()) && !m.refused)
       .map(m => ({ role: m.role, content: m.content }))
     const data = await callChat(text, history, imagePath, applyToken, (draft) => {
       const line = messages.value[replyIdx]
@@ -2618,8 +2537,18 @@ async function sendMessage() {
     // The technical detail is not lost — it goes where it is of use, with the
     // stack that comes with it.
     const line = messages.value[replyIdx]
-    // Whatever had already been read stays; the trouble is said under it.
-    note(line, t('resona.connectionError'))
+    // Whatever had already been read stays; the trouble is said under it. A
+    // refusal is said there in the room's language and explained in the safety
+    // window, and a message the intake refused is not sent again as history.
+    const refusal = refusalKeyOf(e)
+    if (refusal) {
+      const block = reportRefusal(e)
+      if (block?.checkpoint === 'intake' && block.field === 'message') {
+        const sent = messages.value[sentIdx]
+        if (sent) sent.refused = true
+      }
+    }
+    note(line, refusal ? t(refusal) : t('resona.connectionError'))
     console.error('[RESONA] callChat failed:', e)
   } finally {
     streamingIdx.value = null
@@ -2676,31 +2605,6 @@ watch(
 .board-node.selected {
   border-color: rgba(255, 179, 0, 0.5);
   box-shadow: 0 0 0 1px rgba(255, 179, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.5);
-}
-
-/* How Resona is present: on the edge, legible when looked for, otherwise
-   almost not there. Same z-band as the view tools. */
-.voice-mode-switch {
-  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-  z-index: 55; display: flex; flex-direction: column; gap: 4px;
-  opacity: 0.32; transition: opacity 0.3s ease;
-}
-.voice-mode-switch:hover { opacity: 1; }
-.voice-mode-switch button {
-  width: 26px; height: 26px; padding: 0; border-radius: 7px;
-  background: transparent; border: 1px solid transparent;
-  color: rgba(255, 255, 255, 0.55); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-}
-.voice-mode-switch button svg {
-  width: 16px; height: 16px;
-  fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round;
-}
-.voice-mode-switch button:hover { color: #ffb300; }
-.voice-mode-switch button.on {
-  color: #ffb300;
-  border-color: rgba(255, 179, 0, 0.32);
-  background: rgb(var(--surface-1-rgb) / 0.7);
 }
 
 .view-tools { position: absolute; right: 12px; bottom: 12px; z-index: 55; display: flex; gap: 6px; } /* above ambient voice band (z:50); below memo layer (z:60) */

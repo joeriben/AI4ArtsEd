@@ -22,16 +22,26 @@ the storage, and the recorder COPIES the bytes into the raster run, so each run
 stays complete on its own and the surface is spared holding the pictures and
 uploading them again. The single images behind a set are pipeline runs of their
 own, and their run ids travel in the recorded run's `results`.
+
+What the user wrote passes the intake, and what the language model wrote passes
+the check of the result before it is shown or varied: the English sentence and
+every variant, at the level the view resolved (services/safety_gate). A refused
+variant refuses the set. The decoded mean of a latent set is a picture nobody
+has looked at, and it passes the check of the result like a generated one; the
+pixel mean, the relief and the contact sheet are made of the pictures the
+delivery rule hands out at that level and are not asked again.
 """
 
 import base64
 import logging
 import math
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional
 
 from flask import Blueprint, jsonify, request
 
 from my_app.services import mean_images
+from my_app.services.safety_gate import (check_intake_texts, check_result_image,
+                                         check_result_text)
 from my_app.services.streaming_response import answered_either_way
 
 logger = logging.getLogger(__name__)
@@ -78,16 +88,6 @@ class LatentUnreadable(Exception):
         super().__init__(f"the latent of run {run_id} could not be read: {cause}")
 
 
-class CheckDidNotRun(Exception):
-    """The image check on the mean could not be carried out at all.
-
-    Distinct from a refusal, which IS an answer. A scratch file that cannot be
-    written, or a checker that breaks, leaves this platform without a judgement
-    on a picture nobody has looked at — and an absent judgement is never read as
-    a pass here.
-    """
-
-
 @mean_images_bp.route('/variants', methods=['POST'])
 def variants():
     """
@@ -98,6 +98,8 @@ def variants():
     Answer:  {"status": "success", "translation_en": "...",
               "variants": ["...", ...],   # n entries, [0] IS the translation
               "shortfall": 0}
+             A refusal of the checks is a 403 with the block message
+             (`safety_block`).
 
     Where the surface wants variants it asks twice: for the translation alone
     (n = 1), so the column of the prompt as entered can start on it, and then
@@ -127,16 +129,45 @@ def variants():
     """
     data = request.get_json(silent=True)
 
-    return answered_either_way(data, _run_variants, data,
+    # Resolved HERE, in the thread that serves the request, for the reason the
+    # overlay resolves it here (see there): the checks of the run hang on it.
+    from my_app.services.safety_level_resolver import resolve_safety_level
+    try:
+        level = resolve_safety_level()
+    except Exception as exc:
+        # As at the overlay: the resolver documents that it never raises. If
+        # it ever does, the level is unknown, and the run does not start.
+        return jsonify({
+            'status': 'error',
+            'error': 'The checks of the variants could not run: '
+                     f'the safety level could not be resolved ({exc})',
+        }), 500
+
+    return answered_either_way(data, _run_variants, data, level,
                                label='MEAN-IMAGES-VARIANTS')
 
 
-def _run_variants(data: Any):
+def _refusal(verdict):
+    """A refusal of the checks: 403 with the block message the page reads
+    (`safety_block`), in this route's shape of an error."""
+    logger.warning(f"[MEAN-IMAGES] refused at {verdict.checkpoint} "
+                   f"({verdict.field or '-'}: {verdict.reason_key})")
+    return {'status': 'error', 'error': 'safety_blocked', 'safety_block': verdict.block()}, 403
+
+
+def _run_variants(data: Any, level: str):
     """The variants run, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
-    not reach for ``request``: everything it needs stands in ``data``, and a
-    streamed answer runs this on a thread of its own.
+    not reach for ``request``: everything it needs stands in ``data``, the level
+    is resolved at the request boundary and passed in, and a streamed answer
+    runs this on a thread of its own.
+
+    The prompt, and the English sentence where the surface hands it back, pass
+    the intake before anything is translated or varied. The sentence this route
+    translates, and every variant, pass the check of the result before they are
+    varied or shown. A refusal stops the run: a set with a refused variant in it
+    is refused as a whole, and nothing of it goes out.
     """
     if not isinstance(data, dict):
         return {'status': 'error', 'error': 'A JSON body is required'}, 400
@@ -174,6 +205,10 @@ def _run_variants(data: Any):
             'error': 'translation_en must carry text where it is given',
         }, 400
 
+    verdict = check_intake_texts({"prompt": prompt, "translation_en": given}, level=level)
+    if not verdict.passed:
+        return _refusal(verdict)
+
     from my_app.routes.schema_pipeline_routes import translate_one
     from my_app.routes.chat_routes import call_chat_helper
 
@@ -187,6 +222,9 @@ def _run_variants(data: Any):
             return {'status': 'error', 'error': f'Translation failed: {exc}'}, 502
         if not translation:
             return {'status': 'error', 'error': 'Translation came back empty'}, 502
+        verdict = check_result_text(translation, level=level, field='translation_en')
+        if not verdict.passed:
+            return _refusal(verdict)
 
     wanted = n - 1
     if wanted == 0:
@@ -243,6 +281,10 @@ def _run_variants(data: Any):
         if not fresh:
             logger.warning(f"[MEAN-IMAGES] round {rounds} brought nothing new")
             continue
+        for variant in fresh:
+            verdict = check_result_text(variant, level=level, field='variants')
+            if not verdict.passed:
+                return _refusal(verdict)
         written.extend(fresh)
 
     logger.info(f"[MEAN-IMAGES] {len(written)} of {wanted} variants came back distinct")
@@ -296,9 +338,9 @@ def cell_account(
         )
     else:
         made = (
-            f"{model_label} generated it from the prompt as entered, on one random seed."
+            f"{model_label} generated it from the English version of the prompt, on one random seed."
             if one else
-            f"{model_label} generated them from the prompt as entered, each on a "
+            f"{model_label} generated them from the English version of the prompt, each on a "
             f"different random seed."
         )
     # Single typographic quotes, because Help sets this whole account inside
@@ -452,16 +494,18 @@ def _record_cell(
     return {'run_id': run_id, 'refs': refs}
 
 
-def _latent_of(run_id: str, cleared_only: bool = False):
+def _latent_of(run_id: str, requester_level=None):
     """
     The final latent one run kept, and what that latent says about itself.
 
-    With `cleared_only`, a run whose pictures the platform would NOT hand out
-    contributes nothing (`pipeline_recorder.entity_cleared_for_delivery`, the
-    same rule the media routes answer by): a picture the check turned back at
-    this run's level, and a picture still being checked, are both refused, and
-    a run holding no picture at all has nothing to derive a verdict from. The
-    latent preview asks for this at the levels that check pictures.
+    With `requester_level`, a run whose pictures the platform would not hand to
+    that level contributes nothing (`pipeline_recorder.entity_cleared_for_delivery`,
+    the same rule the media routes answer by): a picture the check turned back,
+    a picture no pass answers for at that level and a picture still being
+    checked are all refused, and at kids and youth a run holding no picture at
+    all has nothing to derive a verdict from. The latent preview passes its
+    level; the overlay passes none, because it has asked the media route's rule
+    for every picture it lays over the others.
 
     Returns `(array, meta)`, or None where the run HAS none. None is the only
     ordinary absence and it is no failure: a row whose chunk keeps no latent has
@@ -501,13 +545,16 @@ def _latent_of(run_id: str, cleared_only: bool = False):
         logger.debug(f"[MEAN-IMAGES] {run_id}: no run record, so no latent")
         return None
 
-    if cleared_only:
-        from my_app.services.pipeline_recorder import entity_cleared_for_delivery
+    if requester_level is not None:
+        from my_app.services.pipeline_recorder import (
+            IMAGE_CHECKED_LEVELS, entity_cleared_for_delivery)
+        from my_app.services.safety_gate import normalise_level
         pictures = find_media_entities(recorder.metadata.get('entities', []), 'image')
-        if not pictures:
+        if not pictures and normalise_level(requester_level) in IMAGE_CHECKED_LEVELS:
             raise NotCleared(run_id, "no picture yet, so no verdict to derive")
         for picture in pictures:
-            cleared, reason = entity_cleared_for_delivery(picture, recorder.metadata)
+            cleared, reason = entity_cleared_for_delivery(picture, recorder.metadata,
+                                                          requester_level)
             if not cleared:
                 raise NotCleared(run_id, f"its picture is {reason}, so its latent "
                                          f"stays out of the drawing")
@@ -534,82 +581,6 @@ def _latent_of(run_id: str, cleared_only: bool = False):
         raise LatentUnreadable(run_id, exc)
 
 
-def _refused(png: bytes, run_ids: Sequence[str], safety_level: str) -> Optional[Dict[str, Any]]:
-    """
-    The image check on a mean this platform has just made, where it refused it.
-
-    Returns the body of a refusal, or None where the picture passed or the level
-    asks for no check. The decoded latent mean is a NEW picture — nobody has
-    ever looked at it, and it is not any of the pictures that were checked on
-    their way in — so it goes through the same check a generated picture goes
-    through, at `kids` and `youth`.
-
-    `safety_level` is resolved AT THE REQUEST BOUNDARY and handed in. Asked for
-    here, it would be asked for from a worker thread whenever the answer is
-    streamed, and the resolver reads the session — see the docstring of
-    my_app/services/safety_level_resolver.py, written after a whole surface ran
-    a kids course at the installation level. Whether this picture is looked at
-    at all hangs on this one value, so it is taken where the session is.
-
-    The checker's own policy stands as it is: `vlm_safety_check` is FAIL-CLOSED
-    and answers False for everything it cannot confirm as safe, operational
-    failures included. Nothing is softened and nothing is tightened here.
-
-    Where the check cannot be CARRIED OUT — no scratch file, a checker that
-    breaks — `CheckDidNotRun` is raised and the route answers 500. That is the
-    one thing this function will not do: return None because it never got as far
-    as an answer.
-
-    `run_ids` is the set the mean was taken from. It goes into the log line of a
-    refusal, which is the only trace of it on this side: the instrument keeps
-    the refusal per cell on the surface, and this platform would otherwise hold
-    a blocked picture it cannot connect to a single run.
-    """
-    import os
-    import tempfile
-
-    if safety_level not in ('kids', 'youth'):
-        return None
-
-    from config import ANALYSIS_TMP_DIR
-    from my_app.utils.vlm_safety import vlm_safety_check
-
-    tmp = None
-    try:
-        # The checker reads a FILE. The scratch is the platform's own,
-        # deliberately not uploads_tmp — that one is emptied wholesale when
-        # ComfyUI starts.
-        ANALYSIS_TMP_DIR.mkdir(parents=True, exist_ok=True)
-        tmp = tempfile.NamedTemporaryFile(
-            dir=str(ANALYSIS_TMP_DIR), suffix='.png', delete=False)
-        try:
-            tmp.write(png)
-            tmp.close()
-            is_safe, reason, description = vlm_safety_check(tmp.name, safety_level)
-        finally:
-            # Closing belongs here too: a write that fails on a full volume
-            # would otherwise leave the handle open for the rest of the process.
-            try:
-                tmp.close()
-            except Exception:
-                pass
-            try:
-                os.unlink(tmp.name)
-            except OSError:
-                pass
-    except Exception as exc:
-        logger.error(f"[MEAN-IMAGES] the image check on the mean could not run: {exc}")
-        raise CheckDidNotRun(exc)
-
-    if is_safe:
-        return None
-    logger.warning(
-        f"[MEAN-IMAGES] the mean image was turned back at {safety_level}: "
-        f"{reason or 'no reason named'} — set: {', '.join(run_ids)}")
-    return {'status': 'blocked', 'blocked': True, 'stage': 'vlm_safety',
-            'reason': reason, 'vlm_description': description}
-
-
 @mean_images_bp.route('/latent-preview', methods=['POST'])
 def latent_preview():
     """
@@ -632,14 +603,14 @@ def latent_preview():
     pictures disagree.
 
     **The drawing is made of pictures the check has cleared.** At `kids` and
-    `youth` a run contributes its latent only where the run itself records
-    verdicts and every picture of it passed (`pipeline_recorder.
+    `youth` a run contributes its latent only where every picture of it carries
+    a pass that answers for the level of whoever asks (`pipeline_recorder.
     entity_cleared_for_delivery`), which is the platform's own rule for a
     picture made of pictures (`DERIVED_IMAGE_KINDS`) and costs no model call. A
     run whose picture is still being checked has no verdict yet and joins the
     drawing at the next step; a run recorded at a level that checks nothing
     stays out of it at these two. Where the level cannot be resolved, the
-    stricter half of the rule applies.
+    resolver answers the strictest.
 
     Earlier there was no drawing at all at those two levels, on the
     ground that a drawn latent is a picture no check has seen. It is a picture
@@ -672,18 +643,9 @@ def latent_preview():
 
     # Resolved HERE, in the thread that serves the request, for the reason the
     # overlay resolves it here (see there). It decides which runs may feed the
-    # drawing, and a level that does not resolve takes the stricter half.
-    from my_app.services.safety_level_resolver import (
-        SAFETY_LEVELS_STRICTEST_FIRST, resolve_safety_level)
-    try:
-        safety_level = resolve_safety_level()
-        cleared_only = (SAFETY_LEVELS_STRICTEST_FIRST.index(safety_level)
-                        < SAFETY_LEVELS_STRICTEST_FIRST.index('open'))
-    except Exception as exc:
-        logger.warning(
-            f"[MEAN-IMAGES] the level did not resolve ({exc}); the drawing takes "
-            f"only runs whose pictures the check cleared")
-        cleared_only = True
+    # drawing.
+    from my_app.services.safety_level_resolver import resolve_safety_level
+    safety_level = resolve_safety_level()
 
     if not isinstance(data, dict):
         return jsonify({'status': 'error', 'error': 'A JSON body is required'}), 400
@@ -704,7 +666,7 @@ def latent_preview():
     waiting = False
     for run_id in run_ids:
         try:
-            held = _latent_of(run_id, cleared_only=cleared_only)
+            held = _latent_of(run_id, safety_level)
         except NotCleared as exc:
             # A picture the check has not judged yet. The next step asks again.
             logger.debug(f"[MEAN-IMAGES] preview without {exc.run_id}: {exc.cause}")
@@ -788,9 +750,9 @@ def overlay():
     decode is asked for, the picture is not put through the image check a second
     time, and the account keeps its own sentence about a single picture.
 
-    A refusal answers 200 with {"status": "blocked", "blocked": true,
-    "stage": "vlm_safety", "reason": ..., "vlm_description": ...} — the fields
-    the rest of this platform blocks in — and records nothing.
+    A refusal answers 200 with {"status": "blocked", "reason": ...,
+    "safety_block": ...}, the block message the rest of this platform sends,
+    and records nothing.
 
     With a `record` the composite becomes a run of its own and `run_id` is its
     address — what the surface hands Help so a finished cell can be looked at
@@ -884,7 +846,7 @@ def _run_overlay(data: Any, safety_level: str):
     # — which is what the recorded cell claims about itself.
     used: List[str] = []
     for run_id in run_ids:
-        resolved, _error = _resolve_image(run_id, 0)
+        resolved, _error = _resolve_image(run_id, 0, safety_level)
         if not resolved:
             missing.append(run_id)
             continue
@@ -974,17 +936,29 @@ def _run_overlay(data: Any, safety_level: str):
                 'error': f'The latent mean could not be decoded: {exc}',
             }, 502
 
-        try:
-            refusal = _refused(mean_png, used, safety_level)
-        except CheckDidNotRun as exc:
+        # A NEW picture: nobody has looked at it, and it is none of the
+        # pictures that were checked on their way in. At kids and youth it is
+        # asked what a generated picture is asked.
+        verdict = check_result_image(mean_png, level=safety_level, field='image')
+        if verdict.operational:
             # The decode is already spent and the picture exists. What is missing
-            # is a judgement on it, and nothing here turns that into a pass.
+            # is a judgement on it: nothing here turns that into a pass, and it
+            # is no refusal either. The safety gate's log names the cause.
             return {
                 'status': 'error',
-                'error': f'The image check of the mean could not run: {exc.args[0]}',
+                'error': 'The image check of the mean could not run; '
+                         'the log of the safety gate names the cause',
             }, 500
-        if refusal is not None:
-            return refusal, 200
+        if not verdict.passed:
+            # The set goes into this line, the only trace of the refusal on this
+            # side: the instrument keeps it per cell on the surface, and this
+            # platform would otherwise hold a refused picture it cannot connect
+            # to a single run.
+            logger.warning(
+                f"[MEAN-IMAGES] the mean image was turned back at {safety_level}: "
+                f"{verdict.reason or 'no reason named'} — set: {', '.join(used)}")
+            return {'status': 'blocked', 'reason': verdict.reason,
+                    'safety_block': verdict.block()}, 200
 
     try:
         composed = mean_images.compose(arrays, mean_png=mean_png)

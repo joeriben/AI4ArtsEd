@@ -79,8 +79,15 @@ class UsageTracker:
         return self._pricing_cache
 
     def log(self, model: str, provider: str, stage: str,
-            input_tokens: int, output_tokens: int) -> None:
-        """Append a usage record. Safe to call from any thread."""
+            input_tokens: int, output_tokens: int,
+            cache_read_tokens: int = 0, cache_write_tokens: int = 0) -> None:
+        """Append a usage record. Safe to call from any thread.
+
+        input_tokens counts the whole prompt. Of those, cache_read_tokens were
+        read from the provider's prompt cache and cache_write_tokens written
+        to it; the two are recorded only where they are not zero. The cost
+        estimate below prices every input token at the full input price,
+        cached or not (2026-11-13)."""
         # Strip provider prefix (e.g. "mammouth/claude-sonnet-4-6" -> "claude-sonnet-4-6")
         bare_model = model.split("/", 1)[-1] if "/" in model else model
         record = {
@@ -91,6 +98,10 @@ class UsageTracker:
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
         }
+        if cache_read_tokens:
+            record["cache_read_tokens"] = cache_read_tokens
+        if cache_write_tokens:
+            record["cache_write_tokens"] = cache_write_tokens
         try:
             DATA_DIR.mkdir(parents=True, exist_ok=True)
             with self._file_lock:
@@ -206,8 +217,30 @@ def extract_usage(response_json: dict, provider: str) -> tuple:
     from my_app.services.llm_providers import CHAT_COMPLETIONS, provider as provider_entry
     entry = provider_entry(provider) or {}
     if entry.get("dialect", CHAT_COMPLETIONS) != CHAT_COMPLETIONS:
-        return usage.get("input_tokens", 0), usage.get("output_tokens", 0)
+        # The Messages API counts in input_tokens only what follows the last
+        # cache marker; what was read from or written to the cache stands in
+        # two fields of its own. Added here, so input_tokens is the whole
+        # prompt on both dialects (prompt_tokens already is).
+        read, write = extract_cache_usage(response_json, provider)
+        return (usage.get("input_tokens", 0) or 0) + read + write, usage.get("output_tokens", 0)
     return usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
+
+
+def extract_cache_usage(response_json: dict, provider: str) -> tuple:
+    """(tokens read from the prompt cache, tokens written to it), 0 where the
+    answer names none. The Messages API (and Bedrock) report
+    cache_read_input_tokens / cache_creation_input_tokens; OpenRouter reports
+    prompt_tokens_details.cached_tokens / cache_write_tokens."""
+    usage = response_json.get("usage") or {}
+    if not usage:
+        return 0, 0
+    from my_app.services.llm_providers import CHAT_COMPLETIONS, provider as provider_entry
+    entry = provider_entry(provider) or {}
+    if entry.get("dialect", CHAT_COMPLETIONS) != CHAT_COMPLETIONS:
+        return (usage.get("cache_read_input_tokens") or 0,
+                usage.get("cache_creation_input_tokens") or 0)
+    details = usage.get("prompt_tokens_details") or {}
+    return details.get("cached_tokens") or 0, details.get("cache_write_tokens") or 0
 
 
 def get_usage_tracker() -> UsageTracker:

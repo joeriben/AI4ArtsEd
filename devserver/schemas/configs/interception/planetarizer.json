@@ -11,7 +11,8 @@
     "es": "Planetarizador",
     "he": "מַפְלָנֵטִי",
     "ar": "المُكوكبِ",
-    "bg": "Планетаризатор"
+    "bg": "Планетаризатор",
+    "zh-hant": "行星化器"
   },
   "description": {
     "en": "Reimagines image prompts through planetary perspectives in the anthropocene. Deconstructs capitalist consumerist norms and challenges AI's inherent biases toward capitalist subjects and consumerist aesthetics.",
@@ -22,6 +23,7 @@
     "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות פלנטריות באנתרופוצן. מפרק נורמות קפיטליסטיות-צרכניות ומאתגר את ההטיות הטבועות של AI כלפי נושאים קפיטליסטיים ואסתטיקות צרכניות.",
     "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر كوكبية في الأنثروبوسين. يفكّك المعايير الاستهلاكية الرأسمالية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات الرأسمالية والجماليات الاستهلاكية.",
     "bg": "Преосмисля промптове за изображения през планетарни перспективи в антропоцена. Деконструира капиталистическите потребителски норми и предизвиква присъщите предразсъдъци на ИИ към капиталистически субекти и потребителска естетика.",
+    "zh-hant": "從人類世中的行星視角重新構想圖像提示詞。解構資本主義的消費主義規範，挑戰 AI 對資本主義主體與消費主義美學的內在偏見。",
     "tr": "Görüntü promptlarını Antroposen'deki gezegense perspektifler aracılığıyla yeniden hayal eder. Kapitalist tüketimci normları yapısöküme uğratır ve yapay zekanın kapitalist öznelere ve tüketimci estetiklere yönelik içkin önyargılarını sorgular.",
     "ko": "인류세의 행성적 관점을 통해 이미지 프롬프트를 재상상합니다. 자본주의적 소비주의 규범을 해체하고, 자본주의적 대상과 소비주의 미학에 대한 AI의 내재적 편향에 도전합니다."
   },
@@ -31,6 +33,7 @@
     "he": "חשיבה ביקורתית",
     "ar": "التفكير النقدي",
     "bg": "Критическо мислене",
+    "zh-hant": "批判性思考",
     "tr": "Eleştirel Düşünce",
     "ko": "비판적 사고",
     "uk": "Критичне мислення",

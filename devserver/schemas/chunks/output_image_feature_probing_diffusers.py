@@ -117,7 +117,7 @@ async def execute(
         'image_data': probing_result['image_base64'],
         'media_type': 'image',
         'backend': 'diffusers',
-        'model_id': model_id,
+        'model_used': model_id,
         'seed': probing_result['seed'],
         'probing_data': probing_result['probing_data'],
         'parameters': {

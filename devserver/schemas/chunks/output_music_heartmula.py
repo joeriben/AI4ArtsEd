@@ -9,12 +9,14 @@ Input (from Stage 2/3 or direct):
     - tags (TEXT_2): Comma-separated style tags (genre, mood, instruments)
 
 Output:
-    - MP3 audio bytes
+    - dict with the MP3 as base64 (audio_data) and the model the run loaded
+      (model_used), matching BackendResponse metadata format
 
 Usage:
     result = await execute(lyrics="[Verse] Hello...", tags="pop, upbeat")
 """
 
+import base64
 import logging
 from typing import Optional, Dict, Any
 
@@ -75,7 +77,7 @@ async def execute(
     max_audio_length_ms: int = None,
     seed: int = None,
     **kwargs  # Ignore extra parameters from pipeline
-) -> bytes:
+) -> Dict[str, Any]:
     """
     Execute HeartMuLa music generation.
 
@@ -89,7 +91,7 @@ async def execute(
         seed: Seed for reproducibility (None = random)
 
     Returns:
-        MP3 audio bytes (ready for storage/response)
+        dict with the MP3 as base64 and the model the run loaded
 
     Raises:
         Exception: If generation fails or backend unavailable
@@ -203,7 +205,7 @@ async def execute(
             tags = ','.join(tags.split(',')[:-1])  # Remove partial last tag
 
     # Generate music
-    audio_bytes = await backend.generate_music(
+    audio_bytes, model_used = await backend.generate_music(
         lyrics=lyrics,
         tags=tags,
         temperature=temperature,
@@ -220,5 +222,15 @@ async def execute(
 
     logger.info(f"[CHUNK:heartmula] Generated {len(audio_bytes)} bytes (seed={seed})")
 
-    # Return raw bytes - backend_router will wrap them properly
-    return audio_bytes
+    # Return dict — _execute_python_chunk wraps it in BackendResponse. Raw
+    # bytes would carry no model; the keys are the ones the router gives the
+    # bytes of an audio chunk.
+    return {
+        "content_marker": "heartmula_generated",
+        "media_type": "music",
+        "backend": "heartmula",
+        "model_used": model_used,
+        "audio_data": base64.b64encode(audio_bytes).decode('utf-8'),
+        "audio_format": CHUNK_META["output_format"],
+        "size_bytes": len(audio_bytes),
+    }

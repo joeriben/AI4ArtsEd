@@ -5,6 +5,9 @@ export interface ChatMessage {
   id: number
   role: 'user' | 'assistant'
   content: string
+  /** A message the intake refused. It stays on screen and is not sent again
+   *  as history. */
+  refused?: boolean
 }
 
 export interface StoredMediaBox {

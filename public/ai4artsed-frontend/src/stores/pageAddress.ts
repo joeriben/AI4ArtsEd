@@ -42,20 +42,22 @@ export interface PageAddress {
  * from what happens to what is learned, so that a surface can carry the story
  * without the purpose, or set the two down one after the other.
  *
- * The other eight are cut from the authored annotations of the pages: the
+ * Eight entries were first cut from the authored annotations of the pages: the
  * column "worum es geht" is the story, the two learning columns are drawn
  * together into the purpose. Cut at whole sentences and clauses; German is the
  * authored side and English is set after it, because the annotations were
  * written in German.
  *
- * Of the 37 places, eleven carry annotations. Missing here are the
- * four pages whose columns are still empty (start page, Direct, x2x Legacy, the
- * educator area), Text-Transformation and the two image transformations —
- * annotated, but their views are being taken off the platform — and the 14
- * Latent Lab instruments that carry no annotation. Those fourteen are reachable
- * now — they have routes of their own — and empty, which is a different thing
- * from unreachable: help says so on them. Every instrument gets an address of
- * its own; an instrument whose text is not yet written has no entry here.
+ * Thirty-four entries: the four pages Flow, Together, Contesting and Canvas,
+ * the lab's own page (`/latent-lab`), and the twenty-nine places of the
+ * Latent Lab, the overview and every instrument in `SLUGS` of
+ * `views/latent_lab.vue`. Every instrument of the lab has an address of its
+ * own. Routes with a view and no entry: the start page, About, Direct, the
+ * Surrealizer Flow, Settings, Impressum, Datenschutz, Dokumentation, the
+ * usage agreement, login, account, the educator and admin areas, and the
+ * test views (Kickin, Kickin per block, animation test, pixel editor). An
+ * earlier address of an instrument (`IDS` in `views/latent_lab.vue`) has no
+ * entry of its own; the lab rewrites the URL to the current one.
  */
 const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
   '/contesting': { storyKey: 'persona.story', purposeKey: 'persona.purpose' },
@@ -74,7 +76,7 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
   '/canvas': { storyKey: 'canvas.story', purposeKey: 'canvas.purpose' },
   '/latent-lab': { storyKey: 'latentLab.story', purposeKey: 'latentLab.purpose' },
   // The lab's overview is not an instrument: it is the frame, what the three
-  // procedures are and where the twenty-two instruments reach into them. The
+  // procedures are and where the twenty-eight instruments reach into them. The
   // lab's general address defines the frame and not the concrete contents of
   // an instrument, which is the reason no instrument borrows the lab's text.
   // The overview carries two halves of its own, because the map is a page.
@@ -87,31 +89,25 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
   // the ones they had as pages, and they are keyed per instrument because that
   // is what the route says — without these rows every one of the seven would
   // fall through to the lab's own address and lose what it says about itself.
-  // The first of the four comparisons adapted to its own instrument. The
-  // shared text names all four comparisons in one sentence, so three quarters
-  // of it was about somewhere else; a shared text is not adapted to any one
-  // instrument. The closing note stays on all four.
+  // Model Comparison. First half: the two sets of three, the single choice,
+  // the minimum of two and the Commons row with its search term; second half:
+  // the differences between the models, an occupation prompt, the Commons row.
   '/latent-lab/model-comparison': {
     storyKey: 'compare.address.model.story',
     purposeKey: 'compare.address.model.purpose',
     noteKey: 'compare.ask.note',
   },
-  // Its first half says the setup before the handling — the same description
-  // of a picture in every column, only the language differs. Its second names
-  // the matter of fact and no concrete example: the translation holds, the
-  // text encoders are trained on English, and what is left is the cliché.
+  // Language Understanding. First half: the same prompt in two to four
+  // languages, one row per image model, translation and back-translation per
+  // column; second half: reading along a row and across two rows.
   '/latent-lab/language-understanding': {
     storyKey: 'compare.address.language.story',
     purposeKey: 'compare.address.language.purpose',
     noteKey: 'compare.ask.note',
   },
-  // The second of the four adapted to its own instrument. Its first half is
-  // the handling in the order a visitor meets it; its second says what the
-  // readings are FOR: they are the matter of study themselves. The sentence
-  // that says so stays, because a surface that has models read pictures
-  // invites exactly the opposite reading, and that reading is a
-  // misunderstanding of the platform. It keeps the closing note like the other
-  // comparisons.
+  // Image Understanding. First half: the picture, the six perspectives and
+  // the field they fill; second half: what a reading describes, interprets
+  // and adds, and the rules of the critical perspective.
   '/latent-lab/image-understanding': {
     storyKey: 'compare.address.vlm-analysis.story',
     purposeKey: 'compare.address.vlm-analysis.purpose',
@@ -132,7 +128,7 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
     purposeKey: 'compare.address.voice.purpose',
   },
   '/latent-lab/lora-sd35': { storyKey: 'training.story', purposeKey: 'training.purpose' },
-  // The first of the fourteen instruments to get its own address, cut at a
+  // The first instrument of the lab to get its own address, cut at a
   // sentence boundary of the authored text: the first half says what the
   // sentences on this page are, the second what there is to see in them.
   // German is the authored side; English is set after it. The first half opens
@@ -147,23 +143,17 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
   // hold between 432 (Sexual orientation) and 7,980 (Race x gender) open
   // questions; a fixed number would be true of one category and wrong of ten.
   '/latent-lab/bias-archaeology': { storyKey: 'biasArchaeology.story', purposeKey: 'biasArchaeology.purpose' },
-  // The third, cut where the surface itself is cut: the first half is what
-  // happens to the line that is written, the second what the first column and
-  // the further columns each show. Its keys live in the instrument's own block
-  // (`latentLab.census`) because that block exists and holds every other word
-  // this instrument says. It carries the closing note, like the three
-  // comparisons: it is the one instrument outside Compare where the
-  // interpretation help belongs.
+  // Stereotype Analysis, keys in `latentLab.census`. First half: base prompt,
+  // variations, rows, columns, reruns, the studies in the note; second half:
+  // the own word, the judgement of whoever knows the place, one model.
   '/latent-lab/cultural-un-known': {
     storyKey: 'latentLab.census.story',
     purposeKey: 'latentLab.census.purpose',
     noteKey: 'compare.ask.note',
   },
-  // The first instrument of Prompt Interception. Its keys live in its own
-  // block, like the census's; it carries the same closing note as the
-  // comparisons, because it is read the same way — several results side by
-  // side, and the reading is the work.
-  // Draft text, to be rewritten after the first real run.
+  // Language Model Comparison. First half: the step, the writing models and
+  // the top row; second half: the texts as the matter of the comparison.
+  // Read like the comparisons, so it carries the closing note.
   // The address changed with the instrument's name
   // (llm-cultural-understanding -> interception-across-models). The old one
   // still routes (`views/latent_lab.vue`), and a page reached under it stands
@@ -173,60 +163,118 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
     purposeKey: 'latentLab.interception.models.purpose',
     noteKey: 'compare.ask.note',
   },
-  // The second instrument of Prompt Interception, and the reverse of the
-  // first: there one perspective and several writing models, here one
-  // template and several perspectives. Same closing note, for the same reason.
-  // Draft text, to be rewritten after the first real run.
+  // Interception Scope. First half: one prompt, a picture per perspective,
+  // the first picture without the step; second half: a work under several
+  // perspectives and the numbers in the note. Closing note as above.
   '/latent-lab/perspectives-on-a-template': {
     storyKey: 'latentLab.interception.template.story',
     purposeKey: 'latentLab.interception.template.purpose',
     noteKey: 'compare.ask.note',
   },
-  // The third instrument of Prompt Interception. It asks what an aesthetic
-  // checklist does to a template: one handle per property, one setting per
-  // run, and a row for each of them under the template as it was written.
-  // Same closing note, for the same reason.
-  // Draft text, to be rewritten after the first real run.
+  // Aesthetic Poles. First half: the checklist, the chips and the reference
+  // image; second half: where the scales come from and the comparison with
+  // the reference image. Closing note as above.
   '/latent-lab/aesthetic-poles': {
     storyKey: 'latentLab.interception.poles.story',
     purposeKey: 'latentLab.interception.poles.purpose',
     noteKey: 'compare.ask.note',
   },
-  // The fourth. Its first half is the handling in the order a visitor meets
-  // it, its second the reading — that a word's influence lands in areas,
-  // softly and often elsewhere than expected. No closing note here: the
-  // interpretation help belongs to the comparisons and to Cultural (Un)Known,
-  // and this instrument reads one picture rather than several.
+  // Attention Cartography. First half: the run and the settings of the view;
+  // second half: what a colour patch is and the layers. No closing note.
   '/latent-lab/attention-cartography': {
     storyKey: 'latentLab.attention.story',
     purposeKey: 'latentLab.attention.purpose',
   },
-  // LoRA Explorer (its keys keep the earlier working name LoRA Reach). Its
-  // first half is what a run puts on the surface, its second how the four rows
-  // are read against one another. No closing note: the interpretation help
-  // belongs to the comparisons and to Cultural (Un)Known, and this instrument
-  // compares one adapter with itself.
+  // LoRA Explorer (its keys keep the earlier working name LoRA Reach). First
+  // half: adapter, word, motifs, four pictures per column; second half: the
+  // drift named in the note. No closing note.
   '/latent-lab/lora-explorer': {
     storyKey: 'latentLab.loraReach.story',
     purposeKey: 'latentLab.loraReach.purpose',
   },
-  // Mean Images. The two halves are the story and purpose the instrument
-  // carries in its own block (`latentLab.meanImages`): the first says what a
-  // run computes and shows, the second Steyerl's method and what the
-  // comparison across models serves. No closing note: the interpretation help
-  // belongs to the comparisons and to Cultural (Un)Known.
+  // Mean Images, keys in `latentLab.meanImages`. First half: the two means per
+  // model, the views, where the mean is taken; second half: the comparison
+  // as an exploration of visual clichés. No closing note.
   '/latent-lab/mean-images': {
     storyKey: 'latentLab.meanImages.story',
     purposeKey: 'latentLab.meanImages.purpose',
   },
-  // The fifth. Its second half rests on what a run actually looks like rather
-  // than on the section names: the view stays noise well past the
-  // middle, and the scene arrives within a few steps. Where that turn falls
-  // moves with prompt, backbone and shift, so the address sends the visitor to
-  // look for it instead of naming a step number.
+  // Denoising Archaeology. First half: the steps of a run and the slider at
+  // the picture; second half: denoising and the division by noise level after
+  // Choi et al. (2022) as a rough orientation. No closing note.
   '/latent-lab/denoising-archaeology': {
     storyKey: 'latentLab.archaeology.story',
     purposeKey: 'latentLab.archaeology.purpose',
+  },
+  // Model Comparison of the Transformers Lab. First half: the setup; second
+  // half: what a model says or declines. Read like System Prompts: several
+  // answers side by side, so it carries the closing note.
+  '/latent-lab/system-prompt-across-models': {
+    storyKey: 'latentLab.textLab.systempromptModels.story',
+    purposeKey: 'latentLab.textLab.systempromptModels.purpose',
+    noteKey: 'compare.ask.note',
+  },
+  // Encoder Fusion. First half: the project lead's opening sentences, then
+  // the conditioning table and the factors a, b, c; second half: a row with
+  // both encodings and what changes with b. No closing note.
+  '/latent-lab/encoder-fusion': {
+    storyKey: 'surrealizer.story',
+    purposeKey: 'surrealizer.purpose',
+  },
+  // Dimension Explorer. First half: the two runs and the ranked dimensions;
+  // second half: the numbers of an encoder and what a larger range moves.
+  '/latent-lab/dimension-explorer': {
+    storyKey: 'latentLab.probing.story',
+    purposeKey: 'latentLab.probing.purpose',
+  },
+  // Concept Algebra. First half: A − B + C, the two columns and the scales;
+  // second half: the calculation and what the result picture keeps.
+  '/latent-lab/concept-algebra': {
+    storyKey: 'latentLab.algebra.story',
+    purposeKey: 'latentLab.algebra.purpose',
+  },
+  // Composable Diffusion. First half: concepts with weights, AND and NOT,
+  // the place of composition; second half: the composition of the picture.
+  '/latent-lab/composable-diffusion': {
+    storyKey: 'latentLab.composable.story',
+    purposeKey: 'latentLab.composable.purpose',
+  },
+  // Encoder Fusion Workbench. First half: the grid of a sweep and its preset
+  // axes; second half: the moment of the fusion and the weights of a cell.
+  '/latent-lab/fusion-workbench': {
+    storyKey: 'latentLab.workbench.story',
+    purposeKey: 'latentLab.workbench.purpose',
+  },
+  // Representation Engineering. First half: the three columns and the
+  // direction from the contrast pairs; second half: the intervention and
+  // the reference column.
+  '/latent-lab/representation-engineering': {
+    storyKey: 'latentLab.textLab.repeng.story',
+    purposeKey: 'latentLab.textLab.repeng.purpose',
+  },
+  // Tokenizer. First half: the pieces, the counts and the translations;
+  // second half: the cost of a language in tokens.
+  '/latent-lab/tokenization': {
+    storyKey: 'latentLab.textLab.tokens.story',
+    purposeKey: 'latentLab.textLab.tokens.purpose',
+  },
+  // Latent Audio Synth. First half: the two prompts, α and the dimension
+  // strip; second half: the numbers of T5Gemma and the semantic axes.
+  '/latent-lab/audio-synth': {
+    storyKey: 'latentLab.crossmodal.synth.story',
+    purposeKey: 'latentLab.crossmodal.synth.purpose',
+  },
+  // MMAudio. First half: picture, text or both, and the sound; second half:
+  // the sound for a still picture and what the model was built for.
+  '/latent-lab/mmaudio': {
+    storyKey: 'latentLab.crossmodal.mmaudio.story',
+    purposeKey: 'latentLab.crossmodal.mmaudio.purpose',
+  },
+  // ImageBind Guidance. First half: the guided steps, the strength and the
+  // cosine on the card; second half: the measure of fit.
+  '/latent-lab/imagebind-guidance': {
+    storyKey: 'latentLab.crossmodal.guidance.story',
+    purposeKey: 'latentLab.crossmodal.guidance.purpose',
   },
 }
 

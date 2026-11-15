@@ -17,11 +17,11 @@ robustness test + one reprocess-vs-fresh-upload pair (this data-destroying
 cancel bug's fix):
   * queued job -> POST /jobs/<id>/cancel flips it to `cancelled` and it never
     runs (verified by holding the single worker busy with a gate).
-  * running job -> the Verdichtung Map loop honours the per-job cancel_check at
-    a unit boundary (stub LLM trips the cancel on its first Map call); the job
+  * running job -> the Verdichtung summary loop honours the per-job cancel_check at
+    a unit boundary (stub LLM trips the cancel on its first summary call); the job
     lands in `cancelled` and its partial draft + raw.md are gone.
   * cancel on a finished (done) job -> 409.
-  * knowledge_processing.process_document raises ProcessingCancelled BETWEEN Map
+  * knowledge_processing.process_document raises ProcessingCancelled BETWEEN summary
     calls when cancel_check turns true (pure unit test, no Flask, no worker).
   * a FATAL sanity-check abort (CLAUDE.md rule 12) on one document must not
     wedge the shared FIFO worker: the next queued document still has to run.
@@ -50,7 +50,7 @@ import pytest
 
 
 # A raw (Docling-style) input Markdown for the --md passthrough path, long enough
-# for a couple of content sections (so the Map loop has >1 unit to step through).
+# for a couple of content sections (one unit: the whole document is one summary call).
 _MINI_MD = """# Mini Operator Doc
 
 ## Einleitung
@@ -200,9 +200,7 @@ def test_cancel_queued_job_removes_from_queue(app_client):
             gate.wait(timeout=20)  # hold the worker on job #1
             if "PROFIL" in system:
                 return "Profil."
-            import json as _json
-            return _json.dumps({"section_title": "A", "digest": "x",
-                                "terms": []}, ensure_ascii=False)
+            return "## A\n\nx"
         return _fn
 
     kp.default_llm_fn = _blocking_llm
@@ -245,27 +243,25 @@ def test_cancel_queued_job_removes_from_queue(app_client):
 def test_cancel_running_job_aborts_at_unit_boundary_and_cleans_up(app_client):
     client, kp, jobs, _, config = app_client
 
-    # The stub trips THIS job's cancel on its first Map call, so process_document
+    # The stub trips THIS job's cancel on its first summary call, so process_document
     # raises ProcessingCancelled at the boundary after unit 1. We learn the
     # job_id from the upload response and set the cancel via the service.
-    state = {"job_id": None, "map_calls": 0}
+    state = {"job_id": None, "summary_calls": 0}
 
     def _cancelling_llm(temperature: float = 0.2):
         def _fn(system, user, max_tokens):
             if "PROFIL" in system:
                 return "Profil."
-            state["map_calls"] += 1
-            # On the first Map call, request cancel for this job so the loop's
+            state["summary_calls"] += 1
+            # On the first summary call, request cancel for this job so the loop's
             # post-unit cancel_check fires before the next unit. Guard on the job
-            # actually being `running` (a Map call only happens during running;
+            # actually being `running` (a summary call only happens during running;
             # this also makes the intent explicit).
-            if state["map_calls"] == 1 and state["job_id"]:
+            if state["summary_calls"] == 1 and state["job_id"]:
                 snap = jobs.get_job(state["job_id"])
                 if snap and snap["state"] == "running":
                     jobs.request_cancel(state["job_id"])
-            import json as _json
-            return _json.dumps({"section_title": "A", "digest": "x",
-                                "terms": []}, ensure_ascii=False)
+            return "## A\n\nx"
         return _fn
 
     kp.default_llm_fn = _cancelling_llm
@@ -277,8 +273,8 @@ def test_cancel_running_job_aborts_at_unit_boundary_and_cleans_up(app_client):
     end = _wait_state(client, body["job_id"], {"cancelled", "done", "error"})
     assert end is not None and end["state"] == "cancelled", end
 
-    # The Map loop ran at least once but did NOT process every unit (aborted).
-    assert state["map_calls"] >= 1
+    # The summary loop ran at least once, and the job was aborted after it.
+    assert state["summary_calls"] >= 1
 
     # Artefact cleanup: the partial compact draft and the raw.md intermediate of
     # THIS run are gone; the log records the cleanup + that the original is kept.
@@ -305,12 +301,7 @@ def test_cancel_done_job_conflicts(app_client):
         def _fn(system, user, max_tokens):
             if "PROFIL" in system:
                 return "Profil ueber Resilienz."
-            import json as _json
-            return _json.dumps({
-                "section_title": "Massnahmen",
-                "digest": "- drei Schritte\n- Mindestalter 12",
-                "terms": [],
-            }, ensure_ascii=False)
+            return "## Massnahmen\n\n- drei Schritte\n- Mindestalter 12"
         return _fn
 
     kp.default_llm_fn = _stub_llm
@@ -334,65 +325,79 @@ def test_cancel_unknown_job_404(app_client):
 # 4) load-bearing unit test: process_document honours cancel_check BETWEEN units
 # ---------------------------------------------------------------------------
 
-def test_process_document_raises_between_map_calls():
+def _multi_unit_extraction(monkeypatch):
+    """An extraction the library cuts into three units: three sections, each
+    above the size below which sections are packed together
+    (kp._UNIT_MIN_CHARS), and the ceiling of one summary call
+    (kp._DOC_UNIT_MAX_CHARS) lowered to a little above one section. The
+    document type is passed in, so every LLM call is a summary or Reduce call."""
+    import my_app.services.knowledge_processing as kp
+    from my_app.services.knowledge_extract import from_markdown
+    para = ("Konkrete Massnahme in drei Schritten, Mindestalter 12, Evaluation alle "
+            "6 Monate, ein Projekt mit 30 Teilnehmenden im Jahr 2025. ")
+    n = kp._UNIT_MIN_CHARS // len(para) + 2
+    md = "# T\n\n" + "".join(f"## Abschnitt {k}\n\n{para * n}\n\n" for k in (1, 2, 3))
+    monkeypatch.setattr(kp, "_DOC_UNIT_MAX_CHARS", len(para * n) * 6 // 5)
+    ex = from_markdown(md)
+    assert len(kp.library_units(kp.clean_blocks(ex, "T")[0], "T")) == 3
+    return ex
+
+
+def test_process_document_raises_between_summary_calls(monkeypatch):
     """The cancel poll sits at the unit boundary: with >1 unit and a cancel_check
-    that turns true after the first Map call, process_document raises
-    ProcessingCancelled and does NOT map every unit. No Flask, no worker."""
+    that turns true after the first summary call, process_document raises
+    ProcessingCancelled and does NOT summarize every unit. No Flask, no worker."""
     import my_app.services.knowledge_processing as kp
     importlib.reload(kp)
 
-    calls = {"map": 0}
+    calls = {"summary": 0}
     flip = {"cancel": False}
 
     def _llm(system, user, max_tokens):
         if "PROFIL" in system:
             return "Profil."
-        calls["map"] += 1
+        calls["summary"] += 1
         # After the first unit is condensed, ask to cancel.
-        if calls["map"] == 1:
+        if calls["summary"] == 1:
             flip["cancel"] = True
-        import json as _json
-        return _json.dumps({"section_title": "A", "digest": "x",
-                            "terms": []}, ensure_ascii=False)
+        return "## A\n\nx"
 
     fm = {"id": "unit-cancel-doc", "titel": "T", "tier": "O",
           "sparten": [], "themen": [], "status": "draft"}
 
     with pytest.raises(kp.ProcessingCancelled) as ei:
         kp.process_document(
-            _MINI_MD, fm, llm=_llm,
+            _multi_unit_extraction(monkeypatch), fm, llm=_llm,
             cancel_check=lambda: flip["cancel"],
-            mode="standard",
+            doc_type="practice_report",
         )
-    # Aborted after the first unit — not every unit was mapped.
+    # Aborted after the first unit — not every unit was summarized.
     assert ei.value.units_done == 1
-    assert calls["map"] == 1
+    assert calls["summary"] == 1
 
 
-def test_process_document_cancel_before_first_unit():
-    """A cancel already true before the Map loop -> raise with units_done=0 and
-    zero Map calls."""
+def test_process_document_cancel_before_first_unit(monkeypatch):
+    """A cancel already true before the summary loop -> raise with units_done=0 and
+    zero summary calls."""
     import my_app.services.knowledge_processing as kp
     importlib.reload(kp)
 
-    calls = {"map": 0}
+    calls = {"summary": 0}
 
     def _llm(system, user, max_tokens):
         if "PROFIL" in system:
             return "Profil."
-        calls["map"] += 1
-        import json as _json
-        return _json.dumps({"section_title": "A", "digest": "x",
-                            "terms": []}, ensure_ascii=False)
+        calls["summary"] += 1
+        return "## A\n\nx"
 
     fm = {"id": "pre-cancel-doc", "titel": "T", "tier": "O",
           "sparten": [], "themen": [], "status": "draft"}
 
     with pytest.raises(kp.ProcessingCancelled) as ei:
-        kp.process_document(_MINI_MD, fm, llm=_llm,
-                            cancel_check=lambda: True, mode="standard")
+        kp.process_document(_multi_unit_extraction(monkeypatch), fm, llm=_llm,
+                            cancel_check=lambda: True, doc_type="practice_report")
     assert ei.value.units_done == 0
-    assert calls["map"] == 0
+    assert calls["summary"] == 0
 
 
 # ---------------------------------------------------------------------------
@@ -410,14 +415,14 @@ PROVIDERAUSFALL simuliert einen vollstaendigen Ausfall des Sprachmodell-Anbieter
 
 ## Ausfallabschnitt Zwei
 
-Auch dieser zweite Abschnitt traegt PROVIDERAUSFALL im Fliesstext, damit mehrere Einheiten entstehen und die Verdichtung trotzdem komplett fehlschlaegt, weil jede Map-Antwort ungueltiges JSON liefert und als fehlend gezaehlt wird.
+Auch dieser zweite Abschnitt traegt PROVIDERAUSFALL im Fliesstext; die Verdichtung schlaegt komplett fehl, weil jede Antwort leer bleibt und als fehlend gezaehlt wird.
 """
 
 
 def test_fatal_middle_job_does_not_wedge_the_fifo_worker(app_client):
     """Three jobs, back-to-back, through the ONE shared FIFO worker: a good
-    document, a document whose every Verdichtung call returns unparsable
-    content (simulating the all-404 provider outage CLAUDE.md rule 12 guards
+    document, a document whose every Verdichtung call returns an empty
+    answer (simulating the all-404 provider outage CLAUDE.md rule 12 guards
     against), and a second good document. The middle job must abort as a
     FATAL sanity-check failure (state=error) -- never `cancelled` (its cancel
     Event is never set) -- and, critically, the worker must not get stuck on
@@ -432,15 +437,10 @@ def test_fatal_middle_job_does_not_wedge_the_fifo_worker(app_client):
             if "PROFIL" in system:
                 return "Profil."
             if "PROVIDERAUSFALL" in user:
-                # Unparsable on both the first attempt AND the one repair
-                # retry _map_unit gives it -> the unit is recorded MISSING.
-                return "not a json object at all"
-            import json as _json
-            return _json.dumps({
-                "section_title": "Massnahmen",
-                "digest": "- drei Schritte\n- Mindestalter 12",
-                "terms": [],
-            }, ensure_ascii=False)
+                # Empty on both the first attempt AND the one retry
+                # _summarize_unit gives it -> the unit is recorded MISSING.
+                return ""
+            return "## Massnahmen\n\n- drei Schritte\n- Mindestalter 12"
         return _fn
 
     kp.default_llm_fn = _mixed_llm
@@ -494,20 +494,18 @@ def test_cancel_fresh_upload_removes_partial_draft_but_keeps_original(app_client
     never reach for."""
     client, kp, jobs, _, config = app_client
 
-    state = {"job_id": None, "map_calls": 0}
+    state = {"job_id": None, "summary_calls": 0}
 
     def _cancelling_llm(temperature: float = 0.2):
         def _fn(system, user, max_tokens):
             if "PROFIL" in system:
                 return "Profil."
-            state["map_calls"] += 1
-            if state["map_calls"] == 1 and state["job_id"]:
+            state["summary_calls"] += 1
+            if state["summary_calls"] == 1 and state["job_id"]:
                 snap = jobs.get_job(state["job_id"])
                 if snap and snap["state"] == "running":
                     jobs.request_cancel(state["job_id"])
-            import json as _json
-            return _json.dumps({"section_title": "A", "digest": "x",
-                                "terms": []}, ensure_ascii=False)
+            return "## A\n\nx"
         return _fn
 
     kp.default_llm_fn = _cancelling_llm
@@ -524,7 +522,7 @@ def test_cancel_fresh_upload_removes_partial_draft_but_keeps_original(app_client
 
     end = _wait_state(client, body["job_id"], {"cancelled", "done", "error"})
     assert end is not None and end["state"] == "cancelled", end
-    assert state["map_calls"] >= 1
+    assert state["summary_calls"] >= 1
 
     draft = Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md"
     raw = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator" / f"{doc_id}.raw.md"
@@ -552,12 +550,7 @@ def test_cancel_reprocess_keeps_existing_draft_and_source(app_client):
         def _fn(system, user, max_tokens):
             if "PROFIL" in system:
                 return "Profil ueber Resilienz."
-            import json as _json
-            return _json.dumps({
-                "section_title": "Massnahmen",
-                "digest": "- drei Schritte\n- Mindestalter 12",
-                "terms": [],
-            }, ensure_ascii=False)
+            return "## Massnahmen\n\n- drei Schritte\n- Mindestalter 12"
         return _fn
 
     kp.default_llm_fn = _clean_llm
@@ -575,21 +568,19 @@ def test_cancel_reprocess_keeps_existing_draft_and_source(app_client):
     raw_bytes_before = raw.read_bytes()
 
     # Step 2: reprocess the SAME doc_id, cancel it at a Verdichtung unit
-    # boundary (same trip-on-first-Map-call technique as the test above).
-    state = {"job_id": None, "map_calls": 0}
+    # boundary (same trip-on-first-summary-call technique as the test above).
+    state = {"job_id": None, "summary_calls": 0}
 
     def _cancelling_llm(temperature: float = 0.2):
         def _fn(system, user, max_tokens):
             if "PROFIL" in system:
                 return "Profil."
-            state["map_calls"] += 1
-            if state["map_calls"] == 1 and state["job_id"]:
+            state["summary_calls"] += 1
+            if state["summary_calls"] == 1 and state["job_id"]:
                 snap = jobs.get_job(state["job_id"])
                 if snap and snap["state"] == "running":
                     jobs.request_cancel(state["job_id"])
-            import json as _json
-            return _json.dumps({"section_title": "B", "digest": "y",
-                                "terms": []}, ensure_ascii=False)
+            return "## B\n\ny"
         return _fn
 
     kp.default_llm_fn = _cancelling_llm
@@ -600,7 +591,7 @@ def test_cancel_reprocess_keeps_existing_draft_and_source(app_client):
 
     end = _wait_state(client, reprocess_job_id, {"cancelled", "done", "error"})
     assert end is not None and end["state"] == "cancelled", end
-    assert state["map_calls"] >= 1
+    assert state["summary_calls"] >= 1
 
     # The existing, good analysis and the stored source must be untouched --
     # byte for byte, not merely "a file happens to exist again".

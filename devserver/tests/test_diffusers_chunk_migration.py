@@ -257,7 +257,7 @@ def test_sd35_basic_generation():
 
     assert result['content_marker'] == 'diffusers_generated'
     assert 'image_data' in result
-    assert result['model_id'] == 'stabilityai/stable-diffusion-3.5-large'
+    assert result['model_used'] == 'stabilityai/stable-diffusion-3.5-large'
     assert result['media_type'] == 'image'
     mock_backend.generate_image.assert_called_once()
     call_kwargs = mock_backend.generate_image.call_args.kwargs
@@ -632,7 +632,7 @@ def test_flux2_basic():
             module.execute(prompt="test")
         )
 
-    assert result['model_id'] == 'black-forest-labs/FLUX.2-dev'
+    assert result['model_used'] == 'black-forest-labs/FLUX.2-dev'
     call_kwargs = mock_backend.generate_image.call_args.kwargs
     assert call_kwargs['pipeline_class'] == 'Flux2Pipeline'
     assert call_kwargs['steps'] == 20

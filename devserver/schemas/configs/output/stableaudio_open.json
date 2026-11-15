@@ -10,7 +10,8 @@
     "es": "Stable Audio 3",
     "he": "Stable Audio 3",
     "ar": "Stable Audio 3",
-    "bg": "Stable Audio 3"
+    "bg": "Stable Audio 3",
+    "zh-hant": "Stable Audio 3"
   },
   "description": {
     "en": "Text-to-audio generation using Stability AI's Stable Audio 3 (medium) via the GPU service. Few-step rectified-flow model with a multilingual t5gemma text encoder.",
@@ -22,7 +23,8 @@
     "es": "Generación de texto a audio con Stable Audio 3 (medium) de Stability AI a través del servicio GPU. Modelo rectified-flow de pocos pasos con un codificador de texto multilingüe t5gemma.",
     "he": "יצירת אודיו מטקסט באמצעות Stable Audio 3 (medium) של Stability AI דרך שירות ה-GPU. מודל rectified-flow מועט-שלבים עם מקודד טקסט רב-לשוני t5gemma.",
     "ar": "توليد الصوت من النص باستخدام Stable Audio 3 (medium) من Stability AI عبر خدمة GPU. نموذج rectified-flow قليل الخطوات مع مُرمِّز نص متعدد اللغات t5gemma.",
-    "bg": "Генериране на аудио от текст с Stable Audio 3 (medium) на Stability AI чрез GPU услугата. Few-step rectified-flow модел с многоезичен текстов енкодер t5gemma."
+    "bg": "Генериране на аудио от текст с Stable Audio 3 (medium) на Stability AI чрез GPU услугата. Few-step rectified-flow модел с многоезичен текстов енкодер t5gemma.",
+    "zh-hant": "透過 GPU 服務使用 Stability AI 的 Stable Audio 3（medium）進行文字轉音訊生成。少步數的 rectified-flow 模型，搭配多語言的 t5gemma 文字編碼器。"
   },
   "category": {
     "en": "Audio Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de audio",
     "he": "יצירת אודיו",
     "ar": "توليد الصوت",
-    "bg": "Генериране на аудио"
+    "bg": "Генериране на аудио",
+    "zh-hant": "音訊生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_audio_stableaudio_diffusers",
@@ -95,7 +98,8 @@
           "es": "t5gemma es multilingüe — una clara mejora respecto al T5-Base solo en inglés de SA1 — pero la distribución de idiomas de sus datos de entrenamiento no se ha revelado, por lo que no se puede verificar la cobertura de idiomas distintos del inglés",
           "he": "t5gemma הוא רב-לשוני — שיפור ברור לעומת T5-Base של SA1 שהיה באנגלית בלבד — אך התפלגות השפות בנתוני האימון שלו לא נחשפה, כך שאי אפשר לאמת את הכיסוי בשפות שאינן אנגלית",
           "ar": "t5gemma متعدد اللغات — تحسّن واضح مقارنةً بـ T5-Base الخاص بـ SA1 المقتصر على الإنجليزية — لكن توزيع لغات بيانات تدريبه غير معلن، لذا لا يمكن التحقق من تغطيته للغات غير الإنجليزية",
-          "bg": "t5gemma е многоезичен — ясно подобрение спрямо T5-Base на SA1, който е само на английски — но езиковото разпределение на неговите данни за обучение не е оповестено, така че покритието извън английския не може да бъде проверено"
+          "bg": "t5gemma е многоезичен — ясно подобрение спрямо T5-Base на SA1, който е само на английски — но езиковото разпределение на неговите данни за обучение не е оповестено, така че покритието извън английския не може да бъде проверено",
+          "zh-hant": "t5gemma 支援多語言——相較於 SA1 只支援英語的 T5-Base 是明顯的進步——但其訓練資料的語言分佈並未公開，因此無法驗證非英語的涵蓋程度"
         },
         {
           "en": "With training data undisclosed, cultural and genre biases cannot be audited from the source data",
@@ -107,7 +111,8 @@
           "es": "Al no revelarse los datos de entrenamiento, los sesgos culturales y de género no pueden auditarse a partir de los datos fuente",
           "he": "מאחר שנתוני האימון לא נחשפו, אי אפשר לבקר הטיות תרבותיות וז'אנריות מתוך נתוני המקור",
           "ar": "بما أن بيانات التدريب غير معلنة، لا يمكن تدقيق التحيزات الثقافية والنوعية انطلاقاً من البيانات المصدرية",
-          "bg": "Тъй като данните за обучение не са оповестени, културните и жанровите отклонения не могат да бъдат одитирани от изходните данни"
+          "bg": "Тъй като данните за обучение не са оповестени, културните и жанровите отклонения не могат да бъдат одитирани от изходните данни",
+          "zh-hant": "由於訓練資料未公開，無法從來源資料稽核文化與曲風上的偏見"
         }
       ],
       "known_gaps": [
@@ -121,7 +126,8 @@
           "es": "RETROCESO DE TRANSPARENCIA: SA3 NO publica una lista de atribución de los datos de entrenamiento. Stable Audio Open 1.0 publicó una atribución completa (7300 h de audio CC: Freesound + FMA) y fue el modelo más transparente de nuestro sistema.",
           "he": "נסיגה בשקיפות: SA3 אינו מפרסם רשימת ייחוס לנתוני האימון. Stable Audio Open 1.0 פרסם ייחוס מלא (7,300 שעות אודיו CC: Freesound ו-FMA) והיה המודל השקוף ביותר במערכת שלנו.",
           "ar": "تراجع في الشفافية: لا يَنشر SA3 قائمة إسناد لبيانات التدريب. نشر Stable Audio Open 1.0 إسناداً كاملاً (7300 ساعة صوت CC: Freesound وFMA) وكان الأكثر شفافية في نظامنا.",
-          "bg": "РЕГРЕС В ПРОЗРАЧНОСТТА: SA3 НЕ публикува списък с приписване на данните за обучение. Stable Audio Open 1.0 публикуваше пълно приписване (7300 часа CC аудио: Freesound + FMA) и беше най-прозрачният модел в нашата система."
+          "bg": "РЕГРЕС В ПРОЗРАЧНОСТТА: SA3 НЕ публикува списък с приписване на данните за обучение. Stable Audio Open 1.0 публикуваше пълно приписване (7300 часа CC аудио: Freesound + FMA) и беше най-прозрачният модел в нашата система.",
+          "zh-hant": "透明度倒退：SA3 並未公開訓練資料的來源標示清單。Stable Audio Open 1.0 曾公開完整的來源標示（7,300 小時 CC 音訊：Freesound + FMA），是本系統中最透明的模型。"
         },
         {
           "en": "\"Licensed and Creative Commons data\" is Stability's own description; the specific datasets, consent basis, and CC license breakdown are not public",
@@ -133,7 +139,8 @@
           "es": "\"Datos con licencia y Creative Commons\" es la descripción propia de Stability; los conjuntos de datos concretos, la base del consentimiento y el desglose de licencias CC no son públicos",
           "he": "\"נתונים מורשים ונתוני Creative Commons\" הוא תיאור עצמי של Stability; מערכי הנתונים הספציפיים, בסיס ההסכמה ופירוט רישיונות ה-CC אינם פומביים",
           "ar": "\"بيانات مرخَّصة وبيانات Creative Commons\" وصفٌ خاص بشركة Stability نفسها؛ مجموعات البيانات المحددة وأساس الموافقة وتفصيل تراخيص CC غير معلنة للعموم",
-          "bg": "„Лицензирани данни и данни с Creative Commons“ е собственото описание на Stability; конкретните набори от данни, основанието за съгласие и разбивката на CC лицензите не са публични"
+          "bg": "„Лицензирани данни и данни с Creative Commons“ е собственото описание на Stability; конкретните набори от данни, основанието за съгласие и разбивката на CC лицензите не са публични",
+          "zh-hant": "「Licensed and Creative Commons data」是 Stability 自己的描述；具體的資料集、同意的依據以及 CC 授權的細分都未公開"
         }
       ]
     }

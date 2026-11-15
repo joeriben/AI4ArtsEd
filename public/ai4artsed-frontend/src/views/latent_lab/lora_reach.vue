@@ -52,7 +52,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- Which adapter is compared. ONE at a time: the four rows are the

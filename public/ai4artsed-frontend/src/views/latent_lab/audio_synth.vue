@@ -7,874 +7,916 @@
   once.
 
   Split out of views/latent_lab/crossmodal_lab.vue on 2026-09-05, where it stood
-  with MMAudio and ImageBind Guidance in one file. The SURFACE is the one that
-  file carried at a50054bc, laid out as ARCHITECTURE PART 30 describes it:
-  prompts, sliders, parameters and the trigger, then the Dimension Explorer, the
-  looper, the preset box and MIDI — one under another, with the strip of 768
-  dimensions across the full width, which is the only width it can be read at.
-  A two-column frame was put here on 2026-09-05 and taken out the same day.
+  with MMAudio and ImageBind Guidance in one file. Until 2026-11-02 the SURFACE
+  was the one that file carried at a50054bc, laid out as ARCHITECTURE PART 30
+  then described it: prompts, sliders, parameters and the trigger, then the
+  Dimension Explorer, the looper, the preset box and MIDI, one under another. A
+  two-column frame was put here on 2026-09-05 and taken out the same day.
+
+  Since 2026-11-02 it stands in the frame of the instruments as MMAudio and
+  ImageBind Guidance do (assets/flow-stage.css): the trigger in the bar; in the
+  preparing column the two prompts, the three sliders that move the embedding,
+  the numbers of the request in the klappe, and the axes and the Dimension
+  Explorer with the strip of 768 dimensions, which open one at a time; on the
+  right side, which scrolls on its own, the looper with everything that plays
+  the sound, saving and MIDI.
 -->
 <template>
-  <div class="xm-lab">
-    <div class="xm-panel">
-      <h3>{{ t('latentLab.crossmodal.tabs.synth.title') }}</h3>
+  <div class="lab-page">
+    <ShellRun
+      :ready="canRun"
+      :running="generating"
+      :title="t('latentLab.crossmodal.generate')"
+      @run="runSynth"
+    />
 
+    <div class="lab-main">
+      <div class="lab-stage">
+        <div class="lab-work" :class="{ folded }">
+          <section ref="prepEl" class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
+            <ColumnFold v-model:folded="folded" />
 
-      <!-- Sticky prompt + generate area -->
-      <div class="synth-sticky-top">
-        <!-- Prompt A -->
-        <PromptExamples
-          :items="synthExamples"
-          :current="synth.promptA"
-          @pick="applySynthExample"
-        />
-        <MediaInputBox
-          chrome="bare"
-          icon="lightbulb"
-          :label="t('latentLab.crossmodal.synth.promptA')"
-          :placeholder="t('mediaInput.freePromptPlaceholder')"
-          :value="synth.promptA"
-          @update:value="synth.promptA = $event"
-          :rows="2"
-          :isEmpty="!synth.promptA"
-          :isFilled="!!synth.promptA"
-          :is-loading="readingPicture"
-          :disabled="readingPicture"
-          @copy="copySynthPromptA"
-          @paste="pasteSynthPromptA"
-          @clear="clearSynthPromptA"
-          @image-uploaded="handlePicture"
-          @image-removed="dropPicture"
-          :show-preset-button="true"
-          :preset-busy="enriching === 'a'"
-          @open-preset-selector="openPreset('a')"
-        />
-        <!-- The reading of a dropped picture, where it did not come back. -->
-        <p v-if="readingFailedKey" class="lab-prep-err">{{ t(readingFailedKey) }}</p>
+            <!-- Why a run did not come back, at the head of the column, where
+                 the eye is after a press. The line keeps its room whether or
+                 not it has anything to say (`at-head`): a failure of the drift
+                 lands on a bar boundary under a hand on a slider, and a line
+                 appearing there would push every control below it down. -->
+            <p ref="errLine" class="lab-prep-err at-head">{{ error }}</p>
 
-        <!-- Prompt B (optional) -->
-        <MediaInputBox
-          chrome="bare"
-          icon="lightbulb"
-          :label="t('latentLab.crossmodal.synth.promptB')"
-          :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
-          :value="synth.promptB"
-          @update:value="synth.promptB = $event"
-          :rows="2"
-          :isEmpty="!synth.promptB"
-          :isFilled="!!synth.promptB"
-          @copy="copySynthPromptB"
-          @paste="pasteSynthPromptB"
-          @clear="clearSynthPromptB"
-          :show-preset-button="true"
-          :preset-busy="enriching === 'b'"
-          @open-preset-selector="openPreset('b')"
-        />
-        <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
+            <!-- Prompt A -->
+            <PromptExamples
+              :items="synthExamples"
+              :current="synth.promptA"
+              @pick="applySynthExample"
+            />
+            <MediaInputBox
+              chrome="bare"
+              icon="lightbulb"
+              :label="t('latentLab.crossmodal.synth.promptA')"
+              :placeholder="t('mediaInput.freePromptPlaceholder')"
+              :value="synth.promptA"
+              @update:value="synth.promptA = $event"
+              :rows="2"
+              :isEmpty="!synth.promptA"
+              :isFilled="!!synth.promptA"
+              :is-loading="readingPicture"
+              :disabled="readingPicture"
+              @copy="copySynthPromptA"
+              @paste="pasteSynthPromptA"
+              @clear="clearSynthPromptA"
+              @image-uploaded="handlePicture"
+              @image-removed="dropPicture"
+              :show-preset-button="true"
+              :preset-busy="enriching === 'a'"
+              @open-preset-selector="openPreset('a')"
+            />
+            <!-- The reading of a dropped picture, where it did not come back. -->
+            <p v-if="readingFailedKey" class="lab-prep-err">{{ t(readingFailedKey) }}</p>
 
-        <div class="action-row">
-          <button class="xm-generate" :disabled="!synth.promptA || generating" @click="runSynth">
-            {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
-          </button>
-          <button class="test-btn" :disabled="!hasLoadedAudio || generating" @click="testNote">
-            {{ t('latentLab.crossmodal.synth.testNote') }}
-          </button>
-        </div>
-      </div>
+            <!-- Prompt B (optional) -->
+            <MediaInputBox
+              chrome="bare"
+              icon="lightbulb"
+              :label="t('latentLab.crossmodal.synth.promptB')"
+              :placeholder="t('latentLab.crossmodal.synth.promptBPlaceholder')"
+              :value="synth.promptB"
+              @update:value="synth.promptB = $event"
+              :rows="2"
+              :isEmpty="!synth.promptB"
+              :isFilled="!!synth.promptB"
+              @copy="copySynthPromptB"
+              @paste="pasteSynthPromptB"
+              @clear="clearSynthPromptB"
+              :show-preset-button="true"
+              :preset-busy="enriching === 'b'"
+              @open-preset-selector="openPreset('b')"
+            />
+            <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
 
-      <!-- Sliders -->
-      <div class="xm-slider-group synth-slider-group">
-        <div class="xm-slider-item">
-          <div class="xm-slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
-            <span class="xm-slider-value">{{ synth.alpha.toFixed(2) }}</span>
-          </div>
-          <div class="xm-slider-drift-track">
-            <input type="range" v-model.number="synth.alpha" min="-2" max="2" step="0.01" />
-            <div v-if="driftMarkerPct('alpha', synth.alpha, -2, 2) >= 0" class="drift-marker" :style="{ left: driftMarkerPct('alpha', synth.alpha, -2, 2) + '%' }" />
-          </div>
-        </div>
-
-        <div class="xm-slider-item">
-          <div class="xm-slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.magnitude') }}</label>
-            <span class="xm-slider-value">{{ synth.magnitude.toFixed(2) }}</span>
-          </div>
-          <input type="range" v-model.number="synth.magnitude" min="0.1" max="5" step="0.1" />
-        </div>
-
-        <div class="xm-slider-item">
-          <div class="xm-slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.noise') }}</label>
-            <span class="xm-slider-value">{{ synth.noise.toFixed(2) }}</span>
-          </div>
-          <input type="range" v-model.number="synth.noise" min="0" max="1" step="0.05" />
-        </div>
-      </div>
-
-      <!-- Params row -->
-      <div class="xm-params-row">
-        <div class="xm-param xm-param-wide">
-          <div class="xm-slider-header">
-            <label>{{ t('latentLab.crossmodal.synth.duration') }}</label>
-            <span class="xm-slider-value">{{ synth.duration.toFixed(1) }}s</span>
-          </div>
-          <input type="range" :value="durationToSlider(synth.duration)" min="0" max="1" step="0.002" @input="synth.duration = sliderToDuration(Number(($event.target as HTMLInputElement).value))" />
-        </div>
-        <div class="xm-param xm-param-narrow">
-          <label>{{ t('latentLab.crossmodal.synth.steps') }}</label>
-          <!-- step=1: SA3 is distilled for 8, which is not on a grid of 5 —
-               the field was :invalid at its own default and the spinner
-               snapped away from the only value the model was trained for. -->
-          <input v-model.number="synth.steps" type="number" min="1" max="100" step="1" />
-        </div>
-        <div class="xm-param xm-param-narrow">
-          <label>{{ t('latentLab.crossmodal.synth.cfg') }}</label>
-          <input v-model.number="synth.cfg" type="number" min="1" max="15" step="0.5" />
-        </div>
-        <div class="xm-param xm-param-wide">
-          <label>{{ t('latentLab.crossmodal.seed') }}</label>
-          <input v-model.number="synth.seed" type="number" />
-        </div>
-      </div>
-
-      <!-- Semantic Axes (collapsible, modifies prompt embedding) -->
-      <details v-if="availableAxes.length > 0" class="semantic-axes-section lab-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggle">
-        <summary>{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</summary>
-        <div class="semantic-axes-content">
-          <div class="semantic-axes-slots">
-            <div
-              v-for="(slot, idx) in axisSlots"
-              :key="idx"
-              class="axis-slot"
-            >
-              <span class="axis-color-dot" :style="{ background: axisColors[idx] }" />
-              <select
-                :value="slot.axis"
-                class="axis-select"
-                @change="onAxisSelectChange(idx, ($event.target as HTMLSelectElement).value)"
-              >
-                <option value="">{{ t('latentLab.crossmodal.synth.semanticAxes.slotNone') }}</option>
-                <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
-                  <option
-                    v-for="ax in semanticAxisList"
-                    :key="ax.name"
-                    :value="ax.name"
-                  >
-                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                    <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
-                    <template v-if="ax.level === 'experimental'"> *</template>
-                  </option>
-                </optgroup>
-                <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
-                  <option
-                    v-for="ax in pcaAxisList"
-                    :key="ax.name"
-                    :value="ax.name"
-                  >
-                    {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                  </option>
-                </optgroup>
-              </select>
-              <div v-if="slot.axis" class="axis-slider-row">
-                <span class="axis-pole-label pole-b" :title="getAxisMeta(slot.axis)?.pole_b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
-                <div class="xm-slider-drift-track axis-drift-track">
-                  <input
-                    type="range"
-                    :value="axisValueToSlider(slot.value)"
-                    min="0"
-                    max="1"
-                    step="0.002"
-                    class="axis-range"
-                    :style="{ accentColor: axisColors[idx] }"
-                    @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
-                  />
-                  <div v-if="axisDriftMarkerPct(idx) >= 0" class="drift-marker" :style="{ left: axisDriftMarkerPct(idx) + '%', backgroundColor: axisColors[idx] }" />
+            <!-- Sliders -->
+            <div>
+              <div class="xm-slider-item">
+                <div class="xm-slider-header">
+                  <label>{{ t('latentLab.crossmodal.synth.alpha') }}</label>
+                  <span class="xm-slider-value">{{ synth.alpha.toFixed(2) }}</span>
                 </div>
-                <span class="axis-pole-label pole-a" :title="getAxisMeta(slot.axis)?.pole_a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
-                <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
+                <div class="xm-slider-drift-track">
+                  <input type="range" v-model.number="synth.alpha" min="-2" max="2" step="0.01" />
+                  <div v-if="driftMarkerPct('alpha', synth.alpha, -2, 2) >= 0" class="drift-marker" :style="{ left: driftMarkerPct('alpha', synth.alpha, -2, 2) + '%' }" />
+                </div>
+              </div>
+
+              <div class="xm-slider-item">
+                <div class="xm-slider-header">
+                  <label>{{ t('latentLab.crossmodal.synth.magnitude') }}</label>
+                  <span class="xm-slider-value">{{ synth.magnitude.toFixed(2) }}</span>
+                </div>
+                <input type="range" v-model.number="synth.magnitude" min="0.1" max="5" step="0.1" />
+              </div>
+
+              <div class="xm-slider-item">
+                <div class="xm-slider-header">
+                  <label>{{ t('latentLab.crossmodal.synth.noise') }}</label>
+                  <span class="xm-slider-value">{{ synth.noise.toFixed(2) }}</span>
+                </div>
+                <input type="range" v-model.number="synth.noise" min="0" max="1" step="0.05" />
               </div>
             </div>
-          </div>
 
-          <div class="section-action-bar">
-            <button class="dim-btn dim-btn-generate" :disabled="generating" @click="runSynth">
-              {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
-            </button>
-            <button class="dim-btn dim-btn-reset" @click="resetAxesToCenter">
-              {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
-            </button>
-          </div>
-        </div>
-      </details>
+            <!-- The numbers of the request that are rarely touched. Their
+                 ranges are the ones the fields had in the parameter row. -->
+            <details class="advanced-settings" :open="settingsOpen" @toggle="onSettingsToggle">
+              <summary>{{ t('latentLab.crossmodal.synth.advancedLabel') }}</summary>
+              <div class="settings-grid">
+                <label class="setting-full">
+                  <span class="xm-slider-header">
+                    {{ t('latentLab.crossmodal.synth.duration') }}
+                    <span class="xm-slider-value">{{ synth.duration.toFixed(1) }}s</span>
+                  </span>
+                  <input type="range" :value="durationToSlider(synth.duration)" min="0" max="1" step="0.002" @input="synth.duration = sliderToDuration(Number(($event.target as HTMLInputElement).value))" />
+                </label>
+                <label>
+                  {{ t('latentLab.crossmodal.synth.steps') }}
+                  <!-- step=1: SA3 is distilled for 8, which is not on a grid of 5 —
+                       the field was :invalid at its own default and the spinner
+                       snapped away from the only value the model was trained for. -->
+                  <input v-model.number="synth.steps" type="number" min="1" max="100" step="1" class="setting-input setting-small" />
+                </label>
+                <label>
+                  {{ t('latentLab.crossmodal.synth.cfg') }}
+                  <input v-model.number="synth.cfg" type="number" min="1" max="15" step="0.5" class="setting-input setting-small" />
+                </label>
+                <SeedControl v-model:seed="synth.seed" v-model:random="randomSeed" />
+              </div>
+            </details>
 
-      <!-- Dimension Explorer Section (open by default) -->
-      <details class="dim-explorer-section lab-section" :open="dimExplorerOpen" @toggle="onDimExplorerToggle">
-        <summary>{{ t('latentLab.crossmodal.synth.dimensions.section') }}</summary>
-        <div class="dim-explorer-content">
-          <!-- Mode toggle: Relative / Absolute -->
-          <div class="section-toggle dim-mode-toggle">
-            <label class="inline-toggle" :class="{ active: spectralMode === 'relative' }">
-              <input type="radio" value="relative" :checked="spectralMode === 'relative'" @change="onSpectralModeChange('relative')" :disabled="!hasABReference" />
-              {{ t('latentLab.crossmodal.synth.dimensions.modeRelative') }}
-            </label>
-            <label class="inline-toggle" :class="{ active: spectralMode === 'absolute' }">
-              <input type="radio" value="absolute" :checked="spectralMode === 'absolute'" @change="onSpectralModeChange('absolute')" />
-              {{ t('latentLab.crossmodal.synth.dimensions.modeAbsolute') }}
-            </label>
-          </div>
+            <!-- The axes and the Dimension Explorer move the embedding of the
+                 next run. They open one at a time: opening one closes the
+                 other (`onSemanticAxesToggled`, `onDimExplorerToggled`). -->
+            <!-- Semantic Axes (collapsible, modifies prompt embedding) -->
+            <details v-if="availableAxes.length > 0" class="semantic-axes-section lab-section" :open="semanticAxesOpen" @toggle="onSemanticAxesToggled">
+              <summary>{{ t('latentLab.crossmodal.synth.semanticAxes.modeToggle') }}</summary>
+              <div class="semantic-axes-content">
+                <div class="semantic-axes-slots">
+                  <div
+                    v-for="(slot, idx) in axisSlots"
+                    :key="idx"
+                    class="axis-slot"
+                  >
+                    <span class="axis-color-dot" :style="{ background: axisColors[idx] }" />
+                    <select
+                      :value="slot.axis"
+                      class="axis-select"
+                      @change="onAxisSelectChange(idx, ($event.target as HTMLSelectElement).value)"
+                    >
+                      <option value="">{{ t('latentLab.crossmodal.synth.semanticAxes.slotNone') }}</option>
+                      <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
+                        <option
+                          v-for="ax in semanticAxisList"
+                          :key="ax.name"
+                          :value="ax.name"
+                        >
+                          {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                          <template v-if="ax.d !== null"> (d={{ ax.d }})</template>
+                          <template v-if="ax.level === 'experimental'"> *</template>
+                        </option>
+                      </optgroup>
+                      <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
+                        <option
+                          v-for="ax in pcaAxisList"
+                          :key="ax.name"
+                          :value="ax.name"
+                        >
+                          {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                        </option>
+                      </optgroup>
+                    </select>
+                    <div v-if="slot.axis" class="axis-slider-row">
+                      <span class="axis-pole-label pole-b" :title="getAxisMeta(slot.axis)?.pole_b">{{ getAxisMeta(slot.axis)?.pole_b }}</span>
+                      <div class="xm-slider-drift-track axis-drift-track">
+                        <input
+                          type="range"
+                          :value="axisValueToSlider(slot.value)"
+                          min="0"
+                          max="1"
+                          step="0.002"
+                          class="axis-range"
+                          :style="{ accentColor: axisColors[idx] }"
+                          @input="slot.value = sliderToAxisValue(Number(($event.target as HTMLInputElement).value))"
+                        />
+                        <div v-if="axisDriftMarkerPct(idx) >= 0" class="drift-marker" :style="{ left: axisDriftMarkerPct(idx) + '%', backgroundColor: axisColors[idx] }" />
+                      </div>
+                      <span class="axis-pole-label pole-a" :title="getAxisMeta(slot.axis)?.pole_a">{{ getAxisMeta(slot.axis)?.pole_a }}</span>
+                      <span class="axis-value" :style="{ color: axisColors[idx] }">{{ slot.value.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
 
-          <!-- Spectral Strip Canvas -->
-          <div class="spectral-strip-container">
-            <canvas
-              ref="spectralCanvasRef"
-              class="spectral-canvas"
-              @mousedown="onSpectralMouseDown"
-              @mousemove="onSpectralMouseMove"
-              @mouseup="onSpectralMouseUp"
-              @mouseleave="onSpectralMouseUp"
-              @contextmenu="onSpectralContextMenu"
-              @touchstart="onSpectralTouchStart"
-              @touchmove="onSpectralTouchMove"
-              @touchend="onSpectralTouchEnd"
-            />
-            <div v-if="!embeddingStats?.all_activations" class="spectral-empty">
-              {{ t('latentLab.crossmodal.synth.dimensions.hint') }}
-            </div>
-          </div>
+                <div class="section-action-bar">
+                  <button class="dim-btn dim-btn-generate" :disabled="generating" @click="runSynth">
+                    {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
+                  </button>
+                  <button class="dim-btn dim-btn-reset" @click="resetAxesToCenter">
+                    {{ t('latentLab.crossmodal.synth.semanticAxes.resetAll') }}
+                  </button>
+                </div>
+              </div>
+            </details>
 
-          <!-- Hover info + sort mode -->
-          <div class="dim-info-row">
-            <span v-if="hoveredDim" class="dim-hover-info">
-              d{{ hoveredDim.dim }}:
-              {{ t('latentLab.crossmodal.synth.dimensions.hoverActivation') }}={{ hoveredDim.activation.toFixed(4) }}
-              <template v-if="spectralMode === 'relative' && hasABReference">
-                {{ t('latentLab.crossmodal.synth.dimensions.hoverMix') }}={{ (hoveredDim.offset * 100).toFixed(0) }}%
-              </template>
-              <template v-else>
-                {{ t('latentLab.crossmodal.synth.dimensions.hoverOffset') }}={{ hoveredDim.offset.toFixed(2) }}
-              </template>
-            </span>
-            <span v-if="embeddingStats?.sort_mode" class="dim-sort-mode">
-              {{ embeddingStats.sort_mode === 'diff'
-                ? t('latentLab.crossmodal.synth.dimensions.sortDiff')
-                : t('latentLab.crossmodal.synth.dimensions.sortMagnitude') }}
-            </span>
-          </div>
+            <!-- Dimension Explorer Section (open by default) -->
+            <details class="dim-explorer-section lab-section" :open="dimExplorerOpen" @toggle="onDimExplorerToggled">
+              <summary>{{ t('latentLab.crossmodal.synth.dimensions.section') }}</summary>
+              <div class="dim-explorer-content">
+                <!-- Mode toggle: Relative / Absolute -->
+                <div class="section-toggle dim-mode-toggle">
+                  <label class="inline-toggle" :class="{ active: spectralMode === 'relative' }">
+                    <input type="radio" value="relative" :checked="spectralMode === 'relative'" @change="onSpectralModeChange('relative')" :disabled="!hasABReference" />
+                    {{ t('latentLab.crossmodal.synth.dimensions.modeRelative') }}
+                  </label>
+                  <label class="inline-toggle" :class="{ active: spectralMode === 'absolute' }">
+                    <input type="radio" value="absolute" :checked="spectralMode === 'absolute'" @change="onSpectralModeChange('absolute')" />
+                    {{ t('latentLab.crossmodal.synth.dimensions.modeAbsolute') }}
+                  </label>
+                </div>
 
-          <!-- Controls Row (always visible, disabled when inactive) -->
-          <div class="section-action-bar">
-            <button
-              class="dim-btn dim-btn-generate"
-              :disabled="generating || activeOffsetCount === 0"
-              @click="runSynth"
-            >
-              {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
-            </button>
-            <button class="dim-btn dim-btn-undo" :disabled="!canUndo" @click="undo" :title="t('latentLab.crossmodal.synth.dimensions.undo')">
-              <img src="@/assets/icons/undo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Undo" class="action-icon" />
-            </button>
-            <button class="dim-btn dim-btn-undo" :disabled="!canRedo" @click="redo" :title="t('latentLab.crossmodal.synth.dimensions.redo')">
-              <img src="@/assets/icons/redo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Redo" class="action-icon" />
-            </button>
-            <span v-if="activeOffsetCount > 0" class="dim-offset-status">
-              {{ t('latentLab.crossmodal.synth.dimensions.activeOffsets', { count: activeOffsetCount }) }}
-            </span>
-            <button class="dim-btn dim-btn-reset" :disabled="activeOffsetCount === 0" @click="resetAllOffsets">
-              {{ t('latentLab.crossmodal.synth.dimensions.resetAll') }}
-            </button>
-          </div>
-        </div>
-      </details>
+                <!-- Spectral Strip Canvas -->
+                <div class="spectral-strip-container">
+                  <canvas
+                    ref="spectralCanvasRef"
+                    class="spectral-canvas"
+                    @mousedown="onSpectralMouseDown"
+                    @mousemove="onSpectralMouseMove"
+                    @mouseup="onSpectralMouseUp"
+                    @mouseleave="onSpectralMouseUp"
+                    @contextmenu="onSpectralContextMenu"
+                    @touchstart="onSpectralTouchStart"
+                    @touchmove="onSpectralTouchMove"
+                    @touchend="onSpectralTouchEnd"
+                  />
+                  <div v-if="!embeddingStats?.all_activations" class="spectral-empty">
+                    {{ t('latentLab.crossmodal.synth.dimensions.hint') }}
+                  </div>
+                </div>
 
-      <!-- Looper Widget (collapsible, disabled when no audio) -->
-      <details class="looper-widget lab-section" :open="looperOpen" @toggle="onLooperToggle"
-               :class="{ disabled: !looper.hasAudio.value }">
-        <summary>{{ t('latentLab.crossmodal.synth.looperSection') }}</summary>
-        <div class="looper-status">
-          <span class="looper-indicator" :class="{ pulsing: transport === 'playing' }" />
-          <span class="looper-label">
-            {{ transport === 'playing'
-              ? (engineMode === 'wavetable'
-                ? t('latentLab.crossmodal.synth.oscillating')
-                : (sequencer.isPlaying.value
-                  ? t('latentLab.crossmodal.synth.sequencing')
-                  : (loopMode !== 'oneshot' ? t('latentLab.crossmodal.synth.looping') : t('latentLab.crossmodal.synth.playing'))))
-              : (transport === 'generating' ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.synth.stopped')) }}
-          </span>
-          <span v-if="looper.bufferDuration.value > 0" class="looper-duration">
-            {{ looper.bufferDuration.value.toFixed(2) }}s
-          </span>
-        </div>
-        <!-- Waveform + region selection (visible in both engine modes) -->
-        <div v-if="looper.hasAudio.value" class="loop-interval">
-          <div class="xm-slider-header">
-            <label>{{ engineMode === 'wavetable' ? t('latentLab.crossmodal.synth.extractionRegion') : t('latentLab.crossmodal.synth.loopInterval') }}</label>
-            <span class="xm-slider-value">
-              {{ (looper.loopStartFrac.value * looper.bufferDuration.value).toFixed(3) }}s
-              – {{ (looper.loopEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
-            </span>
-          </div>
-          <div class="waveform-loop-container">
-            <canvas ref="waveformCanvasRef" class="waveform-canvas" />
-            <div class="dual-range">
-              <input
-                type="range"
-                :value="looper.loopStartFrac.value"
-                min="0"
-                max="1"
-                step="0.001"
-                class="range-start"
-                :disabled="!looper.hasAudio.value"
-                @input="onLoopStartInput"
+                <!-- Hover info + sort mode -->
+                <div class="dim-info-row">
+                  <span v-if="hoveredDim" class="dim-hover-info">
+                    d{{ hoveredDim.dim }}:
+                    {{ t('latentLab.crossmodal.synth.dimensions.hoverActivation') }}={{ hoveredDim.activation.toFixed(4) }}
+                    <template v-if="spectralMode === 'relative' && hasABReference">
+                      {{ t('latentLab.crossmodal.synth.dimensions.hoverMix') }}={{ (hoveredDim.offset * 100).toFixed(0) }}%
+                    </template>
+                    <template v-else>
+                      {{ t('latentLab.crossmodal.synth.dimensions.hoverOffset') }}={{ hoveredDim.offset.toFixed(2) }}
+                    </template>
+                  </span>
+                  <span v-if="embeddingStats?.sort_mode" class="dim-sort-mode">
+                    {{ embeddingStats.sort_mode === 'diff'
+                      ? t('latentLab.crossmodal.synth.dimensions.sortDiff')
+                      : t('latentLab.crossmodal.synth.dimensions.sortMagnitude') }}
+                  </span>
+                </div>
+
+                <!-- Controls Row (always visible, disabled when inactive) -->
+                <div class="section-action-bar">
+                  <button
+                    class="dim-btn dim-btn-generate"
+                    :disabled="generating || activeOffsetCount === 0"
+                    @click="runSynth"
+                  >
+                    {{ t('latentLab.crossmodal.synth.dimensions.applyAndGenerate') }}
+                  </button>
+                  <button class="dim-btn dim-btn-undo" :disabled="!canUndo" @click="undo" :title="t('latentLab.crossmodal.synth.dimensions.undo')">
+                    <img src="@/assets/icons/undo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Undo" class="action-icon" />
+                  </button>
+                  <button class="dim-btn dim-btn-undo" :disabled="!canRedo" @click="redo" :title="t('latentLab.crossmodal.synth.dimensions.redo')">
+                    <img src="@/assets/icons/redo_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Redo" class="action-icon" />
+                  </button>
+                  <span v-if="activeOffsetCount > 0" class="dim-offset-status">
+                    {{ t('latentLab.crossmodal.synth.dimensions.activeOffsets', { count: activeOffsetCount }) }}
+                  </span>
+                  <button class="dim-btn dim-btn-reset" :disabled="activeOffsetCount === 0" @click="resetAllOffsets">
+                    {{ t('latentLab.crossmodal.synth.dimensions.resetAll') }}
+                  </button>
+                </div>
+              </div>
+            </details>
+
+            <!-- The explanation box at the foot of the preparing column, the
+                 platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+                 heading is the menu title of this surface, its text is
+                 `latentLab.crossmodal.synth.noteBody`, cut into paragraphs at the blank line,
+                 and the titles it cites stand under it in LabReferences. -->
+            <aside class="lab-note">
+              <h3>{{ t('latentLab.crossmodal.tabs.synth.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.crossmodal.synth.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                :title="t('latentLab.crossmodal.synth.referencesTitle')"
+                :items="REFERENCES"
+                flat
               />
-              <input
-                type="range"
-                :value="looper.loopEndFrac.value"
-                min="0"
-                max="1"
-                step="0.001"
-                class="range-end"
-                :disabled="!looper.hasAudio.value"
-                @input="onLoopEndInput"
-              />
-            </div>
-          </div>
-        </div>
+            </aside>
+          </section>
 
-        <!-- ═══════ BOX 1: ENGINE ═══════ -->
-        <div class="synth-box">
-          <!-- Engine Switch: Looper vs Wavetable -->
-          <div class="section-toggle engine-switch-row">
-            <label class="inline-toggle" :class="{ active: engineMode === 'looper' }">
-              <input type="radio" value="looper" :checked="engineMode === 'looper'" @change="setEngineMode('looper')" />
-              {{ t('latentLab.crossmodal.synth.engineLooper') }}
-            </label>
-            <label class="inline-toggle" :class="{ active: engineMode === 'wavetable' }" :title="!wavetableOsc.hasFrames.value ? 'Generate first' : ''">
-              <input type="radio" value="wavetable" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode('wavetable')" />
-              {{ t('latentLab.crossmodal.synth.engineWavetable') }}
-              <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
-            </label>
-          </div>
-
-          <!-- Looper options -->
-          <div v-if="engineMode === 'looper'" class="looper-options">
-            <div class="loop-mode-row">
-              <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
-                <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
-                {{ t('latentLab.crossmodal.synth.loopOff') }}
-              </label>
-              <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
-                <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
-                {{ t('latentLab.crossmodal.synth.loopToggle') }}
-              </label>
-              <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
-                <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
-                {{ t('latentLab.crossmodal.synth.loopPingPong') }}
-              </label>
-            </div>
-            <div v-if="loopMode !== 'oneshot'" class="loop-options">
-              <label class="inline-toggle">
-                <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
-                {{ t('latentLab.crossmodal.synth.loopOptimize') }}
-              </label>
-              <span v-if="looper.loopOptimize.value" class="optimized-hint">
-                → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
-              </span>
-            </div>
-            <!-- Crossfade -->
-            <div v-if="!sequencerOn" class="transpose-row">
-              <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
-              <input type="range" :value="looper.crossfadeMs.value" min="0" max="500" step="10" :disabled="!looper.hasAudio.value" @input="onCrossfadeInput" />
-              <span class="transpose-value">{{ looper.crossfadeMs.value }}ms</span>
-            </div>
-          </div>
-
-          <!-- Wavetable controls -->
-          <div v-if="wavetableOn" class="wavetable-controls">
-            <div class="wavetable-mode-row">
-              <label class="inline-toggle" :class="{ active: wtMode === 'extract' }" @click="wtMode = 'extract'">
-                <input type="radio" value="extract" :checked="wtMode === 'extract'" />
-                {{ t('latentLab.crossmodal.synth.wavetableExtract') }}
-              </label>
-              <label class="inline-toggle" :class="{ active: wtMode === 'semantic' }" @click="wtMode = 'semantic'">
-                <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
-                {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
-              </label>
-              <button v-if="wtMode === 'extract' && looper.hasAudio.value" class="wt-reextract-btn" @click="reextractFromRegion">
-                {{ t('latentLab.crossmodal.synth.wtReextract') }}
-              </button>
-            </div>
-            <div v-if="wtMode === 'semantic'" class="wt-build-section" v-memo="[wtBuildAxis, wtBuildFrameCount, wtBuilding, wtBuildProgress, wtBuildProgressCurrent]">
-              <div class="wt-build-row">
-                <select v-model="wtBuildAxis" class="wt-axis-select">
-                  <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
-                  <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
-                    <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
-                      {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                    </option>
-                  </optgroup>
-                  <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
-                    <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
-                      {{ ax.pole_b }} ↔ {{ ax.pole_a }}
-                    </option>
-                  </optgroup>
-                </select>
-                <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
-                  <option :value="8">8</option>
-                  <option :value="16">16</option>
-                  <option :value="32">32</option>
-                </select>
-                <button class="wt-build-btn" :disabled="!wtBuildAxis || wtBuilding" @click="buildSemanticWavetable">
-                  {{ wtBuilding ? t('latentLab.crossmodal.synth.wtBuilding') : t('latentLab.crossmodal.synth.wtBuild') }}
+          <!-- The instrument that plays what the run came back with: the
+               looper with its engine, modulation, filter, effects and
+               sequencer, saving and MIDI. This side scrolls on its own
+               (`.as-plot`). -->
+          <section ref="plotEl" class="lab-plot as-plot">
+            <!-- Looper Widget (collapsible, disabled when no audio) -->
+            <details class="looper-widget lab-section" :open="looperOpen" @toggle="onLooperToggled"
+                     :class="{ disabled: !looper.hasAudio.value }">
+              <summary>{{ t('latentLab.crossmodal.synth.looperSection') }}</summary>
+              <div class="looper-status">
+                <span class="looper-indicator" :class="{ pulsing: transport === 'playing' }" />
+                <span class="looper-label">
+                  {{ transport === 'playing'
+                    ? (engineMode === 'wavetable'
+                      ? t('latentLab.crossmodal.synth.oscillating')
+                      : (sequencer.isPlaying.value
+                        ? t('latentLab.crossmodal.synth.sequencing')
+                        : (loopMode !== 'oneshot' ? t('latentLab.crossmodal.synth.looping') : t('latentLab.crossmodal.synth.playing'))))
+                    : (transport === 'generating' ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.synth.stopped')) }}
+                </span>
+                <span v-if="looper.bufferDuration.value > 0" class="looper-duration">
+                  {{ looper.bufferDuration.value.toFixed(2) }}s
+                </span>
+                <button class="test-btn" :disabled="!hasLoadedAudio || generating" @click="testNote">
+                  {{ t('latentLab.crossmodal.synth.testNote') }}
                 </button>
               </div>
-              <div v-if="wtBuilding" class="wt-progress">
-                <div class="wt-progress-bar" :style="{ width: `${wtBuildProgress}%` }" />
-                <span class="wt-progress-label">{{ wtBuildProgressCurrent }}/{{ wtBuildFrameCount }}</span>
+              <!-- Waveform + region selection (visible in both engine modes) -->
+              <div v-if="looper.hasAudio.value" class="loop-interval">
+                <div class="xm-slider-header">
+                  <label>{{ engineMode === 'wavetable' ? t('latentLab.crossmodal.synth.extractionRegion') : t('latentLab.crossmodal.synth.loopInterval') }}</label>
+                  <span class="xm-slider-value">
+                    {{ (looper.loopStartFrac.value * looper.bufferDuration.value).toFixed(3) }}s
+                    – {{ (looper.loopEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
+                  </span>
+                </div>
+                <div class="waveform-loop-container">
+                  <canvas ref="waveformCanvasRef" class="waveform-canvas" />
+                  <div class="dual-range">
+                    <input
+                      type="range"
+                      :value="looper.loopStartFrac.value"
+                      min="0"
+                      max="1"
+                      step="0.001"
+                      class="range-start"
+                      :disabled="!looper.hasAudio.value"
+                      @input="onLoopStartInput"
+                    />
+                    <input
+                      type="range"
+                      :value="looper.loopEndFrac.value"
+                      min="0"
+                      max="1"
+                      step="0.001"
+                      class="range-end"
+                      :disabled="!looper.hasAudio.value"
+                      @input="onLoopEndInput"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- ═══════ BOX 1: ENGINE ═══════ -->
+              <div class="synth-box">
+                <!-- Engine Switch: Looper vs Wavetable -->
+                <div class="section-toggle engine-switch-row">
+                  <label class="inline-toggle" :class="{ active: engineMode === 'looper' }">
+                    <input type="radio" value="looper" :checked="engineMode === 'looper'" @change="setEngineMode('looper')" />
+                    {{ t('latentLab.crossmodal.synth.engineLooper') }}
+                  </label>
+                  <label class="inline-toggle" :class="{ active: engineMode === 'wavetable' }" :title="!wavetableOsc.hasFrames.value ? 'Generate first' : ''">
+                    <input type="radio" value="wavetable" :checked="engineMode === 'wavetable'" :disabled="!wavetableOsc.hasFrames.value" @change="setEngineMode('wavetable')" />
+                    {{ t('latentLab.crossmodal.synth.engineWavetable') }}
+                    <span v-if="wavetableOsc.hasFrames.value" class="frame-badge">{{ wavetableOsc.frameCount.value }}</span>
+                  </label>
+                </div>
+
+                <!-- Looper options -->
+                <div v-if="engineMode === 'looper'" class="looper-options">
+                  <div class="loop-mode-row">
+                    <label class="inline-toggle" :class="{ active: loopMode === 'oneshot' }">
+                      <input type="radio" value="oneshot" :checked="loopMode === 'oneshot'" @change="setLoopMode('oneshot')" />
+                      {{ t('latentLab.crossmodal.synth.loopOff') }}
+                    </label>
+                    <label class="inline-toggle" :class="{ active: loopMode === 'loop' }">
+                      <input type="radio" value="loop" :checked="loopMode === 'loop'" @change="setLoopMode('loop')" />
+                      {{ t('latentLab.crossmodal.synth.loopToggle') }}
+                    </label>
+                    <label class="inline-toggle" :class="{ active: loopMode === 'pingpong' }">
+                      <input type="radio" value="pingpong" :checked="loopMode === 'pingpong'" @change="setLoopMode('pingpong')" />
+                      {{ t('latentLab.crossmodal.synth.loopPingPong') }}
+                    </label>
+                  </div>
+                  <div v-if="loopMode !== 'oneshot'" class="loop-options">
+                    <label class="inline-toggle">
+                      <input type="checkbox" :checked="looper.loopOptimize.value" :disabled="!looper.hasAudio.value" @change="onOptimizeChange" />
+                      {{ t('latentLab.crossmodal.synth.loopOptimize') }}
+                    </label>
+                    <span v-if="looper.loopOptimize.value" class="optimized-hint">
+                      → {{ (looper.optimizedEndFrac.value * looper.bufferDuration.value).toFixed(3) }}s
+                    </span>
+                  </div>
+                  <!-- Crossfade -->
+                  <div v-if="!sequencerOn" class="transpose-row">
+                    <label>{{ t('latentLab.crossmodal.synth.crossfade') }}</label>
+                    <input type="range" :value="looper.crossfadeMs.value" min="0" max="500" step="10" :disabled="!looper.hasAudio.value" @input="onCrossfadeInput" />
+                    <span class="transpose-value">{{ looper.crossfadeMs.value }}ms</span>
+                  </div>
+                </div>
+
+                <!-- Wavetable controls -->
+                <div v-if="wavetableOn" class="wavetable-controls">
+                  <div class="wavetable-mode-row">
+                    <label class="inline-toggle" :class="{ active: wtMode === 'extract' }" @click="wtMode = 'extract'">
+                      <input type="radio" value="extract" :checked="wtMode === 'extract'" />
+                      {{ t('latentLab.crossmodal.synth.wavetableExtract') }}
+                    </label>
+                    <label class="inline-toggle" :class="{ active: wtMode === 'semantic' }" @click="wtMode = 'semantic'">
+                      <input type="radio" value="semantic" :checked="wtMode === 'semantic'" />
+                      {{ t('latentLab.crossmodal.synth.wavetableSemantic') }}
+                    </label>
+                    <button v-if="wtMode === 'extract' && looper.hasAudio.value" class="wt-reextract-btn" @click="reextractFromRegion">
+                      {{ t('latentLab.crossmodal.synth.wtReextract') }}
+                    </button>
+                  </div>
+                  <div v-if="wtMode === 'semantic'" class="wt-build-section" v-memo="[wtBuildAxis, wtBuildFrameCount, wtBuilding, wtBuildProgress, wtBuildProgressCurrent]">
+                    <div class="wt-build-row">
+                      <select v-model="wtBuildAxis" class="wt-axis-select">
+                        <option value="">{{ t('latentLab.crossmodal.synth.wtSelectAxis') }}</option>
+                        <optgroup :label="t('latentLab.crossmodal.synth.semanticAxes.groupSemantic')">
+                          <option v-for="ax in semanticAxisList" :key="ax.name" :value="ax.name">
+                            {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                          </option>
+                        </optgroup>
+                        <optgroup v-if="pcaAxisList.length" :label="t('latentLab.crossmodal.synth.semanticAxes.groupPCA')">
+                          <option v-for="ax in pcaAxisList" :key="ax.name" :value="ax.name">
+                            {{ ax.pole_b }} ↔ {{ ax.pole_a }}
+                          </option>
+                        </optgroup>
+                      </select>
+                      <select v-model.number="wtBuildFrameCount" class="wt-frame-select">
+                        <option :value="8">8</option>
+                        <option :value="16">16</option>
+                        <option :value="32">32</option>
+                      </select>
+                      <button class="wt-build-btn" :disabled="!wtBuildAxis || wtBuilding" @click="buildSemanticWavetable">
+                        {{ wtBuilding ? t('latentLab.crossmodal.synth.wtBuilding') : t('latentLab.crossmodal.synth.wtBuild') }}
+                      </button>
+                    </div>
+                    <div v-if="wtBuilding" class="wt-progress">
+                      <div class="wt-progress-bar" :style="{ width: `${wtBuildProgress}%` }" />
+                      <span class="wt-progress-label">{{ wtBuildProgressCurrent }}/{{ wtBuildFrameCount }}</span>
+                    </div>
+                  </div>
+                  <!-- Scan position with range brackets -->
+                  <div class="xm-slider-header">
+                    <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
+                    <span class="xm-slider-value">
+                      {{ scanDisplayFrame }} / {{ wavetableOsc.frameCount.value }}
+                      <template v-if="wavetableOsc.detectedPitch.value > 0">
+                        @ {{ Math.round(wavetableOsc.detectedPitch.value) }} Hz
+                      </template>
+                    </span>
+                  </div>
+                  <div class="wt-scan-track" ref="scanTrackEl">
+                    <div class="wt-range-band" :style="rangeBandStyle" />
+                    <div class="wt-bracket wt-bracket-start" :style="{ left: `${rangeStartPct}%` }" @pointerdown.prevent="startBracketDrag('start', $event)" />
+                    <div class="wt-bracket wt-bracket-end" :style="{ left: `${rangeEndPct}%` }" @pointerdown.prevent="startBracketDrag('end', $event)" />
+                    <div class="wt-scan-marker" :style="{ left: `${scanMarkerPct}%` }" />
+                    <div v-if="driftMarkerPct('wt_scan', wavetableScan, 0, 1) >= 0" class="drift-marker drift-marker-wt" :style="{ left: driftMarkerPct('wt_scan', wavetableScan, 0, 1) + '%' }" />
+                    <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
+                  </div>
+                  <label class="inline-toggle" :class="{ active: wtInterpolate }">
+                    <input type="checkbox" :checked="wtInterpolate" @change="onWtInterpolateChange" />
+                    {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
+                  </label>
+                  <!-- Frame waveform visualizer -->
+                  <canvas v-if="wavetableOsc.hasFrames.value" ref="wtFrameCanvasRef" class="wt-frame-canvas" />
+                </div>
+
+                <!-- Normalize + Peak -->
+                <div class="normalize-row">
+                  <label class="normalize-toggle">
+                    <input type="checkbox" :checked="looper.normalizeOn.value" :disabled="!looper.hasAudio.value" @change="onNormalizeChange" />
+                    {{ t('latentLab.crossmodal.synth.normalize') }}
+                  </label>
+                  <span v-if="looper.peakAmplitude.value > 0" class="peak-display">
+                    {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- ═══════ BOX 2: ENVELOPES ═══════ -->
+              <!-- ═══════ BOX 2: MODULATION (3 Envelopes + 2 LFOs) ═══════ -->
+              <div class="synth-box">
+                <!-- 3 ADSR Envelopes -->
+                <div v-for="(env, idx) in modulation.envs" :key="'env'+idx" v-memo="[env.target.value, env.loop.value, env.attackMs.value, env.decayMs.value, env.sustain.value, env.releaseMs.value, env.amount.value]" class="adsr-section">
+                  <div class="mod-header">
+                    <h5>ENV {{ idx + 1 }}</h5>
+                    <select class="mod-target-select" :value="env.target.value" @change="modulation.setEnvParam(idx, 'target', ($event.target as HTMLSelectElement).value as ModTarget)">
+                      <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
+                    </select>
+                    <label class="inline-toggle loop-toggle">
+                      <input type="checkbox" :checked="env.loop.value" @change="modulation.setEnvParam(idx, 'loop', ($event.target as HTMLInputElement).checked)" />
+                      Loop
+                    </label>
+                  </div>
+                  <div v-if="env.target.value !== 'none'" class="adsr-grid">
+                    <div class="adsr-slider">
+                      <label>A</label>
+                      <input type="range" v-model.number="env.attackMs.value" min="0" max="2000" step="1" />
+                      <span class="adsr-value">{{ env.attackMs.value }}ms</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>D</label>
+                      <input type="range" v-model.number="env.decayMs.value" min="0" max="2000" step="1" />
+                      <span class="adsr-value">{{ env.decayMs.value }}ms</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>S</label>
+                      <input type="range" v-model.number="env.sustain.value" min="0" max="1" step="0.01" />
+                      <span class="adsr-value">{{ env.sustain.value.toFixed(2) }}</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>R</label>
+                      <input type="range" v-model.number="env.releaseMs.value" min="0" max="3000" step="1" />
+                      <span class="adsr-value">{{ env.releaseMs.value }}ms</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>Amt</label>
+                      <input type="range" v-model.number="env.amount.value" min="0" max="1" step="0.01" />
+                      <span class="adsr-value">{{ env.amount.value.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2 LFOs -->
+                <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" v-memo="[lfo.target.value, lfo.rate.value, lfo.depth.value, lfo.waveform.value, lfo.mode.value]" class="adsr-section">
+                  <div class="mod-header">
+                    <h5>LFO {{ idx + 1 }}</h5>
+                    <select class="mod-target-select" :value="lfo.target.value" @change="modulation.setLfoParam(idx, 'target', ($event.target as HTMLSelectElement).value)">
+                      <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
+                    </select>
+                    <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.waveform.value" @change="modulation.setLfoParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
+                      <option value="sine">Sine</option>
+                      <option value="triangle">Tri</option>
+                      <option value="square">Sq</option>
+                      <option value="sawtooth">Saw</option>
+                    </select>
+                    <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.mode.value" @change="modulation.setLfoParam(idx, 'mode', ($event.target as HTMLSelectElement).value)">
+                      <option value="free">Free</option>
+                      <option value="trigger">Trig</option>
+                    </select>
+                  </div>
+                  <div v-if="lfo.target.value !== 'none'" class="adsr-grid">
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
+                      <input type="range" :value="lfoRateToSlider(lfo.rate.value)" min="0" max="1" step="0.001" @input="modulation.setLfoParam(idx, 'rate', sliderToLfoRate(Number(($event.target as HTMLInputElement).value)))" />
+                      <span class="adsr-value">{{ lfo.rate.value.toFixed(1) }} Hz</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
+                      <input type="range" :value="lfo.depth.value" min="0" max="1" step="0.01" @input="modulation.setLfoParam(idx, 'depth', Number(($event.target as HTMLInputElement).value))" />
+                      <span class="adsr-value">{{ lfo.depth.value.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- ═══════ BOX 2b: DRIFT LFOs ═══════ -->
+              <div class="synth-box">
+                <h5 class="box-title">DRIFT</h5>
+                <div v-for="(dlfo, idx) in driftLfo.lfos" :key="'drift'+idx" v-memo="[dlfo.target.value, dlfo.rate.value, dlfo.depth.value, dlfo.waveform.value]" class="adsr-section">
+                  <div class="mod-header">
+                    <h5>DRIFT {{ idx + 1 }}</h5>
+                    <select class="mod-target-select" :value="dlfo.target.value" @change="driftLfo.setParam(idx, 'target', ($event.target as HTMLSelectElement).value as DriftTarget)">
+                      <option v-for="t in DRIFT_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.replace('sem_axis_', 'Axis ').replace('wt_scan', 'WT Scan').replace('alpha', 'Alpha') }}</option>
+                    </select>
+                    <select v-if="dlfo.target.value !== 'none'" class="lfo-select" :value="dlfo.waveform.value" @change="driftLfo.setParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
+                      <option value="sine">Sine</option>
+                      <option value="triangle">Tri</option>
+                      <option value="square">Sq</option>
+                      <option value="sawtooth">Saw</option>
+                    </select>
+                  </div>
+                  <div v-if="dlfo.target.value !== 'none'" class="adsr-grid">
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.controls.rate') }}</label>
+                      <input type="range" :value="driftRateToSlider(dlfo.rate.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'rate', sliderToDriftRate(Number(($event.target as HTMLInputElement).value)))" />
+                      <span class="adsr-value">{{ formatDriftRate(dlfo.rate.value) }}</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.controls.depth') }}</label>
+                      <input type="range" :value="driftDepthToSlider(dlfo.depth.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'depth', sliderToDriftDepth(Number(($event.target as HTMLInputElement).value)))" />
+                      <span class="adsr-value">{{ formatDriftDepth(dlfo.depth.value) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="drift-autoregen">
+                  <label class="inline-toggle">
+                    <input type="checkbox" v-model="autoRegenEnabled" />
+                    Auto-Regen
+                  </label>
+                  <span v-if="regenInFlight" class="regen-badge generating">GEN</span>
+                  <span v-else-if="pendingBase64" class="regen-badge ready">RDY</span>
+                </div>
+              </div>
+
+              <!-- ═══════ BOX 3: FILTER ═══════ -->
+              <div class="synth-box" v-memo="[filter.enabled.value, filter.type.value, filter.slope.value, filter.cutoff.value, filter.resonance.value, filter.mix.value, filter.kbdTrack.value]">
+                <div class="section-toggle">
+                  <label class="inline-toggle">
+                    <input type="checkbox" :checked="filter.enabled.value" @change="filter.setEnabled(($event.target as HTMLInputElement).checked)" />
+                    {{ t('latentLab.crossmodal.synth.filter.title') }}
+                  </label>
+                  <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.type.value" @change="filter.setType(($event.target as HTMLSelectElement).value as FilterType)">
+                    <option value="lowpass">LP</option>
+                    <option value="highpass">HP</option>
+                    <option value="bandpass">BP</option>
+                  </select>
+                  <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.slope.value" @change="filter.setSlope(($event.target as HTMLSelectElement).value as any)">
+                    <option value="12">12dB</option>
+                    <option value="24">24dB</option>
+                  </select>
+                </div>
+
+                <div v-if="filter.enabled.value" class="filter-params">
+                  <div class="adsr-grid">
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</label>
+                      <input type="range" :value="filter.cutoff.value" min="0" max="1" step="0.005" @input="filter.setCutoff(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="adsr-value">{{ Math.round(normalizedToFreq(filter.cutoff.value)) }} Hz</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.resonance') }}</label>
+                      <input type="range" :value="filter.resonance.value" min="0" max="1" step="0.01" @input="filter.setResonance(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="adsr-value">{{ filter.resonance.value.toFixed(2) }}</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.mix') }}</label>
+                      <input type="range" :value="filter.mix.value" min="0" max="1" step="0.01" @input="filter.setMix(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="adsr-value">{{ Math.round(filter.mix.value * 100) }}%</span>
+                    </div>
+                    <div class="adsr-slider">
+                      <label>{{ t('latentLab.crossmodal.synth.filter.kbdTrack') }}</label>
+                      <input type="range" :value="filter.kbdTrack.value" min="0" max="1" step="0.01" @input="filter.setKbdTrack(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="adsr-value">{{ Math.round(filter.kbdTrack.value * 100) }}%</span>
+                    </div>
+                  </div>
+
+                  <!-- Modulators route to filter cutoff via the modulation bank -->
+                </div>
+              </div>
+
+              <!-- ═══════ BOX 4: EFFECTS (Delay + Reverb) ═══════ -->
+              <div class="synth-box" v-memo="[effects.delayEnabled.value, effects.delayTimeMs.value, effects.delayFeedback.value, effects.delayDamp.value, effects.delayDampFreq.value, effects.delayMix.value, effects.reverbEnabled.value, effects.reverbMix.value, effects.reverbVariant.value, effects.reverbLoaded.value]">
+                <!-- Delay -->
+                <div class="section-toggle">
+                  <label class="inline-toggle">
+                    <input type="checkbox" :checked="effects.delayEnabled.value" @change="effects.setDelayEnabled(($event.target as HTMLInputElement).checked)" />
+                    {{ t('latentLab.crossmodal.synth.controls.delay') }}
+                  </label>
+                </div>
+                <div v-if="effects.delayEnabled.value" class="effects-params">
+                  <div class="adsr-slider">
+                    <label>Time</label>
+                    <input type="range" :value="delayTimeToSlider(effects.delayTimeMs.value)" min="0" max="1" step="0.001" @input="effects.setDelayTime(sliderToDelayTime(Number(($event.target as HTMLInputElement).value)))" />
+                    <span class="adsr-value">{{ effects.delayTimeMs.value }}ms</span>
+                  </div>
+                  <div class="adsr-slider">
+                    <label>{{ t('latentLab.crossmodal.synth.controls.feedback') }}</label>
+                    <input type="range" :value="effects.delayFeedback.value" min="0" max="0.85" step="0.01" @input="effects.setDelayFeedback(Number(($event.target as HTMLInputElement).value))" />
+                    <span class="adsr-value">{{ effects.delayFeedback.value.toFixed(2) }}</span>
+                  </div>
+                  <div class="adsr-slider">
+                    <label>{{ t('latentLab.crossmodal.synth.controls.damping') }}</label>
+                    <input type="range" :value="effects.delayDamp.value" min="0" max="1" step="0.01" @input="effects.setDelayDamp(Number(($event.target as HTMLInputElement).value))" />
+                    <span class="adsr-value">{{ effects.delayDampFreq.value }}Hz</span>
+                  </div>
+                  <div class="adsr-slider">
+                    <label>{{ t('latentLab.crossmodal.synth.controls.mix') }}</label>
+                    <input type="range" :value="effects.delayMix.value" min="0" max="1" step="0.01" @input="effects.setDelayMix(Number(($event.target as HTMLInputElement).value))" />
+                    <span class="adsr-value">{{ effects.delayMix.value.toFixed(2) }}</span>
+                  </div>
+                </div>
+                <!-- Reverb -->
+                <div class="section-toggle">
+                  <label class="inline-toggle">
+                    <input type="checkbox" :checked="effects.reverbEnabled.value" @change="effects.setReverbEnabled(($event.target as HTMLInputElement).checked)" />
+                    {{ t('latentLab.crossmodal.synth.controls.reverb') }}
+                  </label>
+                  <select
+                    v-if="effects.reverbEnabled.value"
+                    class="arp-select"
+                    :value="effects.reverbVariant.value"
+                    @change="effects.setReverbVariant(($event.target as HTMLSelectElement).value as any)"
+                  >
+                    <option value="bright">Bright</option>
+                    <option value="medium">Medium</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+                <div v-if="effects.reverbEnabled.value" class="effects-params">
+                  <div class="adsr-slider">
+                    <label>{{ t('latentLab.crossmodal.synth.controls.mix') }}</label>
+                    <input type="range" :value="effects.reverbMix.value" min="0" max="1" step="0.01" @input="effects.setReverbMix(Number(($event.target as HTMLInputElement).value))" />
+                    <span class="adsr-value">{{ effects.reverbMix.value.toFixed(2) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ═══════ BOX 4: SEQUENCER / ARPEGGIATOR ═══════ -->
+              <div class="synth-box">
+                <!-- Keyboard -->
+                <div class="keyboard-row">
+                  <button
+                    v-for="(note, idx) in keyboardNotes"
+                    :key="idx"
+                    class="key-btn"
+                    :class="{ black: note.black, active: activeKeyNote === note.midi }"
+                    :disabled="!hasLoadedAudio"
+                    @pointerdown="onKeyDown_key(note.midi)"
+                    @pointerup="onKeyUp_key"
+                    @pointerleave="onKeyUp_key"
+                  >{{ note.label }}</button>
+                  <button
+                    class="key-btn hold-btn"
+                    :class="{ active: holdActive }"
+                    :disabled="!hasLoadedAudio"
+                    @click="toggleHold"
+                  >{{ t('latentLab.crossmodal.synth.controls.hold') }}</button>
+                </div>
+
+                <!-- Sequencer -->
+                <div class="section-toggle">
+                  <label class="inline-toggle">
+                    <input type="checkbox" :checked="sequencerEnabled" @change="setSequencerEnabled(($event.target as HTMLInputElement).checked)" />
+                    {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
+                  </label>
+                </div>
+                <div v-if="sequencerEnabled" class="sequencer-controls">
+                  <div class="sequencer-transport">
+                    <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
+                      {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
+                    </button>
+                    <div class="seq-step-count">
+                      <button v-for="opt in sequencer.stepCountOptions" :key="opt" class="step-count-btn" :class="{ active: sequencer.stepCount.value === opt }" @click="sequencer.setStepCount(opt)">{{ opt }}</button>
+                    </div>
+                    <div class="seq-division">
+                      <button v-for="div in sequencer.noteDivisions" :key="div" class="division-btn" :class="{ active: sequencer.division.value === div }" @click="sequencer.setDivision(div)">{{ div }}</button>
+                    </div>
+                    <div class="seq-division">
+                      <button v-for="oct in [-1, 0, 1]" :key="oct" class="division-btn" :class="{ active: seqOctave === oct }" @click="seqOctave = oct">{{ oct > 0 ? `+${oct}` : oct }}</button>
+                    </div>
+                    <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
+                      {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
+                      <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
+                    </span>
+                  </div>
+                  <div class="sequencer-settings-row" v-memo="[sequencer.presetIndex.value, sequencer.bpm.value, sequencer.midiClockActive.value, sequencer.midiClockBpm.value, sequencer.stepCount.value, sequencer.division.value, sequencer.steps[0]?.gate, sequencer.glideTime.value]">
+                    <div class="sequencer-preset">
+                      <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
+                      <select :value="sequencer.presetIndex.value" @change="onPresetChange">
+                        <option :value="-1">—</option>
+                        <option v-for="(p, idx) in sequencer.presets" :key="idx" :value="idx">
+                          {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="sequencer-bpm">
+                      <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
+                      <input type="range" :value="sequencer.bpm.value" min="60" max="200" step="1" :disabled="sequencer.midiClockActive.value" @input="onBpmInput" />
+                      <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
+                    </div>
+                    <div class="sequencer-gate">
+                      <label>{{ t('latentLab.crossmodal.synth.controls.gate') }}</label>
+                      <input type="range" :value="sequencer.steps[0]?.gate ?? 0.8" min="0.1" max="1" step="0.05" @input="sequencer.setAllGates(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="seq-bpm-value">{{ Math.round((sequencer.steps[0]?.gate ?? 0.8) * 100) }}%</span>
+                    </div>
+                    <div class="sequencer-glide">
+                      <label>{{ t('latentLab.crossmodal.synth.sequencer.glideTime') }}</label>
+                      <input type="range" :value="sequencer.glideTime.value" min="10" max="500" step="5" @input="sequencer.setGlideTime(Number(($event.target as HTMLInputElement).value))" />
+                      <span class="seq-bpm-value">{{ sequencer.glideTime.value }}ms</span>
+                    </div>
+                  </div>
+                  <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
+                    <div v-for="(step, idx) in sequencer.steps" :key="idx" class="seq-step" :class="{ active: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx, muted: !step.active }">
+                      <span class="seq-step-num">{{ idx + 1 }}</span>
+                      <input type="range" class="seq-semitone-slider" :value="step.semitone" min="-24" max="24" step="1" orient="vertical" @input="onStepSemitoneInput(idx, $event)" />
+                      <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
+                      <button class="seq-step-toggle" :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }" @click="sequencer.setStepActive(idx, !step.active)" />
+                      <button class="seq-glide-btn" :class="{ on: step.glide }" @click="sequencer.setStepGlide(idx, !step.glide)" title="Glide">G</button>
+                      <input type="range" class="seq-velocity-slider" :value="step.velocity" min="0" max="1" step="0.05" @input="onStepVelocityInput(idx, $event)" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Arpeggiator -->
+                <div class="section-toggle" v-memo="[arpeggiator.enabled.value, arpeggiator.pattern.value, arpeggiator.rate.value, arpeggiator.octaveRange.value]">
+                  <label class="inline-toggle">
+                    <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
+                    {{ t('latentLab.crossmodal.synth.arpeggiator') }}
+                  </label>
+                  <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.pattern.value" @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')">
+                    <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
+                    <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
+                    <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
+                    <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
+                  </select>
+                  <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.rate.value" @change="arpeggiator.setRate(($event.target as HTMLSelectElement).value as any)">
+                    <option value="1/4">1/4</option>
+                    <option value="1/8">1/8</option>
+                    <option value="1/16">1/16</option>
+                    <option value="1/32">1/32</option>
+                    <option value="1/4T">1/4T</option>
+                    <option value="1/8T">1/8T</option>
+                    <option value="1/16T">1/16T</option>
+                  </select>
+                  <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.octaveRange.value" @change="arpeggiator.setOctaveRange(Number(($event.target as HTMLSelectElement).value))">
+                    <option :value="1">1 Oct</option>
+                    <option :value="2">2 Oct</option>
+                    <option :value="3">3 Oct</option>
+                    <option :value="4">4 Oct</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <!-- Preset Export/Import -->
+            <div class="synth-box preset-box">
+              <div class="save-row">
+                <button class="save-btn record-btn" :class="{ recording: isRecording }" @click="toggleRecording">
+                  <span class="record-dot" />
+                  {{ isRecording ? t('latentLab.crossmodal.synth.stopRecording') : t('latentLab.crossmodal.synth.record') }}
+                </button>
+                <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
+                  {{ t('latentLab.crossmodal.synth.saveRaw') }}
+                </button>
+                <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
+                  {{ t('latentLab.crossmodal.synth.saveLoop') }}
+                </button>
+                <span class="save-separator" />
+                <button class="save-btn" @click="exportPreset">
+                  {{ t('latentLab.crossmodal.synth.preset.export') }}
+                </button>
+                <button class="save-btn" @click="() => presetFileInput?.click()">
+                  {{ t('latentLab.crossmodal.synth.preset.import') }}
+                </button>
+                <input ref="presetFileInput" type="file" accept=".json" style="display:none" @change="importPreset" />
               </div>
             </div>
-            <!-- Scan position with range brackets -->
-            <div class="xm-slider-header">
-              <label>{{ t('latentLab.crossmodal.synth.wavetableScan') }}</label>
-              <span class="xm-slider-value">
-                {{ scanDisplayFrame }} / {{ wavetableOsc.frameCount.value }}
-                <template v-if="wavetableOsc.detectedPitch.value > 0">
-                  @ {{ Math.round(wavetableOsc.detectedPitch.value) }} Hz
+
+            <!-- MIDI Section (collapsed by default) -->
+            <details class="midi-section lab-section" :open="midiOpen" @toggle="onMidiToggle">
+              <summary>{{ t('latentLab.crossmodal.synth.midiSection') }}</summary>
+              <div class="midi-content">
+                <div v-if="!midi.isSupported.value" class="midi-unsupported">
+                  {{ t('latentLab.crossmodal.synth.midiUnsupported') }}
+                </div>
+                <template v-else>
+                  <div class="midi-input-select">
+                    <label>{{ t('latentLab.crossmodal.synth.midiInput') }}</label>
+                    <select
+                      :value="midi.selectedInputId.value"
+                      @change="onMidiInputChange"
+                    >
+                      <option :value="null">{{ t('latentLab.crossmodal.synth.midiNone') }}</option>
+                      <option v-for="inp in midi.inputs.value" :key="inp.id" :value="inp.id">
+                        {{ inp.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="midi-mapping-table">
+                    <h5>{{ t('latentLab.crossmodal.synth.midiMappings') }}</h5>
+                    <table>
+                      <tbody>
+                        <tr><td>CC1</td><td>{{ t('latentLab.crossmodal.synth.alpha') }}</td></tr>
+                        <tr><td>CC2</td><td>{{ t('latentLab.crossmodal.synth.magnitude') }}</td></tr>
+                        <tr><td>CC3</td><td>{{ t('latentLab.crossmodal.synth.noise') }}</td></tr>
+                        <tr><td>CC5</td><td>{{ t('latentLab.crossmodal.synth.midiScan') }}</td></tr>
+                        <tr><td>CC64</td><td>{{ t('latentLab.crossmodal.synth.loop') }}</td></tr>
+                        <tr><td>{{ t('latentLab.crossmodal.synth.midiNoteC3') }}</td><td>{{ t('latentLab.crossmodal.synth.midiGenerate') }}</td></tr>
+                        <tr><td>{{ t('latentLab.crossmodal.synth.midiPitch') }}</td><td>{{ t('latentLab.crossmodal.synth.transpose') }}</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </template>
-              </span>
-            </div>
-            <div class="wt-scan-track" ref="scanTrackEl">
-              <div class="wt-range-band" :style="rangeBandStyle" />
-              <div class="wt-bracket wt-bracket-start" :style="{ left: `${rangeStartPct}%` }" @pointerdown.prevent="startBracketDrag('start', $event)" />
-              <div class="wt-bracket wt-bracket-end" :style="{ left: `${rangeEndPct}%` }" @pointerdown.prevent="startBracketDrag('end', $event)" />
-              <div class="wt-scan-marker" :style="{ left: `${scanMarkerPct}%` }" />
-              <div v-if="driftMarkerPct('wt_scan', wavetableScan, 0, 1) >= 0" class="drift-marker drift-marker-wt" :style="{ left: driftMarkerPct('wt_scan', wavetableScan, 0, 1) + '%' }" />
-              <input type="range" :value="wavetableScan" min="0" max="1" step="0.01" @input="onScanInput" />
-            </div>
-            <label class="inline-toggle" :class="{ active: wtInterpolate }">
-              <input type="checkbox" :checked="wtInterpolate" @change="onWtInterpolateChange" />
-              {{ t('latentLab.crossmodal.synth.wtInterpolate') }}
-            </label>
-            <!-- Frame waveform visualizer -->
-            <canvas v-if="wavetableOsc.hasFrames.value" ref="wtFrameCanvasRef" class="wt-frame-canvas" />
-          </div>
-
-          <!-- Normalize + Peak -->
-          <div class="normalize-row">
-            <label class="normalize-toggle">
-              <input type="checkbox" :checked="looper.normalizeOn.value" :disabled="!looper.hasAudio.value" @change="onNormalizeChange" />
-              {{ t('latentLab.crossmodal.synth.normalize') }}
-            </label>
-            <span v-if="looper.peakAmplitude.value > 0" class="peak-display">
-              {{ t('latentLab.crossmodal.synth.peak') }}: {{ looper.peakAmplitude.value.toFixed(3) }}
-            </span>
-          </div>
-        </div>
-
-        <!-- ═══════ BOX 2: ENVELOPES ═══════ -->
-        <!-- ═══════ BOX 2: MODULATION (3 Envelopes + 2 LFOs) ═══════ -->
-        <div class="synth-box">
-          <!-- 3 ADSR Envelopes -->
-          <div v-for="(env, idx) in modulation.envs" :key="'env'+idx" v-memo="[env.target.value, env.loop.value, env.attackMs.value, env.decayMs.value, env.sustain.value, env.releaseMs.value, env.amount.value]" class="adsr-section">
-            <div class="mod-header">
-              <h5>ENV {{ idx + 1 }}</h5>
-              <select class="mod-target-select" :value="env.target.value" @change="modulation.setEnvParam(idx, 'target', ($event.target as HTMLSelectElement).value as ModTarget)">
-                <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
-              </select>
-              <label class="inline-toggle loop-toggle">
-                <input type="checkbox" :checked="env.loop.value" @change="modulation.setEnvParam(idx, 'loop', ($event.target as HTMLInputElement).checked)" />
-                Loop
-              </label>
-            </div>
-            <div v-if="env.target.value !== 'none'" class="adsr-grid">
-              <div class="adsr-slider">
-                <label>A</label>
-                <input type="range" v-model.number="env.attackMs.value" min="0" max="2000" step="1" />
-                <span class="adsr-value">{{ env.attackMs.value }}ms</span>
               </div>
-              <div class="adsr-slider">
-                <label>D</label>
-                <input type="range" v-model.number="env.decayMs.value" min="0" max="2000" step="1" />
-                <span class="adsr-value">{{ env.decayMs.value }}ms</span>
-              </div>
-              <div class="adsr-slider">
-                <label>S</label>
-                <input type="range" v-model.number="env.sustain.value" min="0" max="1" step="0.01" />
-                <span class="adsr-value">{{ env.sustain.value.toFixed(2) }}</span>
-              </div>
-              <div class="adsr-slider">
-                <label>R</label>
-                <input type="range" v-model.number="env.releaseMs.value" min="0" max="3000" step="1" />
-                <span class="adsr-value">{{ env.releaseMs.value }}ms</span>
-              </div>
-              <div class="adsr-slider">
-                <label>Amt</label>
-                <input type="range" v-model.number="env.amount.value" min="0" max="1" step="0.01" />
-                <span class="adsr-value">{{ env.amount.value.toFixed(2) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 2 LFOs -->
-          <div v-for="(lfo, idx) in modulation.lfos" :key="'lfo'+idx" v-memo="[lfo.target.value, lfo.rate.value, lfo.depth.value, lfo.waveform.value, lfo.mode.value]" class="adsr-section">
-            <div class="mod-header">
-              <h5>LFO {{ idx + 1 }}</h5>
-              <select class="mod-target-select" :value="lfo.target.value" @change="modulation.setLfoParam(idx, 'target', ($event.target as HTMLSelectElement).value)">
-                <option v-for="t in MOD_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.toUpperCase() }}</option>
-              </select>
-              <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.waveform.value" @change="modulation.setLfoParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
-                <option value="sine">Sine</option>
-                <option value="triangle">Tri</option>
-                <option value="square">Sq</option>
-                <option value="sawtooth">Saw</option>
-              </select>
-              <select v-if="lfo.target.value !== 'none'" class="lfo-select" :value="lfo.mode.value" @change="modulation.setLfoParam(idx, 'mode', ($event.target as HTMLSelectElement).value)">
-                <option value="free">Free</option>
-                <option value="trigger">Trig</option>
-              </select>
-            </div>
-            <div v-if="lfo.target.value !== 'none'" class="adsr-grid">
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.lfoRate') }}</label>
-                <input type="range" :value="lfoRateToSlider(lfo.rate.value)" min="0" max="1" step="0.001" @input="modulation.setLfoParam(idx, 'rate', sliderToLfoRate(Number(($event.target as HTMLInputElement).value)))" />
-                <span class="adsr-value">{{ lfo.rate.value.toFixed(1) }} Hz</span>
-              </div>
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.lfoDepth') }}</label>
-                <input type="range" :value="lfo.depth.value" min="0" max="1" step="0.01" @input="modulation.setLfoParam(idx, 'depth', Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ lfo.depth.value.toFixed(2) }}</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ═══════ BOX 2b: DRIFT LFOs ═══════ -->
-        <div class="synth-box">
-          <h5 class="box-title">DRIFT</h5>
-          <div v-for="(dlfo, idx) in driftLfo.lfos" :key="'drift'+idx" v-memo="[dlfo.target.value, dlfo.rate.value, dlfo.depth.value, dlfo.waveform.value]" class="adsr-section">
-            <div class="mod-header">
-              <h5>DRIFT {{ idx + 1 }}</h5>
-              <select class="mod-target-select" :value="dlfo.target.value" @change="driftLfo.setParam(idx, 'target', ($event.target as HTMLSelectElement).value as DriftTarget)">
-                <option v-for="t in DRIFT_TARGETS" :key="t" :value="t">{{ t === 'none' ? '—' : t.replace('sem_axis_', 'Axis ').replace('wt_scan', 'WT Scan').replace('alpha', 'Alpha') }}</option>
-              </select>
-              <select v-if="dlfo.target.value !== 'none'" class="lfo-select" :value="dlfo.waveform.value" @change="driftLfo.setParam(idx, 'waveform', ($event.target as HTMLSelectElement).value)">
-                <option value="sine">Sine</option>
-                <option value="triangle">Tri</option>
-                <option value="square">Sq</option>
-                <option value="sawtooth">Saw</option>
-              </select>
-            </div>
-            <div v-if="dlfo.target.value !== 'none'" class="adsr-grid">
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.controls.rate') }}</label>
-                <input type="range" :value="driftRateToSlider(dlfo.rate.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'rate', sliderToDriftRate(Number(($event.target as HTMLInputElement).value)))" />
-                <span class="adsr-value">{{ formatDriftRate(dlfo.rate.value) }}</span>
-              </div>
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.controls.depth') }}</label>
-                <input type="range" :value="driftDepthToSlider(dlfo.depth.value)" min="0" max="1" step="0.001" @input="driftLfo.setParam(idx, 'depth', sliderToDriftDepth(Number(($event.target as HTMLInputElement).value)))" />
-                <span class="adsr-value">{{ formatDriftDepth(dlfo.depth.value) }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="drift-autoregen">
-            <label class="inline-toggle">
-              <input type="checkbox" v-model="autoRegenEnabled" />
-              Auto-Regen
-            </label>
-            <span v-if="regenInFlight" class="regen-badge generating">GEN</span>
-            <span v-else-if="pendingBase64" class="regen-badge ready">RDY</span>
-          </div>
-        </div>
-
-        <!-- ═══════ BOX 3: FILTER ═══════ -->
-        <div class="synth-box" v-memo="[filter.enabled.value, filter.type.value, filter.slope.value, filter.cutoff.value, filter.resonance.value, filter.mix.value, filter.kbdTrack.value]">
-          <div class="section-toggle">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="filter.enabled.value" @change="filter.setEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.filter.title') }}
-            </label>
-            <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.type.value" @change="filter.setType(($event.target as HTMLSelectElement).value as FilterType)">
-              <option value="lowpass">LP</option>
-              <option value="highpass">HP</option>
-              <option value="bandpass">BP</option>
-            </select>
-            <select v-if="filter.enabled.value" class="filter-type-select" :value="filter.slope.value" @change="filter.setSlope(($event.target as HTMLSelectElement).value as any)">
-              <option value="12">12dB</option>
-              <option value="24">24dB</option>
-            </select>
-          </div>
-
-          <div v-if="filter.enabled.value" class="filter-params">
-            <div class="adsr-grid">
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.cutoff') }}</label>
-                <input type="range" :value="filter.cutoff.value" min="0" max="1" step="0.005" @input="filter.setCutoff(Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ Math.round(normalizedToFreq(filter.cutoff.value)) }} Hz</span>
-              </div>
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.resonance') }}</label>
-                <input type="range" :value="filter.resonance.value" min="0" max="1" step="0.01" @input="filter.setResonance(Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ filter.resonance.value.toFixed(2) }}</span>
-              </div>
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.mix') }}</label>
-                <input type="range" :value="filter.mix.value" min="0" max="1" step="0.01" @input="filter.setMix(Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ Math.round(filter.mix.value * 100) }}%</span>
-              </div>
-              <div class="adsr-slider">
-                <label>{{ t('latentLab.crossmodal.synth.filter.kbdTrack') }}</label>
-                <input type="range" :value="filter.kbdTrack.value" min="0" max="1" step="0.01" @input="filter.setKbdTrack(Number(($event.target as HTMLInputElement).value))" />
-                <span class="adsr-value">{{ Math.round(filter.kbdTrack.value * 100) }}%</span>
-              </div>
-            </div>
-
-            <!-- Modulators route to filter cutoff via the modulation bank -->
-          </div>
-        </div>
-
-        <!-- ═══════ BOX 4: EFFECTS (Delay + Reverb) ═══════ -->
-        <div class="synth-box" v-memo="[effects.delayEnabled.value, effects.delayTimeMs.value, effects.delayFeedback.value, effects.delayDamp.value, effects.delayDampFreq.value, effects.delayMix.value, effects.reverbEnabled.value, effects.reverbMix.value, effects.reverbVariant.value, effects.reverbLoaded.value]">
-          <!-- Delay -->
-          <div class="section-toggle">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="effects.delayEnabled.value" @change="effects.setDelayEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.controls.delay') }}
-            </label>
-          </div>
-          <div v-if="effects.delayEnabled.value" class="effects-params">
-            <div class="adsr-slider">
-              <label>Time</label>
-              <input type="range" :value="delayTimeToSlider(effects.delayTimeMs.value)" min="0" max="1" step="0.001" @input="effects.setDelayTime(sliderToDelayTime(Number(($event.target as HTMLInputElement).value)))" />
-              <span class="adsr-value">{{ effects.delayTimeMs.value }}ms</span>
-            </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.controls.feedback') }}</label>
-              <input type="range" :value="effects.delayFeedback.value" min="0" max="0.85" step="0.01" @input="effects.setDelayFeedback(Number(($event.target as HTMLInputElement).value))" />
-              <span class="adsr-value">{{ effects.delayFeedback.value.toFixed(2) }}</span>
-            </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.controls.damping') }}</label>
-              <input type="range" :value="effects.delayDamp.value" min="0" max="1" step="0.01" @input="effects.setDelayDamp(Number(($event.target as HTMLInputElement).value))" />
-              <span class="adsr-value">{{ effects.delayDampFreq.value }}Hz</span>
-            </div>
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.controls.mix') }}</label>
-              <input type="range" :value="effects.delayMix.value" min="0" max="1" step="0.01" @input="effects.setDelayMix(Number(($event.target as HTMLInputElement).value))" />
-              <span class="adsr-value">{{ effects.delayMix.value.toFixed(2) }}</span>
-            </div>
-          </div>
-          <!-- Reverb -->
-          <div class="section-toggle">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="effects.reverbEnabled.value" @change="effects.setReverbEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.controls.reverb') }}
-            </label>
-            <select
-              v-if="effects.reverbEnabled.value"
-              class="arp-select"
-              :value="effects.reverbVariant.value"
-              @change="effects.setReverbVariant(($event.target as HTMLSelectElement).value as any)"
-            >
-              <option value="bright">Bright</option>
-              <option value="medium">Medium</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-          <div v-if="effects.reverbEnabled.value" class="effects-params">
-            <div class="adsr-slider">
-              <label>{{ t('latentLab.crossmodal.synth.controls.mix') }}</label>
-              <input type="range" :value="effects.reverbMix.value" min="0" max="1" step="0.01" @input="effects.setReverbMix(Number(($event.target as HTMLInputElement).value))" />
-              <span class="adsr-value">{{ effects.reverbMix.value.toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ═══════ BOX 4: SEQUENCER / ARPEGGIATOR ═══════ -->
-        <div class="synth-box">
-          <!-- Keyboard -->
-          <div class="keyboard-row">
-            <button
-              v-for="(note, idx) in keyboardNotes"
-              :key="idx"
-              class="key-btn"
-              :class="{ black: note.black, active: activeKeyNote === note.midi }"
-              :disabled="!hasLoadedAudio"
-              @pointerdown="onKeyDown_key(note.midi)"
-              @pointerup="onKeyUp_key"
-              @pointerleave="onKeyUp_key"
-            >{{ note.label }}</button>
-            <button
-              class="key-btn hold-btn"
-              :class="{ active: holdActive }"
-              :disabled="!hasLoadedAudio"
-              @click="toggleHold"
-            >{{ t('latentLab.crossmodal.synth.controls.hold') }}</button>
-          </div>
-
-          <!-- Sequencer -->
-          <div class="section-toggle">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="sequencerEnabled" @change="setSequencerEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.sequencerToggle') }}
-            </label>
-          </div>
-          <div v-if="sequencerEnabled" class="sequencer-controls">
-            <div class="sequencer-transport">
-              <button class="seq-play-btn" :disabled="!looper.hasAudio.value" @click="toggleSequencer">
-                {{ sequencer.isPlaying.value ? t('latentLab.crossmodal.synth.sequencer.stop') : t('latentLab.crossmodal.synth.sequencer.play') }}
-              </button>
-              <div class="seq-step-count">
-                <button v-for="opt in sequencer.stepCountOptions" :key="opt" class="step-count-btn" :class="{ active: sequencer.stepCount.value === opt }" @click="sequencer.setStepCount(opt)">{{ opt }}</button>
-              </div>
-              <div class="seq-division">
-                <button v-for="div in sequencer.noteDivisions" :key="div" class="division-btn" :class="{ active: sequencer.division.value === div }" @click="sequencer.setDivision(div)">{{ div }}</button>
-              </div>
-              <div class="seq-division">
-                <button v-for="oct in [-1, 0, 1]" :key="oct" class="division-btn" :class="{ active: seqOctave === oct }" @click="seqOctave = oct">{{ oct > 0 ? `+${oct}` : oct }}</button>
-              </div>
-              <span v-if="sequencer.midiClockActive.value" class="midi-sync-badge">
-                {{ t('latentLab.crossmodal.synth.sequencer.midiSync') }}
-                <template v-if="sequencer.midiClockBpm.value > 0"> {{ sequencer.midiClockBpm.value }}</template>
-              </span>
-            </div>
-            <div class="sequencer-settings-row" v-memo="[sequencer.presetIndex.value, sequencer.bpm.value, sequencer.midiClockActive.value, sequencer.midiClockBpm.value, sequencer.stepCount.value, sequencer.division.value, sequencer.steps[0]?.gate, sequencer.glideTime.value]">
-              <div class="sequencer-preset">
-                <label>{{ t('latentLab.crossmodal.synth.sequencer.preset') }}</label>
-                <select :value="sequencer.presetIndex.value" @change="onPresetChange">
-                  <option :value="-1">—</option>
-                  <option v-for="(p, idx) in sequencer.presets" :key="idx" :value="idx">
-                    {{ t(`latentLab.crossmodal.synth.sequencer.patterns.${p.name}`) }}
-                  </option>
-                </select>
-              </div>
-              <div class="sequencer-bpm">
-                <label>{{ t('latentLab.crossmodal.synth.sequencer.bpm') }}</label>
-                <input type="range" :value="sequencer.bpm.value" min="60" max="200" step="1" :disabled="sequencer.midiClockActive.value" @input="onBpmInput" />
-                <span class="seq-bpm-value">{{ sequencer.midiClockActive.value ? sequencer.midiClockBpm.value : sequencer.bpm.value }}</span>
-              </div>
-              <div class="sequencer-gate">
-                <label>{{ t('latentLab.crossmodal.synth.controls.gate') }}</label>
-                <input type="range" :value="sequencer.steps[0]?.gate ?? 0.8" min="0.1" max="1" step="0.05" @input="sequencer.setAllGates(Number(($event.target as HTMLInputElement).value))" />
-                <span class="seq-bpm-value">{{ Math.round((sequencer.steps[0]?.gate ?? 0.8) * 100) }}%</span>
-              </div>
-              <div class="sequencer-glide">
-                <label>{{ t('latentLab.crossmodal.synth.sequencer.glideTime') }}</label>
-                <input type="range" :value="sequencer.glideTime.value" min="10" max="500" step="5" @input="sequencer.setGlideTime(Number(($event.target as HTMLInputElement).value))" />
-                <span class="seq-bpm-value">{{ sequencer.glideTime.value }}ms</span>
-              </div>
-            </div>
-            <div class="seq-grid" :class="`seq-grid-${sequencer.stepCount.value}`">
-              <div v-for="(step, idx) in sequencer.steps" :key="idx" class="seq-step" :class="{ active: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx, muted: !step.active }">
-                <span class="seq-step-num">{{ idx + 1 }}</span>
-                <input type="range" class="seq-semitone-slider" :value="step.semitone" min="-24" max="24" step="1" orient="vertical" @input="onStepSemitoneInput(idx, $event)" />
-                <span class="seq-semitone-val">{{ step.semitone > 0 ? `+${step.semitone}` : step.semitone }}</span>
-                <button class="seq-step-toggle" :class="{ on: step.active, playing: sequencer.isPlaying.value && sequencer.currentStep.value === idx }" @click="sequencer.setStepActive(idx, !step.active)" />
-                <button class="seq-glide-btn" :class="{ on: step.glide }" @click="sequencer.setStepGlide(idx, !step.glide)" title="Glide">G</button>
-                <input type="range" class="seq-velocity-slider" :value="step.velocity" min="0" max="1" step="0.05" @input="onStepVelocityInput(idx, $event)" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Arpeggiator -->
-          <div class="section-toggle" v-memo="[arpeggiator.enabled.value, arpeggiator.pattern.value, arpeggiator.rate.value, arpeggiator.octaveRange.value]">
-            <label class="inline-toggle">
-              <input type="checkbox" :checked="arpeggiator.enabled.value" @change="arpeggiator.setEnabled(($event.target as HTMLInputElement).checked)" />
-              {{ t('latentLab.crossmodal.synth.arpeggiator') }}
-            </label>
-            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.pattern.value" @change="arpeggiator.setPattern(($event.target as HTMLSelectElement).value as 'up' | 'down' | 'updown' | 'random')">
-              <option value="up">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.up') }}</option>
-              <option value="down">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.down') }}</option>
-              <option value="updown">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.updown') }}</option>
-              <option value="random">{{ t('latentLab.crossmodal.synth.arpeggiatorPatterns.random') }}</option>
-            </select>
-            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.rate.value" @change="arpeggiator.setRate(($event.target as HTMLSelectElement).value as any)">
-              <option value="1/4">1/4</option>
-              <option value="1/8">1/8</option>
-              <option value="1/16">1/16</option>
-              <option value="1/32">1/32</option>
-              <option value="1/4T">1/4T</option>
-              <option value="1/8T">1/8T</option>
-              <option value="1/16T">1/16T</option>
-            </select>
-            <select v-if="arpeggiator.enabled.value" class="arp-select" :value="arpeggiator.octaveRange.value" @change="arpeggiator.setOctaveRange(Number(($event.target as HTMLSelectElement).value))">
-              <option :value="1">1 Oct</option>
-              <option :value="2">2 Oct</option>
-              <option :value="3">3 Oct</option>
-              <option :value="4">4 Oct</option>
-            </select>
-          </div>
-        </div>
-      </details>
-
-      <!-- Preset Export/Import -->
-      <div class="synth-box preset-box">
-        <div class="save-row">
-          <button class="save-btn record-btn" :class="{ recording: isRecording }" @click="toggleRecording">
-            <span class="record-dot" />
-            {{ isRecording ? t('latentLab.crossmodal.synth.stopRecording') : t('latentLab.crossmodal.synth.record') }}
-          </button>
-          <button class="save-btn" :disabled="!looper.hasAudio.value" @click="saveRaw">
-            {{ t('latentLab.crossmodal.synth.saveRaw') }}
-          </button>
-          <button v-if="engineMode === 'looper' && !sequencerOn" class="save-btn" :disabled="!looper.hasAudio.value" @click="saveLoop">
-            {{ t('latentLab.crossmodal.synth.saveLoop') }}
-          </button>
-          <span class="save-separator" />
-          <button class="save-btn" @click="exportPreset">
-            {{ t('latentLab.crossmodal.synth.preset.export') }}
-          </button>
-          <button class="save-btn" @click="() => presetFileInput?.click()">
-            {{ t('latentLab.crossmodal.synth.preset.import') }}
-          </button>
-          <input ref="presetFileInput" type="file" accept=".json" style="display:none" @change="importPreset" />
+            </details>
+          </section>
         </div>
       </div>
-
-      <!-- MIDI Section (collapsed by default) -->
-      <details class="midi-section lab-section" :open="midiOpen" @toggle="onMidiToggle">
-        <summary>{{ t('latentLab.crossmodal.synth.midiSection') }}</summary>
-        <div class="midi-content">
-          <div v-if="!midi.isSupported.value" class="midi-unsupported">
-            {{ t('latentLab.crossmodal.synth.midiUnsupported') }}
-          </div>
-          <template v-else>
-            <div class="midi-input-select">
-              <label>{{ t('latentLab.crossmodal.synth.midiInput') }}</label>
-              <select
-                :value="midi.selectedInputId.value"
-                @change="onMidiInputChange"
-              >
-                <option :value="null">{{ t('latentLab.crossmodal.synth.midiNone') }}</option>
-                <option v-for="inp in midi.inputs.value" :key="inp.id" :value="inp.id">
-                  {{ inp.name }}
-                </option>
-              </select>
-            </div>
-            <div class="midi-mapping-table">
-              <h5>{{ t('latentLab.crossmodal.synth.midiMappings') }}</h5>
-              <table>
-                <tbody>
-                  <tr><td>CC1</td><td>{{ t('latentLab.crossmodal.synth.alpha') }}</td></tr>
-                  <tr><td>CC2</td><td>{{ t('latentLab.crossmodal.synth.magnitude') }}</td></tr>
-                  <tr><td>CC3</td><td>{{ t('latentLab.crossmodal.synth.noise') }}</td></tr>
-                  <tr><td>CC5</td><td>{{ t('latentLab.crossmodal.synth.midiScan') }}</td></tr>
-                  <tr><td>CC64</td><td>{{ t('latentLab.crossmodal.synth.loop') }}</td></tr>
-                  <tr><td>{{ t('latentLab.crossmodal.synth.midiNoteC3') }}</td><td>{{ t('latentLab.crossmodal.synth.midiGenerate') }}</td></tr>
-                  <tr><td>{{ t('latentLab.crossmodal.synth.midiPitch') }}</td><td>{{ t('latentLab.crossmodal.synth.transpose') }}</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </template>
-        </div>
-      </details>
     </div>
 
-    <div v-if="error" class="xm-output">
-      <div class="xm-error">{{ error }}</div>
-    </div>
     <InterceptionPresetOverlay
       :visible="showPresetOverlay"
       single
@@ -896,6 +938,8 @@ import {
   generationErrorFor as labErrorText,
   interceptPrompt,
   perspectiveFailureText,
+  refusalKeyOf,
+  reportRefusal,
 } from '@/composables/useLabRun'
 import { apiBase } from '@/services/labApi'
 import { useAudioLooper } from '@/composables/useAudioLooper'
@@ -908,6 +952,10 @@ import { useArpeggiator } from '@/composables/useArpeggiator'
 import { useEffects, type PlateVariant } from '@/composables/useEffects'
 import { useFilter, type FilterType, normalizedToFreq } from '@/composables/useFilter'
 import MediaInputBox from '@/components/MediaInputBox.vue'
+import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
+import ShellRun from '@/components/ShellRun.vue'
+import SeedControl from '@/components/SeedControl.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useDeviceId } from '@/composables/useDeviceId'
@@ -918,8 +966,41 @@ import { useInstrumentRuns } from '@/composables/useInstrumentRuns'
 import type { DrawerItem } from '@/components/canvas/OutputDrawer.vue'
 import { useDetailsState } from '@/composables/useDetailsState'
 import { downloadMarkedBlob } from '@/composables/useMediaMarking'
+import { downloadBlob as saveFileAsIs } from '@/lib/downloadMedia'
 
 const { t } = useI18n()
+
+/**
+ * The titles the explanation box cites: the audio model, its predecessor with
+ * a paper, its text encoder, and the direction built from word pairs that the
+ * semantic axes share their idea with.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Stability AI (2026)',
+    title: '"Stable Audio 3.0"',
+    venue: '2026, model release',
+    doi: 'https://stability.ai/stable-audio',
+  },
+  {
+    authors: 'Evans et al. (2024)',
+    title: '"Stable Audio Open"',
+    venue: 'ICASSP 2025',
+    doi: 'https://arxiv.org/abs/2407.14358',
+  },
+  {
+    authors: 'Zhang et al. (2025)',
+    title: '"Encoder-Decoder Gemma: Improving the Quality-Efficiency Trade-Off via Adaptation"',
+    venue: 'arXiv:2504.06225',
+    doi: 'https://arxiv.org/abs/2504.06225',
+  },
+  {
+    authors: 'Bolukbasi et al. (2016)',
+    title: '"Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings"',
+    venue: 'NeurIPS 2016, 4349–4357',
+    doi: 'https://arxiv.org/abs/1607.06520',
+  },
+]
 
 /**
  * The tool key stays `crossmodal_lab` after the split, and that is not a
@@ -933,9 +1014,12 @@ const TOOL = 'crossmodal_lab'
 const TAB = 'synth'
 const SOURCE_VIEW = 'latent-lab/audio-synth'
 
-/** The reasons a run did not come back, in the reader's language. */
+/**
+ * The reasons a run did not come back, in the reader's language. A refusal of
+ * the platform's checks is said as one, and goes to the safety window.
+ */
 function generationErrorFor(failure: unknown): string {
-  return labErrorText(t, failure)
+  return reportRefusal(failure) ? t(refusalKeyOf(failure)) : labErrorText(t, failure)
 }
 const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const { record: labRecord } = useLatentLabRecorder(TOOL)
@@ -999,9 +1083,48 @@ async function keepTake(parameters: Record<string, unknown>, results: Record<str
     outputs: [{ type: 'audio', format: 'wav', url: `/api/media/audio/${runId}`, meta: {} }],
   }))
 }
-const { isOpen: dimExplorerOpen, onToggle: onDimExplorerToggle } = useDetailsState('ll_crossmodal_dims', true)
+const { isOpen: dimExplorerOpen, onToggle: onDimExplorerToggle, setOpen: setDimExplorerOpen } = useDetailsState('ll_crossmodal_dims', true)
 const { isOpen: looperOpen, onToggle: onLooperToggle } = useDetailsState('ll_crossmodal_looper', true)
+/**
+ * A closed section gives its canvases no size, so they are not drawn while it
+ * is closed, and its side may have changed width meanwhile. Opened, they are
+ * drawn at the width they have now. The Dimension Explorer and the axes share
+ * the preparing column and open one at a time: opening the explorer closes the
+ * axes (`onSemanticAxesToggled` for the other way round).
+ */
+function onDimExplorerToggled(event: Event) {
+  onDimExplorerToggle(event)
+  if (!dimExplorerOpen.value) return
+  // The axes stand above the explorer. Closing them pulls the explorer up by
+  // their height, away from the pointer that opened it, so whichever box
+  // scrolls (the column, or the page where the two sides stack) scrolls back
+  // by as much as the explorer moved.
+  const opened = event.target as HTMLElement
+  const before = opened.getBoundingClientRect().top
+  const axesWereOpen = semanticAxesOpen.value
+  setSemanticAxesOpen(false)
+  void nextTick(() => {
+    const moved = opened.getBoundingClientRect().top - before
+    if (axesWereOpen && moved !== 0) {
+      for (const box of [prepEl.value, opened.closest('.lab-main')]) {
+        if (!box) continue
+        const was = box.scrollTop
+        box.scrollTop += moved
+        if (box.scrollTop !== was) break
+      }
+    }
+    drawSpectralStrip()
+  })
+}
+function onLooperToggled(event: Event) {
+  onLooperToggle(event)
+  if (looperOpen.value) void nextTick(onResize)
+}
 const { isOpen: midiOpen, onToggle: onMidiToggle } = useDetailsState('ll_crossmodal_midi')
+const { isOpen: settingsOpen, onToggle: onSettingsToggle } = useDetailsState('ll_synth_settings')
+/** Whether the preparing column is folded away. The handle moves this, and a
+ *  failed run somebody pressed for unfolds it (the watch on `error`). */
+const folded = ref(false)
 
 const error = ref('')
 // The line itself, handed to `bringFailureIntoView` as a ref rather than looked
@@ -1015,11 +1138,16 @@ const errLine = ref<HTMLElement | null>(null)
 // change of `error` puts it back — the clear at the head of a press included.
 let fromDrift = false
 // Wherever a failure is written — a run, a perspective, a wavetable — the
-// sentence has to be readable without going looking for it.
+// sentence has to be readable without going looking for it. Folded, the column
+// hides this line with everything else in it (components/ColumnFold.vue), so a
+// failure somebody pressed for brings the column back; the drift's does not,
+// for the same reason it does not jog, and waits in the folded column.
 watch(error, (said) => {
   const jog = !!said && !fromDrift
   fromDrift = false
-  if (jog) void bringFailureIntoView(errLine)
+  if (!jog) return
+  folded.value = false
+  void bringFailureIntoView(errLine)
 })
 const resultSeed = ref<number | null>(null)
 
@@ -1530,7 +1658,16 @@ const synth = reactive({
 })
 
 // ===== Semantic Axes =====
-const { isOpen: semanticAxesOpen, onToggle: onSemanticAxesToggle } = useDetailsState('ll_crossmodal_semantic_axes')
+const { isOpen: semanticAxesOpen, onToggle: onSemanticAxesToggle, setOpen: setSemanticAxesOpen } = useDetailsState('ll_crossmodal_semantic_axes')
+/** Opening the axes closes the Dimension Explorer (see `onDimExplorerToggled`). */
+function onSemanticAxesToggled(event: Event) {
+  onSemanticAxesToggle(event)
+  if (semanticAxesOpen.value) setDimExplorerOpen(false)
+}
+// Both stored open, from before they shared the column: the explorer stays.
+// Stored through `setOpen`, because the axes render only once their list has
+// arrived and fire no `toggle` before that.
+if (semanticAxesOpen.value && dimExplorerOpen.value) setSemanticAxesOpen(false)
 
 interface AxisDef {
   name: string
@@ -1693,6 +1830,9 @@ function drawSpectralStrip() {
 
   const dpr = window.devicePixelRatio || 1
   const rect = canvas.getBoundingClientRect()
+  // Closed, the section gives the strip no size, and a bitmap of 0 x 0 would
+  // stay empty when it opens.
+  if (rect.width === 0 || rect.height === 0) return
   canvas.width = rect.width * dpr
   canvas.height = rect.height * dpr
   ctx.scale(dpr, dpr)
@@ -2071,9 +2211,10 @@ const canRun = computed(() => !!synth.promptA && !generating.value)
  * what the seed automatic compares the next press with. Only what goes out
  * counts: prompt B when it holds more than blanks, an offset that is not zero
  * (as set on the control), the spectral mode while one is set, an axis moved
- * off its centre. This surface has no tick „Random variation“. The
- * regeneration in time with the beat (`runSynthBackground`) takes the number
- * in the field and is not compared: it makes the same sound again under drift.
+ * off its centre. While „Random variation“ is ticked every press draws a new
+ * seed and this key decides nothing. The regeneration in time with the beat
+ * (`runSynthBackground`) takes the number in the field and is not compared: it
+ * makes the same sound again under drift.
  */
 function inputsKey(): string {
   const offsets = Object.entries(dimensionOffsets).filter(([, v]) => v !== 0)
@@ -2084,8 +2225,9 @@ function inputsKey(): string {
     synth.magnitude, synth.noise, synth.duration, synth.steps, synth.cfg,
     offsets, offsets.length ? spectralMode.value : '', axes])
 }
+const randomSeed = ref(false)
 // null: this instrument keeps none of its fields, so the yardstick starts afresh with them.
-const seedAutomatic = useSeedAutomatic(toRef(synth, 'seed'), ref(false), null)
+const seedAutomatic = useSeedAutomatic(toRef(synth, 'seed'), randomSeed, null)
 
 // ============================================================================
 // PERSPECTIVE (the ring in the corner of the two written fields)
@@ -2324,6 +2466,9 @@ async function buildSemanticWavetable() {
 
   const axisName = wtBuildAxis.value
   const n = wtBuildFrameCount.value
+  // A new attempt clears the last sentence, as a press of the trigger does, so
+  // the same failure twice is said twice: the watch on `error` runs on a change.
+  error.value = ''
   wtBuilding.value = true
   wtBuildProgress.value = 0
   wtBuildProgressCurrent.value = 0
@@ -2770,7 +2915,8 @@ function exportPreset() {
   const json = JSON.stringify(preset, null, 2)
   const blob = new Blob([json], { type: 'application/json' })
   const safeName = synth.promptA.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40)
-  downloadBlob(blob, `synth_preset_${safeName}.json`)
+  // A preset is settings, not a medium: it goes out as it is.
+  saveFileAsIs(blob, `synth_preset_${safeName}.json`)
 }
 
 async function importPreset(event: Event) {
@@ -2778,6 +2924,8 @@ async function importPreset(event: Event) {
   const file = input.files?.[0]
   if (!file) return
   input.value = '' // allow re-import of same file
+  // A new import clears the last sentence, so the same failure twice is said twice.
+  error.value = ''
 
   try {
     const text = await file.text()
@@ -2797,13 +2945,18 @@ async function importPreset(event: Event) {
     synth.duration = preset.synth.duration ?? 3
     synth.steps = preset.synth.steps ?? 8
     synth.cfg = preset.synth.cfg ?? 1
-    synth.seed = preset.synth.seed ?? -1
     // A preset is a sound's recipe and goes out with its own seed, also when
-    // that number already stands in the field. Not while a run is out: its
-    // arrival would write its own seed over the preset's. The preset's number
-    // then stands in the field as typed and outlasts that arrival.
-    if (!generating.value && Number.isInteger(synth.seed) && synth.seed >= 0) {
-      seedAutomatic.laidBack(null, synth.seed)
+    // that number already stands in the field, and also when „Random
+    // variation“ was ticked: the import takes the tick off. Not while a run is
+    // out: its arrival would write its own seed over the preset's. The
+    // preset's number then stands in the field as typed and outlasts that
+    // arrival. A preset without a seed leaves the field as it is; the field
+    // takes no negative number (components/SeedControl.vue).
+    const presetSeed = preset.synth.seed
+    if (typeof presetSeed === 'number' && Number.isInteger(presetSeed) && presetSeed >= 0) {
+      synth.seed = presetSeed
+      randomSeed.value = false
+      if (!generating.value) seedAutomatic.laidBack(null, presetSeed)
     }
 
     // Restore dimension explorer
@@ -2999,10 +3152,19 @@ interface SynthRunParams {
   seed: number
 }
 
+// The two texts the platform's check refused last, as a press and the drift
+// send them. The drift asks again on every bar with the texts as they stand;
+// while they are the refused ones it does not ask, so a refusal is said once
+// and not on every bar. A press always asks.
+let refusedTexts: string | null = null
+function textsKey(promptA: string, promptB: string): string {
+  return JSON.stringify([promptA, promptB.trim() ? promptB : ''])
+}
+
 // ===== Synth =====
 async function runSynth() {
   // The same gate the trigger in the bar reads. The two "Apply and regenerate"
-  // buttons on the right call this as well, and without it an empty Prompt A
+  // buttons of the axes and the explorer call this as well, and without it an empty Prompt A
   // and a second press while a run was already out both reached the card.
   if (!canRun.value) return
 
@@ -3011,6 +3173,7 @@ async function runSynth() {
   // nothing did, the field's when it was typed. The seed goes into the field.
   const runInputs = inputsKey()
   const runSeed = seedAutomatic.seedForRun(runInputs)
+  const asked = textsKey(synth.promptA, synth.promptB)
 
   // Track pre-generation state to restore after completion
   preGenTransport = transport.value === 'generating'
@@ -3101,6 +3264,7 @@ async function runSynth() {
       : []
 
     if (result.success) {
+      refusedTexts = null
       resultSeed.value = result.seed
       embeddingStats.value = result.embedding_stats
       // This sound is now the one the next press is compared with.
@@ -3152,6 +3316,7 @@ async function runSynth() {
       transport.value = preGenTransport === 'playing' ? 'playing' : 'idle'
     }
   } catch (e) {
+    if (refusalKeyOf(e)) refusedTexts = asked
     error.value = generationErrorFor(e)
     transport.value = preGenTransport === 'playing' ? 'playing' : 'idle'
   }
@@ -3162,6 +3327,8 @@ async function runSynth() {
 /** Background synth generation — doesn't touch transport, stores result as pending. */
 async function runSynthBackground() {
   if (regenInFlight.value) return
+  const asked = textsKey(synth.promptA, synth.promptB)
+  if (asked === refusedTexts) return
   regenInFlight.value = true
   try {
     // Apply drift offsets to alpha and axes for background generation
@@ -3222,8 +3389,14 @@ async function runSynthBackground() {
     // stopped making sound was indistinguishable from a drift that was off.
     // Said WHERE IT STANDS, though: nothing scrolls under a hand that is on a
     // slider on a bar boundary nobody asked for.
-    fromDrift = true
-    error.value = generationErrorFor(e)
+    const said = generationErrorFor(e)
+    if (refusalKeyOf(e)) refusedTexts = asked
+    // Only where the sentence changes: the same sentence again runs no watch,
+    // and the flag would outlast it into the next failure somebody pressed for.
+    if (error.value !== said) {
+      fromDrift = true
+      error.value = said
+    }
   } finally {
     regenInFlight.value = false
   }
@@ -3276,7 +3449,17 @@ function onKeyDown(e: KeyboardEvent) {
   }
 }
 
-function onResize() { drawWaveform(); drawWtFrame() }
+/**
+ * The looper's two canvases take their width from the right side, the strip
+ * from the preparing column. Both sides change width with the window and the
+ * instrument rail, and the right side with the fold of the column too, which
+ * also gives the column back its width. Only the first of these is an event of
+ * the window, so the sides themselves are watched.
+ */
+const plotEl = ref<HTMLElement | null>(null)
+const prepEl = ref<HTMLElement | null>(null)
+let sideWidth: ResizeObserver | null = null
+function onResize() { drawWaveform(); drawWtFrame(); drawSpectralStrip() }
 
 onMounted(() => {
   fetchSemanticAxes()
@@ -3285,18 +3468,21 @@ onMounted(() => {
 /**
  * KEPT ALIVE: leaving this instrument deactivates it instead of unmounting it
  * (views/latent_lab/crossmodal_lab.vue), so what mount and unmount did for the
- * two window listeners has to be done on the way in and out as well.
+ * keyboard listener and the watch on the two sides has to be done on the way
+ * in and out as well.
  *
  * `onKeyDown` calls `preventDefault()` for Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z and
  * Ctrl/Cmd+Y. Left on the window it reaches every surface: measured 2026-09-05,
  * a fresh MMAudio undid typing with Cmd+Z, and after one visit here the same
  * keystroke was swallowed and drove THIS surface's dimension-offset stack while
- * the text stood unchanged. `onResize` redraws two canvases that are no longer
- * in the document.
+ * the text stood unchanged. The watch on the two sides would redraw three
+ * canvases that are no longer in the document.
  */
 onActivated(() => {
   window.addEventListener('keydown', onKeyDown)
-  window.addEventListener('resize', onResize)
+  sideWidth ??= new ResizeObserver(onResize)
+  if (plotEl.value) sideWidth.observe(plotEl.value)
+  if (prepEl.value) sideWidth.observe(prepEl.value)
   // A run that failed while this surface was away has its sentence standing at
   // the head of the column; bring it under the eye now that there is an eye.
   if (error.value) void bringFailureIntoView(errLine)
@@ -3322,14 +3508,14 @@ onActivated(() => {
  */
 onDeactivated(() => {
   window.removeEventListener('keydown', onKeyDown)
-  window.removeEventListener('resize', onResize)
+  sideWidth?.disconnect()
   transportStop()
   transport.value = 'idle'
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeyDown)
-  window.removeEventListener('resize', onResize)
+  sideWidth?.disconnect()
   arpeggiator.dispose()
   sequencer.dispose()
   modulation.dispose()
@@ -3378,78 +3564,52 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.synth-sticky-top {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg-base);
-  padding-bottom: 0.5rem;
-  margin: 0 -1.5rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+/* The right side holds the instrument that plays the sound, which is more
+   than any window shows at once. It scrolls on
+   its own; the `overflow: hidden` of the raster plots (`.lab-plot`,
+   assets/flow-stage.css) would cut the sequencer off. */
+.as-plot {
+  gap: 0.8rem;
+  overflow-y: auto;
 }
 
-.synth-slider-group {
-  margin-top: 1rem;
-}
+/* Each box keeps the height its content asks for, and the side scrolls past
+   the ones that do not fit. `.lab-work > *` makes this side a column flex
+   container, where an item may shrink below its content, and `.lab-section`
+   below sets `overflow: hidden`, which takes the item's automatic minimum size
+   to 0: while the first column version of this surface was built (2026-09-05,
+   committed with this floor as e343e75b) every section was squeezed into a
+   share of the side, clipped its own content, and nothing scrolled. The floor
+   stands here and not in the shared
+   file, where every other `.lab-plot` is a raster whose one child shares the
+   height of the surface. */
+.as-plot > * { flex: 0 0 auto; }
 
-/* Params row */
-.xm-params-row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
+/* The axes and the Dimension Explorer stand in the preparing column, which is
+   an overflowing column flex container as well (`.lab-prep`,
+   assets/flow-stage.css), and clip like every `.lab-section`: the same floor
+   keeps them at the height of their content. */
+.lab-prep > .lab-section { flex: 0 0 auto; }
 
-.xm-param-narrow {
-  flex: 0.7;
-  min-width: 70px;
-}
-
-.xm-param-wide {
-  flex: 2;
-  min-width: 160px;
-}
-
-.xm-param label {
-  display: block;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 0.3rem;
-}
-
-.xm-param input:not([type="range"]),
-.xm-param select {
-  width: 100%;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+/* The menus open on the dark surface, the example prompts' menu in its child
+   component included. `:where()` keeps the weight of a bare element selector,
+   so that a menu's own class (`.axis-select`, `.midi-input-select select`,
+   `.pe-select` in components/PromptExamples.vue) still decides what it sets
+   itself. Until 2026-11-02 this stood in assets/crossmodal-stage.css, under
+   the page class of that stage, with the same reach. */
+:where(.lab-page) :deep(select),
+:where(.lab-page) :deep(option),
+:where(.lab-page) :deep(optgroup) {
+  background: var(--surface-2);
   color: #ffffff;
-  font-size: 0.85rem;
-  box-sizing: border-box;
+  color-scheme: dark;
 }
 
-.xm-param input[type="range"] {
-  width: 100%;
-}
+/* In the klappe the head of the duration stands as close to its axis as the
+   names of the other fields stand to theirs (`.settings-grid > label`). */
+.advanced-settings .xm-slider-header { margin-bottom: 0; }
 
-.xm-param input:not([type="range"]):focus,
-.xm-param select:focus {
-  outline: none;
-  border-color: rgba(76, 175, 80, 0.5);
-}
-
-/* Action row */
-.action-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
+/* Test C3, in the looper's status row. */
 .test-btn {
   padding: 0.5rem 1rem;
   background: rgba(255, 255, 255, 0.06);
@@ -3471,7 +3631,6 @@ onBeforeUnmount(() => {
 .looper-widget {
   padding: 1rem;
   background: rgba(255, 255, 255, 0.03);
-  margin-bottom: 1rem;
   transition: opacity 0.2s;
 }
 
@@ -3735,10 +3894,6 @@ onBeforeUnmount(() => {
 }
 
 /* MIDI section */
-.midi-section {
-  margin-top: 1rem;
-}
-
 .midi-section summary {
   background: rgba(255, 255, 255, 0.03);
 }
@@ -3836,7 +3991,6 @@ onBeforeUnmount(() => {
 
 /* Dimension Explorer */
 .dim-explorer-section {
-  margin-top: 0.8rem;
   padding: 0.6rem;
 }
 
@@ -4433,6 +4587,11 @@ onBeforeUnmount(() => {
   display: grid;
   gap: 2px;
   padding: 0.4rem 0;
+  /* A step needs about 24 px, so 32 steps need about 830 px, more than the
+     right side has at most widths, and 16 steps more than it has on a narrow
+     page. The row scrolls sideways in itself rather than being cut off by the
+     section around it, which clips (`.lab-section`). */
+  overflow-x: auto;
 }
 
 .seq-grid-5 { grid-template-columns: repeat(5, 1fr); }
@@ -4546,6 +4705,10 @@ onBeforeUnmount(() => {
   margin-bottom: 0.5rem;
 }
 
+/* The preset row is a box of the right side, which spaces its boxes with its
+   own gap (`.as-plot`). */
+.preset-box { margin-bottom: 0; }
+
 /* Drift marker: ghost indicator showing modulated position on slider track */
 .xm-slider-drift-track {
   position: relative;
@@ -4576,7 +4739,7 @@ onBeforeUnmount(() => {
 }
 
 .axis-drift-track {
-  flex: 1;
+  grid-area: track;
   min-width: 0;
 }
 
@@ -4665,10 +4828,6 @@ onBeforeUnmount(() => {
 }
 
 /* Semantic Axes Section */
-.semantic-axes-section {
-  margin-bottom: 1.2rem;
-}
-
 .semantic-axes-section summary {
   background: rgba(255, 255, 255, 0.03);
 }
@@ -4718,23 +4877,38 @@ onBeforeUnmount(() => {
   border-color: rgba(76, 175, 80, 0.5);
 }
 
+/* Two lines: the two poles over the ends of the track, then the track with the
+   value beside it. In one line each pole took 6rem, which in the preparing
+   column left the track 67 px at 1440 x 900 and nothing at 1194 x 834
+   (measured 2026-11-03). */
 .axis-slider-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  grid-template-areas:
+    "b a ."
+    "track track value";
   align-items: center;
-  gap: 0.5rem;
+  column-gap: 0.5rem;
+  row-gap: 0.15rem;
 }
 
+/* A pole name wraps between its words rather than being cut: at 900 x 700 a
+   name has about 49 px. A word keeps its letters together, and its column
+   takes the width of the longest word. Both names stand on the track,
+   whichever of them wraps. */
 .axis-pole-label {
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.4);
-  flex-shrink: 0;
-  width: 6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  align-self: end;
+}
+
+.axis-pole-label.pole-b {
+  grid-area: b;
 }
 
 .axis-pole-label.pole-a {
+  grid-area: a;
   text-align: end;
 }
 
@@ -4744,12 +4918,12 @@ onBeforeUnmount(() => {
 }
 
 .axis-value {
+  grid-area: value;
   font-size: 0.75rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   min-width: 2.5rem;
   text-align: right;
-  flex-shrink: 0;
 }
 
 /* Every number this surface prints is read left to right, whatever direction
@@ -4781,6 +4955,17 @@ onBeforeUnmount(() => {
 .midi-sync-badge {
   direction: ltr;
   unicode-bidi: isolate;
+}
+
+/* Narrow: the two sides stack, and the page scrolls in itself. Measured on the
+   page, not the window, as in views/latent_lab/mmaudio.vue: the instrument
+   rail takes 240 to 340 px of the window while it is open. Stacked, the right
+   side is as tall as its content. */
+.lab-page { container: synth / inline-size; }
+@container synth (max-width: 640px) {
+  .lab-main { overflow-y: auto; }
+  .lab-stage { flex: 0 0 auto; }
+  .lab-work, .lab-work.folded { grid-template-columns: 1fr; grid-template-rows: auto; row-gap: 16px; }
 }
 </style>
 

@@ -129,10 +129,12 @@ const hatchId = `ct-neg-${Math.random().toString(36).slice(2, 8)}`
 
 /*
  * The geometry, in the drawing's own units. The SVG scales to the width it is
- * given (`width: 100%`), so nothing here is a pixel; at 303 units of width the
- * drawing renders 1:1 in the column it was designed for.
+ * given (`width: 100%`), so nothing here is a pixel; at 277 units of width the
+ * drawing renders 1:1 in the column it was designed for: 303 px at 1210 x 834,
+ * of which the column box (`.cmp-column`, 2026-11-07) leaves 277 inside its
+ * padding and border. 303 units until that day.
  */
-const W = 303
+const W = 277
 const H = 168
 const left = 34
 // the bar of the pooled vector stands in the head band, over the blocks

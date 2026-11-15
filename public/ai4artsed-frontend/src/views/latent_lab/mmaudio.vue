@@ -1,127 +1,189 @@
 <!--
   MMAudio — a picture is given to a sound model, and what comes back is what
-  that model makes of it, with a prompt beside it and a second prompt saying
-  what is not wanted.
+  that model makes of it, with a prompt beside it.
 
   Split out of views/latent_lab/crossmodal_lab.vue on 2026-09-05, where it stood
-  with the Latent Audio Synth and ImageBind Guidance in one file. The SURFACE is
-  the one that file carried at a50054bc: picture, prompt, negative prompt, the
-  four numbers, the trigger, and the sound underneath — one under another. A
-  two-column frame was put here on 2026-09-05 and taken out the same day.
+  with the Latent Audio Synth and ImageBind Guidance in one file. Until
+  2026-11-02 the surface was the one that file carried at a50054bc, one thing
+  under another, in its own scoped style and from 2026-10-10 on the Crossmodal
+  stage (assets/crossmodal-stage.css).
+
+  Since 2026-11-02 it stands in the frame of the instruments
+  (`.lab-main` / `.lab-stage` / `.lab-work`, assets/flow-stage.css): the trigger
+  in the bar, the picture and the prompt in the preparing column with the
+  four numbers in its klappe, and on the right one row per press, newest on
+  top (`.lab-runrows`, assets/flow-stage.css): the row names once what its run
+  was made with, and under that stand the picture it was given, if any, and
+  the sound in the platform's cell (components/MediaGridCell.vue), whose back
+  carries the favourite and the download. Rows, so that a run with a picture
+  and one without can be heard against each other.
+
+  Until 2026-11-03 a negative prompt stood under the prompt, MMAudio's own
+  parameter, taken over with the first build of 2026-02-16 (80ce98ea). It
+  left the surface on request; a run goes out without one, and the backend
+  gives the model the empty string in its place.
 
   The picture is the one ImageBind Guidance works on as well
   (composables/useCrossmodalPicture.ts), which is what the two shared refs of
   the old single file did.
 -->
 <template>
-  <div class="xm-lab">
-    <div class="xm-panel">
-      <h3>{{ t('latentLab.crossmodal.tabs.mmaudio.title') }}</h3>
+  <div class="lab-page">
+    <ShellRun
+      :ready="canRun"
+      :running="generating"
+      :title="t('latentLab.crossmodal.generate')"
+      @run="runMMAudio"
+    />
 
+    <div class="lab-main">
+      <div class="lab-stage">
+        <div class="lab-work" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
+            <ColumnFold v-model:folded="folded" />
 
-      <MediaInputBox
-        inputType="image"
-        icon="image"
-        :label="t('latentLab.crossmodal.mmaudio.imageUpload')"
-        :allow-sketch="true"
-        value=""
-        :initial-image="imagePreview"
-        @image-uploaded="handleImageUpload"
-        @image-removed="clearImage"
-        @copy="copyImage"
-        @paste="pasteImage"
-        @clear="clearImage"
-      />
+            <MediaInputBox
+              chrome="bare"
+              inputType="image"
+              icon="image"
+              :label="t('latentLab.crossmodal.mmaudio.imageUpload')"
+              :allow-sketch="true"
+              value=""
+              :initial-image="imagePreview"
+              @image-uploaded="handleImageUpload"
+              @image-removed="clearImage"
+              @copy="copyImage"
+              @paste="pasteImage"
+              @clear="clearImage"
+            />
 
-      <PromptExamples
-        :items="mmaudioExamples"
-        :current="mmaudio.prompt"
-        @pick="applyMMAudioExample"
-      />
-      <MediaInputBox
-        chrome="bare"
-        icon="lightbulb"
-        :label="t('latentLab.crossmodal.mmaudio.prompt')"
-        :placeholder="t('mediaInput.freePromptPlaceholder')"
-        :value="mmaudio.prompt"
-        @update:value="mmaudio.prompt = $event"
-        :rows="2"
-        :isEmpty="!mmaudio.prompt"
-        :isFilled="!!mmaudio.prompt"
-        :is-loading="readingPicture"
-        :disabled="readingPicture"
-        @copy="copyMMAudioPrompt"
-        @paste="pasteMMAudioPrompt"
-        @clear="clearMMAudioPrompt"
-        :show-preset-button="true"
-        :preset-busy="enriching === 'a'"
-        @open-preset-selector="openPreset('a')"
-        @image-uploaded="handlePicture"
-        @image-removed="dropPicture"
-      />
-      <!-- The reading of a dropped picture, where it did not come back. -->
-      <p v-if="readingFailedKey" class="lab-prep-err">{{ t(readingFailedKey) }}</p>
+            <PromptExamples
+              :items="mmaudioExamples"
+              :current="mmaudio.prompt"
+              @pick="applyMMAudioExample"
+            />
+            <MediaInputBox
+              chrome="bare"
+              icon="lightbulb"
+              :label="t('latentLab.crossmodal.mmaudio.prompt')"
+              :placeholder="t('mediaInput.freePromptPlaceholder')"
+              :value="mmaudio.prompt"
+              @update:value="mmaudio.prompt = $event"
+              :rows="2"
+              :isEmpty="!mmaudio.prompt"
+              :isFilled="!!mmaudio.prompt"
+              :is-loading="readingPicture"
+              :disabled="readingPicture"
+              @copy="copyMMAudioPrompt"
+              @paste="pasteMMAudioPrompt"
+              @clear="clearMMAudioPrompt"
+              :show-preset-button="true"
+              :preset-busy="enriching"
+              @open-preset-selector="showPresetOverlay = true"
+              @image-uploaded="handlePicture"
+              @image-removed="dropPicture"
+            />
+            <!-- The reading of a dropped picture, where it did not come back. -->
+            <p v-if="readingFailedKey" class="lab-prep-err">{{ t(readingFailedKey) }}</p>
+            <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
 
-      <MediaInputBox
-        chrome="bare"
-        icon="clipboard"
-        :label="t('latentLab.crossmodal.mmaudio.negativePrompt')"
-        :value="mmaudio.negativePrompt"
-        @update:value="mmaudio.negativePrompt = $event"
-        :rows="2"
-        :isEmpty="!mmaudio.negativePrompt"
-        :isFilled="!!mmaudio.negativePrompt"
-        :showTranslate="false"
-        @copy="copyMMAudioNeg"
-        @paste="pasteMMAudioNeg"
-        @clear="clearMMAudioNeg"
-        :show-preset-button="true"
-        :preset-busy="enriching === 'b'"
-        @open-preset-selector="openPreset('b')"
-      />
-      <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
+            <!-- The four numbers of a run. Their ranges are the ones the fields
+                 had on the Crossmodal stage. -->
+            <details class="advanced-settings" :open="settingsOpen" @toggle="onSettingsToggle">
+              <summary>{{ t('latentLab.crossmodal.mmaudio.advancedLabel') }}</summary>
+              <div class="settings-grid">
+                <label>
+                  {{ t('latentLab.crossmodal.mmaudio.duration') }}
+                  <input v-model.number="mmaudio.duration" type="number" min="1" max="8" step="1" class="setting-input setting-small" />
+                </label>
+                <label>
+                  {{ t('latentLab.crossmodal.mmaudio.cfg') }}
+                  <input v-model.number="mmaudio.cfg" type="number" min="1" max="15" step="0.5" class="setting-input setting-small" />
+                </label>
+                <label>
+                  {{ t('latentLab.crossmodal.mmaudio.steps') }}
+                  <input v-model.number="mmaudio.steps" type="number" min="10" max="50" step="5" class="setting-input setting-small" />
+                </label>
+                <SeedControl v-model:seed="mmaudio.seed" v-model:random="randomSeed" />
+              </div>
+            </details>
 
-      <div class="xm-params-row">
-        <div class="xm-param">
-          <label>{{ t('latentLab.crossmodal.mmaudio.duration') }}</label>
-          <input v-model.number="mmaudio.duration" type="number" min="1" max="8" step="1" />
-        </div>
-        <div class="xm-param">
-          <label>{{ t('latentLab.crossmodal.mmaudio.cfg') }}</label>
-          <input v-model.number="mmaudio.cfg" type="number" min="1" max="15" step="0.5" />
-        </div>
-        <div class="xm-param">
-          <label>{{ t('latentLab.crossmodal.mmaudio.steps') }}</label>
-          <input v-model.number="mmaudio.steps" type="number" min="10" max="50" step="5" />
-        </div>
-        <div class="xm-param">
-          <label>{{ t('latentLab.crossmodal.seed') }}</label>
-          <input v-model.number="mmaudio.seed" type="number" />
+            <aside class="lab-note">
+              <h3>{{ t('latentLab.crossmodal.tabs.mmaudio.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.crossmodal.mmaudio.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                flat
+                :title="t('latentLab.crossmodal.mmaudio.referencesTitle')"
+                :items="REFERENCES"
+              />
+            </aside>
+          </section>
+
+          <!-- What came out: one row per press, NEWEST AT THE TOP, so the run
+               just made is always in sight, in the run rows of the lab
+               (assets/flow-stage.css). The head says once what the run was
+               made with; under it stand the picture it was given, or the
+               empty place of one, and the sound. A run that brought nothing
+               back keeps its row and says why in the cell. Before the first
+               press the row stands there dimmed, with the settings it would
+               run with. The rows scroll in their own box, so this side is a
+               plain side of `.lab-work` and not `.lab-plot`, which holds a
+               raster that stands whole on the screen. -->
+          <section>
+            <div class="lab-runrows">
+              <div
+                v-for="row in displayRows"
+                :key="row.id"
+                class="lab-runrow"
+                :class="{ 'is-preview': row.preview }"
+              >
+                <div class="lab-runrow-head">
+                  <span v-if="row.prompt" class="lab-runrow-prompt">{{ row.prompt }}</span>
+                  <span class="lab-runrow-meta">
+                    {{ t('latentLab.crossmodal.mmaudio.duration') }}: <b>{{ row.duration }}</b>
+                  </span>
+                  <span class="lab-runrow-meta">
+                    {{ t('latentLab.crossmodal.mmaudio.cfg') }}: <b>{{ row.cfg }}</b>
+                  </span>
+                  <span class="lab-runrow-meta">
+                    {{ t('latentLab.crossmodal.mmaudio.steps') }}: <b>{{ row.steps }}</b>
+                  </span>
+                  <span class="lab-runrow-meta">
+                    {{ t('latentLab.crossmodal.seed') }}: <b>{{ row.seed === null ? '—' : row.seed }}</b>
+                  </span>
+                </div>
+                <div class="lab-runrow-media">
+                  <div class="lab-runrow-pic" :class="{ none: !row.picture }">
+                    <img v-if="row.picture" :src="row.picture" alt="" />
+                  </div>
+                  <div class="lab-runrow-sound">
+                    <MediaGridCell
+                      strip
+                      :url="row.url"
+                      media-type="audio"
+                      :run-id="row.runId"
+                      :prompt="row.prompt"
+                      :config-id="TAB"
+                      :created-at="row.madeAt"
+                      :duration-ms="row.ms ?? 0"
+                      :facts="row.facts"
+                      :note="row.note"
+                      :is-favorited="!!row.runId && favoritesStore.isFavorited(row.runId)"
+                      @toggle-favorite="toggleFavorite(row)"
+                      @download="downloadRow(row)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-
-      <button class="xm-generate" :disabled="(!mmaudio.prompt && !imagePath) || generating" @click="runMMAudio">
-        {{ generating ? t('latentLab.crossmodal.generating') : t('latentLab.crossmodal.generate') }}
-      </button>
     </div>
 
-    <div v-if="error" class="xm-output">
-      <div class="xm-error">{{ error }}</div>
-    </div>
-
-    <div class="output-section">
-      <MediaOutputBox
-        :output-image="resultAudio"
-        media-type="audio"
-        :is-executing="generating"
-        :progress="0"
-        @download="downloadResultAudio"
-      />
-      <div v-if="resultSeed !== null || generationTimeMs" class="xm-result-meta">
-        <span v-if="resultSeed !== null" class="xm-meta-item">{{ t('latentLab.crossmodal.seed') }}: {{ resultSeed }}</span>
-        <span v-if="generationTimeMs" class="xm-meta-item">{{ t('latentLab.crossmodal.generationTime') }}: {{ generationTimeMs }}ms</span>
-      </div>
-    </div>
     <InterceptionPresetOverlay
       :visible="showPresetOverlay"
       single
@@ -137,17 +199,32 @@ import { usePictureTemplate } from '@/composables/usePictureTemplate'
 import { useI18n } from 'vue-i18n'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
-import { apiPost, base64ToDataUrl, generationErrorFor as labErrorText, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import {
+  apiPost,
+  base64ToDataUrl,
+  generationErrorFor as labErrorText,
+  interceptPrompt,
+  perspectiveFailureText,
+  refusalKeyOf,
+  reportRefusal,
+} from '@/composables/useLabRun'
 import { downloadMedia } from '@/lib/downloadMedia'
 import MediaInputBox from '@/components/MediaInputBox.vue'
-import MediaOutputBox from '@/components/MediaOutputBox.vue'
+import MediaGridCell from '@/components/MediaGridCell.vue'
+import ColumnFold from '@/components/ColumnFold.vue'
+import ShellRun from '@/components/ShellRun.vue'
+import SeedControl from '@/components/SeedControl.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
+import { useDetailsState } from '@/composables/useDetailsState'
+import { useFavoritesStore } from '@/stores/favorites'
+import { useLabAuthStore } from '@/stores/labAuth'
 import PromptExamples from '@/components/PromptExamples.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useCrossmodalPicture } from '@/composables/useCrossmodalPicture'
 import { useLatentLabRecorder, type InstrumentRun } from '@/composables/useLatentLabRecorder'
-import { useSeedAutomatic } from '@/composables/useSeedAutomatic'
+import { useSeedAutomatic, STANDARD_SEED } from '@/composables/useSeedAutomatic'
 import { useInstrumentRuns } from '@/composables/useInstrumentRuns'
 import type { DrawerItem } from '@/components/canvas/OutputDrawer.vue'
 
@@ -162,92 +239,164 @@ const { t } = useI18n()
 const TOOL = 'crossmodal_lab'
 const TAB = 'mmaudio'
 
+/**
+ * The model this surface runs, as its makers published it, and one of the
+ * video sets it was trained on.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Cheng et al. (2025)',
+    title: '"MMAudio: Taming Multimodal Joint Training for High-Quality Video-to-Audio Synthesis"',
+    venue: 'CVPR 2025',
+    doi: 'https://doi.org/10.48550/arXiv.2412.15322',
+  },
+  {
+    authors: 'Chen et al. (2020)',
+    title: '"VGGSound: A Large-scale Audio-Visual Dataset"',
+    venue: 'ICASSP 2020',
+    doi: 'https://arxiv.org/abs/2004.14368',
+  },
+]
+
 const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const { imagePath, imagePreview, setPicture, clearPicture } = useCrossmodalPicture()
 const { record: labRecord } = useLatentLabRecorder(TOOL)
 
-/** The reasons a run did not come back, in the reader's language. */
+/**
+ * The reasons a run did not come back, in the reader's language. A refusal of
+ * the platform's checks is said as one, and goes to the safety window.
+ */
 function generationErrorFor(failure: unknown): string {
-  return labErrorText(t, failure)
+  return reportRefusal(failure) ? t(refusalKeyOf(failure)) : labErrorText(t, failure)
 }
 
-const error = ref('')
 const isRunning = ref(false)
 /** The name the surface of yesterday uses; the state is one ref. */
 const generating = computed(() => isRunning.value)
+/** A run needs a prompt or a picture, and one at a time. */
+const canRun = computed(() => (!!mmaudio.prompt || !!imagePath.value) && !generating.value)
+
+/** Whether the preparing column is folded away. Only the handle moves this. */
+const folded = ref(false)
+const { isOpen: settingsOpen, onToggle: onSettingsToggle } = useDetailsState('ll_mmaudio_settings')
 
 // ---------------------------------------------------------------------------
-// The perspective in the corner of the two written fields — the platform's
-// mandatory pair with a written field (registry, Rule #13;
-// test_element_structure_policy.py, R3). ONE overlay serves both; which one
-// opened it decides where the answer is written back. Wired on 2026-10-10
-// (finding S-041 of the code review of 2026-10-10), when the policy began to see the three surfaces of the Crossmodal Lab.
+// The perspective in the field's corner — the platform's mandatory pair with a
+// written field (registry, Rule #13; test_element_structure_policy.py, R3).
+// Wired on 2026-10-10 (finding S-041 of the code review of 2026-10-10), when
+// the policy began to see the three surfaces of the Crossmodal Lab.
 // ---------------------------------------------------------------------------
-type PromptField = 'a' | 'b'
-
 const deviceId = useDeviceId()
 const showPresetOverlay = ref(false)
 // The perspective's failure stands under the field (`.lab-prep-err`), as on
-// mean_images; the run's own error keeps the foot of the output.
+// mean_images; the run's own error stands in its row's cell.
 const perspectiveError = ref('')
-const enriching = ref<PromptField | ''>('')
-let presetTarget: PromptField = 'a'
-
-function openPreset(which: PromptField): void {
-  presetTarget = which
-  showPresetOverlay.value = true
-}
+const enriching = ref(false)
 
 async function handlePresetSelected(payload: { configId: string; context: string; configName: string }) {
   showPresetOverlay.value = false
-  const which = presetTarget
-  const before = which === 'a' ? mmaudio.prompt : mmaudio.negativePrompt
+  const before = mmaudio.prompt
   if (!before.trim()) return
-  enriching.value = which
+  enriching.value = true
   perspectiveError.value = ''
   try {
     const outcome = await interceptPrompt(payload.configId, before, deviceId)
     if ('written' in outcome) {
       // A perspective takes minutes; a run started meanwhile was sent the
       // wording that stood then.
-      if (!generating.value) {
-        if (which === 'a') mmaudio.prompt = outcome.written
-        else mmaudio.negativePrompt = outcome.written
-      }
+      if (!generating.value) mmaudio.prompt = outcome.written
     } else {
       perspectiveError.value = perspectiveFailureText(t, outcome)
     }
   } catch (e) {
     perspectiveError.value = labErrorText(t, e)
   } finally {
-    enriching.value = ''
+    enriching.value = false
   }
 }
 
-const resultAudio = ref('')
-const resultSeed = ref<number | null>(null)
-const generationTimeMs = ref<number | null>(null)
+/**
+ * One press, as its row on the right: what the run went out with, read once at
+ * the press (the fields stay open while it is out), and what came back.
+ * The cell IS the run: its id carries the star and the back of the card.
+ */
+interface SoundRow {
+  id: number
+  preview?: boolean
+  prompt: string
+  duration: number
+  cfg: number
+  steps: number
+  seed: number | null
+  /** The picture the run was given, or '' for a run without one. */
+  picture: string
+  url: string
+  /** Why the cell holds no sound: the run is out, or what it failed with. */
+  note: string
+  runId: string | null
+  madeAt: number
+  ms: number | null
+  facts: string[]
+}
+
+const rows = ref<SoundRow[]>([])
+let rowCounter = 0
+
+// A participant's material goes when the participant does (stores/labAuth.ts
+// puts the shared picture away on sign-out and on a change of course). The
+// rows hold that picture again, with the prompts and the sounds made from it,
+// and a workshop machine is handed on with this page still standing.
+const labAuth = useLabAuthStore()
+watch(() => [labAuth.user?.id ?? null, labAuth.activeCourseId], () => {
+  rows.value = []
+})
+
+/** Before the first press: the row a press would make, from the fields as they stand. */
+const displayRows = computed<SoundRow[]>(() => rows.value.length ? rows.value : [{
+  id: 0,
+  preview: true,
+  prompt: mmaudio.prompt,
+  duration: mmaudio.duration,
+  cfg: mmaudio.cfg,
+  steps: mmaudio.steps,
+  seed: null,
+  picture: imagePath.value ? imagePreview.value : '',
+  url: '',
+  note: '',
+  runId: null,
+  madeAt: 0,
+  ms: null,
+  facts: [],
+}])
+
+const favoritesStore = useFavoritesStore()
+
+async function toggleFavorite(row: SoundRow): Promise<void> {
+  if (!row.runId) return
+  // The address the runs bar files the same run under (useInstrumentRuns
+  // below), so one run is one favourite whichever star was pressed.
+  await favoritesStore.toggleFavorite(row.runId, 'audio', deviceId, 'anonymous', 'latent-lab/mmaudio')
+}
 
 const mmaudio = reactive({
   prompt: '',
-  negativePrompt: '',
   duration: 8,
   cfg: 4.5,
   steps: 25,
-  seed: -1,
+  seed: STANDARD_SEED,
 })
+const randomSeed = ref(false)
 
 /**
  * Everything a run goes out with except its seed, as one key: what the seed
- * automatic compares the next press with. This surface has no tick „Random
- * variation“.
+ * automatic compares the next press with.
  */
 function inputsKey(): string {
-  return JSON.stringify([mmaudio.prompt, mmaudio.negativePrompt, mmaudio.duration, mmaudio.cfg,
-    mmaudio.steps, imagePath.value])
+  return JSON.stringify([mmaudio.prompt, mmaudio.duration, mmaudio.cfg, mmaudio.steps,
+    imagePath.value])
 }
 // null: this instrument keeps none of its fields, so the yardstick starts afresh with them.
-const seedAutomatic = useSeedAutomatic(toRef(mmaudio, 'seed'), ref(false), null)
+const seedAutomatic = useSeedAutomatic(toRef(mmaudio, 'seed'), randomSeed, null)
 
 const { addRun } = useInstrumentRuns(TOOL, cardFor, {
   shell: { sourceView: computed(() => 'latent-lab/mmaudio') },
@@ -284,21 +433,22 @@ function cardFor(run: InstrumentRun): DrawerItem | null {
 }
 
 /** A take just made, laid as a card through the same reader that reads one back. */
-async function keepTake(parameters: Record<string, unknown>, results: Record<string, unknown>, wavBase64: string) {
-  const runId = await labRecord({
+async function keepTake(parameters: Record<string, unknown>, results: Record<string, unknown>, wavBase64: string): Promise<string | null> {
+  const recorded = await labRecord({
     parameters,
     results,
     outputs: [{ type: 'audio', format: 'wav', dataBase64: wavBase64 }],
   })
-  if (!runId) return
+  if (!recorded) return null
   addRun(cardFor({
-    run_id: runId,
+    run_id: recorded,
     tool: TOOL,
     timestamp: new Date().toISOString(),
     parameters,
     results,
-    outputs: [{ type: 'audio', format: 'wav', url: `/api/media/audio/${runId}`, meta: {} }],
+    outputs: [{ type: 'audio', format: 'wav', url: `/api/media/audio/${recorded}`, meta: {} }],
   }))
+  return recorded
 }
 
 
@@ -343,32 +493,41 @@ function copyMMAudioPrompt() { copyToClipboard(mmaudio.prompt) }
 function pasteMMAudioPrompt() { mmaudio.prompt = pasteFromClipboard() }
 function clearMMAudioPrompt() { mmaudio.prompt = '' }
 
-function copyMMAudioNeg() { copyToClipboard(mmaudio.negativePrompt) }
-function pasteMMAudioNeg() { mmaudio.negativePrompt = pasteFromClipboard() }
-function clearMMAudioNeg() { mmaudio.negativePrompt = '' }
-
-function clearResults() {
-  error.value = ''
-  resultAudio.value = ''
-  resultSeed.value = null
-  generationTimeMs.value = null
-}
-
 async function runMMAudio() {
-  clearResults()
+  if (!canRun.value) return
   isRunning.value = true
   // The seed automatic (composables/useSeedAutomatic): the same seed when
-  // something changed since the sound on the surface was made, a new one when
-  // nothing did, the field's when it was typed. The seed goes into the field.
+  // something changed since the newest sound was made, a new one when nothing
+  // did, the field's when it was typed. The seed goes into the field.
   const runInputs = inputsKey()
   const runSeed = seedAutomatic.seedForRun(runInputs)
+  const id = ++rowCounter
+  rows.value.unshift({
+    id,
+    prompt: mmaudio.prompt,
+    duration: mmaudio.duration,
+    cfg: mmaudio.cfg,
+    steps: mmaudio.steps,
+    seed: runSeed,
+    picture: imagePath.value ? imagePreview.value : '',
+    url: '',
+    note: t('latentLab.crossmodal.generating'),
+    runId: null,
+    madeAt: 0,
+    ms: null,
+    facts: [],
+  })
+  // Written through the row the list holds, never through a local object: a
+  // write to the raw object reaches the surface only when something else
+  // redraws it (registry, `Textzelle und Zeilenkopf eines Laufrasters`).
+  const row = () => rows.value.find(r => r.id === id)
+  const sent = rows.value[0]!
   try {
     const body: Record<string, unknown> = {
-      prompt: mmaudio.prompt,
-      negative_prompt: mmaudio.negativePrompt,
-      duration_seconds: mmaudio.duration,
-      cfg_strength: mmaudio.cfg,
-      num_steps: mmaudio.steps,
+      prompt: sent.prompt,
+      duration_seconds: sent.duration,
+      cfg_strength: sent.cfg,
+      num_steps: sent.steps,
       seed: runSeed,
     }
     if (imagePath.value) {
@@ -376,33 +535,54 @@ async function runMMAudio() {
     }
 
     const result = await apiPost('/api/cross_aesthetic/mmaudio', body)
+    const r = row()
     if (result.success) {
-      resultAudio.value = base64ToDataUrl(result.audio_base64, 'audio/wav')
-      resultSeed.value = result.seed
-      generationTimeMs.value = result.generation_time_ms
       // This sound is now the one the next press is compared with.
       seedAutomatic.arrived(runInputs, result.seed ?? runSeed)
+      if (r) {
+        r.url = base64ToDataUrl(result.audio_base64, 'audio/wav')
+        r.seed = result.seed ?? runSeed
+        r.ms = result.generation_time_ms ?? null
+        r.madeAt = Date.now()
+        r.note = ''
+        r.facts = [
+          `${t('latentLab.crossmodal.seed')}: ${r.seed}`,
+          `${t('latentLab.crossmodal.mmaudio.duration')}: ${r.duration}`,
+          `${t('latentLab.crossmodal.mmaudio.cfg')}: ${r.cfg}`,
+          `${t('latentLab.crossmodal.mmaudio.steps')}: ${r.steps}`,
+          ...(r.ms ? [`${t('latentLab.crossmodal.generationTime')}: ${r.ms}ms`] : []),
+        ]
+      }
 
       void keepTake(
-        { tab: TAB, prompt: mmaudio.prompt, negative_prompt: mmaudio.negativePrompt,
-          duration: mmaudio.duration, cfg: mmaudio.cfg, steps: mmaudio.steps, seed: runSeed,
-          has_image: !!imagePath.value },
+        { tab: TAB, prompt: sent.prompt, duration: sent.duration, cfg: sent.cfg,
+          steps: sent.steps, seed: runSeed, has_image: !!body.image_path },
         { seed: result.seed, generation_time_ms: result.generation_time_ms },
         result.audio_base64,
-      )
-    } else {
-      error.value = generationErrorFor(result.error || 'MMAudio generation failed')
+      ).then(recorded => {
+        const rr = row()
+        if (!rr || !recorded) return
+        rr.runId = recorded
+        // Kept, the sound is heard from the server's copy: the base64 copy of
+        // every take would otherwise stay in the page for as long as it stands,
+        // and the back of the card reads the AI-origin disclosure only from a
+        // served file (composables/useMediaDisclosure.ts).
+        rr.url = `/api/media/audio/${recorded}`
+      })
+    } else if (r) {
+      r.note = generationErrorFor(result.error || 'MMAudio generation failed')
     }
   } catch (e) {
-    error.value = generationErrorFor(e)
+    const r = row()
+    if (r) r.note = generationErrorFor(e)
   } finally {
     isRunning.value = false
   }
 }
 
-function downloadResultAudio() {
-  if (!resultAudio.value) return
-  void downloadMedia(resultAudio.value, `mmaudio_${resultSeed.value ?? 0}.wav`)
+function downloadRow(row: SoundRow) {
+  if (!row.url) return
+  void downloadMedia(row.url, `mmaudio_${row.seed ?? 0}.wav`)
 }
 
 const pageContextStore = usePageContextStore()
@@ -426,27 +606,18 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.xm-params-row {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-  flex-wrap: wrap;
-}
+/* The page skeleton, the klappe, the run rows and what a row of sound holds
+   (the picture of the run beside the sound) are shared and stand in
+   assets/flow-stage.css. */
 
-.xm-param label {
-  display: block;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 0.3rem;
-}
-
-.xm-param input {
-  width: 100%;
-  padding: 0.5rem;
-  background: var(--surface-2);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #ffffff;
-  font-size: 0.85rem;
+/* Narrow: the two sides stack, and the page scrolls in itself. Measured on the
+   page, not the window, as in views/cover_band.vue: the instrument rail takes
+   240 to 340 px of the window while it is open. At 640 px of page the
+   preparing column is about 197 px wide. */
+.lab-page { container: mmaudio / inline-size; }
+@container mmaudio (max-width: 640px) {
+  .lab-main { overflow-y: auto; }
+  .lab-stage { flex: 0 0 auto; }
+  .lab-work, .lab-work.folded { grid-template-columns: 1fr; grid-template-rows: auto; row-gap: 16px; }
 }
 </style>

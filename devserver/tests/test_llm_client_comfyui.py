@@ -278,6 +278,19 @@ def test_the_stream_hands_out_what_the_socket_missed(installed, monkeypatch):
     assert items[1][0] == "error" and "not its beginning" in items[1][1]
 
 
+def test_a_stopped_chat_carries_its_once_form_beside_the_content(installed, monkeypatch):
+    """The content stays what the model wrote; the once form rides in its
+    own key, for the one caller that takes it (the engine's `loop_once`)."""
+    looped = "kuyu, kanki, " * 10
+    monkeypatch.setattr(llm_client.LLMClient, "_track", staticmethod(
+        lambda workflow, on_progress=None, on_event=None: _result(
+            content=looped.strip(), thinking="", finish_reason="repetition",
+            prompt_tokens=1, completion_tokens=40, once="kuyu, kanki,")))
+    r = llm_client.LLMClient().chat(ALIAS, [{"role": "user", "content": "q"}])
+    assert r["content"] == looped.strip()
+    assert r["once"] == "kuyu, kanki,"
+
+
 def test_the_rest_of_an_answer():
     assert llm_client._rest_of("Hello", "Hello") == ""
     assert llm_client._rest_of("Hello", "\n\nHello\n") == ""
@@ -327,7 +340,7 @@ def test_a_reading_of_the_text_lab_is_one_prompt_tracked_like_a_chat(monkeypatch
             seen.append({"workflow": workflow, "timeout": timeout, "config": CURRENT_OUTPUT_CONFIG.get()})
             on_progress(SimpleNamespace(event_type="submitted", prompt_id="p9"))
             return SimpleNamespace(prompt_id="p9", media_files=[], execution_time=0.1,
-                                   outputs_metadata=self.outputs)
+                                   outputs_metadata=self.outputs, model_used="")
 
         async def forget_prompt(self, prompt_id):
             forgotten.append(prompt_id)

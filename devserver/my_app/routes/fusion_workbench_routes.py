@@ -13,9 +13,13 @@ ComfyUI these were thin proxies to the GPU service's Diffusers routes.
 Deliberately BYPASSES the 4-stage pedagogical pipeline: a controlled research
 sweep must send the exact operand (prompt, seed, alpha) to the card with NO
 Stage-2 interception, so that image differences are attributable to the
-injection schedule alone. The four research routes answer at the research
-level only (`_research_run`); /generate stands as it stood, an open item of
-docs/WORK_ORDER_CONTENT_CHECKING.md (A7).
+injection schedule alone. The checks do not change the operand; they let it
+through or refuse it, at the level the view resolved (services/safety_gate).
+What the user wrote passes the intake, what the graph hands the model passes
+the check before the model, and the picture passes the check of the result
+before it leaves. The T5 expander's prompt passes the intake, and what the
+expander wrote the check of the result. The four research routes answer at the
+research level only, where none of the checks applies.
 
 Endpoints:
 - POST /api/fusion_workbench/generate                   - one scheduled-fusion cell
@@ -33,6 +37,9 @@ import random
 from flask import Blueprint, request, jsonify
 
 
+from my_app.services.safety_gate import (check_before_model, check_intake_texts,
+                                         check_result_image, check_result_text)
+from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.streaming_response import (answered_either_way,
                                                 note_dispatch,
                                                 object_body,
@@ -181,13 +188,60 @@ def _required(kind):
     }[kind]
 
 
-def _run(kind, data):
+def _decomposition_texts(data):
+    """The Decomposition's own texts, under the names the request carries
+    them by: a prompt per stream, and one per cell. `t5_prompt` is the T5
+    stream's prompt here and the cell's T5 text on /generate, one field
+    either way."""
+    from my_app.services.latent_lab_context_graphs import STREAMS
+    texts = {f"{stream}_prompt": data.get(f"{stream}_prompt") for stream in STREAMS}
+    cells = data.get('cells')
+    if isinstance(cells, list):
+        texts.update({f"cells[{i}].prompt": cell.get('prompt')
+                      for i, cell in enumerate(cells) if isinstance(cell, dict)})
+    return texts
+
+
+def _model_texts(kind, data):
+    """What the graph of each instrument hands the model (`_graph_for`), under
+    the names the request carries it by. Where /generate is sent no
+    t5_prompt, its T5 encoder receives the prompt, which is checked as
+    itself."""
+    names = {
+        'generate': ('prompt', 't5_prompt'),
+        'decomposition': ('source_prompt',),
+        'position_probe': ('baseline_prompt', 'probe_prompt'),
+        'delayed_kickin': ('prompt_early', 'prompt_full'),
+        'delayed_kickin_cumulative': ('prompt_early', 'prompt_full'),
+    }[kind]
+    texts = {name: data.get(name) for name in names + ('negative_prompt',)}
+    if kind == 'decomposition':
+        texts.update(_decomposition_texts(data))
+    return texts
+
+
+def _refusal(verdict):
+    """A refusal of the checks, as both ways back carry it: 403 with the
+    block message the page reads (`safety_block`)."""
+    logger.warning(f"[fusion_workbench] refused at {verdict.checkpoint} "
+                   f"({verdict.field or '-'}: {verdict.reason_key})")
+    return {"success": False, "error": "safety_blocked", "safety_block": verdict.block()}, 403
+
+
+def _run(kind, data, level):
     """One run of one instrument on ComfyUI, and the ``(payload, http_status)``
     both ways back are made of.
 
     Split from the route so that one call can be answered either way. It must
     not reach for ``request``: the body is read at the request boundary and
-    passed in, and a streamed answer runs this on a thread of its own.
+    passed in with the level the view resolved, and a streamed answer runs
+    this on a thread of its own.
+
+    Every text the request carries passes the intake, and what the graph
+    hands the model passes the check before the model; only then does the
+    graph run. The picture passes the check of the result as it leaves,
+    marked: no recorder sees it on its way to the page. A refusal is a 403
+    with the block message.
 
     A schedule the run cannot be given reaches the page as the sentence that
     says why, as a 400. A card that is taken is a 503, the same request works in
@@ -202,6 +256,18 @@ def _run(kind, data):
     for name in _required(kind):
         if name not in data:
             return {"success": False, "error": f"{name} required"}, 400
+    verdict = check_intake_texts({
+        "prompt": data.get('prompt'), "t5_prompt": data.get('t5_prompt'),
+        "negative_prompt": data.get('negative_prompt'),
+        "source_prompt": data.get('source_prompt'),
+        "baseline_prompt": data.get('baseline_prompt'),
+        "probe_prompt": data.get('probe_prompt'),
+        "prompt_early": data.get('prompt_early'), "prompt_full": data.get('prompt_full'),
+        **_decomposition_texts(data)}, level=level)
+    if verdict.passed:
+        verdict = check_before_model(_model_texts(kind, data), level=level)
+    if not verdict.passed:
+        return _refusal(verdict)
 
     async def one_run():
         graph, model_id, seed = await _graph_for(kind, data)
@@ -224,6 +290,10 @@ def _run(kind, data):
             watermark_result_metadata(payload, {'seed': seed}, extra_keys=('image_base64',))
         except Exception as e:
             logger.warning(f"[fusion_workbench] watermark not applied ({e})")
+        verdict = check_result_image(payload["image_base64"], level=level, field='image_base64')
+        if not verdict.passed:
+            note_dispatch(None, local=True)
+            return _refusal(verdict)
         return payload, 200
     # `note_dispatch(None)` in each: the run is at no model any more, and the
     # name would otherwise stand in the bar until the next dispatch replaced it.
@@ -246,7 +316,8 @@ def generate():
     Body: { prompt, t5_prompt?, alpha_factor, fusion_strategy, step_window?,
             layer_entry?, step_bands?, layer_bands?, negative_prompt?, width?,
             height?, steps?, cfg_scale?, seed?, model_id? }
-    Returns: { success, image_base64 }
+    Returns: { success, image_base64 }; a refusal of the checks is a 403 with
+             the block message (`safety_block`).
 
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same cell; only its way back is
@@ -267,7 +338,7 @@ def generate():
     data, refusal = _proxy_body()
     if refusal is not None:
         return jsonify(refusal[0]), refusal[1]
-    return answered_either_way(data, _run, 'generate', data,
+    return answered_either_way(data, _run, 'generate', data, resolve_safety_level(),
                                label='FUSION-WORKBENCH-GENERATE')
 
 
@@ -281,6 +352,11 @@ def expand_t5_route():
     Body:    { prompt }
     Returns: { success, t5_expansion }  -- the ~200-word enrichment (expansion
              only; the caller builds t5_prompt = prompt + ' ' + expansion).
+             A refusal of the checks is a 403 with the block message.
+
+    The expander is a language model: the prompt passes the intake before it
+    reads it, and what it wrote passes the check of the result before the page
+    shows it.
     """
     from my_app.services.t5_expansion import expand_t5
     data, refusal = _proxy_body()
@@ -289,37 +365,49 @@ def expand_t5_route():
     prompt = (data.get('prompt') or '').strip()
     if not prompt:
         return jsonify({"success": False, "error": "empty prompt"}), 400
+    level = resolve_safety_level()
+    verdict = check_intake_texts({"prompt": prompt}, level=level)
+    if not verdict.passed:
+        body, status = _refusal(verdict)
+        return jsonify(body), status
     expansion = expand_t5(prompt)
     if not expansion:
         return jsonify({"success": False, "error": "expansion failed"}), 502
+    verdict = check_result_text(expansion, level=level, field='t5_expansion')
+    if not verdict.passed:
+        body, status = _refusal(verdict)
+        return jsonify(body), status
     return jsonify({"success": True, "t5_expansion": expansion})
 
 
-def _research_run(kind):
-    """One run of one of the four research instruments, at the research level.
+def _research_run(kind, level):
+    """One run of one of the four research instruments, at the research level
+    its view found.
 
     Until stage 4 of the move to ComfyUI these four answered on the GPU service
     alone, on its loopback port, which no browser reaches. Here they stand behind the
     origin every page is served from, and the level this installation runs at
     decides whether they answer at all: their operand goes to the card as sent,
-    past every check of the chain, which is what `research` in
-    SAFETY_LEVELS_STRICTEST_FIRST names. The level is resolved on the request's
-    own thread (services/safety_level_resolver.py: off it, the resolver answers
-    with the strictest level), before the run leaves for its own.
+    and at research none of the checks applies, which is what `research` in
+    SAFETY_LEVELS_STRICTEST_FIRST names. Each view resolves the level on the
+    request's own thread (services/safety_level_resolver.py: off it, the
+    resolver answers with the strictest level) and refuses every other level
+    before the body is read.
     Each takes the body its Diffusers route took (gpu_service/routes/
     diffusers_routes.py) and answers the same way, { success, image_base64, seed }.
     """
-    from my_app.services.safety_level_resolver import resolve_safety_level
     data, refusal = _proxy_body()
     if refusal is not None:
         return jsonify(refusal[0]), refusal[1]
-    level = resolve_safety_level()
-    if level != 'research':
-        return jsonify({"success": False,
-                        "error": f"{kind} runs at the research level only; "
-                                 f"this installation runs at {level!r}"}), 403
-    return answered_either_way(data, _run, kind, data,
+    return answered_either_way(data, _run, kind, data, level,
                                label=f'FUSION-WORKBENCH-{kind.upper()}')
+
+
+def _below_research(kind, level):
+    """What a research instrument answers at any level but research."""
+    return jsonify({"success": False,
+                    "error": f"{kind} runs at the research level only; "
+                             f"this installation runs at {level!r}"}), 403
 
 
 @fusion_workbench_bp.route('/decomposition', methods=['POST'])
@@ -327,25 +415,37 @@ def decomposition():
     """One Decomposition run: source_prompt, and cells, each a delta of one
     prompt on one (step band, layer band, stream) at alpha; no cells is the
     plain conditioning."""
-    return _research_run('decomposition')
+    level = resolve_safety_level()
+    if level != 'research':
+        return _below_research('decomposition', level)
+    return _research_run('decomposition', level)
 
 
 @fusion_workbench_bp.route('/position_probe', methods=['POST'])
 def position_probe():
     """One position probe: baseline_prompt, probe_prompt, probe_step_range,
     probe_block_range, probe_stream."""
-    return _research_run('position_probe')
+    level = resolve_safety_level()
+    if level != 'research':
+        return _below_research('position_probe', level)
+    return _research_run('position_probe', level)
 
 
 @fusion_workbench_bp.route('/delayed_kickin', methods=['POST'])
 def delayed_kickin():
     """One delayed kick-in at one block: prompt_early, prompt_full,
     kickin_step, block_range? ([entry, hi]: the hook stands at the entry)."""
-    return _research_run('delayed_kickin')
+    level = resolve_safety_level()
+    if level != 'research':
+        return _below_research('delayed_kickin', level)
+    return _research_run('delayed_kickin', level)
 
 
 @fusion_workbench_bp.route('/delayed_kickin_cumulative', methods=['POST'])
 def delayed_kickin_cumulative():
     """One delayed kick-in over blocks 0..up_to_block: prompt_early,
     prompt_full, kickin_step, up_to_block."""
-    return _research_run('delayed_kickin_cumulative')
+    level = resolve_safety_level()
+    if level != 'research':
+        return _below_research('delayed_kickin_cumulative', level)
+    return _research_run('delayed_kickin_cumulative', level)

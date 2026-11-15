@@ -3,9 +3,12 @@
 Each case was red on the tree before its fix:
   - malformed concepts ended a composable run at stage 1 with a 500 (85ba393
     made stage 1 read them; the chunk had read them itself before);
-  - checks_passed carried a check once per text;
+  - checks_passed carried a check once per text (Stage 1 is gone since
+    2026-11-01; the pre-check takes each text in at the intake, once);
   - the kids/youth classifier's refusal came back as a 500, which every
-    surface reads as a breakdown, not as the block it is;
+    surface reads as a breakdown, not as the block it is (the classifier
+    gate is gone since 2026-11-01; on the pre-check a refusal is the
+    intake's, a 403);
   - a skipped stage 2 handed the visitor's own text to the refusal detector
     (501b5d8), and a visitor who wrote the sentence was "refused";
   - the Flow's streaming path and the Canvas node let the model-written
@@ -23,6 +26,8 @@ from flask import Flask
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from my_app.routes import schema_pipeline_routes as R  # noqa: E402
+from my_app.services.safety_gate import (  # noqa: E402
+    CHECKPOINT_INTAKE, CHECKPOINT_RESULT, REASON_PERSONAL_DATA, REASON_UNAVAILABLE, Verdict)
 from schemas.engine.instruction_selector import SAFETY_REFUSAL_SENTENCE  # noqa: E402
 
 DEVSERVER = Path(__file__).resolve().parents[1]
@@ -32,36 +37,38 @@ REFUSAL = SAFETY_REFUSAL_SENTENCE + " Bitte formuliere es anders."
 
 
 # ---------------------------------------------------------------------------
-# stage 1: concepts and checks_passed
+# the intake: concepts, and each text once
 # ---------------------------------------------------------------------------
 
 @pytest.mark.parametrize("sent", ["{not json", "[1,", 42])
 def test_malformed_concepts_are_not_stage_ones_to_refuse(sent):
-    """The chunk reads the concepts and says what is wrong with them; stage 1
-    reads the prompts it can find, and finds none here."""
+    """The chunk reads the concepts and says what is wrong with them; the
+    intake reads the prompts it can find, and finds none here."""
     assert R._concept_prompts(sent) == []
 
 
 def test_well_formed_concepts_are_still_read():
     assert R._concept_prompts('[{"prompt": "a"}, {"prompt": " "}, {"prompt": "b"}]') == [
-        ("concept_1", "a"), ("concept_3", "b")]
+        (0, "a"), (2, "b")]
 
 
-def test_checks_passed_names_each_check_once(monkeypatch):
-    async def stage1(text, safety_level, pipeline_executor, user_language='de'):
-        return (True, text, None, ["fast_filter", "spacy"])
+def test_the_intake_takes_each_text_once(monkeypatch):
+    from my_app.services import safety_gate
+    seen = []
 
-    monkeypatch.setattr(R, "execute_stage1_safety_unified", stage1)
-    monkeypatch.setattr(R, "pipeline_executor", object())
-    is_safe, _, passed, _, checked = R._stage1_check_texts(
-        [("input_text", "a"), ("context_prompt", "b"), ("concept_1", "c")], "kids", "de")
-    assert is_safe
-    assert passed == ["fast_filter", "spacy"]
-    assert checked == {"input_text": "a", "context_prompt": "b", "concept_1": "c"}
+    def check_intake(material, *, level, kind, field):
+        seen.append((field, material))
+        return Verdict(True, CHECKPOINT_INTAKE, level, field)
+
+    monkeypatch.setattr(safety_gate, "check_intake", check_intake)
+    verdict = safety_gate.check_intake_texts(
+        {"input_text": "a", "context_prompt": "b", "concept_1": "c"}, level="kids")
+    assert verdict.passed
+    assert seen == [("input_text", "a"), ("context_prompt", "b"), ("concept_1", "c")]
 
 
 # ---------------------------------------------------------------------------
-# the stage-2 route: the classifier's refusal, and what is not a refusal
+# the stage-2 route: the pre-check's refusal, and what is not a refusal
 # ---------------------------------------------------------------------------
 
 @pytest.fixture
@@ -73,51 +80,48 @@ def client():
 
 
 @pytest.fixture
-def stage1_waved_through(monkeypatch):
+def checks_waved_through(monkeypatch):
+    """Every check before and after Stage 2 answers safe: the intake and the
+    check at the result."""
     monkeypatch.setattr(R, "resolve_safety_level", lambda: "kids")
-    monkeypatch.setattr(R, "_stage1_check_texts",
-                        lambda texts, level, lang: (True, None, ["stub"], None, {'input_text': HARMLESS}))
+    monkeypatch.setattr(R, "check_intake_texts",
+                        lambda fields, *, level: Verdict(True, CHECKPOINT_INTAKE, level))
+    monkeypatch.setattr(R, "check_result_text", lambda text, *, level, field="text": Verdict(
+        True, CHECKPOINT_RESULT, level, field))
 
 
-def test_the_classifier_refusal_is_a_block_not_a_breakdown(client, stage1_waved_through, monkeypatch):
-    async def classifier(**kwargs):
-        return R._ClassifierResult(success=False, final_output='', error="UNSAFE_VIOLENCE: not for kids",
-                                   metadata={'gate': 'classifier', 'label': 'UNSAFE'})
+def _intake_says(monkeypatch, reason_key, reason):
+    monkeypatch.setattr(R, "check_intake_texts", lambda fields, *, level: Verdict(
+        False, CHECKPOINT_INTAKE, level, "input_text", reason_key, reason))
 
-    monkeypatch.setattr(R, "execute_stage2_classifier", classifier)
+
+def test_the_pre_check_refusal_is_a_block_not_a_breakdown(client, checks_waved_through, monkeypatch):
+    _intake_says(monkeypatch, REASON_PERSONAL_DATA, "a name")
     response = client.post('/api/schema/pipeline/stage2',
                            json={'schema': SCHEMA, 'input_text': HARMLESS, 'skip_optimization': True})
     assert response.status_code == 403, response.get_data(as_text=True)
     body = response.get_json()
-    assert body['status'] == 'blocked'
-    assert body['blocked_at_stage'] == 2
-    assert body['reason'] == "UNSAFE_VIOLENCE: not for kids"
-    assert body['checks_passed'] == ["stub"]
+    assert body['safety_block']['field'] == 'input_text'
+    assert body['error'] == "a name"
+    assert body['safety_block']['checkpoint'] == CHECKPOINT_INTAKE
+    assert body['safety_block']['reason_key'] == REASON_PERSONAL_DATA
 
 
-def test_a_classifier_that_could_not_be_reached_is_still_a_breakdown(client, stage1_waved_through, monkeypatch):
-    async def classifier(**kwargs):
-        return R._ClassifierResult(success=False, final_output='', error="nothing answers",
-                                   metadata={'gate': 'classifier', 'status': 'unreachable'})
-
-    monkeypatch.setattr(R, "execute_stage2_classifier", classifier)
+def test_an_intake_without_an_answer_says_so_on_the_pre_check(client, checks_waved_through, monkeypatch):
+    """Until 2026-11-01 an unreachable classifier came back here as a 500. The
+    intake answers it as every route does: a block that says the check could
+    not be carried out."""
+    _intake_says(monkeypatch, REASON_UNAVAILABLE, "nothing answers")
     response = client.post('/api/schema/pipeline/stage2',
                            json={'schema': SCHEMA, 'input_text': HARMLESS, 'skip_optimization': True})
-    assert response.status_code == 500
+    assert response.status_code == 403, response.get_data(as_text=True)
+    assert response.get_json()['safety_block']['reason_key'] == REASON_UNAVAILABLE
 
 
 def test_a_visitor_who_wrote_the_sentence_is_not_refused_where_stage_2_was_skipped(
-        client, stage1_waved_through, monkeypatch):
-    """A skipped stage 2 hands the visitor's own text on; the detector reads
-    what a MODEL wrote."""
-    monkeypatch.setattr(R, "_stage1_check_texts",
-                        lambda texts, level, lang: (True, None, ["stub"], None, {'input_text': REFUSAL}))
-
-    async def classifier(**kwargs):
-        return R._ClassifierResult(success=True, final_output=REFUSAL,
-                                   metadata={'gate': 'classifier', 'label': 'SAFE'})
-
-    monkeypatch.setattr(R, "execute_stage2_classifier", classifier)
+        client, checks_waved_through):
+    """The pre-check hands the visitor's own text on, as a skipped stage 2
+    does; the detector reads what a MODEL wrote."""
     response = client.post('/api/schema/pipeline/stage2',
                            json={'schema': SCHEMA, 'input_text': REFUSAL, 'skip_optimization': True})
     assert response.status_code == 200, response.get_data(as_text=True)
@@ -130,9 +134,9 @@ def test_a_visitor_who_wrote_the_sentence_is_not_refused_where_stage_2_was_skipp
 
 def test_the_flow_stream_says_blocked_on_a_model_written_refusal(monkeypatch):
     from test_sse_silent_windows import (_interception_data, _wire_interception,  # noqa: E402
-                                         Opened, STAGE1_PASSED, event_names, event_payloads)
+                                         INTERCEPTION_LEVEL, Opened,
+                                         event_names, event_payloads)
     _wire_interception(monkeypatch, Opened())
-    monkeypatch.setattr(R, "_stage1_check_texts", lambda *a, **kw: STAGE1_PASSED)
 
     class Refusing:
         async def execute_pipeline(self, *a, **kw):
@@ -140,22 +144,22 @@ def test_the_flow_stream_says_blocked_on_a_model_written_refusal(monkeypatch):
 
     monkeypatch.setattr(R, "pipeline_executor", Refusing())
 
-    body = "".join(R.execute_pipeline_streaming(_interception_data()))
+    body = "".join(R.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL))
 
     names = event_names(body)
     assert names[-1] == "blocked", names
     assert "chunk" not in names and "complete" not in names
     blocked = event_payloads(body)[-1]
-    assert blocked["stage"] == 2
-    assert blocked["blocked_at_stage"] == 2
+    assert blocked["safety_block"]["checkpoint"] == "refusal"
+    assert blocked["safety_block"]["reason_key"] == "refusal"
     assert SAFETY_REFUSAL_SENTENCE.rstrip('.') in blocked["reason"]
 
 
 def test_the_flow_stream_still_hands_a_written_perspective_on(monkeypatch):
     from test_sse_silent_windows import (_interception_data, _wire_interception,  # noqa: E402
-                                         Opened, STAGE1_PASSED, event_names)
+                                         INTERCEPTION_LEVEL, Opened,
+                                         event_names)
     _wire_interception(monkeypatch, Opened())
-    monkeypatch.setattr(R, "_stage1_check_texts", lambda *a, **kw: STAGE1_PASSED)
 
     class Writing:
         async def execute_pipeline(self, *a, **kw):
@@ -163,7 +167,8 @@ def test_the_flow_stream_still_hands_a_written_perspective_on(monkeypatch):
                                          metadata={}, error=None)
 
     monkeypatch.setattr(R, "pipeline_executor", Writing())
-    names = event_names("".join(R.execute_pipeline_streaming(_interception_data())))
+    names = event_names("".join(R.execute_pipeline_streaming(_interception_data(),
+                                                             INTERCEPTION_LEVEL)))
     assert names[-2:] == ["chunk", "complete"], names
 
 
@@ -340,19 +345,17 @@ def _stage2_returns(monkeypatch, **fields):
     monkeypatch.setattr(R, "execute_stage2_with_optimization", fake)
 
 
-def test_a_passed_through_text_is_no_refusal_whatever_it_says(client, monkeypatch):
+def test_a_passed_through_text_is_no_refusal_whatever_it_says(client, checks_waved_through,
+                                                                monkeypatch):
     """A perspective that owes the visitor their own wording hands it on
     (metadata passthrough); the visitor who wrote the sentence is not refused."""
-    monkeypatch.setattr(R, "resolve_safety_level", lambda: "kids")
-    monkeypatch.setattr(R, "_stage1_check_texts",
-                        lambda texts, level, lang: (True, None, ["stub"], None, {'input_text': REFUSAL}))
     _stage2_returns(monkeypatch, final_output=REFUSAL, interception_result=REFUSAL,
                     metadata={'passthrough': True})
     response = client.post('/api/schema/pipeline/stage2', json={'schema': SCHEMA, 'input_text': REFUSAL})
     assert response.status_code == 200, response.get_data(as_text=True)
 
 
-def test_the_refusal_is_read_before_the_adaption_rewrote_it(client, stage1_waved_through, monkeypatch):
+def test_the_refusal_is_read_before_the_adaption_rewrote_it(client, checks_waved_through, monkeypatch):
     """With an output config the adaption runs after the interception, and
     what it makes of the sentence (an English image prompt) is no longer the
     sentence; the interception model's own text is."""
@@ -363,5 +366,6 @@ def test_the_refusal_is_read_before_the_adaption_rewrote_it(client, stage1_waved
                            json={'schema': SCHEMA, 'input_text': HARMLESS, 'output_config': 'sd35_large'})
     assert response.status_code == 403, response.get_data(as_text=True)
     body = response.get_json()
-    assert body['blocked_at_stage'] == 2
+    assert body['safety_block']['checkpoint'] == 'refusal'
+    assert body['safety_block']['reason_key'] == 'refusal'
     assert SAFETY_REFUSAL_SENTENCE.rstrip('.') in body['reason']

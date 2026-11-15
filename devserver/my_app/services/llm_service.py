@@ -1,9 +1,10 @@
 """
 Service for high-level LLM interactions.
 
-Translation, safety checks, image analysis: all through the platform's LLM
-backend (services/llm_backend), which runs the local models in ComfyUI since
-stage 3 of the move.
+Translation and image analysis, all through the platform's LLM backend
+(services/llm_backend), which runs the local models in ComfyUI since stage 3
+of the move. The check and the cached translation of the old workflow route
+stood here until 2026-11-01; the checks are my_app/services/safety_gate.py now.
 """
 import json
 import logging
@@ -14,9 +15,7 @@ from config import (
     STAGE3_MODEL,
     IMAGE_ANALYSIS_MODEL,
     ANALYSIS_SYSTEM_PROMPT,
-    PROMPT_CACHE,
     TRANSLATION_PROMPT,
-    NO_TRANSLATE,
 )
 
 logger = logging.getLogger(__name__)
@@ -96,50 +95,6 @@ class LLMService:
         """
         prompt = TRANSLATION_PROMPT.format(text=text)
         return self._complete(STAGE3_MODEL, prompt)
-
-    def check_safety(self, text: str, safety_level: str = None) -> Dict[str, Any]:
-        """
-        Ask the safety classifier the question of the running level.
-
-        Args:
-            text: Text to check
-            safety_level: the level the run is under. Absent, the child's
-                question is asked, because a level nobody passed is a level
-                nobody set.
-
-        Returns:
-            Dictionary with 'is_safe' boolean and optional 'reason' if unsafe
-        """
-        # The platform's own sentence for a check that could not be carried out.
-        # It is German, it is already translated at the surface, and it opens
-        # with "Technische Störung", which is what tells a fault apart from a
-        # content rating downstream. Nothing new is worded here.
-        from schemas.engine.stage_orchestrator import SAFETY_CHECK_UNAVAILABLE_MESSAGE
-        from my_app.services import safety_classifier
-
-        if (safety_level or '').strip().lower() in ('adult', 'research'):
-            return {"is_safe": True}
-
-        # Until 2026-09 this asked a chat-trained guard "Is the following text
-        # safe?" in free text and read the answer out of its prose. Two things
-        # were wrong with that beyond the reading: the question was the same at
-        # every level, although this route resolves one, and a no-answer
-        # returned {"is_safe": True} until 2026-09-04 — the first of the
-        # patterns that have broken this chain since 2025. Both are gone: the
-        # level is the question, and no answer blocks.
-        verdict = safety_classifier.is_unsafe(
-            safety_classifier.policy_for_level(safety_level), text)
-
-        if verdict is None:
-            logger.error("[SAFETY] no verdict — blocking (fail-closed)")
-            return {"is_safe": False, "reason": SAFETY_CHECK_UNAVAILABLE_MESSAGE,
-                    "unavailable": True}
-        if verdict:
-            return {
-                "is_safe": False,
-                "reason": "Sorry, your prompt has been rejected due to potential issues."
-            }
-        return {"is_safe": True}
 
     def analyze_image(self, image_data: str) -> Optional[str]:
         """
@@ -243,60 +198,6 @@ class LLMService:
             "no judgement, and do not transcribe any text in the image."
         )
         return self._complete_with_image(self.view_vlm_model(), prompt, image_b64, max_tokens=None)
-
-    def validate_and_translate_prompt(self, prompt: str, safety_level: str = None) -> Dict[str, Any]:
-        """
-        Validate and translate a prompt with caching.
-
-        Args:
-            prompt: Original prompt text
-            safety_level: the level the run is under, which decides both the
-                question the check asks and what the cache may answer.
-
-        Returns:
-            Dictionary with 'success', 'translated_prompt', and optional 'error'
-        """
-        # The level belongs in the key. A cache hit returns without checking,
-        # and the key was the prompt alone, so a prompt cleared in research
-        # answered the next run under kids as already safe.
-        cache_key = ((safety_level or '').strip().lower(), prompt.strip().lower())
-
-        # Check cache first
-        if cache_key in PROMPT_CACHE:
-            return {
-                "success": True,
-                "translated_prompt": PROMPT_CACHE[cache_key]["translated"],
-                "cached": True
-            }
-
-        is_image_analysis = prompt.strip().startswith("Material and medial properties:")
-
-        if NO_TRANSLATE:
-            translated_prompt = prompt
-            logger.info("Translation disabled by NO_TRANSLATE flag, using original prompt")
-        elif is_image_analysis:
-            translated_prompt = prompt
-            logger.info("Skipping translation for image analysis prompt")
-        else:
-            translated_prompt = self.translate_text(prompt)
-            if not translated_prompt:
-                return {"success": False, "error": "Übersetzungs-Service fehlgeschlagen."}
-
-        safety_result = self.check_safety(translated_prompt, safety_level)
-        if not safety_result["is_safe"]:
-            return {"success": False, "error": safety_result.get("reason", "Prompt rejected for safety reasons.")}
-
-        PROMPT_CACHE[cache_key] = {
-            "translated": translated_prompt,
-            "is_safe": True
-        }
-        logger.info(f"Cached new prompt: {cache_key[:50]}...")
-
-        return {
-            "success": True,
-            "translated_prompt": translated_prompt,
-            "cached": False
-        }
 
     # ===== STREAMING METHODS =====
 

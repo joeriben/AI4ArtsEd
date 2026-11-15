@@ -53,7 +53,6 @@ CATALOG_TO_PROBE = [
     ("ltx_video",    "ltx_video",             "text"),
     ("heartmula",    "heartmula_standard",    "text"),
     ("stable_audio", "stableaudio_open",      "text"),
-    ("gemini_3_pro", "gemini_3_pro_image",    "text"),
 ]
 
 

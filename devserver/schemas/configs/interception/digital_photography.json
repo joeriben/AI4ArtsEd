@@ -11,7 +11,8 @@
     "es": "Fotografía digital",
     "he": "צילום דיגיטלי",
     "ar": "التصوير الرقمي",
-    "bg": "Дигитална фотография"
+    "bg": "Дигитална фотография",
+    "zh-hant": "數位攝影"
   },
   "description": {
     "en": "Transforms ideas into contemporary photographic concepts. Emphasizes crisp digital clarity, controlled lighting setups, and precise composition techniques used in modern commercial and editorial photography.",
@@ -22,6 +23,7 @@
     "he": "ממיר רעיונות למושגים פוטוגרפיים עכשוויים. מדגיש בהירות דיגיטלית חדה, הגדרות תאורה מבוקרות וטכניקות קומפוזיציה מדויקות המשמשות בצילום מסחרי ועריכתי מודרני.",
     "ar": "يحوّل الأفكار إلى مفاهيم تصويرية معاصرة. يُبرز الوضوح الرقمي الحاد وإعدادات الإضاءة المضبوطة وتقنيات التأليف الدقيقة المستخدمة في التصوير التجاري والتحريري الحديث.",
     "bg": "Превръща идеите в съвременни фотографски концепции. Подчертава ясната дигитална острота, контролирани осветителни настройки и прецизни композиционни техники, използвани в модерната комерсиална и редакционна фотография.",
+    "zh-hant": "將想法轉化為當代攝影概念。強調清晰銳利的數位畫質、受控的燈光配置，以及現代商業攝影與編輯攝影所使用的精確構圖技巧。",
     "tr": "Fikirleri çağdaş fotoğrafik kavramlara dönüştürür. Modern ticari ve editöryal fotoğrafçılıkta kullanılan keskin dijital netliği, kontrollü aydınlatma düzenlerini ve hassas kompozisyon tekniklerini ön plana çıkarır.",
     "ko": "아이디어를 현대적인 사진 개념으로 변환합니다. 현대 상업 및 에디토리얼 사진에서 사용되는 선명한 디지털 선명도, 제어된 조명 설정, 정밀한 구성 기술을 강조합니다."
   },
@@ -31,6 +33,7 @@
     "he": "צילום ומדיה",
     "ar": "التصوير والإعلام",
     "bg": "Фотография и медии",
+    "zh-hant": "攝影與媒體",
     "tr": "Fotoğraf & Medya",
     "ko": "사진 & 미디어",
     "uk": "Фотографія та медіа",

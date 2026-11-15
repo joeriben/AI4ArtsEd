@@ -10,7 +10,8 @@
     "es": "Attention Cartography (Diffusers)",
     "he": "Attention Cartography (Diffusers)",
     "ar": "Attention Cartography (Diffusers)",
-    "bg": "Attention Cartography (Diffusers)"
+    "bg": "Attention Cartography (Diffusers)",
+    "zh-hant": "Attention Cartography (Diffusers)"
   },
   "description": {
     "en": "Image generation with cross-attention map extraction. Shows which prompt tokens influence which image regions at different layers and timesteps.",
@@ -22,7 +23,8 @@
     "es": "Generación de imágenes con extracción de mapas de atención cruzada. Muestra qué tokens del prompt influyen en qué regiones de la imagen en distintas capas y pasos temporales.",
     "he": "יצירת תמונות עם חילוץ מפות קשב צולב (cross-attention). מראה אילו טוקנים בפרומפט משפיעים על אילו אזורים בתמונה בשכבות ובצעדי זמן שונים.",
     "ar": "توليد الصور مع استخراج خرائط الانتباه المتقاطع (cross-attention). يوضح أي رموز (tokens) من الوصف تؤثر على أي مناطق في الصورة عبر الطبقات وخطوات الزمن المختلفة.",
-    "bg": "Генериране на изображения с извличане на карти на кръстосаното внимание (cross-attention). Показва кои токени от подканата влияят върху кои области на изображението в различни слоеве и времеви стъпки."
+    "bg": "Генериране на изображения с извличане на карти на кръстосаното внимание (cross-attention). Показва кои токени от подканата влияят върху кои области на изображението в различни слоеве и времеви стъпки.",
+    "zh-hant": "生成圖像並擷取交叉注意力圖。顯示在不同的層與時間步中，哪些提示詞 token 影響圖像的哪些區域。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_attention_cartography_diffusers"

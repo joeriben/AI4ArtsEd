@@ -97,7 +97,7 @@ DEFAULTS = {
 # the sentence it was handed, and nothing checks what it added.
 #
 # The fail-closed guard below stays as it is: an absent or unknown level blocks.
-ALLOWED_SAFETY_LEVELS = ("kids", "youth", "open", "adult", "research")
+ALLOWED_SAFETY_LEVELS = ("kids", "youth", "adult", "research")
 
 
 async def execute(
@@ -193,7 +193,7 @@ async def execute(
 
     logger.info(f"[CHUNK:voxcpm] {len(text)} chars | language={lang} | level={level}")
 
-    wav, asked, f0_hz = await backend.synthesize(
+    wav, asked, f0_hz, model_used = await backend.synthesize(
         text=text,
         language=lang,
         voice_description=voice_description,
@@ -206,6 +206,7 @@ async def execute(
         "chunk_name": "output_speech_voxcpm",
         "media_type": "audio",
         "backend": "voxcpm",
+        "model_used": model_used,
         # What was asked for, not who spoke: there is no speaker to name. The
         # header this ends up in is read as "what was requested" everywhere
         # else too, and a described voice is exactly that.

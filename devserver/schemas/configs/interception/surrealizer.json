@@ -11,7 +11,8 @@
     "es": "Surrealizador",
     "he": "מְסַרְיָאֵל",
     "ar": "المُسرْيَل",
-    "bg": "Сюрреализатор"
+    "bg": "Сюрреализатор",
+    "zh-hant": "超現實化器"
   },
   "description": {
     "en": "Two AI 'brains' (CLIP and T5) each read your text — the slider pushes the image far beyond what either would normally produce, into unexplored territory where surreal, dreamlike compositions emerge.",
@@ -22,6 +23,7 @@
     "he": "שני 'מוחות' AI (CLIP ו-T5) קוראים כל אחד את הטקסט שלך — המחוון דוחף את התמונה הרחק מעבר למה שכל אחד מהם היה מייצר בדרך כלל, לשטח בלתי מחוקר שבו צצות קומפוזיציות סוריאליסטיות וחלומיות.",
     "ar": "يقرأ كل من دماغَي الذكاء الاصطناعي (CLIP وT5) نصك — يدفع المنزلق الصورة بعيداً جداً إلى ما هو أبعد مما سيُنتجه أيٌّ منهما عادةً، إلى أراضٍ غير مستكشفة تنبثق منها تأليفات سريالية وحالمة.",
     "bg": "Два ИИ \"мозъка\" (CLIP и T5) четат текста ви поотделно — плъзгачът избутва изображението далеч отвъд това, което всеки от тях обикновено произвежда, в неизследвана територия, където възникват сюрреалистични, мечтателни композиции.",
+    "zh-hant": "兩個 AI「大腦」（CLIP 與 T5）各自讀取你的文字——滑桿把圖像推到遠遠超出兩者平常會產生的範圍，進入尚未探索的領域，在那裡出現超現實、如夢一般的構圖。",
     "tr": "İki yapay zeka 'beyni' (CLIP ve T5) metninizi ayrı ayrı okur — kaydırıcı görüntüyü her birinin normalde üretebileceğinin çok ötesine, gerçeküstü, rüya gibi kompozisyonların ortaya çıktığı keşfedilmemiş alanlara iter.",
     "ko": "두 개의 AI '두뇌'(CLIP과 T5)가 각각 텍스트를 읽습니다 — 슬라이더는 이미지를 둘 중 어느 쪽이 보통 만들어낼 수 있는 것보다 훨씬 너머로, 초현실적이고 꿈같은 구성이 나타나는 미지의 영역으로 밀어붙입니다."
   },
@@ -31,6 +33,7 @@
     "he": "מחקר",
     "ar": "البحث",
     "bg": "Изследвания",
+    "zh-hant": "研究",
     "tr": "Araştırma",
     "ko": "연구",
     "uk": "Дослідження",

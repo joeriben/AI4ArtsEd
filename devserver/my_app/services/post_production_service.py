@@ -15,8 +15,9 @@ Phase 1 ships exactly one operation:
 
 Design notes:
   - Inputs are referenced by run_id (what Resona gets from lookup_shared_favorites)
-    or an /api/media/<type>/<run_id> URL. Resolution reuses the recorder's own
-    get_entity_path(), exactly like view_favorite (tool_registry.py).
+    or an /api/media/<type>/<run_id> URL. Resolution goes through the recorder's
+    door, checked_entity_path(), at the level of whoever asks, exactly like
+    view_favorite (tool_registry.py).
   - Output is persisted via the standard LivePipelineRecorder (get_recorder +
     save_entity), so a composition is a first-class run: it appears on disk under
     exports/json/, is served by /api/media/composition/<run_id>, and can be
@@ -71,10 +72,11 @@ def _extract_run_id(ref: str) -> str:
     return m.group(1) if m else ref
 
 
-def _resolve_ref(ref: str, role: str, base_path: Path) -> Tuple[Path, str, str]:
+def _resolve_ref(ref: str, role: str, base_path: Path, level) -> Tuple[Path, str, str]:
     """Resolve an input ref to (file_path, run_id, entity_type).
 
-    Reuses the recorder's own get_entity_path (same channel as view_favorite).
+    Asks the recorder's door, checked_entity_path, at the level of whoever asks
+    (the door view_favorite takes).
     """
     from my_app.services.pipeline_recorder import SafetyRefusal, load_recorder
 
@@ -101,7 +103,7 @@ def _resolve_ref(ref: str, role: str, base_path: Path) -> Tuple[Path, str, str]:
             if entity.get("type") != etype:
                 continue
             try:
-                path = recorder.checked_entity_path(entity)
+                path = recorder.checked_entity_path(entity, level)
             except SafetyRefusal as refusal:
                 raise PostProductionError(
                     f"role '{role}': run '{run_id}' {etype} is {refusal.reason}"
@@ -235,12 +237,14 @@ def validate_inputs(
     inputs: Dict[str, str],
     *,
     base_path: Optional[Path] = None,
+    level,
 ) -> List[dict]:
     """Resolve + type-check an operation's inputs WITHOUT composing.
 
     Lets a caller (Resona's compose_media decision tool) confirm the refs are
     real artifacts of the right role before acknowledging the composition, and
-    get the same ``composed_from`` provenance compose() will record.
+    get the same ``composed_from`` provenance compose() will record. Each input
+    is taken only where delivery hands it to `level`, the level of whoever asks.
 
     Returns composed_from (list of {role, run_id, type}).
     Raises PostProductionError on unknown operation or unresolvable/mistyped refs.
@@ -262,7 +266,7 @@ def validate_inputs(
             raise PostProductionError(
                 f"operation '{operation_id}' requires input role '{role}'"
             )
-        _path, run_id, etype = _resolve_ref(ref, role, base_path)
+        _path, run_id, etype = _resolve_ref(ref, role, base_path, level)
         composed_from.append({"role": role, "run_id": run_id, "type": etype})
     return composed_from
 
@@ -281,7 +285,7 @@ def compose(
     inputs: Dict[str, str],
     *,
     base_path: Optional[Path] = None,
-    safety_level: str = "open",
+    safety_level: str,
     user_id: str = "resona",
     device_id: Optional[str] = None,
 ) -> dict:
@@ -292,7 +296,9 @@ def compose(
         inputs: {role: ref} where ref is a run_id or /api/media/<type>/<run_id> URL
             (e.g. {"image": "run_...", "audio": "run_..."}).
         base_path: recorder storage root; defaults to config.JSON_STORAGE_DIR.
-        safety_level/user_id/device_id: metadata for the new composition run.
+        safety_level: the level of whoever asks. Each input is taken only where
+            delivery hands it to that level, and the new run is recorded at it.
+        user_id/device_id: metadata for the new composition run.
 
     Returns:
         {run_id, media_type: "composition", url, filename, operation, composed_from}
@@ -318,7 +324,7 @@ def compose(
         ref = inputs.get(role)
         if not ref:
             raise PostProductionError(f"operation '{operation_id}' requires input role '{role}'")
-        path, run_id, etype = _resolve_ref(ref, role, base_path)
+        path, run_id, etype = _resolve_ref(ref, role, base_path, safety_level)
         resolved[role] = path
         composed_from.append({"role": role, "run_id": run_id, "type": etype})
 

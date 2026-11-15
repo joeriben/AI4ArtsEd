@@ -67,8 +67,8 @@ def wants_passthrough(config, effective_context: str, safety_level: str) -> bool
     nobody picked a perspective — Stage 2 must not elaborate the prompt.
 
     At EVERY safety level, kids and youth included. Stage 2 is
-    not a safety instrument: the age check runs in Stage 1 on what the user wrote
-    and in Stage 3 on the prompt that goes to the model. Keeping Stage 2
+    not a safety instrument: the checks run at the intake on what the user wrote
+    and before the model on the prompt that goes to the model. Keeping Stage 2
     mandatory for the young meant that precisely their prompts were the ones
     rewritten by a model nobody had asked for — an instruction on a drawing came
     back as an invented beach scene, and the drawing was gone.

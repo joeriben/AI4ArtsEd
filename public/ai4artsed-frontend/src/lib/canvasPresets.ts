@@ -31,9 +31,13 @@
  *   member the installation lacks is left out, the ones after it move up, and
  *   a place past the last stays without a model. The board's own check names
  *   what is missing — a comparison short of a model is better than one with a
- *   stand-in, and every node is titled by the model it actually got. A lineup
- *   that reaches no model at all (or whose register did not answer) stops the
- *   opening: a comparison of nothing would stand as a board with no cause named.
+ *   stand-in, and every node is titled by the model it actually got. Which
+ *   lineup's members those are is the caller's: the Canvas gives a lineup the
+ *   provider the settings choose reaches nothing of over to the first lineup
+ *   it does reach (`fillableLineup`), as Interception across Models opens. A
+ *   lineup that still reaches no model (or whose register did not answer)
+ *   stops the opening: a comparison of nothing would stand as a board with no
+ *   cause named.
  * - `llmModel` / `visionModel`: kept where the installation offers them, else
  *   left empty for the same reason; a node naming none gets the default.
  * - `titleKey` / `titleArgs`: the node's title in the reader's language; an
@@ -178,7 +182,14 @@ export async function openPreset(preset: CanvasPreset, ctx: PresetContext): Prom
     if (lineup) {
       const members = ctx.lineupMembers(lineup[0])
       if (!members.length) throw new Error(`the lineup '${lineup[0]}' reaches no model here`)
-      node.llmModel = offered(members[lineup[1]], ctx.llmModels)
+      // A member the board does not offer means the two lists disagree -- one
+      // was read while the settings were being written. Blanked, the board
+      // would stand without its models and without a cause.
+      const member = members[lineup[1]]
+      if (member && !offered(member, ctx.llmModels)) {
+        throw new Error(`the lineup '${lineup[0]}' names '${member}', which the board does not offer`)
+      }
+      node.llmModel = offered(member, ctx.llmModels)
     } else if ('llmModel' in rest) {
       node.llmModel = offered(rest.llmModel, ctx.llmModels)
     }

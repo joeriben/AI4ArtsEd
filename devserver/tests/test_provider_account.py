@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-A cloud output config runs through the provider its chunk names. For Gemini 3
-Pro Image through Mammouth AI the config can only be active where a key is
-present, and it is off without credit as well (docs/DEVELOPMENT_DECISIONS.md).
+A cloud output config runs through the provider its chunk names. It can only
+be active where a key for that provider is present, and for a provider judged
+through the LiteLLM account API it is off without credit as well.
 These tests hold that rule as the code makes it -- a key the provider
 refuses counts as none, the key's own budget counts beside the account's, for
 a key of a team its own and its team's in place of the account's, and a
@@ -701,7 +701,6 @@ _MODULE_LEVEL = {"NO_CREDIT", "KEY_EXPIRED"}
 # The routes that may read on demand, behind the settings login.
 _GUARDED_USES = {
     ("my_app/routes/settings_routes.py", "api_usage", "read_account"),
-    ("my_app/routes/settings_routes.py", "frontier_image_accounts", "account"),
 }
 _MODULE = "provider_account"
 # The decorators by which Flask takes a function as a view.
@@ -869,8 +868,8 @@ def test_only_settings_routes_read_the_account_on_demand():
     reach or at import, would undo that. So a module may call usable() and
     account() without a fresh reading and read the two refusals; it calls
     forget() nowhere, whatever else it uses of the module stands in a route
-    behind the settings login (frontier_image_accounts, and api_usage, which
-    reads the accounts on every call), and at its top it binds nothing of the module but
+    behind the settings login (api_usage, which reads the accounts on every
+    call), and at its top it binds nothing of the module but
     the two refusals. Every module in my_app and schemas and at the top of
     devserver is read; provider_account itself is held by the tests above."""
     guarded, loose = set(), []
@@ -1002,24 +1001,44 @@ def test_the_policy_check_sees_what_it_guards_against():
                 "get_account(fresh=True)\n") == []
 
 
-def test_the_gemini_config_goes_off_without_an_account(monkeypatch):
-    """The config the rows in the settings are about is judged by the account
-    of the provider its chunk names, and the availability answer says so."""
+def test_a_cloud_config_goes_off_without_an_account(monkeypatch):
+    """A cloud config is judged by the account of the provider its chunk
+    names, and the availability answer says so."""
     from my_app.services.model_availability_service import ModelAvailabilityService
 
     monkeypatch.setattr(pa, "usable", lambda name: False)
     off = ModelAvailabilityService(comfyui_base_url="http://127.0.0.1:1")
-    assert off.api_provider("gemini_3_pro_image") == "mammouth"
-    assert asyncio.run(off.check_config_availability("gemini_3_pro_image")) is False
-    assert off.account_missing == {"gemini_3_pro_image"}
+    assert off.api_provider("gpt_image_1") == "openai"
+    assert asyncio.run(off.check_config_availability("gpt_image_1")) is False
+    assert off.account_missing == {"gpt_image_1"}
 
     monkeypatch.setattr(pa, "usable", lambda name: True)
     on = ModelAvailabilityService(comfyui_base_url="http://127.0.0.1:1")
-    assert asyncio.run(on.check_config_availability("gemini_3_pro_image")) is True
+    assert asyncio.run(on.check_config_availability("gpt_image_1")) is True
     assert on.account_missing == set()
 
 
-def test_the_gemini_config_goes_off_when_the_account_has_no_credit(monkeypatch):
+def _mammouth_config(svc, tmp_path):
+    """A cloud config whose chunk sends to Mammouth AI, the provider whose
+    account this suite judges; since 2026-11-04 no shipped config does."""
+    import json
+
+    configs, chunks = tmp_path / "configs", tmp_path / "chunks"
+    configs.mkdir()
+    chunks.mkdir()
+    (configs / "cloud_probe.json").write_text(json.dumps({
+        "meta": {"backend_type": "mammouth"},
+        "parameters": {"OUTPUT_CHUNK": "output_cloud_probe"},
+    }), encoding="utf-8")
+    (chunks / "output_cloud_probe.json").write_text(json.dumps({
+        "type": "api_output_chunk",
+        "api_config": {"provider": "mammouth"},
+    }), encoding="utf-8")
+    svc.config_dir, svc.chunk_dir = configs, chunks
+    return "cloud_probe"
+
+
+def test_a_cloud_config_goes_off_when_the_account_has_no_credit(monkeypatch, tmp_path):
     """account() and usable() run as they are; only the network reading is
     faked."""
     from my_app.services.model_availability_service import ModelAvailabilityService
@@ -1027,8 +1046,9 @@ def test_the_gemini_config_goes_off_when_the_account_has_no_credit(monkeypatch):
     _mammouth(monkeypatch, {"error": "HTTP 422 (budget_exceeded)", "status": 422,
                             "error_type": pa.NO_CREDIT})
     svc = ModelAvailabilityService(comfyui_base_url="http://127.0.0.1:1")
-    assert asyncio.run(svc.check_config_availability("gemini_3_pro_image")) is False
-    assert svc.account_missing == {"gemini_3_pro_image"}
+    config_id = _mammouth_config(svc, tmp_path)
+    assert asyncio.run(svc.check_config_availability(config_id)) is False
+    assert svc.account_missing == {config_id}
 
 
 def test_the_availability_answer_names_the_provider_of_a_config_that_is_off(monkeypatch):
@@ -1042,7 +1062,7 @@ def test_the_availability_answer_names_the_provider_of_a_config_that_is_off(monk
     monkeypatch.setattr(pa, "usable", lambda name: False)
 
     async def check_all_configs(self):
-        return {"gemini_3_pro_image": await self.check_config_availability("gemini_3_pro_image")}
+        return {"gpt_image_1": await self.check_config_availability("gpt_image_1")}
 
     async def get_gpu_service_status(self, force_refresh=False):
         return {"gpu_service_reachable": False}
@@ -1053,8 +1073,8 @@ def test_the_availability_answer_names_the_provider_of_a_config_that_is_off(monk
     app = Flask(__name__)
     app.register_blueprint(config_bp)
     body = app.test_client().get("/api/models/availability").get_json()
-    assert body["account_missing"] == ["gemini_3_pro_image"]
-    assert body["account_provider"] == {"gemini_3_pro_image": "mammouth"}
+    assert body["account_missing"] == ["gpt_image_1"]
+    assert body["account_provider"] == {"gpt_image_1": "openai"}
 
 
 def _settings_client():
@@ -1065,30 +1085,6 @@ def _settings_client():
     app.secret_key = "test"
     app.register_blueprint(settings_routes.settings_bp)
     return app.test_client()
-
-
-def test_the_frontier_rows_come_from_the_configs(monkeypatch):
-    """The rows under the key fields list every output config marked as a
-    frontier image model, with the provider its chunk names; the account of
-    each provider is read once."""
-    asked = []
-
-    def account(name, fresh=False):
-        asked.append((name, fresh))
-        return {"has_key": True, "judged": True, "refused": False, "no_credit": False,
-                "used_up": None, "balance": 12.5, "error": None}
-
-    monkeypatch.setattr(pa, "account", account)
-    body = _settings_client().get("/api/settings/frontier-image-accounts").get_json()
-    rows = {c["config_id"]: c for c in body["configs"]}
-    assert "gemini_3_pro_image" in rows
-    row = rows["gemini_3_pro_image"]
-    assert row["provider"] == "mammouth"
-    assert row["name"]["en"].startswith("Gemini 3 Pro Image")
-    assert (row["has_key"], row["judged"], row["balance"], row["used_up"], row["error"]) == (
-        True, True, 12.5, None, None)
-    assert sorted(set(asked)) == sorted(asked)
-    assert all(fresh for _, fresh in asked)
 
 
 def test_the_api_usage_lists_an_account_for_every_key_in_a_key_file(monkeypatch):

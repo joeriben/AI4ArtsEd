@@ -12,14 +12,13 @@
  * - queue_position: {position, active, wait_s} - queue transparency
  * - stage4_start: Media generation starting
  * - cancelled: Generation was cancelled (from another tab)
- * - complete: {media_output, run_id, loras, lora_triggers, was_translated}
+ * - complete: {media_output, run_id, loras, lora_triggers, was_translated, model_meta}
  * - error: Error occurred
  */
 
 import { ref, onUnmounted } from 'vue'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
 import i18n from '@/i18n'
-import { isOperationalReason } from './useMaterialIntake'
 import { clearRunPlace, noteRunPlace } from './useRunPlace'
 
 export interface GenerationParams {
@@ -33,9 +32,8 @@ export interface GenerationParams {
   run_id?: string | null
   device_id?: string
   input_image?: string | null
-  input_image1?: string | null
-  input_image2?: string | null
-  input_image3?: string | null
+  /** input_image1, input_image2, ...: a multi-image run's pictures, in order. */
+  [multiImage: `input_image${number}`]: string | null | undefined
   alpha_factor?: number | null
 
   // Comparison mode — skip Stage 3 translation (send prompt raw to model)
@@ -144,16 +142,12 @@ export interface GenerationResult {
   busy?: BusyNote
   /** For `busy`: what the run already going on this device is making. */
   busyMedium?: string
-  blocked_reason?: string
   /**
-   * Which stage refused, as the backend marks it (`vlm_input`, `vlm_safety`,
-   * or a number). `safetyBlockKey` reads it, and for the image check it is
-   * the ONLY way there: `VLM_CONTENT_BLOCK_MESSAGE` carries none of the words
-   * the reason-matching looks for, so a refused PICTURE without the stage
-   * reads as a refused PROMPT and tells the reader to rewrite a line the
-   * platform itself just called fine.
+   * The block message of a refused run (`safety_block`): where it was stopped,
+   * on which text, and what kind of block it is. `safetyBlockMessageKey` says
+   * which sentence that is.
    */
-  blocked_stage?: string | number
+  safety_block?: SafetyBlock
   found_terms?: string[]
 }
 
@@ -321,74 +315,83 @@ export function classifyError(message: string): GenerationErrorType {
 }
 
 /**
- * The raw reason a blocked run carries — for CLASSIFYING it, never for showing
- * it. The backend writes these sentences in German and only in German
- * (`utils/vlm_safety.py`, `schemas/engine/stage_orchestrator.py`: the
- * `user_language` a run sends steers term matching, not the wording), and two
- * of the Stage-3 ones are developer strings that would put the matched
- * forbidden terms back on the screen. Put the result through
- * `safetyBlockKey()` and render THAT.
- *
- * Takes either an axios error or the payload itself, and reads both spellings
- * the platform uses: the route's `reason` and the stream's `blocked_reason`.
+ * The block message a refused run carries (`safety_block`, the server's one
+ * form for every block since 2026-10-30): the checkpoint that stopped it, the
+ * request field it stopped on, the kind of block (`reason_key`) and the reason
+ * in the server's words. The reason is for the record, never for the screen:
+ * the server writes it in German and only in German, and two of the Stage-3
+ * ones are developer strings that would put the matched forbidden terms back on
+ * it. A reader gets the sentence `reason_key` names (`safetyBlockMessageKey`).
  */
-export function blockedReason(e: any): string | null {
+export interface SafetyBlock {
+  /** `intake`, `before_model`, `result` or `refusal`. */
+  checkpoint: string
+  /** The request field it stopped on, where the server knows it. */
+  field: string
+  /**
+   * `personal_data`, `content`, `image_content`, `video_content`, `symbol`,
+   * `code`, `image_unchecked`, `unavailable` or `refusal`.
+   */
+  reason_key: string
+  reason: string
+}
+
+/**
+ * The block message out of an answer, or null where the answer is no block.
+ *
+ * Takes either an axios error or the payload itself: a route's body, a
+ * stream's event, a run's `GenerationResult`.
+ */
+export function safetyBlockOf(e: any): SafetyBlock | null {
   const d = e?.response?.data ?? e
-  if (!d || typeof d !== 'object' || d.status !== 'blocked') return null
-  for (const key of ['reason', 'blocked_reason']) {
-    const v = d[key]
-    if (typeof v === 'string' && v.trim()) return v
+  const block = d && typeof d === 'object' ? d.safety_block : null
+  return block && typeof block === 'object' && typeof block.reason_key === 'string' ? block : null
+}
+
+/**
+ * Which of the platform's `safetyBlocked.*` sentences a block message is, so
+ * that the reader gets it in their own language.
+ *
+ * A refused picture says whether the platform made it (the check at the
+ * result) or was given it: read as anything else, a picture the platform
+ * refused reads as a refused prompt, and the reader is told to reword what was
+ * never the subject. A refused video is one the platform made: only the check
+ * at the result looks at a video. A check that could not be carried out is
+ * said as that, and never as a rating of what somebody made.
+ */
+export function safetyBlockMessageKey(block: SafetyBlock): string {
+  switch (block.reason_key) {
+    case 'unavailable': return 'safetyBlocked.systemUnavailable'
+    case 'symbol': return 'safetyBlocked.para86a'
+    case 'personal_data': return 'safetyBlocked.dsgvo'
+    case 'image_content':
+      return block.checkpoint === 'result' ? 'safetyBlocked.vlm' : 'safetyBlocked.inputImage'
+    case 'video_content': return 'safetyBlocked.video'
+    default: return 'safetyBlocked.generic'
   }
-  return null
 }
 
 /**
  * Which sentence a block event gets — the reading every surface uses.
  *
- * Take this one wherever a block ARRIVES, and `safetyBlockKey` only where there
- * is nothing but a reason. The difference is the event's `operational`: the
- * surface that watched its own check fail states the case as a fact, and no
- * sentence match can reach it, because the client has no German reason to match
- * and a translated one belongs to no language the matcher knows.
+ * `operational` is the surface's own word that its check could not be carried
+ * out at all: the server unreachable, the body unreadable, the stream torn
+ * before its verdict. There is no block message then, and the case is said as
+ * the fault it is. Safety checks never fail open; the corollary is that a
+ * fault must not be read back as a content rating.
+ *
+ * `generated` is the surface's word that a refused picture is one the platform
+ * made and was handed back, as a Latent Lab instrument hands its pictures back
+ * when it records a run. The check where material comes in refused it there,
+ * and the block message says so (`intake`); the reader is still told about a
+ * made picture, not about one they brought.
  */
 export function safetyBlockKeyForEvent(
-  event: { reason?: string | null; stage?: string | number | null; operational?: boolean },
+  event: { block?: SafetyBlock | null; operational?: boolean; generated?: boolean },
 ): string {
-  // The carried case first: a check that could not be carried out is stated by
-  // the surface that saw it fail, and a sentence match cannot reach it — the
-  // client has no German reason to match, and a translated one belongs to no
-  // language the matcher knows. Safety checks never fail open; the corollary
-  // is that a fault must not be read back as a content rating.
   if (event.operational) return 'safetyBlocked.systemUnavailable'
-  return safetyBlockKey(event.reason, event.stage)
-}
-
-/**
- * Which of the platform's `safetyBlocked.*` sentences a reason is, so that the
- * reader gets it in their own language. The mapping is the one the companion
- * has used since the safety wording existed (`components/ChatOverlay.vue`);
- * it lives here so both read the same block the same way.
- *
- * `stage` is the backend's stage marker where a run has one ('vlm_input',
- * 'vlm_safety', or a number). Pass it: without the stage an image the platform
- * refused reads as a refused prompt, and the reader is told to reword what was
- * never the subject.
- */
-export function safetyBlockKey(reason: string | null | undefined, stage?: string | number | null): string {
-  const r = reason || ''
-  // Operational failure first, before any stage-keyed branch: a fail-closed
-  // block whose cause is a technical fault must never read as a content rating.
-  // The markers are the intake's, so one list answers this question in both
-  // places — the quick route's DSGVO branch says „Sicherheitsprüfung nicht
-  // verfügbar" under a DSGVO prefix, and read by the prefix it accused the
-  // writer of naming a person while the check had not run at all.
-  if (isOperationalReason(r)) return 'safetyBlocked.systemUnavailable'
-  if (stage === 'vlm_input') return 'safetyBlocked.inputImage'
-  if (r.includes('VLM') || stage === 'vlm_safety') return 'safetyBlocked.vlm'
-  if (r.includes('§86a')) return 'safetyBlocked.para86a'
-  if (r.includes('DSGVO') || r.includes('Persönliche Daten')) return 'safetyBlocked.dsgvo'
-  if (r.includes('Kids-Filter') || r.includes('Kinder-Schutzfilter')) return 'safetyBlocked.kids'
-  if (r.includes('Youth-Filter') || r.includes('Jugendschutzfilter')) return 'safetyBlocked.youth'
+  if (event.generated && event.block?.reason_key === 'image_content') return 'safetyBlocked.vlm'
+  if (event.block) return safetyBlockMessageKey(event.block)
   return 'safetyBlocked.generic'
 }
 
@@ -424,7 +427,11 @@ export function useGenerationStream() {
   const previewImage = ref<string | null>(null)
   const isExecuting = ref(false)
   const currentStage = ref<'idle' | 'stage3' | 'stage4' | 'complete'>('idle')
-  /** The model stage 3 translates and checks with, as the backend reports it. */
+  /**
+   * The translation model of stage 3 (STAGE3_MODEL), as the backend reports
+   * it. The check before the model asks the safety classifier, which this
+   * value does not name.
+   */
   const stage3Model = ref('')
   const modelMeta = ref<Record<string, any> | null>(null)
   const stage4DurationMs = ref(0)
@@ -437,6 +444,12 @@ export function useGenerationStream() {
   // if it knows whether the steps have started and whether they are done.
   const genStep = ref(0)
   const genTotalSteps = ref(0)
+  // The phase the generation is in, where the backend names it: ComfyUI runs
+  // name it by the node executing (devserver/my_app/services/
+  // comfyui_ws_client.py, node_phase), 'other' while a node runs that no phase
+  // names. The diffusers backend sends 'other' once its steps and decode are
+  // done and nothing before; until then this stays empty.
+  const genPhaseName = ref('')
 
   // Queue transparency + per-device lock
   const queuePosition = ref(0)
@@ -503,14 +516,8 @@ export function useGenerationStream() {
     if (params.input_image) {
       queryParams.set('input_image', params.input_image)
     }
-    if (params.input_image1) {
-      queryParams.set('input_image1', params.input_image1)
-    }
-    if (params.input_image2) {
-      queryParams.set('input_image2', params.input_image2)
-    }
-    if (params.input_image3) {
-      queryParams.set('input_image3', params.input_image3)
+    for (const [key, value] of Object.entries(params)) {
+      if (/^input_image\d+$/.test(key) && value) queryParams.set(key, String(value))
     }
     if (params.alpha_factor !== null && params.alpha_factor !== undefined) {
       queryParams.set('alpha_factor', String(params.alpha_factor))
@@ -675,14 +682,14 @@ export function useGenerationStream() {
         const data = ssePayload(e) ?? {}
         console.log('[GENERATION-STREAM] Blocked:', data)
         // Centralized: report block to safetyStore (Trashy integration)
-        safetyStore.reportBlock(data.stage || 3, data.reason || 'Inhalt blockiert', data.found_terms || [], data.vlm_description)
+        const block = safetyBlockOf(data)
+        safetyStore.reportBlock(block, { vlmDescription: data.vlm_description || undefined })
         eventSource.close()
         endRun()
         currentStage.value = 'idle'
         resolve({
           status: 'blocked',
-          blocked_reason: data.reason,
-          blocked_stage: data.stage,
+          safety_block: block ?? undefined,
           found_terms: data.found_terms || []
         })
       })
@@ -704,6 +711,7 @@ export function useGenerationStream() {
         previewImage.value = null
         genStep.value = 0
         genTotalSteps.value = 0
+        genPhaseName.value = ''
         modelMeta.value = data.model_meta || null
         _stage4StartTime = Date.now()
       })
@@ -718,7 +726,8 @@ export function useGenerationStream() {
       eventSource.addEventListener('generation_progress', (e: MessageEvent) => {
         const data = ssePayload(e)
         if (!data) return
-        generationProgress.value = data.percent
+        // The event that ends a phase carries no percentage.
+        if (typeof data.percent === 'number') generationProgress.value = data.percent
         // The card is drawing THIS run — whatever place in the queue it last
         // held is over. Nothing else clears it here: once steps arrive every
         // few hundred milliseconds the server's idle heartbeat, which is where
@@ -728,6 +737,7 @@ export function useGenerationStream() {
         queueWaitS.value = null
         if (typeof data.step === 'number') genStep.value = data.step
         if (typeof data.total_steps === 'number') genTotalSteps.value = data.total_steps
+        if (typeof data.phase === 'string') genPhaseName.value = data.phase
         if (data.preview) {
           previewImage.value = data.preview
         }
@@ -758,6 +768,9 @@ export function useGenerationStream() {
         currentStage.value = 'complete'
         generationProgress.value = 100
         stage4DurationMs.value = _stage4StartTime ? Date.now() - _stage4StartTime : 0
+        // The sheet stage4_start carried was built before the run; this one
+        // was built after it and names the model the run generated with.
+        if (data.model_meta) modelMeta.value = data.model_meta
         resolve({
           status: 'success',
           media_output: data.media_output,
@@ -907,6 +920,7 @@ export function useGenerationStream() {
     _stage4StartTime = 0
     genStep.value = 0
     genTotalSteps.value = 0
+    genPhaseName.value = ''
     queuePosition.value = 0
     queueWaitS.value = null
   }
@@ -927,6 +941,7 @@ export function useGenerationStream() {
     encodingInfo,
     genStep,
     genTotalSteps,
+    genPhaseName,
 
     // Queue transparency + per-device lock
     queuePosition,

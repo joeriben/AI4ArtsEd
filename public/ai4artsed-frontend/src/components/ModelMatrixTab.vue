@@ -229,6 +229,7 @@
 
     <div class="matrix-notes">
       <p><strong>{{ $t('settings.matrix.visionTerm') }}</strong> {{ $t('settings.matrix.visionNote') }}</p>
+      <p><strong>{{ $t('settings.matrix.interceptionTerm') }}</strong> {{ $t('settings.matrix.interceptionNote') }}</p>
     </div>
 
     <div class="matrix-edit-section">
@@ -331,7 +332,7 @@ const emit = defineEmits<{
 const COLUMN_ORDER: Array<{ id: string; label: string }> = [
   { id: 'mistral', label: 'Mistral EU' },
   { id: 'ionos', label: 'IONOS EU' },
-  { id: 'mammouth', label: 'Mammouth EU' },
+  { id: 'mammouth', label: 'Mammouth' },
   { id: 'anthropic', label: 'Anthropic' },
   { id: 'openai', label: 'OpenAI' },
   { id: 'openrouter', label: 'OpenRouter' },

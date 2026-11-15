@@ -48,7 +48,8 @@ class CanvasRecorder:
         user_id: str = 'anonymous',
         batch_id: Optional[str] = None,
         batch_index: Optional[int] = None,
-        base_path: Optional[Path] = None
+        base_path: Optional[Path] = None,
+        safety_level: Optional[str] = None,
     ):
         """
         Initialize recorder and save workflow.
@@ -61,6 +62,10 @@ class CanvasRecorder:
             batch_id: Optional batch identifier (for batch runs)
             batch_index: Optional index within batch (0, 1, 2, ...)
             base_path: Base directory for exports/json/
+            safety_level: The level the run is made at, resolved by the caller
+                inside the request. A chat that opens the run reads it
+                (safety_gate.run_opens_at); None is unknown, which answers for
+                no level.
         """
         import uuid as uuid_module
 
@@ -97,6 +102,7 @@ class CanvasRecorder:
             "timestamp": datetime.now().isoformat(),
             "device_id": self.device_id,
             "user_id": user_id,
+            "safety_level": safety_level,
             "workflow_file": "workflow.json",
             "entities": []
         }
@@ -153,8 +159,9 @@ class CanvasRecorder:
         # medium as anything from the schema pipeline. It left unmarked for as
         # long as this recorder wrote past the watermark service.
         if isinstance(content, bytes):
-            from my_app.services.media_marking import mark_or_pass
-            content = mark_or_pass(content, node_type, metadata or {}, "[CANVAS_RECORDER]")
+            from my_app.services.media_marking import mark_for_disk
+            content, filename = mark_for_disk(content, node_type, metadata or {}, filename, "[CANVAS_RECORDER]")
+            filepath = self.final_folder / filename
 
         # Write file
         self._write_file(filepath, content)
@@ -344,7 +351,8 @@ def get_canvas_recorder(
     user_id: str = 'anonymous',
     batch_id: Optional[str] = None,
     batch_index: Optional[int] = None,
-    base_path: Optional[Path] = None
+    base_path: Optional[Path] = None,
+    safety_level: Optional[str] = None,
 ) -> CanvasRecorder:
     """
     Get or create a canvas recorder for a specific run.
@@ -357,6 +365,7 @@ def get_canvas_recorder(
         batch_id: Optional batch identifier
         batch_index: Optional batch index
         base_path: Base directory
+        safety_level: The level the run is made at (CanvasRecorder)
 
     Returns:
         CanvasRecorder instance
@@ -374,7 +383,8 @@ def get_canvas_recorder(
         user_id=user_id,
         batch_id=batch_id,
         batch_index=batch_index,
-        base_path=base_path
+        base_path=base_path,
+        safety_level=safety_level,
     )
     _active_canvas_recorders[run_id] = recorder
     return recorder

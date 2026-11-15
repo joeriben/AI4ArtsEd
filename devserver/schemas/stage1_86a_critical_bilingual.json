@@ -1,10 +1,10 @@
 {
-  "description": "Bilingual §86a StGB critical terms for pre-translation and post-LLM override filtering",
-  "usage": "Used in Stage 1 execute_stage1_safety_unified() for: (1) Pre-translation fast-filter (§86a instant block), (2) Post-LLM hard filter to override US-trained model decisions. Only terms for detected input language + EN are checked.",
-  "rationale": "US-trained LLMs may be too permissive with historical Nazi/terrorist content. This post-filter acts as a safety net to catch symbols that slip through cultural/historical context reasoning.",
+  "description": "§86a StGB terms by language, read by the safety checks and by the upload check of the knowledge library",
+  "usage": "Loaded by load_bilingual_86a_terms() in schemas/engine/stage_orchestrator.py and matched there, fuzzy from six letters on. my_app/services/safety_gate.py runs the lists of every language over what a media model receives, as written and in English, and over a text a language model wrote; at every level but research. my_app/services/upload_gate.py runs the lists of the detected language and English over the text layer of a PDF uploaded to the knowledge library, at every level.",
+  "rationale": "At the safety checks a hit decides nothing alone: the list knows neither the context of a word nor the symbols it lacks. The safety classifier answers the level's question in any case; after a hit it also answers the symbol question.",
   "filters": {
     "stage1_critical_86a": {
-      "description": "Critical §86a StGB terms (German Law) that MUST be blocked - structured by language for selective checking",
+      "description": "§86a StGB terms (German law), by language: the safety checks read every language, the upload check of the knowledge library the detected language and English",
       "legal_reference": "§86a StGB (Germany) - Use of symbols of unconstitutional and terrorist organizations",
       "terms_by_language": {
         "en": [
@@ -63,5 +63,5 @@
       }
     }
   },
-  "note": "This is a CRITICAL subset for POST-FILTER OVERRIDE. When the safety LLM says 'SAFE' but translated text contains these terms, OVERRIDE to BLOCKED. This catches cases where US-trained models might allow historical/educational context that violates German law §86a StGB."
+  "note": "At the upload check of the knowledge library a hit alone rejects the document; no classifier is asked there."
 }

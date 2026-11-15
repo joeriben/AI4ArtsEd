@@ -158,9 +158,12 @@ import SpriteProgressAnimation from '@/components/SpriteProgressAnimation.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { printMedia } from '@/lib/printMedia'
+import { downloadMedia as fetchAndSaveMedia } from '@/lib/downloadMedia'
 import { handOverImage } from '@/lib/handOverImage'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useAnalysisEventStore } from '@/stores/analysisEvent'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { safetyBlockOf } from '@/composables/useGenerationStream'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 
 import { STANDARD_SEED } from '@/composables/useSeedAutomatic'
@@ -219,6 +222,7 @@ const showAnalysis = ref(false)
 // Page Context for Träshy
 const pageContextStore = usePageContextStore()
 const analysisEventStore = useAnalysisEventStore()
+const safetyStore = useSafetyEventStore()
 
 const trashyFocusHint = computed<FocusHint>(() => {
   // During/after execution: bottom-right
@@ -318,7 +322,8 @@ async function executeWorkflow() {
       console.log('[Seed Logic] No changes → New random seed:', currentSeed.value)
     }
 
-    // Lab Architecture: /legacy = Stage 1 (Safety) + Direct ComfyUI workflow
+    // Lab Architecture: /pipeline/direct = the intake, the check before the
+    // model, the workflow, the check at the result
     const response = await postDirectRun({
       prompt: inputText.value,
       output_config: selectedOutputConfig.value,
@@ -509,21 +514,12 @@ async function downloadMedia() {
     const ext = extensions[primaryOutput.value.type] || 'bin'
     const filename = `ai4artsed_${runId}.${ext}`
 
-    // Fetch and download
-    const response = await fetch(primaryOutput.value.url)
-    if (!response.ok) {
-      throw new Error(`Download failed: ${response.status}`)
-    }
-
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = filename
-    link.click()
-    URL.revokeObjectURL(url)
-
-    console.log('[Download] Media downloaded:', filename)
+    // The platform's one download (lib/downloadMedia.ts): the bytes' type
+    // corrects the extension, and bytes that do not carry the AI-origin
+    // disclosure are saved as `_ai_generated`. The address is a blob this page
+    // holds, so the bytes decide, not a name from the server.
+    const problem = await fetchAndSaveMedia(primaryOutput.value.url, filename)
+    if (problem) throw new Error(problem)
 
   } catch (error) {
     console.error('[Download] Error:', error)
@@ -569,6 +565,13 @@ async function analyzeImage() {
 
     if (!response.ok) {
       const errorData = await response.json()
+      // An analysis the check held back is said where every block on this
+      // platform is said, not as a failure.
+      const refused = response.status === 403 ? safetyBlockOf(errorData) : null
+      if (refused) {
+        safetyStore.reportBlock(refused)
+        return
+      }
       throw new Error(errorData.error || `HTTP ${response.status}`)
     }
 

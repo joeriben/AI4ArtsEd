@@ -120,18 +120,19 @@ class TestThePipelineEngineStreamsItsCloudCalls:
         assert response.model_used == MODEL
         assert response.dispatched_model == f"mammouth/{MODEL}"
 
-    def test_nothing_caps_the_answer_unless_a_config_asks(self, offline_model_lists,
-                                                          transport):
+    def test_nothing_caps_the_answer(self, offline_model_lists, transport):
         """A hard output cap truncates substance mid-sentence, and on a
         reasoning model it is spent before a line of content is written."""
         engine = engine_module.PromptInterceptionEngine()
         _run(engine, f"mammouth/{MODEL}")
-        assert transport[0]["max_tokens"] is None
+        assert transport[0].get("max_tokens") is None
 
-    def test_a_cap_a_config_did_ask_for_is_forwarded(self, offline_model_lists, transport):
+    def test_a_cap_a_config_names_is_not_forwarded(self, offline_model_lists, transport):
+        """Until 2026-11-08 the engine forwarded a config's max_tokens; no
+        config named one. The temperature beside it still goes."""
         engine = engine_module.PromptInterceptionEngine()
-        _run(engine, f"mammouth/{MODEL}", {"max_tokens": 64000, "temperature": 0.2})
-        assert transport[0]["max_tokens"] == 64000
+        _run(engine, f"mammouth/{MODEL}", {"max_tokens": 512, "temperature": 0.2})
+        assert transport[0].get("max_tokens") is None
         assert transport[0]["temperature"] == 0.2
 
     def test_the_stage_the_request_carries_is_what_gets_booked(self, offline_model_lists,
@@ -265,17 +266,18 @@ class TestThePipelineEngineStreamsItsCloudCalls:
         engine = engine_module.PromptInterceptionEngine()
         _run(engine, f"anthropic/{MODEL}")
         assert calls[0]["temperature"] is None
-        assert calls[0]["max_tokens"] is None
+        assert calls[0].get("max_tokens") is None
 
     def test_what_a_config_did_ask_anthropic_for_is_forwarded(self, offline_model_lists,
                                                               monkeypatch):
+        """The temperature a config names goes; a cap it names does not."""
         calls = []
         monkeypatch.setattr(engine_module, "call_chat",
                             lambda provider, messages, model, **kw: calls.append(kw) or _answer())
         engine = engine_module.PromptInterceptionEngine()
-        _run(engine, f"anthropic/{MODEL}", {"temperature": 0.2, "max_tokens": 64000})
+        _run(engine, f"anthropic/{MODEL}", {"temperature": 0.2, "max_tokens": 512})
         assert calls[0]["temperature"] == 0.2
-        assert calls[0]["max_tokens"] == 64000
+        assert calls[0].get("max_tokens") is None
         assert calls[0]["stage"] == "stage2"
 
     def test_anthropic_reasoning_alone_is_refused_as_an_intercepted_text(
@@ -514,32 +516,62 @@ class TestTheImageCheckFailsClosed:
         classifier(raises=AssertionError("asked on " + level))
         assert vlm_safety.vlm_safety_check(picture, level)[0] is True
 
-    def test_open_is_checked(self, picture, classifier):
-        """It was not. The old code checked a level only if this file happened
-        to carry a describe prompt for it, and it carried kids and youth, so
-        every picture at 'open' went out unlooked at."""
-        classifier(value=0.97)
+    def test_open_is_asked_the_childs_question(self, picture, classifier):
+        """It was not checked once. The old code checked a level only if this
+        file happened to carry a describe prompt for it, and it carried kids
+        and youth, so every picture at 'open' went out unlooked at. Since
+        2026-11-01 open is no level, and a value that still carries it is
+        asked as a level nobody set."""
+        from my_app.services import safety_classifier as sc
+        seen = {}
+        classifier(value=0.97, record=seen)
         assert vlm_safety.vlm_safety_check(picture, "open")[0] is False
+        assert seen["query"] == sc.LEVEL_QUERIES["kids"]["image"]
 
     def test_a_level_nobody_set_is_asked_the_childs_question(
             self, picture, classifier):
         from my_app.services import safety_classifier as sc
         seen = {}
-        classifier(value=0.02, record=seen)
-        vlm_safety.vlm_safety_check(picture, "an-unknown-level")
+        # A yes to the first question ends the chain there, so the record is
+        # the child's question and not youth's, which kids asks next.
+        classifier(value=0.97, record=seen)
+        assert vlm_safety.vlm_safety_check(picture, "an-unknown-level")[0] is False
         assert seen["query"] == sc.LEVEL_QUERIES["kids"]["image"]
 
+    def test_kids_asks_youths_picture_question_as_well(self, picture, classifier, monkeypatch):
+        """Kids' own question first, then youth's: a level refuses the picture
+        a less strict level refuses, by construction and not by wording."""
+        from my_app.services import safety_classifier as sc
+        classifier(value=0.02)
+        asked = []
 
-class TestACutVerdictStreamWithholdsTheCode:
-    """The whole check over a real socket, with the verdict cut after the word
-    SAFE — the shape that showed a child a picture on 2026-09-04.
+        def fake(instruct, query, document, images=None):
+            asked.append((instruct, query))
+            return 0.02
+        monkeypatch.setattr(sc, "score", fake)
+        assert vlm_safety.vlm_safety_check(picture, "kids")[0] is True
+        assert asked == [(sc.LEVEL_INSTRUCTS["kids"], sc.LEVEL_QUERIES["kids"]["image"]),
+                         (sc.LEVEL_INSTRUCTS["youth"], sc.LEVEL_QUERIES["youth"]["image"])]
 
-    Nothing is patched between the check and the wire here: what is served is
-    the byte sequence a provider, or a proxy in front of one, produces when it
-    stops in the middle, and what is asserted is what the child sees. The
-    picture no longer travels this way; the sketch check does, because whether
-    JavaScript escapes its sandbox is a question about code and not about
-    content, and the classifier does not answer it.
+    def test_kids_refuses_the_picture_youth_refuses(self, picture, classifier, monkeypatch):
+        from my_app.services import safety_classifier as sc
+        classifier(value=0.02)
+
+        def fake(instruct, query, document, images=None):
+            return 0.97 if query == sc.LEVEL_QUERIES["youth"]["image"] else 0.02
+        monkeypatch.setattr(sc, "score", fake)
+        assert vlm_safety.vlm_safety_check(picture, "kids")[0] is False
+        assert vlm_safety.vlm_safety_check(picture, "kids")[1] == vlm_safety.VLM_CONTENT_BLOCK_MESSAGE
+
+
+class TestTheSketchCheckAsksNoProvider:
+    """Until 2026-11-01 the sketch check asked the verdict model over this
+    transport, and this class held that a verdict stream cut after the word
+    SAFE withheld the code. The check at the result asks the local classifier
+    whether a sketch uses what the pattern list found in a way that escapes
+    its sandbox. What is held here is that it asks no provider: one stands
+    scripted to answer SAFE where the verdict model was, and the check does
+    not reach it.
 
     The socket harness is imported from the reader's own test file rather than
     written again here (project rule 13): a second copy of a scripted provider
@@ -548,36 +580,8 @@ class TestACutVerdictStreamWithholdsTheCode:
 
     SKETCH = "function setup() { eval('createCanvas(400, 400)') }"
 
-    def _run(self):
-        import asyncio
-        from schemas.engine import stage_orchestrator as so
-        return asyncio.run(so.execute_stage3_safety_code(self.SKETCH, "kids", "code"))
-
     @pytest.fixture()
-    def cut_after_safe(self, monkeypatch):
-        from test_openai_style_stream import (
-            _Provider, chunk, sse, sse_cut_under_connection_close,
-        )
-        from my_app.services import openai_style_stream as oss
-
-        provider = _Provider()
-        provider.script(sse_cut_under_connection_close([sse(chunk({"content": "SAFE"}))]))
-        monkeypatch.setitem(oss._OPENAI_STYLE_PROVIDERS, "mammouth",
-                            lambda: (provider.url, "test-key"))
-        monkeypatch.setattr(vlm_safety.config, "STAGE3_MODEL", VERDICT_MODEL)
-        yield provider
-        provider.close()
-
-    def test_the_code_is_withheld(self, cut_after_safe):
-        from schemas.engine import stage_orchestrator as so
-        result = self._run()
-        assert result["safe"] is False
-        assert result["abort_reason"] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
-
-    def test_the_same_bytes_ending_properly_do_let_it_through(self, monkeypatch):
-        """The control, and it matters: without it the block above could come
-        from the socket harness rather than from the cut. The same word, the
-        same transport, a stream that says it finished."""
+    def provider(self, monkeypatch):
         from test_openai_style_stream import _Provider, chunk, sse, sse_ok
         from my_app.services import openai_style_stream as oss
 
@@ -586,12 +590,25 @@ class TestACutVerdictStreamWithholdsTheCode:
         monkeypatch.setitem(oss._OPENAI_STYLE_PROVIDERS, "mammouth",
                             lambda: (provider.url, "test-key"))
         monkeypatch.setattr(vlm_safety.config, "STAGE3_MODEL", VERDICT_MODEL)
-        try:
-            result = self._run()
-        finally:
-            provider.close()
-        assert result["safe"] is True
-        assert result["positive_prompt"] == self.SKETCH
+        yield provider
+        provider.close()
+
+    @pytest.mark.parametrize("refused", [True, False])
+    def test_the_classifier_decides_and_no_provider_is_asked(self, provider, monkeypatch,
+                                                             refused):
+        from my_app.services import safety_classifier, safety_gate
+
+        asked = []
+
+        def is_unsafe(policy, document, images=None):
+            asked.append(document)
+            return refused
+
+        monkeypatch.setattr(safety_classifier, "is_unsafe", is_unsafe)
+        verdict = safety_gate.check_result_code(self.SKETCH, level="kids")
+        assert verdict.passed is not refused
+        assert self.SKETCH in asked
+        assert provider.requests == []
 
 
 # ---------------------------------------------------------------------------
@@ -702,6 +719,13 @@ class TestTheChatHelpersProvidersReachTheSharedReader:
             0.7, None, True, None, None)
         assert result["content"] == "Ich überlege noch."
         assert result["thinking"] == "Ich überlege noch."
+        assert chat_routes.reasoning_only(result)
+
+    def test_an_answer_beside_its_reasoning_is_not_reasoning_only(self):
+        assert not chat_routes.reasoning_only(
+            {"content": "Antwort", "thinking": "Ich überlege.", "tool_calls": None})
+        assert not chat_routes.reasoning_only({"content": "Antwort", "thinking": None})
+        assert not chat_routes.reasoning_only({"content": "", "thinking": ""})
 
 
 class TestATemperatureIsSentWhenSomebodyAskedForOne:

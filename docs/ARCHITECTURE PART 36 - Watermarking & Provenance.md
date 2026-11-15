@@ -26,11 +26,11 @@ The platform marks the AI-generated outputs it hands out, in the file itself, at
 
 | Modality | Metadata layer | Invisible layer | Visible layer (optional) |
 |---|---|---|---|
-| **Image (PNG)** | XMP iTXt + tEXt chunks | DWT-DCT (imwatermark) | Pillow text overlay with outline |
+| **Image (PNG)** | XMP iTXt + tEXt chunks spliced in after IHDR — no re-encode | DWT-DCT (imwatermark) | Pillow text overlay with outline |
 | **Image (JPEG)** | EXIF + XMP spliced in as APP1 segments — no re-encode | DWT-DCT (imwatermark) | Pillow text overlay with outline |
 | **Image (WebP, single frame)** | XMP | — | Pillow text overlay |
 | **Image (animated GIF/WebP/APNG)** | none — see below | — | — |
-| **Video (MP4/WebM/MKV)** | ffmpeg container atoms (`-c copy`, lossless; mp4 needs `-movflags use_metadata_tags`) | not yet — roadmap | ffmpeg `drawtext` filter |
+| **Video (MP4/WebM/MKV)** | ffmpeg container atoms (`-c copy`, lossless, the container stays what it was; mp4 needs `-movflags use_metadata_tags`, and `+faststart` keeps its index in front) | not yet — roadmap | ffmpeg `drawtext` filter |
 | **Audio (MP3/FLAC/M4A)** | ffmpeg container metadata (`-c copy`, lossless) | not yet — roadmap | not implemented |
 | **Audio (WAV)** | XMP packet in a RIFF `_PMX` chunk, appended after ffmpeg | not yet — roadmap | not implemented |
 | **3D (GLB)** | glTF `asset.extras`, JSON chunk rebuilt, BIN chunk untouched | — | — |
@@ -54,6 +54,22 @@ people can study exactly that material. So the two APP1 segments are spliced
 into the marker stream after SOI and the entropy-coded data is never read —
 pixel-identical, measured. Only when a visible or invisible layer has to be
 DRAWN does the picture go through an encoder at all.
+
+**A PNG is not re-encoded either (since 2026-11-14).** Pillow's `save()`
+writes only the chunks it is handed, so every PNG marked until then lost the
+ones that were there: the ComfyUI graph in `tEXt prompt`, the SwarmUI
+`parameters`, `pHYs`, `eXIf`. Of the 5,119 unmarked PNG outputs in the
+development storage on 2026-11-14, 2,614 carried the ComfyUI graph and 650 the
+SwarmUI parameters. The text chunks now go in right after IHDR and every other
+chunk stays as it lies; a text chunk under one of the keywords the marking
+writes is replaced, so a corrected value does not stand next to the old one.
+The XMP packet goes into iTXt (UTF-8, uncompressed), the other values into tEXt
+where latin-1 holds them.
+
+**A film stays in its container.** ffmpeg chooses the muxer by the extension
+of the file it writes, and the temporary files were called `.mp4` whatever
+came in: a WebM came back as MP4 bytes under the WebM's name. The temporary
+files now carry the extension the bytes call for.
 
 **An animated picture is left alone.** Pillow writes frame one and drops the
 rest, so marking an 8-frame GIF returned a still. A format with no metadata slot
@@ -88,6 +104,10 @@ marking a person's own photograph as AI-generated would be the false statement
 this service exists to prevent. The upload path therefore only ever *carries
 over* a marking that was already in the file (`carry_disclosure_pnginfo`); it
 never creates one.
+
+SVG is marked only under an entity name that says it is what the run produced
+(`output*`, the sketch types, `generation`, `latent_lab_step`, MIDI): a Stage-2
+text that happens to be SVG code is a record of the run.
 
 The metadata layer in all modalities encodes the IPTC controlled-vocabulary marker `http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia` (the same identifier ISO 22144 specifies for AI-generated media), plus a human-readable description string that includes model, date, and — only when the operator opts in — seed and prompt.
 
@@ -145,15 +165,13 @@ failure returns them unchanged — a download that does not happen is worse than
 one that carries nothing. `src/composables/useMediaMarking.ts` is the client
 side of it.
 
-The hook itself is the same everywhere:
+The four writers that store to disk (the three recorders and the parrot) go
+through one function, which marks and names in one step (§7):
 
 ```python
-if isinstance(content, bytes):
-    try:
-        from my_app.services.watermark_service import watermark_media_bytes
-        content = watermark_media_bytes(content, entity_type, metadata or {})
-    except Exception as e:
-        logger.warning(f"[RECORDER] watermark service unavailable ({e})")
+from my_app.services.media_marking import mark_for_disk
+content, filename = mark_for_disk(content, entity_type, metadata or {}, filename, "[RECORDER]")
+filepath = self.final_folder / filename
 self._write_file(filepath, content)
 ```
 
@@ -183,6 +201,17 @@ watermark_audio_bytes(content: bytes, entity_metadata: dict | None = None) -> by
 watermark_glb_bytes(content: bytes, entity_metadata: dict | None = None) -> bytes
 watermark_svg_bytes(content: bytes, entity_metadata: dict | None = None) -> bytes
 watermark_code_bytes(content: bytes, entity_type: str, entity_metadata: dict | None = None) -> bytes
+
+carries_disclosure(content) -> bool             # one of the two IPTC values in the bytes
+disclosed_source_type(content) -> str | None    # which one
+is_generated_medium(content, entity_type) -> bool
+UNMARKED_SUFFIX = "_ai_generated"
+unmarked_filename(name) -> str                  # the suffix before the extension, once
+plain_filename(name) -> str                     # without it
+
+# services/media_marking.py
+mark_for_disk(raw, entity_type, entity_metadata, filename, tag) -> (bytes, name)
+disclosed_name(content, entity_type, name, tag) -> str
 
 read_media_disclosure(path) -> dict            # was steht wirklich in der Datei
 carry_disclosure_pnginfo(source_info) -> PngInfo | None   # beim Umkodieren mitnehmen
@@ -294,6 +323,78 @@ Defaults live in `config._SETTINGS_DEFAULTS['WATERMARK']` and can be overridden 
 | Audio format undetectable | Skips audio watermark, warning logged |
 
 Pedagogical reasoning: a transient marking issue must not stop a workshop. A missing AI-origin tag on a single artifact is recoverable through workshop context. A failed generation that blocks a participant from continuing is not.
+
+### An unmarked file says so in its name (since 2026-11-14)
+
+The project lead, 2026-11-14: „Regel: ungekennzeichnete Dateien erhalten ein
+filename-Suffix _ai_generated. und Ton und Film werden nun ergänzt; ebenfalls 3D“.
+
+The marking stays fail-open. A file the disclosure did not get into now
+carries `_ai_generated` before the extension of its name, for every medium.
+
+- **The bytes decide.** Every carrier in §2 writes the IPTC value as plain
+  UTF-8, so `carries_disclosure` asks whether one of the two DigitalSourceType
+  URIs is in the file. After marking, PNG, JPEG, WebP, WAV, MP3, FLAC, Ogg,
+  M4A, MP4, WebM, GLB, SVG and sketch code carry it
+  (`tests/test_unmarked_suffix.py`). A PNG whose value sits only in a
+  compressed chunk is marked once more, plainly, so the test and the file agree.
+- **The writers name what they store.** `mark_for_disk` marks, checks, and
+  returns the name to store under: pipeline recorder, canvas recorder, both
+  write sites of the Latent Lab recorder, and the parrot's sung answer. The
+  record names that file, and the log says so at ERROR. A Latent Lab output
+  copied by reference keeps its bytes and is named by the same test. A plate
+  set again goes under the name its new bytes call for, and the record follows;
+  a marked plate drops the suffix its predecessor had.
+- **What goes out under the name.** The media routes hand a stored file out
+  under the name the surface asked for, with the suffix where the stored name
+  has it (`_served_name`); the pipeline, export and parrot routes send the
+  stored name itself. A Latent Lab part sends its name only where it carries
+  the suffix. A miniature goes out with the suffix where it carries nothing
+  (`served_thumbnail_name`); the miniature of a marked film carries the film's
+  value. `/api/speech` and `/api/media/mark` put the suffix into
+  `Content-Disposition` where their bytes carry nothing.
+- **In the browser.** `lib/downloadMedia.ts` puts the suffix into the name the
+  surface chose: from `Content-Disposition` for a file the server hands out
+  (exposed through CORS for the Vite dev server), and by the bytes themselves
+  for an address the page holds (`data:`, `blob:`), which no server named.
+  `useMediaMarking` decides by the bytes the server sends back. The Flow saves
+  a sketch as the run's own file instead of the text on the card, and the
+  Denoising Archaeology saves a frame through the same helper.
+- **Never on what a person brought in** (§2).
+
+### Stored files from before the marking (2026-11-14)
+
+`devserver/scripts/mark_stored_media.py` writes the disclosure into what the
+storage holds from before 2026-08-15; the project lead on how: „es ist
+einfacher die metadaten in den altdateiein zu korrigieren“. It marks in place
+with the same function, dated with the time the run recorded; PNG and JPEG
+are not re-encoded, film and sound are remuxed without touching a stream. A
+file the disclosure has no place in (an animated picture, a picture format
+without a slot, MIDI) is renamed with the suffix and its record rewritten. A
+file whose marking failed otherwise is left for a second run. A file that is a
+copy of an input or a prompt of its own run is left alone. Every replaced file
+and rewritten record is copied first to a new directory outside the repository
+and the storage. The DevServer is restarted afterwards: it holds the records it
+has read in memory.
+
+Besides the files the records name, a medium in a run's folder that no record
+names is taken as an output of that run, unless its name says a person brought
+it in or its bytes are a copy of what a person brought in. On the development
+machine these were nine files: early runs whose record lists nothing, a film
+converted to an image extension, a canvas image from an older recorder, a song
+filed under its title.
+
+Run on the development machine on 2026-11-15: 6,979 outputs marked (11/2025 to
+2026-08), 9,420 already marked, none renamed. Every replaced file was compared
+with its original afterwards: same pixels, same streams, every PNG chunk kept.
+Left as they are: an 11-byte file under an output's name that is no picture
+(`2025-11-04/legacy_20251104/5bef5a9c-…/03_output_image.png`), and five
+sketch files that hold their run's prompt and no code. The originals lie in
+`stored_media_before_disclosure_20261115_010215` beside the repository
+(12.2 GB).
+A marked file carries the time of the marking as its modification time, so
+each miniature is built again from the marked file. The script has not run on
+production (2026-11-15).
 
 ---
 
@@ -415,7 +516,12 @@ These are open items, prioritized by pedagogical value rather than compliance pr
 | `devserver/my_app/services/watermark_service.py` | service implementation, public API |
 | `devserver/my_app/services/pipeline_recorder.py` | hook in `save_entity()` |
 | `devserver/my_app/services/canvas_recorder.py` | hook in `save_entity()` |
-| `devserver/my_app/services/latent_lab_recorder.py` | hook at both write sites (`_marked`) |
+| `devserver/my_app/services/latent_lab_recorder.py` | hook at both write sites (`_marked`), reference copies and plates named by their bytes |
+| `devserver/my_app/services/media_marking.py` | `mark_for_disk`, `disclosed_name`: mark, check, name |
+| `devserver/my_app/services/thumbnails.py` | miniatures carry the source's marking; `served_thumbnail_name` |
+| `devserver/scripts/mark_stored_media.py` | marks the stored files from before 2026-08-15 |
+| `public/ai4artsed-frontend/src/lib/downloadMedia.ts` | the suffix in the browser: `carriesDisclosure`, `unmarkedName` |
+| `devserver/tests/test_unmarked_suffix.py` | the name rule, per format and per writer |
 | `devserver/schemas/engine/pipeline_executor.py` | marks the base64 a run hands back |
 | `devserver/my_app/routes/media_routes.py` | `/api/media/disclosure/<run_id>` reads it back |
 | `devserver/config.py` | `_SETTINGS_DEFAULTS['WATERMARK']` |
@@ -428,16 +534,17 @@ These are open items, prioritized by pedagogical value rather than compliance pr
 
 - The invisible image watermark payload is capped at 32 characters; images smaller than 256 px on the short edge are skipped (DWT decomposition needs minimum frame size).
 - Container metadata is stripped when files are re-encoded through a tool that does not preserve metadata. The invisible image layer is the mitigation against this for images; audio and video do not yet have an equivalent fallback. Innerhalb der Plattform ist der eine bekannte Umkodier-Punkt (Bild-Upload) seit 2026-08-15 abgedeckt, s. o.
-- **Ogg trägt nichts.** Der ffmpeg-Ogg-Muxer schreibt beim `-c copy` überhaupt
-  keine Vorbis-Kommentare — die Ausgabe kommt tag-los heraus, geprüft am
-  2026-08-15. Kein Ausgabe-Config der Plattform erzeugt derzeit Ogg (Ton fällt
-  in wav und mp3), die Lücke ist also latent und nicht live; sie zu schließen
-  hieße, das Kommentar-Paket selbst zu schreiben.
+- **Ogg** (Vorbis) trägt den Wert nach der Markierung, geprüft am 2026-11-14
+  mit dem ffmpeg der Entwicklungsmaschine (`tests/test_unmarked_suffix.py`).
+  Die Feststellung vom 2026-08-15, der Muxer schreibe keine Kommentare, trifft
+  dort nicht zu. Kein Ausgabe-Config der Plattform erzeugt derzeit Ogg.
 - **Animierte Bilder tragen nichts** (GIF, animiertes WebP, APNG) — bewusst, s. §2.
+  Sie heißen seit 2026-11-14 `_ai_generated`.
 - **MIDI trägt nichts.** `/api/media/midi/<run_id>` liefert aus, es gibt aber
   keinen Schreiber dafür und `MThd` erkennt der Schnüffler nicht. Kein
   Ausgabe-Config erzeugt derzeit MIDI; die Karte sagt für eine solche Datei
-  ehrlich „keine in der Datei".
+  ehrlich „keine in der Datei". Eine solche Datei heißt seit 2026-11-14
+  `_ai_generated`.
 - **Der PDF-Bericht trägt den Beleg nur am Dokument.** `SessionExportView`
   kodiert jedes Bild über eine Canvas neu, bevor es eingebettet wird, und das
   streift die Kennzeichnung ab. Das Dokument selbst sagt jetzt in seinen
@@ -451,8 +558,14 @@ These are open items, prioritized by pedagogical value rather than compliance pr
   sichern.
 - **Das Code-Feld der JSON-Antwort trägt nichts.** Die Datei unter
   `/api/media/p5/<run_id>` ist markiert, das Feld `media_output['code']`
-  daneben enthält die rohe Zeichenkette. Kein Herunterladen-Weg nimmt heute
-  dieses Feld — der Sandkasten zeigt es in einem Textfeld. (Die Korrektur säße
-  in `schema_pipeline_routes.py`; die Datei trägt gerade nicht-committete
-  Änderungen einer parallelen Sitzung und wurde deshalb nicht angefasst.)
+  daneben enthält die rohe Zeichenkette. Der Herunterladen-Knopf der Flow-Fläche
+  nahm bis 2026-11-14 dieses Feld; seither nimmt er die Datei des Laufs, und
+  eine Skizze ohne Lauf geht als `_ai_generated` hinaus. Der Sandkasten zeigt
+  das Feld in einem Textfeld.
+- **Was die Seite selbst zeigt, lässt sich am Namen nicht steuern.** Ein Bild,
+  das als `data:`- oder `blob:`-Adresse auf der Seite steht (die Latent-Lab-
+  Ansichten, die Stimme), speichert der Browser über das Kontextmenü oder die
+  eigene Steuerung eines Audio-Elements unter einem Namen, den er selbst wählt.
+  Trägt das Bild die Kennzeichnung, reist sie mit; trägt es keine, sagt der
+  Name es nicht. Die Knöpfe der Plattform gehen über `lib/downloadMedia.ts`.
 - For multimodal outputs (e.g. image-to-video chains), the marking is applied independently per artifact. We do not currently embed cross-references between artifacts of the same generation run; this is a possible future feature, not a current one.

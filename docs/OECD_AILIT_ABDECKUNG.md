@@ -1,8 +1,10 @@
+> **VERWORFENE ARCHIVDATEI.** Diese Datei gehört zu den Versuchen vor den Nutzungsberichten V 1.0, die Help-Texte zu überarbeiten und den Teilen der Plattform Kategorien des AILit-Rahmenwerks zuzuordnen. Die Projektleitung hat diese Versuche verworfen (`docs/DEVELOPMENT_DECISIONS.md`, Eintrag vom 2026-11-14). Die Datei ist weder Quelle noch Abgleich. Maßgeblich sind die Nutzungsberichte V 1.0 in `docs/use_reports/v1.0/`. Sie beruhen auf der handlungsorientierten Erkundung der Seiten (Lauf vom 2026-11-02/03); auf dieser Grundlage sind die AILit-Kategorien zugeordnet und die Unterrichtsszenarien gefunden.
+
 # Welche Maßnahmen des AILit-Rahmenwerks diese Plattform unterstützt, nach Kompetenz
 
 **Quelle des Wortlauts:** OECD / European Union (2026), *Empowering learners for the age of AI: An AI literacy framework for primary and secondary education*, OECD Publishing, Paris, https://doi.org/10.1787/65cd27d4-en, CC BY 4.0. Wortlaut und Seitenzahlen in `docs/ailit/learner_expectations.tsv` und `docs/ailit/classroom_scenarios.tsv`, Herkunft und Lesart in `docs/ailit/QUELLE.md`.
 
-**Quelltext.** Quelle ist `docs/ailit/unterstuetzung.tsv`; dort wird geändert, und `python3 devserver/scripts/build_ailit_support.py` schreibt diese Datei, `docs/AILIT_ORTE_ZUORDNUNG.md`, `docs/AILIT_ZUORDNUNGSTABELLE.md` und `devserver/my_app/knowledge/ailit_coverage.json` neu.
+**Quelltext.** Quelle ist `docs/ailit/unterstuetzung.tsv`; dort wird geändert, und `python3 devserver/scripts/build_ailit_support.py` schreibt diese Datei, `docs/AILIT_ORTE_ZUORDNUNG.md` und `docs/AILIT_ZUORDNUNGSTABELLE.md` neu. Bis zum 2026-11-06 schrieb es auch `devserver/my_app/knowledge/ailit_coverage.json`, die Help je Seite las; diese Datei ist am 2026-11-06 entfallen, seither liest Help `devserver/my_app/knowledge/use_reports.json`.
 
 **Die Frage, die jede Zeile beantwortet.** Ob ein Teil dieser Plattform eine Maßnahme unterstützt, die das AILit-Rahmenwerk beschreibt, und wenn ja, wie, und welches Praxis-Szenario das belegt. Die Maßnahmen sind die Unterrichtsbeispiele des Rahmenwerks („In the Classroom“), eines je Kompetenz und Stufe, 57 im Ganzen; sie stehen hier im Wortlaut, mit Seite. Sie sind Vorhaben einer Lehrkraft mit ihrer Gruppe, und die Plattform wird als Werkzeug dafür beurteilt.
 
@@ -16,7 +18,7 @@
 
 **Die Namen der Stufen** sind die des Rahmenwerks und bleiben unübersetzt. Wo die Texte deutsch sprechen, meint *Grundstufe* Basic, *Mittelstufe* Intermediate und *Fortgeschrittenenstufe* Advanced.
 
-**Stand.** Von den 57 Maßnahmen unterstützt die Plattform 44, 13 nicht. Die Zeilen unten sagen je Maßnahme, welche.
+**Stand.** Von den 57 Maßnahmen unterstützt die Plattform 43, 14 nicht. Die Zeilen unten sagen je Maßnahme, welche.
 
 
 ## Engage 1 — KI im Alltag erkennen
@@ -385,10 +387,7 @@
 *Learner Expectation (S. 31): „Learners identify when AI use may have unintended impacts or implications that are different from a user’s immediate goals.“*  
 *In the Classroom (S. 31): „Learners analyse a case study where an AI tool uses one’s browsing history to advertise discounts and sales on products they have viewed in the past. With their teacher, learners weigh the opportunities to save money with risks the AI tool poses for personal privacy. They discuss the pros and cons of using the tool in the long- and short-term.“*
 
-**Modell-Vergleich `/latent-lab/model-comparison` — ja, angepasst.** Die Maßnahme wägt an einem Fall (Werbung aus dem Browserverlauf) den Vorteil gegen das Risiko für die Privatsphäre ab. Der Fall der Plattform ist der eigene Prompt: beim Modell-Vergleich hält das Set „Aktuelle Modelle“ neben zwei lokalen Modellen eines, das bei Google läuft (Gemini 3 Pro, in der Liste mit „€“ gekennzeichnet; der Kasten unter der Vorbereitungsspalte sagt, dass ein Bild dort auf eine Anfrage an Google Search zurückgreifen kann), das Set „SD-Historie“ drei lokale Modelle. Die DSGVO-Marke in der Kopfzeile nennt die Anbieter-Voreinstellung der Installation.
-
-*Praxis-Szenario.* Die Gruppe lässt denselben Prompt einmal mit „SD-Historie“ und einmal mit „Aktuelle Modelle“ laufen und wägt danach ab: Was hat das Modell bei Google besser gemacht, und was hat der Prompt dafür verlassen? Die DSGVO-Marke sagt, welche Anbieter-Voreinstellung diese Installation hat.  
-<sub>Beleg: `views/compare/model_comparison.vue: PRESETS, CATALOGUE; de.ts compare.presets, compare.modelNote.noteBody.current; components/PolicyChips.vue: DSGVO chip`</sub>
+**Unterstützt: nein.** Die Maßnahme wägt an einem Fall (Werbung aus dem Browserverlauf) den Vorteil gegen das Risiko für die Privatsphäre ab. Die Plattform hält kein Werkzeug, das aus Nutzerdaten Werbung auswählt.
 
 
 ### Engage 7 Advanced
@@ -619,11 +618,6 @@
 *Praxis-Szenario.* Die Gruppe nimmt einen eigenen Lauf und listet entlang der Box und der Lauf-Box, welche Entscheidung sie getroffen hat und welche die Maschine, und begründet, wie sie das Bild ausweisen würde.  
 <sub>Beleg: `views/x2x_flow.vue: fallText(…, 'interception'), Zeile 246`</sub>
 
-**Together `/together` — ja, angepasst.** Die Maßnahme legt drei Arbeiten nebeneinander, eine ganz von einem Menschen, eine von einem KI-System erzeugte und eine von einer Künstlerin zusammen mit KI gemachte, und fragt, welche Entscheidungen jeweils ein Mensch getroffen hat, wer als Urheber zu nennen ist und was Schutz verdient. Together hält die drei Arten auf der Fläche: eine eigene Arbeit, die die Gruppe dort ablegt, ein Stück, das die Begleitung auf Zuruf erzeugt und dessen Rückseite unter „Grund“ den mitgegebenen Grund trägt, und einen behaltenen Favoriten aus einem eigenen Lauf, dessen Karte den Prompt unter „Prompt“ trägt. Die Beispiele der Maßnahme werden durch diese drei eigenen Fälle ersetzt.
-
-*Praxis-Szenario.* Die Gruppe legt eine eigene Zeichnung auf die Fläche, lässt zum selben Thema ein Stück erzeugen und holt einen eigenen behaltenen Favoriten dazu. Zu jeder der drei Karten schreibt sie auf, welche Entscheidungen ein Mensch getroffen hat und welche Schritte die Maschine ausgeführt hat, und wen sie als Urheber nennen würde. Zum Schluss dreht sie die Karte des erzeugten Stücks um und prüft, ob der Grund auf ihrer Rückseite ihre Zuordnung ändert.  
-<sub>Beleg: `views/resona.vue addBroughtBox (mitgebrachte Arbeit und Favorit mit Prompt auf der Fläche), spawnGeneration; tool_registry.py generate_media (motivation); de.ts resonaMediaCard.promptLabel, resonaMediaCard.motivation, resonaMediaCard.flipToBack`</sub>
-
 **LoRA Explorer `/latent-lab/lora-explorer` — ja, angepasst.** Die Maßnahme stellt Werke nebeneinander (ganz von Menschen, ganz von KI, von Künstlerinnen und Künstlern mit KI) und fragt, welche Entscheidungen ein Mensch getroffen hat, wer als Künstlerin oder Künstler genannt werden sollte, was geschützt gehört und wie KI das Kunstschaffen verändern könnte. Beim LoRA Explorer stehen vier Zeilen aus einem Modell mit einer Startzahl: „Modell · ohne Trigger“, „Modell · Trigger“, „Adapter · Trigger“, „Adapter · ohne Trigger“, je Motiv eine Spalte; der Fall „ganz von Menschen“ sind die Zeichnungen der Gruppe, auf die der Adapter trainiert wurde.
 
 *Praxis-Szenario.* Die Gruppe hat einen Adapter auf ihre Reihe trainiert. Sie geht die vier Zeilen durch und schreibt je Zeile, welche Entscheidungen von ihr stammen (Auswahl der Reihe, Beschreibungen, Trigger-Wort, Motive) und welche vom Modell, und wer je Zeile als Künstlerin oder Künstler genannt werden müsste. An der Zeile „Adapter · ohne Trigger“ entscheidet sie, ob das Anregung oder Wiedergabe ist.  
@@ -641,12 +635,7 @@
 *Learner Expectation (S. 38): „Learners identify a variety of AI systems and the tasks they are designed to support.“*  
 *In the Classroom (S. 38): „Learners follow guidance established by their teacher to match appropriate tools with academic tasks (e.g. AI for summarising, search engines for research).“*
 
-**Together `/together` — ja, angepasst.** Die Maßnahme lässt Lernende nach Vorgaben der Lehrkraft Werkzeuge zu Aufgaben zuordnen. Die Vorgaben entstehen mit Together: die Begleitung plant den Ablauf mit der Kursleitung, ausdrücklich mit Schritten ohne Maschine, und hält nach ihrem Systemprompt fest, was entschieden wurde: Ziele, Werkzeugwahl, verworfene Optionen mit Begründung; die Fläche trägt Karten, Notizen und Pläne, und das Werkstattjournal zeichnet auf. Die Vorgaben der Lehrkraft werden durch den Plan aus Together ersetzt.
-
-*Praxis-Szenario.* Die Kursleitung plant mit Together eine Sitzung mit drei Aufgaben und legt fest, welche mit welchem Instrument und welche ohne Maschine laufen; die verworfenen Wahlen stehen mit Begründung auf der Fläche. Die Gruppe bekommt die Aufgaben und ordnet die Instrumente zu, bevor sie den Plan sieht.  
-<sub>Beleg: `views/resona.vue; RESONA_PLANNING_BLOCK in routes/chat_routes.py („What gets decided is noted: goals, tool choices, discarded options with their why“); de.ts resona.surfaceClearConfirm, journalNotice`</sub>
-
-**Überblick `/latent-lab/overview` — ja, angepasst.** Für die Zuordnung selbst zeichnet der Überblick die Verfahren als Spalten aus Stationen; die Instrumente sitzen als Marken auf den Zeichnungen, und ein Zeiger auf eine Marke hebt sie in der linken Spalte hervor. Die akademischen Aufgaben der Maßnahme (Zusammenfassen, Recherchieren) werden durch die Medienaufgaben der Plattform ersetzt.
+**Überblick `/latent-lab/overview` — ja, angepasst.** Für die Zuordnung zeichnet der Überblick die Verfahren als Spalten aus Stationen; die Instrumente sitzen als Marken auf den Zeichnungen, und ein Zeiger auf eine Marke hebt sie in der linken Spalte hervor. Die akademischen Aufgaben der Maßnahme (Zusammenfassen, Recherchieren) werden durch die Medienaufgaben der Plattform ersetzt.
 
 *Praxis-Szenario.* Die Kursleitung gibt drei Aufgaben vor (ein Bild, das einem Prompt genau folgt; eine Stimme zu einem Satz; die Frage, was ein Wort im Bild bewirkt). Die Gruppe sucht auf dem Überblick das Instrument je Aufgabe und begründet die Wahl an der Station, an der es eingreift.  
 <sub>Beleg: `views/latent_lab/flow_logic.vue: marks, highlight`</sub>
@@ -752,11 +741,6 @@
 *Praxis-Szenario.* Dasselbe Vorgehen wie auf dem Canvas: Team B legt vor dem Lauf fest, welchen Text es selbst schreibt (den Prompt, oder auch den Text der Prompt Interception) und welchen es der Maschine lässt, vergleicht mit Team A und tauscht danach eine Rolle.  
 <sub>Beleg: `views/x2x_flow.vue: fallText, zoneStation, runOrdinal`</sub>
 
-**Together `/together` — ja, angepasst.** Die Maßnahme stellt eine Aufgabe unter Zeitdruck und lässt zwei Fassungen desselben Produkts anfertigen, eine mit und eine ohne KI; vorher legt das Team fest, welche Schritte die Maschine übernimmt, nachher überarbeitet es die Verteilung und erklärt, was der Wechsel der Rollen an Qualität, Verlässlichkeit und Zweck geändert hat. Together trägt das Festlegen und das Überarbeiten: die Begleitung baut auf Zuruf einen Apparat, dessen Schritte die Verteilung halten, behält ihn nach ihrem Systemprompt mit Titel, einer Zeile zum Zweck und einer Anwendungsart, heftet nach dem Lauf eine Beobachtung an die gelaufene Fassung und legt eine neue Fassung an, deren Auszug den geänderten Schritt und seinen Grund nennt. Die zwei Fassungen des Produkts werden durch zwei Fassungen des Apparats ersetzt, eine mit dem maschinellen Schritt und eine, in der die Gruppe diesen Schritt selbst macht.
-
-*Praxis-Szenario.* Die Gruppe lässt sich für ihr Stück einen Apparat bauen und behalten. Dann lässt sie denselben Eingabetext ohne den Schritt der Prompt Interception laufen und schreibt diesen Schritt selbst. Zu beiden Läufen heftet sie ihre Beobachtung an die jeweilige Fassung, und der Auszug der zweiten Fassung sagt, welchen Schritt die Gruppe selbst gemacht hat und warum.  
-<sub>Beleg: `tool_registry.py run_canvas_graph (Knoten input/interception/translation/generation), canvas_graph_library (save, revise mit Memo, feedback); chat_routes.py RESONA_CORE_PROMPT („what the room taught goes down as feedback on the version that ran; a revision carries a memo of what changed and why“); de.ts resonaEntityCard.detailLabel`</sub>
-
 **Canvas `/canvas` — ja.** Die Maßnahme erzeugt in begrenzter Zeit zwei Fassungen desselben Produkts, mit und ohne KI; vor der KI-Fassung legt das Team fest, welche Schritte KI-Fähigkeiten und welche menschliche Stärken tragen, vergleicht die Ergebnisse und erklärt, wie die Rollenverteilung Qualität, Verlässlichkeit und Zweck verändert hat. Der Canvas ist das Werkzeug für die KI-Fassung: der Graph ist die Rollenverteilung in Knoten, jeder Schritt ein Knoten, Modell oder eigenes Material (Eingabe-Knoten mit Upload).
 
 *Praxis-Szenario.* Zwei Teams bekommen dieselbe Aufgabe (ein Plakat für ein Ereignis der Schule) und dieselbe Zeit. Team A arbeitet ohne Maschine. Team B baut vorher den Graphen und legt je Knoten fest, ob Modell oder eigenes Material; dann läuft er. Beide Fassungen hängen nebeneinander; danach baut Team B den Graphen um (ein Knoten mehr von Hand, einer weniger) und erklärt am zweiten Lauf, was sich an Qualität und Verlässlichkeit geändert hat.  
@@ -800,11 +784,6 @@
 
 *Praxis-Szenario.* Das Team schreibt vorher drei Kriterien für seine Kampagne auf. Jeder Lauf wird an seinen Boxen gegen die Kriterien geprüft; was durchfällt, wird als Perspektive gewechselt oder als Text in der Box selbst geschrieben. Am Ende zeigt der Tisch mit den Nummern, an welcher Stelle das Team eingegriffen hat.  
 <sub>Beleg: `views/x2x_flow.vue: fallText, bubbles, runOrdinal`</sub>
-
-**Together `/together` — ja, angepasst.** Die Maßnahme setzt Kontrollpunkte für menschliche und maschinelle Anteile, verfolgt den Fortschritt an vorher gesetzten Kriterien und verschiebt die Rollen, wo eine Ausgabe am Ziel vorbeigeht; ihr Beispiel ist eine Kampagne zu einem Thema vor Ort. Together hält die Kontrollpunkte und die Kriterien außerhalb des Laufs: die Begleitung legt den Ablauf auf Verlangen als Plan-Karte mit nummerierten Schritten, und diese Schritte sind die Kontrollpunkte; sie hält das Ziel der Gruppe als Ziel fest; und wo eine Ausgabe am Ziel vorbeigeht, überarbeitet sie den Apparat und nennt im Auszug den geänderten Schritt. Während der Arbeit spricht sie an drei Stellen: bei einer Frage, die im Raum niemand beantworten kann, bei einem Ergebnis, das gerade gelesen wird, und bei etwas, das die Maschine unverlangt erzeugt hat. Das Beispiel der Kampagne wird durch das Vorhaben der Gruppe ersetzt.
-
-*Praxis-Szenario.* Die Gruppe schreibt das Ziel ihrer Kampagne in einen Satz und lässt es als Ziel festhalten. Die Plan-Karte trägt vier Schritte; an jedem vergleicht die Gruppe, was die Maschine erzeugt hat, mit diesem Satz. Wo das Ergebnis am Ziel vorbeigeht, lässt sie den Apparat überarbeiten, und am Ende liest sie die Auszüge der Fassungen in ihrer Reihenfolge.  
-<sub>Beleg: `chat_routes.py RESONA_TAIL PROCESS SCAFFOLDS [[PLAN:]], RESONA_WORKSHOP_BLOCK (a gap, a threshold, an accident); views/resona.vue PLAN_BLOCK_RE, extractPlans; tool_registry.py remember (goal), canvas_graph_library (revise mit Memo)`</sub>
 
 **Canvas `/canvas` — ja.** Auf dem Canvas ist der Ablauf der Graph; die Rollen ändern heißt, Knoten tauschen oder durch eigenes Material ersetzen, und der Graph läuft neu.
 

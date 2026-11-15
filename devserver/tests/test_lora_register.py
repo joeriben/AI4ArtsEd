@@ -511,9 +511,12 @@ def test_the_training_place_registers_what_it_will_write(monkeypatch, tmp_path):
         staging.mkdir(parents=True, exist_ok=True)
         (staging / "001.png").write_bytes(b"\x89PNG")
 
+    # The register is the question here, not the pictures: research takes
+    # nothing in at the intake.
     stage()
     svc.create_project("Meine Sonne", [], "sonne, gelb", staging_token="tok",
-                       captions=["ein Bild"], owner_id=owner, course_id=course)
+                       captions=["ein Bild"], owner_id=owner, course_id=course,
+                       level="research")
     rows = R.all_adapters()
     assert len(rows) == 1
     assert rows[0]["file"] == f"{T.SD35_LORA_PREFIX}MeineSonne.safetensors"
@@ -528,14 +531,16 @@ def test_the_training_place_registers_what_it_will_write(monkeypatch, tmp_path):
 
     # Outside a course: no row. A personal training stands in no register.
     stage()
-    svc.create_project("Mein Gesicht", [], "ich", staging_token="tok", captions=["ein Bild"], owner_id=owner)
+    svc.create_project("Mein Gesicht", [], "ich", staging_token="tok", captions=["ein Bild"],
+                       owner_id=owner, level="research")
     assert [r["name"] for r in R.all_adapters()] == ["Meine Sonne"]
 
     # A project name typed twice never rewrites the row that stands — this
     # route needs no login.
     stage()
     svc.create_project("Meine Sonne", [], "fremdes wort", staging_token="tok",
-                       captions=["ein Bild"], owner_id=None, course_id=_course("Fremdkurs"))
+                       captions=["ein Bild"], owner_id=None, course_id=_course("Fremdkurs"),
+                       level="research")
     rows = R.all_adapters()
     assert len(rows) == 1 and rows[0]["trigger"] == "sonne, gelb" and rows[0]["course_id"] == course
 

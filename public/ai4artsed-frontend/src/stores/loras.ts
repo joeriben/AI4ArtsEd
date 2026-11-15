@@ -84,6 +84,29 @@ export interface LoraRing {
   items: LoraAdapter[]
 }
 
+/**
+ * The pictures an adapter's disc wears, in the chooser
+ * (`components/LoraPickOverlay.vue`) and as a tile on the Flow's table
+ * (`views/x2x_flow.vue`): one file per adapter in `src/assets/lora-previews/`,
+ * named by the adapter
+ * file without `.safetensors`. The folder is read when the frontend is built;
+ * an adapter it holds no picture for keeps the net (`LoraGlyph`). Unlike the
+ * config previews and the Canvas preset pictures (`public/`), where every
+ * entry has its file, only some adapters have one (a fresh training has
+ * none), so the build says which, and no disc asks for a file that is not
+ * there.
+ */
+const PICTURES: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>('../assets/lora-previews/*.webp', { eager: true, import: 'default' })
+  ).map(([path, url]) => [path.replace(/^.*\//, '').replace(/\.webp$/, ''), url])
+)
+
+/** The picture an adapter's disc wears, or '' where there is none. */
+export function loraPicture(l: Pick<LoraAdapter, 'file'>): string {
+  return PICTURES[l.file.replace(/\.safetensors$/, '')] ?? ''
+}
+
 export const useLoraStore = defineStore('loras', () => {
   const auth = useLabAuthStore()
   const items = ref<LoraAdapter[]>([])

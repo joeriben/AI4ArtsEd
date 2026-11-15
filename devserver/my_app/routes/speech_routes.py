@@ -22,6 +22,12 @@ Two consequences run through the whole file:
     the comparison column offers every installed file, and the response names
     the file that spoke).
 
+What is to be spoken, and a speaker described in words, pass the intake. What
+the synthesiser receives passes the check before the model, after the English
+rendering and at the level the view resolved (services/safety_gate). Neither
+changes the text: it is spoken as written, or not at all. The sound itself is
+not checked.
+
 See DEVELOPMENT_DECISIONS.md, 2026-08-06 for the language policy and
 2026-08-08 for the model and the voice policy.
 """
@@ -34,6 +40,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 from flask import Blueprint, Response, jsonify, request
+from my_app.services.safety_gate import check_before_model, check_intake_texts
 from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
@@ -126,14 +133,6 @@ def _system_chunk(system: str):
     return _chunk()
 
 
-def _server_safety_level() -> str:
-    """The level this run obeys: server policy, tightened by the active course.
-
-    Deliberately not a request parameter.
-    """
-    return resolve_safety_level()
-
-
 def _header_safe(value) -> str:
     """A header value that cannot break the response.
 
@@ -177,6 +176,14 @@ class SpeechRefused(Exception):
         super().__init__(message)
         self.message = message
         self.status = status
+
+
+class SpeechBlocked(Exception):
+    """The platform's checks refused the utterance; `verdict` says where and why."""
+
+    def __init__(self, verdict):
+        super().__init__(verdict.reason_key)
+        self.verdict = verdict
 
 
 async def _translate_to_english(text: str) -> str:
@@ -225,6 +232,13 @@ async def _speak(text: str, language: str, voice: str, safety_level: str,
                                         Optional[str],
                                         Optional[float]]:
     from schemas.engine.pipeline_executor import PipelineContext, executor
+
+    # What is to be spoken, and the speaker described in words, are material:
+    # they pass the intake before anything is translated or synthesised.
+    verdict = check_intake_texts({"text": text, "voice_description": voice_description},
+                                 level=safety_level)
+    if not verdict.passed:
+        raise SpeechBlocked(verdict)
 
     # Custom placeholders reach the chunk only where the config leaves the key
     # open — which is why the output config carries no "voice" parameter.
@@ -276,8 +290,20 @@ async def _speak(text: str, language: str, voice: str, safety_level: str,
     if noise_w is not None:
         placeholders["noise_w"] = noise_w
 
+    text_en = None
     if _spoken_language(system, language) != language:
-        placeholders["text_en"] = await _translate_to_english(text)
+        text_en = await _translate_to_english(text)
+        placeholders["text_en"] = text_en
+
+    # What the synthesiser receives: the sentence it speaks, as written or in
+    # its English rendering beside the original, and the speaker described in
+    # words. Nothing that rewrites a text runs after this point.
+    verdict = check_before_model(
+        {"text": text_en or text, "voice_description": voice_description},
+        originals={"text": text} if text_en else (),
+        level=safety_level)
+    if not verdict.passed:
+        raise SpeechBlocked(verdict)
 
     context = PipelineContext(input_text=text, user_input=text)
     context.custom_placeholders = placeholders
@@ -324,7 +350,7 @@ def status():
         SUPERTONIC_VOICES)
 
     chunk = _chunk()
-    state = speech_availability(probe=True)
+    state = speech_availability(resolve_safety_level(), probe=True)
 
     return jsonify({
         'available': state['available'],
@@ -463,6 +489,9 @@ def speak():
 
     Body: {"text": "...", "language": "de", "voice": "even"}
 
+    A refusal of the checks answers 403 with the block message
+    (`safety_block`).
+
     The audio is not a work: it creates no run, no media-store entry, no
     favourite and no export. It is heard and it is gone.
     """
@@ -528,7 +557,10 @@ def speak():
     noise_w = data.get('noise_w')
 
     chunk = _system_chunk(system)
-    level = _server_safety_level()
+    # The level this run obeys: server policy, tightened by the active course.
+    # Deliberately not a request parameter, and resolved here, on the thread
+    # that serves the request; the checks in `_speak` hang on it.
+    level = resolve_safety_level()
     if level not in chunk.ALLOWED_SAFETY_LEVELS:
         # The chunk refuses this too. Answering here keeps it a clean 403
         # rather than a pipeline error, and says why.
@@ -548,6 +580,12 @@ def speak():
                    emotion, length_scale, noise_w))
     except SpeechRefused as e:
         return jsonify({'success': False, 'error': e.message}), e.status
+    except SpeechBlocked as e:
+        verdict = e.verdict
+        logger.warning(f"[SPEECH] refused at {verdict.checkpoint} "
+                       f"({verdict.field or '-'}: {verdict.reason_key})")
+        return jsonify({'success': False, 'error': 'safety_blocked',
+                        'safety_block': verdict.block()}), 403
     except ValueError as e:
         # An unusable mix is the caller's mistake, not a synthesis failure —
         # say which, so a field can show what it sent wrong.
@@ -575,12 +613,14 @@ def speak():
         })
     except Exception as e:
         logger.warning(f"[SPEECH] watermark not applied ({e})")
+    from my_app.services.media_marking import disclosed_name
+    speech_name = disclosed_name(audio, 'output_audio', 'speech.wav', '[SPEECH]')
 
     return Response(
         audio,
         mimetype='audio/wav',
         headers={
-            'Content-Disposition': 'inline; filename="speech.wav"',
+            'Content-Disposition': f'inline; filename="{speech_name}"',
             'Content-Length': str(len(audio)),
             'Cache-Control': 'no-store',
             # Hand the seed back: the variation between runs is wanted, and

@@ -86,6 +86,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { chatTurn } from '@/lib/chatTurn'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { usePageContextStore } from '@/stores/pageContext'
 import { usePageFigureStore } from '@/stores/pageFigure'
 import {
@@ -268,7 +269,11 @@ async function send(): Promise<void> {
     speak(String(data.reply ?? ''))
   } catch (e) {
     console.error('[PlatformVoice] /api/chat/stream failed:', e)
-    speak(t('platformVoice.error'), true)
+    // A refusal is said here and explained in the safety window; anything else
+    // is the line that says no answer came.
+    const refusal = refusalKeyOf(e)
+    if (refusal) reportRefusal(e)
+    speak(refusal ? t(refusal) : t('platformVoice.error'), true)
   } finally {
     waiting.value = false
     presence.voiceWaiting = false

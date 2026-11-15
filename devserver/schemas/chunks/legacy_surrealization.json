@@ -58,10 +58,7 @@
     },
     "6": {
       "inputs": {
-        "text": [
-          "69",
-          0
-        ],
+        "text": "",
         "clip": [
           "54",
           0
@@ -121,10 +118,7 @@
     },
     "21": {
       "inputs": {
-        "text": [
-          "68",
-          0
-        ],
+        "text": "",
         "clip": [
           "18",
           0
@@ -161,32 +155,6 @@
         "title": "CLIP Text Encode NEGATIVE (t5)"
       }
     },
-    "40": {
-      "inputs": {
-        "preview": "",
-        "source": [
-          "69",
-          0
-        ]
-      },
-      "class_type": "PreviewAny",
-      "_meta": {
-        "title": "Prompt optimized for clipl/g"
-      }
-    },
-    "41": {
-      "inputs": {
-        "preview": "",
-        "source": [
-          "68",
-          0
-        ]
-      },
-      "class_type": "PreviewAny",
-      "_meta": {
-        "title": "Prompt optimized for t5"
-      }
-    },
     "43": {
       "inputs": {
         "value": [
@@ -201,10 +169,7 @@
     },
     "50": {
       "inputs": {
-        "value": [
-          "70",
-          1
-        ]
+        "value": 20.0
       },
       "class_type": "PrimitiveFloat",
       "_meta": {
@@ -262,70 +227,6 @@
         "title": "Load CLIP"
       }
     },
-    "68": {
-      "inputs": {
-        "input_prompt": [
-          "43",
-          0
-        ],
-        "input_context": "prompting expert",
-        "style_prompt": "YOUR OUTPUT MUST NOT EXCEED 250 WORDS!\n\nTransform the following input text—regardless of genre—into a single, uninterrupted paragraph structured for encoding by a T5 model and subsequent conditioning of a Stable Diffusion 3.5 (or Flux1) image generation model.\n\nYou must retain all original words exactly once: do not omit, duplicate, or paraphrase beyond necessary syntactic adjustments. Do not add or translate content unless an exact transliteration or orthographic variant is supplied in the source.\n\nReorganize the prompt according to the following internal semantic structure, which must guide your composition logic but leave no visible trace in the final output:\n\n    Core subject (approx. 10–30 tokens): Identify and foreground the principal subject matter as fully specified in the source.\n\n    Action (10–40 tokens): Preserve any dynamic, procedural, or temporal structures, expressed clearly through grammatically embedded verb phrases.\n\n    Relational context (30–100 tokens): Expand on spatial relations, historical or cultural frameworks, ecological configurations, embodied perspectives, and temporal situatedness, all inferred from internal content only.\n\n    Attributive qualities (30–80 tokens): Elaborate sensory and atmospheric descriptors—light, surface, sound, temperature, tactility, material behaviour—based on concrete and culturally situated evidence. Avoid cliché mappings such as “melancholy → rain” or “futurism → neon.” Do not use general affective adjectives such as “beautiful,” “epic,” or “highly detailed.” Instead, convey mood through spatial structure, material traces, or historical signifiers.\n\n    Stylistic and medial references (10–40 tokens): If applicable, retain or clarify stylistic provenance using historically anchored terms (e.g., “early Bauhaus sketch,” “Qing-dynasty monochrome ink”). Avoid genre tropes unless explicitly included in the original text.\n\n    Technical parameters (0–20 tokens): Place any camera data, aspect ratio, rendering models, or diffusion-specific settings at the end of the prompt.\nALPHA-VALUE: control the amount of extrapolation and semantik exaggeration of the resulting t5-vectors. For rather unconventional input texts (surreal, phantasy), stay close to 15 or below. For highly conventional inputs, choose values up to 35. Everything in between will be assigned a value between 20 and 25. Output this value in the format \"#a=[value] for further parsing.\n\nAdditional requirements:\n– If the input contains explicit negations (e.g., “no neon”), isolate and place them at the end of the prompt after an em dash as a negative prompt clause.\n– If the source uses conflicting descriptors (e.g., “nocturnal daylight”), preserve both and separate with a slash ( / ) to indicate intentional contradiction.\n– Preserve diacritics and original orthography for all non-English terms. Do not transliterate unless a dual form is provided.\n– For ambiguous or poetic language, preserve ambiguity. If metaphors operate structurally (e.g., “grief carved into the orchard”), translate them into spatial/material compositions rather than interpretive paraphrase.\n– If vague temporal expressions appear (e.g., “ancient”), translate them into relative or historical chronologies only if unambiguous context exists.\n\nFinal output must be exactly one paragraph, without bullet points, tags, headings, or formatting cues.\n\nYOUR OUTPUT MUST NOT EXCEED 250 WORDS!",
-        "model": "local/sailor2:20b",
-        "debug": "enable",
-        "unload_model": "yes"
-      },
-      "class_type": "ai4artsed_prompt_interception",
-      "_meta": {
-        "title": "Prompt optimization t5"
-      }
-    },
-    "69": {
-      "inputs": {
-        "input_prompt": [
-          "43",
-          0
-        ],
-        "input_context": "prompt expert",
-        "style_prompt": "YOUR OUTPUT MUST NOT EXCEED 50 WORDS!\nOUTPUT THE PURE PRESULTING PROMPT ONLY!\n\nNEVER INCLUDE ANY META-INFORMATION SUCH AS THE NAMES OF THE DIMENSIONS BELOW OR THE TOKEN COUNT\n\nYou will receive a user prompt for image generation. Restructure it ONLY by reordering, for CLIP models that strongly weight early tokens and truncate at 75 tokens.\n\nGeneral information:\nALWAYS EXTRAKT ONLY THE INFORMATION THAT IS VISUALLY RELEVANT. YOUR PROMPT WILL RESULT IN A COMMA_SEPARATED SERIES OF GROUPED TOKENS; BARELY EVER CONNTECTED BY VERBS OR CONJUNCTIONS.\n\nBUT YOU WILL REORDER ALL THESE TOKENS ACCORDING TO THE FOLLOWING ORDER:\n\nEarly tokens = critical: The first 20–30 tokens largely determine the image\nMinimize Attributes: CLIP struggles with complex attributes – keep them short\nClear, direct terms: CLIP prefers concrete nouns and simple adjectives\nDo not alter the input text – no substitutions, paraphrasing, or lexical replacements allowed\n\n\nYOUR OUTPUT:\nCore Motif: max. 15 words\nPlace the main subject FIRST\nUse the exact wording provided in the original prompt\nEMPTY LINE\nAction: max 20 words\nFollows the subject directly for strong subject-action linkage\nPrefer simple verb phrases; maintain exact original wording\nEMPTY LINE\nStyle/Medium: max 10 words\nPlace early in the prompt for maximum impact on CLIP\nTypical examples: “oil painting”, “photography”, “3D render”\nUse only if present in the original prompt\nEMPTY LINE\nContext: max 10 words\nLocation or setting, compressed\nReorder only; do not paraphrase\nEMPTY LINE\nAttributes: max 10 words:\nMinimize; include only if essential\nNo changes to wording – do not replace or reformulate\nEMPTY LINETechnical Aspects (0–5 tokens, 0–7%):\nInclude only if tokens remain and if originally present\n\nYOUR OUTPUT MUST NOT EXCEED 50 WORDS!\nOMIT the Category names (\"Core Motif\"), it will only confuse CLIP and reduces the token budget without contributing to image quality. \nNEVER INCLUDE ANY META-INFORMATION SUCH AS THE NAMES OF THE DIMENSIONS BELOW OR THE TOKEN COUNT",
-        "model": "local/mistral:7b",
-        "debug": "enable",
-        "unload_model": "no"
-      },
-      "class_type": "ai4artsed_prompt_interception",
-      "_meta": {
-        "title": "Prompt optimization clip_l & clip_g"
-      }
-    },
-    "70": {
-      "inputs": {
-        "input_prompt": [
-          "68",
-          0
-        ],
-        "input_context": "number identifier",
-        "style_prompt": "if the text contains the string \"#a=\", output the number - and only the number - that follows the string \"#a=\".\nif the text does not contain this string, output this number: 20",
-        "model": "local/mistral:7b",
-        "debug": "enable",
-        "unload_model": "yes"
-      },
-      "class_type": "ai4artsed_prompt_interception",
-      "_meta": {
-        "title": "AI4ArtsEd Prompt Interception"
-      }
-    },
-    "72": {
-      "inputs": {
-        "preview": "",
-        "source": [
-          "70",
-          1
-        ]
-      },
-      "class_type": "PreviewAny",
-      "_meta": {
-        "title": "auto alpha"
-      }
-    },
     "73": {
       "inputs": {
         "value": ""
@@ -354,6 +255,32 @@
       }
     }
   },
+  "llm_steps": [
+    {
+      "writes": "t5_prompt",
+      "reads": "prompt",
+      "result": "text",
+      "description": "Node 68 of the original workflow (Prompt optimization t5): the text T5 encodes, node 21",
+      "input_context": "prompting expert",
+      "style_prompt": "YOUR OUTPUT MUST NOT EXCEED 250 WORDS!\n\nTransform the following input text—regardless of genre—into a single, uninterrupted paragraph structured for encoding by a T5 model and subsequent conditioning of a Stable Diffusion 3.5 (or Flux1) image generation model.\n\nYou must retain all original words exactly once: do not omit, duplicate, or paraphrase beyond necessary syntactic adjustments. Do not add or translate content unless an exact transliteration or orthographic variant is supplied in the source.\n\nReorganize the prompt according to the following internal semantic structure, which must guide your composition logic but leave no visible trace in the final output:\n\n    Core subject (approx. 10–30 tokens): Identify and foreground the principal subject matter as fully specified in the source.\n\n    Action (10–40 tokens): Preserve any dynamic, procedural, or temporal structures, expressed clearly through grammatically embedded verb phrases.\n\n    Relational context (30–100 tokens): Expand on spatial relations, historical or cultural frameworks, ecological configurations, embodied perspectives, and temporal situatedness, all inferred from internal content only.\n\n    Attributive qualities (30–80 tokens): Elaborate sensory and atmospheric descriptors—light, surface, sound, temperature, tactility, material behaviour—based on concrete and culturally situated evidence. Avoid cliché mappings such as “melancholy → rain” or “futurism → neon.” Do not use general affective adjectives such as “beautiful,” “epic,” or “highly detailed.” Instead, convey mood through spatial structure, material traces, or historical signifiers.\n\n    Stylistic and medial references (10–40 tokens): If applicable, retain or clarify stylistic provenance using historically anchored terms (e.g., “early Bauhaus sketch,” “Qing-dynasty monochrome ink”). Avoid genre tropes unless explicitly included in the original text.\n\n    Technical parameters (0–20 tokens): Place any camera data, aspect ratio, rendering models, or diffusion-specific settings at the end of the prompt.\nALPHA-VALUE: control the amount of extrapolation and semantik exaggeration of the resulting t5-vectors. For rather unconventional input texts (surreal, phantasy), stay close to 15 or below. For highly conventional inputs, choose values up to 35. Everything in between will be assigned a value between 20 and 25. Output this value in the format \"#a=[value] for further parsing.\n\nAdditional requirements:\n– If the input contains explicit negations (e.g., “no neon”), isolate and place them at the end of the prompt after an em dash as a negative prompt clause.\n– If the source uses conflicting descriptors (e.g., “nocturnal daylight”), preserve both and separate with a slash ( / ) to indicate intentional contradiction.\n– Preserve diacritics and original orthography for all non-English terms. Do not transliterate unless a dual form is provided.\n– For ambiguous or poetic language, preserve ambiguity. If metaphors operate structurally (e.g., “grief carved into the orchard”), translate them into spatial/material compositions rather than interpretive paraphrase.\n– If vague temporal expressions appear (e.g., “ancient”), translate them into relative or historical chronologies only if unambiguous context exists.\n\nFinal output must be exactly one paragraph, without bullet points, tags, headings, or formatting cues.\n\nYOUR OUTPUT MUST NOT EXCEED 250 WORDS!"
+    },
+    {
+      "writes": "clip_prompt",
+      "reads": "prompt",
+      "result": "text",
+      "description": "Node 69 of the original workflow (Prompt optimization clip_l & clip_g): the text CLIP encodes, node 6",
+      "input_context": "prompt expert",
+      "style_prompt": "YOUR OUTPUT MUST NOT EXCEED 50 WORDS!\nOUTPUT THE PURE PRESULTING PROMPT ONLY!\n\nNEVER INCLUDE ANY META-INFORMATION SUCH AS THE NAMES OF THE DIMENSIONS BELOW OR THE TOKEN COUNT\n\nYou will receive a user prompt for image generation. Restructure it ONLY by reordering, for CLIP models that strongly weight early tokens and truncate at 75 tokens.\n\nGeneral information:\nALWAYS EXTRAKT ONLY THE INFORMATION THAT IS VISUALLY RELEVANT. YOUR PROMPT WILL RESULT IN A COMMA_SEPARATED SERIES OF GROUPED TOKENS; BARELY EVER CONNTECTED BY VERBS OR CONJUNCTIONS.\n\nBUT YOU WILL REORDER ALL THESE TOKENS ACCORDING TO THE FOLLOWING ORDER:\n\nEarly tokens = critical: The first 20–30 tokens largely determine the image\nMinimize Attributes: CLIP struggles with complex attributes – keep them short\nClear, direct terms: CLIP prefers concrete nouns and simple adjectives\nDo not alter the input text – no substitutions, paraphrasing, or lexical replacements allowed\n\n\nYOUR OUTPUT:\nCore Motif: max. 15 words\nPlace the main subject FIRST\nUse the exact wording provided in the original prompt\nEMPTY LINE\nAction: max 20 words\nFollows the subject directly for strong subject-action linkage\nPrefer simple verb phrases; maintain exact original wording\nEMPTY LINE\nStyle/Medium: max 10 words\nPlace early in the prompt for maximum impact on CLIP\nTypical examples: “oil painting”, “photography”, “3D render”\nUse only if present in the original prompt\nEMPTY LINE\nContext: max 10 words\nLocation or setting, compressed\nReorder only; do not paraphrase\nEMPTY LINE\nAttributes: max 10 words:\nMinimize; include only if essential\nNo changes to wording – do not replace or reformulate\nEMPTY LINETechnical Aspects (0–5 tokens, 0–7%):\nInclude only if tokens remain and if originally present\n\nYOUR OUTPUT MUST NOT EXCEED 50 WORDS!\nOMIT the Category names (\"Core Motif\"), it will only confuse CLIP and reduces the token budget without contributing to image quality. \nNEVER INCLUDE ANY META-INFORMATION SUCH AS THE NAMES OF THE DIMENSIONS BELOW OR THE TOKEN COUNT"
+    },
+    {
+      "writes": "proposed_alpha",
+      "reads": "t5_prompt",
+      "result": "number",
+      "description": "Node 70 of the original workflow: the alpha the T5 text proposes (#a=), for node 50; an alpha_factor in the request replaces it",
+      "input_context": "number identifier",
+      "style_prompt": "if the text contains the string \"#a=\", output the number - and only the number - that follows the string \"#a=\".\nif the text does not contain this string, output this number: 20"
+    }
+  ],
   "input_mappings": {
     "alpha": {
       "node_id": "50",
@@ -365,6 +292,21 @@
       "field": "inputs.seed",
       "default": "random",
       "description": "Random seed for KSampler (Node 3)"
+    },
+    "t5_prompt": {
+      "node_id": "21",
+      "field": "inputs.text",
+      "description": "The T5 text the step t5_prompt wrote, before the check before the model"
+    },
+    "clip_prompt": {
+      "node_id": "6",
+      "field": "inputs.text",
+      "description": "The CLIP text the step clip_prompt wrote, before the check before the model"
+    },
+    "proposed_alpha": {
+      "node_id": "50",
+      "field": "inputs.value",
+      "description": "The alpha the T5 text proposes; an alpha_factor in the request replaces it"
     }
   },
   "legacy_config": {
@@ -404,8 +346,8 @@
       "SD3.5 Large checkpoint",
       "CLIP loaders (clip_l, t5xxl_enconly)",
       "Custom ai4artsed nodes",
-      "Ollama with local/sailor2:20b and local/mistral:7b models"
+      "The platform's Prompt Interception model (STAGE2_INTERCEPTION_MODEL), for the three llm_steps"
     ],
-    "workflow_description": "Surrealization workflow that uses T5-CLIP vector interpolation to create surreal images. Two separate prompt optimization pipelines (one for CLIP, one for T5) feed into a custom fusion node that blends their conditioning vectors."
+    "workflow_description": "Surrealization workflow that uses T5-CLIP vector interpolation to create surreal images. Two prompt optimizations, one for CLIP and one for T5, write the texts whose conditionings a custom fusion node blends; a third step reads the alpha the T5 text proposes. The three run on the platform before the check before the model (llm_steps) and reach the graph through input_mappings."
   }
 }

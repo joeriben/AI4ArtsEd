@@ -99,11 +99,11 @@ const router = createRouter({
       path: '/canvas',
       name: 'canvas-workflow',
       // Canvas workflow builder for parallel fan-out workflows
-      // Safety: every generation asks the flow's Stage 3, which checks at kids,
-      // youth and open (services/canvas_executor.py `canvas_stage3_verdict`);
-      // a perspective carries the Stage-2 safety prefix, and a picture is
-      // checked after generation at kids and youth. There is no Stage 1 on the
-      // Canvas.
+      // Safety: the server reads the board before it runs or is kept
+      // (services/canvas_executor.py `board_intake`); every generation asks the
+      // check before the model, every node that shows what a language model
+      // wrote asks the check at the result, and a picture is checked after
+      // generation at kids and youth.
       component: () => import('../views/canvas_workflow.vue'),
     },
     {

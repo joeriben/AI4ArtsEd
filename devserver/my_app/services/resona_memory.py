@@ -103,7 +103,7 @@ def _save_records(device_id: str, records: List[dict]) -> None:
 
 
 def remember(device_id: str, kind: str, content: str, run_id: Optional[str] = None,
-             journal_id: Optional[str] = None) -> str:
+             journal_id: Optional[str] = None, safety_level: Optional[str] = None) -> str:
     """
     Append one memory record for this device. Returns a short confirmation or
     error string suitable for returning directly to the LLM as a tool result.
@@ -116,6 +116,10 @@ def remember(device_id: str, kind: str, content: str, run_id: Optional[str] = No
     Pausing the journal does NOT strip it — the pause stops the recording, not
     the knowledge of where a note was made. A record with no journal belongs to
     no conversation and is therefore never dropped by forget_journal; see there.
+
+    safety_level is the level of the turn the note was written in. A device can
+    move into a course at a stricter level; the note then goes back to the
+    model only where its level opens (`opens_at`).
     """
     safe_device = _sanitize_device_id(device_id) if device_id else None
     if not safe_device:
@@ -140,6 +144,7 @@ def remember(device_id: str, kind: str, content: str, run_id: Optional[str] = No
         # tells "made outside any journal" (key present, None) from "written
         # before records were stamped" (key absent) by presence, not by value.
         "journal_id": journal_id if isinstance(journal_id, str) and journal_id else None,
+        "safety_level": safety_level,
     }
 
     with _LOCK:
@@ -153,11 +158,21 @@ def remember(device_id: str, kind: str, content: str, run_id: Optional[str] = No
     return f"Remembered ({kind})."
 
 
-def recall(device_id: str, query: str) -> str:
+def opens_at(record: dict, level) -> bool:
+    """Whether a note goes back to a model answering at `level`: at kids and
+    youth only a note written at the same level or a stricter one, and none
+    written before notes carried a level (safety_gate.run_opens_at)."""
+    from my_app.services.safety_gate import run_opens_at
+    return run_opens_at(record.get("safety_level"), level)
+
+
+def recall(device_id: str, query: str, level=None) -> str:
     """
     Case-insensitive substring match over content + kind, most recent first.
     Returns a compact formatted string for the LLM, bounded in count and length.
     Empty query or no hits -> an honest "nothing found" string (never invented).
+    Only notes that open at `level` are searched (`opens_at`); None counts as
+    the strictest level.
     """
     safe_device = _sanitize_device_id(device_id) if device_id else None
     if not safe_device:
@@ -167,7 +182,9 @@ def recall(device_id: str, query: str) -> str:
     if not query:
         return "No memory found (empty query)."
 
-    records = _load_records(device_id)
+    from my_app.services.safety_gate import normalise_level
+    level = normalise_level(level)
+    records = [r for r in _load_records(device_id) if opens_at(r, level)]
     if not records:
         return "No memory found for this group yet."
 

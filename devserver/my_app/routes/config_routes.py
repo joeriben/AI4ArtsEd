@@ -30,8 +30,8 @@ def get_model_availability():
                 "sd35_large": false,
                 "heartmula_standard": true
             },
-            "account_missing": ["gemini_3_pro_image"],
-            "account_provider": {"gemini_3_pro_image": "mammouth"},
+            "account_missing": ["gpt_image_1"],
+            "account_provider": {"gpt_image_1": "openai"},
             "comfyui_reachable": false,
             "gpu_service_reachable": true,
             "cached": false,

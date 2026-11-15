@@ -181,7 +181,7 @@ class Course(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[str] = mapped_column(Text, default="")
-    safety_level: Mapped[str] = mapped_column(String(16), default="youth")  # kids|youth|open
+    safety_level: Mapped[str] = mapped_column(String(16), default="youth")  # kids|youth|installation
     # Privacy toggle (see design README §8): may educators view participants' works?
     educator_can_view_participant_works: Mapped[bool] = mapped_column(Boolean, default=False)
     archived: Mapped[bool] = mapped_column(Boolean, default=False)

@@ -90,6 +90,7 @@ def test_the_instrument_offers_the_table_and_nothing_else(monkeypatch):
     import asyncio
     from my_app.routes import text_routes
     from my_app.services import text_client as tc
+    from my_app.services.safety_gate import CHECKPOINT_INTAKE, Verdict
 
     class _Client:
         def __init__(self):
@@ -105,6 +106,10 @@ def test_the_instrument_offers_the_table_and_nothing_else(monkeypatch):
 
     fake = _Client()
     monkeypatch.setattr(tc, "get_text_client", lambda: fake)
+    # The text passes the intake first; the gate is stood in for.
+    monkeypatch.setattr(text_routes, "resolve_safety_level", lambda: "youth")
+    monkeypatch.setattr(text_routes, "check_intake_texts",
+                        lambda fields, *, level: Verdict(True, CHECKPOINT_INTAKE, level))
     from flask import Flask
     app = Flask(__name__)
     app.register_blueprint(text_routes.text_bp)

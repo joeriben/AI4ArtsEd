@@ -125,8 +125,9 @@ SUPERTONIC_LANGUAGES = frozenset((
     "ru", "sk", "sl", "sv", "tr", "uk", "vi",
 ))
 
-# The platform's ten (src/i18n/index.ts), split by whether this model has them.
-PLATFORM_LANGUAGES = ("ar", "bg", "de", "en", "es", "fr", "he", "ko", "tr", "uk")
+# The platform's languages (src/i18n/index.ts), split by whether this model has them.
+PLATFORM_LANGUAGES = ("ar", "bg", "de", "en", "es", "fr", "he", "ko", "tr", "uk",
+                      "zh-hant")
 UNVOICED_PLATFORM_LANGUAGES = tuple(
     c for c in PLATFORM_LANGUAGES if c not in SUPERTONIC_LANGUAGES)
 
@@ -500,10 +501,12 @@ class SupertonicBackend:
         steps: Optional[int] = None,
         speed: Optional[float] = None,
         **kwargs,
-    ) -> Tuple[bytes, int, str, float]:
+    ) -> Tuple[bytes, int, str, float, str]:
         """Speak `text` verbatim.
 
-        Returns (WAV bytes, seed, the voice that spoke, measured f0 in Hz).
+        Returns (WAV bytes, seed, the voice that spoke, measured f0 in Hz, the
+        model that spoke as it was loaded, which the chunk reports as
+        `model_used`).
         The f0 is what `_f0_median()` read off the audio that is being handed
         back — the same measurement the register rule is built on. It is
         reported rather than kept internal because a study of the preset space
@@ -606,7 +609,7 @@ class SupertonicBackend:
             f"| {'mix' if mix else 'voice'}={name} | steps={total_steps} "
             f"| seed={best_seed} | {best_f0:.0f} Hz | {tried} draw(s) "
             f"| {len(wav)} B")
-        return wav, best_seed, name, best_f0
+        return wav, best_seed, name, best_f0, self.model_name
 
     async def unload(self) -> bool:
         """Drop the session. Used by the model-management surface."""

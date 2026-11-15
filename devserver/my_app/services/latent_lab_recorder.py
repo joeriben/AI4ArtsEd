@@ -40,7 +40,8 @@ from my_app.utils.media_ref import is_media_entity
 logger = logging.getLogger(__name__)
 
 
-def _marked(raw: bytes, entity_type: str, entity_metadata: Dict[str, Any]) -> bytes:
+def _marked(raw: bytes, entity_type: str, entity_metadata: Dict[str, Any],
+            filename: str) -> Tuple[bytes, str]:
     """AI-Origin Disclosure (EU AI Act Art. 50) — see watermark_service.
 
     This recorder writes its files itself instead of going through
@@ -48,11 +49,57 @@ def _marked(raw: bytes, entity_type: str, entity_metadata: Dict[str, Any]) -> by
     For as long as that was so, everything the latent lab produced — the
     pictures a workshop takes home among them — left the house unmarked.
 
-    Fail-open: an unmarked file beats no file (services/media_marking).
+    Fail-open: an unmarked file beats no file (services/media_marking). It is
+    written under `filename` with `_ai_generated` before the extension, which
+    is the name this returns with the bytes.
     """
-    from my_app.services.media_marking import mark_or_pass
+    from my_app.services.media_marking import mark_for_disk
 
-    return mark_or_pass(raw, entity_type, entity_metadata, "[LAB_RECORDER]")
+    return mark_for_disk(raw, entity_type, entity_metadata, filename, "[LAB_RECORDER]")
+
+
+def _own_word(meta) -> Dict[str, Any]:
+    """The instrument's own word about an output or a part, as the browser sent it.
+
+    A verdict is never its word. Delivery reads the one under SAFETY_VERDICT_KEY,
+    and a browser that sent one along would otherwise write a pass onto its own
+    picture.
+    """
+    from my_app.services.pipeline_recorder import SAFETY_VERDICT_KEY
+
+    return {key: value for key, value in dict(meta or {}).items() if key != SAFETY_VERDICT_KEY}
+
+
+def _pass_of(verdict) -> Optional[Dict[str, Any]]:
+    """The intake check's pass on a picture, in the form its entry carries it.
+
+    None where the verdict is no pass, or answers for a level that checks no
+    pictures.
+    """
+    from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS, entity_verdict
+
+    if verdict is not None and verdict.passed and verdict.level in IMAGE_CHECKED_LEVELS:
+        return entity_verdict(True, level=verdict.level)
+    return None
+
+
+def _verdict_on(out: Dict[str, Any], media_type: str, verdict, level) -> Optional[Dict[str, Any]]:
+    """The verdict a picture of a recorded run carries, or None.
+
+    A picture that came as base64 carries the intake check's pass (`_pass_of`).
+    One that came as a `ref` was read out of the storage only where delivery
+    hands it to `level` (LatentLabRecorder._output_bytes), and carries a pass
+    at that level.
+    """
+    from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS, entity_verdict
+    from my_app.services.safety_gate import normalise_level
+
+    if media_type != "image" or level is None:
+        return None
+    if out.get("ref"):
+        asked = normalise_level(level)
+        return entity_verdict(True, level=asked) if asked in IMAGE_CHECKED_LEVELS else None
+    return _pass_of(verdict)
 
 
 #: The one shape a `ref` may have: `/api/media/<kind>/<run_id>/<index>`, the
@@ -107,6 +154,8 @@ class LatentLabRecorder:
         results: Optional[Dict[str, Any]] = None,
         outputs: Optional[List[Dict[str, Any]]] = None,
         steps: Optional[List[Dict[str, Any]]] = None,
+        level: Optional[str] = None,
+        verdicts: Optional[Dict[int, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Record one generation as a run of its own.
@@ -127,6 +176,17 @@ class LatentLabRecorder:
             steps: The ordered parts [{format, dataBase64, meta?}] — denoising
                 steps, axis cells, probe frames. `meta` is the instrument's own
                 word about a part: this recorder carries it and does not read it.
+            level: The level of whoever asks. An output that comes as a `ref` is
+                copied only where delivery hands it to that level; None counts
+                as the strictest. Given, it is the run's `safety_level`.
+            verdicts: The intake check's verdicts on the pictures that came as
+                base64, by their place in `outputs`; the route asks them
+                (latent_lab_recorder_routes.save_recording). A pass that answers
+                for a level that checks pictures is written onto the picture's
+                entry, where delivery reads it. A picture that came as a `ref`
+                was read only where delivery hands it to `level`, and carries a
+                pass at that level. Any other picture carries no verdict, and
+                at kids and youth it does not go out.
 
         Returns:
             {"run_id": str, "entity_count": int, "entities": [...],
@@ -162,6 +222,13 @@ class LatentLabRecorder:
             "results": results or {},
             "entities": [],
         }
+        if level is not None:
+            from my_app.services.safety_gate import normalise_level
+
+            # The level the run was made at. Restoring a run and the
+            # favourites read it (favorites_routes._restorable); a run without
+            # it counts for no level that checks pictures.
+            metadata["safety_level"] = normalise_level(level)
 
         sequence = 0
 
@@ -195,11 +262,13 @@ class LatentLabRecorder:
         # can find - the parameters and every part before it lost with it.
         for idx, step_data in enumerate(steps or []):
             fmt = step_data.get("format", "jpg")
-            part_meta = dict(step_data.get("meta") or {})
+            part_meta = _own_word(step_data.get("meta"))
             step_filename = f"002_step_{idx + 1:02d}.{fmt}"
             try:
                 raw = base64.b64decode(step_data["dataBase64"])
-                raw = _marked(raw, "latent_lab_step", {"step_index": idx, "format": fmt})
+                raw, step_filename = _marked(
+                    raw, "latent_lab_step", {"step_index": idx, "format": fmt}, step_filename
+                )
                 (prompting_folder / step_filename).write_bytes(raw)
             except Exception as e:
                 logger.warning(f"[LAB_RECORDER] Part {idx} of {run_id} not written: {e}")
@@ -217,36 +286,52 @@ class LatentLabRecorder:
             })
 
         # 3) Final outputs in final/
-        for out in outputs or []:
+        for i, out in enumerate(outputs or []):
             media_type = out.get("type", "image")
             fmt = out.get("format", "png")
-            out_meta = dict(out.get("meta") or {})
+            out_meta = _own_word(out.get("meta"))
             sequence += 1
             out_filename = f"{sequence:02d}_output_{media_type}.{fmt}"
             try:
-                raw = self._output_bytes(out, media_type)
+                raw = self._output_bytes(out, media_type, level)
                 # Bytes that came through a `ref` are taken EXACTLY as they lie.
                 # They were marked when they were first written, and marking
                 # them again would put a second disclosure into the file: the
                 # copy would then differ from the picture the address it came
                 # from still hands out, and the two could no longer be compared.
                 if not out.get("ref"):
-                    raw = _marked(
+                    raw, out_filename = _marked(
                         raw,
                         f"output_{media_type}",
                         {"format": fmt, **_disclosed(parameters, results)},
+                        out_filename,
+                    )
+                else:
+                    # Named by the same test as everything else written here:
+                    # a copy of a file the disclosure is not in carries
+                    # `_ai_generated` as its source does.
+                    from my_app.services.media_marking import disclosed_name
+
+                    out_filename = disclosed_name(
+                        raw, f"output_{media_type}", out_filename, "[LAB_RECORDER]"
                     )
                 (final_folder / out_filename).write_bytes(raw)
             except Exception as e:
                 logger.warning(f"[LAB_RECORDER] Output of {run_id} not written: {e}")
                 continue
 
+            entity_meta = {"format": fmt, **out_meta}
+            verdict = _verdict_on(out, media_type, (verdicts or {}).get(i), level)
+            if verdict is not None:
+                from my_app.services.pipeline_recorder import SAFETY_VERDICT_KEY
+
+                entity_meta[SAFETY_VERDICT_KEY] = verdict
             metadata["entities"].append({
                 "sequence": sequence,
                 "type": f"output_{media_type}",
                 "filename": out_filename,
                 "timestamp": datetime.now().isoformat(),
-                "metadata": {"format": fmt, **out_meta},
+                "metadata": entity_meta,
             })
 
         metadata["total_entities"] = len(metadata["entities"])
@@ -288,7 +373,7 @@ class LatentLabRecorder:
         }
 
     @staticmethod
-    def _output_bytes(out: Dict[str, Any], media_type: str) -> bytes:
+    def _output_bytes(out: Dict[str, Any], media_type: str, level) -> bytes:
         """The bytes of ONE output, whether they came as base64 or as a reference.
 
         A reference is the address of one output of one run and nothing else,
@@ -303,7 +388,10 @@ class LatentLabRecorder:
         What is accepted is resolved through the platform's single resolver, so
         the file that is read is the very one the address hands out. Everything
         either step refuses raises, and the caller drops that output the way it
-        drops undecodable base64: one output must never cost the run.
+        drops undecodable base64: one output must never cost the run. A
+        reference resolves only where delivery hands it to `level`: copied into
+        a new run, a picture would otherwise go out under an address that does
+        not refuse it.
         """
         ref = out.get("ref")
         if ref:
@@ -313,7 +401,7 @@ class LatentLabRecorder:
             if not _RUN_REF_RE.match(address):
                 raise ValueError(f"{address[:160]!r} is no run address")
             kind = media_type if media_type in ("image", "audio", "video", "3d") else "image"
-            return Path(resolve_media_ref(address, kind=kind)).read_bytes()
+            return Path(resolve_media_ref(address, kind=kind, level=level)).read_bytes()
         return base64.b64decode(out["dataBase64"])
 
     def complete(self) -> None:
@@ -379,6 +467,7 @@ def replace_output_image(
     device_id: str = "",
     reading: Optional[Dict[str, Any]] = None,
     base_path: Optional[Path] = None,
+    verdict=None,
 ) -> Dict[str, Any]:
     """Put another picture in the place of a run's Nth image output.
 
@@ -410,10 +499,16 @@ def replace_output_image(
     `expected_outputs`), and saving that object would make those invented facts
     permanent in the research record.
 
+    `verdict` is the intake check's verdict on the new picture; the route asks
+    it (latent_lab_recorder_routes.set_run_output). The plate's entry carries it
+    where it is a pass for a level that checks pictures, and loses the verdict it
+    had otherwise: that verdict was about the picture this one replaces, and
+    delivery would hand the new one out under it.
+
     Picture and record are set as one: the previous bytes are kept until the
-    reading is written beside them, and go back if it cannot be. A plate whose
-    record says something else is worse than no plate, because nothing can tell
-    afterwards which of the two is the lie.
+    reading and the verdict are written beside them, and go back if they cannot
+    be. A plate whose record says something else is worse than no plate, because
+    nothing can tell afterwards which of the two is the lie.
 
     Returns {"ok": True, "version": int} — the modification time in
     MICROSECONDS, which a URL carries so that a picture answered as `immutable`
@@ -495,17 +590,23 @@ def replace_output_image(
     # 25 that is the run's own parameters file, and for the one folder holding
     # several generations it is nothing at all.
     parameters, results = recovered_run_data(metadata, recorder.final_folder)
-    raw = _marked(raw, "output_image",
-                  {"format": entity_meta.get("format", "png"), **_disclosed(parameters, results)})
+    # Named by its bytes, as every file this recorder writes: a plate the
+    # disclosure did not get into goes under `_ai_generated`, a marked one under
+    # the plain name, whatever the plate before it was called. The record
+    # follows the name below.
+    raw, named = _marked(raw, "output_image",
+                         {"format": entity_meta.get("format", "png"), **_disclosed(parameters, results)},
+                         filename)
 
-    path = recorder.final_folder / filename
+    path = recorder.final_folder / named
+    old_path = recorder.final_folder / filename
     # A name of this call's own, not of this process's: the server is threaded
     # (waitress), so two requests for one run would otherwise write the same
     # temporary file and promote a mixture of the two.
     tmp = path.with_name(f"{path.name}.{uuid.uuid4().hex}.tmp")
     with _plate_lock(run_id):
         try:
-            previous = path.read_bytes() if path.exists() else None
+            previous = old_path.read_bytes() if old_path.exists() else None
         except OSError:
             previous = None
         try:
@@ -519,13 +620,28 @@ def replace_output_image(
                 pass
             return {"ok": False, "reason": "write_failed"}
 
-        if reading is not None and not _amend_entity_meta(
-            recorder.run_folder, filename, {"reading": reading}
+        from my_app.services.pipeline_recorder import SAFETY_VERDICT_KEY
+
+        fields: Dict[str, Any] = {} if reading is None else {"reading": reading}
+        cleared = _pass_of(verdict)
+        if cleared is not None:
+            fields[SAFETY_VERDICT_KEY] = cleared
+        if not _amend_entity_meta(
+            recorder.run_folder, filename, fields,
+            drop=() if cleared is not None else (SAFETY_VERDICT_KEY,),
+            rename_to=named if named != filename else None,
         ):
             # The picture goes back. What a heat map SHOWS is only knowable from
             # what it says it shows, so a picture that outran its own record is
-            # not a lesser success — it is a run nobody can read afterwards.
-            if previous is not None:
+            # not a lesser success — it is a run nobody can read afterwards. And
+            # under the verdict of the picture it replaced, it would go out
+            # unjudged. Under a new name the old plate was never touched.
+            if named != filename:
+                try:
+                    path.unlink()
+                except OSError as e:
+                    logger.error(f"[LAB_RECORDER] {run_id} left unrepaired: {e}")
+            elif previous is not None:
                 back = path.with_name(f"{path.name}.{uuid.uuid4().hex}.tmp")
                 try:
                     back.write_bytes(previous)
@@ -533,6 +649,11 @@ def replace_output_image(
                 except OSError as e:
                     logger.error(f"[LAB_RECORDER] {run_id} left unrepaired: {e}")
             return {"ok": False, "reason": "record_write_failed"}
+        if named != filename:
+            try:
+                old_path.unlink()
+            except OSError as e:
+                logger.warning(f"[LAB_RECORDER] Earlier plate {filename} of {run_id} not removed: {e}")
 
         # The reader cache holds this run's metadata for the life of the process
         # (pipeline_recorder._active_recorders), so without this every route
@@ -624,8 +745,13 @@ def name_plate(entity_metadata: Optional[Dict[str, Any]]) -> str:
     return f"{what} ({terms})" if terms else what
 
 
-def _amend_entity_meta(run_folder: Path, filename: str, fields: Dict[str, Any]) -> bool:
+def _amend_entity_meta(run_folder: Path, filename: str, fields: Dict[str, Any],
+                       drop: Tuple[str, ...] = (), rename_to: Optional[str] = None) -> bool:
     """Add fields to one entity's own `metadata`, in the file as it lies on disk.
+
+    `drop` names fields that go: a plate's verdict was about the picture the new
+    plate replaces. `rename_to` is the entity's new file name, where the new
+    plate is stored under another one (`_ai_generated`, or no longer).
 
     Read from disk on purpose. The recorder object in memory may carry fields
     `load_recorder` invented for readers that expect a pipeline run, and writing
@@ -642,7 +768,12 @@ def _amend_entity_meta(run_folder: Path, filename: str, fields: Dict[str, Any]) 
         for entity in entities:
             if isinstance(entity, dict) and entity.get("filename") == filename:
                 meta = entity.get("metadata")
-                entity["metadata"] = {**(meta if isinstance(meta, dict) else {}), **fields}
+                meta = {**(meta if isinstance(meta, dict) else {}), **fields}
+                for key in drop:
+                    meta.pop(key, None)
+                entity["metadata"] = meta
+                if rename_to:
+                    entity["filename"] = rename_to
                 break
         else:
             return False
@@ -998,14 +1129,20 @@ def list_session_runs(
     return runs
 
 
-def resolve_part_path(run_id: str, index: int, base_path: Optional[Path] = None) -> Optional[Path]:
+def resolve_part_path(run_id: str, index: int, level,
+                      base_path: Optional[Path] = None) -> Optional[Path]:
     """The file of one part, or None.
 
     The path is built from the run's own metadata and then checked to lie inside
     that run's folder: the index comes off a URL, and a filename read from disk
     is still a filename somebody could have written.
+
+    A part goes out with the run's finished picture, for whoever asks at
+    `level` (pipeline_recorder.entity_cleared_for_delivery); where delivery
+    refuses it, SafetyRefusal is raised.
     """
-    from my_app.services.pipeline_recorder import load_recorder
+    from my_app.services.pipeline_recorder import (
+        SafetyRefusal, entity_cleared_for_delivery, load_recorder)
 
     if base_path is None:
         from config import JSON_STORAGE_DIR
@@ -1021,6 +1158,9 @@ def resolve_part_path(run_id: str, index: int, base_path: Optional[Path] = None)
     ]
     if index < 0 or index >= len(steps):
         return None
+    cleared, reason = entity_cleared_for_delivery(steps[index], recorder.metadata, level)
+    if not cleared:
+        raise SafetyRefusal(reason, run_id, steps[index].get("filename") or "")
 
     run_folder = Path(recorder.run_folder).resolve()
     candidate = (run_folder / steps[index].get("filename", "")).resolve()

@@ -201,7 +201,7 @@ def test_participant_block_reports_phase_notes_from_description(client):
 # ===========================================================================
 def test_participant_client_course_id_is_ignored(client):
     real_course = _make_course(name="Real Room", safety="youth")
-    other_course = _make_course(name="Other Room", safety="open")
+    other_course = _make_course(name="Other Room", safety="installation")
     code = _add_place(real_course)
     # Give the OTHER course a distinctive number of places (3) to detect leakage.
     for _ in range(3):
@@ -222,7 +222,7 @@ def test_participant_client_course_id_is_ignored(client):
 # ===========================================================================
 def test_educator_own_course_injects_block(client):
     edu = _make_user(M.Role.educator, email="edu@example.org", display="Edu")
-    course_id = _make_course(name="Studio One", safety="open")
+    course_id = _make_course(name="Studio One", safety="installation")
     _add_educator(course_id, edu, role=M.CourseRole.owner)
     _add_place(course_id)
     _login_educator(client, "edu@example.org")
@@ -230,8 +230,9 @@ def test_educator_own_course_injects_block(client):
     prompt = _prompt(client, {"resona_mode": True, "course_id": course_id})
     assert "GIVEN-COURSE:" in prompt
     assert 'course "Studio One"' in prompt
-    # one place and exactly one educator, both singular
-    assert "open group, 1 place, 1 educator." in prompt
+    # one place and exactly one educator, both singular; a course at the
+    # installation's level names no group
+    assert '"Studio One" \u2014 1 place, 1 educator.' in prompt
 
 
 def test_the_course_line_counts_places_alone(client):

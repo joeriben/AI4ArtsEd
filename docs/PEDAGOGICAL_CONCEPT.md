@@ -184,7 +184,7 @@ AI4ArtsEd verfolgt ein anderes Ziel: **kritisches Erkunden**. Die Frage ist nich
 
 **1. Modellvergleich**
 
-AI4ArtsEd bietet verschiedene Bildgenerierungsmodelle an: Stable Diffusion 3.5, GPT Image, Gemini, QWEN und andere. Nutzer:innen können denselben Prompt an verschiedene Modelle schicken und die Ergebnisse vergleichen.
+AI4ArtsEd bietet verschiedene Bildgenerierungsmodelle an: Stable Diffusion 3.5, GPT Image, QWEN und andere. Nutzer:innen können denselben Prompt an verschiedene Modelle schicken und die Ergebnisse vergleichen.
 
 Was lernt man dabei?
 - Modelle sind nicht neutral. Jedes hat "Vorlieben".

@@ -3,11 +3,10 @@
 
   Four presets, one of them chosen. They are the four questions this platform
   asks of a lineup: what the small models do, what the large ones do, what one
-  family does across its sizes, and what ONE family at ONE size did over five
-  generations. The last is the only one where the models are base models: over
-  five generations the tuning is what changed most and most unevenly, so the
-  base model is the closer thing to „the same model, later" (see
-  gpu_service/config.py).
+  family does across its sizes, and what ONE family in ONE size class did over
+  five generations. That last lineup stands in the order of the generations,
+  the others smallest first (see the history row in
+  devserver/config/local_llm_weights.json).
 
   A second row once stood under these four, in which every model went in and
   out on its own. It is gone; there are no chips, presets only: sixteen chips
@@ -59,7 +58,7 @@ interface Preset { id: string; description: string; vram_gb: number; params_b?: 
 const SCENARIOS: Scenario[] = ['mixed', 'qwen', 'history']
 
 /** Which models each preset stands for, named the way the service names them. */
-const PRESETS: { id: string; i18n: string; note: string; members: [Scenario, string][] }[] = [
+const PRESETS: { id: string; i18n: string; note: string; members: [Scenario, string][]; inListedOrder?: boolean }[] = [
   {
     id: 'small',
     i18n: 'latentLab.textLab.models.small',
@@ -86,6 +85,8 @@ const PRESETS: { id: string; i18n: string; note: string; members: [Scenario, str
     i18n: 'latentLab.textLab.models.history',
     note: 'latentLab.textLab.models.historyNote',
     members: [['history', 'gen1'], ['history', 'gen2'], ['history', 'gen3'], ['history', 'gen4'], ['history', 'gen5']],
+    // The generations in their order, whatever their sizes.
+    inListedOrder: true,
   },
 ]
 
@@ -96,22 +97,23 @@ const presetChoices = computed(() =>
   PRESETS.map(p => ({ value: p.id, label: t(p.i18n), title: t(p.note) }))
 )
 
-/** The lineup a preset stands for, smallest first. Missing members are skipped:
+/** The lineup a preset stands for, smallest first, or in the order the preset
+ *  lists it where it says so (the generations). Missing members are skipped:
  *  what the service does not offer is not compared, and saying so is the
  *  service's business, not a gap this row invents a model for. Smallest is
  *  said in parameters (params_b), not in the card the model wants: a maker
  *  that ships FP8 fits more parameters on less card, and the large row
  *  holds one of those. */
 function membersOf(preset: typeof PRESETS[number]): Member[] {
-  return preset.members
+  const found = preset.members
     .map(([scenario, key]) => catalogue.value[scenario]?.[key])
     .filter((p): p is Preset => !!p)
-    .sort((a, b) => (a.params_b ?? a.vram_gb) - (b.params_b ?? b.vram_gb))
-    .map(p => ({
-      id: p.id,
-      label: (p.description.split(' - ')[0] ?? p.description).trim(),
-      vram: p.vram_gb,
-    }))
+  if (!preset.inListedOrder) found.sort((a, b) => (a.params_b ?? a.vram_gb) - (b.params_b ?? b.vram_gb))
+  return found.map(p => ({
+    id: p.id,
+    label: (p.description.split(' - ')[0] ?? p.description).trim(),
+    vram: p.vram_gb,
+  }))
 }
 
 function applyPreset(id: string) {

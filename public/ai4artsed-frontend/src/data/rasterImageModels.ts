@@ -47,10 +47,6 @@ export const RASTER_IMAGE_MODELS: readonly RasterImageModel[] = [
   // FLUX 3 Image Klein, Black Forest Labs' model of 2026, stands after Flux 2,
   // the same maker's model of 2025, which stays in the list beside it.
   { id: 'flux3', label: 'Flux 3 Klein' },
-  // Gemini 3 Pro stands in NO preselection that a press multiplies, because
-  // every run of it costs money, and its name carries the € everywhere it can
-  // be chosen.
-  { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro (€)' },
 ]
 
 /**
@@ -61,14 +57,10 @@ export const RASTER_IMAGE_MODELS: readonly RasterImageModel[] = [
  * They live here and not in a view because two surfaces offer them. The Model
  * Comparison still carries its own copy beside its own catalogue, which
  * docs/ELEMENT_STRUCTURE_REGISTRY.md records as the copy to fold in.
- *
- * A surface where ONE press runs a model more than once takes Gemini 3 Pro out
- * of the current set before offering it: it may stand preselected only where a
- * press is one picture per model.
  */
 export const RASTER_IMAGE_MODEL_SETS = {
   history: ['sd15', 'sdxl', 'sd35_large'],
-  current: ['sd35_large', 'flux2', 'gemini_3_pro_image'],
+  current: ['sd35_large', 'flux2', 'flux3'],
 } as const
 
 /**

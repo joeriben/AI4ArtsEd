@@ -37,6 +37,14 @@
   lets the column give the width instead — its height is not bounded, so there is
   no smaller side to take.
 
+  A SOUND has no format, and in a surface that grows a row per press a square
+  would make every row as tall as its column is wide. `strip` makes the cell a
+  strip as high as the player (MMAudio and ImageBind Guidance, since
+  2026-11-02). The back keeps its
+  place inside the cell and scrolls there: in a strip the functions stand first
+  and the rest of the record is a scroll away, so a surface that lays strips
+  says in its row what the run was made with.
+
   What does NOT work on a raster that must show a fixed number of rows at once —
   and once stood here — is letting the row give the height and deriving the
   width from `aspect-ratio` with a `max-width` back to the column. That holds
@@ -52,8 +60,8 @@
 
   The four states a cell can be in stay apart: nothing run yet (empty plate), a
   medium, refused, and nothing came back. The last two arrive as `note` — the
-  caller has translated the key by then, because a refusal is a German developer
-  string until `safetyBlockKey()` has been over it.
+  caller has translated the key by then: a refusal's reason is a German
+  developer string, and the sentence is the one its block message names.
 
   A click on the picture opens it LARGE from here, on the platform's one layer
   (`MediaFullscreen`), with the card's back standing beside it: one click, one
@@ -67,7 +75,7 @@
   perspective, „Reference"), which the record does not carry.
 -->
 <template>
-  <div class="media-grid-cell" :class="{ filled: !!url }">
+  <div class="media-grid-cell" :class="{ filled: !!url, strip }">
     <FlowCard v-if="url || isExecuting" class="mgc-card" :hold-title="t('resonaMediaCard.flipToBack')">
       <MediaCardFront
         :output-url="url"
@@ -152,9 +160,13 @@ const props = withDefaults(
     label?: string
     /**
      * A refusal or a failure, in the reader's language already. Shown in place
-     * of the medium; a cell holds one or the other, never both.
+     * of the medium; a cell holds one or the other, never both. A run that
+     * sends no progress would stand at 0 % on the card's bar for as long as it
+     * is out, and says so here instead.
      */
     note?: string
+    /** A strip as high as the player instead of a square: a sound in a row. */
+    strip?: boolean
   }>(),
   {
     isExecuting: false,
@@ -171,6 +183,7 @@ const props = withDefaults(
     isFavorited: false,
     label: undefined,
     note: '',
+    strip: false,
   }
 )
 
@@ -224,6 +237,13 @@ const back = computed<MediaBack>(() => ({
 .media-grid-cell.filled {
   background: transparent;
   border-color: transparent;
+}
+
+/* A sound in a row: as high as its player, and as high as one line of a note
+   while the run is out or after it failed. */
+.media-grid-cell.strip {
+  aspect-ratio: auto;
+  min-height: 54px;
 }
 
 /* The card is exactly its MEDIUM, and the cell centres it — which is what it
@@ -281,5 +301,13 @@ const back = computed<MediaBack>(() => ({
 
 .mgc-note > span {
   margin: auto;
+}
+
+/* In a strip the height is the content's, so the note stands in the flow and
+   the strip grows with it: a cause sentence is read whole in a narrow row
+   instead of being scrolled inside one line of height. */
+.media-grid-cell.strip .mgc-note {
+  position: static;
+  flex: 1;
 }
 </style>

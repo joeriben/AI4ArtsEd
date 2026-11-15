@@ -102,13 +102,13 @@ def test_the_stage2_composition_is_not_deprecated(monkeypatch):
     from my_app.routes import schema_pipeline_routes as R
 
     async def interception(**kwargs):
-        return R._ClassifierResult(success=True, final_output="written")
+        return R._Stage2Answer(success=True, final_output="written")
 
     monkeypatch.setattr(R, "execute_stage2_interception", interception)
     with warnings.catch_warnings(record=True) as seen:
         warnings.simplefilter("always")
         result = asyncio.run(R.execute_stage2_with_optimization(
-            schema_name="bauhaus", input_text="a house", config=None, safety_level="open"))
+            schema_name="bauhaus", input_text="a house", config=None, safety_level="adult"))
     assert result.final_output == "written"
     assert [w for w in seen if issubclass(w.category, DeprecationWarning)] == []
 

@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { ref } from 'vue'
 import { splitForSpeech, useSpeech, useSpokenTurn } from '@/composables/useSpeech'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 // Sentence ends and nowhere else. A fragment is not spoken as a fragment: the
 // model invents a continuation, and "Hallo. Ich bin Persona, eine Maschine,
@@ -757,5 +758,34 @@ describe('follow', () => {
     expect(clipsAsked()).toBe(asked)
     expect(speech.soundingPiece.value).toBeNull()
     expect(over).toHaveBeenCalledTimes(2)
+  })
+})
+
+
+// A piece the platform's checks refuse is not spoken, and the refusal goes where
+// every surface sends one: the safety window.
+describe('a refused piece', () => {
+  beforeEach(freshEar)
+
+  it('goes to the safety window and is not spoken', async () => {
+    const block = { checkpoint: 'before_model', field: 'text', reason_key: 'content', reason: '' }
+    vi.stubGlobal('fetch', vi.fn(async (url: unknown) => (
+      String(url).endsWith('/api/speech/status')
+        ? { ok: true, json: async () => STATUS }
+        : {
+            ok: false,
+            status: 403,
+            json: async () => ({ success: false, error: 'safety_blocked', safety_block: block }),
+          }
+    )))
+    const speech = useSpeech()
+    await speech.loadStatus()
+
+    void speech.speak('Ein Satz, der nicht gesprochen wird.', 'de', 'r1')
+    await settle()
+    expect(useSafetyEventStore().pendingBlock).toEqual({
+      block, vlmDescription: undefined, operational: false, generated: false,
+    })
+    expect(speech.soundingPiece.value).toBeNull()
   })
 })

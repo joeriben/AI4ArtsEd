@@ -28,6 +28,11 @@ def main():
     # Create Flask app
     app = create_app()
 
+    # This start ended every document job of the last one, and nothing else
+    # comes for the raw PDFs those jobs staged.
+    from my_app.services.scene_ingest_service import sweep_staging
+    sweep_staging()
+
     # Run the server with Waitress
     print(f"Starting AI4ArtsEd Web Server with Waitress on http://{HOST}:{PORT}")
     print(f"Using {THREADS} threads")

@@ -3,8 +3,8 @@
 A result that lives in a register -- a way of speaking, not a set of words --
 is plain prose again once a translator is asked for neither register in
 particular. The perspective says on its own config which register the English
-side gets, Stage 3 reads it there, and every run that says nothing keeps the
-translator it has always had -- to the byte.
+side gets, the translations into English read it there, and every run that
+says nothing keeps the translator it has always had -- to the byte.
 
 No perspective carries a wording today: Slang and Word Game were the two that
 did, and both were taken off the platform on 06.09.2026. The slot stays, and so
@@ -161,8 +161,8 @@ def test_a_translation_looks_nothing_up():
     executor.backend_router.process_request = model
     config = config_loader.get_config("pre_output/translation_en")
     step = PE.PipelineStep(step_id="translate", chunk_name=config.chunks[0])
-    # Stage 3 calls execute_pipeline without a level, so the executor's default
-    # of kids is what a real translation runs under.
+    # The translations into English call execute_pipeline without a level, so
+    # the executor's default of kids is what a real translation runs under.
     out = asyncio.run(executor._execute_single_step(
         step, translation_context(TEXT), resolved_config=config, safety_level="kids"))
 
@@ -194,13 +194,21 @@ def _looked_nothing_up(executor):
         assert context.custom_placeholders.get("_SKIP_WIKIPEDIA") is True
 
 
-def test_stage3_translates_without_looking_anything_up():
-    from schemas.engine.stage_orchestrator import execute_stage3_safety
+def test_the_translation_for_the_model_looks_nothing_up():
+    from my_app.routes.schema_pipeline_routes import _translate_for_model
     executor = _Executor()
-    # research with a forced translation translates and runs no check, so
-    # nothing but the translation is exercised
-    asyncio.run(execute_stage3_safety(TEXT, "research", "image", executor,
-                                      force_translation=True))
+    asyncio.run(_translate_for_model(TEXT, executor))
+    _looked_nothing_up(executor)
+
+
+def test_the_checks_own_translation_looks_nothing_up(monkeypatch):
+    from collections import OrderedDict
+    from my_app.routes import schema_pipeline_routes as R
+    from my_app.services import safety_gate
+    executor = _Executor()
+    monkeypatch.setattr(R, "pipeline_executor", executor)
+    monkeypatch.setattr(safety_gate, "_TRANSLATIONS", OrderedDict())
+    assert safety_gate._translate_for_check(TEXT) == "There is a house in the middle of nowhere."
     _looked_nothing_up(executor)
 
 

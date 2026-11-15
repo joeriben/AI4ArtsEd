@@ -30,6 +30,10 @@ from flask import Flask
 from my_app.routes import chat_routes
 
 
+# The turn is under test here, not what it checks.
+pytestmark = pytest.mark.usefixtures("chat_checks_pass")
+
+
 @pytest.fixture
 def app_ctx():
     app = Flask(__name__)

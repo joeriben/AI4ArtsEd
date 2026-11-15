@@ -8,15 +8,15 @@ The Compare Hub (`/compare`) provides three comparison modes for investigating h
 
 ### 1. Language Comparison
 **Varies**: Input language (columns) and, since 2026-09-21, image model (rows) | **Constant**: Prompt, seed
-- User enters a prompt in any language and ticks the image models (SD 3.5 Large, SD 3.5 Large Turbo, Flux 2, Gemini 3 Pro; default SD 3.5 Large + Flux 2)
+- User enters a prompt in any language and ticks the image models (SD 3.5 Large, SD 3.5 Large Turbo, Flux 2, Flux 3 Klein; default SD 3.5 Large + Flux 2)
 - Prompt is translated to all selected languages via `/api/schema/pipeline/translate` (LLM auto-detects source)
-- Every ticked model generates one image per language on the run's seed, one row per model, on the Latent Lab series grid (`views/compare/language_comparison.vue`); Gemini's interface takes no seed
+- Every ticked model generates one image per language on the run's seed, one row per model, on the Latent Lab series grid (`views/compare/language_comparison.vue`)
 - Reveals the language bias of each model's text parts — CLIP/T5 in SD 3.5, a vision-language model in Flux 2 — whose visual culture the model absorbed
 
 ### 2. Model Comparison
 **Varies**: Image generation model | **Constant**: Prompt, seed
 - Two preset lineups:
-  - **Current Top Models**: SD 3.5 Large (diffusers), Flux 2 (ComfyUI), Gemini 3 Pro (cloud)
+  - **Current models**: SD 3.5 Large (diffusers), Flux 2 (ComfyUI), Flux 3 Klein (ComfyUI)
   - **SD History**: SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024)
 - Same prompt + seed across all models
 - Note: Same seed ≠ same image cross-model (different latent spaces). Seed ensures reproducibility within a model.

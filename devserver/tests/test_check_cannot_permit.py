@@ -11,7 +11,6 @@ each test below stands at the line where one of them bit:
 
 Run: python3 -m pytest devserver/tests/test_check_cannot_permit.py -q
 """
-import asyncio
 import builtins
 import logging
 import sys
@@ -22,6 +21,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from my_app.services import safety_classifier           # noqa: E402
+from my_app.services import safety_gate as gate         # noqa: E402
 from my_app.utils import vlm_safety                      # noqa: E402
 from schemas.engine import stage_orchestrator as so      # noqa: E402
 from schemas.engine.pipeline_executor import PipelineExecutor  # noqa: E402
@@ -34,98 +35,81 @@ CLEAN = ("function setup(){ createCanvas(400,400); }\n"
 
 
 def _run_code_check(code, level='kids'):
-    return asyncio.run(so.execute_stage3_safety_code(code, level, 'code'))
+    return gate.check_result_code(code, level=level)
 
 
 @pytest.fixture()
 def verdict(monkeypatch):
-    """One scripted answer where the verdict model would be."""
-    def script(content=None, finish='stop', raises=None):
-        def fake(prompt):
+    """One scripted answer where the classifier's code question would be. The
+    level's text question over the code is answered no beforehand, so that
+    what is tested is the code question alone."""
+    def script(answer=None, raises=None):
+        def fake(policy, document, images=None):
             if raises is not None:
                 raise raises
-            return content, finish
-        monkeypatch.setattr(vlm_safety, '_call_verdict_model', fake)
+            return answer
+        monkeypatch.setattr(gate, 'check_result_text', lambda text, *, level, field='text':
+                            gate.Verdict(True, gate.CHECKPOINT_RESULT, level, field))
+        monkeypatch.setattr(safety_classifier, 'is_unsafe', fake)
     return script
 
 
 class TestTheCodeCheckDoesNotPassFlaggedCode:
-    """The fast filter flags `eval(`, `fetch(`, `atob` and their siblings and
-    hands the case to a slow check. That slow check called
+    """The pattern list flags `eval(`, `fetch(` and their siblings and hands
+    the case to a slower question. That question called
     `pipeline_executor.execute_chunk_async` — a method PipelineExecutor has
     never had — from 2025-12-01 to 2026-09-04, and the AttributeError was
-    caught and answered with `safe: True` carrying the flagged code."""
+    caught and answered with `safe: True` carrying the flagged code.
+
+    Until 2026-11-01 the question went to the cloud verdict model, whose free
+    text could also arrive cut off or unreadable. The check at the result asks
+    the local classifier, which answers yes, no or nothing; nothing and a call
+    that raises are the ways left of not getting an answer."""
 
     def test_a_verdict_that_never_arrives_is_not_a_pass(self, verdict):
-        verdict(content=None, finish=None)
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is False
-        assert not r['positive_prompt']
-        assert r['abort_reason'] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
+        verdict(answer=None)
+        v = _run_code_check(FLAGGED)
+        assert not v.passed and v.operational
+        assert v.reason == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
 
     def test_a_verdict_call_that_raises_is_not_a_pass(self, verdict):
         verdict(raises=RuntimeError('API Error: 524'))
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is False
-        assert r['abort_reason'] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
-
-    def test_a_truncated_verdict_is_not_a_pass(self, verdict):
-        """finish_reason 'length'. The fragment opens with the word that would
-        otherwise let the sketch through, so this fails if and only if the
-        truncation is seen before the words are read."""
-        assert vlm_safety._extract_verdict('SAFE, the sandbox holds') == 'safe'
-        verdict(content='SAFE, the sandbox holds', finish='length')
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is False
-        assert r['abort_reason'] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
-
-    def test_an_unreadable_verdict_is_not_a_pass(self, verdict):
-        verdict(content='Presence of UNSAF')
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is False
-        assert r['abort_reason'] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
+        v = _run_code_check(FLAGGED)
+        assert not v.passed and v.operational
+        assert v.reason == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
 
     def test_an_unsafe_verdict_reads_as_a_rating_and_not_as_a_fault(self, verdict):
         """The two refusals mean different things to the child reading them."""
-        verdict(content='UNSAFE')
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is False
-        assert r['abort_reason'] != so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
-        assert r['abort_reason'] == so.build_safety_message([])
+        verdict(answer=True)
+        v = _run_code_check(FLAGGED)
+        assert not v.passed and not v.operational
+        assert v.reason_key == gate.REASON_CODE
+        assert v.reason == so.build_safety_message([])
 
     def test_a_stated_safe_verdict_is_the_only_way_through(self, verdict):
         """The control. Without a case that passes under the same harness the
         rest of this class would assert nothing."""
-        verdict(content='SAFE')
-        r = _run_code_check(FLAGGED)
-        assert r['safe'] is True
-        assert r['positive_prompt'] == FLAGGED
+        verdict(answer=False)
+        assert _run_code_check(FLAGGED).passed
 
-    def test_unflagged_code_never_reaches_the_model(self, monkeypatch):
-        def never(prompt):
-            raise AssertionError('the fast path must not call a model')
-        monkeypatch.setattr(vlm_safety, '_call_verdict_model', never)
-        r = _run_code_check(CLEAN)
-        assert r['safe'] is True and r['method'] == 'fast_filter'
+    def test_unflagged_code_never_reaches_the_code_question(self, verdict):
+        verdict(raises=AssertionError('the code question was asked of unflagged code'))
+        assert _run_code_check(CLEAN).passed
 
-    def test_research_and_adult_are_unchanged(self, monkeypatch):
-        def never(prompt):
-            raise AssertionError('these levels run no check')
-        monkeypatch.setattr(vlm_safety, '_call_verdict_model', never)
+    def test_research_and_adult_ask_no_code_question(self, verdict):
+        verdict(raises=AssertionError('these levels run no pattern list'))
         for level in ('research', 'adult'):
-            r = _run_code_check(FLAGGED, level)
-            assert r['safe'] is True and r['method'] == 'safety_off'
+            assert _run_code_check(FLAGGED, level).passed
 
     def test_the_check_calls_no_method_the_executor_does_not_have(self):
-        """Pattern 2, at its root. The repaired check asks the verdict model
-        directly; nothing in it may reach back into the pipeline executor for a
-        method that has to exist for the check to run at all."""
+        """Pattern 2, at its root. The check asks the classifier directly;
+        nothing in it may reach back into the pipeline executor for a method
+        that has to exist for the check to run at all."""
+        import inspect
         assert not hasattr(PipelineExecutor, 'execute_chunk_async')
-        source = Path(so.__file__).read_text(encoding='utf-8')
-        body = source[source.index('async def execute_stage3_safety_code'):]
-        # Comments stripped: the repaired check explains in prose what it no
-        # longer calls, and that sentence must not satisfy this assertion.
-        code = '\n'.join(line.split('#', 1)[0] for line in body.splitlines())
+        source = inspect.getsource(gate.check_result_code)
+        # Comments stripped: prose may name what the check does not call.
+        code = '\n'.join(line.split('#', 1)[0] for line in source.splitlines())
         assert '.execute_chunk_async(' not in code
         assert 'pipeline_executor' not in code
 
@@ -401,51 +385,80 @@ class TestTheDataProtectionGateCannotPermitWithoutAVerdict:
         assert self._drive(monkeypatch, 0.97) is True
 
 
-class TestTheLegacyWorkflowCheckDoesNotBypassItself:
+class TestTheLevelQuestionDoesNotBypassItself:
     """`llm_service.check_safety` (run by `/run_workflow_stream` until that
     route was removed on 2026-10-10) answered a failed safety model with
     `{"is_safe": True, "note": "... bypassing check."}` — the first pattern,
-    written out in words."""
+    written out in words. It asked the level's question about the prompt a
+    workflow was about to receive, and its cache answered for a prompt it had
+    cleared. Since 2026-11-01 the check before the model asks that question,
+    and the gate's memory of what passed is the one a check answers from;
+    what was held against the old check is held against them here."""
 
-    def _drive(self, monkeypatch, value, safety_level='kids'):
-        from my_app.services import llm_service as ls
-        from my_app.services import safety_classifier as sc
-        monkeypatch.setattr(sc, 'score', lambda *a, **k: value)
-        return ls.llm_service.check_safety('some prompt', safety_level)
+    ORIGINAL = 'ein Haus am Meer'
+    PROMPT = 'a house by the sea'
+
+    @pytest.fixture(autouse=True)
+    def _forget(self):
+        gate._RELEASED.clear()
+        yield
+        gate._RELEASED.clear()
+
+    def _check(self, level='kids'):
+        # The original beside the prompt: the check reads both and translates
+        # nothing itself.
+        return gate.check_before_model({'prompt': self.PROMPT}, level=level,
+                                       originals={'prompt': self.ORIGINAL})
+
+    def _drive(self, monkeypatch, value, level='kids'):
+        monkeypatch.setattr(safety_classifier, 'score', lambda *a, **k: value)
+        return self._check(level)
 
     def test_no_verdict_blocks(self, monkeypatch):
-        r = self._drive(monkeypatch, None)
-        assert r['is_safe'] is False
-        assert r['reason'] == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
+        v = self._drive(monkeypatch, None)
+        assert not v.passed and v.operational
+        assert v.reason == so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
 
     def test_a_yes_is_a_content_rating_and_not_a_fault(self, monkeypatch):
-        r = self._drive(monkeypatch, 0.93)
-        assert r['is_safe'] is False
-        assert r['reason'] != so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
-        assert r.get('unavailable') is None
+        v = self._drive(monkeypatch, 0.93)
+        assert not v.passed and not v.operational
+        assert v.reason != so.SAFETY_CHECK_UNAVAILABLE_MESSAGE
 
     def test_a_no_passes(self, monkeypatch):
-        assert self._drive(monkeypatch, 0.04)['is_safe'] is True
+        assert self._drive(monkeypatch, 0.04).passed
 
-    @pytest.mark.parametrize('level', ['adult', 'research'])
-    def test_the_two_unchecked_levels_never_reach_the_model(self, monkeypatch, level):
+    def test_research_never_reaches_the_model(self, monkeypatch):
         def never(*a, **k):
-            raise AssertionError('the classifier was asked on ' + level)
-        from my_app.services import safety_classifier as sc
-        monkeypatch.setattr(sc, 'score', never)
-        from my_app.services import llm_service as ls
-        assert ls.llm_service.check_safety('p', level)['is_safe'] is True
+            raise AssertionError('the classifier was asked on research')
+        monkeypatch.setattr(safety_classifier, 'score', never)
+        assert self._check('research').passed
 
-    def test_the_cache_key_carries_the_level(self, monkeypatch):
+    def test_adult_is_asked_its_own_question(self, monkeypatch):
+        """The old check left adult out as well. Since 2026-11-01 adult is
+        asked its own question before the model; research is the one level
+        that checks nothing."""
+        asked = []
+
+        def score(instruct, query, document, images=None):
+            asked.append((instruct, query))
+            return 0.04
+        monkeypatch.setattr(safety_classifier, 'score', score)
+        assert self._check('adult').passed
+        adult = (safety_classifier.LEVEL_INSTRUCTS['adult'],
+                 safety_classifier.LEVEL_QUERIES['adult']['prompt'])
+        assert asked and set(asked) == {adult}
+
+    def test_a_pass_at_a_looser_level_does_not_answer_a_stricter_one(self, monkeypatch):
         """A prompt cleared under research answered the next kids run as safe:
-        the key was the prompt alone, and a cache hit returns before the check."""
-        from my_app.services import llm_service as ls
-        monkeypatch.setattr(ls, 'NO_TRANSLATE', True, raising=False)
-        ls.PROMPT_CACHE.clear()
-        assert ls.llm_service.validate_and_translate_prompt('p', 'research')['success'] is True
-        from my_app.services import safety_classifier as sc
-        monkeypatch.setattr(sc, 'score', lambda *a, **k: 0.99)
-        assert ls.llm_service.validate_and_translate_prompt('p', 'kids')['success'] is False
+        the old cache's key was the prompt alone, and a cache hit returned
+        before the check. The gate remembers a text that passed with the level
+        it passed at, and a stricter level asks again."""
+        monkeypatch.setattr(safety_classifier, 'score', lambda *a, **k: 0.04)
+        for level in ('research', 'adult'):
+            assert gate.check_result_text(self.PROMPT, level=level).passed
+        monkeypatch.setattr(safety_classifier, 'score', lambda *a, **k: 0.99)
+        assert not gate.check_result_text(self.PROMPT, level='kids').passed
+
 
 class TestTheStatutoryFilterDoesNotReportClearWhenItHasNoList:
     """§86a carries a statutory duty. The loader logged and handed back `{}`,

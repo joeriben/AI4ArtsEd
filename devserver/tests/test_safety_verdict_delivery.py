@@ -24,7 +24,6 @@ from pathlib import Path
 import pytest
 
 from my_app.services.pipeline_recorder import (
-    SAFETY_VERDICTS_FLAG,
     entity_cleared_for_delivery,
     filter_deliverable,
     public_entity,
@@ -42,11 +41,8 @@ def _image(sequence=1, safety=None):
     return entity
 
 
-def _run(level="kids", verdicts=True):
-    meta = {"safety_level": level}
-    if verdicts:
-        meta[SAFETY_VERDICTS_FLAG] = True
-    return meta
+def _run(level="kids"):
+    return {"safety_level": level}
 
 
 # ---------------------------------------------------------------- the rule
@@ -54,7 +50,7 @@ def _run(level="kids", verdicts=True):
 
 def test_unmarked_picture_is_refused_where_verdicts_are_kept():
     """The heart of it: no verdict, no delivery. This is the fail-open that was."""
-    cleared, reason = entity_cleared_for_delivery(_image(), _run("kids"))
+    cleared, reason = entity_cleared_for_delivery(_image(), _run("kids"), "kids")
     assert cleared is False
     assert reason == "unchecked"
 
@@ -62,7 +58,7 @@ def test_unmarked_picture_is_refused_where_verdicts_are_kept():
 @pytest.mark.parametrize("level", ["kids", "youth"])
 def test_picture_marked_unsafe_is_refused(level):
     entity = _image(safety={"safe": False, "reason": "S1"})
-    cleared, reason = entity_cleared_for_delivery(entity, _run(level))
+    cleared, reason = entity_cleared_for_delivery(entity, _run(level), level)
     assert cleared is False
     assert reason == "blocked"
 
@@ -70,7 +66,7 @@ def test_picture_marked_unsafe_is_refused(level):
 @pytest.mark.parametrize("level", ["kids", "youth"])
 def test_picture_marked_safe_is_delivered(level):
     entity = _image(safety={"safe": True, "reason": ""})
-    cleared, reason = entity_cleared_for_delivery(entity, _run(level))
+    cleared, reason = entity_cleared_for_delivery(entity, _run(level), level)
     assert cleared is True
     assert reason == ""
 
@@ -79,7 +75,7 @@ def test_a_truthy_non_true_verdict_does_not_clear():
     """`safe` must BE True. A string, a 1, a dict — none of those is a verdict."""
     for value in ("yes", 1, {}, [], "False"):
         entity = _image(safety={"safe": value})
-        cleared, _ = entity_cleared_for_delivery(entity, _run("kids"))
+        cleared, _ = entity_cleared_for_delivery(entity, _run("kids"), "kids")
         assert cleared is False, f"{value!r} cleared a picture"
 
 
@@ -87,7 +83,7 @@ def test_a_verdict_that_is_not_a_mapping_does_not_clear():
     for value in ("safe", True, 1, ["safe"]):
         entity = _image()
         entity["metadata"]["safety"] = value
-        cleared, reason = entity_cleared_for_delivery(entity, _run("kids"))
+        cleared, reason = entity_cleared_for_delivery(entity, _run("kids"), "kids")
         assert cleared is False
         assert reason == "unchecked"
 
@@ -95,45 +91,59 @@ def test_a_verdict_that_is_not_a_mapping_does_not_clear():
 # ------------------------------------------------- where the rule stays silent
 
 
-@pytest.mark.parametrize("level", ["open", "research", "", None])
-def test_levels_without_an_image_check_are_untouched(level):
-    """No check runs at these levels, so refusing here would hide sound work."""
-    cleared, _ = entity_cleared_for_delivery(_image(), _run(level))
-    assert cleared is True
+@pytest.mark.parametrize("requester", ["adult", "research"])
+def test_a_requester_whose_level_checks_no_pictures_is_handed_them(requester):
+    """Above youth no picture is held against a check, so delivery withholds
+    none: not an unjudged one, and not one a stricter level refused."""
+    assert entity_cleared_for_delivery(_image(), _run("kids"), requester)[0] is True
+    refused = _image(safety={"safe": False, "reason": "S1", "level": "kids"})
+    assert entity_cleared_for_delivery(refused, _run("kids"), requester)[0] is True
 
 
-@pytest.mark.parametrize("kind", ["audio", "video", "3d", "midi", "music"])
+@pytest.mark.parametrize("requester", ["", None, "teens"])
+def test_a_requester_without_a_level_is_asked_as_the_strictest(requester):
+    """What is not a level counts as kids, the direction the resolver falls in."""
+    at_youth = _image(safety={"safe": True, "level": "youth"})
+    assert entity_cleared_for_delivery(at_youth, _run("youth"), requester)[0] is False
+    at_kids = _image(safety={"safe": True, "level": "kids"})
+    assert entity_cleared_for_delivery(at_kids, _run("kids"), requester)[0] is True
+
+
+@pytest.mark.parametrize("kind", ["audio", "midi", "music"])
 def test_kinds_without_a_check_are_untouched(kind):
     """
-    This platform checks pictures and nothing else. Refusing sound at kids level
-    over a check that does not exist would take away work and protect no one.
-    The gap is real and named in the plan; it is a different gap.
+    A kind that no check at the result looks at goes out as it did. Refusing
+    sound at kids level over a check that does not exist would take away work
+    and protect no one. The gap is real and named in the plan; it is a
+    different gap.
     """
     entity = {"sequence": 1, "type": f"output_{kind}", "filename": "x", "metadata": {}}
-    cleared, _ = entity_cleared_for_delivery(entity, _run("kids"))
+    cleared, _ = entity_cleared_for_delivery(entity, _run("kids"), "kids")
     assert cleared is True
 
 
-def test_runs_recorded_before_verdicts_are_untouched():
+def test_a_run_recorded_before_verdicts_is_refused_to_kids():
     """
-    A run whose record predates per-picture verdicts carries no flag. Nothing in
-    it can say what was checked, so the rule stays silent rather than guessing.
+    A run whose record predates per-picture verdicts carries none. Such runs
+    counted as cleared while delivery read the level of the run; at kids and
+    youth they are not shown any more, and above youth nothing changes.
     """
-    cleared, _ = entity_cleared_for_delivery(_image(), _run("kids", verdicts=False))
-    assert cleared is True
+    old = {"safety_level": "kids", "entities": []}
+    assert entity_cleared_for_delivery(_image(), old, "kids") == (False, "unchecked")
+    assert entity_cleared_for_delivery(_image(), old, "adult") == (True, "")
 
 
 def test_non_output_entities_pass():
     for etype in ("input", "translation", "interception", "safety", "error"):
         entity = {"sequence": 1, "type": etype, "filename": "x", "metadata": {}}
-        assert entity_cleared_for_delivery(entity, _run("kids"))[0] is True
+        assert entity_cleared_for_delivery(entity, _run("kids"), "kids")[0] is True
 
 
 def test_filter_keeps_order_and_drops_only_the_refused():
     safe_a = _image(1, {"safe": True})
     blocked = _image(2, {"safe": False, "reason": "S1"})
     safe_b = _image(3, {"safe": True})
-    kept = filter_deliverable([safe_a, blocked, safe_b], _run("kids"))
+    kept = filter_deliverable([safe_a, blocked, safe_b], _run("kids"), "kids")
     assert [e["sequence"] for e in kept] == [1, 3]
 
 
@@ -166,6 +176,15 @@ AUDITED_FINAL_FOLDER_USERS = {
     ("pipeline_recorder.py", "checked_entity_path"): "the checked door itself",
     ("pipeline_recorder.py", "checked_path_for_filename"): "the same door, by name",
     ("media_routes.py", "_resolve_image"): "asks _entity_refusal, answers 403",
+    ("media_routes.py", "get_p5"): "a sketch: asks _code_withheld, answers 403",
+    ("media_routes.py", "get_tonejs"): "a sketch: asks _code_withheld, answers 403",
+    ("media_routes.py", "get_sonicpi"): "Sonic Pi code: asks _code_withheld, answers 403",
+    ("media_routes.py", "get_video"): "a video: asks _entity_refusal, answers 403",
+    ("media_routes.py", "get_3d_mesh"):
+        "a 3D model: asks _entity_refusal (its preview's verdict), answers 403",
+    ("media_routes.py", "_run_analyze_av"):
+        "reads a video after asking _entity_refusal, answers 403; sound has no "
+        "check at the result",
     ("tool_registry.py", "view_run"): "asks checked_entity_path",
     # --- reads past the verdict, on purpose and named ---------------------
     ("pipeline_recorder.py", "unchecked_entity_path_for_checking"):
@@ -176,15 +195,9 @@ AUDITED_FINAL_FOLDER_USERS = {
     ("latent_lab_recorder.py", "record"): "writes the file",
     ("latent_lab_recorder.py", "replace_output_image"): "writes the file",
     # --- no picture ------------------------------------------------------
-    ("media_routes.py", "get_3d_mesh"): "3D, which has no output check anywhere",
-    ("media_routes.py", "get_audio"): "sound, likewise",
+    ("media_routes.py", "get_audio"): "sound, which has no output check anywhere",
     ("media_routes.py", "get_music"): "sound, likewise",
-    ("media_routes.py", "get_video"): "video, likewise — the named gap",
     ("media_routes.py", "get_midi"): "notation",
-    ("media_routes.py", "get_sonicpi"): "code, checked on its own path",
-    ("media_routes.py", "get_p5"): "code, checked on its own path",
-    ("media_routes.py", "get_tonejs"): "code, checked on its own path",
-    ("media_routes.py", "_run_analyze_av"): "sound and video analysis",
     ("media_routes.py", "get_media_disclosure"): "the disclosure text",
     ("media_routes.py", "get_media_info"): "sizes and names, no picture bytes",
     ("favorites_routes.py", "get_favorites"): "the run's TEXT, for the list entry",
@@ -256,28 +269,45 @@ def test_every_path_built_from_a_runs_folder_is_audited():
     )
 
 
+# The functions that read a picture or a video past its verdict, so that the
+# check can read what it is about to judge. Every way lists its pictures for
+# the check at the result through _pictures_of_run, and its videos through
+# _videos_of_run.
+CONTENT_CHECKS = {
+    "schema_pipeline_routes.py:_pictures_of_run",
+    "schema_pipeline_routes.py:_videos_of_run",
+}
+
+
 def test_only_the_content_check_reads_past_the_verdict():
     """
     One door leads to a picture without asking its verdict, and it exists so the
-    check can read what it is about to judge. A second caller would be a picture
-    handed out unjudged, which is the whole failure this rule answers.
+    check can read what it is about to judge. Any other reader would be a
+    picture handed out unjudged, which is the whole failure this rule answers.
     """
     backend = REPO / "devserver" / "my_app"
-    callers = []
+    readers = set()
     for path in sorted(backend.rglob("*.py")):
         text = io.open(path, encoding="utf-8").read()
-        for i, line in enumerate(text.splitlines(), start=1):
-            if "unchecked_entity_path_for_checking" not in line:
+        if "unchecked_entity_path_for_checking" not in text:
+            continue
+        tree = ast.parse(text)
+        functions = [n for n in ast.walk(tree)
+                     if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+        for node in ast.walk(tree):
+            if not (isinstance(node, ast.Attribute)
+                    and node.attr == "unchecked_entity_path_for_checking"):
                 continue
-            if line.strip().startswith("def "):
-                continue
-            callers.append(f"{path.name}:{i}")
-    assert len(callers) == 1, (
-        "the door that reads past the verdict must have exactly one caller, the "
-        f"content check itself — found: {callers or 'none, so the check no longer reads its own pictures'}"
+            around = [f for f in functions if f.lineno <= node.lineno <= f.end_lineno]
+            inner = min(around, key=lambda f: f.end_lineno - f.lineno, default=None)
+            readers.add(f"{path.name}:{inner.name if inner else '<module>'}")
+    assert readers <= CONTENT_CHECKS, (
+        f"the unchecked door is used somewhere other than a content check: "
+        f"{sorted(readers - CONTENT_CHECKS)}"
     )
-    assert callers[0].startswith("schema_pipeline_routes.py:"), (
-        f"the unchecked door is used somewhere other than the content check: {callers}"
+    assert readers == CONTENT_CHECKS, (
+        f"listed as content checks but no longer reading the door: "
+        f"{sorted(CONTENT_CHECKS - readers) or 'none'}"
     )
 
 
@@ -292,6 +322,24 @@ def test_the_two_by_name_routes_ask_the_rule():
     assert "checked_path_for_filename" in by_name and "403" in by_name
     by_type = _function_source(routes, "get_entity")
     assert "checked_entity_path" in by_type and "403" in by_type
+
+
+def test_a_video_is_handed_out_and_read_only_by_the_rule():
+    """
+    A video is checked at the result as a whole and goes out by the verdict
+    written on it, as a picture does. Reading it hands out what it shows.
+    """
+    routes = REPO / "devserver" / "my_app" / "routes" / "media_routes.py"
+    for name in ("get_video", "_run_analyze_av"):
+        source = _function_source(routes, name)
+        assert "_entity_refusal" in source and "403" in source, name
+
+
+def test_a_3d_model_is_handed_out_only_by_the_rule():
+    """A 3D model goes out by the verdict on its preview, a picture of its run."""
+    source = _function_source(REPO / "devserver" / "my_app" / "routes" / "media_routes.py",
+                              "get_3d_mesh")
+    assert "_entity_refusal" in source and "403" in source
 
 
 def test_the_static_export_route_asks_the_rule():
@@ -330,30 +378,16 @@ def test_a_picture_is_cleared_before_it_goes_into_a_composition():
     )
 
 
-def test_the_flag_is_set_when_the_run_is_made_not_when_a_verdict_lands():
+def test_the_restore_and_the_strip_ask_the_level_of_the_run():
     """
-    Where the flag is raised by a successful verdict, a run whose marking fails
-    for every picture carries no flag, drops into the branch for records made
-    before verdicts existed, and hands its pictures out.
+    A run's Stage-2 text was checked with the question of its own level, so at
+    kids and youth only a run of the same level or a stricter one is opened
+    again, and the strip lists only what may be opened.
     """
-    marking = _function_source(RECORDER, "mark_entity_safety")
-    assert "SAFETY_VERDICTS_FLAG" not in marking, (
-        "the flag is raised as a side effect of marking again"
-    )
-    text = io.open(RECORDER, encoding="utf-8").read()
-    tree = ast.parse(text)
-    recorder_class = next(
-        n for n in ast.walk(tree)
-        if isinstance(n, ast.ClassDef) and n.name == "LivePipelineRecorder"
-    )
-    setup = next(
-        ast.get_source_segment(text, n) or ""
-        for n in recorder_class.body
-        if isinstance(n, ast.FunctionDef) and n.name == "__init__"
-    )
-    assert "SAFETY_VERDICTS_FLAG" in setup, (
-        "the run no longer declares itself judged at the moment it is created"
-    )
+    routes = REPO / "devserver" / "my_app" / "routes" / "favorites_routes.py"
+    assert "_restorable" in _function_source(routes, "get_restore_data")
+    assert "403" in _function_source(routes, "get_restore_data")
+    assert "_listable" in _function_source(routes, "get_favorites")
 
 
 # --------------------------------------------- pictures made of other pictures
@@ -369,7 +403,7 @@ def test_a_composite_is_refused_while_a_picture_in_it_is():
     run["entities"] = [_image(1, {"safe": True}), _image(2, {"safe": False})]
     strip = {"sequence": 3, "type": "output_image_composite",
              "filename": "12.png", "metadata": {}}
-    cleared, reason = entity_cleared_for_delivery(strip, run)
+    cleared, reason = entity_cleared_for_delivery(strip, run, "kids")
     assert cleared is False and reason == "blocked"
 
 
@@ -378,7 +412,7 @@ def test_a_composite_travels_when_every_picture_in_it_did():
     run["entities"] = [_image(1, {"safe": True}), _image(2, {"safe": True})]
     strip = {"sequence": 3, "type": "output_image_comparison",
              "filename": "12.png", "metadata": {}}
-    assert entity_cleared_for_delivery(strip, run)[0] is True
+    assert entity_cleared_for_delivery(strip, run, "kids")[0] is True
 
 
 def test_a_composite_is_refused_while_a_picture_in_it_is_unjudged():
@@ -386,7 +420,7 @@ def test_a_composite_is_refused_while_a_picture_in_it_is_unjudged():
     run["entities"] = [_image(1, {"safe": True}), _image(2, None)]
     strip = {"sequence": 3, "type": "output_image_composite",
              "filename": "12.png", "metadata": {}}
-    cleared, reason = entity_cleared_for_delivery(strip, run)
+    cleared, reason = entity_cleared_for_delivery(strip, run, "kids")
     assert cleared is False and reason == "unchecked"
 
 
@@ -431,21 +465,336 @@ def test_every_place_that_sends_entities_out_cuts_the_verdict_back():
 # ------------------------------------- a fault is not a rating of what was made
 
 
-def test_an_operational_ending_writes_no_verdict_onto_the_picture():
+def test_the_check_at_the_result_writes_no_fault_onto_the_picture(tmp_path, monkeypatch):
     """
     Measured over 60 days: 13 operational endings against 2 content ones in 944
     checks. Stamping both as `safe: False` records, on the picture and for good,
     a technical fault as a rating of what somebody made — and no later check can
-    lift it, because a stamp outlives the fault that caused it.
+    lift it, because a stamp outlives the fault that caused it. Every way reads
+    its pictures through _pictures_of_run and asks check_result_image about each.
     """
+    from my_app.routes import schema_pipeline_routes as spr
+    from my_app.services import safety_gate
+    from my_app.utils import vlm_safety
+
+    class Recorder:
+        run_id = "run_test"
+
+        def __init__(self):
+            self.marks = []
+
+        def output_entities(self, kind):
+            return [{"sequence": 1, "filename": "01_output_image.png"},
+                    {"sequence": 2, "filename": "02_output_image.png"}]
+
+        def unchecked_entity_path_for_checking(self, entity):
+            return tmp_path / entity["filename"]
+
+        def mark_entity_safety(self, sequence, safe, **kw):
+            self.marks.append((sequence, safe))
+            return True
+
+    recorder = Recorder()
+    (tmp_path / "02_output_image.png").write_bytes(b"a picture")
+    pictures, refusal = spr._pictures_of_run(recorder, "kids", expect_image=True)
+    assert [sequence for sequence, _path in pictures] == [2], (
+        "the picture that is on disk is checked beside the one that is not")
+    assert refusal.operational and refusal.reason == "file_missing"
+    assert recorder.marks == [], (
+        "a file that could not be read is stamped onto the picture as a verdict")
+
+    monkeypatch.setattr(vlm_safety, "vlm_safety_check",
+                        lambda path, level: (False, vlm_safety.VLM_OPERATIONAL_BLOCK_MESSAGE, ""))
+    verdict = safety_gate.check_result_image(pictures[0][1], level="kids",
+                                             recorder=recorder, entity=2)
+    assert verdict.operational
+    assert recorder.marks == [], "a check that gave no verdict is stamped onto the picture"
+
+
+@pytest.mark.parametrize("expect_image", [False, True])
+def test_a_3d_run_without_its_preview_is_withheld_as_a_fault(expect_image):
+    """
+    A 3D model is checked through its preview. Where Blender is missing or its
+    render failed there is none, and nothing would clear the model: the run is
+    withheld as a fault, rather than shown with a model that delivery then
+    refuses.
+    """
+    from my_app.routes import schema_pipeline_routes as spr
+
+    class Recorder:
+        run_id = "run_test"
+
+        def output_entities(self, kind):
+            if kind == "3d":
+                return [{"sequence": 1, "type": "output_3d", "filename": "01_output_3d.glb"}]
+            return []
+
+    pictures, refusal = spr._pictures_of_run(Recorder(), "kids", expect_image=expect_image)
+    assert pictures == []
+    assert refusal.operational and refusal.reason == "no_preview"
+    assert refusal.field == "3d"
+
+
+# ---------------------------------------------- the rule by level and kind
+#
+# How a verdict's level answers for whoever asks, and how each kind the check
+# at the result reads goes out: pictures and the parts on the way to them,
+# compositions, code, 3D models and videos.
+
+
+def _verdict(level, safe=True):
+    return {"safe": safe, "reason": "", "level": level}
+
+
+def test_a_pass_at_youth_does_not_clear_a_picture_for_a_kids_requester():
+    entity = _image(safety=_verdict("youth"))
+    cleared, _ = entity_cleared_for_delivery(entity, _run("youth"), "kids")
+    assert cleared is False
+
+
+def test_a_pass_at_kids_clears_a_picture_for_a_youth_requester():
+    entity = _image(safety=_verdict("kids"))
+    cleared, _ = entity_cleared_for_delivery(entity, _run("kids"), "youth")
+    assert cleared is True
+
+
+def test_a_picture_made_where_nothing_was_checked_is_refused_to_a_kids_requester():
+    """A run at research keeps no verdict, so its picture has none to show a kids course."""
+    cleared, _ = entity_cleared_for_delivery(_image(), _run("research"), "kids")
+    assert cleared is False
+
+
+def test_the_filter_follows_the_level_of_whoever_asks():
+    at_kids = _image(1, _verdict("kids"))
+    at_youth = _image(2, _verdict("youth"))
+    kept = filter_deliverable([at_kids, at_youth], _run("youth"), "kids")
+    assert [e["sequence"] for e in kept] == [1]
+
+
+def test_a_refusal_at_kids_says_nothing_about_youth():
+    entity = _image(safety=_verdict("kids", safe=False))
+    assert entity_cleared_for_delivery(entity, _run("kids"), "kids") == (False, "blocked")
+    assert entity_cleared_for_delivery(entity, _run("kids"), "youth") == (False, "unchecked")
+
+
+def test_a_refusal_at_youth_holds_for_kids():
+    entity = _image(safety=_verdict("youth", safe=False))
+    assert entity_cleared_for_delivery(entity, _run("youth"), "kids") == (False, "blocked")
+
+
+def _step(fmt="jpg"):
+    return {"sequence": 2, "type": "latent_lab_step",
+            "filename": f"prompting_process/002_step_01.{fmt}",
+            "metadata": {"step_index": 0, "format": fmt}}
+
+
+def test_a_lab_step_goes_out_with_the_finished_picture():
+    """The frames of a denoising run are no verdict's own: they travel with the
+    picture they led to, and are held back until it is cleared."""
+    run = {"entities": [_step(), _image(3, _verdict("kids"))]}
+    assert entity_cleared_for_delivery(_step(), run, "kids") == (True, "")
+    run["entities"][1] = _image(3, None)
+    assert entity_cleared_for_delivery(_step(), run, "kids") == (False, "unchecked")
+    assert entity_cleared_for_delivery(_step(), {"entities": [_step()]}, "kids") == (False, "unchecked")
+    assert entity_cleared_for_delivery(_step(), run, "adult") == (True, "")
+
+
+def test_a_lab_part_is_held_whatever_format_it_names():
+    """The format is the sender's word: a part that names another one still
+    waits for the finished picture."""
+    run = {"entities": [_step("json")]}
+    assert entity_cleared_for_delivery(_step("json"), run, "kids") == (False, "unchecked")
+    run["entities"].append(_image(3, _verdict("kids")))
+    assert entity_cleared_for_delivery(_step("svg"), run, "kids") == (True, "")
+
+
+class _Recorded:
+    def __init__(self, metadata):
+        self.metadata = metadata
+
+
+def _composition(*pieces):
+    return {"sequence": 1, "type": "output_composition", "filename": "01.mp4",
+            "metadata": {"composed_from": list(pieces)}}
+
+
+def test_a_composition_is_as_clear_as_its_pieces(monkeypatch):
+    from my_app.services import pipeline_recorder
+
+    picture = {"safety_level": "kids", "entities": [_image(1, _verdict("kids"))]}
+    sound = {"safety_level": "adult",
+             "entities": [{"sequence": 1, "type": "output_audio", "filename": "x", "metadata": {}}]}
+    runs = {"run_pic": _Recorded(picture), "run_snd": _Recorded(sound)}
+    monkeypatch.setattr(pipeline_recorder, "load_recorder",
+                        lambda run_id, base_path=None: runs.get(run_id))
+    still_and_sound = _composition({"role": "image", "run_id": "run_pic", "type": "output_image"},
+                                   {"role": "audio", "run_id": "run_snd", "type": "output_audio"})
+    own = {"safety_level": "kids", "entities": [still_and_sound]}
+    assert entity_cleared_for_delivery(still_and_sound, own, "kids") == (True, "")
+    picture["entities"][0] = _image(1, _verdict("youth"))
+    assert entity_cleared_for_delivery(still_and_sound, own, "kids") == (False, "unchecked")
+    assert entity_cleared_for_delivery(still_and_sound, own, "adult") == (True, "")
+
+
+def test_a_composition_that_names_no_piece_or_a_lost_one_is_refused(monkeypatch):
+    from my_app.services import pipeline_recorder
+
+    monkeypatch.setattr(pipeline_recorder, "load_recorder", lambda run_id, base_path=None: None)
+    for entity in (_composition(),
+                   _composition({"role": "image", "run_id": "run_gone", "type": "output_image"}),
+                   _composition({"role": "image", "run_id": "run_x", "type": "output_composition"})):
+        assert entity_cleared_for_delivery(entity, _run("kids"), "kids") == (False, "unchecked")
+
+
+def test_the_upload_route_asks_the_verdict_beside_the_upload():
     source = _function_source(
-        REPO / "devserver" / "my_app" / "routes" / "schema_pipeline_routes.py",
-        "_vlm_safety_check_image",
+        REPO / "devserver" / "my_app" / "routes" / "media_routes.py", "get_uploaded_image"
     )
-    assert "VLM_OPERATIONAL_BLOCK_MESSAGE" in source, (
-        "the check no longer tells a judgement from a fault before marking"
-    )
-    marking = source[source.index("mark_entity_safety"):]
-    assert "file_missing" not in marking, (
-        "a file that could not be read is stamped onto the picture as a verdict"
-    )
+    assert "upload_cleared_for" in source or "image_reference_cleared" in source
+    assert "403" in source
+
+
+@pytest.mark.parametrize("kind", ["p5", "tonejs", "sonicpi"])
+def test_code_without_a_verdict_is_refused_to_a_kids_requester(kind):
+    entity = {"sequence": 1, "type": f"output_{kind}", "filename": "x", "metadata": {}}
+    cleared, _ = entity_cleared_for_delivery(entity, _run("kids"), "kids")
+    assert cleared is False
+
+
+def _sketch(safety=None, kind="p5"):
+    """A sketch as the recorders write it today: under its runtime's bare name."""
+    entity = {"sequence": 1, "type": kind, "filename": f"01_{kind}.txt", "metadata": {}}
+    if safety is not None:
+        entity["metadata"]["safety"] = safety
+    return entity
+
+
+@pytest.mark.parametrize("level", ["kids", "youth"])
+def test_a_sketch_without_a_verdict_is_refused_at_kids_and_youth(level):
+    assert entity_cleared_for_delivery(_sketch(), _run(level), level) == (False, "unchecked")
+
+
+@pytest.mark.parametrize("level", ["adult", "research"])
+def test_a_sketch_without_a_verdict_goes_out_where_no_pass_is_asked(level):
+    """Runs from before the check at the result read code carry none."""
+    assert entity_cleared_for_delivery(_sketch(), _run(level), level) == (True, "")
+
+
+def test_a_pass_on_a_sketch_answers_for_its_level_and_the_looser_ones():
+    sketch = _sketch(_verdict("youth"))
+    assert entity_cleared_for_delivery(sketch, _run("youth"), "youth") == (True, "")
+    assert entity_cleared_for_delivery(sketch, _run("youth"), "kids") == (False, "unchecked")
+
+
+@pytest.mark.parametrize("asker, answer", [
+    ("kids", (False, "blocked")),
+    ("youth", (False, "blocked")),
+    ("adult", (False, "blocked")),
+    ("research", (True, "")),
+])
+def test_a_sketch_refused_at_adult_stays_refused_there_and_below(asker, answer):
+    """Code is checked at adult, where no picture is: the refusal stands there."""
+    sketch = _sketch(_verdict("adult", safe=False), kind="tonejs")
+    assert entity_cleared_for_delivery(sketch, _run("adult"), asker) == answer
+
+
+def test_a_sketch_refused_at_kids_says_nothing_about_adult():
+    sketch = _sketch(_verdict("kids", safe=False))
+    assert entity_cleared_for_delivery(sketch, _run("kids"), "kids") == (False, "blocked")
+    assert entity_cleared_for_delivery(sketch, _run("kids"), "adult") == (True, "")
+
+
+def test_a_picture_still_goes_out_at_adult_whatever_stands_on_it():
+    """The refusal that stands at adult is code's alone: adult checks no picture."""
+    picture = _image(safety=_verdict("adult", safe=False))
+    assert entity_cleared_for_delivery(picture, _run("adult"), "adult") == (True, "")
+
+
+def _model(kind="output_3d"):
+    return {"sequence": 2, "type": kind, "filename": "02_output_3d.glb", "metadata": {}}
+
+
+@pytest.mark.parametrize("level", ["kids", "youth"])
+def test_a_3d_model_goes_out_as_clear_as_its_preview(level):
+    """A 3D model is checked through its preview, the picture its run renders
+    of it, and goes out by that picture's verdict."""
+    run = {"safety_level": level, "entities": [_image(1, _verdict(level)), _model()]}
+    assert entity_cleared_for_delivery(_model(), run, level) == (True, "")
+    run["entities"][0] = _image(1, None)
+    assert entity_cleared_for_delivery(_model(), run, level) == (False, "unchecked")
+    run["entities"][0] = _image(1, _verdict(level, safe=False))
+    assert entity_cleared_for_delivery(_model(), run, level) == (False, "blocked")
+
+
+@pytest.mark.parametrize("level", ["kids", "youth"])
+@pytest.mark.parametrize("kind", ["output_3d", "3d"])
+def test_a_3d_model_without_a_preview_is_refused_at_kids_and_youth(level, kind):
+    """Nothing would clear it, and a run without pictures is no agreement."""
+    run = {"safety_level": level, "entities": [_model(kind)]}
+    assert entity_cleared_for_delivery(_model(kind), run, level) == (False, "unchecked")
+
+
+@pytest.mark.parametrize("level", ["adult", "research"])
+def test_a_3d_model_goes_out_where_no_pass_is_asked(level):
+    run = {"safety_level": "kids", "entities": [_model()]}
+    assert entity_cleared_for_delivery(_model(), run, level) == (True, "")
+
+
+def test_a_refused_3d_model_takes_the_pictures_message():
+    """What was refused is its preview, a picture."""
+    from my_app.services.pipeline_recorder import refused_field
+    assert refused_field(_model()) == "image"
+
+
+def _video(safety=None, kind="output_video"):
+    entity = {"sequence": 1, "type": kind, "filename": "01_output_video.mp4", "metadata": {}}
+    if safety is not None:
+        entity["metadata"]["safety"] = safety
+    return entity
+
+
+@pytest.mark.parametrize("level", ["kids", "youth"])
+@pytest.mark.parametrize("kind", ["output_video", "video"])
+def test_a_video_without_a_verdict_is_refused_at_kids_and_youth(level, kind):
+    """Runs from before the check at the result looked at a video carry none."""
+    assert entity_cleared_for_delivery(_video(kind=kind), _run(level), level) == \
+        (False, "unchecked")
+
+
+@pytest.mark.parametrize("level", ["adult", "research"])
+def test_a_video_goes_out_where_no_pass_is_asked(level):
+    assert entity_cleared_for_delivery(_video(), _run(level), level) == (True, "")
+    refused = _video(_verdict("kids", safe=False))
+    assert entity_cleared_for_delivery(refused, _run("kids"), level) == (True, "")
+
+
+def test_a_video_goes_by_its_verdict_as_a_picture_does():
+    assert entity_cleared_for_delivery(_video(_verdict("kids")), _run("kids"), "youth") == \
+        (True, "")
+    assert entity_cleared_for_delivery(_video(_verdict("youth")), _run("youth"), "kids") == \
+        (False, "unchecked")
+    assert entity_cleared_for_delivery(_video(_verdict("youth", safe=False)), _run("youth"),
+                                       "kids") == (False, "blocked")
+    assert entity_cleared_for_delivery(_video(_verdict("kids", safe=False)), _run("kids"),
+                                       "youth") == (False, "unchecked")
+
+
+def test_a_refused_video_is_called_a_video():
+    from my_app.services.pipeline_recorder import refused_field
+    assert refused_field(_video()) == "video"
+    assert refused_field(_video(kind="video")) == "video"
+    assert refused_field(_image()) == "image"
+    assert refused_field(_sketch()) == "code"
+
+
+def test_a_film_under_a_sound_is_as_clear_as_the_film(monkeypatch):
+    from my_app.services import pipeline_recorder
+
+    film = {"safety_level": "kids", "entities": [_video()]}
+    monkeypatch.setattr(pipeline_recorder, "load_recorder",
+                        lambda run_id, base_path=None: _Recorded(film) if run_id == "run_film" else None)
+    piece = _composition({"role": "video", "run_id": "run_film", "type": "output_video"})
+    own = {"safety_level": "kids", "entities": [piece]}
+    assert entity_cleared_for_delivery(piece, own, "kids") == (False, "unchecked")
+    film["entities"][0] = _video(_verdict("kids"))
+    assert entity_cleared_for_delivery(piece, own, "kids") == (True, "")

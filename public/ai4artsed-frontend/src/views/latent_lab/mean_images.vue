@@ -43,7 +43,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -156,18 +156,8 @@
               <h3>{{ t('latentLab.imageLab.tabs.mean.label') }}</h3>
               <!-- Steyerl's own account of the mean image. It stands as soon as
                    there is a text for it. -->
-              <p v-if="steyerlText">
-                <template v-for="(part, i) in steyerlParts" :key="i">
-                  <em v-if="i % 2 === 1">{{ part }}</em>
-                  <template v-else>{{ part }}</template>
-                </template>
-              </p>
-              <p>
-                <template v-for="(part, i) in originParts" :key="i">
-                  <em v-if="i % 2 === 1">{{ part }}</em>
-                  <template v-else>{{ part }}</template>
-                </template>
-              </p>
+              <p v-if="steyerlText"><EmphasisText :text="steyerlText" /></p>
+              <p><EmphasisText :text="t('latentLab.meanImages.origin')" /></p>
 
               <LabReferences
                 :title="t('latentLab.meanImages.referencesTitle')"
@@ -242,6 +232,7 @@
 
 <script setup lang="ts">
 import ColumnFold from '@/components/ColumnFold.vue'
+import EmphasisText from '@/components/EmphasisText.vue'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePictureTemplate } from '@/composables/usePictureTemplate'
@@ -252,6 +243,8 @@ import {
   generationErrorKeyFor,
   interceptPrompt,
   perspectiveFailureText,
+  refusalKeyOf,
+  reportRefusal,
   type GenerationErrorKey,
 } from '@/composables/useLabRun'
 import ShellRun from '@/components/ShellRun.vue'
@@ -270,7 +263,7 @@ import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useGridCellWidth } from '@/composables/useGridCellWidth'
 import { useRasterRun, type RasterCell } from '@/composables/useRasterRun'
-import { failureKey, safetyBlockKey } from '@/composables/useGenerationStream'
+import { failureKey, safetyBlockKeyForEvent, safetyBlockOf } from '@/composables/useGenerationStream'
 import { useModelAvailability } from '@/composables/useModelAvailability'
 import {
   fetchInstrumentRun,
@@ -503,13 +496,6 @@ const perCellCount = computed(() =>
  * until the text is written, and an empty paragraph would stand as a gap in
  * the box.
  */
-/**
- * The second paragraph carries one emphasis, marked *so* in the string; every
- * odd segment is set in italics. The paragraph is text, so the mark stays out
- * of the message and out of the translators' way.
- */
-const originParts = computed(() => t('latentLab.meanImages.origin').split('*'))
-
 const steyerlText = computed(() => {
   // Read through the locale fallback: a language without the key shows the
   // English paragraph, as every other line here does. `te` looks at the
@@ -518,12 +504,6 @@ const steyerlText = computed(() => {
   const text = t(key)
   return text === key ? '' : text.trim()
 })
-
-/**
- * The German paragraph quotes the German edition with its italics, marked *so*
- * in the string as in the second paragraph.
- */
-const steyerlParts = computed(() => steyerlText.value.split('*'))
 
 /** Two lines this platform already offers elsewhere, and no third one here. */
 const promptExamples = usePromptPresets(['house', 'street'])
@@ -724,8 +704,8 @@ function cellAccount(model: string, axis: Axis, count: number, kind: 'latent' | 
       : `${label} generated them from ${count} English rewordings of one prompt, all on seed ${runSeed.value}.`
   } else {
     made = one
-      ? `${label} generated it from the prompt as entered, on one random seed.`
-      : `${label} generated them from the prompt as entered, each on a different random seed.`
+      ? `${label} generated it from the English version of the prompt, on one random seed.`
+      : `${label} generated them from the English version of the prompt, each on a different random seed.`
   }
   // Single typographic quotes, because Help sets this whole account inside
   // double quotes of its own: with double quotes here the line ended `"."`.
@@ -1316,8 +1296,12 @@ function requestMessage(err: unknown): string {
   return generationErrorFor(t, err)
 }
 
-/** The line for variants that did not come back, in the reader's language. */
+/**
+ * The line for variants that did not come back, in the reader's language. A
+ * refusal is said as itself: it is no failure of the run.
+ */
 function variantsFailedText(cause: GenerationErrorKey): string {
+  if (cause.key.startsWith('safetyBlocked.')) return t(cause.key, cause.params)
   return t('latentLab.meanImages.runFailed', { m: t(cause.key, cause.params) })
 }
 
@@ -1431,7 +1415,11 @@ async function startRun(): Promise<void> {
     // reach.
     expected.value = 0
     done.value = 0
-    errorMessage.value = t('latentLab.meanImages.runFailed', { m: requestMessage(err) })
+    // A refusal of the prompt or of its English sentence goes to the safety
+    // window as well, and is said as itself: it is no failure of the run.
+    errorMessage.value = reportRefusal(err)
+      ? t(refusalKeyOf(err))
+      : t('latentLab.meanImages.runFailed', { m: requestMessage(err) })
     return
   } finally {
     preparing.value = false
@@ -1574,7 +1562,11 @@ async function writeVariants(mine: number, prompt: string, translation: string, 
     shortfall.value = Number(data?.shortfall) || 0
   } catch (err) {
     if (!alive || mine !== press) return
-    variantsFailed.value = generationErrorKeyFor(err)
+    // A refused set goes to the safety window as well; its column keeps the
+    // refusal's key, which travels with the run like a failure's.
+    variantsFailed.value = reportRefusal(err)
+      ? { key: refusalKeyOf(err), params: {} }
+      : generationErrorKeyFor(err)
     errorMessage.value = variantsFailedText(variantsFailed.value)
   } finally {
     if (mine === press) variantsPending.value = false
@@ -1842,18 +1834,19 @@ async function overlay(model: string, axis: Axis): Promise<void> {
     }
     // The check refused the mean. The route answers that with a 200 and records
     // nothing, so it arrives here and not in the catch, and the cell says it
-    // instead of showing a picture. The stage is known without being sent: the
-    // only thing this route checks is the picture it just made, so the refusal
-    // is the image check's and reads as one — without it the reader would be
-    // told to rewrite a prompt the platform itself had just passed.
+    // instead of showing a picture. The only thing this route checks is the
+    // picture it just made, and its block message says so (the image check, at
+    // the result) — read as anything else, the reader would be told to rewrite
+    // a prompt the platform itself had just passed.
     if (data?.status === 'blocked') {
       // The platform's own sentence for a refused picture ends in "just try
       // again, every generation is different" — true of a generation, untrue
       // here: a mean is a decode of latents that are already on disk, so the
       // same press gives the same picture and the same verdict. The refusal of
-      // a MEAN therefore gets this surface's wording. An operational fault is
-      // a different matter and keeps the platform's sentence for it.
-      const said = safetyBlockKey(data.reason, 'vlm_safety')
+      // a MEAN therefore gets this surface's wording. A check that could not
+      // run does not come here: the route answers it with a 500, and the cell
+      // asks again at the next press.
+      const said = safetyBlockKeyForEvent({ block: safetyBlockOf(data) })
       overlayBlocked.value = {
         ...overlayBlocked.value,
         [key]: said === 'safetyBlocked.vlm' ? 'latentLab.meanImages.meanBlocked' : said,

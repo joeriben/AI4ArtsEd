@@ -58,7 +58,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
-import { quickImageSafetyCheck, uploadImageFile } from '@/composables/useMaterialIntake'
+import { uploadCheckedImage } from '@/composables/useMaterialIntake'
 
 const { t } = useI18n()
 const safetyStore = useSafetyEventStore()
@@ -208,18 +208,16 @@ async function processFile(file: File) {
   isUploading.value = true
   emit('image-removed')
 
-  // Upload to server: the platform's one upload (`uploadImageFile`), which
-  // throws where the server refused. This box posted the form itself, a
-  // second copy of that call, until 2026-10-10.
+  // Upload to server: the platform's one intake of a picture
+  // (`uploadCheckedImage`), the one every other surface takes. The upload
+  // checks the picture where it comes in, and the quick check reads the
+  // verdict it kept. It fails CLOSED in both of its directions: a refusal and a
+  // check that could not be carried out both keep the picture out of the field.
+  // This box posted the form itself until 2026-10-10 and ran a second copy of
+  // the check until 2026-09-04.
   try {
-    const uploaded = await uploadImageFile(file)
-    // The picture is checked by the platform's own check, the one every
-    // other surface asks (`quickImageSafetyCheck`). It fails CLOSED in both
-    // of its directions: a refusal and a check that could not be carried out
-    // both keep the picture out of the field. This box ran a second copy of
-    // that request until 2026-09-04.
-    const safety = await quickImageSafetyCheck(uploaded.path)
-    if (!safety.safe) {
+    const { up: uploaded, safety } = await uploadCheckedImage(file)
+    if (!uploaded || !safety.safe) {
       // The parent's picture was voided when this upload began and no
       // image-uploaded followed, so its state is already empty; only what
       // this box shows has to go.
@@ -233,13 +231,10 @@ async function processFile(file: File) {
       error.value = safety.operational
         ? t('imageUpload.checkUnavailable')
         : t('imageUpload.heldBack')
-      safetyStore.reportBlock(
-        'vlm_input',
-        safety.errorMessage || '',
-        [],
-        safety.vlmDescription,
-        safety.operational,
-      )
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
+        operational: safety.operational,
+      })
       return
     }
     // Safe: inform Trashy about what the VLM saw

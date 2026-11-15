@@ -30,7 +30,6 @@ API_URL="http://localhost:17802/api/schema/pipeline/stage3-4"
 declare -a CONFIGS=(
     "sd35_large"
     "gpt_image_1"
-    "gemini_3_pro_image"
     "qwen"
     "ltx_video"
     "wan22_video"

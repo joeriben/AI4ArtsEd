@@ -91,6 +91,24 @@
         <p v-if="gpuServiceUnreachable" class="lab-prep-err quiet">
           {{ t('latentLab.textLab.error.gpuUnreachable') }}
         </p>
+
+        <!-- The explanation box at the foot of the preparing column, the
+             platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+             heading is the menu title of this surface, its text is
+             `latentLab.textLab.systempromptModels.noteBody`, cut into paragraphs at the blank line,
+             and the titles it cites stand under it in LabReferences. -->
+        <aside class="lab-note">
+          <h3>{{ t('compare.tabs.model') }}</h3>
+          <p
+            v-for="(para, i) in t('latentLab.textLab.systempromptModels.noteBody').split('\n\n')"
+            :key="i"
+          >{{ para }}</p>
+          <LabReferences
+            :title="t('latentLab.textLab.systempromptModels.referencesTitle')"
+            :items="REFERENCES"
+            flat
+          />
+        </aside>
       </section>
 
       <!-- 3 columns, a model in the head of each. -->
@@ -103,7 +121,7 @@
           :tint="idx"
         >
           <template #head>
-            <div class="cmp-pick-row">
+            <div class="cmp-pick-row cmp-pick-fluid">
               <label>{{ t('compare.shared.modelLabel') }}</label>
               <select
                 :value="col.modelId"
@@ -143,7 +161,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { useI18n } from 'vue-i18n'
@@ -160,9 +178,36 @@ import ChatColumn from '@/components/ChatColumn.vue'
 import SystemPromptField from '@/components/SystemPromptField.vue'
 import ShellRun from '@/components/ShellRun.vue'
 import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 
 const { t } = useI18n()
+
+/**
+ * The titles the explanation box cites: whose opinions the default answers
+ * resemble, how often models refuse what is safe to answer, and what censored
+ * models withhold.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Durmus et al. (2023)',
+    title: '"Towards Measuring the Representation of Subjective Global Opinions in Language Models"',
+    venue: 'COLM 2024',
+    doi: 'https://arxiv.org/abs/2306.16388',
+  },
+  {
+    authors: 'Röttger et al. (2024)',
+    title: '"XSTest: A Test Suite for Identifying Exaggerated Safety Behaviours in Large Language Models"',
+    venue: 'NAACL 2024',
+    doi: 'https://arxiv.org/abs/2308.01263',
+  },
+  {
+    authors: 'Casademunt et al. (2026)',
+    title: '"Censored LLMs as a Natural Testbed for Secret Knowledge Elicitation"',
+    venue: 'arXiv:2603.05494, preprint',
+    doi: 'https://arxiv.org/abs/2603.05494',
+  },
+]
 const store = useSystemPromptAcrossModelsStore()
 const userPreferences = useUserPreferencesStore()
 const deviceId = useDeviceId()
@@ -227,7 +272,7 @@ const {
 // ---------- The models ----------
 
 const {
-  chosenModels, loading, loadFailed, gpuServiceUnreachable, optionLabel, refresh,
+  chosenModels, loading, loadFailed, gpuServiceUnreachable, optionLabel,
 } = useChatModels()
 
 /**
@@ -245,14 +290,6 @@ function isOffered(id: string): boolean {
   return !id || offered.value.some(m => m.id === id)
 }
 
-
-// The list is asked again whenever the surface is built anew, so a provider
-// switched in the settings reaches the heads on the way back to this tab and
-// not only on the next reload. The first build leaves it to useChatModels,
-// which is fetching already.
-onMounted(() => {
-  if (!loading.value) void refresh()
-})
 const { install } = useModelInstall()
 const register = useModelRegister()
 
@@ -364,13 +401,7 @@ const folded = ref(false)
    area -- are `assets/compare-stage.css`, down to the three columns
    (`.cmp-chat-columns`), the chooser in each head (`.cmp-pick-row`) and „New
    conversation" (`.cmp-new-conversation`); the column itself is
-   components/ChatColumn.vue.
-
-   What is this surface's own: a model's name with its facts („Qwen 3.5 9B
-   (local) · Open Weights · klein") is longer than any column is wide, and a
-   select takes the width of its longest option unless it is allowed to shrink.
-   The preset list of System Prompts keeps its width as it has it. */
-.cmp-pick-row > select {
-  min-width: 0;
-}
+   components/ChatColumn.vue. The select in a head may shrink
+   (`.cmp-pick-fluid`, the same sheet), since 2026-11-02 shared with the
+   Language Model Comparison of the Latent Lab. */
 </style>

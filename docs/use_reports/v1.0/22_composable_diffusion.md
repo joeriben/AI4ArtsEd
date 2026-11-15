@@ -1,0 +1,91 @@
+# 22 Composable Diffusion — `/latent-lab/composable-diffusion`
+
+Used 2026-11-02, 23:44–23:55 CET, UI language English, not signed in.
+
+## 1. What I did
+
+1. Opened `/latent-lab/composable-diffusion` (sidebar tooltip "Each concept scored separately"). Preparing column: Example prompts select with four pairs ("a red house on a hill + a blue ship on the ocean"; the street seen through the eyes of a child + of an adult; "a tree + a house"; "an apple tree + apples"), "Concept 1" and "Concept 2" fields (placeholder "e.g. a red house on a hill"), each with "Weight 1.00", a slider from −2 to 2 (step 0.05) and a green badge "AND"; a button "+ Add concept"; "Combination" chips "In the embedding" / "In the denoiser" (preselected) with the sentence "In the embedding the run interpolates between the concepts once, at the start. In the denoiser it puts every concept through the model at each step and weights the predictions into one."; "Advanced settings" (Negative Prompt, Steps 25, CFG 4.5, Seed 123456789, "Random variation" unticked, "Normalize weights (sum to 1.0)" ticked); "Research References" (Liu et al. 2022, "Compositional Visual Generation with Composable Diffusion Models", ECCV 2022, DOI). Right: an empty picture area. The run button is the play triangle ("Generate").
+2. Pressed "+ Add concept": a third field appeared, and each concept gained a × button. Typed Concept 1 "a cat on a sofa" (1.00), Concept 2 "a sunny living room" (1.00), Concept 3 "a window" and moved its slider to −1.00: the badge turned from "AND" to "NOT". Denoiser selected, normalization ticked. Generate. Under the references the line "Composable generation in progress..." appeared; then the picture.
+3. Switched the Combination chip to "In the embedding", same concepts and weights, Generate; the picture arrived. RUNS 2.
+
+Runs: 2 pictures.
+
+## 2. What the controls did
+
+- Concept fields with the five small buttons; "+ Add concept" adds a field; × removes one.
+- Weight slider: −2 to 2; a positive weight shows "AND", a negative one "NOT".
+- Combination chips: where the concepts are combined, as the sentence under them says.
+- Normalize weights: divides the weights by their sum; with 1, 1 and −1 the sum is already 1.
+- Generate: one picture; a status line "Composable generation in progress..." while it runs.
+- Advanced settings, RUNS strip, Hide column, Help: as elsewhere.
+
+## 3. What came out
+
+- In the denoiser (cat on a sofa AND sunny living room NOT window): a tabby cat lying on a beige sofa in warm side light, an orange wall behind, no window in the frame. All three instructions are met.
+- In the embedding, same concepts and weights: a noise picture, black, white and dark-green pixel blocks over the whole square, no object. The one-time mix of the three embeddings with a negative weight produced a vector the model could not turn into a picture.
+- The same three concepts and weights gave a usable picture at one site and noise at the other; the sentence under the chips names the difference, the surface does not warn.
+
+## 4. How long it took
+
+Not measurable. A workshop replay backend on the same machine, running since 2026-11-01, fed the shared ComfyUI queue with 27B language-model jobs throughout; every run here waited behind it, so the durations I measured say nothing about the instrument.
+
+## 5. Where a newcomer stumbles
+
+- Nothing says that a negative weight at the embedding site can give noise, or that the noise is the result and not an error.
+- "Normalize weights (sum to 1.0)" is ticked by default and does nothing visible for 1, 1, −1.
+- The slider's AND / NOT badge is the only explanation of the weights' meaning.
+- The example prompts are pairs; the third concept and the NOT have no example.
+- "Composable generation in progress..." stands under the references, far from the run button.
+
+## 6. What the help text should tell a user
+
+The page has no Help text of its own. It should first say what the instrument is for: composing a picture out of several concepts, each with its own weight, and watching what the weights do, which is a question of composition before it is a question of the model. Positive weight: the concept pulls the picture its way (AND); negative weight: it pushes the picture away from it (NOT). Then the two places of combination, because the difference between them is the content of this surface: "In the denoiser" every concept keeps its own pull at every step, and the picture holds them together as a montage holds its parts; "In the embedding" the concepts are mixed once into one before the run, as a double exposure melts two pictures into one, which works for close concepts and gives noise for a subtraction. It should say that the noise is the result and not an error. It should say that the weight the slider sets is not the weight the eye reads, and that the picture is where the two meet: size, place, colour and sharpness are what the model made of the number. It should say that the heart on the picture keeps it in the favourites, from where a picture goes on to the Flow board as material, so a series made here can be continued there. And it should say that the seed is fixed, so the same concepts and weights give the same picture, which is what makes a series comparable, and that Normalize divides the weights by their sum.
+
+## 7. Use possibilities, action-oriented
+
+- Compose by hand first: two motifs from the own sketchbook as cut-outs on paper, one dominant; then the same two as concepts at three weight pairs (2 / 0.5, 1 / 1, 0.5 / 2) in the denoiser, same seed; keep the three with the heart, put them next to the paper, and read where the model's weight shows: in size, place, colour, sharpness.
+- The same two concepts at both sites: montage in the denoiser, blend in the embedding; keep the noise picture as the record of what a blend cannot do.
+- A third concept with a negative weight: a thing, then a colour, then a mood; write down what left the picture and what filled the gap.
+- The example pair "the street where I live, in the morning, seen through the eyes of a child" / "… of an adult" at 1.5 / 0.5 and 0.5 / 1.5: what the model uses for "child" (colour, scale, viewpoint, objects), and whether that is a child's seeing or a cliché of it.
+- A series over one weight: one concept held at 1, the other from −2 to 2 in steps of 0.5; keep every picture; read the series as one work.
+- Four concepts: watch how much each one gets, and which one the picture drops first.
+- Constellations that no plain prompt reaches: weights above 1 and below 0 together, a NOT on something the AND needs; compare with the same concepts written as one plain prompt on the same model, and keep what the plain prompt cannot give.
+- Take one picture from the favourites onto the Flow board and continue it: a perspective, a sound, a video.
+- Compare the montage with a photomontage from art history (Hannah Höch, 1919; Max Ernst's collage novels, 1929) and the blend with a double exposure: where the seam is visible, and whether a seam is wanted.
+
+## 8. Teaching scenarios
+
+The instrument is a composition instrument. Two or more concepts go in, each with its own weight, and one picture comes out; the judgement the picture asks for is the one art lessons train: what dominates, what recedes, what is left out, how the parts are joined, and whether the result is one the maker stands behind. The two places of combination make two ways of joining visible that art has used for a century, montage and blend, and the difference between them is what there is to see. And the weights reach constellations that a written prompt does not, which is material for the own work.
+
+**S1 — Weight by hand, weight by number** (formal, art, grades 7–10, 90 min). Pupils bring two motifs from their current work, a thing and a place. First by hand: a quick paper composition of the two, cut-outs or a drawing, in which one of them is to dominate; the choice is written under it in one line. Then the same two motifs as concepts, in the denoiser, same seed, at three weight pairs: 2 / 0.5, 1 / 1, 0.5 / 2. The three pictures are kept with the heart and printed or shown next to the paper. Reading: where does the model's weight show, in size, in place, in colour, in sharpness, in what is in front; does the 2 / 0.5 picture dominate the way the paper does; which of the four compositions does the pupil stand behind, and did seeing the model's three change the judgement of the own one. Sequence: 20 min paper composition; 10 min concepts and first run; 20 min two more runs and the hearts; 25 min reading in pairs; 15 min plenary on weight as a number and weight as a thing the eye reads. Subject link: composition, dominance, visual weight; the own decision next to the model's. Uncertainty: I did not run the weight series; only one run per site was made, with three concepts.
+
+**S2 — Montage or blend** (formal, art, grades 9–13, 2 × 45 min). The class looks at a photomontage (Hannah Höch, "Cut with the Kitchen Knife", 1919) and at a double exposure, and names the difference: in the montage every part keeps its edge and its own light, in the blend two pictures become one surface. Pairs then make both by hand with the same two motifs, a collage of cut-outs and a tracing-paper overlay. Then the model: the same two concepts at 1 / 1, once "In the denoiser" and once "In the embedding", same seed, both kept. Four pictures on the wall per pair. Reading: which of the model's two is the montage and which the blend, and by what in the picture they can tell; where the seam is, and whether they want it. Then the question the framework's classroom example asks of the three kinds of work: for the collage, the overlay, the model's montage and the model's blend, which choices did the pupil make (what, where, how big, which weight, which place) and which did the model make (everything the seed decided), which of the four they would sign, and whose the model's pictures are. Sequence: 15 min Höch and the double exposure; 30 min collage and overlay; 20 min two runs; 25 min reading on the wall. Subject link: montage and blend as two ways of putting two things into one picture; authorship. Uncertainty: the embedding site gave a usable picture for close concepts in the page's own examples and noise for the subtraction; for two plain motifs at 1 / 1 the result was not seen.
+
+**S3 — Leaving out** (formal, art or language teaching, grades 8–11, 45 min). Two concepts at 1 / 1 and a third at −1, in the denoiser: first a thing (a window), then a colour (red), then a mood (cheerful). After each run two notes: what left the picture, and what filled the place where it was. The class compares with the oldest means of composition, the omission: what a picture does not show and how the empty place carries the rest. Then the criterion is written on the board, "the thing is gone and the rest of the picture stayed", and each of the three runs is held against it; the model pushes a thing out and does not remove a property bound to an object or a whole register. Sequence: 10 min concepts; 15 min three runs; 10 min notes; 10 min criterion and comparison. Subject link: omission and the empty place; what an instruction can and cannot take out. Uncertainty: the window left the picture; a colour and a mood were not tried.
+
+**S4 - Unlikely Constellations**. (non-formal, art workshop, age 10+, 2 h). Class experiments with combinations in order to achieve images that could not be prompted conventionally. They compare these images to traditionally prompted images using the same model. They use the results for art creation (-> flow) and/or reflect upon how a model achieves order between different elements in the prompt.
+
+**S5 — Two readings of one street** (formal, art or ethics, grades 7–10, 45 min). The example pair, the street where I live, in the morning, seen through the eyes of a child and seen through the eyes of an adult, at 1.5 / 0.5 and then 0.5 / 1.5, same seed. Pupils list what the model used for "child": colour, scale, viewpoint, the objects it put in; then they say whether that is how a child sees a street or how pictures of children's seeing look. The sentence "the model saw it as a child would" is held against that list and rewritten: the model has no eyes and no childhood, it turned the words into the patterns that go with them in its data. Then each pupil writes two readings of their own street in one line each, and one pair is run. Sequence: 10 min two runs; 15 min lists and the rewritten sentence; 20 min own readings and one run. Subject link: perspective as a decision in the prompt (the platform's separation of what from how); cliché. Uncertainty: I did not run the child/adult pair.
+
+**S6 — The series as a work** (non-formal, art workshop, age 14+, 2 h). Participants choose two concepts of their own and build a series over one weight: the first held at 1, the second from −2 to 2 in steps of 0.5, nine pictures, same seed, every one kept with the heart. The series is read as one work, left to right: where the second concept enters, where it takes over, where the picture breaks. Each participant chooses the one picture of the nine they would continue, takes it from the favourites onto the Flow board and gives it a perspective or a sound; the series and the continued picture are shown together at the end. Sequence: 15 min concepts; 45 min nine runs; 30 min reading the series; 30 min continuation on Flow and the showing. Subject link: the series as a form of work and of knowledge; the result as material. Uncertainty: I did not try taking a favourite from this surface onto the Flow board; the Flow report (01) describes the favourites bar.
+
+## 9. AI-Lit mapping (built from S1–S6)
+
+**(a) 100 % hits**
+
+- Create 2 Basic — "Learners use AI to generate an image, story or model to represent an idea." S1: two motifs from the own work as concepts, one picture per weight pair, and the written line under each on what the weight did to the picture and whether it dominates the way the paper composition does; the framework's classroom example has learners generate one image and write how specific elements of their prompt shaped the result and how well it matches the idea they had in mind.
+- Create 2 Intermediate — "Learners experiment with AI tools (e.g., text, image or music generators) to develop diverse ideas and produce varied outputs." S2, S4 and S6: the same concepts at two sites, constellations that no plain prompt reaches next to plainly prompted pictures from the same model, and a series of nine over one weight, compared for what each combination made of the same idea; the framework's classroom example compares how different prompts and tools produce varied interpretations of the same idea.
+- Create 1 Basic — "Learners explore how different AI tools can expand their thinking or spark new ideas." S4: combinations that could not be prompted conventionally, taken as material for art creation on Flow; the framework's classroom example has learners write new stories inspired by unexpected results.
+- Create 1 Intermediate — "Learners compare AI-generated suggestions to their own ideas during a brainstorming process." S1: the paper composition is made before the model's three pictures are seen, and the pair discusses which of the four they stand behind and whether seeing the model's versions changed the judgement of their own; the framework's classroom example has learners brainstorm independently before reviewing AI-generated ideas and discuss how exposure to them shapes originality and confidence.
+- Create 4 Advanced — "Learners assess the ethical implications of AI-generated outputs for creative work, distinguish inspiration from replication in their outputs, and justify how their use of AI maintains authenticity and respects other creators." S2: collage, overlay, model montage and model blend on one wall, and for each the choices the pupil made and the choices the model made, which they would sign, and whose the model's pictures are; the framework's classroom example puts human-made, AI-generated and human-with-AI work side by side and asks which choices a human did or did not make and who should be credited.
+- Engage 2 Intermediate — "Learners accurately describe how a specific AI tool carries out a task in order to address commonly-held misconceptions about how AI works." S3: a NOT is a negative weight on a prediction at every step, which pushes a thing out and does not take a property or a register out, held against the idea that the model understood an instruction not to show something.
+- Engage 2 Basic — "Learners know AI is a non-human tool that produces outputs based on patterns of data and lacks authentic context or understanding." S5: the sentence "the model saw it as a child would" held against the list of what the model used for "child" and rewritten, as the framework's classroom example has learners identify misleading phrases and develop better descriptions.
+- Shape 2 Basic — "Learners define criteria for whether an AI system has accomplished a task." S3: the criterion "the thing is gone and the rest of the picture stayed", written by the class and applied to a thing, a colour and a mood; the framework's classroom example has learners define what would make the system successful and compare it across different cases.
+
+**(b) Mutatis mutandis**
+
+--
+
+**Beyond the framework**: the framework's Create competences have learners generate, vary and combine; the judgement they ask for is whether the result matches the idea. Here the judgement is a compositional one, dominance, omission, the seam between two parts, and it needs what art lessons train and what a hand composition next to the model's makes visible. The two places of combination put montage and blend side by side, two ways of joining that art has used since the photomontage of 1919, and the difference between them is the subject of the surface. The framework has no competence for aesthetic judgement and none for the history of composition; this platform places its Latent Lab under the paradigm of aesthetic and artistic research, and this instrument is one of its instruments.
+
+**Non-fits**: Engage 1, 3, 4, 5, 6, 7, Manage 1–4, Shape 1, 3, 4, Create 3.

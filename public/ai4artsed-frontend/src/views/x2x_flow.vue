@@ -98,9 +98,6 @@
               <span class="gr-stop" :class="{ armed: !!holdOn }">
                 {{ genStopping ? t('x2xFlow.stopping') : t('x2xFlow.holdToStop') }}
               </span>
-              <span v-if="liveIsCloud" class="gr-e off">{{ t('x2xFlow.runCloudNoMeter') }}</span>
-              <span v-else-if="energyLine" class="gr-e">{{ energyLine }}</span>
-              <span v-else class="gr-e off">{{ t('x2xFlow.runEnergyIdle') }}</span>
             </template>
           </FlowRunPanel>
 
@@ -124,7 +121,10 @@
               </template>
               <span v-else-if="safetyState === 'blocked'" class="gi-err">{{ t('x2xFlow.blocked') }}</span>
               <span v-if="queuePosition > 0" class="gi-note">{{ t('x2xFlow.queuePos', { n: queuePosition }) }}<template v-if="queueWaitLabel"> · {{ queueWaitLabel }}</template></span>
-              <span v-if="currentStage === 'stage4' && energyShort" class="gi-note">{{ energyShort }}</span>
+              <!-- The numbers this generation runs with, and where in it the
+                   card is. The energy figures stand in the page header. -->
+              <span v-for="p in cardParams" :key="p" class="gi-note">{{ p }}</span>
+              <span v-if="runPhaseLine" class="gi-run gi-phase" :title="runPhaseLine">{{ runPhaseLine }}</span>
             </div>
             <!-- A run that did not come back states the CAUSE first, in red, and
                  what to DO underneath, in grey. The instruction may take two
@@ -140,20 +140,22 @@
             >
               {{ generationErrorMessage }}
             </div>
-            <!-- The backend writes these reasons in German and only in German,
+            <!-- The backend writes its reasons in German and only in German,
                  and two of the Stage-3 ones are developer strings that would put
-                 the matched forbidden terms back on the screen. Every other
-                 surface of the platform reads them through `safetyBlockKey`;
-                 this one showed them raw until 2026-09-04. -->
+                 the matched forbidden terms back on the screen. The box says the
+                 sentence the block message's `reason_key` names, as every other
+                 surface does; it showed the reason raw until 2026-09-04. -->
             <div
-              v-else-if="blockedReason"
+              v-else-if="blockMessage"
               ref="giBodyEl"
               class="gi-body gi-err"
-              :title="t(safetyBlockKey(blockedReason, blockedStage))"
+              :title="t(safetyBlockMessageKey(blockMessage))"
             >
-              {{ t(safetyBlockKey(blockedReason, blockedStage)) }}
+              {{ t(safetyBlockMessageKey(blockMessage)) }}
             </div>
-            <div v-else ref="giBodyEl" class="gi-body" :title="interceptionResult">
+            <!-- While the generation runs, the prompt makes room for its numbers
+                 and its phase; it comes back when the run is done. -->
+            <div v-else-if="currentStage !== 'stage4'" ref="giBodyEl" class="gi-body" :title="interceptionResult">
               {{ interceptionResult }}
             </div>
             <div v-if="genFailAction" ref="giActEl" class="gi-state">
@@ -270,7 +272,7 @@
              to the zone. Fallen artifacts wake only in here. -->
         <div
           class="zone"
-          :class="{ glow: zoneGlow, holds: zoneItemIds.size > 0 }"
+          :class="{ glow: zoneGlow, holds: zoneArmed }"
           :style="zoneStyle"
           :title="t('x2xFlow.zoneHint')"
         ></div>
@@ -298,7 +300,9 @@
             <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-420q67 0 113.5-46.5T540-580q0-67-46.5-113.5T380-740q-67 0-113.5 46.5T220-580q0 67 46.5 113.5T380-420Z" />
           </svg>
         </button>
-        <!-- Scene capsules: a document the session analysed (UCD-124). The strip
+        <!-- The document card: a PDF the platform summarised. It is material
+             like every other card: in the ring, or on a table with an empty
+             ring, the next run reads it (`effDocStrips`). The strip
              lies in the WORLD, among the cards, and is placed, moved and sized
              like them — its own coordinates, `landFromPlus` for the place it
              lands on, the shared drag/resize engine for the grip and the corner.
@@ -318,7 +322,8 @@
         <FlowCard
           v-for="s in sceneStrips"
           :key="s.id"
-          :class="{ busy: s.uploading }"
+          class="doc-card"
+          :class="{ busy: s.uploading, inzone: zoneStripIds.has(s.id) }"
           :style="{ left: s.x + 'px', top: s.y + 'px', width: s.w + 'px', height: s.h + 'px' }"
           bar
           closable
@@ -329,7 +334,14 @@
           @resize-down="startCardResize($event, s, { mode: 'free' })"
           @close="removeSceneStrip(s.id)"
         >
-          <SceneStrip :doc="s.doc" :status="sceneStatus(s)" @carry="carryScenePrompt" />
+          <template #bar>
+            <span v-if="surplusStripIds.has(s.id)" class="asm-surplus" :title="t('x2xFlow.surplusHint')"
+              >?</span
+            >
+          </template>
+          <!-- The wheel belongs to the card, as in the text card: on the table it
+               pans, and what lies below the fold of a card stayed out of reach. -->
+          <SceneStrip :doc="s.doc" :status="sceneStatus(s)" @carry="carryScenePrompt" @wheel.stop />
         </FlowCard>
 
         <!-- The box is FlowCard; where it sits and how wide it is stays here,
@@ -512,7 +524,8 @@
           <button class="pb-del" :title="t('x2xFlow.perspectiveClear')" @pointerdown.stop @click.stop="removeBubble(b.id)">×</button>
         </div>
 
-        <!-- LoRAs: a disc like a perspective, the net for a face. What lies in
+        <!-- LoRAs: a disc like a perspective, the adapter's picture for a face
+             where it has one (`loraPicture`), else the net. What lies in
              the zone is loaded with the image model of the next run — not
              applied one after another like the perspectives, so no chain
              number. A LoRA the run cannot load (another model picked by hand,
@@ -527,13 +540,16 @@
           @click.stop="onFixtureClick($event, () => openLoraEdit(l))"
         >
           <PerspectiveBubble
+            :src="loraPicture(l)"
             :name="l.name"
             :read="zoneLoraIds.has(l.id)"
             :read-color="LORA_COLOR"
             :openable="false"
             revealed
           >
-            <LoraGlyph light />
+            <template v-if="!loraPicture(l)" #default>
+              <LoraGlyph light />
+            </template>
           </PerspectiveBubble>
           <span
             v-if="loraUnusedIds.has(l.id)"
@@ -833,7 +849,8 @@ import PlatformVoice, { type VoiceAnchor } from '@/components/PlatformVoice.vue'
 import '@google/model-viewer'
 import {
   useGenerationStream,
-  safetyBlockKey,
+  safetyBlockMessageKey,
+  safetyBlockOf,
   classifyError,
   busyCauseKey,
   waitParts,
@@ -841,6 +858,7 @@ import {
   queueWaitLabel as queueWaitWords,
   type BusyNote,
   type GenerationErrorType,
+  type SafetyBlock,
 } from '@/composables/useGenerationStream'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useHold } from '@/composables/useHold'
@@ -855,7 +873,7 @@ import { postStreamedRun } from '@/services/directRun'
 import { useCurrentSession } from '@/composables/useCurrentSession'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useKeptPerspectivesStore, keptColor } from '@/stores/keptPerspectives'
-import { useLoraStore, LORA_COLOR, type LoraAdapter } from '@/stores/loras'
+import { useLoraStore, loraPicture, LORA_COLOR, type LoraAdapter } from '@/stores/loras'
 import { useConfigSelectionStore } from '@/stores/configSelection'
 import { useLabAuthStore } from '@/stores/labAuth'
 import type { PageContext } from '@/composables/usePageContext'
@@ -863,7 +881,7 @@ import { useFlowStage, type FlowRect } from '@/composables/useFlowStage'
 import { useMediumInference, MEDIA, type MediumId } from '@/composables/useMediumInference'
 import { useAssemblageBoard, type AsmItem, type AsmKind } from '@/composables/useAssemblageBoard'
 import { takeHandedImage } from '@/lib/handOverImage'
-import { downloadBlob, downloadMedia, mediaExtension, mediaFileName, runStem } from '@/lib/downloadMedia'
+import { downloadBlob, downloadMedia, mediaExtension, mediaFileName, runStem, unmarkedName } from '@/lib/downloadMedia'
 import { printMedia } from '@/lib/printMedia'
 // The minimal geometry the shared drag/resize engine reads and writes. The
 // board's own items satisfy it; a scene strip card declares it (see BoardSceneStrip).
@@ -879,16 +897,17 @@ import {
 import { classifyMusicRoles } from '@/composables/useTextRoles'
 import { planComposition, type ComposeOp, type ComposeRole } from '@/composables/useCompositionRouting'
 import {
-  quickImageSafetyCheck,
   useMaterialIntake,
-  uploadImageFromUrl,
+  uploadCheckedImageFromUrl,
   type QuickSafetyResult,
 } from '@/composables/useMaterialIntake'
 import {
   uploadSceneDocument,
+  sceneBlockKey,
   fetchSceneJob,
   fetchSceneDocument,
-  listSceneDocuments,
+  emptySceneDocument,
+  documentText,
   type SceneDocument,
   type SceneJobState,
 } from '@/composables/useSceneIntake'
@@ -907,14 +926,14 @@ const safetyStore = useSafetyEventStore()
 const favStore = useFavoritesStore()
 const { updateSession, clearSession } = useCurrentSession()
 
-// Scene documents (UCD-124): a PDF the plus brings in is analysed into scene
-// capsules; the strips stand on the board like every other thing worked on here.
-// Session-bound: the document space hangs on the canvas session (deviceId) and
-// dies with it; nothing reaches Tier-O.
+// Documents: a PDF the plus brings in is summarised; the cards stand on the
+// board like every other thing worked on here, and a run reads them.
+// The document space hangs on the canvas session (deviceId), the summaries stay
+// stored past its end, and nothing reaches Tier-O.
 interface BoardSceneStrip extends BoardItem {
   /**
-   * The analysed document — or, while the worker is still on it, the stand-in
-   * that carries the picked file's name and no capsules, so the strip shows its
+   * The summarised document — or, while the worker is still on it, the stand-in
+   * that carries the picked file's name and no summary, so the strip shows its
    * head alone under the busy dimming.
    */
   doc: SceneDocument
@@ -1125,6 +1144,22 @@ const zoneItemIds = computed<Set<string>>(() => {
   return s
 })
 
+/** The document cards in the ring, by the same measure as the cards above. */
+const zoneStripIds = computed<Set<string>>(() => {
+  const s = new Set<string>()
+  for (const d of sceneStrips.value) {
+    // Everything withheld, nothing to read: the case of the source above. A card
+    // still being summarised counts, because a run has to wait for it.
+    if (!d.uploading && !documentText(d.doc)) continue
+    const dx = d.x + d.w / 2 - zone.x
+    const dy = d.y + d.h / 2 - zone.y
+    if (dx * dx + dy * dy <= zone.r * zone.r) s.add(d.id)
+  }
+  return s
+})
+/** Anything material in the ring, a document included. */
+const zoneArmed = computed(() => zoneItemIds.value.size > 0 || zoneStripIds.value.size > 0)
+
 /**
  * The zone override: once anything material lies in the circle, the circle is
  * the entire reading — every kind, only what lies inside. Only a circle empty
@@ -1133,13 +1168,23 @@ const zoneItemIds = computed<Set<string>>(() => {
  * placement is the gesture that turns a product back into material.
  */
 function effectiveOf(list: AsmItem[]): AsmItem[] {
-  if (zoneItemIds.value.size) return list.filter((i) => zoneItemIds.value.has(i.id))
+  if (zoneArmed.value) return list.filter((i) => zoneItemIds.value.has(i.id))
   return list.filter((i) => !i.fell)
 }
 const effTextItems = computed(() =>
   effectiveOf(items.value.filter((i) => i.kind === 'text' && !!i.text && !!i.text.trim()))
 )
-const effCombinedText = computed(() => effTextItems.value.map((i) => i.text!.trim()).join('\n\n'))
+/** The document cards this run reads: those in the ring, or the table's with an empty ring. */
+const effDocStrips = computed(() =>
+  zoneArmed.value ? sceneStrips.value.filter((s) => zoneStripIds.value.has(s.id)) : sceneStrips.value
+)
+const effDocTexts = computed(() => effDocStrips.value.map((s) => documentText(s.doc)).filter(Boolean))
+/** What is written on the table. The medium is read from this alone (`inferenceText`). */
+const effWrittenText = computed(() => effTextItems.value.map((i) => i.text!.trim()).join('\n\n'))
+/** What the run reads: the written words first, so that an instruction stands before its material. */
+const effCombinedText = computed(() =>
+  [effWrittenText.value, ...effDocTexts.value].filter(Boolean).join('\n\n')
+)
 const effImageItems = computed(() => effectiveOf(imageItems.value))
 const effAudioItems = computed(() => effectiveOf(audioItems.value))
 const effVideoItems = computed(() => effectiveOf(videoItems.value))
@@ -1155,9 +1200,21 @@ const zoneStation = computed<'interception' | 'adaption' | null>(() => {
   if (effTextItems.value.some((i) => i.station === 'interception')) return 'interception'
   return null
 })
+/**
+ * The station a press takes the chain up from. A document in the run is new
+ * words: they go through the whole chain, checks included, and the box is no
+ * evidence of them.
+ */
+const zoneResume = computed(() => (effDocTexts.value.length ? null : zoneStation.value))
 /** Where THIS run picked up, frozen when it started. */
 const runResume = ref<'interception' | 'adaption' | null>(null)
-const effUploadsPending = computed(() => effImageItems.value.some((i) => i.uploading))
+// A document still being summarised counts too, unless this run does not read
+// documents at all (`docsPassedOver`).
+const effUploadsPending = computed(
+  () =>
+    effImageItems.value.some((i) => i.uploading) ||
+    (!docsPassedOver.value && effDocStrips.value.some((s) => s.uploading))
+)
 const effUploadsFailed = computed(() => effImageItems.value.some((i) => i.failed))
 
 // Zone drag: the same screen→world conversion as an item drag.
@@ -1338,10 +1395,11 @@ function fallMedia(
 /**
  * An image artifact is re-uploaded so it carries the server path i2x reads.
  *
- * A picture BROUGHT here (`at` is the point it was let go at) is checked like
- * any other picture entering a surface; the run's own output falling onto its
- * own table (`at` null) is not, having come through Stage 3 of that run at this
- * level moments ago. The fall does not release a held medium/model pick: only a
+ * Every picture is checked where it comes in, by the upload: one BROUGHT here
+ * (`at` is the point it was let go at) like the run's own output falling onto
+ * its own table (`at` null). The upload knows a recorded picture by its address
+ * and its bytes and hands on the verdict it got at the result, so a fall asks
+ * no model again. The fall does not release a held medium/model pick: only a
  * user upload does.
  */
 async function fallImage(
@@ -1360,33 +1418,25 @@ async function fallImage(
   if (meta) it.meta = meta
   it.uploading = true
   try {
-    const up = await uploadImageFromUrl(url, `${runId}.png`)
-    // A picture BROUGHT here is checked, whatever made it. The run's own output
-    // falling onto its own table is not (`at` is null there): it came through
-    // Stage 3 of this very run, at this level, moments ago. A favourite or a
-    // picture handed over from another surface is a different matter — it
-    // carries the level of the session that made it, and Stage 3 checks an
-    // image at kids and youth level only, so an `open` run's picture has no
-    // image verdict at all. The drop path took the fall's exemption until
-    // 2026-09-04 and put it on the board as material to run with.
-    if (at) {
-      const safety = await quickImageSafetyCheck(up.path)
-      if (!safety.safe) {
-        // The url goes back out of the dedupe: a refusal is not a fall that has
-        // happened, and the same picture must be able to arrive again.
-        fallenSrcs.delete(url)
-        removeItem(it.id)
-        safetyStore.reportBlock(
-          'vlm_input',
-          safety.errorMessage || '',
-          [],
-          safety.vlmDescription,
-          safety.operational,
-        )
-        return ''
-      }
-      if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
+    // Checked on the way in, whatever made it, at this table's level. A
+    // favourite or a picture handed over from another surface carries the level
+    // of the session that made it, which need not be this one. The run's own
+    // output carries the pass it got at the result, and the upload hands that
+    // on. The drop path took the fall's exemption from the check until
+    // 2026-09-04; the fall itself was exempt until 2026-10-31.
+    const { up, safety } = await uploadCheckedImageFromUrl(url, `${runId}.png`)
+    if (!up || !safety.safe) {
+      // The url goes back out of the dedupe: a refusal is not a fall that has
+      // happened, and the same picture must be able to arrive again.
+      fallenSrcs.delete(url)
+      removeItem(it.id)
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
+        operational: safety.operational,
+      })
+      return ''
     }
+    if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
     it.imageId = up.imageId
     it.path = up.path
     it.src = up.servedUrl
@@ -1892,9 +1942,9 @@ function onDocFilePick(e: Event) {
   if (pdf) void intakeSceneDocument(pdf)
 }
 /**
- * A PDF the plus brings in goes to the scene pipeline (UCD-124). The canvas
- * session (deviceId) is the journal id: the document space hangs on it and
- * dies with it.
+ * A PDF the plus brings in goes to the summary job. The canvas session
+ * (deviceId) is the journal id: the document space hangs on it. The summary is
+ * written in the language of the surface.
  *
  * The CARD STANDS ON THE BOARD FROM THE PICK ONWARDS, busy, the way a picture
  * does while it uploads: the analysis is a queued worker job and takes minutes,
@@ -1907,18 +1957,21 @@ async function intakeSceneDocument(file: File) {
   const jid = deviceId
   if (!jid) return
 
-  const pending = addSceneStrip(pendingSceneDoc(file), true)
+  const pending = addSceneStrip(emptySceneDocument(file.name), true)
   try {
-    const outcome = await uploadSceneDocument(file, jid)
+    const outcome = await uploadSceneDocument(file, jid, String(locale.value))
     if (outcome.status === 'rejected') {
       removeSceneStrip(pending.id)
       platformVoice.value?.speak(t(`resonaScene.rej.${outcome.reasonKey}`))
       return
     }
-    if (outcome.status === 'duplicate') {
+    if (outcome.status === 'refused') {
       removeSceneStrip(pending.id)
-      platformVoice.value?.speak(t('resonaScene.duplicate'))
-      await refreshSceneStrips()
+      platformVoice.value?.speak(t(sceneBlockKey(outcome.block)))
+      return
+    }
+    if (outcome.status === 'duplicate') {
+      await takeKnownDocument(pending, outcome.docId, outcome.jobId)
       return
     }
     pending.job = { id: outcome.jobId, docId: outcome.docId }
@@ -1931,18 +1984,53 @@ async function intakeSceneDocument(file: File) {
 }
 
 /**
- * The card an analysis stands behind: it names the file that was picked and
- * carries no capsules, so the strip shows its head alone. Not a document — the
- * session's document space knows nothing under this name until the worker is
- * through, which is why it has no docId and is never deduped against one.
+ * The platform knows this file. The card that stands for the upload becomes the
+ * document's card at once, with no analysis. A card already standing for the
+ * document stays and the new one goes; it reads the document again, because the
+ * upload checked the summary anew and may have stored less, or the file's
+ * summary in another language. A summary this session is still running is
+ * followed on. Without a document (a file known only to the library) the card
+ * goes, and the voice says why.
  */
-function pendingSceneDoc(file: File): SceneDocument {
-  return { docId: '', title: file.name, capsules: [], flagged: 0, discarded: 0, meta: {} }
+async function takeKnownDocument(pending: BoardSceneStrip, docId: string, jobId?: string) {
+  const standing = sceneStrips.value.find(
+    (s) => s.id !== pending.id && !!docId && (s.doc.docId === docId || s.job?.docId === docId)
+  )
+  if (standing) {
+    removeSceneStrip(pending.id)
+    if (standing.job) return
+    const held = await fetchSceneDocument(deviceId!, docId)
+    if (!sceneStrips.value.some((s) => s.id === standing.id)) return
+    if (held) {
+      settleSceneStrip(standing, held)
+      platformVoice.value?.speak(t('resonaScene.duplicate'))
+    } else {
+      removeSceneStrip(standing.id)
+      platformVoice.value?.speak(t('resonaScene.unavailable'))
+    }
+    return
+  }
+  if (jobId) {
+    pending.job = { id: jobId, docId }
+    await followSceneStrip(pending)
+    return
+  }
+  const doc = docId ? await fetchSceneDocument(deviceId!, docId) : null
+  // Closed during the wait: no card is left to speak of.
+  if (!sceneStrips.value.some((s) => s.id === pending.id)) return
+  if (!doc) {
+    removeSceneStrip(pending.id)
+    platformVoice.value?.speak(t(docId ? 'resonaScene.unavailable' : 'resonaScene.inLibrary'))
+    return
+  }
+  settleSceneStrip(pending, doc)
+  platformVoice.value?.speak(t('resonaScene.duplicate'))
 }
 
 /**
  * Follow the card's analysis job to its end: the card settles into the
- * document, or goes, and the voice says the analysis did not complete.
+ * document, or goes, and the voice says why: the intake refused the
+ * document, or the analysis did not complete.
  * Polling is the jobs route's own contract, and it has no deadline: the card
  * once waited ten minutes and then went while the worker went on (2026-09-28).
  * A poll that does not come through is asked again; a job the server no
@@ -1964,8 +2052,18 @@ async function followSceneStrip(strip: BoardSceneStrip) {
       if (state.state === 'done') {
         const doc = await fetchSceneDocument(deviceId!, job.docId)
         if (stopped()) return
-        if (doc) settleSceneStrip(strip, doc)
-        else failSceneStrip(strip)
+        if (doc) {
+          settleSceneStrip(strip, doc)
+        } else {
+          // The summary stands, and this session may not read it: the level
+          // tightened while the job ran. The file coming in again is checked at it.
+          removeSceneStrip(strip.id)
+          platformVoice.value?.speak(t('resonaScene.unavailable'))
+        }
+        return
+      }
+      if (state.state === 'blocked') {
+        refuseSceneStrip(strip, state.block)
         return
       }
       if (state.state === 'error' || state.state === 'cancelled' || state.state === 'gone') {
@@ -1985,12 +2083,16 @@ function failSceneStrip(strip: BoardSceneStrip) {
   platformVoice.value?.speak(t('resonaScene.analysisFailed'))
 }
 
+/** The intake refused the document: the card goes, and the voice says why. */
+function refuseSceneStrip(strip: BoardSceneStrip, block?: SafetyBlock) {
+  removeSceneStrip(strip.id)
+  platformVoice.value?.speak(t(block ? sceneBlockKey(block) : 'resonaScene.rej.generic'))
+}
+
 /**
- * The line under a busy card's title: where its analysis stands. The upload
+ * The line under a busy card's title: where its summary stands. The upload
  * comes first, then the queue behind another document (the worker takes one
- * at a time), then the text recognition, then the units read and the
- * capsules kept; the pipeline stops at the capsule limit, which is why the
- * limit stands in the line.
+ * at a time), then the text recognition, then the sections condensed.
  */
 function sceneStatus(s: BoardSceneStrip): string {
   if (!s.uploading) return ''
@@ -1999,12 +2101,7 @@ function sceneStatus(s: BoardSceneStrip): string {
   if (j.state === 'queued') return t('resonaScene.progressQueued')
   const p = j.progress
   if (!p) return t('resonaScene.progressReading')
-  return t('resonaScene.progressUnits', {
-    done: p.unitsDone,
-    total: p.unitsTotal,
-    capsules: p.capsules,
-    max: p.capsulesMax,
-  })
+  return t('resonaScene.progressUnits', { done: p.unitsDone, total: p.unitsTotal })
 }
 
 /** The follow loops end with the page (`followSceneStrip`); the jobs do not. */
@@ -2059,10 +2156,7 @@ async function restoreSceneStrips() {
   saved.forEach((s, i) => {
     const place = { x: Number(s.x) || 60, y: Number(s.y) || 60, w: Number(s.w) || SCENE_STRIP_W, h: Number(s.h) || SCENE_STRIP_H }
     if (s.job?.id && s.job.docId) {
-      const strip = standSceneStrip(
-        { docId: '', title: String(s.title || ''), capsules: [], flagged: 0, discarded: 0, meta: {} },
-        place
-      )
+      const strip = standSceneStrip(emptySceneDocument(String(s.title || '')), place)
       strip.uploading = true
       strip.job = { id: String(s.job.id), docId: String(s.job.docId) }
       following.push(strip)
@@ -2098,26 +2192,10 @@ watch(
 )
 
 /**
- * Stand a strip on the board, once per document: on the free place nearest the
- * plus, like every other card the plus brings in (`landFromPlus`). A document
- * already standing there keeps its card and its place and only takes the
- * re-read version of itself.
+ * Stand a strip on the board: on the free place nearest the plus, like every
+ * other card the plus brings in (`landFromPlus`).
  */
 function addSceneStrip(doc: SceneDocument, uploading = false): BoardSceneStrip {
-  // A card still following this document's analysis counts as it too: it
-  // settles here, and its following ends with its job (`followSceneStrip`).
-  const known = doc.docId
-    ? sceneStrips.value.find(s => s.doc.docId === doc.docId || s.job?.docId === doc.docId)
-    : undefined
-  if (known) {
-    known.doc = doc
-    known.uploading = uploading
-    if (!uploading) {
-      known.job = undefined
-      known.jobState = undefined
-    }
-    return known
-  }
   const live = standSceneStrip(doc, { x: 60, y: 60, w: SCENE_STRIP_W, h: SCENE_STRIP_H })
   live.uploading = uploading
   // After it is in the list and before it is drawn: the placement reads the
@@ -2143,27 +2221,21 @@ function standSceneStrip(
 }
 
 /**
- * The analysed document takes over the card its analysis stood behind — same
- * card, same place, now with its capsules and no longer busy.
+ * The summarised document takes over the card its analysis stood behind — same
+ * card, same place, now with its summary and no longer busy. A document stands
+ * on the table once, so a card of the same document goes, and this one takes its
+ * place, because the ring goes by place: two uploads of one file can follow one
+ * job, and the same file in another language replaces the summary the older card
+ * shows.
  */
 function settleSceneStrip(strip: BoardSceneStrip, doc: SceneDocument) {
   strip.doc = doc
   strip.uploading = false
   strip.job = undefined
   strip.jobState = undefined
-}
-
-/** Re-read every strip's document from the session space. */
-async function refreshSceneStrips() {
-  const jid = deviceId
-  if (!jid) return
-  try {
-    const listed = await listSceneDocuments(jid)
-    const docs = await Promise.all(listed.map(l => fetchSceneDocument(jid, l.docId)))
-    for (const d of docs) if (d) addSceneStrip(d)
-  } catch (e) {
-    console.warn('[X2X] Scene document refresh failed (non-fatal):', e)
-  }
+  const older = sceneStrips.value.find((s) => s.id !== strip.id && s.doc.docId === doc.docId)
+  if (older) Object.assign(strip, { x: older.x, y: older.y, w: older.w, h: older.h })
+  sceneStrips.value = sceneStrips.value.filter((s) => s.id === strip.id || s.doc.docId !== doc.docId)
 }
 
 /** Take a whole strip off the board. The document space keeps it. */
@@ -2172,13 +2244,14 @@ function removeSceneStrip(id: string) {
 }
 
 /**
- * A capsule's prompt goes into a new text card on the canvas — the flow's
- * own prompt instrument.
+ * A section of a document goes into a new text card on the canvas — the flow's
+ * own prompt instrument. A run reads the document's profile; a section reaches
+ * a run this way.
  */
-function carryScenePrompt(prompt: string) {
+function carryScenePrompt(text: string) {
   const n = items.value.length
   const it = addText(60 + n * 18, 50 + n * 18)
-  it.text = prompt
+  it.text = text
   // Where a text from the plus lands (`bringText`): at a fixed place it lay
   // under whatever stood there, the strip it came from included.
   landFromPlus(it)
@@ -2325,14 +2398,11 @@ const { pickImage, onFilePick, onDrop, onArtifactDrag } = useMaterialIntake({
       if (manualMedium.value !== 'text') clearManualChoice()
     },
     reportSafetyBlocked: (r: QuickSafetyResult) =>
-      safetyStore.reportBlock(
-        'vlm_input',
-        r.errorMessage || t('safetyBlocked.inputImage'),
-        [],
-        r.vlmDescription,
+      safetyStore.reportBlock(r.block, {
+        vlmDescription: r.vlmDescription,
         // Whether the check judged the picture or could not run at all.
-        r.operational
-      ),
+        operational: r.operational,
+      }),
     reportSafetyAnalysis: (d: string) => safetyStore.reportAnalysis(d, true),
   },
 })
@@ -2976,8 +3046,6 @@ const configsByMedium: Record<MediumId, OutputConfig[]> = {
     { id: 'sd35_large', label: 'Stable\nDiffusion', description: 'Klassische Bildgenerierung' },
     { id: 'flux2', label: 'Flux 2', description: 'Hochwertige Bildgenerierung mit Flux 2 Dev' },
     { id: 'flux3', label: 'Flux 3\nKlein', description: 'FLUX 3 Image Klein (Black Forest Labs, 2026), without the prompt upsampler' },
-    { id: 'gemini_3_pro_image', label: 'Gemini 3\nPro (€)', description: 'Google Gemini 3 Pro via Mammouth AI (EU)' },
-    { id: 'gemini_nano_banana_2_1', label: 'Nano Banana\n2.1 (€)', description: 'Google Gemini Nano Banana 2.1 via Mammouth AI (EU)' },
   ],
   video: [
     { id: 'wan22_t2v_video_fast', label: 'Wan 2.2\n14B Fast', description: 'Schnelle 14B Videogenerierung (4 Steps)' },
@@ -3182,7 +3250,12 @@ watch(zone, () =>
 
 // --- Medium inference (ambient, from the assemblage text) ---
 const interceptionResult = ref('')
-const inferenceText = computed(() => interceptionResult.value || effCombinedText.value)
+// Written words only: the medium follows what someone asked for, and the word
+// "film" in the summary of a report does not ask for a film. The text of a run
+// that read a document carries that document's words, so it decides nothing.
+const inferenceText = computed(() =>
+  effDocTexts.value.length ? effWrittenText.value : interceptionResult.value || effWrittenText.value
+)
 const { media: inferredMedia, primary: inferredPrimary } = useMediumInference(inferenceText)
 
 // A changed chain — swapped, reordered or rewritten — voids the last
@@ -3465,10 +3538,13 @@ const readMaterialAsPrompt = computed(() => {
  * the ring that the route discards is read.
  *
  * One formula covers every route: a picture past the count the model takes (0
- * for a text-only model such as p5.js, 1 for i2i, 3 for the fusion), and any
- * sound or video no composition consumes. The marker lives only inside the
- * zone; material lying outside is left alone, it merely lies ready. A reading
- * run takes everything as it is, so it marks nothing.
+ * for a text-only model such as p5.js, 1 for i2i, up to ten for the multi-image
+ * route), and any sound or video no composition consumes. The marker lives only
+ * inside the zone; material lying outside is left alone, it merely lies ready.
+ * The one exception is a board read with an empty ring: a route that takes
+ * pictures has taken the first ones there, and the rest would go nowhere with
+ * nothing saying so. A reading run takes everything as it is, so it marks
+ * nothing.
  */
 const readIntoWordsIds = computed<Set<string>>(() => {
   if (!willGenerate.value) return new Set<string>()
@@ -3486,7 +3562,9 @@ const readIntoWordsIds = computed<Set<string>>(() => {
   effVideoItems.value.forEach((it, i) => {
     if (!(plan && i === 0 && plan.ready.video)) s.add(it.id)
   })
-  return new Set([...s].filter((id) => zoneItemIds.value.has(id)))
+  const marked = new Set([...s].filter((id) => zoneItemIds.value.has(id)))
+  if (cap > 0) effImageItems.value.slice(cap).forEach((it) => marked.add(it.id))
+  return marked
 })
 
 /** Those same pieces, in board order: what the run hands to the reading. */
@@ -3513,6 +3591,23 @@ const resolvedConfigLabel = computed(() => labelForConfig(resolvedConfigId.value
 /** How many pieces of material the next run would read. */
 const readCount = computed(
   () => effImageItems.value.length + effAudioItems.value.length + effVideoItems.value.length
+)
+/**
+ * The runs that read no document: a reading chosen by hand, which takes the
+ * pictures, sounds and videos, a song from two texts, which takes those two, and
+ * a video laid under a sound, which only joins the two. The cards stay where they
+ * lie and carry the same "?" as the words above. The lens reads none either, and
+ * stands outside this: it is a press of its own, and the "?" speaks of the next
+ * start.
+ */
+const docsPassedOver = computed(
+  () =>
+    (manualMedium.value === 'text' && readCount.value >= 1) ||
+    (route.value.outputConfigId === HEARTMULA && !!musicRoles.value) ||
+    composition.value?.generate === null
+)
+const surplusStripIds = computed<Set<string>>(() =>
+  docsPassedOver.value ? new Set(effDocStrips.value.map((s) => s.id)) : new Set<string>()
 )
 /**
  * Whether the next run makes a medium at all. Material alone in the circle is
@@ -3750,10 +3845,20 @@ function printItem(it: AsmItem) {
 function printInspected() {
   if (inspected.value) printItem(inspected.value)
 }
-/** Save the piece: the file at its served address, or a sketch as the text it is. */
+/**
+ * Save the piece: the file at its served address. A sketch is saved as the
+ * run's own file, which carries the AI-origin disclosure in its header; the
+ * text on the card is the model's answer as it came, without it. A sketch with
+ * no run has only that text, and its name says so (`_ai_generated`).
+ */
 function downloadItem(it: AsmItem) {
   if (it.kind === 'code') {
-    downloadBlob(new Blob([it.text || ''], { type: 'text/javascript' }), `sketch_${it.runId || it.id}.js`)
+    const name = `sketch_${it.runId || it.id}.js`
+    if (it.runId) {
+      void downloadMedia(`/api/media/${it.codeKind === 'tonejs' ? 'tonejs' : 'p5'}/${it.runId}`, name)
+    } else {
+      downloadBlob(new Blob([it.text || ''], { type: 'text/javascript' }), unmarkedName(name))
+    }
     return
   }
   if (!it.src) return
@@ -3772,9 +3877,13 @@ function downloadInspected() {
 /**
  * Which runs on the board carry a star. `isFavorited` walks the whole list, and
  * the back of every card asks it twice per render — the board renders again on
- * every frame of a pan, so the walk has to come down to one lookup.
+ * every frame of a pan, so the walk has to come down to one lookup. It holds
+ * what `isFavorited` holds: the runs kept by whoever asks (`may_change`), never
+ * the favourites of others that the "All" view lists.
  */
-const favRunIds = computed(() => new Set(favStore.favorites.map((f) => f.run_id)))
+const favRunIds = computed(() => new Set(
+  favStore.favorites.filter((f) => f.may_change === true).map((f) => f.run_id)
+))
 function backFor(it: AsmItem): MediaBack | null {
   if (it.source) return { source: it.source }
   if (!it.meta && !it.runId) return null
@@ -3825,6 +3934,7 @@ const {
   encodingInfo,
   genStep,
   genTotalSteps,
+  genPhaseName,
   queuePosition,
   queueWaitS,
   deviceBusy,
@@ -3908,13 +4018,13 @@ onBeforeUnmount(() => document.removeEventListener('visibilitychange', onWindowV
 
 const interceptionActive = ref(false)
 const safetyState = ref<'idle' | 'running' | 'passed' | 'blocked'>('idle')
-const blockedReason = ref('')
 /**
- * WHERE the run was stopped — 'vlm_input', 'vlm_safety', or a stage number.
- * Without it a picture the platform refused reads as a refused prompt, and the
- * box tells the reader to reword what was never the subject.
+ * The block message of the run that was stopped: where, on which text, and
+ * why. Its checkpoint keeps a picture the platform refused from reading as a
+ * refused prompt — the box would tell the reader to reword what was never the
+ * subject.
  */
-const blockedStage = ref<string | number | null>(null)
+const blockMessage = ref<SafetyBlock | null>(null)
 const generationErrorMessage = ref('')
 /**
  * What a run that did not come back says. Three refs, one face:
@@ -4221,9 +4331,10 @@ const activeTarget = computed<NodeId | null>(() => {
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'x2x_flow',
   pageDescription:
-    'Der x2x-Fluss. Oben stehen drei Knoten nebeneinander: der erste Knoten (die sechs Medienzeichen Bild, Video, Klang, 3D, Code und Text, und das aufgelöste Modell; Text ist das eine Medium, das nicht erschlossen, sondern nur gewählt wird, und bedeutet, dass der Lauf das Material liest, statt etwas zu machen), Generieren (führt die Verwandlung aus und zeigt Prüfung, Fortschritt und Fehler) und Ausgabe (zeigt das fertige Medium). Der lange Druck liegt auf jedem der sechs Medienzeichen und öffnet die Modelle, die für dieses Medium eingetragen sind; bei Text stehen dort die fünf Deutungsrahmen statt eines Modells. In den Listen von Bild und Video stehen zusätzlich die Wege, die ein Bild als Eingang nehmen und dafür ein oder zwei Bilder auf dem Tisch verlangen. Ein Modell, das die Verfügbarkeitsabfrage als abwesend meldet, steht in der Liste und bleibt unwählbar. Sobald von Hand gewählt wurde, steht „auto" obenan in jeder dieser Listen und gibt die Wahl zurück; ein über Dateiwahl oder Ablegen hereingeholtes Bild gibt sie ebenfalls zurück, außer bei gewähltem Text, und eine Skizze gibt sie in jedem Fall zurück. Fehlen einer Hand-Wahl hier die Voraussetzungen — etwa ein Weg, der zwei Bilder verlangt, bei einem Bild auf dem Tisch —, tritt die automatische an ihre Stelle, und der Generieren-Knoten sagt im Ruhezustand, welche genommen wurde; 3D allein bleibt bestehen, weil es dorthin keinen zweiten Weg gibt: dann macht der Lauf zuerst das Bild und daraus das Gitter. Während der Generieren-Knoten läuft, zeigt er die Position in der Warteschlange, meist samt geschätzter Wartezeit, die Zahl der Schritte des Modells, den Fortschritt in Prozent und den Verbrauch, den die Grafikkarte währenddessen meldet, in Watt und Wattstunden, aufgeklappt zusätzlich in Gramm CO₂ — bei einem auswärtigen Dienst steht dort, dass es dafür keine Zahlen gibt, und bei Kompositionsläufen bleibt die Anzeige leer. Solange er aufgeklappt ist und ein lokales Bildmodell läuft, sagt er außerdem, dass die Wörter zu Zahlen werden, und bei einem zu langen Prompt, wie viele davon CLIP nie erreichen. Den Schritt von n zeigt der Ausgabe-Knoten. Ein langer Druck auf den Generieren-Knoten hält einen laufenden Lauf an. Darunter liegt der Tisch, verschieb- und zoombar, auf dem das Material frei liegt. Auf dem Tisch liegt ein grünes Plus; ein Klick darauf fächert die vier Wege auf, Material hereinzuholen — Text, Bild, Skizze, Dokument —, und was dabei entsteht, fällt dorthin, wo das Plus steht; das Plus selbst lässt sich verschieben. Ein Klick auf eine Bildkarte zeigt sie in voller Größe, ein langer Druck dreht sie auf ihre Rückseite; bei Klang und Video führt der Doppelklick zur vollen Größe, während der einfache Klick den Spieler bedient, und eine Quellenkarte öffnet mit einem Klick gleich ihre Rückseite. Eine Skizze öffnet sich zum Lesen, Ändern und erneuten Laufenlassen. Ein hereingeholtes Bild wird auf seinen Inhalt geprüft; ob eine Datei sich selbst als KI-erzeugt ausweist, steht auf der Rückseite der Karten, die aus einem Lauf dieser Plattform stammen. Was in der Zone liegt und beim Weg zum Modell übrig bleibt, wird für diesen Lauf in Worte gelesen und trägt dafür ein Zeichen; bei einem lesenden Lauf trägt überzähliger Text das Zeichen, dass er ungenutzt bleibt. Ergebnisse lassen sich herunterladen, Bilder auch drucken; Klang und Video lassen sich von der Ausgabe auf den Tisch ziehen, die übrigen fallen am Ende des Laufs von selbst dorthin. Sobald Material in der Zone liegt — dem Kreis auf dem Tisch —, liest der nächste Lauf nur die Zone; eine leere Zone liest den ganzen Tisch. Liegt Bild, Klang oder Video dort, steht neben der Zone eine Lupe: sie liest, was gerade gilt, statt etwas zu machen — ein Stück wird beschrieben, zwei werden verglichen, mehr werden nacheinander gelesen und aneinandergehängt; die Lupe liest ohne Perspektive, auch wenn eine im Kreis liegt. Ein pulsendes Zeichen auf dem Tisch öffnet die Perspektiven; eine Perspektive in der Zone wird im erzeugenden Lauf auf das angewendet, was aus dem Material an Worten geworden ist, mehrere nacheinander in der Reihenfolge, in der sie hineingelegt wurden. Eine Perspektive lässt sich auch selbst schreiben: ein Klick auf ihre Blase öffnet sie zum Lesen und Ändern, und wer angemeldet ist, legt sie unter einem Namen im eigenen Konto ab; eine bereits eigene lässt sich zusätzlich als zweite daneben stellen. Ein Lauf hält fest, welche Perspektive ihn eröffnet hat, und erkennt daran die eigene. Während der Prompt Interception kann eine Perspektive in Wikipedia nachschlagen; was sie fand, liegt danach als eigene Karte auf dem Tisch, die vorn das Wikipedia-Zeichen und den Suchbegriff trägt und auf der Rückseite Sprache, Grund des Nachschlagens, Artikel und Anfangs-Zusammenfassung. Medium und Modell werden aus dem Material erschlossen, nicht ausgewählt; eine Wahl von Hand überschreibt das und wird gehalten. Ein drittes Zeichen auf dem Tisch, ein biegsames Netz über einem starren Gitter, öffnet die LoRAs: Adapter, die über einem Bildmodell aus einer Reihe von Bildern trainiert sind und dessen Ausgabe in Richtung dieser Bilder verschieben, sobald ihr Trigger-Wort im Prompt steht. Angeboten wird, was das Register dieser Sitzung freigibt, in bis zu drei Gruppen: die der Plattform, die des Kurses und die eigenen Trainings; ist nichts freigegeben, sagt die Auswahl das. Das gewählte LoRA liegt als Kachel auf dem Tisch; liegt es in der Zone, lädt der nächste Lauf, der ein Bild macht, es unter dem Modell, das es trägt: die Automatik wählt dieses Modell (heute für jedes LoRA im Register Stable Diffusion 3.5 Large), der Knoten mit den Medienzeichen zeigt neben dem Modell das Netz, der Server stellt das Trigger-Wort dem Prompt voran, wo der Prompt es noch nicht trägt, und die Rückseite der fertigen Karte nennt unter „LoRA“ den Adapter mit seiner Stärke. Ein Klick auf die Kachel öffnet ihre Stärke, 50 bis 100 Prozent der trainierten, voreingestellt 80, daneben Trigger und tragende Modelle; das × entfernt sie. Eine Wahl von Hand bleibt stehen: kann das gewählte Modell das LoRA nicht laden, oder macht der Lauf kein Bild, bleibt die Kachel liegen und trägt das Fragezeichen „für diese Generierung nicht verwendet“; nichts wird unwählbar. Die Perspektive „Cooked Film“ bringt einen eigenen Adapter mit und trägt dafür das Netz an ihrer Blase; unter einem Modell, das ihn nicht trägt, dasselbe Fragezeichen. Welche LoRAs angeboten werden, steht im LoRA-Register der Einstellungen (Admin): Datei, Name, Trigger, tragende Modelle, Freigabe an die Plattform, an einen Kurs oder an niemanden; ein Training von der Seite LoRA Training wird dort eingetragen, bevor es irgendwo angeboten wird.',
+    'Der x2x-Fluss. Oben stehen drei Knoten nebeneinander: der erste Knoten (die sechs Medienzeichen Bild, Video, Klang, 3D, Code und Text, und das aufgelöste Modell; Text ist das eine Medium, das nicht erschlossen, sondern nur gewählt wird, und bedeutet, dass der Lauf das Material liest, statt etwas zu machen), Generieren (führt die Verwandlung aus und zeigt Prüfung, Fortschritt und Fehler) und Ausgabe (zeigt das fertige Medium). Der lange Druck liegt auf jedem der sechs Medienzeichen und öffnet die Modelle, die für dieses Medium eingetragen sind; bei Text stehen dort die fünf Deutungsrahmen statt eines Modells. In den Listen von Bild und Video stehen zusätzlich die Wege, die ein Bild als Eingang nehmen und dafür ein oder zwei Bilder auf dem Tisch verlangen. Ein Modell, das die Verfügbarkeitsabfrage als abwesend meldet, steht in der Liste und bleibt unwählbar. Sobald von Hand gewählt wurde, steht „auto" obenan in jeder dieser Listen und gibt die Wahl zurück; ein über Dateiwahl oder Ablegen hereingeholtes Bild gibt sie ebenfalls zurück, außer bei gewähltem Text, und eine Skizze gibt sie in jedem Fall zurück. Fehlen einer Hand-Wahl hier die Voraussetzungen — etwa ein Weg, der zwei Bilder verlangt, bei einem Bild auf dem Tisch —, tritt die automatische an ihre Stelle, und der Generieren-Knoten sagt im Ruhezustand, welche genommen wurde; 3D allein bleibt bestehen, weil es dorthin keinen zweiten Weg gibt: dann macht der Lauf zuerst das Bild und daraus das Gitter. Während der Generieren-Knoten läuft, zeigt er die Position in der Warteschlange, meist samt geschätzter Wartezeit, die Zahl der Schritte des Modells, den Fortschritt in Prozent und den Verbrauch, den die Grafikkarte währenddessen meldet, in Watt und Wattstunden, aufgeklappt zusätzlich in Gramm CO₂ — bei einem auswärtigen Dienst steht dort, dass es dafür keine Zahlen gibt, und bei Kompositionsläufen bleibt die Anzeige leer. Solange er aufgeklappt ist und ein lokales Bildmodell läuft, sagt er außerdem, dass die Wörter zu Zahlen werden, und bei einem zu langen Prompt, wie viele davon CLIP nie erreichen. Den Schritt von n zeigt der Ausgabe-Knoten. Ein langer Druck auf den Generieren-Knoten hält einen laufenden Lauf an. Darunter liegt der Tisch, verschieb- und zoombar, auf dem das Material frei liegt. Auf dem Tisch liegt ein grünes Plus; ein Klick darauf fächert die vier Wege auf, Material hereinzuholen — Text, Bild, Skizze, Dokument —, und was dabei entsteht, fällt dorthin, wo das Plus steht; das Plus selbst lässt sich verschieben. Ein Klick auf eine Bildkarte zeigt sie in voller Größe, ein langer Druck dreht sie auf ihre Rückseite; bei Klang und Video führt der Doppelklick zur vollen Größe, während der einfache Klick den Spieler bedient, und eine Quellenkarte öffnet mit einem Klick gleich ihre Rückseite. Eine Skizze öffnet sich zum Lesen, Ändern und erneuten Laufenlassen. Ein hereingeholtes Bild wird auf seinen Inhalt geprüft; ob eine Datei sich selbst als KI-erzeugt ausweist, steht auf der Rückseite der Karten, die aus einem Lauf dieser Plattform stammen. Was in der Zone liegt und beim Weg zum Modell übrig bleibt, wird für diesen Lauf in Worte gelesen und trägt dafür ein Zeichen; bei einem lesenden Lauf trägt überzähliger Text das Zeichen, dass er ungenutzt bleibt. Ergebnisse lassen sich herunterladen, Bilder auch drucken; Klang und Video lassen sich von der Ausgabe auf den Tisch ziehen, die übrigen fallen am Ende des Laufs von selbst dorthin. Sobald Material in der Zone liegt — dem Kreis auf dem Tisch —, liest der nächste Lauf nur die Zone; eine leere Zone liest den ganzen Tisch. Liegt Bild, Klang oder Video dort, steht neben der Zone eine Lupe: sie liest, was gerade gilt, statt etwas zu machen — ein Stück wird beschrieben, zwei werden verglichen, mehr werden nacheinander gelesen und aneinandergehängt; die Lupe liest ohne Perspektive, auch wenn eine im Kreis liegt. Ein Dokument (PDF) fasst die Plattform zusammen; die Karte zeigt Profil, Abschnitte und Glossar, und ein Lauf liest von ihr das Profil, nach dem geschriebenen Text. Solange die Zusammenfassung einer Karte läuft, die ein Lauf lesen würde, lässt er sich nicht starten. Der Knopf unter einem geöffneten Abschnitt legt diesen als eigene Textkarte auf den Tisch. Ein von Hand gewählter lesender Lauf über Bild, Klang oder Video, ein Song aus zwei Texten und das Zusammenlegen von Video und Klang gehen an den Dokumenten vorbei; die Karte trägt dann dasselbe Zeichen wie überzähliger Text. Auch die Lupe liest keine Dokumente. Eine Datei, die die Plattform in derselben Sprache schon zusammengefasst hat, erkennt sie wieder: die Karte zeigt die vorhandene Zusammenfassung, geprüft auf der Stufe dieser Sitzung. Eine Datei, die nur die Wissensbibliothek kennt, geht wieder vom Tisch, und die Stimme sagt, warum. Ein pulsendes Zeichen auf dem Tisch öffnet die Perspektiven; eine Perspektive in der Zone wird im erzeugenden Lauf auf das angewendet, was aus dem Material an Worten geworden ist, mehrere nacheinander in der Reihenfolge, in der sie hineingelegt wurden. Eine Perspektive lässt sich auch selbst schreiben: ein Klick auf ihre Blase öffnet sie zum Lesen und Ändern, und wer angemeldet ist, legt sie unter einem Namen im eigenen Konto ab; eine bereits eigene lässt sich zusätzlich als zweite daneben stellen. Ein Lauf hält fest, welche Perspektive ihn eröffnet hat, und erkennt daran die eigene. Während der Prompt Interception kann eine Perspektive in Wikipedia nachschlagen; was sie fand, liegt danach als eigene Karte auf dem Tisch, die vorn das Wikipedia-Zeichen und den Suchbegriff trägt und auf der Rückseite Sprache, Grund des Nachschlagens, Artikel und Anfangs-Zusammenfassung. Medium und Modell werden aus dem Material erschlossen, nicht ausgewählt; eine Wahl von Hand überschreibt das und wird gehalten. Ein drittes Zeichen auf dem Tisch, ein biegsames Netz über einem starren Gitter, öffnet die LoRAs: Adapter, die über einem Bildmodell aus einer Reihe von Bildern trainiert sind und dessen Ausgabe in Richtung dieser Bilder verschieben, sobald ihr Trigger-Wort im Prompt steht. Angeboten wird, was das Register dieser Sitzung freigibt, in bis zu drei Gruppen: die der Plattform, die des Kurses und die eigenen Trainings; ist nichts freigegeben, sagt die Auswahl das. Das gewählte LoRA liegt als Kachel auf dem Tisch; liegt es in der Zone, lädt der nächste Lauf, der ein Bild macht, es unter dem Modell, das es trägt: die Automatik wählt dieses Modell (heute für jedes LoRA im Register Stable Diffusion 3.5 Large), der Knoten mit den Medienzeichen zeigt neben dem Modell das Netz, der Server stellt das Trigger-Wort dem Prompt voran, wo der Prompt es noch nicht trägt, und die Rückseite der fertigen Karte nennt unter „LoRA“ den Adapter mit seiner Stärke. Ein Klick auf die Kachel öffnet ihre Stärke, 50 bis 100 Prozent der trainierten, voreingestellt 80, daneben Trigger und tragende Modelle; das × entfernt sie. Eine Wahl von Hand bleibt stehen: kann das gewählte Modell das LoRA nicht laden, oder macht der Lauf kein Bild, bleibt die Kachel liegen und trägt das Fragezeichen „für diese Generierung nicht verwendet“; nichts wird unwählbar. Die Perspektive „Cooked Film“ bringt einen eigenen Adapter mit und trägt dafür das Netz an ihrer Blase; unter einem Modell, das ihn nicht trägt, dasselbe Fragezeichen. Welche LoRAs angeboten werden, steht im LoRA-Register der Einstellungen (Admin): Datei, Name, Trigger, tragende Modelle, Freigabe an die Plattform, an einen Kurs oder an niemanden; ein Training von der Seite LoRA Training wird dort eingetragen, bevor es irgendwo angeboten wird.',
   pageContent: {
-    inputText: effCombinedText.value,
+    // What is written. The chat takes this without the run's check.
+    inputText: effWrittenText.value,
     interceptionResult: interceptionResult.value,
     selectedCategory: activeMedium.value,
     // Empty, not the UI word: this is the config slot, and a reading uses none.
@@ -4396,15 +4507,15 @@ function runInterceptionStep(
       done = true
       es.close()
       openInterceptions.delete(drop)
-      let reason = ''
+      let block: SafetyBlock | null = null
       try {
-        reason = JSON.parse((ev as MessageEvent).data).reason || ''
+        block = safetyBlockOf(JSON.parse((ev as MessageEvent).data))
       } catch {
         /* ignore */
       }
       feed?.stop()
       closeStationCard(card, false)
-      reject({ blocked: true, reason })
+      reject({ blocked: true, block })
     })
     es.onerror = () => {
       if (done) return
@@ -4480,6 +4591,7 @@ watch([currentSeed, previousPrompt, previousConfig], ([seed, prompt, cfg]) => {
 const ringSig = computed(() =>
   JSON.stringify({
     words: effTextItems.value.map((i) => [i.station || '', (i.text || '').trim()]),
+    documents: effDocTexts.value,
     images: effImageItems.value.map((i) => [i.id, i.path || '']),
     audio: effAudioItems.value.map((i) => i.id),
     video: effVideoItems.value.map((i) => i.id),
@@ -4653,9 +4765,12 @@ watch(
 // generate node that lets go of a running run ------------------------------
 type ImageArgs = {
   input_image?: string
-  input_image1?: string
-  input_image2?: string
-  input_image3?: string
+  /** input_image1, input_image2, ...: a multi-image run's pictures, in order. */
+  [multiImage: `input_image${number}`]: string | undefined
+}
+/** The pictures of a multi-image run, under the numbers the backend reads. */
+function multiImageArgs(paths: string[]): ImageArgs {
+  return Object.fromEntries(paths.map((path, i) => [`input_image${i + 1}`, path]))
 }
 type RunHandoff = {
   /**
@@ -4716,8 +4831,7 @@ watch(
     // A refused run judges the board too, and holds the box exactly as an error
     // does. Left standing it hides the reason the NEXT run cannot start.
     safetyState.value = 'idle'
-    blockedReason.value = ''
-    blockedStage.value = null
+    blockMessage.value = null
   }
 )
 
@@ -4751,9 +4865,9 @@ const runCaption = computed(() => {
     return t('x2xFlow.runCapGenerate', { medium: mediumLabel(activeMedium.value) })
   // A box from an earlier run lies in the ring: the press takes the chain up
   // where that box stands, and says so.
-  if (zoneStation.value === 'adaption')
+  if (zoneResume.value === 'adaption')
     return t('x2xFlow.runCapGenerate', { medium: mediumLabel(activeMedium.value) })
-  if (zoneStation.value === 'interception')
+  if (zoneResume.value === 'interception')
     return t('x2xFlow.runCapAdapt', { medium: mediumLabel(activeMedium.value) })
   // The interception holds; a model picked since asks the adaption for it.
   if (written) return t('x2xFlow.runCapAdapt', { medium: mediumLabel(activeMedium.value) })
@@ -5011,9 +5125,14 @@ function readHalves(j: any): { clip: string; t5: string } | null {
  * The caption for the text that is actually going. Asked of the same adaption
  * that wrote the first one, so it is made the same way — only from the edited
  * text this time. Empty when this text has no two-part form: then it goes on
- * its own, and the model reads it whole.
+ * its own, and the model reads it whole. Where the server refused the text or
+ * withheld the caption, the block message comes back with it, and the run
+ * stops on it.
  */
-async function recaption(longForm: string, cfg: string): Promise<string> {
+async function recaption(
+  longForm: string,
+  cfg: string
+): Promise<{ clip: string; block?: SafetyBlock }> {
   try {
     // Streamed, not awaited in one silent POST: a cloud model writes this
     // caption, and where it answers per encoder a second call fits the long
@@ -5025,18 +5144,27 @@ async function recaption(longForm: string, cfg: string): Promise<string> {
       input_text: longForm,
       output_config: cfg,
     }, { validateStatus: () => true })
-    return readHalves(res.data)?.clip || ''
+    const block = res.status === 403 ? safetyBlockOf(res.data) : null
+    if (block) return { clip: '', block }
+    return { clip: readHalves(res.data)?.clip || '' }
   } catch {
-    return ''
+    return { clip: '' }
   }
 }
 /** Every consumed piece is analyzed by its modality model, labeled in table order. */
 /**
- * One picture, read — through a frame when one is in force. Empty when nothing
- * came back. Both readings go through here: the one over the ring, and the one
- * over a picture the flow has just made for itself.
+ * One picture, read — through a frame when one is in force. The text is empty
+ * when nothing came back. `block` is the block message where the platform's
+ * checks refused the picture or what was read of it: that is no failure to
+ * read, and the caller stops the run on it and says so. Both readings go
+ * through here: the one over the ring, and the one over a picture the flow has
+ * just made for itself.
  */
-async function readOneImage(path: string, lang?: string, frame = ''): Promise<string> {
+async function readOneImage(
+  path: string,
+  lang?: string,
+  frame = ''
+): Promise<{ text: string; block: SafetyBlock | null }> {
   try {
     // Streamed, not awaited in one silent POST: a vision model has to be loaded
     // before it can look and may stand in the card's queue first, and the edge
@@ -5049,11 +5177,16 @@ async function readOneImage(path: string, lang?: string, frame = ''): Promise<st
       ...(frame ? { frame } : {}),
     }, { validateStatus: () => true })
     const j = res.data
-    return j?.success && typeof j.analysis === 'string' ? j.analysis.trim() : ''
+    const block = res.status === 403 ? safetyBlockOf(j) : null
+    if (block) return { text: '', block }
+    return {
+      text: j?.success && typeof j.analysis === 'string' ? j.analysis.trim() : '',
+      block: null,
+    }
   } catch {
     // Empty means "not read", and every caller already says that out loud. An
     // exception here would leave runGenerate through the back door instead.
-    return ''
+    return { text: '', block: null }
   }
 }
 
@@ -5061,6 +5194,8 @@ async function readOneImage(path: string, lang?: string, frame = ''): Promise<st
  * The intercepted text is a stance, not yet a media prompt: the output config's
  * own adaption instruction reformulates it for the model, and without this step
  * the generation never carries the perspective. THE one place that asks for it.
+ * Where the model's maker ships the model that writes the adaption, that one
+ * reads the pictures as well, so they go along.
  *
  * It throws no box for itself: what it writes is a caption for one encoder,
  * and the text a person works with is the interception's, which lies on the
@@ -5070,7 +5205,9 @@ async function readOneImage(path: string, lang?: string, frame = ''): Promise<st
  *
  * Returns null only when the run is no longer this page's; the caller stops
  * then. An adaption that failed comes back with an empty prompt, and the stance
- * text goes as it stands.
+ * text goes as it stands. One the server refused, at the intake or at the
+ * result, comes back with its block message, and the run stops on it: going on
+ * with the stance text would put another text in the place of the one withheld.
  */
 async function adaptFor(
   text: string,
@@ -5079,14 +5216,25 @@ async function adaptFor(
   // The picture this model will be handed. False where there is none to hand —
   // and false for the intermediate picture a 3d run makes for itself, which is
   // asked of a text-to-image model precisely because no picture exists yet.
-  onPicture = false
+  onPicture = false,
+  images: ImageArgs = {}
 ): Promise<{
   prompt: string
   halves: { clip: string; t5: string } | null
   /** The intercepted text as it was shortened, where it had to be. */
   condensed: string
+  /** The block message, where the server refused the adaption. */
+  block?: SafetyBlock
+  /** An adaption that reads the pictures gave no caption: the run ends here. */
+  failure?: { raw: string; kind?: GenerationErrorType; busy?: BusyNote; imageGone?: boolean }
 } | null> {
   adapting.value = true
+  const readsPictures = Object.keys(images).length > 0
+  // This adaption holds the card; Stop closes its stream, and the server ends
+  // the prompt with its reader.
+  const leave = new AbortController()
+  const drop = () => leave.abort()
+  openInterceptions.add(drop)
   try {
     // Streamed, for the reason recaption gives — and this one is asked for on
     // EVERY run, so the 100 seconds stood between every generation and its
@@ -5095,9 +5243,12 @@ async function adaptFor(
       input_text: text,
       output_config: cfg,
       ...(onPicture ? { has_input_image: true } : {}),
-    }, { validateStatus: () => true })
+      ...images,
+    }, { validateStatus: () => true, signal: leave.signal })
     const j = res.data
     if (!live(token)) return null
+    const block = res.status === 403 ? safetyBlockOf(j) : null
+    if (block) return { prompt: '', halves: null, condensed: '', block }
     if (typeof j?.model === 'string') adaptionModel.value = j.model
     condensedTokens.value =
       j?.shortened_to_window === true && typeof j.condensed_tokens === 'number'
@@ -5132,10 +5283,24 @@ async function adaptFor(
       j?.success && typeof j.optimized_prompt === 'string' && j.optimized_prompt.trim()
         ? j.optimized_prompt.trim()
         : ''
-    return { prompt: p, halves: readHalves(j), condensed }
-  } catch {
-    return { prompt: '', halves: null, condensed: '' }
+    // No body at all: what answered stands in front of this server.
+    const kind = j?.code === 'gpu_busy' ? 'busy' : j ? undefined : 'offline'
+    const failure =
+      readsPictures && !p
+        ? {
+            raw: typeof j?.error === 'string' ? j.error : `HTTP ${res.status}`,
+            kind: kind as GenerationErrorType | undefined,
+            busy: j?.code === 'gpu_busy' ? (j.busy as BusyNote) : undefined,
+            ...(j?.code === 'image_gone' ? { imageGone: true } : {}),
+          }
+        : null
+    return { prompt: p, halves: readHalves(j), condensed, ...(failure ? { failure } : {}) }
+  } catch (e: any) {
+    if (!live(token)) return null
+    const failure = readsPictures ? { raw: e?.message || '' } : null
+    return { prompt: '', halves: null, condensed: '', ...(failure ? { failure } : {}) }
   } finally {
+    openInterceptions.delete(drop)
     if (live(token)) adapting.value = false
   }
 }
@@ -5144,8 +5309,13 @@ async function adaptFor(
 async function readMade(path: string, frame: string, token: number) {
   analyzing.value = true
   try {
-    const text = await readOneImage(path, undefined, frame)
+    const { text, block } = await readOneImage(path, undefined, frame)
     if (!live(token)) return
+    if (block) {
+      safetyState.value = 'blocked'
+      blockMessage.value = block
+      return
+    }
     if (text) fallText(text)
     else generationErrorMessage.value = t('x2xFlow.errAnalyze')
   } finally {
@@ -5163,14 +5333,22 @@ async function analyzeEffectiveMedia(
   // reads exactly what its route leaves over (readIntoWordsItems). Left out,
   // everything effective in the ring is read.
   only?: { images: AsmItem[]; audio: AsmItem[]; video: AsmItem[] }
-): Promise<{ label: string; text: string }[]> {
+): Promise<{ parts: { label: string; text: string }[]; block: SafetyBlock | null }> {
+  // A piece the platform's checks refused ends the reading there, with its
+  // block message: the run stops on it rather than going on without it.
   const parts: { label: string; text: string }[] = []
-  const srcs = (only ? only.images : effImageItems.value)
-    .map((i) => i.path)
-    .filter(Boolean) as string[]
-  for (let i = 0; i < srcs.length; i++) {
-    const text = await readOneImage(srcs[i]!, lang, frame)
-    if (text) parts.push({ label: `Image ${i + 1}`, text })
+  // Numbered by the picture's place in the material: a picture read here must
+  // not carry the number of one that goes to the model as a reference.
+  const all = effImageItems.value
+  const toRead = (only ? only.images : all)
+    .filter((it) => it.path)
+    .map((it) => ({ path: it.path!, place: all.indexOf(it) + 1 }))
+  const token = genRun
+  for (const { path, place } of toRead) {
+    if (!live(token)) break
+    const { text, block } = await readOneImage(path, lang, frame)
+    if (block) return { parts, block }
+    if (text) parts.push({ label: `Image ${place}`, text })
   }
   const avKinds: ['audio' | 'video', AsmItem[]][] = [
     ['audio', only ? only.audio : effAudioItems.value],
@@ -5178,6 +5356,7 @@ async function analyzeEffectiveMedia(
   ]
   for (const [kind, list] of avKinds) {
     for (let i = 0; i < list.length; i++) {
+      if (!live(token)) return { parts, block: null }
       const runId = list[i]?.runId
       if (!runId) continue
       // Streamed, for the reason readOneImage gives: the listening model is
@@ -5186,13 +5365,15 @@ async function analyzeEffectiveMedia(
         run_id: runId, kind, ...(lang ? { lang } : {}),
       }, { validateStatus: () => true })
       const j = res.data
+      const block = res.status === 403 ? safetyBlockOf(j) : null
+      if (block) return { parts, block }
       if (j?.success && typeof j.analysis === 'string' && j.analysis.trim()) {
         const cap = kind === 'audio' ? 'Audio' : 'Video'
         parts.push({ label: `${cap} ${i + 1}`, text: j.analysis.trim() })
       }
     }
   }
-  return parts
+  return { parts, block: null }
 }
 
 function joinAnalyses(parts: { label: string; text: string }[]): string {
@@ -5261,11 +5442,9 @@ async function runAnalysisOnly() {
   // after another, and calling that a comparison would name something the run
   // does not do.
   readingLabel.value = t(readCount.value === 2 ? 'x2xFlow.readsTwo' : 'x2xFlow.readsOne')
-  blockedReason.value = ''
-  blockedStage.value = null
+  blockMessage.value = null
   safetyState.value = 'idle'
   analyzing.value = true
-  startEnergy()
   try {
     const single =
       effImageItems.value.length +
@@ -5279,15 +5458,25 @@ async function runAnalysisOnly() {
     // instance language. A framed prompt already writes in it, so asking again
     // would send the text through a model a second time, for nothing, and let
     // it change on the way.
-    const parts = await analyzeEffectiveMedia(single && !frame ? 'system' : undefined, frame)
+    const { parts, block } = await analyzeEffectiveMedia(
+      single && !frame ? 'system' : undefined,
+      frame
+    )
     if (!live(token)) return
+    if (block) {
+      safetyState.value = 'blocked'
+      blockMessage.value = block
+      return
+    }
     if (!parts.length) {
       generationErrorMessage.value = t('x2xFlow.errAnalyze')
       return
     }
     let text = joinAnalyses(parts)
     if (parts.length === 2) {
-      // A failed comparison still leaves both readings on the table.
+      // A failed comparison still leaves both readings on the table. A refused
+      // one stops the run, as every refusal does, and nothing falls.
+      let refused: SafetyBlock | null = null
       try {
         // Streamed, for the reason readOneImage gives: one model call with
         // two whole readings in the prompt, and a translation after it.
@@ -5295,13 +5484,19 @@ async function runAnalysisOnly() {
           parts, lang: 'system', ...(frame ? { frame } : {}),
         }, { validateStatus: () => true })
         const j = res.data
-        if (j?.success && typeof j.comparison === 'string' && j.comparison.trim()) {
+        refused = res.status === 403 ? safetyBlockOf(j) : null
+        if (!refused && j?.success && typeof j.comparison === 'string' && j.comparison.trim()) {
           text = j.comparison.trim()
         }
       } catch {
         /* keep the joined analyses */
       }
       if (!live(token)) return
+      if (refused) {
+        safetyState.value = 'blocked'
+        blockMessage.value = refused
+        return
+      }
     }
     fallText(text)
   } finally {
@@ -5338,85 +5533,88 @@ const genExpanded = computed(
 
 /**
  * The last two moments, named where they happen: the steps push the noise
- * toward the words, then the decoder turns the numbers into pixels. Only the
- * diffusers backend reports steps — elsewhere this line stays empty.
+ * toward the words, then the decoder turns the numbers into pixels. The
+ * diffusers backend and the samplers of a ComfyUI run report steps; a backend
+ * that reports none leaves this line empty.
  */
 const outPhase = computed(() => {
-  if (currentStage.value !== 'stage4' || genTotalSteps.value <= 0) return ''
-  return genStep.value >= genTotalSteps.value
-    ? t('x2xFlow.outDecode', { medium: mediumLabel(activeMedium.value) })
-    : t('x2xFlow.outStep', { k: genStep.value, n: genTotalSteps.value })
+  if (runPhase.value === 'decode') return t('x2xFlow.outDecode', { medium: mediumLabel(activeMedium.value) })
+  if (runPhase.value === 'denoise' && genStep.value > 0 && genTotalSteps.value > 0) {
+    return t('x2xFlow.outStep', { k: genStep.value, n: genTotalSteps.value })
+  }
+  return ''
 })
 const genRect = computed<FlowRect>(() => (genExpanded.value ? GEN_WIDE : RMAP.gen))
 /**
- * The card's own figures, read live from nvidia-smi while a run is on it. The
- * attribution is deliberately modest: this is what the card draws right now,
- * not what this run alone costs — the box is shared, and a cloud step draws
- * nothing here at all. Formulas are the platform's own (useAnimationProgress,
- * resona_hardware): Wh/s = W / 3600, g CO2 = Wh / 1000 * 400 (German grid).
+ * The numbers this generation runs with, as the run's sheet carries them
+ * (devserver/my_app/services/model_meta.py): the seed, the guidance scale and
+ * the step count, one entry each so a narrow box wraps between them. Shown
+ * while the generation runs and after it, until the next run begins its
+ * language steps; a reading generates nothing and has none. A backend that
+ * takes no seed sends none (model_meta.takes_no_seed).
  */
-const CO2_PER_KWH_GRAMS = 400
-const gpuWatts = ref<number | null>(null)
-const runWh = ref(0)
-let energyTimer: ReturnType<typeof setInterval> | null = null
-let energyLast = 0
-
-async function pollEnergy() {
-  try {
-    const res = await fetch('/api/settings/gpu-realtime')
-    const j = await res.json()
-    const now = Date.now()
-    const dt = Math.max(0, (now - energyLast) / 1000)
-    energyLast = now
-    if (j?.available && typeof j.power_draw_watts === 'number' && j.power_draw_watts > 0) {
-      gpuWatts.value = j.power_draw_watts
-      runWh.value += (j.power_draw_watts * dt) / 3600
-    } else {
-      gpuWatts.value = null
-    }
-  } catch {
-    gpuWatts.value = null
+const runParams = computed<string[]>(() => {
+  const mm = modelMeta.value as Record<string, any> | null
+  if (!mm || readingRun.value) return []
+  const stage = currentStage.value
+  if (stage !== 'stage4' && stage !== 'complete') return []
+  if (analyzing.value || interceptionActive.value || adapting.value) return []
+  const parts: string[] = []
+  if (mm.seed !== undefined && mm.seed !== null) parts.push(t('x2xFlow.runSeed', { n: String(mm.seed) }))
+  if (typeof mm.cfg === 'number') {
+    parts.push(t('x2xFlow.runCfg', { n: new Intl.NumberFormat(locale.value).format(mm.cfg) }))
   }
-}
-function startEnergy() {
-  runWh.value = 0
-  gpuWatts.value = null
-  energyLast = Date.now()
-  if (energyTimer) return
-  void pollEnergy()
-  energyTimer = setInterval(() => void pollEnergy(), 2000)
-}
-function stopEnergy() {
-  if (energyTimer) clearInterval(energyTimer)
-  energyTimer = null
-}
-onBeforeUnmount(stopEnergy)
-// A run that has come to rest stops the meter; the last figures stay readable.
-// This sits here, not up beside canRun: watch() reads its source once during
-// setup, and `busy` reaches forward to refs declared further down.
-watch(busy, (b) => {
-  if (!b) stopEnergy()
+  if (runStepsText.value) parts.push(runStepsText.value)
+  return parts
 })
-
-const runCo2 = computed(() => (runWh.value / 1000) * CO2_PER_KWH_GRAMS)
-const energyLine = computed(() =>
-  gpuWatts.value === null
-    ? ''
-    : t('x2xFlow.runEnergy', {
-        w: Math.round(gpuWatts.value),
-        wh: runWh.value.toFixed(2),
-        co2: runCo2.value.toFixed(2),
-      })
-)
-/** The same reading for the small card, where a sentence would crowd it out. */
-const energyShort = computed(() =>
-  gpuWatts.value === null
-    ? ''
-    : t('x2xFlow.runEnergyShort', {
-        w: Math.round(gpuWatts.value),
-        wh: runWh.value.toFixed(2),
-      })
-)
+const runStepsText = computed(() => {
+  const n = (modelMeta.value as Record<string, any> | null)?.steps
+  return typeof n === 'number' ? t('x2xFlow.runSteps', { n }) : ''
+})
+/**
+ * The same numbers on the small box, without the step count: the box holds
+ * five lines, and with the stamp for a translated prompt a line for the steps
+ * cut the phase line off while the run went and took the prompt's last line
+ * after it. The phase line counts the steps while the sampler runs; the run
+ * panel names them.
+ */
+const cardParams = computed(() => runParams.value.filter((p) => p !== runStepsText.value))
+/**
+ * Where in the generation the card is. A ComfyUI run names it by the node
+ * executing, 'other' while none is named. The diffusers backend names nothing
+ * until it is done, and there the step count tells two phases apart: steps
+ * under way are the sampling, the last step reached is the VAE. Before the
+ * first step it loads, encodes and applies LoRAs at once, and no line names
+ * one of them.
+ */
+const runPhase = computed(() => {
+  if (currentStage.value !== 'stage4') return ''
+  if (genPhaseName.value) return genPhaseName.value
+  if (genTotalSteps.value <= 0 || genStep.value <= 0) return ''
+  return genStep.value >= genTotalSteps.value ? 'decode' : 'denoise'
+})
+const runPhaseLine = computed(() => {
+  switch (runPhase.value) {
+    case 'load':
+      return t('x2xFlow.phaseLoad')
+    case 'encode':
+      return t('x2xFlow.phaseEncode')
+    case 'encode_images':
+      return t('x2xFlow.phaseEncodeImages')
+    case 'encode_image':
+      return t('x2xFlow.phaseEncodeImage')
+    case 'denoise':
+      return genStep.value > 0 && genTotalSteps.value > 0
+        ? t('x2xFlow.phaseDenoiseStep', { k: genStep.value, n: genTotalSteps.value })
+        : t('x2xFlow.phaseDenoise')
+    case 'decode':
+      return t('x2xFlow.phaseDecode')
+    case 'save':
+      return t('x2xFlow.phaseSave')
+    default:
+      return ''
+  }
+})
 
 /**
  * Which model ran a step, and where it ran. The reading itself is the
@@ -5428,35 +5626,14 @@ const energyShort = computed(() =>
 function modelLine(m: string): string {
   return sharedModelLine(m, t)
 }
-/** The step running right now — a cloud step means the card here measures nothing. */
-const liveModel = computed(() => {
-  if (analyzing.value) return ''
-  if (interceptionActive.value) return interceptionModel.value
-  if (adapting.value) return adaptionModel.value
-  return adaptionModel.value || interceptionModel.value
-})
-/**
- * Where the step now running happens. Stage 4 is its own question: the language
- * steps before it may have run at a provider, but the picture is made by the
- * backend the output config names — and all of those except the two API image
- * backends run on this machine.
- */
-const CLOUD_MEDIA_BACKENDS = ['openai', 'mammouth', 'anthropic', 'google', 'gemini']
-const liveIsCloud = computed(() => {
-  if (currentStage.value === 'stage4') {
-    const m = modelMeta.value as Record<string, any> | null
-    const b = String(m?.backend_type || m?.backend || '').toLowerCase()
-    return CLOUD_MEDIA_BACKENDS.includes(b)
-  }
-  return !!liveModel.value && !liveModel.value.startsWith('local/')
-})
 
 const materialLine = computed(() => {
   const parts: string[] = []
   const add = (key: string, n: number) => {
     if (n > 0) parts.push(`${t(key)} ${n}`)
   }
-  add('x2xFlow.runKindText', effTextItems.value.length)
+  const docs = docsPassedOver.value || readingRun.value ? 0 : effDocTexts.value.length
+  add('x2xFlow.runKindText', effTextItems.value.length + docs)
   add('x2xFlow.runKindImage', effImageItems.value.length)
   add('x2xFlow.runKindSound', effAudioItems.value.length)
   add('x2xFlow.runKindVideo', effVideoItems.value.length)
@@ -5581,8 +5758,7 @@ const runStations = computed<RunStation[]>(() => {
   }
   const mm = modelMeta.value
   const made: string[] = [resolveModelName(mm, runningConfigId.value || undefined)]
-  if (mm?.steps) made.push(t('x2xFlow.runSteps', { n: mm.steps }))
-  if (mm?.seed !== undefined && mm?.seed !== null) made.push(`seed ${mm.seed}`)
+  made.push(...runParams.value)
   out.push({
     id: 'make',
     label: t('x2xFlow.runMake'),
@@ -5626,8 +5802,7 @@ async function runReading() {
  * start a run here.
  */
 function clearLastRun() {
-  blockedReason.value = ''
-  blockedStage.value = null
+  blockMessage.value = null
   mediaUrl.value = ''
   mediaType.value = ''
   meshThumb.value = ''
@@ -5725,7 +5900,7 @@ async function runGenerate() {
   // A fresh reading makes that impossible: the words going forward are no
   // longer the ones the box is evidence of, and new words go through the whole
   // chain, checks included, rather than around it.
-  const resume = readsLeftover ? null : zoneStation.value
+  const resume = readsLeftover ? null : zoneResume.value
   // The same objects, unchanged, since the chain last wrote: the chain is not
   // asked again. The interception holds, and the adaption holds where it was
   // written for the model this press goes to (see ChainWritten).
@@ -5746,7 +5921,6 @@ async function runGenerate() {
   // interception's text implies. Until then the stations read the live route.
   runningConfigId.value = ''
   materialWasRead.value = again === null && (mediaOnly || readsLeftover)
-  startEnergy()
 
   if (again === null && (mediaOnly || readsLeftover)) {
     analyzing.value = true
@@ -5755,9 +5929,19 @@ async function runGenerate() {
       // reading covers exactly the pieces the route leaves over, and its words
       // go in front of the written ones, so what lies in the ring takes part in
       // the run. A piece that stays unread stops the run rather than falling
-      // out of it: the marker on it promised a reading.
-      const parts = await analyzeEffectiveMedia(undefined, '', readsLeftover ? leftover : undefined)
+      // out of it: the marker on it promised a reading. A refused piece stops
+      // it with its block message.
+      const { parts, block } = await analyzeEffectiveMedia(
+        undefined,
+        '',
+        readsLeftover ? leftover : undefined
+      )
       if (!live(token)) return
+      if (block) {
+        safetyState.value = 'blocked'
+        blockMessage.value = block
+        return
+      }
       if (!parts.length) {
         generationErrorMessage.value = t('x2xFlow.errAnalyze')
         return
@@ -5794,8 +5978,7 @@ async function runGenerate() {
       interceptionActive.value = false
       if (e && e.blocked) {
         safetyState.value = 'blocked'
-        blockedReason.value = e.reason || ''
-        blockedStage.value = e.stage ?? e.blocked_stage ?? null
+        blockMessage.value = e.block ?? null
       } else {
         generationErrorMessage.value = t('x2xFlow.errNoMedia')
       }
@@ -5851,9 +6034,7 @@ async function runGenerate() {
   if (r.imageParam === 'single' && imgs[0]) {
     imageArgs.input_image = imgs[0]
   } else if (r.imageParam === 'multi') {
-    if (imgs[0]) imageArgs.input_image1 = imgs[0]
-    if (imgs[1]) imageArgs.input_image2 = imgs[1]
-    if (imgs[2]) imageArgs.input_image3 = imgs[2]
+    Object.assign(imageArgs, multiImageArgs(imgs))
   }
 
   let finalPrompt = transformed || prompt
@@ -5873,9 +6054,14 @@ async function runGenerate() {
     halves = ad.halves
   } else if (resume === 'adaption') {
     adapting.value = true
-    const cap = await recaption(finalPrompt, cfg)
+    const { clip: cap, block: refused } = await recaption(finalPrompt, cfg)
     adapting.value = false
     if (!live(token)) return
+    if (refused) {
+      safetyState.value = 'blocked'
+      blockMessage.value = refused
+      return
+    }
     if (!moved) keepAdapted(cfg, '', finalPrompt, cap ? { clip: cap, t5: finalPrompt } : null, finalPrompt)
     await sendRun(
       {
@@ -5893,9 +6079,28 @@ async function runGenerate() {
       cap
     )
     return
-  } else if (transformed.trim()) {
-    const a = await adaptFor(transformed, cfg, token, r.maxImages > 0)
+  } else if (transformed.trim() || imageInputRoute(cfg)?.adaptionReadsPictures) {
+    const a = await adaptFor(
+      transformed.trim() ? transformed : prompt,
+      cfg,
+      token,
+      r.maxImages > 0,
+      imageInputRoute(cfg)?.adaptionReadsPictures ? imageArgs : {}
+    )
     if (!live(token)) return
+    if (a?.block) {
+      safetyState.value = 'blocked'
+      blockMessage.value = a.block
+      return
+    }
+    if (a?.failure?.imageGone) {
+      generationErrorMessage.value = t('x2xFlow.errImageFailed')
+      return
+    }
+    if (a?.failure) {
+      failRun(a.failure.raw, a.failure.kind, a.failure.busy)
+      return
+    }
     if (a) {
       if (a.prompt) {
         finalPrompt = a.prompt
@@ -5919,7 +6124,10 @@ async function runGenerate() {
   // on every press and never draw a fresh seed. Gone on with, the yardstick is
   // the one the run that wrote the prompt had — the same prompt again.
   const seedKey = ad ? ad.seedKey : resume === 'interception' ? transformed : ''
-  if (adapted && !ad && !moved) keepAdapted(cfg, transformed, finalPrompt, halves, seedKey)
+  // An interception that came back empty wrote no memory of this ring, so what
+  // stands there is another ring's and takes no adaption of this one.
+  if (adapted && !ad && !moved && transformed.trim())
+    keepAdapted(cfg, transformed, finalPrompt, halves, seedKey)
   await sendRun(
     {
       seedKey,
@@ -6050,12 +6258,7 @@ async function finishRun(
   // that makes a picture needs none, so this cannot recurse further.
   const need = imageInputRoute(cfg)?.minImages ?? 0
   if (need > 0) {
-    const madeIn = [
-      imageArgs.input_image,
-      imageArgs.input_image1,
-      imageArgs.input_image2,
-      imageArgs.input_image3,
-    ].filter(Boolean) as string[]
+    const madeIn = Object.values(imageArgs).filter(Boolean) as string[]
     const had = madeIn.length
     if (had < need) {
       provisioning.value = true
@@ -6073,6 +6276,11 @@ async function finishRun(
         if (transformed.trim()) {
           const a = await adaptFor(transformed, imgCfg, token)
           if (!live(token)) return ''
+          if (a?.block) {
+            safetyState.value = 'blocked'
+            blockMessage.value = a.block
+            return ''
+          }
           if (a?.prompt) seedPrompt = a.prompt
         }
         for (let i = had; i < need; i++) {
@@ -6106,9 +6314,7 @@ async function finishRun(
       }
       imageArgs = { ...imageArgs }
       if (imageInputRoute(cfg)?.imageParam === 'multi') {
-        if (madeIn[0]) imageArgs.input_image1 = madeIn[0]
-        if (madeIn[1]) imageArgs.input_image2 = madeIn[1]
-        if (madeIn[2]) imageArgs.input_image3 = madeIn[2]
+        Object.assign(imageArgs, multiImageArgs(madeIn))
       } else if (madeIn[0]) {
         imageArgs.input_image = madeIn[0]
       }
@@ -6214,8 +6420,7 @@ async function finishRun(
       }
     } else if (result.status === 'blocked') {
       safetyState.value = 'blocked'
-      blockedReason.value = result.blocked_reason || ''
-      blockedStage.value = result.blocked_stage ?? null
+      blockMessage.value = result.safety_block ?? null
       // Refused, these words are not a prompt the next press goes on with: it
       // asks the chain again, as every press did before the memory existed. A
       // memory this run did not go on with is another ring's, and stands.
@@ -6263,7 +6468,6 @@ async function runMusic(roles: { lyrics: string; style: string }) {
   runningConfigId.value = HEARTMULA
   // A song reads no material.
   materialWasRead.value = false
-  startEnergy()
   interceptionActive.value = true
 
   let lyrics = roles.lyrics
@@ -6276,8 +6480,7 @@ async function runMusic(roles: { lyrics: string; style: string }) {
     interceptionActive.value = false
     if (e && e.blocked) {
       safetyState.value = 'blocked'
-      blockedReason.value = e.reason || ''
-      blockedStage.value = e.stage ?? e.blocked_stage ?? null
+      blockMessage.value = e.block ?? null
     } else {
       generationErrorMessage.value = t('x2xFlow.errNoMedia')
     }
@@ -6315,8 +6518,7 @@ async function runCompose(
   // keeps that run's number; asked for on its own, it is a run of its own.
   token: number = beginRun()
 ) {
-  blockedReason.value = ''
-  blockedStage.value = null
+  blockMessage.value = null
   // Cleared at the START, the way the two other run functions clear it, and not
   // only where this one succeeds. A judgement stands until the next run or the
   // next change to the board answers it (the watch above `onGenClick`), so a
@@ -6475,6 +6677,8 @@ onBeforeUnmount(endStopHold)
    is. It reads in the same grey as the box's other notes. */
 .gi-act { color: #9a9a9a; }
 .gi-note { color: #9a9a9a; }
+/* One line, always: the box counts on it (cardParams). */
+.gi-phase { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gi-body { flex: 1; min-height: 0; margin-top: 2px; font-size: var(--flow-fs-sub); line-height: 1.35; color: rgba(255, 255, 255, 0.62); overflow: hidden; display: -webkit-box; -webkit-line-clamp: var(--gi-lines, 3); -webkit-box-orient: vertical; }
 /* .gi-body stands last and sets a colour of its own, and one class weighs as
    much as another: a body that is a note or an error was drawn in the ordinary
@@ -6496,8 +6700,6 @@ onBeforeUnmount(endStopHold)
 /* The panel is FlowRunPanel's. What stays here is what goes INTO its foot:
    this page's live energy figures, which are slot content and therefore this
    page's scope. */
-.gr-e { font-size: var(--flow-fs-hint); color: #9fd3a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gr-e.off { color: #7a7a7a; }
 
 .gi-bar { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
 .gi-fill { height: 100%; background: #4a9eff; border-radius: 2px; transition: width 0.2s; }
@@ -6585,7 +6787,8 @@ onBeforeUnmount(endStopHold)
 .zone-read:hover { background: rgba(255, 255, 255, 0.3); color: #fff; }
 .zone-read svg { width: 11px; height: 11px; }
 /* Material the zone holds is visibly the material being read. */
-.asm-item.inzone { outline: 1px solid rgba(255, 255, 255, 0.18); outline-offset: 2px; }
+.asm-item.inzone,
+.doc-card.inzone { outline: 1px solid rgba(255, 255, 255, 0.18); outline-offset: 2px; }
 
 /* The perspective picker: boxless, pulsing, movable. */
 .persp { position: absolute; z-index: 6; display: flex; padding: 0; border: none; background: transparent; color: #FFB300; cursor: pointer; filter: drop-shadow(0 0 4px rgba(255, 179, 0, 0.6)); animation: preset-pulse 3.2s ease-in-out infinite; touch-action: none; }

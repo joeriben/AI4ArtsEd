@@ -17,6 +17,7 @@ from my_app.services.llm_providers import (
 )
 from config import JSON_STORAGE_DIR, LORA_TRIGGERS, COMFYUI_MAX_QUEUE_DEPTH, COMFYUI_TIMEOUT
 from schemas.engine.progress_callback import get_progress_callback
+from schemas.engine.multi_image_params import MULTI_IMAGE_KEYS
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ def _find_entity_by_type(entities: list, media_type: str) -> dict:
     return None
 
 
-def _resolve_media_url_to_path(url_or_path: str) -> str:
+def _resolve_media_url_to_path(url_or_path: str, level) -> str:
     """
     Resolve media URL to filesystem path.
 
@@ -42,6 +43,10 @@ def _resolve_media_url_to_path(url_or_path: str) -> str:
     - /api/media/image/<run_id>/<index>
 
     Resolves to actual file path. Otherwise returns the input unchanged.
+
+    `level` is the level of whoever started the run (the executor sets it in
+    every chunk's parameters): a picture delivery would not hand to that level
+    does not come back in as the source of the next generation either.
     """
     if url_or_path.startswith('/api/media/image/'):
         path_part = url_or_path.replace('/api/media/image/', '')
@@ -59,7 +64,7 @@ def _resolve_media_url_to_path(url_or_path: str) -> str:
                     # as the SOURCE of the next generation either — what is made
                     # from it carries it forward, and the new run's own record
                     # says nothing about where its input came from.
-                    resolved_path = str(recorder.checked_entity_path(image_entity))
+                    resolved_path = str(recorder.checked_entity_path(image_entity, level))
                     logger.info(f"[URL-RESOLVE] {url_or_path} → {resolved_path}")
                     return resolved_path
         except SafetyRefusal:
@@ -101,6 +106,24 @@ def _adapt_workflow_for_multi_image(workflow: Dict[str, Any], parameters: Dict[s
     if dropped_inputs:
         logger.info(f"[MULTI-IMAGE-ADAPT] Dropped unused inputs: {', '.join(dropped_inputs)}")
     return workflow
+
+
+def _shown_text(outputs: Optional[Dict[str, Any]], node_id: Any) -> str:
+    """What a node showed as text, off a run's /history outputs."""
+    shown = ((outputs or {}).get(str(node_id)) or {}).get('text')
+    text = shown[0] if isinstance(shown, list) and shown else shown
+    return text.strip() if isinstance(text, str) else ''
+
+
+def _completion_timeout(workflow: Dict[str, Any], parameters: Dict[str, Any]) -> Optional[int]:
+    """How long a legacy workflow may take.
+
+    A language model in the workflow writes until it stops, and a ceiling on
+    that is the hard read timeout rule 5 forbids: None, as llm_client.py passes.
+    """
+    if any(node.get('class_type') == 'TextGenerate' for node in workflow.values()):
+        return None
+    return parameters.get('timeout', COMFYUI_TIMEOUT)
 
 
 class BackendType(Enum):
@@ -155,6 +178,14 @@ class BackendResponse:
     success: bool
     content: str
     error: Optional[str] = None
+    # A successful output chunk that runs a model answers with `model_used` in
+    # here: the model the output was generated with, named the way the backend
+    # that ran it names it (the files a ComfyUI workflow loads,
+    # comfyui_ws_client.models_in_workflow; the repository id the GPU service
+    # loads from; the model an API request names). The card, the media entries
+    # of the run record and the AI-Origin Disclosure name the model by it, and
+    # devserver/tests/test_model_used_coverage.py holds every output config to
+    # it, with the runs that load none named there.
     metadata: Optional[Dict[str, Any]] = None
 
 
@@ -191,6 +222,20 @@ async def _queue_refusal(client, what: str):
                                "waiting": queue_depth}},
         ), queue_depth
     return None, queue_depth
+
+
+def _busy_answer(e) -> BackendResponse:
+    """A refusal of the gate as a chunk's answer. WHICH busy it was travels beside
+    the sentence, and the gate's own words stay the message."""
+    return BackendResponse(
+        success=False,
+        content="",
+        error=str(e),
+        metadata={"busy": {"reason": e.reason,
+                           "holder_kind": e.holder_kind,
+                           "waiting": e.waiting}},
+    )
+
 
 class BackendRouter:
     """Router für verschiedene KI-Backends"""
@@ -609,6 +654,9 @@ class BackendRouter:
                 return await self._process_api_output_chunk(chunk_name, text_prompt, parameters, chunk)
             elif chunk_type == 'text_passthrough':
                 logger.info(f"[ROUTER] Using text passthrough for '{chunk_name}'")
+                # No model runs here, so there is no `model_used`: the text was
+                # written by the Adaption, in a request of its own
+                # (test_model_used_coverage.py names the exception).
                 return BackendResponse(
                     success=True,
                     content=text_prompt,
@@ -747,7 +795,7 @@ class BackendRouter:
                     'media_files': [f.data for f in media],
                     'outputs_metadata': [{'filename': f.filename, 'type': f.media_type, 'node_id': f.node_id} for f in media],
                     'seed': seed,
-                    'model': model,
+                    'model_used': result.model_used,
                     'parameters': {
                         'width': width,
                         'height': height,
@@ -945,6 +993,7 @@ class BackendRouter:
                 ],
                 'seed': generated_seed,
                 'workflow_completed': True,
+                'model_used': result.model_used,
             }
             if latent_b64:
                 # The same two keys the Diffusers sink fills, read by
@@ -959,9 +1008,13 @@ class BackendRouter:
             )
 
         except Exception as e:
-            logger.error(f"Error processing workflow chunk '{chunk_name}': {e}")
-            import traceback
-            traceback.print_exc()
+            from my_app.services.generation_abort import current_run_aborted
+            if current_run_aborted():
+                logger.info(f"Workflow chunk '{chunk_name}' ended with its run: {e}")
+            else:
+                logger.error(f"Error processing workflow chunk '{chunk_name}': {e}")
+                import traceback
+                traceback.print_exc()
             return BackendResponse(
                 success=False,
                 content="",
@@ -970,6 +1023,7 @@ class BackendRouter:
 
     async def _process_legacy_workflow(self, chunk: Dict[str, Any], prompt: str, parameters: Dict[str, Any]) -> BackendResponse:
         """Process legacy workflow: Complete workflow passthrough with title-based prompt injection."""
+        from my_app.services.gpu_lease_client import GpuBusyError
         try:
             chunk_name = chunk.get('name', 'unknown')
             media_type = chunk.get('media_type', 'image')
@@ -977,6 +1031,24 @@ class BackendRouter:
             logger.info(f"[LEGACY-WORKFLOW] Processing legacy workflow: {chunk_name}")
             logger.info(f"[DEBUG-PROMPT] Received prompt parameter: '{prompt[:200]}...'" if prompt else f"[DEBUG-PROMPT] Prompt is EMPTY or None: {repr(prompt)}")
             logger.info(f"[DEBUG-PROMPT] Received parameters: {list(parameters.keys())}")
+
+            # A chunk's language-model steps (llm_steps) run before the check
+            # before the model, on the route that runs the chunk
+            # (my_app/services/chunk_llm_steps.py), and their results arrive
+            # here as parameters. A path that did not run them would submit the
+            # empty texts the graph holds in their place.
+            not_written = [step.get('writes') for step in chunk.get('llm_steps') or []
+                           if parameters.get(step.get('writes')) is None]
+            if not_written:
+                logger.error(f"[LEGACY-WORKFLOW] {chunk_name}: the steps that write "
+                             f"{not_written} did not run")
+                return BackendResponse(
+                    success=False,
+                    content="",
+                    error=(f"{chunk_name} writes {', '.join(map(str, not_written))} "
+                           f"with a language model before the safety check, and this "
+                           f"path did not run those steps, so nothing was generated.")
+                )
 
             # Get workflow from chunk (deepcopy: chunk is cached, concurrent
             # requests would mutate the same dict via input_mappings)
@@ -1016,8 +1088,8 @@ class BackendRouter:
             await self._handle_legacy_image_uploads(workflow, input_mappings, parameters)
 
             # Handle multi-image uploads
-            multi_image_keys = ['input_image1', 'input_image2', 'input_image3']
-            has_multi_image = any(key in input_mappings for key in multi_image_keys)
+            multi_image_keys = [key for key in MULTI_IMAGE_KEYS if key in input_mappings]
+            has_multi_image = bool(multi_image_keys)
 
             if input_mappings and has_multi_image:
                 await self._handle_legacy_multi_image_uploads(
@@ -1050,9 +1122,59 @@ class BackendRouter:
             if refusal is not None:
                 return refusal
 
-            timeout = parameters.get('timeout', COMFYUI_TIMEOUT)
+            timeout = _completion_timeout(workflow, parameters)
 
-            result = await client.submit_and_track(workflow, timeout=timeout, on_progress=get_progress_callback())
+            output_mapping = chunk.get('output_mapping') or {}
+            answers_in_words = output_mapping.get('output_type') == 'text'
+            progress = get_progress_callback()
+            submitted: Dict[str, str] = {}
+
+            def _noting_the_prompt(ev):
+                if getattr(ev, "event_type", None) == "submitted":
+                    submitted["prompt_id"] = ev.prompt_id
+                if progress is not None:
+                    progress(ev)
+
+            try:
+                result = await client.submit_and_track(
+                    workflow, timeout=timeout,
+                    on_progress=_noting_the_prompt if answers_in_words else progress)
+            finally:
+                # Left in /history, a run in words stays readable with no login
+                # until ComfyUI restarts, as llm_client says of its own runs: its
+                # input and the pictures' names stand there, and the caption
+                # describes the pictures. Best effort: a prompt stopped mid-run
+                # can reach the history after this call, and a DevServer that
+                # dies mid-run never makes it.
+                if submitted.get("prompt_id"):
+                    await client.forget_prompt(submitted["prompt_id"])
+
+            # A chunk that answers in words: what its output node showed is the
+            # answer, and a run that showed nothing has not answered.
+            if answers_in_words:
+                node_id = output_mapping.get('node_id')
+                text = _shown_text(result.outputs_metadata, node_id)
+                if not text:
+                    return BackendResponse(
+                        success=False,
+                        content="",
+                        error=(f"{chunk_name}: node {node_id} showed no text"
+                               if result.outputs_metadata
+                               else f"{chunk_name}: the outputs of the run could not be read")
+                    )
+                return BackendResponse(
+                    success=True,
+                    content=text,
+                    metadata={
+                        'chunk_name': chunk_name,
+                        'media_type': media_type,
+                        'prompt_id': result.prompt_id,
+                        'legacy_workflow': True,
+                        # A language model loaded through CLIPLoader is no name
+                        # models_in_workflow gives, so the chunk says it.
+                        'model_used': result.model_used or chunk.get('meta', {}).get('display_name', ''),
+                    }
+                )
 
             # No legacy workflow keeps a latent today. The split stands here
             # anyway: the day one does, a latent handed on as a picture is a
@@ -1070,6 +1192,7 @@ class BackendRouter:
                     'media_type': media_type,
                     'prompt_id': result.prompt_id,
                     'legacy_workflow': True,
+                    'model_used': result.model_used,
                     **({'latent_data': latent_b64,
                         'latent_meta': latent_meta} if latent_b64 else {}),
                     'media_files': [f.data for f in media],
@@ -1082,10 +1205,17 @@ class BackendRouter:
                 }
             )
 
+        except GpuBusyError as e:
+            logger.info(f"[LEGACY-WORKFLOW] Card busy ({e.reason}): {e}")
+            return _busy_answer(e)
         except Exception as e:
-            logger.error(f"[LEGACY-WORKFLOW] Error: {e}")
-            import traceback
-            traceback.print_exc()
+            from my_app.services.generation_abort import current_run_aborted
+            if current_run_aborted():
+                logger.info(f"[LEGACY-WORKFLOW] Ended with its run: {e}")
+            else:
+                logger.error(f"[LEGACY-WORKFLOW] Error: {e}")
+                import traceback
+                traceback.print_exc()
             return BackendResponse(
                 success=False,
                 content="",
@@ -1100,7 +1230,8 @@ class BackendRouter:
             return
 
         image_mapping = input_mappings['input_image']
-        source_path = _resolve_media_url_to_path(parameters['input_image'])
+        source_path = _resolve_media_url_to_path(parameters['input_image'],
+                                                 parameters.get('safety_level'))
         source_file = Path(source_path)
 
         from my_app.services.comfyui_ws_client import get_comfyui_ws_client
@@ -1127,7 +1258,7 @@ class BackendRouter:
         self, workflow: Dict[str, Any], input_mappings: Dict[str, Any],
         parameters: Dict[str, Any], multi_image_keys: List[str]
     ):
-        """Handle multi-image uploads (input_image1/2/3)."""
+        """Handle multi-image uploads (input_image1, input_image2, ...)."""
         from my_app.services.comfyui_ws_client import get_comfyui_ws_client
 
         logger.info("[LEGACY-WORKFLOW] Multi-image upload via ComfyUI WS client...")
@@ -1141,7 +1272,8 @@ class BackendRouter:
                 continue
 
             image_mapping = input_mappings[image_key]
-            source_path = _resolve_media_url_to_path(parameters[image_key])
+            source_path = _resolve_media_url_to_path(parameters[image_key],
+                                                     parameters.get('safety_level'))
             source_file = Path(source_path)
 
             try:
@@ -1259,7 +1391,10 @@ class BackendRouter:
                                     'chunk_name': chunk_name,
                                     'media_type': chunk['media_type'],
                                     'provider': api_config['provider'],
-                                    'model': api_config['model'],
+                                    # What the request named, after the input
+                                    # mappings: gpt_image_1 maps a `model`
+                                    # parameter over the chunk's own.
+                                    'model_used': request_body.get('model'),
                                     'media_url': media_url,
                                     'async_job': True
                                 }
@@ -1288,7 +1423,7 @@ class BackendRouter:
                                     error_msg = f"Content safety filter: API refused image generation (finish_reason={finish_reason})"
                                     logger.error(f"[CONTENT-SAFETY] {error_msg}")
                                 elif empty_result_list and usage.get('output_tokens') == 0:
-                                    # Multimodal chat models served through an images endpoint (Gemini 3 Pro Image)
+                                    # Multimodal chat models served through an images endpoint (Gemini 3 Pro Image, removed 2026-11-04)
                                     # answer story-shaped prompts with TEXT. The endpoint adapter drops that text and
                                     # returns an empty result list with zero image tokens. Not a safety rejection.
                                     error_msg = ("The model returned text instead of an image. "
@@ -1310,7 +1445,7 @@ class BackendRouter:
                                     'chunk_name': chunk_name,
                                     'media_type': chunk['media_type'],
                                     'provider': api_config['provider'],
-                                    'model': api_config['model'],
+                                    'model_used': request_body.get('model'),
                                     'image_data': image_data
                                 }
                             )
@@ -1709,7 +1844,9 @@ class BackendRouter:
                     }
                 )
 
-            # Result should be bytes (audio/image/video data)
+            # Result should be bytes (audio/image/video data). Bytes carry no
+            # `model_used`: the chunk of every output config returns a dict
+            # (test_model_used_coverage.py).
             if not isinstance(result, bytes):
                 logger.warning(f"[PYTHON-CHUNK] execute() returned {type(result)}, expected bytes")
                 # Try to convert if it's a string path
@@ -1786,14 +1923,7 @@ class BackendRouter:
             # stay the message, without the "chunk execution failed" dressing —
             # they are what the hover shows.
             logger.info(f"[PYTHON-CHUNK] Card busy ({e.reason}): {e}")
-            return BackendResponse(
-                success=False,
-                content="",
-                error=str(e),
-                metadata={"busy": {"reason": e.reason,
-                                   "holder_kind": e.holder_kind,
-                                   "waiting": e.waiting}},
-            )
+            return _busy_answer(e)
         except TypeError as e:
             # Parameter mismatch
             logger.error(f"[PYTHON-CHUNK] Parameter mismatch: {e}")

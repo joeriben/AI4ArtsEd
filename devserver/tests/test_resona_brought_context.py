@@ -221,15 +221,15 @@ def test_brought_captions_cold_cap_and_cache(monkeypatch):
             calls["n"] += 1
             return f"caption {calls['n']}"
 
-    monkeypatch.setattr(cr, "_resolve_brought_image_b64", lambda item: "ZmFrZQ==")
+    monkeypatch.setattr(cr, "_resolve_brought_image_b64", lambda item, level: "ZmFrZQ==")
     monkeypatch.setattr("my_app.services.llm_service.llm_service", _FakeLLM())
     cr._BROUGHT_CAPTION_CACHE.clear()
     items = [{"kind": "upload", "media_type": "image", "upload_id": f"u{i}"} for i in range(6)]
 
-    caps = cr._brought_captions(items, cold_max=3)
+    caps = cr._brought_captions(items, "kids", cold_max=3)
     assert calls["n"] == 3          # cold cap holds
     assert len(caps) == 3
-    caps2 = cr._brought_captions(items, cold_max=3)
+    caps2 = cr._brought_captions(items, "kids", cold_max=3)
     assert calls["n"] == 6          # 3 cache hits free, 3 new described
     assert len(caps2) == 6
 
@@ -243,12 +243,41 @@ def test_brought_captions_failed_resolve_does_not_consume_budget(monkeypatch):
             calls["n"] += 1
             return "x"
 
-    monkeypatch.setattr(cr, "_resolve_brought_image_b64", lambda item: None)
+    monkeypatch.setattr(cr, "_resolve_brought_image_b64", lambda item, level: None)
     monkeypatch.setattr("my_app.services.llm_service.llm_service", _FakeLLM())
     cr._BROUGHT_CAPTION_CACHE.clear()
     items = [{"kind": "upload", "media_type": "image", "upload_id": f"u{i}"} for i in range(3)]
 
-    caps = cr._brought_captions(items, cold_max=2)
+    caps = cr._brought_captions(items, "kids", cold_max=2)
     assert calls["n"] == 0          # a missing image never reaches the VLM
     assert caps == {}
+
+
+def test_a_caption_is_kept_per_level(monkeypatch):
+    """A caption says what is in a picture, and a picture one level may see is
+    not one every level may. A caption made for adult is not served to kids:
+    there the picture is asked for again, at kids."""
+    import my_app.routes.chat_routes as cr
+    calls = {"n": 0}
+    asked = []
+
+    class _FakeLLM:
+        def describe_image_brief(self, b64):
+            calls["n"] += 1
+            return "a caption"
+
+    def resolve(item, level):
+        asked.append(level)
+        return "ZmFrZQ==" if level == "adult" else None
+
+    monkeypatch.setattr(cr, "_resolve_brought_image_b64", resolve)
+    monkeypatch.setattr("my_app.services.llm_service.llm_service", _FakeLLM())
+    cr._BROUGHT_CAPTION_CACHE.clear()
+    items = [{"kind": "favorite", "media_type": "image", "run_id": "run_a"}]
+
+    assert cr._brought_captions(items, "adult", cold_max=3) == {("favorite", "run_a"): "a caption"}
+    assert cr._brought_captions(items, "kids", cold_max=3) == {}
+    assert cr._brought_captions(items, "adult", cold_max=3) == {("favorite", "run_a"): "a caption"}
+    assert asked == ["adult", "kids"]
+    assert calls["n"] == 1
 # round2-tests

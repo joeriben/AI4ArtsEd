@@ -9,7 +9,9 @@ taken out of that directory again once the run has ended. Which reader
 answers which task -- MiDashengLM for a recording, HeartTranscriptor for
 the words, CLAP and MuQ-MuLan for the ranking, the vision model for a
 picture or a video -- and what each is told is the reading block of the
-table config/local_media_weights.json (services/local_media_weights). Until
+table config/local_media_weights.json (services/local_media_weights). One
+reading is no text: score_video asks the video reader one yes/no question
+for the safety check at the result and gets the probability of yes. Until
 stage 6 of the move to ComfyUI this posted to the GPU
 service's /api/analysis/* stations; the methods are the ones the callers
 had then (the cover band's chain, the VLM comparison, the flow's reading of
@@ -71,9 +73,13 @@ class MediaAnalysisClient:
     # ------------------------------------------------------------------
     # The one way every reading goes.
 
-    def _read(self, task: str, path: str, **inputs) -> Optional[Dict[str, Any]]:
+    def _read(self, task: str, path: str, reader: Optional[str] = None,
+              **inputs) -> Optional[Dict[str, Any]]:
         """One prompt of the node for `task` over the file at `path`: what the
         node wrote (its ui outputs), or None with the reason in LAST_REASON.
+        The table's reader for `task` runs it, or the one for `reader` where a
+        task is put to the reader of another (video_check, to the video
+        reader).
 
         The file goes up under a name of its own, so that two readings of
         files that share a name never overwrite each other, and comes down
@@ -86,10 +92,10 @@ class MediaAnalysisClient:
         LAST_REASON.set("")
         LAST_STATUS.set(500)
         try:
-            alias, model_dir = local_media_weights.reader_dir(task)
+            alias, model_dir = local_media_weights.reader_dir(reader or task)
         except KeyError as e:
             logger.error(f"[ANALYSIS-CLIENT] {task}: {e}")
-            LAST_REASON.set(f"No reader is configured for {task}.")
+            LAST_REASON.set(f"No reader is configured for {reader or task}.")
             return None
         try:
             with open(path, "rb") as f:
@@ -200,6 +206,36 @@ class MediaAnalysisClient:
         from my_app.services import local_media_weights
         out = self._read("video", path, prompt=prompt or local_media_weights.prompt("video"))
         return None if out is None else str(out.get("analysis") or "")
+
+    def score_video(self, path: str, system_prompt: str, prompt: str) -> Optional[float]:
+        """The probability that the video reader answers yes to `prompt` about
+        the video, or None with the reason in LAST_REASON.
+
+        The safety check at the result asks it (safety_gate.check_result_video):
+        the classifier takes no video, and the video reader is the model of
+        this installation that watches one. None covers every way of not
+        getting a number -- the reader not installed, the run broken, an
+        answer that is neither yes nor no, a score that is no probability --
+        and the caller blocks on it.
+        """
+        out = self._read("video_check", path, reader="video",
+                         system_prompt=system_prompt, prompt=prompt)
+        if out is None:
+            return None
+        value = out.get("score")
+        # A JSON number only, between 0 and 1: true reads as 1.0 to float(),
+        # a number outside the range (NaN as well) is no probability, and an
+        # integer too large for a float is neither.
+        try:
+            probability = (not isinstance(value, bool) and isinstance(value, (int, float))
+                           and 0.0 <= float(value) <= 1.0)
+        except OverflowError:
+            probability = False
+        if not probability:
+            logger.error(f"[ANALYSIS-CLIENT] video_check: the reader sent no probability ({value!r})")
+            LAST_REASON.set("The video check sent back no probability.")
+            return None
+        return float(value)
 
     def describe(self, path: str, prompt: Optional[str] = None) -> Optional[str]:
         """Prose description of the recording (MiDashengLM).

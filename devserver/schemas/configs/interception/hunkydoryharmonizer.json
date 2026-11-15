@@ -11,7 +11,8 @@
     "es": "Endulzador",
     "he": "ממתיק",
     "ar": "مُحلّي",
-    "bg": "Подсладител"
+    "bg": "Подсладител",
+    "zh-hant": "甜化器"
   },
   "description": {
     "en": "Makes everything feel harmonious and cute. Softens sharp edges and creates a calm, balanced atmosphere.",
@@ -22,6 +23,7 @@
     "he": "הופך הכל להרמוני וחמוד. מרכך קצוות חדים ויוצר אווירה רגועה ומאוזנת.",
     "ar": "يجعل كل شيء يبدو متناغماً ولطيفاً. يخفف الحواف الحادة ويخلق أجواء هادئة ومتوازنة.",
     "bg": "Прави всичко да изглежда хармонично и сладко. Омекотява острите ръбове и създава спокойна, балансирана атмосфера.",
+    "zh-hant": "讓一切感覺和諧又可愛。柔化尖銳的稜角，營造平靜、平衡的氛圍。",
     "tr": "Her şeyin uyumlu ve sevimli hissettirmesini sağlar. Keskin kenarları yumuşatır ve sakin, dengeli bir atmosfer yaratır.",
     "ko": "모든 것을 조화롭고 사랑스럽게 느끼게 합니다. 날카로운 모서리를 부드럽게 하고 차분하고 균형 잡힌 분위기를 만듭니다."
   },
@@ -31,6 +33,7 @@
     "he": "טרנספורמציות יצירתיות",
     "ar": "تحولات إبداعية",
     "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
     "tr": "Yaratıcı Dönüşümler",
     "ko": "창의적 변환",
     "uk": "Творчі перетворення",

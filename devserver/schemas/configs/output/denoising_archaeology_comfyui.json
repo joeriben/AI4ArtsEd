@@ -10,7 +10,8 @@
     "es": "Denoising Archaeology",
     "he": "Denoising Archaeology",
     "ar": "Denoising Archaeology",
-    "bg": "Denoising Archaeology"
+    "bg": "Denoising Archaeology",
+    "zh-hant": "Denoising Archaeology"
   },
   "description": {
     "en": "Step-by-step denoising visualization.",
@@ -22,7 +23,8 @@
     "es": "Visualización paso a paso del proceso de eliminación de ruido (denoising).",
     "he": "הדמיה שלב-אחר-שלב של הסרת הרעש (denoising).",
     "ar": "تصور خطوة بخطوة لعملية إزالة الضوضاء (denoising).",
-    "bg": "Визуализация стъпка по стъпка на премахването на шума (denoising)."
+    "bg": "Визуализация стъпка по стъпка на премахването на шума (denoising).",
+    "zh-hant": "去雜訊過程的逐步視覺化。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_denoising_archaeology_comfyui"

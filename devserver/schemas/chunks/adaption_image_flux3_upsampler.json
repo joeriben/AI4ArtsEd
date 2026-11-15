@@ -1,0 +1,627 @@
+{
+  "name": "adaption_image_flux3_upsampler",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "text",
+  "description": "BFL's prompt upsampler for FLUX 3 Image Klein: reads the reference images and the prompt and writes the caption the image model takes. The Prompt Adaption of the output config flux3_multi.",
+  "workflow": {
+    "75": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveStringMultiline",
+      "_meta": {
+        "title": "Ai4ArtsEd Prompt Input"
+      }
+    },
+    "101": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 1"
+      }
+    },
+    "102": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 2"
+      }
+    },
+    "103": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 3"
+      }
+    },
+    "104": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 4"
+      }
+    },
+    "105": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 5"
+      }
+    },
+    "106": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 6"
+      }
+    },
+    "107": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 7"
+      }
+    },
+    "108": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 8"
+      }
+    },
+    "109": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 9"
+      }
+    },
+    "110": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 10"
+      }
+    },
+    "210": {
+      "inputs": {
+        "clip_name": "qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors",
+        "type": "flux3",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load Prompt Upsampler"
+      }
+    },
+    "211": {
+      "inputs": {
+        "images.image0": [
+          "101",
+          0
+        ],
+        "images.image1": [
+          "302",
+          0
+        ],
+        "images.image2": [
+          "303",
+          0
+        ],
+        "images.image3": [
+          "304",
+          0
+        ],
+        "images.image4": [
+          "305",
+          0
+        ],
+        "images.image5": [
+          "306",
+          0
+        ],
+        "images.image6": [
+          "307",
+          0
+        ],
+        "images.image7": [
+          "308",
+          0
+        ],
+        "images.image8": [
+          "309",
+          0
+        ],
+        "images.image9": [
+          "310",
+          0
+        ]
+      },
+      "class_type": "BatchImagesNode",
+      "_meta": {
+        "title": "The References for the Upsampler"
+      }
+    },
+    "212": {
+      "inputs": {
+        "clip": [
+          "210",
+          0
+        ],
+        "prompt": [
+          "75",
+          0
+        ],
+        "image": [
+          "211",
+          0
+        ],
+        "system_prompt": "You are the prompt upsampler of an image-editing model. You see the reference image(s), attached in order (the first image, the second image, ...), and the user's short request. Expand it into ONE detailed, self-contained instruction: the caption the editing model receives together with the same images. Output only the instruction as one continuous English prose block, with no greetings, explanations, Markdown, JSON, coordinates, ids or angle-bracket tokens. Read a vague or conversational request as the most plausible edit of the supplied images.\\n\\nPick the voice by task shape. When one reference stays and gets bounded changes, write an imperative editing instruction on it (\\\"Remove the ...\\\", \\\"Change the ... to ...\\\", \\\"Zoom in on ...\\\"); a whole-image transformation opens with its scope (\\\"Convert the entire image into ...\\\", \\\"Apply a ... filter over the entire scene\\\", \\\"Horizontally flip the entire image so that ...\\\", \\\"Shift the camera viewpoint to ...\\\", then where the major elements should now be). When the references are drawn into a newly composed frame (combining subjects, a new scene, a garment, object or style donor), write a generation request (\\\"Create a photograph of ...\\\", \\\"Create an anime-style illustration of ...\\\", \\\"Generate a new image featuring ...\\\") that says what to take from each image, by ordinal, and what is newly generated.\\n\\nKeep every explicit edit, constraint, count, position, style cue and piece of wording, and decide what is left open as one concrete plan. Ground everything in what is actually visible: identify each referent unambiguously by its real appearance, never mention content that is not there, and use every image the user attached. State every end state concretely (which color, how large, which pose, which material) and give new content enough appearance to be generated. Cover the knock-on effects of the change (shadows, reflections, occlusion, perspective, scale, lighting) and say what fills a removed region. A zoom-in names what stays in frame and which neighbors are cropped out; an outpainting continues the scene in the same medium. Describe the change, not the whole scene, and close an editing instruction with one compact clause naming what stays unchanged; transferred people keep their identity, face and accessories unless asked otherwise. Transcribe on-image text verbatim in its original language inside double quotes, with line breaks as \\\\n, and match the original font, size and color when replacing it. Name recognizable public figures, brands and landmarks you can see. Directions are frame-relative; use no evaluative or quality words. Typical length is 50 to 150 words.\\n\\nOutput only the instruction.",
+        "max_length": [
+          "213",
+          0
+        ],
+        "sampling_mode": "on",
+        "sampling_mode.temperature": 1,
+        "sampling_mode.top_k": 1,
+        "sampling_mode.top_p": 0.95,
+        "sampling_mode.min_p": 0,
+        "sampling_mode.repetition_penalty": 1.05,
+        "sampling_mode.seed": 0,
+        "sampling_mode.presence_penalty": 0,
+        "thinking": false,
+        "use_default_template": true,
+        "mtp": "off"
+      },
+      "class_type": "TextGenerate",
+      "_meta": {
+        "title": "Prompt Upsampler"
+      }
+    },
+    "213": {
+      "class_type": "PrimitiveInt",
+      "inputs": {
+        "value": 65536
+      },
+      "_meta": {
+        "title": "Output length of the prompt upsampler"
+      }
+    },
+    "300": {
+      "class_type": "GetImageSize",
+      "inputs": {
+        "image": [
+          "101",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Size of the first reference"
+      }
+    },
+    "302": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "102",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 2 at the size of the first, for the upsampler"
+      }
+    },
+    "303": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "103",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 3 at the size of the first, for the upsampler"
+      }
+    },
+    "304": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "104",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 4 at the size of the first, for the upsampler"
+      }
+    },
+    "305": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "105",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 5 at the size of the first, for the upsampler"
+      }
+    },
+    "306": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "106",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 6 at the size of the first, for the upsampler"
+      }
+    },
+    "307": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "107",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 7 at the size of the first, for the upsampler"
+      }
+    },
+    "308": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "108",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 8 at the size of the first, for the upsampler"
+      }
+    },
+    "309": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "109",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 9 at the size of the first, for the upsampler"
+      }
+    },
+    "310": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "110",
+          0
+        ],
+        "upscale_method": "area",
+        "width": [
+          "300",
+          0
+        ],
+        "height": [
+          "300",
+          1
+        ],
+        "crop": "disabled"
+      },
+      "_meta": {
+        "title": "Reference 10 at the size of the first, for the upsampler"
+      }
+    },
+    "214": {
+      "class_type": "PreviewAny",
+      "inputs": {
+        "source": [
+          "212",
+          0
+        ]
+      }
+    }
+  },
+  "input_mappings": {
+    "prompt": {
+      "node_id": "75",
+      "field": "inputs.value",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "The text the adaption is asked for, in any language; the caption comes back in English"
+    },
+    "input_image1": {
+      "node_id": "101",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE1}}",
+      "required": true,
+      "description": "Path to reference image 1 (required)"
+    },
+    "input_image2": {
+      "node_id": "102",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE2}}",
+      "required": false,
+      "description": "Path to reference image 2 (optional)"
+    },
+    "input_image3": {
+      "node_id": "103",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE3}}",
+      "required": false,
+      "description": "Path to reference image 3 (optional)"
+    },
+    "input_image4": {
+      "node_id": "104",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE4}}",
+      "required": false,
+      "description": "Path to reference image 4 (optional)"
+    },
+    "input_image5": {
+      "node_id": "105",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE5}}",
+      "required": false,
+      "description": "Path to reference image 5 (optional)"
+    },
+    "input_image6": {
+      "node_id": "106",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE6}}",
+      "required": false,
+      "description": "Path to reference image 6 (optional)"
+    },
+    "input_image7": {
+      "node_id": "107",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE7}}",
+      "required": false,
+      "description": "Path to reference image 7 (optional)"
+    },
+    "input_image8": {
+      "node_id": "108",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE8}}",
+      "required": false,
+      "description": "Path to reference image 8 (optional)"
+    },
+    "input_image9": {
+      "node_id": "109",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE9}}",
+      "required": false,
+      "description": "Path to reference image 9 (optional)"
+    },
+    "input_image10": {
+      "node_id": "110",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE10}}",
+      "required": false,
+      "description": "Path to reference image 10 (optional)"
+    }
+  },
+  "multi_image_adaptation": {
+    "input_image2": {
+      "remove_nodes": [
+        "102",
+        "302"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image1"
+        ]
+      }
+    },
+    "input_image3": {
+      "remove_nodes": [
+        "103",
+        "303"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image2"
+        ]
+      }
+    },
+    "input_image4": {
+      "remove_nodes": [
+        "104",
+        "304"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image3"
+        ]
+      }
+    },
+    "input_image5": {
+      "remove_nodes": [
+        "105",
+        "305"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image4"
+        ]
+      }
+    },
+    "input_image6": {
+      "remove_nodes": [
+        "106",
+        "306"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image5"
+        ]
+      }
+    },
+    "input_image7": {
+      "remove_nodes": [
+        "107",
+        "307"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image6"
+        ]
+      }
+    },
+    "input_image8": {
+      "remove_nodes": [
+        "108",
+        "308"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image7"
+        ]
+      }
+    },
+    "input_image9": {
+      "remove_nodes": [
+        "109",
+        "309"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image8"
+        ]
+      }
+    },
+    "input_image10": {
+      "remove_nodes": [
+        "110",
+        "310"
+      ],
+      "drop_inputs": {
+        "211": [
+          "images.image9"
+        ]
+      }
+    }
+  },
+  "output_mapping": {
+    "node_id": "214",
+    "output_type": "text",
+    "field": "text",
+    "description": "PreviewAny shows what TextGenerate wrote"
+  },
+  "meta": {
+    "requires_gpu": true,
+    "display_name": "FLUX 3 prompt upsampler",
+    "gpu_vram_mb": 25100,
+    "estimated_duration_seconds": "9-12",
+    "clip_models": [
+      "qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors"
+    ],
+    "notes": "The upsampler of ComfyUI template image_flux3_klein_distilled_image_edit, as a workflow of its own: TextGenerate with the template's system prompt letter for letter, top_k 1. BatchImagesNode crops every image to the first one's shape, so references 2 to 10 are stretched to the first reference's size first (ImageScale, crop disabled); the image model takes them as loaded. max_length comes from a PrimitiveInt holding 65536: the node requires a value, the template's 3584 would be a hard cap, its widget stops at 32768 and ComfyUI range-checks literals only."
+  }
+}

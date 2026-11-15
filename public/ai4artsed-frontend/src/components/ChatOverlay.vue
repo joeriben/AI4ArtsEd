@@ -225,6 +225,7 @@ import FigureMask, { FIGURE_MASK_OVERHANG_RATIO, type FigureState } from './Figu
 import { useSpeech, primeSpeech } from '../composables/useSpeech'
 import { safetyBlockKeyForEvent } from '../composables/useGenerationStream'
 import { chatTurn } from '../lib/chatTurn'
+import { refusalKeyOf, reportRefusal } from '../composables/useLabRun'
 import { usePageFigureStore } from '../stores/pageFigure'
 
 interface Message {
@@ -232,6 +233,9 @@ interface Message {
   role: 'user' | 'assistant'
   content: string
   thinking?: string | null
+  /** A message the intake refused. It stays on screen and is not sent again
+   *  as history. */
+  refused?: boolean
 }
 
 const props = withDefaults(
@@ -1370,8 +1374,9 @@ async function sendMessage() {
   inputMessage.value = ''
 
   // Add user message to UI (show original message only)
+  const sentId = messageIdCounter++
   messages.value.push({
-    id: messageIdCounter++,
+    id: sentId,
     role: 'user',
     content: userMessage
   })
@@ -1385,7 +1390,7 @@ async function sendMessage() {
 
   try {
     // Prepare history for backend
-    const historyForBackend = messages.value.map(msg => ({
+    const historyForBackend = messages.value.filter(msg => !msg.refused).map(msg => ({
       role: msg.role,
       content: msg.content
     }))
@@ -1422,7 +1427,10 @@ async function sendMessage() {
       content: assistantReply,
       thinking: assistantThinking
     })
-    if (voiceAvailable.value) void speak(assistantReply, locale.value, replyId)
+    // The speech keys are one space for the whole platform, and Together keys
+    // its turns by message index from the same small numbers. A numeric key
+    // here let Help's voice drive the words standing on Together.
+    if (voiceAvailable.value) void speak(assistantReply, locale.value, `help:${replyId}`)
 
     // Scroll to bottom
     await nextTick()
@@ -1430,6 +1438,18 @@ async function sendMessage() {
 
   } catch (error) {
     console.error('[ChatOverlay] Error sending message:', error)
+
+    // A refusal is explained by the safety window, which is this conversation:
+    // the block message reaches it through the store, as every surface's does.
+    // A message the intake refused is not sent again as history.
+    const block = reportRefusal(error)
+    if (block) {
+      if (block.checkpoint === 'intake' && block.field === 'message') {
+        const sent = messages.value.find(m => m.id === sentId)
+        if (sent) sent.refused = true
+      }
+      return
+    }
 
     // Add error message
     messages.value.push({
@@ -1488,15 +1508,15 @@ watch(
 
     // Build pedagogical explanation based on block type
     let explanation: string
-    const reason = event.reason || ''
+    const reason = event.block?.reason || ''
 
     // Which block this is — the same reading every surface uses
     // (composables/useGenerationStream.ts). What the image AI said it saw is
     // added here, because only this conversation has room for it.
     const blockKey = safetyBlockKeyForEvent({
-      reason,
-      stage: event.stage,
+      block: event.block,
       operational: event.operational,
+      generated: event.generated,
     })
     explanation = t(blockKey)
     if (event.vlmDescription && (blockKey === 'safetyBlocked.inputImage' || blockKey === 'safetyBlocked.vlm')) {
@@ -1588,10 +1608,12 @@ Suggest ONE creative alternative prompt that keeps the user's core idea but avoi
   } catch (error) {
     console.error('[ChatOverlay] Error generating safety suggestion:', error)
 
-    // Replace loading message with error
+    // Replace loading message with error, or with the refusal: the block that
+    // started this has been explained already, so this one is only said.
     const msg = messages.value.find(m => m.id === loadingId)
     if (msg) {
-      msg.content = t('safetyBlocked.suggestionError')
+      const refusal = refusalKeyOf(error)
+      msg.content = refusal ? t(refusal) : t('safetyBlocked.suggestionError')
     }
   }
 
@@ -1669,7 +1691,8 @@ watch(
       console.error('[ChatOverlay] Image analysis failed:', error)
       const msg = messages.value.find(m => m.id === loadingId)
       if (msg) {
-        msg.content = t('trashy.analysisReflectionError')
+        const refusal = refusalKeyOf(error)
+        msg.content = refusal ? t(refusal) : t('trashy.analysisReflectionError')
       }
     }
 

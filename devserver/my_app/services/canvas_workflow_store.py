@@ -20,6 +20,9 @@ File shape (<id>.json):
     "description": str,            # what it is / when to reach for it
     "application_type": str,       # free string <=40, e.g. "vergleich"
     "author": str,                 # "resona"
+    "safety_level": str|None,      # the least strict level any of its text was
+                                   # written at (safety_gate.looser_level);
+                                   # None: unknown, which answers for no level
     "created_at": ISO,             # first version's date
     "updated_at": ISO,             # bumped on revise/feedback
     "versions": [
@@ -46,7 +49,7 @@ import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import config
 
@@ -165,9 +168,13 @@ def save_strategy(
     application_type: str = "",
     author: str = "resona",
     memo: Optional[str] = None,
+    safety_level: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Persist a strategy, minting id 'cw_<uuid8>' and creating version 1.
+
+    safety_level is the level its texts were written at; a value that is not a
+    level is kept as unknown.
 
     Validation: title non-empty <=120; description <=2000; application_type <=40;
     memo <=2000 (optional for v1). workflow must carry a 'nodes' list.
@@ -206,6 +213,8 @@ def save_strategy(
     if not isinstance(author, str) or not author.strip():
         author = "resona"
 
+    from my_app.services.safety_gate import looser_level
+
     now = _now_iso()
     record = {
         "id": _mint_id(),
@@ -213,6 +222,7 @@ def save_strategy(
         "description": description,
         "application_type": application_type,
         "author": author.strip(),
+        "safety_level": looser_level(safety_level),
         "created_at": now,
         "updated_at": now,
         "versions": [
@@ -258,6 +268,7 @@ def list_strategies(
     query: Optional[str] = None,
     application_type: Optional[str] = None,
     limit: int = 20,
+    keep: Optional[Callable[[Dict[str, Any]], bool]] = None,
 ) -> List[Dict[str, Any]]:
     """
     Summaries of stored strategies, newest-updated first.
@@ -265,6 +276,7 @@ def list_strategies(
     query — case-insensitive substring matched against title + description.
     application_type — exact match (case-insensitive) when given.
     limit — max returned (clamped to [1, 200]).
+    keep — when given, only records it accepts, asked before the limit.
     """
     try:
         limit = int(limit)
@@ -290,6 +302,8 @@ def list_strategies(
             if at:
                 if (rec.get("application_type", "") or "").strip().lower() != at:
                     continue
+            if keep is not None and not keep(rec):
+                continue
             records.append(rec)
 
     records.sort(
@@ -334,10 +348,14 @@ def get_strategy(
 
 
 def add_version(
-    strategy_id: str, workflow: Dict[str, Any], memo: str
+    strategy_id: str, workflow: Dict[str, Any], memo: str,
+    safety_level: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Append version N+1 to an existing strategy and bump updated_at.
+
+    safety_level is the level the new version was written at; the record keeps
+    the least strict of its levels (safety_gate.looser_level).
 
     memo is REQUIRED (non-empty, <=2000) — what changed and why. workflow must
     carry a 'nodes' list. Caps at MAX_VERSIONS versions.
@@ -345,6 +363,8 @@ def add_version(
     Returns the updated record. Raises ValueError on invalid input / missing
     strategy / cap overflow.
     """
+    from my_app.services.safety_gate import looser_level
+
     if not isinstance(memo, str) or not memo.strip():
         raise ValueError("memo is required when revising — say what changed and why.")
     memo = memo.strip()
@@ -381,6 +401,7 @@ def add_version(
         )
         record["versions"] = versions
         record["updated_at"] = now
+        record["safety_level"] = looser_level(record.get("safety_level"), safety_level)
         _write(path, record)
 
     logger.info(
@@ -390,11 +411,15 @@ def add_version(
 
 
 def add_feedback(
-    strategy_id: str, note: str, version: Optional[int] = None
+    strategy_id: str, note: str, version: Optional[int] = None,
+    safety_level: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Append a feedback entry {ts, note} to the given version (default latest) and
     bump updated_at.
+
+    safety_level is the level the note was written at; the record keeps the
+    least strict of its levels (safety_gate.looser_level).
 
     note is REQUIRED (non-empty, <=2000). Caps at MAX_FEEDBACK_PER_VERSION per
     version.
@@ -402,6 +427,8 @@ def add_feedback(
     Returns the updated record. Raises ValueError on invalid input / missing
     strategy / missing version / cap overflow.
     """
+    from my_app.services.safety_gate import looser_level
+
     if not isinstance(note, str) or not note.strip():
         raise ValueError("feedback note must be a non-empty string.")
     note = note.strip()
@@ -447,6 +474,7 @@ def add_feedback(
         feedback.append({"ts": now, "note": note})
         target["feedback"] = feedback
         record["updated_at"] = now
+        record["safety_level"] = looser_level(record.get("safety_level"), safety_level)
         _write(path, record)
 
     logger.info(

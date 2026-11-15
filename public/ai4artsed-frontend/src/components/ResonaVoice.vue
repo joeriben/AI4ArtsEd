@@ -35,7 +35,7 @@
       human's line answers in white — the one writing here that is no agent's. That treatment is
       the same wherever the platform speaks; the engine decides how the words
       READ, this component alone decides where they stand.
-    - Where the human asked for BOTH the acoustic voice and the writing, the
+    - Where the acoustic voice speaks, the
       sentences no longer keep a rhythm of their own: each one enters at the
       instant its piece begins to SOUND, so what stands is what is being heard,
       and its characters are spread over the measured length of that piece, so
@@ -48,8 +48,8 @@
       piece i the same thing. Here the words WAIT for the voice and never run
       ahead of it. What lets the rest of a turn stand is the voice having
       ENDED — refused by the browser, a clip that could not be had, stopped by
-      the human, or spoken through to its last piece — and the human's own way
-      out, which is to ask for writing alone.
+      the human, or spoken through to its last piece — and the voice being
+      switched off in the main menu.
 
   Positioning and the sentence DOM are IMPERATIVE (direct style/attribute
   writes, nodes built by hand), kept off Vue's reactive path on purpose: a
@@ -71,21 +71,15 @@
        standing words do not — clickable/persistent things live in the parent.
     2) Ephemeral = visual only. We never mutate the trail.
 
-  Voice only: with `words` false the standing text gives way to
-  being heard. What she says is not read; the turn keeps only what a human still
-  has to be able to DO with it.
-
-  NO PRESENCE IS DRAWN HERE, in any mode. A page carries exactly one agent and
+  NO PRESENCE IS DRAWN HERE. A page carries exactly one agent and
   one mask for it, and that mask stands in the app-level overlay
   (components/ChatOverlay.vue), tinted for this page and fed this surface's own
   state through stores/pageFigure. A shape of this component's own would be a
   second agent standing beside the first one. The flowing circle that used to
   stand here is gone with that.
 
-  What the circle also CARRIED stays, as chips: the way back to the line (the
-  platform's one speaker control, the same one words mode shows beside "lift
-  out") and keeping it. `sounding` says whether the acoustic voice is audible
-  right now; that is a different thing from `speak`, which describes the turn.
+  `sounding` says whether the acoustic voice is audible right now; that is a
+  different thing from `speak`, which describes the turn.
 -->
 <template>
   <div ref="rootRef" class="resona-voice">
@@ -100,7 +94,7 @@
     <div
       ref="turnEl"
       class="turn"
-      :class="{ anchored: isAnchored, listening: speak === 'listening', 'voice-only': !words }"
+      :class="{ anchored: isAnchored, listening: speak === 'listening' }"
     >
       <!-- The pair that has just been replaced, on its way out. Two dialog
            texts stand at a time and no more: this is a plain-text copy of what
@@ -112,7 +106,8 @@
         <div v-if="leaving.answer && leaving.answerAbove" class="turn-answer above">{{ leaving.answer }}</div>
         <div v-if="leaving.sentences.length" class="turn-said">
           <div class="sent-stack">
-            <div v-for="(line, i) in leaving.sentences" :key="i" class="voice-sent">{{ line }}</div>
+            <div v-for="(line, i) in leaving.sentences" :key="i"
+                 :class="['voice-sent', { withdrawn: leaving.struck }]">{{ line }}</div>
           </div>
         </div>
         <div v-if="leaving.answer && !leaving.answerAbove" class="turn-answer">{{ leaving.answer }}</div>
@@ -121,7 +116,7 @@
       <!-- What has been said stands only once there is something said. The
            column around it stands always, because it carries the open line. -->
       <div
-        v-if="said || isFirstTurnPending || !words || speak === 'listening'"
+        v-if="said || isFirstTurnPending || speak === 'listening'"
         class="turn-body"
         :key="said ? said.id : 'pending'"
       >
@@ -134,7 +129,7 @@
           :class="{ settling: settlingId !== null && answer.id === settlingId }"
         >{{ answer.text }}</div>
 
-        <div v-if="words && said" class="turn-said">
+        <div v-if="said" class="turn-said">
           <!-- The sentences are built and revealed by hand (see
                renderSentences); Vue only owns the empty ground they stand
                on. No caret: the entrance itself is the liveness, and a
@@ -155,31 +150,7 @@
           />
         </div>
 
-        <!-- Voice only: nothing is written, the line is heard. No shape stands
-             here — the page's one mask is its presence. What stays are the two
-             things a human still has to be able to do with a spoken line: hear
-             it again, and keep it. The speaker is the platform's one speaker
-             control, exactly as words mode shows it beside "lift out"; keeping
-             it is the human's decision, and a memo is a thing they asked for. -->
-        <div v-if="!words" class="turn-voice-only">
-          <SpeakButton
-            v-if="said && canReplay && said.id !== streamingId"
-            :sounding="sounding"
-            :waiting="preparing"
-            :blocked="blocked"
-            :label="blocked ? tapLabel : replayLabel"
-            @press="emit('replay', said)"
-          />
-          <button
-            v-if="said && said.liftable"
-            class="lift-btn lift-quiet"
-            @click="emit('lift', said)"
-          >{{ liftLabel }}</button>
-        </div>
-
-        <!-- What the human wrote always stands, in every mode. Voice only
-             means RESONA is heard instead of read; it never means the room's
-             own words vanish. -->
+        <!-- What the human wrote always stands. -->
         <div
           v-if="answer && !answerAbove"
           class="turn-answer"
@@ -283,7 +254,6 @@ const props = withDefaults(defineProps<{
   anchors?: VoiceAnchor[]
   liftLabel?: string
   zoom?: number
-  words?: boolean
   sounding?: boolean
   canReplay?: boolean
   replayLabel?: string
@@ -307,7 +277,6 @@ const props = withDefaults(defineProps<{
   spot: null,
   liftLabel: 'lift out',
   zoom: 1,
-  words: true,
   sounding: false,
   canReplay: false,
   replayLabel: 'hear this again',
@@ -395,6 +364,8 @@ interface TurnRecord {
   sentences: string[]
   answer: string | null
   answerAbove: boolean
+  /** The sentences are a draft that was taken back, standing struck through. */
+  struck?: boolean
 }
 let standing: TurnRecord | null = null
 const leaving = ref<TurnRecord | null>(null)
@@ -443,8 +414,8 @@ function voiceLocale(): string {
 // `split` is the turn's own cutter and `splitBy` says whose it is. Both are
 // fixed at the turn's first pass and then held: re-cutting mid-turn would make
 // sentences that already stand jump, and the cutter has to outlive the coupling
-// it came from — the parent takes that away the instant the human switches to
-// writing alone, with the turn's words still on screen.
+// it came from — the parent takes that away the instant the voice is switched
+// off in the main menu, with the turn's words still on screen.
 interface RenderedFor {
   id: string | number | null
   /** Which paragraph of this turn is the one on the surface, -1 before the first. */
@@ -498,8 +469,8 @@ function startQuiet(id: string | number, done: () => void) {
 
 // WHERE NO VOICE SPEAKS, READING IS THE CLOCK. A paragraph stands for as long
 // as it takes to read and is then replaced by the next one — the surface never
-// releases a whole reply, not when the browser refuses to play, not in writing
-// mode, not when the pieces of the audio and the pieces of the text disagree.
+// releases a whole reply, not when the browser refuses to play, not with the voice
+// switched off, not when the pieces of the audio and the pieces of the text disagree.
 // Releasing everything is what an accumulating surface does, and this one does
 // not accumulate.
 let readTimer: ReturnType<typeof setTimeout> | null = null
@@ -571,28 +542,24 @@ function renderSentences() {
   const s = said.value
   const streaming = !!s && s.id === props.streamingId
 
-  // Voice only, or nothing said yet: no words stand. The state is reset even
-  // though the container is gone, or the words would not come back when the
-  // human switches writing on again.
-  if (!s || !props.words) {
+  // Nothing said yet: no words stand.
+  if (!s) {
     stopRead()
     stack?.replaceChildren()
     renderedFor = freshRender(null, null)
-    standing = s
-      ? { id: s.id, sentences: [], answer: answer.value ? answer.value.text : null, answerAbove: answerAbove.value }
-      : null
-    if (!streaming) { stopQuiet(); return }
-    if (quietFor !== s.id) startQuiet(s.id, () => emit('revealDone', s.id))
+    standing = null
+    stopQuiet()
     return
   }
   if (!stack) return
 
-  const setStanding = (sentences: string[]) => {
+  const setStanding = (sentences: string[], struck = false) => {
     standing = {
       id: s.id,
       sentences,
       answer: answer.value ? answer.value.text : null,
       answerAbove: answerAbove.value,
+      struck,
     }
   }
 
@@ -620,13 +587,15 @@ function renderSentences() {
     renderedFor.upTo = -1
     renderedFor.shown = []
     renderedFor.text = ''
-    setStanding([draft])
+    setStanding([draft], true)
   }
 
   const grew = fullText !== renderedFor.text
   renderedFor.text = fullText
 
-  const parts = renderedFor.split(fullText)
+  // An empty text has no sentences. The speech cutter returns it as one empty
+  // piece, which cleared a struck draft and stood up an empty sentence.
+  const parts = fullText.trim() ? renderedFor.split(fullText) : []
   const paras = paragraphOf(fullText, parts)
   // The last piece of a text that is still arriving may still grow, so it is
   // not a piece yet.
@@ -685,16 +654,42 @@ function renderSentences() {
     reached = Math.min(reached, settled)
   }
   if (reached < 0 || reached >= parts.length) {
-    // The text was taken back (a tool round's preamble, `discard`) below what
-    // stood: nothing that stands is in it any more, so nothing stands. Left
-    // as it was, the preamble stood through the whole tool run.
-    if (reached >= parts.length && renderedFor.upTo >= 0) {
+    // Nothing of the text is due to stand, or nothing more. What stands stays
+    // while the text still holds it: on the reading clock the first piece of a
+    // text still arriving is not settled, and a parent that strips a marker
+    // takes a second piece away again for a moment. Where the text no longer
+    // holds it, it was taken back below what stands (a tool round's preamble,
+    // `discard`), and nothing stands, on the voice's clock and on the reading
+    // one alike. Left as it was, the preamble stood through the whole tool
+    // run; with the voice off or refused by the browser it still did until
+    // 2026-11-14, because only the voice's clock was asked. While the turn
+    // is still written, a struck draft that the taken-back text had replaced
+    // stands again: the corrected text has not begun. A text that is finished
+    // and shorter than what was read of it is no take-back of that kind. The
+    // reading clock of the taken-back text stops with it.
+    const from = renderedFor.upTo - renderedFor.shown.length + 1
+    const held = renderedFor.shown.every((t, i) => (parts[from + i] ?? '').startsWith(t))
+    if (renderedFor.upTo >= 0 && !held) {
+      stopRead()
       stack.replaceChildren()
       renderedFor.shown = []
       renderedFor.para = -1
       renderedFor.upTo = -1
+      const draft = streaming && renderedFor.struck
+        ? s.withdrawn?.[renderedFor.struck - 1] : undefined
+      if (draft) {
+        const el = buildVoiceSentence(draft, { charMode: false, extraClass: 'withdrawn' })
+        stack.appendChild(el)
+        revealVoiceSentence(el, 0)
+        setStanding([draft], true)
+      } else {
+        setStanding([])
+      }
+    } else if (renderedFor.upTo < 0 && !renderedFor.struck) {
+      // Nothing of the turn stands: the record says so, and carries the
+      // human's answer for the fade when the next turn comes.
+      setStanding([])
     }
-    if (renderedFor.upTo < 0) setStanding([])
     return
   }
 
@@ -758,15 +753,14 @@ function renderSentences() {
   startQuiet(s.id, () => emit('revealDone', s.id))
 }
 
-// flush 'post': the keyed .turn-body is rebuilt for a new turn and the words
-// mode adds or removes the container — the ref must already point at the DOM
-// this pass is going to write into.
+// flush 'post': the keyed .turn-body is rebuilt for a new turn — the ref must
+// already point at the DOM this pass is going to write into.
 // The coupling is watched field by field, and whether there is one at all:
 // what moves during a turn is the piece and the keys, while the object holding
 // them may well stay the same one from the first sentence to the last.
 watch(
   () => [
-    said.value?.id, props.streamingId, props.words, streamingLiveText.value,
+    said.value?.id, props.streamingId, streamingLiveText.value,
     !!props.coupling, props.coupling?.piece, props.coupling?.askedKey,
     props.coupling?.pendingKey, props.coupling?.speakingKey, props.coupling?.blockedKey,
   ],
@@ -1121,11 +1115,6 @@ onUnmounted(() => {
 /* Standing at an object, the turn is placed in pixels by place() and keeps the
    board's scale from its top left — it belongs to the thing, not to the middle. */
 .turn.anchored { width: min(40ch, 30vw); }
-/* A row of chips is not a paragraph, and the human's own line beneath it is
-   short. Keeping the paragraph's width here left them clinging to the corner of
-   an invisible 40vw box. */
-.turn.voice-only { width: min(30ch, 24vw); left: calc((100% - min(30ch, 24vw)) / 2); }
-.turn.voice-only .turn-answer { margin-top: 0.9rem; padding-left: 0; }
 .turn-body { animation: turnfade 0.55s ease both; }
 @keyframes turnfade { from { opacity: 0; } to { opacity: 1; } }
 
@@ -1206,18 +1195,6 @@ onUnmounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .turn-answer.settling { animation: turnfade 0.5s ease both; }
 }
-
-/* ---- Voice only: what is left to DO with a line that is only heard ----
-   No shape: the page's one mask is its presence (see the note at the top of
-   this file). Just the two chips, on the row where the circle used to stand.
-   Both carry their own state, so nothing here animates. */
-/* The chips stand where the agent's words would: at the right edge. */
-.turn-voice-only { display: flex; align-items: center; justify-content: flex-end; gap: 0.9rem; }
-/* The lift button takes the pointer while the rest of the turn stays
-   click-through, so it carries its own quiet state instead of waiting for a
-   hover over something larger. */
-.lift-quiet { opacity: 0.4; transition: opacity 0.2s ease; }
-.lift-quiet:hover { opacity: 1; }
 
 /* The turn is click-through so the board underneath still pans; every control
    inside it has to take the pointer back explicitly. The speaker lives in

@@ -1979,36 +1979,9 @@ const stage4Loras = computed(() => {
 
 ---
 
-#### Safety Approved Stamp (Stage 1)
+#### Safety Approved Stamp (removed)
 
-**Purpose:** Visual confirmation that user input passed safety validation
-
-**Location:** Next to Start #2 button (Generation)
-
-**Visual Design:**
-- Checkmark icon ✓
-- Text: "Safety Approved"
-- Green color scheme
-
-**Timing:**
-- Appears after 300ms delay during `executePipeline()`
-- Simulates Stage 1 safety check
-- Provides user confidence before generation starts
-
-**Code Pattern:**
-```typescript
-const showSafetyApprovedStamp = ref(false)
-
-async function executePipeline() {
-  showSafetyApprovedStamp.value = false  // Reset
-
-  // Stage 1: Safety check (silent, shows stamp when complete)
-  await new Promise(resolve => setTimeout(resolve, 300))
-  showSafetyApprovedStamp.value = true
-
-  // Continue with generation...
-}
-```
+No current view shows this stamp; it stands only in `views/dual_encoder_fusion.vue.deprecated`. It waited for no check: it appeared 300 ms after `executePipeline()` started. The checks are described in Part 01, section 1.7.
 
 ---
 

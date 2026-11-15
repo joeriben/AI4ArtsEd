@@ -87,7 +87,7 @@ async def execute(
         # the card, and without this the answer names the output config instead —
         # "Concept Algebra (SD 3.5)", which is the instrument's name and not a
         # model, and which drops exactly that distinction.
-        'model_id': model_id,
+        'model_used': model_id,
         'reference_image': result['reference_image'],
         'result_image': result['result_image'],
         'algebra_data': result['algebra_data'],

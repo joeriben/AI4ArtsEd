@@ -8,6 +8,9 @@
             <img src="/logos/unesco_chair.png" alt="UNESCO Chair" class="header-logo" />
           </a>
           <span class="app-title"><span style="color:#667eea">U</span><span style="color:#e91e63">C</span><span style="color:#7C4DFF">D</span><span style="color:#FF6F00">C</span><span style="color:#4CAF50">A</span><span style="color:#00BCD4">E</span> <span style="color:#667eea">A</span><span style="color:#e91e63">I</span> <span style="color:#7C4DFF">L</span><span style="color:#FF6F00">A</span><span style="color:#4CAF50">B</span></span>
+          <!-- Whom this device is signed in as: a course, the own use, or a
+               place; never a person's name (the header is on the projector). -->
+          <SignInField />
         </div>
 
         <div class="header-center">
@@ -84,11 +87,11 @@
               <button @click="langMenuOpen = !langMenuOpen" class="nav-link lang-toggle" :title="$t('nav.language')">
                 {{ currentLanguage.toUpperCase() }} <span class="lang-caret">&#9662;</span>
               </button>
-              <div v-if="langMenuOpen" class="lang-menu">
+              <div v-if="langMenuOpen" class="header-menu">
                 <button
                   v-for="lang in SUPPORTED_LANGUAGES"
                   :key="lang.code"
-                  class="lang-option"
+                  class="header-menu-option"
                   :class="{ active: currentLanguage === lang.code }"
                   @click="selectLanguage(lang.code)"
                 >
@@ -116,9 +119,9 @@
               <button @click="legalMenuOpen = !legalMenuOpen" class="nav-link nav-link-text" :title="$t('nav.impressum')">
                 §
               </button>
-              <div v-if="legalMenuOpen" class="legal-menu">
-                <button class="legal-option" @click="openImpressum">{{ $t('nav.impressum') }}</button>
-                <button class="legal-option" @click="openDatenschutz">{{ $t('nav.privacy') }}</button>
+              <div v-if="legalMenuOpen" class="header-menu legal-menu">
+                <button class="header-menu-option" @click="openImpressum">{{ $t('nav.impressum') }}</button>
+                <button class="header-menu-option" @click="openDatenschutz">{{ $t('nav.privacy') }}</button>
               </div>
             </div>
             <div class="bg-dropdown" ref="bgDropdownRef">
@@ -220,6 +223,7 @@ import DokumentationModal from './components/DokumentationModal.vue'
 import ImpressumModal from './components/ImpressumModal.vue'
 import DatenschutzModal from './components/DatenschutzModal.vue'
 import PolicyChips from './components/PolicyChips.vue'
+import SignInField from './components/SignInField.vue'
 import {
   useUserPreferencesStore,
   BACKGROUND_TINTS,
@@ -440,6 +444,14 @@ html, body {
   inset-inline-start: calc(-1 * (var(--header-edge-shift) + 3px));
 }
 
+/* The pull above moves the left group away from the mode selector by the same
+   amount; the column's box is that much wider, so the sign-in field after the
+   name (components/SignInField.vue) still reaches up to the room kept before
+   the mode selector. */
+.header-content > .header-left {
+  margin-inline-end: calc(-1 * (var(--header-edge-shift) + 3px));
+}
+
 .header-logo-link {
   display: flex;
   align-items: center;
@@ -522,7 +534,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 2px;
   white-space: nowrap;
-  margin-right: 1.5rem;
+  margin-inline-end: 1.5rem;
 }
 
 /* Header Right Reorganization */
@@ -608,7 +620,12 @@ html, body {
   opacity: 0.5;
 }
 
-.lang-menu {
+/* The menu under a field of the header: the language, the legal pages and
+   the sign-in (components/SignInField.vue) open the same one
+   (docs/ELEMENT_STRUCTURE_REGISTRY.md, `.header-menu`). It opens toward
+   the middle: under a field of the right row it stands at the field's end,
+   under the sign-in field at its start (`header-menu-start`). */
+.header-menu {
   position: absolute;
   top: 100%;
   inset-inline-end: 0;
@@ -621,7 +638,12 @@ html, body {
   min-width: 120px;
 }
 
-.lang-option {
+.header-menu-start {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+}
+
+.header-menu-option {
   display: block;
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -634,12 +656,45 @@ html, body {
   transition: background 0.15s;
 }
 
-.lang-option:hover {
+.header-menu-option:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.lang-option.active {
+.header-menu-option.active {
   color: #4CAF50;
+}
+
+.header-menu-option:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Where one of the options is the one in force, a column at the start of
+   every option carries its mark, and the name stands in a column of its own
+   beside it: a name that wraps keeps to its column. */
+.header-menu-option:has(> .header-menu-mark) {
+  display: flex;
+  align-items: flex-start;
+}
+
+.header-menu-mark {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 0.8rem;
+  margin-inline-end: 0.5rem;
+  color: #4CAF50;
+}
+
+/* A line the menu says and nobody clicks: the place of a device, a cause. */
+.header-menu-info {
+  padding: 0.5rem 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+}
+
+.header-menu-sep {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .bg-dropdown {
@@ -733,33 +788,7 @@ html, body {
 }
 
 .legal-menu {
-  position: absolute;
-  top: 100%;
-  inset-inline-end: 0;
-  margin-top: 0.25rem;
-  background: var(--surface-2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  overflow: hidden;
-  z-index: 1001;
   min-width: 140px;
-}
-
-.legal-option {
-  display: block;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.8rem;
-  text-align: start;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.legal-option:hover {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Content Area */

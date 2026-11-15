@@ -149,7 +149,7 @@ async def execute(
     # --- Step 1: Generate mesh via GPU service ---
     logger.info(f"[CHUNK:hunyuan3d] Generating mesh: image={len(image_b64)//1024}KB, seed={actual_seed}")
 
-    glb_bytes, actual_seed = await client.generate_mesh(
+    glb_bytes, actual_seed, model_used = await client.generate_mesh(
         image_base64=image_b64,
         seed=actual_seed,
         num_inference_steps=steps,
@@ -209,6 +209,7 @@ async def execute(
         "chunk_name": "output_3d_hunyuan3d",
         "media_type": "3d",
         "backend": "hunyuan3d",
+        "model_used": model_used,
         "seed": actual_seed,
         "mesh_data": base64.b64encode(glb_bytes).decode('utf-8'),
         "mesh_format": "glb",

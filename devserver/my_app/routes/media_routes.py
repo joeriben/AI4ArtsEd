@@ -17,12 +17,27 @@ import uuid
 from werkzeug.utils import secure_filename
 from PIL import Image
 
-from my_app.services.pipeline_recorder import load_recorder
-from my_app.services.thumbnails import THUMBNAIL_PX, THUMBNAIL_SIZES, cached_thumbnail
+from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS, SafetyRefusal, load_recorder
+from my_app.services.safety_gate import (
+    carried_intake_verdict,
+    check_before_model,
+    check_intake,
+    check_result_text,
+    delivery_block,
+    normalise_level,
+    record_upload_verdict,
+    upload_cleared_for,
+)
+from my_app.services.safety_level_resolver import resolve_safety_level
+from my_app.services.thumbnails import (
+    THUMBNAIL_PX, THUMBNAIL_SIZES, cached_thumbnail, served_thumbnail_name,
+)
 from my_app.services.watermark_service import (
+    UNMARKED_SUFFIX,
     read_media_disclosure,
     carry_disclosure_pnginfo,
     carry_disclosure_jpeg_kwargs,
+    unmarked_filename,
 )
 from config import JSON_STORAGE_DIR, UPLOADS_TMP_DIR
 from my_app.services import reading_frames
@@ -39,9 +54,10 @@ logger = logging.getLogger(__name__)
 media_bp = Blueprint('media', __name__, url_prefix='/api/media')
 
 
-def _entity_refusal(entity: dict, recorder) -> str:
+def _entity_refusal(entity: dict, recorder, level) -> str:
     """
-    Why this entity may not be handed out, or '' when it may.
+    Why this entity may not be handed to whoever asks at `level`, or '' when
+    it may.
 
     The rule itself lives with the record that carries the verdict
     (``pipeline_recorder.entity_cleared_for_delivery``); this is the reading of
@@ -51,8 +67,24 @@ def _entity_refusal(entity: dict, recorder) -> str:
     exception.
     """
     from my_app.services.pipeline_recorder import entity_cleared_for_delivery
-    cleared, reason = entity_cleared_for_delivery(entity, recorder.metadata)
+    cleared, reason = entity_cleared_for_delivery(entity, recorder.metadata, level)
     return "" if cleared else reason
+
+
+def _code_withheld(entity: dict, recorder, run_id: str, level):
+    """The 403 for a sketch that delivery may not hand to whoever asks at
+    `level`, or None where it may.
+
+    Code a language model wrote goes out by the rule a picture goes out by, and
+    the block message says code, not picture.
+    """
+    refusal = _entity_refusal(entity, recorder, level)
+    if not refusal:
+        return None
+    logger.warning("[MEDIA] Refusing the code of run %s: %s", run_id, refusal)
+    return jsonify({"error": "safety_blocked", "detail": refusal,
+                    "safety_block": delivery_block(refusal, field="code"),
+                    "run_id": run_id}), 403
 
 
 def _find_entity_by_type(entities: list, media_type: str, latest: bool = True) -> dict:
@@ -120,6 +152,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 # A ceiling for /mark. A workshop's loop is seconds of audio; anything past this
 # is not something a page assembled.
 MAX_MARK_BYTES = 256 * 1024 * 1024
+
+def _served_name(name: str, file_path) -> str:
+    """The name a stored file goes out under: `name`, with `_ai_generated`
+    where the stored file carries it (services/media_marking.mark_for_disk)."""
+    if Path(file_path).stem.endswith(UNMARKED_SUFFIX):
+        return unmarked_filename(name)
+    return name
+
 
 def _allowed_file(filename: str) -> bool:
     """Check if filename has allowed extension"""
@@ -241,6 +281,15 @@ COMPARE_FRAME_NOTES = {
 }
 
 
+def _reading_refused(verdict):
+    """A reading the platform's checks refused: 403 with the block message.
+
+    The log names where and why, never the text."""
+    logger.warning(f"[MEDIA-READING] withheld ({verdict.checkpoint}/"
+                   f"{verdict.field or '-'}: {verdict.reason_key})")
+    return {"error": "safety_blocked", "safety_block": verdict.block()}, 403
+
+
 @media_bp.route('/analyze/image', methods=['POST'])
 def analyze_image_file():
     """
@@ -262,6 +311,11 @@ def analyze_image_file():
         - success: Boolean
         - analysis: analysis text (English unless lang requests otherwise)
 
+    The reading model gets the picture only where its upload carries a pass
+    for the level of whoever asks; pictures are checked at kids and youth
+    only. The reading is checked at the result before it leaves. A refusal
+    answers 403 with the block message (`safety_block`).
+
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same reading; only its way back is
     different. A vision model has to be loaded before it can look at anything,
@@ -281,16 +335,17 @@ def analyze_image_file():
     if refusal is not None:
         return jsonify(refusal[0]), refusal[1]
 
-    return answered_either_way(data, _run_analyze_image, data,
+    return answered_either_way(data, _run_analyze_image, data, resolve_safety_level(),
                                label='MEDIA-ANALYZE-IMAGE')
 
 
-def _run_analyze_image(data):
+def _run_analyze_image(data, level):
     """The reading, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
-    not reach for ``request``: everything it needs stands in ``data``, and a
-    streamed answer runs this on a thread of its own.
+    not reach for ``request``: everything it needs stands in ``data`` and in the
+    level the route resolved, and a streamed answer runs this on a thread of its
+    own.
     """
     try:
         image_path = str(data.get('image_path') or '').strip()
@@ -301,6 +356,13 @@ def _run_analyze_image(data):
         resolved = Path(image_path).resolve()
         if UPLOADS_TMP_DIR.resolve() not in resolved.parents or not resolved.is_file():
             return {"error": "image_path must point to an uploaded image"}, 400
+
+        # The picture came in through the upload, which judged it. The check
+        # reads that verdict at the level of whoever asks now, and it asks no
+        # model about a picture it finds through its reference.
+        verdict = check_before_model({}, level=level, images={'image': str(resolved)})
+        if not verdict.passed:
+            return _reading_refused(verdict)
 
         frame = str(data.get('frame') or '').strip()
         # The frames are their own texts in schemas/reading_frames, asked
@@ -314,7 +376,7 @@ def _run_analyze_image(data):
             # nothing is translated afterwards.
             from my_app.utils.image_analysis import analyze_image as framed_read
             analysis = framed_read(str(resolved), analysis_type=frame,
-                                   lang=data.get('lang'))
+                                   lang=data.get('lang'), level=level)
             if not analysis:
                 return {"error": "Image analysis failed"}, 502
         else:
@@ -335,6 +397,13 @@ def _run_analyze_image(data):
             if lang:
                 analysis = _translate_analysis(analysis, lang)
 
+        # THE RESULT. The reading leaves exactly as it was checked, trimmed:
+        # the comparison takes it back in as material, and the intake knows a
+        # released text only in the words it was released in.
+        analysis = analysis.strip()
+        verdict = check_result_text(analysis, level=level, field='analysis')
+        if not verdict.passed:
+            return _reading_refused(verdict)
         return {"success": True, "analysis": analysis}, 200
 
     except Exception as e:
@@ -363,6 +432,10 @@ def analyze_av_file():
         - success: Boolean
         - analysis: analysis text (English unless lang requests otherwise)
 
+    A video is read only where delivery would hand it to whoever asks, and the
+    reading is checked at the result before it leaves. Either refusal answers
+    403 with the block message (`safety_block`).
+
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same reading; only its way back is
     different. The listening happens on ComfyUI, whose first call loads the
@@ -382,16 +455,17 @@ def analyze_av_file():
     if refusal is not None:
         return jsonify(refusal[0]), refusal[1]
 
-    return answered_either_way(data, _run_analyze_av, data,
+    return answered_either_way(data, _run_analyze_av, data, resolve_safety_level(),
                                label='MEDIA-ANALYZE-AV')
 
 
-def _run_analyze_av(data):
+def _run_analyze_av(data, level):
     """The reading, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
-    not reach for ``request``: everything it needs stands in ``data``, and a
-    streamed answer runs this on a thread of its own.
+    not reach for ``request``: everything it needs stands in ``data`` and in the
+    level the route resolved, and a streamed answer runs this on a thread of its
+    own.
     """
     try:
         run_id = str(data.get('run_id') or '').strip()
@@ -408,6 +482,16 @@ def _run_analyze_av(data):
             entity = _find_entity_by_type(entities, 'music')
         if not entity:
             return {"error": f"No {kind} found for run {run_id}"}, 404
+        if kind == 'video':
+            # A video is read only where delivery would hand it to whoever
+            # asks: the reading says what the video shows. Sound has no check
+            # of its own yet and goes as it did.
+            refusal = _entity_refusal(entity, recorder, level)
+            if refusal:
+                logger.warning("[MEDIA] Refusing to read the video of run %s: %s", run_id, refusal)
+                return {"error": "safety_blocked", "detail": refusal,
+                        "safety_block": delivery_block(refusal, field="video"),
+                        "run_id": run_id}, 403
         file_path = recorder.final_folder / entity['filename']
         if not file_path.exists():
             return {"error": f"{kind} file not found"}, 404
@@ -438,6 +522,11 @@ def _run_analyze_av(data):
         if lang:
             analysis = _translate_analysis(analysis, lang)
 
+        # THE RESULT, as in the image reading: checked as it leaves, trimmed.
+        analysis = analysis.strip()
+        verdict = check_result_text(analysis, level=level, field='analysis')
+        if not verdict.passed:
+            return _reading_refused(verdict)
         return {"success": True, "analysis": analysis}, 200
 
     except Exception as e:
@@ -467,6 +556,11 @@ def analyze_media_compare():
         - success: Boolean
         - comparison: English comparative reading
 
+    Both readings and their labels pass the intake: they come from the request
+    and go into the model's prompt, and a reading the result released costs
+    nothing there. The comparison is checked at the result before it leaves.
+    A refusal answers 403 with the block message (`safety_block`).
+
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same reading; only its way back is
     different. What stands behind it is one call to the analysis model with two
@@ -486,16 +580,17 @@ def analyze_media_compare():
     if refusal is not None:
         return jsonify(refusal[0]), refusal[1]
 
-    return answered_either_way(data, _run_analyze_compare, data,
+    return answered_either_way(data, _run_analyze_compare, data, resolve_safety_level(),
                                label='MEDIA-ANALYZE-COMPARE')
 
 
-def _run_analyze_compare(data):
+def _run_analyze_compare(data, level):
     """The comparison, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
-    not reach for ``request``: everything it needs stands in ``data``, and a
-    streamed answer runs this on a thread of its own.
+    not reach for ``request``: everything it needs stands in ``data`` and in the
+    level the route resolved, and a streamed answer runs this on a thread of its
+    own.
     """
     try:
         parts = data.get('parts') or []
@@ -506,6 +601,17 @@ def _run_analyze_compare(data):
         ]
         if len(cleaned) != 2:
             return {"error": "exactly two parts with text are required"}, 400
+
+        # THE INTAKE. Both readings and their labels go into the prompt below.
+        # The surface sends the readings as the reading routes released them,
+        # and a released text asks the intake nothing.
+        for i, part in enumerate(cleaned):
+            verdict = check_intake(part['text'], level=level, kind='text', field=f"parts[{i}]")
+            if verdict.passed:
+                verdict = check_intake(part['label'], level=level, kind='text',
+                                       field=f"parts[{i}].label")
+            if not verdict.passed:
+                return _reading_refused(verdict)
 
         frame = str(data.get('frame') or '').strip()
         framed = COMPARE_FRAME_NOTES.get(frame)
@@ -558,11 +664,25 @@ def _run_analyze_compare(data):
         if lang:
             text = _translate_analysis(text, lang)
 
+        # THE RESULT. The comparison is checked before it leaves.
+        verdict = check_result_text(text, level=level, field='comparison')
+        if not verdict.passed:
+            return _reading_refused(verdict)
         return {"success": True, "comparison": text}, 200
 
     except Exception as e:
         logger.error(f"Comparative analysis failed: {e}")
         return {"error": str(e)}, 500
+
+
+def _discard_upload(path: Path) -> None:
+    """Remove an upload that is not kept: refused, or its verdict not written."""
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        pass
+    except OSError as e:
+        logger.error(f"[UPLOAD] {path.name} is not kept but could not be removed: {e}")
 
 
 @media_bp.route('/upload/image', methods=['POST'])
@@ -572,10 +692,21 @@ def upload_image():
 
     Automatically resizes images to fit within supported model resolutions.
 
+    The picture is checked where it comes in (safety_gate.check_intake): at
+    kids and youth the level's picture question, about the picture as it is
+    kept; the other levels ask nothing about pictures. A picture that does not
+    pass is not kept, and the answer is 403 with the block message. The verdict
+    of one that passes is kept beside it, where delivery and every later check
+    read it. A recorded picture uploaded again under its own address (`source`)
+    carries the pass it has for the level, and nothing is asked again.
+
     Request body (multipart/form-data):
         - file: Image file (PNG, JPG, JPEG, WEBP) - REQUIRED
         - mask: Mask image file (PNG) - DEPRECATED (not used, text-guided editing sufficient)
         - run_id: Optional run ID to associate with (for organization)
+        - source: the address of the recorded picture the file was fetched
+          from (/api/media/image/<run>/<index>), where it is that picture
+          uploaded again
 
     Returns:
         JSON with:
@@ -589,6 +720,7 @@ def upload_image():
         - file_size_bytes: File size in bytes
         - has_mask: Boolean (always False, deprecated feature)
         - mask_url: URL to retrieve mask (always None, deprecated feature)
+        403: the picture did not pass the intake check (`safety_block`)
     """
     try:
         # Check if file part exists
@@ -681,6 +813,23 @@ def upload_image():
 
         logger.info(f"Image uploaded: {new_filename} | Original: {original_size} → Resized: {resized_size} | Size: {file_size / 1024:.1f}KB")
 
+        # The picture as it is kept is the one judged. A recorded picture
+        # uploaded again under its own address carries the pass it has; any
+        # other picture is asked.
+        level = resolve_safety_level()
+        verdict = (carried_intake_verdict(gate_bytes, request.form.get('source'),
+                                          level=level, field="file")
+                   or check_intake(file_path, level=level, kind="image", field="file"))
+        if not verdict.passed:
+            _discard_upload(file_path)
+            return jsonify({"error": "safety_blocked", "safety_block": verdict.block()}), 403
+        if verdict.level in IMAGE_CHECKED_LEVELS and not record_upload_verdict(image_id, verdict):
+            # A pass nobody can read again is no pass: every later check would
+            # refuse the picture, so it is refused now, while someone is there
+            # to be told.
+            _discard_upload(file_path)
+            return jsonify({"error": "The verdict on this picture could not be kept"}), 500
+
         # No mask: QWEN Image Edit and Flux2 IMG2IMG edit by text alone.
         mask_path = None
         has_mask = False
@@ -712,15 +861,23 @@ def get_uploaded_image(image_id: str):
     """
     Serve uploaded image by image_id.
 
-    Used by image_input nodes to display preview.
+    Used by image_input nodes to display preview. At kids and youth an upload
+    goes out only with a pass for the level of whoever asks, kept beside it
+    when it came in (safety_gate.upload_cleared_for); the other levels check no
+    pictures. Nothing is asked here.
 
     Args:
         image_id: UUID of the uploaded image
 
     Returns:
-        Image file or 404 error
+        Image file, 403 with the block message, or 404
     """
     try:
+        level = resolve_safety_level()
+        if normalise_level(level) in IMAGE_CHECKED_LEVELS and not upload_cleared_for(image_id, level):
+            return jsonify({"error": "safety_blocked", "safety_block": delivery_block("unchecked"),
+                            "image_id": image_id}), 403
+
         # Look for image in uploads directory (supports multiple extensions)
         for ext in ['png', 'jpg', 'jpeg', 'webp']:
             file_path = UPLOADS_TMP_DIR / f"{image_id}.{ext}"
@@ -740,14 +897,15 @@ def get_uploaded_image(image_id: str):
         return jsonify({'error': str(e)}), 500
 
 
-def _resolve_image(run_id: str, index: int):
+def _resolve_image(run_id: str, index: int, level):
     """
     WHICH file /api/media/image/<run_id>/<index> means.
 
     Returns ((path, format, index), None) or (None, (response, status)). The two
     routes that hand out a run's picture — full size and miniature — resolve it
     through this one function, so a miniature can never show a different picture
-    than the plate it stands in.
+    than the plate it stands in. `level` is the level of whoever asks: the
+    picture goes out where delivery hands it to that level.
     """
     recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
     if not recorder:
@@ -773,7 +931,7 @@ def _resolve_image(run_id: str, index: int):
     # The index stays what it was — a blocked picture keeps its place in the
     # numbering, so /image/<run>/1 means the same picture whether or not
     # picture 0 was cleared. Refused, not renumbered.
-    refusal = _entity_refusal(entity, recorder)
+    refusal = _entity_refusal(entity, recorder, level)
     if refusal:
         logger.warning(
             "[MEDIA] Refusing image %s/%s: %s", run_id, index, refusal
@@ -783,6 +941,7 @@ def _resolve_image(run_id: str, index: int):
         return None, (jsonify({
             "error": "safety_blocked",
             "detail": refusal,
+            "safety_block": delivery_block(refusal),
             "run_id": run_id,
             "index": index,
         }), 403)
@@ -813,7 +972,7 @@ def get_image_thumbnail(run_id: str, index: int):
     that is slow says more than a strip full of holes, and the header keeps the
     failure visible rather than silent.
     """
-    resolved, error = _resolve_image(run_id, index)
+    resolved, error = _resolve_image(run_id, index, resolve_safety_level())
     if error:
         return error
     file_path, file_format, idx = resolved
@@ -836,7 +995,8 @@ def get_image_thumbnail(run_id: str, index: int):
         response.headers['X-Thumbnail'] = 'full'
         return response
 
-    response = send_file(str(thumb), mimetype='image/jpeg', conditional=True)
+    response = send_file(str(thumb), mimetype='image/jpeg', conditional=True,
+                         download_name=served_thumbnail_name(thumb))
     # A finished run keeps its picture, so this one may be kept as well; the
     # marker exempts it from the app-wide no-store policy (my_app/__init__.py).
     response.headers['Cache-Control'] = 'private, max-age=31536000, immutable'
@@ -859,7 +1019,7 @@ def get_image(run_id: str, index: int = -1):
         Image file or 404 error
     """
     try:
-        resolved, error = _resolve_image(run_id, index)
+        resolved, error = _resolve_image(run_id, index, resolve_safety_level())
         if error:
             return error
         file_path, file_format, index = resolved
@@ -880,7 +1040,7 @@ def get_image(run_id: str, index: int = -1):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}_{index}.{file_format}'
+            download_name=_served_name(f'{run_id}_{index}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -896,7 +1056,8 @@ def get_3d_mesh(run_id: str):
     Serve 3D mesh (GLB) from local storage by run_id.
 
     Returns:
-        GLB file or 404 error
+        GLB file; 403 with the block message where no verdict on the run's
+        preview answers for the level of whoever asks; or 404
     """
     try:
         recorder = load_recorder(run_id, base_path=JSON_STORAGE_DIR)
@@ -909,6 +1070,16 @@ def get_3d_mesh(run_id: str):
             return jsonify({"error": f"No 3D mesh found for run {run_id}"}), 404
 
         mesh_entity = mesh_entities[-1]
+
+        # A 3D model is checked through its preview, a picture of its run, and
+        # goes out as clear as the run's pictures.
+        refusal = _entity_refusal(mesh_entity, recorder, resolve_safety_level())
+        if refusal:
+            logger.warning("[MEDIA] Refusing the 3D model of run %s: %s", run_id, refusal)
+            return jsonify({"error": "safety_blocked", "detail": refusal,
+                            "safety_block": delivery_block(refusal),
+                            "run_id": run_id}), 403
+
         logger.info(f"[MEDIA] Serving 3D mesh for run {run_id}")
 
         filename = mesh_entity['filename']
@@ -935,7 +1106,7 @@ def get_3d_mesh(run_id: str):
             file_path,
             mimetype=mimetype,
             as_attachment=as_download,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -994,7 +1165,7 @@ def get_audio(run_id: str, index: int = 0):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1058,7 +1229,7 @@ def get_music(run_id: str, index: int = 0):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1078,7 +1249,8 @@ def get_video(run_id: str, index: int = 0):
         run_id: UUID of the pipeline run
 
     Returns:
-        Video file or 404 error
+        Video file; 403 with the block message where no verdict on the video
+        answers for the level of whoever asks; or 404
     """
     try:
         # Load recorder from disk
@@ -1090,6 +1262,16 @@ def get_video(run_id: str, index: int = 0):
         video_entity = _find_entity_by_type(recorder.metadata.get('entities', []), 'video')
         if not video_entity:
             return jsonify({"error": f"No video found for run {run_id}"}), 404
+
+        # The check at the result wrote its verdict onto the video, and the
+        # video goes out where that verdict answers for whoever asks, as a
+        # picture does.
+        refusal = _entity_refusal(video_entity, recorder, resolve_safety_level())
+        if refusal:
+            logger.warning("[MEDIA] Refusing the video of run %s: %s", run_id, refusal)
+            return jsonify({"error": "safety_blocked", "detail": refusal,
+                            "safety_block": delivery_block(refusal, field="video"),
+                            "run_id": run_id}), 403
 
         # Get file path
         filename = video_entity['filename']
@@ -1112,7 +1294,7 @@ def get_video(run_id: str, index: int = 0):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1163,7 +1345,7 @@ def get_midi(run_id: str):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1194,6 +1376,9 @@ def get_sonicpi(run_id: str):
         sonicpi_entity = _find_entity_by_type(recorder.metadata.get('entities', []), 'sonicpi')
         if not sonicpi_entity:
             return jsonify({"error": f"No Sonic Pi code found for run {run_id}"}), 404
+        withheld = _code_withheld(sonicpi_entity, recorder, run_id, resolve_safety_level())
+        if withheld:
+            return withheld
 
         # Get file path
         filename = sonicpi_entity['filename']
@@ -1214,7 +1399,7 @@ def get_sonicpi(run_id: str):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1245,6 +1430,9 @@ def get_p5(run_id: str):
         p5_entity = _find_entity_by_type(recorder.metadata.get('entities', []), 'p5')
         if not p5_entity:
             return jsonify({"error": f"No p5.js code found for run {run_id}"}), 404
+        withheld = _code_withheld(p5_entity, recorder, run_id, resolve_safety_level())
+        if withheld:
+            return withheld
 
         # Get file path
         filename = p5_entity['filename']
@@ -1266,7 +1454,7 @@ def get_p5(run_id: str):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1297,6 +1485,9 @@ def get_tonejs(run_id: str):
         tonejs_entity = _find_entity_by_type(recorder.metadata.get('entities', []), 'tonejs')
         if not tonejs_entity:
             return jsonify({"error": f"No Tone.js code found for run {run_id}"}), 404
+        withheld = _code_withheld(tonejs_entity, recorder, run_id, resolve_safety_level())
+        if withheld:
+            return withheld
 
         # Get file path
         filename = tonejs_entity['filename']
@@ -1318,7 +1509,7 @@ def get_tonejs(run_id: str):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{file_format}'
+            download_name=_served_name(f'{run_id}.{file_format}', file_path)
         )
 
     except Exception as e:
@@ -1362,10 +1553,15 @@ def mark_media():
         data = watermark_media_bytes(data, 'output_media', {})
     except Exception as e:
         logger.warning(f"[MEDIA-MARK] watermark not applied ({e})")
+    # The page saves what comes back under its own name; this one tells it
+    # whether that name needs `_ai_generated` (composables/useMediaMarking.ts).
+    from my_app.services.media_marking import disclosed_name
+    name = disclosed_name(data, 'output_media', 'media', '[MEDIA-MARK]')
 
     return Response(data, mimetype=upload.mimetype or 'application/octet-stream', headers={
         'Content-Length': str(len(data)),
         'Cache-Control': 'no-store',
+        'Content-Disposition': f'inline; filename="{name}"',
     })
 
 
@@ -1505,7 +1701,21 @@ def get_composition(run_id: str, index: int = 0):
         if not recorder:
             return jsonify({"error": f"Run {run_id} not found"}), 404
 
-        file_path = recorder.get_entity_path('output_composition')
+        # Asked like every other door: a composition goes out as clear as the
+        # pieces it was made of, for whoever asks
+        # (pipeline_recorder._composition_cleared).
+        level = resolve_safety_level()
+        file_path = None
+        for entity in recorder.metadata.get('entities', []):
+            if entity.get('type') != 'output_composition':
+                continue
+            try:
+                file_path = recorder.checked_entity_path(entity, level)
+            except SafetyRefusal as refusal:
+                return jsonify({"error": "safety_blocked", "detail": refusal.reason,
+                                "safety_block": delivery_block(refusal.reason, refusal.field),
+                                "run_id": run_id}), 403
+            break
         if not file_path or not file_path.exists():
             return jsonify({"error": f"No composition found for run {run_id}"}), 404
 
@@ -1523,7 +1733,7 @@ def get_composition(run_id: str, index: int = 0):
             file_path,
             mimetype=mimetype,
             as_attachment=False,
-            download_name=f'{run_id}.{ext}',
+            download_name=_served_name(f'{run_id}.{ext}', file_path),
         )
 
     except Exception as e:
@@ -1550,7 +1760,9 @@ def compose_media():
 
     Inputs are existing platform artifacts, which have already passed the safety
     check on the run that produced them. Composition adds no new prompt and no
-    new model output, so it runs no further check.
+    new model output, so it runs no further check. Each piece is taken only
+    where delivery would hand it to whoever asks, and the composition goes out
+    as clear as its pieces are.
 
     Returns:
         JSON with success + {run_id, media_type: "composition", url, filename,
@@ -1574,6 +1786,7 @@ def compose_media():
         result = pp.compose(
             operation,
             inputs,
+            safety_level=resolve_safety_level(),
             user_id=data.get('user_id') or 'flow',
             device_id=data.get('device_id'),
         )

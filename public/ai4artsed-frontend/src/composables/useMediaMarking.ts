@@ -13,23 +13,34 @@
  * carries nothing.
  */
 
-import { downloadBlob } from '@/lib/downloadMedia'
+import { carriesDisclosure, downloadBlob, unmarkedName } from '@/lib/downloadMedia'
 
-/** Hand bytes to the server for marking. Returns the original blob on failure. */
-export async function markBlob(blob: Blob): Promise<Blob> {
+/**
+ * Hand bytes to the server for marking. Returns the original blob on failure.
+ * `unmarked` where the disclosure is not in what comes back, read off the bytes.
+ * Only for a medium: anything else (a preset, a workflow) is saved as it is.
+ */
+export async function markBlob(blob: Blob): Promise<{ blob: Blob; unmarked: boolean }> {
+  let result = blob
   try {
     const form = new FormData()
     form.append('file', blob)
     const response = await fetch('/api/media/mark', { method: 'POST', body: form })
-    if (!response.ok) return blob
-    const marked = await response.blob()
-    return marked.size > 0 ? marked : blob
+    if (response.ok) {
+      const marked = await response.blob()
+      if (marked.size > 0) result = marked
+    }
   } catch {
-    return blob
+    // The original goes out; its bytes say whether it carries the disclosure.
   }
+  return { blob: result, unmarked: !(await carriesDisclosure(result)) }
 }
 
-/** Save a blob the browser made, marked: the cause, or '' (lib/downloadMedia.ts). */
+/**
+ * Save a blob the browser made, marked: the cause, or '' (lib/downloadMedia.ts).
+ * A file the disclosure did not get into is saved with `_ai_generated` in its name.
+ */
 export async function downloadMarkedBlob(blob: Blob, filename: string): Promise<string> {
-  return downloadBlob(await markBlob(blob), filename)
+  const marked = await markBlob(blob)
+  return downloadBlob(marked.blob, marked.unmarked ? unmarkedName(filename) : filename)
 }

@@ -310,6 +310,20 @@ def test_settings_admin_bridge_without_seeded_admin_is_anonymous():
     assert c.get("/probe/admin").status_code == 401
 
 
+def test_logout_ends_the_settings_sign_in():
+    """The sign-out signs out a browser that signed in through the settings
+    password as well: it stayed the first admin."""
+    seed_admin()
+    app = _role_probe_app()
+    c = app.test_client()
+    with c.session_transaction() as sess:
+        sess["settings_authenticated"] = True
+    assert c.get("/api/auth/me").get_json()["user"]["role"] == "admin"
+    assert c.post("/api/auth/logout").status_code == 200
+    assert c.get("/api/auth/me").get_json()["user"] is None
+    assert c.get("/probe/admin").status_code == 401
+
+
 # ---------------------------------------------------------------------------
 # Fail-safe init: a broken DB must NOT block app start
 # ---------------------------------------------------------------------------

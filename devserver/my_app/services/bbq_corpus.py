@@ -13,9 +13,9 @@ decided here at run time. Every template targets one bias that is documented as
 harmful, carries the source it is attested in, and ships with a per-example
 annotation (target_loc) of WHICH of the three answers reflects that bias. This
 module only joins the two files and hands them out. Nothing is filtered - with
-one exception, and it is a level, not a judgement about the benchmark: below the
-open level some situations are kept back, and at the kids level some categories
-are not offered at all. See KIDS_CATEGORIES and MINORS_LEVELS below.
+one exception, and it is a level, not a judgement about the benchmark: at the
+kids and youth levels some situations are kept back, and at the kids level some
+categories are not offered at all. See KIDS_CATEGORIES and MINORS_LEVELS below.
 
 The annotation is polarity-specific, and that is the point of BBQ's four-way
 design: for "who was the secretary?" target_loc points at the stereotyped group,
@@ -137,8 +137,7 @@ KIDS_EXCLUDE = re.compile(
 # not a rest.
 KIDS_EXCLUDE_SUBCATEGORIES = ("MentalIllness",)
 
-# Six situations that are held back from EVERY level below `open`, kids and
-# youth alike. They name no
+# Six situations that are held back at kids and youth alike. They name no
 # heavy theme, which is why the screen above walks past them, and they are not
 # harmless: each one puts a person of the class in the room in the place the
 # question asks about.
@@ -180,7 +179,7 @@ KIDS_SELECTION = (
     "and within them the situations that turn on drugs, alcohol, violence, weapons, "
     "crime, terror, mental illness or sex are kept back - as whole situations, before "
     "the draw. What is left is drawn from as described above. Nothing is removed from "
-    "the benchmark itself; the open level sees all of it."
+    "the benchmark itself; the adult and research levels see all of it."
 )
 
 YOUTH_SELECTION = (
@@ -189,7 +188,7 @@ YOUTH_SELECTION = (
     "girlfriend or wife, being ranked by looks, same-sex marriage held against a "
     "religious conviction, and racism named as one of the two people's deed. Whole "
     "situations, before the draw. Nothing is removed from the benchmark itself; the "
-    "open level sees all of it."
+    "adult and research levels see all of it."
 )
 
 
@@ -291,16 +290,16 @@ def _screened(item: Dict[str, Any], level: str) -> bool:
     return bool(KIDS_EXCLUDE.search(blob))
 
 
-def clusters(category: str, level: str = "open") -> List[List[Dict[str, Any]]]:
+def clusters(category: str, level: str = "adult") -> List[List[Dict[str, Any]]]:
     """The four ways of asking one situation, kept together.
 
     BBQ writes each situation as four rows: negative and non-negative question,
     each with and without the disambiguating sentence. Sampling has to move in
     fours or the control condition falls apart.
 
-    Below the open level a whole situation goes or stays: if any of its four
+    At kids and youth a whole situation goes or stays: if any of its four
     rows is screened - by its theme, by its subcategory, or as one of the six
-    held back from every level below open - the situation is not offered.
+    held back at both - the situation is not offered.
     Dropping only the offending row would leave a cluster whose control
     condition rests on a question the group never saw.
     """
@@ -319,7 +318,7 @@ def clusters(category: str, level: str = "open") -> List[List[Dict[str, Any]]]:
 
 
 def sample(category: str, count: int = 30, seed: Optional[int] = None,
-           level: str = "open") -> Dict[str, Any]:
+           level: str = "adult") -> Dict[str, Any]:
     """`count` situations drawn at random from the whole category.
 
     A draw, not a filter, and a fresh one per run: repeating a run then asks a
@@ -364,7 +363,7 @@ class BBQDenied(RuntimeError):
     """Asked for a category this safety level is not offered."""
 
 
-def allowed(category: str, level: str = "open") -> bool:
+def allowed(category: str, level: str = "adult") -> bool:
     """Whether a course at this level is offered this category at all.
 
     A name the benchmark does not have is not offered at any level. Without
@@ -376,7 +375,7 @@ def allowed(category: str, level: str = "open") -> bool:
     return level != "kids" or category in KIDS_CATEGORIES
 
 
-def overview(level: str = "open") -> Dict[str, Any]:
+def overview(level: str = "adult") -> Dict[str, Any]:
     """What is there, without running anything.
 
     The counts are the ones the level actually gets: at kids the categories it

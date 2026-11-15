@@ -5,16 +5,19 @@ media_analysis_client.py) queues one prompt of this node per reading: the
 file was put into ComfyUI's input directory through /upload/image and is
 named here. The task says which reader runs (audio: the chat model that
 hears; image and video: the local Qwen3-VL from models/llm; lyrics: the
-transcriber; music_tags: a ranking of the labels), and the prompts, the
-labels and the trust_remote_code flag come from the DevServer's table.
-Everything that holds the models is in _media_reading.py.
+transcriber; music_tags: a ranking of the labels; video_check: the video
+reader's answer to one yes/no question, as the probability of yes, for the
+safety check at the result), and the prompts, the labels and the
+trust_remote_code flag come from the DevServer's table (the question of
+video_check from its safety check). Everything that holds the models is in
+_media_reading.py.
 """
 import json
 import time
 
 from . import _local_llm, _media_files, _media_reading
 
-TASKS = ["audio", "image", "video", "lyrics", "music_tags"]
+TASKS = ["audio", "image", "video", "video_check", "lyrics", "music_tags"]
 
 
 class ai4artsed_media_reading:
@@ -72,6 +75,10 @@ class ai4artsed_media_reading:
         elif task == "video":
             text = _media_reading.describe_video(model_name, path, prompt)
             ui["analysis"] = [text]
+        elif task == "video_check":
+            score = _media_reading.score_video(model_name, path, system_prompt, prompt)
+            text = repr(score)
+            ui["score"] = [score]
         elif task == "lyrics":
             out = _media_reading.transcribe(model_name, path, language=language or None)
             text = out["text"]

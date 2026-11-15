@@ -11,7 +11,8 @@
     "es": "¡Amplificador!",
     "he": "מגבר!",
     "ar": "المُضخِّم!",
-    "bg": "Усилвател!"
+    "bg": "Усилвател!",
+    "zh-hant": "放大器"
   },
   "description": {
     "en": "Overdrive. Inspired by the guitar effect of the same name. Drives visual elements to and beyond their limits. Amplifies colors, contrasts and structures to the point of distortion.",
@@ -22,6 +23,7 @@
     "he": "Overdrive. בהשראת אפקט הגיטרה בעל אותו השם. דוחף אלמנטים חזותיים אל גבולותיהם ומעבר להם. מגביר צבעים, ניגודיות ומבנים עד לנקודת העיוות.",
     "ar": "Overdrive. مستوحى من تأثير الغيتار الذي يحمل الاسم نفسه. يدفع العناصر البصرية إلى حدودها وما بعدها. يُضخّم الألوان والتباينات والهياكل حتى نقطة التشويه.",
     "bg": "Overdrive. Вдъхновен от едноименния китарен ефект. Довежда визуалните елементи до и отвъд границите им. Усилва цветовете, контрастите и структурите до степен на изкривяване.",
+    "zh-hant": "Overdrive。靈感來自同名的吉他效果器。把視覺元素推向、甚至超越它們的極限。放大色彩、對比與結構，直到失真。",
     "tr": "Overdrive. Aynı adlı gitar efektinden ilham alınmıştır. Görsel öğeleri sınırlarına ve ötesine iter. Renkleri, kontrast ve yapıları bozulma noktasına kadar güçlendirir.",
     "ko": "Overdrive. 같은 이름의 기타 이펙트에서 영감을 받았습니다. 시각적 요소들을 한계까지, 그리고 그 너머까지 밀어붙입니다. 색상, 대비, 구조를 왜곡 지점까지 증폭시킵니다."
   },
@@ -31,6 +33,7 @@
     "he": "טרנספורמציות יצירתיות",
     "ar": "التحولات الإبداعية",
     "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
     "tr": "Yaratıcı Dönüşümler",
     "ko": "창의적 변환",
     "uk": "Творчі перетворення",

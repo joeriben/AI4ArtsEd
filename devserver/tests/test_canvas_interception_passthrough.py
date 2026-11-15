@@ -8,8 +8,10 @@ asked its language model anyway, with the task instruction and no perspective,
 and what reached the image model was that model's rewrite. The basic forms the
 Canvas offers under "New" (schemas/canvas_presets) start with such a node.
 
-The age check is not this step's: it runs where the text meets the media
-model (test_canvas_generation_stage3.py). A node that names a perspective but
+The check before the model is not this step's: it runs where the text meets
+the media model (test_canvas_generation_stage3.py). What the node's model
+writes goes through the check at the result (test_canvas_checks.py), which
+lets everything pass here. A node that names a perspective but
 carries none of its words is not the empty zone -- its text did not arrive --
 and stops instead of passing the prompt on under the perspective's name.
 
@@ -23,6 +25,19 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from my_app.services.canvas_executor import CanvasWorkflowExecutor
+
+
+@pytest.fixture(autouse=True)
+def _results_pass(monkeypatch):
+    """The check at the result lets every text pass; test_canvas_checks.py
+    tests it."""
+    from my_app.services import canvas_executor
+    from my_app.services.safety_gate import CHECKPOINT_RESULT, Verdict
+
+    def passes(text, *, level, field="text"):
+        return Verdict(True, CHECKPOINT_RESULT, level, field)
+
+    monkeypatch.setattr(canvas_executor, "check_result_text", passes)
 
 
 class _Recorder:
@@ -114,4 +129,13 @@ def test_a_configured_lens_runs():
 
 def test_a_perspective_keeps_its_safety_prefix():
     ex, engine, _ = _run(safety_level="kids", contextPrompt="Sieh es als Ort.")
-    assert "SAFETY (ages 8-13)" in engine.requests[0].task_instruction
+    assert "SAFETY: This output generates media for children." in engine.requests[0].task_instruction
+
+
+def test_a_looped_answer_goes_on_in_its_once_form():
+    """No error for a model that began to repeat itself: the text goes on with
+    what repeated in it standing in it once, as at the translation node
+    (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31). The engine side is in
+    test_interception_local_branch.py."""
+    _, engine, _ = _run(contextPrompt="Sieh es als Ort.")
+    assert engine.requests[0].loop_once is True

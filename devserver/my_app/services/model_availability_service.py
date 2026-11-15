@@ -566,9 +566,8 @@ class ModelAvailabilityService:
                 # for a provider whose entry names the LiteLLM account API, also
                 # with a key the provider refuses, with a
                 # budget used up that the provider names (budget_exceeded), or with
-                # one that services/provider_account.py judges: for Gemini 3 Pro
-                # Image, without a key, with a refused key, and without credit
-                # (docs/DEVELOPMENT_DECISIONS.md). The code-based ones name no
+                # one that services/provider_account.py judges used up. The
+                # code-based ones name no
                 # provider and stay available. The account check is imported here,
                 # in the function (tests/test_provider_account.py).
                 from my_app.services import provider_account
@@ -595,6 +594,12 @@ class ModelAvailabilityService:
             # Load chunk and extract requirements
             chunk_path = self.chunk_dir / f"{output_chunk}.json"
             requirements = self._extract_chunk_requirements(chunk_path)
+            # The model that writes the adaption is as much a condition of this
+            # config as the one that makes the picture.
+            adaption_chunk = config_data.get("meta", {}).get("adaption_chunk")
+            if adaption_chunk:
+                requirements = requirements + self._extract_chunk_requirements(
+                    self.chunk_dir / f"{adaption_chunk}.json")
 
             if not requirements:
                 logger.warning(f"[MODEL_AVAILABILITY] {config_id}: No model requirements found in chunk {output_chunk}")

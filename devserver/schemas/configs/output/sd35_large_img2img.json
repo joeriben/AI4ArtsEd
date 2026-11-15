@@ -10,7 +10,8 @@
     "es": "SD 3.5 Large Imagen a imagen",
     "he": "SD 3.5 Large מתמונה לתמונה",
     "ar": "SD 3.5 Large من صورة إلى صورة",
-    "bg": "SD 3.5 Large Изображение към изображение"
+    "bg": "SD 3.5 Large Изображение към изображение",
+    "zh-hant": "SD 3.5 Large 圖生圖"
   },
   "description": {
     "en": "Image transformation using Stable Diffusion 3.5 Large. Partially denoises your image and regenerates guided by your prompt — zero extra VRAM via from_pipe().",
@@ -22,7 +23,8 @@
     "es": "Transformación de imágenes con Stable Diffusion 3.5 Large. Elimina parcialmente el ruido de tu imagen y la regenera guiada por tu prompt — sin VRAM adicional gracias a from_pipe().",
     "he": "טרנספורמציית תמונה באמצעות Stable Diffusion 3.5 Large. מסיר רעש חלקית מהתמונה שלך ומייצר אותה מחדש בהנחיית הפרומפט שלך — ללא VRAM נוסף בזכות from_pipe().",
     "ar": "تحويل الصور باستخدام Stable Diffusion 3.5 Large. يزيل الضوضاء جزئيًا من صورتك ويعيد توليدها بتوجيه من وصفك (prompt) — دون أي ذاكرة VRAM إضافية بفضل from_pipe().",
-    "bg": "Трансформация на изображения с Stable Diffusion 3.5 Large. Частично премахва шума от изображението ви и го регенерира, водено от вашата подкана — без допълнителна VRAM благодарение на from_pipe()."
+    "bg": "Трансформация на изображения с Stable Diffusion 3.5 Large. Частично премахва шума от изображението ви и го регенерира, водено от вашата подкана — без допълнителна VRAM благодарение на from_pipe().",
+    "zh-hant": "使用 Stable Diffusion 3.5 Large 進行圖像轉換。對你的圖片進行部分去雜訊，再依照你的提示詞重新生成——透過 from_pipe() 不需額外 VRAM。"
   },
   "category": {
     "en": "Image Transformation",
@@ -34,7 +36,8 @@
     "es": "Transformación de imágenes",
     "he": "טרנספורמציית תמונות",
     "ar": "تحويل الصور",
-    "bg": "Трансформация на изображения"
+    "bg": "Трансформация на изображения",
+    "zh-hant": "圖像轉換"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_sd35_img2img",
@@ -111,7 +114,8 @@
           "es": "Los codificadores de texto CLIP se entrenaron predominantemente con datos web en inglés",
           "he": "מקודדי הטקסט של CLIP אומנו ברובם על נתוני רשת באנגלית",
           "ar": "دُرِّبت مُرمِّزات نص CLIP في الغالب على بيانات ويب باللغة الإنجليزية",
-          "bg": "Текстовите енкодери CLIP са обучени предимно с англоезични уеб данни"
+          "bg": "Текстовите енкодери CLIP са обучени предимно с англоезични уеб данни",
+          "zh-hant": "CLIP 文字編碼器主要以英語網路資料訓練"
         },
         {
           "en": "Western visual aesthetic emphasis (composition, lighting conventions)",
@@ -123,7 +127,8 @@
           "es": "Énfasis en una estética visual occidental (composición, convenciones de iluminación)",
           "he": "דגש על אסתטיקה חזותית מערבית (קומפוזיציה, מוסכמות תאורה)",
           "ar": "تركيز على الجمالية البصرية الغربية (التكوين، أعراف الإضاءة)",
-          "bg": "Акцент върху западна визуална естетика (композиция, конвенции за осветление)"
+          "bg": "Акцент върху западна визуална естетика (композиция, конвенции за осветление)",
+          "zh-hant": "著重西方視覺美學（構圖、打光慣例）"
         },
         {
           "en": "T5-XXL multilingual but English-dominant (~80% C4 corpus is English)",
@@ -135,7 +140,8 @@
           "es": "T5-XXL es multilingüe pero dominado por el inglés (~80% del corpus C4 es inglés)",
           "he": "T5-XXL רב-לשוני אך נשלט על ידי האנגלית (כ-80% מקורפוס C4 הוא באנגלית)",
           "ar": "T5-XXL متعدد اللغات لكنه يغلب عليه الإنجليزية (نحو 80% من مجموعة بيانات C4 بالإنجليزية)",
-          "bg": "T5-XXL е многоезичен, но с доминация на английския (~80% от корпуса C4 е на английски)"
+          "bg": "T5-XXL е многоезичен, но с доминация на английския (~80% от корпуса C4 е на английски)",
+          "zh-hant": "T5-XXL 支援多語言，但以英語為主（C4 語料庫約 80% 為英語）"
         }
       ],
       "known_gaps": [
@@ -149,7 +155,8 @@
           "es": "Comprensión limitada de escrituras no latinas en los codificadores CLIP",
           "he": "הבנה מוגבלת של כתבים שאינם לטיניים במקודדי CLIP",
           "ar": "فهم محدود للأنظمة الكتابية غير اللاتينية في مُرمِّزات CLIP",
-          "bg": "Ограничено разбиране на нелатински писмености в енкодерите на CLIP"
+          "bg": "Ограничено разбиране на нелатински писмености в енкодерите на CLIP",
+          "zh-hant": "CLIP 編碼器對非拉丁文字的理解有限"
         },
         {
           "en": "Underrepresented: African, Indigenous, Southeast Asian visual traditions",
@@ -161,7 +168,8 @@
           "es": "Subrepresentadas: tradiciones visuales africanas, indígenas y del sudeste asiático",
           "he": "מיוצגים בחסר: מסורות חזותיות אפריקאיות, ילידיות ודרום-מזרח אסייתיות",
           "ar": "ممثَّلة تمثيلاً ناقصاً: التقاليد البصرية الأفريقية والأصلية وجنوب شرق آسيا",
-          "bg": "Недостатъчно представени: африкански, коренни (индигенни) и югоизточноазиатски визуални традиции"
+          "bg": "Недостатъчно представени: африкански, коренни (индигенни) и югоизточноазиатски визуални традиции",
+          "zh-hant": "代表性不足：非洲、原住民、東南亞的視覺傳統"
         },
         {
           "en": "No consent from original creators whose work may be in training data",
@@ -173,7 +181,8 @@
           "es": "Sin consentimiento de los creadores originales cuya obra puede estar en los datos de entrenamiento",
           "he": "אין הסכמה מהיוצרים המקוריים שיצירתם עשויה להימצא בנתוני האימון",
           "ar": "لا موافقة من المبدعين الأصليين الذين قد تكون أعمالهم ضمن بيانات التدريب",
-          "bg": "Липсва съгласие от оригиналните автори, чиито произведения може да са в данните за обучение"
+          "bg": "Липсва съгласие от оригиналните автори, чиито произведения може да са в данните за обучение",
+          "zh-hant": "未取得原創作者的同意，而他們的作品可能就在訓練資料中"
         }
       ]
     },

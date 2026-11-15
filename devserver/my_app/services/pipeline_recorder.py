@@ -54,19 +54,25 @@ _metadata_save_lock = threading.Lock()
 SAFETY_VERDICT_KEY = "safety"
 
 # Levels at which a generated picture is held against a content check before it
-# is shown. Mirrors the caller in schema_pipeline_routes; kept here because the
-# delivery side has to answer the same question without importing routes.
+# is shown, and at which delivery hands a picture out only with a pass that
+# answers for the level of whoever asks. Above them nothing is withheld here:
+# adult checks no pictures, research nothing at all. Kept here
+# because the delivery side has to answer without importing routes.
 IMAGE_CHECKED_LEVELS = ("kids", "youth")
 
-# Media kinds for which a verdict is recorded HERE. Generated code has its own
-# check on its own path (stage_orchestrator.execute_stage3_safety_code, which
-# is fail-closed and skipped only at research/adult), so it needs none from
-# this register. Sound, video and 3D have no output check anywhere on the
-# platform — a missing verdict on those says nothing was ever asked, and
-# refusing them would hide work over a check that does not exist. That gap is
-# real (video at kids/youth is reachable: ltx_video carries min_age 10) and it
-# is a different gap from this one.
-VERDICT_BEARING_KINDS = ("image",)
+# Code a language model wrote, which the browser runs: a p5.js or Tone.js
+# sketch, Sonic Pi. The check at the result writes its verdict onto the entity
+# (safety_gate.check_result_code), and delivery reads it as it reads a
+# picture's. Code is also checked at adult, where no picture is, so a sketch
+# refused at adult is not handed out there either.
+CODE_KINDS = ("p5", "tonejs", "sonicpi")
+
+# Media kinds for which a verdict is recorded HERE: pictures, videos and code.
+# A video is checked as a whole at the result (safety_gate.check_result_video)
+# and goes out by its verdict as a picture does. Sound has no output check
+# anywhere on the platform — a missing verdict on it says nothing was ever
+# asked, and refusing it would hide work over a check that does not exist.
+VERDICT_BEARING_KINDS = ("image", "video") + CODE_KINDS
 
 # Pictures MADE OF the pictures above: the strip a run lays out when it
 # produced several images, and the before/after pair. They carry no content of
@@ -76,21 +82,48 @@ VERDICT_BEARING_KINDS = ("image",)
 # difference whether the strip is written before or after the check runs.
 DERIVED_IMAGE_KINDS = ("image_composite", "image_comparison")
 
-# Runs recorded before per-entity verdicts existed carry no marker. Their
-# pictures were cleared by the old chain (which looked at the first picture of
-# a run) or blocked by it, and no reading of their record can turn that into a
-# per-picture verdict after the fact. `metadata["safety_verdicts"] is True`
-# marks a run that records them, and only such a run is judged by this rule.
-SAFETY_VERDICTS_FLAG = "safety_verdicts"
+# Pictures a run shows on its way to the result: the parts a Latent Lab
+# instrument keeps (the frames of a denoising run). They are held back until
+# the run's finished picture is cleared and travel with it (decided with the
+# structure of 2026-10-29); a verdict of their own would cost a call per frame.
+# A part is held whatever format it names: the format is the sender's word, and
+# every part an instrument sends today is a picture.
+INTERMEDIATE_IMAGE_KINDS = ("latent_lab_step",)
+
+# Media the check at the result reads through a picture of them: a 3D model,
+# which its run renders as a preview and stores as an `output_image`. The
+# preview is checked like any picture, and the model goes out as clear as the
+# run's pictures. A 3D run without a preview has nothing to clear it with.
+PREVIEWED_KINDS = ("3d",)
+
+# A post-production piece (post_production_service): a still or a film laid
+# under a sound. It is made of other runs' pieces and carries no verdict of its
+# own, so it is as clear as the pieces its record names (`composed_from`).
+COMPOSITION_KIND = "composition"
+
+# Whether a run's generation took a picture in: image to image, several images,
+# image to video. A picture such a run makes is made from the one it took in,
+# and goes where that one may go: an upload stays on this server, and so does
+# what is made from it. True or False where the run said it
+# (LivePipelineRecorder.record_input_image); a run that does not say counts as
+# one whose origin is unknown (media_ref.may_leave_server).
+INPUT_IMAGE_KEY = "had_input_image"
 
 
 class SafetyRefusal(Exception):
-    """Raised where a recorded output may not be handed out."""
+    """Raised where a recorded output may not be handed out.
 
-    def __init__(self, reason: str, run_id: str = "", filename: str = ""):
+    `field` says what was refused, for the block message: "code" for code a
+    language model wrote, "video" for a video, "image" for everything else a
+    door refuses.
+    """
+
+    def __init__(self, reason: str, run_id: str = "", filename: str = "",
+                 field: str = "image"):
         self.reason = reason
         self.run_id = run_id
         self.filename = filename
+        self.field = field
         super().__init__(
             f"run {run_id or '?'}: {filename or 'entity'} is {reason}"
         )
@@ -123,8 +156,21 @@ def public_entity(entity: dict) -> dict:
     return trimmed
 
 
-def _sources_cleared(run_metadata: dict) -> tuple:
-    """Whether every picture of the run this composed one belongs to is cleared.
+def _kind_of(entity_type) -> str:
+    """The kind behind `output_`.
+
+    Runs from before the `output_` prefix recorded the bare kind, and the
+    platform's selection rule still picks those up (media_ref, legacy branch).
+    Reading only the prefixed form would let exactly those through unasked.
+    """
+    etype = str(entity_type or "")
+    return etype[len("output_"):] if etype.startswith("output_") else etype
+
+
+def _sources_cleared(run_metadata: dict, level) -> tuple:
+    """Whether every picture of the run is cleared for `level`: what a picture
+    made of them, or shown on the way to them, needs, and what a 3D model
+    needs whose preview is one of them.
 
     Over the RUN rather than over the entity's own `source_files`, which is the
     stricter of the two readings: a strip is written from the pictures of its
@@ -136,58 +182,152 @@ def _sources_cleared(run_metadata: dict) -> tuple:
         if entity.get("type") != "output_image":
             continue
         sources += 1
-        cleared, reason = entity_cleared_for_delivery(entity, run_metadata)
+        cleared, reason = entity_cleared_for_delivery(entity, run_metadata, level)
         if not cleared:
             return False, reason
     if not sources:
-        # A picture made of pictures, in a run holding none. Nothing to derive a
+        # A picture made of pictures, a part on the way to one, or a 3D model
+        # without its preview, in a run holding none. Nothing to derive a
         # verdict from, and an empty loop must not read as agreement.
         return False, "unchecked"
     return True, ""
 
 
-def entity_cleared_for_delivery(entity: dict, run_metadata: dict) -> tuple:
+def _composition_cleared(entity: dict, level) -> tuple:
+    """Whether every piece a composition was made of is cleared for `level`.
+
+    Its record names them (`composed_from`: role, run, entity type), and each is
+    asked where it lies, the way `post_production_service._resolve_ref` took it:
+    the first entity of that type in its run. A composition that names no
+    piece, or a piece that is gone, has nothing to derive a verdict from. No
+    composition is made of another one, so a piece of that kind is refused
+    rather than followed.
     """
-    May this entity be handed out?
+    import config
+
+    pieces = (entity.get("metadata") or {}).get("composed_from")
+    if not isinstance(pieces, list) or not pieces:
+        return False, "unchecked"
+    for piece in pieces:
+        if not isinstance(piece, dict):
+            return False, "unchecked"
+        run_id = str(piece.get("run_id") or "")
+        etype = str(piece.get("type") or "")
+        if not run_id or not etype or _kind_of(etype) == COMPOSITION_KIND:
+            return False, "unchecked"
+        source = load_recorder(run_id, base_path=Path(config.JSON_STORAGE_DIR))
+        if source is None:
+            return False, "unchecked"
+        found = next((e for e in source.metadata.get("entities", [])
+                      if e.get("type") == etype), None)
+        if found is None:
+            return False, "unchecked"
+        cleared, reason = entity_cleared_for_delivery(found, source.metadata, level)
+        if not cleared:
+            return False, reason
+    return True, ""
+
+
+def refused_field(entity: dict) -> str:
+    """What a refused entity is called in the block message: code, a video, or
+    a picture. A 3D model is refused by its preview and called a picture."""
+    kind = _kind_of(entity.get("type"))
+    if kind in CODE_KINDS:
+        return "code"
+    return "video" if kind == "video" else "image"
+
+
+def entity_verdict(safe: bool, reason: str = "", description: str = "",
+                   level: Optional[str] = None) -> dict:
+    """A content-check verdict in the form an entity carries it.
+
+    It stands under SAFETY_VERDICT_KEY in the entity's metadata, where delivery
+    reads it (safety_gate.entity_cleared_for). Every recorder writes this one
+    form. A verdict without a level counts at the level of its run.
+    """
+    verdict = {
+        "safe": bool(safe),
+        "reason": reason or "",
+        "description": description or "",
+        "checked_at": datetime.now().isoformat(),
+    }
+    if level:
+        verdict["level"] = level
+    return verdict
+
+
+def entity_cleared_for_delivery(entity: dict, run_metadata: dict, level) -> tuple:
+    """
+    May this entity be handed to whoever asks at `level`?
 
     Returns (cleared: bool, reason: str). The reason is empty when cleared and
     carries a short machine-readable word otherwise ('blocked', 'unchecked').
 
-    FAIL-CLOSED for every run that records verdicts: an output whose kind is
-    checked at this run's safety level is handed out only once a verdict says
-    so. A picture still being checked has no verdict yet and is refused until
-    it has one — which is the right answer for the seconds it lasts.
+    `level` is the level of whoever asks, resolved by the view that serves them
+    — never the level the run was made at. At kids and youth a picture goes out
+    only with a pass that answers for that level: a pass counts for its own
+    level and every looser one, and a verdict written without a level counts at
+    the level of its run (safety_gate.entity_cleared_for). A picture still being
+    checked has no verdict yet and is refused until it has one, and so is a
+    picture of a run recorded before verdicts were kept. Delivery asks no model:
+    browsing a gallery costs nothing.
+
+    'blocked' says that a check refused the picture at this level or a looser
+    one. A refusal at a stricter level says nothing about this one, and there
+    the picture is 'unchecked'.
+
+    A video goes by the same rule as a picture, by the verdict the check at the
+    result wrote on it. A 3D model goes by its preview: it is as clear as the
+    run's pictures, and a run without a preview has nothing to clear it. Code a
+    language model wrote goes by its own verdict, as a picture does. Code is
+    the one kind the check at the result reads at adult too, so a sketch
+    refused at adult is not handed to adult either; no pass is asked of it there.
     """
-    etype = str(entity.get("type") or "")
-    # Runs from before the `output_` prefix recorded the bare kind, and the
-    # platform's selection rule still picks those up (media_ref, legacy branch).
-    # Reading only the prefixed form would let exactly those through unasked.
-    kind = etype[len("output_"):] if etype.startswith("output_") else etype
-    if kind in DERIVED_IMAGE_KINDS:
-        return _sources_cleared(run_metadata)
+    from my_app.services.safety_gate import entity_cleared_for, normalise_level
+
+    level = normalise_level(level)
+    kind = _kind_of(entity.get("type"))
+    if level not in IMAGE_CHECKED_LEVELS:
+        # Nothing needs a pass here. Code is the one kind the check at the
+        # result reads at this level as well, and a refusal of it stands.
+        if kind in CODE_KINDS and _refused_for(entity, run_metadata, level):
+            return False, "blocked"
+        return True, ""
+
+    if (kind in DERIVED_IMAGE_KINDS or kind in INTERMEDIATE_IMAGE_KINDS
+            or kind in PREVIEWED_KINDS):
+        return _sources_cleared(run_metadata, level)
+    if kind == COMPOSITION_KIND:
+        return _composition_cleared(entity, level)
     if kind not in VERDICT_BEARING_KINDS:
         return True, ""
 
-    level = str(run_metadata.get("safety_level") or "")
-    if level not in IMAGE_CHECKED_LEVELS:
+    if entity_cleared_for(entity, run_metadata, level):
         return True, ""
+    if _refused_for(entity, run_metadata, level):
+        return False, "blocked"
+    return False, "unchecked"
 
-    if not run_metadata.get(SAFETY_VERDICTS_FLAG):
-        # Recorded before verdicts were kept. Nothing here can say what was
-        # checked, so this rule stays silent rather than guessing.
-        return True, ""
+
+def _refused_for(entity: dict, run_metadata: dict, level: str) -> bool:
+    """Whether a verdict on the entity refused it where `level` stands.
+
+    The one asking stands where the refusal was made, or stricter. A refusal at
+    a stricter level says nothing about this one.
+    """
+    from my_app.services.safety_gate import counts_for
+    from my_app.services.safety_level_resolver import SAFETY_LEVELS_STRICTEST_FIRST
 
     verdict = (entity.get("metadata") or {}).get(SAFETY_VERDICT_KEY)
-    if not isinstance(verdict, dict):
-        return False, "unchecked"
-    if verdict.get("safe") is True:
-        return True, ""
-    return False, "blocked"
+    if not isinstance(verdict, dict) or verdict.get("safe") is not False:
+        return False
+    judged_at = verdict.get("level") or run_metadata.get("safety_level")
+    return judged_at in SAFETY_LEVELS_STRICTEST_FIRST and counts_for(level, judged_at)
 
 
-def filter_deliverable(entities: list, run_metadata: dict) -> list:
-    """Every entity of `entities` that may be handed out, order preserved."""
-    return [e for e in entities if entity_cleared_for_delivery(e, run_metadata)[0]]
+def filter_deliverable(entities: list, run_metadata: dict, level) -> list:
+    """Every entity of `entities` that may be handed to `level`, order preserved."""
+    return [e for e in entities if entity_cleared_for_delivery(e, run_metadata, level)[0]]
 
 
 
@@ -272,14 +412,6 @@ class LivePipelineRecorder:
             "timestamp": datetime.now().isoformat(),
             "config_name": config_name,
             "safety_level": safety_level,
-            # Set HERE, at the run's creation, and never as a side effect of a
-            # verdict that happened to be written. Setting it in
-            # mark_entity_safety would mean: a run whose marking fails for
-            # EVERY picture carries no flag, drops into the branch for records
-            # made before verdicts existed, and hands its pictures out. The
-            # flag says "this run is judged by the rule", which is decided by
-            # its safety level and by nothing that happens later.
-            SAFETY_VERDICTS_FLAG: safety_level in IMAGE_CHECKED_LEVELS,
             "user_id": user_id,
             "device_id": device_id,
             "expected_outputs": self.expected_outputs,
@@ -295,6 +427,28 @@ class LivePipelineRecorder:
         self._save_metadata()
 
         logger.info(f"[RECORDER] Initialized run {run_id} in {self.run_folder}")
+
+    def record_input_image(self, took_one: bool) -> None:
+        """Say whether this run's generation took a picture in (`INPUT_IMAGE_KEY`).
+
+        Once a run has taken one in, it has: a later generation without one
+        does not clear what the earlier one made from it. And a run that wrote
+        outputs before it said anything keeps not saying it, since what those
+        were made from is not known here.
+        """
+        known = self.metadata.get(INPUT_IMAGE_KEY)
+        if took_one:
+            if known is True:
+                return
+            self.metadata[INPUT_IMAGE_KEY] = True
+        elif known is not None:
+            return
+        elif any(str(e.get("type") or "").startswith("output_")
+                 for e in self.metadata.get("entities", [])):
+            return
+        else:
+            self.metadata[INPUT_IMAGE_KEY] = False
+        self._save_metadata()
 
     def set_state(self, stage: int, step: str):
         """
@@ -368,10 +522,12 @@ class LivePipelineRecorder:
 
         # AI-Origin Disclosure (EU AI Act Art. 50): apply watermark to
         # output_image / output_video bytes before persisting. Service is
-        # fail-open — original bytes returned if anything goes wrong.
+        # fail-open — original bytes returned if anything goes wrong, and a
+        # medium the disclosure is not in is written as NN_<type>_ai_generated.
         if isinstance(content, bytes):
-            from my_app.services.media_marking import mark_or_pass
-            content = mark_or_pass(content, entity_type, metadata or {}, "[RECORDER]")
+            from my_app.services.media_marking import mark_for_disk
+            content, filename = mark_for_disk(content, entity_type, metadata or {}, filename, "[RECORDER]")
+            filepath = self.final_folder / filename
 
         # Write file
         self._write_file(filepath, content)
@@ -491,7 +647,8 @@ class LivePipelineRecorder:
         sequence: int,
         safe: bool,
         reason: str = "",
-        description: str = ""
+        description: str = "",
+        level: Optional[str] = None,
     ) -> bool:
         """
         Write a content-check verdict onto the entity it judges.
@@ -501,26 +658,18 @@ class LivePipelineRecorder:
         the inventory sees it without a second lookup, and delivery can refuse
         an entity without knowing anything about how the check was run.
 
-        The run's flag is NOT set here — it is set when the run is created, so
-        that a marking which fails for every picture cannot leave the run
-        looking like one recorded before verdicts existed. What follows below
-        was written when the flag was raised here:
-
-        Setting the run's flag here rather than at construction keeps the
-        promise honest: a run claims to record verdicts from the moment it
-        actually records one.
+        `level` is the safety level the check asked at. A pass answers for that
+        level and every looser one, and only that far: a picture cleared at
+        youth has not been asked the children's question. A verdict written
+        without a level counts at the level of its run.
 
         Returns True when an entity was stamped.
         """
         for entity in self.metadata.get("entities", []):
             if entity.get("sequence") != sequence:
                 continue
-            entity.setdefault("metadata", {})[SAFETY_VERDICT_KEY] = {
-                "safe": bool(safe),
-                "reason": reason or "",
-                "description": description or "",
-                "checked_at": datetime.now().isoformat(),
-            }
+            verdict = entity_verdict(safe, reason, description, level)
+            entity.setdefault("metadata", {})[SAFETY_VERDICT_KEY] = verdict
             self._save_metadata()
             logger.info(
                 "[RECORDER] Entity %s marked %s%s",
@@ -551,7 +700,7 @@ class LivePipelineRecorder:
         from my_app.utils.media_ref import find_media_entities
         return find_media_entities(self.metadata.get("entities", []), media_type)
 
-    def checked_entity_path(self, entity: dict) -> Path:
+    def checked_entity_path(self, entity: dict, level) -> Path:
         """
         The file behind an entity — and only when the content check cleared it.
 
@@ -562,14 +711,18 @@ class LivePipelineRecorder:
         how they find the entity and agree in what they do with it, so the
         refusal belongs here, where they meet.
 
-        Raises SafetyRefusal when the entity was blocked or never cleared.
+        `level` is the level of whoever asks (entity_cleared_for_delivery).
+
+        Raises SafetyRefusal when the entity was blocked or never cleared for
+        that level.
         """
-        cleared, reason = entity_cleared_for_delivery(entity, self.metadata)
+        cleared, reason = entity_cleared_for_delivery(entity, self.metadata, level)
         if not cleared:
-            raise SafetyRefusal(reason, self.run_id, entity.get("filename") or "")
+            raise SafetyRefusal(reason, self.run_id, entity.get("filename") or "",
+                                field=refused_field(entity))
         return self.final_folder / entity["filename"]
 
-    def checked_path_for_filename(self, filename: str) -> Path:
+    def checked_path_for_filename(self, filename: str, level) -> Path:
         """
         The file a caller names by its FILENAME — asked the same question.
 
@@ -585,7 +738,7 @@ class LivePipelineRecorder:
         name = str(filename or "")
         for entity in self.metadata.get("entities", []):
             if entity.get("filename") == name:
-                return self.checked_entity_path(entity)
+                return self.checked_entity_path(entity, level)
         return self.final_folder / name
 
     def unchecked_entity_path_for_checking(self, entity: dict) -> Path:
@@ -593,9 +746,9 @@ class LivePipelineRecorder:
         The file behind an entity WITHOUT asking the verdict.
 
         Exactly one caller may use this: the content check itself, which has to
-        read the picture in order to judge it, at a moment when no verdict can
-        exist yet. Anything else that reaches for this is handing out an
-        unjudged picture.
+        read the picture or the video in order to judge it, at a moment when no
+        verdict can exist yet. Anything else that reaches for this is handing
+        out an unjudged picture.
         """
         return self.final_folder / entity["filename"]
 
@@ -633,13 +786,13 @@ class LivePipelineRecorder:
             "entities": [public_entity(e) for e in entities]
         }
 
-    def get_entity_path(self, entity_type: str) -> Optional[Path]:
+    def get_entity_path(self, entity_type: str, level) -> Optional[Path]:
         """
         Filesystem path for the FIRST entity of a type, or None.
 
-        Asks the content check's verdict on the way out, so the callers that
-        reach for a path by type — the entity route, post-production, the
-        research table — cannot hand out a picture the check refused.
+        Asks the content check's verdict on the way out, at the level of
+        whoever asks, so a caller that reaches for a path by type cannot hand
+        out a picture delivery would refuse.
 
         Returns None where the entity is absent AND where it is refused; a
         caller that wants to tell those apart uses `checked_entity_path`, which
@@ -649,7 +802,7 @@ class LivePipelineRecorder:
             if entity["type"] == entity_type:
                 # Entities are stored in final/ subfolder
                 try:
-                    return self.checked_entity_path(entity)
+                    return self.checked_entity_path(entity, level)
                 except SafetyRefusal as refusal:
                     logger.warning("[RECORDER] %s", refusal)
                     return None

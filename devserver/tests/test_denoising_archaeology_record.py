@@ -99,6 +99,25 @@ def _record(sitting, **fields):
     return base
 
 
+def test_a_step_goes_out_at_kids_only_with_a_pass_on_the_finished_picture(storage, sitting):
+    """The steps are pictures on the way to the run's picture and travel with
+    it: while that picture carries no pass for the level of whoever asks, no
+    step is handed out, and once it carries one, every step is."""
+    from my_app.services import pipeline_recorder
+
+    obj, refusal = _run(_record(sitting), _answer(count=3))
+    assert refusal is None
+    for i in range(3):
+        with pytest.raises(pipeline_recorder.SafetyRefusal):
+            lab.resolve_part_path(obj["run_id"], i, "kids", base_path=storage)
+
+    recorder = pipeline_recorder.load_recorder(obj["run_id"], base_path=storage)
+    picture = next(e for e in recorder.metadata["entities"] if e["type"] == "output_image")
+    recorder.mark_entity_safety(picture["sequence"], safe=True, level="kids")
+    for i in range(3):
+        assert lab.resolve_part_path(obj["run_id"], i, "kids", base_path=storage) is not None
+
+
 def test_the_run_lands_in_the_named_sitting_as_the_surface_used_to_write_it(storage, sitting):
     answer = _answer(count=3)
     obj, refusal = _run(_record(sitting), answer)
@@ -132,8 +151,9 @@ def test_the_run_lands_in_the_named_sitting_as_the_surface_used_to_write_it(stor
     assert [p["url"] for p in parts] == [
         f"/api/latent-lab/run/{obj['run_id']}/part/{i}" for i in range(3)
     ]
+    # At a level that checks no picture: the recording carries no verdict here.
     for i in range(3):
-        assert lab.resolve_part_path(obj["run_id"], i, base_path=storage) is not None
+        assert lab.resolve_part_path(obj["run_id"], i, "adult", base_path=storage) is not None
 
     # The finished picture is the run's one image output, at a media address.
     images = [o for o in obj["outputs"] if o["type"] == "image"]

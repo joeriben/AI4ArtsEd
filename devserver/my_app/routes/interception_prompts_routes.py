@@ -25,6 +25,12 @@ Invariants this file honours:
   * Safety prefixes (kids/youth) still apply — they are prepended later in
     instruction_selector.get_instruction(), regardless of where `context` came
     from, so a kept prompt can NEVER bypass safety (the preview shows this).
+  * What a person writes into a perspective is their own material. Its name,
+    its text and its task instruction pass the intake where a route here
+    writes them (_intake_refusal), at the level of whoever writes; its text
+    passes it again where a run uses the perspective, at that run's level
+    (course_prompt_resolver.kept_texts). Text copied from a preset is the
+    platform's and is not checked here.
 
 Location: devserver/my_app/routes/interception_prompts_routes.py
 """
@@ -32,6 +38,7 @@ from __future__ import annotations
 
 import asyncio
 import dataclasses
+import json
 import logging
 from typing import Optional
 
@@ -44,6 +51,19 @@ from my_app.services.course_prompt_resolver import (
     ALLOWED_PIPELINES,
     course_prompt_resolver,
     is_offerable_perspective,
+    kept_texts,
+)
+from my_app.services.safety_gate import (
+    CHECKPOINT_REFUSAL,
+    REASON_REFUSAL,
+    check_intake,
+    check_intake_texts,
+    check_result_text,
+    safety_block,
+)
+from my_app.services.safety_level_resolver import (
+    SAFETY_LEVELS_STRICTEST_FIRST,
+    resolve_safety_level,
 )
 
 logger = logging.getLogger(__name__)
@@ -55,7 +75,6 @@ prompts_bp = Blueprint(
 MAX_CONTEXT_LEN = 8000
 MAX_NAME_LEN = 200
 MAX_SAMPLE_LEN = 4000
-_SAFETY_LEVELS = ("kids", "youth", "open")
 
 # What a kept perspective may carry in `parameters`, and nothing else.
 #
@@ -78,9 +97,10 @@ _SAFETY_LEVELS = ("kids", "youth", "open")
 #     can add one back, whatever a fork inherits from.
 #   * top_p, top_k, min_p, presence_penalty and frequency_penalty, accepted
 #     and bounded here until 2026-10-10 while no model call read them: the
-#     interception engine hands a local model temperature, max_tokens,
-#     repetition_penalty and enable_thinking, a cloud model temperature and
-#     max_tokens (finding S-012 of the code review of 2026-10-10). A kept perspective that still carries one of them
+#     interception engine hands a local model temperature,
+#     repetition_penalty and enable_thinking, a cloud model temperature
+#     (finding S-012 of the code review of 2026-10-10; max_tokens it has not
+#     forwarded since 2026-11-08). A kept perspective that still carries one of them
 #     from before that day is cleaned on its next update, not refused.
 ALLOWED_PARAM_KEYS = {
     "temperature",
@@ -282,6 +302,40 @@ def _resolve_name(raw, fallback: str, owner_id: int,
 
 
 # ---------------------------------------------------------------------------
+# the intake
+# ---------------------------------------------------------------------------
+def _intake_refusal(level, *, name=None, context_text=None, task_instruction=None):
+    """The answer that refuses what a perspective is about to be given, or None.
+
+    A saved perspective is its author's own material: its name stands in the
+    palette of a course, and its text and its task instruction reach the model
+    of every run that uses it. Each is checked where a route writes it, for
+    names of living private persons and for addresses with a house number
+    (safety_gate.check_intake), at the level of whoever writes it. A text in
+    several languages is checked language by language. What does not pass is
+    not written, and nothing else of the request is either; a check that could
+    not run refuses as well, and its block message says so.
+    """
+    verdict = check_intake(name, level=level, kind="text", field="name")
+    if isinstance(context_text, dict):
+        contexts = [(f"[{lang}]", text) for lang, text in context_text.items()]
+    else:
+        contexts = [("", context_text)]
+    for suffix, text in contexts:
+        if not verdict.passed:
+            break
+        verdict = check_intake(text, level=level, kind="text", field=f"context_text{suffix}")
+    if verdict.passed:
+        verdict = check_intake(task_instruction, level=level, kind="text",
+                               field="task_instruction")
+    if verdict.passed:
+        return None
+    logger.warning("[PROMPT-LIB] refused at the intake (%s, %s)",
+                   verdict.field, verdict.reason_key)
+    return jsonify({"error": verdict.reason, "safety_block": verdict.block()}), 403
+
+
+# ---------------------------------------------------------------------------
 # authz helpers (owner-or-admin)
 # ---------------------------------------------------------------------------
 def _owned_or_404(pid: int) -> Optional[InterceptionPrompt]:
@@ -399,6 +453,11 @@ def create_prompt():
     name, name_err = _resolve_name(data.get("name"), "Untitled", current_user().id)
     if name_err:
         return name_err
+    refusal = _intake_refusal(resolve_safety_level(), name=data.get("name"),
+                              context_text=data["context_text"],
+                              task_instruction=data.get("task_instruction"))
+    if refusal:
+        return refusal
 
     db = SessionLocal()
     p = InterceptionPrompt(
@@ -450,6 +509,13 @@ def update_prompt(pid: int):
                 "error": f"'{data['base_config']}' cannot be the structure of a perspective"
             }), 400
         new_pipeline = base.pipeline_name or "text_transformation"
+
+    # What this edit writes. What it leaves as it was is no new material.
+    refusal = _intake_refusal(resolve_safety_level(), name=data.get("name"),
+                              context_text=data.get("context_text"),
+                              task_instruction=data.get("task_instruction"))
+    if refusal:
+        return refusal
 
     db = SessionLocal()
     _snapshot_version(db, p)  # capture PRIOR state before mutating
@@ -534,6 +600,12 @@ def fork_from_preset():
     name, name_err = _resolve_name(data.get("name"), preset_name, current_user().id)
     if name_err:
         return name_err
+    # The text the caller hands in is theirs. The preset's own, copied where
+    # nothing is handed in, and its task instruction are the platform's.
+    refusal = _intake_refusal(resolve_safety_level(), name=data.get("name"),
+                              context_text=data.get("context_text"))
+    if refusal:
+        return refusal
 
     db = SessionLocal()
     p = InterceptionPrompt(
@@ -571,6 +643,14 @@ def fork_prompt(pid: int):
     )
     if name_err:
         return name_err
+    # The copy carries the original's text and, unless it is given a name of
+    # its own, the original's name: material that may have been kept before
+    # the intake existed, or at a level that checks nothing.
+    refusal = _intake_refusal(resolve_safety_level(), name=name,
+                              context_text=src.context_text,
+                              task_instruction=src.task_instruction)
+    if refusal:
+        return refusal
     p = InterceptionPrompt(
         owner_id=current_user().id,
         name=name,
@@ -629,6 +709,13 @@ def revert_to_version(pid: int, version_no: int):
     )
     if version is None:
         return jsonify({"error": "version not found"}), 404
+    # An earlier version may have been kept before the intake existed, or at a
+    # level that checks nothing.
+    refusal = _intake_refusal(resolve_safety_level(), name=version.name,
+                              context_text=version.context_text,
+                              task_instruction=version.task_instruction)
+    if refusal:
+        return refusal
 
     _snapshot_version(db, p)  # snapshot current before restoring
     p.name = version.name
@@ -682,11 +769,12 @@ def revert_to_preset(pid: int):
 def preview_prompt(pid: int):
     """Run an owned prompt against a sample input through the real Stage 2.
 
-    Stage 1 runs over `sample_input` at the resolved level, exactly as it does
-    at every other entry into Stage 2, and the run stops here if it blocks.
-    Then execute_stage2_interception with that same safety_level, so the
-    kids/youth SAFETY PREFIXES are prepended in
-    instruction_selector.get_instruction() exactly as in production. Whoever
+    The sample and the perspective's own text pass the intake at the resolved
+    level, as at every other entry into Stage 2, and the run stops here if one
+    is refused. Then execute_stage2_interception with that same safety_level,
+    so the kids/youth SAFETY PREFIXES are prepended in
+    instruction_selector.get_instruction() exactly as in production, and what
+    the model wrote is checked at the result before it is answered. Whoever
     wrote the perspective sees that safety still applies to it BEFORE it goes
     into a course palette — a kept prompt can never bypass safety.
 
@@ -708,10 +796,7 @@ def preview_prompt(pid: int):
     # The level the session actually stands at — installation level, tightened by
     # the course. A dry run may TIGHTEN below it, exactly as a course may, and
     # may never loosen it: taking the level from the request body let a member of
-    # a kids course preview at `open`.
-    from my_app.services.safety_level_resolver import (
-        resolve_safety_level, SAFETY_LEVELS_STRICTEST_FIRST,
-    )
+    # a kids course preview at a looser level.
     session_level = resolve_safety_level()
     order = list(SAFETY_LEVELS_STRICTEST_FIRST)
     safety_level = data.get("safety_level", session_level)
@@ -730,48 +815,41 @@ def preview_prompt(pid: int):
     # part of the engine, and this blueprint is registered before it.
     from my_app.routes.schema_pipeline_routes import (
         init_schema_engine, execute_stage2_interception, llm_queue_semaphore,
-        _stage1_check_texts, _stage2_refusal,
+        _stage2_refusal,
     )
     init_schema_engine()
-
-    # THE ENTRY GATE, over the text the client sent. `execute_stage2_interception`
-    # states in its own docstring that its input is "already safety-checked in
-    # Stage 1", and every other way into it holds that: /pipeline/stage2 and
-    # /pipeline/interception both run the gate at the request boundary. This one
-    # did not. `sample_input` is free-form POST body from whoever is logged in —
-    # the gate is `require_auth`, which on this platform is every participant —
-    # and it went to a model with the Stage-2 safety PREFIX in front of it and
-    # nothing checking the text itself.
-    #
-    # The prefix is not the check. It shapes what the interception is asked to
-    # do; it does not look at what it is being asked to do it to.
-    #
-    # Before the semaphore below, not inside it: the gate takes a slot of the
-    # same plant-wide queue for its own run, and holding two at once for one
-    # request is what a queue of one would deadlock on.
-    #
-    # `user_language` is the fast filters' fallback for deciding the script of a
-    # Latin-alphabet text; the platform's default is what the generation routes
-    # pass when a client sends none.
-    user_language = data.get("user_language") or "de"
-    is_safe, error_message, checks_passed, blocked_on, _checked = _stage1_check_texts(
-        [("sample_input", sample)], safety_level, user_language,
-    )
-    if not is_safe:
-        logger.warning("[PROMPT-LIB] preview of custom:%s BLOCKED at stage 1 (%s)",
-                       pid, blocked_on)
-        return jsonify({
-            "error": error_message or "Content blocked by safety check",
-            "blocked_at_stage": 1,
-            "safety_level": safety_level,
-            "checks_passed": checks_passed,
-        }), 403
 
     cfg = course_prompt_resolver.get_config(p.style_key, user=current_user())
     if cfg is None:
         return jsonify({
             "error": f"cannot resolve base config '{p.base_config or p.forked_from_preset}'"
         }), 400
+
+    # THE INTAKE, over the sample the client sent and the perspective's own
+    # text. `sample_input` is free-form POST body from whoever is logged in —
+    # the gate is `require_auth`, which on this platform is every participant —
+    # and it goes to a model with the Stage-2 safety PREFIX in front of it. The
+    # prefix is not the check: it shapes what the interception is asked to do,
+    # and it does not look at what it is asked to do it to. The perspective's
+    # text passes the intake where it is written, at the level of whoever
+    # writes it, and again here, at the level of this run; kept_texts says why.
+    #
+    # One slot of the queue, as at the other entries into Stage 2: after a name
+    # or an address the classifier is asked. It is released before Stage 2
+    # takes its own; holding two at once for one request is what a queue of
+    # one would deadlock on.
+    with llm_queue_semaphore:
+        intake = check_intake_texts({"sample_input": sample, **kept_texts(cfg)},
+                                    level=safety_level)
+    if not intake.passed:
+        logger.warning("[PROMPT-LIB] preview of custom:%s refused at the intake (%s)",
+                       pid, intake.field)
+        return jsonify({
+            "error": intake.reason,
+            "safety_block": intake.block(),
+            "safety_level": safety_level,
+            "checks_passed": [],
+        }), 403
 
     try:
         # The same queue every other Stage-2 entry point stands in. Without it a
@@ -793,21 +871,41 @@ def preview_prompt(pid: int):
         output = result.get("final_output")
 
     # The refusal the safety prefix asks for is a block at stage 2, in the shape
-    # of the stage-1 block above; until the second review of 2026-10-10 it went
-    # back as the output, 200 (finding S-015 of the code review of 2026-10-10).
+    # of the intake's block above; until 2026-10-10 it went back as the output,
+    # 200.
     refusal = _stage2_refusal(result) if not isinstance(result, dict) else None
     if refusal:
         logger.warning("[PROMPT-LIB] preview of custom:%s refused by the model", pid)
         return jsonify({
             "error": refusal,
-            "blocked_at_stage": 2,
+            "safety_block": safety_block(CHECKPOINT_REFUSAL, REASON_REFUSAL, refusal,
+                                         "interception"),
             "safety_level": safety_level,
-            "checks_passed": checks_passed,
+            "checks_passed": [],
         }), 403
+
+    # THE RESULT. What the model wrote leaves as `output` and is checked before
+    # it does, in one slot of the queue; nothing is reworded. A structured
+    # answer is read as the JSON it leaves as. A sample handed back as it came
+    # in has passed the intake and is not read again. A refused text is
+    # withheld, as a block at stage 2 like the refusal above.
+    output = output or ""
+    text = output if isinstance(output, str) else json.dumps(output, ensure_ascii=False)
+    if text.strip() and text.strip() != sample:
+        with llm_queue_semaphore:
+            verdict = check_result_text(text, level=safety_level, field="output")
+        if not verdict.passed:
+            logger.warning("[PROMPT-LIB] preview of custom:%s withheld at the result", pid)
+            return jsonify({
+                "error": verdict.reason,
+                "safety_block": verdict.block(),
+                "safety_level": safety_level,
+                "checks_passed": [],
+            }), 403
 
     _ = dataclasses  # kept: the resolver's replace() path is what produced cfg
     return jsonify({
         "style_key": p.style_key,
         "safety_level": safety_level,
-        "output": output or "",
+        "output": output,
     }), 200

@@ -10,7 +10,8 @@
     "es": "CommonCanvas XL C",
     "he": "CommonCanvas XL C",
     "ar": "CommonCanvas XL C",
-    "bg": "CommonCanvas XL C"
+    "bg": "CommonCanvas XL C",
+    "zh-hant": "CommonCanvas XL C"
   },
   "description": {
     "en": "SDXL-architecture image model (2023), trained only on Creative Commons-licensed images. No scraped or unlicensed data in the training set.",
@@ -22,7 +23,8 @@
     "es": "Modelo de imagen con arquitectura SDXL (2023), entrenado exclusivamente con imágenes con licencia Creative Commons. Sin datos extraídos de la web ni sin licencia en el conjunto de entrenamiento.",
     "he": "מודל תמונות בארכיטקטורת SDXL (2023), מאומן אך ורק על תמונות ברישיון Creative Commons. אין נתונים שנאספו ללא היתר או ללא רישיון בסט האימון.",
     "ar": "نموذج صور بمعمارية SDXL (2023)، مدرَّب حصريًا على صور مرخّصة بموجب Creative Commons. لا توجد بيانات مُجمَّعة دون إذن أو غير مرخّصة في مجموعة التدريب.",
-    "bg": "Модел за изображения с архитектура SDXL (2023), трениран изключително с изображения, лицензирани под Creative Commons. Без събирани без разрешение или нелицензирани данни в тренировъчния набор."
+    "bg": "Модел за изображения с архитектура SDXL (2023), трениран изключително с изображения, лицензирани под Creative Commons. Без събирани без разрешение или нелицензирани данни в тренировъчния набор.",
+    "zh-hant": "SDXL 架構的圖像模型（2023），只以 Creative Commons 授權的圖片訓練。訓練集中沒有爬取或未經授權的資料。"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_commoncanvas_xl_c",

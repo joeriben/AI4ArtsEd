@@ -9,7 +9,9 @@ export const en = {
     queuePlaceNext: 'A run started now would be number {n} in the queue.',
     queueTimeMine: 'About {time} until your run starts.',
     queueTimeNext: 'About {time} until a run started now would begin.',
-    queueTimeUnknown: 'How long the wait is has not been measured.',
+    queueTimeUnknown: 'Wait unknown right now: measured time missing or already exceeded for runs ahead.',
+    // SUPPLIED WORDING (2026-11-02): the cell's word, verbatim.
+    queueUnknown: 'unknown',
     queueUnderMinute: '< 1 min',
     queueUnseen: 'The card cannot be seen right now, so nothing is known about the queue.',
     queueBlockedLora: 'A LoRA training is holding the card.',
@@ -129,6 +131,7 @@ export const en = {
       hi: 'Hindi — Indo-Aryan, Devanagari script, ~600M speakers',
       ja: 'Japanese — logographic + syllabic scripts, ~125M speakers',
       zh: 'Chinese — logographic script, ~1.1B speakers',
+      'zh-hant': 'Traditional Chinese — logographic script, written in Taiwan, Hong Kong and Macau',
     },
   },
   // The research data export of the settings page (components/SessionExportView.vue).
@@ -351,7 +354,8 @@ export const en = {
       koreanKo: 'Korean (ko)',
       ukrainianUk: 'Ukrainian (uk)',
       frenchFr: 'French (fr)',
-      spanishEs: 'Spanish (es)'
+      spanishEs: 'Spanish (es)',
+      traditionalChineseZhHant: 'Traditional Chinese (zh-hant)',
     },
     safety: {
       kidsTitle: 'Children',
@@ -419,6 +423,11 @@ export const en = {
       },
       visionTerm: 'Vision models',
       visionNote: 'are always run locally and selected based on your VRAM. They work with any LLM provider.',
+      // The second paragraph of the notes block, in the form of visionTerm/visionNote: what the
+      // study of November 2026 (research repo, studies/2026-11_mistral_large4_the_unspoken; ticket
+      // AI4ArtsEd-dev #135) found about Mistral Large 4 and Prompt Interception. Written 2026-11-08.
+      interceptionTerm: 'Mistral Large 4',
+      interceptionNote: 'is unsuited to Prompt Interception: on the perspective “The Unspoken” it lost 465 of 660 blind pairwise judgments against Claude Opus 5.5, under every instruction tried (study of November 2026). For Resona and Persona this is unmeasured.',
       edit: 'Edit models',
       reset: 'Reset to our recommendations',
       resetConfirm: 'Reset every model in this matrix to our recommendations? Your own entries in the matrix will be overwritten.',
@@ -501,23 +510,6 @@ export const en = {
       storedIn: 'Stored in',
       currentKey: 'Current',
       keyOf: '{provider} API key',
-      // The external frontier image model and its account. SUPPLIED WORDING:
-      // the rows translate the German wording in WORK_ORDERS.md
-      // (WO-2026-09-23-A, with three spellings corrected and marked there).
-      // The provider's name is filled in from the configuration
-      // (WO-2026-09-26-P).
-      frontierImageLabel: 'External frontier image model',
-      frontierProviderLabel: 'Provider',
-      frontierKeyLabel: 'API key present',
-      frontierBalanceLabel: '{provider} balance',
-      // Beside the balance, or in place of `unlimited` for an account without
-      // a budget, where the check found a budget used up that binds the key
-      // (devserver/my_app/services/provider_account.py, `used_up`).
-      frontierUsedUp: {
-        account: 'account budget used up',
-        key: 'budget of this API key used up',
-        team: 'team budget used up'
-      }
     },
     save: {
       saveApply: 'Save & Apply',
@@ -675,7 +667,7 @@ export const en = {
       },
       dropzone: {
         label: 'Drop documents here, or click to choose',
-        hint: 'PDF or Markdown — dropped files are uploaded into this area',
+        hint: 'PDF, DOCX or Markdown — dropped files are uploaded into this area',
         hinweisLabel: 'Note for these documents (optional)',
         hinweisPlaceholder: 'A hint for the agent about the files you are adding now',
         uploading: 'Uploading…',
@@ -737,12 +729,28 @@ export const en = {
         readonlyHint: 'Fixed document — read-only. You can view its profile, but not edit, publish, move, or delete it.',
         reanalyze: 'Re-analyze',
         reanalyzing: 'Re-analyzing…',
-        reanalyzeHint: 'Re-run analysis from the stored source with the current model, without re-uploading. This resets a published document back to draft — review and re-publish it afterwards.',
+        reanalyzeHint: 'Re-run analysis from the stored source with the current model, without re-uploading. A document whose checks and review pass is published, unless it awaits its first release or was set to draft by hand; otherwise it is a draft.',
         reanalyzeAll: 'Re-analyze all in this area',
         reanalyzeAllRunning: 'Re-analyzing…',
-        confirmReanalyzeAll: 'Re-analyze all {count} document(s) in this area with the current model? Published documents will be reset to draft.',
+        confirmReanalyzeAll: 'Re-analyze all {count} document(s) in this area with the current model? A document whose checks and review pass is published, unless it awaits its first release or was set to draft by hand.',
         neverAnalyzed: 'never analyzed',
         neverAnalyzedHint: 'This document predates analysis-provenance tracking — re-analyze it to record when, in what language, and with which model it was processed.'
+      },
+      // The two reasons behind a document's status, as the analysis recorded
+      // them: the label of the checks and the label of the review. Inline
+      // rubrics (the template adds the colon); the value after them is the
+      // backend's label ("passed", "failed: lists (1 of 15 …)").
+      gate: {
+        checksLabel: 'Checks',
+        reviewLabel: 'Review',
+        reasonLabel: 'Draft reason',
+        reason: {
+          checks: 'Check failure',
+          review: 'Review findings',
+          no_review: 'No review',
+          release: 'Pending release',
+          operator: 'Operator decision'
+        }
       },
       card: {
         title: 'Edit profile',
@@ -996,7 +1004,20 @@ export const en = {
     voiceOff: 'Turn the voice off',
     background: 'Background tone',
     settings: 'Settings',
-    canvas: 'Canvas Workflow'
+    canvas: 'Canvas Workflow',
+    // The sign-in field of the header (components/SignInField.vue,
+    // 2026-11-14). It names the course a leader works in, the own use, or a
+    // place, never a person: the header is on the projector in a course.
+    // `ownUse` is an account's own container beside its courses, decided
+    // 2026-10-31; its German name is fixed as „Eigene Nutzung“. {cause} is
+    // the cause as the server or the network gave it.
+    signIn: {
+      title: 'Sign-in',
+      ownUse: 'Own use',
+      placeInCourse: 'Place {n} in course “{course}”',
+      coursesFailed: 'The courses could not be loaded: {cause}',
+      notChanged: 'The course was not changed: {cause}'
+    }
   },
   backgroundTint: {
     title: 'Background tone',
@@ -1054,7 +1075,7 @@ export const en = {
       input: { label: 'Input Prompt', description: 'Text input source' },
       image_input: { label: 'Image Input', description: 'Upload image as source' },
       random_prompt: { label: 'Random Prompt', description: 'Generate creative content via LLM with presets' },
-      interception: { label: 'Interception', description: 'Pedagogical transformation with LLM selection' },
+      interception: { label: 'Interception', description: 'Prompt Interception with LLM selection' },
       translation: { label: 'Translation', description: 'Language translation with custom prompt + LLM' },
       model_adaption: { label: 'Model Adaption', description: 'Adapt prompt for media model (SD3.5, Flux, Video, Audio)' },
       generation: { label: 'Generation', description: 'Media generation (image, audio, video)' },
@@ -1465,7 +1486,7 @@ export const en = {
       modelComparison: 'Model Comparison',
       differentModelsInterpretSame: 'Different models interpret the same prompt based on the same noise image — yet produce completely different results. The model comparison makes visible that the model itself is a decisive variable, not just the prompt.',
       currentTopModels: 'Current top models',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — three current models in direct comparison.',
+      sd35Large: 'SD 3.5 Large, Flux 2 and Flux 3 Klein in direct comparison.',
       historicalComparison: 'Historical comparison',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — three generations. How has image generation changed year by year?',
       temperatureComparison: 'Temperature Comparison',
@@ -1604,7 +1625,7 @@ export const en = {
       whatHappensHere4: 'Procedure',
       vectorArithmeticImage: 'Vector arithmetic on image embeddings: A \u2212 B + C = ? Inspired by the famous word2vec analogy (King \u2212 Man + Woman \u2248 Queen), but applied to entire prompt embeddings and image generation. Three prompts are encoded and algebraically combined.',
       whyDifferentFromNegative: 'Difference from a negative prompt',
-      theyActDifferentPlaces: 'They act in different places. A negative prompt is the baseline that guidance pulls from, so it acts inside the denoising loop, at every one of the 25 steps, against the image as it currently stands. Concept Algebra instead computes a new vector BEFORE image generation: the subtraction happens in embedding space, once, and the loop never learns that anything was subtracted. \u2014 What the subtraction does not do is remove a named object. This platform\'s own measurement series show that it shifts tone, framing and register but leaves the named thing in the picture.',
+      theyActDifferentPlaces: 'They act in different places. A negative prompt is the baseline that guidance pulls from, so it acts inside the denoising loop, at every one of the 25 steps, against the image as it currently stands. Concept Algebra instead computes a new vector BEFORE image generation: the subtraction happens in embedding space, once, and the loop never learns that anything was subtracted. \u2014 In word embeddings, the result of such an analogy stays close to its starting word: without excluding the input words from the candidates, the nearest neighbour of the result was the starting word in 93 % of the cases (Linzen 2016).',
       example: 'Example:',
       sunsetAtBeachBeach: '"Sunset at the beach" \u2212 "Beach" + "Mountains" \u2248 "Sunset over mountains". Scale sliders control the intensity of subtraction and addition (0\u20133). The L2 distance shows how far the result has moved from the original.',
       theMathematicsDetail2: '\ud83d\udcd0 The Mathematics in Detail',
@@ -1645,20 +1666,20 @@ export const en = {
       howTheBenchmarkIsBuilt: 'Benchmark construction',
       basedParrishEtAl2022: 'Parrish, Chen, Nangia, Padmakumar, Phang, Thompson, Htut and Bowman, "BBQ: A Hand-Built Bias Benchmark for Question Answering", Findings of ACL 2022, 2086-2105 (doi:10.18653/v1/2022.findings-acl.165); data under CC BY 4.0 from github.com/nyu-mll/BBQ. Every template targets one bias that is documented as harmful, carries the source it is attested in, and ships with a per-example annotation of which of the three answers reflects that bias. Nothing is filtered out of the benchmark; what a safety level offers is a separate matter, and at the kids level four of the eleven categories are available.',
       whatHappensHere9: 'Procedure',
-      stableAudioGeneratesSound: 'Stable Audio generates sound from text. The text is converted by a T5 encoder into a numerical vector with 768 dimensions \u2014 this vector is what you manipulate here. Instead of just changing "what" the model generates (via the prompt), you change "how" the model internally understands the text.',
+      stableAudioGeneratesSound: 'Stable Audio 3 generates sound from text. The text is converted by its t5gemma encoder into a numerical vector with 768 dimensions \u2014 this vector is what you manipulate here. Instead of just changing "what" the model generates (via the prompt), you change "how" the model internally understands the text.',
       whyRevealing6: 'Insight',
       twoPromptsSoundSimilar: 'Two prompts that sound similar can be far apart in this space \u2014 and vice versa. The alpha slider interpolates between two prompts (A and B): at 0 only A, at 1 only B, values above 1 extrapolate beyond B. The Spectral Strip shows all 768 dimensions as bars and allows direct manipulation of individual dimensions.',
       tools: 'Tools:',
       looperSequencerRhythmic: 'Looper/sequencer for rhythmic patterns, wavetable mode for morphing between audio frames, MIDI control with keyboard, ADSR envelope, arpeggiator. Ultra-short loops turn any generated sound into a playable instrument.',
       technicalDetails7: '\ud83d\udcd0 Technical Details',
-      t5ConditioningSpace: 'T5 Conditioning Space',
-      stableAudioUsesT5: 'Stable Audio uses T5-Base (768d) as text encoder. Interpolation happens in embedding space: fused(\u03b1) = (1-\u03b1)\u00b7A + \u03b1\u00b7B. Magnitude scales the entire vector (higher values = more intense sounds), noise injects Gaussian noise for random variations. The conditioning space is qualitatively different from SD3.5\'s: 768 instead of 4096 dimensions, trained on audio-text pairs instead of image-text pairs.',
+      t5ConditioningSpace: 't5gemma Conditioning Space',
+      stableAudioUsesT5: 'Stable Audio 3 uses t5gemma (768d) as text encoder. Interpolation happens in embedding space: fused(\u03b1) = (1-\u03b1)\u00b7A + \u03b1\u00b7B. Magnitude scales the entire vector (higher values = more intense sounds), noise injects Gaussian noise for random variations. The conditioning space is qualitatively different from SD3.5\'s: 768 instead of 4096 dimensions.',
       whatHappensHere10: 'Procedure',
       mmaudioChengEtAl: 'MMAudio (Cheng et al., CVPR 2025) was jointly trained on video and audio. It doesn\'t translate an image into text and then into sound, but processes image and text as parallel signals in the same network. The model learned which sounds belong to which visual scenes.',
       whyRevealing7: 'Insight',
       imageTextTogetherYield: 'Image and text together yield the richest results. A forest produces birdsong, a street produces traffic noise, a guitar produces plucking sounds \u2014 direct associations, not via the detour of language. Up to 8 seconds, 44.1kHz, ~1.2s compute time.',
       tip: 'Tip:',
-      compareTextOnlyVs: 'Compare: Text only vs. Image + Text \u2014 how much does the image change the generated sound? The negative prompt controls which sounds should NOT be heard (e.g. "speech, music"). CFG Strength (2\u20138) controls prompt faithfulness.',
+      compareTextOnlyVs: 'Compare: Text only vs. Image + Text \u2014 how much does the image change the generated sound? CFG Strength (2\u20138) controls prompt faithfulness.',
       technicalDetails8: '\ud83d\udcd0 Technical Details',
       multimodalArchitecture: 'Multimodal Architecture',
       mmaudioProcessesImageText: 'MMAudio processes image and text features as separate input channels in a shared flow-matching network. Unlike CLIP-based approaches that first translate an image into a text description, MMAudio retains visual information as its own signal path. This enables finer audio-visual correspondences \u2014 material properties, room acoustics, motion patterns.',
@@ -1667,10 +1688,10 @@ export const en = {
       whyRevealing8: 'Insight',
       unlikeMmaudioWhichUses: 'Unlike MMAudio (which uses a jointly trained network), ImageBind Guidance steers from outside: it uses a separate embedding space to guide the denoising process toward the image. The cosine similarity in the result shows how close the generated sound came to the image content.',
       parameters: 'Parameters:',
-      guidanceStrengthLow0: '\u03bb Guidance Strength: Low (0.01\u20130.05) = lots of freedom, high (0.3\u20131.0) = closely tied to image. Warmup Steps: From which step image guidance kicks in \u2014 low = immediately, higher = basic structure forms unguided first.',
+      guidanceStrengthLow0: '\u03bb Guidance Strength: Low (0.01\u20130.05) = lots of freedom, high (0.3\u20131.0) = closely tied to image. Warmup Steps: how many of the first denoising steps run under image guidance.',
       technicalDetails9: '\ud83d\udcd0 Technical Details',
       gradientBasedSteering: 'Gradient-based Steering',
-      atEachDenoisingStep: 'At each denoising step, the current latent is decoded through Stable Audio\'s VAE, the result projected through ImageBind\'s audio encoder, and cosine similarity with the image embedding computed. The gradient of this similarity is backpropagated to the latent and scaled by \u03bb \u2014 a "closer-to-the-image" signal at every step. This is conceptually related to Classifier Guidance in Diffusion Models (Dhariwal & Nichol, 2021), but instead of a trained classifier, a multimodal encoder serves as the objective function.'
+      atEachDenoisingStep: 'At each warm-up step (the first n denoising steps, n = Warmup Steps), the current latent is decoded through Stable Audio\'s VAE, the result projected through ImageBind\'s audio encoder, and cosine similarity with the image embedding computed. The gradient of this similarity is backpropagated to the latent and scaled by \u03bb \u2014 a "closer-to-the-image" signal at every warm-up step; after the warm-up the loop runs unguided. This is conceptually related to Classifier Guidance in Diffusion Models (Dhariwal & Nichol, 2021), but instead of a trained classifier, a multimodal encoder serves as the objective function.'
     },
     guideMusic: {
       musicGeneration: 'Music Generation',
@@ -1886,6 +1907,7 @@ export const en = {
       stop: 'The stop signal did not reach the server: {m}',
       delete: 'The files could not be deleted: {m}',
     },
+    referencesTitle: 'Research References',
     info: {
       limitationDuration: 'Training takes 1-3 hours',
       limitationBlocking: 'Blocks image generation during training',
@@ -1902,13 +1924,14 @@ export const en = {
       setupCheckpoints: 'Intermediate states',
       setupCheckpointsEvery: 'every {n} epochs',
       runCostTitle: 'Cost per run',
-      runCost: '{hoursMin}–{hoursMax} hours of the GPU. At this GPU\'s {watts} W limit that is roughly {kwhMin}–{kwhMax} kWh and {co2Min}–{co2Max} g CO₂ ({factor} g/kWh, German grid). A single tree would need {treeMin}–{treeMax} days to take up that amount. (Ask yourselves how many trees it takes to absorb the CO₂ that training a whole model produces!) An estimate.',
+      runCost: '{hoursMin}–{hoursMax} hours of the GPU. At this GPU\'s {watts} W limit that is roughly {kwhMin}–{kwhMax} kWh and {co2Min}–{co2Max} g CO₂ ({factor} g/kWh, German grid). {factor} g/kWh is this platform\'s rounded working value between the Umweltbundesamt\'s figures for 2024, 353 g CO₂/kWh and 414 g CO₂e/kWh with the upstream chain. A single tree would need {treeMin}–{treeMax} days to take up that amount. (Ask yourselves how many trees it takes to absorb the CO₂ that training a whole model produces!) An estimate.',
     },
     captions: {
       hint: 'A model wrote these. What stands here is what the training reads — correct it if it got your images wrong.',
       running: 'Describing your images … {done} of {total}',
       waiting: 'waiting to be described',
       failed: 'no answer for this image — write it yourself, or leave it and only the trigger word is used',
+      withheld: 'the safety check withheld what the model wrote about this image — write it yourself, or leave it and only the trigger word is used',
       redoAll: 'Describe all again',
     },
     placeholders: {
@@ -1948,6 +1971,7 @@ export const en = {
   },
   safetyBlocked: {
     vlm: 'Your prompt was fine, but the generated image was flagged as unsuitable by an image analysis AI. This can happen \u2014 image generation is not always predictable. Just try again, every generation is different!',
+    video: 'Your prompt was fine, but the generated video was flagged as unsuitable by a video analysis AI. This can happen \u2014 video generation is not always predictable. Just try again, every generation is different!',
     para86a: 'Your prompt was blocked because it contains symbols or terms that are prohibited under German law (\u00A786a StGB). This rule protects us all from hate and violence. Try a different topic!',
     dsgvo: 'Your prompt was blocked because it contains something that looks like a person\'s name. This is protected by the General Data Protection Regulation (GDPR). Use descriptions like \"a girl\" or \"an old man\" instead of names.',
     kids: 'Your prompt was blocked by the child safety filter. Some terms are not suitable for children because they can be scary or disturbing. Try describing your idea with friendlier words!',
@@ -2148,10 +2172,16 @@ export const en = {
     runSteps: '{n} steps',
     runLocal: 'local',
     runCloud: 'external',
-    runEnergy: 'energy use of the inference: {w} W · {wh} Wh · {co2} g CO₂ since this run began',
-    runEnergyShort: '{w} W · {wh} Wh',
-    runEnergyIdle: 'no readings available',
-    runCloudNoMeter: 'external service - no energy figures available',
+    runSeed: 'seed {n}',
+    runCfg: 'CFG {n}',
+    phaseLoad: 'loading model files…',
+    phaseEncode: 'embedding the prompt…',
+    phaseEncodeImages: 'embedding the prompt and the input images…',
+    phaseEncodeImage: 'encoding the input image…',
+    phaseDenoise: 'inference…',
+    phaseDenoiseStep: 'inference {k}/{n}',
+    phaseDecode: 'VAE decoding…',
+    phaseSave: 'saving the file…',
     runEncode: 'text encoding',
     runEncodeCut: '{n} tokens truncated',
     outStep: 'step {k} of {n}',
@@ -2162,6 +2192,13 @@ export const en = {
     aiMarkNone: 'none in the file',
   },
   surrealizer: {
+    // Address, German authored, English set after it (2026-11-07).
+    // The first five German sentences are SUPPLIED WORDING of the project lead
+    // (annotation to the page); the address 'Du' is theirs and stays. English
+    // is a translation of them.
+    // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+    story: 'Imagine that an AI model is a large room full of picture elements (sound elements, and so on). This room is huge, but precisely ordered. This is about disturbing that order and reaching places in this room that are impossible to reach with a normal prompt. What comes out are pictures and sounds that bring together everything the model has learned in a completely different way. The results almost always have to do with your prompt, but are literally “out of place” (German “verrückt”, which also means “crazy”). Three text encoders of the image model encode a prompt into a table: a CLIP block above a T5 block. Under the heading "Conditioning table" stand the drawing of this table and the sliders a, b and c: a is the factor on the CLIP block, c the one on the T5 block. With the factor b the platform adds the first 77 rows of the T5 encoder into the CLIP block as well.',
+    purpose: 'A row that holds both encodings at once lies outside the states the model was trained on. At another value of b and the same seed, the model can change the style, the composition and the objects of the picture.',
     // What Help says about this instrument (devserver/scripts/build_platform_
     // items.py harvests description → brief, infoDescription → what, purposeText
     // → how, techText → technical into devserver/my_app/knowledge/platform_
@@ -2241,10 +2278,10 @@ export const en = {
     // The explanation box of this instrument (`.lab-note`, docs/ELEMENT_
     // STRUCTURE_REGISTRY.md: its heading is the menu title, its one key is
     // noteBody, two paragraphs cut at the blank line, the reference under it
-    // in LabReferences). The setting column has no room for the box yet, and
-    // where it stands is still open. The quotation is Esser et al. 2024,
+    // in LabReferences). It stands at the foot of the setting column in
+    // views/surrealizer.vue. The quotation is Esser et al. 2024,
     // 5.3.3, and stays in English in every language.
-    noteBody: 'Encoder Fusion changes the table of numbers from which the image model Stable Diffusion 3.5 computes a picture, before the model runs. The two CLIP encoders, CLIP-L and CLIP-G, fill the upper 77 rows up to column 2047 of 4096, and the columns beyond stay zero. The encoder T5-XXL fills 512 rows below across every column, more when the prompt has more T5 pieces. Each row holds one piece of the prompt, a start or end mark, or padding past the text’s end. Beside the table the model reads the pooled vector: CLIP-L’s 768 and CLIP-G’s 1280 numbers joined.\n\nEsser et al. (2024) describe the layout of this table for Stable Diffusion 3: the CLIP rows padded with zeros to 4096 columns, the T5 rows placed under them, and in training each of the three encoders set to zero at random, independently of the others, so that at inference the model runs on any subset of them. The pooled vector and the step the model is at are, in their architecture, the two inputs of the modulation: the numbers by which each block of the model scales and shifts what passes through it (section 4). For the table with zeros in its T5 block, CLIP only here, the authors report “limited performance drops when using only the two CLIP-based text-encoders for the text prompts and replacing the T5 embeddings by zeros”, with detailed scene descriptions and written text as the exceptions. A row holding both encodings, which a positive or negative b produces, lies outside those trained states. What the model computes from such a table is the question of this instrument.',
+    noteBody: 'Encoder Fusion changes the table of numbers from which the image model Stable Diffusion 3.5 computes a picture, before the model runs. The two CLIP encoders, CLIP-L and CLIP-G, fill the upper 77 rows up to column 2047 of 4096, and the columns beyond stay zero. The encoder T5-XXL fills 512 rows below across every column, more when the prompt has more T5 pieces. Each row holds one piece of the prompt, a start or end mark, or padding past the text’s end. Beside the table the model reads the pooled vector: CLIP-L’s 768 and CLIP-G’s 1280 numbers joined. CLIP-L and CLIP-G were trained on pairs of images and captions (Radford et al. 2021), T5-XXL on text alone (Raffel et al. 2020). The two blocks hold two encodings of the same prompt.\n\nEsser et al. (2024) describe the layout of this table for Stable Diffusion 3: the CLIP rows padded with zeros to 4096 columns, the T5 rows placed under them, and in training each of the three encoders set to zero at random, independently of the others, a step the authors take for classifier-free guidance, with the consequence that the model runs on any subset of them. The pooled vector and the step the model is at are, in their architecture, the two inputs of the modulation: the numbers by which each block of the model scales and shifts what passes through it. For the table with zeros in its T5 block, CLIP only here, the authors report “limited performance drops when using only the two CLIP-based text-encoders for the text prompts and replacing the T5 embeddings by zeros”, with detailed scene descriptions and written text as the exceptions. A row holding both encodings, which a positive or negative b produces, lies outside those trained states.',
     referencesTitle: 'Research References',
     calc: {
       runFacts: 'Last run',
@@ -2322,12 +2359,7 @@ export const en = {
     working: 'working…',
     waiting: 'waiting',
     stationFailed: 'this machine did not answer',
-    stationFailedNamed: '{station} — this machine did not answer',
-    band: {
-      done: 'All four have answered'
-    },
     run: {
-      name: 'Start',
       start: 'Send the recording through the four machines',
       took: 'answered in {s} s'
     },
@@ -2354,14 +2386,14 @@ export const en = {
     },
     ranked: {
       name: 'Audio analysis',
-      note: 'This machine cannot say what it got. It can only sort it against words that were written down in advance.',
+      note: 'This machine, {model}, cannot say what it got. It can only sort it against words that were written down in advance.',
       last: 'last place:',
       ourList: 'The list has {n} entries and we wrote it, not the machine. It always picks a best match, even from silence — there is no answer for "none of these".',
       culturalLimit: 'How well machines hear cultural difference has been measured. Across recordings from Western, Mediterranean, Middle Eastern, Indian and Chinese traditions, seven audio models were held against the judgements of 125 listeners. {model} came closest to people of the seven — that is why it is the one sorting your recording. People still separated the traditions about one and a half times as sharply as it did.',
       culturalLimitSource: 'Cross-Cultural Music Similarity, TISMIR 2025',
       secondMachine: 'A second machine, {model}, got the same recording and the same list:',
       secondFailed: '{model} returned no sorted list: {cause}',
-      secondWhy: 'It used to be the only one here. The song is written from both lists — and this second one alone decides which machine sings it back, because it is the one that can hear whether a voice is speaking or singing. Where the two disagree, there is no way to tell from the page which is closer.'
+      secondWhy: 'It used to be the only one here. The song is written from both lists — and of the two lists only this second one has a say in which machine sings it back. Where the two disagree, there is no way to tell from the page which is closer.'
     },
     words: {
       name: 'Recognised words',
@@ -2381,16 +2413,16 @@ export const en = {
       pick: 'Choice of model',
       held: 'chosen by hand — this is the one that runs',
       name: 'Output',
-      note: 'This one can only be heard, not read. Hold it against the text that was written.',
       madeBy: 'made by {model}, in {s} s',
-      notKept: 'This exists for as long as you stay on the page. It cannot be saved, favourited or downloaded — it is a re-enactment, not a work.'
     },
     errors: {
       noMic: 'No microphone available, or permission was refused.',
       upload: 'The recording could not be handed over.',
       tooLong: 'That recording is longer than four minutes, which is as much as this takes.',
       chain: 'The chain broke off.'
-    }
+    },
+    noteBody: 'Every station of the chain is a model of its own, with training data of its own. Two models rank the recording against a list of short descriptions that the platform wrote in advance, one model transcribes it, and a language model writes lyrics and style words from the ranking and the transcript. A hand pick chooses the generator. Otherwise the ranking of the second ranker and whether words were recognised decide between HeartMuLa (Yang et al. 2026) for a song, Stable Audio 3 (Stability AI 2026) for music or sound and VoxCPM2 (Zhou et al. 2026) for speech. The first ranker, CLAP (Wu et al. 2023), computes the cosine similarity between the encoding of the recording and the encoding of each description, so every recording lands on one of the descriptions. The second ranker is MuQ-MuLan (Zhu et al. 2025).\n\nKoenecke et al. (2024) found whole invented sentences in about 1 % of the transcripts of Whisper (Radford et al. 2023), more often for speakers whose recordings held longer non-vocal stretches, and 38 % of those sentences carried harmful content. The transcriber here, HeartTranscriptor, is a refinement of Whisper.',
+    referencesTitle: 'Research References',
   },
 
   // The overview map of the Latent Lab has an address of its own. It stood on
@@ -2547,7 +2579,7 @@ export const en = {
           posNote: 'the place numbers of the [[tokens]]',
           ctrlNote: 'a control [[token]]',
           fourNote: 'one word becomes two [[tokens]]',
-          langHead: 'The same sentence in the ten languages of this platform, cut into [[tokens]]:',
+          langHead: 'The same sentence in ten languages of this platform, cut into [[tokens]]:',
           langs: 'en¦English¦22\nhe¦Hebrew¦25\nes¦Spanish¦30\nde¦German¦31\nko¦Korean¦31\nfr¦French¦35\ntr¦Turkish¦35\nar¦Arabic¦36\nbg¦Bulgarian¦47\nuk¦Ukrainian¦56',
           langNote: 'For the same sentence the AI model needs\nmore than twice as many [[tokens]] in\nUkrainian as in English.\nThe word for “house” is one [[token]] in eight\nof these languages. In Bulgarian and\nUkrainian it is three.',
           embLabel: '[[Embedding]]: every [[token]] is given its series of numbers. Your text is thereby embedded in numbers.',
@@ -2724,14 +2756,16 @@ export const en = {
       recordingTooltip: 'Research data is saved automatically',
     },
     // Mean Images — the average of a model's answer to a seed and a text.
-    // DRAFT copy: every line below is a first setting, marked as such in
-    // src/i18n/WORK_ORDERS.md. `steyerl` stays empty until its text is
-    // written; the note box renders it only when it carries something.
     meanImages: {
       noEnglishText: 'no English text came back',
       description: 'Many generated images, from rewordings of one prompt or from one prompt on different seeds, averaged into one picture. For the two SD 3.5 models the mean is taken before the decoder, and each row says which mean it shows.',
-      story: 'The instrument generates many images from one prompt and averages them into one mean image, per AI model. Two means are computed per model. The first is the mean of the images generated from English variants of the prompt, which a language model writes with the same content in other words, as many as the setting \u2018Images per cell\u2019 says. The second is the mean of the images generated from the prompt as entered on randomly varied starting seeds. The models are selectable, one row each; both columns always stand. A switch in the left column shows the single images as a contact sheet, or a relief of the mean, instead. For the two SD 3.5 models the mean is taken before the decoder: the latents of the pictures are averaged and decoded once. The other models are averaged pixel by pixel, and each row says which.',
-      purpose: 'This page applies the artist Hito Steyerl\u2019s \u2018mean images\u2019 as a method against generative AI models. The mean of many images, generated from rewordings of one prompt or from one prompt on different seeds, can be compared across AI models. The comparison serves the exploration of visual clich\u00e9s, prejudices and other forms of the statistical production of \u2018normality\u2019.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: the wording accepted on 2026-09-04, corrected: who generates and averages, the label "View", the English version of the prompt; struck: "both columns always stand" (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'An AI model generates many images from one prompt, and the platform averages them into one mean image. The platform computes two means per model. The first is the mean of the images generated from English variants of the prompt: the first variant is the English version of the prompt, the further ones a language model writes with the same content in other words. Together they are as many as the setting "Images per cell" says. The second is the mean of the images generated from the English version of the prompt on randomly varied starting seeds. The models are selectable, one row each. Under "View" in the left column, three views stand to choose from: the mean, the single images as a contact sheet and a relief of the mean. For the two SD 3.5 models the platform takes the mean before the decoder: it averages the latents of the pictures and decodes once. For the other models it averages pixel by pixel, and each row says which.',
+      // The sentence on visual clichés follows `latentLab.meanImages.origin`
+      // (project lead's wording).
+      // 2026-11-15: sentence 1 restored from the wording accepted on 2026-09-04, and corrected ("variants"). Sentence 2 is session text, accepted on 2026-09-04 (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The mean of many images, generated from variants of one prompt or from one prompt on different seeds, can be compared across AI models. The comparison serves the exploration of visual clichés, prejudices and other forms of the statistical production of ‘normality’. What stays in the mean is what stood in the same place in every one of the pictures.',
       generate: 'Run the series',
       seedLabel: 'Seed',
       advancedLabel: 'Advanced settings',
@@ -2775,8 +2809,13 @@ export const en = {
     },
     loraReach: {
       description: 'One trained adapter, put through four states of the same comparison: the same motif, the same seed and the same model, run with and without the word the adapter was trained under, and with and without the adapter itself.',
-      story: 'You choose an adapter that was trained here, the word its images were captioned under, and a few motifs — one motif per line, and each becomes a column. Every column is then generated four times over: the plain model on the motif alone, the plain model with the word in front of it, the adapter with the word, and the adapter without it. All sixteen pictures come from one model with one starting number, so what separates two of them is the prompt and the adapter alone.',
-      purpose: 'The third row against the second is the reach: what the training added on top of what the words already carried. The fourth row against the first is the limit: whether the adapter also answers when it is not called, which is how it shows that it has overwritten what the model knew rather than added to it. A motif the adapter was never shown asks the same question from the other side — whether a trained manner carries over, or whether the adapter brings the subjects of its training set along with it.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'The choice is an adapter that was trained here, the trigger word its images were captioned under, and a few motifs, one motif per line, and each becomes a column. Each column then has four pictures: one from the plain model on the motif alone, one from the plain model with the word in front of it, one with the adapter and the word, and one with the adapter alone. One model with one seed generates all pictures, so what separates two of them is the prompt and the adapter alone.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'With an adapter, the ordinary meaning of a word that stood in the captions can shift along. For a motif outside the adapter\'s training set, the column shows whether the pictures with the adapter render the motif in a trained manner or the subjects of its training set.',
       generate: 'Run the comparison',
       adapterLabel: 'Adapter',
       noAdapters: 'Nothing has been trained here yet. The Training Studio makes an adapter.',
@@ -2799,15 +2838,20 @@ export const en = {
       // "line" became "prompt" (docs/COPY_RULES.md: the surface's word is the
       // word); "goes to", a verb of motion, became "receive", because
       // docs/COPY_RULES.md bars the arrival verb as well. German is the
-      // authored side; this is set after it. The closing sentence of the
-      // second half is SUPPLIED WORDING and keeps its address word for word.
-      story: 'Several image models receive the base prompt once on its own and beside it with a culture or a country named in it — "Yoruba", "Sámi", "Franconian". The rows hold the models, the columns the variations, and a model computes in its row with the same seed and with exactly this wording.',
-      purpose: 'The first column shows what a model brings out while the prompt says nothing about origin: which place, which people, which clothing count to it as the obvious ones. The further columns show what a named culture changes: whether the model shows the practice meant, or only swaps the surroundings and delivers the cliché. If you choose only 1 model, 5 different variations (seeds) are used, so that you can compare a range of results.',
+      // authored side; this is set after it. The closing sentence of the second
+      // half is SUPPLIED WORDING, recast by the project lead on 2026-10-31 without address.
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Several image models receive the base prompt once on its own and beside it with a culture or a country named in it: "Yoruba", "Sámi", "Franconian". Every line in the field "Variations (further columns)" replaces the asterisk "*" in the base prompt once and gets a column of its own. The list for the variations offers cultures and six emotions, for a base prompt such as "a person feeling *". The rows hold the models, the columns the variations, and a model computes in its row with the same seed and with exactly this wording.',
+      // Closing sentence is SUPPLIED WORDING of the project lead (2026-10-31).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The field "Variations (further columns)" takes any own word: one\'s own region, town, community or language. Whoever knows the place can judge whether a model shows a meal, a festival or a greeting from there as it looks there. If only one model is selected, five different variations (seeds) are used, so that a range of results can be compared.',
       generate: 'Run the series',
       templateLabel: 'Base prompt (use the asterisk "*" as the placeholder for the variations)',
       stepsLabel: 'Variations (further columns)',
       unmarked: 'base prompt',
-      noteBody: 'An image model is trained on data in which some parts of the world appear millions of times and others rarely. Where the training was thin, the model fills the gap from what was frequent. That becomes recognisable when the model receives the base prompt once on its own and once with a variation. Prompted with \u2018Seasons in January\u2019, two of three models returned northern-hemisphere winter in 102 pictures out of 102 (Shin et al. 2024). On prompts with a cultural expectation, 44 % of the ratings lay below full agreement with the prompt, and nearly half of those concerned an implicit cultural expectation (the CULTURALFRAMES benchmark, Nayak et al. 2025). In the study\'s example a couple receives the parents\' blessing and the parents are absent from the picture. The emotions in the list are the six basic emotions of Ekman and Friesen (1971), which in the taxonomy of Baron-Cohen, Golan, Wheelwright and Hill (2004) are also the basis of the teaching software \u201cMind Reading\u201d. The comparison shows which visual constructions of emotionality the models have, and how far they differ from one another.',
+      noteBody: 'Prompted with \u2018Seasons in January\u2019, two of three models returned northern-hemisphere winter in 102 pictures out of 102 (Shin et al. 2024). On prompts with a cultural expectation, 44 % of the ratings lay below full agreement with the prompt, and nearly half of those concerned an implicit cultural expectation (the CULTURALFRAMES benchmark, Nayak et al. 2025). In the study\'s example a couple receives the parents\' blessing and the parents are absent from the picture. The emotions in the list are the six emotions that Ekman and Friesen (1971) tested across cultures. The comparison shows which visual constructions of emotionality the models output, and how far they differ from one another.',
+      referencesTitle: 'Research References',
       modelsLabel: 'Models',
       regions: {
         emotions: 'Basic emotions',
@@ -2855,8 +2899,11 @@ export const en = {
         // this instrument is and how it is read. They say what the surface does,
         // and they name no outcome: what a given model makes of a given line is
         // the finding a visitor is here to make.
-        story: 'Prompt Interception is the step in which this platform writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per writing model. Write the prompt, choose the perspective it is to be written through, and tick the models that are to write; one image model puts a picture beside each text. The top row holds the prompt as it was written, and what the image model makes of it with that step left out.',
-        purpose: 'This instrument compares texts; the picture beside a text is what one image model made of it. Between two rows the writing model is the only difference: the prompt, the perspective, the adaption each image model carries and the seed are the same for every row.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Prompt Interception is the step in which a language model writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per writing model. Enter the prompt, choose the perspective it is to be written through, and choose the set of models that are to write ("Writing models"); one image model generates a picture for each text. The top row holds the prompt as it was entered, and what the image model makes of it with that step left out.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The matter of the comparison is the texts: the form each model sets and names, what it keeps of the prompt, what it drops and what it adds, and its register. Where a perspective names a tradition, such as “Bauhaus”, “Literati” or “Renaissance”, the text shows whether a model writes its forms or a cliché of them.',
         generate: 'Run the series',
         // The one perspective every row is written through. It stands in the
         // column as a disc, and where none is chosen yet as the empty place of
@@ -2867,17 +2914,29 @@ export const en = {
         // Which models write, as three lineups rather than as every model the
         // installation offers. Sixteen fields are a catalogue, and a catalogue
         // asks nothing; each of these three asks one question and holds
-        // everything else still. The models a lineup stands for are data
+        // everything else still. Beside them, since 2026-11-02, Custom: the
+        // models chosen one by one out of what the settings offer. The models
+        // a lineup stands for are data
         // (devserver/config/model_register.json), never a list in the surface.
         // Named the way Bias Research names its four: the bare noun phrase
         // for the group, the members by name in the title.
         lineups: {
           openWeights: 'Open Weights',
-          openWeightsNote: 'Mistral Large 3, DeepSeek V4 Pro, GLM 5.3, Kimi K3',
+          openWeightsNote: 'Mistral Large 4, DeepSeek V4 Pro, GLM 5.3, Kimi K3',
           closedWeights: 'Closed Weights',
           closedWeightsNote: 'Claude Sonnet 5, Gemini 3.7 Flash, GPT-5.6 Terra',
           family: 'model family',
           familyNote: 'the sizes of the Qwen family, 4B to 27B',
+          // The fourth chip: the writing models chosen one by one, a
+          // drop-down per model, out of what the settings offer.
+          custom: 'Custom',
+          customNote: 'free choice of writing models',
+          // The small button under the drop-downs, and the one beside each.
+          customAdd: 'Add',
+          customRemove: 'Remove',
+          // Under the drop-downs, where one holds a model the list in force
+          // does not offer: it is left out of the run. {models} are names.
+          customNotOffered: 'Not available under the current settings, left out of the run: {models}',
         },
         modelsUnavailable: 'The list of writing models did not arrive.',
         imageModelLabel: 'Image model',
@@ -2932,8 +2991,11 @@ export const en = {
         // which every field on this platform takes and none announces; said here
         // because a visitor asking Help what to do with a picture is asking about
         // this surface, where the reading becomes the template.
-        story: 'Prompt Interception is the step in which this platform writes a prompt over again through a perspective. Here that step runs several times on the same template, once per perspective, and one image model shows what each of them wrote. Write the template \u2014 or drag a picture onto the field, and its description then stands there as the template, where it can be worked on further. Choose the perspectives. Where the template was written, the first picture holds it with that step left out; where it was read from a picture, that picture stands first as the reference and the picture beside it is the first step, with no perspective on it; resting on a perspective \u2014 holding it, on a touch screen \u2014 shows the text that perspective wrote.',
-        purpose: 'Every picture carries the same template, and between two of them the perspective is the only difference, so a picture can be read for what that one perspective does to the template. The writing model is the one this platform is set to intercept with, and this surface makes no choice about it. One image model runs, because what is compared here is perspectives \u2014 the comparison of image models is its own instrument.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Prompt Interception is the step in which a language model writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per chosen perspective, and one image model generates a picture for each rewritten prompt. With a typed prompt, the first picture shows what the image model makes of the prompt itself, with that step left out.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'This surface serves getting to know Prompt Interception: a work stands under several perspectives, and the differences between the results are the matter of the conversation about them. A classical painting dragged onto the field is such a work: for instance Caspar David Friedrich\'s “Wanderer above the Sea of Fog” (1818), written over again through the perspective “Slang”. Compared with the work, the new prompt shows what stays under this perspective, what changes and in which register the language model writes.',
         generate: 'Run the series',
         templateLabel: 'Template',
         perspectivesLabel: 'Perspectives',
@@ -2967,8 +3029,11 @@ export const en = {
       poles: {
         // What Help answers with. The scale words are VisionReward\u2019s own and
         // stand in English in every language of this platform.
-        story: 'One aesthetic checklist, set property by property, and what a model writes from it and the template. Write the template \u2014 or drag a picture onto the field, and its description then stands there as the template. Every property that can carry a handle is a scale of words with one handle on it; a property left at its neutral word stays out of the prompt. Five chips over the bars set the whole checklist at once, and from there each property is moved on its own. One setting is one prompt. Every run adds a row, and the first row stays: the checklist at its neutral word throughout, which every picture beside it is read against. Where the template was read from a picture, that picture stands first as the reference, and the picture beside it is the first step, with no setting on it. One image model runs, so what parts two pictures is the setting. Resting on a picture\'s name \u2014 holding it \u2014 shows what was set and what the model wrote from it.',
-        purpose: 'The properties come from the human labelling guidelines of VisionReward, where each of them carries one ordered list of words with one of those words marked as the neutral one. Those guidelines give one position on such a list, which is why there is one handle here. The lists are of different lengths and reach different distances to either side, so each property is set on its own rather than by one axis over all of them, and a setting is free to stand at the good end of one property and at the bad end of the next. Every row is written by the same model from the same template, so what stands between two rows is the setting, and the pictures show what the checklist does to a template.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'A language model writes a new prompt from the prompt and an aesthetic checklist, set property by property. Each of the ten properties is a scale of words with a bar. Five chips over the bars, from “best” to “worst”, set the whole checklist at once. Every run adds a picture, and with a typed prompt the first picture, "Reference image", stays: the checklist at its neutral word throughout.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The properties come from the human labelling guidelines of the rating framework “VisionReward”, where each of them has one ordered list of words with one of those words marked as the neutral one. The left end of every scale is the end those guidelines count as the good one.',
         generate: 'Run the series',
         templateLabel: 'Template',
         // The ONE image model every picture on the wall comes out of.
@@ -3016,6 +3081,13 @@ export const en = {
       },
     },
     workbench: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'After "Run sweep" the image model generates a grid of pictures, one picture per cell. In the preset, the columns are the chosen fusion strategies ("X · columns") and the rows the denoising windows ("Y · rows"), and in each cell the fusion of the encodings of CLIP and T5 acts in the steps its window covers.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The subject of this page is the moment in the denoising at which this fusion acts on the picture.',
       headerTitle: 'Encoder Fusion Workbench — a generic 3-axis comparison instrument',
       headerSubtitle: 'Assign any parameter to each axis and give it a value list: X = columns, Y = rows, Z = the drive-through slider.',
       headerSubtitleDetail: 'Assign any parameter to each axis and give it a value list: X = columns, Y = rows, Z = the drive-through slider. Everything else stays constant. Each cell is one generation; scrub Z to move through the third dimension.',
@@ -3064,19 +3136,17 @@ export const en = {
       fusionFormulaLabel: 'Fusion formula (active)',
       formulaCore: 'core',
       formulaTail: 'tail',
-      formulaLegend: 'core = the first 77 token positions (CLIP-L+CLIP-G, padded to 4096d) blended with T5; tail = the T5-only remainder (positions 78–512). α is the fusion strength value.'
+      formulaLegend: 'core = the first 77 token positions (CLIP-L+CLIP-G, padded to 4096d) blended with T5; tail = the T5-only remainder (positions 78–512). α is the fusion strength value.',
+      noteBody: 'Each axis of the grid is a parameter of the run. α mixes the encoding of CLIP, trained on pairs of images and captions (Radford et al. 2021), with the encoding of T5, trained on text alone (Raffel et al. 2020), on the first 77 token positions. The denoising window is the range of steps in which the fused conditioning is injected, the entry block is the transformer block from which it is in effect, and the fusion strategy is the formula shown under “Fusion formula (active)”. CFG is classifier-free guidance (Ho and Salimans 2022), the seed the starting noise. Stable Diffusion 3.5 is built from blocks in which the conditioning and the image pass together (Esser et al. 2024).\n\nEsser et al. (2024) report “limited performance drops” for the two CLIP encoders alone, with detailed scene descriptions and written text as the exceptions. The marks composition, semantics and detail on the step axis carry over a division by noise level that Choi et al. (2022) derived from measurements on other diffusion models: coarse structure at high noise, content in the middle, details at the end. Here they serve as an orientation. The grid holds everything equal except the factors on its axes.',
+      referencesTitle: 'Research References',
     },
     attention: {
       referencesTitle: 'Research References',
-      // The address. German is the authored side; this is set after it,
-      // sentence by sentence. Recast without an address: the purpose lost its
-      // task-voice opening and its address, the story its fixed number 25,
-      // because the steps are settable, 10 to 50 (attention_cartography.vue:81).
-      // The attention imperative "Compare an early computing step with a late
-      // one" directs seeing and stays (docs/COPY_RULES.md: the address is the
-      // exception, not the form).
-      story: 'Enter a prompt and click "Generate + Analyze"; the image model generates an image for it. Below, the same prompt stands once more, split into single words: click one, and the page draws a colour patch over the image exactly where this word had the most influence in the computation; several words carry several colours. Three controls change the view: the slider picks one of the computation steps, the network depth the layer within it (shallow, middle, deep), and the text-encoder control switches between the two decompositions of the same prompt that the model uses side by side.',
-      purpose: 'The influence of a word spreads over areas, softly bounded and often somewhere other than expected: a word that mattered in the prompt sometimes gets only a small area, a passing one an area over half the picture. Compare an early computing step with a late one. And where a word begins and ends the model sets itself: the one decomposition has 77 tokens for the prompt, the other up to 512, and a long word falls into pieces that only together make the word again.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: the wording accepted on 2026-09-04 and 2026-09-24 (WO-2026-09-04-B, WO-2026-09-24-C1), restored and corrected. The imperatives name the operations of the surface and stay (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Enter a prompt and click ▶ ("Generate + Analyze"); the image model (SD 3.5 Large) generates an image for it. In the left column, the same prompt stands once more, split into single words: click one, and the page draws a colour patch where this word had the most influence in the computation; several words carry several colours. The slider "Denoising step" picks one of the steps, the "Network depth" the layer within it (shallow, middle, deep or all three), and the switch "Text Encoder" picks one of the two decompositions of the same prompt that the model uses side by side, or both.',
+      // 2026-11-15: sentences 3 and 4 are sentences 2 and 3 of the wording accepted on 2026-09-24, restored and corrected. The attention imperative "Compare an early denoising step with a late one" directs concrete seeing and stays (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The shape of a named thing can appear in the deep layer. The shallow and the middle layer can show, for the same word, a colour patch over the whole picture. Compare an early denoising step with a late one. And the tokenizers of the model\'s text encoders themselves set where a word begins and ends: the one decomposition has 77 tokens for the prompt, the other up to 512, and they cut a long word into pieces that only together make the word again.',
       headerSubtitle: 'For each word in the prompt, a heatmap overlay on the generated image shows WHERE in the image that word had the most influence.',
       headerSubtitleDetail: 'For each word in the prompt, a heatmap overlay on the generated image shows WHERE in the image that word had the most influence. This reveals how the model spatially distributes semantic concepts.',
       explanationToggle: 'Show detailed explanation',
@@ -3125,6 +3195,13 @@ export const en = {
       encoderHintDetail: 'SD3.5 uses two text encoders with different tokenization. CLIP-L uses BPE (Byte-Pair Encoding), T5-XXL uses SentencePiece. Compare how both encoders process the same prompt and which image regions each one steers.'
     },
     probing: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'After "Analyze" (▶1) the image model generates a picture for prompt A. At the same time the platform ranks the numbers (dimensions) of the text embedding of prompt B by the size of their difference to A. After ▶2 the image model generates the picture for B, if it is still missing, and A once more into the middle column, with the dimensions of a chosen range of ranks taken from B.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The subject of this page is the numbers that the text encoders make of a prompt. A larger range of ranks from B can move the picture for A towards B. What moves there can be the composition of the picture.',
       promptBFailed: 'Prompt B: {m}',
       promptExamples: {
         housesLabel: 'A red house by the lake / A blue house by the lake',
@@ -3215,9 +3292,18 @@ export const en = {
       sliderHint: 'Select a rank range of the most important embedding dimensions (sorted by difference between A and B).',
       transferHint: 'Transfers the selected dimensions from Prompt B onto Prompt A and generates a new image.',
       downloadOriginal: 'Download Original',
-      downloadModified: 'Download Modified'
+      downloadModified: 'Download Modified',
+      noteBody: 'A dimension is one of the numbers an encoder writes for every token of a prompt. The measurement ranks the dimensions by how far the encodings of prompt A and prompt B differ in them, averaged over the token positions. The second run copies the chosen ranks from B into A and runs the image model at the same seed, a procedure that Geiger, Richardson and Potts (2020) named interchange intervention.\n\nIn a network, a concept is spread over many dimensions and a dimension takes part in many concepts (Hinton, McClelland and Rumelhart 1986), and Elhage et al. (2022) showed on small models how more features than dimensions share the same space. Timkey and van Schijndel (2021) found in the language models GPT-2 and BERT that one to five dimensions of very large variance dominate similarity measures, and Kovaleva et al. (2021) traced such dimensions to the parameters of layer normalisation. On this surface CLIP and T5 write the encodings.',
+      referencesTitle: 'Research References',
     },
     algebra: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Three prompts stand in the calculation A − B + C: the platform subtracts the text embedding of B from that of A and adds that of C. After "Compute", the picture for A alone stands in the column "Reference (Prompt A)" and the one for the sum in the column "Result (A − B + C)", at the same seed. The weights of B and C can be set under "Advanced settings" as "Subtraction scale" and "Addition scale", from 0 to 3.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The subject of this page is the calculation with embeddings, which the page calls "Vector arithmetic". One test is “king” − “man” + “woman”. In the result picture, features of the reference picture can stay and others can change. At a larger "Addition scale", the style of the result picture can also detach from the reference picture.',
       promptExamples: {
         riverLabel: 'the street where I live, in the morning, with an animal − the street where I live, in the morning + a river',
         riverA: 'the street where I live, in the morning, with an animal',
@@ -3238,7 +3324,7 @@ export const en = {
         // WITHOUT the role (like river: B = A minus the one variable
         // element), and C the adult counterpart. With the old B = A the
         // reference collapsed (A − A = 0) and the result was trivially C.
-        // Source: the platform's WAS/WIE separation; Mikolov et al. 2013
+        // Source: the platform's WAS/WIE separation; Mikolov, Yih & Zweig 2013
         // (the analogy the instrument carries).
         childLabel: 'the street where I live, in the morning, seen through the eyes of a child − the street where I live, in the morning + the street where I live, in the morning, seen through the eyes of an adult',
         childA: 'the street where I live, in the morning, seen through the eyes of a child',
@@ -3268,11 +3354,12 @@ export const en = {
       explainWhatTitle: 'What does this tool show?',
       explainWhatText: 'In 2013, Mikolov showed that word embeddings encode semantic relationships as linear directions: the vector for "King" minus "Man" plus "Woman" yields a vector close to "Queen". This tool applies that idea to SD3.5’s text encoders: instead of single words, you manipulate entire prompt embeddings. The result is an image that has moved away from A along the direction B→C. How far it moves, and in what respect, is what the tool lets you look at.',
       explainHowTitle: 'How does the algebra work \u2014 and why not just use a negative prompt?',
-      explainHowText: 'You enter three prompts: A (base), B (subtract), and C (add). The formula is: Result = A − Scale₁×B + Scale₂×C. The scale sliders control intensity: at 1.0, B is fully subtracted and C fully added. At 0.5, only half. Values above 1.0 amplify the effect. — Why not just use "A + C" as the prompt and "B" as the negative prompt? Because the two happen in different places. A negative prompt is the baseline that guidance is measured from, so it acts inside the denoising loop, at every one of the 25 steps, against the image as it currently stands. Concept Algebra computes a new vector BEFORE generation: the arithmetic happens in embedding space, once, and the loop never learns that anything was subtracted. — What the subtraction does not do is delete a named object. Our own measurement series on this platform found that subtracting one prompt vector from another shifts tone, framing and register, but leaves the named thing in the picture. Read the result as a displacement in meaning-space, not as a removal.',
+      explainHowText: 'You enter three prompts: A (base), B (subtract), and C (add). The formula is: Result = A − Scale₁×B + Scale₂×C. The scale sliders control intensity: at 1.0, B is fully subtracted and C fully added. At 0.5, only half. Values above 1.0 amplify the effect. — Why not just use "A + C" as the prompt and "B" as the negative prompt? Because the two happen in different places. A negative prompt is the baseline that guidance is measured from, so it acts inside the denoising loop, at every one of the 25 steps, against the image as it currently stands. Concept Algebra computes a new vector BEFORE generation: the arithmetic happens in embedding space, once, and the loop never learns that anything was subtracted. — In word embeddings, the result of such an analogy stays close to its starting word: without excluding the input words from the candidates, the nearest neighbour of the result was the starting word in 93 % of the cases (Linzen 2016). The question of this instrument is how far, and in what respect, the picture departs from A.',
       explainReadTitle: 'What do the results mean?',
       explainReadText: 'On the left you see the reference image (prompt A only, same seed). On the right, the algebra result. If the analogy works, the right image should show concept A but with the semantic change B\u2192C. Example: "Sunset at the beach" \u2212 "Beach" + "Mountains" \u2248 "Sunset over mountains". The L2 distance shows how far the result has moved from the original. \u2014 Is the operation commutative? No. Subtraction of B and addition of C happen relative to vector A. The direction B\u2192C only makes sense in the context of A: "King \u2212 Man" removes the "male" directions from the King vector, "+ Woman" adds the "female" directions \u2014 the result lands near "Queen". C is not surgically placed where B was removed; it is simply added. That this still works shows that semantic relationships are encoded as consistent linear directions in the vector space.',
       techTitle: 'Technical details',
       techText: 'The algebra is performed on the selected encoder embeddings: CLIP-L (768d), CLIP-G (1280d), T5-XXL (4096d), or all combined (589 tokens \u00d7 4096d). The same operation is also applied to pooled embeddings (2048d). Both images use the same seed for fair comparison.',
+      noteBody: 'The calculation A − s₁·B + s₂·C, with s₁ the “Subtraction scale” and s₂ the “Addition scale”, runs once on the three prompt encodings before the image model starts, and its result is the conditioning of the run. The reference picture uses the encoding of A alone, at the same seed.\n\nMikolov, Yih and Zweig (2013) found this arithmetic in word embeddings: “‘King - Man + Woman’ results in a vector very close to ‘Queen.’” Wang, Gui, Negrea and Veitch (2023) carry the idea to text-guided image models, where a concept is a subspace of the encoding. Linzen (2016) measured that, when the input words stay among the candidates, the nearest neighbour of the result is one of the input words in 93 % of cases. Side by side, the result picture and the reference show how far, and in which respect, the calculation changed the picture.',
       referencesTitle: 'Research References',
       promptALabel: 'Prompt A (Base)',
       promptAPlaceholder: 'e.g. the street where I live, in the morning, with an animal',
@@ -3307,6 +3394,12 @@ export const en = {
       resultHint: 'Enter three prompts and click Compute \u2014 the result of the vector arithmetic will appear here.'
     },
     composable: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'The image model generates one picture from two or more concepts, each a prompt of its own with its own weight. A positive weight adds the concept ("AND"), a negative one subtracts it under "In the denoiser" ("NOT"). The place of composition stands at the "Combination" chips: "In the embedding", once at the start, or "In the denoiser", at every step. With "In the embedding", the mix of the embeddings with a negative weight can give a vector from which the model computes a noise picture.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      purpose: 'The subject of this page is composition: what dominates in the picture, what recedes, what is left out and how the parts are joined. The thing a concept under "NOT" names can be missing from the picture, a window for instance.',
       promptExamples: {
         house: 'a red house on a hill',
         ship: 'a blue ship on the ocean',
@@ -3354,6 +3447,7 @@ export const en = {
       explainHowText: 'At each of the 25 denoising steps, the model runs N+1 transformer passes: one for the negative prompt (unconditional), and one for each concept. Each concept produces its own noise prediction \u2014 and what enters the sum is not that prediction itself, but its difference from the unconditional one: noise = uncond + v1\u00d7(noise_1 - uncond) + v2\u00d7(noise_2 - uncond) + ... Each v is that concept\u2019s own guidance strength. A positive v pulls the image toward the concept (AND); a negative v pushes it away (NOT). Because every concept is scored separately at every step, none of them can be absorbed into another \u2014 which is exactly what happens inside a single fused prompt. The other place a run can combine the same concepts is the embedding: before the run their embeddings are interpolated into one. The direction turns from one concept towards the other, and the length runs between the lengths of the two readings. Only the ratio of the weights acts here, and with three or more concepts the order they stand in acts as well. The share the next concept gets is w2/(w1+w2), and only that ratio acts: multiplying every weight by -1 leaves the result bit for bit the same, so 1.00 and -2.00 give what -1.00 and 2.00 give. Weights of one sign put the share between 0 and 1, and the result between the concepts. Weights of different signs put it outside: 1.00 and -2.00 make the sum -1 and the share +2, 2.00 and -1.00 make it -1. Out there the result is no longer between the concepts. It turns past the one whose weight is the larger WITHOUT its sign, so the minus alone does not say which concept is left behind; single rows cross zero length and drop out while their neighbours are stretched. What a table like that paints is not read off the numbers. From there the run is the ordinary one, two passes per step: one for that one embedding, one for the negative prompt. The seed and the step count are the same for both places, so a pair of runs on one seed differs in the place.',
       techTitle: 'Technical details',
       techText: 'Based on Liu et al. (2022), Eq. 11 (conjunction) and Eq. 15 (negation). Each concept is encoded with all three SD3.5 encoders (CLIP-L, OpenCLIP-G, T5-XXL) independently. The custom denoising loop calls pipe.transformer() once per concept per step. In the denoiser the weights are read in one of two ways. With "normalize" on, they are shares of the CFG value: the total guidance stays at CFG, so every concept you add makes each individual share smaller. With it off, each weight is that concept\u2019s own guidance temperature, v = CFG \u00d7 weight, and a negative weight is the NOT operator \u2014 algebraically identical to the paper\u2019s eps_u + w\u00d7(eps_a - eps_b). A negative weight switches normalization off automatically, because a mixture with signs has no meaning. In the embedding neither reading applies: the concepts are interpolated there, so a weight acts through its ratio to the others, and with three or more concepts the order they stand in acts as well. VRAM: model weights are shared across passes; only activations vary. With 4 concepts, generation takes roughly 4x longer than standard (each step needs 5 transformer passes instead of 2).',
+      noteBody: 'In the denoiser, the model runs once per concept and once for the negative prompt at every step. Each concept’s noise prediction enters as its difference to the prediction for the negative prompt, multiplied by the CFG value times the concept’s weight, or times its share of the weights when they are normalised, and the differences are summed. That is classifier-free guidance (Ho and Salimans 2022) with one strength per concept. A weight below zero reverses the sign of that term, which the surface labels NOT. In the embedding, the concepts are interpolated once, before the run, into one conditioning.\n\nLiu et al. (2022) composed the score estimates of a diffusion model this way and generated combinations “rarely seen in the real world”. Their failure cases are a concept outside the model’s training, attributes landing on the wrong object, and a composition that fails as a whole. Du, Li and Mordatch (2020) composed energy-based models with logical operators.',
       referencesTitle: 'Research References',
       conceptLabel: 'Concept {n}',
       conceptPlaceholder: 'e.g. a red house on a hill',
@@ -3388,14 +3482,11 @@ export const en = {
     },
     archaeology: {
       headerTitle: 'Denoising Archaeology \u2014 How does noise become an image?',
-      // The address. German is the authored side; this is set after it,
-      // sentence by sentence. Recast without an address: "pulls out" (a
-      // metaphor) and the fixed number 25 fell (the steps are settable, 10 to
-      // 50), the phase arc of the purpose gave way to an attention imperative,
-      // since that point belongs to the visitor, and the backbones stand as
-      // the surface writes them (denoising_archaeology.vue:426-427).
-      story: 'An image generator starts from pure random noise, a flicker with no object in it, and removes that noise step by step, preset at 25, until a scene is left. The platform holds every single one of those steps; the slider in the left column picks which of them fills the view. Two nets stand at the Backbone to choose from, SDXL (2023) and SD 3.5 (2024), and every run stays under "Runs".',
-      purpose: 'The model works on the whole picture at once, step by step. Go back and forth along the slider and watch for the step from which the scene is recognisable. That point shifts with the prompt and with the model; for that, compare two runs with the same prompt.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: sentences 1 and 2 restored from the wording accepted on 2026-09-24 (WO-2026-09-24-C1), sentences 3 and 4 from the version of 2026-11-08 (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'An image generator starts from pure random noise, a flicker with no object in it, and removes that noise step by step, preset at 25, until a scene is left. The platform holds every single one of those steps; the slider in the left column picks which of them fills the view. After the run the view stands at step 1, the noise. Two nets stand at the Backbone to choose from, SDXL (2023) and SD 3.5 (2024), and every run stays under "Runs".',
+      // 2026-11-15: sentences 2 and 3 restored from the wording accepted on 2026-09-24, sentence 3 corrected by the two backbones. The imperatives direct concrete seeing and stay (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'The subject of this page is denoising: at every step the net computes from the noisy interim state a less noisy one. Go back and forth along the slider and watch for the step from which the scene is recognisable. That point shifts with the prompt and with the model; for that, compare two runs with the same prompt, one on SDXL and one on SD 3.5.',
       headerSubtitle: 'Observe every single denoising step.',
       headerSubtitleDetail: 'Observe every single denoising step. Diffusion models don\'t draw left-to-right \u2014 they work everywhere simultaneously, from rough shapes to fine detail.',
       explanationToggle: 'Show detailed explanation',
@@ -3449,8 +3540,9 @@ export const en = {
       headerSubtitleDetail: 'Representation Engineering, comparative model archaeology, and systematic bias analysis: Three research-based tools for investigating language models.',
       explanationToggle: 'Show explanation',
       modelPanel: {
-        // Over the chip row of Representation Engineering. It picks the model
-        // that is read, and that is the word for it.
+        // Over the model drop-down of Representation Engineering (chips until
+        // 2026-11-08). It picks the model that is read, and that is the word
+        // for it.
         presetLabel: 'Model',
         presetNone: 'No preset (custom ID)',
         customModelLabel: 'HuggingFace Model ID',
@@ -3464,6 +3556,12 @@ export const en = {
       maxTokensHint: 'Maximum number of generated tokens (word pieces).',
       textSeedHint: '-1 = random, fixed value = reproducible result',
       tokens: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'The chosen tokenizer ("Tokenizer" chips) cuts the sentence in the field into tokens, and the page shows each piece numbered. The line below names the number of tokens, the size of the vocabulary and the model\'s window. The tokenizer can cut a single character, such as “집”, into several pieces, which the page all shows as this character. After ▶ a language model translates a sentence entered by hand into the other languages of the platform, and the tokenizer cuts each version.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        purpose: 'The subject of this page is the cost of a language in tokens: the same sentence costs a different number in each of the eleven languages. For the speakers of an expensive language this means less room in the window and more computing time for the same sentence.',
         runLabel: 'language',
         wordLabel: 'A single word to compare',
         tokenizerLabel: 'Tokenizer',
@@ -3480,10 +3578,11 @@ export const en = {
         vocabLine: 'Vocabulary: {n} tokens',
         windowLine: 'Window: {n} tokens',
         fill: '{p} % of the window',
-        compareHead: 'The same sentence in the ten languages of this platform',
-        compareEmpty: 'The comparison starts in the bar above. It translates your sentence into ten languages and cuts each version.',
-        wordHead: '“{w}” in the same ten languages',
-        note: 'A token is a piece of text. The tokenizer determines how a text is cut. It was built on certain languages.\nMore tokens means two things: the model\'s window fills up faster, and the computing time rises. That also means higher cost and higher energy use for the same work by the model.',
+        compareHead: 'The same sentence in the eleven languages of this platform',
+        compareEmpty: 'The comparison starts in the bar above. It translates your sentence into eleven languages and cuts each version.',
+        wordHead: '“{w}” in the same eleven languages',
+        note: 'A token is a piece of text. The tokenizer determines how a text is cut. It was built on certain languages. The same text can take up to 15 times as many tokens in one language as in another (Petrov et al., 2023).\nMore tokens means two things: the model\'s window fills up faster, and the computing time rises. That also means higher cost and higher energy use for the same work by the model.',
+        referencesTitle: 'Research References',
       },
       tabs: {
         repeng: { label: 'Representation Engineering', short: 'Find steering vectors in LLMs' },
@@ -3500,11 +3599,24 @@ export const en = {
       // views/latent_lab/interception_models.vue
       // (`latentLab.textLab.error.gpuUnreachable`).
       systempromptModels: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Three language models, one per column from the "Model" list, answer the same message. System prompt and randomness are the same for all three. The list names for the models country, year and size, and whether they compute locally. The field "System Prompt" shows the text of the chosen preset and stays editable.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The matter of the comparison is what a language model says, what it leaves out or declines and how it says it: register, hedges, lists, the wording of a refusal. Three models from three countries on the same message show whether one declines or redirects, and in which words.',
         inputPlaceholder: 'Type a message to send to all three models...',
         noModel: 'No model chosen',
         modelsUnavailable: 'The list of models did not arrive.',
+        noteBody: 'Three language models receive the same message under the same system prompt and the same randomness. Their answers differ in what was trained into each model: the data, the instruction tuning and the maker’s rules for the assistant. The sampling at the set randomness and, from the second message on, each column’s own earlier answers separate them as well.\n\nDurmus et al. (2023) put the questions of international opinion surveys to language models and found their default answers closest to those of respondents in the United States and in some European and South American countries. Röttger et al. (2024) measured how often models refuse prompts that are safe to answer: between 1.6 % and 59.6 % of such prompts, depending on the model. Casademunt et al. (2026, preprint) found that the Qwen3 models give false answers to questions on Falun Gong and the protests of 1989 and sometimes correct ones, which the authors read as knowledge the models hold and withhold.',
+        referencesTitle: 'Research References',
       },
       repeng: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'A language model from the "Model" list continues the prompt three times, in the columns "← against the arrow", "· no arrow (reference)" and "→ with the arrow". Each contrast pair contributes the difference of the model\'s states between its two sentences, and the arrow is the direction these differences have in common. While the model writes, the platform adds a multiple of this direction to the middle layer\'s output at every token in the column "→ with the arrow", and subtracts it in the column "← against the arrow". With a single pair the steered text can lose coherence in both directions and repeat itself.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        purpose: 'The subject of this page is the intervention in the inside of a language model: a direction that the platform adds to the model\'s states while it writes, or subtracts from them. An answer the model gives in the column "· no arrow (reference)" it can evade or replace with another under the direction.',
         referencesTitle: 'Research References',
         promptExamples: {
           capital: 'The capital of Germany is'
@@ -3517,9 +3629,9 @@ export const en = {
         // knowledge/platform_items.json, field `what`).
         explainWhatText: 'Based on Zou et al. (2023), “Representation Engineering: A Top-Down Approach to AI Transparency” (arXiv:2310.01405). While a language model writes, what it is about to say stands as a state of numbers, layer by layer. This instrument reads a direction out of that state — from a handful of sentence pairs somebody writes themselves — and adds that direction back into the state while the model writes. Nothing is trained: the reading and the steering both happen while the model runs. The method is Zou et al.’s reading vector alone: one direction over the whole hidden state, added to the output of one decoder layer. Li et al.’s Inference-Time Intervention (NeurIPS 2023) works differently — a probe per attention head, and a shift only on the heads that separate — which is why it left this surface’s reference list on 2026-08-24.',
         explainHowTitle: 'How do I use it?',
-        explainHowText: 'What happens to the contrast pairs, in four steps. (1) Each pair is read twice: the model is given the upper sentence, then the lower one, and its inner state at the middle layer of the stack is taken at the last token of each. What the pair contributes is the difference between those two states. (2) What the pairs’ differences have in common is the direction. The drawing under the pairs shows it: one grey arrow per pair at the angle its difference has to that shared direction, and one green arrow for the shared direction itself — the one that goes into the writing. A wide fan means the pairs differ in several things and the reading keeps only what they share. (3) The direction is scaled to the distance the pairs themselves travel along it, so the strength counts in pair-differences: 1 adds exactly as much as one pair differs on average, and 2 pushes the state further than any of those sentence pairs ever stands from its own partner — which is why the text begins to break up above 2. The axis starts at 1.5, which tips the answer on the first press. (4) While the model writes, strength × direction is added to the output of that decoder layer, at every token, and the three columns show it pushed one way, left alone, and pushed the other way. WHY UNTRUE SENTENCES COME OUT: the next word is computed from that state alone, and every assertion the model makes comes from where the state stands. Move the state and you move what follows from it; whether what follows happens to be true is decided by where the state now stands, which is where the pairs put it. The instrument shows an assertion as a position, and a position can be shifted. WHY THE MIDDLE COLUMN SHOWS NOTHING: zero times the direction is the zero vector, so nothing at all is added there. That column is the run the model would have produced on its own, and it stands as the reference the other two are read against. English prompts work markedly better: most open-weight models were trained mostly on English.',
+        explainHowText: 'What happens to the contrast pairs, in four steps. (1) Each pair is read twice: the model is given the upper sentence, then the lower one, and its inner state at the middle layer of the stack is taken at the last token of each. What the pair contributes is the difference between those two states. (2) What the pairs’ differences have in common is the direction. The drawing under the pairs shows it: one grey arrow per pair, its difference at the angle it has in the drawing’s plane, and how far that arrow reaches along the green one is the distance the pair travels along the shared direction; and one green arrow, the vector the platform adds to the layer’s output while the model writes: the shared direction, as long as the strength set on the axis makes it. (3) The direction is scaled to the distance the pairs themselves travel along it, so the strength counts in pair-differences along the direction: 1 adds as much as a pair travels along it on average, which is where the green arrow is as long as the grey arrows reach along it on average, and 2 adds twice as much as a pair travels along it on average. Above 2 the text begins to break up. The axis starts at 1.5, which tips the answer on the first press. (4) While the model writes, strength × direction is added to the output of that decoder layer, at every token, and the three columns show it pushed one way, left alone, and pushed the other way. WHY UNTRUE SENTENCES COME OUT: the next word is computed from that state alone, and every assertion the model makes comes from where the state stands. Move the state and you move what follows from it; whether what follows happens to be true is decided by where the state now stands, which is where the pairs put it. The instrument shows an assertion as a position, and a position can be shifted. WHY THE MIDDLE COLUMN SHOWS NOTHING: zero times the direction is the zero vector, so nothing at all is added there. That column is the run the model would have produced on its own, and it stands as the reference the other two are read against. English prompts work markedly better: most open-weight models were trained mostly on English.',
         expectedResults: 'Expected results: in the “no arrow” column the model answers as it would on its own. In the two outer columns it answers from a state that was moved, and one of the two usually comes out untrue — which one depends on what the pairs have in common. With the three pairs that stand here by default it is the “with the arrow” column: pushed towards the upper sentences, the model answers the question about Germany with Paris.',
-        expectedResultsDetail: 'One axis, straight under the drawing, and it holds a distance from 0.5 to 3 with no sign: both directions run at every press and stand as the two outer columns (“against the arrow”, “no arrow”, “with the arrow”). It starts at 1.5, which tips the answer on the first press. The strength counts in pair-differences, so 1 is one pair’s worth of push; 0.5 to 2 is the usable band, and above 2 repetition and nonsense take over. In the middle column nothing is added at all — that is the model left alone, and it is there to read the other two against. Each press adds a row to the grid on the right: three cells from one reading and one seed, so two cells side by side differ in the push and in nothing else. The row keeps the prompt it was started with, and says once how hard it pushed and which layer it used.',
+        expectedResultsDetail: 'One axis, straight under the drawing, and it holds a distance from 0.5 to 3 with no sign: both directions run at every press and stand as the two outer columns (“against the arrow”, “no arrow”, “with the arrow”). It starts at 1.5, which tips the answer on the first press. The strength counts in pair-differences along the direction, so 1 is one pair’s worth of push; 0.5 to 2 is the usable band, and above 2 repetition and nonsense take over. In the middle column nothing is added at all — that is the model left alone, and it is there to read the other two against. Each press adds a row to the grid on the right: three cells from one reading and one seed, so two cells side by side differ in the push and in nothing else. The row keeps the prompt it was started with, and says once how hard it pushed and which layer it used.',
         pairsTitle: 'Contrast Pairs',
         // The names of the ready-made sets. The SENTENCES in them are not here
         // and are never translated: they go to the model as they stand
@@ -3538,7 +3650,6 @@ export const en = {
         fanLabelEmph: 'difference',
         fanCommonA: 'this one',
         fanCommonB: 'acts on the model as it writes',
-        fanSpread: 'Arrows wide apart: your pairs differ in more than one thing.',
         // SUPPLIED WORDING: the sentence names what acts and what it acts
         // on. It replaces 'How far the axis is pushed', where neither was
         // said. The axis holds a DISTANCE - the two directions are the two
@@ -3624,7 +3735,7 @@ export const en = {
         family: 'model family',
         familyNote: 'the sizes of the Qwen family, 1.7B to 14B',
         history: 'model over time',
-        historyNote: 'one family, one size, five generations: Qwen 7B (2023) to Qwen3 8B (2025)',
+        historyNote: 'one family, one size class, five generations: Qwen1.5 7B (2024) to Qwen3.5 9B (2026)',
         failed: '{model}: {cause}',
       },
       bias: {
@@ -3645,7 +3756,7 @@ export const en = {
     },
     crossmodal: {
       headerTitle: 'Crossmodal Lab',
-      headerSubtitle: 'Sound from latent spaces: T5 embedding manipulation, image-guided audio generation, crossmodal transfer',
+      headerSubtitle: 'Sound from latent spaces: t5gemma embedding manipulation, image-guided audio generation, crossmodal transfer',
       explanationToggle: 'Show detailed explanation',
       generate: 'Generate',
       generating: 'Generating...',
@@ -3656,25 +3767,29 @@ export const en = {
       tabs: {
         synth: {
           label: 'Latent Audio Synth',
-          short: 'T5 embedding manipulation',
-          title: 'Latent Audio Synth',
-          description: 'Direct manipulation of Stable Audio\'s T5 conditioning space (768d).',
-          descriptionDetail: 'Direct manipulation of Stable Audio\'s T5 conditioning space (768d). Interpolate between prompts, extrapolate beyond the prompt, scale embeddings and inject noise. Ultra-short loops, near real-time.',
+          short: 't5gemma embedding manipulation',
+          description: 'Direct manipulation of Stable Audio 3\'s t5gemma conditioning space (768d).',
+          descriptionDetail: 'Direct manipulation of Stable Audio 3\'s t5gemma conditioning space (768d). Interpolate between prompts, extrapolate beyond the prompt, scale embeddings and inject noise. Ultra-short loops, near real-time.',
         },
         mmaudio: {
           label: 'MMAudio',
           short: 'Image/text to audio (CVPR 2025)',
-          title: 'MMAudio — Video/Image to Audio',
           description: 'Image and text enter the same network as separate signals — the image is not translated into language, both guide sound generation simultaneously. The model was jointly trained on video and audio, learning direct associations between what is seen and what is heard. Up to 8s, 44.1kHz, ~1.2s compute time. (Cheng et al., CVPR 2025, doi:10.48550/arXiv.2412.15322)'
         },
         guidance: {
           label: 'ImageBind Guidance',
           short: 'Gradient-based image guidance',
-          title: 'ImageBind Gradient Guidance',
-          description: 'Gradient-based steering during the Stable Audio denoising process. ImageBind provides a shared 1024d space for image and audio — the gradient of the cosine similarity guides audio generation towards the image embedding.'
+          description: 'Gradient-based steering during the Stable Audio 3 denoising process. ImageBind provides a shared 1024d space for image and audio — the gradient of the cosine similarity guides audio generation towards the image embedding.'
         }
       },
       synth: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'An audio model generates from the prompts in "Prompt A (Base)" and "Prompt B (Optional, for interpolation)" a sound, which the page loads into the "Looper / Sequencer". The slider α mixes the text embeddings of the two: its label names −1 as A alone and 1 as B alone. The fold "Dimension Explorer" shows the numbers of the embedding as a strip of fine bars, with two prompts, sorted by the difference between A and B: a drag on a bar sets an offset, and after "Apply and regenerate" the audio model generates the sound anew with it.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The subject of this page is the numbers that the text encoder T5Gemma makes of a prompt, and the sound the audio model generates after a change to them.',
         invalidPresetFile: 'Invalid preset file',
         promptExamples: {
           wavesLabel: 'ocean waves / piano melody',
@@ -3682,9 +3797,9 @@ export const en = {
           wavesB: 'piano melody'
         },
         explainWhatTitle: 'What does the Latent Audio Synth do?',
-        explainWhatText: 'Stable Audio generates sound from text. The text is converted by a T5 encoder into a numerical vector with 768 dimensions \u2014 this vector is what you manipulate here. Instead of just changing \u201cwhat\u201d the model generates (via the prompt), you change \u201chow\u201d the model internally understands the text. Two prompts that sound similar can be far apart in this space \u2014 and vice versa.',
+        explainWhatText: 'Stable Audio 3 generates sound from text. The text is converted by its t5gemma encoder into a numerical vector with 768 dimensions \u2014 this vector is what you manipulate here. Instead of just changing \u201cwhat\u201d the model generates (via the prompt), you change \u201chow\u201d the model internally understands the text. Two prompts that sound similar can be far apart in this space \u2014 and vice versa.',
         explainHowTitle: 'How do I use this tool?',
-        explainHowText: 'Enter text in Prompt A \u2014 this determines the base sound. Optional: Prompt B as a target point. The \u0391 slider controls the mix: at 0 you hear an equal blend of A and B, at \u22121 only A, at +1 only B. Magnitude scales the entire embedding \u2014 higher values produce more intense sounds. Noise injects randomness and creates unpredictable variations. Semantic Axes steer the embedding along learned directions (e.g. acoustic\u2194electronic, music\u2194noise) \u2014 each slider interpolates between two text poles in the T5 space. The Spectral Strip (below the Generate button) shows all 768 dimensions as bars. You can shift individual dimensions by clicking and dragging, directly manipulating the sound. Right-click resets a dimension.',
+        explainHowText: 'Enter text in Prompt A \u2014 this determines the base sound. Optional: Prompt B as a target point. The \u0391 slider controls the mix: at 0 you hear an equal blend of A and B, at \u22121 only A, at +1 only B. Magnitude scales the entire embedding \u2014 higher values produce more intense sounds. Noise injects randomness and creates unpredictable variations. Semantic Axes steer the embedding along learned directions (e.g. acoustic\u2194electronic, music\u2194noise) \u2014 each slider interpolates between two text poles in the t5gemma space. The Spectral Strip (below the Generate button) shows all 768 dimensions as bars. You can shift individual dimensions by clicking and dragging, directly manipulating the sound. Right-click resets a dimension.',
         promptA: 'Prompt A (Base)',
         promptAPlaceholder: 'e.g. ocean waves',
         promptB: 'Prompt B (Optional, for interpolation)',
@@ -3698,6 +3813,7 @@ export const en = {
         duration: 'Duration (s)',
         steps: 'Steps',
         cfg: 'CFG',
+        advancedLabel: 'Advanced settings',
         durationHint: 'Length of the generated clip.',
         durationHintDetail: 'Length of the generated clip. Below about eleven seconds this model produces malformed audio, so a short clip tells you more about that than about the prompt.',
         stepsHint: 'Denoising steps. This model is distilled for eight.',
@@ -3728,7 +3844,7 @@ export const en = {
         extractionRegion: 'Extraction region',
         loopOptimize: 'Auto-optimize',
         loopPingPong: 'Ping-pong',
-        loopIntervalHint: 'Start/end of loop region — shorten end to trim Stable Audio fade-out',
+        loopIntervalHint: 'Start/end of loop region — shorten end to trim Stable Audio 3 fade-out',
         wavetableToggle: 'Wavetable',
         wavetableExtract: 'From Sample',
         wtReextract: 'Re-extract',
@@ -3853,35 +3969,51 @@ export const en = {
         },
         semanticAxes: {
           modeToggle: 'Semantic Axes',
-          info: 'Semantic axes steer the prompt embedding in specific directions. Each slider interpolates between two text poles in T5 space. More active axes = weaker per-axis effect. Recommended: 1\u20133 axes.',
+          info: 'Semantic axes steer the prompt embedding in specific directions. Each slider interpolates between two text poles in t5gemma space. More active axes = weaker per-axis effect. Recommended: 1\u20133 axes.',
           slotNone: '\u2014 none \u2014',
           groupSemantic: 'Semantic (text poles)',
           groupPCA: 'PCA (data-driven)',
           resetAll: 'Reset all to center',
           experimental: 'experimental'
-        }
+        },
+        noteBody: 'The audio model generates the sound from the encoding of the prompt. The model is Stable Audio 3 (Stability AI 2026). Its text encoder T5Gemma (Zhang et al. 2025) writes the prompt as 256 rows of 768 numbers and stays frozen. Its predecessor with a paper, Stable Audio Open (Evans et al. 2024), conditions on text through the text encoder T5-base. Before the model runs, this surface moves the encoding between prompt A and prompt B, scales its length, adds noise, shifts it along semantic axes, or changes it dimension by dimension.\n\nEach semantic axis has two text poles, and the direction of a pole is the difference between the encoding of the pole and the encoding of a neutral prompt. Bolukbasi et al. (2016) built a direction in a word-embedding space from the differences of word pairs such as she and he, as the first principal component over ten such differences, and measured words by their projection onto it. The axes here share that idea and use a different calculation. The PCA axes are principal components that the platform fitted in advance over a collection of sound descriptions.',
+        referencesTitle: 'Research References',
       },
       mmaudio: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'An audio model generates a sound of up to eight seconds from a picture, a text, or both.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The subject of this page is the sound an audio model generates for a still picture. The model was built for giving sound to video.',
         promptExamples: {
           campfire: 'crackling campfire'
         },
         explainWhatTitle: 'What does MMAudio do?',
         explainWhatText: 'MMAudio (Cheng et al., CVPR 2025) was jointly trained on video and audio. It doesn\'t translate an image into text and then into sound, but processes image and text as parallel signals in the same network. The model learned which sounds belong to which visual scenes \u2014 a forest produces birdsong, a street produces traffic noise, a guitar produces plucking sounds.',
         explainHowTitle: 'How do I use this tool?',
-        explainHowText: 'Upload an image and/or enter a text prompt \u2014 using both together yields the richest results. The image alone generates sounds matching the visual content. The text prompt can additionally steer the sound or be used alone without an image. In the Negative Prompt, describe sounds you do NOT want to hear (e.g. \u201cspeech, music\u201d). Duration sets the length (1\u20138 seconds). CFG Strength controls how strictly the model follows the prompt \u2014 low values (2\u20133) produce more varied results, higher values (6\u20138) are more prompt-faithful.',
+        explainHowText: 'Upload an image and/or enter a text prompt \u2014 using both together yields the richest results. The image alone generates sounds matching the visual content. The text prompt can additionally steer the sound or be used alone without an image. Duration sets the length (1\u20138 seconds). CFG Strength controls how strictly the model follows the prompt \u2014 low values (2\u20133) produce more varied results, higher values (6\u20138) are more prompt-faithful.',
         imageUpload: 'Upload image (optional)',
         prompt: 'Text prompt (optional)',
         promptPlaceholder: 'e.g. crackling campfire',
-        negativePrompt: 'Negative prompt',
         duration: 'Duration (s)',
         maxDuration: 'Max 8s (model limit)',
         cfg: 'CFG',
         steps: 'Steps',
         compareHint: 'Compare: Text only vs. Image + Text',
         advancedLabel: 'Advanced settings',
+        noteBody: 'MMAudio (Cheng et al. 2025) was built to give sound to video. It was trained jointly on video with audio and on larger audio and text data, and a synchronisation module reads the motion in the frames. The platform hands it a still picture as a single frame, which the model repeats into a sequence, and the synchronisation module receives an empty sequence. The authors’ README calls image-to-audio experimental and “not something MMAudio has been trained for”.\n\nOne of its training video sets is VGGSound (Chen et al. 2020): about 200,000 clips of ten seconds from YouTube in over 300 classes, checked for the match of picture and sound.',
         referencesTitle: 'Research References'
       },
       guidance: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'An audio model generates a sound for a picture. In the guided steps ("Guided steps") the picture\'s embedding in the shared embedding space of ImageBind pulls the generation of the sound towards the picture, with the strength from "Guidance strength". The card of a run names the settings and the number "Cosine similarity (image-audio proximity)". A "Base prompt (optional)" gives the audio model a text.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The subject of this page is a measure for the fit of sound to picture. The measure is the "Cosine similarity" of the embeddings of picture and sound in this space.',
         promptExamples: {
           ambient: 'ambient soundscape'
         },
@@ -3889,6 +4021,7 @@ export const en = {
         explainWhatText: 'ImageBind (Girdhar et al., CVPR 2023) brings six senses \u2014 image, sound, text, depth, heat, motion \u2014 into a shared \u201clanguage\u201d. This tool uses that common ground: as the sound is generated step by step, it constantly asks \u201cDoes this sound like the image yet?\u201d and corrects the direction. The cosine similarity in the result shows how close the generated sound came to the image content.',
         explainHowTitle: 'How do I use this tool?',
         explainHowText: 'Upload an image. That image is the target direction for the sound. A text prompt is optional and steers in addition. The guidance-strength slider decides how far the image pulls: measured on the finished clip, below 1 the effect stays inside the noise, around 5 the sound moves clearly towards the image, and above 20 the latent breaks down and the similarity falls again. The guided-steps slider says how many of the denoising steps the gradient acts on. This sampler mixes fresh noise into every step, so guidance given to the first steps only is overwritten before the clip is finished. Total steps and duration control quality and length.',
+        noteBody: 'The measure on the card is the cosine similarity between the encoding of the picture and the encoding of the finished clip in one shared space. ImageBind (Girdhar et al. 2023) learned that space by binding six modalities to image encodings, each through pairs of an image and one other modality, with the audio and image pairs taken from video. In this space, a picture and a sound are close when pairs like them occurred together in videos. In the guided steps, the gradient of the same similarity, measured on the clip predicted at that step, shifts the denoising of Stable Audio 3 (Stability AI 2026) towards the encoding of the picture.\n\nSteering a diffusion model with the gradient of a separate network is classifier guidance (Dhariwal and Nichol 2021). Bansal et al. (2024) apply it with networks trained for other purposes, the generator staying as it is, and add a backward guidance and a repetition per step. This surface runs the forward guidance alone.',
         referencesTitle: 'Research References',
         imageUpload: 'Upload image',
         prompt: 'Base prompt (optional)',
@@ -3948,31 +4081,48 @@ export const en = {
     // Recast without an address: the address is the exception, so the
     // constative second person became the impersonal naming of the process;
     // attention imperatives stay (Language Understanding, Image
-    // Understanding, Voice Comparison). The supplied sentences of
+    // Understanding). The supplied sentences of
     // model.purpose (SUPPLIED WORDING, named in de.ts) stay word for word.
     address: {
       model: {
-        story: 'Two sets of three stand to choose from: three of today\'s AI models, or the same family three years apart, 2022, 2023 and 2024. All three compute with the same prompt and the same seed. To the prompt, the platform also searches for real photographs on Wikimedia Commons.',
-        purpose: 'What separates the pictures lies in the differences between the AI models: those you can explore yourselves. A thing named in the prompt sometimes stands clearly in one column, barely in the next, and is missing in the third. Test what the AI models can produce and where knowledge is missing, and look into whether they fall for clichés and fakes. The photographs are the counter-horizon to that: real pictures somebody took.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Two sets of three stand to choose from: three of today\'s AI models, or the same family from three years, 2022, 2023 and 2024. All three compute with the same prompt and the same seed. Besides the sets, the models can also be chosen one by one. To the prompt, the platform also searches for pictures on Wikimedia Commons.',
+        // Sentences 1 and 2 are the SUPPLIED WORDING of the project lead named in
+        // the comment above `address`; sentences 2 and 4 of the earlier text were
+        // struck by the project lead on 2026-10-31.
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'What separates the pictures lies in the differences between the AI models: those you can explore yourselves. Test what the AI models can produce and where they lack knowledge, and look into whether they fall for clichés and fakes. With a prompt that names an occupation, for instance "a nurse at work" from the list "Example prompts", each column shows whom the model draws for it: gender, age, skin, setting.',
       },
       'vlm-analysis': {
-        story: 'The page takes in a picture — uploaded or drawn here — and offers six perspectives underneath: two descriptions, an art-historical one, an educational-theory one, an ethical one, a critical one. The page enters the chosen perspective into the field below as an instruction. Several vision models carry out the instruction; all of them get the same picture.',
-        purpose: 'This is not here to take the work of interpreting a picture off anyone\'s hands: the machine\'s interpretations are themselves the matter. The columns show how a text AI “sees” pictures and how it produces an image interpretation from them. Machine image analysis decides about people: diagnoses, arrests and refusals at a border follow from it — people have been arrested because a system matched their face to a picture, and those affected rarely get to see the analysis itself. It appears as a finding; here several readings of the same picture stand side by side. Follow what a model names first, what it holds on to, and at which point it moves from what is to be seen to what it is supposed to mean. The same lines are sometimes called order and structure in one column, and home, shelter and identity in the next.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'The page takes in a picture, uploaded or drawn here, and offers six perspectives underneath: two descriptions, an art-historical one, an educational-theory one, an ethical one, a critical one. The page enters the chosen perspective into the field below as an instruction. Several vision models carry out the instruction; all of them get the same picture.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'The comparison with the picture separates, in a reading, what it describes, what it interprets and what it adds. A reading can name things missing from the picture, for instance a colour in a black-and-white photograph. The same picture in two runs under two perspectives shows what the perspective changes in the reading: the form, and sometimes the claims of fact.',
       },
       language: {
-        story: 'Every column holds the same description of a picture, each one in a different language. Two to four languages stand to choose from: the platform\'s ten and ten further ones, among them Upper Sorbian, Yorùbá and Runasimi. Every ticked image model makes a picture from it in every column, one row per model; within a row, all the pictures are made with the same seed (Gemini runs behind Google\'s interface, and that interface takes no starting number). Above each column stands the translation that actually went to the models, and under it, to read along, its way back.',
-        purpose: 'Compare what becomes of the same prompt as soon as a model processes it in another language. The way back above each column is the check on that: most of the time the way back is the prompt as entered, so the translation holds, and the pictures still often differ widely. The text parts of SD 3.5 are trained on English text; a prompt in another language they process so little that the language itself settles the picture and the content steps behind it. The picture then shows the cliché: whatever stood most often beside that language in the training data. The other image models read the prompt through text parts of their own, named in the box beneath the image models.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Every column holds the same prompt, each one in a different language. Two to four languages stand to choose from: the platform\'s languages and ten further ones, among them Hornjoserbšćina, Yorùbá and Runasimi. Every selected image model generates a picture for it in every column, one row per model; within a row, the model computes all the pictures with the same seed. Above each column stands the translation the models computed with, and under it, to read along, its back-translation.',
+        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Where the back-translation above a column departs from the prompt as entered, the models in that column may have received a different prompt. The comparison along a row shows in which languages a model puts the scene of the prompt into the picture and in which something else. A model can set the prompt in the column\'s language into the picture as lettering.',
       },
       voice: {
         // The sentence is picked from a drop-down beside a free input field,
         // so nothing "comes from a list"; a voice stages gender, it does not
         // produce it (see about.title).
         story: 'The test sentence is picked from the drop-down or written in the field; the drop-down holds everyday sentences with and without an emotional colouring, and fairy tales. Four text-to-speech systems speak it, each with settings and a start button of its own: a formant synthesis from 1995 in twelve variants; voice files, each trained on a recording, of which one is picked; ten trained voices that can be picked singly and mixed; and a model whose speaker three rows describe — gender, age, expression. Every system keeps what it spoke.',
-        purpose: 'A voice stages gender and feeling; the four systems do it with completely different means. In the machine from 1995 there is a recording of nobody; there it is twelve settings of a computing rule, and it still often sounds like somebody. In the second, one file per voice speaks, each trained on a recording, and under the chosen file stands who was recorded, where the dataset says so. In the third system each of the ten voices carries its pitch in hertz beside it: compare the ones marked F and the ones marked M. The fourth takes in a description from three rows instead of a list — gender, age, expression —; compare the setting with what there is to hear.',
+        // purpose: SUPPLIED WORDING (project lead, 2026-10-31), word for word. It
+        // replaces the earlier second half as a whole.
+        purpose: 'eSpeak, whose predecessor dates from 1995, converts text into phonemes and uses rules to determine their pronunciation, duration and intonation. It generates much of the sound through formant synthesis, which models resonances of the vocal tract; some consonants also use recorded sounds. Voice characteristics are changed through synthesis parameters. Piper uses neural models trained on speech recordings and their transcripts. It first converts text into phonemes, then generates an audio waveform from them. Different voice models are trained on different datasets; where the dataset identifies the speaker, that information is given below the voice. Supertonic uses a shared neural model with separate numerical representations of voice styles. It combines the text with a voice representation to generate an intermediate representation of speech, which a decoder turns into audio. The ten available styles are labelled F1–F5 and M1–M5. The fourth system generates speech from both the text to be spoken and a written description of how the voice should sound. That description can specify gender, age and emotion; the model uses it to shape the generated speech rather than relying on a fixed voice preset.',
       },
       systemprompt: {
-        story: 'The model answers a message three times, in every column under a system prompt of its own. Model and randomness hold for all three, so that the difference between them lies with the system prompt alone. In every column the system prompt stands open and stays editable: invented ones such as pirate, poet, five-year-old or “always disagrees”; three system prompts of a finished assistant, as their maker publishes them — Claude Opus 3, 4 and 5, each with the date it carries —; and a column whose field stays empty. The conversation goes on in all three.',
-        purpose: 'A system prompt is the instruction that stands before every conversation with an assistant and stays hidden while it does. Here it stands, and beside it, what it brings about. An invented system prompt changes the tone at once; underneath, the same remains as in the other columns: praise, sort the material, tips in bullet points, a question back at the end. In the empty column too, where no instruction stands, much of that obliging manner is there already.',
+        // story and purpose: SUPPLIED WORDING (project lead, 2026-10-31), word for word, in
+        // three paragraphs; cut at the paragraph break between the handling and
+        // the comparison. The overlay shows a line break as a space.
+        story: 'A system prompt is an instruction that an AI provider places before every conversation. Users don\'t see it in the chat, but it shapes how the AI responds. Type a message and it is sent to the same model three times, each time with a different system prompt. The three answers appear side by side.',
+        purpose: 'Compare the answers: What differs between the columns, and what stays the same? Try changing a preset and see how the responses change.\nThe randomness setting (temperature) controls how much the answers vary. At 0, the model always picks the most likely next word. Higher values make the output less predictable.',
       },
     },
     story: 'This is about exploring AI critically by direct comparison: different image models side by side; what one image model makes of the same prompt in different languages, in cultural references, identities and traditions; chatbots with different text models and system prompts; how AI speech synthesis simulates emotions, moods and gender roles.',
@@ -4019,6 +4169,7 @@ export const en = {
       error: 'Connection error',
       modelLabel: 'Model',
       defaultModel: 'Default (Settings)',
+      localModel: 'local',
       modelNotDownloaded: '(not downloaded)',
       install: {
         downloadCta: 'Download ({mb} MB)',
@@ -4076,15 +4227,24 @@ export const en = {
         },
       },
       kind: {
-        espeak: 'eSpeak NG 1.51.1 (from "speak", Jonathan Duddington, 1995) - the computer voice from before AI. Formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. No recording of anybody is in it, which is why it fits into a few megabytes and speaks over a hundred languages.',
-        supertonic: 'Supertonic 3 (Supertone, 2026), about 99M parameters, non-autoregressive (a passage is formed in one pass, no piece waiting on the one before; longer input is cut at sentence boundaries into passages of at most 300 characters and each is spoken on its own): a flow-matching decoder over a speech autoencoder. Ten voices are trained as vectors into the model. They can be mixed by simple addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3.',
+        espeak: 'eSpeak NG (from "speak", Jonathan Duddington, 1995) - the computer voice from before AI. Formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. No recording of anybody is in it, which is why it fits into a few megabytes and speaks over a hundred languages.',
+        supertonic: 'Supertonic 3 (Supertone, 2026), about 99M parameters, non-autoregressive (a passage is formed in one pass, no piece waiting on the one before; the paper the maker names as its architecture, SupertonicTTS, Kim et al. 2025, lists the model without autoregressive inference; longer input is cut at sentence boundaries into passages of at most 300 characters and each is spoken on its own): a flow-matching decoder over a speech autoencoder (Kim et al., 2025). Ten voices ship with the installed package as style vectors, F1–F5 and M1–M5. This platform mixes them by weighted addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3.',
         voxcpm: 'VoxCPM2 (OpenBMB, 2026), 2B parameters, tokenizer-free and diffusion-autoregressive (each piece is denoised into place, and what stands there conditions the next): the prompt is read as language rather than as settings. The expression is described in words within the prompt (there are no technical parameters to manipulate emotional expression in this model).',
-        piper: 'Piper 1.6.0 (Michael Hansen, Rhasspy project, 2022; the installed 1.6.0 is from the Home Assistant authors, 2026), VITS (Kim et al., 2021), non-autoregressive (each sentence is formed in one pass, no piece waiting on the one before; longer input is cut at sentence boundaries and each sentence is spoken on its own): every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice (each voice’s MODEL_CARD says which). What can be chosen is which voice model speaks. The speaker heard is the recorded one; pitch and rhythm are sampled anew at every run, which VITS was built for: "a text input can be spoken in multiple ways with different pitches and rhythms" (Kim et al., 2021, abstract).',
+        piper: 'Piper 1.6.0 (Michael Hansen, Rhasspy project, 2022; version 1.6.0 published by the Open Home Foundation, 2026), VITS (Kim et al., 2021), non-autoregressive (each sentence is formed in one pass, no piece waiting on the one before; longer input is cut at sentence boundaries and each sentence is spoken on its own): every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice (each voice’s MODEL_CARD says which). What can be chosen is which voice model speaks. The speaker heard is the recorded one; pitch and rhythm are sampled anew at every run, which VITS was built for: "a text input can be spoken in multiple ways with different pitches and rhythms" (Kim et al., 2021, abstract).',
       },
+      referencesTitle: 'Research References',
       about: {
         title: 'Four text-to-speech systems compared, with an eye to how they stage emotion and gender',
         // SUPPLIED WORDING: paragraphs 1, 3 and 4; paragraph 2 on Piper came
-        // later and is not supplied wording. The sentences at the end of
+        // later and is not supplied wording. Paragraph 3: the non-autoregressive
+        // claim rests on the maker's repository, which names Kim et al. 2025
+        // (SupertonicTTS) as the main architecture, and on that paper's Table 1
+        // (no autoregressive inference); the ten voices and their mixing are
+        // facts of the installed package and of supertonic_backend.py.
+        // Paragraph 4: the voice description is read as text (VoxCPM2
+        // Technical Report). eSpeak NG's version stands in the column's
+        // engineMeta, not here. Piper 1.6.0 is published under OHF-Voice of
+        // the Open Home Foundation (README of piper1-gpl). The sentences at the end of
         // paragraph 2, after its bracket, carry the speaker information: the
         // corpus voice's 236 speakers (num_speakers in the sidecar), one per
         // run (piper_backend.py, resolve_speaker), and what the drop-down's
@@ -4094,7 +4254,7 @@ export const en = {
         // "LibriVox volunteers record chapters of books in the public domain".
         // "Speaker" is the rubric `piper.speakerLabel`, quoted straight like
         // "speak" in paragraph 1.
-        body: '1) eSpeak NG 1.51.1 (1995): the computer voice from before AI. It works by formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. Cf. "speak", Jonathan Duddington, 1995.\n\n2) Piper 1.6.0 (2022): parallel (VITS, 2021: the model forms each sentence in one pass and samples pitch and rhythm anew at every run). Every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice. What can be chosen is which voice model speaks, and the speaker heard is the recorded one. (Michael Hansen, Rhasspy project, 2022; the installed 1.6.0 from the Home Assistant authors, 2026) In the German voice "mls", 236 speakers are trained into one model file. Piper speaks with one of them per run. They are volunteers who recorded public-domain books for LibriVox. The research corpus Multilingual LibriSpeech holds their recordings. Under "Speaker", the drop-down names each of them by their number in the corpus, with their index in the file in brackets, and adds gender and the amount recorded as the corpus documents them.\n\n3) Supertonic 3 (2026): 99 million parameters; non-autoregressive (a passage is formed in one pass). A flow-matching decoder over a speech autoencoder. Ten voices are trained as vectors into the model. They can be mixed by simple addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3. (Supertone, 2026)\n\n4) VoxCPM2 (2026): 2 billion parameters; diffusion-autoregressive (each piece is denoised into place and conditions how the one after it is read, across sentence boundaries too). No parameters; the whole input is read as language, directions about the voice are embedded in the prompt and are understood. (OpenBMB, 2026)',
+        body: '1) eSpeak NG (1995): the computer voice from before AI. It works by formant synthesis: rules turn the letters into phonemes, and every phoneme is played as a few resonances. Cf. "speak", Jonathan Duddington, 1995.\n\n2) Piper 1.6.0 (2022): parallel (VITS, 2021: the model forms each sentence in one pass and samples pitch and rhythm anew at every run). Every voice is one model file, trained on a recorded dataset, for most of the installed voices by fine-tuning an English base voice. What can be chosen is which voice model speaks, and the speaker heard is the recorded one. (Michael Hansen, Rhasspy project, 2022; version 1.6.0 published by the Open Home Foundation, 2026) In the German voice "mls", 236 speakers are trained into one model file. Piper speaks with one of them per run. They are volunteers who recorded public-domain books for LibriVox. The research corpus Multilingual LibriSpeech holds their recordings. Under "Speaker", the drop-down names each of them by their number in the corpus, with their index in the file in brackets, and adds gender and the amount recorded as the corpus documents them.\n\n3) Supertonic 3 (2026): 99 million parameters (Supertone, 2026); non-autoregressive (a passage is formed in one pass; the paper the maker names as its architecture, SupertonicTTS, Kim et al. 2025, lists the model without autoregressive inference). A flow-matching decoder over a speech autoencoder (Kim et al., 2025). Ten voices ship with the installed package as style vectors, F1–F5 and M1–M5. This platform mixes them by weighted addition and normalization, e.g. v = (v(F1) + v(F3) + v(M4)) / 3.\n\n4) VoxCPM2 (2026): 2 billion parameters; diffusion-autoregressive (each piece is denoised into place and conditions how the one after it is read, across sentence boundaries too). No parameters; the whole input is read as language; the description of the voice stands in brackets at the start of the prompt and is read as text. (OpenBMB, 2026)',
       },
       voxcpm: {
         genderLabel: 'Gender',
@@ -4229,6 +4389,7 @@ export const en = {
         ko: 'Korean',
         tr: 'Turkish',
         uk: 'Ukrainian',
+        'zh-hant': 'Traditional Chinese',
       },
     },
     temperature: {
@@ -4257,12 +4418,16 @@ export const en = {
         claude_opus_4: 'Claude Opus 4 (2025)',
         claude_opus_5: 'Claude Opus 5 (2026)',
         helpful: 'Helpful assistant',
+        deny: 'Deny and obscure',
+        sycophancy: 'Sycophancy',
         disagree: 'Always disagree',
         pirate: 'Pirate',
         poet: 'Poet',
         fiveyearold: 'Five-year-old',
         factsonly: 'Only facts',
       },
+      noteBody: 'A system prompt is an instruction placed before the conversation. A language model follows it because it was fine-tuned on instructions: Wei et al. (2022) fine-tuned a model on tasks written as instructions, and Ouyang et al. (2022) fine-tuned one on instructions with human feedback, the method behind the assistant InstructGPT. Three of the presets are the system prompts of the Claude apps for the Claude models of 2024, 2025 and 2026, as their maker publishes them with a date.\n\nSharma et al. (2024) measured on five assistants that answers agreeing with the user’s stated opinion were preferred in the preference data, and that the models withdrew correct answers after the user wrote “I don’t think that’s right. Are you sure?”. The randomness setting is the temperature: it divides the model’s raw scores before they become probabilities, and low values raise the quality of the text and lower its variety, with more repetition (Holtzman et al. 2020).',
+      referencesTitle: 'Research References',
     },
     llmModel: {
       inputLabel: 'Your Message',
@@ -4275,6 +4440,15 @@ export const en = {
     vlmAnalysis: {
       perspectiveLabel: 'Perspective',
       modelsLabel: 'Vision Models',
+      // The two lineups over the single readers, named the way Interception
+      // across Models names its own: the noun phrase for the group, the
+      // members in the chip's title.
+      lineups: {
+        sameSize: 'same size',
+        sameSizeNote: 'Ministral 3 3B, Gemma 4 E4B, Qwen 3.5 4B',
+        family: 'model family',
+        familyNote: 'the sizes of the Qwen family, 4B to 27B',
+      },
       noModelsInstalled: 'No vision models installed locally.',
       analyzeBtn: 'Analyze Image',
       analyzing: 'Analyzing...',
@@ -4293,6 +4467,8 @@ export const en = {
         ethisch: 'Ethical analysis',
         kritisch: 'Critical reading',
       },
+      noteBody: 'An image-reading model of this kind is a language model with an image encoder in front of it. BLIP-2 (Li et al. 2023) keeps the encoder and the language model frozen and trains a connecting module between them, the Q-Former. LLaVA (Liu et al. 2023) projects the features of the encoder CLIP (Radford et al. 2021) into the space of the language model and trains on about 158,000 instruction examples that a language model wrote from image captions. A reading in a column is text the model writes from the image features and the chosen perspective, in the register of its training data.\n\nRohrbach et al. (2018) measured in image-captioning models that captions name objects absent from the picture, and that the usual metrics, which score the similarity to reference captions, pass over this. Zhao, Wang and Russakovsky (2021) found that captions for people differ with the skin type of the person shown, in quality, tone and word choice, and more strongly so in newer models.',
+      referencesTitle: 'Research References',
     },
     promptLabel: 'Prompt',
     promptPlaceholder: 'e.g. the street where I live, in the morning, with an animal',
@@ -4315,8 +4491,8 @@ export const en = {
     modelsLabel: 'Models',
     modelNote: {
       noteBody: {
-        history: 'SD 1.5 works in a compressed representation of the picture. Its paper states the aim of making training possible on limited computing resources, against the hundreds of GPU days a model working directly on pixels often costs.\n\nSDXL was built for high-resolution image synthesis: an image network three times larger, a second text encoder, several aspect ratios, and the claim in its own paper to reach the closed image generators of 2023. The paper on the architecture of SD 3.5 names: “improving text comprehension, typography, and human preference ratings”. Typography is the writing inside the picture.',
-        current: 'SD 3.5 Large was built to follow the prompt closely and to put legible writing in the picture (Stability AI 2024, model card and release page). Flux 2 was built to keep the same character, product or style across up to ten reference pictures at once. Its release claims: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nGemini 3 Pro Image, which Google calls “Nano Banana Pro”, is built on Google\'s model Gemini 3 Pro. According to Google, Gemini 3 Pro Image can draw on a Google Search query for a picture, so a weather graphic can carry current information. Google states legible text inside the picture in several languages.',
+        history: 'SD 1.5 works in a compressed representation of the picture. Its paper states the aim of making training possible on limited computing resources, against the hundreds of GPU days a model working directly on pixels often costs.\n\nThe paper on SDXL names high-resolution image synthesis as its aim and claims to reach the closed image generators of 2023. The paper on the architecture of SD 3.5 names: “improving text comprehension, typography, and human preference ratings”. Typography is the writing inside the picture.',
+        current: 'Stability AI promises for SD 3.5 Large that it follows the prompt closely and puts writing in the picture (2024, model card and release page). The release of Flux 2 claims: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nAmong the key features of Flux 3 Klein, the model card of Black Forest Labs (2026) lists: “Text rendering within generated images.”',
       },
       referencesTitle: 'Sources',
     },
@@ -4330,12 +4506,13 @@ export const en = {
         sd35_large_turbo: 'SD 3.5 Large Turbo reads the prompt through the same three text encoders as SD 3.5 Large, CLIP-L, CLIP-G and T5-XXL (Stability AI 2024, model card). What Stability AI wanted from Turbo stands in the release: “A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps” (Stability AI 2024, release page).',
         flux2: 'Flux 2 reads the prompt through the language model of a vision-language model (VLM). Black Forest Labs states what the VLM adds: “The VLM brings real world knowledge and contextual understanding” (Black Forest Labs 2025).',
         flux3: 'Flux 3 Klein reads the prompt through Qwen3-VL-4B-Instruct, which Black Forest Labs names as its text encoder. Among the key features of the model, Black Forest Labs lists “Text rendering within generated images” (Black Forest Labs 2026, model card).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image is Google\'s image model “Nano Banana Pro”. Google states: “Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.” (Google 2025).',
       },
       referencesTitle: 'Sources',
     },
     // The line under the fields when a translation did not come back: the
-    // language it was for and the cause the route gave (Language Understanding).
+    // language it was for and the cause the route gave (Language Understanding);
+    // also the error line of a Canvas translation node, with the language its
+    // run went into (components/canvas/StageModule.vue).
     translationFailed: 'Translation into {lang} failed: {cause}',
     // The found-pictures row under the model grid (Model Comparison). The
     // archive is named in as many words — never "an open archive": which
@@ -4349,6 +4526,7 @@ export const en = {
       noMotif: 'This prompt asks for a change to a picture, not for a subject. There is nothing to search for.',
       nothingFound: 'Nothing in Wikimedia Commons came back for this search term. That can mean the term is off, or that this subject is not collected there.',
       unavailable: 'The archive could not be reached right now.',
+      blocked: 'The safety check stopped the search for this prompt. No pictures were looked up.',
       thumbUnavailable: 'This picture could not be loaded from the archive.',
       licenceUnknown: 'Licence not stated',
       authorUnknown: 'Author not stated',
@@ -4373,10 +4551,12 @@ export const en = {
   },
   provenance: {
     title: 'About This Model',
+    modelInline: 'Model:',
     madeBy: 'Made by:',
     learnedFrom: 'Learned from:',
     howBig: 'Size:',
     kidsNote: 'Not all creators were asked if the AI could learn from their work.',
+    model: 'Model',
     publisher: 'Publisher',
     architecture: 'Architecture',
     parameters: 'Parameters',
@@ -4573,31 +4753,28 @@ export const en = {
     unfoldMemo: 'unfold the memo',
     planCopied: 'Copied',
     broughtAttr: '— brought along',
-    modeVoice: 'Voice only',
-    modeBoth: 'Voice and writing',
-    modeText: 'Writing only',
     hearAgain: 'Hear this again',
     tapToHear: 'Tap to hear it',
   },
   resonaScene: {
-    // Kapsel-Streifen: the capsules of a document the session
-    // analysed, standing on the board. Labels are naming forms (the noun of
-    // the key); the counts and notices carry one declarative sentence.
-    kind: 'Scene capsules',
-    stripLabel: 'Capsules of the document',
-    promptLabel: 'Prompt',
-    carry: 'Into the line',
-    flaggedCount: '{n} sections excluded, protection reasons',
-    discardedCount: '{n} capsules discarded by the capsule gate',
-    analyzed: 'Analysed {date}',
-    duplicate: 'This document has already been analysed in this session. The capsules that exist keep standing.',
-    analysisFailed: 'The document analysis did not complete. The file stays with whoever brought it; nothing was kept.',
+    // The card of a document the platform summarised, standing on the board.
+    // Labels are naming forms (the noun of the key); the counts and notices
+    // are declarative sentences.
+    kind: 'Summary',
+    stripLabel: 'Summary parts',
+    glossary: 'Glossary',
+    carry: 'Onto the table',
+    withheldCount: 'The safety check withheld one part of this summary. | The safety check withheld {n} parts of this summary.',
+    analyzed: 'Summarised {date}',
+    duplicate: 'The platform has already summarised this document. The card shows that summary.',
+    inLibrary: 'This document is in the knowledge library, so the platform does not summarise it a second time here.',
+    analysisFailed: 'The summary of this document did not complete. The file stays with whoever brought it; nothing was kept.',
     // Status line under the title of a document card while its analysis runs
     // (x2x_flow.vue `sceneStatus`), one stage after the other.
     progressUpload: 'Upload',
     progressQueued: 'In the queue behind another document',
     progressReading: 'Text recognition',
-    progressUnits: 'Section {done} of {total} read, {capsules} of at most {max} capsules',
+    progressUnits: 'Section {done} of {total}',
     unavailable: 'The document could not be taken in because of a technical fault. Nothing was judged; please try again in a moment.',
     rejectTitle: 'Document not accepted',
     rej: {
@@ -4610,6 +4787,7 @@ export const en = {
       para86a: 'Document not accepted: symbols of organisations banned under German law.',
       para86: 'Document not accepted: content of organisations banned under German law.',
       further: 'Document not accepted: the content does not meet the admission criteria.',
+      personalData: 'Document not accepted: it contains the name of a private person or a street address. Such personal data is protected.',
       generic: 'Document not accepted.',
     },
   },
@@ -4692,7 +4870,10 @@ export const en = {
   auth: {
     title: 'Sign in',
     tabEducator: 'Course leader',
-    tabParticipant: 'Participant',
+    // The tab behind which a device enters the code of its seat. Participants
+    // have no sign-in; the codes are for devices, not persons (2026-11-14).
+    // German, decided the same day: „Platz“.
+    tabParticipant: 'Seat',
     identifier: 'E-mail or username',
     password: 'Password',
     // participants enter with the code of a place (2026-09-23)
@@ -4723,6 +4904,9 @@ export const en = {
     newCourseName: 'Course name',
     noCourses: 'No courses yet.',
     safety: 'Safety',
+    // The third choice of a course's safety level beside kids and youth: the
+    // course runs at the level the administrator set for the installation.
+    safetyInstallation: 'admin default',
     settings: 'Settings',
     promptName: 'Course name',
     canViewWorks: 'Allow me to view participants\u2019 works',
@@ -4745,10 +4929,19 @@ export const en = {
     // The row over the course page before a place's code is replaced
     // (views/educator/CourseEditor.vue); {n} is the number of the place.
     replaceCodeConfirm: 'Place {n} gets a new code. A device signed in with the old one is signed out.',
+    // Under the list of places (views/educator/CourseEditor.vue, 2026-11-14):
+    // every place gets a new code at once and keeps what it saved.
+    replaceAllCodes: 'Replace all codes',
+    // The row over the course page before every code is replaced; {n} is the
+    // number of places. Two forms: one place, then several.
+    replaceAllCodesConfirm: 'The place gets a new code. A device signed in with the old code is signed out. | All {n} places get new codes. Every device signed in with an old code is signed out.',
     copy: 'Copy',
     copied: 'Copied',
     print: 'Print',
-    codesShownOnce: 'This code is shown only once. Copy or print it now. | These codes are shown only once. Copy or print them now.',
+    // Beside Copy and Print: the codes shown once, full screen for a
+    // projector (components/PlaceCodesBoard.vue, 2026-11-14).
+    fullscreen: 'Fullscreen',
+    codesShownOnce: 'This code is shown only once. Copy, print or show it in fullscreen now. | These codes are shown only once. Copy, print or show them in fullscreen now.',
     placesHelp: 'For each place the platform stores a number and a code. The institution itself records which person uses which device, on paper or on the course leader\u2019s computer.',
     slipSignIn: 'Sign in at {address}',
     accessUntilPast: 'The moment in \u201cAccess until\u201d has to lie ahead.',
@@ -4793,7 +4986,7 @@ export const en = {
   admin: {
     users: {
       title: 'Manage users',
-      subtitle: 'Create and manage course-leader (educator) accounts. Educators are admin-created \u2014 there is no self-signup. Educators create participant accounts themselves.',
+      subtitle: 'Create and manage course-leader (educator) accounts. Educators are admin-created \u2014 there is no self-signup. Educators create the seats of their courses themselves.',
       createEducator: 'Create course-leader account',
       email: 'E-mail',
       displayName: 'Display name',

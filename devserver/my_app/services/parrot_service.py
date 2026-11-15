@@ -19,10 +19,12 @@ the transcription, in the language the transcriber chose. See _read_in.
 
 Two properties are load-bearing and must not be "fixed" later:
 
-- No station is corrected or gated. If the recording contains no words, the
+- No station is corrected. If the recording contains no words, the
   transcription still returns a confident sentence and the chain still runs.
   That is the demonstration, not a failure — a group can point a microphone
-  at an empty room and get a song about a line nobody said.
+  at an empty room and get a song about a line nobody said. The platform's
+  checks change no word either: what a station produced is shown as it is, or
+  withheld (see run_chain).
 - The recording is not a work. It is written to a temp directory, read by
   the stations, and deleted. It is never registered as a run, never enters
   the media store, never appears in favourites or exports.
@@ -44,6 +46,9 @@ import tempfile
 import time
 import uuid
 from typing import Any, Dict, Iterator, List, Optional
+
+from my_app.services.safety_gate import (check_before_model, check_intake_texts,
+                                         check_result_text)
 
 logger = logging.getLogger(__name__)
 
@@ -426,40 +431,50 @@ def _what_was_heard(ranking: Optional[List[Dict[str, Any]]],
     `devserver/testfiles/probe_parrot_routing.py`, which reruns them, and in
     „ARCHITECTURE PART 38 - Cover-Band.md".
 
-    Three comparisons, in this order:
+    Two comparisons decide the music question, in this order:
 
-    1. Top-1 is „noise, not music" or „silence" → no music. On the noise probe
-       that is the only thing that catches it: MuQ still had a music label at
-       ~.46 there. It settles the MUSIC question only — a recording made in a
-       room can be ranked „silence" at the top and still have words in it.
-    2. Otherwise, if „a voice speaking, not singing" beats the best music label,
-       this is a speaking voice → no music. Only the SPEAKING label may do this.
-       The singing labels are on the music side, see _NOT_MUSIC_SIDE.
-    3. Otherwise music is present when the best music label beats the best of
-       „noise, not music" / „silence".
+    1. Top-1 is „noise, not music" or „silence" → no music. It settles the
+       MUSIC question only — a recording made in a room can be ranked
+       „silence" at the top and still have words in it.
+    2. Otherwise music is present when the best music label beats the best of
+       „noise, not music" / „silence". On the noise probe this is what catches
+       it: metal .406 against „noise, not music" .514.
 
-    Text needs the transcriber AND the ranking, and WHICH voice label the
-    ranking is asked for depends on the answer above, because the question is
-    not the same one:
+    The speaking label has no say in the music question. Until 2026-11-01 it
+    had one: ranked above the best music label, it meant „no music", and that
+    sent songs to VoxCPM2. On a 30-second song recorded on the page that day,
+    MuQ put „a voice speaking, not singing" first at .39, with reggae, country,
+    pop song and jazz under it at .36 to .29; two of four HeartMuLa songs,
+    filtered to sound like a phone held up in a room, went the same way. What
+    this costs is speech: the German speech probe now counts as music, because
+    its music labels (the singing labels at .52, hip hop at .47) beat „noise,
+    not music" (.39), and a spoken recording ranked like it is sung by HeartMuLa
+    unless VoxCPM2 is picked by hand. One comparison in the measured rankings
+    would still tell that probe from every song: „no voice at all" above the
+    best genre or instrument label (.509 against .466 on the probe, .434
+    against .477 on the closest song). It is not used: it rests on one speech
+    probe with .043 to spare, and the two labels do not stand for opposed
+    answers.
 
-    * in music, „are there words" means „is somebody singing" — asked of the two
-      singing labels. Asking the speaking label there is what let an instrumental
-      pass as a song: its score sits in this model's cross-category leakage, and
-      it does not have to be high, only higher than „no voice at all".
-    * without music it means „is somebody talking" — asked of the speaking label.
+    In music, text is whatever the transcriber wrote. Until 2026-11-01 the
+    ranking had to agree as well, with a singing label above „no voice at all".
+    On 2026-10-31 a 19.7-second recording of singing went to SA3 Music, with no
+    hand-pick in the log, although the transcriber had written its words down
+    and the page had translated them from Indonesian; under that rule this
+    happens only when no singing label beats „no voice at all". MuQ's scores
+    for it are not logged. That comparison was the narrowest of all already
+    (issue #37). What this costs: an instrumental the transcriber reads words
+    into is sung too; on synthetic chords it wrote „××××，x，x，x，". SA3 Music
+    runs when the transcriber writes nothing.
 
-    The transcriber alone will not do, and that is the whole subject of this
-    page: handed brown noise it wrote „uh...", handed synthetic chords
-    „××××，x，x，x，". Requiring the ranking to agree is the one place where the
-    confabulation is caught rather than shown.
+    Without music, text still needs both machines: the transcriber wrote
+    something AND „a voice speaking, not singing" beats „no voice at all".
+    Handed brown noise on 2026-10-31, the transcriber wrote „The train is
+    about to leave"; the ranking is what keeps that one a sound.
 
     Every comparison is between labels that stand for opposed answers. Across
     unrelated labels these numbers do not compare: on the sung probe CLAP gave
     „silence" .25 while every voice label sat near .11.
-
-    The narrowest of them is the voice-against-„no voice at all" one: MuQ scored
-    „no voice at all" .499 on a recording that is nothing but a voice, .073 below
-    its own top label. It is recorded as such in issue #37.
     """
     scores = {e["label"]: e["score"] for e in (ranking or [])
               if isinstance(e, dict) and "label" in e and "score" in e}
@@ -471,25 +486,20 @@ def _what_was_heard(ranking: Optional[List[Dict[str, Any]]],
         return max(found) if found else None
 
     speaking = scores.get(_SPEAKING_LABEL)
-    singing = best(_SINGING_LABELS)
     no_voice = best((_NO_VOICE_LABEL,))
     music = best([label for label in scores if label not in _NOT_MUSIC_SIDE])
     not_music = best(_NOT_MUSIC_LABELS)
 
-    def over_none(voice):
-        return voice is not None and (no_voice is None or voice > no_voice)
-
     if max(scores, key=lambda label: scores[label]) in _NOT_MUSIC_LABELS:
-        has_music = False
-    elif speaking is not None and music is not None and speaking > music:
         has_music = False
     else:
         has_music = music is not None and (not_music is None or music > not_music)
 
     wrote = bool((transcription or "").strip())
     if has_music:
-        return True, wrote and over_none(singing)
-    return False, wrote and over_none(speaking)
+        return True, wrote
+    return False, wrote and speaking is not None and (
+        no_voice is None or speaking > no_voice)
 
 
 def _asserts_song(lyrics: str, tags: str) -> bool:
@@ -536,10 +546,26 @@ def resolve_singer(ranking: Optional[List[Dict[str, Any]]],
 # The chain
 # ---------------------------------------------------------------------------
 
+def _block_of(station: str, verdict) -> Dict[str, Any]:
+    """The block message of a station the platform's checks refused."""
+    logger.warning(f"[PARROT] {station} refused at {verdict.checkpoint} "
+                   f"({verdict.field or '-'}: {verdict.reason_key})")
+    return verdict.block()
+
+
 def run_chain(recording_path: str, language: Optional[str] = None,
               reading: Optional[str] = None,
-              singer: Optional[str] = None) -> Iterator[Dict[str, Any]]:
-    """Yield one event per station, in order. Never raises; failures are events."""
+              singer: Optional[str] = None, *, level: str) -> Iterator[Dict[str, Any]]:
+    """Yield one event per station, in order. Never raises; failures are events.
+
+    `level` is the safety level the view resolved; every check below runs at
+    it. The transcription passes the intake check, the reading passes the
+    result check, and the lyrics and the tags pass the check before the model.
+    A station whose text is refused yields a failed event that carries the
+    block message and none of the refused text. After a refused transcription
+    or refused lyrics the chain stops. After a refused reading it goes on,
+    because no later station uses the reading.
+    """
     from my_app.services.media_analysis_client import get_media_analysis_client
 
     analysis = get_media_analysis_client()
@@ -552,7 +578,9 @@ def run_chain(recording_path: str, language: Optional[str] = None,
     # middle box says which machine is working; until 2026-08-09 it could only
     # name the ones that had already stopped, so the longest station of the four
     # spent its whole run anonymous.
-    yield {"station": "ranked", "status": "running",
+    # "first" is the machine whose list the box shows first. The box names it,
+    # also when the run breaks off while this station is still working.
+    yield {"station": "ranked", "status": "running", "first": RANKER_PRIMARY[1],
            "model": f"{RANKER_PRIMARY[1]} \u00b7 {RANKER_SECOND[1]}"}
     started = time.time()
     tags = analysis.tag(recording_path, model=RANKER_PRIMARY[0])
@@ -590,6 +618,15 @@ def run_chain(recording_path: str, language: Optional[str] = None,
         return
     transcription = heard["text"]
     detected = heard["language"]
+    words_ms = int((time.time() - started) * 1000)
+    # The transcription is the user's material, since it comes from their
+    # recording. It passes the intake check before the page shows it or any
+    # station uses it.
+    verdict = check_intake_texts({"transcription": transcription}, level=level)
+    if not verdict.passed:
+        yield {"station": "words", "status": "failed",
+               "safety_block": _block_of("words", verdict)}
+        return
     yield {
         "station": "words", "status": "done",
         "text": transcription,
@@ -600,7 +637,7 @@ def run_chain(recording_path: str, language: Optional[str] = None,
         # An empty answer and an invented answer look the same from here. The
         # page has to say so; the backend must not pretend to know which.
         "empty": transcription.strip() == "",
-        "ms": int((time.time() - started) * 1000),
+        "ms": words_ms,
     }
 
     # --- the same words, readable -------------------------------------------
@@ -618,13 +655,22 @@ def run_chain(recording_path: str, language: Optional[str] = None,
     if target and transcription.strip():
         readable = _read_in(transcription, target)
         if readable:
-            # Its own station name: it is not a second reading of the recording,
-            # it is the same words again. Nothing downstream sees it — the song
-            # is written from the transcription, in the language it came back in.
-            # The model is named because every other station on this page names
-            # its own, and this one is a different vendor from all of them.
-            yield {"station": "reading", "status": "done",
-                   "text": readable, "model": _writer_model()}
+            # The reading is text a language model wrote, and the page shows
+            # it, so it passes the result check first. If it is refused, it is
+            # not shown, and the chain goes on: no later station uses it.
+            verdict = check_result_text(readable, level=level, field="reading")
+            if not verdict.passed:
+                yield {"station": "reading", "status": "failed",
+                       "safety_block": _block_of("reading", verdict)}
+            else:
+                # Its own station name: it is not a second reading of the
+                # recording, it is the same words again. Nothing downstream sees
+                # it — the song is written from the transcription, in the
+                # language it came back in. The model is named because every
+                # other station on this page names its own, and this one is a
+                # different vendor from all of them.
+                yield {"station": "reading", "status": "done",
+                       "text": readable, "model": _writer_model()}
 
     # --- written up ---------------------------------------------------------
     yield {"station": "written", "status": "running", "model": _writer_model()}
@@ -634,30 +680,53 @@ def run_chain(recording_path: str, language: Optional[str] = None,
         yield {"station": "written", "status": "failed",
                "error": "the writing station did not answer"}
         return
+    written_ms = int((time.time() - started) * 1000)
+
+    # The singer is chosen before the check, because it decides what the last
+    # machine receives. The speaking voice also gets an English rendering of
+    # the lyrics, for the languages it has no voice for. A language model writes
+    # that rendering, so it is made here, before the check, and the check reads
+    # it: no language model changes the text between the check and the machine.
+    # Choosing the singer early also lets the running event of the last station
+    # name the machine that is working, as the ranking station does.
+    config_id = resolve_singer(second, transcription, singer)
+    # `.get(named, named)` and not a bare get: a caller who forced `language`
+    # gets a CODE back from the transcriber, not a name, and dropping it here
+    # would hand the speech chunk nothing and let it default to English.
+    _heard = (detected or "").strip().lower()
+    lang = _DETECTED_LOCALES.get(_heard, _heard) or None
+    english = None
+    if config_id == SPEECH_CONFIG and lang not in (None, "en"):
+        english = _read_in(written["lyrics"], "English")
+
+    # The page shows the lyrics and the tags, and the last machine receives
+    # them. One check covers both uses, so it runs before the page shows them.
+    verdict = check_before_model(
+        {"lyrics": english or written["lyrics"], "tags": written["tags"]},
+        originals={"lyrics": written["lyrics"]} if english else (),
+        level=level)
+    if not verdict.passed:
+        yield {"station": "written", "status": "failed",
+               "safety_block": _block_of("written", verdict)}
+        return
     yield {
         "station": "written", "status": "done",
         "tags": written["tags"],
         "lyrics": written["lyrics"],
         "model": _writer_model(),
-        "ms": int((time.time() - started) * 1000),
+        "ms": written_ms,
     }
 
     # --- sung ---------------------------------------------------------------
-    # Resolved before the station starts, so the running event can name the
-    # machine that is working — the same thing the sorting station does.
-    config_id = resolve_singer(second, transcription, singer)
     singer_name = SINGER_NAMES[config_id]
-    # The id, not only the name: the page lights the machine that runs, and
-    # matching it back from a display label would break the day one is renamed.
+    # The name is what the page shows over the song while this machine works.
+    # The id came along so the page could light the machine's own button
+    # without matching a display label back; since 2026-11-02 the page names
+    # the machine and lights nothing.
     yield {"station": "sung", "status": "running",
            "model": singer_name, "config": config_id}
     started = time.time()
-    # `.get(named, named)` and not a bare get: a caller who forced `language`
-    # gets a CODE back from the transcriber, not a name, and dropping it here
-    # would hand the speech chunk nothing and let it default to English.
-    _heard = (detected or "").strip().lower()
-    sung_result = _sing(written, song_ms, config_id,
-                        lang=_DETECTED_LOCALES.get(_heard, _heard) or None)
+    sung_result = _sing(written, song_ms, config_id, lang=lang, english=english)
     if sung_result is None:
         yield {"station": "sung", "status": "failed",
                "error": "the last machine did not answer"}
@@ -667,12 +736,13 @@ def run_chain(recording_path: str, language: Optional[str] = None,
     # recorder and served straight out of /api/parrot/sung — the marking has to
     # happen here or nowhere. (The recording it answers is a person singing and
     # is deliberately left alone.)
-    try:
-        from my_app.services.watermark_service import watermark_media_bytes
-        audio = watermark_media_bytes(audio, "output_audio", {"model": singer_name})
-    except Exception as e:
-        logger.warning(f"[PARROT] watermark not applied ({e})")
-    output_path = os.path.join(os.path.dirname(recording_path), "sung." + fmt)
+    # A sound the disclosure did not get into is written as sung_ai_generated.
+    from my_app.services.media_marking import mark_for_disk
+
+    audio, sung_name = mark_for_disk(
+        audio, "output_audio", {"model": singer_name}, "sung." + fmt, "[PARROT]"
+    )
+    output_path = os.path.join(os.path.dirname(recording_path), sung_name)
     with open(output_path, "wb") as handle:
         handle.write(audio)
     yield {
@@ -819,7 +889,7 @@ def _read_in(text: str, target: str) -> Optional[str]:
 
 
 def _sing(written: Dict[str, Any], song_ms: int, config_id: str,
-          lang: Optional[str] = None) -> Optional[tuple]:
+          lang: Optional[str] = None, english: Optional[str] = None) -> Optional[tuple]:
     """Sing the written song through the platform's own output path.
 
     This does not call HeartMuLaClient. It runs the output config the way every
@@ -841,14 +911,15 @@ def _sing(written: Dict[str, Any], song_ms: int, config_id: str,
     handler — run_chain writes the bytes into the staging directory and the
     sweeper takes them away again.
 
-    No station is gated, and that holds for all three configs rather than for
-    heartmula_standard's pipeline flag. skip_stage2 is read in
-    schema_pipeline_routes — the orchestrator this path deliberately does not go
-    through — and the engine below it runs the chunks a config names. All three
-    name a single output chunk and set requires_interception_prompt false, so no
-    safety check, no interception and no translation sits between the written
-    words and the sung ones. Nothing here refuses a song or judges what was
-    said.
+    This function checks nothing and rewrites nothing. The check runs earlier,
+    in run_chain: it reads the lyrics and the tags, plus the English rendering
+    where the speaking voice gets one, before the station "written" shows them,
+    and run_chain hands the rendering in here. No interception and no
+    translation runs between the written words and the sung ones, for every
+    config this page offers and not only because of heartmula_standard's
+    pipeline flag: skip_stage2 is read in schema_pipeline_routes, the
+    orchestrator this path deliberately does not go through, and the engine
+    below it runs only the chunks a config names.
 
     The chunk does reshape what it is handed, and that is worth naming rather
     than glossing: it strips the space after each comma (the one thing the
@@ -908,9 +979,9 @@ def _sing(written: Dict[str, Any], song_ms: int, config_id: str,
         # without it a recording heard as any of them dead-ends here. The
         # platform decided on 2026-08-06 that the fallback is English and never a
         # foreign voice; the chunk uses this only when it has no voice, so it
-        # costs one call and changes nothing in the other cases.
+        # costs one call and changes nothing in the other cases. run_chain
+        # makes the rendering before the check and hands it in.
         placeholders = {"TEXT_1": lyrics}
-        english = _read_in(lyrics, "English") if lang not in (None, "en") else None
         if english:
             placeholders["text_en"] = english
         context.custom_placeholders = placeholders

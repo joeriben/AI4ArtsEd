@@ -106,11 +106,13 @@ THIS FILE IS ABOUT THE 4-STAGE-ORCHESTRATION.
 ### 1.1 Executive Summary
 
 **DevServer orchestrates a 4-stage flow where:**
-- **Stage 1** runs once per user input (based on input type, not pipeline declaration)
+- **Stage 1**, the intake, checks each new piece of the user's material once, before Stage 2
 - **Stage 2** executes the main pipeline (can be complex: loops, branches, multiple outputs)
-- **Stage 3-4** run once PER OUTPUT REQUEST from Stage 2 (not once per pipeline)
+- **Stage 3-4** run once PER OUTPUT REQUEST from Stage 2 (not once per pipeline): the translation and the check before the model, then the generation
 
 **Key Principle:** Pipelines are DUMB (declare inputs/outputs), DevServer is SMART (knows safety rules).
+
+The checks sit at three places: the intake, the step before a media model, and the result before it leaves the server. Section 1.7 describes them; `devserver/my_app/services/safety_gate.py` holds them.
 
 ### 1.2 Core Architecture
 
@@ -120,18 +122,16 @@ THIS FILE IS ABOUT THE 4-STAGE-ORCHESTRATION.
 │ ROLE: Smart Orchestrator - Knows 4-Stage Flow & Safety Rules   │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│ STAGE 1: Pre-Interception (Safety Only - Original Language)    │
+│ STAGE 1: Intake (check_intake, once per piece of material)     │
 │ ════════════════════════════════════════════════════════════   │
-│   DevServer reads: pipeline.input_requirements                 │
-│   - texts: N  → Run text_safety for each (NO translation!)    │
-│   - images: M → Run image_safety for each                      │
-│   - Bilingual: Works in DE or EN (§86a filters both)          │
+│   Every new piece of the user's material, on the server:       │
+│   - texts: names of living private individuals and addresses   │
+│     with a house number (name recogniser, address pattern;     │
+│     after a hit the classifier's name question)                │
+│   - uploaded pictures (kids, youth): the level's picture       │
+│     question                                                   │
 │                                                                 │
-│   Example: {"texts": 2, "images": 1}                           │
-│   → text_safety(text1_in_original_language)                   │
-│   → text_safety(text2_in_original_language)                   │
-│   → image_safety(image1)                                       │
-│   Text stays in original language (DE/EN) for Stage 2!        │
+│   Text stays in its original language for Stage 2.             │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
@@ -248,15 +248,19 @@ if optimization_instruction:
 │       - Media generation requires English prompts             │
 │       - User can edit BEFORE this stage (in original lang)    │
 │                                                                 │
-│     STAGE 3b: Pre-Output Safety                                │
-│       - Hybrid: Fast string-match → LLM if needed             │
-│       - Check: translated_prompt against safety_level         │
-│       - If blocked: Skip Stage 4, return text alternative     │
+│     STAGE 3b: The check before the model (check_before_model)  │
+│       - the §86a lists of every language over the original     │
+│         and the English version                                │
+│       - then the safety classifier with the level's question   │
+│       - If blocked: no Stage 4; the block message goes back    │
 │                                                                 │
 │     STAGE 4: Media Generation                                  │
 │       - Execute output config (e.g., gpt5_image)              │
 │       - Generate media with English prompt                     │
 │       - Return media reference (prompt_id, URL, etc.)         │
+│                                                                 │
+│     AT THE RESULT: check_result_image (kids, youth): every     │
+│       picture of the run, before it leaves the server          │
 │                                                                 │
 │   Collect all generated media + metadata                       │
 │                                                                 │
@@ -288,31 +292,16 @@ if optimization_instruction:
 **Pipelines DO NOT declare:**
 - ❌ Safety requirements (DevServer knows this)
 - ❌ Translation needs (DevServer knows: text → translate)
-- ❌ Pre-processing steps (DevServer orchestrates Stage 1)
-- ❌ When to run safety checks (DevServer orchestrates Stage 3)
+- ❌ Pre-processing steps (DevServer runs the intake)
+- ❌ When to run safety checks (the routes call the three checks, section 1.7)
 
 #### What DevServer Knows (SMART)
 
-**DevServer has hardcoded safety rules:**
-
-```python
-# schema_pipeline_routes.py
-
-STAGE1_RULES = {
-    "text": ["translation", "text_safety_stage1"],
-    "image": ["image_safety_stage1"],
-    "audio": ["audio_safety_stage1"]  # Future
-}
-
-STAGE3_RULES = {
-    "image": "text_safety_check_{safety_level}",  # kids/youth/off
-    "audio": "audio_safety_check_{safety_level}",  # Future
-    "video": "video_safety_check_{safety_level}"   # Future
-}
-```
+**DevServer holds the safety rules in one module, `my_app/services/safety_gate.py`.**
+The routes call its checks at three places (section 1.7); no pipeline config names a check.
 
 **Why non-redundant?**
-- If pipeline says `"texts": 2`, DevServer runs Stage 1 safety for BOTH texts
+- If a run brings two texts, the intake reads both
 - No duplication in pipeline configs
 - Change safety rules in ONE place (DevServer)
 - Prevents inconsistencies
@@ -334,13 +323,12 @@ STAGE3_RULES = {
 ```
 ┌─ STAGE 1 (Run ONCE) ─────────────────────────────────────────┐
 │ Input: "EIne Blume auf der Wiese"                            │
-│ → Translation: "One flower on the meadow"                    │
-│ → Stage 1 Safety: PASSED (fast-path, no unsafe terms)       │
+│ → Intake: PASSED (no private person named, no address)      │
 └──────────────────────────────────────────────────────────────┘
 
 ┌─ STAGE 2 (Main Pipeline) ────────────────────────────────────┐
 │ Pipeline: overdrive (text_transformation)                    │
-│ Input: "One flower on the meadow"                            │
+│ Input: "EIne Blume auf der Wiese"                            │
 │ → manipulate chunk with overdrive context                    │
 │ Output: "In the vast, undulating sea of emerald..."         │
 │                                                              │
@@ -352,9 +340,9 @@ STAGE3_RULES = {
 ┌─ STAGE 3-4 (Run ONCE per output request) ───────────────────┐
 │ Request #1: image                                            │
 │                                                              │
-│ STAGE 3: Pre-Output Safety                                  │
+│ STAGE 3: The check before the model                         │
 │   Prompt: "In the vast, undulating..."                      │
-│   → Fast-path check: No unsafe terms → PASSED (0.1ms)       │
+│   → Lists and the classifier's question → PASSED            │
 │                                                              │
 │ STAGE 4: Media Generation                                   │
 │   Lookup: image/fast → gpt5_image                           │
@@ -363,7 +351,7 @@ STAGE3_RULES = {
 └──────────────────────────────────────────────────────────────┘
 ```
 
-**Current Bug (What Happens Now):**
+**The bug of 2025-11 (fixed, see 1.6; no check runs inside `execute_pipeline()` now):**
 ```
 ✅ Stage 1 runs once → Good
 ✅ Stage 2 runs once → Good
@@ -394,18 +382,18 @@ STAGE3_RULES = {
 ```
 Input: "Eine Blume auf der Wiese"
   ↓
-Stage 1: translation + text_safety (once)
-  → "A flower on the meadow" + PASSED
+Stage 1: the intake (once)
+  → PASSED
   ↓
 Stage 2: text_transformation (once)
-  → "A flower on the meadow" (pass-through)
+  → "Eine Blume auf der Wiese" (pass-through)
   ↓
 Stage 3-4 Loop: FOR EACH output_config
   ├─ Iteration 1: sd35_large
-  │  ├─ Stage 3: Pre-Output Safety ✅
+  │  ├─ Stage 3: The check before the model ✅
   │  └─ Stage 4: ComfyUI workflow → image_1.png
   └─ Iteration 2: gpt5_image
-     ├─ Stage 3: Pre-Output Safety ✅
+     ├─ Stage 3: The check before the model ✅
      └─ Stage 4: OpenRouter API → image_2.png
 
 Response: {
@@ -417,7 +405,7 @@ Response: {
 ```
 
 **Key Points:**
-✅ Stage 1 runs once (not 2x) - no redundant translation
+✅ Stage 1 runs once (not 2x) - the intake reads the input once
 ✅ Stage 2 runs once (not 2x) - no redundant pipeline
 ✅ Stage 3-4 loop per output - each gets independent safety check
 ✅ Efficient: Only outputs require duplication, not inputs
@@ -449,8 +437,8 @@ Response: {
 ```
 Input: "Eine Blume auf der Wiese"
   ↓
-Stage 1: translation + text_safety (once)
-  → "A flower on the meadow" + PASSED
+Stage 1: the intake (once)
+  → PASSED
   ↓
 Stage 2: text_transformation_recursive (once, loops internally)
   Iteration 1: translate to Hindi
@@ -459,7 +447,7 @@ Stage 2: text_transformation_recursive (once, loops internally)
   Iteration 8: translate to English
   → "The Dutch translation of..." (mangled text)
   ↓
-Stage 3: Pre-Output Safety ✅
+Stage 3: The check before the model ✅
   ↓
 Stage 4: Media Generation → image.png
 ```
@@ -468,7 +456,7 @@ Stage 4: Media Generation → image.png
 ✅ Stage 1 runs once (not 8x) - Critical test PASSED
 ✅ Loop runs INSIDE Stage 2 pipeline
 ✅ Config controls loop behavior (iterations, languages, final_language)
-❌ Does NOT call execute_pipeline() recursively (would trigger Stage 1-3 redundancy)
+❌ Does NOT call execute_pipeline() recursively
 
 **Pedagogical Goal:**
 - Students see prompt degradation over iterations
@@ -478,6 +466,8 @@ Stage 4: Media Generation → image.png
 **Implementation:** See `pipeline_executor.py` _execute_recursive_pipeline_steps()
 
 ### 1.6 Implementation Status
+
+**Since 2026-11-01** the checks are the three of section 1.7, in `my_app/services/safety_gate.py`; the routes in `schema_pipeline_routes.py` call them. The list below is the status of 2025-11-26.
 
 **Current (v2.3 - 2025-11-26 with Stage 2 Refactoring):**
 - ✅ Stage 1-3 logic in `schema_pipeline_routes.py` - CORRECT
@@ -514,6 +504,41 @@ Stage 4: Media Generation → image.png
 - `schema_pipeline_routes.py` for orchestration code
 - `pipeline_executor.py` for execution engine
 
+### 1.7 Safety: The Three Checks
+
+**Since 2026-11-01.** Every check sits at one of three places, and each place is one function in `devserver/my_app/services/safety_gate.py`. The routes call them; no pipeline config names a check.
+
+| Place | Function | Reads | kids, youth | adult |
+|---|---|---|---|---|
+| **Intake** (Stage 1) | `check_intake()`, `check_intake_texts()` | every new piece of the user's material, once: typed text, uploaded pictures and documents | names of living private individuals and addresses with a house number; uploaded pictures: the level's picture question | names and addresses |
+| **Before the model** (Stage 3) | `check_before_model()` | everything a media model receives, after the last step a language model takes | the §86a lists of every language over the original and the English version, then the safety classifier with the level's question, after a list hit also the symbol question; a picture handed to the model needs a verdict | the same, with the question for adult; pictures are not checked |
+| **At the result** | `check_result_image()`, `check_result_text()`, `check_result_code()` | a picture before it leaves the server, a text a language model wrote before it is shown, code before it runs in a browser | pictures: the level's picture question; texts: the §86a lists of every language, then the level's text question, after a list hit also the symbol question; code: the same, and a list of constructs dangerous in a browser, after a hit the code question | texts and code, with the question for adult, code without that list; pictures are not checked |
+
+**The chats** (Together, Contesting, the Help and the platform voice; since 2026-11-08) check what goes in. Their intake checks names and addresses and runs the §86a lists of every language, with the symbol question after a list hit (`check_intake(kind="chat")`); the level's text question is not asked. It covers the message, the page state, the context's texts, the notes on the board, the names of the media on the page and every line of the history. What their model writes leaves unchecked, piece by piece as it is written. Their system message closes with an instruction that names the safety level and carries the classifier's criteria for that level (`level_instruction`, read from `safety_classifier.LEVEL_INSTRUCTS`), at kids, youth and adult; research gets none. The tolerances of the less strict levels, which the result check asks as well, are left out because they contradict the stricter measure. Their restrictions stand in the stricter one, two of adult's only by category, so kids and youth are also told the adult measure's list of symbols and its rule for a text that depicts a Nazi crime. The instruction names itself the measure of every reply and says that the platform's checks judge what is passed to a generator. At kids and youth the reasoning a model delivers apart from its reply is not sent, and a reply that is only the reasoning counts as none; reasoning written into the reply text (`<think>`) is not removed. It stands after the page state, the page's entries and the listing of the surface. A picture sent as data passes the image intake. A chat's reply counts as no new material only where it comes back in a chat's history (`remember_chat_reply`). What a chat model reads from storage (a run's texts, a run's stored conversation, a favourite's note, a remembered note, Together's journal, a kept strategy) reaches it at kids and youth only where the level it was written at opens there (`safety_gate.run_opens_at`), and an upload only with its pass for the level. The history route, the journal route and the favourites' list show a stored line, a journal event and a note by the same rule, and a favourite brought to Together's board reaches the model by it (`_brought_at`). What a chat model reads of something stored is input as well: the context of the run a chat is opened on, `view_run`, `lookup_shared_favorites`, `view_favorite` and the strategy store (`canvas_graph_library`). At kids and youth they hand it nothing of a run made at a less strict level or at none, by the rule the favourites' restore asks (`safety_gate.run_opens_at`); canvas runs record their level, and the strategy store keeps the least strict level any of a strategy's texts was written at. A tool runs only when the turn offered it. The comparisons of the Latent Lab run on the same chat turn, get no instruction, no tools and no thinking, and keep the result check on their whole answer.
+
+At research no check runs and no model is asked. The file check of an upload is not one of these checks and runs at every level. A PDF uploaded to the knowledge library also goes through three lists, the §86a list among them, and there a hit alone rejects the document (`upload_gate.py`).
+
+**Rules for all three:**
+- The level is resolved once per request, on the request thread, and handed to every check.
+- A check that gets no answer blocks. The block says that a check could not be carried out, never that the material was rated.
+- A pass is remembered per material and level while the process runs. A pass at a looser level does not answer for a stricter one.
+- The safety prefix before a language model checks nothing. Where the model answers with the refusal the prefix asks for (`is_safety_refusal()`), the route reports a block.
+
+**The block message.** Every block answer carries `safety_block`:
+
+```json
+{
+  "checkpoint": "intake | before_model | result | refusal",
+  "field": "the request field, where it is known",
+  "reason_key": "personal_data | content | symbol | image_content | code | unavailable | refusal | ...",
+  "reason": "the sentence the platform has shown for it"
+}
+```
+
+A request carries it in the answer's body, most routes with the status 403; a stream sends it in a `blocked` event. The frontend picks its sentence by `reason_key` (`safetyBlockMessageKey()` in `useGenerationStream.ts`).
+
+**Delivery.** At kids and youth a recorded picture is delivered only with a verdict that answers for the level (`pipeline_recorder.py`).
+
 ---
 
 ## 2. Model Selection Architecture
@@ -543,9 +568,10 @@ Stage 4: Media Generation → image.png
 **Model Constants:**
 ```python
 # Stage-specific model assignments
-STAGE1_TEXT_MODEL = "llama-guard-3-8b"           # Safety check (local only)
+STAGE1_TEXT_MODEL = "..."                        # Translation of a written prompt
 STAGE2_INTERCEPTION_MODEL = "mistral-nemo"       # Pedagogical transformation
-STAGE3_MODEL = "llama-guard-3-8b"                # Pre-output safety
+STAGE3_MODEL = "..."                             # Translation for the media model
+SAFETY_MODEL = "..."                             # The safety classifier every check asks
 # ... etc
 ```
 
@@ -641,7 +667,7 @@ prompt keeps the seed, so the two models are compared on the same noise.
 ### 3.3 Timing in 4-Stage Flow
 
 ```
-Stage 1: Safety ✅
+Stage 1: Intake ✅
   ↓
 Stage 2: Interception ✅
   ↓
@@ -649,7 +675,7 @@ Stage 2: Interception ✅
   - Compare: stage2_prompt vs _last_prompt
   - Decide: reuse / new / first-run seed
   ↓
-Stage 3: Translation ✅
+Stage 3: Translation + the check before the model ✅
   ↓
 Stage 4: Media Generation (with calculated seed) ✅
 ```
@@ -794,20 +820,23 @@ Frontend                          Backend (/generation)
 def execute_generation_streaming(data: dict):
     """SSE-Generator für Stage 3+4"""
 
-    # Stage 3: Translation + Safety
-    yield generate_sse_event('stage3_start', {})
+    # Stage 3: Translation + the check before the model
+    yield generate_sse_event('stage3_start', {...})
 
-    safety_result = await execute_stage3_safety(...)
+    verdict = check_before_model({'prompt': translated_prompt}, level=safety_level,
+                                 originals={'prompt': prompt})
     was_translated = translated_prompt != prompt
 
-    yield generate_sse_event('stage3_complete', {
-        'was_translated': was_translated,
-        'safe': safety_result['safe']
-    })
-
-    if not safety_result['safe']:
-        yield generate_sse_event('blocked', {...})
+    if not verdict.passed:
+        yield generate_sse_event('blocked', {'reason': verdict.reason,
+                                             'safety_block': verdict.block(), ...})
         return
+
+    yield generate_sse_event('stage3_complete', {
+        'safe': True,
+        'was_translated': was_translated,
+        'checks_passed': [...]
+    })
 
     # Stage 4: Generation
     yield generate_sse_event('stage4_start', {})
@@ -881,49 +910,47 @@ export function useGenerationStream() {
 
 | Stage | Function | Endpoint | SSE Event |
 |-------|----------|----------|-----------|
-| Stage 1 | Safety Check (§86a + DSGVO + Jugendschutz) | `/interception` | `stage_start/complete (stage: 1)` |
-| Stage 2 | Prompt Interception | `/interception` | `stage_start/complete (stage: 2)` |
-| Stage 3 | Translation + Safety | `/generation` | `stage3_start/complete` |
+| Stage 1 | The intake: names of private individuals, addresses; at kids/youth uploaded pictures | `/interception` | `blocked` where it refuses, nothing where it passes |
+| Stage 2 | Prompt Interception; its text goes through the check at the result before it is shown | `/interception` | `stage_start/complete (stage: 2)` |
+| Stage 3 | Translation + the check before the model | `/generation` | `stage3_start/complete` |
 | Stage 4 | Media Generation | `/generation` | `stage4_start/complete` |
-| Post-4 | VLM Image Safety (kids/youth only) | `/generation` | `blocked (stage: vlm_safety)` |
+| Post-4 | The check at the result: the run's pictures (kids/youth only) | `/generation` | `blocked` (`safety_block.checkpoint`: `result`) |
 
 **Endpoint Bundling (by design):**
 - `/interception` = Stage 1 + Stage 2 (input processing)
-- `/generation` = Stage 3 + Stage 4 + post-generation VLM check (output generation)
+- `/generation` = Stage 3 + Stage 4 + the picture check after generation (output generation)
 
 **Clean Internal Separation:**
-- `execute_stage1_gpt_oss_unified()` - Stage 1
-- `execute_pipeline()` (via PipelineExecutor) - Stage 2
-- `execute_stage3_safety()` - Stage 3
+- `check_intake()`, `check_intake_texts()` - Stage 1
+- `execute_pipeline()` (via PipelineExecutor) - Stage 2; its text through `check_result_text()`
+- `check_before_model()` - Stage 3
 - `execute_stage4_generation_only()` - Stage 4
-- `_vlm_safety_check_image()` - Post-Stage-4 VLM check
+- `check_result_image()` - the pictures after Stage 4
 
-#### Post-Generation VLM Safety Check
+#### The Picture Check After Generation
 
-Text-based safety checks (Stage 1 + Stage 3) analyze the **prompt**, but cannot predict what the image generator actually produces. A harmless prompt can generate disturbing content. The VLM safety check closes this gap:
+The checks before generation (the intake, the check before the model) read the **prompt**, but cannot predict what the image generator actually produces. A harmless prompt can generate disturbing content. The check at the result closes this gap:
 
 ```
-Stage 4 complete (image saved to disk)
+Stage 4 complete (picture saved to disk)
   ↓
-media_type == 'image' AND safety_level in ('kids', 'youth')?
-  ↓ no  → COMPLETE (no VLM check for code/audio/video or adult/off)
+safety_level in ('kids', 'youth') and the run recorded a picture?
+  ↓ no  → COMPLETE (no picture check at adult and research)
   ↓ yes
-VLM Safety Check (qwen3-vl:2b via Ollama):
-  - Load image from recorder entity (output_image)
-  - Base64-encode → Ollama /api/chat
-  - Age-appropriate prompt (kids: 6-12, youth: 14-18)
-  - Parse response (content + thinking field) for "safe"/"unsafe"
-  ↓ "safe"  → SSE 'complete' (normal flow)
-  ↓ "unsafe" → SSE 'blocked' (stage: 'vlm_safety')
-  ↓ error   → fail-open → SSE 'complete'
+check_result_image() for every picture of the run:
+  - the safety classifier is asked the level's picture question
+  - the verdict is written onto the recorded picture, with its level
+  ↓ passed     → SSE 'complete' (normal flow)
+  ↓ refused    → SSE 'blocked' (checkpoint 'result', reason_key 'image_content')
+  ↓ no verdict → SSE 'blocked' (checkpoint 'result', reason_key 'unavailable')
 ```
 
 **Key design decisions:**
-- **Fail-open**: VLM errors never block generation (availability > false negatives)
-- **kids/youth only**: adult/off levels skip the check
-- **images only**: code, audio, video are not checked (future: video VLM check)
-- **qwen3 thinking mode**: Response may be in `message.thinking` instead of `message.content` — both fields are checked
-- **Complements, not replaces**: Stage 1+3 remain as fast pre-generation guards
+- **No verdict is a block**: a check that gave no answer stops the run and is said as a check that could not be carried out, never as a rating of the picture
+- **kids/youth only**: adult and research skip the check
+- **Every picture the run recorded**: the preview a 3D run stores as a picture included; sound and video as a whole are not checked at the result
+- **Delivery**: a recorded picture without a verdict that answers for the level is not delivered
+- **Complements, not replaces**: the intake and the check before the model stay as the checks before generation
 
 ### 4.6 Design Decisions
 

@@ -404,6 +404,14 @@ def search(query: str, sparte: Optional[str] = None, thema: Optional[str] = None
 # Public: read
 # ---------------------------------------------------------------------------
 
+# The header line of read() per front-matter `seitenzahlen`.
+_PAGE_NUMBERING_LINES = {
+    "gedruckt": "[Seitenangaben: die in der Quelle gedruckten Seitenzahlen]",
+    "pdf": "[Seitenangaben: Seiten der PDF-Datei; in der Quelle wurden keine gedruckten Seitenzahlen erkannt]",
+    "keine": "[Seitenangaben: keine; die Quelle hat keine Seiten, Verweise nennen den Abschnitt]",
+}
+
+
 def read(doc_id: str, section: Optional[str] = None,
          chunk_ids: Optional[List] = None, max_chars: int = READ_DEFAULT_MAX_CHARS) -> str:
     con = _connect()
@@ -420,6 +428,8 @@ def read(doc_id: str, section: Optional[str] = None,
         max_chars = max(500, min(max_chars, 12000))
 
         hinweis_col = ", hinweis" if _docs_has_column(con, "hinweis") else ""
+        if _docs_has_column(con, "seitenzahlen"):
+            hinweis_col += ", seitenzahlen"
         meta = con.execute(
             "SELECT doc_id,title,authors,year,lang,lizenz,url,status" + hinweis_col +
             " FROM docs WHERE doc_id = ?",
@@ -470,11 +480,15 @@ def read(doc_id: str, section: Optional[str] = None,
         # The operator's per-document hinweis (why this was uploaded) is added
         # as ONE neutral line when present — data context, not an instruction.
         doc_hinweis = (meta["hinweis"].strip() if ("hinweis" in meta.keys() and meta["hinweis"]) else "")
+        # Which numbering the "(S. n)" references of the passages use.
+        pages_line = _PAGE_NUMBERING_LINES.get(
+            meta["seitenzahlen"] if "seitenzahlen" in meta.keys() else "", "")
         header = [
             f"{meta['title']} — {meta['authors'] or 'UNESCO'}"
             + (f" ({meta['year']})" if meta["year"] else ""),
             *([f"{meta['url']}"] if meta["url"] else []),
             *([f"[Betreiber-Hinweis: {doc_hinweis}]"] if doc_hinweis else []),
+            *([pages_line] if pages_line else []),
             "",
         ]
 
@@ -712,6 +726,23 @@ def _docs_has_column(con, column: str) -> bool:
     return column in cols
 
 
+_GATE_COLUMNS = ("checks", "review", "status_reason")
+
+
+def _gate_cols(con) -> str:
+    """The SELECT suffix for the gate's columns, the checks' label, the
+    adversarial review's label and the reason for a draft (docs columns of
+    indexes built since 2026-11-13), guarded like the provenance columns."""
+    return "".join(", d." + c for c in _GATE_COLUMNS if _docs_has_column(con, c))
+
+
+def _gate_fields(row) -> Dict[str, str]:
+    """`checks`, `review` and `status_reason` of one docs row, "" where the
+    index has no such column or the file carried no label."""
+    keys = row.keys()
+    return {c: (row[c] or "") if c in keys else "" for c in _GATE_COLUMNS}
+
+
 def list_operator_items(bereich: Optional[str] = None) -> List[Dict]:
     """Curation list of ALL Tier-O items (drafts INCLUDED), from the index.
 
@@ -744,6 +775,7 @@ def list_operator_items(bereich: Optional[str] = None) -> List[Dict]:
             extra_cols += ", d.analysis_lang"
         if has_analysis_model:
             extra_cols += ", d.analysis_model"
+        extra_cols += _gate_cols(con)
         where = "d.tier = 'O'"
         params: list = []
         if bereich and has_bereich:
@@ -774,6 +806,7 @@ def list_operator_items(bereich: Optional[str] = None) -> List[Dict]:
                 "analyzed_at": r["analyzed_at"] if "analyzed_at" in keys else "",
                 "analysis_lang": r["analysis_lang"] if "analysis_lang" in keys else "",
                 "analysis_model": r["analysis_model"] if "analysis_model" in keys else "",
+                **_gate_fields(r),
                 "chunks": r["chunks"],
                 "readonly": False,  # Tier-O items are curated (mutable)
             })
@@ -828,6 +861,9 @@ def _item_view_from_md(md: str, stem: str, *, readonly: bool) -> Dict:
         "themen": fm.get("themen", []) if isinstance(fm.get("themen"), list) else [],
         "bereich": fm.get("bereich", "") if isinstance(fm.get("bereich"), str) else "",
         "hinweis": fm.get("hinweis", "") if isinstance(fm.get("hinweis"), str) else "",
+        # The PDF pages of a document that is part of its file ("111-137");
+        # "" for a whole file. A reprocess passes it on.
+        "pdf_seiten": fm.get("pdf_seiten", "") if isinstance(fm.get("pdf_seiten"), str) else "",
         # Analysis provenance (additive, 2026-07-10): absent ("") on any
         # document produced before this feature -- never guessed/backfilled.
         # The frontend renders that as a muted "never analysed with
@@ -838,6 +874,13 @@ def _item_view_from_md(md: str, stem: str, *, readonly: bool) -> Dict:
         "analyzed_at": fm.get("analyzed_at", "") if isinstance(fm.get("analyzed_at"), str) else "",
         "analysis_lang": fm.get("analysis_lang", "") if isinstance(fm.get("analysis_lang"), str) else "",
         "analysis_model": fm.get("analysis_model", "") if isinstance(fm.get("analysis_model"), str) else "",
+        # Why the gate set `status`: the checks' label and the adversarial
+        # review's label as the condensation wrote them ("" on older files).
+        "checks": fm.get("checks", "") if isinstance(fm.get("checks"), str) else "",
+        "review": fm.get("review", "") if isinstance(fm.get("review"), str) else "",
+        # Why the item is a draft (knowledge_processing.gate_status); "" when
+        # published or on files written before the reason was recorded.
+        "status_reason": fm.get("status_reason", "") if isinstance(fm.get("status_reason"), str) else "",
         "card": sections.get("PROFIL", ""),
         "wissen": sections.get("WISSEN", ""),
         "glossary": _admin_parse_glossary(sections.get("GLOSSAR", "")),
@@ -854,12 +897,19 @@ def get_operator_item(doc_id: str) -> Optional[Dict]:
     path = operator_md_path(doc_id)
     if not path or not path.exists():
         return None
+    return read_item_file(path, readonly=False)
+
+
+def read_item_file(path: Path, *, readonly: bool = True) -> Optional[Dict]:
+    """The item view of one library Markdown file at `path`, wherever it lies
+    (scripts/knowledge_run.py reads a prior analysis from a given folder).
+    None when the file cannot be read."""
     try:
-        md = path.read_text(encoding="utf-8")
+        md = Path(path).read_text(encoding="utf-8")
     except OSError as e:
-        logger.warning("[KNOWLEDGE] could not read Tier-O item %s: %s", path, e)
+        logger.warning("[KNOWLEDGE] could not read library item %s: %s", path, e)
         return None
-    return _item_view_from_md(md, path.stem, readonly=False)
+    return _item_view_from_md(md, Path(path).stem, readonly=readonly)
 
 
 # --- Tier-F read-only views (Settings transparency only) --------------------
@@ -924,6 +974,7 @@ def list_fixed_items(bereich: Optional[str] = None) -> List[Dict]:
             extra_cols += ", d.analysis_lang"
         if has_analysis_model:
             extra_cols += ", d.analysis_model"
+        extra_cols += _gate_cols(con)
         rows = con.execute(
             "SELECT d.doc_id, d.title, d.year, d.lizenz, d.status, d.lang, "
             "       d.sparten_json, d.themen_json, d.authors" + extra_cols + ", "
@@ -948,6 +999,7 @@ def list_fixed_items(bereich: Optional[str] = None) -> List[Dict]:
                 "analyzed_at": r["analyzed_at"] if "analyzed_at" in keys else "",
                 "analysis_lang": r["analysis_lang"] if "analysis_lang" in keys else "",
                 "analysis_model": r["analysis_model"] if "analysis_model" in keys else "",
+                **_gate_fields(r),
                 "chunks": r["chunks"],
                 "readonly": True,  # committed Tier-F: view-only, never curated
             })
@@ -991,7 +1043,11 @@ _META_INSERT_AFTER = {
     "autor": ("titel", "id"),  # autor after titel
     "jahr": ("autor", "titel", "id"),
     "quelle": ("jahr", "autor", "titel", "id"),
+    # The reason for a draft sits right under the status it explains, the slot
+    # render_front_matter gives it.
+    "status_reason": ("status",),
 }
+_ADMIN_STATUS_REASON_LINE_RE = re.compile(r"^status_reason:\s*.*\n?", re.MULTILINE)
 
 
 
@@ -1024,8 +1080,13 @@ def _assert_tier_o(path: Path) -> None:
 
 def set_operator_status(doc_id: str, status: str) -> bool:
     """Rewrite the front-matter `status:` of a Tier-O item (draft|published).
-    Returns True on success, False if the item does not exist. Raises
-    PermissionError if the resolved path is not under the Tier-O directory."""
+
+    The operator's decision is a reason of its own: a draft set here carries
+    `status_reason: operator`, which a later reprocess keeps (the gate holds the
+    document for the operator), and publishing removes every recorded reason.
+    Only the front-matter slice is edited. Returns True on success, False if
+    the item does not exist. Raises PermissionError if the resolved path is not
+    under the Tier-O directory."""
     if status not in ("draft", "published"):
         raise ValueError("status must be 'draft' or 'published'")
     path = operator_md_path(doc_id)
@@ -1033,16 +1094,20 @@ def set_operator_status(doc_id: str, status: str) -> bool:
         return False
     _assert_tier_o(path)
     md = path.read_text(encoding="utf-8")
-    if _ADMIN_STATUS_RE.search(md):
-        md = _ADMIN_STATUS_RE.sub(f"status: {status}", md, count=1)
+    m = _ADMIN_FM_RE.match(md)
+    if not m:
+        raise ValueError("Tier-O file has no front-matter block")
+    fm_block, rest = md[: m.end()], md[m.end():]
+    if _ADMIN_STATUS_RE.search(fm_block):
+        fm_block = _ADMIN_STATUS_RE.sub(f"status: {status}", fm_block, count=1)
     else:
-        # No status line in front-matter — insert one before the closing '---'.
-        m = _ADMIN_FM_RE.match(md)
-        if not m:
-            raise ValueError("Tier-O file has no front-matter block")
-        fm_end = md.rfind("\n---", 0, m.end())
-        md = md[:fm_end] + f"\nstatus: {status}" + md[fm_end:]
-    _atomic_write_text(path, md)
+        fm_end = fm_block.rfind("\n---")
+        fm_block = fm_block[:fm_end] + f"\nstatus: {status}" + fm_block[fm_end:]
+    if status == "draft":
+        fm_block = _set_fm_scalar(fm_block, "status_reason", "operator")
+    else:
+        fm_block = _ADMIN_STATUS_REASON_LINE_RE.sub("", fm_block, count=1)
+    _atomic_write_text(path, fm_block + rest)
     return True
 
 
@@ -1169,10 +1234,13 @@ def delete_operator_item(doc_id: str) -> Dict:
         _assert_tier_o(path)
         path.unlink()
         result["md_deleted"] = True
-    # Remove the stored original PDF too (operator originals live under
-    # resources/knowledge_originals/operator/<doc_id>.pdf).
-    orig = _operator_original_path(doc_id)
-    if orig and orig.exists():
+        checks = path.with_name(path.stem + ".checks.json")  # the checks of that file
+        if checks.exists():
+            checks.unlink()
+    # Remove the stored original too (operator originals live under
+    # resources/knowledge_originals/operator/<doc_id>.pdf or .docx).
+    orig = operator_original(doc_id)
+    if orig is not None:
         try:
             orig.unlink()
             result["original_deleted"] = True
@@ -1181,12 +1249,24 @@ def delete_operator_item(doc_id: str) -> Dict:
     return result
 
 
-def _operator_original_path(doc_id: str) -> Optional[Path]:
+# The formats an operator original is stored in: what the upload route accepts
+# and Docling converts (an MD upload is stored as its <doc_id>.raw.md only).
+ORIGINAL_SUFFIXES = (".pdf", ".docx")
+
+
+def operator_original(doc_id: str) -> Optional[Path]:
+    """The stored original of a Tier-O document,
+    resources/knowledge_originals/operator/<doc_id>.pdf or .docx, or None
+    when there is none."""
     from config import KNOWLEDGE_ORIGINALS_DIR
     safe = re.sub(r"[^A-Za-z0-9_-]", "", (doc_id or "").strip())
     if not safe:
         return None
-    return Path(KNOWLEDGE_ORIGINALS_DIR) / "operator" / f"{safe}.pdf"
+    for suffix in ORIGINAL_SUFFIXES:
+        path = Path(KNOWLEDGE_ORIGINALS_DIR) / "operator" / f"{safe}{suffix}"
+        if path.is_file():
+            return path
+    return None
 
 
 def _replace_top_section(md: str, section: str, new_body: str) -> str:

@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import type { AsmItem } from './useAssemblageBoard'
 import { postStreamedRun } from '@/services/directRun'
 import { apiBase } from '@/services/labApi'
+import { safetyBlockOf, type SafetyBlock } from '@/composables/useGenerationStream'
 
 /**
  * Material intake — the canonical, view-independent way material reaches a
@@ -38,6 +39,89 @@ export interface UploadedImage {
 }
 
 /**
+ * The upload refused the picture rather than failing as a transfer: the
+ * server's intake check judged it, or could not be carried out. `safety` is
+ * that refusal as the quick check hands one over, so a surface reports it the
+ * way it reports a refusal of the quick check.
+ */
+export class UploadRefused extends Error {
+  readonly safety: QuickSafetyResult
+
+  constructor(safety: QuickSafetyResult) {
+    super('safety_blocked')
+    this.name = 'UploadRefused'
+    this.safety = safety
+  }
+}
+
+/** The refusal an upload ended in, or null where it failed in any other way. */
+export function uploadRefusal(err: unknown): QuickSafetyResult | null {
+  return err instanceof UploadRefused ? err.safety : null
+}
+
+/**
+ * What the upload route takes: `media_routes.ALLOWED_EXTENSIONS` by name and
+ * `upload_gate.ALLOWED_IMAGE_SIGNATURES` by content. Kept in sync with both.
+ */
+const UPLOADABLE_TYPES: Record<string, string> = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/webp': 'webp',
+}
+const UPLOADABLE_NAME = /\.(png|jpe?g|webp)$/i
+/** The route scales to this longest side (`_resize_image_to_supported_resolution`). */
+const UPLOAD_MAX_SIDE = 2048
+
+/**
+ * The file as the upload route takes it.
+ *
+ * An iPhone stores its photos as HEIC by default, and Safari shows a HEIC on the board
+ * while the route refuses it by name and by content. The photo then stood on
+ * the board as a preview that never reached the server, and nothing that reads
+ * the board (Resona among them) ever saw it. Any picture this browser can
+ * display is therefore redrawn here as a JPEG, at the size the route would
+ * scale it to anyway, so what is on the board is what is uploaded. A format
+ * the browser cannot display stays as it is and is refused by the route.
+ */
+async function asUploadable(file: File): Promise<File> {
+  const ext = UPLOADABLE_TYPES[file.type]
+  if (ext) {
+    return UPLOADABLE_NAME.test(file.name)
+      ? file
+      : new File([file], `${file.name || 'image'}.${ext}`, { type: file.type })
+  }
+  const url = URL.createObjectURL(file)
+  try {
+    const img = new Image()
+    img.src = url
+    try {
+      await img.decode()
+    } catch {
+      return file
+    }
+    const w0 = img.naturalWidth
+    const h0 = img.naturalHeight
+    if (!w0 || !h0) return file
+    const scale = Math.min(1, UPLOAD_MAX_SIDE / Math.max(w0, h0))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(w0 * scale))
+    canvas.height = Math.max(1, Math.round(h0 * scale))
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return file
+    // The route flattens transparency onto white as well.
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92))
+    if (!blob) return file
+    const base = (file.name || 'image').replace(/\.[^.]*$/, '') || 'image'
+    return new File([blob], `${base}.jpg`, { type: 'image/jpeg' })
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
+
+/**
  * POST /api/media/upload/image. THE single upload implementation.
  * Body moved verbatim from x2x_flow's ingestImage — res.json() runs
  * BEFORE the !res.ok check, and this order MUST be preserved.
@@ -46,13 +130,24 @@ export interface UploadedImage {
  * or success:false throws Error(data.error || 'upload failed'), with what
  * the server said under `said` where it said anything. All callers catch
  * generically, so both failure shapes behave identically.
+ *
+ * The server checks the PICTURE where it comes in (media_routes.upload_image)
+ * and refuses it there with 403 and the block message. That refusal throws an
+ * `UploadRefused`, which carries it in the shape the quick check hands a
+ * refusal over in; `uploadCheckedImage` turns it back into an answer.
+ *
+ * `source` is the address of the recorded picture the file was fetched from.
+ * Where the bytes are that picture, the server hands its verdict on instead of
+ * asking again.
  */
-export async function uploadImageFile(file: File): Promise<UploadedImage> {
+export async function uploadImageFile(file: File, source?: string): Promise<UploadedImage> {
   const form = new FormData()
-  form.append('file', file)
+  form.append('file', await asUploadable(file))
+  if (source) form.append('source', source)
   const res = await fetch('/api/media/upload/image', { method: 'POST', body: form })
   const data = await res.json()
   if (!res.ok || !data.success) {
+    if (safetyBlockOf(data)) throw new UploadRefused(readRefusal({ safe: false }, data))
     const refused = new Error(data.error || 'upload failed') as Error & { said?: string }
     if (typeof data.error === 'string' && data.error) refused.said = data.error
     throw refused
@@ -79,7 +174,40 @@ export async function uploadImageFile(file: File): Promise<UploadedImage> {
  */
 export async function uploadImageFromUrl(url: string, filename: string): Promise<UploadedImage> {
   const blob = await (await fetch(url)).blob()
-  return uploadImageFile(new File([blob], filename, { type: blob.type || 'image/png' }))
+  return uploadImageFile(new File([blob], filename, { type: blob.type || 'image/png' }), url)
+}
+
+/**
+ * A picture's way onto a surface, as one step: the upload, which checks the
+ * picture where it comes in, and the quick check, which reads the verdict the
+ * upload kept, at the level of whoever asks, and asks no model again.
+ *
+ * `up` is null where the upload refused the picture; `safety` then says why,
+ * as it does where the quick check refuses. Every other failure of the upload
+ * throws, as `uploadImageFile` does, and the callers catch it as before.
+ */
+export async function uploadCheckedImage(
+  file: File,
+  source?: string,
+): Promise<{ up: UploadedImage | null; safety: QuickSafetyResult }> {
+  let up: UploadedImage
+  try {
+    up = await uploadImageFile(file, source)
+  } catch (err) {
+    const refused = uploadRefusal(err)
+    if (refused) return { up: null, safety: refused }
+    throw err
+  }
+  return { up, safety: await quickImageSafetyCheck(up.path) }
+}
+
+/** `uploadCheckedImage` for a picture this platform serves, fetched by its address. */
+export async function uploadCheckedImageFromUrl(
+  url: string,
+  filename: string,
+): Promise<{ up: UploadedImage | null; safety: QuickSafetyResult }> {
+  const blob = await (await fetch(url)).blob()
+  return uploadCheckedImage(new File([blob], filename, { type: blob.type || 'image/png' }), url)
 }
 
 /**
@@ -120,6 +248,8 @@ export type ResolvedMaterial =
   | { kind: 'text'; text: string }
   | { kind: 'image'; image: UploadedImage }
   | { kind: 'media'; src: string }
+  /** The picture was refused where it came in: the upload's intake check. */
+  | { kind: 'refused'; safety: QuickSafetyResult }
 
 /**
  * Take ONE thing out of a run — the thing the receiving place is. The place
@@ -203,8 +333,11 @@ export async function resolveRunAs(
   if (want === 'image') {
     try {
       return { kind: 'image', image: await uploadImageFromUrl(out.url, out.filename || `${runId}.png`) }
-    } catch {
-      return null
+    } catch (err) {
+      // A picture refused where it came in is a verdict the place that asked
+      // has to report, not a run that holds no picture.
+      const refused = uploadRefusal(err)
+      return refused ? { kind: 'refused', safety: refused } : null
     }
   }
   return { kind: 'media', src: out.url }
@@ -217,6 +350,8 @@ export interface QuickSafetyResult {
   errorMessage?: string
   /** response.vlm_description */
   vlmDescription?: string
+  /** response.safety_block — the block message, where the check refused. */
+  block?: SafetyBlock
   /**
    * response.checks_passed — which checks the route says it carried out. The
    * text check reads it; the picture check has no reader for it.
@@ -232,44 +367,17 @@ export interface QuickSafetyResult {
 }
 
 /**
- * Every wording in which this platform says a check could not be CARRIED OUT.
- * The backend says it in German and only in German, so the sentences are
- * matched — one list, read both by the surfaces and by the classifier that
- * picks what the reader is told (`useGenerationStream.safetyBlockKey`). The
- * route is to carry the distinction in its body under `operational`, agreed
- * with the session working on the backend half and not built yet.
+ * A refusal's block message, and whether it says the check could not be
+ * CARRIED OUT rather than that it judged the material (`reason_key`
+ * `unavailable`). A fault of this platform must never reach anyone as a rating
+ * of what they made. Until 2026-10-30 that was read out of the server's German
+ * wording, with a list of the sentences it says it in.
  */
-const OPERATIONAL_MARKERS = [
-  // VLM_OPERATIONAL_BLOCK_MESSAGE (utils/vlm_safety.py) and
-  // SAFETY_CHECK_UNAVAILABLE_MESSAGE (schemas/engine/stage_orchestrator.py).
-  'Technische Störung',
-  // SAFETY_QUICK_FAILURE, the quick route's answer to a run that raised.
-  'Sicherheitssystem-Fehler',
-  // The quick route's DSGVO branch when the name-verifying model is
-  // unreachable: „DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service
-  // neustarten." It wears the DSGVO prefix, and read by that prefix it told the
-  // writer their text held a person's name while in truth nothing had read it.
-  'Sicherheitsprüfung nicht verfügbar',
-  // A service that is not answering, in the stage wordings.
-  'reagiert nicht',
-  'not responding',
-  'Systemadministrator',
-  // The image check's two operational endings, which travel as machine tokens
-  // rather than as a sentence: the run declared itself an image run and holds
-  // no picture, and the record names a file that is not on disk. Both END a run
-  // the same way a refusal does, and read as a refusal they tell a course group
-  // that what they made was rated — when nothing was ever looked at.
-  'no_image_entity',
-  'file_missing',
-]
-
-/**
- * Whether a refusal says the check could not be carried out rather than that it
- * judged the material. A fault of this platform must never reach anyone as a
- * rating of what they made.
- */
-export function isOperationalReason(reason: unknown): boolean {
-  return typeof reason === 'string' && OPERATIONAL_MARKERS.some(m => reason.includes(m))
+function readRefusal(result: QuickSafetyResult, body: unknown): QuickSafetyResult {
+  const block = safetyBlockOf(body)
+  if (block) result.block = block
+  if (block?.reason_key === 'unavailable') result.operational = true
+  return result
 }
 
 /**
@@ -323,8 +431,7 @@ export async function quickImageSafetyCheck(imagePath: string): Promise<QuickSaf
     // The server's own operational refusal reaches the surfaces under the same
     // marker as this client's, so neither has to be matched out of German
     // wording at the far end.
-    if (!safety.safe && isOperationalReason(safety.error_message)) result.operational = true
-    return result
+    return safety.safe ? result : readRefusal(result, safety)
   } catch {
     // Nothing came back that could permit this picture, so it does not go on.
     return { safe: false, operational: true }
@@ -361,8 +468,7 @@ export async function quickTextSafetyCheck(
       errorMessage: data.error_message,
       checks: data.checks_passed || [],
     }
-    if (!data.safe && isOperationalReason(data.error_message)) result.operational = true
-    return result
+    return data.safe ? result : readRefusal(result, data)
   } catch {
     // Nothing came back that judged this text.
     return { safe: false, operational: true }
@@ -511,14 +617,13 @@ export function useMaterialIntake(options: MaterialIntakeOptions): MaterialIntak
     }
     it.uploading = true
     try {
-      const up = await uploadImageFile(file)
-
-      // The same VLM input check the classic upload widget runs. It holds the
+      // The platform's intake of a picture, the one the upload widget takes:
+      // checked where it comes in, the verdict read once more. It holds the
       // picture back both when the check refuses it and when the check could
       // not be carried out.
       // Canvas images now really reach a pipeline, so the check travels with them.
-      const safety = await quickImageSafetyCheck(up.path)
-      if (!safety.safe) {
+      const { up, safety } = await uploadCheckedImage(file)
+      if (!up || !safety.safe) {
         adapter.removeItem(it.id)
         adapter.reportSafetyBlocked(safety)
         return

@@ -24,6 +24,8 @@ what a surface puts on its run card.
 """
 
 import asyncio
+import base64
+import binascii
 import logging
 import re
 from flask import Blueprint, jsonify, request, send_file
@@ -41,6 +43,9 @@ from my_app.services.latent_lab_recorder import (
 )
 from my_app.services.latent_lab_capabilities import get_latent_lab_capabilities
 from my_app.services.latent_lab_model import get_latent_lab_model_id
+from my_app.services.pipeline_recorder import SafetyRefusal
+from my_app.services.safety_gate import check_intake, delivery_block
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +54,119 @@ logger = logging.getLogger(__name__)
 _PLAIN_ID = re.compile(r'[A-Za-z0-9._:-]{1,128}')
 
 latent_lab_recorder_bp = Blueprint('latent_lab_recorder', __name__)
+
+
+def _strings(value, path=""):
+    """Every string in a block of a request, with the place it stands at."""
+    if isinstance(value, str):
+        if value.strip():
+            yield path, value
+    elif isinstance(value, dict):
+        for key, inner in value.items():
+            yield from _strings(inner, f"{path}[{key}]")
+    elif isinstance(value, list):
+        for i, inner in enumerate(value):
+            yield from _strings(inner, f"{path}[{i}]")
+
+
+def _refused(verdict):
+    logger.warning(f"[LAB_RECORD] {verdict.field} refused at the intake ({verdict.reason_key})")
+    return jsonify({"error": "safety_blocked", "safety_block": verdict.block()}), 403
+
+
+def _recording_intake(data: dict, level):
+    """Check what a recording brings from the browser, where it comes in.
+
+    Returns (refusal, verdicts): the answer that refuses the recording, or None;
+    and the verdicts on its pictures by their place in `outputs`, which the
+    recorder writes onto them (LatentLabRecorder.record).
+
+    A picture an instrument hands over as base64 is new material on this server,
+    whatever made it: at kids and youth it gets the level's picture question.
+    It is decoded as the recorder decodes it (LatentLabRecorder._output_bytes),
+    so the question is asked about the very bytes that are kept; base64 the
+    recorder cannot decode is not kept, and not asked about.
+    One handed over as a `ref` is not asked here; the recorder reads it out of
+    the storage only where delivery hands it to the level. The words are the
+    parameters and results the instrument names, and its own word about each
+    output and part: the chat hands a run's prompt to its model
+    (tool_registry), and a vision channel reads a plate by what it says
+    (`name_plate`).
+
+    The parts (`steps`, the Denoising Archaeology's step pictures where the
+    browser records them) are not asked about one by one. At kids and youth they
+    go out only with the verdict on the run's finished picture
+    (pipeline_recorder.INTERMEDIATE_IMAGE_KINDS), as the step pictures the server
+    records do.
+
+    One refusal refuses the whole recording: a run written without one of its
+    pictures, or with a word taken out, is not the run that was made.
+    """
+    for path, text in _strings(data.get('parameters')):
+        verdict = check_intake(text, level=level, kind="text", field=f"parameters{path}")
+        if not verdict.passed:
+            return _refused(verdict), {}
+    for path, text in _strings(data.get('results')):
+        verdict = check_intake(text, level=level, kind="text", field=f"results{path}")
+        if not verdict.passed:
+            return _refused(verdict), {}
+    steps = data.get('steps')
+    for i, step in enumerate(steps if isinstance(steps, list) else []):
+        for path, text in _strings(step.get('meta') if isinstance(step, dict) else None):
+            verdict = check_intake(text, level=level, kind="text", field=f"steps[{i}][meta]{path}")
+            if not verdict.passed:
+                return _refused(verdict), {}
+
+    verdicts = {}
+    outputs = data.get('outputs')
+    for i, out in enumerate(outputs if isinstance(outputs, list) else []):
+        if not isinstance(out, dict):
+            continue
+        for path, text in _strings(out.get('meta')):
+            verdict = check_intake(text, level=level, kind="text", field=f"outputs[{i}][meta]{path}")
+            if not verdict.passed:
+                return _refused(verdict), {}
+        picture = out.get('dataBase64')
+        if out.get('ref') or out.get('type', 'image') != 'image' or not isinstance(picture, str) \
+                or not picture:
+            continue
+        try:
+            raw = base64.b64decode(picture)
+        except (binascii.Error, ValueError):
+            continue
+        verdict = check_intake(raw, level=level, kind="image", field=f"outputs[{i}]")
+        if not verdict.passed:
+            return _refused(verdict), {}
+        verdicts[i] = verdict
+    return None, verdicts
+
+
+def _plate_intake(picture, reading, level):
+    """Check a plate where it comes in: its picture, and the words of its reading.
+
+    Returns (refusal, verdict): the answer that refuses the plate, or None; and
+    the verdict on the picture, which the plate's entry carries
+    (replace_output_image). The picture is decoded as replace_output_image
+    decodes it, so the question is asked about the very bytes that are set. A
+    payload that is too large or no picture is left to replace_output_image,
+    which refuses it as such.
+    """
+    for path, text in _strings(reading):
+        verdict = check_intake(text, level=level, kind="text", field=f"reading{path}")
+        if not verdict.passed:
+            return _refused(verdict), None
+    if not isinstance(picture, str) or not picture or len(picture) > MAX_PLATE_BASE64:
+        return None, None
+    try:
+        raw = base64.b64decode(picture, validate=True)
+    except (binascii.Error, ValueError):
+        return None, None
+    if not raw:
+        return None, None
+    verdict = check_intake(raw, level=level, kind="image", field="dataBase64")
+    if not verdict.passed:
+        return _refused(verdict), None
+    return None, verdict
 
 
 @latent_lab_recorder_bp.route('/api/latent-lab/capabilities', methods=['GET'])
@@ -135,6 +253,8 @@ def save_recording():
     Response JSON:
         run_id: str           — what the surface puts on its run card
         entity_count: int
+    403 with the block message (`safety_block`) where the intake check refused
+    what the recording brings (`_recording_intake`); nothing is written then.
     """
     data = request.get_json(silent=True) or {}
     # `run_id`: what an older bundle calls the sitting. See start_recording.
@@ -146,11 +266,18 @@ def save_recording():
     if not recorder:
         return jsonify({"error": f"No open session: {session_id}"}), 404
 
+    level = resolve_safety_level()
+    refusal, verdicts = _recording_intake(data, level)
+    if refusal is not None:
+        return refusal
+
     written = recorder.record(
         parameters=data.get('parameters', {}),
         results=data.get('results'),
         outputs=data.get('outputs'),
         steps=data.get('steps'),
+        level=level,
+        verdicts=verdicts,
     )
 
     return jsonify({
@@ -241,8 +368,17 @@ def get_run(run_id: str):
 
 @latent_lab_recorder_bp.route('/api/latent-lab/run/<run_id>/part/<int:index>', methods=['GET'])
 def get_run_part(run_id: str, index: int):
-    """One part of a run — a denoising step, an axis cell, a probe frame."""
-    path = resolve_part_path(run_id, index)
+    """One part of a run — a denoising step, an axis cell, a probe frame.
+
+    A part goes out with the run's finished picture, at the level of whoever
+    asks (`resolve_part_path`).
+    """
+    try:
+        path = resolve_part_path(run_id, index, resolve_safety_level())
+    except SafetyRefusal as refusal:
+        return jsonify({'error': 'safety_blocked', 'detail': refusal.reason,
+                        'safety_block': delivery_block(refusal.reason, refusal.field),
+                        'run_id': run_id, 'index': index}), 403
     if not path:
         return jsonify({"error": f"No part {index} in run {run_id}"}), 404
 
@@ -263,8 +399,13 @@ def get_run_part(run_id: str, index: int):
     # No download name from here: the surface that offers a part for download
     # names the file (the Denoising Archaeology's step frames carry their step
     # and seed in the name), and a Content-Disposition, which send_file sets
-    # from the file's own name, would win over that name in the browser.
-    response.headers.pop('Content-Disposition', None)
+    # from the file's own name, would win over that name in the browser. Except
+    # where that name says `_ai_generated`: the download helper reads it there
+    # and puts it into the surface's name (lib/downloadMedia.ts).
+    from my_app.services.watermark_service import UNMARKED_SUFFIX
+
+    if not path.stem.endswith(UNMARKED_SUFFIX):
+        response.headers.pop('Content-Disposition', None)
     # A part is written once and set again never (only an OUTPUT can be
     # replaced, see set_run_output), so the browser may keep it. The Denoising
     # Archaeology moves along the step frames of a run (25 by default), and
@@ -317,6 +458,8 @@ def set_run_output(run_id: str, index: int):
                            change when the bytes do; this is what it carries.
         Every refusal is a refusal: the surface has to say the reading was not
         kept rather than keep the run under a picture that shows another one.
+        403 with the block message (`safety_block`) where the intake check
+        refused the plate or the words of its reading (`_plate_intake`).
     """
     if not _PLAIN_ID.fullmatch(run_id):
         return jsonify({"error": "invalid run_id"}), 400
@@ -337,6 +480,10 @@ def set_run_output(run_id: str, index: int):
     if reading is not None and not isinstance(reading, dict):
         return jsonify({"error": "reading must be an object", "reason": "no_reading"}), 400
 
+    refusal, verdict = _plate_intake(data.get('dataBase64'), reading, resolve_safety_level())
+    if refusal is not None:
+        return refusal
+
     result = replace_output_image(
         run_id,
         index,
@@ -344,6 +491,7 @@ def set_run_output(run_id: str, index: int):
         device_id=device_id,
         reading=reading,
         base_path=JSON_STORAGE_DIR,
+        verdict=verdict,
     )
     if not result.get("ok"):
         reason = str(result.get("reason") or "write_failed")

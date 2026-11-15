@@ -343,10 +343,13 @@ transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 **1. Tree CO2 Absorption (ForestMiniGame, IcebergAnimation fallback)**
 
 ```
-Source: Multiple forestry studies (EPA, Arbor Day Foundation, research papers)
+Source: Arbor Day Foundation, "The Value of Trees", https://www.arborday.org/value (the published figure located on 2026-11-07; no further source is on file)
 
 Mature tree absorption rate:
 - Average tree absorbs ~22 kg CO2/year
+- Published figure: Arbor Day Foundation, "The Value of Trees" (https://www.arborday.org/value):
+  a single mature tree can absorb over 48 pounds of CO2 per year. 48 lb is about
+  21.8 kg/year, or 2.49 g/hour; the platform rounds to 22 kg.
 - Calculation: 22,000g / 365 days / 24 hours = ~2.51 g/hour
 
 Code implementation:
@@ -384,10 +387,15 @@ Example: 5g CO2 generated → "Diese Menge lässt ~30 cm³ Arktis-Eis schmelzen"
 **3. Smartphone Comparison (PixelAnimation)**
 
 ```
-Source: Energy consumption studies, German energy mix data
+Source: Umweltbundesamt, Icha & Lauf (2026), "Entwicklung der spezifischen Treibhausgas-Emissionen des deutschen Strommix in den Jahren 1990 - 2025", Climate Change 16/2026, https://www.umweltbundesamt.de/publikationen/entwicklung-der-spezifischen-treibhausgas-0
 
 Smartphone power consumption (idle/standby): ~5W
 German energy mix CO2 intensity: ~400g CO2/kWh
+Published figures: Umweltbundesamt, Icha & Lauf (2026), Climate Change 16/2026
+(https://www.umweltbundesamt.de/publikationen/entwicklung-der-spezifischen-treibhausgas-0): for 2024 (preliminary data)
+353 g CO2/kWh for the electricity mix and 414 g CO2e/kWh including the upstream chain;
+for 2025 (estimated data) 344 g CO2/kWh and 406 g CO2e/kWh. 400 g is the platform's
+rounded working value between the CO2 value and the CO2e value with upstream chain.
 
 Calculation:
 - Smartphone CO2 per hour: 5W × 1h / 1000 × 400g = 2g/hour

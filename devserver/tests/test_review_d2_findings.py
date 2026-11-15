@@ -155,7 +155,9 @@ def test_the_engine_books_the_stage_the_request_carries():
 RETIRED = {"top_p", "top_k", "min_p", "presence_penalty", "frequency_penalty"}
 # What a parameter can reach: the engine's two model calls, and the chunks that
 # read a key of their own (text_transformation_recursive).
-READ_BY_A_MODEL_CALL = {"temperature", "max_tokens", "repetition_penalty", "enable_thinking"}
+# max_tokens left the table on 2026-11-08, when the engine stopped forwarding
+# it (test_interception_sends_no_output_cap.py).
+READ_BY_A_MODEL_CALL = {"temperature", "repetition_penalty", "enable_thinking"}
 READ_BY_A_CHUNK = {"iterations", "use_random_languages", "final_language"}
 
 

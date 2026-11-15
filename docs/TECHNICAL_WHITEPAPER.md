@@ -229,7 +229,7 @@ PipelineExecutor simply executes what it's told.
    - Adapts prompt for target generation model
    - Uses `output_config.optimization_instruction`
    - **When applied**: SD3.5 (needs keyword style), video, audio, p5.js
-   - **When skipped**: GPT Image, Gemini, QWEN (have strong language models)
+   - **When skipped**: GPT Image, QWEN (have strong language models)
 
 2. **Translation**: German → English (generation models need English)
 
@@ -246,7 +246,7 @@ PipelineExecutor simply executes what it's told.
 
 **Targets**:
 - SwarmUI/ComfyUI (SD3.5, video, audio)
-- External APIs (GPT Image, Gemini, QWEN)
+- External APIs (GPT Image, QWEN)
 
 ---
 
@@ -537,11 +537,11 @@ Automatically injected during Stage 4.
 
 ## 11. Additional Features
 
-### AI-Origin Disclosure (EU AI Act Art. 50 Compliance)
+### AI-Origin Disclosure (EU AI Act Art. 50)
 
-**Status: planned / in implementation.** This section describes the target design, not an existing feature. A previous attempt was reverted.
+**Status: implemented.** Module: `devserver/my_app/services/watermark_service.py`. `ARCHITECTURE PART 36 — Marking AI-Generated Content` carries the detail, the failure modes and the wording of the Article.
 
-The platform addresses the upcoming legal requirement under EU AI Act Article 50 to mark AI-generated visual content in a **machine-readable format**. Because the platform is deployed by arbitrary educational providers, the design is deliberately **vendor-neutral**: it does not embed a "AI4ArtsEd" or any other provider brand. Operators are responsible for their own compliance; the platform supplies the default mechanics.
+The platform marks the AI-generated content it hands out in a **machine-readable format**. Article 50 of Regulation (EU) 2024/1689 has applied since 2 August 2026; its wording stands in `ARCHITECTURE PART 36`. Because the platform is deployed by arbitrary educational providers, the design is deliberately **vendor-neutral**: it does not embed a "AI4ArtsEd" or any other provider brand. Operators are responsible for their own compliance; the platform supplies the default mechanics.
 
 **Two layers, separately configurable:**
 
@@ -555,7 +555,7 @@ The platform addresses the upcoming legal requirement under EU AI Act Article 50
    - Implemented via Pillow for images and ffmpeg `drawtext` for videos.
    - Operators who want a visible KI-Hinweis can enable it; those who only need legal disclosure rely on layer 1.
 
-**Configuration** lives in `user_settings.json` under the `watermark` key. **Implementation location** (planned): `devserver/my_app/services/watermark_service.py`, hooked into `pipeline_recorder.save_entity()` so all generation paths (Diffusers, ComfyUI, OpenAI Images, Mammouth) are covered uniformly.
+**Configuration** lives in `user_settings.json` under the `watermark` key. **Where it is applied:** on the way to the disk through `services/media_marking.py`, which the pipeline, latent lab and canvas recorders call before they write; and on the way to the page in `schemas/engine/pipeline_executor.py`, which marks the base64 media a finished run carries back, because that is what the surfaces display and what their download buttons hand out. Routes that compose a payload of their own (speech, mean images, fusion workbench, cross-aesthetic) mark it themselves.
 
 C2PA Content Credentials are not part of this design.
 

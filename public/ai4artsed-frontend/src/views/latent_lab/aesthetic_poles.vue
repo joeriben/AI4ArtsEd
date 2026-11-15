@@ -59,7 +59,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -611,10 +611,9 @@ function contextFor(lines: string[]): string {
  */
 const chosenImageModel = ref<string>(RASTER_IMAGE_MODEL_SINGLE_DEFAULT)
 
-// Gemini 3 Pro runs through Mammouth AI and is switched off where that account
-// holds no key or no credit (docs/DEVELOPMENT_DECISIONS.md); a
-// choice that holds it goes back to the one this surface opens with, further
-// down, where the run is.
+// A cloud model is switched off where its provider holds no key or no credit
+// (services/provider_account.py); a choice that holds it goes back to the one
+// this surface opens with, further down, where the run is.
 const { askWhenShown, accountMissing, accountParams, replaceAccountMissing } = useModelAvailability()
 askWhenShown()
 

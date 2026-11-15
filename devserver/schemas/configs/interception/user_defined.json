@@ -11,7 +11,8 @@
     "es": "¡Tú decides!",
     "he": "אתה מחליט!",
     "ar": "أنت تقرر!",
-    "bg": "Ти решаваш!"
+    "bg": "Ти решаваш!",
+    "zh-hant": "你決定！"
   },
   "description": {
     "en": "When you make art, you decide what you want to use and how you want to do it. Here, you can tell the AI what to use and what rules to follow.",
@@ -22,6 +23,7 @@
     "he": "כשאתה יוצר אמנות, אתה מחליט מה להשתמש בו וכיצד לעשות זאת. כאן תוכל לומר ל-AI מה להשתמש ואילו כללים לפעול לפיהם.",
     "ar": "عندما تصنع الفن، أنت تقرر ما تريد استخدامه وكيف تريد القيام بذلك. هنا يمكنك إخبار الذكاء الاصطناعي بما يجب استخدامه وأي قواعد يجب اتباعها.",
     "bg": "Когато правиш изкуство, ти решаваш какво да използваш и как да го направиш. Тук можеш да кажеш на ИИ какво да използва и какви правила да следва.",
+    "zh-hant": "當你創作藝術時，你決定要用什麼、要怎麼做。在這裡，你可以告訴 AI 要用什麼、要遵守哪些規則。",
     "tr": "Sanat yaptığında, ne kullanmak istediğine ve nasıl yapmak istediğine sen karar verirsin. Burada, yapay zekaya ne kullanmasını ve hangi kurallara uymasını söyleyebilirsin.",
     "ko": "예술을 만들 때, 무엇을 사용하고 어떻게 할지는 당신이 결정합니다. 여기서 AI에게 무엇을 사용하고 어떤 규칙을 따를지 알려줄 수 있습니다."
   },
@@ -31,6 +33,7 @@
     "he": "אמנות ותרבות",
     "ar": "الفن والثقافة",
     "bg": "Изкуство и култура",
+    "zh-hant": "藝術與文化",
     "tr": "Sanat ve Kültür",
     "ko": "예술과 문화",
     "uk": "Мистецтво та культура",

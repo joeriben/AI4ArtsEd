@@ -12,7 +12,8 @@
     "es": "Paisaje fotográfico temprano",
     "he": "נוף הצילום המוקדם",
     "ar": "منظر التصوير المبكر",
-    "bg": "Ранна фотография пейзаж"
+    "bg": "Ранна фотография пейзаж",
+    "zh-hant": "早期攝影風景"
   },
   "description": {
     "en": "Transforms ideas into the visual language of early photographic landscape imagery from 1850–1900, shaped by wet plate processes, albumen prints, and the atmospheric qualities of long-exposure large-format photography.",
@@ -24,7 +25,8 @@
     "es": "Transforma ideas en el lenguaje visual de las primeras imágenes fotográficas de paisaje de 1850–1900, moldeado por procesos de placa húmeda, impresiones de albúmina y las cualidades atmosféricas de la fotografía de gran formato con larga exposición.",
     "he": "ממיר רעיונות לשפה החזותית של צילומי הנוף המוקדמים מ-1850 עד 1900, שעוצבה על ידי תהליכי לוח רטוב, הדפסי אלבומין ואיכויות האווירה של צילום גדול-פורמט עם חשיפה ארוכה.",
     "ar": "يحوّل الأفكار إلى اللغة البصرية لصور المناظر الطبيعية التصويرية المبكرة من 1850 إلى 1900، المشكّلة بعمليات الألواح الرطبة وطبعات الألبومين والجودة الجوية لتصوير الفورمات الكبير بالتعريض الطويل.",
-    "bg": "Превръща идеите във визуалния език на ранната пейзажна фотография от 1850–1900, оформена от мокри колодионови процеси, албуминови отпечатъци и атмосферните качества на дългата експозиция с широкоформатна фотография."
+    "bg": "Превръща идеите във визуалния език на ранната пейзажна фотография от 1850–1900, оформена от мокри колодионови процеси, албуминови отпечатъци и атмосферните качества на дългата експозиция с широкоформатна фотография.",
+    "zh-hant": "將想法轉化為 1850–1900 年早期風景攝影的視覺語言，其樣貌來自濕版製程、蛋白印相，以及大片幅長時間曝光攝影的氛圍特質。"
   },
   "category": {
     "en": "Photography & Media",
@@ -36,7 +38,8 @@
     "es": "Fotografía & Medios",
     "he": "צילום ומדיה",
     "ar": "التصوير والإعلام",
-    "bg": "Фотография и медии"
+    "bg": "Фотография и медии",
+    "zh-hant": "攝影與媒體"
   },
   "properties": [
     "technical_imaging"

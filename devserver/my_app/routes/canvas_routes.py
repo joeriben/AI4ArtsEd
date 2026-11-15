@@ -18,8 +18,11 @@ import re
 
 from schemas.engine.model_selector import ModelSelector
 from my_app.services.canvas_recorder import CanvasRecorder, get_canvas_recorder, cleanup_canvas_recorder
-from my_app.services.canvas_executor import CanvasWorkflowExecutor, as_seed
+from my_app.services.canvas_executor import (
+    CanvasWorkflowExecutor, as_seed, board_intake, intake_refusal,
+)
 from my_app.services.pipeline_recorder import generate_run_id
+from my_app.services.safety_gate import check_intake
 from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.streaming_response import events_with_heartbeat
 from my_app.services.translation_instruction import (
@@ -31,32 +34,42 @@ logger = logging.getLogger(__name__)
 
 def _load_cloud_models_from_matrix():
     """
-    The cloud models a canvas node can pick: the platform's chat-model list
-    (chat_routes._cloud_chat_models_from_matrix -- the register's models over
-    every provider with a key, one route per model, conform routes first), in
-    the shape the canvas reads: id, name, provider, dsgvo. Until 2026-09-12
-    this read every preset's role cells for itself, key or no key, and offered
-    routes the installation could not take.
+    The cloud models a canvas node can pick: the models of the provider the
+    settings choose, through it (chat_routes._cloud_chat_models_from_matrix
+    with only_active, since 2026-10-27, as the Latent Lab's lists offer them),
+    in the shape the canvas reads: id, name, register, provider, dsgvo. Where
+    the choice cannot be read at this instant -- the settings caught mid-save
+    -- the list over every provider with a key, one route per model, conform
+    routes first, which is what the canvas offered from 2026-09-12 until then.
+    Until 2026-09-12 this read every preset's role cells for itself, key or no
+    key, and offered routes the installation could not take.
 
     Conformity is not derived here. It is a property of the service, and the
     platform has one place that records it -- flag plus the grounds it was set
     on, three-valued: True, False, or None for "nothing recorded".
     """
-    from my_app.routes.chat_routes import _cloud_chat_models_from_matrix, _load_llm_matrix
+    from my_app.routes.chat_routes import (
+        _chosen_provider, _cloud_chat_models_from_matrix, _load_llm_matrix,
+    )
     from my_app.routes.settings_routes import _recorded_conformity
     from my_app.services.llm_providers import provider as provider_entry, split_provider
 
     matrix = _load_llm_matrix()
     presets = matrix.get('llm_presets', {}) if isinstance(matrix, dict) else {}
 
+    listed = _cloud_chat_models_from_matrix(matrix, active=_chosen_provider(), only_active=True)
+    if listed is None:
+        listed = _cloud_chat_models_from_matrix(matrix)
+
     cloud_models = []
-    for m in _cloud_chat_models_from_matrix(matrix):
+    for m in listed:
         provider, _path = split_provider(m['id'])
         label = ((provider_entry(provider) or {}).get('label')
                  or (presets.get(provider) or {}).get('label') or provider)
         cloud_models.append({
             'id': m['id'],
             'name': f"{m['register']} ({label})",
+            'register': m['register'],
             'provider': provider,
             'dsgvo': _recorded_conformity(provider, presets),
         })
@@ -222,6 +235,7 @@ def get_llm_models():
             models.append({
                 'id': cm['id'],
                 'name': cm['name'],
+                'register': cm['register'],
                 'provider': cm['provider'],
                 'tier': 'cloud',
                 'dsgvoCompliant': cm['dsgvo'],
@@ -514,8 +528,12 @@ def keep_workflow():
     the workflow, as the entity `canvas`; the favourites strip shows it, opens
     it back into the Canvas and saves it as a `.atcanvas` file.
 
+    The board passes the intake first (canvas_executor.board_intake): a kept
+    board stands in the favourites and opens from there.
+
     Body: {workflow: {name?, nodes: [...], connections: [...]}, device_id?}
-    Returns 201 {status, run_id}; 400 when the body holds no workflow.
+    Returns 201 {status, run_id}; 400 when the body holds no workflow; 403
+    {status: blocked, safety_block} when the intake refuses the board.
     """
     from config import JSON_STORAGE_DIR
     from my_app.services.pipeline_recorder import LivePipelineRecorder
@@ -532,11 +550,18 @@ def keep_workflow():
         return jsonify({'status': 'error', 'error': 'device_id malformed'}), 400
 
     name = workflow_name(workflow)
+    safety_level = resolve_safety_level()
+    verdict, _node = board_intake(workflow['nodes'], level=safety_level, workflow=workflow)
+    if not verdict.passed:
+        logger.warning(f"[Canvas] Keeping refused at the intake ({verdict.field})")
+        return jsonify({'status': 'blocked', 'error': verdict.reason,
+                        'safety_block': verdict.block(),
+                        'safety_level': safety_level}), 403
     run_id = generate_run_id(suffix='canvasfile')
     recorder = LivePipelineRecorder(
         run_id=run_id,
         config_name='canvas_workflow',
-        safety_level=resolve_safety_level(),
+        safety_level=safety_level,
         device_id=device_id,
         base_path=JSON_STORAGE_DIR,
     )
@@ -576,6 +601,10 @@ def execute_workflow_stream():
     - node_complete: {node_id, node_type, output_preview} - Node finished.
     - complete: {results, collectorOutput, executionOrder, exportPath, run_id}.
     - error: {message} - Error occurred.
+
+    The board passes the intake first (canvas_executor.board_intake), on the
+    server, before the run exists. A refused board gets one `error` event,
+    shaped as a failed run's, and no run.
     """
     from my_app.services import canvas_run_service
 
@@ -597,18 +626,25 @@ def execute_workflow_stream():
         device_id = data.get('device_id')
         logger.info(f"[Canvas Stream] Starting job with {len(nodes)} nodes, {len(connections)} connections")
 
-        # Start the background job; get the run_id back BEFORE any node runs.
         from flask import current_app
         app = current_app._get_current_object()
         # Resolved HERE, while the session is still in reach: the run itself
         # executes in a worker thread that cannot see it.
         run_safety_level = resolve_safety_level()
-        run_id = canvas_run_service.start_run(
-            nodes=nodes, connections=connections, device_id=device_id, app=app,
-            safety_level=run_safety_level,
-            lang=str(data.get('lang') or '').strip() or None,
-            name=workflow_name(data.get('workflow')),
-        )
+        intake, run = {}, {}
+
+        def _intake_work(client_gone):
+            """The board's intake, under the stream's breathing: it can ask the
+            classifier, and the connection must not stay silent meanwhile.
+
+            It runs before the run exists, so a refused board leaves no run, no
+            record and no event file behind; a refusal can name people. Its one
+            `yield ''` makes it a source of events and puts nothing on the wire.
+            """
+            if not client_gone.is_set():
+                intake['verdict'] = board_intake(nodes, level=run_safety_level,
+                                                 workflow=data.get('workflow'))
+            yield ''
 
         def _tail(client_gone):
             """The run's events, with the leaving signal reaching the tail.
@@ -621,10 +657,33 @@ def execute_workflow_stream():
             following ends, instead of sitting on the run registry's lock for
             five minutes for nobody.
             """
-            return canvas_run_service.iter_events(run_id, after=-1,
+            return canvas_run_service.iter_events(run['id'], after=-1,
                                                   client_gone=client_gone)
 
         def generate():
+            try:
+                yield from events_with_heartbeat(
+                    _intake_work, label='CANVAS-RUN-INTAKE', frame=lambda chunk: chunk)
+                if 'verdict' not in intake:
+                    logger.info("[Canvas Stream] The reader left during the intake; no run")
+                    return
+                verdict, node = intake['verdict']
+                if not verdict.passed:
+                    logger.warning(f"[Canvas Stream] Refused at the intake ({verdict.field})")
+                    yield f"event: error\ndata: {json.dumps(intake_refusal(verdict, node))}\n\n"
+                    return
+                # Start the background job; get the run_id back BEFORE any node runs.
+                run['id'] = canvas_run_service.start_run(
+                    nodes=nodes, connections=connections, device_id=device_id, app=app,
+                    safety_level=run_safety_level,
+                    lang=str(data.get('lang') or '').strip() or None,
+                    name=workflow_name(data.get('workflow')),
+                )
+            except Exception as e:
+                logger.error(f"[Canvas Stream] The run could not start: {e}")
+                yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+                return
+            run_id = run['id']
             # run_started FIRST so the client can persist the run id immediately.
             yield f"event: run_started\ndata: {json.dumps({'run_id': run_id})}\n\n"
             # Back-compat: existing consumers key off `started`/total_nodes.
@@ -904,6 +963,12 @@ def execute_batch():
     - run_complete: {run_index, run_id, export_path, results}
     - batch_complete: {batch_id, total_runs, export_paths}
     - error: {message, run_index}
+
+    The board passes the intake before the first run
+    (canvas_executor.board_intake), and in prompt mode each prompt passes it
+    before its run. A refused board is one `error` event, shaped as a failed
+    run's, and no run; a refused prompt is its run's `run_error` with the
+    block message, and the batch goes on with the next.
     """
     from schemas.engine.prompt_interception_engine import PromptInterceptionEngine, PromptInterceptionRequest
     import time
@@ -955,6 +1020,18 @@ def execute_batch():
             run below -- the one place a closed tab used to be noticed.
             """
             try:
+                # The board's intake, before any run of it. In prompt mode
+                # the prompts replace the input nodes' texts, and each is
+                # read below, for its run.
+                verdict, node = board_intake(nodes, level=batch_safety_level,
+                                             workflow=workflow,
+                                             with_inputs=batch_mode != 'prompts')
+                if not verdict.passed:
+                    logger.warning(f"[Canvas Batch] Batch {batch_id} refused at the "
+                                   f"intake ({verdict.field})")
+                    yield f"event: error\ndata: {json.dumps(intake_refusal(verdict, node))}\n\n"
+                    return
+
                 # Initialize abort flag
                 BATCH_ABORT_FLAGS[batch_id] = False
 
@@ -1002,6 +1079,18 @@ def execute_batch():
                     yield f"event: run_start\ndata: {json.dumps({'run_index': run_index, 'total_runs': total_runs, 'run_id': run_id, 'seed': run_seed})}\n\n"
 
                     try:
+                        if prompt_override is not None:
+                            verdict = check_intake(prompt_override, level=batch_safety_level,
+                                                   kind="text", field=f"prompts[{run_index}]")
+                            if not verdict.passed:
+                                logger.warning(f"[Canvas Batch] Run {run_index} refused at "
+                                               f"the intake")
+                                reason = verdict.reason or 'Content blocked by safety check'
+                                refused = {'run_index': run_index, 'run_id': run_id,
+                                           'error': reason, 'safety_block': verdict.block()}
+                                yield f"event: run_error\ndata: {json.dumps(refused)}\n\n"
+                                continue
+
                         # Initialize recorder for this run, with the board as
                         # THIS run ran it (board_as_run): a kept output reopens
                         # it in the Canvas.
@@ -1013,7 +1102,8 @@ def execute_batch():
                                       'connections': run_connections},
                             device_id=device_id,
                             batch_id=batch_id,
-                            batch_index=run_index
+                            batch_index=run_index,
+                            safety_level=batch_safety_level,
                         )
 
                         # Create executor for this run - use recorder's device_id
@@ -1087,7 +1177,15 @@ def execute_batch():
                             yield f"event: run_complete\ndata: {json.dumps({'run_index': run_index, 'run_id': run_id, 'export_path': export_path, 'success': True})}\n\n"
                         else:
                             cleanup_canvas_recorder(run_id)
-                            yield f"event: run_error\ndata: {json.dumps({'run_index': run_index, 'run_id': run_id, 'error': run_result.get('error', 'Unknown error')})}\n\n"
+                            failed = {'run_index': run_index, 'run_id': run_id,
+                                      'error': run_result.get('error', 'Unknown error')}
+                            # A node the checks refused: its block message, for
+                            # the safety window.
+                            block = next((e['safety_block'] for e in run_result.get('errors') or []
+                                          if isinstance(e, dict) and e.get('safety_block')), None)
+                            if block:
+                                failed['safety_block'] = block
+                            yield f"event: run_error\ndata: {json.dumps(failed)}\n\n"
 
                     except Exception as e:
                         logger.error(f"[Canvas Batch] Run {run_index} failed: {e}")

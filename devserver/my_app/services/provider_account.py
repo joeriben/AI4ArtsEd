@@ -1,17 +1,12 @@
 """The account behind a provider key: whether there is one, and whether it
 still holds credit.
 
-Two places ask the same question. The availability check
-(services/model_availability_service.py) reports a cloud output config as
-unavailable when the provider its chunk names has no key, refuses the key, or
-reports no credit left, and the Flow and the model choice of five instruments
-switch it off then (docs/ARCHITECTURE PART 08). The settings page shows in
-the API table whether that key is present and the account's balance
-(routes/settings_routes.py, /frontier-image-accounts), the cause wherever the balance
-could not be read, and which budget is used up where one is. The occasion is
-Gemini 3 Pro Image, which runs through Mammouth AI whatever the external LLM
-provider is set to. It can only be active where a key is present, and it is
-off without credit as well (docs/DEVELOPMENT_DECISIONS.md). Both read this one
+The availability check (services/model_availability_service.py) reports a
+cloud output config as unavailable when the provider its chunk names has no
+key, refuses the key, or reports no credit left, and the Flow and the model
+choice of five instruments switch it off then (docs/ARCHITECTURE PART 08).
+The "API Management" tab of the settings page reads the account behind every
+provider key (routes/settings_routes.py, /api-usage). Both read this one
 module.
 
 Which provider's account is read, and how, stands in
@@ -364,7 +359,7 @@ def account(name: str, fresh: bool = False) -> dict:
     2026-09-24): the account's budget and the key's own at a spend at or above
     the budget, a team's at a spend above it. `used_up` names the first of the
     three that binds the key and is used up, in that order ('account', 'key',
-    'team'), for the settings row, and is None otherwise. A key that belongs
+    'team'), and is None otherwise. A key that belongs
     to a team is held to its own budget and its team's, and to the account's
     only where the proxy is set to, which is off by default. A key missing
     from the keys the answer lists is not held to the account's budget, since
@@ -394,7 +389,7 @@ def account(name: str, fresh: bool = False) -> dict:
 
     Judged (`judged`) is only a provider whose entry names the LiteLLM
     account API; every other provider is judged by its key alone. `balance`
-    is what is left on the account, for the settings row. It is None without
+    is what is left on the account. It is None without
     a key, for a provider that is not judged, for an account without a
     budget, and wherever the reading failed; `error` then names why: the HTTP
     status, with the proxy's name for the refusal where it gives one,
@@ -407,8 +402,7 @@ def account(name: str, fresh: bool = False) -> dict:
     read at the next question, and so is the old one when it comes back. A key
     saved in the settings goes into the key file, and the environment
     variable, where it is set, comes before it, for the run as for this check.
-    One reading runs at a time. `fresh` reads regardless, for the settings
-    page, where the operator looks at the balance.
+    One reading runs at a time. `fresh` reads regardless.
     """
     judged = (provider(name) or {}).get("account_api") == LITELLM
     if not has_key(name):

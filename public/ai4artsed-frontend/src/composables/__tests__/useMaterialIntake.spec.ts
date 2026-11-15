@@ -5,6 +5,10 @@ import {
   FAVORITE_DT,
   PROMPT_DT,
   uploadImageFile,
+  uploadCheckedImage,
+  uploadCheckedImageFromUrl,
+  uploadRefusal,
+  UploadRefused,
   quickImageSafetyCheck,
   quickTextSafetyCheck,
   useMaterialIntake,
@@ -238,11 +242,108 @@ describe('uploadImageFile', () => {
     fetchMock.mockResolvedValueOnce(jsonResponse({ success: false }))
     await expect(uploadImageFile(pngFile())).rejects.toThrow('upload failed')
   })
+
+  it('names the recorded picture it was fetched from, and nothing where there is none', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse({ success: true, image_id: 'img-1', image_path: '/srv/uploads/img-1.png' })
+    )
+    await uploadImageFile(pngFile(), '/api/media/image/run_x/0')
+    await uploadImageFile(pngFile())
+    const sent = fetchMock.mock.calls.map(([, init]) => (init?.body as FormData).get('source'))
+    expect(sent).toEqual(['/api/media/image/run_x/0', null])
+  })
+
+  it('a picture refused where it came in throws the refusal, not a transfer failure', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({ error: 'safety_blocked', safety_block: REFUSED_AT_UPLOAD }, false, 403)
+    )
+    const err = await uploadImageFile(pngFile()).catch((e: unknown) => e)
+    expect(err).toBeInstanceOf(UploadRefused)
+    expect(uploadRefusal(err)).toEqual({ safe: false, block: REFUSED_AT_UPLOAD })
+    expect((err as { said?: string }).said).toBeUndefined()
+  })
+
+  it('an intake check that could not run reads as a fault of the platform', async () => {
+    const unavailable = { ...REFUSED_AT_UPLOAD, reason_key: 'unavailable' }
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({ error: 'safety_blocked', safety_block: unavailable }, false, 403)
+    )
+    const err = await uploadImageFile(pngFile()).catch((e: unknown) => e)
+    expect(uploadRefusal(err)).toEqual({ safe: false, block: unavailable, operational: true })
+  })
+
+  it('any other failure is no refusal', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ success: false, error: 'no space left' }))
+    const err = await uploadImageFile(pngFile()).catch((e: unknown) => e)
+    expect(uploadRefusal(err)).toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// uploadCheckedImage — the upload and the verdict, as one step
+// ---------------------------------------------------------------------------
+
+/** The block message the upload sends where its intake check refused the picture. */
+const REFUSED_AT_UPLOAD = { checkpoint: 'intake', field: 'file', reason_key: 'image_content', reason: 'refused' }
+
+describe('uploadCheckedImage', () => {
+  it('a refusal at the upload is the answer, and the quick check is not asked', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({ error: 'safety_blocked', safety_block: REFUSED_AT_UPLOAD }, false, 403)
+    )
+    const { up, safety } = await uploadCheckedImage(pngFile())
+    expect(up).toBeNull()
+    expect(safety).toEqual({ safe: false, block: REFUSED_AT_UPLOAD })
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('a picture that went up is read by the quick check', async () => {
+    routeUploadAndSafety({ safe: true })
+    const { up, safety } = await uploadCheckedImage(pngFile())
+    expect(up?.path).toBe('/srv/uploads/img-9.png')
+    expect(safety.safe).toBe(true)
+    const [, init] = fetchMock.mock.calls[1]!
+    expect(JSON.parse(String(init?.body)).image_path).toBe('/srv/uploads/img-9.png')
+  })
+
+  it('any other failure of the upload throws as before', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ success: false, error: 'no space left' }))
+    await expect(uploadCheckedImage(pngFile())).rejects.toThrow('no space left')
+  })
+
+  it('a picture fetched by its address names that address to the upload', async () => {
+    fetchMock.mockImplementation((input, init) => {
+      const url = String(input)
+      if (url === '/api/media/image/run_x/0') {
+        return Promise.resolve({
+          ok: true, status: 200,
+          blob: () => Promise.resolve(new Blob(['png'], { type: 'image/png' })),
+        } as unknown as Response)
+      }
+      if (url === '/api/media/upload/image') {
+        expect((init?.body as FormData).get('source')).toBe('/api/media/image/run_x/0')
+        return Promise.resolve(
+          jsonResponse({ success: true, image_id: 'img-9', image_path: '/srv/uploads/img-9.png' })
+        )
+      }
+      if (url === '/api/schema/pipeline/safety/quick') {
+        return Promise.resolve(streamedResponse({ safe: true }))
+      }
+      return Promise.reject(new Error('unexpected fetch: ' + url))
+    })
+    const { up, safety } = await uploadCheckedImageFromUrl('/api/media/image/run_x/0', 'run_x.png')
+    expect(up?.imageId).toBe('img-9')
+    expect(safety.safe).toBe(true)
+  })
 })
 
 // ---------------------------------------------------------------------------
 // quickImageSafetyCheck
 // ---------------------------------------------------------------------------
+
+/** The block messages the quick route sends with a refusal (`safety_block`). */
+const IMAGE_REFUSED = { checkpoint: 'intake', field: 'image', reason_key: 'image_content', reason: 'refused' }
+const UNAVAILABLE = (reason: string) => ({ checkpoint: 'intake', field: 'image', reason_key: 'unavailable', reason })
 
 describe('quickImageSafetyCheck', () => {
   it('asks for the stream and passes a safe verdict through with the VLM description', async () => {
@@ -266,12 +367,16 @@ describe('quickImageSafetyCheck', () => {
 
   it('maps an unsafe body to safe:false with message and description', async () => {
     fetchMock.mockResolvedValueOnce(
-      streamedResponse({ safe: false, error_message: 'blocked for this room', vlm_description: 'a weapon' })
+      streamedResponse({
+        safe: false, error_message: 'blocked for this room', vlm_description: 'a weapon',
+        safety_block: IMAGE_REFUSED,
+      })
     )
     expect(await quickImageSafetyCheck('/p')).toEqual({
       safe: false,
       errorMessage: 'blocked for this room',
       vlmDescription: 'a weapon',
+      block: IMAGE_REFUSED,
     })
   })
 
@@ -310,11 +415,13 @@ describe('quickImageSafetyCheck', () => {
   it('reads the DSGVO branch\'s unavailable model as operational, not as a name', async () => {
     // The quick route says this one under a DSGVO prefix when the model that
     // verifies a name cannot be reached. Read by the prefix it told the writer
-    // their text held a person's name, while in truth nothing had read it.
+    // their text held a person's name, while in truth nothing had read it. The
+    // block message says which it is, whatever prefix the wording wears.
     fetchMock.mockResolvedValueOnce(
       streamedResponse({
         safe: false,
         error_message: 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.',
+        safety_block: UNAVAILABLE('DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'),
       })
     )
     expect((await quickImageSafetyCheck('/p')).operational).toBe(true)
@@ -331,7 +438,10 @@ describe('quickImageSafetyCheck', () => {
 
   it('reads the server\'s own operational refusal as operational', async () => {
     fetchMock.mockResolvedValueOnce(
-      streamedResponse({ safe: false, error_message: '⚠️ Technische Störung bei der Bildprüfung' })
+      streamedResponse({
+        safe: false, error_message: '⚠️ Technische Störung bei der Bildprüfung',
+        safety_block: UNAVAILABLE('⚠️ Technische Störung bei der Bildprüfung'),
+      })
     )
     const r = await quickImageSafetyCheck('/p')
     expect(r.safe).toBe(false)
@@ -340,9 +450,11 @@ describe('quickImageSafetyCheck', () => {
 
   it('leaves a content refusal unmarked, so it keeps its own sentence', async () => {
     fetchMock.mockResolvedValueOnce(
-      streamedResponse({ safe: false, error_message: 'Kids-Filter: nicht freigegeben' })
+      streamedResponse({ safe: false, error_message: 'refused', safety_block: IMAGE_REFUSED })
     )
-    expect((await quickImageSafetyCheck('/p')).operational).toBeUndefined()
+    const r = await quickImageSafetyCheck('/p')
+    expect(r.operational).toBeUndefined()
+    expect(r.block).toEqual(IMAGE_REFUSED)
   })
 
   it('reads the refusal out of a terminal frame that carries a failure status', async () => {
@@ -579,7 +691,10 @@ describe('quickTextSafetyCheck', () => {
 
   it('marks the server\'s own operational refusal', async () => {
     fetchMock.mockResolvedValueOnce(
-      streamedResponse({ safe: false, error_message: 'Sicherheitssystem-Fehler' })
+      streamedResponse({
+        safe: false, error_message: 'Sicherheitssystem-Fehler',
+        safety_block: { ...UNAVAILABLE('Sicherheitssystem-Fehler'), field: 'text' },
+      })
     )
     expect((await quickTextSafetyCheck('ein haus', 'de')).operational).toBe(true)
   })
@@ -607,7 +722,10 @@ describe('ingestImage', () => {
 
   it('a safety block removes the item and reports it', async () => {
     const { adapter, intake } = makeIntake()
-    routeUploadAndSafety({ safe: false, error_message: 'not for this room', vlm_description: 'something' })
+    routeUploadAndSafety({
+      safe: false, error_message: 'not for this room', vlm_description: 'something',
+      safety_block: IMAGE_REFUSED,
+    })
     await intake.ingestImage(pngFile(), 0)
     const placed = adapter.addImage.mock.results[0]!.value as AsmItem
     expect(adapter.removeItem).toHaveBeenCalledWith(placed.id)
@@ -615,6 +733,7 @@ describe('ingestImage', () => {
       safe: false,
       errorMessage: 'not for this room',
       vlmDescription: 'something',
+      block: IMAGE_REFUSED,
     })
     expect(placed.imageId).toBeUndefined() // never switched to the upload
   })
@@ -638,6 +757,19 @@ describe('ingestImage', () => {
       operational: true,
     })
     expect(placed.imageId).toBeUndefined() // never switched to the upload
+  })
+
+  it('a picture refused at the upload comes off the board and is reported', async () => {
+    const { adapter, intake } = makeIntake()
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({ error: 'safety_blocked', safety_block: REFUSED_AT_UPLOAD }, false, 403)
+    )
+    await intake.ingestImage(pngFile(), 0)
+    const placed = adapter.addImage.mock.results[0]!.value as AsmItem
+    expect(adapter.removeItem).toHaveBeenCalledWith(placed.id)
+    expect(adapter.reportSafetyBlocked).toHaveBeenCalledWith({ safe: false, block: REFUSED_AT_UPLOAD })
+    expect(placed.failed).toBeUndefined()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it('a failed upload marks the item instead of removing it', async () => {

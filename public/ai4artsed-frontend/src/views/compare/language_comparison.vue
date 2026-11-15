@@ -20,7 +20,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -64,7 +64,7 @@
               multiple
               :model-value="selectedModels"
               :options="modelChoices"
-              :min-width="145"
+              :min-width="134"
               :disabled="isGenerating"
               @update:model-value="v => pickModels(v as string[])"
             />
@@ -155,8 +155,8 @@
                         :created-at="cell.createdAt"
                         :model-meta="cell.modelMeta ?? null"
                         :duration-ms="cell.durationMs ?? 0"
-                        :facts="cellFacts(cell, rows[ri]?.config)"
-                        :is-favorited="!!(cell.runId && favorited[cell.runId])"
+                        :facts="cellFacts(cell)"
+                        :is-favorited="!!cell.runId && favoritesStore.isFavorited(cell.runId)"
                         :note="cellNote(cell)"
                         @toggle-favorite="toggleCellFavorite(cell)"
                         @forward="forwardToPage(cell)"
@@ -200,7 +200,13 @@ import ChipSelect from '@/components/ChipSelect.vue'
 import LanguageChipSelector from '@/components/LanguageChipSelector.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
-import { failureKey, safetyBlockKey, useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
+import {
+  failureKey,
+  safetyBlockKeyForEvent,
+  safetyBlockOf,
+  useGenerationStream,
+  type GenerationResult,
+} from '@/composables/useGenerationStream'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useDeviceId } from '@/composables/useDeviceId'
@@ -257,28 +263,18 @@ const selectedLanguages = ref<string[]>(['en', 'ar'])
  * business.
  */
 const TURBO: RasterImageModel = { id: 'sd35_large_turbo', label: 'SD 3.5 Large Turbo (fast)' }
-const LANGUAGE_MODEL_IDS: readonly string[] = ['sd35_large', TURBO.id, 'flux2', 'flux3', 'gemini_3_pro_image']
+const LANGUAGE_MODEL_IDS: readonly string[] = ['sd35_large', TURBO.id, 'flux2', 'flux3']
 const availableModels: RasterImageModel[] = LANGUAGE_MODEL_IDS.flatMap(id => {
   const m = id === TURBO.id ? TURBO : RASTER_IMAGE_MODELS.find(x => x.id === id)
   return m ? [m] : []
 })
 
 /**
- * Where the model runs behind an interface that takes no seed, the card back
- * names none: the Gemini chunk sends the prompt and a size and nothing else
- * (devserver/schemas/chunks/output_image_gemini_3_pro.json), so the number
- * drawn for the run never reached that picture.
- */
-const NO_SEED: ReadonlySet<string> = new Set(['gemini_3_pro_image'])
-
-/**
  * Which models run. They ARE the rows, in the order the list stands in and
  * not the order they were clicked, as on Cultural (Un)Known. It opens on the
  * two whose text parts differ in kind - SD 3.5 Large with its three encoders,
  * FLUX.2 with its language model - so that the first press already puts the
- * two ways of reading a sentence under each other. Gemini 3 Pro stands in no
- * preselection that a press multiplies, because of cost: a row of it is one
- * paid call per language.
+ * two ways of reading a sentence under each other.
  */
 const OPENING_MODELS = ['sd35_large', 'flux2']
 const selectedModels = ref<string[]>([...OPENING_MODELS])
@@ -296,9 +292,9 @@ const isEnriching = ref(false)
 const safetyError = ref('')
 const safetyStore = useSafetyEventStore()
 
-// Gemini 3 Pro runs through Mammouth AI and is switched off where that account
-// holds no key or no credit (docs/DEVELOPMENT_DECISIONS.md); a
-// choice that holds it lets it go further down, where the cells are.
+// A cloud model is switched off where its provider holds no key or no credit
+// (services/provider_account.py); a choice that holds it lets it go further
+// down, where the cells are.
 const { askWhenShown, accountMissing, accountParams, leaveOutAccountMissing } = useModelAvailability()
 askWhenShown()
 
@@ -393,13 +389,6 @@ const NOTE_REFERENCES: Record<string, LabReference[]> = {
       venue: 'huggingface.co/black-forest-labs/flux-3-image-klein',
     },
   ],
-  gemini_3_pro_image: [
-    {
-      authors: 'Google (2025)',
-      title: 'Introducing Nano Banana Pro',
-      venue: 'blog.google, 20 November 2025',
-    },
-  ],
 }
 
 const noteReferences = computed<LabReference[]>(() => {
@@ -451,9 +440,6 @@ function rowShowsPicture(id: string): boolean {
  * the template reads by `.value`, and the map is replaced whole at each press.
  */
 const cellStreams = shallowRef<Record<string, ReturnType<typeof useGenerationStream>>>({})
-
-/** Which pictures of this surface are in the favourites, by run. */
-const favorited = ref<Record<string, boolean>>({})
 
 /**
  * What identifies a cell: the model that made it, the language it was made in,
@@ -508,9 +494,9 @@ function cellNote(cell: RasterCell): string {
  * stand under the picture in expert mode and have a card back to live on
  * since 2026-08-25.
  */
-function cellFacts(cell: RasterCell, config?: string): string[] {
+function cellFacts(cell: RasterCell): string[] {
   const out: string[] = []
-  if ((cell.url || cell.blockedKey || cell.failed) && !(config && NO_SEED.has(config))) out.push(`seed ${cell.seed}`)
+  if (cell.url || cell.blockedKey || cell.failed) out.push(`seed ${cell.seed}`)
   const res = cell.modelMeta?.recommended_resolution
   if (res) out.push(String(res))
   const ms = cell.durationMs ?? 0
@@ -546,10 +532,8 @@ function applyExample(item: { fill: string[] }) {
 // --- Cell actions (events from the cell) ---
 async function toggleCellFavorite(cell: RasterCell) {
   if (!cell.runId) return
-  const success = await favoritesStore.toggleFavorite(cell.runId, 'image', deviceId, 'anonymous', 'compare')
-  if (success) {
-    favorited.value = { ...favorited.value, [cell.runId]: !favorited.value[cell.runId] }
-  }
+  // The star reads the store (`isFavorited`), which follows a sign-in.
+  await favoritesStore.toggleFavorite(cell.runId, 'image', deviceId, 'anonymous', 'compare')
 }
 
 function forwardToPage(cell: RasterCell) {
@@ -646,16 +630,19 @@ async function startComparison() {
 
   const baseUrl = apiBase()
 
-  // Stage 2 Jugendschutz gate — check original prompt before translation/generation. The platform's perspective call,
-  // on the passthrough perspective and without an adaptation: a refusal
-  // arrives as the block it is (status blocked, stage 2) and goes where every
-  // block on this platform goes; an answer that wrote nothing says so under
-  // the field. Until 2026-10-10 this matched the refusal sentence's wording
-  // itself, from a copy of the backend's constant (finding S-015 of the code review of 2026-10-10).
+  // The gate before any translation or picture: the platform's pre-check,
+  // which takes the prompt in at the intake and hands it back as it came in.
+  // What the comparison makes of the prompt is checked where that happens:
+  // each translation at the result, and what each model receives before that
+  // model. A refusal arrives as the block it is and goes where every block on
+  // this platform goes; an answer that wrote nothing says so under the field.
+  // Until 2026-10-10 this matched the refusal sentence's wording itself, from
+  // a copy of the backend's constant (finding S-015 of the code review of
+  // 2026-10-10).
   try {
     const outcome = await interceptPrompt('user_defined', userPrompt.value, null, { skipOptimization: true })
     if ('refusedKey' in outcome) {
-      safetyStore.reportBlock(outcome.blockedAtStage || 2, outcome.reason || t('mediaInput.contentBlocked'), [])
+      safetyStore.reportBlock(outcome.block)
       isGenerating.value = false
       return
     }
@@ -694,6 +681,14 @@ async function startComparison() {
       const res = await postStreamedRun('/api/schema/pipeline/translate', {
         text: userPrompt.value, target_language: lang,
       }, { baseUrl, validateStatus: () => true })
+      // A refusal by the route, of the prompt or of its translation, goes where
+      // every block on this platform goes, and the run stops there.
+      const refused = res.status === 403 ? safetyBlockOf(res.data) : null
+      if (refused) {
+        safetyStore.reportBlock(refused)
+        isGenerating.value = false
+        return
+      }
       if (res.status >= 400) {
         safetyError.value = t('compare.translationFailed', { lang: LANGUAGE_NAMES[lang] || lang, cause: `HTTP ${res.status}` })
         isGenerating.value = false
@@ -725,8 +720,13 @@ async function startComparison() {
       // sentences by the time a slow one comes back.
       postStreamedRun('/api/schema/pipeline/translate', {
         text: sent, target_language: uiLang,
-      }, { baseUrl, validateStatus: () => true }).then(({ data }) => {
-        if (data.status === 'success' && data.translated_text && translations.value[lang]?.sent === sent) {
+      }, { baseUrl, validateStatus: () => true }).then(({ status, data }) => {
+        if (translations.value[lang]?.sent !== sent) return
+        // A reading the route held back is said where every block is said; the
+        // sentence stands without it.
+        const refused = status === 403 ? safetyBlockOf(data) : null
+        if (refused) safetyStore.reportBlock(refused)
+        else if (data.status === 'success' && data.translated_text) {
           translations.value = { ...translations.value, [lang]: { sent, back: data.translated_text } }
         }
       }).catch(() => { /* non-critical */ })
@@ -834,7 +834,7 @@ async function runCell(row: Row, lang: string, seed: number, groupId: string, ba
       // out of the reply; a refusal that carries none still has to read as one,
       // so it lands with the platform's general sentence for a refused prompt.
       if (!recordBlocked(key, seed, result)) {
-        recordFailed(key, seed, safetyBlockKey(result.blocked_reason, result.blocked_stage))
+        recordFailed(key, seed, safetyBlockKeyForEvent({ block: result.safety_block }))
       }
     } else {
       // error, cancelled, busy, and a success that carried no picture: all

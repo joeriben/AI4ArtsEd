@@ -6,9 +6,10 @@
   net full, the grid under it at half; stroke, no fill, `currentColor`, so the
   host sets colour and size. Drawn once (from the picture of a purple mesh
   draped over a grey isometric grid) and used wherever a LoRA is named as a
-  thing: the free fixture on the Flow's view, the face of a LoRA tile on the
-  table, the mark on a perspective that carries an adapter, the mark beside
-  the model in the create box, the card's back.
+  thing: the free fixture on the Flow's view, the mark on a perspective that
+  carries an adapter, the mark beside the model in the create box, the card's
+  back, and the face of a LoRA's disc, in the chooser and as a tile on the
+  table, where the adapter has no picture (`loraPicture`).
   Two weights: the fixture's, and `light` for the face of a disc, where the
   name lies over the sign.
   See docs/ELEMENT_STRUCTURE_REGISTRY.md.

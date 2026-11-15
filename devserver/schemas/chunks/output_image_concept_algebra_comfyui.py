@@ -205,7 +205,7 @@ async def execute(
         # Same marker as the Diffusers chunk on purpose: the route dispatches on
         # it and the frontend contract stays identical.
         'content_marker': 'diffusers_algebra_generated',
-        'model_id': model_id,
+        'model_used': result.model_used,
         'reference_image': reference,
         'result_image': outcome,
         'algebra_data': {

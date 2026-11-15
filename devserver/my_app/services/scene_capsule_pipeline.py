@@ -19,9 +19,10 @@ duty riding the SAME model calls that condense (no separate safety call):
                      analysisModel, analysisLang, docHash).
 
 Machine parts reused from the library procedure (same repo idioms, no fork):
-  knowledge_processing.parse_structure (Wiederholzeilen/TOC/Akronym filter),
-  knowledge_processing._pack_units (chapter packing) and its essay segmenter
-  (_segment_essay) — the unit construction mirrors process_document, and
+  knowledge_extract.from_markdown (Markdown -> blocks),
+  knowledge_processing.clean_blocks (running heads, ToC, acronym lists, back
+  matter) and build_units (the headings carry the units, paragraph windows
+  where they are missing) — the unit construction is process_document's, and
   knowledge_processing.default_llm_fn is reused UNCHANGED so the provider
   routing (role KNOWLEDGE_PROCESSING_MODEL) and the models_used provenance
   apply. The model choice (own preset in llm_providers.json vs the standard
@@ -433,11 +434,9 @@ def process_document_to_capsules(
     progress: Optional[Callable[[str], None]] = None,
     cancel_check: Optional[Callable[[], bool]] = None,
     max_capsules: int = DEFAULT_MAX_CAPSULES,
-    mode: str = "auto",
 ) -> Dict[str, Any]:
     """The full backend procedure over ONE raw Docling MD (steps 2-3 of the
-    plan): structure parse -> units (essay segmenter or chapter packing,
-    same decision logic as the library) -> per-unit segment Map with the
+    plan): blocks -> units (the library's build_units) -> per-unit segment Map with the
     Stage-B fields -> per-unit capsule Reduce with the fail-closed capsule
     gate -> result dict:
 
@@ -449,14 +448,15 @@ def process_document_to_capsules(
           "fatal": [...],          # empty on success
         }
 
-    Structure reuse (no fork of the library machinery): parse_structure,
-    detect_mode, _pack_units, _segment_essay, _units_from_segments and
-    default_llm_fn all come from knowledge_processing; the SCENE system
+    Structure reuse (no fork of the library machinery): from_markdown,
+    clean_blocks, build_units, render_blocks and default_llm_fn come from
+    knowledge_extract / knowledge_processing; the SCENE system
     prompts, the safety blocks and the capsule gate are this module's own.
     The PDF lifecycle (§6) is NOT this function's concern — the job service
     owns the workdir and deletes the raw files at job end.
     """
     from my_app.services import knowledge_processing as kp
+    from my_app.services.knowledge_extract import from_markdown
 
     llm = llm or kp.default_llm_fn()
 
@@ -468,25 +468,10 @@ def process_document_to_capsules(
             except Exception:  # noqa: BLE001
                 pass
 
-    paratext, content_sections, all_kept = kp.parse_structure(raw_md)
-    mode, mode_reason = kp.detect_mode(raw_md, all_kept, explicit=mode)
-
-    seg_note = ""
-    if mode == "essay":
-        _log("Essay-Segmentierung (LLM liest den Volltext)…")
-        segments = kp._segment_essay(raw_md, llm)
-        if segments:
-            units = kp._units_from_segments(segments)
-            seg_note = f", {len(segments)} Argument-Abschnitte (LLM)"
-        else:
-            _log("Essay-Segmentierung fehlgeschlagen -> Fallback Heading-Packing")
-            units = kp._pack_units(content_sections)
-            seg_note = ", Segmentierung fiel aus (Heading-Fallback)"
-    else:
-        units = kp._pack_units(content_sections)
-
-    _log(f"Struktur: {len(content_sections)} Abschnitte -> {len(units)} Einheiten"
-         f"{seg_note} (Modus: {mode_reason})")
+    blocks, _skipped = kp.clean_blocks(from_markdown(raw_md))
+    units = kp.build_units(blocks)
+    _log(f"Struktur: {sum(1 for b in blocks if b.kind == 'heading')} Überschriften "
+         f"-> {len(units)} Einheiten")
 
     # A cancel before any Map work: nothing produced.
     def _cancelled() -> bool:
@@ -508,7 +493,8 @@ def process_document_to_capsules(
     for i, unit in enumerate(units, 1):
         if _cancelled():
             raise kp.ProcessingCancelled(units_done=i)
-        body = unit.body[:kp._MAP_SECTION_CAP]
+        body = kp.render_blocks(unit.blocks, "de", page_markers=False,
+                                figure_markers=False)
         _log(f"verdichte Einheit {i}/{len(units)}: {unit.heading}")
         digest_obj, seg_ok = _map_segment(unit.heading, body, llm, cancel_check)
         if not seg_ok:
@@ -550,8 +536,6 @@ def process_document_to_capsules(
         "n_flagged_segments": n_flagged,
         "n_discarded_capsules": n_discarded_capsules,
         "fatal": fatal,
-        "mode": mode,
-        "mode_reason": mode_reason,
         "analyzed_at": analyzed_at,
         "models_used": models_used,
         "analysis_lang": "de",

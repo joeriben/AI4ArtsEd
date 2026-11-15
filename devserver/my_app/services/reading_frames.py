@@ -35,7 +35,7 @@ LANGUAGE_NAMES = {
     'uk': 'Ukrainian', 'ko': 'Korean', 'hsb': 'Upper Sorbian',
     'dsb': 'Lower Sorbian', 'fry': 'Frisian', 'yo': 'Yoruba',
     'sw': 'Swahili', 'qu': 'Quechua', 'cy': 'Welsh', 'hi': 'Hindi',
-    'ja': 'Japanese', 'zh': 'Chinese',
+    'ja': 'Japanese', 'zh': 'Chinese', 'zh-hant': 'Traditional Chinese (Taiwan)',
 }
 
 _cache: dict[str, str] = {}

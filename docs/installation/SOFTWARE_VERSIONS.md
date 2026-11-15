@@ -73,7 +73,7 @@ alike.
 | `deployment/requirements-git.txt` | heartlib / mmaudio / imagebind commits |
 | `deployment/requirements-spacy.txt` | SpaCy NER model wheels |
 | `public/ai4artsed-frontend/package-lock.json` | Frontend dependency tree |
-| `dlbackend/ComfyUI/` (git checkout, not pinned) | ComfyUI backend + custom nodes; the installed state is whatever `git -C dlbackend/ComfyUI log -1` reports. Floor: v0.41.0, the first release that loads FLUX 3 (`output_image_flux3`). Since v0.38.0 ComfyUI's `requirements.txt` no longer lists `torchaudio`; install it next to it (see `UBUNTU_SERVER_FRESH_INSTALL.md`, Phase 5) |
+| `dlbackend/ComfyUI/` (git checkout, pinned to v0.44.2, commit e6515b16) | ComfyUI backend + custom nodes; the installed state is whatever `git -C dlbackend/ComfyUI log -1` reports. Pinned since 2026-11-10: the local language models Qwen 3.5 and 3.8 run on ComfyUI's own implementation (`comfy/text_encoders/qwen35.py`), and the node reads their tokens along through the stop list of ComfyUI's two decode loops (`comfyui_nodes/ai4artsed_comfyui/_comfy_llm.py`, `PINNED_COMFYUI`). Before moving to another release, run `devserver/tests/test_comfy_llm_stop_watch.py` against it, then change this row and `PINNED_COMFYUI` together. Floor: v0.41.0, the first release that loads FLUX 3 (`output_image_flux3`). Since v0.38.0 ComfyUI's `requirements.txt` no longer lists `torchaudio`; install it next to it (see `UBUNTU_SERVER_FRESH_INSTALL.md`, Phase 5) |
 
 ---
 

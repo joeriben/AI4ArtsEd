@@ -46,7 +46,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <PromptExamples
@@ -98,14 +98,62 @@
                  coding model and the platform's own safety checker in front of
                  a class as things to compare. Which models a lineup stands for
                  is data, and a model stands under its own name: which service
-                 it is reached through says nothing about what it writes. -->
+                 it is reached through says nothing about what it writes.
+                 Beside them, since 2026-11-02, Custom: the models chosen one
+                 by one, a drop-down each. -->
             <ChipSelect
               :model-value="lineup"
               :options="lineupChoices"
-              :min-width="145"
+              :min-width="134"
               :disabled="series.busy.value"
-              @update:model-value="v => applyLineup(v as string)"
+              @update:model-value="v => pickLineup(v as string)"
             />
+            <!-- Custom: a drop-down per writing model, in the order they were
+                 added, out of what the settings offer (`offeredWriters`). The
+                 row is the platform's drop-down row (`.cmp-pick-row`,
+                 assets/compare-stage.css), as in the Model Comparison of the
+                 Transformers Lab, here without a name in front: the heading
+                 above names them all. A row is keyed by its place, so a
+                 changed model keeps the drop-down and its focus; a model is
+                 added by the button, so stepping through a closed drop-down
+                 with the arrow keys adds nothing. -->
+            <div v-if="lineup === CUSTOM" class="ilm-custom">
+              <div v-for="(name, idx) in customWriters" :key="idx" class="cmp-pick-row cmp-pick-fluid">
+                <select
+                  :value="name"
+                  :disabled="series.busy.value"
+                  :aria-label="t('latentLab.interception.models.writingModelsLabel')"
+                  @change="replaceCustom(idx, ($event.target as HTMLSelectElement).value)"
+                >
+                  <!-- A model this list holds and the settings do not offer
+                       now: the drop-down names it rather than standing blank
+                       over it, and the line under the list says so. -->
+                  <option v-if="!offersName(name)" :value="name">{{ labelOf(name) }}</option>
+                  <option
+                    v-for="m in offeredWriters"
+                    :key="m.id"
+                    :value="writerName(m)"
+                    :disabled="writerName(m) !== name && customWriters.includes(writerName(m))"
+                  >{{ modelLabel(m) }}</option>
+                </select>
+                <button
+                  type="button"
+                  class="mini-btn"
+                  :disabled="series.busy.value"
+                  @click="removeCustom(idx)"
+                >{{ t('latentLab.interception.models.lineups.customRemove') }}</button>
+              </div>
+              <button
+                v-if="addableWriters.length"
+                type="button"
+                class="mini-btn ilm-custom-add"
+                :disabled="series.busy.value"
+                @click="addCustom"
+              >{{ t('latentLab.interception.models.lineups.customAdd') }}</button>
+              <p v-if="customUnreached.length" class="lab-prep-err quiet">
+                {{ t('latentLab.interception.models.lineups.customNotOffered', { models: customUnreached.join(', ') }) }}
+              </p>
+            </div>
             <!-- The list itself never arrived. Without this line the area
                  under the heading is empty and silent, which is also what it
                  looks like while the list is still on its way. -->
@@ -155,9 +203,8 @@
               head-class="ilm-rowname"
             >
               <!-- Which model a row is, said once at its left end. The card
-                   beside it says what that model is and where its text goes:
-                   who made it, how open, how big, through which service, and
-                   what the register records about that service. -->
+                   beside it says what that model is: who made it, how open,
+                   how big. Which service it goes through the settings say. -->
               <template #row-head="{ row }">
                 <span
                   class="ilm-rowname-label"
@@ -188,7 +235,7 @@
 
 <script setup lang="ts">
 import ColumnFold from '@/components/ColumnFold.vue'
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, shallowRef, computed, watch, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePictureTemplate } from '@/composables/usePictureTemplate'
 import { usePageContextStore } from '@/stores/pageContext'
@@ -198,7 +245,6 @@ import ChipSelect, { type ChipInfo } from '@/components/ChipSelect.vue'
 import InfoCard from '@/components/InfoCard.vue'
 import InfoCardFacts from '@/components/InfoCardFacts.vue'
 import { useInfoCard } from '@/composables/useInfoCard'
-import { providerName } from '@/data/providers'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import { usePromptPresets } from '@/lib/promptPresets'
@@ -217,7 +263,7 @@ import {
 import { useKeptPerspectivesStore, keptColor } from '@/stores/keptPerspectives'
 import { RASTER_IMAGE_MODELS } from '@/data/rasterImageModels'
 import { useModelAvailability } from '@/composables/useModelAvailability'
-import { useModelRegister, lineupMembers } from '@/composables/useModelRegister'
+import { useModelRegister, lineupMembers, fillableLineup, bareName, isLocalModel } from '@/composables/useModelRegister'
 
 const { t, locale } = useI18n()
 
@@ -341,66 +387,80 @@ function handlePresetSelected(payload: {
 }
 
 const {
-  models: chatModels,
+  chosenModels: chatModels,
+  models: everyModel,
   loading: writersLoading,
   loadFailed: writersLoadFailed,
   gpuServiceUnreachable,
-  refresh: refreshChatModels,
+  modelLabel,
 } = useChatModels()
-
-/**
- * The list is fetched once per session and what came of it is kept — so a list
- * that never arrived stays missing until the page is reloaded, and this surface
- * cannot be worked with at all without it. Entering it asks again where the
- * last attempt failed, and only there: a list that arrived is not fetched a
- * second time.
- */
-onMounted(() => {
-  if (writersLoadFailed.value) void refreshChatModels()
-})
 
 /** Which models write. They ARE the rows, under the reference row. */
 const chosenWriters = ref<string[]>([])
 
 /**
- * The writing models, one under the other in the order the list arrives in, each
- * under the name it carries. A model the platform lists and this installation
- * has not installed stays in the list and cannot be picked: what else there is
- * has to stay in sight.
- *
- * WHERE a model is installed has nothing to do with the question this surface
- * asks. The chat route publishes a locally installed model as „<name> (local)"
- * (my_app/routes/chat_routes.py), which is the right thing to say where the
- * choice is about reaching a service, and here it would sort the list by an axis
- * that is not the subject. So that one suffix comes off — everywhere on this
- * surface, chips and row heads alike, or the same model would carry two names.
- * The maker is out of the name at its source (`gpu_service/services/
- * llm_backend.py`), so nothing has to be taken off here for it.
+ * Each writing model stands under the line every list of language models on the
+ * platform gives it (useChatModels.modelLabel): name, maker's country and year,
+ * size -- at the row heads and on their card alike, or the same model would
+ * carry two names. WHERE a model is installed is not in that line; it has
+ * nothing to do with the question this surface asks.
  */
-const LOCAL_SUFFIX = / \(local\)$/
 
-function writerName(label: string): string {
-  return label.replace(LOCAL_SUFFIX, '')
-}
+/**
+ * The list the rows are read off: the one offered, taken over by `followList`
+ * whenever no run is open. While one is, a list that arrives -- the settings
+ * applied in between, an install completed -- names other ids, and rows looked
+ * up in it would drop out of the run they are part of.
+ */
+const listInForce = shallowRef<readonly ChatModelOption[]>([])
+
+/** The whole list beside it, for naming what ran (`knownById`), held alike. */
+const everyInForce = shallowRef<readonly ChatModelOption[]>([])
+
+/**
+ * The language the rows are keyed by (`resultKey`), held alike: a language
+ * switched in the header while a run is open would move every row to keys the
+ * run writes nothing under, and what it wrote would not be recorded.
+ */
+const localeInForce = ref(locale.value)
 
 const modelById = computed<Record<string, ChatModelOption>>(() =>
-  Object.fromEntries(chatModels.value.map(m => [m.id, m])),
+  Object.fromEntries(listInForce.value.map(m => [m.id, m])),
 )
+
+/**
+ * Every model the platform lists, for naming the model that RAN: it can be
+ * another than the one asked for (`dispatched`), and need not be one the
+ * offered list carries, and a row is named by what wrote it. What the surface
+ * offers is `modelById`.
+ */
+const knownById = computed<Record<string, ChatModelOption>>(() =>
+  Object.fromEntries([...everyInForce.value, ...listInForce.value].map(m => [m.id, m])),
+)
+
+/** A model's line, also for one no list carries: the register's name for its id. */
+/** The word a model of this platform's own machines carries at the end. */
+function localWord(id: string): string {
+  return isLocalModel(id) ? t('compare.shared.localModel') : ''
+}
+
+function labelOf(id: string): string {
+  const m = knownById.value[id]
+  return m ? modelLabel(m) : register.modelLabel(id, bareName(id), locale.value, localWord(id))
+}
 
 /**
  * The three lineups. Which models each one stands for is data
  * (devserver/config/model_register.json), and a lineup that names a model this
  * installation does not offer is short by that model rather than wrong: what
  * the platform cannot reach is not compared, and a stand-in would change the
- * question. Which models an installation CAN reach is what the backend lists
- * (chat_routes._cloud_chat_models_from_matrix): the register's models over
- * every provider it holds a key for, from the reach list
- * (devserver/config/model_providers.json) and the providers' cells
- * (devserver/hardware_matrix.json); what is recorded about a provider's data
- * path orders that list and travels with each entry. Before, the list was
- * the active provider's cells alone, and a lineup was as full as that one
- * provider's offer. Each entry carries the register's name (`register`),
- * which the lineups are written in.
+ * question. Which models an installation CAN reach is what the settings choose
+ * (useChatModels.chosenModels, since 2026-10-27): this machine's models and
+ * the register's models the chosen provider reaches, through it
+ * (chat_routes._chosen_chat_models). From 2026-09-12 until then it was the
+ * register's models over every provider holding a key, and a lineup was
+ * filled through providers nobody had chosen. Each entry carries the
+ * register's name (`register`), which the lineups are written in.
  *
  * They are named the way Bias Archaeology names its own four: the bare noun
  * phrase for the group of models, the members by name in the chip's title.
@@ -417,21 +477,99 @@ const modelById = computed<Record<string, ChatModelOption>>(() =>
 const LINEUPS = ['openWeights', 'closedWeights', 'family'] as const
 const DEFAULT_LINEUP = 'openWeights'
 
+/**
+ * The fourth chip, beside the three lineups: the writing models chosen one by
+ * one, a drop-down per model (2026-11-02, docs/DEVELOPMENT_DECISIONS.md). The
+ * drop-downs offer the models of the list in force that can write now
+ * (`listInForce`, what the settings choose); a local model still to be downloaded is not among them. A model
+ * stands in one drop-down at a time, because a row is keyed by its model
+ * (`resultKey`). The list opens on the lineup that was in force, and is kept
+ * while another lineup is chosen.
+ *
+ * The list holds what a lineup holds: the register's name of a model
+ * (`writerName`), not its id. An id names the provider it goes through, and
+ * after a provider switch in the settings the same model is another id; the
+ * list is read off the list in force again each time it arrives
+ * (`resolveCustom`, `followList`), as a lineup is (`lineupMembers`).
+ */
+const CUSTOM = 'custom'
+const customWriters = ref<string[]>([])
+
+/** The name a model stands under in the list: the register's for a model of a
+ *  provider, the id for one of this machine, which no provider switch moves
+ *  and which a provider's copy of the same model must not stand in for. */
+function writerName(m: ChatModelOption): string {
+  return isLocalModel(m.id) ? m.id : (m.register || m.id)
+}
+
+/** What a drop-down offers: the models of the list in force that can write now. */
+const offeredWriters = computed<ChatModelOption[]>(() =>
+  listInForce.value.filter(m => m.available),
+)
+
+function offersName(name: string): boolean {
+  return offeredWriters.value.some(m => writerName(m) === name)
+}
+
+/** What the button adds from: what no drop-down holds yet, the first of it. */
+const addableWriters = computed<ChatModelOption[]>(() =>
+  offeredWriters.value.filter(m => !customWriters.value.includes(writerName(m))),
+)
+
+/** The ids the list reaches in the list in force, in its order. */
+function resolveCustom(names: readonly string[]): string[] {
+  return names
+    .map(name => offeredWriters.value.find(m => writerName(m) === name)?.id)
+    .filter((id): id is string => !!id)
+}
+
+/** The models of the list that the list in force does not offer: they write no
+ *  row, and the line under the list names them. */
+const customUnreached = computed<string[]>(() =>
+  customWriters.value.filter(name => !offersName(name)).map(name => labelOf(name)),
+)
+
+function setCustom(names: string[]): void {
+  customWriters.value = names
+  chosenWriters.value = resolveCustom(names)
+}
+
+function replaceCustom(idx: number, name: string): void {
+  const names = [...customWriters.value]
+  names[idx] = name
+  setCustom(names)
+}
+
+function removeCustom(idx: number): void {
+  setCustom(customWriters.value.filter((_, i) => i !== idx))
+}
+
+function addCustom(): void {
+  const m = addableWriters.value[0]
+  if (m) setCustom([...customWriters.value, writerName(m)])
+}
+
 const lineup = ref<string>('')
 
-const lineupChoices = computed(() =>
-  LINEUPS.map(id => ({
+const lineupChoices = computed(() => [
+  ...LINEUPS.map(id => ({
     value: id,
     label: t(`latentLab.interception.models.lineups.${id}`),
     title: t(`latentLab.interception.models.lineups.${id}Note`),
     disabled: membersOf(id).length === 0,
   })),
-)
+  {
+    value: CUSTOM,
+    label: t('latentLab.interception.models.lineups.custom'),
+    title: t('latentLab.interception.models.lineups.customNote'),
+    disabled: offeredWriters.value.length === 0,
+  },
+])
 
 /** The models a lineup reaches on THIS installation, in the order it names
  *  them (`lineupMembers`, shared with the Canvas's ready-made workflow). */
 function membersOf(id: string): string[] {
-  return lineupMembers(id, chatModels.value)
+  return lineupMembers(id, listInForce.value)
 }
 
 function applyLineup(id: string) {
@@ -456,20 +594,61 @@ const chosenWriterModels = computed<ChatModelOption[]>(() =>
 /**
  * What the surface opens on. The open-weights models, because they are the
  * ones a course can also run somewhere else; the other two stand beside them
- * and are one click away.
+ * and are one click away. Where the provider the settings choose reaches none
+ * of them, the first lineup it can fill: otherwise the surface would open on
+ * the line as written alone.
  *
  * Both the model list and the register arrive after the surface does, and the
- * lineup needs both — so this waits until a lineup can actually be filled, and
- * stops asking once one has been set by hand.
+ * lineup needs both — so this waits until a lineup can actually be filled. It
+ * chooses again with every list that arrives, until a lineup is set by hand:
+ * the list is asked for again whenever the surface is entered and after the
+ * settings were applied (useChatModels), and the surface opens on the list
+ * from before, which may be another provider's. A lineup set by hand stays,
+ * and its members are read again off every list: an id names the provider it
+ * goes through, so after a provider switch the same lineup is other ids.
+ *
+ * Not while a run is open: the run reads its rows to the end, and a row
+ * exchanged in between would lose what was written for it -- nor before what
+ * it made is recorded (`recordRuns`), which reads the rows too. The list that
+ * arrived meanwhile is read once the run is closed; the watch stands under the
+ * series, below.
  */
-watch(
-  () => [chatModels.value.length, register.lineups.value] as const,
-  () => {
-    if (!alive || lineup.value) return
-    if (membersOf(DEFAULT_LINEUP).length) applyLineup(DEFAULT_LINEUP)
-  },
-  { immediate: true },
-)
+let lineupByHand = false
+
+/** From the press until what it made is recorded (`startRun`). */
+const runOpen = ref(false)
+
+function pickLineup(id: string) {
+  lineupByHand = true
+  if (id === CUSTOM) {
+    lineup.value = CUSTOM
+    setCustom(customWriters.value.length
+      ? customWriters.value
+      : chosenWriters.value.map(id => (modelById.value[id] ? writerName(modelById.value[id]!) : id)))
+    return
+  }
+  applyLineup(id)
+}
+
+function followList() {
+  if (!alive || series.busy.value || runOpen.value) return
+  listInForce.value = chatModels.value
+  everyInForce.value = everyModel.value
+  localeInForce.value = locale.value
+  // A list chosen by hand keeps its models and is read off the list in force
+  // again, as a lineup is; one the list does not offer writes no row, and the
+  // line under the list names it (`customUnreached`).
+  if (lineupByHand && lineup.value === CUSTOM) {
+    const ids = resolveCustom(customWriters.value)
+    if (ids.join('\n') !== chosenWriters.value.join('\n')) chosenWriters.value = ids
+    return
+  }
+  const id = lineupByHand ? lineup.value : fillableLineup(DEFAULT_LINEUP, listInForce.value, LINEUPS)
+  const members = id ? membersOf(id) : []
+  if (id === lineup.value && members.join('\n') === chosenWriters.value.join('\n')) return
+  lineup.value = id
+  chosenWriters.value = members
+}
 
 /**
  * Which image model shows the rows to begin with. Flux 2 reads a long prompt to
@@ -486,10 +665,9 @@ const IMAGE_MODEL_DEFAULT = 'flux2'
  */
 const imageModel = ref<string>(IMAGE_MODEL_DEFAULT)
 
-// Gemini 3 Pro runs through Mammouth AI and is switched off where that account
-// holds no key or no credit (docs/DEVELOPMENT_DECISIONS.md); a
-// choice that holds it goes back to the one this surface opens with, further
-// down, where the run is.
+// A cloud model is switched off where its provider holds no key or no credit
+// (services/provider_account.py); a choice that holds it goes back to the one
+// this surface opens with, further down, where the run is.
 const { askWhenShown, accountMissing, accountParams, replaceAccountMissing } = useModelAvailability()
 askWhenShown()
 
@@ -525,15 +703,19 @@ interface WriterRow extends SeriesRow {
   /** The model that wrote, or the one asked for while nothing has. The card
    *  beside the head describes this one, because the head names it. */
   wrote: string
+  /** The register's name for that model, where the row keeps it (a past run):
+   *  its id names a route, and after a provider switch the lists carry the
+   *  same model under another id, or none. */
+  facts?: string
 }
 
 // ---------------------------------------------------------------------------
-// The card beside a row head: what the writing model is, and where its text
-// goes. The gesture and the card are the platform's own (useInfoCard,
-// InfoCard); the lines are the same a model chip shows (InfoCardFacts), plus
-// the size, which a chip carries in its aside, and the route, which the image
-// models' chips have none of: their list (data/rasterImageModels.ts) names no
-// service.
+// The card beside a row head: what the writing model is. The gesture and the
+// card are the platform's own (useInfoCard, InfoCard); the lines are the same a
+// model chip shows (InfoCardFacts), plus the size, which a chip carries in its
+// aside. Until 2026-10-27 it carried the route as well, the provider and its
+// data-path mark; every model here now goes through the one provider the
+// settings choose, and the settings show it.
 // ---------------------------------------------------------------------------
 
 const {
@@ -548,22 +730,21 @@ const {
 } = useInfoCard<ChipInfo>()
 
 /** What the card of a row says, or nothing for the line as written and for a
- *  model the list no longer carries. */
+ *  model the register does not know. */
 function writerInfo(row: WriterRow): ChipInfo | undefined {
-  const m = row.wrote ? modelById.value[row.wrote] : undefined
-  if (!m) return undefined
-  const name = writerName(m.label)
-  const facts = m.register || m.id
+  if (!row.wrote) return undefined
+  const m = knownById.value[row.wrote]
+  const facts = row.facts || (m ? (m.register || m.id) : row.wrote)
+  // The model's own name: the head says country, year and size, and the
+  // card's line says them again.
+  const name = register.factsFor(facts)?.name || row.label
   const info = register.infoFor(facts, name, t) ?? { name }
   // No aside at a row head, so the size stands in the line here -- what is
   // known of it; the dash of the aside is for a list, not a card.
   const size = register.sizeWords(facts, t, locale.value)
   if (size) info.line = [info.line, size].filter(Boolean).join(' · ')
-  if (m.service && m.service !== 'local') {
-    info.route = { via: providerName(m.service), recorded: m.dsgvoRecorded }
-  }
   // A card with nothing but the name repeats the head.
-  return info.line || info.mark || info.route ? info : undefined
+  return info.line || info.mark ? info : undefined
 }
 
 function onRowEnter(row: WriterRow, event: Event) { enterRowCard(writerInfo(row), event) }
@@ -580,8 +761,10 @@ function resultKey(modelId: string): string {
   // the model in that language and travels with the request (`user_language`),
   // so a row written in one language is not the same work as the same row in
   // another. Without it a run made in German is handed back unchanged after the
-  // reader switches to English.
-  return `${preset.value.configId}|${locale.value}|${promptText.value.trim()}|${modelId}`
+  // reader switches to English. The language the rows are in force under, not
+  // the header's: one switched while a run is open reaches the rows once the
+  // run is recorded (`followList`).
+  return `${preset.value.configId}|${localeInForce.value}|${promptText.value.trim()}|${modelId}`
 }
 
 /**
@@ -598,8 +781,11 @@ const presetTerms = computed<string[]>(() => perspectiveTerms(preset.value.conte
  */
 interface MadeRun {
   key: string
-  label: string
   requested: string
+  /** The register's name for the model that wrote it (`WriterRow.facts`). */
+  facts: string
+  /** The list's own name for it, for a model the register does not know. */
+  listed: string
   /** The words of the perspective it ran under: the marking is that run's. */
   terms: string[]
 }
@@ -623,11 +809,16 @@ function recordRuns(): void {
     // A refusal is a run too: on this surface it is a finding about that model,
     // and it is kept the way a written text is.
     if (!r) continue
-    const ranModel = r.dispatched ? modelById.value[r.dispatched] : undefined
+    // No label is kept: a run is named like every other word on the page, in
+    // the language it is read in now -- the language it was WRITTEN in is in
+    // its key. What is kept is what the name is made from, and no route.
+    const wrote = r.dispatched || m.id
+    const known = knownById.value[wrote]
     made.push({
       key,
-      label: ranModel ? writerName(ranModel.label) : (r.dispatched || writerName(m.label)),
       requested: m.id,
+      facts: known ? (known.register || known.id) : wrote,
+      listed: known ? known.label : bareName(wrote),
       terms: presetTerms.value,
     })
   }
@@ -664,14 +855,13 @@ const rows = computed<WriterRow[]>(() => {
     // The head names the model that RAN. Where the engine routed the request to
     // another one than the chip asked for, that is what the row is.
     const ran = r?.dispatched || ''
-    const ranModel = ran ? modelById.value[ran] : undefined
     standing.add(key)
     out.push({
       key,
       reference: false,
       requested: m.id,
       wrote: ran || m.id,
-      label: ran ? (ranModel ? writerName(ranModel.label) : ran) : writerName(m.label),
+      label: ran ? labelOf(ran) : modelLabel(m),
       request: { schema: preset.value.configId, interceptionModel: m.id },
       text: r?.text ?? '',
       segments: markTerms(r?.text ?? '', presetTerms.value),
@@ -691,7 +881,8 @@ const rows = computed<WriterRow[]>(() => {
       inert: true,
       requested: r.requested,
       wrote: res?.dispatched || r.requested,
-      label: r.label,
+      facts: r.facts,
+      label: register.modelLabel(r.facts, r.listed, locale.value, localWord(res?.dispatched || r.requested)),
       request: null,
       text: res?.text ?? '',
       segments: markTerms(res?.text ?? '', r.terms),
@@ -714,6 +905,14 @@ const series = useInterceptionSeries({
   // itself; where the two differ, the pair is the finding.
   context: row => ({ requested_model: (row as WriterRow).requested }),
 })
+
+// The lineup follows the list (`followList`, above), and waits for a run to
+// be closed: this series is the run.
+watch(
+  () => [chatModels.value, register.lineups.value, locale.value, series.busy.value, runOpen.value] as const,
+  followList,
+  { immediate: true },
+)
 
 /**
  * A choice switched off for want of an account goes back to the one this
@@ -743,11 +942,16 @@ const canRun = computed(
 
 async function startRun(): Promise<void> {
   if (!canRun.value) return
-  await series.startRun()
-  if (!alive) return
-  // What this press made goes into the record, so that the next question moves
-  // it down instead of taking it off the surface.
-  recordRuns()
+  runOpen.value = true
+  try {
+    await series.startRun()
+    if (!alive) return
+    // What this press made goes into the record, so that the next question
+    // moves it down instead of taking it off the surface.
+    recordRuns()
+  } finally {
+    runOpen.value = false
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -797,10 +1001,14 @@ const folded = ref(false)
   justify-content: flex-end;
 }
 
+/* The whole line, wrapped: its end -- the size, and 'lokal' -- tells the
+   rows apart, and an ellipsis cut exactly that. */
 .ilm-rowname-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 132px;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: right;
 }
 
 /* A run that has moved down is another ROW, and the rows shared the height of
@@ -822,6 +1030,19 @@ const folded = ref(false)
    they did, so no measurement comes to measure what it caused itself. */
 .lab-plot {
   overflow-y: auto;
+}
+
+/* The drop-downs of Custom, one under another, the button that adds one
+   under them at its own width. A select that may shrink is `.cmp-pick-fluid`
+   (assets/compare-stage.css). */
+.ilm-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ilm-custom-add {
+  align-self: flex-start;
 }
 
 /* Every column carries the same floor and they all start at the same edge, so

@@ -24,6 +24,10 @@ from my_app.services import resona_entities as re_
 from my_app.services.canvas_graph_authoring import RESONA_CANVAS_CONFIGS
 from my_app.services.tool_registry import get_tool_registry
 
+
+# The turn is under test here, not what it checks.
+pytestmark = pytest.mark.usefixtures("chat_checks_pass")
+
 CFG = sorted(RESONA_CANVAS_CONFIGS)[0]
 
 GRAPH = {

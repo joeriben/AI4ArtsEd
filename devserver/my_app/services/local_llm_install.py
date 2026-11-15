@@ -67,6 +67,14 @@ class LocalLLMInstaller:
         if e is None:
             return {"ok": False, "reason": f"Unknown model alias: {alias}", "approx_mb": 0}
         approx_mb = int(round(float(e.get("size_gb") or 0) * 1024))
+        if e.get("trust_remote_code"):
+            # ComfyUI's loader executes no code from a repository, so the
+            # download would bring a model that runs nowhere; the Text Lab
+            # names it on its row with the same reason (text_presets.held_back).
+            return {"ok": False,
+                    "reason": (f"{e['repo']} needs code from its repository "
+                               f"(trust_remote_code), which the loader does not execute"),
+                    "approx_mb": approx_mb}
         if weights.is_installed(alias):
             return {"ok": False, "reason": f"{alias} is already installed", "approx_mb": approx_mb}
         if e.get("gated"):
@@ -183,6 +191,9 @@ class LocalLLMInstaller:
         try:
             path = snapshot_download(
                 repo_id=e["repo"],
+                # A revision the table pins is fetched as pinned, not the
+                # repository's current main.
+                revision=e.get("revision"),
                 local_dir=staging,
                 ignore_patterns=e.get("ignore") or None,
             )

@@ -321,6 +321,7 @@
           :href="fullscreenImage"
           :download="fullscreenFilename"
           class="da-fs-download"
+          @click.prevent="saveFullscreenFrame"
         >
           {{ t('latentLab.archaeology.download') }}
         </a>
@@ -340,6 +341,7 @@ import PromptExamples from '@/components/PromptExamples.vue'
 import { usePromptPresets } from '@/lib/promptPresets'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import MediaFullscreen from '@/components/MediaFullscreen.vue'
+import { downloadMedia } from '@/lib/downloadMedia'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 
 import ChipSelect from '@/components/ChipSelect.vue'
@@ -356,7 +358,7 @@ import { useDetailsState } from '@/composables/useDetailsState'
 import { fetchInstrumentRun, useLatentLabRecorder, type InstrumentRun } from '@/composables/useLatentLabRecorder'
 import { useInstrumentRuns } from '@/composables/useInstrumentRuns'
 import { useFavoritesStore } from '@/stores/favorites'
-import { blockedReason, safetyBlockKey } from '@/composables/useGenerationStream'
+import { safetyBlockMessageKey, safetyBlockOf } from '@/composables/useGenerationStream'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { useGenerationSteps } from '@/composables/useGenerationSteps'
@@ -771,6 +773,16 @@ const fullscreenFilename = computed(() => {
   return `denoising_final_seed_${s}.png`
 })
 
+/**
+ * The frame onto the disk under the bar's name, the platform's way
+ * (lib/downloadMedia.ts): a frame that does not carry the AI-origin
+ * disclosure is saved as `_ai_generated`, which a bare `<a download>` cannot
+ * know. The anchor stays for what an anchor offers besides a click.
+ */
+function saveFullscreenFrame(): void {
+  if (fullscreenImage.value) void downloadMedia(fullscreenImage.value, fullscreenFilename.value)
+}
+
 // ============================================================================
 // THE RUN
 // ============================================================================
@@ -1026,15 +1038,15 @@ async function generate() {
     } else {
       // A blocked run is read as what it is and said in the reader's language;
       // the backend's own sentence is German and stays behind the reading.
-      const blockedBody = blockedReason(response.data)
-      errorMessage.value = blockedBody
-        ? t(safetyBlockKey(blockedBody, response.data.stage))
+      const block = safetyBlockOf(response.data)
+      errorMessage.value = block
+        ? t(safetyBlockMessageKey(block))
         : generationErrorFor(t, response.data.error || response.data.message || '')
     }
   } catch (err: any) {
-    const blocked = blockedReason(err)
-    errorMessage.value = blocked
-      ? t(safetyBlockKey(blocked, err.response?.data?.stage))
+    const block = safetyBlockOf(err)
+    errorMessage.value = block
+      ? t(safetyBlockMessageKey(block))
       : generationErrorFor(t, err)
   } finally {
     isGenerating.value = false

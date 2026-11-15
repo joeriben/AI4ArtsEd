@@ -257,7 +257,7 @@ async def execute(
         'image_data': image,
         'media_type': 'image',
         'backend': 'comfyui',
-        'model_id': model_id,
+        'model_used': result.model_used,
         'seed': seed,
         'attention_data': {key: record[key] for key in RECORD_KEYS},
         'parameters': {

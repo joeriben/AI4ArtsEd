@@ -55,6 +55,22 @@ MEASURED = {
         "a voice speaking, not singing": 0.21, "a single voice singing alone": 0.19,
         "noise, not music": 0.18, "silence": 0.12,
     }),
+    # Measured 2026-10-31 with MuQ-MuLan on one of HeartMuLa's own songs, sung
+    # without accompaniment and filtered to sound like a phone held up in a room.
+    "a-cappella through a room": ranking({
+        "a voice speaking, not singing": 0.535, "carnatic vocal music": 0.503,
+        "several voices singing together": 0.486, "a single voice singing alone": 0.465,
+        "humming without words": 0.446, "no voice at all": 0.409,
+        "noise, not music": 0.381, "silence": 0.222,
+    }),
+    # A song recorded on the page on 2026-11-01. The page showed these five;
+    # every other label scored at most .29, and the three that could turn the
+    # comparisons below are set at that ceiling.
+    "song on the page": ranking({
+        "a voice speaking, not singing": 0.39, "reggae": 0.36, "country": 0.34,
+        "pop song": 0.30, "jazz": 0.29, "no voice at all": 0.29,
+        "noise, not music": 0.29, "silence": 0.29,
+    }),
 }
 
 # Constructed by the review passes against an earlier rule, each one a case that
@@ -86,22 +102,29 @@ CONSTRUCTED = {
     # what was heard              ranking                 transcriber wrote        machine
     ("brown noise",   MEASURED["brown noise"],   "The train is now arriving", ps.SFX_CONFIG),
     ("sung pop",      MEASURED["sung pop"],      "The sun creeps in",         ps.SONG_CONFIG),
-    ("german speech", MEASURED["german speech"], "Guten Tag, dies ist",       ps.SPEECH_CONFIG),
-    ("synth chords",  MEASURED["synth chords"],  "××××",  ps.MUSIC_CONFIG),
+    # The speaking label tops both of these, and both are songs. It has no say
+    # in the music question, so both are sung.
+    ("a-cappella through a room", MEASURED["a-cappella through a room"],
+     "The light comes in across the floor", ps.SONG_CONFIG),
+    ("song on the page", MEASURED["song on the page"], "la la", ps.SONG_CONFIG),
+    # What that costs: speech counts as music too, and is sung unless VoxCPM2 is
+    # picked by hand.
+    ("german speech", MEASURED["german speech"], "Guten Tag, dies ist",       ps.SONG_CONFIG),
+    # In music, text is whatever the transcriber wrote. An instrumental it reads
+    # words into is sung.
+    ("synth chords",  MEASURED["synth chords"],  "××××",  ps.SONG_CONFIG),
+    ("instrumental jazz trio", CONSTRUCTED["instrumental jazz trio"], "you", ps.SONG_CONFIG),
     # A choir has no instrument in it. If singing counted against music, this
     # would be spoken back by a TTS — on a page that asks people to sing.
     ("a-cappella choir", CONSTRUCTED["a-cappella choir"], "wir singen", ps.SONG_CONFIG),
-    # The transcriber invents words for anything, and the speaking label sits in
-    # this model's cross-category leakage. In music the words question is asked
-    # of the SINGING labels, which is what keeps this one instrumental.
-    ("instrumental jazz trio", CONSTRUCTED["instrumental jazz trio"], "you", ps.MUSIC_CONFIG),
     # Top-1 "silence" settles the music question, not the words question.
     ("words in a quiet room", CONSTRUCTED["words in a quiet room"],
      "könnt ihr mich hören", ps.SPEECH_CONFIG),
-    # No words at all is the empty-room case the page invites, and the table
-    # sends it to the sound model.
-    ("speech, nothing transcribed", MEASURED["german speech"], "", ps.SFX_CONFIG),
-    ("speech, only whitespace", MEASURED["german speech"], "   \n", ps.SFX_CONFIG),
+    # No words: a Stable Audio model, never a voice.
+    ("synth chords, nothing transcribed", MEASURED["synth chords"], "", ps.MUSIC_CONFIG),
+    ("speech, nothing transcribed", MEASURED["german speech"], "", ps.MUSIC_CONFIG),
+    ("speech, only whitespace", MEASURED["german speech"], "   \n", ps.MUSIC_CONFIG),
+    ("brown noise, nothing transcribed", MEASURED["brown noise"], "", ps.SFX_CONFIG),
 ])
 def test_table(case, rank, transcription, expected):
     assert ps.resolve_singer(rank, transcription) == expected, case

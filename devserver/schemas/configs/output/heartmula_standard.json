@@ -10,7 +10,8 @@
     "es": "HeartMuLa Música",
     "he": "HeartMuLa מוזיקה",
     "ar": "HeartMuLa موسيقى",
-    "bg": "HeartMuLa Музика"
+    "bg": "HeartMuLa Музика",
+    "zh-hant": "HeartMuLa 音樂"
   },
   "description": {
     "en": "Generate music from lyrics and style tags using HeartMuLa AI - multilingual, including but not limited to English, Chinese, Japanese, Korean and Spanish",
@@ -22,7 +23,8 @@
     "es": "Genera música a partir de letras y etiquetas de estilo con HeartMuLa AI - multilingüe, incluyendo entre otros inglés, chino, japonés, coreano y español",
     "he": "יצירת מוזיקה ממילות שיר ותגיות סגנון באמצעות HeartMuLa AI - רב-לשוני, כולל בין השאר אנגלית, סינית, יפנית, קוריאנית וספרדית",
     "ar": "توليد الموسيقى من كلمات الأغاني وعلامات الأسلوب باستخدام HeartMuLa AI - متعدد اللغات، بما في ذلك على سبيل المثال لا الحصر الإنجليزية والصينية واليابانية والكورية والإسبانية",
-    "bg": "Генериране на музика от текстове на песни и стилови етикети с HeartMuLa AI - многоезичен, включително, но не само, английски, китайски, японски, корейски и испански"
+    "bg": "Генериране на музика от текстове на песни и стилови етикети с HeartMuLa AI - многоезичен, включително, но не само, английски, китайски, японски, корейски и испански",
+    "zh-hant": "使用 HeartMuLa AI，根據歌詞與風格標籤生成音樂——支援多種語言，包括但不限於英文、中文、日文、韓文與西班牙文"
   },
   "category": {
     "en": "Sound",
@@ -34,7 +36,8 @@
     "es": "Sonido",
     "he": "שמע",
     "ar": "صوت",
-    "bg": "Звук"
+    "bg": "Звук",
+    "zh-hant": "聲音"
   },
   "context": "Write structured song lyrics with markers like [Verse], [Chorus], [Bridge] and provide comma-separated style tags describing genre, mood, instruments, and tempo. Focus on creating poetic, rhythmic lyrics that fit the musical style.",
   "parameters": {
@@ -93,7 +96,8 @@
           "es": "Soporte lingüístico limitado a EN, ZH, JA, KO, ES — otros idiomas producen resultados impredecibles",
           "he": "תמיכת שפות מוגבלת ל-EN, ZH, JA, KO, ES — שפות אחרות מניבות תוצאות בלתי צפויות",
           "ar": "دعم اللغات مقتصر على EN وZH وJA وKO وES — اللغات الأخرى تُنتج نتائج غير متوقعة",
-          "bg": "Езикова поддръжка, ограничена до EN, ZH, JA, KO, ES — другите езици дават непредвидими резултати"
+          "bg": "Езикова поддръжка, ограничена до EN, ZH, JA, KO, ES — другите езици дават непредвидими резултати",
+          "zh-hant": "語言支援僅限 EN、ZH、JA、KO、ES——其他語言會產生無法預期的結果"
         },
         {
           "en": "Training data likely skewed toward commercial pop/electronic genres",
@@ -105,7 +109,8 @@
           "es": "Los datos de entrenamiento probablemente están sesgados hacia géneros pop/electrónicos comerciales",
           "he": "נתוני האימון ככל הנראה מוטים לכיוון ז'אנרים מסחריים של פופ/אלקטרוני",
           "ar": "يُرجَّح أن بيانات التدريب منحازة نحو أنواع البوب/الإلكترونية التجارية",
-          "bg": "Данните за обучение вероятно са изкривени към комерсиални поп/електронни жанрове"
+          "bg": "Данните за обучение вероятно са изкривени към комерсиални поп/електронни жанрове",
+          "zh-hant": "訓練資料可能偏向商業的流行／電子曲風"
         },
         {
           "en": "Tag system reflects Western genre categories (pop, rock, jazz)",
@@ -117,7 +122,8 @@
           "es": "El sistema de etiquetas refleja categorías de género occidentales (pop, rock, jazz)",
           "he": "מערכת התיוג משקפת קטגוריות ז'אנר מערביות (פופ, רוק, ג'אז)",
           "ar": "نظام الوسوم يعكس فئات الأنواع الغربية (بوب، روك، جاز)",
-          "bg": "Системата от етикети отразява западни жанрови категории (поп, рок, джаз)"
+          "bg": "Системата от етикети отразява западни жанрови категории (поп, рок, джаз)",
+          "zh-hant": "標籤系統反映西方的曲風分類（流行、搖滾、爵士）"
         }
       ],
       "known_gaps": [
@@ -131,7 +137,8 @@
           "es": "Las tradiciones musicales orales y no notadas están subrepresentadas",
           "he": "מסורות מוזיקליות שבעל-פה ושאינן כתובות בתווים מיוצגות בחסר",
           "ar": "التقاليد الموسيقية الشفهية وغير المدوَّنة بالنوتة ممثَّلة تمثيلاً ناقصاً",
-          "bg": "Устните и ненотирани музикални традиции са недостатъчно представени"
+          "bg": "Устните и ненотирани музикални традиции са недостатъчно представени",
+          "zh-hant": "口述與無樂譜記錄的音樂傳統代表性不足"
         },
         {
           "en": "Microtonal systems (Arabic maqam, Indian raga) not explicitly supported",
@@ -143,7 +150,8 @@
           "es": "Los sistemas microtonales (maqam árabe, raga indio) no están explícitamente soportados",
           "he": "מערכות מיקרוטונליות (מקאם ערבי, ראגה הודית) אינן נתמכות במפורש",
           "ar": "الأنظمة الصوتية دون النصف نغمة (المقام العربي، الراغا الهندية) غير مدعومة صراحةً",
-          "bg": "Микротоналните системи (арабски макам, индийска рага) не са изрично поддържани"
+          "bg": "Микротоналните системи (арабски макам, индийска рага) не са изрично поддържани",
+          "zh-hant": "未明確支援微分音體系（阿拉伯木卡姆、印度拉格）"
         },
         {
           "en": "Song sources undisclosed — consent of original artists unknown",
@@ -155,7 +163,8 @@
           "es": "Fuentes de las canciones no reveladas — se desconoce el consentimiento de los artistas originales",
           "he": "מקורות השירים לא נחשפו — הסכמת האמנים המקוריים אינה ידועה",
           "ar": "مصادر الأغاني غير معلنة — موافقة الفنانين الأصليين غير معروفة",
-          "bg": "Източниците на песните не са оповестени — съгласието на оригиналните изпълнители е неизвестно"
+          "bg": "Източниците на песните не са оповестени — съгласието на оригиналните изпълнители е неизвестно",
+          "zh-hant": "歌曲來源未公開——原創藝人是否同意不得而知"
         }
       ]
     },

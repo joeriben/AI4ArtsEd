@@ -26,8 +26,8 @@
  *
  * Everything above the transport stays as it was. This resolves and throws
  * exactly like the `axios.post` it replaces, so call sites keep reading
- * `response.data`, keep reading `response.status`, and keep classifying a
- * refusal with `blockedReason(error)`.
+ * `response.data`, keep reading `response.status`, and keep reading a
+ * refusal's block message with `safetyBlockOf(error)`.
  *
  * The transport serves MORE THAN ONE endpoint. `postStreamedRun` takes the path
  * it posts to; `postDirectRun` is that same call with the direct run's path in

@@ -10,7 +10,8 @@
     "es": "Generación musical Tone.js",
     "he": "יצירת מוזיקה ב-Tone.js",
     "ar": "توليد الموسيقى بـ Tone.js",
-    "bg": "Генериране на музика с Tone.js"
+    "bg": "Генериране на музика с Tone.js",
+    "zh-hant": "Tone.js 音樂生成"
   },
   "description": {
     "en": "Generates executable Tone.js JavaScript code for browser-based music. Creates rhythmic, melodic compositions using synths, samples, and temporal patterns.",
@@ -22,7 +23,8 @@
     "es": "Genera código JavaScript Tone.js ejecutable para música en el navegador. Crea composiciones rítmicas y melódicas mediante sintetizadores, samples y patrones temporales.",
     "he": "מייצר קוד JavaScript של Tone.js הניתן להרצה למוזיקה מבוססת דפדפן. יוצר קומפוזיציות קצביות ומלודיות באמצעות סינתיסייזרים, סמפלים ותבניות זמן.",
     "ar": "يولّد كود JavaScript قابلاً للتشغيل بواسطة Tone.js لموسيقى تعمل في المتصفح. ينشئ تأليفات إيقاعية ولحنية باستخدام أجهزة synth وعينات صوتية (samples) وأنماط زمنية.",
-    "bg": "Генерира изпълним JavaScript код с Tone.js за музика в браузъра. Създава ритмични, мелодични композиции чрез синтезатори, семпли и времеви модели."
+    "bg": "Генерира изпълним JavaScript код с Tone.js за музика в браузъра. Създава ритмични, мелодични композиции чрез синтезатори, семпли и времеви модели.",
+    "zh-hant": "為瀏覽器中的音樂生成可執行的 Tone.js JavaScript 程式碼。使用合成器、取樣與時間模式，建立有節奏、有旋律的作品。"
   },
   "category": {
     "en": "Music & Sound",
@@ -34,7 +36,8 @@
     "es": "Música y sonido",
     "he": "מוזיקה וסאונד",
     "ar": "موسيقى وصوت",
-    "bg": "Музика и звук"
+    "bg": "Музика и звук",
+    "zh-hant": "音樂與聲音"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_code_tonejs",

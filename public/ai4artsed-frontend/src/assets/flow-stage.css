@@ -297,6 +297,14 @@
 }
 
 /**
+ * The name of a language model under the axis of a chart
+ * (`components/ModelAxisLabel.vue`), the same in every chart. Until 2026-11-14
+ * the two charts that draw one carried this rule each under its own name
+ * (`.ba-name`, `.ct-name`).
+ */
+.lab-model-name { fill: rgba(255, 255, 255, 0.75); font-size: var(--flow-fs-label); }
+
+/**
  * The page frame of a measuring instrument (Bias Archaeology, Coreference Test,
  * Default Census). Same reason as `.lab-col` above: all three carried these
  * rules character for character, down to the 2.0467 and the 1.509434 %, and
@@ -307,7 +315,12 @@
  * run on the left, what came out of it on the right. Its two children get the
  * min-0/column treatment both need; whatever a single instrument adds on top —
  * a gap, its own scrolling, the number of lines a case may run to — stays in
- * that instrument.
+ * that instrument. Since 2026-11-07 the preparing column carries the comparison
+ * column box `.cmp-column` from assets/compare-stage.css. This frame and the
+ * comparison stage (`.cmp-work`, same file) still differ in the track (1 : 2.0467
+ * here, 300 px there) and in where they stack (each instrument's own rule here,
+ * a container query at 900 px of work area there); the registry carries the two
+ * frames as to-consolidate (docs/ELEMENT_STRUCTURE_REGISTRY.md, `.cmp-column`).
  */
 .lab-main {
   flex: 1;
@@ -609,9 +622,12 @@
 
 /* The last reason a cell did not come back. Where it stands follows the column:
    at the FOOT, over the note box, where the column fits the window, and at its
-   HEAD where the column scrolls — which is the case on the three instruments of
-   the Crossmodal Lab, whose preparing columns run 971 to 1234 px against a
-   window of 469 (docs/ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`). */
+   HEAD where the column scrolls — which is the case on the Latent Audio Synth,
+   whose preparing column runs 794 to 1480 px against a window of 469 at
+   900 x 700 with the instrument rail open (measured 2026-11-03;
+   docs/ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`). MMAudio and ImageBind
+   Guidance stood here too until 2026-11-02; they say a failed run in the cell
+   of its row on the right side. */
 .lab-prep-err {
   margin: 0;
   font-size: var(--flow-fs-hint);
@@ -633,7 +649,14 @@
    wrapped height: with it alone a two-line sentence was squeezed back to one
    line's room and its second line ran across the field label under it (measured
    1210 x 834). Refusing to shrink, the room kept is a floor and a longer
-   sentence takes what it needs. */
+   sentence takes what it needs. This reservation serves the Latent Audio
+   Synth, whose drift writes the sentence under a hand on a slider. Since
+   2026-11-07 Bias Research 1 and 2 render the line per `v-if` only while it has
+   text: there it comes after a press, and the picker and the slider under it
+   are disabled while a run goes, so what it pushes down is the rest of the
+   column, to the reference links at its foot; empty, the reservation stood as a
+   blank line at the head of their column (one hint line plus the column's 10 px
+   gap, about 28 px at 1210 x 834). */
 .lab-prep-err.at-head {
   flex: 0 0 auto;
   line-height: 1.45;
@@ -789,3 +812,156 @@
    (`.as-plot`, views/latent_lab/audio_synth.vue). A floor HERE would take the
    raster's height away from every other one. */
 .lab-plot { overflow: hidden; }
+
+/*
+ * Reading columns — N readings side by side, every column the same width, a
+ * head over each. Built in views/compare/vlm_analysis_comparison.vue (one
+ * column per model reading ONE picture) and shared since 2026-11-02, when
+ * Re-enactment (views/cover_band.vue) needed the same thing for the three
+ * stations between a recording and its song.
+ *
+ * The columns stand on the series raster above: `.lab-grid` with
+ * `--lab-grid-cols`, every column a `.lab-grid-col` that is also a
+ * `.lab-readcol`. Heads and cells share its ONE grid, so a head that wraps to
+ * two lines cannot shorten the cell in its own column only. What a reading
+ * adds is here: a head with a name, the time its machine took or the word that
+ * it waits, and a cell that takes the height the surface gives it and scrolls
+ * inside — a surface that grew with its longest reading would push the others
+ * below the window, and reading them against each other is the whole point of
+ * standing them side by side.
+ *
+ * `.lab-readcell` is the plain text cell; a surface whose cell is a card
+ * (FlowCard) puts the card there instead and gives it `min-height: 0`.
+ */
+
+.lab-readcol-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-width: 0;
+}
+
+.lab-readcol-name {
+  font-size: var(--flow-fs-label);
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* How long the column's machine took to answer. */
+.lab-readcol-time {
+  margin-inline-start: auto;
+  font-size: var(--flow-fs-hint);
+  color: rgba(76, 175, 80, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The column's turn has not come yet, or its machine is at work. */
+.lab-readcol-wait {
+  margin-inline-start: auto;
+  font-size: var(--flow-fs-hint);
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Its ground is the surface stack, never a literal. */
+.lab-readcell {
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+/* Before the first press the columns already stand there, darkened with their
+   heads: an empty surface says nothing about what a press would do. A column
+   queued behind a running one dims its cell only. */
+.lab-readcol.is-preview > * { opacity: 0.45; }
+.lab-readcol.is-waiting > :not(.lab-readcol-head) { opacity: 0.5; }
+
+/*
+ * Run rows: a surface that GROWS a row per press. The newest row stands on
+ * top, so the run just made is always in sight, and the rows scroll in their
+ * own box while the preparing column stands still. A row says once, in its
+ * head, what its run was made with. What stands under the head is the
+ * surface's own (text cells in Representation Engineering) or, for a sound,
+ * the shared body below (`.lab-runrow-media`: MMAudio, ImageBind Guidance).
+ * Before the first press the row a press would make stands there dimmed
+ * (`.is-preview`).
+ *
+ * Built in views/latent_lab/representation_engineering.vue as `.re-rows` /
+ * `.re-row` / `.re-row-head` and shared since 2026-11-02, when MMAudio
+ * (views/latent_lab/mmaudio.vue) needed the same rows.
+ */
+.lab-runrows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-right: 6px;
+}
+
+.lab-runrow { display: flex; flex-direction: column; gap: 6px; }
+
+/* What everything in this row shares, said once. */
+.lab-runrow-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  font-size: var(--flow-fs-sub);
+  color: rgba(255, 255, 255, 0.5);
+}
+.lab-runrow-prompt { color: rgba(255, 255, 255, 0.75); }
+.lab-runrow-meta b {
+  font-weight: 400;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* The row before the first press: at half weight, because it says what WOULD
+   happen and nothing that did. */
+.lab-runrow.is-preview { opacity: 0.45; }
+
+/* A row of SOUND (MMAudio, ImageBind Guidance): the picture its run was given
+   beside the sound. The picture is shown whole, not cropped, at 88 px; a run
+   without one keeps the place empty, so the sounds of all rows stand at the
+   same left edge and a run with a picture and one without can be heard one
+   under the other. The sound stands in the platform's cell as a strip
+   (`strip`, components/MediaGridCell.vue): a square would make every row as
+   tall as the column is wide. Not to be confused with the lead picture of a
+   series wall (`.lab-wall-lead`, components/InterceptionSeriesWall.vue), which
+   is cropped to the square of its cell. */
+.lab-runrow-media {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lab-runrow-pic {
+  flex: 0 0 88px;
+  height: 88px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.lab-runrow-pic.none { visibility: hidden; }
+.lab-runrow-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lab-runrow-sound {
+  flex: 1;
+  min-width: 0;
+}

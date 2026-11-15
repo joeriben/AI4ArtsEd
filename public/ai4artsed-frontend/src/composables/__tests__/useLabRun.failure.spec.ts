@@ -26,7 +26,8 @@ describe('perspectiveFailureText', () => {
   })
 
   it('keeps the refusal and the empty answer as they were', () => {
-    expect(perspectiveFailureText(t, { refusedKey: 'safetyBlocked.generic', reason: 'x' })).toBe('safetyBlocked.generic')
+    const block = { checkpoint: 'refusal', field: 'interception', reason_key: 'refusal', reason: 'x' }
+    expect(perspectiveFailureText(t, { refusedKey: 'safetyBlocked.generic', block })).toBe('safetyBlocked.generic')
     expect(perspectiveFailureText(t, { empty: true })).toBe('perspective.empty')
   })
 })

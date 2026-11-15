@@ -30,6 +30,10 @@ from flask import Flask
 from my_app.routes import chat_routes
 from my_app.services.canvas_graph_authoring import RESONA_CANVAS_CONFIGS
 
+
+# The turn is under test here, not what it checks.
+pytestmark = pytest.mark.usefixtures("chat_checks_pass")
+
 CFG = sorted(RESONA_CANVAS_CONFIGS)[0]
 
 GRAPH = {

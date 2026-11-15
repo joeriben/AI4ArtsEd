@@ -1,27 +1,31 @@
 """Zusammenfassungen im Flow — HTTP-Routen (from UCD-132).
 
 /api/scene/* — the BACKEND surface of UCD-132 (no "+"-Integration; that is
-UCD-133's own scope). The upload route runs the Stage-A gate (UCD-131,
-synchronously, BEFORE storage/enqueue — rejected files cost nothing), then
-stages the PDF into a job temp dir and enqueues the summary job
-(scene_ingest_service: the library's condensation, then the safety check).
+UCD-133's own scope). The upload route runs the file check (UCD-131) and
+takes the document's name in at the platform's intake, synchronously, BEFORE
+storage/enqueue — rejected files cost nothing. Then it stages the PDF into a
+job temp dir and enqueues the summary job (scene_ingest_service: the intake of
+the document's text, the library's condensation, then the check at the
+result), with the safety level resolved here.
 
-Session scoping: the caller supplies the resona journal id (the session
-idiom of the flow surface). The document space verfällt mit der Sitzung;
-deleting a journal drops its space (scene_document_space.delete_journal_space
-— wired into the resona journal delete route).
+Session scoping: the caller supplies the journal id (the session idiom of the
+flow surface), and no route hands out the id of another session. Deleting a
+journal drops its space (scene_document_space.delete_journal_space, wired into
+the resona journal delete route).
 
-Duplicate protection (§5 layer 1, session-scoped): before enqueue the
-route consults the session space's hash map; a re-upload of an already
-analysed document gets a 409 with the existing doc_id + provenance — no
-second analysis (acceptance 5).
+Duplicate protection: before enqueue the route looks for a stored summary of
+the same file in ANY session (scene_ingest_service.take_summary, which says why
+and under which conditions), checks it at this session's level and copies it
+into this session. The answer is a 409 with the doc_id + provenance, and no
+second analysis runs. The session id carries the date, so a search in the
+session alone ended at midnight UTC.
 """
 
 from __future__ import annotations
 
 import logging
 import re
-import tempfile
+import shutil
 from pathlib import Path
 
 from flask import Blueprint, jsonify, request
@@ -29,6 +33,8 @@ from flask import Blueprint, jsonify, request
 from my_app.services import scene_document_space as space
 from my_app.services import scene_ingest_service as jobs
 from my_app.services import upload_gate
+from my_app.services.safety_gate import check_intake, safety_block
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
 
@@ -44,23 +50,25 @@ def _allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in _ALLOWED_EXTENSIONS
 
 
-def _find_doc_by_hash(journal_id: str, raw_hash: str) -> dict | None:
-    """Session-scoped hash lookup: the FIRST document of this session whose
-    doc_hash matches (acceptance 5 — same document re-uploaded within the
-    session refers back to the existing analysis)."""
-    for doc in space.list_documents(journal_id):
-        full = space.get_document(journal_id, doc["doc_id"])
-        if full and full["meta"].get("doc_hash") == raw_hash:
-            return full
-    return None
+def _job_view(job: dict) -> dict:
+    """A job as a caller sees it. The log stays on the server: it names the
+    document's headings, those of parts the check withheld included. So does
+    the session, because a job is read by its id alone."""
+    return {k: v for k, v in job.items() if k not in ("log_tail", "journal_id")}
 
 
 @scene_bp.route("/upload", methods=["POST"])
 def upload_document():
-    """Multipart PDF upload into the scene pipeline. Requires `journal_id`
-    (the session) and the file part `document`. Stage-A gate first, duplicate
-    check second — both BEFORE any storage or enqueue."""
+    """Multipart PDF upload into the document summary. Requires `journal_id`
+    (the session) and the file part `document`. The file check first, the
+    intake of the document's name second, the duplicate check third, all
+    BEFORE any storage, enqueue or stored summary taken over. A refused name
+    answers 403 with the block message. What the document says is taken in by
+    the job once the converter has read it."""
     try:
+        # Resolved HERE, at the request boundary: the worker thread has no
+        # session and would get the strictest level.
+        level = resolve_safety_level()
         journal_id = (request.form.get("journal_id") or "").strip()
         if not journal_id:
             return jsonify({"error": "journal_id fehlt (Sitzungsbezug)."}), 400
@@ -85,20 +93,56 @@ def upload_document():
         if size == 0:
             return jsonify({"error": "Uploaded file is empty."}), 400
 
-        # --- Stage-A admission gate (UCD-131): deterministic, BEFORE storage --
+        # --- The file check (UCD-131), at every level: deterministic, BEFORE
+        # storage. What the document says is not read here: the job takes its
+        # text in at the intake once the converter has read it, scanned pages
+        # included. ---------------------------------------------------------
         raw_bytes = file.stream.read()
         file.stream.seek(0)
-        reason, raw_hash = upload_gate.gate_pdf_upload(raw_bytes)
+        reason, raw_hash = upload_gate.gate_pdf_file(raw_bytes)
 
         if reason is not None and not upload_gate.is_duplicate(reason):
             upload_gate.audit_rejection(raw_hash, reason, "scene/upload")
             return jsonify({"error": upload_gate.reject_message(reason)}), 400
 
-        # --- Duplicate within the session (§5 layer 1 / acceptance 5) ----------
-        # Note: gate_pdf_upload's duplicate hit is against the TIER-O hash
-        # index (a library document); the SESSION check is the space lookup.
+        # The summary is written in the language of the surface it came from;
+        # a code the form does not carry falls back to the library default.
+        from my_app.services.knowledge_processing import DEFAULT_ANALYSIS_LANG
+
+        lang = (request.form.get("lang") or "").strip().lower()
+        if not re.fullmatch(r"[a-z]{2}(?:-[a-z]{4})?", lang):
+            lang = DEFAULT_ANALYSIS_LANG
+
+        # --- The document's name: it stands on the card and in the job list,
+        # and a stored summary is taken over under it, so it passes the intake
+        # before anything is looked up. A refusal names the kind of block,
+        # never what was found. ---------------------------------------------
+        title = (request.form.get("title") or "").strip() or Path(file.filename).stem
+        verdict = check_intake(title, level=level, kind="text", field="title")
+        if not verdict.passed:
+            logger.warning("[SZENE] upload refused at the intake (%s: %s)",
+                           verdict.field, verdict.reason_key)
+            return jsonify({
+                "error": "safety_blocked",
+                "safety_block": safety_block(verdict.checkpoint, verdict.reason_key,
+                                             field=verdict.field),
+            }), 403
+
+        # --- Already summarised, in this session or another --------------------
+        # Note: gate_pdf_file's duplicate hit is against the TIER-O hash
+        # index (a library document); the summary lookup is the document space.
         # Both mean the same thing for the flow: no second analysis.
-        existing = _find_doc_by_hash(journal_id, raw_hash)
+        try:
+            existing = jobs.take_summary(journal_id, raw_hash, title=title, lang=lang,
+                                         safety_level=level)
+        except RuntimeError as e:
+            # No answer from the check. What this session already holds at this
+            # level stands as it is. Otherwise the job asks again when its turn
+            # comes, and ends as the technical fault this is.
+            logger.warning("[SZENE] check gave no answer for a stored summary: %s", e)
+            existing = space.get_document(journal_id, space.doc_id_for(raw_hash))
+            if existing is not None and not space.checked_for(existing["meta"], level):
+                existing = None
         if existing is None and upload_gate.is_duplicate(reason):
             # Known Tier-O document — not in this session's space, but still
             # no second analysis: the caller is told the document is already
@@ -127,39 +171,55 @@ def upload_document():
                 "duplicate": True,
                 "doc_id": doc_id,
                 "error": (
-                    "Dieses Dokument wurde in dieser Sitzung bereits analysiert"
+                    "Dieses Dokument wurde bereits analysiert"
                     + (f" — bestehende Zusammenfassung: '{doc_id}'." if doc_id else ".")
                     + provenance
                 ),
             }), 409
 
+        # --- The same document is still being summarised in this session: the
+        # space only holds finished documents, so a second upload during the
+        # minutes of the first would otherwise start a second run.
+        running = jobs.find_active_job(journal_id, raw_hash)
+        if running is not None:
+            return jsonify({
+                "success": False,
+                "duplicate": True,
+                "doc_id": running["doc_id"],
+                "job_id": running["job_id"],
+                "error": "Dieses Dokument wird in dieser Sitzung gerade zusammengefasst.",
+            }), 409
+
         # --- Admitted: stage into a JOB temp dir (§6 — the only place the raw
         # PDF ever exists outside the caller's hands; the worker deletes it) --
-        tmp_dir = Path(tempfile.mkdtemp(prefix="scene_pdf_"))
+        tmp_dir = jobs.new_staging_dir()
         staged_pdf = tmp_dir / "document.pdf"
-        file.save(str(staged_pdf))
-
-        title = (request.form.get("title") or "").strip() or Path(file.filename).stem
-        doc_id = f"doc-{raw_hash[:12]}"
-        # The summary is written in the language of the surface it came from;
-        # a code the form does not carry falls back to the library default.
-        from my_app.services.knowledge_processing import DEFAULT_ANALYSIS_LANG
-        from my_app.services.safety_level_resolver import resolve_safety_level
-
-        lang = (request.form.get("lang") or "").strip().lower()
-        if not re.fullmatch(r"[a-z]{2}", lang):
-            lang = DEFAULT_ANALYSIS_LANG
-        job_id = jobs.enqueue_scene_ingest(
-            journal_id=journal_id,
-            title=title,
-            staged_pdf=staged_pdf,
-            raw_hash=raw_hash,
-            doc_id=doc_id,
-            lang=lang,
-            # Resolved HERE, at the request boundary: the worker thread has
-            # no session and would get the strictest level.
-            safety_level=resolve_safety_level(),
-        )
+        doc_id = space.doc_id_for(raw_hash)
+        try:
+            file.save(str(staged_pdf))
+            job_id = jobs.enqueue_scene_ingest(
+                journal_id=journal_id,
+                title=title,
+                staged_pdf=staged_pdf,
+                raw_hash=raw_hash,
+                doc_id=doc_id,
+                lang=lang,
+                safety_level=level,
+            )
+        except jobs.DuplicateJobError as dup:
+            # Lost the race against an identical upload: its raw PDF goes now.
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+            return jsonify({
+                "success": False,
+                "duplicate": True,
+                "doc_id": dup.doc_id,
+                "job_id": dup.job_id,
+                "error": "Dieses Dokument wird in dieser Sitzung gerade zusammengefasst.",
+            }), 409
+        except Exception:
+            # No job took the file over, so nothing else would delete it.
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+            raise
         logger.info("[SZENE] queued scene job %s for %s (journal %s)",
                     job_id, doc_id, journal_id)
         return jsonify({"success": True, "job_id": job_id, "doc_id": doc_id}), 200
@@ -172,7 +232,12 @@ def upload_document():
 
 @scene_bp.route("/jobs", methods=["GET"])
 def list_jobs():
-    return jsonify({"jobs": jobs.list_jobs()})
+    """The jobs of one session."""
+    journal_id = (request.args.get("journal_id") or "").strip()
+    if not journal_id:
+        return jsonify({"error": "journal_id fehlt."}), 400
+    return jsonify({"jobs": [_job_view(j) for j in jobs.list_jobs()
+                             if j["journal_id"] == journal_id]})
 
 
 @scene_bp.route("/jobs/<job_id>", methods=["GET"])
@@ -180,7 +245,7 @@ def get_job(job_id):
     job = jobs.get_job(job_id)
     if job is None:
         return jsonify({"error": "unknown job"}), 404
-    return jsonify(job)
+    return jsonify(_job_view(job))
 
 
 @scene_bp.route("/jobs/<job_id>/cancel", methods=["POST"])
@@ -201,20 +266,23 @@ def list_documents():
 @scene_bp.route("/documents/<doc_id>", methods=["GET"])
 def get_document(doc_id):
     """One document with its summary (profile, sections, glossary) and
-    provenance."""
+    provenance. A document checked at a looser level than the session's stands
+    back until the file comes in again and goes through this level's check."""
+    from my_app.services.safety_level_resolver import resolve_safety_level
+
     journal_id = (request.args.get("journal_id") or "").strip()
     if not journal_id:
         return jsonify({"error": "journal_id fehlt."}), 400
     doc = space.get_document(journal_id, doc_id)
-    if doc is None:
+    if doc is None or not space.checked_for(doc["meta"], resolve_safety_level()):
         return jsonify({"error": "unknown document"}), 404
     return jsonify(doc)
 
 
 @scene_bp.route("/documents/<doc_id>", methods=["DELETE"])
 def delete_document(doc_id):
-    """Remove ONE document's space entry (incl. its hash protection — a
-    fresh upload of the same file becomes analysable again)."""
+    """Remove ONE document's space entry. A fresh upload of the same file is
+    summarised again unless another session holds a summary of it."""
     journal_id = (request.args.get("journal_id") or "").strip()
     if not journal_id:
         return jsonify({"error": "journal_id fehlt."}), 400

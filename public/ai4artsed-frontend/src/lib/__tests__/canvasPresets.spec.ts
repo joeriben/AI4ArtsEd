@@ -212,6 +212,12 @@ describe('openPreset', () => {
       .rejects.toThrow(/reaches no model/)
   })
 
+  it('does not open where the lineup names a model the board does not offer', async () => {
+    await expect(openPreset(byFile('language_models'), ctx({
+      lineupMembers: () => ['openrouter/mistralai/mistral-large-3'],
+    }))).rejects.toThrow(/does not offer/)
+  })
+
   it('does not open on a perspective whose wording did not arrive', async () => {
     await expect(openPreset(byFile('perspectives'), ctx({ lensContext: async () => '' })))
       .rejects.toThrow(/has no wording/)

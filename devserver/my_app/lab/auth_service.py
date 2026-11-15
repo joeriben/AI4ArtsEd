@@ -25,7 +25,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db import SessionLocal
 from .models import (
-    User, Role, CourseEducator, CourseMembership,
+    User, Role, Course, CourseEducator, CourseMembership,
     CourseRole, MembershipStatus,
 )
 
@@ -54,7 +54,7 @@ def login_user(user: User) -> None:
     session.pop("place_id", None)
     session.pop("place_code", None)
     session["user_id"] = user.id
-    session["user_stamp"] = _account_stamp(user)
+    session["user_stamp"] = account_stamp(user)
     session["role"] = user.role.value
     session.permanent = True
 
@@ -77,7 +77,7 @@ def login_place(place: CourseMembership) -> None:
     from .place_codes import code_stamp, course_stamp
     session.pop("settings_authenticated", None)
     session["user_id"] = place.user_id
-    session["user_stamp"] = _account_stamp(place.user)
+    session["user_stamp"] = account_stamp(place.user)
     session["role"] = Role.participant.value
     session["course_id"] = place.course_id
     session["course_stamp"] = course_stamp(place.course)
@@ -86,23 +86,32 @@ def login_place(place: CourseMembership) -> None:
     session.permanent = True
 
 
-def set_active_course(course_id: Optional[int]) -> None:
-    """Educator-side active-course selection (CourseSelector).
+def set_active_course(course: Optional[Course]) -> None:
+    """The course a leader or an admin works in, chosen in the sign-in field
+    of the header (POST /api/auth/active-course, 2026-11-14).
 
-    Explicit only: an educator login does NOT auto-set course_id (Entscheid 1);
-    the educator actively chooses the course they are working inside. Passing
-    None clears the selection ("no course / presets only").
+    Explicit only: a sign-in does NOT set a course (Entscheid 1). None is no
+    course: the account works in its own use ("Eigene Nutzung", decided
+    2026-10-31), at the installation's level. A course is pinned with the
+    moment it was made, as a place session pins it (`login_place`): the
+    safety level of the course applies only to the course the session chose
+    (`is_session_course`), and `_check_chosen_course` ends a choice whose
+    course is gone or no longer led by the account.
     """
-    if course_id is None:
+    from .place_codes import course_stamp
+    if course is None:
         session.pop("course_id", None)
+        session.pop("course_stamp", None)
     else:
-        session["course_id"] = int(course_id)
+        session["course_id"] = course.id
+        session["course_stamp"] = course_stamp(course)
 
 
 def current_course_id() -> Optional[int]:
     """The course_id pinned in the session — a participant's fixed course
     binding OR the educator's explicitly chosen active course — or None."""
     _check_place_session()
+    _check_chosen_course()
     cid = session.get("course_id")
     return int(cid) if cid is not None else None
 
@@ -115,9 +124,11 @@ def is_session_course(course) -> bool:
     return "course_stamp" in session and session["course_stamp"] == course_stamp(course)
 
 
-def _account_stamp(user: User) -> Optional[str]:
+def account_stamp(user: User) -> Optional[str]:
     """What a session remembers of the account it signed in as: the moment
-    the account was made, as `place_codes.course_stamp` does for a course."""
+    the account was made, as `place_codes.course_stamp` does for a course. A
+    favourite kept under the account keeps it too (routes/favorites_routes.py,
+    `_asker`)."""
     from .place_codes import iso_utc
     return iso_utc(user.created_at)
 
@@ -129,7 +140,7 @@ def _is_session_account(user: User) -> bool:
     AUTOINCREMENT), and a browser still signed in as the deleted account
     would act as the new one. A session signed in before the stamp
     (2026-09-24) takes the stamp of the account it reaches now."""
-    stamp = _account_stamp(user)
+    stamp = account_stamp(user)
     if "user_stamp" not in session:
         session["user_stamp"] = stamp
         return True
@@ -157,6 +168,10 @@ def logout_user() -> None:
     session.pop("course_stamp", None)
     session.pop("place_id", None)
     session.pop("place_code", None)
+    # The sign-in through the settings password: kept, it made the browser the
+    # first admin again after the sign-out (`current_user`), and what the
+    # browser kept then belonged to that account.
+    session.pop("settings_authenticated", None)
 
 
 # The request attribute that says what this request's check of its place
@@ -228,9 +243,63 @@ def check_place_session() -> None:
     (Resona's chat stream, the interception event stream) stayed in memory,
     and the cookie kept the place for the next request. A file of the
     frontend is served without the check: reading the session makes Flask
-    add `Vary: Cookie` to the response."""
+    add `Vary: Cookie` to the response. A leader's chosen course is checked
+    here as well (`_check_chosen_course`), for the same reason."""
     if request.path.startswith("/api/"):
         _check_place_session()
+        _check_chosen_course()
+
+
+# The request attribute that says the chosen course of this request's session
+# has been checked; on the request for the reason given at _PLACE_CHECK.
+_CHOSEN_CHECK = "_lab_chosen_course_check"
+
+
+def _check_chosen_course() -> None:
+    """End a leader's choice of a course the account can no longer work in.
+    Once per request.
+
+    A choice (`set_active_course`) holds while its course exists, is the
+    course that was chosen and not one made later under its id
+    (`is_session_course`), and is led by the account (`is_course_educator`;
+    an admin passes). A co-leader taken off a course, or a course deleted,
+    ends it: the course leaves the session, and the account works in its own
+    use again, at the installation's level. Without this, the session would
+    keep the course of an account that no longer leads it, for as long as the
+    session lives: its safety level, and its adapters for a run that names no
+    course (services/lora_register.py, `session_scope`).
+
+    A place session is no choice and is checked in `_check_place_session`; a
+    session without an account keeps its course (an ended place session
+    stays under its course's level, see there). Where the check itself
+    fails, the choice stays for the next request to check.
+    """
+    try:
+        req = request._get_current_object()
+    except RuntimeError:
+        return  # outside a request there is no session to check
+    if getattr(req, _CHOSEN_CHECK, False):
+        return
+    setattr(req, _CHOSEN_CHECK, True)
+    cid = session.get("course_id")
+    if cid is None or session.get("place_id") is not None:
+        return
+    if session.get("role") == Role.participant.value:
+        return
+    try:
+        user = current_user()
+        if user is None or user.role == Role.participant:
+            return
+        with _short_session() as db:
+            course = db.get(Course, int(cid))
+            holds = course is not None and is_session_course(course)
+        holds = holds and is_course_educator(user, int(cid))
+    except Exception:
+        logger.exception("[AUTH] chosen course not checked: course=%s", cid)
+        return
+    if not holds:
+        logger.info("[AUTH] chosen course %s left the session of account %s", cid, user.id)
+        set_active_course(None)
 
 
 def _place_unverified() -> bool:

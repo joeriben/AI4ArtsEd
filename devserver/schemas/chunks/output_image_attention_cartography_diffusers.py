@@ -117,7 +117,7 @@ async def execute(
         'image_data': attention_result['image_base64'],
         'media_type': 'image',
         'backend': 'diffusers',
-        'model_id': model_id,
+        'model_used': model_id,
         'seed': attention_result['seed'],
         'attention_data': {
             'tokens': attention_result['tokens'],

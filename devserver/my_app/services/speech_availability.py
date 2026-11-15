@@ -35,19 +35,20 @@ def speech_chunk():
     return _chunk_module
 
 
-def speech_availability(probe: bool = True) -> dict:
+def speech_availability(level, probe: bool = True) -> dict:
     """Whether this installation speaks, and if not, why not.
 
+    `level` is the safety level the calling view resolved for the request.
     `probe=False` skips loading the model and reports on configuration and
     safety level alone — enough for a prompt, and it keeps a chat turn from
     waiting on a model load.
     """
     from config import SUPERTONIC_ENABLED
-    from my_app.services.safety_level_resolver import resolve_safety_level
+    from my_app.services.safety_gate import normalise_level
 
     try:
         chunk = speech_chunk()
-        level = resolve_safety_level()
+        level = normalise_level(level)
         level_allowed = level in chunk.ALLOWED_SAFETY_LEVELS
 
         installed = None
@@ -92,8 +93,6 @@ _SILENT = {
 _HEARD = {
     'on_request': ("spoken aloud whenever a listener asks for it, one piece "
                    "at a time"),
-    'voice': ("spoken aloud and not written on the screen — someone chose to "
-              "hear rather than read"),
     'both': "spoken aloud and written on the screen at once",
     'text': ("written on the screen only; nothing is spoken this turn — "
              "someone chose to read rather than hear"),
@@ -107,22 +106,24 @@ _NO_SURFACE = ("written on the screen only — this surface offers no way to "
 
 
 def voice_state_sentence(voice_mode: Optional[str] = None,
-                         probe: bool = False) -> str:
-    """One sentence: what happens to these words right now.
+                         probe: bool = False, *, level) -> str:
+    """One sentence: what happens to these words right now, at `level`.
 
     `voice_mode` is what the calling surface knows and the backend cannot:
     whether there is a voice there at all, and what the listener set in
     their own browser where the choice is offered.
 
       'on_request'  a voice per message, asked for by hand (Persona)
-      'voice' | 'both' | 'text'   the listener's own setting (Resona)
+      'both'        every reply spoken and written (Resona, voice switched on)
+      'text'        written only: the main-menu switch is off in this browser,
+                    or the status endpoint reports no speech there (Resona, Persona)
       absent        no voice on this surface
 
     Absent means silent, not "on request". Only two surfaces carry a voice,
     so the opposite default would tell most figures they can be heard in rooms
     that have no ears — and a figure that believes it is heard writes for one.
     """
-    state = speech_availability(probe=probe)
+    state = speech_availability(level, probe=probe)
     if not state['available']:
         return _SILENT.get(state['reason'] or 'unknown', _SILENT['unknown'])
     return _HEARD.get((voice_mode or "").strip().lower(), _NO_SURFACE)

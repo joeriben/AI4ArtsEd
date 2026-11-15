@@ -173,7 +173,7 @@ def a_run_that_answers(monkeypatch):
     either pipeline is under test here — only which of the two a request
     reaches.
     """
-    def older_protocol(data):
+    def older_protocol(data, safety_level):
         yield "event: complete\ndata: " + json.dumps(
             {"status": "success", "run_id": "the-older-protocol"}) + "\n\n"
 

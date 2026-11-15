@@ -37,6 +37,11 @@ from my_app.utils.media_ref import (
 
 RUN = "run_probe_canvas__gen_normal"
 
+# The level the resolution tests read at: one that checks no picture, so that
+# what they test is the reference and not a verdict. Delivery has its own tests
+# below.
+LEVEL = "adult"
+
 
 def _png(path, size=(16, 16), color=(10, 120, 200)):
     Image.new("RGB", size, color).save(path, format="PNG")
@@ -72,26 +77,26 @@ def run_folder(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_media_url_resolves_to_the_indexed_file(run_folder):
-    assert resolve_media_ref(f"/api/media/image/{RUN}/0") == run_folder / "02_output_image.png"
-    assert resolve_media_ref(f"/api/media/image/{RUN}/1") == run_folder / "05_output_image.png"
+    assert resolve_media_ref(f"/api/media/image/{RUN}/0", level=LEVEL) == run_folder / "02_output_image.png"
+    assert resolve_media_ref(f"/api/media/image/{RUN}/1", level=LEVEL) == run_folder / "05_output_image.png"
 
 
 def test_media_url_without_index_takes_the_latest(run_folder):
-    assert resolve_media_ref(f"/api/media/image/{RUN}") == run_folder / "05_output_image.png"
+    assert resolve_media_ref(f"/api/media/image/{RUN}", level=LEVEL) == run_folder / "05_output_image.png"
 
 
 def test_explicit_index_overrides_the_url(run_folder):
-    assert resolve_media_ref(f"/api/media/image/{RUN}/1", index=0) == run_folder / "02_output_image.png"
+    assert resolve_media_ref(f"/api/media/image/{RUN}/1", index=0, level=LEVEL) == run_folder / "02_output_image.png"
 
 
 def test_bare_run_id_resolves(run_folder):
-    assert resolve_media_ref(RUN) == run_folder / "05_output_image.png"
+    assert resolve_media_ref(RUN, level=LEVEL) == run_folder / "05_output_image.png"
 
 
 def test_existing_path_is_taken_as_is(run_folder):
     path = run_folder / "02_output_image.png"
-    assert resolve_media_ref(str(path)) == path
-    assert resolve_media_ref(path) == path
+    assert resolve_media_ref(str(path), level=LEVEL) == path
+    assert resolve_media_ref(path, level=LEVEL) == path
 
 
 def test_upload_id_and_upload_url_resolve(tmp_path, monkeypatch):
@@ -99,8 +104,8 @@ def test_upload_id_and_upload_url_resolve(tmp_path, monkeypatch):
     uploads.mkdir()
     _png(uploads / "abc-123.webp")
     monkeypatch.setattr(config, "UPLOADS_TMP_DIR", uploads)
-    assert resolve_media_ref("abc-123") == uploads / "abc-123.webp"
-    assert resolve_media_ref("/api/media/uploads/abc-123") == uploads / "abc-123.webp"
+    assert resolve_media_ref("abc-123", level=LEVEL) == uploads / "abc-123.webp"
+    assert resolve_media_ref("/api/media/uploads/abc-123", level=LEVEL) == uploads / "abc-123.webp"
 
 
 # ---------------------------------------------------------------------------
@@ -109,30 +114,30 @@ def test_upload_id_and_upload_url_resolve(tmp_path, monkeypatch):
 
 def test_media_url_of_an_unknown_run_raises(run_folder):
     with pytest.raises(MediaRefError):
-        resolve_media_ref("/api/media/image/run_that_does_not_exist/0")
+        resolve_media_ref("/api/media/image/run_that_does_not_exist/0", level=LEVEL)
 
 
 def test_media_url_is_never_read_as_base64(run_folder):
     """The 2026-07-23 failure verbatim: the URL must not survive as image data."""
     with pytest.raises(MediaRefError):
-        load_image_b64("/api/media/image/run_that_does_not_exist/0")
+        load_image_b64("/api/media/image/run_that_does_not_exist/0", level=LEVEL)
 
 
 def test_index_out_of_range_raises(run_folder):
     with pytest.raises(MediaRefError):
-        resolve_media_ref(f"/api/media/image/{RUN}/7")
+        resolve_media_ref(f"/api/media/image/{RUN}/7", level=LEVEL)
 
 
 def test_missing_file_on_disk_raises(run_folder):
     (run_folder / "05_output_image.png").unlink()
     with pytest.raises(MediaRefError):
-        resolve_media_ref(f"/api/media/image/{RUN}/1")
+        resolve_media_ref(f"/api/media/image/{RUN}/1", level=LEVEL)
 
 
 def test_nonsense_and_empty_references_raise(run_folder):
     for bad in ("", "   ", None, "not-a-reference-at-all", "/api/media/image/"):
         with pytest.raises(MediaRefError):
-            resolve_media_ref(bad)
+            resolve_media_ref(bad, level=LEVEL)
 
 
 def test_run_without_images_raises_naming_the_run(tmp_path, monkeypatch):
@@ -144,8 +149,64 @@ def test_run_without_images_raises_naming_the_run(tmp_path, monkeypatch):
         lambda run_id, base_path=None: _FakeRecorder(final, [{"type": "output_text", "filename": "a.txt"}]),
     )
     with pytest.raises(MediaRefError) as excinfo:
-        resolve_media_ref("run_text_only")
+        resolve_media_ref("run_text_only", level=LEVEL)
     assert "run_text_only" in str(excinfo.value)
+
+
+# ---------------------------------------------------------------------------
+# Delivery: a run's picture resolves only where it would be handed out
+# ---------------------------------------------------------------------------
+
+def test_a_run_picture_resolves_only_for_a_level_its_pass_answers_for(tmp_path, monkeypatch):
+    """The resolver asks the rule the media route serves by, at the level of
+    whoever the picture is read for: unjudged, a picture is none for kids, and a
+    pass counts for its own level and every looser one."""
+    final = tmp_path / "final"
+    final.mkdir()
+    _png(final / "02_output_image.png")
+    picture = {"type": "output_image", "filename": "02_output_image.png", "sequence": 2,
+               "metadata": {}}
+    import my_app.services.pipeline_recorder as pr
+    monkeypatch.setattr(pr, "load_recorder",
+                        lambda run_id, base_path=None: _FakeRecorder(final, [picture]))
+    ref = f"/api/media/image/{RUN}/0"
+    with pytest.raises(MediaRefError):
+        resolve_media_ref(ref, level="kids")
+    assert resolve_media_ref(ref, level="adult") == final / "02_output_image.png"
+
+    picture["metadata"]["safety"] = {"safe": True, "level": "youth"}
+    with pytest.raises(MediaRefError):
+        resolve_media_ref(ref, level="kids")
+    assert resolve_media_ref(ref, level="youth") == final / "02_output_image.png"
+
+
+def test_a_path_into_a_run_folder_is_asked_like_the_run(tmp_path, monkeypatch):
+    """A path is how the chat and the analysis hand a picture on. One into a
+    run's folder is that run's output under another name and is asked what the
+    run's address is asked; a file outside the run storage is taken as it is."""
+    import my_app.services.pipeline_recorder as pr
+
+    storage = tmp_path / "exports"
+    monkeypatch.setattr(config, "JSON_STORAGE_DIR", str(storage))
+    recorder = pr.LivePipelineRecorder(run_id="run_by_path", config_name="sd35_large",
+                                       safety_level="kids", device_id="dev", base_path=storage)
+    buffer = io.BytesIO()
+    Image.new("RGB", (16, 16), (10, 120, 200)).save(buffer, format="PNG")
+    recorder.save_entity(entity_type="output_image", content=buffer.getvalue(),
+                         metadata={"format": "png"})
+    monkeypatch.setitem(pr._active_recorders, "run_by_path", recorder)
+    entity = recorder.metadata["entities"][-1]
+    path = recorder.final_folder / entity["filename"]
+
+    with pytest.raises(MediaRefError):
+        resolve_media_ref(str(path), level="kids")
+    assert resolve_media_ref(path, level="adult") == path
+    recorder.mark_entity_safety(entity["sequence"], safe=True)
+    assert resolve_media_ref(str(path), level="kids") == path
+
+    elsewhere = tmp_path / "upload.png"
+    _png(elsewhere)
+    assert resolve_media_ref(elsewhere, level="kids") == elsewhere
 
 
 # ---------------------------------------------------------------------------
@@ -288,6 +349,8 @@ def _recorder_for(monkeypatch, module, final, entities):
     recorder = _FakeRecorder(final, entities)
     recorder.metadata["run_id"] = LATENT_RUN
     recorder.metadata["config_name"] = "sd35_large"
+    # Made at kids: a pass there answers for every level that may ask.
+    recorder.metadata["safety_level"] = "kids"
     monkeypatch.setattr(
         module, "load_recorder",
         lambda run_id, base_path=None: recorder if run_id == LATENT_RUN else None)
@@ -343,6 +406,23 @@ def test_restoring_a_favourite_hands_out_no_address_for_a_latent(
     assert all("/api/media/latent/" not in o["url"] for o in outputs)
 
 
+def test_at_kids_a_run_of_a_looser_level_is_not_opened_again(monkeypatch, one_image_one_latent):
+    """At kids and youth only a run of the same level or a stricter one opens
+    again: its Stage-2 text was checked with the question of its own level. A
+    run that names no level answers for none."""
+    import my_app.routes.favorites_routes as favorites_routes
+
+    final, entities = one_image_one_latent
+    recorder = _recorder_for(monkeypatch, favorites_routes, final, entities)
+    monkeypatch.setattr(favorites_routes, "resolve_safety_level", lambda: "kids")
+    client = _client(favorites_routes.favorites_bp)
+    for made_at, status in (("kids", 200), ("youth", 403), ("adult", 403), (None, 403)):
+        recorder.metadata["safety_level"] = made_at
+        answer = client.get(f"/api/favorites/{LATENT_RUN}/restore")
+        assert answer.status_code == status, made_at
+    assert answer.get_json()["safety_block"]["reason_key"] == "unchecked"
+
+
 def test_the_research_table_counts_one_medium_for_a_run_that_kept_a_latent(
     monkeypatch, tmp_path, one_image_one_latent
 ):
@@ -357,7 +437,7 @@ def test_the_research_table_counts_one_medium_for_a_run_that_kept_a_latent(
         "run_id": LATENT_RUN,
         "timestamp": "2026-09-04T10:00:00",
         "config_name": "sd35_large",
-        "safety_level": "open",
+        "safety_level": "adult",
         "device_id": "dev",
         "entities": entities,
     }), encoding="utf-8")

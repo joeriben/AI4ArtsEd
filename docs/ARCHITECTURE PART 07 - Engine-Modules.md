@@ -415,7 +415,7 @@ This is not a linguistic translation, but an aesthetic, semantic and structural 
 Be verbose!
 
 Reconstruct all entities and their relations as specified, ensuring that:
-- Each entity is retained – or respectively transformed – as instructed.
+- Each entity is retained – or respectively transformed – as instructed, unless the instruction explicitly says otherwise.
 - Each relation is altered in line with the particular aesthetics, genre-typical traits, and logic
   of the "Context". Be explicit about visual aesthetics in terms of materials, techniques, composition,
   and overall atmosphere. Mention the input_context als cultural, cf. artistic, c.f intervening context
@@ -571,52 +571,21 @@ The engine twin of the output-config selection had no caller; the selection runs
 
 ### 10. stage_orchestrator.py
 
-**Purpose:** Helper functions for 4-stage pipeline architecture
+**Purpose:** Helpers the routes and the safety gate share
 
-**Context:** Extracted from `pipeline_executor.py` for Phase 2 refactoring
-- DevServer (schema_pipeline_routes.py) orchestrates Stage 1-3
-- PipelineExecutor becomes a "dumb" executor (just runs chunks)
-- These helper functions support the smart orchestrator
+**Context:** Extracted from `pipeline_executor.py` for the Phase 2 refactoring. Until 2026-11-01 it also ran Stage 1 and Stage 3 for the routes; the checks are `my_app/services/safety_gate.py` now (Part 01, section 1.7).
 
-**Key Functions:**
+**What stands here:**
 
-#### Safety Filtering (Hybrid Approach)
-```python
-def load_filter_terms() -> Dict[str, List[str]]:
-    """Load safety filter terms (cached)"""
-    # Loads from:
-    # - youth_kids_safety_filters.json (Stage 3: Kids/Youth)
-    # - stage1_safety_filters.json (Stage 1: CSAM/Violence/Hate)
-
-def check_stage1_safety(text: str) -> Tuple[bool, Optional[str]]:
-    """Fast string-matching for critical terms"""
-    # Blocks: CSAM, extreme violence, hate speech
-    # Returns: (is_safe, blocked_reason)
-
-def check_stage3_safety(text: str, safety_level: str) -> Tuple[bool, Optional[str]]:
-    """Age-appropriate content filtering"""
-    # safety_level: "kids" (8-12) or "youth" (13-17)
-    # Checks for age-inappropriate content
-```
-
-#### Bilingual §86a Compliance (Germany)
-```python
-def check_86a_violation(text: str) -> Tuple[bool, Optional[str]]:
-    """Check for prohibited symbols under German law"""
-    # Detects: Nazi symbols, terrorist symbols, extremist codes
-    # Bilingual: German and English terms
-    # Returns: (is_violation, explanation)
-```
-
-**Workflow Integration:**
-1. Stage 1: User input → `check_stage1_safety()` + `check_86a_violation()`
-2. Stage 3: Pre-output → `check_stage3_safety(safety_level)`
-3. If blocked → Return error to user with explanation
-
-**Files:**
-- `schemas/engine/stage_orchestrator.py` - Main helpers
-- `schemas/youth_kids_safety_filters.json` - Stage 3 filters
-- `schemas/stage1_safety_filters.json` - Stage 1 filters
+| Helpers | What they do | Used by |
+|---|---|---|
+| `translation_instruction_for()`, `translation_context()`, the translation cache per device | The context every translation into English runs in, with a perspective's own wording where its config carries one (`meta.translation_instruction`) | the translations in `schema_pipeline_routes.py` and `speech_routes.py` |
+| `fast_dsgvo_check()` | The name recogniser: SpaCy, person names of two words or more | the intake (`safety_gate.py`) |
+| `llm_personal_data_check()` | The classifier's question whether a text names a private individual or an address. True blocks, False releases, no answer blocks | the intake, after a hit of the name recogniser or the address pattern, and whenever the recogniser cannot run |
+| `load_bilingual_86a_terms()`, `fast_filter_86a_all_languages()`, `fast_filter_bilingual_86a()` | The §86a lists of `schemas/stage1_86a_critical_bilingual.json`, matched with tolerance for misspellings from six letters on: the lists of every language, or those of the detected language and English | the check before the model and the check at the result on a text (`safety_gate.py`, every language); the upload check of the knowledge library (`upload_gate.py`, detected language and English) |
+| `_detect_input_language()` | The language of a text: from its script, for a Latin script from the interface language | the language a Stage-2 context is rendered in (`schema_pipeline_routes.py`); `fast_filter_bilingual_86a()` |
+| `build_safety_message()`, `SAFETY_CHECK_UNAVAILABLE_MESSAGE` | The sentences of the block message for content (`schemas/safety_code_explanations.json`) and for a check that could not be carried out | `safety_gate.py`; the second also `schema_pipeline_routes.py` |
+| `load_filter_terms()`, `fast_filter_check()`, `parse_preoutput_json()` | The word lists of `schemas/stage1_safety_filters.json` and `schemas/youth_kids_safety_filters.json`, and the reader of an answer of the old pre-output check | no route and no check; tests and measuring scripts |
 
 ---
 
@@ -940,7 +909,7 @@ if not self._auto_start_enabled:
 10. ⚠️ **comfyui_workflow_generator.py** - DEPRECATED (use Output-Chunks)
 
 ### Orchestration & Safety
-11. ✅ **stage_orchestrator.py** - 4-stage helpers & safety filtering
+11. ✅ **stage_orchestrator.py** - translation context, name recogniser, §86a lists, block sentences (the checks: `my_app/services/safety_gate.py`)
 
 ### Services & Lifecycle
 12. ✅ **swarmui_manager.py** - SwarmUI auto-recovery & lifecycle management

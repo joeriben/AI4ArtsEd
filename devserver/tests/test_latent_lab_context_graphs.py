@@ -447,31 +447,38 @@ def test_a_run_answers_with_the_picture_or_the_status_its_failure_carries(routes
     monkeypatch.setattr("my_app.services.watermark_service.watermark_result_metadata",
                         lambda payload, meta, extra_keys: marked.append((payload["seed"], meta, extra_keys)))
     body = {"prompt": "a house", "seed": 12, "enable_streaming": True}
+    # At research none of the checks applies; what they decide is the matter of
+    # test_workbench_checks.py.
 
     monkeypatch.setattr(graphs, "run_graph", run_graph_with("aW1n"))
-    assert routes._run("generate", body) == ({"success": True, "image_base64": "aW1n", "seed": 12}, 200)
+    assert routes._run("generate", body, "research") == (
+        {"success": True, "image_base64": "aW1n", "seed": 12}, 200)
     assert calls == [("fusion_scheduled", "FUSION-WORKBENCH-GENERATE")]
     assert marked == [(12, {"seed": 12}, ("image_base64",))]
 
-    assert routes._run("generate", {"seed": 1}) == ({"success": False, "error": "prompt required"}, 400)
-    assert routes._run("position_probe", {"baseline_prompt": "a"}) == (
+    assert routes._run("generate", {"seed": 1}, "research") == (
+        {"success": False, "error": "prompt required"}, 400)
+    assert routes._run("position_probe", {"baseline_prompt": "a"}, "research") == (
         {"success": False, "error": "probe_prompt required"}, 400)
     # Presence, as the twin's routes checked: the probe's empty baseline passes.
-    assert routes._run("position_probe", {"baseline_prompt": "", "probe_prompt": "a"}) == (
+    assert routes._run("position_probe", {"baseline_prompt": "", "probe_prompt": "a"},
+                       "research") == (
         {"success": False, "error": "probe_step_range required"}, 400)
-    assert routes._run("delayed_kickin", {"prompt_early": "a", "prompt_full": "b"}) == (
+    assert routes._run("delayed_kickin", {"prompt_early": "a", "prompt_full": "b"}, "research") == (
         {"success": False, "error": "kickin_step required"}, 400)
     assert routes._run("delayed_kickin_cumulative",
-                       {"prompt_early": "a", "prompt_full": "b", "kickin_step": 3}) == (
+                       {"prompt_early": "a", "prompt_full": "b", "kickin_step": 3},
+                       "research") == (
         {"success": False, "error": "up_to_block required"}, 400)
-    assert routes._run("generate", {"prompt": "a", "fusion_strategy": "original"}) == (
+    assert routes._run("generate", {"prompt": "a", "fusion_strategy": "original"},
+                       "research") == (
         {"success": False, "error": "fusion_strategy 'original' is none of centered_fade, legacy, "
                                     "dual_alpha, slerp, normalized"}, 400)
     monkeypatch.setattr(graphs, "run_graph", run_graph_with(GpuBusyError("queue full")))
-    payload, status = routes._run("generate", body)
+    payload, status = routes._run("generate", body, "research")
     assert status == 503 and payload["error"] == "the card is busy: queue full"
     monkeypatch.setattr(graphs, "run_graph", run_graph_with(RuntimeError("node 30 refused: Block 40")))
-    assert routes._run("decomposition", {"source_prompt": "a"}) == (
+    assert routes._run("decomposition", {"source_prompt": "a"}, "research") == (
         {"success": False, "error": "node 30 refused: Block 40"}, 500)
 
 
@@ -480,8 +487,7 @@ RESEARCH_ROUTES = ("decomposition", "position_probe", "delayed_kickin", "delayed
 
 def _app(routes, monkeypatch, level):
     from flask import Flask
-    from my_app.services import safety_level_resolver
-    monkeypatch.setattr(safety_level_resolver, "resolve_safety_level", lambda: level)
+    monkeypatch.setattr(routes, "resolve_safety_level", lambda: level)
     app = Flask(__name__)
     app.register_blueprint(routes.fusion_workbench_bp)
     return app
@@ -506,14 +512,14 @@ def test_the_research_routes_stand_beside_generate_and_refuse_a_missing_field(ro
 
 
 def test_the_research_routes_answer_at_the_research_level_only(routes, monkeypatch):
-    client = _app(routes, monkeypatch, "open").test_client()
+    client = _app(routes, monkeypatch, "adult").test_client()
     for kind in RESEARCH_ROUTES:
         answer = client.post(f"/api/fusion_workbench/{kind}", json={"source_prompt": "a"})
         assert answer.status_code == 403
         assert answer.get_json() == {
             "success": False,
-            "error": f"{kind} runs at the research level only; this installation runs at 'open'"}
-    # /generate stands as it stood (docs/WORK_ORDER_CONTENT_CHECKING.md, A7).
+            "error": f"{kind} runs at the research level only; this installation runs at 'adult'"}
+    # /generate answers at every level; a field it lacks is refused before any check.
     client = _app(routes, monkeypatch, "kids").test_client()
     answer = client.post("/api/fusion_workbench/generate", json={})
     assert answer.status_code == 400 and answer.get_json() == {"success": False, "error": "prompt required"}

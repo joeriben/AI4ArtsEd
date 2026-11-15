@@ -496,6 +496,10 @@ async function handleFavorite(item: DrawerItem) {
     // stays dark says the reading was not kept, while a lit one over the
     // previous reading says something false about what is in the picture.
     if (props.beforeFavorite && !favoritesStore.isFavorited(item.runId)) {
+      // A run is kept once. Where somebody else keeps it, keeping is refused,
+      // and the reading written first would replace the plate of their
+      // favourite.
+      if ((await favoritesStore.keeperOf(item.runId, deviceId)) === 'another') return
       await props.beforeFavorite(item)
     }
     await favoritesStore.toggleFavorite(

@@ -272,6 +272,7 @@ export const es = {
       uiModeEffectStructure: 'Información en pantalla: fácil oculta los datos técnicos, experto muestra el modelo, el Seed y los parámetros.',
       uiModeEffectStyle: 'Estilo de los comentarios sobre imágenes.',
       uiModeNotSafety: 'Esto no es un ajuste de filtro. Lo que se verifica y se bloquea lo decide el nivel de seguridad de abajo.',
+      traditionalChineseZhHant: 'Chino tradicional (zh-hant)',
     },
     safety: {
       kidsTitle: 'Niños (8–13)',
@@ -331,15 +332,6 @@ export const es = {
       storedIn: 'Almacenado en',
       currentKey: 'Actual',
       keyOf: 'Clave API de {provider}',
-      frontierImageLabel: 'Modelo de imagen frontera externo',
-      frontierProviderLabel: 'Proveedor',
-      frontierKeyLabel: 'Clave API presente',
-      frontierBalanceLabel: 'Saldo de Mammouth.ai',
-      frontierUsedUp: {
-        account: 'presupuesto de la cuenta agotado',
-        key: 'presupuesto de esta clave API agotado',
-        team: 'presupuesto del equipo agotado',
-      },
     },
     save: {
       saveApply: 'Guardar y aplicar',
@@ -1125,7 +1117,7 @@ export const es = {
       modelComparison: 'Comparación de modelos',
       differentModelsInterpretSame: 'Distintos modelos interpretan el mismo prompt a partir de la misma imagen de ruido — y sin embargo producen resultados completamente diferentes. La comparación de modelos hace visible que el modelo mismo es una variable decisiva, no solo el prompt.',
       currentTopModels: 'Modelos punteros actuales',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — tres modelos actuales en comparación directa.',
+      sd35Large: 'SD 3.5 Large, Flux 2 y Flux 3 Klein en comparación directa.',
       historicalComparison: 'Comparación histórica',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — tres generaciones. ¿Cómo ha cambiado la generación de imágenes año tras año?',
       temperatureComparison: 'Comparación de temperatura',
@@ -1925,9 +1917,6 @@ export const es = {
     working: 'trabajando…',
     waiting: 'esperando',
     stationFailed: 'esta máquina no respondió',
-    band: {
-      done: 'Las cuatro han respondido',
-    },
     ask: {
       sign: '¡Pregúntame!',
       question: '¿Qué puedes oír en realidad de mi música, y qué le pasa a mi grabación en el camino hacia la canción? También me gustaría saber qué vale la pena probar aquí.',
@@ -1964,8 +1953,6 @@ export const es = {
     },
     sung: {
       name: 'Resultado',
-      note: 'Esto solo se puede oír, no leer. Contrástalo con el texto que se escribió.',
-      notKept: 'Esto existe mientras te quedes en la página. No se puede guardar, marcar como favorito ni descargar — es una recreación, no una obra.',
       held: 'elegido a mano — este es el que se ejecuta',
       madeBy: 'hecho por {model}, en {s} s',
       pick: 'Elección del modelo',
@@ -1989,11 +1976,9 @@ export const es = {
     },
     purpose: 'Aquí se pueden aprender dos cosas: a provocar deliberadamente una salida concreta con una entrada cantada o tocada, y a encontrarse en ello con los propios medios de expresión y los clichés de percepción. Y a descubrir que una IA a menudo inventa algo incluso cuando no hay más que silencio, y que grabaciones completamente distintas producen a menudo resultados muy similares y estereotipados.',
     run: {
-      name: 'Iniciar',
       start: 'Enviar la grabación a través de las cuatro máquinas',
       took: 'respondió en {s} s',
     },
-    stationFailedNamed: '{station} — esta máquina no respondió',
     story: 'Esto es una exploración lúdica de lo que una IA entiende — y malinterpreta — sobre asuntos musicales y culturales. La página escucha a través del micrófono, intenta reconocer canto y habla, luego situaciones sonoras y estilos, y finalmente reconstruirlos: una cadena de traducciones llena de pérdidas de traducción y artefactos, que puede experimentarse como un espejo deformante.',
   },
   latentLabOverview: {
@@ -2118,7 +2103,7 @@ export const es = {
           posNote: 'los números de posición de los [[tokens]]',
           ctrlNote: 'un [[token]] de control',
           fourNote: 'una palabra se convierte en dos [[tokens]]',
-          langHead: 'La misma frase en las diez lenguas de esta plataforma, cortada en [[tokens]]:',
+          langHead: 'La misma frase en diez lenguas de esta plataforma, cortada en [[tokens]]:',
           langs: 'en¦Inglés¦22\nhe¦Hebreo¦25\nes¦Español¦30\nde¦Alemán¦31\nko¦Coreano¦31\nfr¦Francés¦35\ntr¦Turco¦35\nar¦Árabe¦36\nbg¦Búlgaro¦47\nuk¦Ucraniano¦56',
           langNote: 'Para la misma frase el modelo de IA necesita\nmás del doble de [[tokens]] en ucraniano que\nen inglés.\nLa palabra para “casa” es un solo [[token]] en ocho\nde estas lenguas. En búlgaro y\nucraniano son tres.',
           embLabel: '[[Embedding]]: a cada [[token]] se le da su serie de números. Así tu texto queda incrustado en números.',
@@ -2841,9 +2826,9 @@ export const es = {
       models: {
         label: 'Modelos',
         small: 'modelos pequeños',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1.7B y 4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1.7B y 4B',
         large: 'modelos grandes',
-        largeNote: 'OLMo 2 y 3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — de 7 a 12B',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — de 7 a 14B',
         family: 'familia de modelos',
         familyNote: 'los tamaños de la familia Qwen, de 1.7B a 14B',
         history: 'modelo a lo largo del tiempo',
@@ -3279,6 +3264,7 @@ export const es = {
       error: 'Error de conexión',
       modelLabel: 'Modelo',
       defaultModel: 'Predeterminado (ajustes)',
+      localModel: 'local',
       modelNotDownloaded: '(no descargado)',
       install: {
         downloadCta: 'Descargar ({mb} MB)',
@@ -3403,6 +3389,7 @@ export const es = {
         ko: 'Coreano',
         tr: 'Turco',
         uk: 'Ucraniano',
+        'zh-hant': 'Chino tradicional',
       },
       piper: {
         fileMeta: 'Exportada con Piper {version}, {hz} Hz, nivel de calidad «{quality}»',
@@ -3531,8 +3518,8 @@ export const es = {
     languagesLabel: 'Idiomas',
     modelNote: {
       noteBody: {
-        current: 'SD 3.5 Large se construyó para seguir el prompt de cerca y poner escritura legible en la imagen. FLUX.2 se construyó para el trabajo que se repite: el mismo personaje, producto o estilo mantenido a lo largo de hasta diez imágenes de referencia a la vez. Su publicación de lanzamiento afirma que “la tipografía compleja, las infografías, los memes y las maquetas de interfaz con texto fino legible ya funcionan de forma fiable en producción”.\n\nGemini 3 Pro Image está construido sobre Gemini 3, el modelo general. Una imagen puede recurrir a una consulta de Google Search, de modo que una ficha de receta o un gráfico del tiempo pueden llevar información actual. Google indica texto legible dentro de la imagen en varios idiomas.',
-        history: 'Stable Diffusion trabaja en una representación comprimida de la imagen y no sobre sus píxeles. Su artículo se propuso hacer posible el entrenamiento con recursos de cómputo limitados, frente a los cientos de días de GPU que cuesta un modelo que trabaja directamente sobre los píxeles.\n\nSDXL se construyó para la fidelidad visual: una red de imagen tres veces mayor, un segundo codificador de texto, varias relaciones de aspecto y la afirmación, en su propio artículo, de alcanzar a los generadores de imagen cerrados de 2023. El artículo de SD 3.5 nombra otros objetivos: “mejorar la comprensión del texto, la tipografía y las valoraciones de preferencia humana”. La tipografía es la escritura dentro de la imagen; la comprensión del texto, si un prompt que nombra varias cosas las consigue todas.',
+        current: 'Stability AI promete para SD 3.5 Large que sigue el prompt de cerca y pone escritura en la imagen (2024, ficha del modelo y página de lanzamiento). La publicación de Flux 2 afirma: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nEntre las características principales de Flux 3 Klein, la ficha del modelo de Black Forest Labs (2026) cita: “Text rendering within generated images.”',
+        history: 'Stable Diffusion trabaja en una representación comprimida de la imagen y no sobre sus píxeles. Su artículo se propuso hacer posible el entrenamiento con recursos de cómputo limitados, frente a los cientos de días de GPU que cuesta un modelo que trabaja directamente sobre los píxeles.\n\nEl artículo sobre SDXL nombra la síntesis de imágenes de alta resolución como objetivo y afirma alcanzar a los generadores de imagen cerrados de 2023. El artículo sobre la arquitectura de SD 3.5 nombra: “improving text comprehension, typography, and human preference ratings”. La tipografía es la escritura dentro de la imagen.',
       },
       referencesTitle: 'Fuentes',
     },
@@ -3541,7 +3528,6 @@ export const es = {
         sd35_large: 'SD 3.5 Large lee el prompt a través de tres codificadores de texto: CLIP-L y CLIP-G, entrenados con pares de imagen y leyenda (Radford et al. 2021; Cherti et al. 2023), y T5-XXL, entrenado solo con texto (Raffel et al. 2020). El artículo de Stability AI sobre la arquitectura (Esser et al. 2024) presenta el objetivo como “improving text comprehension, typography, and human preference ratings”. En la evaluación del artículo, la tipografía es la fidelidad con la que la imagen reproduce un texto escrito.',
         sd35_large_turbo: 'SD 3.5 Large Turbo lee el prompt a través de los mismos tres codificadores de texto que SD 3.5 Large, CLIP-L, CLIP-G y T5-XXL (Stability AI 2024, ficha del modelo). Lo que Stability AI quería de Turbo está en el anuncio: “A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps” (Stability AI 2024, página de anuncio).',
         flux2: 'Flux 2 lee el prompt a través del modelo de lenguaje de un modelo de visión y lenguaje (VLM). Black Forest Labs indica lo que aporta el VLM: “The VLM brings real world knowledge and contextual understanding” (Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image es el modelo de imagen de Google “Nano Banana Pro”. Google escribe: “Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.” (Google 2025).',
       },
       referencesTitle: 'Fuentes',
     },

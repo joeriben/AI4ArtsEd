@@ -253,9 +253,10 @@ def get_cached_metadata_files(base_path: Path) -> List[MetadataInfo]:
 # session is the one to preview.
 
 
-def resolve_preview_media(session_dir: Path, metadata: dict):
+def resolve_preview_media(session_dir: Path, metadata: dict, level):
     """
-    First output image or video of a session - the one the table previews.
+    First output image or video of a session that delivery hands to `level` -
+    the one the table previews.
 
     Returns (absolute_path, subpath_below_session_dir, 'image'|'video'),
     or None when the session produced neither.
@@ -272,7 +273,7 @@ def resolve_preview_media(session_dir: Path, metadata: dict):
         # question. A refused picture is passed over here rather than refused
         # outright: the next output of the session becomes the preview, and a
         # session whose every picture was refused simply previews nothing.
-        cleared, _ = entity_cleared_for_delivery(entity, metadata)
+        cleared, _ = entity_cleared_for_delivery(entity, metadata, level)
         if not cleared:
             continue
         # New structure keeps outputs in final/, the old one beside metadata.json.
@@ -1040,7 +1041,8 @@ def get_gpu_realtime():
         # Calculate memory percentage
         memory_percent = round((memory_used / memory_total) * 100, 1) if memory_total > 0 else 0
 
-        # CO2 factor: German electricity grid average ~400g CO2/kWh (2024)
+        # CO2 factor: the platform's rounded working value for the German grid;
+        # the sources stand at CO2_PER_KWH_GRAMS in services/resona_hardware.py.
         # This could be made configurable in the future
         co2_per_kwh = 400
 
@@ -1418,6 +1420,7 @@ def get_sessions():
         source_view_filter = request.args.get('source_view', None)
         sort_field = request.args.get('sort', 'timestamp')
         sort_order = request.args.get('order', 'desc')
+        level = resolve_safety_level()
 
         # Path to exports/json
         exports_path = Path(config.JSON_STORAGE_DIR)
@@ -1571,7 +1574,7 @@ def get_sessions():
                 thumbnail_path = None
                 thumbnail_type = None
                 thumbnail_url = None
-                preview = resolve_preview_media(session_dir, metadata)
+                preview = resolve_preview_media(session_dir, metadata, level)
                 if preview:
                     _, file_subpath, thumbnail_type = preview
                     # The full-size file, kept as the fallback the table uses
@@ -1672,7 +1675,7 @@ def get_session_thumbnail(run_id):
         with open(metadata_path) as f:
             metadata = json.load(f)
 
-        preview = resolve_preview_media(metadata_path.parent, metadata)
+        preview = resolve_preview_media(metadata_path.parent, metadata, resolve_safety_level())
         if not preview:
             return jsonify({"error": "Session has no preview medium"}), 404
 
@@ -1686,7 +1689,9 @@ def get_session_thumbnail(run_id):
         if cache_file is None:
             return jsonify({"error": "Thumbnail could not be built"}), 500
 
-        response = send_file(str(cache_file), mimetype='image/jpeg', conditional=True)
+        from my_app.services.thumbnails import served_thumbnail_name
+        response = send_file(str(cache_file), mimetype='image/jpeg', conditional=True,
+                             download_name=served_thumbnail_name(cache_file))
         # Exports do not change after the run, so the browser may keep this;
         # the marker exempts it from the app-wide no-store policy.
         response.headers['Cache-Control'] = 'private, max-age=31536000, immutable'
@@ -2032,7 +2037,7 @@ def get_backend_status():
     # stage 4: no surface runs the Diffusers station any more, and asking
     # after it is a call on the old way. Its twin configs go with the station
     # in stage 8. No `text` row since stage 5: the Text Lab's models are
-    # folders under models/llm/ that ComfyUI runs (config/text_presets.json);
+    # folders under models/llm/ that ComfyUI runs (config/local_llm_weights.json, 'text_rows');
     # the Text Lab's own routes (text_routes.list_models, list_presets) say
     # which are installed.
     media_rows = ("heartmula", "stable_audio", "cross_aesthetic", "mmaudio")
@@ -2857,64 +2862,6 @@ def api_usage():
         "active_provider": active_provider,
         "model_assignments": model_assignments,
     })
-
-
-@settings_bp.route('/frontier-image-accounts', methods=['GET'])
-@require_settings_auth
-def frontier_image_accounts():
-    """The external frontier image models and the accounts they run on, for
-    the rows under the key fields in the API table: every output
-    config whose meta marks it `frontier_image`, with its name, the provider
-    its chunk sends to, whether a key is present there, and the account's
-    balance, read afresh because the operator is looking at it, where the
-    check judges the provider's account (`judged`). Which model
-    and which provider stand in the rows comes from the configs and their
-    chunks, not from here.
-    Where the balance could not be read, `error` names why: the HTTP status,
-    with the proxy's name for the refusal where it gives one, "timeout", the
-    class of an exception, or an English sentence of
-    provider_account.read_account or of its LiteLLM reader (no address in
-    the provider table, no account in the answer); for a config whose chunk
-    names no provider, that. `used_up` names the first of the three budgets that binds
-    the key and is used up ('account', 'key', 'team', in that order), where
-    one is. The reading is stored as well, and the availability check acts on
-    it for five minutes while the key stays the same
-    (services/provider_account.py): it takes the config off the Flow and the
-    model choice of five instruments where there is no key, the provider
-    refuses the key, or a budget that binds the key is used up."""
-    from my_app.services import provider_account
-    from my_app.services.model_availability_service import ModelAvailabilityService
-    service = ModelAvailabilityService()
-    configs, states = [], {}
-    for path in sorted(service.config_dir.glob("*.json")):
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-        except Exception as e:
-            logger.error(f"[SETTINGS] {path.name} not read: {e}")
-            continue
-        if not isinstance(data, dict) or (data.get("meta") or {}).get("frontier_image") is not True:
-            continue
-        name = service.api_provider(path.stem)
-        if not name:
-            configs.append({"config_id": path.stem, "name": data.get("name"), "provider": None,
-                            "has_key": None, "judged": False, "balance": None, "used_up": None,
-                            "error": f"{path.stem} names no provider"})
-            continue
-        if name not in states:
-            states[name] = provider_account.account(name, fresh=True)
-        state = states[name]
-        configs.append({
-            "config_id": path.stem,
-            "name": data.get("name"),
-            "provider": name,
-            "has_key": state["has_key"],
-            "judged": state["judged"],
-            "balance": state["balance"],
-            "used_up": state["used_up"],
-            "error": state["error"],
-        })
-    return jsonify({"configs": configs})
 
 
 # ============================================================================

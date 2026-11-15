@@ -669,7 +669,7 @@ import IconPhase1 from '@/components/icons/IconPhase1.vue'
 - **Hover**: Border color + transform
 - **Active**: Background color + scale
 - **Loading**: Spinner animation
-- **Success**: Green glow + safety stamp
+- **Success**: Green glow
 - **Error**: Red border (not heavily used - app minimizes errors)
 
 **Pedagogical Rationale**: Immediate feedback reinforces cause-effect understanding.

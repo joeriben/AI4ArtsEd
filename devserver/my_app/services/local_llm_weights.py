@@ -5,7 +5,9 @@ the Hugging Face repository its weights come from, the folder under ComfyUI's
 models/llm/ they are written to, and whether the checkpoint reads images. The
 installer downloads from it, the ComfyUI client resolves an alias to that
 folder with it, and the model lists of the settings page and the comparison
-surfaces are read off it. Until stage 3 of the move to ComfyUI the same
+surfaces are read off it; since 2026-11-08 the Latent Text Lab's rows too
+(the entries' 'text_rows', read by services/text_presets). Until stage 3
+of the move to ComfyUI the same
 knowledge stood in the GPU service's GGUF registry, MODEL_CONFIGS in
 gpu_service/services/llm_backend.py, and the DevServer asked that service for
 it over HTTP.
@@ -54,6 +56,13 @@ def _table() -> dict:
 def models() -> Dict[str, dict]:
     """Every alias, in table order, with its entry."""
     return _table()["models"]
+
+
+def register() -> dict:
+    """The whole table, its head included: the order of the Text Lab's rows
+    ('text_rows') and the alias its Representation Engineering surface
+    starts on are read there (services/text_presets)."""
+    return _table()
 
 
 @lru_cache(maxsize=1)
@@ -158,6 +167,7 @@ def _listing(alias: str, e: dict) -> dict:
         "chat_capable": bool(e.get("chat_capable")),
         "vision": bool(e.get("vision")),
         "gated": bool(e.get("gated")),
+        "offered": e.get("offered", True) is not False,
         "repo": e["repo"],
     }
 
@@ -169,7 +179,7 @@ def listing() -> List[dict]:
 
 def chat_models() -> List[dict]:
     """The models the platform offers on its comparison surfaces."""
-    return [m for m in listing() if m["chat_capable"]]
+    return [m for m in listing() if m["chat_capable"] and m["offered"]]
 
 
 def vision_models() -> List[dict]:

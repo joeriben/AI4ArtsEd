@@ -87,16 +87,16 @@ The Latent Lab tools are grounded in six lines of research:
 ### Representation Engineering
 - **Zou, A. et al. (2023).** "Representation Engineering: A Top-Down Approach to AI Transparency." arXiv.
   DOI: [10.48550/arXiv.2310.01405](https://doi.org/10.48550/arXiv.2310.01405)
-  — Reading and steering model behavior through manipulation of internal representations. Establishes that neural network activations encode interpretable, manipulable concepts. **Basis for: Feature Probing tab (dimension transfer).**
+  — Reading and steering model behavior through manipulation of internal representations. Establishes that neural network activations encode interpretable, manipulable concepts. **Basis for: Representation Engineering (Transformers Lab), see the text domain below. Not a basis of the Dimension Explorer: that instrument transfers single dimensions between two prompt embeddings and reads or steers no activation; the title left its reference list on 2026-08-18.**
 
 ### Probing / Feature Attribution
 - **Belinkov, Y. (2022).** "Probing Classifiers: Promises, Shortcomings, and Advances." Computational Linguistics (MIT Press).
   DOI: [10.1162/coli_a_00422](https://doi.org/10.1162/coli_a_00422)
-  — Systematic survey of probing methods for understanding what information neural representations encode. **Basis for: Feature Probing tab (analysis phase).**
+  — Systematic survey of probing methods for understanding what information neural representations encode. **Not a basis of the Dimension Explorer: the instrument trains no probing classifier; the title left its reference list on 2026-08-18.**
 
 - **Bau, D. et al. (2020).** "Rewriting a Deep Generative Model." ECCV 2020 (Springer).
   DOI: [10.1007/978-3-030-58452-8_21](https://doi.org/10.1007/978-3-030-58452-8_21)
-  — Targeted rewriting of individual features in generative models. Shows that single directions in representation space control specific visual concepts. **Basis for: Feature Probing tab (targeted dimension transfer).**
+  — Targeted rewriting of individual features in generative models. Shows that single directions in representation space control specific visual concepts. **Not a basis of the Dimension Explorer: the instrument rewrites no model weights; the title left its reference list on 2026-08-18.**
 
 ### Attention in Diffusion Models
 - **Hertz, A. et al. (2022).** "Prompt-to-Prompt Image Editing with Cross Attention Control." ICLR 2023.
@@ -119,9 +119,6 @@ The Latent Lab tools are grounded in six lines of research:
 |-------|-----|-----------|
 | Mikolov 2013 | Concept Algebra | A - B + C embedding arithmetic |
 | Liu 2022 | Concept Algebra | Composable concept diffusion |
-| Zou 2023 | Feature Probing | Representation reading + steering |
-| Belinkov 2022 | Feature Probing | Probing what embeddings encode |
-| Bau 2020 | Feature Probing | Rewriting specific features |
 | Hertz 2022 | Attention Cartography | Cross-attention map analysis |
 | Kwon 2023 | Denoising Archaeology | Semantic phases in denoising |
 
@@ -217,8 +214,9 @@ See `Instrumenten-Flaechen im Latent Lab` in `docs/ELEMENT_STRUCTURE_REGISTRY.md
 called `Instrumenten-Flaechen unter dem Band` until 2026-08-22, when the last of the four gave up its
 band), and read the count of rebuilt instruments there rather than here — it changes with every
 rebuild. The instruments still in their old form do not sit in ONE 900 px measure but in several:
-`views/latent_lab/image_lab.vue`, `views/latent_lab/latent_text_lab.vue` and
-`views/latent_lab/crossmodal_lab.vue` each carry their own, and Re-enactment (`views/cover_band.vue`)
+`views/latent_lab/image_lab.vue` and `views/latent_lab/latent_text_lab.vue` each carry their own (the three
+instruments of the Crossmodal Lab sat in `.xm-lab`, `assets/crossmodal-stage.css`, until all three left it
+on 2026-11-02, and that rule is gone), and Re-enactment (`views/cover_band.vue`)
 carries none at all. Each leaves its own wrapper as it is rebuilt.
 
 **The automatic T5 expansion is gone.** The T5 expansion rewrites the prompt destructively. The switch
@@ -609,6 +607,11 @@ The Text Lab does not produce finished text outputs — it runs controlled exper
 | System Prompts | `compare/system_prompt_comparison.vue` | Implemented | The same prompt under different system prompts |
 | Model Comparison | `latent_lab/system_prompt_across_models.vue` | Implemented | The same prompt under ONE system prompt, a model per column (the instrument of the same name under Cultural Knowledge & Stereotypes compares image models) |
 
+Bias Archaeology 1 and 2 carry the names Bias Research 1 and 2 on the surface. Since 2026-11-06 they
+stand in the left column under Cultural Knowledge & Stereotypes. `latent_lab.vue` still renders them
+through `LatentTextLab`, so their addresses, their page context and their i18n root are unchanged;
+the catalogue (`platform_items.json`) carries them under the parent `compare`.
+
 ### Scientific Foundation (Text-Side)
 
 Three additional research lines complement the image-side foundation:
@@ -654,7 +657,7 @@ Frontend (the Text Lab views)
     │ POST /api/text/*
     ▼
 DevServer text_routes.py
-    ├── services/text_presets.py   the model rows (config/text_presets.json)
+    ├── services/text_presets.py   the model rows ('text_rows' in config/local_llm_weights.json)
     ├── services/text_probes.py    one prompt of a node per reading
     │       ▼
     │   ComfyUI: ai4artsed_llm_option_scores, ai4artsed_llm_rep_engineering
@@ -719,8 +722,11 @@ headings and the settings it would run with.
      towards the upper sentences
    - it is scaled by `mean(|d · direction|)`, the distance the pairs themselves
      travel along it — which is what makes α a count of pair-differences
-   - returned per pair: `agreement` (cosine to the direction) and the coordinates
-     in the plane of the first two singular vectors (`plane_x`, `plane_y`), plus
+   - returned per pair: `projection` (how far the pair travels along the direction,
+     in the layer's own units), `agreement` (cosine to the direction) and the
+     unit difference projected into the plane of the first two singular vectors
+     (`plane_x`, `plane_y`, length ≤ 1), plus `direction_norm` (the mean of
+     |projection|, the norm of the vector added at strength 1),
      `plane_share` and `explained_variance` for the whole reading
 
 2. **Manipulation** — one press, one reading, three generations, one seed:
@@ -778,9 +784,9 @@ Four more things came with it:
   model asks of the card beside its name. What that costs: the native
   `<option disabled>` blocked a model that will not fit, and `ChipSelect` has no
   per-chip block.
-- **The fan shows the arrow that agrees.** The common arrow is drawn first so the
-  pair arrows lie on top of it; a number that would land on a neighbour's steps
-  one notch further out along its own ray.
+- **The fan shows the arrow that agrees.** The green arrow is drawn first so the
+  pair arrows lie on top of it; the numbers of pairs at one angle stand beyond
+  the longest arrow of that angle, in pair order.
 
 **Not Li et al. (ITI).** Inference-Time Intervention trains a probe on each
 ATTENTION HEAD, keeps the heads that separate, and shifts only those, each along
@@ -792,8 +798,19 @@ No head is probed and none is selected, so the citation left the surface on
 **What the fan shows.** Three differences stand at three pairwise angles, and
 three rays from one point on a flat sheet have two free parameters — so the
 drawing is a projection onto the plane the reading itself picks out, not a
-hand-made arrangement. All arrows are the same length; a length would state a
-property of the drawing. Measured on Qwen3-4B, layer 18, with the three default
+hand-made arrangement. Each grey arrow is the pair's difference projected into
+that plane, in the layer's units, so how far it reaches along the green arrow is
+exactly `projection`, the pair's travel along the common direction. The green
+arrow is the vector the platform adds while the model writes, `direction_norm` ×
+the strength on the axis under the drawing, so it moves with the axis; at
+strength 1 it is as long as the grey arrows reach along it on average. One scale
+per reading, computed so that every arrow, its number and the green arrow at the
+axis's top stay in the box (`fanScale`). Until 2026-11-07 all arrows had the same
+length and the drawing carried the angles alone; the project lead's order of
+that day (verbatim in `docs/DEVELOPMENT_DECISIONS.md`, 2026-11-07; paraphrased
+here) asked that each single arrow stand for one pair and that the whole vector
+convey the strength and orientation of the direction, with the slider value as
+effect strength. Measured on Qwen3-4B, layer 18, with the three default
 pairs: agreements 0.685 / 0.650 / 0.569 (46.8° / 49.5° / 55.3°),
 `explained_variance` 40.5 %, `plane_share` 71.35 %.
 
@@ -918,7 +935,7 @@ All three instruments of this lab share a single model management panel (top of 
 |------|---------|
 | `devserver/my_app/routes/text_routes.py` | the Text Lab's routes |
 | `devserver/my_app/services/text_probes.py` | the readings: one prompt of a node of the platform's package on ComfyUI |
-| `devserver/my_app/services/text_presets.py` | the model rows (`config/text_presets.json`) |
+| `devserver/my_app/services/text_presets.py` | the model rows, read off `config/local_llm_weights.json` (`text_rows`) |
 | `devserver/my_app/services/text_client.py` | the tokenizer doors, asked of ComfyUI's HTTP routes |
 
 ### Backend — Latent Text Lab (ComfyUI execution)

@@ -19,7 +19,13 @@ Architecture:
       └── lookup_knowledge      (Knowledge library Phase 1: search Tier-F corpus; scope=['resona'])
       └── read_knowledge        (Knowledge library Phase 1: read a doc passage + citation; scope=['resona'])
       └── lookup_place          (Places grant 2026-08-11: what a lab instrument or comparison
-                                  mode says about its own technology; scopes default+resona)
+                                  mode says about its own technology, and since 2026-11-06 the
+                                  page's use report; scopes default+resona)
+      └── lookup_scenarios      (2026-11-06: search the teaching scenarios of the use reports
+                                  by subject, form, duration, competence, instrument or text;
+                                  scopes default+resona)
+      └── read_scenario         (2026-11-06: one scenario in full with the mapping entries
+                                  that cite it; scopes default+resona)
       └── lookup_research       (Research grant 2026-08-11: search the library's Tier-R section; universal)
       └── read_research         (Research grant 2026-08-11: read a Tier-R passage + citation; universal)
       └── (future) check_model_availability (later phase)
@@ -54,11 +60,8 @@ _SECTION_IDS = {
     "1": "platform_overview",
     "2": "platform_structure",
     "3": "text_mode",
-    "3b": "canvas_mode",
     "4": "circularity",
     "5": "was_wie_principle",
-    "6": "experimental_workflows",
-    "7": "lora_training",
     "8": "safety_levels",
     "9": "data_privacy",
     "10": "faq",
@@ -173,7 +176,8 @@ class ToolRegistry:
                 out.append(t["schema"])
         return out
 
-    def execute(self, name: str, arguments: dict, context: Optional[dict] = None) -> str:
+    def execute(self, name: str, arguments: dict, context: Optional[dict] = None,
+                *, level: Optional[str] = None, language: Optional[str] = None) -> str:
         """Execute a tool by name. Returns result string or error message.
 
         Args:
@@ -188,6 +192,15 @@ class ToolRegistry:
                 `_`-prefixed keys above. Never populate `context` from model
                 output — only from the request itself (see chat_routes.py's
                 tool-call loop).
+            level: The level of whoever the chat answers, resolved by its view.
+                Handed to the tool as `_level`, beside the context keys and like
+                them never taken from the model. A tool that opens a run's
+                picture asks delivery with it; without one the strictest level
+                counts.
+            language: The conversation language (the frontend's language code),
+                resolved by the chat route as for the system prompt. Handed to
+                the tool as `_language`, like `_level` never taken from the
+                model. lookup_place names a page in it.
         """
         tool = self._tools.get(name)
         if not tool:
@@ -219,6 +232,10 @@ class ToolRegistry:
                 # Backend-owned like the rest — a model naming its own delegate
                 # would be choosing where the picture is sent.
                 effective_args["_for_model"] = context["for_model"]
+        if level is not None:
+            effective_args["_level"] = level
+        if language is not None:
+            effective_args["_language"] = language
         try:
             result = tool["handler"](effective_args)
             logger.info(f"[TOOL-REGISTRY] Executed {name}: {len(result)} chars")
@@ -282,6 +299,17 @@ def take_kept_strategy():
     return kept
 
 
+# The opening of every null answer of lookup_scenarios, and the clause that
+# only the complete one carries (a competence filter: the record's reason, or
+# the levels at which the competence is mapped). The chat's evidence ledger
+# recognises the pair (chat_routes.py, beside the entries for lookup_knowledge
+# and search_websites) and counts that answer as a search that ran and came
+# back empty; a free-text miss grounds nothing. Constants, so the sites cannot
+# drift (2026-11-08).
+SCENARIO_NULL_PREFIX = "No teaching scenario of the use reports matches"
+SCENARIO_NULL_COMPLETE = "This is the answer to give:"
+
+
 def _register_builtin_tools(registry: ToolRegistry):
     """Register all built-in tools."""
 
@@ -307,6 +335,10 @@ def _register_builtin_tools(registry: ToolRegistry):
             "Look up a section from the AI4ArtsEd platform knowledge base. "
             "Use this when users ask about platform features, workflows, configurations, "
             "troubleshooting, or interface elements. Call multiple times for multiple sections. "
+            "What a mode, an instrument of a lab or a comparison is and does is "
+            "described by its use report, which lookup_place returns when asked for it "
+            "by name; where this knowledge base says something else about it, the use "
+            "report counts. "
             "Section titles and internal labels in what comes back (heading names, "
             "'TRICK 1' and the like) are shelf marks, not shared language: say what "
             "they mean in plain words, never speak them as names the group knows."
@@ -394,8 +426,6 @@ def _register_builtin_tools(registry: ToolRegistry):
         "sd35_large": ("image", "Stable Diffusion 3.5 Large — detailed images"),
         "flux2": ("image", "FLUX.2 — images"),
         "flux3": ("image", "FLUX 3 Image Klein — images"),
-        "gemini_3_pro_image": ("image", "Gemini 3 Pro image (€ paid cloud call — every entry here without € runs on the house's own cards; cloud EU/DSGVO via Mammouth)"),
-        "gemini_nano_banana_2_1": ("image", "Gemini Nano Banana 2.1 image (€ paid cloud call; cloud EU/DSGVO via Mammouth)"),
         "stableaudio_open": ("audio", "Stable Audio 3 — sound / audio"),
         "heartmula_standard": ("music", "HeartMuLa music. Prompt format: lyrics || tags, e.g. '[Verse] ... || pop,upbeat,piano'"),
         "wan22_t2v_video_fast": ("video", "Wan 2.2 — text-to-video"),
@@ -470,7 +500,7 @@ def _register_builtin_tools(registry: ToolRegistry):
         }
         inputs = {role: ref for role, ref in refs.items() if ref}
         try:
-            _pp.validate_inputs(operation_id, inputs)
+            _pp.validate_inputs(operation_id, inputs, level=args.get("_level"))
         except _pp.PostProductionError as e:
             return f"Error: {e}"
         if operation_id == "video_plus_audio":
@@ -547,12 +577,16 @@ def _register_builtin_tools(registry: ToolRegistry):
         # journal is paused too — the pause stops the recording below, not the
         # knowledge of where a note was made.
         journal_id = args.get("_journal_id")
+        from my_app.services.safety_gate import normalise_level
         result = resona_memory.remember(
             device_id=device_id,
             kind=args.get("kind", ""),
             content=args.get("content", ""),
             run_id=run_id,
             journal_id=journal_id,
+            # Written under this turn's instruction; a turn without a level
+            # was told the strictest.
+            safety_level=normalise_level(args.get("_level")),
         )
         # J3 dual-write: mirror the ACCEPTED record into the Werkstatt-Journal so
         # the exported workshop book shows what Resona noted. Best effort — a
@@ -567,7 +601,8 @@ def _register_builtin_tools(registry: ToolRegistry):
                     resona_journal.append_event(
                         journal_id,
                         "memory",
-                        {"kind": args.get("kind", ""), "content": args.get("content", "")},
+                        {"kind": args.get("kind", ""), "content": args.get("content", ""),
+                         "safety_level": normalise_level(args.get("_level"))},
                         device_id=device_id,
                     )
             except Exception:
@@ -610,7 +645,8 @@ def _register_builtin_tools(registry: ToolRegistry):
 
     def recall_handler(args: dict) -> str:
         device_id = args.get("_device_id")
-        return resona_memory.recall(device_id=device_id, query=args.get("query", ""))
+        return resona_memory.recall(device_id=device_id, query=args.get("query", ""),
+                                    level=args.get("_level"))
 
     registry.register(
         name="recall",
@@ -663,8 +699,35 @@ def _register_builtin_tools(registry: ToolRegistry):
         except Exception as e:
             return f"Error reading shared favorites: {e}"
 
-        favorites = data.get("favorites", [])
-        total = len(favorites)
+        # At kids and youth a favourite of a run made at a looser level is left
+        # out whole: its words, the platform's text and the note
+        # (safety_gate.run_opens_at, the rule of the favourites' restore). What
+        # this tool returns goes to a chat model whose answer is not checked.
+        from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS
+        from my_app.services.safety_gate import normalise_level, run_opens_at
+        level = normalise_level(args.get("_level"))
+
+        def _record(fav: dict):
+            if not fav.get("run_id"):
+                return None
+            try:
+                return load_recorder(fav["run_id"], base_path=storage_dir)
+            except Exception:
+                return None
+
+        # Above youth every run opens, and a run record is read only for the
+        # favourites shown.
+        gated = level in IMAGE_CHECKED_LEVELS
+        visible = []
+        for fav in data.get("favorites", []):
+            if not gated:
+                visible.append((fav, None, False))
+                continue
+            recorder = _record(fav)
+            run_level = (recorder.metadata or {}).get("safety_level") if recorder else None
+            if run_opens_at(run_level, level):
+                visible.append((fav, recorder, True))
+        total = len(visible)
         if total == 0:
             return empty_msg
 
@@ -675,16 +738,9 @@ def _register_builtin_tools(registry: ToolRegistry):
             limit = 8
         limit = max(1, min(limit, 20))
 
-        def _texts(fav: dict) -> dict:
+        def _texts(fav: dict, recorder) -> dict:
             """Text traces of one favorite from its run record (best effort)."""
             out = {"input": "", "transformed": "", "config": ""}
-            run_id = fav.get("run_id")
-            if not run_id:
-                return out
-            try:
-                recorder = load_recorder(run_id, base_path=storage_dir)
-            except Exception:
-                recorder = None
             if not recorder:
                 return out
             out["config"] = recorder.metadata.get("config_name", "")
@@ -718,11 +774,16 @@ def _register_builtin_tools(registry: ToolRegistry):
             return text if len(text) <= n else text[: n - 1] + "…"
 
         lines = []
-        for fav in favorites:  # stored most-recent-first (POST inserts at 0)
+        for fav, recorder, loaded in visible:  # stored most-recent-first (POST inserts at 0)
             if len(lines) >= limit:
                 break
-            t = _texts(fav)
-            note = (fav.get("user_note") or "").strip()
+            if not loaded:
+                recorder = _record(fav)
+            t = _texts(fav, recorder)
+            # The note was written by whoever kept the favourite, at their
+            # level, which need not be the run's.
+            kept_note = (fav.get("user_note") or "").strip()
+            note = kept_note if run_opens_at(fav.get("note_level"), level) else ""
             if query:
                 haystack = " ".join(
                     [t["input"], t["transformed"], note, fav.get("media_type") or ""]
@@ -740,7 +801,7 @@ def _register_builtin_tools(registry: ToolRegistry):
                 parts.append(f'their words: "{_clip(t["input"])}"')
             if t["transformed"] and t["transformed"] != t["input"]:
                 parts.append(f'what the platform made of it: "{_clip(t["transformed"])}"')
-            if not t["input"] and not note:
+            if not t["input"] and not kept_note:
                 parts.append("(run data no longer on disk — only this entry remains)")
             lines.append(" — ".join(parts))
 
@@ -811,6 +872,13 @@ def _register_builtin_tools(registry: ToolRegistry):
             recorder = None
         if not recorder:
             return f"Error: the run data of favorite '{run_id}' is no longer on disk."
+        # The rule of the favourites' restore, as in view_run: what this tool
+        # returns, the reading of a Latent Lab plate included, goes to a chat
+        # model (safety_gate.run_opens_at).
+        from my_app.services.safety_gate import run_opens_at
+        if not run_opens_at((recorder.metadata or {}).get("safety_level"), args.get("_level")):
+            return (f"Error: favorite '{run_id}' was not made at this conversation's safety "
+                    f"level or a stricter one, so it is not opened here.")
 
         image_file = None
         image_reading = ""
@@ -818,7 +886,7 @@ def _register_builtin_tools(registry: ToolRegistry):
         for entity in recorder.metadata.get("entities", []):
             if entity.get("type") == "output_image":
                 try:
-                    candidate = recorder.checked_entity_path(entity)
+                    candidate = recorder.checked_entity_path(entity, args.get("_level"))
                 except SafetyRefusal:
                     continue
                 if candidate.exists():
@@ -921,11 +989,14 @@ def _register_builtin_tools(registry: ToolRegistry):
         if image_file is None:
             return f"Error: the brought file '{upload_id}' is no longer on disk."
 
-        from my_app.utils.media_ref import encode_image_b64, MediaRefError
+        # At kids and youth an upload is looked at only with the pass kept
+        # beside it for that level, as on every other way a picture reaches a
+        # model (media_ref._checked_upload).
+        from my_app.utils.media_ref import load_image_b64, MediaRefError
         try:
-            image_b64 = encode_image_b64(image_file)
+            image_b64 = load_image_b64(upload_id, level=args.get("_level"))
         except MediaRefError as e:
-            return f"Error reading the image file: {e}"
+            return f"Error: the brought file '{upload_id}' is not looked at: {e}"
 
         from my_app.services.llm_service import llm_service
         account = llm_service.describe_image_neutral(image_b64)
@@ -983,11 +1054,25 @@ def _register_builtin_tools(registry: ToolRegistry):
             return "Error: a valid run_id is required (see RUNS ON THE TABLE or lookup_shared_favorites)."
 
         storage_dir = Path(_config.JSON_STORAGE_DIR)
+        # A run made at a looser level than the one asking is not opened at kids
+        # and youth (safety_gate.run_opens_at): its texts were checked at its
+        # own level, and what this tool returns goes to a chat model whose
+        # answer is not checked.
+        from my_app.services.safety_gate import run_opens_at
+        not_here = (f"Error: run '{run_id}' was not made at this conversation's safety "
+                    f"level or a stricter one, so its record is not opened here.")
 
         # --- Canvas apparatus run: exports/json/<date>/<device>/<run_id>/ ----
         canvas_dirs = [d for d in storage_dir.glob(f"*/*/{run_id}") if (d / "events.jsonl").exists()]
         if canvas_dirs:
             run_dir = canvas_dirs[0]
+            try:
+                run_level = json.loads(
+                    (run_dir / "metadata.json").read_text(encoding="utf-8")).get("safety_level")
+            except Exception:
+                run_level = None
+            if not run_opens_at(run_level, args.get("_level")):
+                return not_here
             node_results = {}
             run_error = ""
             try:
@@ -1061,7 +1146,7 @@ def _register_builtin_tools(registry: ToolRegistry):
                 # Asked of the register, not of the directory. A glob takes the
                 # first file lying there, which is how a refused picture reached
                 # the vision channel and its description reached the chat.
-                image_file = _first_cleared_image(branch_dir)
+                image_file = _first_cleared_image(branch_dir, args.get("_level"))
                 if image_file is None:
                     continue
                 try:
@@ -1090,6 +1175,8 @@ def _register_builtin_tools(registry: ToolRegistry):
             recorder = None
         if not recorder:
             return f"Error: no run record found for '{run_id}'."
+        if not run_opens_at((recorder.metadata or {}).get("safety_level"), args.get("_level")):
+            return not_here
 
         from my_app.services.pipeline_recorder import SafetyRefusal
         lines = [f"Run {run_id} — the trace as it actually ran:"]
@@ -1101,7 +1188,7 @@ def _register_builtin_tools(registry: ToolRegistry):
             fpath = recorder.final_folder / fname
             if etype == "output_image" and fpath.exists() and image_file is None:
                 try:
-                    recorder.checked_entity_path(entity)
+                    recorder.checked_entity_path(entity, args.get("_level"))
                 except SafetyRefusal:
                     continue
                 image_file = fpath
@@ -1194,9 +1281,11 @@ def _register_builtin_tools(registry: ToolRegistry):
             b64, question,
             for_model=(args.get("_for_model") or ""),
             # Whether THIS picture may leave the server, decided by the route
-            # from where the image came in, never by anything the model said.
-            # An uploaded or camera image is looked at here whatever preset
-            # names a delegate (DEVELOPMENT_DECISIONS 2026-03-25).
+            # from where the image came in (media_ref.may_leave_server), never
+            # by anything the model said. An uploaded or camera image is looked
+            # at here whatever preset names a delegate (DEVELOPMENT_DECISIONS
+            # 2026-03-25), and so are one made from one and one of unknown
+            # origin.
             may_leave_server=bool(args.get("_look_may_leave")))
         # The standing sentence of the BROUGHT block, on the one channel whose
         # payload is a reading of pixels somebody else chose. Without it a
@@ -1329,6 +1418,18 @@ def _register_builtin_tools(registry: ToolRegistry):
             "image breaks down (fp16 cliff); omit it to auto-pick 20-30. fusion_strategy "
             "(legacy | dual_alpha, default dual_alpha) chooses the blend rule and thus the "
             "sweet spot. These two keys apply ONLY to surrealization.\n"
+            "  For configId 'composable_diffusion' every text connected to the generation "
+            "node is one concept, two to five of them: give each concept its own input "
+            "node (an interception or translation may stand in front of any one) and "
+            "connect each to the generation node. One text stays one concept, whatever "
+            "words stand in it. Two extra inline keys: concept_weights (list of numbers, "
+            "-2..+2, one per concept in the order of the connections, default 1 each; "
+            "under score a weight below zero subtracts the concept) and combine_at (score "
+            "| conditioning, default score): score keeps one prediction per concept at "
+            "every denoising step, conditioning interpolates the concepts' conditionings "
+            "into one before the run, where only the ratio of the weights acts and a weight "
+            "of the other sign runs the interpolation past the other concepts. These two "
+            "keys apply ONLY to composable_diffusion.\n"
             "- evaluation {evaluationPrompt, llmModel?}: has a result read.\n"
             "- image_evaluation {imageEvaluationPrompt, visionModel?}: has ONE image "
             "read by a vision model (image input only)\n"
@@ -1345,7 +1446,10 @@ def _register_builtin_tools(registry: ToolRegistry):
             "no seeds set, all its generations automatically share ONE fixed seed, so image "
             "differences come from the text, not the dice. Set distinct seeds "
             "deliberately for variance instead of comparison.\n"
-            "GENERATION configIds: " + _canvas_config_help()
+            "GENERATION configIds: " + _canvas_config_help() + "\n"
+            "From a graph, attention_cartography and denoising_archaeology_comfyui give "
+            "the finished image alone; their maps and steps stay on their own pages.\n"
+            "NOT AVAILABLE IN A GRAPH: " + "; ".join(_cga.PAGE_ONLY_INSTRUMENTS.values()) + "."
         ),
         parameters={
             "type": "object",
@@ -1409,7 +1513,23 @@ def _register_builtin_tools(registry: ToolRegistry):
 
     def canvas_graph_library(args: dict) -> str:
         import json as _json
+        from my_app.services.safety_gate import normalise_level, run_opens_at
         action = (args.get("action") or "").strip().lower()
+        # The store is global and keeps, beside each strategy, the least strict
+        # level any of its text was written at. At kids and youth a strategy
+        # written at a looser level is neither listed nor opened, revised or
+        # annotated (safety_gate.run_opens_at): what this tool returns goes to a
+        # chat model whose answer is not checked. A text written here was
+        # written under this turn's instruction, at this turn's level; a turn
+        # without one was told the strictest.
+        level = normalise_level(args.get("_level"))
+
+        def _opens(rec) -> bool:
+            return run_opens_at(rec.get("safety_level"), level)
+
+        def _closed(wid: str) -> str:
+            return (f"Error: strategy '{wid}' was kept at a less strict safety level than "
+                    f"this conversation's, so it is not opened here.")
 
         if action == "save":
             title = (args.get("title") or args.get("name") or "").strip()
@@ -1427,6 +1547,7 @@ def _register_builtin_tools(registry: ToolRegistry):
                     application_type=(args.get("application_type") or ""),
                     author="resona",
                     memo=(args.get("memo") or None),
+                    safety_level=level,
                 )
             except ValueError as e:
                 return f"Error: {e}"
@@ -1443,6 +1564,7 @@ def _register_builtin_tools(registry: ToolRegistry):
                 query=args.get("query"),
                 application_type=args.get("application_type"),
                 limit=args.get("limit", 20),
+                keep=_opens,
             )
             if not items:
                 return "No strategies kept yet."
@@ -1474,6 +1596,8 @@ def _register_builtin_tools(registry: ToolRegistry):
             rec = _cwstore.get_strategy(wid, version=version)
             if rec is None:
                 return f"Error: no strategy with id '{wid}'."
+            if not _opens(rec):
+                return _closed(wid)
             versions = rec.get("versions") or []
             selected = rec.get("selected_version") or (versions[-1] if versions else {})
             at = rec.get("application_type") or "—"
@@ -1519,8 +1643,12 @@ def _register_builtin_tools(registry: ToolRegistry):
             payload, err = _cga.validate_and_expand(graph)
             if err:
                 return f"Error: {err}"
+            known = _cwstore.get_strategy(wid)
+            if known is not None and not _opens(known):
+                return _closed(wid)
             try:
-                rec = _cwstore.add_version(wid, workflow=payload, memo=memo)
+                rec = _cwstore.add_version(wid, workflow=payload, memo=memo,
+                                           safety_level=level)
             except ValueError as e:
                 return f"Error: {e}"
             n = (rec.get("versions") or [{}])[-1].get("version")
@@ -1542,8 +1670,12 @@ def _register_builtin_tools(registry: ToolRegistry):
                     version = int(version)
                 except (TypeError, ValueError):
                     return "Error: 'version' must be an integer."
+            known = _cwstore.get_strategy(wid)
+            if known is not None and not _opens(known):
+                return _closed(wid)
             try:
-                rec = _cwstore.add_feedback(wid, note=note, version=version)
+                rec = _cwstore.add_feedback(wid, note=note, version=version,
+                                            safety_level=level)
             except ValueError as e:
                 return f"Error: {e}"
             # Report the version the note landed on.
@@ -1894,87 +2026,79 @@ def _register_builtin_tools(registry: ToolRegistry):
     from my_app.services import platform_items as _pi
 
     def lookup_place(args: dict) -> str:
-        query = (args.get("place") or "").strip()
+        query = str(args.get("place") or "").strip()
+        # Pages are named in the conversation language, the English label in
+        # brackets where it differs (platform_items.display_name).
+        lang = args.get("_language")
         if not query:
-            return ("The places this catalogue holds:\n\n" + _pi.menu()
-                    + "\n\nPages and functions with measures and no catalogue text:\n\n"
+            return ("The places this catalogue holds:\n\n" + _pi.menu(lang)
+                    + "\n\nPages with a use report and no catalogue text:\n\n"
                     + _pi.place_menu())
-        # Under its own rubric: the text of the page comes first, this is the
-        # platform's reading of the framework.
-        rubric = ("Measures of the AILit framework (OECD / European Union 2026) "
-                  "that this page supports as a tool. Per measure: the Learner "
-                  "Expectation and the 'In the Classroom' scenario in the "
-                  "framework's wording, then how this page carries the measure "
-                  "and a practical scenario of this platform. A course leader "
-                  "runs the measure with the group; nobody is graded by it. Say "
-                  "what a sentence says in plain words, in the language of the "
-                  "question; a course leader who asks gets the English wording "
-                  "with its page:\n")
-        item = _pi.find(query)
+        # A bare number is a report number ("1" is Flow), never a part of a
+        # catalogue name ("Bias Archaeology 1"); the catalogue answers only
+        # when no report carries it.
+        place = _pi.find_place(query) if query.isdigit() else None
+        if place:
+            item = _pi.item_for_route(place["route"])
+            if not item:
+                return (f"{place['name']}\n\nRoute: {place['route']}\n\nThis part has no "
+                        "catalogue text of its own.\n\n" + _pi.use_report_block(place))
+        else:
+            item = _pi.find(query)
         if not item:
-            # The coverage file names every part in German and English; a
-            # German name of a catalogue page resolves through it to the
-            # item. Flow, Canvas, Contesting, Together and two Latent Lab
-            # pages have no catalogue text of their own and carry their
-            # measures in the coverage file alone; before 2026-09-19 the
-            # answer for Flow, the page with the most measures of all, was a
-            # miss.
+            # Any of the 33 use reports can be found by name, route or number;
+            # where the catalogue holds the page, its item is the answer, with
+            # the page's own text before the report. Flow, Canvas, Contesting,
+            # Together and the Overview of the Latent Lab have no catalogue
+            # text and answer with the report alone.
             place = _pi.find_place(query)
             item = _pi.item_for_route(place["route"]) if place else None
             if place and not item:
-                name = place["name"]
-                if place.get("name_de") and place["name_de"] != name:
-                    name += f" ({place['name_de']})"
-                route = place.get("route") or ""
-                where = (f"Route: {route}" if route.startswith("/")
-                         else "A function on every page, no route of its own.")
-                return (f"{name}\n\n{where}\n\nThis part has no catalogue text "
-                        "of its own.\n\n" + rubric + _pi.goals(place))
+                return (f"{place['name']}\n\nRoute: {place['route']}\n\nThis part has no "
+                        "catalogue text of its own.\n\n" + _pi.use_report_block(place))
             if not item:
                 return (
                     f"'{query}' is not in this catalogue — it holds the instruments "
-                    "of the labs and the comparison modes, and the measures of "
-                    "Flow, Canvas, Contesting, Together, the Overview of the Latent "
-                    "Lab, the Tokenizer of the Transformers Lab and two functions "
-                    "on every page, not every page of the platform. What is in "
-                    "it:\n\n" + _pi.menu()
-                    + "\n\nPages and functions with measures and no catalogue text:\n\n"
+                    "of the labs and the comparison modes, and the use reports of "
+                    "Flow, Canvas, Contesting, Together and the Overview of the "
+                    "Latent Lab, not every page of the platform. What is in "
+                    "it:\n\n" + _pi.menu(lang)
+                    + "\n\nPages with a use report and no catalogue text:\n\n"
                     + _pi.place_menu()
                 )
-        text = _pi.render(item)
-        goals = _pi.goals(item)
-        if goals:
-            text += "\n\n" + rubric + goals
+        text = _pi.render(item, lang)
+        block = _pi.use_report_block(item, lang)
+        if block:
+            text += "\n\n" + block
         children = [it for it in _pi.ITEMS.values() if it.get("parent") == item["id"]]
         if not (item.get("technical") or {}):
             # A frame, not an instrument: say so and name what sits inside.
-            inside = ", ".join(c.get("name", c["id"]) for c in children)
+            inside = ", ".join(_pi.display_name(c, lang) for c in children)
             return (text + "\n\nThe catalogue describes what sits inside this, "
                     f"not the frame itself: {inside}." if inside else text)
         if children:
             text += ("\n\nInside it: "
-                     + ", ".join(c.get("name", c["id"]) for c in children) + ".")
+                     + ", ".join(_pi.display_name(c, lang) for c in children) + ".")
         return text
 
     registry.register(
         name="lookup_place",
         description=(
-            "What one place of this platform says about its own technology — the "
-            "instruments of the Diffusion Lab, the Transformers Lab and the Crossmodal "
-            "Lab, and the comparison modes. This is the wording those pages show, "
-            "so it is the platform's own account and not a recollection. Use it "
-            "whenever somebody asks what an instrument does, how it works, or what "
-            "it is for, and they are not standing on it. Pass a name ('Encoder "
-            "Fusion', 'Bias Archaeology 1') or an id ('latent_lab.image.fusion'); "
-            "pass nothing to see everything the catalogue holds. It also names the "
-            "measures of the AILit framework (OECD / European Union 2026) that a "
-            "page supports as a tool, with the framework's wording and a practical "
-            "scenario: for the catalogue's instruments beneath their text, and for "
-            "Flow, Canvas, Contesting, Together, the Overview of the Latent Lab "
-            "and the Tokenizer of the Transformers Lab, which have no catalogue "
-            "text, on their own. A question about what can be done on a page with a "
-            "group or which measure fits a page is answered from here. What comes "
-            "back is written for a page, not for a workshop, and is to be said in "
+            "What one place of this platform says about its own technology, and its "
+            "use report: what was done on it, what its controls did and what came out, "
+            "where a newcomer stumbles, what a user needs to know, "
+            "use possibilities, teaching scenarios, the AI-literacy mapping to the "
+            "OECD / European Union 2026 framework and the competences the report names "
+            "as not reached. The instruments of the Diffusion "
+            "Lab, the Transformers Lab and the Crossmodal Lab, the comparison modes, "
+            "and the pages without catalogue text (Flow, Canvas, Contesting, Together, "
+            "the Overview of the Latent Lab), which return the use report alone. Use it whenever "
+            "somebody asks what an instrument does, how it works, what it is for, or "
+            "what can be done there with a group, and they are not standing on it. "
+            "Pass a name ('Encoder Fusion', 'Flow', also the German page name), the "
+            "report's number ('22') or an id ('latent_lab.image.fusion'); "
+            "pass nothing to see everything that can be asked for. What comes back is "
+            "written in the first person: say what it says, in "
             "plain words."
         ),
         parameters={
@@ -1990,6 +2114,322 @@ def _register_builtin_tools(registry: ToolRegistry):
             "required": [],
         },
         handler=lookup_place,
+        scopes=["default", "resona"],
+    )
+
+    # --- lookup_scenarios / read_scenario (both scopes) ---
+    # The teaching scenarios of the use reports, searchable across all
+    # instruments, and one of them in full with the mapping entries that cite
+    # it. Pure reads of platform_items.USE_REPORTS, a file that ships with the
+    # platform.
+    _BOTH_FORMS = {"formalornonformal", "nonformalorformal", "formal/nonformal"}
+    _COMPETENCE = re.compile(
+        r"^\s*(engage|create|manage|shape)\s*(\d)(?:\s+(basic|intermediate|advanced))?\s*$", re.I)
+    _SCENARIO_ID = re.compile(r"^\s*(\d{1,2})\s*[/\s-]\s*s?(\d+)\s*$", re.I)
+
+    def _reports() -> List[dict]:
+        return list((_pi.USE_REPORTS.get("by_route") or {}).values())
+
+    def _norm_form(form: str) -> str:
+        # 'non formal', 'nonformal' and 'non-formal' are one form.
+        return re.sub(r"[\s-]+", "", (form or "").lower())
+
+    def _form_set(form: str) -> set:
+        f = _norm_form(form)
+        if f in _BOTH_FORMS:
+            return {"formal", "non-formal"}
+        return {"formal": {"formal"}, "nonformal": {"non-formal"}}.get(f, set())
+
+    def _competence_list() -> str:
+        # The framework's competences as the record names them, e.g.
+        # 'Engage 1–7, Create 1–4', and its levels.
+        by_domain: Dict[str, List[int]] = {}
+        for code in _pi.USE_REPORTS.get("competences") or []:
+            domain, _, nr = code.rpartition(" ")
+            if domain and nr.isdigit():
+                by_domain.setdefault(domain, []).append(int(nr))
+        comps = ", ".join(f"{d} {min(n)}–{max(n)}" if len(n) > 1 else f"{d} {n[0]}"
+                          for d, n in by_domain.items())
+        levels = " / ".join(_pi.USE_REPORTS.get("levels") or [])
+        return comps + (f", optionally with a level {levels}" if levels else "")
+
+    def _scenario_key(sid: str) -> int:
+        try:
+            return int(str(sid).lstrip("Ss"))
+        except ValueError:
+            return 0
+
+    def _citing(rec: dict, sid: str) -> Dict[str, List[dict]]:
+        mapping = rec.get("mapping") if isinstance(rec.get("mapping"), dict) else {}
+        return {cat: [e for e in mapping.get(cat) or []
+                      if isinstance(e, dict) and sid in (e.get("scenarios") or [])]
+                for cat in ("a", "b")}
+
+    def lookup_scenarios(args: dict) -> str:
+        reports = _reports()
+        if not reports:
+            return "The use reports are not loaded on this server."
+
+        for key in ("query", "form", "subject", "duration", "competence", "instrument"):
+            value = args.get(key)
+            if isinstance(value, (list, tuple)):
+                return f"{key} must be a text, not a list."
+            if isinstance(value, dict):
+                return f"{key} must be a text, not an object."
+
+        def arg(key: str) -> str:
+            value = args.get(key)
+            if isinstance(value, str):
+                return value.strip()
+            # A number or a flag is read as its text ('22' for 22).
+            return str(value).strip() if isinstance(value, (int, float)) else ""
+
+        query, form, subject = arg("query").lower(), arg("form").lower(), arg("subject").lower()
+        duration, competence, instrument = arg("duration").lower(), arg("competence"), arg("instrument").lower()
+        try:
+            limit = max(1, int(args.get("limit") or 20))
+        except (TypeError, ValueError):
+            limit = 20
+        filters = {k: v for k, v in (("query", query), ("form", form), ("subject", subject),
+                                      ("duration", duration), ("competence", competence),
+                                      ("instrument", instrument)) if v}
+        if not filters:
+            lines = ["Teaching scenarios of the use reports per instrument. Filter with "
+                     "query, form ('formal' or 'non-formal'), subject, duration ('45 min', "
+                     "'90 min', '2 h'), competence ('Engage 2' or 'Engage 2 Intermediate'), "
+                     "instrument (name, route or number) and limit; read_scenario('22/S1') "
+                     "gives one in full.", ""]
+            for rec in reports:
+                n = len([s for s in rec.get("scenarios") or [] if isinstance(s, dict)])
+                lines.append(f"{rec.get('number')} {rec.get('name')} ({rec.get('route')}): {n} scenarios")
+            return "\n".join(lines)
+
+        cited_by: Optional[set] = None
+        comp, level = "", None
+        cited_per_level: dict = {}
+        if competence:
+            m = _COMPETENCE.match(competence)
+            known = _pi.USE_REPORTS.get("competences") or []
+            comp = f"{m.group(1).capitalize()} {m.group(2)}" if m else ""
+            if not m or (known and comp not in known):
+                return (f"'{competence}' is not a competence of the framework; the competences "
+                        f"are {_competence_list()}.")
+            level = m.group(3).capitalize() if m.group(3) else None
+            # Every level is collected, so a null answer for one level can
+            # say at which levels the competence is mapped (2026-11-08).
+            for rec in reports:
+                mapping = rec.get("mapping") if isinstance(rec.get("mapping"), dict) else {}
+                for cat in ("a", "b"):
+                    for e in mapping.get(cat) or []:
+                        if not isinstance(e, dict) or e.get("competence") != comp:
+                            continue
+                        for sid in e.get("scenarios") or []:
+                            cited_per_level.setdefault(str(e.get("level")), set()).add(
+                                (rec.get("number"), sid))
+            cited_by = set()
+            for lv, ids in cited_per_level.items():
+                if level is None or lv == level:
+                    cited_by |= ids
+        wanted_forms = _form_set(form)
+
+        hits = []
+        for rec in reports:
+            num = str(rec.get("number") or "")
+            name = rec.get("name") or ""
+            route = rec.get("route") or ""
+            if instrument:
+                if instrument.isdigit():
+                    if instrument.zfill(2) != num:
+                        continue
+                elif instrument not in name.lower() and instrument not in route.lower():
+                    continue
+            for s in rec.get("scenarios") or []:
+                if not isinstance(s, dict) or not isinstance(s.get("id"), str):
+                    continue
+                sid = s["id"]
+                if cited_by is not None and (num, sid) not in cited_by:
+                    continue
+                if form:
+                    own = _form_set(s.get("form") or "")
+                    if wanted_forms:
+                        if not own & wanted_forms:
+                            continue
+                    elif _norm_form(form) not in _norm_form(s.get("form") or ""):
+                        continue
+                # At the start of a word, so 'art' does not hit 'part' or 'start'.
+                if subject and not re.search(r"\b" + re.escape(subject), " ".join(
+                        (s.get("subjects") or "", s.get("subject_link") or "")).lower()):
+                    continue
+                if duration and duration not in (s.get("duration") or "").lower():
+                    continue
+                if query and query not in " ".join(
+                        (s.get("title") or "", s.get("text") or "", s.get("subjects") or "",
+                         s.get("subject_link") or "", name)).lower():
+                    continue
+                hits.append((num, sid, rec, s))
+        if not hits:
+            named = ", ".join(f"{k}='{v}'" for k, v in filters.items())
+            # The filter collects only mapping entries that carry scenario
+            # ids, so the answer says "mapped to a teaching scenario" and
+            # makes no claim about what a report cites elsewhere (2026-11-08).
+            if set(filters) == {"competence"}:
+                # The null answer of a competence filter is complete in itself.
+                # Where no part of the platform carries the measure, the record
+                # says so (`unreached`, per competence and level, in German,
+                # from the rows without a part of docs/ailit/unterstuetzung.tsv);
+                # where the competence is mapped at other levels, their counts
+                # go with it. No pointer to further calls, so nothing is left
+                # to look for (2026-11-08).
+                where = f"{comp} {level}" if level else comp
+                levels = _pi.USE_REPORTS.get("levels") or []
+                lines = [f"{SCENARIO_NULL_PREFIX} {named}. {SCENARIO_NULL_COMPLETE} "
+                         f"no teaching scenario of the use reports is mapped to {where}."]
+                unreached = _pi.USE_REPORTS.get("unreached") or {}
+                reasons = [(lv, unreached[f"{comp}|{lv}"]) for lv in levels
+                           if (level is None or lv == level) and unreached.get(f"{comp}|{lv}")]
+                if reasons:
+                    lines.append("The platform's record names the measure and says what the "
+                                 "platform does not hold, per level; the text is German, give "
+                                 "it in the language of the conversation:")
+                    lines += [f"- {comp} {lv}: {text}" for lv, text in reasons]
+                else:
+                    lines.append("The platform's record gives no reason for this.")
+                elsewhere = [(lv, len(cited_per_level[lv])) for lv in levels
+                             if lv != level and cited_per_level.get(lv)]
+                if elsewhere:
+                    lines.append("Mapped at the other levels: " + ", ".join(
+                        f"{comp} {lv} ({n} scenario{'s' if n != 1 else ''})"
+                        for lv, n in elsewhere) + ".")
+                lines.append("Nothing further is to be looked up for this question.")
+                return "\n".join(lines)
+            together = ("none matches these filters together" if len(filters) > 1
+                        else "nothing matches this filter")
+            return (f"{SCENARIO_NULL_PREFIX} {named}: {together}. A call without a filter "
+                    "lists the instruments and how many scenarios each carries.")
+        hits.sort(key=lambda h: (h[0], _scenario_key(h[1])))
+        lines = []
+        for num, sid, rec, s in hits[:limit]:
+            line = f"{num}/{sid} — {s.get('title') or ''}"
+            if s.get("setting"):
+                line += f" ({s['setting']})"
+            line += f" · {rec.get('name')}, {rec.get('route')}"
+            cites = _citing(rec, sid)
+            for cat in ("a", "b"):
+                if cites[cat]:
+                    line += f" · ({cat}) " + ", ".join(
+                        f"{e.get('competence')} {e.get('level')}" for e in cites[cat])
+            lines.append(line)
+        first = f"{hits[0][0]}/{hits[0][1]}"
+        lines.append("")
+        lines.append(f"{min(limit, len(hits))} of {len(hits)} matching scenarios shown. "
+                     f"read_scenario('{first}') gives one in full.")
+        return "\n".join(lines)
+
+    registry.register(
+        name="lookup_scenarios",
+        description=(
+            "Search the teaching scenarios of the use reports of all instruments "
+            "of this platform: by free text, form (formal or non-formal), subject, "
+            "duration, competence of the AI literacy framework of OECD / European Union "
+            "2026 ('Engage 2' or 'Engage 2 Intermediate'), or instrument. Each hit names "
+            "the scenario, its setting, its instrument and route, and the framework "
+            "entries that cite it. Pass nothing to see how many scenarios each instrument "
+            "carries. Use it when somebody plans a lesson or a workshop and asks which "
+            "page fits a subject, a duration or a measure of the framework; then "
+            "read_scenario gives one in full. The scenarios are written in the first "
+            "person: say what they say, in plain words. Where no scenario is mapped to "
+            "a competence, the answer says so and is complete: it gives the reason the "
+            "platform's record carries, in German, or the levels at which the "
+            "competence is mapped."
+        ),
+        parameters={
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Free text, matched in title, text, subjects, subject link and instrument name."},
+                "form": {"type": "string", "description": "'formal' (school lessons) or 'non-formal' (workshops); scenarios open to both match either."},
+                "subject": {"type": "string", "description": "A school subject or field, e.g. 'art', 'ethics', 'music'."},
+                "duration": {"type": "string", "description": "Part of the duration as the scenario states it, e.g. '45 min', '90 min', '2 h'."},
+                "competence": {"type": "string", "description": "'Engage 2' or 'Engage 2 Intermediate': scenarios the mapping cites for that competence (and level)."},
+                "instrument": {"type": "string", "description": "Part of an instrument's name or route, or its two-digit number ('22')."},
+                "limit": {"type": "integer", "description": "How many hits to list (default 20)."},
+            },
+            "required": [],
+        },
+        handler=lookup_scenarios,
+        scopes=["default", "resona"],
+    )
+
+    def read_scenario(args: dict) -> str:
+        reports = _reports()
+        if not reports:
+            return "The use reports are not loaded on this server."
+        raw = args.get("id")
+        m = _SCENARIO_ID.match(raw) if isinstance(raw, str) else None
+        if not m:
+            return (f"'{raw}' is not a scenario id. Pass it as 'NN/Sx', e.g. '22/S1'; "
+                    "lookup_scenarios lists them.")
+        num, sid = m.group(1).zfill(2), f"S{int(m.group(2))}"
+        rec = next((r for r in reports if str(r.get("number")) == num), None)
+        if rec is None:
+            return (f"No use report carries the number {num}. The instruments:\n\n"
+                    + "\n".join(f"{r.get('number')} {r.get('name')} ({r.get('route')})" for r in reports))
+        scen = next((s for s in rec.get("scenarios") or []
+                     if isinstance(s, dict) and s.get("id") == sid), None)
+        if scen is None:
+            return (f"The use report {num} {rec.get('name')} carries no scenario {sid}. Its scenarios:\n\n"
+                    + "\n".join(f"{num}/{s.get('id')} — {s.get('title')}"
+                                for s in rec.get("scenarios") or [] if isinstance(s, dict)))
+        version = _pi.USE_REPORTS.get("version") or "unknown"
+        head = f"{scen.get('title') or ''}"
+        if scen.get("setting"):
+            head += f" ({scen['setting']})"
+        out = [f"{rec.get('name')} ({rec.get('route')}), use report V {version}, scenario {num}/{sid}. "
+               "Written in the first person: say "
+               "what it says, never speak as its author; the Uncertainty line names what was "
+               "not verified.",
+               head]
+        for key, label in (("text", None), ("sequence", "Sequence"),
+                           ("subject_link", "Subject link"), ("uncertainty", "Uncertainty")):
+            value = scen.get(key)
+            if isinstance(value, str) and value:
+                out.append(f"{label}: {value}" if label else value)
+        cites = _citing(rec, sid)
+        lines = ["AI-literacy mapping of this scenario (OECD / European Union 2026; the "
+                 "platform's own reading, the framework names no page):"]
+        for cat, title in (("a", "(a) 100 % hit"), ("b", "(b) mutatis mutandis")):
+            for e in cites[cat]:
+                entry = _pi.format_mapping_entry(e)
+                if entry:
+                    lines.append(f"{title}: {entry}")
+        if len(lines) == 1:
+            lines.append("No entry of the mapping cites this scenario.")
+        mapping = rec.get("mapping") if isinstance(rec.get("mapping"), dict) else {}
+        if isinstance(mapping.get("beyond"), str) and mapping["beyond"]:
+            lines.append(f"Beyond the framework (for the whole instrument): {mapping['beyond']}")
+        lines.append(_pi.NO_THRESHOLD)
+        out.append("\n".join(lines))
+        return "\n\n".join(out)
+
+    registry.register(
+        name="read_scenario",
+        description=(
+            "One teaching scenario of the use reports in full: its instrument "
+            "and route, title, setting, text, sequence, subject link and uncertainty, "
+            "then the entries of the AI-literacy mapping (OECD / European Union 2026) "
+            "that cite it, with the Learner Expectation and the 'In the Classroom' "
+            "example in the framework's wording, and the instrument's paragraph on "
+            "where its scenarios go beyond the framework. Pass the id lookup_scenarios "
+            "gives, 'NN/Sx' (e.g. '22/S1'). Written in the first person: "
+            "say what it says, in plain words."
+        ),
+        parameters={
+            "type": "object",
+            "properties": {
+                "id": {"type": "string", "description": "The scenario id, 'NN/Sx', e.g. '22/S1'."},
+            },
+            "required": ["id"],
+        },
+        handler=read_scenario,
         scopes=["default", "resona"],
     )
 
@@ -2105,8 +2545,8 @@ def _register_builtin_tools(registry: ToolRegistry):
 # Interception tool helpers
 # ---------------------------------------------------------------------------
 
-def _first_cleared_image(branch_dir):
-    """The first recorded picture of a run that the content check cleared."""
+def _first_cleared_image(branch_dir, level):
+    """The first recorded picture of a run that delivery hands to `level`."""
     import json
     from pathlib import Path
     from my_app.utils.media_ref import find_media_entities
@@ -2116,7 +2556,7 @@ def _first_cleared_image(branch_dir):
     except Exception:
         return None
     for entity in find_media_entities(metadata.get("entities", []), "image"):
-        cleared, _ = entity_cleared_for_delivery(entity, metadata)
+        cleared, _ = entity_cleared_for_delivery(entity, metadata, level)
         if not cleared:
             continue
         candidate = Path(branch_dir) / "final" / (entity.get("filename") or "")

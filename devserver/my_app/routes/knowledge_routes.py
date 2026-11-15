@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 
 knowledge_bp = Blueprint("knowledge", __name__, url_prefix="/api/knowledge")
 
-ALLOWED_EXTENSIONS = {"pdf", "md"}
+ALLOWED_EXTENSIONS = {"pdf", "docx", "md"}
 MAX_UPLOAD_BYTES = 100 * 1024 * 1024  # 100 MB upload cap
 
 # doc_id sanitiser (same character class as the ingest kebab-slug / the service
@@ -109,7 +109,8 @@ _DEFAULT_LICENSE = "Alle Rechte vorbehalten — nur interne Nutzung"
 @knowledge_bp.route("/upload", methods=["POST"])
 @require_settings_auth
 def upload_document():
-    """Multipart upload of a Tier-O document (PDF or MD). Stores the original and
+    """Multipart upload of a Tier-O document (PDF, DOCX or MD). Stores the
+    original (PDF and DOCX) and
     enqueues an ingest job (Docling -> Verdichtung -> reindex).
 
     Formular-Entbürokratisierung (2026-07-04): only the FILE is truly required.
@@ -177,8 +178,9 @@ def upload_document():
         safe_name = secure_filename(file.filename)
         ext = safe_name.rsplit(".", 1)[1].lower()
 
-        if ext == "pdf":
-            reason = upload_gate.gate_pdf_upload(raw_bytes)[0]
+        if ext in ("pdf", "docx"):
+            gate = upload_gate.gate_pdf_upload if ext == "pdf" else upload_gate.gate_docx_upload
+            reason = gate(raw_bytes)[0]
             if upload_gate.is_duplicate(reason):
                 # Known document: no new job, no second analysis (cost defect,
                 # UCD-124 §5 layer 1). The answer points at the existing
@@ -220,16 +222,16 @@ def upload_document():
         filename_stem = safe_name.rsplit(".", 1)[0]
         doc_id = _derive_doc_id(title, year, fallback=filename_stem)
 
-        source_pdf: Optional[Path] = None
+        source_file: Optional[Path] = None
         source_md: Optional[Path] = None
         cleanup_paths = []
 
-        if ext == "pdf":
+        if ext in ("pdf", "docx"):
             # Store the original under resources/knowledge_originals/operator/.
             originals_dir = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator"
             originals_dir.mkdir(parents=True, exist_ok=True)
-            source_pdf = originals_dir / f"{doc_id}.pdf"
-            file.save(str(source_pdf))
+            source_file = originals_dir / f"{doc_id}.{ext}"
+            file.save(str(source_file))
         else:  # md — no original store; stage into a tmp dir as ingest input.
             tmp_dir = Path(tempfile.mkdtemp(prefix="knowledge_md_"))
             source_md = tmp_dir / f"{doc_id}.md"
@@ -247,7 +249,7 @@ def upload_document():
             doc_id=doc_id,
             title=title,
             lizenz=lizenz,
-            source_pdf=source_pdf,
+            source_file=source_file,
             source_md=source_md,
             autor=autor,
             year=year_int,
@@ -739,19 +741,23 @@ def reprocess_item(doc_id):
     unconditionally, which is exactly the hardcoded assumption being fixed;
     carrying it forward would make that lie permanent.
 
-    Source resolution prefers the raw Docling Markdown intermediate the
-    original ingest wrote (resources/knowledge_originals/operator/
-    <doc_id>.raw.md) — Docling then becomes a no-op passthrough and only
-    Verdichtung + reindex actually run. Falls back to the stored PDF
-    (<doc_id>.pdf, re-runs Docling too) if no .raw.md survived. Neither
-    present -> 404 naming the doc_id (nothing to re-analyze from).
+    Source resolution (resources/knowledge_originals/operator/): when the
+    extraction of the original ingest survived (<doc_id>.raw.md AND
+    <doc_id>.blocks.json), Docling becomes a no-op passthrough and only the
+    condensation + reindex run. Otherwise the stored original (<doc_id>.pdf
+    or <doc_id>.docx, kl.operator_original) re-runs Docling, which writes the
+    blocks (with page numbers and figures for a PDF). Only without an
+    original does a bare .raw.md serve (an already-Markdown upload: no page
+    numbers). None present -> 404 naming the doc_id.
 
-    NOTE: a re-analyze carries the item's CURRENT `status` and `bereich`
-    forward (a reprocess of a `published` document stays `published`; a
-    reprocess of a `draft` stays `draft`) -- unlike a fresh upload, which
-    always starts at `draft`. Before this fix, every reprocess unconditionally
-    reset `status` to `draft`, which would have silently unpublished 25 of the
-    30 documents in the library on the owner's planned bulk re-analysis.
+    NOTE: `bereich` is carried forward; `status` is decided by the gate
+    (knowledge_processing.gate_status, 2026-11-13): a reprocess whose checks
+    and review pass is published, one that fails is a draft with the failing
+    gate named in `status_reason`. Only a draft the operator set
+    (`status_reason: operator`) or a fresh upload not yet released
+    (`release`) is held as a draft (reprocess_hold). Until 2026-11-13 the
+    prior status was carried forward and only ever demoted, so a draft
+    stayed a draft after a passing reprocess with no reason recorded.
 
     NOTE: cancelling a reprocess must not destroy the existing draft or the
     stored source either. enqueue_ingest(reprocess=True) tells
@@ -759,45 +765,52 @@ def reprocess_item(doc_id):
     cancel (see its docstring for the full reasoning). Before THIS fix, every
     cancelled reprocess removed both exactly as a cancelled fresh upload does,
     on the mistaken assumption that both were this run's own throwaway
-    partial artefacts -- for the two Tier-O documents with no <doc_id>.pdf
-    fallback, that made a single Cancel click during a reprocess unrecoverable
+    partial artefacts -- for the two Tier-O documents with no stored original
+    as fallback, that made a single Cancel click during a reprocess unrecoverable
     data loss.
 
     Tier-F is not addressable here: get_operator_item returns None for a
     Tier-F doc_id, so this is a 404 like the sibling Tier-O-only mutation
     routes above (status/bereich/card/meta/delete).
     """
+    from my_app.services.knowledge_processing import reprocess_hold
+
     item = kl.get_operator_item(doc_id)
     if item is None:
         return jsonify({"error": f"No Tier-O item '{doc_id}'"}), 404
 
     originals_dir = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator"
     raw_md_path = originals_dir / f"{doc_id}.raw.md"
-    pdf_path = originals_dir / f"{doc_id}.pdf"
-    if raw_md_path.exists():
-        src_md, src_pdf = raw_md_path, None
-    elif pdf_path.exists():
-        src_md, src_pdf = None, pdf_path
+    blocks_path = originals_dir / f"{doc_id}.blocks.json"
+    original = kl.operator_original(doc_id)
+    if raw_md_path.exists() and blocks_path.exists():
+        src_md, src_file = raw_md_path, None
+    elif original is not None:
+        src_md, src_file = None, original
+    elif raw_md_path.exists():
+        src_md, src_file = raw_md_path, None
     else:
         return jsonify({
             "error": (f"No stored source for '{doc_id}' — neither "
-                      f"{raw_md_path.name} nor {pdf_path.name} found under "
+                      f"{raw_md_path.name} nor {doc_id}.pdf/.docx found under "
                       f"{originals_dir}; cannot re-analyze."),
         }), 404
 
     # --- Stage A on the stored source (UCD-131): deterministic re-check of an
-    # EXISTING document's stored PDF — embedded files / launch actions could
-    # have slipped in before this gate existed; the curated text-layer lists
+    # EXISTING document's stored PDF or DOCX — embedded files, launch actions
+    # or macros could have slipped in before this gate existed; the curated lists
     # apply equally. The hash INDEX is deliberately NOT consulted here:
     # re-analysing an existing document is the operator's explicit way around
     # it (working basis while the UCD-124 decision is open). A blocked-hash
     # entry still rejects.
-    if src_pdf is not None:
+    if src_file is not None:
         try:
-            stored = src_pdf.read_bytes()
+            stored = src_file.read_bytes()
         except OSError as e:
             return jsonify({"error": f"Stored source unreadable: {e}"}), 500
-        reason, stored_hash = upload_gate.gate_stored_pdf(stored)
+        gate = (upload_gate.gate_stored_docx if src_file.suffix.lower() == ".docx"
+                else upload_gate.gate_stored_pdf)
+        reason, stored_hash = gate(stored)
         if reason is not None:
             upload_gate.audit_rejection(stored_hash, reason, "knowledge/reprocess")
             return jsonify({"error": upload_gate.reject_message(reason)}), 400
@@ -814,7 +827,7 @@ def reprocess_item(doc_id):
         doc_id=doc_id,
         title=item.get("titel", "") or "",
         lizenz=item.get("lizenz", "") or "",
-        source_pdf=src_pdf,
+        source_file=src_file,
         source_md=src_md,
         autor=item.get("autor", "") or "",
         year=year_val,
@@ -824,7 +837,10 @@ def reprocess_item(doc_id):
         themen=themen,
         bereich=item.get("bereich", "") or "",
         hinweis=item.get("hinweis", "") or "",
-        status=item.get("status", "") or "draft",
+        pdf_seiten=item.get("pdf_seiten", "") or "",
+        # A passing reprocess is published; a draft the operator set, or a
+        # fresh upload not yet released, stays one (gate_status).
+        hold=reprocess_hold(item.get("status") or "", item.get("status_reason") or ""),
         # This run's <doc_id>.md and raw.md PRE-DATE it (the existing analysis
         # + the stored source, resolved above) -- a cancel must remove
         # NEITHER. Only this route ever sets reprocess=True; upload_document()
@@ -833,7 +849,7 @@ def reprocess_item(doc_id):
         reprocess=True,
     )
     logger.info("[KNOWLEDGE] queued reprocess job %s for doc_id=%s (source=%s)",
-                job_id, doc_id, "raw.md" if src_md else "pdf")
+                job_id, doc_id, src_md.name if src_md else src_file.name)
     return jsonify({"success": True, "job_id": job_id, "doc_id": doc_id}), 200
 
 

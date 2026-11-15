@@ -17,10 +17,11 @@
   down to it. ONE kind stands in the middle and is open from the start — a ring
   of one bubble would be a circle around nothing.
 
-  A kind is a `RingKind`. An adapter is a `PerspectiveBubble` with the net in it and its name across
-  it. The name stays there, where a perspective shows its own only while it is
-  held: the faces here are one and the same net, and a ring of unnamed nets
-  says nothing. A click lays it on the table beside the zone and closes the
+  A kind is a `RingKind`. An adapter is a `PerspectiveBubble` with its picture
+  in it where it has one (`loraPicture`, `src/assets/lora-previews/`), else the
+  net, and its name across it. The name stays there, where a perspective shows
+  its own only while it is held: without pictures the faces here are one and
+  the same net, and a ring of unnamed nets says nothing. A click lays it on the table beside the zone and closes the
   frame. An adapter whose file the folder does not hold stands in its ring and
   cannot be taken — like a model the availability check reports absent — with
   the cause in its title. See docs/ELEMENT_STRUCTURE_REGISTRY.md.
@@ -53,6 +54,7 @@
         :style="bubbleStyle(itemPos[j], geo.itemPct)"
       >
         <PerspectiveBubble
+          :src="loraPicture(l)"
           :name="l.name"
           :title="hint(l)"
           :disabled="!l.present"
@@ -61,7 +63,9 @@
           revealed
           @open="pick(l)"
         >
-          <LoraGlyph light />
+          <template v-if="!loraPicture(l)" #default>
+            <LoraGlyph light />
+          </template>
         </PerspectiveBubble>
       </div>
     </template>
@@ -76,7 +80,7 @@ import PerspectiveBubble from '@/components/PerspectiveBubble.vue'
 import RingKind from '@/components/RingKind.vue'
 import LoraGlyph from '@/components/LoraGlyph.vue'
 import { fitRing, ringPositions, bloomPositions, type RingPos } from '@/composables/useBubbleRing'
-import { useLoraStore, LORA_COLOR, type LoraAdapter, type LoraRing } from '@/stores/loras'
+import { useLoraStore, loraPicture, LORA_COLOR, type LoraAdapter, type LoraRing } from '@/stores/loras'
 
 const props = defineProps<{
   modelValue: boolean

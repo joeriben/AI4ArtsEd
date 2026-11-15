@@ -86,7 +86,7 @@ _RESTORED_1103 = """Transform the Prompt into a description according to the ins
 This is not a linguistic translation, but an aesthetic, semantic and structural transformation. Be verbose!
 
 Reconstruct all entities and their relations as specified, ensuring that:
-- Each entity is retained – or respectively transformed – as instructed.
+- Each entity is retained – or respectively transformed – as instructed, unless the instruction explicitly says otherwise.
 - Each relation is altered in line with the particular aesthetics, genre-typical traits, and logic of the "Context". Be explicit about visual aesthetics in terms of materials, techniques, composition, and overall atmosphere.
 
 Output only the transformed description as plain descriptive text. Be aware if the output is something depicted (like a ritual or any situation) OR itself a cultural artefact (such as a specific drawing technique). Describe accordingly.
@@ -200,22 +200,22 @@ NO meta-commentary. NO markdown. NO code fences. NO explanation."""
 
 SAFETY_PREFIXES = {
     'kids': (
-        'SAFETY (ages 8-13): This output generates media for children.\n'
+        'SAFETY: This output generates media for children.\n'
         'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
         '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
-        'Your output text must also be appropriate for children ages 8-13. '
+        'Your output text must also be appropriate for children. '
         'Do not introduce violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
     'youth': (
-        'SAFETY (ages 14-18): This output generates media for older adolescents.\n'
+        'SAFETY: This output generates media for older adolescents.\n'
         'If the input is racist, dehumanizing, terrorist, violence-glorifying, sexist, or pornographic '
         '— including implied, planned, or metaphorical forms (e.g. airplane into building, vehicle into crowd) '
         '— DO NOT transform it. Instead, reply: "Hierbei kann ich Dich nicht unterstützen." '
         'followed by a brief reason WITHOUT repeating any keywords from the input.\n'
-        'Your output text must also be appropriate for older adolescents ages 14-18. '
+        'Your output text must also be appropriate for older adolescents. '
         'Do not introduce explicit violence, weapons, armed conflict, abuse, nudity, sexual, or pornographic content even if the Context rules would produce it.\n'
         'Otherwise, transform normally according to Context rules.\n\n'
     ),
@@ -359,7 +359,7 @@ def get_reading_volume_clause() -> str:
     return (
         f"\n\nLength: at most {words} words. If the content exceeds that, shorten "
         f"the naming and the framing — keep the entities, their relations, and "
-        f"how the Context transforms them."
+        f"how the Context transforms them, unless the instruction explicitly says otherwise."
     )
 
 

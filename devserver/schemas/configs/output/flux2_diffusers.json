@@ -10,7 +10,8 @@
     "es": "Flux 2 Dev",
     "he": "Flux 2 Dev",
     "ar": "Flux 2 Dev",
-    "bg": "Flux 2 Dev"
+    "bg": "Flux 2 Dev",
+    "zh-hant": "Flux 2 Dev"
   },
   "description": {
     "en": "High-quality image generation using Flux 2 Dev with Mistral text encoder via Diffusers.",
@@ -22,7 +23,8 @@
     "es": "Generación de imágenes de alta calidad con Flux 2 Dev y el codificador de texto Mistral a través de Diffusers.",
     "he": "יצירת תמונות איכותית באמצעות Flux 2 Dev עם מקודד הטקסט Mistral דרך Diffusers.",
     "ar": "توليد صور عالية الجودة باستخدام Flux 2 Dev مع مُرمِّز النص Mistral عبر Diffusers.",
-    "bg": "Висококачествено генериране на изображения с Flux 2 Dev и текстов енкодер Mistral през Diffusers."
+    "bg": "Висококачествено генериране на изображения с Flux 2 Dev и текстов енкодер Mistral през Diffusers.",
+    "zh-hant": "透過 Diffusers，使用 Flux 2 Dev 搭配 Mistral 文字編碼器進行高品質圖像生成。"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_diffusers",

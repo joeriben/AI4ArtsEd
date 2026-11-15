@@ -32,7 +32,8 @@ weights do differs with the place: under "score" each one scales the guidance of
 prediction, under "conditioning" only their RATIO acts, as the point between the
 concepts that the interpolation reaches. NOT is the denoiser's operation alone: a
 point between the concepts exists for weights of one sign, so under "conditioning"
-a negative weight is refused instead of read as something else.
+a weight of the other sign sends its share outside [0, 1] and the interpolation runs
+past the other concepts.
 
 Why a guider and not `set_model_sampler_cfg_function`: that hook is handed ONE conditional
 prediction and one unconditional one (comfy/samplers.py:387), and this instrument needs one

@@ -42,11 +42,12 @@ gender, no control for feeling. It stands as the second machine (the third of
 five columns). See my_app/services/piper_backend.py, and
 docs/SPRACHSYNTHESE_PIPER_KONFIGURATION.md for the catalogue it comes from.
 
-There is NO English fallback here, and none is needed: Piper has a voice for
-every platform language — Hebrew, which Supertonic lacks, and Bulgarian and
-Ukrainian, which VoxCPM2 answers in English. If a language is nonetheless
-unanswerable, a download is missing, and saying so is the point: answering a
-download gap with English would hide it behind a limit that does not exist.
+There is NO English fallback here: Piper has a voice for every platform language
+but one — Hebrew, which Supertonic lacks, and Bulgarian and Ukrainian, which
+VoxCPM2 answers in English. Traditional Chinese (zh-hant, a platform language
+since 2026-10-29) has no installed voice yet. If a language is unanswerable, a
+download is missing, and saying so is the point: answering a download gap
+with English would hide it behind a limit that does not exist.
 """
 
 import base64
@@ -93,7 +94,7 @@ DEFAULTS = {
 # sits in piper_standard.json, not here.
 #
 # The fail-closed guard below stays as it is: an absent or unknown level blocks.
-ALLOWED_SAFETY_LEVELS = ("kids", "youth", "open", "adult", "research")
+ALLOWED_SAFETY_LEVELS = ("kids", "youth", "adult", "research")
 
 
 async def execute(
@@ -193,7 +194,7 @@ async def execute(
 
     logger.info(f"[CHUNK:piper] {len(text)} chars | language={lang} | level={level}")
 
-    wav, spoke, f0_hz = await backend.synthesize(
+    wav, spoke, f0_hz, model_used = await backend.synthesize(
         text=text,
         language=lang,
         voice=voice,
@@ -207,6 +208,7 @@ async def execute(
         "chunk_name": "output_speech_piper",
         "media_type": "audio",
         "backend": "piper",
+        "model_used": model_used,
         "voice": spoke,
         "f0_hz": round(f0_hz, 1),
         "audio_data": base64.b64encode(wav).decode("utf-8"),

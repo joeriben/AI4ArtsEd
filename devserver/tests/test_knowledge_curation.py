@@ -24,6 +24,7 @@ Run: python3 -m pytest devserver/tests/test_knowledge_curation.py -q
 
 import importlib
 import io
+import json
 import sys
 import time
 from pathlib import Path
@@ -37,7 +38,7 @@ import pytest
 
 
 # A raw (Docling-style) input Markdown for the --md passthrough path. Long enough
-# that the structure parser makes a content section worth a Map call.
+# that the structure parser makes a content section worth a summary.
 _MINI_MD = """# Mini Operator Doc
 
 ## Einleitung
@@ -52,12 +53,14 @@ Etwas mehr Fliesstext, damit der Struktur-Chunker mindestens einen inhaltstragen
 
 def _stub_llm(temperature: float = 0.2):
     """A deterministic stand-in for the provider-routed LLM: a bibliographic
-    record for the identify_bibliographic call, schema JSON for Map calls, plain
+    record for the identify_bibliographic call, a Markdown summary, plain
     text for the PROFIL Reduce call. Keeps the in-vivo term and a number so the
     Mittellage expectation is exercised without a network."""
     import json as _json
 
     def _fn(system: str, user: str, max_tokens: int):
+        if "REFUTE" in system:   # the adversarial review: nothing to refute
+            return _json.dumps({"omissions": [], "distortions": [], "additions": []})
         if "bibliographic cataloguer" in system:
             # The identifier: return a clean work title/author/year so a
             # blank-title upload gets a real bibliography (art105413 shape).
@@ -74,11 +77,10 @@ def _stub_llm(temperature: float = 0.2):
             return ("Das Dokument behandelt dekoloniale Kunstpaedagogik und "
                     "kulturelle Resilienz und baut auf vorhandenen Diskursen auf. "
                     "Anwendbar in medialer und performativer Praxis.")
-        return _json.dumps({
-            "section_title": "Massnahmen",
-            "digest": "- drei Schritte\n- Mindestalter 12\n- Evaluation alle 6 Monate\nBeispiel: 30 Teilnehmende, 2025.",
-            "terms": [{"term": "kulturelle Resilienz", "definition": "Widerstandsfaehigkeit kultureller Praxis"}],
-        }, ensure_ascii=False)
+        return ("## Einleitung\n\nBetreiberdokument zu dekolonialer Kunstpaedagogik.\n\n"
+                "## Abschnitt\n\nMassnahme in drei Schritten, Mindestalter 12, Evaluation "
+                "alle 6 Monate; Projekt mit 30 Teilnehmenden 2025.\n\n"
+                "## TERMS\n\n- **kulturelle Resilienz**: Widerstandsfaehigkeit kultureller Praxis")
 
     return _fn
 
@@ -728,3 +730,159 @@ def test_get_operator_item_without_provenance_keys_still_parses(tmp_path, monkey
     assert item["analysis_model"] == ""
     assert item["sprache"] == "de"
 
+
+
+# ---------------------------------------------------------------------------
+# The on-platform path with figures: a reprocess of a stored Docling export
+# (raw.md + blocks.json + figures/) -> the figure descriptions through the
+# platform's image-analysis path (analyze_image -> LLMClient -> ComfyUI's
+# node), each under the gate's lease (rule 15) -> condensation -> checks ->
+# review -> gate -> index. The image model is a fake behind the REAL lease
+# decorator of comfyui_ws_client; no model is called.
+# ---------------------------------------------------------------------------
+
+def _stored_docling_export(config, doc_id):
+    """An existing Tier-O item and its stored extraction: two pages of text,
+    two exported figures (100x100 PNG, two different pictures with a numbered
+    caption each, which the figure screening keeps), no PDF (the integrity
+    check then says it had nothing to check against)."""
+    import json as _json
+    from PIL import Image
+    from my_app.services.knowledge_extract import Block, Extraction
+
+    tier_o = Path(config.KNOWLEDGE_TIER_O_DIR)
+    tier_o.mkdir(parents=True, exist_ok=True)
+    (tier_o / f"{doc_id}.md").write_text(
+        f"---\nid: {doc_id}\ntitel: \"Mini mit Abbildungen\"\nautor: Tester\njahr: 2026\n"
+        "sprache: de\ntier: O\nlizenz: CC BY 4.0\nstatus: published\n---\n\n"
+        "# Mini mit Abbildungen\n\n## PROFIL\n\nalt\n", encoding="utf-8")
+    ops = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator"
+    figs = ops / f"{doc_id}.figures"
+    figs.mkdir(parents=True)
+    for name, box in (("fig-001-p1.png", (0, 0, 50, 100)), ("fig-002-p2.png", (0, 0, 100, 50))):
+        im = Image.new("RGB", (100, 100), (200, 30, 30))
+        im.paste((20, 20, 20), box)
+        im.save(figs / name)
+    paras = _MINI_MD.split("\n\n")
+    blocks = [Block("heading", text="Einleitung", level=2, page=1, seq=0),
+              Block("paragraph", text=paras[2], page=1, seq=1),
+              Block("figure", page=1, seq=2, figure_no="1", caption="Abb. 1: Skizze",
+                    image="fig-001-p1.png"),
+              Block("heading", text="Abschnitt", level=2, page=2, seq=3),
+              Block("paragraph", text=paras[4].strip(), page=2, seq=4),
+              Block("figure", page=2, seq=5, figure_no="2", caption="Abb. 2: Foto",
+                    image="fig-002-p2.png")]
+    ext = Extraction(blocks=blocks, pages=2, source="docling", figures_dir=figs)
+    (ops / f"{doc_id}.blocks.json").write_text(
+        _json.dumps(ext.to_dict(), ensure_ascii=False), encoding="utf-8")
+    (ops / f"{doc_id}.raw.md").write_text(_MINI_MD, encoding="utf-8")
+
+
+def _fake_image_model(monkeypatch, config):
+    """The local image model behind ComfyUI's node, faked at the one call
+    that would queue the prompt; the platform's own lease decorator stays
+    around it. Returns the list of leases taken and the prompts seen."""
+    import contextlib
+    from types import SimpleNamespace
+    from my_app.services import comfyui_ws_client as WS
+    from my_app.services import gpu_lease_client, llm_client, local_llm_weights
+
+    leases, prompts = [], []
+
+    @contextlib.asynccontextmanager
+    async def lease(kind="comfyui", model_id="comfyui", required_mb=0, **kw):
+        leases.append((kind, model_id))
+        yield "token"
+    monkeypatch.setattr(gpu_lease_client, "gpu_lease", lease)
+
+    async def run(self, workflow, timeout=None, on_progress=None, on_event=None):
+        inputs = workflow[llm_client.NODE_ID]["inputs"]
+        prompts.append((inputs["llm_name"], len(json.loads(inputs["images_b64"]))))
+        return SimpleNamespace(prompt_id=f"p-{len(prompts)}", outputs_metadata={
+            llm_client.NODE_ID: {"content": [f"Ein rotes Quadrat ({len(prompts)})."]}})
+
+    async def forget(self, prompt_id):
+        return None
+    monkeypatch.setattr(WS.ComfyUIWebSocketClient, "submit_and_track", WS._with_gpu_lease(run))
+    monkeypatch.setattr(WS.ComfyUIWebSocketClient, "forget_prompt", forget)
+    monkeypatch.setattr(WS, "_client", WS.ComfyUIWebSocketClient(base_url="http://127.0.0.1:1"))
+    monkeypatch.setattr(local_llm_weights, "dir_name", lambda m: "qwen3-vl-4b")
+    monkeypatch.setattr(local_llm_weights, "is_installed", lambda m: True)
+    monkeypatch.setattr(config, "IMAGE_ANALYSIS_MODEL", "local/qwen3-vl:4b", raising=False)
+    # Named as the library's image model, so the condensing model this machine
+    # has configured (and may have measured reading images) does not take over.
+    monkeypatch.setattr(config, "KNOWLEDGE_IMAGE_MODEL", "local/qwen3-vl:4b", raising=False)
+    return leases, prompts
+
+
+
+def test_reprocess_describes_figures_under_the_lease_and_shows_the_gate(app_client, monkeypatch):
+    client, kl, config = app_client
+    doc_id = "mini-mit-abbildungen"
+    _stored_docling_export(config, doc_id)
+    leases, prompts = _fake_image_model(monkeypatch, config)
+
+    r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
+    assert r.status_code == 200, r.get_json()
+    job = _poll_job(client, r.get_json()["job_id"])
+    assert job["state"] == "done", job
+
+    # One prompt per figure, one lease per prompt, each with the picture.
+    assert prompts == [("qwen3-vl-4b", 1), ("qwen3-vl-4b", 1)]
+    assert [k for k, _m in leases] == ["comfyui", "comfyui"]
+    log = "\n".join(job["log_tail"])
+    assert "Bildbeschreibungen: 2 von 2 beschrieben" in log
+    assert "no block export" not in log
+
+    md = (Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md").read_text(encoding="utf-8")
+    assert "Ein rotes Quadrat (1)." in md and "Ein rotes Quadrat (2)." in md
+
+    # The gate's decision and its reasons, in the job, the item and the list.
+    out = job["outcome"]
+    assert out["status"] in ("draft", "published")
+    assert out["checks"] and out["review"] == "passed"
+    assert f"status: {out['status']}" in md
+    item = client.get(f"/api/knowledge/items/{doc_id}").get_json()
+    assert (item["status"], item["checks"], item["review"]) == (out["status"], out["checks"], "passed")
+    row = [i for i in client.get("/api/knowledge/items").get_json()["items"] if i["doc_id"] == doc_id]
+    assert row and (row[0]["checks"], row[0]["review"]) == (out["checks"], "passed")
+
+
+def test_a_converted_pdf_without_block_export_is_an_error(app_client, monkeypatch):
+    """A PDF that went through Docling in this job and left no blocks.json is
+    not condensed from its Markdown (no pages, no figures, no integrity)."""
+    client, _, config = app_client
+    from my_app.services import knowledge_ingest_service as jobs
+    raw = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator" / "nur-md.raw.md"
+    raw.parent.mkdir(parents=True, exist_ok=True)
+    raw.write_text(_MINI_MD, encoding="utf-8")
+    with pytest.raises(RuntimeError, match="no block export"):
+        jobs._load_extraction("no-job", {"doc_id": "nur-md", "source_file": "/x/nur-md.pdf"},
+                              raw, _MINI_MD)
+
+
+def test_reprocess_of_a_chapter_reads_only_its_pages_and_keeps_the_range(app_client, monkeypatch):
+    """A document that is a chapter of its file (`pdf_seiten` in the front
+    matter): the reprocess takes the blocks of those PDF pages only, carries
+    the range forward, and the sidecar names it with the file it was read
+    from."""
+    client, kl, config = app_client
+    doc_id = "mini-mit-abbildungen"
+    _stored_docling_export(config, doc_id)
+    md_path = Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md"
+    md_path.write_text(md_path.read_text(encoding="utf-8").replace(
+        "lizenz: CC BY 4.0\n", "lizenz: CC BY 4.0\npdf_seiten: 2-2\n"), encoding="utf-8")
+    assert kl.get_operator_item(doc_id)["pdf_seiten"] == "2-2"
+    leases, prompts = _fake_image_model(monkeypatch, config)
+
+    r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
+    assert r.status_code == 200, r.get_json()
+    job = _poll_job(client, r.get_json()["job_id"])
+    assert job["state"] == "done", job
+    assert prompts == [("qwen3-vl-4b", 1)]              # the figure of page 2 only
+    assert "extraction: 1 pages" in "\n".join(job["log_tail"])
+    md = md_path.read_text(encoding="utf-8")
+    assert "\npdf_seiten: 2-2\n" in md
+    from my_app.services import knowledge_checks
+    side = json.loads(knowledge_checks.sidecar_path(md_path).read_text(encoding="utf-8"))
+    assert side["source"]["pdf_seiten"] == "2-2"

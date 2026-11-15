@@ -11,7 +11,8 @@
     "es": "Jerga juvenil",
     "he": "סלנג נוער",
     "ar": "لغة الشباب",
-    "bg": "Сленг"
+    "bg": "Сленг",
+    "zh-hant": "俚語"
   },
   "description": {
     "en": "Tries to rewrote everything in UK street slang as it could be used by teens in urban areas. Uses words from Drill, Grime, and Trap culture.",
@@ -22,6 +23,7 @@
     "he": "מנסה לשכתב הכל בסלנג רחוב בריטי כפי שבני נוער באזורים עירוניים עשויים להשתמש בו. משתמש במילים מתרבות Drill, Grime ו-Trap.",
     "ar": "يحاول إعادة كتابة كل شيء بالعامية الشارعية البريطانية كما قد يستخدمها المراهقون في المناطق الحضرية. يستخدم كلمات من ثقافة Drill وGrime وTrap.",
     "bg": "Опитва се да пренапише всичко на британски уличен сленг, какъвто би могъл да се използва от тийнейджъри в градски райони. Използва думи от Drill, Grime и Trap културата.",
+    "zh-hant": "試著把一切改寫成英國都市青少年可能會用的街頭俚語。使用 Drill、Grime 和 Trap 文化中的詞彙。",
     "tr": "Her şeyi kentsel alanlardaki gençlerin kullanabileceği İngiliz sokak argosuyla yeniden yazmaya çalışır. Drill, Grime ve Trap kültüründen kelimeler kullanır.",
     "ko": "도시 지역 청소년들이 사용할 수 있는 영국 스트리트 슬랭으로 모든 것을 다시 쓰려고 시도합니다. Drill, Grime, Trap 문화의 단어를 사용합니다."
   },
@@ -31,6 +33,7 @@
     "he": "טרנספורמציות יצירתיות",
     "ar": "التحولات الإبداعية",
     "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
     "tr": "Yaratıcı Dönüşümler",
     "ko": "창의적 변환",
     "uk": "Творчі перетворення",

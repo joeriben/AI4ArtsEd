@@ -6,7 +6,10 @@ chat model that hears), of a video or a still (Qwen3-VL through the
 platform's local language models, _local_llm), the words the transcriber
 believes were sung or spoken (HeartTranscriptor, a Whisper fine-tune,
 through heartlib's pipeline class), and a ranking of English labels against
-a recording (MuQ-MuLan and CLAP, cosine in a joint music/text space).
+a recording (MuQ-MuLan and CLAP, cosine in a joint music/text space). For
+the safety check at the result there is one reading that is no text: the
+video reader's answer to one yes/no question about a video, as the
+probability of yes (score_video).
 
 The weights are folders under <ComfyUI>/models/media_reading/<dir>/ --
 transformers-style snapshots (config.json and the weights) -- except the
@@ -23,6 +26,7 @@ read decoded arrays through the torchvision reader and librosa instead, as
 the GPU service told them.
 """
 import functools
+import inspect
 import json
 import logging
 import os
@@ -450,29 +454,36 @@ def describe_audio(dir_name: str, path: str, prompt: str, system_prompt: str,
 # ---------------------------------------------------------------------------
 # image, video
 
-def _describe_visual(llm_dir: str, content: List[dict], reserve: int, video: bool) -> str:
+def _visual_inputs(built: Any, messages: List[dict], video: bool) -> Any:
+    """The processor's inputs for a chat over a picture or a video, on the
+    CPU: the chat template's prompt, and the frames the way qwen-vl-utils
+    samples them. The reading and the yes/no question go through this one
+    preparation, so that a video is seen the same way by both."""
     from qwen_vl_utils import process_vision_info
+    processor = built.processor
+    text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    if video:
+        images, videos, video_kwargs = process_vision_info(
+            messages, image_patch_size=16, return_video_kwargs=True, return_video_metadata=True)
+        if videos is not None:
+            videos, metadatas = zip(*videos)
+            videos, metadatas = list(videos), list(metadatas)
+        else:
+            metadatas = None
+        return processor(text=[text_prompt], images=images, videos=videos, video_metadata=metadatas,
+                         do_resize=False, return_tensors="pt", **video_kwargs)
+    images, _videos = process_vision_info(messages, image_patch_size=16)
+    return processor(text=[text_prompt], images=images, return_tensors="pt")
+
+
+def _describe_visual(llm_dir: str, content: List[dict], reserve: int, video: bool) -> str:
     built = _local_llm.get_built(llm_dir)
     messages = [{"role": "user", "content": content}]
     with built.lock:
         window = _window(built.config)
         device = _local_llm._on_card(built, reserve + _local_llm._kv_cache_bytes(built.config, window))
-        model, processor = built.module.hf, built.processor
-        text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        if video:
-            images, videos, video_kwargs = process_vision_info(
-                messages, image_patch_size=16, return_video_kwargs=True, return_video_metadata=True)
-            if videos is not None:
-                videos, metadatas = zip(*videos)
-                videos, metadatas = list(videos), list(metadatas)
-            else:
-                metadatas = None
-            inputs = processor(text=[text_prompt], images=images, videos=videos, video_metadata=metadatas,
-                               do_resize=False, return_tensors="pt", **video_kwargs)
-        else:
-            images, _videos = process_vision_info(messages, image_patch_size=16)
-            inputs = processor(text=[text_prompt], images=images, return_tensors="pt")
-        inputs = inputs.to(device)
+        model = built.module.hf
+        inputs = _visual_inputs(built, messages, video).to(device)
         prompt_len = int(inputs["input_ids"].shape[1])
         return _answer(model, built.tokenizer, dict(inputs), window, prompt_len, prompt_len, llm_dir,
                        eos_ids=built.eos_ids)
@@ -486,6 +497,92 @@ def describe_image(llm_dir: str, path: str, prompt: str) -> str:
 def describe_video(llm_dir: str, path: str, prompt: str) -> str:
     return _describe_visual(llm_dir, [{"type": "video", "video": "file://" + path},
                                       {"type": "text", "text": prompt}], VIDEO_RESERVE_BYTES, video=True)
+
+
+# ---------------------------------------------------------------------------
+# a yes/no question about a video
+
+# The spellings an answer can begin with. Each side's mass is summed over
+# those the vocabulary holds as a single token, as the classifier's score
+# is (gpu_service llm_child_backend._score_from_logprobs): a side whose mass
+# splits across two spellings would otherwise count at the larger half.
+YES_SPELLINGS = ("yes", "Yes", "YES", " yes", " Yes", " YES")
+NO_SPELLINGS = ("no", "No", "NO", " no", " No", " NO")
+
+
+def answer_token_ids(tokenizer: Any, spellings: Tuple[str, ...]) -> List[int]:
+    """The ids of the spellings the tokenizer writes as one token."""
+    ids = set()
+    for spelling in spellings:
+        tokens = tokenizer(spelling, add_special_tokens=False).input_ids
+        if len(tokens) == 1:
+            ids.add(int(tokens[0]))
+    return sorted(ids)
+
+
+def yes_share(logits: torch.Tensor, yes_ids: List[int], no_ids: List[int],
+              decode=None) -> float:
+    """The yes side's share of the mass of both sides at the answer position.
+
+    The token the reader would write there has to be one of the two sides:
+    a reader that would begin with anything else -- a preamble, a refusal,
+    a model that does not follow the question -- has not answered, and the
+    ratio of two tails would be noise. That raises, and so does a position
+    where neither side carries any mass at all.
+    """
+    top = int(torch.argmax(logits))
+    if top not in yes_ids and top not in no_ids:
+        said = decode([top]) if decode else str(top)
+        raise ValueError(f"the reader would begin its answer with {said!r}, which is "
+                         f"neither yes nor no -- no answer")
+    probs = torch.softmax(logits.float(), dim=-1)
+    yes = float(probs[yes_ids].sum())
+    no = float(probs[no_ids].sum())
+    if not yes + no > 0.0:
+        raise ValueError("neither yes nor no carries any mass at the answer -- no answer")
+    return yes / (yes + no)
+
+
+def score_video(llm_dir: str, path: str, system_prompt: str, prompt: str) -> float:
+    """The probability that the video reader answers yes to `prompt` about
+    the video at `path`, with `system_prompt` as its system line.
+
+    One forward pass and no generation: the token the reader would write
+    after the prompt is its answer, read off the logits at that position
+    (yes_share). Nothing is sampled -- the reader's own generation config
+    samples, and a verdict read off a sampled answer would change between
+    two runs of the same video -- so the same video and question give the
+    same score every time. The video is prepared as the reading prepares it
+    (_visual_inputs), the question stands before the video as the
+    classifier's document line stands before a picture, and the cache is not
+    kept, since nothing follows the pass.
+    """
+    built = _local_llm.get_built(llm_dir)
+    messages = [
+        {"role": "system", "content": [{"type": "text", "text": system_prompt}]},
+        {"role": "user", "content": [{"type": "text", "text": prompt},
+                                     {"type": "video", "video": "file://" + path}]},
+    ]
+    with built.lock:
+        yes_ids = answer_token_ids(built.tokenizer, YES_SPELLINGS)
+        no_ids = answer_token_ids(built.tokenizer, NO_SPELLINGS)
+        if not yes_ids or not no_ids:
+            missing = "yes" if not yes_ids else "no"
+            raise ValueError(f"{llm_dir} writes no spelling of {missing!r} as one token; it "
+                             f"cannot answer a yes/no question this way")
+        inputs = _visual_inputs(built, messages, video=True)
+        prompt_len = int(inputs["input_ids"].shape[1])
+        device = _local_llm._on_card(
+            built, VIDEO_RESERVE_BYTES + _local_llm._kv_cache_bytes(built.config, prompt_len))
+        inputs = inputs.to(device)
+        hf = built.module.hf
+        # Only the last position is read; a model whose forward takes
+        # logits_to_keep computes only that one (_text_probes does the same).
+        keep = {"logits_to_keep": 1} if "logits_to_keep" in inspect.signature(hf.forward).parameters else {}
+        _card.interrupted()
+        with torch.inference_mode():
+            logits = hf(**dict(inputs), use_cache=False, **keep).logits[0, -1]
+        return yes_share(logits, yes_ids, no_ids, decode=built.tokenizer.decode)
 
 
 # ---------------------------------------------------------------------------

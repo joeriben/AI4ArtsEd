@@ -24,7 +24,7 @@ def test_the_context_carries_the_runs_input_interception_and_medium(storage):
     from my_app.services.pipeline_recorder import get_recorder
     from my_app.routes.chat_routes import load_session_context
 
-    recorder = get_recorder("run_ctx_test_1", config_name="bauhaus", safety_level="open",
+    recorder = get_recorder("run_ctx_test_1", config_name="bauhaus", safety_level="adult",
                             device_id="dev", base_path=storage)
     # The order a run saves in: the config first, then the texts, so none of
     # the three lands on the number the old reader guessed for it.
@@ -34,7 +34,7 @@ def test_the_context_carries_the_runs_input_interception_and_medium(storage):
     recorder.save_entity("translation_en", "A house by the lake")
     recorder.save_entity("interception", "A Bauhaus house by the lake")
 
-    out = load_session_context("run_ctx_test_1")
+    out = load_session_context("run_ctx_test_1", "adult")
     assert out["success"], out
     context = out["context"]
     assert context["input_text"] == "Ein Haus am See"

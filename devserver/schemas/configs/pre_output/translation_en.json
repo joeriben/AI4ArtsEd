@@ -13,7 +13,8 @@
     "es": "Pre-Salida: Traducción al inglés",
     "he": "לפני פלט: תרגום לאנגלית",
     "ar": "قبل المخرجات: الترجمة إلى الإنجليزية",
-    "bg": "Преди изхода: Превод на английски"
+    "bg": "Преди изхода: Превод на английски",
+    "zh-hant": "輸出前：翻譯成英文"
   },
   "description": {
     "en": "Translates text to English before media generation (uses DEFAULT_LANGUAGE from config.py as source) - preserves artistic intent and structure",
@@ -25,7 +26,8 @@
     "es": "Traduce el texto al inglés antes de generar el medio (usa DEFAULT_LANGUAGE de config.py como origen) — conserva la intención artística y la estructura.",
     "he": "מתרגם טקסט לאנגלית לפני יצירת המדיה (משתמש ב-DEFAULT_LANGUAGE מתוך config.py כמקור) — שומר על הכוונה האמנותית והמבנה.",
     "ar": "يترجم النص إلى الإنجليزية قبل توليد الوسائط (يستخدم DEFAULT_LANGUAGE من config.py كمصدر) — يحافظ على القصد الفني والبنية.",
-    "bg": "Превежда текста на английски преди генериране на медия (използва DEFAULT_LANGUAGE от config.py като източник) — запазва художествения замисъл и структурата."
+    "bg": "Превежда текста на английски преди генериране на медия (използва DEFAULT_LANGUAGE от config.py като източник) — запазва художествения замисъл и структурата.",
+    "zh-hant": "在生成媒體之前將文字翻譯成英文（使用 config.py 中的 DEFAULT_LANGUAGE 作為來源語言）——保留藝術意圖與結構"
   },
   "parameters": {
     "temperature": 0.2,

@@ -11,7 +11,8 @@
     "es": "Hoelderlin",
     "he": "Hoelderlin",
     "ar": "Hoelderlin",
-    "bg": "Hoelderlin"
+    "bg": "Hoelderlin",
+    "zh-hant": "Hoelderlin"
   },
   "description": {
     "en": "Material collision with Hoelderlin's 'Der Gang aufs Land' (1800). An invitation into the open despite grey skies — language finding itself, the heart opening, colliding with your prompt.",
@@ -23,7 +24,8 @@
     "es": "Colision material con 'Der Gang aufs Land' de Hoelderlin (1800). Una invitacion a lo abierto pese al cielo gris — el lenguaje se encuentra, el corazon se abre, chocando con tu prompt.",
     "he": "התנגשות חומרית עם 'הליכה אל הכפר' של הלדרלין (1800). הזמנה אל הפתוח למרות שמיים אפורים — השפה מוצאת את עצמה, הלב נפתח, מתנגשת עם הפרומפט שלך.",
     "ar": "تصادم مادي مع قصيدة هولدرلين 'المسير الى الريف' (1800). دعوة الى المفتوح رغم السماء الرمادية — اللغة تجد نفسها، القلب ينفتح، تتصادم مع موجهك.",
-    "bg": "Материален сблъсък с 'Der Gang aufs Land' на Хьолдерлин (1800). Покана към откритото въпреки сивото небе — езикът се намира, сърцето се отваря, сблъсквайки се с вашия промпт."
+    "bg": "Материален сблъсък с 'Der Gang aufs Land' на Хьолдерлин (1800). Покана към откритото въпреки сивото небе — езикът се намира, сърцето се отваря, сблъсквайки се с вашия промпт.",
+    "zh-hant": "與 Hoelderlin 的《Der Gang aufs Land》（1800）進行材料碰撞。儘管天色灰暗，仍是一份走向開闊之處的邀請——語言找到自己，心敞開了，與你的提示詞相互碰撞。"
   },
   "category": {
     "en": "Poetry",
@@ -35,7 +37,8 @@
     "es": "Poesía",
     "he": "שירה",
     "ar": "شعر",
-    "bg": "Поезия"
+    "bg": "Поезия",
+    "zh-hant": "詩歌"
   },
   "properties": [
     "poetry"

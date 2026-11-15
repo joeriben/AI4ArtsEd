@@ -42,6 +42,7 @@ _MEDIA_URL_RE = re.compile(
 )
 _UPLOAD_URL_RE = re.compile(r'^/api/media/uploads/(?P<upload_id>[^/?#]+?)/?$')
 _UPLOAD_EXTS = ('png', 'jpg', 'jpeg', 'webp')
+_PICTURE_SUFFIXES = ('.png', '.jpg', '.jpeg', '.webp', '.gif')
 _MAX_PATHLIKE_LEN = 1024  # beyond this a "string" is base64, not a path
 
 
@@ -100,7 +101,7 @@ def _upload_path(upload_id: str) -> Optional[Path]:
     return None
 
 
-def _from_run(run_id: str, kind: str, index: Optional[int], ref: str) -> Path:
+def _from_run(run_id: str, kind: str, index: Optional[int], ref: str, level) -> Path:
     recorder = _load_recorder(run_id)
     if recorder is None:
         raise MediaRefError(f"no run record for '{run_id}' (ref: {ref})")
@@ -117,8 +118,9 @@ def _from_run(run_id: str, kind: str, index: Optional[int], ref: str) -> Path:
     # The verdict, asked here rather than at each caller: this resolver is what
     # Resona's vision channel, the image analysis and the chat's picture lookup
     # all go through, and none of them has an entity of its own to ask about.
+    # It is asked at the level of whoever the picture is read for.
     from my_app.services.pipeline_recorder import entity_cleared_for_delivery
-    cleared, why = entity_cleared_for_delivery(entities[i], recorder.metadata)
+    cleared, why = entity_cleared_for_delivery(entities[i], recorder.metadata, level)
     if not cleared:
         raise MediaRefError(
             f"run '{run_id}' {kind} {i} was withheld by the content check "
@@ -130,8 +132,82 @@ def _from_run(run_id: str, kind: str, index: Optional[int], ref: str) -> Path:
     return path
 
 
+def _checked_upload(path: Path, level) -> Path:
+    """An upload goes on at kids and youth only with a pass for the level.
+
+    The pass was kept beside the upload when it came in (media_routes.
+    upload_image, safety_gate.record_upload_verdict). It is read here as
+    delivery reads a run's verdict, at the level of whoever the picture is
+    resolved for; the other levels check no pictures. A file of the upload
+    directory that is no picture has no such verdict and is returned as it is.
+    """
+    if path.suffix.lower().lstrip('.') not in _UPLOAD_EXTS:
+        return path
+    from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS
+    from my_app.services.safety_gate import normalise_level, upload_cleared_for
+    if normalise_level(level) in IMAGE_CHECKED_LEVELS and not upload_cleared_for(path.stem, level):
+        raise MediaRefError(f"the upload {path.name} carries no verdict for this level - withheld")
+    return path
+
+
+def _run_holding(resolved: Path):
+    """The run whose folder holds `resolved`: (its run_id, the file's name in
+    the run), or None for a file outside the run storage."""
+    from config import JSON_STORAGE_DIR
+    try:
+        relative = resolved.relative_to(Path(JSON_STORAGE_DIR).resolve())
+    except (OSError, ValueError):
+        return None
+    parts = relative.parts
+    at = next((i for i, part in enumerate(parts[:-1]) if part.startswith('run_')), None)
+    if at is None:
+        return None
+    filename = '/'.join(parts[at + 1:])
+    if filename.startswith('final/'):
+        filename = filename[len('final/'):]
+    return parts[at], filename
+
+
+def _checked_path(path: Path, level) -> Path:
+    """A path into the run storage is a run's output under another name.
+
+    It is asked what the run's own address is asked, by the run that holds it
+    (`checked_path_for_filename`): a path is how the chat and the analysis hand
+    a picture on, and one into a run's folder would otherwise reach past the
+    verdict. A picture whose run record cannot be read is refused, as the
+    export route refuses it. A path into the upload directory is asked for the
+    upload's own verdict (`_checked_upload`). Any other file is returned as it
+    is.
+    """
+    from config import UPLOADS_TMP_DIR
+    try:
+        resolved = path.resolve()
+        in_uploads = resolved.parent == Path(UPLOADS_TMP_DIR).resolve()
+    except OSError:
+        return path
+    if in_uploads:
+        return _checked_upload(path, level)
+    held = _run_holding(resolved)
+    if held is None:
+        return path
+    run_id, filename = held
+    recorder = _load_recorder(run_id)
+    if recorder is None:
+        if path.suffix.lower() in _PICTURE_SUFFIXES:
+            raise MediaRefError(f"no run record for the picture {path}")
+        return path
+    from my_app.services.pipeline_recorder import SafetyRefusal
+    try:
+        recorder.checked_path_for_filename(filename, level)
+    except SafetyRefusal as refusal:
+        raise MediaRefError(
+            f"{path.name} of run '{run_id}' was withheld by the content check "
+            f"({refusal.reason})")
+    return path
+
+
 def resolve_media_ref(ref: Union[str, Path, None], *, kind: str = 'image',
-                      index: Optional[int] = None) -> Path:
+                      index: Optional[int] = None, level) -> Path:
     """Turn a media reference into a file path, or raise MediaRefError.
 
     Accepted, each as its own explicit branch:
@@ -142,13 +218,19 @@ def resolve_media_ref(ref: Union[str, Path, None], *, kind: str = 'image',
 
     An explicit `index` overrides the one carried in the URL. Nothing else is
     accepted — base64 is not a reference and is never inferred here.
+
+    `level` is the level of whoever the file is resolved for. A run's output
+    resolves only where delivery hands it to that level, whether it is named by
+    its run or by its path (`_checked_path`), and an upload at kids and youth
+    only with the pass kept beside it for that level (`_checked_upload`); a
+    refusal raises like any other reference that does not resolve.
     """
     if ref is None or (isinstance(ref, str) and not ref.strip()):
         raise MediaRefError("empty media reference")
 
     if isinstance(ref, Path):
         if ref.exists():
-            return ref
+            return _checked_path(ref, level)
         raise MediaRefError(f"path does not exist: {ref}")
 
     ref = ref.strip()
@@ -156,10 +238,11 @@ def resolve_media_ref(ref: Union[str, Path, None], *, kind: str = 'image',
     if len(ref) <= _MAX_PATHLIKE_LEN and not ref.startswith('/api/'):
         try:
             candidate = Path(ref)
-            if candidate.exists():
-                return candidate
+            exists = candidate.exists()
         except (OSError, ValueError):
-            pass
+            exists = False
+        if exists:
+            return _checked_path(candidate, level)
 
     match = _MEDIA_URL_RE.match(ref)
     if match:
@@ -169,22 +252,71 @@ def resolve_media_ref(ref: Union[str, Path, None], *, kind: str = 'image',
             kind=match.group('kind'),
             index=index if index is not None else (int(url_index) if url_index is not None else None),
             ref=ref,
+            level=level,
         )
 
     match = _UPLOAD_URL_RE.match(ref)
     if match:
         path = _upload_path(match.group('upload_id'))
         if path is not None:
-            return path
+            return _checked_upload(path, level)
         raise MediaRefError(f"no uploaded file for {ref}")
 
     if '/' not in ref and '\\' not in ref and len(ref) <= _MAX_PATHLIKE_LEN:
         path = _upload_path(ref)
         if path is not None:
-            return path
-        return _from_run(ref, kind=kind, index=index, ref=ref)
+            return _checked_upload(path, level)
+        return _from_run(ref, kind=kind, index=index, ref=ref, level=level)
 
     raise MediaRefError(f"unresolvable media reference: {ref[:160]!r}")
+
+
+def may_leave_server(ref: Union[str, Path, None], *, level) -> bool:
+    """Whether the picture `ref` names may be handed to a model outside this server.
+
+    The one picture that may is one the platform made from words alone: an
+    output of a run whose record says it took no picture in (pipeline_recorder.
+    INPUT_IMAGE_KEY). Everything else stays here, and a local model looks at it
+    (DEVELOPMENT_DECISIONS 2026-03-25):
+      - an upload, in the upload directory or a folder below it;
+      - a camera picture, which arrives as a data: URL;
+      - a picture made from one: its run took a picture in, by image to image,
+        several images or image to video;
+      - a picture whose origin cannot be read here: a reference that does not
+        resolve or is withheld at `level`, a run that does not say whether it
+        took a picture in (recorded before runs said so, or on a path that does
+        not say it), a file outside the run storage.
+
+    The question is not where the file is but whether it may pass out of the
+    building, so every doubt answers no.
+    """
+    if isinstance(ref, str) and ref.strip().startswith('data:'):
+        return False
+    try:
+        resolved = resolve_media_ref(ref, level=level).resolve()
+    except MediaRefError:
+        return False
+    except Exception as e:
+        logger.warning("[MEDIA-REF] where %r came from could not be read (%s); "
+                       "it stays on this server", str(ref)[:160], e)
+        return False
+    from config import UPLOADS_TMP_DIR
+    try:
+        # `in .parents`, not `.parent ==`: a folder below the upload directory
+        # (uploads_tmp/masks/, any per-session folder somebody adds) holds
+        # uploads too.
+        if Path(UPLOADS_TMP_DIR).resolve() in resolved.parents:
+            return False
+    except OSError:
+        return False
+    held = _run_holding(resolved)
+    if held is None:
+        return False
+    recorder = _load_recorder(held[0])
+    if recorder is None:
+        return False
+    from my_app.services.pipeline_recorder import INPUT_IMAGE_KEY
+    return recorder.metadata.get(INPUT_IMAGE_KEY) is False
 
 
 def normalize_image(path: Union[str, Path], *, max_size: int = IMAGE_MAX_SIZE,
@@ -248,9 +380,10 @@ def encode_image_b64(path: Union[str, Path], *, normalize: bool = True,
 
 
 def load_image_b64(ref: Union[str, Path, None], *, index: Optional[int] = None,
-                   normalize: bool = True) -> str:
-    """resolve_media_ref + encode_image_b64 — what a vision consumer wants."""
-    return encode_image_b64(resolve_media_ref(ref, kind='image', index=index),
+                   normalize: bool = True, level) -> str:
+    """resolve_media_ref + encode_image_b64 — what a vision consumer wants,
+    read for whoever asks at `level`."""
+    return encode_image_b64(resolve_media_ref(ref, kind='image', index=index, level=level),
                             normalize=normalize)
 
 

@@ -142,6 +142,7 @@
                   <option value="he">{{ $t('settings.general.hebrewHe') }}</option>
                   <option value="tr">{{ $t('settings.general.turkishTr') }}</option>
                   <option value="uk">{{ $t('settings.general.ukrainianUk') }}</option>
+                  <option value="zh-hant">{{ $t('settings.general.traditionalChineseZhHant') }}</option>
                   <option value="ko">{{ $t('settings.general.koreanKo') }}</option>
                 </select>
               </td>
@@ -363,40 +364,6 @@
               <span class="help-text">{{ $t('settings.api.storedIn') }} {{ p.key_path }}</span>
             </td>
           </tr>
-          <!-- The external frontier image models and the accounts they run on,
-               one row each, built for Gemini 3 Pro Image:
-               every output config whose meta marks it `frontier_image`, under
-               its own name, with the provider its chunk sends to
-               (/api/settings/frontier-image-accounts). The model's route stands
-               in its chunk and does not follow the provider above, so the rows
-               set nothing. Without a key or credit the model is switched off in the
-               Flow and in the model choice of five instruments; a provider of
-               its own for it is issue #100. -->
-          <tr v-if="frontierFailed">
-            <td class="label-cell">{{ $t('settings.api.frontierImageLabel') }}</td>
-            <td class="value-cell">{{ $t('settings.apiManagement.billingError') }}: {{ frontierFailed }}</td>
-          </tr>
-          <template v-for="f in frontierConfigs" :key="f.config_id">
-            <tr>
-              <td class="label-cell">{{ $t('settings.api.frontierImageLabel') }}</td>
-              <td class="value-cell">{{ f.name ? localized(f.name, locale) : f.config_id }}</td>
-            </tr>
-            <tr>
-              <td class="label-cell">{{ $t('settings.api.frontierProviderLabel') }}</td>
-              <td class="value-cell">{{ f.provider ? providerName(f.provider) : (f.error || '—') }}</td>
-            </tr>
-            <tr>
-              <td class="label-cell">{{ $t('settings.api.frontierKeyLabel') }}</td>
-              <td class="value-cell">{{ f.has_key ? '✓' : '—' }}</td>
-            </tr>
-            <!-- Only for a provider whose account the check reads and judges
-                 (`judged`): for any other its balance would read as
-                 unlimited. -->
-            <tr v-if="f.judged">
-              <td class="label-cell">{{ $t('settings.api.frontierBalanceLabel', { provider: providerName(f.provider) }) }}</td>
-              <td class="value-cell">{{ frontierBalanceText(f) }}</td>
-            </tr>
-          </template>
 
           </tbody>
         </table>
@@ -479,12 +446,13 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MODEL_ROLES } from '@/data/modelRoles'
 import { providerName } from '@/data/providers'
-import { localized } from '@/i18n'
 import { readDsgvoRecord } from '@/lib/dsgvoRecord'
 import { modelShort } from '@/lib/modelPlace'
 import { useChatModels } from '@/composables/useChatModels'
+import { settingsApplied } from '@/lib/settingsApplied'
+import { useLabAuthStore } from '@/stores/labAuth'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 // Authentication state
 const authenticated = ref(false)
@@ -535,62 +503,6 @@ async function loadProviders() {
   } catch (e) {
     console.warn('[Settings] Provider table not loaded:', e)
   }
-}
-
-// The external frontier image models and the accounts behind them, for their
-// rows under the key fields: read by the same check that switches a model off
-// in the Flow and in the model choice of five instruments where there is no
-// key, the key is refused, or no credit is left
-// (devserver/my_app/services/provider_account.py). Which models these are and
-// which provider each runs through comes from the output configs and their
-// chunks. Empty while they are being read; the rows then stand out of the
-// table, since a dash would read as "no key". Where a reading failed, the
-// balance row shows the cause the route names in place of a dash: the HTTP
-// status, with the proxy's name for the refusal where it gives one, "timeout",
-// the class of an exception, or an English sentence of the server. Where the
-// route itself failed, one row shows its HTTP status or the browser's message.
-// The balance row stands only for a provider whose account the check judges;
-// for a config whose chunk names no provider, the provider row shows the
-// route's sentence.
-const frontierConfigs = ref([])
-const frontierFailed = ref('')
-// Counts the loads, so that the answer to an earlier one, which reads every
-// provider afresh and can arrive after a later one, does not overwrite it.
-let frontierLoad = 0
-
-async function loadFrontierAccounts() {
-  const mine = ++frontierLoad
-  frontierConfigs.value = []
-  frontierFailed.value = ''
-  try {
-    const response = await fetch('/api/settings/frontier-image-accounts', { credentials: 'include' })
-    const configs = response.ok ? (await response.json()).configs || [] : null
-    if (mine !== frontierLoad) return
-    if (configs) frontierConfigs.value = configs
-    else frontierFailed.value = `HTTP ${response.status}`
-  } catch (e) {
-    if (mine !== frontierLoad) return
-    console.warn('[Settings] Frontier image accounts not loaded:', e)
-    frontierFailed.value = e?.message || String(e)
-  }
-}
-
-// The account's balance. An account without a budget reads as unlimited, the
-// way the API Management tab writes its budget limit; the dash stays for no key.
-// Where the check found one of the three budgets it judges used up
-// (`used_up`), the row names which one, beside the balance or, for an account
-// without a budget, in its place: the key's own budget or its team's can be
-// spent while the account's balance stands above zero, and a balance closer
-// to zero than half a cent reads $0.00 either way.
-function frontierBalanceText(a) {
-  const usedUp = a.used_up ? t(`settings.api.frontierUsedUp.${a.used_up}`) : ''
-  if (a.balance != null) {
-    const shown = `$${(Math.abs(a.balance) < 0.005 ? 0 : a.balance).toFixed(2)}`
-    return usedUp ? `${shown} · ${usedUp}` : shown
-  }
-  if (a.error) return a.error
-  if (usedUp) return usedUp
-  return a.has_key ? t('settings.apiManagement.unlimited') : '—'
 }
 
 // The cloud models the platform offers, for the list under a role field: each
@@ -902,7 +814,6 @@ async function loadSettings() {
     lastUserModels.value = data.last_user_models || {}
     dsgvoReview.value = data.dsgvo_review || []
     loadCapabilities()
-    loadFrontierAccounts()
 
   } catch (e) {
     error.value = e.message
@@ -1032,6 +943,9 @@ async function saveAndApply() {
     // the form. It comes back with the hot-reload that made it current.
     const applied = await applyResponse.json()
     dsgvoReview.value = applied.dsgvo_review || dsgvoReview.value
+    // The lists of language models under this overlay offer what was chosen
+    // before; they ask again now.
+    settingsApplied()
 
     saveMessage.value = `✓ ${t('settings.save.success')}`
     saveSuccess.value = true
@@ -1044,7 +958,6 @@ async function saveAndApply() {
     // The typed keys are saved; the table shows them masked from now on.
     providerKeys.value = {}
     await loadProviders()
-    loadFrontierAccounts()
 
     setTimeout(() => {
       saveMessage.value = ''
@@ -1086,6 +999,12 @@ async function checkAuth() {
 function onAuthenticated() {
   authenticated.value = true
   showAuthModal.value = false
+  // The settings password signs this browser in as the first admin account
+  // (lab/auth_service.py, `current_user`), and what it keeps from now on is
+  // that account's (favorites_routes.py, `_asker`). The page asks who is
+  // signed in, so that the header shows it and the favourites strip reloads;
+  // until 2026-11-15 it learnt of it only with the next reload.
+  void useLabAuthStore().fetchMe()
   // Load settings after authentication
   loadSettings()
   // Load local LLM models for dropdown (no auth required)

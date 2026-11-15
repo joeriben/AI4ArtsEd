@@ -623,12 +623,15 @@ def test_remember_dual_writes_memory_event(monkeypatch, tmp_path):
         "remember",
         {"kind": "goal", "content": "Collage-Werkstatt geplant"},
         context={"device_id": device, "run_id": None, "journal_id": device},
+        level="youth",
     )
     assert not str(out).startswith("Error")
     events = resona_journal.read_events(device)["events"]
     mem = [e for e in events if e["type"] == "memory"]
     assert len(mem) == 1
-    assert mem[0]["payload"] == {"kind": "goal", "content": "Collage-Werkstatt geplant"}
+    # The level of the turn goes with the note (resona_journal.events_at).
+    assert mem[0]["payload"] == {"kind": "goal", "content": "Collage-Werkstatt geplant",
+                                 "safety_level": "youth"}
 
 
 def test_remember_without_journal_id_writes_no_memory_event(monkeypatch, tmp_path):

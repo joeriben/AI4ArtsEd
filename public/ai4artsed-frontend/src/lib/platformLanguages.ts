@@ -24,6 +24,7 @@ export const PLATFORM_LANGUAGES: readonly PlatformLanguage[] = [
   { code: 'fr', label: 'Français' },
   { code: 'es', label: 'Español' },
   { code: 'bg', label: 'Български' },
+  { code: 'zh-hant', label: '繁體中文' },
 ]
 
 export const FURTHER_LANGUAGES: readonly PlatformLanguage[] = [

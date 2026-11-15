@@ -10,8 +10,10 @@ Scope:
     places (2026-09-23, lab/place_codes.py). NO password, NO name. The session
     then carries course_id (the exclusivity axis) and the place.
   - POST /api/auth/logout
-  - GET  /api/auth/me                — identity, the session's active course_id,
-    and the number of a place session's place.
+  - POST /api/auth/active-course {course_id} — a leader or an admin chooses
+    the course they work in, or null for their own use (2026-11-14).
+  - GET  /api/auth/me                — identity, the session's active course_id
+    and that course's name, and the number of a place session's place.
 
 Location: devserver/my_app/routes/auth_routes.py
 """
@@ -22,12 +24,13 @@ import logging
 from flask import Blueprint, current_app, request, jsonify
 
 from my_app.lab.db import SessionLocal
-from my_app.lab.models import User, Role, MembershipStatus
+from my_app.lab.models import User, Role, Course, MembershipStatus
 from my_app.lab.auth_service import (
     check_place_session, current_user, current_course_id, current_place_number,
-    login_user, login_place, logout_user, place_session_unverified,
-    verify_password,
+    is_course_educator, is_session_course, login_user, login_place,
+    logout_user, place_session_unverified, set_active_course, verify_password,
 )
+from my_app.utils.url_ids import MAX_ROW_ID
 from my_app.lab.login_attempts import attempts_of, client_address
 from my_app.lab.place_codes import access_open, find_place, has_code_form
 
@@ -45,7 +48,8 @@ def login():
     use this route — a device enters via /participant-login with the code of
     its place.
     An educator login does NOT set course_id: the educator picks the active
-    course explicitly in the CourseSelector (BAUPLAN Entscheid 1).
+    course explicitly in the sign-in field of the header (BAUPLAN Entscheid
+    1; POST /active-course).
     """
     data = request.get_json(silent=True) or {}
     identifier = (data.get("identifier") or "").strip()
@@ -144,8 +148,9 @@ def logout():
 def me():
     """Current identity plus the session's active course_id (Entscheid 1/2).
 
-    For a participant this is their fixed course binding; for an educator it is
-    whatever they selected in the CourseSelector (or null = presets only).
+    For a participant this is their fixed course binding; for a leader or an
+    admin it is the course chosen in the sign-in field of the header
+    (POST /active-course), or null for their own use.
 
     A device asks here whether the sign-in of its place still holds
     (stores/labAuth.ts, `checkPlaceSession`). Where the check of this
@@ -154,14 +159,70 @@ def me():
     """
     user = current_user()
     if user is None:
-        body = {"user": None, "course_id": None, "place": None}
+        body = {"user": None, "course_id": None, "course": None, "place": None}
         if place_session_unverified():
             body["unverified"] = True
         return jsonify(body), 200
-    return jsonify({
+    return jsonify(_identity(user)), 200
+
+
+def _identity(user: User) -> dict:
+    """What /me answers for a signed-in session. `course` is the active
+    course's id and name, which the sign-in field of the header shows; null
+    where no course is active, or where the course under the session's id is
+    not the one it entered (the safety level then holds the strictest)."""
+    cid = current_course_id()
+    course = None
+    if cid is not None:
+        found = SessionLocal().get(Course, cid)
+        if found is not None and is_session_course(found):
+            course = {"id": found.id, "name": found.name}
+    return {
         "user": user.to_public(),
-        "course_id": current_course_id(),
+        "course_id": cid,
+        "course": course,
         "place": current_place_number(),
-    }), 200
+    }
+
+
+@auth_bp.route("/active-course", methods=["POST"])
+def choose_course():
+    """The course a leader or an admin works in (2026-11-14), chosen in the
+    sign-in field of the header; null is the account's own use ("Eigene
+    Nutzung", decided 2026-10-31).
+
+    Body: {course_id: int | null}. 401 without a sign-in. 403 for a place,
+    whose course is the one its code entered, and for a course id the
+    account leads no course under (`is_course_educator`; an admin passes),
+    whether or not a course has it: the answer tells nobody which ids exist.
+    404 where no course has the id, for an admin, and for an id no course
+    can have. 400 where the body names no course_id or one that is no whole
+    number. The answer is that of /me.
+    """
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "Authentication required"}), 401
+    if user.role == Role.participant:
+        return jsonify({"error": "Forbidden"}), 403
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or "course_id" not in data:
+        return jsonify({"error": "course_id required"}), 400
+    raw = data["course_id"]
+    if raw is None:
+        set_active_course(None)
+        logger.info("[AUTH] account %s works in its own use", user.id)
+        return jsonify(_identity(user)), 200
+    if isinstance(raw, bool) or not isinstance(raw, int):
+        return jsonify({"error": "course_id must be a whole number or null"}), 400
+    if not 0 < raw <= MAX_ROW_ID:
+        return jsonify({"error": "Not found"}), 404
+    if not is_course_educator(user, raw):
+        return jsonify({"error": "Forbidden"}), 403
+    course = SessionLocal().get(Course, raw)
+    if course is None:
+        return jsonify({"error": "Not found"}), 404
+    set_active_course(course)
+    logger.info("[AUTH] account %s works in course %s", user.id, course.id)
+    return jsonify(_identity(user)), 200
 
 

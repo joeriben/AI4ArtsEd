@@ -90,7 +90,7 @@
           <!-- What prepares a run, in the shape the Latent Lab gives that
                column (assets/flow-stage.css): the handle that folds it away,
                the controls under it, and the note box at its foot. -->
-          <section class="lab-prep col-fold-host" :class="{ folded: columnFolded }">
+          <section class="cmp-column lab-prep col-fold-host" :class="{ folded: columnFolded }">
             <!-- Folded away, this column keeps the handle and hides every other
                  child of it — the stop among them, which is the only way to
                  break a run off. So the column stands for the length of a run
@@ -132,8 +132,8 @@
                   <textarea
                     v-model="captionItems[i]!.caption"
                     class="caption-text"
-                    :class="{ 'caption-pending': item.caption === null && !item.failed }"
-                    :placeholder="item.failed ? t('training.captions.failed') : t('training.captions.waiting')"
+                    :class="{ 'caption-pending': item.caption === null && !item.failed && !item.withheld }"
+                    :placeholder="item.withheld ? t('training.captions.withheld') : item.failed ? t('training.captions.failed') : t('training.captions.waiting')"
                     :disabled="is_training"
                   ></textarea>
                 </div>
@@ -191,6 +191,17 @@
                 <div class="setup-cap">{{ t('training.info.runCostTitle') }}</div>
                 <p>{{ t('training.info.runCost', energyParams) }}</p>
               </div>
+
+              <!-- The sources of the two factors in the cost estimate: the
+                   grid's CO2 per kWh and a tree's CO2 uptake per year, from
+                   which the platform derives its value per hour. Shown with the
+                   estimate whose factors they are. -->
+              <LabReferences
+                v-if="energyEstimate"
+                :title="t('training.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
             </aside>
           </section>
 
@@ -222,9 +233,32 @@ import { useLabAuthStore } from '@/stores/labAuth';
 import type { PageContext } from '@/composables/usePageContext';
 import ColumnFold from '@/components/ColumnFold.vue';
 import ShellRun from '@/components/ShellRun.vue';
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue';
 import { apiBase } from '@/services/labApi'
+import { safetyBlockOf, safetyBlockMessageKey } from '@/composables/useGenerationStream';
+import { useSafetyEventStore } from '@/stores/safetyEvent';
 
 const { t } = useI18n();
+
+/**
+ * The sources of the two factors in the cost estimate: grams of CO2 per kWh of
+ * German electricity, and the CO2 a mature tree absorbs per year, from which
+ * the platform derives its grams per hour (resona_hardware.py).
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Icha & Lauf (2026)',
+    title: '"Entwicklung der spezifischen Treibhausgas-Emissionen des deutschen Strommix in den Jahren 1990 - 2025"',
+    venue: 'Umweltbundesamt, Climate Change 16/2026',
+    doi: 'https://www.umweltbundesamt.de/publikationen/entwicklung-der-spezifischen-treibhausgas-0',
+  },
+  {
+    authors: 'Arbor Day Foundation',
+    title: '"The Value of Trees"',
+    venue: 'undated web page, accessed 2026-11-07',
+    doi: 'https://www.arborday.org/value',
+  },
+]
 
 const project_name = ref('');
 const trigger_word = ref('');
@@ -247,7 +281,7 @@ const columnFolded = computed(() => folded.value && !is_training.value);
 const pageContextStore = usePageContextStore();
 const labAuth = useLabAuthStore();
 
-// Same as the start page: the handbook entry needs the page to name itself.
+// Help finds the page's use report only if the page names itself.
 const pageContext = computed<PageContext>(() => ({
   activeViewType: 'TrainingView',
   pageDescription:
@@ -398,6 +432,9 @@ interface CaptionItem {
   file: string;
   caption: string | null;
   failed: boolean;
+  // The check at the result refused what the model wrote: the field stays
+  // empty and says so.
+  withheld?: boolean;
 }
 
 const stagingToken = ref<string | null>(null);
@@ -407,12 +444,23 @@ const describing = ref(false);
 let describePoll: ReturnType<typeof setTimeout> | null = null;
 
 const describedCount = computed(
-  () => captionItems.value.filter(i => i.caption !== null || i.failed).length,
+  () => captionItems.value.filter(i => i.caption !== null || i.failed || i.withheld).length,
 );
 
 const releaseThumbs = () => {
   thumbUrls.value.forEach(url => URL.revokeObjectURL(url));
   thumbUrls.value = [];
+};
+
+/** Take files out of the set, with their thumbnails. */
+const dropFiles = (files: File[]) => {
+  const gone = new Set(files);
+  const kept = images.value.map(f => !gone.has(f));
+  thumbUrls.value.forEach((url, i) => {
+    if (kept[i] === false) URL.revokeObjectURL(url);
+  });
+  thumbUrls.value = thumbUrls.value.filter((_, i) => kept[i] !== false);
+  images.value = images.value.filter((_, i) => kept[i]);
 };
 
 const stopDescribePoll = () => {
@@ -437,7 +485,17 @@ const describeFiles = async (files: File[], token: string | null) => {
     stagingToken.value = res.data?.token ?? null;
     captionItems.value = res.data?.items ?? [];
     pollDescription();
-  } catch {
+  } catch (err) {
+    const block = safetyBlockOf(err);
+    if (block) {
+      // The intake refused a picture of this handful, and none of it was
+      // kept: it leaves the set, and what was staged before stays as it was.
+      useSafetyEventStore().reportBlock(block, { operational: block.reason_key === 'unavailable' });
+      dropFiles(files);
+      if (stagingToken.value) pollDescription();
+      else describing.value = false;
+      return;
+    }
     // Nothing was staged, so nothing is claimed: the strip stays away and the
     // training thread describes the images itself, as it did before.
     describing.value = false;
@@ -462,6 +520,7 @@ const pollDescription = () => {
         else if (held.caption === null) {
           held.caption = incoming.caption;
           held.failed = incoming.failed;
+          held.withheld = incoming.withheld;
         }
       });
       if (res.data?.running) pollDescription();
@@ -671,8 +730,17 @@ const startTraining = async () => {
     connectSSE();
 
   } catch (e: any) {
-    const errorMsg = e.response?.data?.error || e.message || t('generationError.unknown');
-    logs.value.push(`Error: ${errorMsg}`);
+    const block = safetyBlockOf(e);
+    if (block) {
+      // Refused at the intake: a name, a sentence or a picture. The protocol
+      // says the platform's sentence for it, and the block goes to the safety
+      // window as everywhere else.
+      useSafetyEventStore().reportBlock(block, { operational: block.reason_key === 'unavailable' });
+      logs.value.push(`Error: ${t(safetyBlockMessageKey(block))}`);
+    } else {
+      const errorMsg = e.response?.data?.error || e.message || t('generationError.unknown');
+      logs.value.push(`Error: ${errorMsg}`);
+    }
     is_training.value = false;
   }
 };
@@ -780,7 +848,8 @@ const handleScroll = () => {
 <style scoped>
 /* The note box holds two blocks on this surface, and the cost of a run is a
    paragraph of 530 characters — four lines in the wide box at the head of the
-   page it came from, nine in a column of 277 px. At its own height the box
+   page it came from, nine in a column of 277 px (measured before the column
+   box of 2026-11-07 left 251 px). At its own height the box
    stands 459 px against 643 px of column (measured 1210 x 834), which is
    taller than everything it explains.
 
@@ -790,23 +859,28 @@ const handleScroll = () => {
    holds for a column which does NOT scroll - two scrollers inside one another
    are worse - and everything above the box in this column has a fixed height,
    so the floor alone decides from which window height on the column scrolls
-   too. At 10 rem the whole column stands on one screen down to 1024 x 768,
-   before any image is dropped, and the box is the only thing that scrolls. A
+   too. At 8.5 rem the whole column stands on one screen down to 1024 x 768,
+   before any image is dropped, and the box is the only thing that scrolls (10
+   rem until the column box of 2026-11-07 took 22 px of the column's height;
+   measured that day at 1024 x 768: with 10 rem the column scrolled by 15 px
+   while the box scrolled too; at 8.5 rem 9 px are left). A
    floor of 14 rem, which would show both of the box's headings at once, makes
-   1024 x 768 scroll the column by 57 px. Under 768 px of window the box stops
-   giving way and the column takes over, which is the right order once the room
+   1024 x 768 scroll the column by 79 px. Under about 759 px of window the box
+   stops giving way and the column takes over, which is the right order once the room
    is really gone. The registry's other answer, shortening the text, is not
    available here: SUPPLIED WORDING, down to the question about the trees.
 
    `0 1 auto` and not Denoising Archaeology's `1 1 auto`: this box has a
    natural height worth keeping. Where a window is tall enough it stands at its
-   459 px and scrolls nowhere, rather than growing into empty room.
+   459 px and scrolls nowhere, rather than growing into empty room. The
+   reference list under the cost paragraph (2026-11-07) came after these
+   measurements and adds its own height to the box.
    `overflow-y` is what lets it give way at all - it makes the automatic
    minimum size of a flex item 0, and without it the box would push the column
    instead of yielding to it. */
 .lab-note {
   flex: 0 1 auto;
-  min-height: 10rem;
+  min-height: 8.5rem;
   overflow-y: auto;
 }
 

@@ -10,7 +10,8 @@
     "es": "Supertonic Voz",
     "he": "Supertonic קול",
     "ar": "Supertonic صوت",
-    "bg": "Supertonic Глас"
+    "bg": "Supertonic Глас",
+    "zh-hant": "Supertonic 聲音"
   },
   "description": {
     "en": "Speaks a given text aloud. The text is spoken verbatim — it is not a prompt and is never rewritten. Native voices for nine of the ten platform languages.",
@@ -22,7 +23,8 @@
     "es": "Da voz a un texto dado. El texto se pronuncia literalmente — no es un prompt y nunca se reescribe. Voces nativas para nueve de los diez idiomas de la plataforma.",
     "he": "משמיע טקסט נתון. הטקסט מושמע כלשונו — הוא אינו פרומפט ולעולם אינו נכתב מחדש. קולות ילידיים לתשע מתוך עשר שפות הפלטפורמה.",
     "ar": "ينطق بنص معطى. يُنطق النص كما هو حرفيًا — إنه ليس نصًا توجيهيًا (prompt) ولا يُعاد كتابته أبدًا. أصوات أصلية لتسع من لغات المنصة العشر.",
-    "bg": "Озвучава зададен текст. Текстът се озвучава дословно — той не е промпт и никога не се пренаписва. Автентични гласове за девет от десетте езика на платформата."
+    "bg": "Озвучава зададен текст. Текстът се озвучава дословно — той не е промпт и никога не се пренаписва. Автентични гласове за девет от десетте езика на платформата.",
+    "zh-hant": "以語音說出指定的文字。文字會逐字說出——它不是提示詞，也絕不會被改寫。十種平臺語言中的九種有原生聲音。"
   },
   "category": {
     "en": "Sound",
@@ -34,7 +36,8 @@
     "es": "Sonido",
     "he": "סאונד",
     "ar": "صوت",
-    "bg": "Звук"
+    "bg": "Звук",
+    "zh-hant": "聲音"
   },
   "context": "",
   "parameters": {
@@ -101,7 +104,8 @@
           "es": "Las diez voces preestablecidas están etiquetadas como cinco masculinas y cinco femeninas. No existe una tercera categoría, ni control sobre el registro. Por ello, la plataforma habla con una mezcla de preajustes en lugar de con uno solo de ellos — véase DEVELOPMENT_DECISIONS.md, 2026-08-08.",
           "he": "עשרת הקולות הקבועים מסומנים כחמישה זכריים וחמישה נקביים. אין קטגוריה שלישית ואין שליטה ברגיסטר הקולי. לכן הפלטפורמה מדברת בתערובת של קולות קבועים ולא באחד מהם — ראו DEVELOPMENT_DECISIONS.md, 2026-08-08.",
           "ar": "الأصوات الجاهزة العشرة موسومة بخمسة ذكورية وخمسة أنثوية. لا توجد فئة ثالثة، ولا تحكم في طبقة الصوت. لذلك تتحدث المنصة بمزيج من الأصوات الجاهزة بدلاً من صوت واحد منها — انظر DEVELOPMENT_DECISIONS.md، 2026-08-08.",
-          "bg": "Десетте предварително зададени гласа са обозначени като пет мъжки и пет женски. Няма трета категория и няма контрол върху регистъра. Затова платформата говори със смес от пресети, а не с един от тях — вижте DEVELOPMENT_DECISIONS.md, 2026-08-08."
+          "bg": "Десетте предварително зададени гласа са обозначени като пет мъжки и пет женски. Няма трета категория и няма контрол върху регистъра. Затова платформата говори със смес от пресети, а не с един от тях — вижте DEVELOPMENT_DECISIONS.md, 2026-08-08.",
+          "zh-hant": "十個預設音色被標記為五個男性、五個女性。沒有第三種類別，也沒有控制音域的設定。因此平臺以多個預設音色的混合來說話，而不是僅用其中一個——見 DEVELOPMENT_DECISIONS.md，2026-08-08。"
         },
         {
           "en": "In a mixture the male presets pull disproportionately: equal parts over two male presets lands on the male voice, not in the middle. The female share is therefore held at 60 percent or above, enforced in code.",
@@ -113,7 +117,8 @@
           "es": "En una mezcla, los preajustes masculinos predominan de forma desproporcionada: partes iguales entre dos preajustes masculinos dan como resultado la voz masculina, no un punto intermedio. Por ello, la proporción femenina se mantiene en el 60 % o más, impuesta en el código.",
           "he": "בתערובת, הקולות הזכריים הקבועים גוברים באופן לא פרופורציונלי: חלקים שווים בין שני קולות זכריים קבועים מובילים לקול הזכרי, לא לאמצע. לכן חלקן של הנשים נשמר על 60 אחוז ומעלה, באכיפת קוד.",
           "ar": "في المزيج، تطغى الأصوات الجاهزة الذكورية بشكل غير متناسب: توزيع متساوٍ بين صوتين ذكوريين جاهزين يؤدي إلى الصوت الذكوري، لا إلى منتصف الطريق. لذلك تُبقى الحصة الأنثوية عند 60 بالمئة أو أكثر، مفروضة في الكود.",
-          "bg": "В смес мъжките пресети натежават непропорционално: равни дялове между два мъжки пресета дават мъжкия глас, а не нещо по средата. Затова женският дял се поддържа на 60 процента или повече, наложено в кода."
+          "bg": "В смес мъжките пресети натежават непропорционално: равни дялове между два мъжки пресета дават мъжкия глас, а не нещо по средата. Затова женският дял се поддържа на 60 процента или повече, наложено в кода.",
+          "zh-hant": "在混合中，男性預設音色的影響不成比例地大：平均分配給兩個男性預設音色，結果會落在男聲上，而不是在中間。因此女性比例維持在 60% 或以上，並由程式碼強制執行。"
         }
       ],
       "known_gaps": [
@@ -127,7 +132,8 @@
           "es": "No hay voz para el hebreo — uno de los diez idiomas de la plataforma. El hebreo se habla en inglés en su lugar. De los modelos abiertos, solo Piper tiene una voz en hebreo.",
           "he": "אין קול לעברית — אחת מעשר שפות הפלטפורמה. עברית מדוברת באנגלית במקום זאת. מבין המודלים הפתוחים, רק ל-Piper יש קול בעברית.",
           "ar": "لا يوجد صوت للعبرية — إحدى لغات المنصة العشر. تُنطق العبرية بالإنجليزية بدلاً من ذلك. من بين النماذج المفتوحة، Piper وحده يملك صوتاً بالعبرية.",
-          "bg": "Няма глас за иврит — един от десетте езика на платформата. Ивритът вместо това се говори на английски. От отворените модели само Piper има глас на иврит."
+          "bg": "Няма глас за иврит — един от десетте езика на платформата. Ивритът вместо това се говори на английски. От отворените модели само Piper има глас на иврит.",
+          "zh-hant": "沒有希伯來語的聲音——希伯來語是十種平臺語言之一。希伯來語改以英語說出。開放模型中只有 Piper 有希伯來語聲音。"
         },
         {
           "en": "Training data undisclosed — consent of the recorded speakers is unknown",
@@ -139,7 +145,8 @@
           "es": "Datos de entrenamiento no revelados — se desconoce el consentimiento de las personas grabadas",
           "he": "נתוני האימון לא נחשפו — הסכמת הדוברים המוקלטים אינה ידועה",
           "ar": "بيانات التدريب غير معلنة — موافقة المتحدثين المسجَّلين غير معروفة",
-          "bg": "Данните за обучение не са оповестени — съгласието на записаните говорители е неизвестно"
+          "bg": "Данните за обучение не са оповестени — съгласието на записаните говорители е неизвестно",
+          "zh-hant": "訓練資料未公開——被錄音的說話者是否同意不得而知"
         }
       ]
     },

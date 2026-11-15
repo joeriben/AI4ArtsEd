@@ -97,12 +97,18 @@
                2026-09-10 and is called by name: the category's own file is the
                comparison hub, which does not know this instrument. -->
           <MeanImages v-else-if="activeInstrument === 'mean'" />
+          <!-- Bias Research 1 and 2 stand there too since 2026-11-06, in from the
+               Transformers Lab, whose file goes on rendering them; so its line
+               stands above the comparison hub, for the same reason. -->
+          <LatentTextLab
+            v-else-if="activeGroup === 'textlab' || activeInstrument === 'bias' || activeInstrument === 'coref'"
+            :tab="activeInstrument"
+          />
           <CompareLab v-else-if="activeGroup === 'compare'" :tab="activeInstrument" />
           <InterceptionModels v-else-if="activeInstrument === 'interception-models'" />
           <PerspectivesTemplate v-else-if="activeInstrument === 'interception-template'" />
           <AestheticPoles v-else-if="activeInstrument === 'interception-poles'" />
           <ImageLab v-else-if="activeGroup === 'image'" :tab="activeInstrument" />
-          <LatentTextLab v-else-if="activeGroup === 'textlab'" :tab="activeInstrument" />
           <CoverBand v-else-if="activeInstrument === 'reenactment'" />
           <CrossmodalLab v-else-if="activeGroup === 'crossmodal'" :tab="activeInstrument" />
           <LoraReach v-else-if="activeInstrument === 'reach'" />
@@ -243,15 +249,21 @@ const GROUPS: { id: GroupId; items: { id: string; i18n?: string; root?: string; 
       // Mean Images third, in from the Diffusion Lab.
       { id: 'census', i18n: 'compare.tabs.census', icons: [IMAGE_ICON] },
       { id: 'model', i18n: 'compare.tabs.model', icons: [IMAGE_ICON] },
-      // The one entry here whose name and whose line under it stay where the
-      // instrument was built, under `latentLab.imageLab.tabs`. It carries that
-      // root instead of a key of its own, so the move costs it neither.
+      // Its name and the line under it stay where the instrument was built,
+      // under `latentLab.imageLab.tabs`. It carries that root instead of a key
+      // of its own, so the move costs it neither.
       { id: 'mean', root: 'latentLab.imageLab.tabs', icons: [IMAGE_ICON] },
       { id: 'language', i18n: 'compare.tabs.language', icons: [IMAGE_ICON] },
       // Ein Bild geht hinein, Text kommt heraus. Zuvor stand dafuer das
       // Sprachsymbol allein, weil das Instrument keine Bilder macht; jetzt
       // stehen beide Marken in der Richtung des Laufs: Bild, dann Text.
       { id: 'vlm-analysis', i18n: 'compare.tabs.vlm-analysis', icons: [IMAGE_ICON, TEXT_ICON] },
+      // In from the Transformers Lab on 2026-11-06, on the same root rule as
+      // Mean Images. Bias Research 1 and 2 carry one name with a number: both
+      // ask a model what it brings with it, the first by having it answer
+      // questions that cannot be decided, the second by swapping a pronoun.
+      { id: 'bias', root: 'latentLab.textLab.tabs', icons: [TEXT_ICON] },
+      { id: 'coref', root: 'latentLab.textLab.tabs', icons: [TEXT_ICON] },
       { id: 'voice', i18n: 'compare.tabs.voice', icons: [VOICE_ICON] },
     ],
   },
@@ -277,11 +289,8 @@ const GROUPS: { id: GroupId; items: { id: string; i18n?: string; root?: string; 
   {
     id: 'textlab',
     // The order follows the run: System Prompts and the Tokenizer act on what
-    // goes INTO the model; Bias Research 1/2 and Representation Engineering
-    // read what is already learned inside it. Bias Research 1 and 2 carry
-    // one name with a number: both ask a model what it brings with it, the
-    // first by having it answer questions that cannot be decided, the second
-    // by swapping a pronoun.
+    // goes INTO the model; Representation Engineering reads what is already
+    // learned inside it.
     items: [
       { id: 'systemprompt', icons: [TEXT_ICON] },
       // System Prompts with the two axes exchanged (2026-10-27): one system
@@ -294,7 +303,6 @@ const GROUPS: { id: GroupId; items: { id: string; i18n?: string; root?: string; 
       // Text geht hinein, Text kommt heraus - und nichts davon laeuft auf der
       // Grafikkarte: die Zerlegung liest eine Vokabeldatei (2026-08-26).
       { id: 'tokens', icons: [TEXT_ICON] },
-      { id: 'bias', icons: [TEXT_ICON] }, { id: 'coref', icons: [TEXT_ICON] },
       { id: 'repeng', icons: [TEXT_ICON] },
     ],
   },

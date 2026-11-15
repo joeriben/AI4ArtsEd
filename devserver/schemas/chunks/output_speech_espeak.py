@@ -36,9 +36,11 @@ because of what can be asked of it - a number for the speed, a number for the
 pitch, a variant - and because none of those numbers is a feeling. See
 my_app/services/espeak_backend.py.
 
-There is NO English fallback here and none is needed: eSpeak NG has a voice for
-every platform language, Hebrew and Bulgarian included, and it has them without
-anybody having been recorded for it.
+There is NO English fallback here: eSpeak NG has a voice for every platform
+language but one, Hebrew and Bulgarian included, and it has them without
+anybody having been recorded for it. Traditional Chinese (zh-hant, a platform
+language since 2026-10-29) is the exception: no voice is mapped for it, and it
+is refused with that cause.
 """
 
 import base64
@@ -76,7 +78,7 @@ DEFAULTS = {
 # sits in espeak_standard.json, not here.
 #
 # The fail-closed guard below stays as it is: an absent or unknown level blocks.
-ALLOWED_SAFETY_LEVELS = ("kids", "youth", "open", "adult", "research")
+ALLOWED_SAFETY_LEVELS = ("kids", "youth", "adult", "research")
 
 
 async def execute(

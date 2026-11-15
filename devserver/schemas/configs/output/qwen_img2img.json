@@ -10,7 +10,8 @@
     "es": "Qwen Image Edit Lightning",
     "he": "Qwen Image Edit Lightning",
     "ar": "Qwen Image Edit Lightning",
-    "bg": "Qwen Image Edit Lightning"
+    "bg": "Qwen Image Edit Lightning",
+    "zh-hant": "Qwen Image Edit Lightning"
   },
   "description": {
     "en": "Ultra-fast image transformation with QWEN Image Edit Lightning (4 steps)",
@@ -22,7 +23,8 @@
     "es": "Transformación de imágenes ultrarrápida con QWEN Image Edit Lightning (4 pasos)",
     "he": "טרנספורמציית תמונה מהירה במיוחד עם QWEN Image Edit Lightning (4 צעדים)",
     "ar": "تحويل صور فائق السرعة باستخدام QWEN Image Edit Lightning (4 خطوات)",
-    "bg": "Свръхбърза трансформация на изображения с QWEN Image Edit Lightning (4 стъпки)"
+    "bg": "Свръхбърза трансформация на изображения с QWEN Image Edit Lightning (4 стъпки)",
+    "zh-hant": "使用 QWEN Image Edit Lightning 超快速轉換圖像（4 步）"
   },
   "category": {
     "en": "Image Editing",
@@ -34,7 +36,8 @@
     "es": "Edición de imágenes",
     "he": "עריכת תמונות",
     "ar": "تحرير الصور",
-    "bg": "Редактиране на изображения"
+    "bg": "Редактиране на изображения",
+    "zh-hant": "圖像編輯"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_qwen_img2img",

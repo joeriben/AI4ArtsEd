@@ -5,7 +5,7 @@ platform's HeartMuLa node on ComfyUI (my_app/services/heartmula_client.py).
 Usage:
     backend = get_heartmula_backend()
     if await backend.is_available():
-        audio_bytes = await backend.generate_music(
+        audio_bytes, model_used = await backend.generate_music(
             lyrics="[Verse] Hello world...",
             tags="pop, upbeat, male vocal"
         )

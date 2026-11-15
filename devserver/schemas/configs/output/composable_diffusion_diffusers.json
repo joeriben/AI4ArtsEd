@@ -10,7 +10,8 @@
     "es": "Composable Diffusion (Diffusers)",
     "he": "Composable Diffusion (Diffusers)",
     "ar": "Composable Diffusion (Diffusers)",
-    "bg": "Composable Diffusion (Diffusers)"
+    "bg": "Composable Diffusion (Diffusers)",
+    "zh-hant": "Composable Diffusion (Diffusers)"
   },
   "description": {
     "en": "Per-concept noise prediction blending during denoising.",
@@ -22,7 +23,8 @@
     "es": "Mezcla de predicciones de ruido por concepto durante el proceso de eliminación de ruido (denoising).",
     "he": "מיזוג תחזיות רעש לפי מושג במהלך הסרת הרעש (denoising).",
     "ar": "مزج تنبؤات الضوضاء لكل مفهوم أثناء إزالة الضوضاء (denoising).",
-    "bg": "Смесване на прогнозите за шум за всяка концепция по време на премахването на шума (denoising)."
+    "bg": "Смесване на прогнозите за шум за всяка концепция по време на премахването на шума (denoising).",
+    "zh-hant": "在去雜訊過程中，按概念分別混合雜訊預測。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_composable_diffusion_diffusers"

@@ -14,6 +14,7 @@ import logging
 from flask import Blueprint, jsonify, request
 
 from my_app.services import resona_journal, resona_memory, resona_question_filter
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,10 @@ def journal_get(journal_id: str):
         if result is None:
             return jsonify({"error": "journal not found"}), 404
 
+        # What a chat model would not be handed at this level, the restore and
+        # the educator's view do not show either; what is restored goes back
+        # to the model as the conversation's history.
+        result["events"] = resona_journal.events_at(result["events"], resolve_safety_level())
         return jsonify(result)
     except Exception as e:
         logger.error(f"[RESONA-ROUTES] journal_get error: {e}", exc_info=True)
@@ -200,8 +205,8 @@ def journal_delete(journal_id: str):
             logger.warning("[RESONA-ROUTES] clearing the cut-sentence notice failed", exc_info=True)
 
         # UCD-132: the journal's session document space (the summaries of
-        # documents the group brought in) verfällt MIT der Sitzung — drop it
-        # with the journal, best-effort (a missing space is not an error).
+        # documents the group brought in) goes with the journal, best-effort
+        # (a missing space is not an error).
         try:
             from my_app.services import scene_document_space as _space
             _space.delete_journal_space(journal_id)

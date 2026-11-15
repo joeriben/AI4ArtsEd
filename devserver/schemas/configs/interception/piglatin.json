@@ -11,7 +11,8 @@
     "es": "Juego de palabras",
     "he": "משחק מילים",
     "ar": "لعبة الكلمات",
-    "bg": "Езикова игра"
+    "bg": "Езикова игра",
+    "zh-hant": "文字遊戲"
   },
   "description": {
     "en": "Transforms text into Pig Latin by moving consonants to the end and adding 'ay'. A playful language game that makes familiar words sound strange.",
@@ -22,6 +23,7 @@
     "he": "ממיר טקסט ל-Pig Latin על ידי הזזת עיצורים לסוף והוספת 'ay'. משחק שפה שובב שגורם למילים מוכרות להישמע זרות.",
     "ar": "يُحوّل النص إلى لغة Pig Latin بنقل الحروف الساكنة إلى النهاية وإضافة 'ay'. لعبة لغوية مرحة تجعل الكلمات المألوفة تبدو غريبة.",
     "bg": "Превръща текст в Pig Latin, като премества съгласните в края и добавя \"ay\". Забавна езикова игра, която прави познатите думи да звучат странно.",
+    "zh-hant": "把文字轉成 Pig Latin：將子音移到字尾，再加上「ay」。一種好玩的語言遊戲，讓熟悉的字詞聽起來很陌生。",
     "tr": "Ünsüzleri sona taşıyarak ve 'ay' ekleyerek metni Pig Latin'e dönüştürür. Tanıdık kelimeleri yabancı hissettiren eğlenceli bir dil oyunu.",
     "ko": "자음을 끝으로 이동하고 'ay'를 추가하여 텍스트를 Pig Latin으로 변환합니다. 친숙한 단어를 낯설게 들리게 만드는 장난스러운 언어 게임입니다."
   },
@@ -31,6 +33,7 @@
     "he": "טרנספורמציות יצירתיות",
     "ar": "التحولات الإبداعية",
     "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
     "tr": "Yaratıcı Dönüşümler",
     "ko": "창의적 변환",
     "uk": "Творчі перетворення",

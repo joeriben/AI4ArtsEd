@@ -192,5 +192,82 @@ platform's sentences around it are translated; "Qwen3-VL-4B-Instruct",
 
 Affected: de, fr, es, tr, ko, uk, ar, bg, he.
 
+### WO-2026-11-01-A (Flow: a document refused for personal data)
+
+A document brought in through the flow's plus is now taken in at the
+platform's intake, and a document that names a private person or gives a
+street address is not accepted. The platform voice says so in the form of the
+other `resonaScene.rej.*` sentences, which are already translated.
+
+| Key | English | Context |
+|---|---|---|
+| `resonaScene.rej.personalData` | Document not accepted: it contains the name of a private person or a street address. Such personal data is protected. | Spoken by the platform voice when a document is refused; same form as `resonaScene.rej.further`. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
+### WO-2026-11-01-B (Training: a description withheld by the safety check)
+
+What a model writes about a training image is now checked before it is shown.
+A description the check withholds leaves its field empty, and the field says
+so with this placeholder, where an image the model gave no answer for shows
+`training.captions.failed`.
+
+| Key | English | Context |
+|---|---|---|
+| `training.captions.withheld` | the safety check withheld what the model wrote about this image — write it yourself, or leave it and only the trigger word is used | Placeholder of a caption field on the training page; same form as `training.captions.failed`. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
+### WO-2026-11-01-C (Model Comparison: a search the safety check stopped)
+
+The found-pictures row under the model grid now says when the safety check
+stopped its search: the prompt at the intake, or the search term a model made
+of it. The row shows this sentence in place of the search term and the
+pictures.
+
+| Key | English | Context |
+|---|---|---|
+| `compare.found.blocked` | The safety check stopped the search for this prompt. No pictures were looked up. | Found-pictures row under the model grid (Model Comparison); stands where `compare.found.nothingFound` and `compare.found.unavailable` stand. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
+### WO-2026-11-01-D (Course pages: a course at the admin default)
+
+A course chose its safety level among kids, youth and open. The level open
+is gone; the third choice now lets the course run at the level the
+administrator set for the whole installation. The choice is shown in the
+select of the course page and of the course list, and on a course's card.
+
+| Key | English | Context |
+|---|---|---|
+| `educator.safetyInstallation` | admin default | Third option of the safety select beside `kids` and `youth`, which stay untranslated; lower case like them, and as short. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
+### WO-2026-11-01-E (Generation: a video the safety check withheld)
+
+A generated video is now checked as a whole before it is shown, at the levels
+for children and young people, the way a generated image is. A video the check
+withholds gets its own sentence, written as `safetyBlocked.vlm` is written for
+an image, with "video" where that one says "image".
+
+| Key | English | Context |
+|---|---|---|
+| `safetyBlocked.video` | Your prompt was fine, but the generated video was flagged as unsuitable by a video analysis AI. This can happen — video generation is not always predictable. Just try again, every generation is different! | Safety notice when a generated video is withheld; same form as `safetyBlocked.vlm`, and each language should follow its own translation of that sentence. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he.
+
+### WO-2026-10-30-A (Canvas: a failed translation names its language)
+
+The error line of a Canvas translation node now reads `compare.translationFailed`
+with the language the run went into. (Corrected 2026-10-31: the key
+`canvas.stage.translation.repeatedText` of the first version is gone again.)
+
+| Key | English | Context |
+|---|---|---|
+| `compare.translationFailed` | Translation into {lang} failed: {cause} | English unchanged. Now also read by the Canvas translation node. `{lang}` is a language's own name as the language list shows it (Runasimi, Deutsch, 日本語, Български) or a name the user typed into the free text field (e.g. "Leichte Sprache", "Gebärdensprache"). The German form „Übersetzung ins {lang} fehlgeschlagen“ fixes a neuter article and breaks with typed names („ins Leichte Sprache“): it needs a form without an article in front of `{lang}`. Check the same in every language that inflects or puts an article before a language name. |
+
+Affected: de, fr, es, tr, ko, uk, ar, bg, he, zh-hant.
+
 ## Completed
 

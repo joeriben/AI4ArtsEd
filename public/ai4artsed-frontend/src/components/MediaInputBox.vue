@@ -15,7 +15,8 @@
     <!-- Header -->
     <!-- The slim form has no heading row - its buttons sit in the field's own
          corner. Where the surroundings do not already say which field this is,
-         the caller names it and the name stands here, one line above the field.
+         the caller names it and the name stands here, one line above the field,
+         with the buttons in that line instead of the field's corner.
          Left unnamed, nothing stands here at all. -->
     <div v-if="isBare && label" class="bare-title">{{ label }}</div>
     <div class="bubble-header" :title="tooltip">
@@ -56,7 +57,8 @@
            field can show it, and on a picture that takes a moment. Without a
            sign the box stood exactly as before and the drop read as though
            nothing had happened. It sits in the header, which in the slim form
-           is the strip in the field's own corner. -->
+           is the strip in the field's own corner, or in the name's line where
+           the field is named. -->
       <span
         v-if="takingRun || imageBusy"
         class="taking-run"
@@ -158,8 +160,8 @@
 
     <!-- Content: Text Input
 
-         An editable div, not a <textarea>. In the slim form the symbols stand
-         IN the field's own corner, and the text has to run around them for the
+         An editable div, not a <textarea>. In the slim form without a name the
+         symbols stand IN the field's own corner, and the text has to run around them for the
          line or two they cover and then take the full width again. Nothing can
          float inside a textarea, so the only way to keep that corner clear
          there is to narrow the whole column from top to bottom - which is what
@@ -254,12 +256,13 @@ import AudioRecordWidget from '@/components/AudioRecordWidget.vue'
 import ImageUploadWidget from '@/components/ImageUploadWidget.vue'
 import SketchCanvas from '@/components/SketchCanvas.vue'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { safetyBlockOf } from '@/composables/useGenerationStream'
 import {
   FAVORITE_DT,
   quickImageSafetyCheck,
   quickTextSafetyCheck,
   resolveRunAs,
-  uploadImageFile,
+  uploadCheckedImage,
   type MaterialWant,
 } from '@/composables/useMaterialIntake'
 import { postStreamedRun } from '@/services/directRun'
@@ -307,7 +310,7 @@ const isFirstChunkReceived = ref(false)
 // until 2026-10-10.
 let feed: WordFeed | null = null
 
-// Autonomous safety state (fuzzy filter + NER + LLM on blur/paste)
+// Autonomous safety state (the server's intake on blur/paste: names and addresses)
 const safetyResult = ref<
   { safe: boolean; checks: string[]; error?: string; operational?: boolean } | null
 >(null)
@@ -509,7 +512,7 @@ const isBare = computed(() => props.chrome === 'bare')
 
 /**
  * How many symbols the bare row actually shows. The field reserves its corner
- * from this number, so a box that switches one of them off does not keep the
+ * from this number, or the name's line where the field is named, so a box that switches one of them off does not keep the
  * room for it - and one that switches another ON does not lose the text under
  * it. Mirrors the v-if conditions of the buttons above; a symbol added there
  * has to be counted here.
@@ -686,18 +689,20 @@ function insertPlainText(text: string) {
 // Quick-translate: destructive in-place DE→EN translation via backend
 async function translateToEnglish() {
   if (!props.value.trim() || isTranslating.value) return
-  // This button is a way OUT of the box: it sends the text to a cloud model on
-  // a route that runs no check of its own. So it goes only for text that HAS
-  // been judged and passed — the tap itself blurs the field, so without this
-  // the text it sends is the text the standing verdict was never about. Where
-  // no verdict stands it asks for one and waits, and where the answer holds the
-  // text back it says so, rather than standing disabled with a reason nobody
-  // can reach on a touch screen.
+  // This button is a way OUT of the box: it sends the text to a cloud model.
+  // The route checks the text for names and addresses before the model gets
+  // it, and the translation before it comes back. The field's own check still
+  // comes first: the button goes only for text that HAS been judged and passed
+  // — the tap itself blurs the field, so without this the text it sends is the
+  // text the standing verdict was never about. Where no verdict stands it asks
+  // for one and waits, and where the answer holds the text back it says so,
+  // rather than standing disabled with a reason nobody can reach on a touch
+  // screen.
   if (safetyResult.value?.safe !== true) await checkSafety()
   if (safetyResult.value?.safe !== true) {
     // A judged refusal has already been said by the check itself, and it took
     // the text with it. What is left to say is the other case.
-    if (safetyResult.value?.operational) safetyStore.reportBlock(1, '', [], undefined, true)
+    if (safetyResult.value?.operational) safetyStore.reportBlock(null, { operational: true })
     return
   }
   isTranslating.value = true
@@ -711,7 +716,11 @@ async function translateToEnglish() {
       text: props.value, target_language: 'en',
     }, { baseUrl, validateStatus: () => true })
     const data = res.data
-    if (data.status === 'success' && data.translated_text) {
+    // A refusal by the route, of the text or of its translation: the companion
+    // says why, and the field keeps what was written.
+    const refused = res.status === 403 ? safetyBlockOf(data) : null
+    if (refused) safetyStore.reportBlock(refused)
+    else if (data.status === 'success' && data.translated_text) {
       emit('update:value', data.translated_text)
     }
   } catch (e) {
@@ -723,7 +732,8 @@ async function translateToEnglish() {
 
 // Autonomous safety check (called on blur + paste — NOT on stream-complete)
 // "Innocent until proven guilty": text stays visible, only cleared if blocked.
-// Backend safety checks (Stage 1 + Stage 3 + VLM) are the actual security boundary.
+// The backend's checks (intake, before the model, at the result) are the actual
+// security boundary.
 async function checkSafety() {
   const text = props.value?.trim()
   if (!text || props.inputType !== 'text' || props.disabled) return
@@ -749,7 +759,7 @@ async function checkSafety() {
       // A judged refusal clears the field, as it always has, and the companion
       // says why.
       emit('update:value', '')
-      safetyStore.reportBlock(1, safety.errorMessage || '', [])
+      safetyStore.reportBlock(safety.block)
     }
     // A check that could not run keeps the text — the fault is this platform's
     // and says nothing about what was written. It is not announced here either:
@@ -813,6 +823,14 @@ async function takeRun(runId: string) {
     takingRun.value = false
   }
   if (!material) return
+  if (material.kind === 'refused') {
+    // The run's picture was refused where it came in, at this field's level.
+    safetyStore.reportBlock(material.safety.block, {
+      vlmDescription: material.safety.vlmDescription,
+      operational: material.safety.operational,
+    })
+    return
+  }
   if (material.kind === 'text') {
     emit('update:value', material.text)
     // A run made at one safety level can be carried into a field standing at
@@ -829,18 +847,14 @@ async function takeRun(runId: string) {
     // another — the level is the FIELD's, now, not the run's. The text branch
     // above has said so since it was written; the picture branch went without a
     // check until 2026-09-04, so a picture starred in an adult session landed in
-    // a kids field unjudged.
+    // a kids field unjudged. The upload checked it where it came in; this reads
+    // that verdict at the field's level.
     const safety = await quickImageSafetyCheck(material.image.path)
     if (!safety.safe) {
-      safetyStore.reportBlock(
-        'vlm_input',
-        // No sentence of this client's: the reason is CLASSIFIED where it is
-        // read, and a translated one would be classified as a rating.
-        safety.errorMessage || '',
-        [],
-        safety.vlmDescription,
-        safety.operational,
-      )
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
+        operational: safety.operational,
+      })
       imageBusy.value = false
       return
     }
@@ -883,19 +897,13 @@ async function takePicture(file: File) {
   // for the earlier one. Same order as in the picture field.
   emit('image-removed')
   try {
-    const up = await uploadImageFile(file)
-    const safety = await quickImageSafetyCheck(up.path)
-    if (!safety.safe) {
-      safetyStore.reportBlock(
-        'vlm_input',
-        // No sentence of this client's: the reason is CLASSIFIED where it is
-        // read, and a translated one would be classified as a rating.
-        safety.errorMessage || '',
-        [],
-        safety.vlmDescription,
+    const { up, safety } = await uploadCheckedImage(file)
+    if (!up || !safety.safe) {
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
         // Whether the check judged the picture or could not run at all.
-        safety.operational,
-      )
+        operational: safety.operational,
+      })
       return
     }
     if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
@@ -1105,7 +1113,7 @@ function startStreaming() {
     }
     feed?.stop()
     feed = null
-    safetyStore.reportBlock(data.stage || 'safety', data.reason || t('mediaInput.contentBlocked'), data.found_terms || [])
+    safetyStore.reportBlock(safetyBlockOf(data))
     emit('stream-complete', { blocked: true, reason: data.reason })
   })
 
@@ -1580,7 +1588,8 @@ onUnmounted(() => {
 /* --- bare: the field and its actions, nothing around them ---
    For a field of one or two lines, where the box would weigh more than what is
    written in it. The frame, the heading and the icon are gone; the actions move
-   into the field's own corner, and the field keeps that corner clear of text.
+   into the field's own corner, and the field keeps that corner clear of text
+   (into the name's line where the field is named, see `.has-title` below).
    The buttons are the same buttons - only their order changes, to the order in
    which they are read: copy, paste, perspective, English. */
 /* The name of a field in the slim form: the size of the field's own text, in
@@ -1656,14 +1665,34 @@ onUnmounted(() => {
    28px covers what the field's padding does not. */
 /* Not where the field is named: the name's line is what the symbols stand in
    then (`.bare-title` is a row of its own and the strip is absolute to the box,
-   not to the field), so they end above the first line of text and nothing has
-   to be cut out at all. Measured 2026-08-23 in Concept Algebra: symbols end at
-   376.5px, the text begins at 380. */
+   not to the field), so nothing has to be cut out of the text. */
 .media-input-box.bare:not(.has-title) .bubble-textarea::before {
   content: '';
   float: inline-end;
   width: calc(var(--bare-actions, 4) * 32px);
   height: 28px;
+}
+
+/* Where the field is named, the symbols stand IN the name's line and end above
+   the field's border. The row is 26px tall (see the sum above); the name's line
+   is `--flow-fs-body` x 1.3, which is 17px to 22px, plus its 0.3rem, so with the
+   row 6px down the symbols ran 6.5px over the border at 1440px of window and
+   stood on it at every width. The name's line is therefore at least as tall as
+   the row and centres its words in it, and the row stands at the top of the
+   box: a name of one line sits on the same middle as the symbols, and the
+   name's 0.3rem stands between them and the field. The name keeps the room of
+   the symbols free at its end - the same count as the cut-out above, plus the
+   row's 8px inset less its 6px gap - so a long name (a narrow column, a longer
+   language) wraps before them instead of running under them. */
+.media-input-box.bare.has-title .bare-title {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+  padding-inline-end: calc(var(--bare-actions, 4) * 32px + 2px);
+}
+
+.media-input-box.bare.has-title .bubble-header {
+  top: 0;
 }
 
 /* 'Required' is drawn by frame and by a pulse of the whole box - in bare mode

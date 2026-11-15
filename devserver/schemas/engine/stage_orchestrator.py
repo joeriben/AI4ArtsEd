@@ -1,11 +1,12 @@
 """
-Stage Orchestrator - Helper functions for 4-Stage Architecture
+Stage Orchestrator - helpers the routes and the safety gate share
 Extracted from pipeline_executor.py for Phase 2 refactoring
 
-These functions will be used by DevServer (schema_pipeline_routes.py)
-to orchestrate Stage 1-3, while PipelineExecutor becomes a DUMB executor.
-
-DUMB helpers: Just execute specific stage configs, return results
+What stands here, among other things: the translation into English and its
+context, the device translation cache, the word filters with the §86a lists,
+the name recogniser and the name question, and the sentences of the block
+message. Stage 1 and Stage 3, which this module ran for the routes, stood here
+until 2026-11-01; the checks are my_app/services/safety_gate.py now.
 """
 from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
@@ -391,69 +392,6 @@ def llm_personal_data_check(text: str, candidates: Optional[list] = None) -> Opt
     _dsgvo_verify_cache[document] = (verdict, _time.time())
     return verdict
 
-def _llm_safety_check_generation(generation_prompt: str, policy) -> Dict[str, Any]:
-    """
-    Ask the safety classifier one yes/no question about one text.
-
-    `policy` is an (instruct, query) pair from my_app.services.safety_classifier
-    and it says WHICH question: the age question of the level that is running,
-    the §86a question, the adult-reader question. It is a required argument
-    because the question is the check. Until 2026-09 one fixed question in a
-    borrowed category list served every level, and the level was applied
-    afterwards by dropping codes from the answer -- which is how a category the
-    filter did not know became a release.
-
-    Args:
-        generation_prompt: The text to check (generation prompt, or Stage-1
-            input for the §86a context check).
-        policy: (instruct, query), phrased so that "yes" means unsafe.
-
-    Returns:
-        {
-            "safe": bool,          # True only if a verdict exists and said no
-            "uncoded_unsafe": bool,# True where it answered yes
-            "verdict": bool,       # False = NO USABLE VERDICT (fail-closed)
-            "model_used": str,
-            "execution_time": float,
-            "llm_output": str      # the score, for the run log
-        }
-
-    There is no window splitting any more: the old guard carried 2400 bytes at
-    a time and this one carries its whole context, so a text too long for it
-    fails at the server and arrives here as no verdict, which blocks.
-    """
-    import config
-    from my_app.services import safety_classifier
-
-    model = config.SAFETY_MODEL
-
-    def _no_verdict(execution_time: float, llm_output: str = "") -> Dict[str, Any]:
-        return {"safe": False, "uncoded_unsafe": False, "verdict": False,
-                "model_used": model, "execution_time": execution_time, "llm_output": llm_output}
-
-    instruct, query = policy
-    start = _time.time()
-    try:
-        value = safety_classifier.score(instruct, query, generation_prompt)
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"[STAGE3-SAFETY] classifier failed ({model}): {e} — no verdict")
-        return _no_verdict(_time.time() - start)
-
-    execution_time = _time.time() - start
-    if value is None:
-        logger.error(f"[STAGE3-SAFETY] {model} gave no verdict ({execution_time*1000:.0f}ms)")
-        return _no_verdict(execution_time)
-
-    unsafe = value >= safety_classifier.UNSAFE_THRESHOLD
-    logger.info(
-        f"[STAGE3-SAFETY] {model} → {'UNSAFE' if unsafe else 'SAFE'} "
-        f"(score {value:.3f}, threshold {safety_classifier.UNSAFE_THRESHOLD}, "
-        f"{execution_time*1000:.0f}ms)"
-    )
-    return {"safe": not unsafe, "uncoded_unsafe": unsafe,
-            "verdict": True, "model_used": model,
-            "execution_time": execution_time, "llm_output": f"score={value:.4f}"}
-
 
 # ============================================================================
 # HYBRID SAFETY: Fast String-Matching + LLM Context Verification
@@ -575,30 +513,65 @@ def fast_filter_bilingual_86a(text: str, user_language: str = 'de') -> Tuple[boo
     if not terms_list:
         return (False, [])
 
-    text_lower = text.lower()
-    found_terms = []
-    for term in terms_list:
-        term_lower = term.lower()
-        if len(term_lower) >= 6:
-            # Fuzzy match: distance=1 for 6-7 char terms, distance=2 for 8+ chars
-            max_dist = 1 if len(term_lower) < 8 else 2
-            if _fuzzy_contains(text_lower, term_lower, max_distance=max_dist):
-                found_terms.append(term)
-        else:
-            # Very short terms (<=3 chars): word-boundary only (prevents 'kan' in 'scharfkantige')
-            # 4-5 char terms: substring match (catches 'Blut' in 'blutiger', same word stem)
-            if len(term_lower) <= 3:
-                if _word_boundary_match(text_lower, term_lower):
-                    found_terms.append(term)
-            else:
-                if term_lower in text_lower:
-                    found_terms.append(term)
+    found_terms = _match_86a_terms(text.lower(), terms_list)
 
     if found_terms:
         logger.info(f"[§86a] found {found_terms[:3]}... (lang={lang_key}, checked {len(terms_list)} of {sum(len(v) for v in terms_by_lang.values())})")
     else:
         logger.debug(f"[§86a] CLEAR (lang={lang_key}, checked {len(terms_list)})")
 
+    return (len(found_terms) > 0, found_terms)
+
+
+def _match_86a_terms(text_lower: str, terms_list: List[str]) -> List[str]:
+    """The §86a terms of `terms_list` that occur in `text_lower`, in list order.
+
+    One matcher for both readers of the list: fuzzy from six letters on
+    (distance 1 up to seven, 2 from eight), a whole word up to three letters
+    (keeps 'kan' out of 'scharfkantige'), a substring for four and five
+    (catches 'Blut' in 'blutiger', same word stem).
+    """
+    found_terms = []
+    for term in terms_list:
+        term_lower = term.lower()
+        if len(term_lower) >= 6:
+            max_dist = 1 if len(term_lower) < 8 else 2
+            if _fuzzy_contains(text_lower, term_lower, max_distance=max_dist):
+                found_terms.append(term)
+        elif len(term_lower) <= 3:
+            if _word_boundary_match(text_lower, term_lower):
+                found_terms.append(term)
+        elif term_lower in text_lower:
+            found_terms.append(term)
+    return found_terms
+
+
+def fast_filter_86a_all_languages(text: str) -> Tuple[bool, List[str]]:
+    """The §86a lists of EVERY language in the file, on one text.
+
+    `fast_filter_bilingual_86a` reads two of them, the language it detects and
+    English, and it detects a Latin-script language only from the interface
+    language it is told. A Turkish term in a text sent from a German interface
+    was therefore never looked for. This reads all of them, on whatever text it
+    is given. A hit decides nothing by itself: the safety gate asks the
+    classifier after it (my_app/services/safety_gate.py).
+
+    Raises like `load_bilingual_86a_terms` when the list cannot be loaded; a
+    list that cannot be read is a check that cannot run.
+    """
+    terms_by_lang = load_bilingual_86a_terms()
+    terms_list = []
+    seen = set()
+    for terms in terms_by_lang.values():
+        for term in terms:
+            if term.lower() not in seen:
+                seen.add(term.lower())
+                terms_list.append(term)
+    if not terms_list:
+        return (False, [])
+    found_terms = _match_86a_terms((text or '').lower(), terms_list)
+    if found_terms:
+        logger.info(f"[§86a] found {found_terms[:3]}... (all languages, checked {len(terms_list)})")
     return (len(found_terms) > 0, found_terms)
 
 def fast_filter_check(prompt: str, safety_level: str, user_language: str = 'de') -> Tuple[bool, List[str]]:
@@ -741,218 +714,21 @@ def parse_preoutput_json(output: str) -> Dict[str, Any]:
 # ============================================================================
 
 
-# `execute_stage1_safety` stood here until 2026-09-04. It had no caller in the
-# repository — only the import in schema_pipeline_routes — and on a pipeline
-# failure it returned `(True, [])`, i.e. a pass, with a log line that said
-# "continuing (fail-open)". It was the last place in this module that would have
-# reopened the aggregation the work order closed under A1, and dead code in a
-# check path is worse than a missing check: it reads like a check that runs.
-# The live entry point is `execute_stage1_safety_unified` below.
+# Stage 1 stood here until 2026-11-01: `execute_stage1_safety_unified`, and
+# before 2026-09-04 a second entry point without a caller. Its name check is
+# the intake now (safety_gate.check_intake), with the recogniser, the name
+# question after a hit and the question on every text where the recogniser is
+# missing; it looks for addresses as well. Its §86a lists run before every
+# media model and on every text a model shows (check_before_model,
+# check_result_text), in every language of the list file.
 
 
-async def execute_stage1_safety_unified(
-    text: str,
-    safety_level: str,
-    pipeline_executor,
-    user_language: str = 'de'
-) -> Tuple[bool, str, Optional[str], List[str]]:
-    """
-    Execute Stage 1: Fast-Filter-First Safety Check (NO Translation)
-
-    New Flow (eliminates LLM call in 95%+ of cases):
-    1. §86a Fast-Filter (language-aware, ~0.001s)
-       → Hit? → BLOCK immediately (§86a is unambiguous)
-    2. Age-appropriate Fast-Filter (language-aware, ~0.001s)
-       → No hit? → continue to step 3
-       → Hit? → LLM Context-Check (e.g. "cute vampire" vs "scary vampire")
-    3. DSGVO SpaCy NER (~50-100ms)
-       → No entities? → SAFE (done, no LLM needed)
-       → Entities found? → BLOCK with explanation
-       → SpaCy unavailable? → LLM Fallback (DSGVO check via safety pipeline)
-
-    Args:
-        text: Input text to safety-check (in original language)
-        safety_level: 'kids', 'youth', 'adult', or 'research'
-        pipeline_executor: PipelineExecutor instance
-        user_language: Frontend interface language (fallback for Latin-script detection)
-
-    Returns:
-        (is_safe, original_text, error_message, checks_passed)
-    """
-    total_start = _time.time()
-
-    # ── Research mode: skip ALL safety checks ─────────────────────────
-    if safety_level == 'research':
-        logger.info(f"[STAGE1] SKIPPED (safety_level=research)")
-        return (True, text, None, [])
-
-    # ── STEP 1: §86a Fast-Filter (language-aware, ~0.001s) ─────────────
-    # §86a terms trigger a classifier context check (educational/historical exemption)
-    s86a_start = _time.time()
-    has_86a_terms, found_86a_terms = fast_filter_bilingual_86a(text, user_language)
-    s86a_time = _time.time() - s86a_start
-
-    if has_86a_terms:
-        # §86a hit — behavior depends on safety level:
-        # kids/youth: HARDBLOCK (no LLM exemption — children don't need "educational context" for NS symbols)
-        # adult/open: LLM context check (educational/historical context is §86a-exempt)
-        # The exemption is EXPLICIT, never a default: an unknown level string
-        # hardblocks like kids instead of inheriting the adult path
-        # (review note 2026-08-08; today all callers are resolver-fed, which
-        # already fails to 'kids' — this guards the next caller).
-        if safety_level not in ('adult', 'open'):
-            # Kids/Youth: §86a terms are unambiguous → immediate block, no LLM needed
-            error_message = (
-                f"⚠️ Dein Prompt wurde blockiert\n\n"
-                f"GRUND: §86a StGB\n\n"
-                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sind: "
-                f"{', '.join(found_86a_terms[:3])}\n\n"
-                f"WARUM DIESE REGEL?\n"
-                f"Diese Symbole werden benutzt, um Gewalt und Hass zu verbreiten.\n"
-                f"Wir schützen dich und andere vor gefährlichen Inhalten."
-            )
-            logger.warning(f"[STAGE1] HARDBLOCK §86a ({safety_level}): {found_86a_terms[:3]} ({s86a_time*1000:.1f}ms)")
-            return (False, text, error_message, ['§86a'])
-
-        # Adult: context check — educational and historical use of these
-        # symbols is §86a-exempt, and that is what the classifier is asked, in
-        # its own question (SYMBOL_POLICY). An answer that does not arrive
-        # fails closed below, as everywhere in this chain.
-        logger.info(f"[STAGE1] §86a hit: {found_86a_terms[:3]} → classifier context check ({s86a_time*1000:.1f}ms)")
-        from my_app.services.safety_classifier import SYMBOL_POLICY
-        llm_result = _llm_safety_check_generation(text, SYMBOL_POLICY)
-        llm_time = llm_result["execution_time"]
-
-        if not llm_result["verdict"]:
-            error_message = (
-                f"⚠️ Dein Prompt wurde blockiert\n\n"
-                f"GRUND: §86a StGB — Sicherheitssystem nicht erreichbar\n\n"
-                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sein können: "
-                f"{', '.join(found_86a_terms[:3])}\n\n"
-                f"Das Sicherheitssystem konnte den Kontext nicht prüfen.\n"
-                f"Bitte versuche es erneut."
-            )
-            logger.warning(f"[STAGE1] §86a: no verdict → fail-closed ({llm_time:.1f}s)")
-            return (False, text, error_message, ['§86a'])
-
-        is_safe = llm_result["safe"]
-
-        if not is_safe:
-            error_message = (
-                f"⚠️ Dein Prompt wurde blockiert\n\n"
-                f"GRUND: §86a StGB\n\n"
-                f"Dein Prompt enthält Begriffe, die nach deutschem Recht verboten sind: "
-                f"{', '.join(found_86a_terms[:3])}\n\n"
-                f"WARUM DIESE REGEL?\n"
-                f"Diese Symbole werden benutzt, um Gewalt und Hass zu verbreiten.\n"
-                f"Wir schützen dich und andere vor gefährlichen Inhalten."
-            )
-            logger.warning(f"[STAGE1] BLOCKED §86a (classifier confirmed, {llm_result.get('llm_output', '')}) ({llm_time:.1f}s)")
-            return (False, text, error_message, ['§86a'])
-        else:
-            # The classifier says no → educational context → continue for adults
-            logger.info(f"[STAGE1] §86a educational exemption (adult, classifier: safe, {llm_time:.1f}s)")
-
-    # ── STEP 2: DSGVO SpaCy NER (~50-100ms) or LLM Fallback ──────────
-    # DSGVO runs BEFORE age filter to ensure no personal data leaves local system.
-    # This allows the age filter (Step 3) to safely use external LLMs (gpt-oss-120b)
-    # for context verification — DSGVO already guaranteed no personal names in text.
-    checks_passed = ['§86a']
-
-    dsgvo_start = _time.time()
-    has_personal_data, found_entities, spacy_available = fast_dsgvo_check(text)
-    dsgvo_time = _time.time() - dsgvo_start
-
-    if spacy_available and has_personal_data:
-        # NER triggered — LLM verification to avoid false positives
-        # (SpaCy flags technical terms like "Agrarische Funktionszone" or "muted earth tones:1.1")
-        logger.info(f"[STAGE1] DSGVO NER triggered: {found_entities[:3]} — verifying with LLM")
-        verify_result = llm_personal_data_check(text, found_entities)
-        if verify_result is None:
-            # LLM unavailable — fail-closed
-            error_message = (
-                "Sicherheitssystem reagiert nicht, daher kann keine weitere "
-                "Verarbeitung erfolgen. Bitte den Systemadministrator kontaktieren."
-            )
-            checks_passed.append('dsgvo_ner')
-            logger.error(f"[STAGE1] BLOCKED — LLM verification unavailable (fail-closed)")
-            return (False, text, error_message, checks_passed)
-        elif verify_result:
-            # LLM confirmed real names → BLOCK
-            entities_str = ', '.join(found_entities[:5])
-            error_message = (
-                f"⚠️ Dein Prompt wurde blockiert\n\n"
-                f"GRUND: DSGVO - Persönliche Daten erkannt\n\n"
-                f"Folgende persönliche Daten wurden in deinem Prompt gefunden:\n"
-                f"{entities_str}\n\n"
-                f"WARUM DIESE REGEL?\n"
-                f"Der Schutz persönlicher Daten (DSGVO) verbietet die Verarbeitung von Namen, "
-                f"Adressen und Kontaktdaten ohne Einwilligung.\n"
-                f"Bitte verwende Phantasienamen oder beschreibe Personen ohne echte Namen."
-            )
-            checks_passed.append('dsgvo_ner')
-            checks_passed.append('dsgvo_llm_verify')
-            logger.warning(f"[STAGE1] BLOCKED DSGVO (LLM confirmed): {found_entities[:3]} ({dsgvo_time*1000:.1f}ms)")
-            return (False, text, error_message, checks_passed)
-        else:
-            # False positive (LLM rejected) → allow
-            logger.info(f"[STAGE1] DSGVO NER false positive (LLM rejected): {found_entities[:3]}")
-
-    elif spacy_available and not has_personal_data:
-        # SpaCy clean → SAFE
-        checks_passed.append('dsgvo_ner')
-
-    elif not spacy_available:
-        # SpaCy NOT available → direct LLM check for personal names
-        logger.warning(f"[STAGE1] SpaCy unavailable → LLM fallback for DSGVO check")
-        llm_start = _time.time()
-        dsgvo_result = llm_personal_data_check(text)
-        llm_time = _time.time() - llm_start
-
-        if dsgvo_result is None:
-            # LLM unavailable → fail-closed
-            error_message = (
-                "Sicherheitssystem reagiert nicht, daher kann keine weitere "
-                "Verarbeitung erfolgen. Bitte den Systemadministrator kontaktieren."
-            )
-            checks_passed.append('dsgvo_llm')
-            logger.warning(f"[STAGE1] DSGVO LLM fallback unavailable → fail-closed ({llm_time:.1f}s)")
-            return (False, text, error_message, checks_passed)
-        elif dsgvo_result:
-            # LLM found personal names → BLOCK
-            error_message = (
-                f"⚠️ Dein Prompt wurde blockiert\n\n"
-                f"GRUND: DSGVO - Persönliche Daten erkannt\n\n"
-                f"Dein Prompt enthält möglicherweise persönliche Daten.\n\n"
-                f"WARUM DIESE REGEL?\n"
-                f"Der Schutz persönlicher Daten (DSGVO) verbietet die Verarbeitung von Namen, "
-                f"Adressen und Kontaktdaten ohne Einwilligung.\n"
-                f"Bitte verwende Phantasienamen oder beschreibe Personen ohne echte Namen."
-            )
-            checks_passed.append('dsgvo_llm')
-            logger.warning(f"[STAGE1] BLOCKED DSGVO (LLM fallback confirmed, {llm_time:.1f}s)")
-            return (False, text, error_message, checks_passed)
-        else:
-            # LLM says no personal names → safe
-            checks_passed.append('dsgvo_llm')
-            logger.info(f"[STAGE1] DSGVO LLM fallback: SAFE ({llm_time:.1f}s)")
-
-    # Jugendschutz (kids/youth) is handled by Stage 2 safety prefix — not in Stage 1.
-
-    # ── ALL CHECKS PASSED ──────────────────────────────────────────────
-    total_time = _time.time() - total_start
-    logger.info(f"[STAGE1] SAFE ({total_time*1000:.1f}ms total, checks: {checks_passed})")
-    return (True, text, None, checks_passed)
-
-
-# Decision 1 (work order §6.1): when the safety model yields no verdict, the
-# run STOPS. The §86a word filter and the name check run locally and have
-# already passed by the time this message can appear; the age judgement's
-# second carrier is the Stage-2 safety preamble. What is missing without a
-# verdict is the Llama-Guard assessment — and a run that continues without it
-# is exactly the shape of all nine documented incidents. The message must not
-# read as a content rating: in a workshop, nobody should take their own input
-# for the cause. The operational way back is a restart of the GPU service.
+# The sentence for a check that could not be carried out: no answer from the
+# classifier, no translation for the check, no list to read. The run stops
+# then: a run that went on without a verdict is the shape of all nine
+# documented incidents. The sentence must not read as a content rating: in a
+# workshop, nobody should take their own input for the cause. The operational
+# way back is a restart of the GPU service.
 SAFETY_CHECK_UNAVAILABLE_MESSAGE = (
     "⚠️ Technische Störung im Sicherheitssystem\n\n"
     "Die Sicherheitsprüfung konnte gerade nicht durchgeführt werden. "
@@ -962,411 +738,12 @@ SAFETY_CHECK_UNAVAILABLE_MESSAGE = (
 )
 
 
-async def execute_stage3_safety(
-    prompt: str,
-    safety_level: str,
-    media_type: str,
-    pipeline_executor,
-    user_language: str = 'de',
-    device_id: Optional[str] = None,
-    force_translation: bool = False,
-    translation_instruction: Optional[str] = None,
-    as_given: bool = False,
-) -> Dict[str, Any]:
-    """
-    Execute Stage 3: Pre-Output Safety Check (Jugendschutz)
-
-    Tiered translation behavior:
-    - research/adult: No translation, no safety check — original prompt to model
-    - kids: Translate to English, run safety, pass TRANSLATED prompt to model
-    - youth: Translate to English internally for safety check, pass ORIGINAL prompt to model
-    - force_translation=True overrides the prompt choice only: the model always
-      gets the English translation (t2x flow, which has no translate button);
-      each level's safety behavior stays exactly as it was.
-    - as_given=True: the text reaches the model as it was written, not as
-      translated -- a text the output chunk reads itself (the song's lyrics and
-      style tags). The classifier reads it as written, at kids the translation
-      as well, and the run stops if either is refused; the positive prompt is
-      the text as given.
-
-    This decouples translation-for-safety from translation-for-generation.
-    Youth+ users can explore how models react to their native language.
-    The translate button in MediaInputBox remains available for manual use.
-
-    Steps:
-    1. research/adult → return original prompt immediately
-    2. Translate to English (for kids/youth safety check)
-    3. §86a fast-filter on translated text (instant block)
-    4. Determine generation prompt (kids=translated, youth=original)
-    5. Single Llama-Guard check with proper S1-S13 template on generation prompt
-
-    Args:
-        prompt: Prompt to check before media generation
-        safety_level: 'kids', 'youth', 'adult', or 'research'
-        media_type: Type of media being generated (for logging)
-        pipeline_executor: PipelineExecutor instance
-        user_language: Frontend interface language (fallback for Latin-script detection)
-
-    Returns:
-        {
-            "safe": bool,
-            "method": "disabled" | "86a_filter" | "llm_safety_check" | "llm_check_failed",
-            "abort_reason": str | None,
-            "positive_prompt": str | None,
-            "negative_prompt": str | None
-        }
-    """
-    import time
-
-    # STEP 1: research/adult — no safety check; without forced translation the
-    # original prompt goes straight to the model.
-    if safety_level in ('research', 'adult') and not force_translation:
-        return {
-            "safe": True,
-            "method": "disabled",
-            "abort_reason": None,
-            "positive_prompt": prompt,
-            "negative_prompt": ""
-        }
-
-    # STEP 2: Translate to English (for safety check on kids/youth)
-    # Reuse only within one device bucket to avoid cross-device prompt bleed.
-    cached_translation = _get_translation_cache_entry(device_id)
-    instruction_key = (translation_instruction or '').strip()
-    if (
-        cached_translation is not None
-        and prompt == cached_translation.get('untranslated')
-        and cached_translation.get('instruction', '') == instruction_key
-        and cached_translation.get('translated') is not None
-    ):
-        translated_prompt = cached_translation['translated']
-        translate_time = 0
-        logger.info(
-            f"[STAGE3-TRANSLATION] Reused for device {device_id}: "
-            f"{translated_prompt[:150]}..."
-        )
-    else:
-        translate_start = time.time()
-        translate_result = await pipeline_executor.execute_pipeline(
-            'pre_output/translation_en',  # Translation config (just translate chunk)
-            prompt,
-            context_override=translation_context(prompt, translation_instruction),
-        )
-        translate_time = time.time() - translate_start
-
-        if translate_result.success:
-            translated_prompt = translate_result.final_output
-            _update_translation_cache(device_id, prompt, translated_prompt, instruction_key)
-            logger.info(f"[STAGE3-TRANSLATION] Translated in {translate_time:.2f}s: {translated_prompt[:150]}...")
-        else:
-            # No translation, and therefore no text this stage can check: the §86a
-            # filter below reads English term lists. The original prompt is NOT used
-            # as a stand-in -- that would run the last gate on Stage-2-generated text
-            # in a language it cannot read.
-            translated_prompt = None
-            logger.error(
-                "[STAGE3-TRANSLATION] Translation failed — run stops (fail-closed); "
-                "operational error, not a content rating"
-            )
-
-    # research/adult with forced translation: hand back what translation produced
-    # and keep the no-safety-check contract of these levels. These levels run no
-    # check, so a missing translation falls back to the original text here and only
-    # here -- it is handed to generation untranslated, not to a gate.
-    if safety_level in ('research', 'adult'):
-        translated_prompt = translated_prompt if translated_prompt is not None else prompt
-        return {
-            "safe": True,
-            "method": "disabled",
-            "abort_reason": None,
-            "positive_prompt": translated_prompt,
-            "negative_prompt": "",
-            "execution_time": translate_time
-        }
-
-    # A failed translation stops the run. Same shape as the missing-verdict case
-    # below: an operational failure, distinguishable from a content rejection.
-    if translated_prompt is None:
-        return {
-            "safe": False,
-            "method": "translation_failed",
-            "abort_reason": SAFETY_CHECK_UNAVAILABLE_MESSAGE,
-            "positive_prompt": None,
-            "negative_prompt": None,
-            "execution_time": translate_time
-        }
-
-    # STEP 3: §86a fast-filter on translated text — use 'en'. Reached only when
-    # translation succeeded, so the text really is English.
-    has_86a, found_86a = fast_filter_bilingual_86a(translated_prompt, 'en')
-    if has_86a:
-        logger.warning(f"[STAGE3-SAFETY] §86a BLOCKED: {found_86a[:3]}")
-        return {
-            "safe": False,
-            "method": "86a_filter",
-            "abort_reason": f'§86a StGB: {", ".join(found_86a[:3])}',
-            "positive_prompt": None,
-            "negative_prompt": None,
-            "execution_time": translate_time
-        }
-
-    # STEP 4: Determine generation prompt by safety level
-    # kids → auto-translated English (better model output, full guardrails)
-    # youth → original language (user explores model behavior, manual translate available)
-    generation_prompt = translated_prompt if (safety_level == 'kids' or force_translation) else prompt
-    classified = [generation_prompt]
-    if as_given:
-        # Until 2026-10-01 a text the chunk read itself was classified as its
-        # translation at kids, so a translation that came out milder than the
-        # text -- or that did what a line in the text told it to -- passed a
-        # text the model then received untouched.
-        generation_prompt = prompt
-        classified = [translated_prompt, prompt] if safety_level == 'kids' else [prompt]
-
-    # STEP 5: the safety classifier, asked the question of the level that is
-    # running. The level used to reach the check only afterwards, as a filter
-    # over the category codes a chat-trained guard had answered in; every code
-    # the filter did not know was a release, and the numbering the template used
-    # was not the numbering the model card declares. The question carries the
-    # level now, and the answer is one yes or no about it.
-    from my_app.services.safety_classifier import policy_for_level
-
-    policy = policy_for_level(safety_level)
-    logger.info(f"[STAGE3-SAFETY] Running the safety classifier ({safety_level}) on the generation prompt")
-    for text in classified:
-        llm_result = _llm_safety_check_generation(text, policy)
-        if not llm_result["verdict"] or llm_result["uncoded_unsafe"]:
-            break
-
-    # Work order A1 / decision 1: no verdict → the run stops, and the message
-    # names an operational failure, distinguishable from a content rejection.
-    # The old aggregation read empty codes from a failed call as a pass —
-    # every documented incident had that shape. Blocking is bound to a
-    # verdict that actually exists.
-    if not llm_result["verdict"]:
-        logger.error(
-            f"[STAGE3-SAFETY] NO VERDICT from {llm_result['model_used']} — run stops (fail-closed); "
-            f"operational error, not a content rating"
-        )
-        return {
-            "safe": False,
-            "method": "llm_check_failed",
-            "abort_reason": SAFETY_CHECK_UNAVAILABLE_MESSAGE,
-            "positive_prompt": None,
-            "negative_prompt": None,
-            "model_used": llm_result["model_used"],
-            "execution_time": translate_time + llm_result["execution_time"],
-            "llm_output": llm_result.get("llm_output", ""),
-        }
-
-    # The verdict is one answer to the question of the running level, so there
-    # is no category list left to filter and no second model left to ask. Both
-    # were Llama-Guard machinery: its taxonomy answered one fixed question, and
-    # what this platform actually needed was applied to that answer afterwards
-    # — by dropping the codes an image cannot carry, and by re-asking a cloud
-    # model about the two codes deemed over-eager. Every code the filter did
-    # not know was a release. The classifier is asked this platform's question
-    # itself now, so the answer needs neither correction.
-    is_safe = not llm_result["uncoded_unsafe"]
-
-    if is_safe:
-        logger.info(f"[STAGE3-SAFETY] PASSED ({llm_result['execution_time']:.1f}s), using {'translated' if (safety_level == 'kids' or force_translation) and not as_given else 'original'} prompt for generation")
-        return {
-            "safe": True,
-            "method": "llm_safety_check",
-            "abort_reason": None,
-            "positive_prompt": generation_prompt,
-            "negative_prompt": "",
-            "model_used": llm_result["model_used"],
-            "execution_time": translate_time + llm_result["execution_time"]
-        }
-    else:
-        logger.warning(f"[STAGE3-SAFETY] BLOCKED ({llm_result['execution_time']:.1f}s, {llm_result.get('llm_output', '')})")
-        return {
-            "safe": False,
-            "method": "llm_safety_check",
-            "abort_reason": "Content blocked by safety filter",
-            "positive_prompt": None,
-            "negative_prompt": None,
-            "model_used": llm_result["model_used"],
-            "execution_time": llm_result["execution_time"],
-            "llm_output": llm_result.get("llm_output", ""),
-            "found_terms": []
-        }
-
-
-# ============================================================================
-# SESSION 84: STAGE 3 SAFETY CHECK FOR CODE OUTPUT
-# ============================================================================
-
-async def execute_stage3_safety_code(
-    code: str,
-    safety_level: str,
-    media_type: str,
-) -> dict:
-    """
-    Stage 3 Safety Check for Code Output (P5.js, SonicPi, etc.)
-
-    Checks generated code for unsafe patterns without translation.
-    Uses fast filter + conditional LLM verification.
-
-    Args:
-        code: Generated code (JavaScript, Ruby, etc.)
-        safety_level: Safety level ('kids', 'youth', 'research')
-        media_type: Media type ('code')
-
-    Returns:
-        dict: Safety result with structure:
-            {
-                'safe': bool,
-                'positive_prompt': str (original code if safe),
-                'method': str,
-                'abort_reason': Optional[str],
-                'patterns_found': Optional[List[str]],
-                'execution_time': float
-            }
-    """
-    from datetime import datetime
-
-    start_time = datetime.now()
-
-    logger.info(f"[STAGE3-CODE] Safety check for code (level: {safety_level})")
-
-    # If safety is research or adult, skip all checks
-    if safety_level in ('research', 'adult'):
-        logger.info(f"[STAGE3-CODE] Safety level '{safety_level}' → allowing code")
-        return {
-            'safe': True,
-            'positive_prompt': code,
-            'method': 'safety_off',
-            'execution_time': (datetime.now() - start_time).total_seconds()
-        }
-
-    # Fast filter: Check for dangerous code patterns
-    UNSAFE_CODE_PATTERNS = [
-        'eval(',
-        'Function(',
-        'document.cookie',
-        'localStorage.',
-        'sessionStorage.',
-        'fetch(',
-        'XMLHttpRequest',
-        'import(',
-        'require(',
-        '<script',
-        '</script',
-        'innerHTML',
-        'outerHTML',
-        'document.write',
-        'setTimeout(',
-        'setInterval('
-    ]
-
-    found_patterns = []
-    code_lower = code.lower()
-    for pattern in UNSAFE_CODE_PATTERNS:
-        if pattern.lower() in code_lower:
-            found_patterns.append(pattern)
-
-    if not found_patterns:
-        # FAST PATH: No unsafe patterns detected
-        logger.info(f"[STAGE3-CODE] Safety check passed (fast filter, no patterns found)")
-        return {
-            'safe': True,
-            'positive_prompt': code,
-            'method': 'fast_filter',
-            'execution_time': (datetime.now() - start_time).total_seconds()
-        }
-
-    # SLOW PATH: the fast filter flagged something → ask the verdict model
-    # whether the pattern is dangerous in THIS code.
-    logger.warning(f"[STAGE3-CODE] Found patterns: {found_patterns} → verdict model")
-
-    verification_prompt = (
-        "You are a code safety reviewer for an educational creative-coding "
-        "environment used by children.\n\n"
-        "A generated sketch contains patterns a fast filter flags: "
-        f"{', '.join(found_patterns)}\n\n"
-        "The sketch runs in a sandboxed iframe. Decide whether these patterns "
-        "are used in a way that is dangerous there — reaching out of the "
-        "sandbox, contacting the network, reading or writing browser storage, "
-        "injecting markup, or executing text as code — or whether this is "
-        "ordinary creative-coding use.\n\n"
-        "Code:\n"
-        "```\n"
-        f"{code}\n"
-        "```\n\n"
-        "Answer SAFE or UNSAFE."
-    )
-
-    # The call this check used to make was
-    # `pipeline_executor.execute_chunk_async`, a method that has never existed
-    # on PipelineExecutor. It was written in 6ce8456f on 2025-12-01 ("WIP:
-    # Broken p5.js implementation"), and for the nine months after that every
-    # flagged p5.js and SonicPi output raised AttributeError here and was handed
-    # to the child with the flagged pattern still in it.
-    #
-    # A check asks a model directly, and it asks the one it was configured to
-    # ask. `_call_verdict_model` is this platform's single adjudication call
-    # (STAGE3_MODEL, no fallback chain, no output cap, `finish_reason` carried
-    # back), already shared with the image check and the S4/S8 escalation, and
-    # `_extract_verdict` is the one reader for its answer. Llama-Guard is the
-    # wrong model for this question — it answers its own S1-S13 template, not a
-    # free-form question about JavaScript — and the model that wrote the sketch
-    # must not be the one to rate it.
-    from my_app.utils.vlm_safety import _call_verdict_model, _extract_verdict
-
-    def _no_verdict(why: str) -> dict:
-        """A check that could not be carried out. It withholds the code, and it
-        says so as a technical fault: the child's own sketch is not the cause,
-        and the message must not read as a rating of it."""
-        logger.error(f"[STAGE3-CODE] {why} — run stops (fail-closed); operational error, not a content rating")
-        return {
-            'safe': False,
-            'positive_prompt': None,
-            'abort_reason': SAFETY_CHECK_UNAVAILABLE_MESSAGE,
-            'method': 'llm_check_failed',
-            'patterns_found': found_patterns,
-            'execution_time': (datetime.now() - start_time).total_seconds()
-        }
-
-    try:
-        response, finish_reason = _call_verdict_model(verification_prompt)
-    except Exception as e:
-        # An exception is the absence of a verdict, and the absence of a verdict
-        # is not permission (work order §6 decision 1).
-        return _no_verdict(f"verdict model raised {e!r}")
-
-    if not response:
-        return _no_verdict("verdict model unreachable or answered empty")
-
-    if finish_reason == 'length':
-        # A truncated answer is cut-off reasoning, not a rating (work order A12).
-        return _no_verdict("verdict truncated (finish_reason=length)")
-
-    verdict = _extract_verdict(response)
-    if verdict is None:
-        return _no_verdict(f"no readable verdict in {response[:120]!r}")
-
-    if verdict == 'safe':
-        logger.info(f"[STAGE3-CODE] Verdict SAFE despite {found_patterns}")
-        return {
-            'safe': True,
-            'positive_prompt': code,
-            'method': 'llm_context_check',
-            'patterns_found': found_patterns,
-            'execution_time': (datetime.now() - start_time).total_seconds()
-        }
-
-    logger.warning(f"[STAGE3-CODE] Verdict UNSAFE for {found_patterns} — blocked")
-    return {
-        'safe': False,
-        'positive_prompt': None,
-        # The platform's existing wording for a content block with no S-code.
-        # There is no code-specific German sentence in the tree; inventing one
-        # is not this change's to make.
-        'abort_reason': build_safety_message([]),
-        'method': 'llm_context_check',
-        'patterns_found': found_patterns,
-        'execution_time': (datetime.now() - start_time).total_seconds()
-    }
+# Stage 3 stood here until 2026-11-01: `execute_stage3_safety`, the check
+# before a media model, and `execute_stage3_safety_code`, the check of a sketch
+# a model wrote. The check before the model is safety_gate.check_before_model:
+# the §86a lists of every language on the text and its translation, the
+# level's question on both, adult included, and the symbol question after a
+# list hit. Where a media model receives a translation, the route that calls it
+# makes it (schema_pipeline_routes._translate_for_model). Code is checked at the
+# result (safety_gate.check_result_code), with the same pattern list; after a
+# hit the local classifier is asked where the cloud verdict model was.

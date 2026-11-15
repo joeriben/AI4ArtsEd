@@ -20,6 +20,8 @@ from flask import Flask
 
 import config
 from my_app.routes import canvas_routes, favorites_routes
+from my_app.services import canvas_executor
+from my_app.services.safety_gate import CHECKPOINT_INTAKE, Verdict
 
 DEVICE = "0b6f2c1e-6a43-4c1b-9d1e-2f3a4b5c6d7e_2026-10-01"
 
@@ -35,12 +37,19 @@ BOARD = {
 }
 
 
+def _passes(material, *, level, kind, field):
+    return Verdict(True, CHECKPOINT_INTAKE, level, field)
+
+
 @pytest.fixture()
 def storage(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "JSON_STORAGE_DIR", tmp_path)
     # Bound at import in the favourites routes, read at call time in the keep route.
     monkeypatch.setattr(favorites_routes, "JSON_STORAGE_DIR", tmp_path)
     monkeypatch.setattr(canvas_routes, "resolve_safety_level", lambda: "kids")
+    # The intake lets every board pass here; test_canvas_checks.py tests it.
+    monkeypatch.setattr(canvas_executor, "check_intake", _passes)
+    monkeypatch.setattr(canvas_routes, "check_intake", _passes)
     (tmp_path / "favorites.json").write_text(
         json.dumps({"version": "1.0", "mode": "global", "favorites": []}), encoding="utf-8")
     return tmp_path
@@ -144,7 +153,7 @@ def _output_run(storage, run_id):
     (folder / "final" / "01_output_image.png").write_bytes(b"\x89PNG\r\n\x1a\n")
     (folder / "metadata.json").write_text(json.dumps({
         "run_id": run_id, "config_name": "sd3.5_large", "device_id": DEVICE,
-        "timestamp": "2026-10-01T14:33:00",
+        "timestamp": "2026-10-01T14:33:00", "safety_level": "kids",
         "entities": [{"sequence": 1, "type": "output_image", "filename": "01_output_image.png",
                       "metadata": {}}],
     }), encoding="utf-8")

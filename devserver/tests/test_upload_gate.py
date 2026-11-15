@@ -349,6 +349,12 @@ class TestGatePdfUpload:
             mk_pdf(text_lines=("ein foto mit ss symbol an der wand",)))
         assert reason == ug.REASON_86A
 
+    def test_the_file_part_comes_first(self, gate_env):
+        # A known document is a duplicate before its text is scanned.
+        data = mk_pdf(text_lines=("ein foto mit ss symbol an der wand",))
+        ug.record_hash_index("existing-doc", ug.sha256_hex(data), None)
+        assert ug.is_duplicate(ug.gate_pdf_upload(data)[0])
+
     def test_reject_message_never_contains_term(self, gate_env):
         # No curated §86a term may surface in the rejection answer.
         import json as _json
@@ -372,6 +378,31 @@ class TestGatePdfUpload:
         assert set(line) == {"ts", "doc_hash", "reason", "origin"}
         assert line["doc_hash"] == "e" * 64
         assert line["reason"] == ug.REASON_86A
+
+
+class TestGatePdfFile:
+    """The file part alone, as the flow's document import uses it: what the
+    document says is the intake's, once the converter has read it."""
+
+    def test_a_list_hit_is_not_its_business(self, gate_env):
+        reason, raw_hash = ug.gate_pdf_file(
+            mk_pdf(text_lines=("ein foto mit ss symbol an der wand",)))
+        assert reason is None
+        assert len(raw_hash) == 64
+
+    def test_the_file_checks_stand(self, gate_env):
+        _, lists = gate_env
+        assert ug.gate_pdf_file(mk_pdf(embedded_name="setup.exe"))[0] == ug.REASON_EMBEDDED_FILE
+        assert ug.gate_pdf_file(mk_pdf(launch=True))[0] == ug.REASON_LAUNCH_ACTION
+        assert ug.gate_pdf_file(b"not a pdf")[0] == ug.REASON_NOT_PDF
+        data = mk_pdf(text_lines=("Ein gesperrtes Dokument.",))
+        _write_list(lists, "upload_gate_blocked_hashes.json", {"hashes": [ug.sha256_hex(data)]})
+        assert ug.gate_pdf_file(data)[0] == ug.REASON_BLOCKED_HASH
+
+    def test_a_known_document_is_a_duplicate(self, gate_env):
+        data = mk_pdf()
+        ug.record_hash_index("existing-doc", ug.sha256_hex(data), None)
+        assert ug.is_duplicate(ug.gate_pdf_file(data)[0])
 
 
 # ---------------------------------------------------------------------------
@@ -401,3 +432,123 @@ class TestGateImageUpload:
                     {"hashes": [ug.sha256_hex(data)]})
         reason, _ = ug.gate_image_upload(data)
         assert reason == ug.REASON_BLOCKED_HASH
+
+
+# ---------------------------------------------------------------------------
+# 7. DOCX gate (zip container: macros, embedded objects, external references)
+# ---------------------------------------------------------------------------
+
+_DOCX_CT = (
+    '<?xml version="1.0" encoding="UTF-8"?>'
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    '<Default Extension="xml" ContentType="application/xml"/>'
+    '<Override PartName="/word/document.xml" ContentType="{main}"/>'
+    '</Types>'
+)
+_DOCX_MAIN = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"
+_DOCX_MACRO_MAIN = "application/vnd.ms-word.document.macroEnabled.main+xml"
+
+
+def _docx_rel(rid, rel_type, target, external=False):
+    mode = ' TargetMode="External"' if external else ""
+    return (f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/'
+            f'officeDocument/2006/relationships/{rel_type}" Target="{target}"{mode}/>')
+
+
+def mk_docx(paragraphs=("Ein Dokument.",), main=_DOCX_MAIN, rels=(), extra=None):
+    """Build a minimal DOCX in memory: content types, package and document
+    relationships, a body of paragraphs, and optional extra members."""
+    import zipfile
+    from xml.sax.saxutils import escape
+
+    body = "".join(f"<w:p><w:r><w:t>{escape(t)}</w:t></w:r></w:p>" for t in paragraphs)
+    doc = ('<?xml version="1.0" encoding="UTF-8"?>'
+           '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+           f"<w:body>{body}</w:body></w:document>")
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", _DOCX_CT.format(main=main))
+        z.writestr("_rels/.rels",
+                   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                   + _docx_rel("rId1", "officeDocument", "word/document.xml")
+                   + "</Relationships>")
+        z.writestr("word/_rels/document.xml.rels",
+                   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                   + "".join(rels) + "</Relationships>")
+        z.writestr("word/document.xml", doc)
+        for name, data in (extra or {}).items():
+            z.writestr(name, data)
+    return buf.getvalue()
+
+
+class TestValidateDocx:
+    def test_clean(self):
+        assert ug.validate_docx(mk_docx()) is None
+
+    def test_a_hyperlink_is_admitted(self):
+        rel = _docx_rel("rId9", "hyperlink", "https://example.org/", external=True)
+        assert ug.validate_docx(mk_docx(rels=(rel,))) is None
+
+    def test_not_a_zip(self):
+        assert ug.validate_docx(b"%PDF-1.7 not a docx") == ug.REASON_NOT_DOCX
+
+    def test_a_zip_without_a_body(self):
+        import zipfile
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr("readme.txt", "x")
+        assert ug.validate_docx(buf.getvalue()) == ug.REASON_NOT_DOCX
+
+    def test_a_vba_project_is_a_macro(self):
+        data = mk_docx(extra={"word/vbaProject.bin": b"\x00" * 16})
+        assert ug.validate_docx(data) == ug.REASON_MACRO
+
+    def test_a_macro_enabled_content_type_is_a_macro(self):
+        assert ug.validate_docx(mk_docx(main=_DOCX_MACRO_MAIN)) == ug.REASON_MACRO
+
+    def test_an_embedded_object(self):
+        data = mk_docx(extra={"word/embeddings/oleObject1.bin": b"\x00" * 16})
+        assert ug.validate_docx(data) == ug.REASON_EMBEDDED_FILE
+
+    def test_a_remote_template_is_an_external_reference(self):
+        rel = _docx_rel("rId9", "attachedTemplate", "https://example.org/t.dotm",
+                        external=True)
+        assert ug.validate_docx(mk_docx(rels=(rel,))) == ug.REASON_EXTERNAL_REFERENCE
+
+    def test_the_uncompressed_ceiling(self, monkeypatch):
+        monkeypatch.setattr(ug, "MAX_DOCX_UNCOMPRESSED", 100)
+        assert ug.validate_docx(mk_docx()) == ug.REASON_NOT_DOCX
+
+
+class TestGateDocxUpload:
+    def test_clean_admitted(self, gate_env):
+        reason, raw_hash = ug.gate_docx_upload(mk_docx())
+        assert reason is None and len(raw_hash) == 64
+
+    def test_86a_reject_from_the_body(self, gate_env):
+        reason, _ = ug.gate_docx_upload(mk_docx(("ein foto mit ss symbol an der wand",)))
+        assert reason == ug.REASON_86A
+
+    def test_duplicate_before_the_scan(self, gate_env):
+        data = mk_docx(("ein foto mit ss symbol an der wand",))
+        ug.record_hash_index("existing-doc", ug.sha256_hex(data), None)
+        assert ug.is_duplicate(ug.gate_docx_upload(data)[0])
+
+    def test_stored_gate_skips_the_index(self, gate_env):
+        data = mk_docx()
+        ug.record_hash_index("existing-doc", ug.sha256_hex(data), None)
+        assert ug.gate_stored_docx(data)[0] is None
+
+    def test_a_body_that_does_not_parse(self, gate_env):
+        import zipfile
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr("word/document.xml", "<w:document")
+        assert ug.gate_docx_upload(buf.getvalue())[0] == ug.REASON_NOT_DOCX
+
+    def test_every_docx_reason_has_a_message(self):
+        for reason in (ug.REASON_NOT_DOCX, ug.REASON_MACRO, ug.REASON_EXTERNAL_REFERENCE):
+            assert ug.reject_message(reason) != ug.reject_message("unbekannt")

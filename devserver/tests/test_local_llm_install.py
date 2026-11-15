@@ -13,6 +13,7 @@ the install runs to its end when the reader of its events has left.
 Run: pytest devserver/tests/test_local_llm_install.py -q
 """
 
+import copy
 import json
 import os
 import sys
@@ -138,3 +139,37 @@ def test_an_unknown_alias_is_refused():
     installer = inst.LocalLLMInstaller()
     assert installer.precheck("nothing:1b")["ok"] is False
     assert list(installer.install("nothing:1b"))[0]["type"] == "error"
+
+
+def test_a_model_the_loader_runs_nowhere_is_not_fetched(root, monkeypatch):
+    """An entry marked trust_remote_code is refused before any download:
+    ComfyUI's loader executes no code from a repository. No entry of the
+    table carries it since 2026-11-08; the one refused here is added."""
+    table = copy.deepcopy(w.register())
+    held = "held:7b"
+    table["models"][held] = {k: v for k, v in ENTRY.items() if k != "text_rows"}
+    table["models"][held].update(repo="owner/held-7b", dir="owner--held-7b", trust_remote_code=True)
+    monkeypatch.setattr(w, "_table", lambda: table)
+    fetched = []
+    monkeypatch.setattr(inst.LocalLLMInstaller, "_fetch",
+                        _fetching(lambda staging: fetched.append(staging)))
+    installer = inst.LocalLLMInstaller()
+    check = installer.precheck(held)
+    assert check["ok"] is False and "trust_remote_code" in check["reason"]
+    assert list(installer.install(held))[0]["type"] == "error" and fetched == []
+
+
+def test_a_pinned_revision_is_fetched_as_pinned(monkeypatch, tmp_path):
+    import huggingface_hub
+    seen = {}
+
+    def snapshot_download(**kwargs):
+        seen.update(kwargs)
+        return str(tmp_path)
+
+    monkeypatch.setattr(huggingface_hub, "snapshot_download", snapshot_download)
+    inst.LocalLLMInstaller._fetch({"repo": "owner/name", "revision": "abc123"}, str(tmp_path / "s"))
+    assert seen["repo_id"] == "owner/name" and seen["revision"] == "abc123"
+    seen.clear()
+    inst.LocalLLMInstaller._fetch({"repo": "owner/name"}, str(tmp_path / "s"))
+    assert seen["revision"] is None

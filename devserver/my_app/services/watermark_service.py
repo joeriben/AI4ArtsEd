@@ -6,6 +6,11 @@ visible mark to generated images and videos. Vendor-neutral by design: this
 service does not embed an "AI4ArtsEd" or any other provider brand. Operators
 configure visible text via user_settings.json if they want one.
 
+A generated medium whose bytes do not carry the disclosure after marking is
+stored with `_ai_generated` before the extension of its name (UNMARKED_SUFFIX;
+rule of 2026-11-14, applied in services/media_marking.mark_for_disk), and the
+media routes hand it out under that name.
+
 Settings live in `config.WATERMARK` (dict). Metadata embedding is the
 compliance core; visible overlay is optional. Failure of either layer is
 fail-open: original bytes are returned with a WARNING log so the workshop is
@@ -23,8 +28,10 @@ import json
 import logging
 import re
 import shutil
+import struct
 import subprocess
 import tempfile
+import zlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -95,6 +102,20 @@ def _source_type(entity_metadata: Optional[Dict[str, Any]]) -> str:
     return value if value in _KNOWN_SOURCE_TYPES else DIGITAL_SOURCE_TYPE_AI
 
 
+def _marking_time(entity_metadata: Optional[Dict[str, Any]]) -> str:
+    """When the medium was made, as its marking states it.
+
+    Now, for a medium marked as it is made. A stored file marked afterwards
+    (scripts/mark_stored_media.py) passes the time its run recorded under
+    `generated_at`, so its marking names the day it was generated and not
+    the day it was marked.
+    """
+    value = (entity_metadata or {}).get("generated_at")
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
 def _xml_text(value: Any) -> str:
     """Escape text on its way into an XMP packet or an SVG.
 
@@ -116,7 +137,7 @@ def _build_description(entity_metadata: Dict[str, Any], settings: Dict[str, Any]
         if model:
             parts.append(f"model={model}")
     if settings.get("metadata_include_date", True):
-        parts.append(f"date={datetime.now(timezone.utc).isoformat(timespec='seconds')}")
+        parts.append(f"date={_marking_time(entity_metadata)}")
     if settings.get("metadata_include_seed", False):
         seed = entity_metadata.get("seed")
         if seed is not None:
@@ -133,6 +154,7 @@ def _xmp_packet(
     description: str,
     wrapped: bool = True,
     source_type: str = DIGITAL_SOURCE_TYPE_AI,
+    created: str = "",
 ) -> str:
     """Minimal XMP packet with iptcExt:DigitalSourceType and dc:description.
 
@@ -155,7 +177,7 @@ def _xmp_packet(
    xmlns:iptcExt="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
    <iptcExt:DigitalSourceType>{source_type}</iptcExt:DigitalSourceType>
    <xmp:CreatorTool>{sw}</xmp:CreatorTool>
-   <xmp:CreateDate>{datetime.now(timezone.utc).isoformat(timespec='seconds')}</xmp:CreateDate>
+   <xmp:CreateDate>{_xml_text(created) or datetime.now(timezone.utc).isoformat(timespec='seconds')}</xmp:CreateDate>
    <dc:description>
     <rdf:Alt><rdf:li xml:lang="x-default">{description}</rdf:li></rdf:Alt>
    </dc:description>
@@ -274,6 +296,61 @@ _XMP_APP1_ID = b"http://ns.adobe.com/xap/1.0/\x00"
 _EXIF_APP1_ID = b"Exif\x00\x00"
 
 
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+_PNG_TEXT_CHUNKS = (b"tEXt", b"zTXt", b"iTXt")
+
+
+def _png_chunk(chunk_type: bytes, data: bytes) -> bytes:
+    crc = zlib.crc32(chunk_type + data) & 0xFFFFFFFF
+    return struct.pack(">I", len(data)) + chunk_type + data + struct.pack(">I", crc)
+
+
+def _png_with_text(content: bytes, entries) -> Optional[bytes]:
+    """The PNG with these text chunks right after IHDR, every other chunk as it was.
+
+    `entries` are (keyword, text) pairs. A text chunk under one of these
+    keywords that is already there is replaced, so a corrected value does not
+    stand next to the old one. The XMP packet and any text latin-1 cannot hold
+    go into iTXt (UTF-8, uncompressed), the rest into tEXt, as Pillow decides.
+    None where the bytes are not a well-formed PNG; the caller then re-encodes.
+    """
+    if not content.startswith(_PNG_SIGNATURE):
+        return None
+    keywords = {key.encode("latin-1") for key, _ in entries}
+    kept = []
+    pos = len(_PNG_SIGNATURE)
+    while pos + 12 <= len(content):
+        length = struct.unpack(">I", content[pos:pos + 4])[0]
+        chunk_type = content[pos + 4:pos + 8]
+        end = pos + 12 + length
+        if end > len(content):
+            return None
+        keyword = content[pos + 8:pos + 8 + length].split(b"\x00", 1)[0]
+        if not (chunk_type in _PNG_TEXT_CHUNKS and keyword in keywords):
+            kept.append((chunk_type, content[pos:end]))
+        pos = end
+        if chunk_type == b"IEND":
+            break
+    if not kept or kept[0][0] != b"IHDR" or kept[-1][0] != b"IEND":
+        return None
+    added = []
+    for key, text in entries:
+        name = key.encode("latin-1")
+        latin = None
+        if key != "XML:com.adobe.xmp":
+            try:
+                latin = text.encode("latin-1")
+            except UnicodeEncodeError:
+                latin = None
+        if latin is not None:
+            added.append(_png_chunk(b"tEXt", name + b"\x00" + latin))
+        else:
+            # keyword and separator, compression flag and method (none), an
+            # empty language tag and translated keyword, each closed by a zero
+            added.append(_png_chunk(b"iTXt", name + b"\x00\x00\x00\x00\x00" + text.encode("utf-8")))
+    return _PNG_SIGNATURE + kept[0][1] + b"".join(added) + b"".join(chunk for _, chunk in kept[1:])
+
+
 def _jpeg_with_app1(content: bytes, exif_payload: bytes, xmp_payload: bytes) -> Optional[bytes]:
     """Put the disclosure into a JPEG without re-encoding the picture.
 
@@ -374,12 +451,17 @@ def watermark_image_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
             if isinstance(packet, bytes):
                 packet = packet.decode("utf-8", errors="replace")
             already = _xmp_element(packet, "iptcExt:DigitalSourceType") == source_type
-        if already:
+        # And it has to be legible in the bytes as they lie. Pillow also reads
+        # a value out of a COMPRESSED chunk (zTXt, compressed iTXt), where the
+        # test that names a file (`carries_disclosure`) does not find it; such
+        # a file is marked once more, plainly, so the name and the file agree.
+        if already and source_type.encode("utf-8") in content:
             return content
 
     fmt = (img.format or "PNG").upper()
     entity_metadata = entity_metadata or {}
     description = _build_description(entity_metadata, settings)
+    created = _marking_time(entity_metadata)
     software = settings.get("software_name", "") or ""
 
     if frames > 1:
@@ -400,18 +482,33 @@ def watermark_image_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
 
         out = io.BytesIO()
         if fmt == "PNG":
+            if apply_metadata and not (apply_visible or apply_invisible):
+                # Nothing touched the pixels, so the chunks go in beside the
+                # ones that are there. A re-save through Pillow writes only the
+                # chunks it is handed: it dropped the ComfyUI graph (`prompt`),
+                # the SwarmUI `parameters`, `pHYs` and `eXIf` of every picture
+                # it marked.
+                spliced = _png_with_text(content, (
+                    ("XML:com.adobe.xmp",
+                     _xmp_packet(software, description, source_type=source_type, created=created)),
+                    ("Software", software or "AI4ArtsEd-platform"),
+                    ("Description", description),
+                    ("DigitalSourceType", source_type),
+                ))
+                if spliced is not None:
+                    return spliced
             pnginfo = PngImagePlugin.PngInfo()
             if apply_metadata:
                 pnginfo.add_itxt(
                     "XML:com.adobe.xmp",
-                    _xmp_packet(software, description, source_type=source_type),
+                    _xmp_packet(software, description, source_type=source_type, created=created),
                 )
                 pnginfo.add_text("Software", software or "AI4ArtsEd-platform")
                 pnginfo.add_text("Description", description)
                 pnginfo.add_text("DigitalSourceType", source_type)
             img.save(out, format="PNG", pnginfo=pnginfo, optimize=False)
         elif fmt in ("JPEG", "JPG"):
-            packet = _xmp_packet(software, description, source_type=source_type)
+            packet = _xmp_packet(software, description, source_type=source_type, created=created)
             exif = Image.Exif()
             exif[0x0131] = software or "AI4ArtsEd-platform"  # Software
             exif[0x010E] = description  # ImageDescription
@@ -435,7 +532,7 @@ def watermark_image_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
             save_kwargs = {"format": "WEBP", "lossless": True, "quality": 100}
             if apply_metadata:
                 save_kwargs["xmp"] = _xmp_packet(
-                    software, description, source_type=source_type
+                    software, description, source_type=source_type, created=created
                 ).encode("utf-8")
             img.save(out, **save_kwargs)
         else:
@@ -500,8 +597,12 @@ def watermark_video_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
     software = settings.get("software_name", "") or "AI4ArtsEd-platform"
 
     tmpdir = Path(tempfile.mkdtemp(prefix="watermark_"))
-    in_path = tmpdir / "input.mp4"
-    out_path = tmpdir / "output.mp4"
+    # The container stays what it was: ffmpeg picks the muxer by the extension
+    # of the output, and a WebM written to `output.mp4` came back as MP4 bytes
+    # under the WebM's name.
+    suffix = _video_suffix(content)
+    in_path = tmpdir / f"input{suffix}"
+    out_path = tmpdir / f"output{suffix}"
     try:
         in_path.write_bytes(content)
 
@@ -538,9 +639,11 @@ def watermark_video_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
                 # not know -- which is exactly the one that carries the controlled
                 # vocabulary. Read back, such a file showed only the plain-text
                 # line (standard: "text"). With the flag the key travels in the
-                # udta box and comes back as iptcExt's own value.
-                "-movflags", "use_metadata_tags",
-                "-metadata", f"creation_time={datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+                # udta box and comes back as iptcExt's own value. `faststart`
+                # puts the index back in front, where a browser starts playing
+                # from; the remux would otherwise move it behind the data.
+                *(["-movflags", "use_metadata_tags+faststart"] if suffix in (".mp4", ".mov") else []),
+                "-metadata", f"creation_time={_marking_time(entity_metadata)}",
                 "-metadata", f"description={description}",
                 "-metadata", f"comment={description}",
                 "-metadata", f"encoder={software}",
@@ -569,6 +672,15 @@ def watermark_video_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
             shutil.rmtree(tmpdir, ignore_errors=True)
         except Exception:
             pass
+
+
+def _video_suffix(content: bytes) -> str:
+    """The extension of the container these bytes are, for ffmpeg's choice of muxer."""
+    if content[4:8] == b"ftyp":
+        return ".mov" if content[8:12] == b"qt  " else ".mp4"
+    if content[:4] == b"\x1aE\xdf\xa3":
+        return ".webm" if b"webm" in content[:64] else ".mkv"
+    return ".mp4"
 
 
 def _detect_audio_format(content: bytes) -> Optional[str]:
@@ -616,6 +728,7 @@ def _riff_xmp_bytes(
     software: str,
     description: str,
     source_type: str = DIGITAL_SOURCE_TYPE_AI,
+    created: str = "",
 ) -> bytes:
     """Put the XMP packet into the WAV's own _PMX chunk.
 
@@ -636,7 +749,9 @@ def _riff_xmp_bytes(
     if chunks is None or content[8:12] != b"WAVE":
         return content
 
-    packet = _xmp_packet(software, description, source_type=source_type).encode("utf-8")
+    packet = _xmp_packet(
+        software, description, source_type=source_type, created=created
+    ).encode("utf-8")
     chunk = b"_PMX" + struct.pack("<I", len(packet)) + packet
     if len(packet) % 2:
         chunk += b"\x00"
@@ -702,7 +817,7 @@ def watermark_audio_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
             "-metadata", f"comment={description}",
             "-metadata", f"encoded_by={software}",
             "-metadata", f"DigitalSourceType={_source_type(entity_metadata)}",
-            "-metadata", f"creation_time={datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+            "-metadata", f"creation_time={_marking_time(entity_metadata)}",
             str(out_path),
         ]
         result = subprocess.run(cmd, capture_output=True, timeout=60)
@@ -717,7 +832,8 @@ def watermark_audio_bytes(content: bytes, entity_metadata: Optional[Dict[str, An
             # RIFF INFO has no field for the controlled vocabulary; the packet
             # goes into the chunk the XMP specification provides for it.
             marked = _riff_xmp_bytes(
-                marked, software, description, _source_type(entity_metadata)
+                marked, software, description, _source_type(entity_metadata),
+                _marking_time(entity_metadata),
             )
         return marked
     except subprocess.TimeoutExpired:
@@ -765,7 +881,11 @@ def watermark_media_bytes(
     if kind == "glb":
         return watermark_glb_bytes(content, entity_metadata)
     if kind == "svg":
-        return watermark_svg_bytes(content, entity_metadata)
+        # A drawing only where the entity is one: a Stage-2 text that happens
+        # to be SVG code is a record of the run, not its medium.
+        if _names_a_medium(entity_type):
+            return watermark_svg_bytes(content, entity_metadata)
+        return content
     if kind == "text":
         if entity_type in _CODE_TYPES:
             return watermark_code_bytes(content, entity_type, entity_metadata)
@@ -779,6 +899,87 @@ def watermark_media_bytes(
     if entity_type in _AUDIO_TYPES:
         return watermark_audio_bytes(content, entity_metadata)
     return content
+
+
+#: What a file's name carries when the disclosure is not in its bytes. Rule of
+#: the project lead, 2026-11-14: "ungekennzeichnete Dateien erhalten ein
+#: filename-Suffix _ai_generated". The browser's download helper
+#: (lib/downloadMedia.ts) spells it the same way.
+UNMARKED_SUFFIX = "_ai_generated"
+
+
+def carries_disclosure(content: Any) -> bool:
+    """Whether the AI-Origin Disclosure is in these bytes.
+
+    Every carrier this service writes holds one of the two IPTC values as plain
+    UTF-8: the XMP packet, the PNG text chunk, the container tag, the glTF
+    extras, the SVG metadata, the sketch header. The same test as
+    `_container_already_marked`, for either value.
+    """
+    return disclosed_source_type(content) is not None
+
+
+def disclosed_source_type(content: Any) -> Optional[str]:
+    """The IPTC value these bytes carry, or None (see `carries_disclosure`)."""
+    if not isinstance(content, bytes):
+        return None
+    for value in _KNOWN_SOURCE_TYPES:
+        if value.encode("utf-8") in content:
+            return value
+    return None
+
+
+def is_generated_medium(content: Any, entity_type: str) -> bool:
+    """Whether these bytes are a medium a run produced, i.e. a file the
+    disclosure belongs in.
+
+    Not what a person brought in, and not prompts, records, JSON or latents.
+    MIDI counts although this service writes nothing into it (no writer for
+    its text events exists), and the suffix is what such a file carries instead.
+    """
+    if not isinstance(content, bytes) or _is_user_material(entity_type):
+        return False
+    if "midi" in (entity_type or "").lower():
+        return True
+    kind = _sniff_media_kind(content)
+    if kind in ("image", "video", "audio", "glb"):
+        return True
+    if kind == "svg":
+        return _names_a_medium(entity_type)
+    if kind == "text":
+        head = content[:4096].decode("utf-8", errors="ignore").lstrip()
+        return entity_type in _CODE_TYPES and head[:1] not in ("{", "[")
+    return entity_type in (_IMAGE_TYPES | _VIDEO_TYPES | _AUDIO_TYPES)
+
+
+def _names_a_medium(entity_type: str) -> bool:
+    """Whether the entity's name says it is what the run produced, not a record of it."""
+    name = (entity_type or "").strip().lower()
+    return (name.startswith("output") or name in _CODE_TYPES
+            or name in ("generation", "latent_lab_step") or "midi" in name)
+
+
+def _split_extension(filename: str):
+    head, dot, ext = filename.rpartition(".")
+    if not dot or not head or "/" in ext:
+        return filename, "", ""
+    return head, dot, ext
+
+
+def unmarked_filename(filename: str) -> str:
+    """`filename` with UNMARKED_SUFFIX before its extension, once."""
+    head, dot, ext = _split_extension(filename)
+    if head.endswith(UNMARKED_SUFFIX):
+        return filename
+    return f"{head}{UNMARKED_SUFFIX}{dot}{ext}"
+
+
+def plain_filename(filename: str) -> str:
+    """`filename` without UNMARKED_SUFFIX: the name a file carries once it is marked."""
+    head, dot, ext = _split_extension(filename)
+    if head.endswith(UNMARKED_SUFFIX):
+        return f"{head[:-len(UNMARKED_SUFFIX)]}{dot}{ext}"
+    return filename
 
 
 # Media that travels back to the page as base64 inside a result's metadata.
@@ -1367,7 +1568,8 @@ def watermark_svg_bytes(content: bytes, entity_metadata: Optional[Dict[str, Any]
     block = (
         "\n  <metadata>\n"
         + _xmp_packet(
-            software, description, wrapped=False, source_type=_source_type(entity_metadata)
+            software, description, wrapped=False, source_type=_source_type(entity_metadata),
+            created=_marking_time(entity_metadata),
         )
         + "\n  </metadata>"
     )

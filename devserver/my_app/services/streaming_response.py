@@ -612,8 +612,8 @@ def _pumped(
     Of the sources on this transport, the one that can reach that length in a
     single C call is the SpaCy pass in the Stage-1 gate: a long text through a
     transformer pipeline is one call into compiled code. It is bounded by the
-    length of the text a visitor typed rather than by a model's answer, and it
-    is far under the edge's hundred seconds; the model calls behind every other
+    length of the text a visitor typed, or of a caption an adaption read off
+    the pictures, and it is far under the edge's hundred seconds; the model calls behind every other
     source spend their time in socket reads, which release the GIL. So this is
     a limitation to know about rather than an open window -- and where one
     opens, the fix is in the WORK (a release point inside it), not a second

@@ -272,6 +272,7 @@ export const tr = {
       uiModeEffectStructure: 'Ekrandaki bilgi: kolay teknik göstergeleri gizler, uzman modeli, seed\'i ve parametreleri gösterir.',
       uiModeEffectStyle: 'Görsel yorumlarının üslubu.',
       uiModeNotSafety: 'Bu bir filtre ayarı değildir. Neyin kontrol edilip engelleneceğine aşağıdaki güvenlik düzeyi karar verir.',
+      traditionalChineseZhHant: 'Geleneksel Çince (zh-hant)',
     },
     safety: {
       kidsTitle: 'Çocuklar (8–13)',
@@ -331,15 +332,6 @@ export const tr = {
       storedIn: 'Kayıt yeri',
       currentKey: 'Mevcut',
       keyOf: '{provider} API anahtarı',
-      frontierImageLabel: 'Harici öncü görsel modeli',
-      frontierProviderLabel: 'Sağlayıcı',
-      frontierKeyLabel: 'API anahtarı mevcut',
-      frontierBalanceLabel: 'Mammouth.ai bakiyesi',
-      frontierUsedUp: {
-        account: 'hesap bütçesi tükendi',
-        key: 'bu API anahtarının bütçesi tükendi',
-        team: 'ekip bütçesi tükendi',
-      },
     },
     save: {
       saveApply: 'Kaydet ve Uygula',
@@ -1125,7 +1117,7 @@ export const tr = {
       modelComparison: 'Model Karşılaştırması',
       differentModelsInterpretSame: 'Farklı modeller aynı gürültü görüntüsüne dayanarak aynı promptu yorumlar — yine de tamamen farklı sonuçlar üretirler. Model karşılaştırması, yalnızca promptun değil, modelin kendisinin de belirleyici bir değişken olduğunu görünür kılar.',
       currentTopModels: 'Güncel en iyi modeller',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — doğrudan karşılaştırmada üç güncel model.',
+      sd35Large: 'SD 3.5 Large, Flux 2 ve Flux 3 Klein doğrudan karşılaştırmada.',
       historicalComparison: 'Tarihsel karşılaştırma',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — üç nesil. Görsel üretimi yıldan yıla nasıl değişti?',
       temperatureComparison: 'Sıcaklık Karşılaştırması',
@@ -1921,9 +1913,6 @@ export const tr = {
     working: 'çalışıyor…',
     waiting: 'bekliyor',
     stationFailed: 'bu makine yanıt vermedi',
-    band: {
-      done: 'Dördü de yanıt verdi',
-    },
     ask: {
       sign: 'Soru sor!',
       question: 'Müziğimden gerçekten neyi duyabiliyorsun, ve kaydım şarkıya dönüşürken başına ne geliyor? Burada neyi denemeye değer olduğunu da bilmek isterim.',
@@ -1960,8 +1949,6 @@ export const tr = {
     },
     sung: {
       name: 'Çıktı',
-      note: 'Bu yalnızca duyulabilir, okunamaz. Yazılmış metinle karşılaştırın.',
-      notKept: 'Bu, yalnızca sayfada kaldığınız sürece var olur. Kaydedilemez, favorilere eklenemez veya indirilemez — bu bir yeniden canlandırmadır, bir eser değil.',
       held: 'elle seçildi — çalışacak olan bu',
       madeBy: '{model} tarafından, {s} sn içinde yapıldı',
       pick: 'Model seçimi',
@@ -1985,11 +1972,9 @@ export const tr = {
     },
     purpose: 'Burada iki şey öğrenilebilir: söylenen ya da çalınan bir girdiyle belirli bir çıktıyı kasıtlı olarak tetiklemek ve bunu yaparken kendi ifade araçlarınızla ve algı klişeleriyle karşılaşmak. Ve bir yapay zekânın, sessizlikten başka bir şey olmadığında bile sık sık bir şey uydurduğunu, tamamen farklı kayıtların çoğu zaman çok benzer, klişe sonuçlar ürettiğini keşfetmek.',
     run: {
-      name: 'Başlat',
       start: 'Kaydı dört makineden geçirin',
       took: '{s} sn içinde yanıtladı',
     },
-    stationFailedNamed: '{station} — bu makine yanıt vermedi',
     story: 'Bu, bir yapay zekânın müzikal ve kültürel meseleler hakkında neyi anladığının — ve neyi yanlış anladığının — oyunbaz bir keşfidir. Sayfa mikrofon üzerinden dinler, önce şarkı söylemeyi ve konuşmayı, ardından ses durumlarını ve üslupları tanımaya çalışır ve son olarak onları yeniden kurmaya çalışır: çeviri kayıplarıyla ve yapaylıklarla dolu, çarpıtan bir ayna gibi deneyimlenebilecek bir çeviri zinciri.',
   },
   latentLabOverview: {
@@ -2114,7 +2099,7 @@ export const tr = {
           posNote: '[[token]]ların sıra numaraları',
           ctrlNote: 'bir kontrol [[token]]ı',
           fourNote: 'bir sözcük iki [[token]] olur',
-          langHead: 'Bu platformun on dilindeki aynı cümle, [[token]]lara bölünmüş hâlde:',
+          langHead: 'Bu platformun on dilinde aynı cümle, [[token]]lara bölünmüş hâlde:',
           langs: 'en¦İngilizce¦22\nhe¦İbranice¦25\nes¦İspanyolca¦30\nde¦Almanca¦31\nko¦Korece¦31\nfr¦Fransızca¦35\ntr¦Türkçe¦35\nar¦Arapça¦36\nbg¦Bulgarca¦47\nuk¦Ukraynaca¦56',
           langNote: 'Aynı cümle için yapay zeka modeli Ukraynacada\nİngilizcedekinin iki katından fazla [[token]]a\nihtiyaç duyar.\n“Ev” sözcüğü bu dillerin sekizinde tek bir\n[[token]]dır. Bulgarca ve Ukraynacada\nüç tanedir.',
           embLabel: '[[Gömme]]: her [[token]]a kendi sayı dizisi verilir. Metniniz böylece sayıların içine gömülür.',
@@ -2910,9 +2895,9 @@ export const tr = {
       models: {
         label: 'Modeller',
         small: 'küçük modeller',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1,7B ve 4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1,7B ve 4B',
         large: 'büyük modeller',
-        largeNote: 'OLMo 2 ve 3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — 7 ile 12B arası',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7 ile 14B arası',
         family: 'model ailesi',
         familyNote: 'Qwen ailesinin boyutları, 1,7B ile 14B arası',
         history: 'zaman içinde model',
@@ -3272,6 +3257,7 @@ export const tr = {
       error: 'Bağlantı hatası',
       modelLabel: 'Model',
       defaultModel: 'Varsayılan (Ayarlar)',
+      localModel: 'yerel',
       modelNotDownloaded: '(indirilmedi)',
       temperatureValue: 'T = {v}',
       install: {
@@ -3396,6 +3382,7 @@ export const tr = {
         ko: 'Korece',
         tr: 'Türkçe',
         uk: 'Ukraynaca',
+        'zh-hant': 'Geleneksel Çince',
       },
       piper: {
         voiceLabel: 'Ses',
@@ -3518,8 +3505,8 @@ export const tr = {
     languagesLabel: 'Diller',
     modelNote: {
       noteBody: {
-        current: 'SD 3.5 Large, promptu yakından izlemek ve görselin içine okunaklı yazı koymak için kuruldu (Stability AI 2024, model kartı ve yayın sayfası). Flux 2, aynı karakterin, ürünün ya da üslubun bir kerede on adede kadar referans görsel boyunca korunması için kuruldu. Yayını şunu belirtir: “Karmaşık tipografi, infografikler, memeler ve okunaklı ince metin taşıyan arayüz taslakları artık üretimde güvenilir biçimde çalışıyor.”\n\nGoogle\'ın “Nano Banana Pro” dediği Gemini 3 Pro Image, Google\'ın modeli Gemini 3 Pro üzerine kuruludur. Google\'a göre Gemini 3 Pro Image bir görsel için bir Google Search sorgusundan yararlanabilir; böylece bir hava durumu grafiği güncel bilgi taşıyabilir. Google, görselin içinde birkaç dilde okunaklı metin olduğunu belirtir.',
-        history: 'SD 1.5, görselin pikselleri üzerinde değil, sıkıştırılmış bir temsili üzerinde çalışır. Makalesi, doğrudan piksel üzerinde çalışan bir modelin harcadığı yüzlerce GPU gününe karşı, eğitimi sınırlı hesaplama kaynaklarıyla mümkün kılmayı hedef olarak adlandırır.\n\nSDXL yüksek çözünürlüklü görsel sentezi için kuruldu: üç kat büyük bir görsel ağı, ikinci bir metin kodlayıcı, birkaç en-boy oranı ve kendi makalesinde 2023\'ün kapalı görsel üreteçlerine erişme iddiası. SD 3.5\'in mimarisi üzerine makale şunları adlandırır: “metin kavrayışını, tipografiyi ve insan tercih derecelendirmelerini iyileştirmek”. Tipografi, görselin içindeki yazıdır.',
+        current: 'Stability AI, SD 3.5 Large için promptu yakından izlediğini ve görselin içine yazı koyduğunu vaat eder (2024, model kartı ve yayın sayfası). Flux 2\'nin yayını şunu öne sürer: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nBlack Forest Labs\'in model kartı (2026), Flux 3 Klein\'ın temel özellikleri arasında şunu sayar: “Text rendering within generated images.”',
+        history: 'SD 1.5, görselin pikselleri üzerinde değil, sıkıştırılmış bir temsili üzerinde çalışır. Makalesi, doğrudan piksel üzerinde çalışan bir modelin harcadığı yüzlerce GPU gününe karşı, eğitimi sınırlı hesaplama kaynaklarıyla mümkün kılmayı hedef olarak adlandırır.\n\nSDXL üzerine makale, yüksek çözünürlüklü görsel sentezini hedef olarak adlandırır ve 2023\'ün kapalı görsel üreteçlerine eriştiğini öne sürer. SD 3.5\'in mimarisi üzerine makale şunları adlandırır: “improving text comprehension, typography, and human preference ratings”. Tipografi, görselin içindeki yazıdır.',
       },
       referencesTitle: 'Kaynaklar',
     },
@@ -3528,7 +3515,6 @@ export const tr = {
         sd35_large: 'SD 3.5 Large promptu üç metin kodlayıcısı üzerinden okur: görsel–başlık çiftleri üzerinde eğitilmiş CLIP-L ve CLIP-G (Radford vd. 2021; Cherti vd. 2023), ve yalnızca metin üzerinde eğitilmiş T5-XXL (Raffel vd. 2020). Stability AI\'nin mimari üzerine makalesi (Esser vd. 2024) tasarımı “metin kavrayışını, tipografiyi ve insan tercih derecelendirmelerini iyileştirmek” olarak bildirir. Makalenin değerlendirmesinde tipografi, görselin yazılı metni ne kadar doğru gösterdiğidir.',
         sd35_large_turbo: 'SD 3.5 Large Turbo promptu, SD 3.5 Large ile aynı üç metin kodlayıcısı üzerinden okur: CLIP-L, CLIP-G ve T5-XXL (Stability AI 2024, model kartı). Stability AI\'nin Turbo\'dan istediği şey yayında şöyle durur: “Stable Diffusion 3.5 Large\'ın damıtılmış bir sürümü, yalnızca 4 adımda olağanüstü prompt uyumuyla yüksek kaliteli görseller üretir” (Stability AI 2024, yayın sayfası).',
         flux2: 'Flux 2 promptu bir görme-dil modelinin (VLM) dil modeli üzerinden okur. Black Forest Labs, VLM\'in kattığını şöyle belirtir: “VLM gerçek dünya bilgisi ve bağlamsal kavrayış getirir” (Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image, Google\'ın “Nano Banana Pro” görsel modelidir. Google şunu belirtir: “Gemini 3 Pro üzerine kurulu olan Nano Banana Pro, bilgiyi şimdiye kadar olduğundan daha iyi görselleştirmek için Gemini\'nin en gelişmiş akıl yürütmesini ve gerçek dünya bilgisini kullanır.” (Google 2025).',
       },
       referencesTitle: 'Kaynaklar',
     },

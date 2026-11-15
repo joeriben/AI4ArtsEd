@@ -82,7 +82,7 @@ def test_the_latent_is_written_as_its_own_npy_entity():
     _save_output_latent(
         recorder,
         _result(latent_data=base64.b64encode(payload).decode("ascii"),
-                latent_meta=meta, model_id="a-model/for-this-test"),
+                latent_meta=meta, model_used="a-model/for-this-test"),
         "sd35_large", 42)
 
     assert len(recorder.saved) == 1
@@ -213,7 +213,7 @@ def test_without_the_flag_the_chunk_returns_what_it_always_did(monkeypatch, chun
     assert "keep_latent" not in backend.seen
     assert "latent_sink" not in backend.seen
     assert set(out) == {"content_marker", "image_data", "media_type", "backend",
-                        "model_id", "seed", "parameters"}
+                        "model_used", "seed", "parameters"}
 
 
 @pytest.mark.parametrize("chunk_name", CHUNKS)
@@ -327,7 +327,7 @@ def test_stage_four_carries_the_flag_into_the_chunks_parameters(
 
     seen = _executor_that_records(monkeypatch)
     asyncio.run(execute_stage4_generation_only(
-        prompt="a house", output_config="sd35_large", safety_level="open",
+        prompt="a house", output_config="sd35_large", safety_level="adult",
         run_id="run_for_this_test", seed=1, keep_latent=asked))
 
     assert seen["custom"].get("keep_latent") is expected
@@ -351,9 +351,11 @@ def test_the_direct_route_carries_the_flag_into_the_chunks_parameters(
     recorder_mod._active_recorders.clear()
 
     seen = _executor_that_records(monkeypatch)
+    # At research, where nothing is checked, so that no check is reached: the
+    # check before the model asks a model at every other level.
     _run_direct_workflow(
         {"prompt": "a house", "output_config": "sd35_large", "seed": 1,
-         "keep_latent": asked}, "open")
+         "keep_latent": asked}, "research")
 
     assert seen["custom"].get("keep_latent") is expected
 

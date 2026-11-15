@@ -427,6 +427,8 @@ class GpuGate:
         self._max_waiters = int(getattr(_cfg, "GPU_ADMISSION_MAX_WAITERS", 40))
         self._blind_samples_to_declare = int(getattr(_cfg, "GPU_ADMISSION_BLIND_SAMPLES", 3))
         self._ema_hold_s = float(getattr(_cfg, "GPU_ADMISSION_ASSUMED_RUN_S", 90.0))
+        self._forecast_buffer_share = float(getattr(_cfg, "GPU_ADMISSION_FORECAST_BUFFER_SHARE", 0.25))
+        self._forecast_buffer_min_s = float(getattr(_cfg, "GPU_ADMISSION_FORECAST_BUFFER_MIN_S", 15.0))
         self._affinity_enabled = bool(getattr(_cfg, "GPU_ADMISSION_AFFINITY", True))
         self._affinity_max_overtakes = int(getattr(_cfg, "GPU_ADMISSION_MAX_OVERTAKES", 3))
         self._affinity_max_wait_s = float(getattr(_cfg, "GPU_ADMISSION_AFFINITY_MAX_WAIT_S", 300.0))
@@ -1205,6 +1207,16 @@ class GpuGate:
             est = None
         return None if est is None else float(est)
 
+    def _quoted_s(self, est_s: Optional[float]) -> Optional[float]:
+        """What the running operation is quoted at: its measured duration plus
+        the buffer, a share of it and never less than the floor (config.py,
+        GPU_ADMISSION_FORECAST_BUFFER_*). The countdown runs to this figure,
+        and the wait turns unknown past it rather than the moment the run
+        goes over its measurement (2026-11-02)."""
+        if est_s is None:
+            return None
+        return est_s + max(est_s * self._forecast_buffer_share, self._forecast_buffer_min_s)
+
     def plan(self) -> Dict[str, Any]:
         """The queue as it will actually run, with the wait each place implies.
 
@@ -1222,17 +1234,19 @@ class GpuGate:
 
             # How much of the running operation is still to come. Everything
             # below happens after that, so the replay starts there.
-            # When the running operation has outlived its estimate, nobody
-            # knows when the card frees up — and then nobody knows when anyone
-            # in the queue starts either. That has to travel: a "starts in 0 s"
-            # under a running job whose remaining time reads "unknown" is the
-            # same lie one line further down.
+            # The running operation is quoted at its measurement plus the
+            # buffer (_quoted_s), so the countdown reaches zero only once the
+            # run is past what runs of its kind take. When it has outlived
+            # that, nobody knows when the card frees up — and then nobody
+            # knows when anyone in the queue starts either. That has to
+            # travel: a "starts in 0 s" under a running job whose remaining
+            # time reads "unknown" is the same lie one line further down.
             ahead_s = 0.0
             ahead_known = True
             exp_active = None
             if a is not None:
                 held = now - (a.admitted_at or a.created_at)
-                exp_active = self._expected_hold_s(a, resident)
+                exp_active = self._quoted_s(self._expected_hold_s(a, resident))
                 if exp_active is None:
                     ahead_known = False
                 else:
@@ -1265,6 +1279,8 @@ class GpuGate:
                 for w in pool[:idx]:
                     w.overtaken += 1
                 pool.remove(pick)
+                # At its measurement alone: a margin on every queued run
+                # would stack along the chain.
                 own = self._expected_hold_s(pick, sim_resident)
                 pos += 1
                 real = real_by_id.get(pick.id)
@@ -1301,7 +1317,7 @@ class GpuGate:
                     "id": a.id, "kind": a.kind, "model_id": a.model_id,
                     "label": a.label, "source": a.source,
                     "held_s": round(now - (a.admitted_at or a.created_at), 1),
-                    # None, not 0, once a run has outlived its estimate.
+                    # None, not 0, once a run has outlived its quote.
                     # Reporting 0 tells a whole room "about to start" while a
                     # video that was quoted 10s has been running for 200.
                     "expected_remaining_s": (

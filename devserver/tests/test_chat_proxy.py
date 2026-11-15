@@ -15,7 +15,10 @@ stay in one place. What this file holds the route to:
   - a caller inside ComfyUI's executor ("runs_inside_comfyui") gets a local
     model as the instruction to run it there ("run_in_caller"), since the
     DevServer runs local models BY ComfyUI, one prompt at a time (stage 3 of
-    the move to ComfyUI).
+    the move to ComfyUI);
+  - it answers calls from this machine only, where ComfyUI runs; a call from
+    another machine, or one the Cloudflare tunnel or the Vite server passed on
+    from there (CF-Connecting-IP), is refused before anything is read.
 
 Run: pytest devserver/tests/test_chat_proxy.py -q
 """
@@ -194,6 +197,39 @@ def test_a_local_call_hands_the_picture_beside_the_messages(monkeypatch):
         assert call["images"] == ["QUJD"]
         assert call["messages"] == MESSAGES
         assert all(isinstance(m["content"], str) for m in call["messages"])
+
+
+@pytest.mark.parametrize("address", ["127.0.0.1", "::1"])
+def test_this_machine_is_answered(client, address):
+    r = client.post("/api/chat/proxy", json={"messages": MESSAGES, "model": "platform/CHAT_HELPER_MODEL"},
+                    environ_base={"REMOTE_ADDR": address})
+    assert r.status_code == 200, r.get_json()
+    assert len(client.application.calls) == 1
+
+
+@pytest.mark.parametrize("address, headers", [
+    ("192.168.1.20", {}),
+    ("10.0.0.5", {}),
+    # The Cloudflare tunnel connects from this machine and names the client.
+    ("127.0.0.1", {"CF-Connecting-IP": "203.0.113.7"}),
+    # A client that names this machine itself is still not this machine.
+    ("127.0.0.1", {"CF-Connecting-IP": "127.0.0.1"}),
+], ids=["lan", "other-net", "tunnel", "tunnel-naming-loopback"])
+def test_any_other_caller_is_refused(client, address, headers):
+    r = client.post("/api/chat/proxy", json={"messages": MESSAGES, "model": "platform/CHAT_HELPER_MODEL",
+                                             "image_b64": "QUJD"},
+                    environ_base={"REMOTE_ADDR": address}, headers=headers)
+    assert r.status_code == 403
+    assert r.get_json() == {"error": "this route answers calls from this machine only"}
+    assert client.application.calls == []
+
+
+def test_a_refused_caller_learns_nothing_about_the_request(client):
+    """The address is asked before the body is read: a malformed request from
+    elsewhere is refused as such, not told what was wrong with it."""
+    r = client.post("/api/chat/proxy", json={"model": "platform/NO_SUCH_MODEL"},
+                    environ_base={"REMOTE_ADDR": "192.168.1.20"})
+    assert r.status_code == 403
 
 
 def test_the_request_shape_is_checked(client):

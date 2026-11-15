@@ -3,8 +3,9 @@ The effective safety level: installation setting, tightened by the active course
 
 Two rules are under test, and they are the whole contract:
 
-  ONLY TIGHTEN  a course may lower the level, never raise it. An 'open' course
-                inside a 'kids' installation still runs at 'kids'.
+  ONLY TIGHTEN  a course may lower the level, never raise it. A 'youth' course
+                inside a 'kids' installation still runs at 'kids', and a
+                course without a level of its own runs at the installation's.
   FAIL-SAFE     every uncertain path lands on the STRICTEST level, not on the
                 looser installation value. Unknown level strings, a session
                 bound to a course that no longer exists, a resolver that throws
@@ -12,8 +13,8 @@ Two rules are under test, and they are the whole contract:
 
 Background: until 2026-08-07 the course column was never read at generation
 time (my_app/routes/schema_pipeline_routes.py assigned config.DEFAULT_SAFETY_LEVEL
-directly at eleven places), so a kids course inside an 'open' installation ran
-at 'open'. The policy guard at the bottom keeps that from coming back.
+directly at eleven places), so a kids course ran at the installation's level.
+The policy guard at the bottom keeps that from coming back.
 
 Run: python3 -m pytest devserver/tests/test_safety_level_resolver.py -q
 """
@@ -36,10 +37,11 @@ import pytest
 from flask import Flask
 
 import config
-from my_app.lab.db import Base, engine, SessionLocal
+from my_app.lab.db import Base, engine, SessionLocal, _ensure_course_levels
 from my_app.lab.models import Course
 from my_app.lab.place_codes import course_stamp
 from my_app.services.safety_level_resolver import (
+    COURSE_USES_INSTALLATION,
     STRICTEST,
     SAFETY_LEVELS_STRICTEST_FIRST,
     resolve_safety_level,
@@ -95,16 +97,16 @@ def _resolve(app, base, course_id=None, stamp=_ENTERED):
 
 # --------------------------------------------------------------- only tighten
 def test_no_course_uses_the_installation_setting(app):
-    assert _resolve(app, 'open') == 'open'
+    assert _resolve(app, 'adult') == 'adult'
 
 
 def test_course_tightens(app):
     cid = _course('kids', 'tighten')
-    assert _resolve(app, 'open', cid) == 'kids'
+    assert _resolve(app, 'adult', cid) == 'kids'
 
 
 def test_course_may_not_loosen(app):
-    cid = _course('open', 'loosen')
+    cid = _course('youth', 'loosen')
     assert _resolve(app, 'kids', cid) == 'kids'
 
 
@@ -125,10 +127,42 @@ def test_every_pair_only_tightens(app):
     either input, and never stricter than the stricter of the two."""
     rank = {n: i for i, n in enumerate(SAFETY_LEVELS_STRICTEST_FIRST)}
     for i, base in enumerate(SAFETY_LEVELS_STRICTEST_FIRST):
-        for course_level in ('kids', 'youth', 'open'):
+        for course_level in ('kids', 'youth'):
             cid = _course(course_level, f'pair{i}{course_level}')
             got = _resolve(app, base, cid)
             assert rank[got] == min(rank[base], rank[course_level]), (base, course_level, got)
+
+
+def test_a_course_without_a_level_of_its_own_runs_at_the_installations(app):
+    """At every level of the installation, research included: such a course
+    tightens nothing."""
+    cid = _course(COURSE_USES_INSTALLATION, 'installation')
+    for base in SAFETY_LEVELS_STRICTEST_FIRST:
+        assert _resolve(app, base, cid) == base, base
+
+
+def test_a_course_that_carried_open_runs_at_the_installations_level(app):
+    """The level open is gone (2026-11-01). The start of the lab layer rewrites
+    a course that carried it, whatever the case or spaces, and a course
+    with a level of its own keeps it."""
+    stale = _course(' Open ', 'stale')
+    own = _course('youth', 'own')
+    _ensure_course_levels()
+    db = SessionLocal()
+    assert db.get(Course, stale).safety_level == COURSE_USES_INSTALLATION
+    assert db.get(Course, own).safety_level == 'youth'
+    db.close()
+    assert _resolve(app, 'adult', stale) == 'adult'
+
+
+def test_open_is_no_level_any_more(app):
+    """Where it is still written, it is a value the resolver does not know: the
+    installation and a course that the rewrite has not reached both run at
+    the strictest level."""
+    assert 'open' not in SAFETY_LEVELS_STRICTEST_FIRST
+    assert _resolve(app, 'open') == STRICTEST
+    cid = _course('open', 'unrewritten')
+    assert _resolve(app, 'adult', cid) == STRICTEST
 
 
 # ----------------------------------------------------------------- fail-safe
@@ -145,26 +179,26 @@ def test_none_installation_level_is_strictest(app):
 
 
 def test_session_bound_to_a_missing_course_is_strictest(app):
-    assert _resolve(app, 'open', 999999) == STRICTEST
+    assert _resolve(app, 'adult', 999999) == STRICTEST
 
 
 def test_a_course_made_under_the_id_of_the_session_course_is_strictest(app):
     """SQLite gives the id of the newest course, once deleted, to the next
     course made. The session remembers the moment the course it entered was
     made, and this course was made at another."""
-    cid = _course('open', 'reused')
-    assert _resolve(app, 'open', cid, stamp='2026-01-01T00:00:00+00:00') == STRICTEST
+    cid = _course(COURSE_USES_INSTALLATION, 'reused')
+    assert _resolve(app, 'adult', cid, stamp='2026-01-01T00:00:00+00:00') == STRICTEST
 
 
 def test_a_session_course_without_a_stamp_is_strictest(app):
     """A participant session from before the places remembers no course."""
-    cid = _course('open', 'unstamped')
-    assert _resolve(app, 'open', cid, stamp=None) == STRICTEST
+    cid = _course(COURSE_USES_INSTALLATION, 'unstamped')
+    assert _resolve(app, 'adult', cid, stamp=None) == STRICTEST
 
 
 def test_course_with_an_unknown_level_is_strictest(app):
     cid = _course('erwachsene', 'badlevel')
-    assert _resolve(app, 'open', cid) == STRICTEST
+    assert _resolve(app, 'adult', cid) == STRICTEST
 
 
 def test_a_throwing_resolver_is_strictest(app, monkeypatch):
@@ -212,7 +246,7 @@ def test_a_bare_worker_thread_with_only_an_app_context_is_strictest(app):
     stay caught -- the mark the streamed transport sets is an ADDITION to this
     guard, never a replacement for it."""
     original = config.DEFAULT_SAFETY_LEVEL
-    config.DEFAULT_SAFETY_LEVEL = 'open'
+    config.DEFAULT_SAFETY_LEVEL = 'adult'
     answered = {}
     try:
         def run():
@@ -236,8 +270,8 @@ def test_the_streamed_transports_worker_is_strictest(app, caplog):
     live `_cv_request`. So from 2026-09-04 `has_request_context()` answered True
     on every one of those workers: the fail-safe branch was never entered, no
     warning was written, and the level came back as the installation setting --
-    measured with DEFAULT_SAFETY_LEVEL='open' and no course pinned, `open` where
-    the module's own text promised `kids`.
+    measured with the installation at the level open, which there was then,
+    and no course pinned: `open` where the module's own text promised `kids`.
 
     Driven through `streamed_answer` and not through a thread built here on
     purpose: a hand-built thread is a claim about what the transport does, and
@@ -251,7 +285,7 @@ def test_the_streamed_transports_worker_is_strictest(app, caplog):
     from my_app.services.streaming_response import streamed_answer
 
     original = config.DEFAULT_SAFETY_LEVEL
-    config.DEFAULT_SAFETY_LEVEL = 'open'
+    config.DEFAULT_SAFETY_LEVEL = 'adult'
     answered = {}
     try:
         def work():
@@ -267,7 +301,7 @@ def test_the_streamed_transports_worker_is_strictest(app, caplog):
     finally:
         config.DEFAULT_SAFETY_LEVEL = original
 
-    assert answered['boundary'] == 'open', 'the request thread reads the session'
+    assert answered['boundary'] == 'adult', 'the request thread reads the session'
     assert answered['worker'] == STRICTEST, (
         'the worker read the installation level where it owes the strictest one')
     assert any('worker thread' in r.getMessage() for r in caplog.records), \
@@ -284,7 +318,7 @@ def test_a_mark_that_cannot_be_read_is_strictest(app, monkeypatch):
         raise RuntimeError('the mark could not be read')
 
     monkeypatch.setattr(transport, 'runs_off_the_request_thread', unreadable)
-    assert _resolve(app, 'open') == STRICTEST
+    assert _resolve(app, 'adult') == STRICTEST
 
 
 # ------------------------------------------------- the canvas worker thread
@@ -318,7 +352,7 @@ def test_worker_thread_modules_never_resolve_the_level_themselves():
 
 def test_level_names_are_case_and_space_tolerant(app):
     cid = _course('  KIDS  ', 'sloppy')
-    assert _resolve(app, 'open', cid) == 'kids'
+    assert _resolve(app, 'adult', cid) == 'kids'
 
 
 # --------------------------------------------------------------- policy guard

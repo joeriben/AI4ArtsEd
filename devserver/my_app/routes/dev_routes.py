@@ -1,7 +1,9 @@
 """
 Dev Tools API Routes
-Development-only endpoints for pixel template editor, VRAM monitoring, and other dev tools.
-Only available when DEBUG=True or running on localhost.
+The pixel template editor and the research sweep (the kick-in study). The
+blueprint is registered on every installation. The editor answers on every
+level; every route of the sweep answers at the research level only
+(_refused_below_research).
 """
 from flask import Blueprint, jsonify, request, send_from_directory, abort
 import json
@@ -11,6 +13,8 @@ import shlex
 import subprocess
 import time
 from pathlib import Path
+
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +114,22 @@ def delete_pixel_template(name: str):
 
 
 
+def _refused_below_research(level):
+    """The research sweep's answer to a request below research.
+
+    The sweep sends two prompts to the card as they were typed, past every
+    check of the chain, and its pictures, datasets and states are made of
+    them: what `research` in SAFETY_LEVELS_STRICTEST_FIRST names. Every route
+    of the sweep resolves the level of whoever asks, on the request's own
+    thread (services/safety_level_resolver.py), and answers with this where it
+    is not research, before anything of the request is read: a refused caller
+    learns nothing about the sweep.
+    """
+    return jsonify({"success": False,
+                    "error": f"the research sweep answers at the research level only; "
+                             f"this request is at {level!r}"}), 403
+
+
 KICKIN_BANDS = {
     "flach":  Path("/tmp/kickin_band_flach_iso_s123"),
     "mittel": Path("/tmp/kickin_band_mittel_iso_s123"),
@@ -119,6 +139,9 @@ KICKIN_BANDS = {
 
 @dev_bp.route('/kickin/<band>/<path:filename>', methods=['GET'])
 def kickin_image(band, filename):
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     if band not in KICKIN_BANDS:
         abort(404)
     base = KICKIN_BANDS[band]
@@ -188,6 +211,9 @@ def research_sweep_launch():
     """Spawn a kickin sweep (per-block, cumulative, or both) as a detached
     subprocess. Output streams to a log file under /tmp.
     """
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     data = request.get_json()
     if not data:
         return jsonify({"success": False, "error": "JSON body required"}), 400
@@ -257,6 +283,9 @@ def research_sweep_launch():
 @dev_bp.route('/kickin-research/datasets', methods=['GET'])
 def kickin_datasets():
     """List all kickin research datasets with their metadata."""
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     datasets = []
     if KICKIN_RESEARCH_BASE.exists():
         for child in sorted(KICKIN_RESEARCH_BASE.iterdir()):
@@ -271,6 +300,9 @@ def kickin_datasets():
 
 @dev_bp.route('/kickin-research/<ds_id>/perblock/status', methods=['GET'])
 def kickin_perblock_status(ds_id):
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     if not _safe_dataset_id(ds_id):
         abort(400)
     base = _dataset_dir(ds_id) / "perblock"
@@ -287,6 +319,9 @@ def kickin_perblock_status(ds_id):
 
 @dev_bp.route('/kickin-research/<ds_id>/perblock/<int:block>/<path:filename>', methods=['GET'])
 def kickin_perblock_image(ds_id, block, filename):
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     if not _safe_dataset_id(ds_id):
         abort(400)
     if block < 0 or block >= PERBLOCK_NUM_BLOCKS:
@@ -301,6 +336,9 @@ def kickin_perblock_image(ds_id, block, filename):
 
 @dev_bp.route('/kickin-research/<ds_id>/cumulative/status', methods=['GET'])
 def kickin_cumulative_status(ds_id):
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     if not _safe_dataset_id(ds_id):
         abort(400)
     base = _dataset_dir(ds_id) / "cumulative"
@@ -317,6 +355,9 @@ def kickin_cumulative_status(ds_id):
 
 @dev_bp.route('/kickin-research/<ds_id>/cumulative/<int:upto>/<path:filename>', methods=['GET'])
 def kickin_cumulative_image(ds_id, upto, filename):
+    level = resolve_safety_level()
+    if level != "research":
+        return _refused_below_research(level)
     if not _safe_dataset_id(ds_id):
         abort(400)
     if upto < 0 or upto >= PERBLOCK_NUM_BLOCKS:

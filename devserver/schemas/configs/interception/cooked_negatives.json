@@ -11,7 +11,8 @@
     "es": "Cooked Film",
     "he": "Cooked Film",
     "ar": "Cooked Film",
-    "bg": "Cooked Film"
+    "bg": "Cooked Film",
+    "zh-hant": "煮過的底片"
   },
   "description": {
     "en": "Transforms ideas into the appearance of film negatives that have distorted by cooking for artistic purposes.",
@@ -22,6 +23,7 @@
     "he": "ממיר רעיונות למראה נגטיבים פוטוגרפיים שעוּוּתו על ידי בישול למטרות אמנותיות.",
     "ar": "يحوّل الأفكار إلى مظهر السلبيات الفوتوغرافية التي شُوِّهت بالطهي لأغراض فنية.",
     "bg": "Превръща идеите в изгледа на филмови негативи, изкривени чрез варене за художествени цели.",
+    "zh-hant": "將想法轉化為底片負片的樣貌：這些負片為了藝術目的被煮過而變形。",
     "tr": "Fikirleri sanatsal amaçlarla pişirme yoluyla bozulmuş film negatiflerinin görünümüne dönüştürür.",
     "ko": "아이디어를 예술적 목적으로 가열하여 변형된 필름 네거티브의 외관으로 변환합니다."
   },
@@ -31,6 +33,7 @@
     "he": "צילום ומדיה",
     "ar": "التصوير والإعلام",
     "bg": "Фотография и медии",
+    "zh-hant": "攝影與媒體",
     "tr": "Fotoğraf & Medya",
     "ko": "사진 & 미디어",
     "uk": "Фотографія та медіа",

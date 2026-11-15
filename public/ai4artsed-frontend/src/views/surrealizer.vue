@@ -131,7 +131,7 @@
                its floor (see .ef-tokens). Only taking something out of this
                column would buy that back, and everything in it prepares the
                run. -->
-          <section class="ef-set col-fold-host" :class="{ folded }">
+          <section class="cmp-column ef-set col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The combination Model Bias sets (views/compare/model_comparison.vue):
@@ -358,6 +358,24 @@
                 </div>
               </details>
             </div>
+
+            <!-- The explanation box at the foot of the setting column, the
+                 platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+                 heading is the menu title of this surface, its text is
+                 `surrealizer.noteBody`, cut into paragraphs at the blank line,
+                 and the paper it cites stands under it in LabReferences. -->
+            <aside class="lab-note">
+              <h3>{{ t('latentLab.imageLab.tabs.fusion.label') }}</h3>
+              <p
+                v-for="(para, i) in t('surrealizer.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                :title="t('surrealizer.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
+            </aside>
           </section>
 
           <!-- What came out, and the record of the run under it. It filled the
@@ -444,6 +462,7 @@ import MediaInputBox from '@/components/MediaInputBox.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import { usePromptPresets } from '@/lib/promptPresets'
 import SeedControl from '@/components/SeedControl.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import { useSeedAutomatic, STANDARD_SEED } from '@/composables/useSeedAutomatic'
 import ConditioningTable from '@/components/ConditioningTable.vue'
 import ChipSelect, { type ChipOption } from '@/components/ChipSelect.vue'
@@ -470,8 +489,13 @@ import {
   type Pooled,
   type T5Rows,
 } from '@/lib/fusionSetting'
-import { blockedReason, safetyBlockKey } from '@/composables/useGenerationStream'
-import { generationErrorFor as labErrorText, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import { safetyBlockMessageKey, safetyBlockOf } from '@/composables/useGenerationStream'
+import {
+  generationErrorFor as labErrorText,
+  interceptPrompt,
+  perspectiveFailureText,
+  refusalKeyOf,
+} from '@/composables/useLabRun'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useLatentLabRecorder, type InstrumentRun } from '@/composables/useLatentLabRecorder'
 import { useInstrumentRuns } from '@/composables/useInstrumentRuns'
@@ -485,6 +509,32 @@ import type { PageContext, FocusHint } from '@/composables/usePageContext'
 // ============================================================================
 
 const { t, locale } = useI18n()
+
+/**
+ * The titles the explanation box cites: Esser et al., section 5.3.3 for the
+ * quotation and section 4 for the modulation; Radford et al. and Raffel et al.
+ * for what the CLIP encoders and T5 were trained on.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Esser et al. (2024)',
+    title: '"Scaling Rectified Flow Transformers for High-Resolution Image Synthesis"',
+    venue: 'ICML 2024',
+    doi: 'https://doi.org/10.48550/arXiv.2403.03206',
+  },
+  {
+    authors: 'Radford et al. (2021)',
+    title: '"Learning Transferable Visual Models From Natural Language Supervision"',
+    venue: 'ICML 2021, PMLR 139, 8748–8763',
+    doi: 'https://arxiv.org/abs/2103.00020',
+  },
+  {
+    authors: 'Raffel et al. (2020)',
+    title: '"Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"',
+    venue: 'JMLR 21(140), 1–67',
+    doi: 'https://arxiv.org/abs/1910.10683',
+  },
+]
 
 /**
  * The reasons a run did not come back, in the reader's language
@@ -1010,6 +1060,12 @@ async function fetchTokenRows(text: string) {
   } catch (error: any) {
     if (ask !== tokenAsk) return
     tokenRows.value = null
+    // A prompt the intake refused is said on this line, in the reader's
+    // language, and not in the safety window: the rows follow the typing, and
+    // the window would get a new message at every pause. Generating checks the
+    // prompt again and says it there.
+    const refusal = refusalKeyOf(error)
+    if (refusal) { tokenError.value = t(refusal); return }
     // The cause travels with the status. The DevServer writes it into `error`
     // (503 „Nothing answers where ComfyUI should be" when ComfyUI is down);
     // where no answer came at all, the message is the cause.
@@ -1169,8 +1225,9 @@ async function executeWorkflow() {
       cfg: cfgScale.value,
     })
 
-    // Lab Architecture: /legacy = Stage 1 (Safety) + Direct ComfyUI workflow
-    // No Stage 2/3 needed - legacy workflows handle prompt directly
+    // Lab Architecture: /pipeline/direct = the intake, the check before the
+    // model, the workflow, the check at the result. No Stage 2 - the workflow
+    // handles the prompt directly
     const response = await postDirectRun({
       prompt: sent.prompt,
       output_config: OUTPUT_CONFIG,
@@ -1247,9 +1304,9 @@ async function executeWorkflow() {
       }
     } else {
       clearInterval(progressInterval)
-      const blockedBody = blockedReason(response.data)
-      generationErrorMessage.value = blockedBody
-        ? t(safetyBlockKey(blockedBody, response.data.stage))
+      const block = safetyBlockOf(response.data)
+      generationErrorMessage.value = block
+        ? t(safetyBlockMessageKey(block))
         : generationErrorFor(response.data.error || '')
     }
   } catch (error: any) {
@@ -1257,9 +1314,9 @@ async function executeWorkflow() {
     console.error('[Surrealizer] Execution error:', error)
     // A blocked run is read as what it is and said in the reader's language;
     // the backend's own sentence is German and stays behind the classification.
-    const blocked = blockedReason(error)
-    if (blocked) {
-      generationErrorMessage.value = t(safetyBlockKey(blocked, error.response?.data?.stage))
+    const block = safetyBlockOf(error)
+    if (block) {
+      generationErrorMessage.value = t(safetyBlockMessageKey(block))
     } else {
       const errorMsg = error.response?.data?.error || error.message || ''
       generationErrorMessage.value = generationErrorFor(errorMsg)
@@ -1649,9 +1706,10 @@ const folded = ref(false)
 }
 
 /* The named points as fields (components/ChipSelect.vue), two to a row: the
-   longest name, „Surrealization 35", does not fit three to the 303 px of the
-   reference device's column. The lit field is the accent, the same green the
-   Standard button had (green is for what is meant). */
+   longest name, „Surrealization 35", does not fit three to the 277 px the
+   column box leaves of the reference device's 303 px column. The lit field is
+   the accent, the same green the Standard button had (green is for what is
+   meant). */
 .ef-presets {
   flex: 0 0 auto;
   margin-bottom: 6px;
@@ -1716,12 +1774,14 @@ const folded = ref(false)
    that. 150 px is the head and four rows: the column of the reference device
    (603 px at 1210 x 834) is over-full with the field, the drawing and the
    three axes alone, so the floor decides how much of the table stands on the
-   screen once the column is scrolled to its foot. */
+   screen once the column is scrolled to its foot. The rule over the table
+   stands one step above the column's ground, which is `--surface-2` since the
+   column box of 2026-11-07; at `--surface-2` it vanished into it. */
 .ef-tokens {
   flex: 1 1 auto;
   min-height: 150px;
   overflow: auto;
-  border-top: 1px solid var(--surface-2);
+  border-top: 1px solid var(--surface-3);
   padding-top: 6px;
 }
 
@@ -1816,6 +1876,10 @@ const folded = ref(false)
      stands directly under the token table. */
   margin-top: 0;
 }
+
+/* The explanation box keeps its own height; the column scrolls past it. */
+.lab-note { flex: 0 0 auto; }
+
 .ef-err {
   margin: 0;
   font-size: var(--flow-fs-hint);

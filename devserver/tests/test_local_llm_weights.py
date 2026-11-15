@@ -50,6 +50,7 @@ def test_every_entry_carries_what_the_readers_read():
         assert e.get("display_name"), f"{alias}: no display_name"
         assert isinstance(e.get("chat_capable"), bool), f"{alias}: chat_capable is not a bool"
         assert isinstance(e.get("vision"), bool), f"{alias}: vision is not a bool"
+        assert isinstance(e.get("offered", True), bool), f"{alias}: offered is not a bool"
         assert isinstance(e.get("size_gb"), (int, float)) and e["size_gb"] > 0, f"{alias}: no size_gb"
         for key in ("ignore", "requires"):
             if key in e:
@@ -149,6 +150,30 @@ def test_resolution_and_listing_shape():
     assert isinstance(row["available"], bool)
     assert all(m["chat_capable"] for m in w.chat_models())
     assert all(m["vision"] for m in w.vision_models())
+    # A model made for writing code is not offered as a language model, and
+    # stays in the table and among the readers an image read is routed by
+    # (the list of readers leaves it out: test_the_list_of_readers_...).
+    assert "devstral:24b" in {m["id"] for m in w.listing()}
+    assert "devstral:24b" not in {m["id"] for m in w.chat_models()}
+    assert "devstral:24b" in {m["id"] for m in w.vision_models()}
+    assert not next(m for m in w.listing() if m["id"] == "devstral:24b")["offered"]
+
+
+def test_the_list_of_readers_leaves_out_what_the_table_does_not_offer(monkeypatch):
+    from flask import Flask
+    from my_app.services import local_llm_weights as w
+    from my_app.routes import chat_routes
+    from my_app.services import llm_backend
+
+    class Backend:
+        def vlm_models(self):
+            return [m for m in w.listing() if m["vision"]]
+
+    monkeypatch.setattr(llm_backend, "get_llm_backend", lambda: Backend())
+    with Flask(__name__).app_context():
+        ids = {m["id"] for m in chat_routes.chat_vlm_models().get_json()["models"]}
+    assert "local/devstral:24b" not in ids
+    assert "local/qwen3-vl:8b" in ids
 
 
 def test_installed_means_a_whole_snapshot(tmp_path, monkeypatch):

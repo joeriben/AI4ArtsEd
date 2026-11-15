@@ -59,7 +59,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <template v-if="!folded">
@@ -106,7 +106,7 @@
             <ChipSelect
               :model-value="chosenImageModel"
               :options="imageChoices"
-              :min-width="145"
+              :min-width="134"
               :disabled="series.busy.value"
               @update:model-value="v => (chosenImageModel = v as string)"
             />
@@ -200,6 +200,14 @@ import {
 import { useModelRegister } from '@/composables/useModelRegister'
 
 const { t, locale } = useI18n()
+
+/**
+ * The language the rows are keyed by. It follows the header while no run is
+ * under way (the watch under the series, below): one switched while a run
+ * writes would move every row to keys the run writes nothing under, and the
+ * texts would drop out of it -- no picture would be computed for them.
+ */
+const localeInForce = ref(locale.value)
 
 /**
  * What is measured about wording. Palmini and Cetinic compare prompt groups on a
@@ -451,7 +459,7 @@ const rows = computed<PerspectiveRow[]>(() => {
     // (`user_language`), so a row written in one language is not the same work
     // as the same row in another. The writing model is the platform's own and
     // stands in no key, because this surface never varies it.
-    const key = `${p.configId}|${locale.value}|${line}`
+    const key = `${p.configId}|${localeInForce.value}|${line}`
     const r = series.results.value[key]
     out.push({
       key,
@@ -495,6 +503,10 @@ const series = useInterceptionSeries({
           template_frame: templateOrigin.value.frame,
         }
       : {},
+})
+
+watch([locale, () => series.busy.value], () => {
+  if (!series.busy.value) localeInForce.value = locale.value
 })
 
 /** The one image model, as the run hands it over. */

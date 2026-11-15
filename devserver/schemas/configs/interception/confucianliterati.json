@@ -11,7 +11,8 @@
     "es": "Literati",
     "he": "ליטרטי",
     "ar": "الأدباء الكونفوشيوسيون",
-    "bg": "Литерати"
+    "bg": "Литерати",
+    "zh-hant": "文人"
   },
   "description": {
     "en": "Critical examination tool: Tests how AI handles complex cultural knowledge. Reveals AI's limitations in understanding Confucian literati culture - not for authentic representation, but to critically investigate how generative AI deals with cultural specifics.",
@@ -22,6 +23,7 @@
     "he": "כלי בחינה ביקורתי: בוחן כיצד AI מתמודד עם ידע תרבותי מורכב. חושף את מגבלות ה-AI בהבנת תרבות הסופרים הקונפוציאנית — לא לייצוג אותנטי, אלא לחקירה ביקורתית כיצד AI גנרטיבי מתמודד עם ספציפיות תרבותית.",
     "ar": "أداة فحص نقدي: تختبر كيف يتعامل الذكاء الاصطناعي مع المعرفة الثقافية المعقدة. تكشف عن قيود الذكاء الاصطناعي في فهم ثقافة الأدباء الكونفوشيوسيين — ليس للتمثيل الأصيل، بل للتحقيق النقدي في كيفية تعامل الذكاء الاصطناعي التوليدي مع الخصوصيات الثقافية.",
     "bg": "Инструмент за критично изследване: тества как ИИ се справя със сложно културно знание. Разкрива ограниченията на ИИ в разбирането на конфуцианската литератска култура — не за автентично представяне, а за критично изследване как генеративният ИИ се справя с културните специфики.",
+    "zh-hant": "批判性檢視工具：測試 AI 如何處理複雜的文化知識。揭示 AI 在理解儒家文人文化上的侷限——目的不是真實地呈現，而是批判地探究生成式 AI 如何處理文化的特殊性。",
     "tr": "Eleştirel inceleme aracı: Yapay zekanın karmaşık kültürel bilgiyle nasıl başa çıktığını test eder. YZ'nin Konfüçyüs literati kültürünü anlama konusundaki sınırlamalarını ortaya çıkarır — özgün temsil için değil, üretici YZ'nin kültürel özellikleri nasıl ele aldığını eleştirel biçimde araştırmak için.",
     "ko": "비판적 검토 도구: AI가 복잡한 문화 지식을 어떻게 처리하는지 테스트합니다. 유교 문인 문화에 대한 AI의 한계를 드러냅니다 — 진정한 표현을 위해서가 아니라, 생성 AI가 문화적 특수성을 어떻게 다루는지 비판적으로 탐구하기 위해서입니다."
   },
@@ -31,6 +33,7 @@
     "he": "היסטוריית האמנות",
     "ar": "تاريخ الفن",
     "bg": "История на изкуството",
+    "zh-hant": "藝術史",
     "tr": "Sanat Tarihi",
     "ko": "미술사",
     "uk": "Історія мистецтва",

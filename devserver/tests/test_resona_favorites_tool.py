@@ -57,6 +57,7 @@ def _fav(run_id: str, media_type: str = "image", note: str = "", added: str = "2
         "media_type": media_type,
         "user_id": "anonymous",
         "user_note": note,
+        "note_level": "kids",
     }
 
 
@@ -72,7 +73,8 @@ class _FakeRecorder:
         if transformed:
             entities.append({"type": "interception", "filename": "interception.txt"})
             (folder / "interception.txt").write_text(transformed, encoding="utf-8")
-        self.metadata = {"config_name": config_name, "entities": entities}
+        self.metadata = {"config_name": config_name, "entities": entities,
+                         "safety_level": "kids"}
 
 
 @pytest.fixture()
@@ -148,8 +150,10 @@ def test_lists_text_traces_most_recent_first(storage, fake_recorders):
 
 
 def test_missing_run_data_still_listed(storage, fake_recorders):
+    """Above youth: below it a run that is gone answers for no level
+    (safety_gate.run_opens_at) and its favourite is not listed."""
     _write_favorites(storage, [_fav("run_gone")])
-    result = _execute({})
+    result = get_tool_registry().execute("lookup_shared_favorites", {}, level="adult")
     assert "1 kept in total, showing 1" in result
     assert "run data no longer on disk" in result
 

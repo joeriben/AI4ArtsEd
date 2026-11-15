@@ -12,8 +12,8 @@ import type { MediumId } from './useMediumInference'
  * devserver/schemas/configs/output/).
  *
  * The medium is inferred upstream from the (transformed) text. An *inferred*
- * medium may be clamped here: two or more images force `image`, because the sole
- * multi-image pipeline (qwen_2511_multi) is image-out. A medium picked by hand is
+ * medium may be clamped here: two or more images force `image`, because the
+ * multi-image pipelines (qwen_2511_multi, flux3_multi) are image-out. A medium picked by hand is
  * clamped in one case only — 3d without a picture, which has no path at all —
  * and material the chosen route cannot consume is READ INTO WORDS by the caller
  * (x2x_flow's readIntoWordsIds, marked "Tt") rather than silently dropped: its
@@ -36,6 +36,7 @@ import type { MediumId } from './useMediumInference'
 const I2I_IMAGE = 'qwen_img2img' // 1 image → image (Qwen Image Edit Lightning)
 const I2V_VIDEO = 'wan22_i2v_video' // 1 image → 5s video (WAN 2.2 i2v)
 const MI2X_MULTI = 'qwen_2511_multi' // 1–3 images → image (fusion); backend prunes unused slots
+const MI2X_FLUX3 = 'flux3_multi' // 1–10 references → image; backend prunes unused slots
 const I2_3D = 'hunyuan3d_text_to_3d' // 1 image → textured GLB mesh (Hunyuan3D-2)
 
 /** How the consumed images are handed to the pipeline. */
@@ -69,6 +70,16 @@ export interface RouteSpec {
   maxImages: number
   imageParam: ImageParam
   /**
+   * The route automatic routing takes for this medium when images are in play.
+   * One per medium. Every other route of the medium is reached by hand.
+   */
+  standard?: boolean
+  /**
+   * The adaption of this model reads the pictures: they go to it with the text,
+   * and a run whose adaption failed ends there with the cause.
+   */
+  adaptionReadsPictures?: boolean
+  /**
    * There is no other way to this medium. Reached with too few pictures, this
    * route does NOT give way to automatic routing — the run makes the picture it
    * needs and then dispatches this: an SD3.5 image is generated as the natural
@@ -86,8 +97,9 @@ export const IMAGE_INPUT_ROUTES: RouteSpec[] = [
   // combine the images"), so a one-image run is handed "merge these pictures"
   // for a board holding one.
   { id: MI2X_MULTI, label: 'Qwen Multi', medium: 'image', minImages: 2, maxImages: 3, imageParam: 'multi' },
-  { id: I2V_VIDEO, label: 'Wan i2v', medium: 'video', minImages: 1, maxImages: 1, imageParam: 'single' },
-  { id: I2_3D, label: 'Hunyuan3D', medium: '3d', minImages: 1, maxImages: 1, imageParam: 'single', noOtherPath: true },
+  { id: MI2X_FLUX3, label: 'Flux 3 Multi', medium: 'image', minImages: 1, maxImages: 10, imageParam: 'multi', standard: true, adaptionReadsPictures: true },
+  { id: I2V_VIDEO, label: 'Wan i2v', medium: 'video', minImages: 1, maxImages: 1, imageParam: 'single', standard: true },
+  { id: I2_3D, label: 'Hunyuan3D', medium: '3d', minImages: 1, maxImages: 1, imageParam: 'single', noOtherPath: true, standard: true },
 ]
 
 const ROUTE_BY_ID = new Map(IMAGE_INPUT_ROUTES.map((r) => [r.id, r]))
@@ -97,13 +109,9 @@ export function imageInputRoute(id: string): RouteSpec | undefined {
   return ROUTE_BY_ID.get(id)
 }
 
-/**
- * The one-image route a medium has, if it has one. The fusion route is not one
- * of these: what two or more images reach is a different decision, taken
- * further down, and putting it here would make it the answer for one image too.
- */
-const SINGLE_IMAGE_ROUTE = new Map(
-  IMAGE_INPUT_ROUTES.filter((r) => r.maxImages === 1).map((r) => [r.medium, r])
+/** The route a medium takes for images, if it has one. */
+const STANDARD_ROUTE = new Map(
+  IMAGE_INPUT_ROUTES.filter((r) => r.standard).map((r) => [r.medium, r])
 )
 
 /** Short display labels for route configs not present in configsByMedium. */
@@ -116,7 +124,7 @@ export interface MaterialRoute {
   outputConfigId: string
   /** Medium after clamping (≥2 images ⇒ image). */
   medium: MediumId
-  /** How many images this route consumes (0, 1, or up to 3). */
+  /** How many images this route consumes (0, 1, or up to the route's maxImages). */
   maxImages: number
   /** How to send the consumed images. */
   imageParam: ImageParam
@@ -184,7 +192,7 @@ export function resolveRoute({
 
   // Exactly one image → image-conditioned, if the medium has an i-path.
   if (imageCount === 1) {
-    const spec = SINGLE_IMAGE_ROUTE.get(medium)
+    const spec = STANDARD_ROUTE.get(medium)
     if (spec) {
       return { outputConfigId: spec.id, medium, maxImages: 1, imageParam: spec.imageParam }
     }
@@ -196,13 +204,19 @@ export function resolveRoute({
   // by clamping the medium to `image`. A hand-picked medium forbids that: it
   // holds, takes what its own path can consume, and the rest becomes surplus.
   if (mediumPinned && medium !== 'image') {
-    const spec = SINGLE_IMAGE_ROUTE.get(medium)
+    const spec = STANDARD_ROUTE.get(medium)
     if (spec) {
       return { outputConfigId: spec.id, medium, maxImages: 1, imageParam: spec.imageParam }
     }
     return { outputConfigId: t2xConfigId, medium, maxImages: 0, imageParam: 'none' }
   }
 
-  // Backend consumes input_image1/2/3 and prunes unused slots (≤3).
-  return { outputConfigId: MI2X_MULTI, medium: 'image', maxImages: 3, imageParam: 'multi' }
+  // The backend prunes the unused slots.
+  const multi = STANDARD_ROUTE.get('image')!
+  return {
+    outputConfigId: multi.id,
+    medium: 'image',
+    maxImages: Math.min(multi.maxImages, imageCount),
+    imageParam: multi.imageParam,
+  }
 }

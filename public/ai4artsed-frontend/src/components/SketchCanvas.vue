@@ -123,7 +123,7 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
-import { uploadImageFile, quickImageSafetyCheck } from '@/composables/useMaterialIntake'
+import { uploadCheckedImage } from '@/composables/useMaterialIntake'
 
 const { t } = useI18n()
 const safetyStore = useSafetyEventStore()
@@ -326,19 +326,16 @@ async function submitSketch() {
       return
     }
 
-    const up = await uploadImageFile(new File([blob], 'sketch.png', { type: 'image/png' }))
-
-    // VLM safety check (same shared path as the board intake)
-    const safety = await quickImageSafetyCheck(up.path)
-    if (!safety.safe) {
-      safetyStore.reportBlock(
-        'vlm_input',
-        safety.errorMessage || '',
-        [],
-        safety.vlmDescription,
+    // The platform's intake of a picture, the same shared path as the board
+    // intake: checked where it comes in, the verdict read once more.
+    const { up, safety } = await uploadCheckedImage(
+      new File([blob], 'sketch.png', { type: 'image/png' }))
+    if (!up || !safety.safe) {
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
         // Whether the check judged the drawing or could not run at all.
-        safety.operational,
-      )
+        operational: safety.operational,
+      })
       isUploading.value = false
       return
     }

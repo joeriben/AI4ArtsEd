@@ -26,10 +26,10 @@ afterEach(() => {
 })
 
 /** The route's answer, in the transport this client speaks. */
-function streamed(body: unknown): Response {
+function streamed(body: unknown, status = 200): Response {
   const frames = [
     ': heartbeat\n\n',
-    'event: complete\ndata: ' + JSON.stringify({ http_status: 200, body }) + '\n\n',
+    'event: complete\ndata: ' + JSON.stringify({ http_status: status, body }) + '\n\n',
   ]
   const encoder = new TextEncoder()
   let i = 0
@@ -49,6 +49,9 @@ function streamed(body: unknown): Response {
     },
   } as unknown as Response
 }
+
+/** The block message of the route's refusal (`safety_block`). */
+const REFUSED = { checkpoint: 'intake', field: 'text', reason_key: 'content', reason: 'nicht freigegeben' }
 
 function field(value = 'ein satz über ein haus') {
   return mount(MediaInputBox, {
@@ -83,14 +86,14 @@ describe('MediaInputBox — the text check at the field', () => {
 
   it('takes the text and states the reason when the check refused it', async () => {
     fetchMock.mockResolvedValueOnce(
-      streamed({ safe: false, error_message: 'Kids-Filter: nicht freigegeben' })
+      streamed({ safe: false, error_message: 'nicht freigegeben', safety_block: REFUSED })
     )
     const w = field()
     await (w.vm as any).checkSafety()
     expect(w.emitted('update:value')?.[0]).toEqual([''])
-    const block = useSafetyEventStore().pendingBlock
-    expect(block?.reason).toBe('Kids-Filter: nicht freigegeben')
-    expect(block?.operational).toBe(false)
+    const event = useSafetyEventStore().pendingBlock
+    expect(event?.block).toEqual(REFUSED)
+    expect(event?.operational).toBe(false)
     w.unmount()
   })
 
@@ -109,8 +112,8 @@ describe('MediaInputBox — the text check at the field', () => {
   })
 
   it('translates only what the check has passed', async () => {
-    // The translate route runs no check of its own, so this button is a way out
-    // of the box. It asks for a verdict where none stands, and stops where the
+    // This button is a way out of the box, and the field's own check comes
+    // first. It asks for a verdict where none stands, and stops where the
     // answer holds the text back.
     fetchMock.mockResolvedValueOnce(
       streamed({ safe: false, error_message: 'Kids-Filter: nicht freigegeben' })
@@ -133,6 +136,23 @@ describe('MediaInputBox — the text check at the field', () => {
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(fetchMock.mock.calls.map(c => String(c[0])).some(u => u.includes('/pipeline/translate')))
       .toBe(true)
+    w.unmount()
+  })
+
+  it('says a refusal by the translate route and keeps what was written', async () => {
+    // The route checks the text before its model gets it and the translation
+    // before it comes back. Either refusal is said by the companion, and the
+    // field keeps the text, which the field's own check had passed.
+    const WITHHELD = {
+      checkpoint: 'result', field: 'translated_text', reason_key: 'content', reason: 'withheld',
+    }
+    fetchMock
+      .mockResolvedValueOnce(streamed({ safe: true, checks_passed: [] }))
+      .mockResolvedValueOnce(streamed({ status: 'blocked', safety_block: WITHHELD }, 403))
+    const w = field('ein haus')
+    await w.find('.translate-btn').trigger('click')
+    await vi.waitFor(() => expect(useSafetyEventStore().pendingBlock?.block).toEqual(WITHHELD))
+    expect(w.emitted('update:value')).toBeUndefined()
     w.unmount()
   })
 })

@@ -81,7 +81,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The platform's standard pair, twice over: the drop-down offers
@@ -177,8 +177,13 @@
             <!-- Ohne Text kein Kasten: eine Ueberschrift ueber nichts sieht aus
                  wie ein Fehler. -->
             <aside v-if="noteText" class="lab-note">
-              <h3>{{ t('latentLab.imageLab.tabs.census.label') }}</h3>
+              <h3>{{ t('compare.tabs.census') }}</h3>
               <p>{{ noteText }}</p>
+              <LabReferences
+                :title="t('latentLab.census.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
             </aside>
           </section>
 
@@ -257,16 +262,18 @@ import ColumnFold from '@/components/ColumnFold.vue'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePageContextStore } from '@/stores/pageContext'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 import type { PageContext } from '@/composables/usePageContext'
 import { postDirectRun, postStreamedRun, serverSentence } from '@/services/directRun'
 import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
-import { failureKey } from '@/composables/useGenerationStream'
+import { failureKey, safetyBlockOf } from '@/composables/useGenerationStream'
 import ShellRun from '@/components/ShellRun.vue'
 import ChipSelect from '@/components/ChipSelect.vue'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import MediaGridCell from '@/components/MediaGridCell.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import { useAppClipboard } from '@/composables/useAppClipboard'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useGridCellWidth } from '@/composables/useGridCellWidth'
@@ -283,6 +290,31 @@ import { useModelRegister } from '@/composables/useModelRegister'
 import { STANDARD_SEED } from '@/composables/useSeedAutomatic'
 import { apiBase } from '@/services/labApi'
 const { t, locale } = useI18n()
+
+/**
+ * The titles the explanation box cites: the seasons measurement, the
+ * CULTURALFRAMES benchmark, and the source of the six emotions in the list.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Shin et al. (2024)',
+    title: '"Can Prompt Modifiers Control Bias? A Comparative Analysis of Text-to-Image Generative Models"',
+    venue: 'arXiv:2406.05602',
+    doi: 'https://arxiv.org/abs/2406.05602',
+  },
+  {
+    authors: 'Nayak et al. (2025)',
+    title: '"CulturalFrames: Assessing Cultural Expectation Alignment in Text-to-Image Models and Evaluation Metrics"',
+    venue: 'Findings of EMNLP 2025',
+    doi: 'https://arxiv.org/abs/2506.08835',
+  },
+  {
+    authors: 'Ekman & Friesen (1971)',
+    title: '"Constants across cultures in the face and emotion"',
+    venue: 'Journal of Personality and Social Psychology 17(2), 124–129',
+    doi: 'https://doi.org/10.1037/h0030377',
+  },
+]
 const register = useModelRegister()
 const { copy: copyToClipboard, paste: pasteFromClipboard } = useAppClipboard()
 const deviceId = useDeviceId()
@@ -349,27 +381,17 @@ const MODELS = RASTER_IMAGE_MODELS
  * tall as the square is wide, so a fourth and a fifth model cost nothing where
  * the column is the narrower side, and shorten the pictures where it is not.
  *
- * It opens on the three that run on the house's own cards. Gemini 3 Pro is
- * preselected nowhere a press can multiply it: every column here is one more
- * paid call, and a run is as many calls as there are contexts plus one. The
- * ONE place where it may stand preselected is the Model Comparison, where a
- * press is one picture per model. Here it stays one click away, and its chip
- * carries the € that says what it costs.
+ * It opens on the three that run on the house's own cards.
  */
 const chosenModels = ref<string[]>([...RASTER_IMAGE_MODELS_DEFAULT])
 
 /**
  * The two ready sets over the model row, the same two the Model Comparison
- * offers. Gemini 3 Pro is taken out of them here: one press on this surface is
- * one paid call per model AND per context, which is the multiplication the note
- * over `chosenModels` names. It stays one click away in the row itself.
+ * offers.
  */
 type SetKey = keyof typeof RASTER_IMAGE_MODEL_SETS
 const SETS = Object.fromEntries(
-  (Object.keys(RASTER_IMAGE_MODEL_SETS) as SetKey[]).map(key => [
-    key,
-    RASTER_IMAGE_MODEL_SETS[key].filter(id => id !== 'gemini_3_pro_image'),
-  ]),
+  (Object.keys(RASTER_IMAGE_MODEL_SETS) as SetKey[]).map(key => [key, [...RASTER_IMAGE_MODEL_SETS[key]]]),
 ) as Record<SetKey, string[]>
 
 const setChoices = computed(() =>
@@ -398,9 +420,9 @@ function applySet(key: SetKey) {
   chosenModels.value = [...SETS[key]]
 }
 
-// Gemini 3 Pro runs through Mammouth AI and is switched off where that account
-// holds no key or no credit (docs/DEVELOPMENT_DECISIONS.md); a
-// choice that holds it lets it go further down, where the raster is.
+// A cloud model is switched off where its provider holds no key or no credit
+// (services/provider_account.py); a choice that holds it lets it go further
+// down, where the raster is.
 const { askWhenShown, accountMissing, accountParams, leaveOutAccountMissing } = useModelAvailability()
 askWhenShown()
 
@@ -984,6 +1006,7 @@ const canRun = computed(
 // ---------------------------------------------------------------------------
 const baseTr = ref('')
 const needsTranslation = computed(() => !locale.value.startsWith('en') && !!baseTr.value)
+const safetyStore = useSafetyEventStore()
 
 /**
  * Which order a translation was asked in. Two quick changes of line or language
@@ -1017,8 +1040,12 @@ async function loadTranslation(): Promise<void> {
     if (Array.isArray(list) && typeof list[0] === 'string' && seq === trSeq) {
       baseTr.value = list[0]
     }
-  } catch {
-    // The English stands. Nothing is invented in its place.
+  } catch (e) {
+    // The English stands. Nothing is invented in its place, and a reading the
+    // server held back is said where every block on this platform is said,
+    // while its line is still the one in the field.
+    const refused = safetyBlockOf(e)
+    if (refused && seq === trSeq) safetyStore.reportBlock(refused)
   }
 }
 

@@ -21,6 +21,19 @@
     "public/ai4artsed-frontend/src/composables/useModelRegister.ts (sizeClass).",
     "A closed model without a published count is very large;",
     "any other model without a published count has no class.",
+    "",
+    "params_b_estimate (since 2026-10-27): where no count is published, an",
+    "ESTIMATE of that model's whole count in billions that others published, and",
+    "only where independent ones agree (since 2026-10-29). It is not a fact and",
+    "never stands in params_b; its grounds, with the pages they rest on, stand",
+    "under 'size_estimates' at the end, as the makers' pages stand under 'makers'.",
+    "The lists order by it (smallest first, useModelRegister.ordered), the line",
+    "shows it with a '~' ('~200b', '~1800b'), and the size class reads it where",
+    "params_b is null. A figure derived here -- from a model's tier, its price,",
+    "its speed, or another model of its maker -- is no estimate and stands",
+    "nowhere, and neither does a single estimate whose own interval spans a",
+    "factor of ten: such a model has no number, and a closed one stands as",
+    "'>1000b'.",
     "medium: image marks an image network. The size class is read for",
     "language models only: its thresholds were set from language-model",
     "examples (small = up to 32 B); on an image network, where 8 B",
@@ -35,8 +48,9 @@
     "it was read off: the seat of the maker or of the group it belongs to",
     "(Google DeepMind: Google LLC), as an ISO 3166 code; a consortium across",
     "several European countries is '150', the UN code for Europe. The surface",
-    "names it in the reader's language (Intl.DisplayNames), so no word for",
-    "the reader stands here."
+    "names it in the reader's language, off a fixed table of CLDR's names",
+    "(COUNTRY_NAMES in useModelRegister.ts), so no word for the reader stands",
+    "here; a code the table lacks fails modelLabel.spec.ts."
   ],
 
   "models": {
@@ -130,6 +144,33 @@
       "params_b": null,
       "source": "https://platform.claude.com/docs/en/models/sonnet-5/overview"
     },
+    "claude-sonnet-5.5": {
+      "name": "Claude Sonnet 5.5",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview"
+    },
+    "claude-haiku-5.5": {
+      "name": "Claude Haiku 5.5",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2026,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://platform.claude.com/docs/en/models/haiku-5-5/overview"
+    },
+    "claude-haiku-4.5": {
+      "name": "Claude Haiku 4.5",
+      "maker": "Anthropic",
+      "country": "US",
+      "year": 2025,
+      "openness": "closed",
+      "params_b": null,
+      "source": "https://platform.claude.com/docs/en/models/haiku-4-5/overview"
+    },
     "gpt-5.6-terra": {
       "name": "GPT-5.6 Terra",
       "maker": "OpenAI",
@@ -148,7 +189,7 @@
       "params_b": 141,
       "source": "https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1"
     },
-    "mistral-nemo": {
+    "mistral-nemo:12b": {
       "name": "Mistral NeMo",
       "maker": "Mistral AI",
       "country": "FR",
@@ -189,9 +230,9 @@
       "maker": "Mistral AI",
       "country": "FR",
       "year": 2026,
-      "openness": "closed",
+      "openness": "weights",
       "params_b": 1000,
-      "source": "https://mistral.ai/news/mistral-large-4"
+      "source": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
     },
     "gpt-3.5-turbo-0613": {
       "name": "GPT-3.5 Turbo 0613",
@@ -209,6 +250,7 @@
       "year": 2023,
       "openness": "closed",
       "params_b": null,
+      "params_b_estimate": 1800,
       "source": "https://cdn.openai.com/papers/gpt-4.pdf"
     },
     "gpt-4o": {
@@ -218,6 +260,7 @@
       "year": 2024,
       "openness": "closed",
       "params_b": null,
+      "params_b_estimate": 200,
       "source": "https://developers.openai.com/api/docs/changelog"
     },
     "gpt-4.1": {
@@ -535,6 +578,24 @@
       "params_b": 4.3,
       "source": "https://huggingface.co/google/gemma-3-4b-it"
     },
+    "gemma-4-e2b": {
+      "name": "Gemma 4",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 2.3,
+      "source": "https://huggingface.co/google/gemma-4-E2B-it"
+    },
+    "gemma-4-e4b": {
+      "name": "Gemma 4",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 4.5,
+      "source": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
     "llama3.2:3b": {
       "name": "Llama 3.2",
       "maker": "Meta",
@@ -570,6 +631,105 @@
       "openness": "open",
       "params_b": 8,
       "source": "https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509"
+    },
+    "qwen3:14b": {
+      "name": "Qwen 3",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 14.8,
+      "source": "https://huggingface.co/Qwen/Qwen3-14B"
+    },
+    "qwen3:8b": {
+      "name": "Qwen 3",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 8.2,
+      "source": "https://huggingface.co/Qwen/Qwen3-8B"
+    },
+    "qwen2.5:7b": {
+      "name": "Qwen 2.5",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 7.61,
+      "source": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"
+    },
+    "qwen2:7b": {
+      "name": "Qwen 2",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 7.62,
+      "source": "https://huggingface.co/Qwen/Qwen2-7B-Instruct"
+    },
+    "qwen1.5:7b": {
+      "name": "Qwen 1.5",
+      "maker": "Alibaba",
+      "country": "CN",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 7.72,
+      "source": "https://huggingface.co/Qwen/Qwen1.5-7B-Chat"
+    },
+    "ministral3:14b": {
+      "name": "Ministral 3",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 13.9,
+      "source": "https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512"
+    },
+    "ministral3:8b": {
+      "name": "Ministral 3",
+      "maker": "Mistral AI",
+      "country": "FR",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 8.8,
+      "source": "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512"
+    },
+    "gemma-4-12b": {
+      "name": "Gemma 4",
+      "maker": "Google DeepMind",
+      "country": "US",
+      "year": 2026,
+      "openness": "weights",
+      "params_b": 11.95,
+      "source": "https://huggingface.co/google/gemma-4-12B-it"
+    },
+    "phi3.5:3.8b": {
+      "name": "Phi 3.5 Mini",
+      "maker": "Microsoft",
+      "country": "US",
+      "year": 2024,
+      "openness": "weights",
+      "params_b": 3.8,
+      "source": "https://huggingface.co/microsoft/Phi-3.5-mini-instruct"
+    },
+    "olmo3:7b": {
+      "name": "Olmo 3",
+      "maker": "Ai2",
+      "country": "US",
+      "year": 2025,
+      "openness": "open",
+      "params_b": 7.3,
+      "source": "https://huggingface.co/allenai/Olmo-3-7B-Instruct"
+    },
+    "nemotron-nano:9b": {
+      "name": "Nemotron Nano 2",
+      "maker": "NVIDIA",
+      "country": "US",
+      "year": 2025,
+      "openness": "weights",
+      "params_b": 8.89,
+      "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-Nano-9B-v2"
     },
 
     "sd15": {
@@ -612,14 +772,6 @@
       "params_b": 32,
       "source": "https://bfl.ai/blog/flux-2"
     },
-    "gemini_nano_banana_2_1": {
-      "maker": "Google DeepMind",
-      "year": 2026,
-      "openness": "closed",
-      "medium": "image",
-      "params_b": null,
-      "source": "https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1"
-    },
     "flux3": {
       "maker": "Black Forest Labs",
       "year": 2026,
@@ -627,25 +779,19 @@
       "medium": "image",
       "params_b": 5.6,
       "source": "https://bfl.ai/blog/flux-3-image-klein"
-    },
-    "gemini_3_pro_image": {
-      "maker": "Google DeepMind",
-      "year": 2025,
-      "openness": "closed",
-      "medium": "image",
-      "params_b": null,
-      "source": "https://deepmind.google/models/gemini-image/pro/"
     }
   },
 
   "interception_lineups": {
-    "openWeights": ["mistral-large-3", "deepseek-v4-pro", "glm-5.3", "kimi-k3"],
+    "openWeights": ["mistral-large-4-0", "deepseek-v4-pro", "glm-5.3", "kimi-k3"],
     "closedWeights": ["claude-sonnet-5", "gemini-3.7-flash", "gpt-5.6-terra"],
-    "family": ["qwen3.5:4b", "qwen3.5:9b", "qwen3.5:27b"]
+    "family": ["qwen3.5:4b", "qwen3.5:9b", "qwen3.5:27b"],
+    "sameSize": ["ministral3:3b", "gemma-4-e4b", "qwen3.5:4b"]
   }
 ,
 
   "makers": {
+    "Ai2": {"country": "US", "source": "https://en.wikipedia.org/wiki/Allen_Institute_for_AI"},
     "Alibaba": {"country": "CN", "source": "https://en.wikipedia.org/wiki/Alibaba_Group"},
     "Anthropic": {"country": "US", "source": "https://www.anthropic.com/legal/consumer-terms"},
     "DeepSeek": {"country": "CN", "source": "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html"},
@@ -654,11 +800,17 @@
     "Hugging Face": {"country": "US", "source": "https://en.wikipedia.org/wiki/Hugging_Face"},
     "IBM": {"country": "US", "source": "https://en.wikipedia.org/wiki/IBM"},
     "Meta": {"country": "US", "source": "https://en.wikipedia.org/wiki/Meta_Platforms"},
+    "Microsoft": {"country": "US", "source": "https://en.wikipedia.org/wiki/Microsoft"},
     "MiniMax": {"country": "CN", "source": "https://platform.minimaxi.com/protocol/privacy-policy"},
     "Mistral AI": {"country": "FR", "source": "https://legal.mistral.ai/terms/commercial-terms-of-service"},
     "Moonshot AI": {"country": "CN", "source": "https://www.moonshot.cn/"},
+    "NVIDIA": {"country": "US", "source": "https://en.wikipedia.org/wiki/Nvidia"},
     "OpenAI": {"country": "US", "source": "https://en.wikipedia.org/wiki/OpenAI"},
     "Unbabel et al.": {"country": "150", "source": "https://huggingface.co/utter-project/EuroLLM-1.7B-Instruct"},
     "Z.ai": {"country": "CN", "source": "https://en.wikipedia.org/wiki/Z.ai"}
+  },
+  "size_estimates": {
+    "gpt-4": {"basis": "About 1.8T in all, a mixture of experts: SemiAnalysis (2023), as relayed by The Decoder (https://the-decoder.com/gpt-4-architecture-datasets-costs-and-more-leaked/); Epoch AI ('Likely'); MEDEC, Abacha et al., arXiv:2412.19260 (about 1.76T). OpenAI has never confirmed it."},
+    "gpt-4o": {"basis": "About 200B in all: Epoch AI, from serving speed and price (https://epoch.ai/gradient-updates/frontier-language-models-have-become-much-smaller); MEDEC, Abacha et al., arXiv:2412.19260 (about 200B)."}
   }
 }

@@ -1,0 +1,516 @@
+{
+  "name": "output_image_flux3_multi",
+  "type": "output_chunk",
+  "backend_type": "comfyui",
+  "execution_mode": "legacy_workflow",
+  "media_type": "image",
+  "description": "FLUX 3 Image Klein with up to 10 reference images. The caption comes from the Prompt Adaption (adaption_image_flux3_upsampler); this workflow takes it as the prompt.",
+  "workflow": {
+    "3": {
+      "inputs": {
+        "seed": 605452029419059,
+        "steps": 16,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1,
+        "model": [
+          "37",
+          0
+        ],
+        "positive": [
+          "201",
+          0
+        ],
+        "negative": [
+          "201",
+          1
+        ],
+        "latent_image": [
+          "201",
+          2
+        ]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": [
+          "75",
+          0
+        ],
+        "clip": [
+          "38",
+          0
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (the upsampler's caption)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "samples": [
+          "3",
+          0
+        ],
+        "vae": [
+          "39",
+          0
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "37": {
+      "inputs": {
+        "unet_name": "flux3-image-klein-bf16.safetensors",
+        "weight_dtype": "default"
+      },
+      "class_type": "UNETLoader",
+      "_meta": {
+        "title": "Load Diffusion Model"
+      }
+    },
+    "38": {
+      "inputs": {
+        "clip_name": "qwen3vl_4b_bf16.safetensors",
+        "type": "flux3",
+        "device": "default"
+      },
+      "class_type": "CLIPLoader",
+      "_meta": {
+        "title": "Load Qwen3-VL-4B Text Encoder"
+      }
+    },
+    "39": {
+      "inputs": {
+        "vae_name": "Flux/flux2-vae.safetensors"
+      },
+      "class_type": "VAELoader",
+      "_meta": {
+        "title": "Load VAE"
+      }
+    },
+    "60": {
+      "inputs": {
+        "filename_prefix": "ai4artsed_flux3_multi",
+        "images": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "75": {
+      "inputs": {
+        "value": ""
+      },
+      "class_type": "PrimitiveStringMultiline",
+      "_meta": {
+        "title": "Ai4ArtsEd Prompt Input"
+      }
+    },
+    "101": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 1"
+      }
+    },
+    "102": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 2"
+      }
+    },
+    "103": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 3"
+      }
+    },
+    "104": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 4"
+      }
+    },
+    "105": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 5"
+      }
+    },
+    "106": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 6"
+      }
+    },
+    "107": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 7"
+      }
+    },
+    "108": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 8"
+      }
+    },
+    "109": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 9"
+      }
+    },
+    "110": {
+      "inputs": {
+        "image": ""
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Reference 10"
+      }
+    },
+    "200": {
+      "inputs": {
+        "conditioning": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "ConditioningZeroOut",
+      "_meta": {
+        "title": "Empty Negative"
+      }
+    },
+    "201": {
+      "inputs": {
+        "positive": [
+          "6",
+          0
+        ],
+        "negative": [
+          "200",
+          0
+        ],
+        "vae": [
+          "39",
+          0
+        ],
+        "resolution": "resize",
+        "resolution.megapixels": 1.0,
+        "images.image0": [
+          "101",
+          0
+        ],
+        "images.image1": [
+          "102",
+          0
+        ],
+        "images.image2": [
+          "103",
+          0
+        ],
+        "images.image3": [
+          "104",
+          0
+        ],
+        "images.image4": [
+          "105",
+          0
+        ],
+        "images.image5": [
+          "106",
+          0
+        ],
+        "images.image6": [
+          "107",
+          0
+        ],
+        "images.image7": [
+          "108",
+          0
+        ],
+        "images.image8": [
+          "109",
+          0
+        ],
+        "images.image9": [
+          "110",
+          0
+        ]
+      },
+      "class_type": "ReferenceMultiLatent",
+      "_meta": {
+        "title": "Set Reference Multi Latent"
+      }
+    }
+  },
+  "multi_image_adaptation": {
+    "input_image2": {
+      "remove_nodes": [
+        "102"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image1"
+        ]
+      }
+    },
+    "input_image3": {
+      "remove_nodes": [
+        "103"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image2"
+        ]
+      }
+    },
+    "input_image4": {
+      "remove_nodes": [
+        "104"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image3"
+        ]
+      }
+    },
+    "input_image5": {
+      "remove_nodes": [
+        "105"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image4"
+        ]
+      }
+    },
+    "input_image6": {
+      "remove_nodes": [
+        "106"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image5"
+        ]
+      }
+    },
+    "input_image7": {
+      "remove_nodes": [
+        "107"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image6"
+        ]
+      }
+    },
+    "input_image8": {
+      "remove_nodes": [
+        "108"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image7"
+        ]
+      }
+    },
+    "input_image9": {
+      "remove_nodes": [
+        "109"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image8"
+        ]
+      }
+    },
+    "input_image10": {
+      "remove_nodes": [
+        "110"
+      ],
+      "drop_inputs": {
+        "201": [
+          "images.image9"
+        ]
+      }
+    }
+  },
+  "input_mappings": {
+    "input_image1": {
+      "node_id": "101",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE1}}",
+      "required": true,
+      "description": "Path to reference image 1 (required)"
+    },
+    "input_image2": {
+      "node_id": "102",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE2}}",
+      "required": false,
+      "description": "Path to reference image 2 (optional)"
+    },
+    "input_image3": {
+      "node_id": "103",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE3}}",
+      "required": false,
+      "description": "Path to reference image 3 (optional)"
+    },
+    "input_image4": {
+      "node_id": "104",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE4}}",
+      "required": false,
+      "description": "Path to reference image 4 (optional)"
+    },
+    "input_image5": {
+      "node_id": "105",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE5}}",
+      "required": false,
+      "description": "Path to reference image 5 (optional)"
+    },
+    "input_image6": {
+      "node_id": "106",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE6}}",
+      "required": false,
+      "description": "Path to reference image 6 (optional)"
+    },
+    "input_image7": {
+      "node_id": "107",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE7}}",
+      "required": false,
+      "description": "Path to reference image 7 (optional)"
+    },
+    "input_image8": {
+      "node_id": "108",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE8}}",
+      "required": false,
+      "description": "Path to reference image 8 (optional)"
+    },
+    "input_image9": {
+      "node_id": "109",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE9}}",
+      "required": false,
+      "description": "Path to reference image 9 (optional)"
+    },
+    "input_image10": {
+      "node_id": "110",
+      "field": "inputs.image",
+      "source": "{{INPUT_IMAGE10}}",
+      "required": false,
+      "description": "Path to reference image 10 (optional)"
+    },
+    "prompt": {
+      "node_id": "75",
+      "field": "inputs.value",
+      "source": "{{PREVIOUS_OUTPUT}}",
+      "description": "The caption the adaption wrote, or the text changed by hand at the adaption, after the check and the translation"
+    },
+    "steps": {
+      "node_id": "3",
+      "field": "inputs.steps",
+      "default": 16,
+      "description": "Number of sampling steps (distilled checkpoint: 16, BFL model card)"
+    },
+    "cfg": {
+      "node_id": "3",
+      "field": "inputs.cfg",
+      "default": 1,
+      "description": "Classifier Free Guidance scale (distilled checkpoint: 1; the BFL model card lists its guidance as none)"
+    },
+    "seed": {
+      "node_id": "3",
+      "field": "inputs.seed",
+      "default": 605452029419059,
+      "description": "Seed for reproducibility"
+    },
+    "sampler_name": {
+      "node_id": "3",
+      "field": "inputs.sampler_name",
+      "default": "euler",
+      "description": "Sampling algorithm"
+    },
+    "scheduler": {
+      "node_id": "3",
+      "field": "inputs.scheduler",
+      "default": "simple",
+      "description": "Noise scheduling algorithm"
+    },
+    "denoise": {
+      "node_id": "3",
+      "field": "inputs.denoise",
+      "default": 1.0,
+      "description": "Denoise strength"
+    }
+  },
+  "output_mapping": {
+    "node_id": "60",
+    "output_type": "image",
+    "format": "png",
+    "field": "filename_prefix",
+    "description": "SaveImage node that outputs the composed image"
+  },
+  "meta": {
+    "img2img": true,
+    "multi_image": true,
+    "max_images": 10,
+    "estimated_duration_seconds": "11-60",
+    "requires_gpu": true,
+    "gpu_vram_mb": 26000,
+    "model_file": "flux3-image-klein-bf16.safetensors",
+    "clip_models": [
+      "qwen3vl_4b_bf16.safetensors"
+    ],
+    "vae_model": "flux2-vae.safetensors",
+    "recommended_resolution": "The size of the first reference, scaled to 1 megapixel",
+    "notes": "Workflow after ComfyUI template image_flux3_klein_distilled_image_edit: ReferenceMultiLatent on positive and negative, the output latent takes the first reference's size. The template's upsampler runs as the Prompt Adaption (adaption_image_flux3_upsampler), so its caption passes the check and the translation like every adaption. The template's boxes are left out. Distilled checkpoint in bfloat16, 16 steps, no guidance (cfg 1)."
+  }
+}

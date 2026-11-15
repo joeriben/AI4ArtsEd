@@ -463,9 +463,20 @@ def client(monkeypatch):
 
 @pytest.fixture()
 def no_model(monkeypatch):
-    """Neither the translation nor the variants call reaches a model."""
+    """Neither the translation nor the variants call reaches a model, and the
+    checks pass without one. What they decide is the matter of
+    test_mean_images_checks.py."""
     import my_app.routes.chat_routes as chat_routes
+    import my_app.routes.mean_images_routes as routes
     import my_app.routes.schema_pipeline_routes as schema_routes
+    import my_app.services.safety_level_resolver as resolver
+    from my_app.services.safety_gate import Verdict
+
+    monkeypatch.setattr(resolver, "resolve_safety_level", lambda: "kids")
+    monkeypatch.setattr(routes, "check_intake_texts",
+                        lambda fields, *, level: Verdict(True, "intake", level))
+    monkeypatch.setattr(routes, "check_result_text",
+                        lambda text, *, level, **_: Verdict(True, "result", level))
 
     answers = {"variants": '["a second line", "a third line"]', "calls": []}
 
@@ -738,7 +749,7 @@ def test_overlay_lays_the_resolved_runs_over_each_other(client, monkeypatch, tmp
 
     monkeypatch.setattr(
         media_routes, "_resolve_image",
-        lambda run_id, index: ((path, "png", 0), None) if run_id != "gone" else (None, ("x", 404)),
+        lambda run_id, index, level: ((path, "png", 0), None) if run_id != "gone" else (None, ("x", 404)),
     )
 
     res = client.post(
@@ -760,7 +771,7 @@ def test_overlay_without_a_record_writes_nothing_and_says_so(client, monkeypatch
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=2).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post('/api/latent-lab/mean-images/overlay', json={"run_ids": ["run_a", "run_b"]})
     assert res.status_code == 200
@@ -796,7 +807,9 @@ def _stored(ref):
     """
     from my_app.utils.media_ref import resolve_media_ref
 
-    with Image.open(resolve_media_ref(ref)) as img:
+    # Read as it is stored, at a level that checks no picture: the recorded
+    # cell carries no verdict of its own.
+    with Image.open(resolve_media_ref(ref, level="adult")) as img:
         return np.asarray(img.convert("RGB"), dtype=float)
 
 
@@ -817,7 +830,7 @@ def test_a_recorded_cell_becomes_a_run_of_its_own(client, monkeypatch, sitting, 
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=4).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -866,7 +879,7 @@ def test_a_set_of_one_is_recorded_without_a_sheet(client, monkeypatch, sitting, 
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=6).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -902,7 +915,7 @@ def test_the_reference_axis_is_not_a_set_and_is_not_recorded(client, monkeypatch
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=12).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -945,7 +958,7 @@ def test_a_record_that_cannot_be_used_costs_the_address_and_not_the_composite(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=8).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -963,7 +976,7 @@ def test_overlay_of_a_single_run_carries_no_sheet(client, monkeypatch, tmp_path)
     one = _noise(seed=13)
     path = tmp_path / "single.png"
     Image.fromarray(one.astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post('/api/latent-lab/mean-images/overlay', json={"run_ids": ["run_a"]}).get_json()
     assert body["count"] == 1
@@ -974,7 +987,7 @@ def test_overlay_of_a_single_run_carries_no_sheet(client, monkeypatch, tmp_path)
 def test_overlay_answers_404_where_no_run_carried_an_image(client, monkeypatch):
     import my_app.routes.media_routes as media_routes
 
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: (None, ("x", 404)))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: (None, ("x", 404)))
     res = client.post('/api/latent-lab/mean-images/overlay', json={"run_ids": ["a", "b"]})
     assert res.status_code == 404
     assert res.get_json()["missing"] == ["a", "b"]
@@ -994,7 +1007,7 @@ def test_the_addresses_in_the_answer_resolve_to_the_pictures_in_the_answer(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=21).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -1037,7 +1050,7 @@ def test_a_picture_that_was_not_written_moves_the_addresses_after_it(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=22).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     # The relief, and nothing else, cannot be written. It is the SECOND of the
     # three pictures, so the contact sheet moves up into its place. Told apart
@@ -1047,10 +1060,10 @@ def test_a_picture_that_was_not_written_moves_the_addresses_after_it(
     refused = base64.b64decode(mean_images.compose([mean_images.load_image(path)] * 2)["relief"])
     marked = lab._marked
 
-    def one_picture_fails(raw, entity_type, entity_metadata):
+    def one_picture_fails(raw, entity_type, entity_metadata, filename):
         if raw == refused:
             raise OSError("the relief could not be written")
-        return marked(raw, entity_type, entity_metadata)
+        return marked(raw, entity_type, entity_metadata, filename)
 
     monkeypatch.setattr(lab, "_marked", one_picture_fails)
 
@@ -1085,7 +1098,7 @@ def test_a_held_seed_that_is_missing_costs_the_address_and_not_the_composite(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=23).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     res = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -1118,7 +1131,7 @@ def test_the_axis_that_draws_its_seeds_is_recorded_without_one(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=25).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -1153,7 +1166,7 @@ def test_only_the_runs_a_picture_came_from_are_recorded(
     Image.fromarray(_noise(seed=24).astype(np.uint8)).save(path)
     monkeypatch.setattr(
         media_routes, "_resolve_image",
-        lambda run_id, index: (None, ("x", 404)) if run_id == "gone" else ((path, "png", 0), None),
+        lambda run_id, index, level: (None, ("x", 404)) if run_id == "gone" else ((path, "png", 0), None),
     )
 
     body = client.post(
@@ -1205,7 +1218,7 @@ def test_the_answered_plates_carry_the_ai_origin_disclosure(client, monkeypatch,
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=31).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post('/api/latent-lab/mean-images/overlay', json={"run_ids": ["run_a", "run_b"]}).get_json()
     for view in ("mean", "relief", "sheet"):
@@ -1227,7 +1240,7 @@ def test_the_answered_plates_and_the_stored_plates_each_name_the_model(
     _naming_the_model(monkeypatch)
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=32).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -1244,7 +1257,7 @@ def test_the_answered_plates_and_the_stored_plates_each_name_the_model(
         },
     ).get_json()
     for ref, key in (("mean", "mean"), ("relief", "relief"), ("images", "sheet")):
-        stored = read_media_disclosure(resolve_media_ref(body["refs"][ref]))
+        stored = read_media_disclosure(resolve_media_ref(body["refs"][ref], level="adult"))
         answered = _disclosure_of(body[key], tmp_path)
         for found in (stored, answered):
             assert found["marked"], key
@@ -1264,7 +1277,7 @@ def test_a_refused_record_still_names_the_model_on_the_answered_plates(
     _naming_the_model(monkeypatch)
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=33).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     session_id = "sitting_1"
     if refusal == "the sitting has ended":
@@ -1302,7 +1315,7 @@ def test_a_composite_says_it_is_one_and_what_it_was_computed_from(
 
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=26).astype(np.uint8)).save(path)
-    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index: ((path, "png", 0), None))
+    monkeypatch.setattr(media_routes, "_resolve_image", lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -1474,6 +1487,9 @@ def latent_runs(monkeypatch, tmp_path):
     Real recorders, real entities, real files: what is under test is the whole
     lookup — the platform's entity-selection rule, the recorder's folder and the
     meta the chunk wrote — and a stubbed `_latent_of` would test none of it.
+
+    With `passed_at` the run is made at that level and its picture carries a
+    pass there, as the runs of a workshop at kids or youth do.
     """
     import config
     import my_app.services.pipeline_recorder as pr
@@ -1482,9 +1498,9 @@ def latent_runs(monkeypatch, tmp_path):
     monkeypatch.setattr(config, "JSON_STORAGE_DIR", str(base))
 
     def make(run_id: str, value: float, meta=_LATENT_META, shape=(4, 8, 8),
-             array=None):
+             array=None, passed_at=None):
         recorder = pr.LivePipelineRecorder(
-            run_id=run_id, config_name="sd35_large", safety_level="open",
+            run_id=run_id, config_name="sd35_large", safety_level=passed_at or "adult",
             device_id="dev", base_path=base,
         )
         recorder.save_entity(
@@ -1492,6 +1508,8 @@ def latent_runs(monkeypatch, tmp_path):
             content=mean_images.to_png_bytes(_noise(seed=1)),
             metadata={"format": "png"},
         )
+        if passed_at is not None:
+            recorder.mark_entity_safety(recorder.metadata["entities"][-1]["sequence"], safe=True)
         if meta is not None:
             recorder.save_entity(
                 entity_type="output_latent",
@@ -1563,12 +1581,12 @@ def decoder(monkeypatch):
 
 
 @pytest.fixture()
-def open_level(monkeypatch):
+def adult_level(monkeypatch):
     """A level that asks for no image check, and a checker that records a call."""
     import my_app.services.safety_level_resolver as resolver
     import my_app.utils.vlm_safety as vlm_safety
 
-    seen = {"level": "open", "calls": [], "answer": (True, "", "")}
+    seen = {"level": "adult", "calls": [], "answer": (True, "", "")}
     monkeypatch.setattr(resolver, "resolve_safety_level", lambda: seen["level"])
 
     def check(image_path, safety_level):
@@ -1586,7 +1604,7 @@ def _one_image(monkeypatch, tmp_path):
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=17).astype(np.uint8)).save(path)
     monkeypatch.setattr(media_routes, "_resolve_image",
-                        lambda run_id, index: ((path, "png", 0), None))
+                        lambda run_id, index, level: ((path, "png", 0), None))
     return path
 
 
@@ -1760,7 +1778,7 @@ def test_latents_of_two_measures_are_not_drawn_together():
         mean_images.latent_view([np.zeros((4, 8, 8)), np.zeros((4, 16, 16))])
 
 
-def test_the_preview_draws_the_running_mean(client, latent_runs, open_level):
+def test_the_preview_draws_the_running_mean(client, latent_runs, adult_level):
     rng = np.random.default_rng(41)
     latent_runs("run_a", 0.0, array=rng.normal(0.0, 1.0, size=(4, 8, 8)))
     latent_runs("run_b", 0.0, array=rng.normal(0.0, 1.0, size=(4, 8, 8)))
@@ -1781,15 +1799,16 @@ def test_the_preview_draws_the_running_mean(client, latent_runs, open_level):
 
 
 def test_the_preview_is_drawn_at_the_levels_that_check_pictures(
-    client, latent_runs, open_level
+    client, latent_runs, adult_level
 ):
     """A workshop runs at kids or youth, and the cell builds up there too.
     What is drawn is the tensor: at 1024 pixels 128 by 128, three of sixteen
-    channels as three colours."""
-    latent_runs("run_a", 2.0)
-    latent_runs("run_b", 6.0)
+    channels as three colours. Its runs were made there and carry a pass, and a
+    pass at kids answers for youth as well."""
+    latent_runs("run_a", 2.0, passed_at="kids")
+    latent_runs("run_b", 6.0, passed_at="kids")
     for level in ("kids", "youth"):
-        open_level["level"] = level
+        adult_level["level"] = level
         body = client.post('/api/latent-lab/mean-images/latent-preview',
                            json={"run_ids": ["run_a", "run_b"]}).get_json()
         assert body["preview"]
@@ -1797,11 +1816,11 @@ def test_the_preview_is_drawn_at_the_levels_that_check_pictures(
 
 
 def test_a_picture_the_check_turned_back_stays_out_of_the_drawing(
-    client, latent_runs, open_level, checked_run
+    client, latent_runs, adult_level, checked_run
 ):
     """The drawing is made of the pictures the platform would hand out: the
     rule `entity_cleared_for_delivery` answers by, over the run's own record."""
-    open_level["level"] = "kids"
+    adult_level["level"] = "kids"
     checked_run("run_blocked", safe=False)
     body = client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_blocked"]}).get_json()
@@ -1816,13 +1835,13 @@ def test_a_picture_the_check_turned_back_stays_out_of_the_drawing(
 
 
 def test_a_picture_still_being_checked_joins_the_drawing_one_step_later(
-    client, open_level, checked_run
+    client, adult_level, checked_run
 ):
     """No verdict yet is no clearance: the run comes in when its picture has
     one, which is the seconds the check lasts. The answer says WHICH nothing it
     is, because the cell asks again for this one and stops asking for a row
     that keeps no latents."""
-    open_level["level"] = "youth"
+    adult_level["level"] = "youth"
     checked_run("run_pending", safe=None)
     body = client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_pending"]}).get_json()
@@ -1832,10 +1851,10 @@ def test_a_picture_still_being_checked_joins_the_drawing_one_step_later(
 
 
 def test_the_answer_says_which_nothing_it_is(
-    client, latent_runs, open_level, checked_run
+    client, latent_runs, adult_level, checked_run
 ):
-    open_level["level"] = "kids"
-    latent_runs("run_none", 2.0, meta=None)          # a row that keeps no latent
+    adult_level["level"] = "kids"
+    latent_runs("run_none", 2.0, meta=None, passed_at="kids")   # a row that keeps no latent
     assert client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_none"]}).get_json()["why"] == "no_latents"
 
@@ -1843,8 +1862,8 @@ def test_the_answer_says_which_nothing_it_is(
     assert client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_blocked"]}).get_json()["why"] == "not_yet"
 
-    latent_runs("run_a", 2.0)
-    latent_runs("run_b", 6.0, shape=(4, 16, 16))
+    latent_runs("run_a", 2.0, passed_at="kids")
+    latent_runs("run_b", 6.0, shape=(4, 16, 16), passed_at="kids")
     assert client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_a", "run_b"]}).get_json()["why"] == "mixed_set"
 
@@ -1852,25 +1871,32 @@ def test_the_answer_says_which_nothing_it_is(
 def test_a_level_that_did_not_resolve_draws_only_what_the_check_cleared(
     client, latent_runs, monkeypatch, checked_run
 ):
+    """Where the resolver cannot tell, it answers the strictest level, and the
+    preview takes that answer as it comes."""
     import my_app.services.safety_level_resolver as resolver
 
     def boom():
         raise RuntimeError("the session is gone")
 
-    monkeypatch.setattr(resolver, "resolve_safety_level", boom)
+    monkeypatch.setattr(resolver, "_resolve", boom)
     checked_run("run_blocked", safe=False)
     body = client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_blocked"]}).get_json()
     assert body["preview"] is None
 
-    latent_runs("run_a", 2.0)
+    latent_runs("run_open", 2.0)
+    body = client.post('/api/latent-lab/mean-images/latent-preview',
+                       json={"run_ids": ["run_open"]}).get_json()
+    assert body["preview"] is None
+
+    latent_runs("run_a", 2.0, passed_at="kids")
     body = client.post('/api/latent-lab/mean-images/latent-preview',
                        json={"run_ids": ["run_a"]}).get_json()
     assert body["preview"]
 
 
 def test_the_preview_says_nothing_for_a_row_that_keeps_no_latents(
-    client, latent_runs, open_level
+    client, latent_runs, adult_level
 ):
     """The ComfyUI rows keep none. That is ordinary and says nothing."""
     latent_runs("run_a", 2.0, meta=None)
@@ -1882,7 +1908,7 @@ def test_the_preview_says_nothing_for_a_row_that_keeps_no_latents(
 
 
 def test_the_preview_says_nothing_for_a_set_of_two_measures(
-    client, latent_runs, open_level
+    client, latent_runs, adult_level
 ):
     latent_runs("run_a", 2.0)
     latent_runs("run_b", 6.0, shape=(4, 16, 16))
@@ -1893,7 +1919,7 @@ def test_the_preview_says_nothing_for_a_set_of_two_measures(
 
 @pytest.mark.parametrize("run_ids", [None, [], "run_a", [""], [7], ["a"] * 51])
 def test_the_preview_refuses_an_impossible_request(
-    client, open_level, run_ids
+    client, adult_level, run_ids
 ):
     res = client.post('/api/latent-lab/mean-images/latent-preview',
                       json={"run_ids": run_ids})
@@ -1901,7 +1927,7 @@ def test_the_preview_refuses_an_impossible_request(
 
 
 def test_a_set_that_all_kept_its_latents_is_averaged_before_the_decoder(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     The mean is what the decode returned, and it was taken over the LATENTS.
@@ -1930,7 +1956,7 @@ def test_a_set_that_all_kept_its_latents_is_averaged_before_the_decoder(
 
 
 def test_a_set_of_one_is_the_picture_and_asks_for_no_decode(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     Nothing was averaged, so there is nothing to average before a decoder. The
@@ -1950,12 +1976,12 @@ def test_a_set_of_one_is_the_picture_and_asks_for_no_decode(
     assert body["mean_kind"] == "pixel"
     assert body["count"] == 1
     assert decoder["calls"] == []
-    assert open_level["calls"] == []
+    assert adult_level["calls"] == []
     assert np.array_equal(_decode(body["mean"]), one)
 
 
 def test_one_run_without_a_latent_takes_the_whole_set_pixel_by_pixel(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """A mixed set is no error — it is what the rows without a latent path are."""
     one = _noise(seed=17)
@@ -1975,7 +2001,7 @@ def test_one_run_without_a_latent_takes_the_whole_set_pixel_by_pixel(
 
 
 def test_two_models_in_one_set_are_averaged_pixel_by_pixel(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """Latents of two models are not comparable numbers, and the answer says so."""
     _one_image(monkeypatch, tmp_path)
@@ -1992,7 +2018,7 @@ def test_two_models_in_one_set_are_averaged_pixel_by_pixel(
 
 
 def test_two_measures_in_one_set_are_averaged_pixel_by_pixel(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     _one_image(monkeypatch, tmp_path)
     latent_runs("run_a", 2.0)
@@ -2008,7 +2034,7 @@ def test_two_measures_in_one_set_are_averaged_pixel_by_pixel(
 
 
 def test_a_decode_that_failed_is_an_error_and_never_the_other_mean(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     Falling back to the pixel mean here would hand back a different picture
@@ -2033,7 +2059,7 @@ def test_a_decode_that_failed_is_an_error_and_never_the_other_mean(
 
 
 def test_a_card_that_is_taken_says_so_and_keeps_its_own_status(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """Busy is not broken: the same request works in a moment."""
     from my_app.services.gpu_lease_client import GpuBusyError
@@ -2053,7 +2079,7 @@ def test_a_card_that_is_taken_says_so_and_keeps_its_own_status(
 
 
 def test_a_mean_the_check_turns_back_is_answered_and_not_recorded(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level, sitting, caplog
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level, sitting, caplog
 ):
     """
     The decoded mean is a picture nobody has looked at, so it is checked like a
@@ -2065,8 +2091,8 @@ def test_a_mean_the_check_turns_back_is_answered_and_not_recorded(
     _one_image(monkeypatch, tmp_path)
     latent_runs("run_a", 2.0)
     latent_runs("run_b", 6.0)
-    open_level["level"] = "kids"
-    open_level["answer"] = (False, "Bild nicht freigegeben", "a described picture")
+    adult_level["level"] = "kids"
+    adult_level["answer"] = (False, "Bild nicht freigegeben", "a described picture")
 
     # `latent_runs` moved the storage; the sitting writes into its own.
     written_before = len(list(Path(sitting["base"]).glob("*/*/run_*")))
@@ -2088,19 +2114,19 @@ def test_a_mean_the_check_turns_back_is_answered_and_not_recorded(
     )
     assert res.status_code == 200
     body = res.get_json()
-    # The fields the rest of this platform blocks in, so one surface reads all
-    # of its refusals the same way.
+    # The block message the rest of this platform sends, so one surface reads
+    # all of its refusals the same way.
     assert body == {
         "status": "blocked",
-        "blocked": True,
-        "stage": "vlm_safety",
         "reason": "Bild nicht freigegeben",
-        "vlm_description": "a described picture",
+        "safety_block": {"checkpoint": "result", "field": "image",
+                         "reason_key": "image_content",
+                         "reason": "Bild nicht freigegeben"},
     }
-    assert len(open_level["calls"]) == 1
-    assert open_level["calls"][0][1] == "kids"
+    assert len(adult_level["calls"]) == 1
+    assert adult_level["calls"][0][1] == "kids"
     # The checker reads a FILE, and the scratch it read is gone again.
-    assert not Path(open_level["calls"][0][0]).exists()
+    assert not Path(adult_level["calls"][0][0]).exists()
     # Nothing of the cell was written.
     assert len(list(Path(sitting["base"]).glob("*/*/run_*"))) == written_before
     # This log line is the only trace on this side: the instrument keeps the
@@ -2111,8 +2137,8 @@ def test_a_mean_the_check_turns_back_is_answered_and_not_recorded(
     assert "kids" in said and "Bild nicht freigegeben" in said
 
 
-def test_an_open_level_asks_no_image_check(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+def test_the_adult_level_asks_no_image_check(
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """The two levels that check a generated picture are the two checked here."""
     _one_image(monkeypatch, tmp_path)
@@ -2125,7 +2151,7 @@ def test_an_open_level_asks_no_image_check(
     ).get_json()
 
     assert body["mean_kind"] == "latent"
-    assert open_level["calls"] == []
+    assert adult_level["calls"] == []
 
 
 def test_the_recorded_cell_carries_the_kind_of_mean_it_holds(
@@ -2142,7 +2168,7 @@ def test_the_recorded_cell_carries_the_kind_of_mean_it_holds(
     path = tmp_path / "image.png"
     Image.fromarray(_noise(seed=29).astype(np.uint8)).save(path)
     monkeypatch.setattr(media_routes, "_resolve_image",
-                        lambda run_id, index: ((path, "png", 0), None))
+                        lambda run_id, index, level: ((path, "png", 0), None))
 
     body = client.post(
         '/api/latent-lab/mean-images/overlay',
@@ -2182,7 +2208,7 @@ def _latent_file(recorder) -> Path:
 
 
 def test_a_latent_that_will_not_load_names_its_run_and_fails(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     A truncated file is a fault of this platform's own store, not a run that
@@ -2206,7 +2232,7 @@ def test_a_latent_that_will_not_load_names_its_run_and_fails(
 
 
 def test_a_stored_latent_that_names_no_model_is_not_quietly_a_pixel_mean(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     Both names come out of the record. An entity that carries neither cannot be
@@ -2228,7 +2254,7 @@ def test_a_stored_latent_that_names_no_model_is_not_quietly_a_pixel_mean(
 
 
 def test_a_run_that_kept_no_latent_at_all_is_still_the_ordinary_case(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     Having none and having a broken one are different states. This is the first:
@@ -2249,7 +2275,7 @@ def test_a_run_that_kept_no_latent_at_all_is_still_the_ordinary_case(
 
 
 def test_two_pipeline_classes_in_one_set_are_averaged_pixel_by_pixel(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level
 ):
     """
     One model name is not enough to make a set one set. Two pipeline classes are
@@ -2270,19 +2296,24 @@ def test_two_pipeline_classes_in_one_set_are_averaged_pixel_by_pixel(
 
 
 def test_an_image_check_that_could_not_run_is_never_a_pass(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level, sitting
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level, sitting, caplog
 ):
     """
     The decode is already spent and the picture exists; what is missing is a
     judgement on it. An absent judgement is not a pass, and it is not a refusal
-    either — it is this platform saying it could not look.
+    either — it is this platform saying it could not look. The cause stands in
+    the log of the safety gate, where every check that could not run is named.
     """
+    import logging
+
     import my_app.utils.vlm_safety as vlm_safety
+
+    caplog.set_level(logging.ERROR, logger="my_app.services.safety_gate")
 
     _one_image(monkeypatch, tmp_path)
     latent_runs("run_a", 2.0)
     latent_runs("run_b", 6.0)
-    open_level["level"] = "kids"
+    adult_level["level"] = "kids"
 
     def breaks(image_path, safety_level):
         raise OSError("no space left on device")
@@ -2302,13 +2333,44 @@ def test_an_image_check_that_could_not_run_is_never_a_pass(
     assert res.status_code == 500
     body = res.get_json()
     assert body["status"] == "error"
-    assert "no space left on device" in body["error"]
+    assert "could not run" in body["error"]
+    assert "blocked" not in body
+    assert "no space left on device" in caplog.text
+    assert len(list(Path(sitting["base"]).glob("*/*/run_*"))) == written_before
+
+
+def test_an_image_check_that_gave_no_verdict_is_never_a_pass_either(
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level, sitting
+):
+    """A checker that answers without a verdict is the same case as one that
+    breaks: the platform could not look, and the cell may ask again."""
+    from my_app.utils.vlm_safety import VLM_OPERATIONAL_BLOCK_MESSAGE
+
+    _one_image(monkeypatch, tmp_path)
+    latent_runs("run_a", 2.0)
+    latent_runs("run_b", 6.0)
+    adult_level["level"] = "kids"
+    adult_level["answer"] = (False, VLM_OPERATIONAL_BLOCK_MESSAGE, "")
+    written_before = len(list(Path(sitting["base"]).glob("*/*/run_*")))
+
+    res = client.post(
+        '/api/latent-lab/mean-images/overlay',
+        json={
+            "run_ids": ["run_a", "run_b"],
+            "record": {"session_id": "sitting_1", "model": "sd35_large",
+                       "model_label": "SD 3.5 Large", "axis": "seedFixed",
+                       "seed": 424242, "translation_en": "a house"},
+        },
+    )
+    assert res.status_code == 500
+    body = res.get_json()
+    assert body["status"] == "error"
     assert "blocked" not in body
     assert len(list(Path(sitting["base"]).glob("*/*/run_*"))) == written_before
 
 
 def test_the_same_set_that_passes_the_check_is_recorded(
-    client, monkeypatch, tmp_path, latent_runs, decoder, open_level, sitting
+    client, monkeypatch, tmp_path, latent_runs, decoder, adult_level, sitting
 ):
     """
     The guard on the two tests above: they both assert that NOTHING was written,
@@ -2318,8 +2380,8 @@ def test_the_same_set_that_passes_the_check_is_recorded(
     _one_image(monkeypatch, tmp_path)
     latent_runs("run_a", 2.0)
     latent_runs("run_b", 6.0)
-    open_level["level"] = "kids"
-    open_level["answer"] = (True, "", "")
+    adult_level["level"] = "kids"
+    adult_level["answer"] = (True, "", "")
 
     before = len(list(Path(sitting["base"]).glob("*/*/run_*")))
     res = client.post(

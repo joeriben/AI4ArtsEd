@@ -6,7 +6,7 @@
 # of devserver/config/local_llm_weights.json) only with it.
 accelerate
 # transformers >= 5.17: the architectures of the Text Lab rows
-# (devserver/config/text_presets.json) -- Gemma 4 (gemma4, gemma4_unified),
+# (devserver/config/local_llm_weights.json) -- Gemma 4 (gemma4, gemma4_unified),
 # Nemotron Nano 9B v2 (nemotron_h) -- are in transformers from 5.17.0
 # (2026-09-09); ComfyUI itself asks only for >= 4.50.3.
 transformers>=5.17.0
@@ -16,3 +16,20 @@ transformers>=5.17.0
 # bound. 2_start_comfyui.sh sets the user-agent origin the publisher check
 # needs while Hub telemetry is off.
 kernels>=0.16.2,<0.17
+# fla-core: the Gated DeltaNet layers of Qwen 3.5 and 3.8 (model_type qwen3_5:
+# 48 of 64 layers in the 27 B models) take fla's chunk and recurrent kernels
+# when the package is importable (transformers integrations/hub_kernels.py
+# use_kernel_func_from_hub_with_fallback) and its torch reference otherwise.
+# Measured 2026-11-08 on the RTX PRO 6000, same weights in one process:
+# 256 greedy tokens 5.6 % (4 B) and 6.6 % (27 B) faster, a 15k-token prefill
+# 23 % (27 B) to 38 % (4 B) faster. The torch reference itself moves when its
+# attention layers switch backend; on a short text the 27 B's logits moved
+# as far under fla as under that switch, the 4 B's 1.2 to 3.2 times as far
+# (mean and tail of the KL divergence, short and 15k-token texts). The
+# first prompt of a new length class compiles and tunes one kernel for about
+# 5 s, once per machine (~/.triton/cache). Pinned exactly: transformers drops
+# every argument fla's signature does not name, so a renamed one would be
+# lost without an error; a transformers upgrade can cause the same. No [cuda]
+# extra: it would ask pip for torch and triton against the nightly builds
+# this venv carries; einops is its one dependency.
+fla-core==0.6.0

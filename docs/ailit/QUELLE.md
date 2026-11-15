@@ -1,3 +1,5 @@
+> **`unterstuetzung.tsv` ist eine verworfene Archivdatei.** Die Tabelle gehört zu den Versuchen vor den Nutzungsberichten V 1.0, den Teilen der Plattform Kategorien des AILit-Rahmenwerks zuzuordnen. Die Projektleitung hat diese Versuche verworfen (`docs/DEVELOPMENT_DECISIONS.md`, Eintrag vom 2026-11-14). Maßgeblich sind die Nutzungsberichte V 1.0 in `docs/use_reports/v1.0/`. `devserver/scripts/build_use_reports.py` liest aus der Tabelle allein die Zeilen ohne Teil: die Maßnahmen, die kein Teil der Plattform unterstützt, mit ihrer Begründung. Der Wortlaut des Rahmenwerks in `learner_expectations.tsv` und `classroom_scenarios.tsv` gilt weiter; derselbe Build liest ihn.
+
 # Quelle der Zuordnungen
 
 Alle Zeilen in `unterstuetzung.tsv` werden am Wortlaut des AILit-Frameworks
@@ -23,6 +25,36 @@ Zuordnungen nicht: er führt 22 Kompetenzen, die Domäne heißt dort noch
 *Designing AI*, und Learner Expectations mit den Stufen Basic / Intermediate /
 Advanced kommen darin überhaupt noch nicht vor. Was in den Sichten steht, ist
 ausschließlich an der Endfassung geprüft.
+
+## Abgleich mit dem PDF
+
+Am 2026-10-29 sind die erfassten Stellen maschinell gegen das PDF abgeglichen
+worden, an Text und Lage jedes Wortes (`pdftotext -tsv`): je Kompetenz die
+Aussage mit ihrer Überschrift („Engage with AI 1: …“), die Zeile
+Knowledge/Skills/Attitudes, die drei Learner Expectations und die drei
+Unterrichtsbeispiele, zusammen 152 Zeichenketten, dazu die Zitate in dieser
+Datei. Jede steht Zeichen für Zeichen und vollständig auf der angegebenen Seite,
+unter ihrer Kompetenz, in der Spalte ihrer Stufe und im Feld Learner Expectation
+beziehungsweise „In the Classroom“. Anführungszeichen, Apostrophe und
+Gedankenstriche haben die Form des PDF.
+
+Zwei Stellen sind festgehalten:
+
+- **Manage AI 4, Zeile Knowledge/Skills/Attitudes (S. 39).** Das PDF druckt sie
+  als einzige der 19 Zeilen mit Schlusspunkt („… Attitudes: Adaptive,
+  Reflective, Responsible.“). `learner_expectations.tsv` trägt den Punkt seit
+  dem 2026-10-31, wie er gedruckt ist.
+- **Drei Bindestriche am Zeilenende.** „non-human“ (Engage 2 Basic, S. 28),
+  „task-specific“ (Engage 3 Intermediate, S. 29) und „rules-based“ (Manage 2
+  Intermediate, S. 38) stehen im PDF ausschließlich am Zeilenende getrennt. Ob
+  der Strich dort zum Wort gehört oder die Silbentrennung ist, lässt das PDF
+  offen; die TSV schreiben den Bindestrich. Die Fassung auf
+  <https://ailiteracyframework.org/frameworks/> (abgerufen am 2026-10-29)
+  schreibt „nonhuman“, „task-specific“ und „rulesbased“, an einer Stelle aber
+  auch „AIgenerated“, das dort sonst 19-mal „AI-generated“ heißt, und lässt die
+  Frage damit ebenfalls offen. Die sechs übrigen Wörter, die in den erfassten
+  Stellen am Zeilenende getrennt sind, stehen im PDF an anderer Stelle mitten in
+  der Zeile, jeweils mit Bindestrich.
 
 ## Was das Framework über die Bewertung selbst sagt
 
@@ -66,8 +98,9 @@ Die Tabelle geht von der Plattform aus, wie die Tabelle vom 2026-09-02: Zeile
 für Zeile steht ein Teil der Plattform (ein Modus, ein Instrument des Latent
 Lab, eine querliegende Funktion) mit einer Maßnahme, die er trägt, in der
 Ordnung der Plattform; die Maßnahmen, die kein Teil trägt, schließen die
-Tabelle ab. Ihr Zweck ist, Help über die aktive Seite zu informieren;
-Help liest sie je Seite aus `ailit_coverage.json`. Spalten von
+Tabelle ab. Ihr Zweck war, Help über die aktive Seite zu informieren;
+Help las sie bis zum 2026-11-06 je Seite aus `ailit_coverage.json` (siehe
+den letzten Absatz). Spalten von
 `unterstuetzung.tsv`: `teil`, `kompetenz`, `stufe`, `unterstuetzt`, `wie_de`,
 `szenario_de`, `beleg`.
 
@@ -88,11 +121,10 @@ wenn die Plattform den Gegenstand hält, um den die Maßnahme selbst geht.
 Material, das ihr Wortlaut beiläufig mit erwähnt, bleibt außerhalb; ebenso die
 Vorbereitung davor und die Nachbesprechung danach, die vor und hinter jeder
 Maßnahme liegen, die eine Kursleitung durchführt. Ein Kriterium, das die
-mitgebrachte Vorbereitung genügen lässt, trägt jede Maßnahme, die geplant wird:
-der Durchgang vom 2026-09-26 hat acht Zeilen für Together daran geprüft, drei
-halten unter diesem Kriterium, und die Zeilen zu den Maßnahmen, deren Gegenstand
-ein Empfehlungssystem, eine Vorhersage oder ein Fall aus der Welt ist, bleiben
-`nein`.
+mitgebrachte Vorbereitung genügen lässt, trägt jede Maßnahme, die geplant wird.
+Together ist ein Agent für Planung und Durchführung und trägt keine Maßnahme.
+Die Zeilen zu den Maßnahmen, deren Gegenstand ein Empfehlungssystem, eine
+Vorhersage oder ein Fall aus der Welt ist, stehen als `nein`.
 
 Eine Schwelle, ab der eine Kompetenz als abgedeckt gälte, sieht das Framework an
 keiner Stelle vor; die Tabelle zählt darum Maßnahmen und Teile, keine Stufen.
@@ -111,3 +143,5 @@ Werkzeug für die Maßnahmen, die das Framework beschreibt und die eine Lehrkraf
 mit einer Gruppe durchführt. `zuordnungen.tsv` und ihr Erzeuger
 `build_ailit_coverage.py` sind entfallen; `unterstuetzung.tsv` und
 `build_ailit_support.py` treten an ihre Stelle.
+
+**Was bis zum 2026-11-06 im Agentenpfad stand.** `unterstuetzung.tsv` speiste über `ailit_coverage.json` die Maßnahmen je Seite in Help und in dem Nachschlagewerkzeug `lookup_place`, das Help und Together haben. Die Projektleitung hat am 2026-11-06 entschieden, dass dort die Fassung V 1.0 der Nutzungsberichte gilt (`docs/use_reports/v1.0/`: 33 Berichte, je Instrument Unterrichtsszenarien und die Zuordnung zum Rahmenwerk aus diesen Szenarien, gebaut von `devserver/scripts/build_use_reports.py` nach `devserver/my_app/knowledge/use_reports.json`). `unterstuetzung.tsv` und die daraus erzeugten Dokumente bleiben als Record der früheren Lesart; `ailit_coverage.json` ist entfallen, der Prüfauftrag für Hilfskräfte ist obsolet und entfernt. Der Wortlaut des Rahmenwerks in `learner_expectations.tsv` und `classroom_scenarios.tsv` bleibt die Quelle beider Fassungen; die Lernerwartungen, die die Berichte in Abschnitt 9 zitieren, sind zeichengleich mit `docs/ailit/learner_expectations.tsv`; der Build prüft das bei jedem Lauf.

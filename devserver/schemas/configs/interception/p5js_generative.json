@@ -12,7 +12,8 @@
     "es": "Técnicas generativas",
     "he": "טכניקות גנרטיביות",
     "ar": "تقنيات توليدية",
-    "bg": "Генеративни техники"
+    "bg": "Генеративни техники",
+    "zh-hant": "生成式技法"
   },
   "description": {
     "en": "Translates scene descriptions into generative coding techniques: recursion, noise fields, particle systems, animation, atmospheric effects. Produces rich technique-oriented instructions for the coding model.",
@@ -24,7 +25,8 @@
     "es": "Traduce descripciones de escena en técnicas de programación generativa: recursión, campos de ruido, sistemas de partículas, animación, efectos atmosféricos. Produce instrucciones ricas y orientadas a la técnica para el modelo de codificación.",
     "he": "מתרגם תיאורי סצנה לטכניקות תכנות גנרטיביות: רקורסיה, שדות רעש (noise fields), מערכות חלקיקים, אנימציה, אפקטים אטמוספריים. מפיק הוראות עשירות ומוכוונות-טכניקה עבור מודל הקוד.",
     "ar": "يترجم أوصاف المشهد إلى تقنيات برمجة توليدية: العودية (recursion)، حقول الضجيج (noise fields)، أنظمة الجسيمات، الرسوم المتحركة، التأثيرات الجوية. ينتج تعليمات غنية وموجهة نحو التقنية لنموذج البرمجة.",
-    "bg": "Превежда описанията на сцени в генеративни програмни техники: рекурсия, шумови полета, системи от частици, анимация, атмосферни ефекти. Създава богати, ориентирани към техниката инструкции за кодиращия модел."
+    "bg": "Превежда описанията на сцени в генеративни програмни техники: рекурсия, шумови полета, системи от частици, анимация, атмосферни ефекти. Създава богати, ориентирани към техниката инструкции за кодиращия модел.",
+    "zh-hant": "將場景描述轉譯為生成式程式設計技法：遞迴、雜訊場、粒子系統、動畫、大氣效果。為程式設計模型產出豐富、以技法為導向的指示。"
   },
   "category": {
     "de": "Kreative Verwandlungen",
@@ -36,7 +38,8 @@
     "es": "Transformaciones creativas",
     "he": "טרנספורמציות יצירתיות",
     "ar": "تحولات إبداعية",
-    "bg": "Творчески трансформации"
+    "bg": "Творчески трансформации",
+    "zh-hant": "創意轉化"
   },
   "properties": [
     "aesthetics"

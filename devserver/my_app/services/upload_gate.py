@@ -99,6 +99,12 @@ REASON_FURTHER = "weiterer sperrgrund"
 # so an outage of the scanner rejects instead of admitting silently.
 REASON_SCAN_UNAVAILABLE = "scan_unavailable"
 
+# DOCX reasons. An encrypted DOCX is an OLE container, not a zip, and is
+# answered as REASON_NOT_DOCX like a legacy .doc.
+REASON_NOT_DOCX = "kein DOCX"
+REASON_MACRO = "makro"
+REASON_EXTERNAL_REFERENCE = "externer verweis"
+
 
 # ---------------------------------------------------------------------------
 # Data files
@@ -225,6 +231,88 @@ def validate_pdf(data: bytes) -> Optional[str]:
     return None
 
 
+# ---------------------------------------------------------------------------
+# DOCX validation (zip container, read with zipfile only)
+# ---------------------------------------------------------------------------
+
+_ZIP_MAGIC = b"PK\x03\x04"
+
+# Ceiling on the summed uncompressed size of all members (the 100 MB byte
+# limit of the routes applies to the compressed file; this one catches the
+# zip bomb).
+MAX_DOCX_UNCOMPRESSED = 500 * 1024 * 1024
+
+_REL_HYPERLINK = "/relationships/hyperlink"
+_TARGET_MODE_EXTERNAL = re.compile(rb'TargetMode\s*=\s*["\']External["\']', re.IGNORECASE)
+_RELATIONSHIP = re.compile(rb"<(?:\w+:)?Relationship\b[^>]*>", re.IGNORECASE)
+_REL_TYPE = re.compile(rb'Type\s*=\s*["\']([^"\']*)["\']', re.IGNORECASE)
+
+
+def validate_docx(data: bytes) -> Optional[str]:
+    """Deterministic DOCX validation. Returns None when the file is a Word
+    document container with a body and without macros, embedded objects or
+    external references other than hyperlinks, otherwise a REASON_* category.
+    Reads the container with zipfile and the relationship parts as bytes;
+    nothing is extracted to disk.
+
+      * no zip, or no word/document.xml: REASON_NOT_DOCX;
+      * summed uncompressed size above MAX_DOCX_UNCOMPRESSED: REASON_NOT_DOCX;
+      * a VBA project (vbaProject.bin) or a macro-enabled content type:
+        REASON_MACRO;
+      * embedded objects (word/embeddings/, word/activeX/): REASON_EMBEDDED_FILE;
+      * a relationship with TargetMode="External" whose type is not a
+        hyperlink (remote template, linked object or image):
+        REASON_EXTERNAL_REFERENCE.
+    """
+    import zipfile
+
+    if not data.startswith(_ZIP_MAGIC):
+        return REASON_NOT_DOCX
+    try:
+        with zipfile.ZipFile(BytesIO(data)) as z:
+            infos = z.infolist()
+            names = [i.filename for i in infos]
+            if "word/document.xml" not in names:
+                return REASON_NOT_DOCX
+            if sum(i.file_size for i in infos) > MAX_DOCX_UNCOMPRESSED:
+                return REASON_NOT_DOCX
+            lowered = [n.lower() for n in names]
+            if any(n.endswith("vbaproject.bin") for n in lowered):
+                return REASON_MACRO
+            if "[content_types].xml" in lowered:
+                ct = z.read(names[lowered.index("[content_types].xml")])
+                if b"macroenabled" in ct.lower():
+                    return REASON_MACRO
+            if any(n.startswith(("word/embeddings/", "word/activex/")) for n in lowered):
+                return REASON_EMBEDDED_FILE
+            for name in names:
+                if not name.lower().endswith(".rels"):
+                    continue
+                for rel in _RELATIONSHIP.findall(z.read(name)):
+                    if not _TARGET_MODE_EXTERNAL.search(rel):
+                        continue
+                    m = _REL_TYPE.search(rel)
+                    rel_type = m.group(1).decode("utf-8", "replace") if m else ""
+                    if not rel_type.endswith(_REL_HYPERLINK):
+                        return REASON_EXTERNAL_REFERENCE
+    except (zipfile.BadZipFile, OSError, RuntimeError, ValueError) as e:
+        logger.info("[UPLOAD-GATE] DOCX unreadable: %s", e)
+        return REASON_NOT_DOCX
+    return None
+
+
+def extract_docx_text(data: bytes, word_budget: int = _TEXT_SCAN_WORD_BUDGET) -> str:
+    """The DOCX body text as one lowercase string, cut to word_budget words:
+    the same paragraphs knowledge_extract.docx_text checks Docling's reading
+    against. Called only after validate_docx admitted the container; a body
+    that does not parse raises, so the caller cannot take it for a clean
+    text."""
+    from my_app.services.knowledge_extract import docx_text
+
+    words = docx_text(BytesIO(data)).lower().split()
+    return " ".join(words[:word_budget])
+
+
 def _catalog_has_embedded_files(root: Any) -> bool:
     """True when the catalog declares embedded file streams (via /EmbeddedFiles
     under /Names or a flat /Names array). Structure-only check — the embedded
@@ -344,8 +432,18 @@ def scan_text_layer(text: str) -> Optional[str]:
     if found:
         return REASON_86A
 
-    # §86 — organisation names / propaganda formulas (exact, case-insensitive,
-    # word-boundary). Own versioned data file.
+    return scan_own_lists(text)
+
+
+def scan_own_lists(text: str) -> Optional[str]:
+    """The gate's own two lists over a text: REASON_86 or REASON_FURTHER for
+    the first hit, None for none.
+
+    §86 organisation names and propaganda formulas, then the further
+    categories, each exact, case-insensitive and at word boundaries, from the
+    gate's versioned data files. Raises where a list file cannot be read
+    (_load_terms), so a caller cannot take an unread list for a clean text.
+    """
     lists = load_curated_lists()
     for term in lists["86_orgs"]:
         if _word_boundary_ci(text, term):
@@ -489,12 +587,13 @@ def audit_rejection(doc_hash: str, reason: str, path_hint: str = "") -> None:
 # ---------------------------------------------------------------------------
 
 
-def gate_pdf_upload(data: bytes) -> Tuple[Optional[str], str]:
-    """Full Stage-A gate for a PDF upload: validation + hash blocklist + hash
-    index lookup + text-layer scan, in that order (cheapest and most
-    decisive first). Returns (reason, raw_hash): reason None means the file
-    is admitted; raw_hash is ALWAYS computed (the caller records it in the
-    index after a successful enqueue or audits it on a reject)."""
+def gate_pdf_file(data: bytes) -> Tuple[Optional[str], str]:
+    """The file part of the gate for a PDF upload: hash blocklist + validation
+    + hash index lookup, in that order. Returns (reason, raw_hash) as
+    gate_pdf_upload does. It reads nothing of what the document says: the
+    flow's document import takes the text in at the platform's intake
+    (safety_gate.check_intake, kind "document") once the converter has read
+    it, at the level of whoever brought the document."""
     raw_hash = sha256_hex(data)
 
     # 1. Hash-Sperrliste (curated, versioned, initially empty).
@@ -513,6 +612,20 @@ def gate_pdf_upload(data: bytes) -> Tuple[Optional[str], str]:
         # The caller resolves the dossier and answers with a reference.
         return _DUPLICATE, raw_hash
 
+    return None, raw_hash
+
+
+def gate_pdf_upload(data: bytes) -> Tuple[Optional[str], str]:
+    """Full Stage-A gate for a PDF upload: the file part (gate_pdf_file: hash
+    blocklist + validation + hash index lookup), then the text-layer scan, in
+    that order (cheapest and most decisive first). Returns (reason,
+    raw_hash): reason None means the file is admitted; raw_hash is ALWAYS
+    computed (the caller records it in the index after a successful enqueue
+    or audits it on a reject)."""
+    reason, raw_hash = gate_pdf_file(data)
+    if reason is not None:
+        return reason, raw_hash
+
     # 4. Text-layer pattern scan (§86a, §86, further categories). A scan that
     #    cannot run is a rejection like any other (REASON_SCAN_UNAVAILABLE,
     #    UCD-140) — the same holds in gate_stored_pdf below.
@@ -522,6 +635,48 @@ def gate_pdf_upload(data: bytes) -> Tuple[Optional[str], str]:
         return reason, raw_hash
 
     return None, raw_hash
+
+
+def gate_docx_upload(data: bytes) -> Tuple[Optional[str], str]:
+    """Full Stage-A gate for a DOCX upload, in the order of gate_pdf_upload:
+    hash blocklist, validate_docx, hash index lookup, then the curated-list
+    scan over the body text. A body that does not parse is REASON_NOT_DOCX.
+    Returns (reason, raw_hash) as gate_pdf_upload does."""
+    raw_hash = sha256_hex(data)
+    if raw_hash in load_blocked_hashes():
+        return REASON_BLOCKED_HASH, raw_hash
+    reason = validate_docx(data)
+    if reason:
+        return reason, raw_hash
+    if lookup_hash_index(raw_hash) is not None:
+        return _DUPLICATE, raw_hash
+    return _scan_docx(data), raw_hash
+
+
+def gate_stored_docx(data: bytes) -> Tuple[Optional[str], str]:
+    """Stage A for a reprocess run over a stored DOCX: gate_docx_upload
+    without the hash-index duplicate check, as gate_stored_pdf is for a
+    PDF."""
+    raw_hash = sha256_hex(data)
+    if raw_hash in load_blocked_hashes():
+        return REASON_BLOCKED_HASH, raw_hash
+    reason = validate_docx(data)
+    if reason:
+        return reason, raw_hash
+    return _scan_docx(data), raw_hash
+
+
+def _scan_docx(data: bytes) -> Optional[str]:
+    """The curated-list scan over a validated DOCX's body text."""
+    import xml.etree.ElementTree as ET
+    import zipfile
+
+    try:
+        text = extract_docx_text(data)
+    except (ET.ParseError, KeyError, zipfile.BadZipFile, OSError, ValueError) as e:
+        logger.info("[UPLOAD-GATE] DOCX body unreadable: %s", e)
+        return REASON_NOT_DOCX
+    return scan_text_layer(text)
 
 
 # ---------------------------------------------------------------------------
@@ -542,6 +697,15 @@ _REJECT_MESSAGES = {
     REASON_LAUNCH_ACTION: (
         "Datei nicht angenommen: das Dokument enthält Aktionen, die Programme "
         "starten. Solche Dokumente werden nicht angenommen."
+    ),
+    REASON_NOT_DOCX: "Datei nicht angenommen: kein lesbares DOCX.",
+    REASON_MACRO: (
+        "Datei nicht angenommen: das Dokument enthält Makros. Solche Dokumente "
+        "werden nicht angenommen."
+    ),
+    REASON_EXTERNAL_REFERENCE: (
+        "Datei nicht angenommen: das Dokument lädt Inhalte von außerhalb nach. "
+        "Solche Dokumente werden nicht angenommen."
     ),
     REASON_BLOCKED_HASH: "Datei nicht angenommen: dieses Dokument ist gesperrt.",
     REASON_86A: (

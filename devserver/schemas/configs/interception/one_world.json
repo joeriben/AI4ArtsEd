@@ -11,7 +11,8 @@
     "es": "Un solo mundo",
     "he": "עולם אחד",
     "ar": "عالم واحد",
-    "bg": "Един свят"
+    "bg": "Един свят",
+    "zh-hant": "同一個世界"
   },
   "description": {
     "en": "Reimagines image prompts through perspectives that do not exclude the Global South. Deconstructs Western visual norms and challenges AI's inherent biases toward white-coded subjects, consumerist aesthetics, and Western cultural references.",
@@ -22,6 +23,7 @@
     "he": "מדמיין מחדש פרומפטים לתמונות דרך פרספקטיבות שאינן מדירות את הדרום הגלובלי. מפרק נורמות חזותיות מערביות ומאתגר את ההטיות הטבועות של AI כלפי נושאים מקודדים כלבנים, אסתטיקה צרכנית והפניות תרבותיות מערביות.",
     "ar": "يُعيد تصوّر موجهات الصور من خلال وجهات نظر لا تستثني الجنوب العالمي. يفكّك المعايير البصرية الغربية ويتحدى التحيزات المتأصلة في الذكاء الاصطناعي تجاه الموضوعات المُرمَّزة بالبياض والجماليات الاستهلاكية والمرجعيات الثقافية الغربية.",
     "bg": "Преосмисля промптове за изображения през перспективи, които не изключват Глобалния юг. Деконструира западните визуални норми и предизвиква присъщите предразсъдъци на ИИ към кодирани като бели субекти, потребителска естетика и западни културни референции.",
+    "zh-hant": "透過不排除全球南方的視角，重新構想圖像提示詞。解構西方的視覺規範，挑戰 AI 對被編碼為白人的主體、消費主義美學與西方文化參照的內在偏見。",
     "tr": "Görüntü promptlarını Küresel Güney'i dışlamayan perspektifler aracılığıyla yeniden hayal eder. Batı görsel normlarını yapısöküme uğratır ve yapay zekanın beyaz-kodlanmış öznelere, tüketimci estetiklere ve Batı kültürel referanslarına yönelik içkin önyargılarını sorgular.",
     "ko": "글로벌 사우스를 배제하지 않는 시각을 통해 이미지 프롬프트를 재상상합니다. 서양의 시각적 규범을 해체하고, 백인으로 코딩된 대상, 소비주의 미학, 서양 문화적 참조에 대한 AI의 내재적 편향에 도전합니다."
   },
@@ -31,6 +33,7 @@
     "he": "חשיבה ביקורתית",
     "ar": "التفكير النقدي",
     "bg": "Критическо мислене",
+    "zh-hant": "批判性思考",
     "tr": "Eleştirel Düşünce",
     "ko": "비판적 사고",
     "uk": "Критичне мислення",

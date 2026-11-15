@@ -8,14 +8,45 @@ import { lensContext } from '@/lib/lensContext'
 import { PLATFORM_LANGUAGES, FURTHER_LANGUAGES } from '@/lib/platformLanguages'
 import { translationDefaults, translationDefaultsError, loadTranslationDefaults } from '@/lib/translationDefaults'
 import { READING_FRAMES } from '@/data/readingFrames'
-import { safetyBlockKeyForEvent } from '@/composables/useGenerationStream'
-import { uploadImageFile, quickImageSafetyCheck } from '@/composables/useMaterialIntake'
+import { safetyBlockMessageKey, type SafetyBlock } from '@/composables/useGenerationStream'
+import { isLocalModel, useModelRegister } from '@/composables/useModelRegister'
+import { uploadCheckedImage } from '@/composables/useMaterialIntake'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 import { STANDARD_SEED } from '@/composables/useSeedAutomatic'
 import { glyphOfMediaType } from '@/composables/useMediumInference'
 import MediumGlyph from '@/components/MediumGlyph.vue'
 const { t, locale } = useI18n()
+
+// A model is offered under the line every list of language models on the
+// platform gives it (useModelRegister.modelLabel), not under the list's own
+// name, which names the provider.
+const register = useModelRegister()
+function modelLabel(model: LLMModelSummary): string {
+  return register.modelLabel(
+    model.register || model.id, model.name, locale.value,
+    isLocalModel(model.id) ? t('compare.shared.localModel') : '',
+  )
+}
+
+/** Both lists in the order every list of models offers them in (useModelRegister.ordered). */
+function inListOrder(models: readonly LLMModelSummary[] | undefined): LLMModelSummary[] {
+  return register.ordered(
+    models || [],
+    m => ({ local: isLocalModel(m.id), key: m.register || m.id, label: modelLabel(m) }),
+    locale.value,
+  )
+}
+
+/**
+ * Whether a node holds a model its list does not name: one the settings no
+ * longer offer, on a board from before a provider switch or from a file. The
+ * node keeps it and sends to it, so its select shows the id rather than
+ * standing blank over it, as a System Prompts column does.
+ */
+function heldOutsideList(id: string | undefined, models: readonly LLMModelSummary[] | undefined): boolean {
+  return !!id && !(models || []).some(m => m.id === id)
+}
 const safetyStore = useSafetyEventStore()
 
 // Icon URL helper
@@ -39,8 +70,12 @@ const props = defineProps<{
     output: unknown
     error: string | null
     model?: string
+    /** The block message of a refusal of the platform's checks (services/canvas_executor.py). */
+    safety_block?: SafetyBlock
+    /** A translation node: the language its run sent, a code or a name written
+     *  in free text; null where an own instruction named its language itself. */
+    language?: string | null
     /** A refusal of the platform's checks (services/canvas_executor.py). */
-    blocked?: { stage: number | string; reason: string; operational?: boolean }
   }
   /** Collector output (only for collector nodes) */
   collectorOutput?: CollectorOutputItem[]
@@ -49,6 +84,8 @@ const props = defineProps<{
 }>()
 
 /** The medium of the chosen config as a glyph; null draws the empty frame below. */
+const orderedLlmModels = computed(() => inListOrder(props.llmModels))
+const orderedVisionModels = computed(() => inListOrder(props.visionModels))
 const configGlyph = computed(() => glyphOfMediaType(props.configMediaType))
 
 const emit = defineEmits<{
@@ -108,7 +145,13 @@ const emit = defineEmits<{
 const errorLine = computed(() => {
   const res = props.executionResult
   if (!res?.error) return ''
-  if (res.blocked) return t(safetyBlockKeyForEvent(res.blocked))
+  if (res.safety_block) return t(safetyBlockMessageKey(res.safety_block))
+  // A model can carry one language and fail in the next, so a failed
+  // translation says which language its run went into.
+  if (props.node.type === 'translation') {
+    const lang = failedTranslationLanguage.value
+    return lang ? t('compare.translationFailed', { lang, cause: res.error }) : res.error
+  }
   return res.error
 })
 
@@ -309,7 +352,8 @@ function onTranslationPromptBlur(event: FocusEvent) {
  *  own instruction names itself. */
 const OTHER_LANGUAGE = '__other__'
 const FROM_PROMPT = '__prompt__'
-const LISTED_LANGUAGES = new Set([...PLATFORM_LANGUAGES, ...FURTHER_LANGUAGES].map(l => l.code))
+/** The listed languages by code, with the label the select shows. */
+const LISTED_LANGUAGES = new Map([...PLATFORM_LANGUAGES, ...FURTHER_LANGUAGES].map(l => [l.code, l.label]))
 
 const ownLanguage = computed(() => ownText(props.node.translationLanguage))
 /** Chosen „Other Language…“ or typed into its field: the field stays open while
@@ -331,6 +375,14 @@ const translationLanguageChoice = computed(() => {
   // the default one goes with English (canvas_executor._execute_translation).
   if (language === undefined) return hasOwnInstruction.value ? FROM_PROMPT : translationDefaults.value.language
   return LISTED_LANGUAGES.has(language) ? language : OTHER_LANGUAGE
+})
+
+/** The language the node's last run sent (its result, not its fields, which
+ *  can have changed since), named as the select names it: the listed label, or
+ *  the name as written. */
+const failedTranslationLanguage = computed(() => {
+  const language = props.executionResult?.language
+  return language ? LISTED_LANGUAGES.get(language) ?? language : ''
 })
 
 function onTranslationLanguageChange(event: Event) {
@@ -491,16 +543,12 @@ async function onImageUpload(event: Event) {
   // value still holds that name fires no change event for it, so a node that
   // refused a picture would take nothing at all from the second attempt.
   try {
-    const up = await uploadImageFile(file)
-    const safety = await quickImageSafetyCheck(up.path)
-    if (!safety.safe) {
-      safetyStore.reportBlock(
-        'vlm_input',
-        safety.errorMessage || t('safetyBlocked.inputImage'),
-        [],
-        safety.vlmDescription,
-        safety.operational,
-      )
+    const { up, safety } = await uploadCheckedImage(file)
+    if (!up || !safety.safe) {
+      safetyStore.reportBlock(safety.block, {
+        vlmDescription: safety.vlmDescription,
+        operational: safety.operational,
+      })
       return
     }
     if (safety.vlmDescription) safetyStore.reportAnalysis(safety.vlmDescription, true)
@@ -517,7 +565,7 @@ async function onImageUpload(event: Event) {
     // and the companion says why — a console line is not something anyone in
     // the room can read.
     console.error('[ImageInput] Upload error:', err)
-    safetyStore.reportBlock('vlm_input', '', [], undefined, true)
+    safetyStore.reportBlock(null, { operational: true })
   } finally {
     input.value = ''
   }
@@ -812,12 +860,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.selectLlmPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.randomPromptModel, llmModels)" :value="node.randomPromptModel">{{ node.randomPromptModel }}</option>
             <option
-              v-for="model in llmModels"
+              v-for="model in orderedLlmModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -866,12 +915,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.selectLlmPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.llmModel, llmModels)" :value="node.llmModel">{{ node.llmModel }}</option>
             <option
-              v-for="model in llmModels"
+              v-for="model in orderedLlmModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -899,12 +949,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.selectLlmPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.llmModel, llmModels)" :value="node.llmModel">{{ node.llmModel }}</option>
             <option
-              v-for="model in llmModels"
+              v-for="model in orderedLlmModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -987,12 +1038,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.selectLlmPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.comparisonLlmModel, llmModels)" :value="node.comparisonLlmModel">{{ node.comparisonLlmModel }}</option>
             <option
-              v-for="model in llmModels"
+              v-for="model in orderedLlmModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -1188,12 +1240,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.selectLlmPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.llmModel, llmModels)" :value="node.llmModel">{{ node.llmModel }}</option>
             <option
-              v-for="model in llmModels"
+              v-for="model in orderedLlmModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -1239,12 +1292,13 @@ const nodeHeight = computed(() => {
             @mousedown.stop
           >
             <option value="" disabled>{{ $t('canvas.stage.imageEvaluation.visionModelPlaceholder') }}</option>
+            <option v-if="heldOutsideList(node.visionModel, visionModels)" :value="node.visionModel">{{ node.visionModel }}</option>
             <option
-              v-for="model in visionModels"
+              v-for="model in orderedVisionModels"
               :key="model.id"
               :value="model.id"
             >
-              {{ model.name }}
+              {{ modelLabel(model) }}
             </option>
           </select>
         </div>
@@ -1322,7 +1376,8 @@ const nodeHeight = computed(() => {
 
       <!-- Why this node stopped the run. A refusal of the platform's checks
            reads as every surface reads it (and the safety window says more);
-           any other failure as the node reported it. -->
+           a failed translation with the language its run went into; any
+           other failure as the node reported it. -->
       <p v-if="errorLine" class="module-error error-text" role="status">{{ errorLine }}</p>
     </div>
 

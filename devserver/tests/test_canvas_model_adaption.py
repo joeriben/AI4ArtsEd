@@ -24,6 +24,19 @@ import my_app.routes.schema_pipeline_routes as spr
 from my_app.services.canvas_executor import CanvasWorkflowExecutor
 
 
+@pytest.fixture(autouse=True)
+def _results_pass(monkeypatch):
+    """The check at the result lets every text pass; test_canvas_checks.py
+    tests it."""
+    from my_app.services import canvas_executor
+    from my_app.services.safety_gate import CHECKPOINT_RESULT, Verdict
+
+    def passes(text, *, level, field="text"):
+        return Verdict(True, CHECKPOINT_RESULT, level, field)
+
+    monkeypatch.setattr(canvas_executor, "check_result_text", passes)
+
+
 class _Recorder:
     def __init__(self):
         self.saved = []
@@ -100,3 +113,12 @@ def test_no_instruction_passes_the_text_on(stubs, preset):
     assert engine.requests == []
     assert ex.results["ad"]["output"] == "a red circle"
     assert ex.results["ad"]["adapted"] is False
+
+
+def test_a_looped_answer_goes_on_in_its_once_form(stubs):
+    """No error for a model that began to repeat itself: the text goes on with
+    what repeated in it standing in it once, as at the translation node
+    (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31). The engine side is in
+    test_interception_local_branch.py."""
+    _, engine = _run("video")
+    assert engine.requests[0].loop_once is True

@@ -272,6 +272,7 @@ export const de = {
       uiModeEffectStructure: 'Informationen auf dem Bildschirm: einfach blendet die technischen Anzeigen aus, Experte zeigt Modell, Seed und Parameter.',
       uiModeEffectStyle: 'Stil der Bildkommentare.',
       uiModeNotSafety: 'Das ist keine Filtereinstellung. Was geprüft und blockiert wird, entscheidet die Sicherheitsstufe weiter unten.',
+      traditionalChineseZhHant: 'Traditionelles Chinesisch (zh-hant)',
     },
     safety: {
       kidsTitle: 'Kinder (8–13)',
@@ -331,15 +332,6 @@ export const de = {
       storedIn: 'Gespeichert in',
       currentKey: 'Aktuell',
       keyOf: 'API-Schlüssel für {provider}',
-      frontierImageLabel: 'Externes Frontier-Bildmodell',
-      frontierProviderLabel: 'Provider',
-      frontierKeyLabel: 'API-Key vorhanden',
-      frontierBalanceLabel: 'Kontostand Mammouth.ai',
-      frontierUsedUp: {
-        account: 'Kontobudget aufgebraucht',
-        key: 'Budget dieses API-Keys aufgebraucht',
-        team: 'Budget des Teams aufgebraucht',
-      },
     },
     save: {
       saveApply: 'Speichern & Anwenden',
@@ -1139,7 +1131,7 @@ export const de = {
       modelComparison: 'Modellvergleich',
       differentModelsInterpretSame: 'Verschiedene Modelle interpretieren denselben Prompt auf Basis desselben Rauschbilds — und erzeugen dennoch völlig unterschiedliche Ergebnisse. Der Modellvergleich macht sichtbar, dass das Modell selbst eine entscheidende Variable ist, nicht nur der Prompt.',
       currentTopModels: 'Aktuelle Top-Modelle',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — drei aktuelle Modelle im direkten Vergleich.',
+      sd35Large: 'SD 3.5 Large, Flux 2 und Flux 3 Klein im direkten Vergleich.',
       historicalComparison: 'Historischer Vergleich',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — drei Generationen. Wie hat sich die Bildgenerierung Jahr für Jahr verändert?',
       temperatureComparison: 'Temperaturvergleich',
@@ -1835,6 +1827,13 @@ export const de = {
     stopping: 'wird gestoppt\u2026',
   },
   surrealizer: {
+    // Address, German authored, English set after it (2026-11-07).
+    // The first five German sentences are SUPPLIED WORDING of the project lead
+    // (annotation to the page); the address 'Du' is theirs and stays. English
+    // is a translation of them.
+    // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+    story: 'Stell Dir vor dass ein KI-Modell ein großer Raum voller Bildelemente (Tonelemente, usw) ist. Dieser Raum ist riesig, aber genau geordnet. Hier geht es darum, diese Ordnung durcheinanderzubringen und Orte in diesem Raum zu erreichen, die mit einem normalen Prompt unmöglich zu erreichen sind. Heraus kommen Bilder und Töne, die alles was das Modell gelernt hat vollkommen anders zusammenbringen. Die Ergebnisse haben fast immer mit Deinem Prompt zu tun, sind aber buchstäblich "verrückt". Drei Text-Encoder des Bildmodells kodieren einen Prompt in eine Tabelle: einen CLIP-Block über einem T5-Block. Unter der Überschrift „Konditionierungstabelle“ stehen die Zeichnung dieser Tabelle und die Regler a, b und c: a ist der Faktor auf dem CLIP-Block, c der auf dem T5-Block. Mit dem Faktor b addiert die Plattform die ersten 77 Zeilen des T5-Encoders zusätzlich in den CLIP-Block.',
+    purpose: 'Eine Zeile mit beiden Kodierungen zugleich liegt außerhalb der Zustände, auf die das Modell trainiert ist. Bei einem anderen Wert von b und gleichem Seed kann das Modell Stil, Komposition und Gegenstände des Bildes ändern.',
     infoDescription: 'Encoder Fusion ist ein Instrument des Latent Lab, das die Konditionierung des Bildmodells Stable Diffusion 3.5 verändert, bevor das Modell rechnet: die Zahlentabelle, die drei Text-Encoder aus dem Prompt berechnen und aus der das Modell das Bild berechnet. Die Tabelle hat 4096 Spalten. Die beiden CLIP-Encoder CLIP-L und CLIP-G füllen die Zeilen 0–76 bis Spalte 2047, und die Spalten 2048–4095 dieser Zeilen sind null; der Encoder T5-XXL füllt 512 Zeilen darunter über alle Spalten, mehr, wenn der Prompt mehr T5-Stücke hat, insgesamt 589 Zeilen bei einem Prompt bis zu dieser Länge. Eine Zeile hält ein Stück des Prompts, eine Start- oder Endmarke oder, hinter dem Ende des Textes, Auffüllung. CLIP-L und CLIP-G sind auf Paaren von Bildern und Bildbeschreibungen trainiert und T5-XXL allein auf Text, sodass die zwei Blöcke zwei verschiedene Kodierungen desselben Prompts halten. Drei Faktoren greifen an der Tabelle an: a multipliziert den CLIP-Block, c multipliziert den T5-Block, und b addiert die T5-Zeilen 0–76 Zelle für Zelle in den CLIP-Block, jede T5-Zeile auf die CLIP-Zeile gleicher Nummer, gleich welches Stück des Prompts in beiden steht. Der T5-Block hält alle diese Zeilen oder, in der Anordnung des früheren Surrealizers, die Zeilen 77–511 allein, sodass T5s Zeilen 0–76 das Modell nur als b-facher Summand im CLIP-Block erreichen; die zwei Felder in der Zeile von c stellen es. Neben der Tabelle liest das Modell den Pool-Vektor, in der Zeichnung pool, CLIP-Ls 768 und CLIP-Gs 1280 Zahlen aneinandergefügt, als einen Eingang der Modulation: die Zahlen, mit denen jede Schicht des Modells skaliert und verschiebt, was durch sie läuft; die zwei Felder in der Zeile von a stellen ein, ob das Modell diesen Vektor erhält oder Nullen an seiner Stelle. Standard, a 1, b 0, c 1, pool CLIP, ist die Tabelle und der Vektor, wie sie ohne dieses Instrument stehen. Das Instrument ist für die Tabellen jenseits dieser einen da. Mit dem T5-Block auf null oder, auf den Zeilen 0–511, mit dem CLIP-Block und dem Pool-Vektor auf null läuft das Modell in einem Zustand, den sein Training enthielt; eine Zeile, in der beide Kodierungen stehen, wie b über 0 sie erzeugt, oder ein Block mit umgedrehtem Vorzeichen, wie a unter 0 ihn erzeugt, ist eine Konditionierung jenseits dessen, was ein Prompt erzeugt, und ein Lauf zeigt, was das Modell daraus berechnet. Jeder Lauf behält eine Karte in der Schublade unter der Fläche, beschriftet mit seinen drei Faktoren, bei jener Anordnung mit den Zeilen 77–511 und bei pool 0 mit Nullen an der Stelle des Pool-Vektors, sodass Läufe mit verschiedenen Einstellungen nebeneinander stehen.',
     purposeText: 'Gib einen Prompt in das Feld ein; er geht an CLIP-L, CLIP-G und T5 gleichermaßen. Die sechs Felder über der Zeichnung stellen alle drei Faktoren, die Anordnung des T5-Blocks und den Pool-Vektor, in der Zeichnung pool, in einem Zug ein. Standard (a 1, b 0, c 1, pool CLIP) ist die Tabelle und der Vektor, wie Stable Diffusion 3.5 von sich aus rechnet. Nur CLIP (a 1, b 0, c 0, pool CLIP) setzt den T5-Block auf null, die Einstellung ohne T5, die Esser u. a. (2024) gemessen haben. Nur T5 (a 0, b 0, c 1, pool 0) setzt den CLIP-Block auf null und setzt Nullen an die Stelle des Pool-Vektors: Das Modell rechnet dann allein mit T5s Zahlen. Surrealisierung 5, 15 und 35 (a 1 − n, b n, c 1, T5-Block Zeilen 77–511, pool CLIP) tragen die Rechnung des früheren Surrealizers in seinen Stärken 5, 15 und 35: den CLIP-Block mit umgedrehtem Vorzeichen und gestreckt, T5s Zeilen 0–76 n-fach addiert und unter dem CLIP-Block T5s Zeilen 77–511 allein. Die drei Regler unter der Zeichnung bewegen jeden Faktor für sich, a und b von −75 bis 75, c von 0 bis 1. a bei 0 nimmt CLIPs Zahlen aus den Zeilen 0–76; a unter 0 dreht das Vorzeichen jeder CLIP-Zelle und multipliziert sie mit der Größe des Faktors. b bei 0 addiert nichts in den CLIP-Block; b über 0 schreibt Summen beider Kodierungen in die Zeilen 0–76; b unter 0 subtrahiert T5s Zeilen stattdessen. c bei 0 leert den T5-Block. Die zwei Felder in der Zeile von c stellen ein, welche Zeilen der T5-Block hält: die Zeilen 0–511, die Anordnung, mit der Stable Diffusion 3.5 von sich aus rechnet, oder die Zeilen 77–511 allein, die Anordnung des früheren Surrealizers, unter der T5s Zeilen 0–76 das Modell nur als b-facher Summand im CLIP-Block erreichen; Standard, Nur CLIP und Nur T5 stehen auf den Zeilen 0–511, die drei Surrealisierungs-Felder auf den Zeilen 77–511, und der Schlüssel eines Laufs auf den Zeilen 77–511 trägt T5 77–511. Die zwei Felder in der Zeile von a stellen den Pool-Vektor ein: pool CLIP, den Vektor, wie CLIP-L und CLIP-G ihn berechnen, oder pool 0, Nullen an seiner Stelle; Nur T5 steht auf pool 0, die anderen fünf Felder auf pool CLIP, und der Schlüssel eines Laufs auf pool 0 trägt pool 0. Die Token-Tabelle unter den Reglern listet Zeile für Zeile das CLIP-Stück und das T5-Stück, die b zusammenlegt; Stücke eines langen Prompts jenseits des CLIP-Blocks erreichen allein T5, und die Tabelle zählt sie. Unter Erweiterte Einstellungen stehen der Negativ-Prompt, der unter denselben drei Faktoren, derselben Anordnung und demselben Pool-Vektor läuft, die CFG Scale und der Seed. Das Dreieck, im Tooltip Ausführen, zeigt das Bild auf der Fläche und legt eine Karte in die Schublade, beschriftet mit a · b · c; der Schlüssel in der Leiste einer Karte setzt jenen Lauf wieder auf die Fläche: Prompt, Faktoren, Anordnung, Pool-Vektor, Negativ-Prompt, CFG Scale, Seed und Bild.',
     techText: 'Die Rechnung läuft in ComfyUI im Knoten AI4ArtsEdSD3ThreeFactors (comfyui_nodes/ai4artsed_sd3_conditioning.py), auf den Teilen, die der Encode-Knoten derselben Familie für den Prompt liefert: Die Zeilen 0–76 erhalten a · CLIP + b · T5[0..76], die Zeilen ab 77 erhalten c · T5, in float32, nichts begrenzt. T5 läuft mit 512 Zeilen (T5TokenizerOptions, min_length 512, devserver/schemas/engine/comfyui_chunk_support.py) oder, darüber hinaus, mit der eigenen Länge des Prompts. Die Anordnung des Blocks ist der vierte Parameter, t5_rows: full, die Zeilen 0–511 unter dem CLIP-Block, eine Tabelle von 589 Zeilen, oder tail, die Zeilen 77–511 allein, eine Tabelle von 512 Zeilen, die Anordnung des früheren Surrealizers, in der T5s Zeilen 0–76 das Modell nur als b-facher Summand im CLIP-Block erreichen. Der Pool-Vektor, CLIP-Ls 768 und CLIP-Gs 1280 Zahlen aneinandergefügt, ist der fünfte Parameter, pooled. Unter clip gibt der Knoten ihn weiter, wie die zwei Encoder ihn berechnen; unter zero gibt er Nullen gleicher Form weiter, die ComfyUI selbst für den Vektor zusammensetzt, wenn es ohne CLIP-Encoder läuft (comfy/text_encoders/sd3_clip.py). Die drei Faktoren greifen an der Tabelle an; der Vektor geht ganz durch. Der Negativ-Prompt läuft durch einen zweiten Knoten derselben Art unter denselben fünf Parametern; ein leerer Negativ-Prompt ist die Kodierung der leeren Zeichenkette. (1, 0, 1, full, clip) ist die Sequenz und der Vektor, wie ComfyUI sie von sich aus zusammensetzt; (1 − α, α, 1, tail, clip) ist der frühere Knoten AI4ArtsEdSD3Fusion unter legacy bei α, bitgleich, und genau das senden die drei Surrealisierungs-Felder. Im Modell läuft die ganze Tabelle durch eine lineare Schicht auf die Breite des Transformers, mit denselben Gewichten für jede Zeile, und Positionskodierungen werden allein zu den Bild-Patches addiert (Esser u. a. 2024, Abschnitt 4, Abbildung 2), sodass der Platz einer Textzeile in der Tabelle in der Rechnung keine Rolle spielt; eine T5-Zeile, die in eine CLIP-Zeile addiert ist, ist am Eingang dieser Schicht eine Summe. Den Pool-Vektor liest das Modell getrennt von der Tabelle: Embeddings des Zeitschritts, des Schritts des Laufs, an dem das Modell steht, und dieses Vektors sind die Eingänge des Modulations-Mechanismus (Esser u. a. 2024, Abschnitt 4), den jeder Transformer-Block des Modells trägt (comfy/ldm/modules/diffusionmodules/mmdit.py), sodass Nullen an seiner Stelle diese Modulation in jedem Transformer-Block verändern und die Tabelle lassen, wie sie ist. Esser u. a. (2024, „Scaling Rectified Flow Transformers for High-Resolution Image Synthesis“, ICML 2024, https://doi.org/10.48550/arXiv.2403.03206) beschreiben den Aufbau in Anhang B.2, die CLIP-Zeilen entlang der Kanal-Achse mit Nullen auf 4096 aufgefüllt und entlang der Sequenz-Achse mit den T5-Zeilen aneinandergefügt; das Training mit jedem Encoder unabhängig zu 46,4 % auf null gesetzt (B.3); und die Ablation ohne T5 in Abschnitt 5.3.3, mit Gewinnraten gegen das vollständige Modell von 50 % für Ästhetik, 46 % für Prompt-Treue und 38 % für geschriebenen Text. In der Veröffentlichung hat der T5-Kontext 77 Zeilen; ComfyUI lässt T5 hier mit 512 Zeilen laufen. CLIP-L ist der Text-Encoder von Radford u. a. (2021, „Learning Transferable Visual Models From Natural Language Supervision“, ICML 2021, https://doi.org/10.48550/arXiv.2103.00020), CLIP-G der des OpenCLIP ViT-bigG/14 von Cherti u. a. (2023, „Reproducible Scaling Laws for Contrastive Language-Image Learning“, CVPR 2023, https://doi.org/10.48550/arXiv.2212.07143), beide auf Bild-Text-Paaren trainiert; T5-XXL ist der Encoder von Raffel u. a. (2020, „Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer“, JMLR 21, https://doi.org/10.48550/arXiv.1910.10683), allein auf Text trainiert.',
@@ -1946,12 +1945,7 @@ export const de = {
     working: 'arbeitet…',
     waiting: 'wartet',
     stationFailed: 'diese Maschine hat nicht geantwortet',
-    stationFailedNamed: '{station} — diese Maschine hat nicht geantwortet',
-    band: {
-      done: 'Alle vier haben geantwortet',
-    },
     run: {
-      name: 'Start',
       start: 'Die Aufnahme durch die vier Maschinen schicken',
       took: 'in {s} s geantwortet',
     },
@@ -2004,9 +1998,7 @@ export const de = {
       pick: 'Wahl des Modells',
       held: 'von Hand gewählt — diese läuft',
       name: 'Ausgabe',
-      note: 'Das hier kann nur gehört werden, nicht gelesen. Halte es gegen den Text darüber.',
-      madeBy: 'gemacht von {model}, in {s} s',
-      notKept: 'Das existiert nur, solange du auf der Seite bleibst. Es kann nicht gespeichert, favorisiert oder heruntergeladen werden — es ist ein Nachspielen, kein Werk.',
+      madeBy: 'erstellt von {model}, in {s} s',
     },
     errors: {
       noMic: 'Kein Mikrofon verfügbar, oder die Berechtigung wurde verweigert.',
@@ -2166,7 +2158,7 @@ export const de = {
           posNote: 'die Platznummern der [[Token]]',
           ctrlNote: 'ein Steuer-[[Token]]',
           fourNote: 'aus einem Wort werden vier [[Token]]',
-          langHead: 'Derselbe Satz in den zehn Sprachen dieser Plattform, in [[Token]] zerlegt:',
+          langHead: 'Derselbe Satz in zehn Sprachen dieser Plattform, in [[Token]] zerlegt:',
           // Je Zeile `Sprachkürzel¦Name¦Anzahl Token`. Am 22.09.2026 an
           // Qwen3-4B gemessen, am Prompt `promptExamples.presets.house` jeder
           // Sprachdatei, beide Sätze (bis dahin der erste allein, Stand 26.08.).
@@ -2353,8 +2345,13 @@ export const de = {
     },
     meanImages: {
       description: 'Viele erzeugte Bilder — aus Umformulierungen eines Prompts oder aus einem Prompt auf verschiedenen Seeds — zu einem Bild gemittelt. Bei den beiden SD 3.5-Modellen wird der Mittelwert vor dem Decoder gebildet, und jede Zeile sagt, welchen Mittelwert sie zeigt.',
-      story: 'Das Instrument erzeugt aus einem Prompt viele Bilder und mittelt sie je KI-Modell zu einem mean image. Pro Modell werden zwei Mittelwerte berechnet. Der erste ist der Mittelwert der Bilder, die aus englischen Varianten des Prompts erzeugt wurden — ein Sprachmodell schreibt sie inhaltsgleich mit anderen Worten, so viele, wie die Einstellung ‚Bilder pro Zelle‘ angibt. Der zweite ist der Mittelwert der Bilder, die aus dem Prompt wie eingegeben auf zufällig variierten Start-Seeds erzeugt wurden. Die Modelle sind wählbar, je eine Zeile; beide Spalten stehen immer. Ein Schalter in der linken Spalte zeigt stattdessen die Einzelbilder als Kontaktbogen oder ein Relief des Mittelwerts. Bei den beiden SD 3.5-Modellen wird der Mittelwert vor dem Decoder gebildet: Die Latents der Bilder werden gemittelt und einmal dekodiert. Die übrigen Modelle werden Pixel für Pixel gemittelt, und jede Zeile sagt, welches von beidem.',
-      purpose: 'Diese Seite wendet die ‚mean images‘ der Künstlerin Hito Steyerl als Methode gegen generative KI-Modelle an. Der Mittelwert vieler Bilder, erzeugt aus Umformulierungen eines Prompts oder aus einem Prompt auf verschiedenen Seeds, lässt sich über KI-Modelle hinweg vergleichen. Der Vergleich dient der Erkundung visueller Klischees, Vorurteile und anderer Formen der statistischen Produktion von ‚Normalität‘.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: die am 2026-09-04 abgenommene Fassung, berichtigt: wer erzeugt und mittelt, die Beschriftung „Ansicht“, die englische Fassung des Prompts; gestrichen: „beide Spalten stehen immer“ (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Ein KI-Modell erzeugt aus einem Prompt viele Bilder, und die Plattform mittelt sie zu einem mean image. Die Plattform berechnet pro Modell zwei Mittelwerte. Der erste ist der Mittelwert der Bilder, die aus englischen Varianten des Prompts erzeugt wurden: Die erste Variante ist die englische Fassung des Prompts, die weiteren schreibt ein Sprachmodell inhaltsgleich mit anderen Worten. Zusammen sind es so viele, wie die Einstellung „Bilder pro Zelle“ angibt. Der zweite ist der Mittelwert der Bilder, die aus der englischen Fassung des Prompts auf zufällig variierten Start-Seeds erzeugt wurden. Die Modelle sind wählbar, je eine Zeile. Unter „Ansicht“ in der linken Spalte stehen drei Ansichten zur Wahl: der Mittelwert, die Einzelbilder als Kontaktbogen und ein Relief des Mittelwerts. Bei den beiden SD 3.5-Modellen bildet die Plattform den Mittelwert vor dem Decoder: Sie mittelt die Latents der Bilder und dekodiert einmal. Bei den übrigen Modellen mittelt sie Pixel für Pixel, und jede Zeile sagt, welches von beidem.',
+      // The sentence on visual clichés follows `latentLab.meanImages.origin`
+      // (project lead's wording).
+      // 2026-11-15: Satz 1 aus der am 2026-09-04 abgenommenen Fassung zurückgeholt und berichtigt („Varianten“). Satz 2 ist Sitzungstext, am 2026-09-04 abgenommen (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Der Mittelwert vieler Bilder, erzeugt aus Varianten eines Prompts oder aus einem Prompt auf verschiedenen Seeds, lässt sich über KI-Modelle hinweg vergleichen. Der Vergleich dient der Erkundung visueller Klischees, Vorurteile und anderer Formen der statistischen Produktion von ‚Normalität‘. Im Mittelwert bleibt, was in jedem der Bilder an derselben Stelle stand.',
       generate: 'Serie starten',
       seedLabel: 'Seed',
       advancedLabel: 'Erweiterte Einstellungen',
@@ -2406,8 +2403,13 @@ export const de = {
     },
     loraReach: {
       description: 'Ein trainierter Adapter, durch vier Zustände desselben Vergleichs geführt: dasselbe Motiv, derselbe Seed und dasselbe Modell, ausgeführt mit und ohne das Wort, unter dem der Adapter trainiert wurde, und mit und ohne den Adapter selbst.',
-      story: 'Du wählst einen hier trainierten Adapter, das Wort, unter dem seine Bilder beschriftet wurden, und ein paar Motive — ein Motiv pro Zeile, und jedes wird eine Spalte. Jede Spalte wird dann viermal erzeugt: das blanke Modell auf dem Motiv allein, das blanke Modell mit dem Wort davor, der Adapter mit dem Wort und der Adapter ohne es. Alle sechzehn Bilder kommen aus einem Modell mit einer Startzahl, sodass zwei von ihnen allein der Prompt und der Adapter trennt.',
-      purpose: 'Die dritte Zeile gegen die zweite ist die Reichweite: was das Training zu dem hinzugefügt hat, was die Worte ohnehin schon trugen. Die vierte Zeile gegen die erste ist die Grenze: ob der Adapter auch antwortet, wenn er nicht gerufen wird — daran zeigt sich, dass er überschrieben hat, was das Modell wusste, statt es zu ergänzen. Ein Motiv, das im Training des Adapters nicht vorkam, stellt dieselbe Frage von der anderen Seite: ob eine trainierte Machart übergeht oder ob der Adapter die Gegenstände seines Trainingssets mitbringt.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Zur Wahl stehen ein hier trainierter Adapter, das Trigger-Wort, unter dem seine Bilder beschriftet wurden, und ein paar Motive, ein Motiv pro Zeile, und jedes wird eine Spalte. Jede Spalte hat dann vier Bilder: eines vom blanken Modell auf dem Motiv allein, eines vom blanken Modell mit dem Wort davor, eines mit dem Adapter und dem Wort und eines mit dem Adapter allein. Alle Bilder erzeugt ein Modell mit einem Seed, sodass zwei von ihnen allein der Prompt und der Adapter trennt.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Mit einem Adapter kann sich die gewöhnliche Bedeutung eines Wortes, das in den Beschriftungen stand, mitverschieben. Bei einem Motiv außerhalb des Trainingssets des Adapters zeigt die Spalte, ob die Bilder mit dem Adapter das Motiv in einer trainierten Machart wiedergeben oder die Gegenstände seines Trainingssets.',
       generate: 'Vergleich starten',
       adapterLabel: 'Adapter',
       noAdapters: 'Hier wurde noch nichts trainiert. Im Training Studio entsteht ein Adapter.',
@@ -2429,11 +2431,13 @@ export const de = {
       // („Eine Zeile, die Ihr schreibt“) wurde zur unpersonalen Benennung des
       // Vorgangs, „Zeile“ zu „Prompt“ (docs/COPY_RULES.md: das Wort der Fläche
       // ist das Wort); „geht an“ (Bewegungsverb) wurde zu „erhalten“, weil
-      // docs/COPY_RULES.md zugleich das Ankunftsverb verbietet. Der
-      // Schlusssatz der zweiten Hälfte ist Vorgegebener Wortlaut und bleibt
-      // mit seiner Anrede wörtlich.
-      story: 'Mehrere Bildmodelle erhalten den Basis-Prompt einmal allein und daneben mit einer Kultur oder einem Land darin — „Yoruba“, „Sámi“, „Franconian“. In den Reihen stehen die Modelle, in den Spalten die Variationen, und ein Modell rechnet in seiner Reihe mit demselben Seed und mit genau diesem Wortlaut.',
-      purpose: 'Die erste Spalte zeigt, was ein Modell hervorbringt, solange im Prompt von Herkunft nichts steht: welcher Ort, welche Menschen, welche Kleidung ihm als das Selbstverständliche gelten. Die weiteren Spalten zeigen, was eine benannte Kultur daran ändert: ob das Modell die gemeinte Praxis zeigt oder nur die Umgebung austauscht und das Klischee liefert. Wählt Ihr nur 1 Modell, so werden 5 verschiedene Variationen (Seeds) verwendet, so dass Ihr eine Bandbreite von Ergebnissen vergleichen könnt.',
+      // docs/COPY_RULES.md zugleich das Ankunftsverb verbietet.
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Mehrere Bildmodelle erhalten den Basis-Prompt einmal allein und daneben mit einer Kultur oder einem Land darin: „Yoruba“, „Sámi“, „Franconian“. Jede Zeile im Feld „Variationen (weitere Spalten)“ ersetzt das Asterisk-Zeichen „*“ im Basis-Prompt einmal und bekommt eine eigene Spalte. Die Liste zu den Variationen bietet Kulturen und sechs Gefühle an, für einen Basis-Prompt wie „a person feeling *“. In den Reihen stehen die Modelle, in den Spalten die Variationen, und ein Modell rechnet in seiner Reihe mit demselben Seed und mit genau diesem Wortlaut.',
+      // Closing sentence is SUPPLIED WORDING of the project lead (2026-10-31).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Das Feld „Variationen (weitere Spalten)“ nimmt jedes eigene Wort: die eigene Region, Stadt, Gemeinschaft oder Sprache. Ob ein Modell ein Essen, ein Fest oder eine Begrüßung von dort so zeigt, wie es dort aussieht, beurteilt, wer den Ort kennt. Wenn nur ein Modell ausgewählt wird, so werden fünf verschiedene Variationen (Seeds) verwendet, so dass eine Bandbreite von Ergebnissen verglichen werden kann.',
       generate: 'Serie starten',
       templateLabel: 'Basis Prompt (Asterisk-Zeichen "*" = Platzhalter für die Variationen verwenden)',
       stepsLabel: 'Variationen (weitere Spalten)',
@@ -2474,8 +2478,11 @@ export const de = {
         },
       },
       models: {
-        story: 'Prompt Interception ist der Schritt, in dem diese Plattform einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je schreibendem Modell. Schreibt den Prompt, wählt die Perspektive, durch die er geschrieben werden soll, und hakt die Modelle an, die schreiben sollen; ein Bildmodell stellt neben jeden Text ein Bild. Die oberste Zeile enthält den Prompt, wie er geschrieben wurde, und das, was das Bildmodell daraus macht, wenn dieser Schritt ausgelassen wird.',
-        purpose: 'Dieses Instrument vergleicht Texte; das Bild neben einem Text ist das, was ein Bildmodell daraus gemacht hat. Zwischen zwei Zeilen ist das schreibende Modell der einzige Unterschied: der Prompt, die Perspektive, die Adaption, die jedes Bildmodell mitbringt, und der Seed sind für jede Zeile gleich.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Prompt Interception ist der Schritt, in dem ein Sprachmodell einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je schreibendem Modell. Gebt den Prompt ein, wählt die Perspektive, durch die er geschrieben werden soll, und wählt die Gruppe der Modelle, die schreiben sollen („Schreibende Modelle“); ein Bildmodell erzeugt zu jedem Text ein Bild. Die oberste Zeile enthält den Prompt, wie er eingegeben wurde, und das, was das Bildmodell daraus macht, ohne diesen Schritt.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Gegenstand des Vergleichs sind die Texte: die Form, die jedes Modell setzt und benennt, was es vom Prompt behält, was es weglässt und was es hinzusetzt, und sein Register. Wo eine Perspektive eine Tradition nennt, etwa „Bauhaus“, „Literati“ oder „Renaissance“, zeigt der Text, ob ein Modell deren Formen schreibt oder ein Klischee davon.',
         generate: 'Serie starten',
         perspectiveLabel: 'Perspektive',
         perspectiveAdd: 'Perspektive wählen',
@@ -2512,8 +2519,11 @@ export const de = {
         runFailed: 'Ein Bild kam nicht an: {m}',
       },
       template: {
-        story: 'Prompt Interception ist der Schritt, in dem diese Plattform einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf derselben Vorlage, einmal je Perspektive, und ein Bildmodell zeigt, was jede von ihnen geschrieben hat. Schreibt die Vorlage — oder zieht ein Bild auf das Feld, dessen Beschreibung dann als Vorlage dort steht und weiter bearbeitet werden kann. Wählt die Perspektiven. Wo die Vorlage geschrieben wurde, hält das erste Bild sie mit ausgelassenem Schritt; wo sie aus einem Bild gelesen wurde, steht dieses Bild als Referenz voran, und das Bild daneben ist der erste Schritt, ohne Perspektive; Ruhen auf einer Perspektive — auf einem Touchscreen: Halten — zeigt den Text, den diese Perspektive geschrieben hat.',
-        purpose: 'Jedes Bild trägt dieselbe Vorlage, und zwischen zwei von ihnen ist die Perspektive der einzige Unterschied, sodass sich an einem Bild ablesen lässt, was diese eine Perspektive mit der Vorlage macht. Das schreibende Modell ist das, mit dem diese Plattform auf Interception eingestellt ist, und diese Fläche trifft darüber keine Wahl. Ein Bildmodell läuft, denn verglichen werden hier Perspektiven — der Vergleich von Bildmodellen ist ein eigenes Instrument.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Prompt Interception ist der Schritt, in dem ein Sprachmodell einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je gewählter Perspektive, und ein Bildmodell erzeugt zu jedem neu geschriebenen Prompt ein Bild. Bei einem eingegebenen Prompt zeigt das erste Bild, was das Bildmodell aus dem Prompt selbst macht, mit ausgelassenem Schritt.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Diese Fläche dient dem Kennenlernen von Prompt Interception: Ein Werk steht unter mehreren Perspektiven, und die Unterschiede zwischen den Ergebnissen sind der Gegenstand des Gesprächs darüber. Ein klassisches Gemälde, auf das Feld gezogen, ist ein solches Werk: etwa Caspar David Friedrichs „Der Wanderer über dem Nebelmeer“ (1818), neu geschrieben durch die Perspektive „Jugendslang“. Der neue Prompt zeigt im Vergleich mit dem Werk, was unter dieser Perspektive bleibt, was sich ändert und in welchem Register das Sprachmodell schreibt.',
         generate: 'Serie starten',
         templateLabel: 'Vorlage',
         perspectivesLabel: 'Perspektiven',
@@ -2528,8 +2538,11 @@ export const de = {
         referencesTitle: 'Forschungsgrundlagen',
       },
       poles: {
-        story: 'Eine ästhetische Checkliste, Eigenschaft für Eigenschaft gesetzt, und das, was ein Modell daraus und aus der Vorlage schreibt. Schreibt die Vorlage — oder zieht ein Bild auf das Feld, dessen Beschreibung dann als Vorlage dort steht. Jede Eigenschaft, die einen Griff tragen kann, ist eine Wortskala mit einem Griff darauf; eine Eigenschaft, die auf ihrem neutralen Wort bleibt, wird gar nicht geschrieben. Fünf Chips über den Reglern setzen die ganze Checkliste auf einmal, von dort wird jede Eigenschaft einzeln bewegt. Eine Einstellung ist ein Prompt. Jeder Lauf fügt eine Zeile hinzu, und die erste Zeile bleibt: die Checkliste durchgehend auf ihrem neutralen Wort, gegen die jedes Bild daneben gelesen wird. Wurde die Vorlage aus einem Bild gelesen, steht dieses Bild als Referenz voran, und das Bild daneben ist der erste Schritt, ohne Einstellung. Es läuft ein Bildmodell, zwischen zwei Bildern steht also die Einstellung. Ruhen auf dem Namen eines Bildes — Halten — zeigt, was gesetzt war und was das Modell daraus geschrieben hat.',
-        purpose: 'Die Eigenschaften stammen aus den Annotationsrichtlinien für Menschen von VisionReward, in denen jede von ihnen eine geordnete Wortliste trägt, auf der eines dieser Wörter als das neutrale markiert ist. Diese Richtlinien geben eine Position auf einer solchen Liste an, deshalb gibt es hier einen Griff. Die Listen sind unterschiedlich lang und reichen unterschiedlich weit nach beiden Seiten, deshalb wird jede Eigenschaft für sich gesetzt statt über eine Achse für alle, und eine Einstellung darf am guten Ende der einen Eigenschaft und am schlechten Ende der nächsten stehen. Jede Zeile wird vom selben Modell aus derselben Vorlage geschrieben, zwischen zwei Zeilen steht also die Einstellung, und die Bilder zeigen, was die Checkliste mit einer Vorlage macht.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Ein Sprachmodell schreibt aus dem Prompt und einer ästhetischen Checkliste, Eigenschaft für Eigenschaft gesetzt, einen neuen Prompt. Jede der zehn Eigenschaften ist eine Wortskala mit einem Regler. Fünf Chips über den Reglern, von “best” bis “worst”, setzen die ganze Checkliste auf einmal. Jeder Lauf fügt ein Bild hinzu, und bei einem eingegebenen Prompt bleibt das erste Bild, „Referenzbild“: die Checkliste durchgehend auf ihrem neutralen Wort.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Die Eigenschaften stammen aus den Annotationsrichtlinien für Menschen des Bewertungsrahmens „VisionReward“, in denen jede von ihnen eine geordnete Wortliste hat, auf der eines dieser Wörter als das neutrale markiert ist. Das linke Ende jeder Skala ist das Ende, das in diesen Richtlinien als das gute gilt.',
         generate: 'Serie starten',
         templateLabel: 'Vorlage',
         imageModelLabel: 'Bildmodell',
@@ -2558,6 +2571,13 @@ export const de = {
       },
     },
     workbench: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Nach „Sweep starten“ erzeugt das Bildmodell ein Raster von Bildern, eines je Zelle. In der Voreinstellung sind die Spalten die gewählten Fusionsstrategien („X · Spalten“) und die Zeilen die Denoising-Fenster („Y · Zeilen“), und in jeder Zelle wirkt die Fusion der Kodierungen von CLIP und T5 in den Schritten, die ihr Fenster deckt.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Gegenstand dieser Seite ist der Zeitpunkt im Denoising, an dem diese Fusion auf das Bild wirkt.',
       headerTitle: 'Encoder Fusion Workbench — ein generisches 3-Achsen-Vergleichsinstrument',
       headerSubtitle: 'Weise jeder Achse einen beliebigen Parameter zu und gib ihr eine Werteliste: X = Spalten, Y = Zeilen, Z = der Durchfahrt-Regler.',
       axisX: 'X · Spalten',
@@ -2608,17 +2628,11 @@ export const de = {
       zNoneHint: 'Dann tragen zwei Achsen den Sweep, und diese Achse zeigt keinen Regler.',
     },
     attention: {
-      // Die Ansprache. Deutsch ist die verfasste Seite, Englisch danach
-      // gesetzt. Die Zahlen darin sind am Objekt geprüft: drei Tiefen und die
-      // beiden Encoder mit 77 und bis zu 512 Plätzen; die Steps sind
-      // einstellbar, 10 bis 50 (attention_cartography.vue:81), deshalb nennt
-      // die story keine feste Zahl. Anrede-frei gefasst: die purpose trägt
-      // keine Aufgabenstimme und keine Anrede. Der Aufmerksamkeits-Imperativ
-      // „Vergleicht einen frühen Rechenschritt mit einem späten“ lenkt
-      // konkretes Sehen und bleibt (docs/COPY_RULES.md: die Anrede ist die
-      // Ausnahme, nicht die Form).
-      story: 'Gebt einen Prompt ein und klickt auf „Generieren + Analyse“; das Bildmodell erzeugt dazu ein Bild. Darunter steht derselbe Prompt noch einmal, in einzelne Wörter zerlegt: Klickt eines an, so zeichnet die Seite über das Bild eine Farbfläche genau dort, wo dieses Wort beim Rechnen am meisten Einfluss hatte; mehrere Wörter tragen mehrere Farben. Drei Schalter ändern die Ansicht: der Regler wählt einen der Rechenschritte, die Netzwerktiefe die Schicht darin (flach, mittel, tief), und der Schalter Text-Encoder wechselt zwischen den beiden Zerlegungen desselben Prompts, die das Modell nebeneinander benutzt.',
-      purpose: 'Der Einfluss eines Wortes verteilt sich über Flächen, weich begrenzt und oft an anderer Stelle als erwartet: Ein Wort, auf das es im Prompt ankam, bekommt manchmal nur eine kleine Fläche, ein beiläufiges eine über dem halben Bild. Vergleicht einen frühen Rechenschritt mit einem späten. Und wo ein Wort anfängt und aufhört, setzt das Modell selbst fest: Die eine Zerlegung hat 77 Tokens für den Prompt, die andere bis zu 512, und ein langes Wort zerfällt in Stücke, die erst zusammen wieder das Wort ergeben.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: die am 2026-09-04 und 2026-09-24 abgenommene Fassung (WO-2026-09-04-B, WO-2026-09-24-C1), zurückgeholt und berichtigt. Die Imperative benennen die Handgriffe der Fläche und bleiben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Gebt einen Prompt ein und klickt auf ▶ („Generieren + Analyse“); das Bildmodell (SD 3.5 Large) erzeugt dazu ein Bild. In der linken Spalte steht derselbe Prompt noch einmal, in einzelne Wörter zerlegt: Klickt eines an, so zeichnet die Seite eine Farbfläche dort, wo dieses Wort beim Rechnen am meisten Einfluss hatte; mehrere Wörter tragen mehrere Farben. Der Regler „Entrauschungsschritt“ wählt einen der Schritte, die „Netzwerktiefe“ die Schicht darin (flach, mittel, tief oder alle drei), und der Schalter „Text-Encoder“ wählt eine der beiden Zerlegungen desselben Prompts, die das Modell nebeneinander benutzt, oder beide.',
+      // 2026-11-15: Sätze 3 und 4 sind die Sätze 2 und 3 der am 2026-09-24 abgenommenen Fassung, zurückgeholt und berichtigt. Der Aufmerksamkeits-Imperativ „Vergleicht einen frühen Entrauschungsschritt mit einem späten“ lenkt konkretes Sehen und bleibt (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Die Form eines genannten Dings kann in der tiefen Schicht erscheinen. Die flache und die mittlere Schicht können für dasselbe Wort eine Farbfläche über dem ganzen Bild zeigen. Vergleicht einen frühen Entrauschungsschritt mit einem späten. Und wo ein Wort anfängt und aufhört, setzen die Tokenizer der Text-Encoder des Modells selbst fest: Die eine Zerlegung hat 77 Tokens für den Prompt, die andere bis zu 512, und ein langes Wort zerlegen sie in Stücke, die erst zusammen wieder das Wort ergeben.',
       headerSubtitle: 'Für jedes Wort im Prompt zeigt eine Heatmap-Überlagerung auf dem generierten Bild, WO im Bild dieses Wort den größten Einfluss hatte.',
       explanationToggle: 'Ausführliche Erklärung anzeigen',
       explainWhatTitle: 'Was zeigt dieses Tool?',
@@ -2668,6 +2682,13 @@ export const de = {
       tokensHintDetail: 'Klicken Sie ein oder mehrere Wörter an. Subwort-Token (z. B. „Ku“+„gel“) werden automatisch zusammengefasst. Mehrere Wörter erscheinen in unterschiedlichen Farben.',
     },
     probing: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Nach „Analysieren“ (▶1) erzeugt das Bildmodell zu Prompt A ein Bild. Zugleich ordnet die Plattform die Zahlen (Dimensionen) des Text-Embeddings von Prompt B nach der Größe ihres Unterschieds zu A. Nach ▶2 erzeugt das Bildmodell das Bild zu B, sofern es noch fehlt, und A noch einmal in die mittlere Spalte, mit den Dimensionen eines gewählten Rangbereichs aus B.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Gegenstand dieser Seite sind die Zahlen, die die Text-Encoder aus einem Prompt machen. Ein größerer Rangbereich aus B kann das Bild zu A in Richtung B verschieben. Was sich dabei verschiebt, kann die Komposition des Bildes sein.',
       promptExamples: {
         housesLabel: 'Ein rotes Haus am See / Ein blaues Haus am See',
         housesA: 'Ein rotes Haus am See',
@@ -2730,6 +2751,13 @@ export const de = {
       headerSubtitleDetail: 'Vergleichen Sie zwei Prompts und finden Sie heraus, welche Embedding-Dimensionen den semantischen Unterschied codieren. Übertragen Sie einzelne Dimensionen gezielt, um zu sehen, wie sie das Bild beeinflussen.',
     },
     algebra: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Drei Prompts stehen in der Rechnung A − B + C: Die Plattform zieht das Text-Embedding von B von dem von A ab und addiert das von C. Nach „Berechnen“ stehen mit demselben Seed das Bild zu A allein in der Spalte „Referenz (Prompt A)“ und das zur Summe in der Spalte „Ergebnis (A − B + C)“. Die Gewichte von B und C sind unter „Erweiterte Einstellungen“ als „Subtraktions-Skalierung“ und „Additions-Skalierung“ einstellbar, von 0 bis 3.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Gegenstand dieser Seite ist die Rechnung mit Embeddings, die die Fläche „Vektorarithmetik“ nennt. Eine Probe ist „king“ − „man“ + „woman“. Im Ergebnisbild können Züge des Referenzbilds stehen bleiben und andere wechseln. Bei einer größeren „Additions-Skalierung“ kann sich auch der Stil des Ergebnisbilds vom Referenzbild lösen.',
       promptExamples: {
         riverLabel: 'die Straße, in der ich wohne, am Morgen, mit einem Tier − die Straße, in der ich wohne, am Morgen + ein Fluss',
         riverA: 'die Straße, in der ich wohne, am Morgen, mit einem Tier',
@@ -2782,6 +2810,12 @@ export const de = {
       headerSubtitleDetail: 'Wendet die berühmte word2vec-Analogie auf die Bilderzeugung an: König − Mann + Frau ≈ Königin. Drei Prompts werden codiert und algebraisch kombiniert.',
     },
     composable: {
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Das Bildmodell erzeugt aus zwei oder mehr Konzepten, jedes ein eigener Prompt mit eigenem Gewicht, ein Bild. Ein positives Gewicht zählt das Konzept hinzu („AND“), ein negatives zieht es bei „In the denoiser“ ab („NOT“). Der Ort des Zusammensetzens steht an den Chips „Combination“: „In the embedding“, einmal zu Beginn, oder „In the denoiser“, bei jedem Schritt. Bei „In the embedding“ kann die Mischung der Embeddings mit einem negativen Gewicht einen Vektor ergeben, aus dem das Modell ein Rauschbild rechnet.',
+      // Purpose written from the documented group wording and the use
+      // report; no supplied wording of the project lead for this page.
+      purpose: 'Gegenstand dieser Seite ist die Komposition: was im Bild dominiert, was zurücktritt, was wegbleibt und wie die Teile zusammengefügt sind. Das Ding, das ein Konzept unter „NOT“ nennt, kann im Bild fehlen, etwa ein Fenster.',
       promptExamples: {
         house: 'ein rotes Haus auf einem Hügel',
         ship: 'ein blaues Schiff auf dem Meer',
@@ -2825,18 +2859,11 @@ export const de = {
     },
     archaeology: {
       headerTitle: 'Denoising Archaeology — Wie wird aus Rauschen ein Bild?',
-      // Die Ansprache. Deutsch ist die verfasste Seite, Englisch danach
-      // gesetzt. Am Objekt geprüft: Step 1 ist farbiges Rauschen, bei 14 fast
-      // noch alles Rauschen, bei 17 steht die Szene erkennbar da, bei 20 ist
-      // das Bild praktisch fertig; deshalb nennt die purpose keine feste Zahl
-      // für den Step, ab dem die Szene zu erkennen ist. Anrede-frei gefasst:
-      // „zieht heraus“ (Metapher) und die feste Zahl 25 fielen (die Steps sind
-      // einstellbar, 10 bis 50), der Phasenbogen der purpose wich dem
-      // Aufmerksamkeits-Imperativ, weil diese Stelle der Besucherin gehört,
-      // und die Backbones stehen da, wie die Fläche sie schreibt
-      // (denoising_archaeology.vue:426-427).
-      story: 'Ein Bildgenerator beginnt mit reinem Zufallsrauschen, einem Flimmern ohne jeden Gegenstand, und entfernt dieses Rauschen Step für Step, voreingestellt in 25, bis eine Szene übrig bleibt. Die Plattform hält jeden einzelnen dieser Steps fest; der Regler in der linken Spalte wählt aus, welcher davon die Ansicht füllt. Zwei Netze stehen am Backbone zur Wahl, SDXL (2023) und SD 3.5 (2024), und jeder Lauf bleibt unter „Läufe“ stehen.',
-      purpose: 'Das Modell arbeitet am ganzen Bild zugleich, Step für Step. Geht am Regler vor und zurück und achtet darauf, ab welchem Step die Szene zu erkennen ist. Diese Stelle verschiebt sich mit dem Prompt und mit dem Modell; vergleicht dazu zwei Läufe mit demselben Prompt.',
+      // Address, German authored, English set after it (2026-11-07).
+      // 2026-11-15: Sätze 1 und 2 aus der am 2026-09-24 abgenommenen Fassung (WO-2026-09-24-C1) zurückgeholt, Sätze 3 und 4 aus der Fassung vom 2026-11-08 (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      story: 'Ein Bildgenerator beginnt mit reinem Zufallsrauschen, einem Flimmern ohne jeden Gegenstand, und entfernt dieses Rauschen Step für Step, voreingestellt in 25, bis eine Szene übrig bleibt. Die Plattform hält jeden einzelnen dieser Steps fest; der Regler in der linken Spalte wählt aus, welcher davon die Ansicht füllt. Nach dem Lauf steht die Ansicht auf Step 1, dem Rauschen. Zwei Netze stehen am Backbone zur Wahl, SDXL (2023) und SD 3.5 (2024), und jeder Lauf bleibt unter „Läufe“ stehen.',
+      // 2026-11-15: Sätze 2 und 3 aus der am 2026-09-24 abgenommenen Fassung zurückgeholt, Satz 3 um die beiden Backbones berichtigt. Die Imperative lenken konkretes Sehen und bleiben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+      purpose: 'Gegenstand dieser Seite ist das Denoising: Bei jedem Step rechnet das Netz aus dem verrauschten Zwischenstand einen weniger verrauschten. Geht am Regler vor und zurück und achtet darauf, ab welchem Step die Szene zu erkennen ist. Diese Stelle verschiebt sich mit dem Prompt und mit dem Modell; vergleicht dazu zwei Läufe mit demselben Prompt, einen auf SDXL und einen auf SD 3.5.',
       headerSubtitle: 'Beobachte jeden einzelnen Entrauschungsschritt.',
       explanationToggle: 'Ausführliche Erklärung anzeigen',
       explainWhatTitle: 'Was zeigt dieses Tool?',
@@ -2899,6 +2926,12 @@ export const de = {
       maxTokensHint: 'Maximale Anzahl generierter Tokens (Wortteile).',
       textSeedHint: '-1 = zufällig, fester Wert = reproduzierbares Ergebnis',
       tokens: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Der gewählte Tokenizer (Chips „Tokenizer“) zerlegt den Satz im Feld in Tokens, und die Seite zeigt jedes Stück nummeriert. Die Zeile darunter nennt die Zahl der Tokens, die Größe des Wortschatzes und das Fenster des Modells. Ein einzelnes Zeichen, etwa „집“, kann der Tokenizer in mehrere Stücke zerlegen, die die Seite alle als dieses Zeichen zeigt. Nach ▶ übersetzt ein Sprachmodell einen von Hand eingegebenen Satz in die übrigen Sprachen der Plattform, und der Tokenizer zerlegt jede Fassung.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        purpose: 'Gegenstand dieser Seite sind die Kosten einer Sprache in Tokens: Derselbe Satz kostet in den elf Sprachen verschieden viele. Für die Sprecherinnen und Sprecher einer teuren Sprache heißt das weniger Platz im Fenster und mehr Rechenzeit für denselben Satz.',
         runLabel: 'Sprache',
         wordLabel: 'Ein einzelnes Wort zum Vergleich',
         tokenizerLabel: 'Tokenizer',
@@ -2941,7 +2974,22 @@ export const de = {
           label: 'System Prompts',
         },
       },
+      // The Transformers Lab's Model Comparison (named `compare.tabs.model`).
+      // Only its address stands here; its other strings fall back to English.
+      systempromptModels: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Drei Sprachmodelle, je Spalte eines aus der Liste „Modell“, antworten auf dieselbe Nachricht. System-Prompt und Zufälligkeit sind für alle drei dieselben. Die Liste nennt zu den Modellen Land, Jahr und Größe und ob sie lokal rechnen. Das Feld „System-Prompt“ zeigt den Text des gewählten Presets und bleibt änderbar.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Gegenstand des Vergleichs ist, was ein Sprachmodell sagt, was es auslässt oder verweigert und wie es das sagt: Register, Vorbehalte, Listen, der Wortlaut einer Ablehnung. Drei Modelle aus drei Ländern zu derselben Nachricht zeigen, ob eines ablehnt oder ausweicht, und mit welchen Worten.',
+      },
       repeng: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Ein Sprachmodell aus der Liste „Modell“ setzt den Prompt dreimal fort, in den Spalten „← gegen den Pfeil“, „· ohne Pfeil (Referenz)“ und „→ mit dem Pfeil“. Jedes Kontrastpaar liefert den Unterschied der Modellzustände zwischen seinen beiden Sätzen, und der Pfeil ist die Richtung, die diese Unterschiede gemeinsam haben. Während das Modell schreibt, addiert die Plattform in der Spalte „→ mit dem Pfeil“ bei jedem Token ein Vielfaches dieser Richtung zur Ausgabe der mittleren Schicht und zieht es in der Spalte „← gegen den Pfeil“ ab. Mit einem einzelnen Paar kann der gesteuerte Text in beiden Richtungen den Zusammenhang verlieren und sich wiederholen.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        purpose: 'Gegenstand dieser Seite ist der Eingriff in das Innere eines Sprachmodells: eine Richtung, die die Plattform während des Schreibens zu den Zuständen des Modells addiert oder von ihnen abzieht. Eine Antwort, die das Modell in der Spalte „· ohne Pfeil (Referenz)“ gibt, kann es unter der Richtung umgehen oder durch eine andere ersetzen.',
         noteBody: 'Ein Paar steuert den Unterschied zwischen den Zuständen des Modells bei seinen zwei Sätzen bei, und was die Unterschiede teilen, ist die Richtung (Zou et al. 2023). Während das Modell schreibt, addiert diese Plattform ein Vielfaches der Richtung bei jedem Token auf die Ausgabe der mittleren Schicht.',
         advancedLabel: 'Erweiterte Einstellungen',
         promptExamples: {
@@ -3027,9 +3075,9 @@ export const de = {
       models: {
         label: 'Modelle',
         small: 'kleine Modelle',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1.7B und 4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1,7B und 4B',
         large: 'große Modelle',
-        largeNote: 'OLMo 2 und 3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — 7 bis 12B',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7 bis 14B',
         family: 'Modellfamilie',
         familyNote: 'die Größen der Qwen-Familie, 1,7B bis 14B',
         history: 'Modell im Zeitverlauf',
@@ -3088,6 +3136,13 @@ export const de = {
         },
       },
       synth: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Ein Audiomodell erzeugt aus den Prompts in „Prompt A (Basis)“ und „Prompt B (Optional, für Interpolation)“ einen Klang, den die Seite in den „Looper / Sequenzer“ lädt. Der Regler α mischt die Text-Embeddings der beiden: Seine Beschriftung nennt −1 als A allein und 1 als B allein. Die Klappe „Dimensions-Explorer“ zeigt die Zahlen des Embeddings als Streifen feiner Balken, bei zwei Prompts sortiert nach dem Unterschied zwischen A und B: Ziehen auf einem Balken setzt einen Versatz, und nach „Anwenden und neu generieren“ erzeugt das Audiomodell den Klang damit neu.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Gegenstand dieser Seite sind die Zahlen, die der Text-Encoder T5Gemma aus einem Prompt macht, und der Klang, den das Audiomodell nach einer Änderung an ihnen erzeugt.',
         promptExamples: {
           wavesLabel: 'Meereswellen / Klaviermelodie',
           wavesA: 'Meereswellen',
@@ -3272,6 +3327,13 @@ export const de = {
         stepsHintDetail: 'Entrauschungsschritte. Dieses Modell ist auf acht destilliert — mehr ist hier nicht besser, meist nur langsamer.',
       },
       mmaudio: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Ein Audiomodell erzeugt aus einem Bild, einem Text oder beidem einen Klang von bis zu acht Sekunden.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Gegenstand dieser Seite ist der Klang, den ein Audiomodell zu einem Standbild erzeugt. Das Modell ist für die Vertonung von Video gebaut.',
         promptExamples: {
           campfire: 'Knisterndes Lagerfeuer',
         },
@@ -3292,6 +3354,13 @@ export const de = {
         referencesTitle: 'Forschungsgrundlagen',
       },
       guidance: {
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Ein Audiomodell erzeugt zu einem Bild einen Klang. In den gelenkten Schritten („Gelenkte Schritte“) zieht das Embedding des Bildes im gemeinsamen Einbettungsraum von ImageBind die Erzeugung des Klangs zum Bild hin, mit der Stärke aus „Guidance-Stärke“. Die Karte eines Laufs nennt die Einstellungen und die Zahl „Cosine-Similarity (Bild-Audio-Nähe)“. Ein „Basis-Prompt (optional)“ gibt dem Audiomodell einen Text.',
+        // Purpose written from the documented group wording and the use
+        // report; no supplied wording of the project lead for this page.
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Gegenstand dieser Seite ist ein Maß für das Passen von Klang zu Bild. Das Maß ist die „Cosine-Similarity“ der Embeddings von Bild und Klang in diesem Raum.',
         promptExamples: {
           ambient: 'Umgebungsklanglandschaft',
         },
@@ -3357,11 +3426,11 @@ export const de = {
     // wissen fehlt, untersucht ob sie auf Klischees und Fake." Der zweite Satz
     // brach ab; „hereinfallen" ist ergaenzt und gehoert nicht zum vorgegebenen
     // Wortlaut.
+    // Ergaenzt ist auch der Satzanfang „Was die Bilder unterscheidet,“, und
+    // „Fake.“ steht als „Fakes“.
     // Die Stromangabe unter den Bildern steht bewusst NICHT in der Ansprache:
     // die Energiewerte gehoeren nicht in die Ansprache, die Angabe liest
-    // 0,000 kWh und sagt nichts. Wikimedia ist als Gegenhorizont mit echten
-    // Bildern gemeint, und die Suche findet mal etwas und mal wenig, deshalb
-    // „wird versucht".
+    // 0,000 kWh und sagt nichts.
     // Was in das Feld geschrieben wird, heisst PROMPT und nichts anderes
     // („einen Prompt", nicht „einen Satz"). Das Wort ist auf der Flaeche
     // selbst gesetzt - „Beispiel-Prompt waehlen" ueber dem Feld -, und ein
@@ -3376,16 +3445,28 @@ export const de = {
     // wörtlich.
     address: {
       model: {
-        story: 'Zwei Dreiergruppen stehen zur Wahl: drei heutige KI-Modelle oder dieselbe Familie in drei Jahren, 2022, 2023 und 2024. Alle drei rechnen mit demselben Prompt und demselben Seed. Zum Prompt sucht die Plattform außerdem echte Fotografien auf Wikimedia Commons.',
-        purpose: 'Was die Bilder unterscheidet, liegt an den Unterschieden der KI-Modelle: die könnt Ihr also selbst erforschen. Ein im Prompt genanntes Ding steht manchmal in der einen Spalte deutlich da, in der nächsten kaum, und in der dritten fehlt es. Testet, was die KI-Modelle erzeugen können und wo ihnen Wissen fehlt, untersucht, ob sie auf Klischees und Fakes hereinfallen. Die Fotografien sind der Gegenhorizont dazu: echte Bilder, die jemand aufgenommen hat.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Zwei Dreiergruppen stehen zur Wahl: drei heutige KI-Modelle oder dieselbe Familie in drei Jahren, 2022, 2023 und 2024. Alle drei rechnen mit demselben Prompt und demselben Seed. Neben den Dreiergruppen lassen sich die Modelle auch einzeln wählen. Zum Prompt sucht die Plattform außerdem Bilder auf Wikimedia Commons.',
+        // Sentences 1 and 2 are the SUPPLIED WORDING of the project lead named in
+        // the comment above `address`; sentences 2 and 4 of the earlier text were
+        // struck by the project lead on 2026-10-31.
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Was die Bilder unterscheidet, liegt an den Unterschieden der KI-Modelle: die könnt Ihr also selbst erforschen. Testet, was die KI-Modelle erzeugen können und wo ihnen Wissen fehlt, untersucht, ob sie auf Klischees und Fakes hereinfallen. Bei einem Prompt mit einem Beruf, etwa „a nurse at work“ aus der Liste „Beispiel-Prompts“, zeigt jede Spalte, wen das Modell dafür zeichnet: Geschlecht, Alter, Haut, Umgebung.',
       },
       'vlm-analysis': {
-        story: 'Die Seite nimmt ein Bild entgegen — hochgeladen oder hier gezeichnet — und bietet darunter sechs Perspektiven an: zwei Beschreibungen, eine kunsthistorische, eine bildungstheoretische, eine ethische, eine kritische. Die Seite trägt die gewählte Perspektive als Auftrag in das Feld darunter ein. Mehrere Vision-Modelle führen den Auftrag aus; alle bekommen dasselbe Bild.',
-        purpose: 'Hier geht es nicht darum, die Arbeit der Bildinterpretation abzunehmen: Die maschinellen Interpretationen sind selbst der Gegenstand. Die Spalten zeigen, wie eine Text-KI Bilder „sieht“ und wie sie daraus eine Bildinterpretation herstellt. Maschinelle Bildauswertung entscheidet über Menschen: Aus ihr folgen Diagnosen, Festnahmen, Zurückweisungen an der Grenze — Menschen sind verhaftet worden, weil ein System ihr Gesicht einem Bild zugeordnet hat, und die Auswertung selbst bekommen die Betroffenen selten zu sehen. Sie erscheint als Befund; hier stehen mehrere Lesarten desselben Bildes nebeneinander. Verfolgt, was ein Modell zuerst benennt, woran es festhält, und an welcher Stelle es von dem, was zu sehen ist, zu dem übergeht, was es bedeuten soll. Dieselben Linien heißen dann manchmal in der einen Spalte Ordnung und Struktur und in der nächsten Heimat, Schutz und Identität.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'Die Seite nimmt ein Bild entgegen, hochgeladen oder hier gezeichnet, und bietet darunter sechs Perspektiven an: zwei Beschreibungen, eine kunsthistorische, eine bildungstheoretische, eine ethische, eine kritische. Die Seite trägt die gewählte Perspektive als Auftrag in das Feld darunter ein. Mehrere Vision-Modelle führen den Auftrag aus; alle bekommen dasselbe Bild.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Der Vergleich mit dem Bild trennt in einer Lesart, was sie beschreibt, was sie deutet und was sie hinzusetzt. Eine Lesart kann Dinge nennen, die im Bild fehlen, etwa eine Farbe in einer Schwarzweiß-Fotografie. Dasselbe Bild in zwei Läufen unter zwei Perspektiven zeigt, was die Perspektive an der Lesart ändert: die Form, manchmal auch die Tatsachenbehauptungen.',
       },
       language: {
-        story: 'In jeder Spalte steht dieselbe Bildbeschreibung, nur in einer anderen Sprache. Zwei bis vier Sprachen stehen zur Wahl, die zehn der Plattform und zehn weitere, unter ihnen Obersorbisch, Yorùbá und Runasimi. Jedes angekreuzte Bildmodell macht daraus in jeder Spalte ein Bild, eine Reihe je Modell; innerhalb einer Reihe rechnen alle Bilder mit demselben Seed. Zu jedem Bild steht die Übersetzung, mit der das Modell gerechnet hat, und ihre Rückübersetzung zum Mitlesen.',
-        purpose: 'Vergleicht, was aus demselben Prompt wird, sobald ihn das Modell in einer anderen Sprache verarbeitet. Die Rückübersetzung ist die Kontrolle dafür: Meistens ist die Rückübersetzung der eingegebene Prompt, die Übersetzung stimmt also, und die Bilder unterscheiden sich trotzdem oft stark. Die Textteile dieses Bildmodells sind an englischem Text trainiert; einen Prompt in einer anderen Sprache verarbeiten sie so wenig, dass die Sprache selbst das Bild bestimmt und der Inhalt dahinter zurücktritt. Das Bild zeigt dann das Klischee: das, was in den Trainingsdaten am häufigsten zu dieser Sprache stand.',
+        // Address, German authored, English set after it (2026-11-07).
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        story: 'In jeder Spalte steht derselbe Prompt, nur in einer anderen Sprache. Zwei bis vier Sprachen stehen zur Wahl, die Sprachen der Plattform und zehn weitere, unter ihnen Hornjoserbšćina, Yorùbá und Runasimi. Jedes gewählte Bildmodell erzeugt dazu in jeder Spalte ein Bild, eine Reihe je Modell; innerhalb einer Reihe rechnet das Modell alle Bilder mit demselben Seed. Über jeder Spalte steht die Übersetzung, mit der die Modelle gerechnet haben, und darunter ihre Rückübersetzung zum Mitlesen.',
+        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Weicht die Rückübersetzung über einer Spalte vom eingegebenen Prompt ab, können die Modelle in dieser Spalte einen anderen Prompt erhalten haben. Der Vergleich entlang einer Reihe zeigt, in welchen Sprachen ein Modell die Szene des Prompts ins Bild setzt und in welchen etwas anderes. Ein Modell kann den Prompt in der Spaltensprache als Schriftzug ins Bild setzen.',
       },
       voice: {
         // Der Testsatz wird aus einem Dropdown neben einem freien Eingabefeld
@@ -3429,6 +3510,7 @@ export const de = {
       error: 'Verbindungsfehler',
       modelLabel: 'Modell',
       defaultModel: 'Standard (Einstellungen)',
+      localModel: 'lokal',
       modelNotDownloaded: '(nicht heruntergeladen)',
       temperatureValue: 'T = {v}',
       install: {
@@ -3568,6 +3650,7 @@ export const de = {
         ko: 'Koreanisch',
         tr: 'Türkisch',
         uk: 'Ukrainisch',
+        'zh-hant': 'Traditionelles Chinesisch',
       },
       piper: {
         fileMeta: 'Exportiert mit Piper {version}, {hz} Hz, Qualitätsstufe „{quality}“',
@@ -3695,8 +3778,8 @@ export const de = {
     languagesLabel: 'Sprachen',
     modelNote: {
       noteBody: {
-        history: 'SD 1.5 arbeitet in einer komprimierten Repräsentation des Bildes. Sein Paper nennt als Ziel, das Training auf begrenzten Rechenressourcen möglich zu machen, gegen die hunderten von GPU-Tagen, die ein Modell oft kostet, das direkt auf Pixeln arbeitet.\n\nSDXL wurde auf hochauflösende Bildsynthese hin gebaut: ein dreimal größeres Bildnetz, ein zweiter Text-Encoder, mehrere Seitenverhältnisse und der Anspruch im eigenen Paper, die geschlossenen Bildgeneratoren von 2023 zu erreichen. Das Paper zur Architektur von SD 3.5 nennt: „improving text comprehension, typography, and human preference ratings“. Mit „typography“ ist die Schrift im Bild gemeint.',
-        current: 'SD 3.5 Large wurde darauf gebaut, dem Prompt genau zu folgen und lesbare Schrift ins Bild zu setzen (Stability AI 2024, Modellkarte und Ankündigung). Flux 2 wurde dafür gebaut, dieselbe Figur, dasselbe Produkt oder denselben Stil über bis zu zehn Referenzbilder auf einmal zu halten. Die Veröffentlichung behauptet: „Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.“\n\nGemini 3 Pro Image, bei Google „Nano Banana Pro“ genannt, ist auf Googles Modell Gemini 3 Pro gebaut. Google zufolge kann Gemini 3 Pro Image für ein Bild auf eine Anfrage an Google Search zurückgreifen, sodass eine Wettergrafik aktuelle Informationen tragen kann. Google gibt lesbaren Text im Bild in mehreren Sprachen an.',
+        history: 'SD 1.5 arbeitet in einer komprimierten Repräsentation des Bildes. Sein Paper nennt als Ziel, das Training auf begrenzten Rechenressourcen möglich zu machen, gegen die hunderten von GPU-Tagen, die ein Modell oft kostet, das direkt auf Pixeln arbeitet.\n\nDas Paper zu SDXL nennt hochauflösende Bildsynthese als Ziel und beansprucht, die geschlossenen Bildgeneratoren von 2023 zu erreichen. Das Paper zur Architektur von SD 3.5 nennt: „improving text comprehension, typography, and human preference ratings“. Mit „typography“ ist die Schrift im Bild gemeint.',
+        current: 'Stability AI verspricht für SD 3.5 Large, dass es dem Prompt genau folgt und Schrift ins Bild setzt (2024, Modellkarte und Ankündigung). Die Veröffentlichung von Flux 2 behauptet: „Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.“\n\nUnter den Hauptmerkmalen von Flux 3 Klein nennt die Modellkarte von Black Forest Labs (2026): „Text rendering within generated images.“',
       },
       referencesTitle: 'Quellen',
     },
@@ -3705,7 +3788,6 @@ export const de = {
         sd35_large: 'SD 3.5 Large liest den Prompt über drei Text-Encoder: CLIP-L und CLIP-G, trainiert auf Paaren aus Bild und Bildunterschrift (Radford et al. 2021; Cherti et al. 2023), und T5-XXL, trainiert allein auf Text (Raffel et al. 2020). Stability AIs Paper zur Architektur (Esser et al. 2024) nennt als Ziel „improving text comprehension, typography, and human preference ratings“. In der Auswertung des Papers meint Typography, wie genau das Bild geschriebenen Text wiedergibt.',
         sd35_large_turbo: 'SD 3.5 Large Turbo liest den Prompt über dieselben drei Text-Encoder wie SD 3.5 Large, CLIP-L, CLIP-G und T5-XXL (Stability AI 2024, Modellkarte). Was Stability AI von Turbo wollte, steht in der Ankündigung: „A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps“ (Stability AI 2024, Ankündigung).',
         flux2: 'Flux 2 liest den Prompt über das Sprachmodell eines Vision-Language-Modells (VLM). Black Forest Labs nennt, was das VLM beiträgt: „The VLM brings real world knowledge and contextual understanding“ (Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image ist Googles Bildmodell „Nano Banana Pro“. Google schreibt: „Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.“ (Google 2025).',
       },
       referencesTitle: 'Quellen',
     },

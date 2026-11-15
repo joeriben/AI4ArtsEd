@@ -1053,3 +1053,40 @@ def test_the_driver_is_read_for_compute_and_graphics_contexts(monkeypatch):
     assert by[23]["label"] == "blender" and by[23]["owned"] is True and by[23]["vram_mb"] == 9000.0
     assert by[22]["label"] == "foreign" and by[22]["vram_unknown"] is True and by[22]["vram_mb"] == 0.0
     assert reading["foreign_mb"] == 0.0 and reading["free_mb"] == 58000.0
+
+
+def test_the_running_operation_is_quoted_with_its_buffer_and_unknown_past_it(monkeypatch):
+    """The run on the card is quoted at its measurement plus the buffer: a
+    share of it, at least the floor. The countdown runs to that figure and
+    the chain behind it answers; past it nobody knows, and that travels. A
+    queued run is quoted at its measurement alone."""
+    gate = a_gate(monkeypatch, GPU_ADMISSION_FORECAST_BUFFER_SHARE=0.25,
+                  GPU_ADMISSION_FORECAST_BUFFER_MIN_S=15.0)
+    est = {"running": 100.0, "second": 10.0}
+    monkeypatch.setattr(gate, "_expected_hold_s", lambda lease, resident: est[lease.label])
+    held = gate.acquire("comfyui", "sd35", 0, label="running")
+    t1, b1 = in_thread(gate.acquire, "comfyui", "sd35", 0, 2, "second")
+    time.sleep(0.05)
+    with gate._cv:
+        a = gate._active
+    # The share: 100 s is quoted at 125, the floor stays under it.
+    a.admitted_at = time.time() - 110.0
+    plan = gate.plan()
+    assert 14.5 <= plan["active"]["expected_remaining_s"] <= 15.5
+    assert 14.5 <= plan["queue"][0]["expected_start_in_s"] <= 15.5
+    assert plan["queue"][0]["expected_run_s"] == 10.0
+    # Past the quote: nobody knows, and nobody behind it either.
+    a.admitted_at = time.time() - 126.0
+    plan = gate.plan()
+    assert plan["active"]["expected_remaining_s"] is None
+    assert plan["queue"][0]["expected_start_in_s"] is None
+    # The floor: 10 s would get 2.5 s and is quoted at 25.
+    est["running"] = 10.0
+    a.admitted_at = time.time() - 20.0
+    plan = gate.plan()
+    assert 4.5 <= plan["active"]["expected_remaining_s"] <= 5.5
+    a.admitted_at = time.time() - 26.0
+    assert gate.plan()["active"]["expected_remaining_s"] is None
+    gate.release(held)
+    t1.join(2)
+    gate.release(b1["value"])

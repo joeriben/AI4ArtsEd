@@ -13,7 +13,9 @@
   Two of the empty states are results, not errors: a prompt that only says "make
   it brighter" names no motif, and a term that finds nothing finds nothing. The
   third, `error`, is the only one that speaks about us — an outage must never be
-  shown to a room as a finding about a participant's prompt.
+  shown to a room as a finding about a participant's prompt. `blocked` says the
+  safety check stopped the search: the prompt at the intake, or the search term
+  a model made of it, which is therefore not shown.
 -->
 <template>
   <section v-if="state !== 'idle'" class="found-row">
@@ -40,6 +42,10 @@
 
     <p v-else-if="state === 'error'" class="found-note">
       {{ t('compare.found.unavailable') }}
+    </p>
+
+    <p v-else-if="state === 'blocked'" class="found-note">
+      {{ t('compare.found.blocked') }}
     </p>
 
     <template v-else>
@@ -120,7 +126,8 @@ export interface FoundImage {
   categories: string[]
 }
 
-export type FoundState = 'idle' | 'loading' | 'ok' | 'no_motif' | 'nothing_found' | 'error'
+export type FoundState =
+  'idle' | 'loading' | 'ok' | 'no_motif' | 'nothing_found' | 'error' | 'blocked'
 
 // `term` and `images` are declared optional, not required-with-a-default: Vue
 // warns "Missing required prop" on a required key even when a default exists,

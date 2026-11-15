@@ -11,7 +11,8 @@
     "es": "Basho",
     "he": "Basho",
     "ar": "Basho",
-    "bg": "Basho"
+    "bg": "Basho",
+    "zh-hant": "Basho"
   },
   "description": {
     "en": "Material collision with three haiku by Matsuo Basho (17th century). Maximum compression, Japanese originals alongside German translation — colliding with your prompt through a deliberately insufficient model.",
@@ -23,7 +24,8 @@
     "es": "Colisión material con tres haikus de Matsuo Basho (siglo XVII). Compresión máxima, originales japoneses junto a la traducción alemana — chocando con tu prompt a través de un modelo deliberadamente insuficiente.",
     "he": "התנגשות חומרית עם שלושה הייקו של מאטסואו בשו (המאה ה-17). דחיסה מקסימלית, המקוריות ביפנית לצד תרגום גרמני — מתנגשת עם הפרומפט שלך דרך מודל מכוון בלתי-מספק.",
     "ar": "تصادم مادي مع ثلاثة هايكو لماتسو باشو (القرن السابع عشر). ضغط أقصى، الأصول اليابانية جنباً إلى جنب مع الترجمة الألمانية — تتصادم مع موجّهك من خلال نموذج غير كافٍ عن قصد.",
-    "bg": "Материален сблъсък с три хайку от Мацуо Башо (XVII век). Максимална компресия, японски оригинали редом с немски превод — сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел."
+    "bg": "Материален сблъсък с три хайку от Мацуо Башо (XVII век). Максимална компресия, японски оригинали редом с немски превод — сблъсквайки се с вашия промпт чрез умишлено недостатъчен модел.",
+    "zh-hant": "與 Matsuo Basho（17 世紀）的三首俳句進行材料碰撞。極度的壓縮，日文原文並列德文譯文——透過一個刻意不足的模型，與你的提示詞相互碰撞。"
   },
   "category": {
     "en": "Poetry",
@@ -35,7 +37,8 @@
     "es": "Poesía",
     "he": "שירה",
     "ar": "شعر",
-    "bg": "Поезия"
+    "bg": "Поезия",
+    "zh-hant": "詩歌"
   },
   "properties": [
     "poetry"

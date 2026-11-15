@@ -37,7 +37,7 @@ Many sessions underestimate their power, thinking they're just "simple text tran
 
 The real power isn't in complex multi-chunk branching logic (though that's architecturally possible). The power is in the **separation of concerns**:
 
-- **DevServer** (schema_pipeline_routes.py): Knows about 4 stages, safety, translation, backend routing
+- **DevServer** (schema_pipeline_routes.py): Knows about 4 stages, translation, backend routing, and calls the safety checks (`safety_gate.py`)
 - **Stage 2 Pipeline**: Focuses ONLY on "what to transform" and "how to transform it"
 - **BackendRouter**: Handles ONLY technical execution (Ollama, ComfyUI, OpenRouter)
 
@@ -130,7 +130,7 @@ Stage 2 doesn't care about:
 - **Which LLM model** processes it (mistral-nemo, qwen2.5, claude-3.5-sonnet)
 - **Which backend** executes it (Ollama local, OpenRouter cloud)
 - **Execution mode** (eco vs fast)
-- **Safety checks** (DevServer handles Stage 1 and Stage 3)
+- **Safety checks** (the routes call them: at the intake, before the model, at the result)
 - **Output media generation** (Stage 4 handles that)
 
 **This means:**
@@ -155,7 +155,7 @@ Stage 2 doesn't care about:
 This config:
 - Will run on whatever LLM the system chooses (based on execution mode and task type)
 - Will automatically trigger image generation after transformation (Stage 4)
-- Will be safety-checked before media generation (Stage 3)
+- Will be checked before media generation (the check before the model)
 - Never needs to know about ComfyUI, OpenRouter, or any backend specifics
 
 ---
@@ -273,40 +273,43 @@ Understanding limitations is as important as understanding capabilities. These l
 **Stage 2 is "dumb" - it doesn't do safety checks.**
 
 ```python
-# Stage 2 receives text that has ALREADY passed Stage 1 safety
-# Stage 2 transforms it without safety checks
-# Stage 3 checks the OUTPUT before media generation
+# Stage 2 receives text that has passed the intake (names, addresses)
+# Stage 2 transforms it without a check of its own
+# What it writes is checked at the result where it is shown,
+# and what a media model receives is checked before the model
 ```
 
+At kids and youth the instruction carries the level's safety prefix (`instruction_selector.SAFETY_PREFIXES`), which asks the model to refuse. The prefix checks nothing; where the model refuses, the route reports a block.
+
 **Why?**
-- Non-redundant architecture: Safety in ONE place (DevServer), not duplicated in 37+ configs
+- Non-redundant architecture: Safety in ONE place (`my_app/services/safety_gate.py`), not duplicated in 37+ configs
 - Centralized control: Easier to update safety rules
 - Pedagogical transparency: Users understand safety happens at specific stages
 
 **What This Means:**
 - Don't encode safety logic in `context` field
 - Don't expect Stage 2 to filter unsafe content
-- Trust DevServer to handle safety at Stage 1 and Stage 3
+- The checks run at the intake, before the model and at the result (Part 01, section 1.7)
 
 ### 2. No Translation
 
-**Stage 2 receives already-translated text.**
+**Stage 2 receives the text in the language it was written in, and answers in that language.**
 
 ```python
-# Stage 1 happens BEFORE Stage 2
 # User input: "Eine traumhafte Landschaft" (German)
-#   ↓ Stage 1: Translation
-# Stage 2 receives: "A dreamlike landscape" (English)
+#   ↓ Stage 1: the intake; nothing is translated
+# Stage 2 receives: "Eine traumhafte Landschaft"
+#   ↓ Stage 3: translated into English for the check before the model,
+#     and for the model where it receives a translation
 ```
 
 **Why?**
-- Efficiency: Translate once, not per config
-- Consistency: All configs work with English internally
-- Separation: Translation is pre-processing, not transformation
+- Efficiency: Translate once, for the model, not per config
+- Separation: Translation serves the media model, not the transformation
 
 **What This Means:**
 - Don't encode translation logic in `context` field
-- Assume all inputs are English
+- Don't assume inputs are English
 - Bilingual `context` fields are for INSTRUCTIONS, not for translating user input
 
 ### 3. No Direct Media Generation
@@ -368,8 +371,7 @@ final_output = "A surrealist landscape with melting clocks..."
     "en": "Your gift is to exaggerate the content of the input beyond measure. YOU ARE THE OVERDRIVE who amplifies everything to its grotesque limit and beyond distortion. Exaggerate in every respect, go over the top, show off, make everything big!"
   },
   "parameters": {
-    "temperature": 0.9,
-    "max_tokens": 2048
+    "temperature": 0.9
   },
   "media_preferences": {
     "default_output": "image"
@@ -380,7 +382,7 @@ final_output = "A surrealist landscape with melting clocks..."
 **How It Works:**
 
 1. **User Input:** "A flower in a meadow"
-2. **Stage 1:** Translation + Safety → "A flower in a meadow" (already English)
+2. **Stage 1:** the intake → passes
 3. **Stage 2 (Overdrive Pipeline):**
    - Chunk: `manipulate`
    - Three-part prompt:
@@ -390,7 +392,7 @@ final_output = "A surrealist landscape with melting clocks..."
      PROMPT: "A flower in a meadow"
      ```
    - LLM Output: "A COLOSSAL MEGA-FLOWER with ENORMOUS BLAZING PETALS towering 500 feet above an INFINITE ENDLESS meadow stretching to the HORIZON OF ETERNITY, with GRASS BLADES as tall as SKYSCRAPERS..."
-4. **Stage 3:** Safety check → PASSED
+4. **Stage 3:** the check before the model → passes
 5. **Stage 4:** Image generation via sd35_large
 
 **Key Learning:** Simple config, powerful transformation. The power is in the CONTEXT content, not complex pipeline structure.
@@ -413,14 +415,14 @@ final_output = "A surrealist landscape with melting clocks..."
 **How It Works:**
 
 1. **User Input:** "A businessman eating lunch at a restaurant"
-2. **Stage 1:** Translation + Safety → Passes
+2. **Stage 1:** the intake → passes
 3. **Stage 2 (YorubaHeritage Pipeline):**
    - Receives multi-page context with Yorùbá cultural instructions
    - Transforms secular modern scene into Yorùbá ritual-ethical frame
    - Reassigns roles: businessman → ògboni elder, restaurant → communal feast space
    - Reframes time: lunch break → ritual gathering in ancestral rhythm
    - Output: "An ògboni elder of dignified bearing, clothed in indigo-dyed áṣọ òkè bearing the marks of ancestral lineage, partakes in a collective nourishment ceremony within a gathering space adorned with clay vessels and woven mats. The act unfolds not as individual consumption but as ritual sharing, acknowledging the presence of ancestors and the sustaining force of àṣẹ that flows through prepared food..."
-4. **Stage 3:** Safety check → PASSED
+4. **Stage 3:** the check before the model → passes
 5. **Stage 4:** Image generation
 
 **Key Learning:** Same pipeline structure as Overdrive, but VASTLY more sophisticated transformation. The complexity is in the CONTENT (multi-page context), not the STRUCTURE (still just text_transformation pipeline with manipulate chunk).
@@ -446,7 +448,7 @@ final_output = "A surrealist landscape with melting clocks..."
 **How It Works:**
 
 1. **User Input:** "[a huge meteoroid in vast space] [a silver spoon in the cutlery drawer]"
-2. **Stage 1:** Translation + Safety → Passes
+2. **Stage 1:** the intake → passes
 3. **Stage 2 (Semantic Split Pipeline):**
    - Pipeline: `text_semantic_split` (uses `text_split` chunk, not `manipulate`)
    - Context specifies JSON output format
@@ -458,7 +460,7 @@ final_output = "A surrealist landscape with melting clocks..."
      }
      ```
 4. **DevServer Parsing:** Recognizes `output_format: "json_split"`, parses JSON
-5. **Stage 3:** Safety check on both parts → PASSED
+5. **Stage 3:** the check before the model → passes
 6. **Stage 4:** Special handling
    - Uses `vector_fusion_linear_clip` output config
    - Generates CLIP embeddings for part_a and part_b
@@ -477,7 +479,7 @@ final_output = "A surrealist landscape with melting clocks..."
 **Data Types:**
 ```python
 {
-  "input_text": str,              # Translated, safety-checked user input
+  "input_text": str,              # The user's text as written, after the intake
   "context": str,                  # From config.context field
   "instruction_type": str,         # e.g., "artistic_transformation"
   "config_metadata": dict          # From config file (parameters, etc.)
@@ -491,8 +493,7 @@ final_output = "A surrealist landscape with melting clocks..."
   "context": "Transform into Bauhaus aesthetic with geometric forms...",
   "instruction_type": "artistic_transformation",
   "config_metadata": {
-    "temperature": 0.7,
-    "max_tokens": 2048
+    "temperature": 0.7
   }
 }
 ```
@@ -512,7 +513,7 @@ TASK_INSTRUCTION = get_instruction_for_type("artistic_transformation")
 CONTEXT = config["context"]["en"]
 # → "Transform into Bauhaus aesthetic..."
 
-# From user input (after Stage 1)
+# From user input (after the intake)
 INPUT_TEXT = "A dreamlike landscape"
 
 # Final prompt sent to LLM:
@@ -549,25 +550,24 @@ class PipelineResult:
 
 ### Stage 2 → Stage 3 Flow
 
-**Input to Stage 3 (Safety Check):**
+**Input to Stage 3 (the check before the model):**
 ```python
-prompt_to_check = pipeline_result.final_output
-# "A COLOSSAL MEGA-FLOWER..."
+from my_app.services.safety_gate import check_before_model
 
-safety_result = check_stage3_safety(
-    prompt=prompt_to_check,
-    safety_level="kids",  # or "youth", "off"
-    media_type="image"
-)
+originals = {"prompt": pipeline_result.final_output}  # "A COLOSSAL MEGA-FLOWER..."
+texts = {"prompt": translated}                         # what the model receives
+
+verdict = check_before_model(texts, level="kids", originals=originals)
 ```
 
-**Output from Stage 3:**
+Where the model receives the text as written, `originals` stays empty and the check translates the text for itself.
+
+**Output from Stage 3:** a `Verdict`
 ```python
-{
-  "passed": True,
-  "method": "fast_path",  # or "llm_check"
-  "duration": "0.5ms"
-}
+verdict.passed       # True, or False with:
+verdict.checkpoint   # "before_model"
+verdict.reason_key   # "content", "symbol", "unavailable", ...
+verdict.block()      # the block message the route sends
 ```
 
 ### Stage 3 → Stage 4 Flow
@@ -620,10 +620,10 @@ The system is designed with clear boundaries:
 │              (Smart Orchestrator)                   │
 │                                                     │
 │  Knows about:                                       │
-│  - 4-stage flow (translation → interception        │
-│    → safety → media)                               │
-│  - Safety rules (Stage 1 + Stage 3)                │
-│  - Translation (Stage 1)                           │
+│  - 4-stage flow (intake → interception             │
+│    → check before the model → media)               │
+│  - Calls of the three checks (safety_gate.py)      │
+│  - Translation (Stage 3: model and check)          │
 │  - Backend routing (eco vs fast)                   │
 │  - Output config selection                         │
 └─────────────────────────────────────────────────────┘
@@ -835,7 +835,7 @@ output_requests = [
 ```
 
 **DevServer would:**
-- Run Stage 3 safety check on each prompt
+- Run the check before the model on each prompt
 - Execute Stage 4 for each output request
 - Return all generated media
 
@@ -891,7 +891,7 @@ output_requests = [
 
 ### Misunderstanding 4: "Stage 2 should handle safety checks"
 
-**Wrong.** Safety belongs in DevServer (Stage 1 + Stage 3), not Stage 2.
+**Wrong.** Safety belongs in DevServer (the three checks of `safety_gate.py`), not Stage 2.
 
 **Why?**
 - Non-redundancy: One place to update safety rules
@@ -921,7 +921,7 @@ output_requests = [
 ```
 Stage 2: Text transformation → Prompt text
   ↓
-Stage 3: Safety check on prompt → Approved prompt
+Stage 3: the check before the model → approved prompt
   ↓
 Stage 4: Media generation → Actual image/audio/video
 ```

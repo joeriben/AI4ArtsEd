@@ -51,7 +51,7 @@ def test_remember_recall_roundtrip():
     result = resona_memory.remember(device, "goal", "Plan a stop-motion short about seasons")
     assert result.startswith("Remembered")
 
-    found = resona_memory.recall(device, "stop-motion")
+    found = resona_memory.recall(device, "stop-motion", level="adult")
     assert "stop-motion short about seasons" in found
     assert "goal" in found
 
@@ -59,7 +59,7 @@ def test_remember_recall_roundtrip():
 def test_recall_no_hits_is_honest():
     device = "device_alpha_2026-07-02"
     resona_memory.remember(device, "note", "Group likes bright colors")
-    result = resona_memory.recall(device, "xylophone-nonsense-query")
+    result = resona_memory.recall(device, "xylophone-nonsense-query", level="adult")
     assert "No memory found" in result
     assert "xylophone-nonsense-query" in result
 
@@ -67,13 +67,13 @@ def test_recall_no_hits_is_honest():
 def test_recall_empty_query():
     device = "device_alpha_2026-07-02"
     resona_memory.remember(device, "note", "something")
-    result = resona_memory.recall(device, "")
+    result = resona_memory.recall(device, "", level="adult")
     assert "No memory found" in result
 
 
 def test_recall_no_memory_yet():
     device = "device_never_used_2026-07-02"
-    result = resona_memory.recall(device, "anything")
+    result = resona_memory.recall(device, "anything", level="adult")
     assert "No memory found" in result
 
 
@@ -82,7 +82,7 @@ def test_recall_is_most_recent_first():
     resona_memory.remember(device, "note", "storyboard step one")
     resona_memory.remember(device, "note", "storyboard step two")
     resona_memory.remember(device, "note", "storyboard step three")
-    result = resona_memory.recall(device, "storyboard")
+    result = resona_memory.recall(device, "storyboard", level="adult")
     lines = [l for l in result.split("\n") if l.strip()]
     assert "step three" in lines[0]
 
@@ -140,7 +140,7 @@ def test_device_isolation():
     assert "Device B" in b_records[0]["content"]
 
     # Cross-device recall must find nothing
-    result = resona_memory.recall(device_b, "Device A")
+    result = resona_memory.recall(device_b, "Device A", level="adult")
     assert "No memory found" in result
 
 
@@ -154,8 +154,8 @@ def test_device_id_sanitization_prevents_collision():
     resona_memory.remember(device_2, "note", "from device 2")
     # Whatever the sanitized form is, each device_id's own records must be
     # retrievable via recall with that same raw device_id.
-    r1 = resona_memory.recall(device_1, "from device")
-    r2 = resona_memory.recall(device_2, "from device")
+    r1 = resona_memory.recall(device_1, "from device", level="adult")
+    r2 = resona_memory.recall(device_2, "from device", level="adult")
     assert "from device 1" in r1
     assert "from device 2" in r2
 
@@ -198,7 +198,8 @@ def test_record_shape_has_required_fields():
     # journal_id joined the shape so "new dialog" can drop one conversation's
     # notes without touching a kept conversation's (resona_memory.forget_journal,
     # devserver/tests/test_resona_new_dialog.py).
-    assert set(record.keys()) == {"kind", "content", "ts", "run_id", "journal_id"}
+    assert set(record.keys()) == {"kind", "content", "ts", "run_id", "journal_id",
+                                  "safety_level"}
     assert record["kind"] == "milestone"
     assert record["run_id"] == "run-abc"
     assert record["journal_id"] == "device_shape_2026-07-02"
@@ -292,6 +293,8 @@ def test_resona_scope_has_exactly_the_granted_tools():
         "lookup_knowledge",        # Knowledge library Phase 1 (2026-07-04 grant)
         "read_knowledge",          # Knowledge library Phase 1 (2026-07-04 grant)
         "lookup_place",            # Places grant 2026-08-11 (both scopes)
+        "lookup_scenarios",        # use reports V 1.0, 2026-11-06 (both scopes)
+        "read_scenario",           # use reports V 1.0, 2026-11-06 (both scopes)
     }
 
 
@@ -310,13 +313,15 @@ def test_trashy_universal_scope_excludes_memory_tools():
 def test_scope_overlap_is_exactly_the_granted_lookups():
     # Both scopes hold a tool only by an explicit "default"+"resona" tag: the
     # two platform lookups (2026-07-03) and lookup_place (2026-08-11, what a lab
-    # instrument or comparison mode says about its own technology). Everything
-    # else stays exclusive to its side.
+    # instrument or comparison mode says about its own technology), and
+    # lookup_scenarios and read_scenario (2026-11-06, the teaching scenarios of
+    # the use reports). Everything else stays exclusive to its side.
     registry = get_tool_registry()
     universal_tools = {t["function"]["name"] for t in registry.get_openai_format(scope=None)}
     resona_tools = {t["function"]["name"] for t in registry.get_openai_format(scope="resona")}
     assert universal_tools & resona_tools == {
-        "lookup_reference", "lookup_interception", "lookup_place"}
+        "lookup_reference", "lookup_interception", "lookup_place",
+        "lookup_scenarios", "read_scenario"}
 
 
 if __name__ == "__main__":

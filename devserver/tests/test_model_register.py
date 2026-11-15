@@ -25,6 +25,7 @@ REGISTER = json.loads(R._REGISTER_FILE.read_text(encoding='utf-8'))
 MODELS = REGISTER['models']
 LINEUPS = REGISTER['interception_lineups']
 MAKERS = REGISTER.get('makers', {})
+ESTIMATES = REGISTER.get('size_estimates', {})
 
 OPENNESS = {'open', 'weights', 'closed'}
 
@@ -45,8 +46,8 @@ class TestEveryEntryCarriesItsSource:
     @pytest.mark.parametrize('key', sorted(MODELS))
     def test_it_says_nothing_it_cannot_say(self, key):
         entry = MODELS[key]
-        assert set(entry) <= {'name', 'maker', 'country', 'year', 'openness', 'params_b', 'medium',
-                              'source'}, entry
+        assert set(entry) <= {'name', 'maker', 'country', 'year', 'openness', 'params_b',
+                              'params_b_estimate', 'medium', 'source'}, entry
         # The one mark the register carries besides the facts: an image network,
         # which shows its count without a size class (useModelRegister.sizeClass).
         if 'medium' in entry:
@@ -60,6 +61,35 @@ class TestEveryEntryCarriesItsSource:
         # zero would print as a model of no size at all.
         if 'params_b' in entry and entry['params_b'] is not None:
             assert entry['params_b'] > 0, entry
+
+
+class TestAnEstimateIsMarkedAndGrounded:
+    """Where no count is published, the lists order by a reasoned estimate.
+
+    It is not a fact, so it never stands where a fact stands (params_b), and it
+    is never without the grounds it was reached on: those stand under
+    'size_estimates' with the pages they rest on, as a maker's country stands
+    under 'makers' with its page.
+    """
+
+    ESTIMATED = sorted(k for k, m in MODELS.items() if 'params_b_estimate' in m)
+
+    def test_there_are_estimates(self):
+        assert self.ESTIMATED
+
+    @pytest.mark.parametrize('key', ESTIMATED)
+    def test_it_stands_only_where_no_count_is_published(self, key):
+        entry = MODELS[key]
+        assert entry.get('params_b') is None, f'{key}: a published count and an estimate'
+        assert isinstance(entry['params_b_estimate'], (int, float)) and entry['params_b_estimate'] > 0, entry
+
+    @pytest.mark.parametrize('key', ESTIMATED)
+    def test_it_names_its_grounds_and_their_pages(self, key):
+        basis = (ESTIMATES.get(key) or {}).get('basis', '')
+        assert 'https://' in basis or 'arXiv:' in basis, f'{key}: an estimate without grounds'
+
+    def test_no_grounds_for_an_estimate_that_is_not_there(self):
+        assert set(ESTIMATES) == set(self.ESTIMATED)
 
 
 class TestEveryLanguageModelSaysWhereItComesFrom:

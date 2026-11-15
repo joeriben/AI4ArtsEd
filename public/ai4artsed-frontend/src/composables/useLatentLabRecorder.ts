@@ -25,7 +25,9 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { useDeviceId } from './useDeviceId'
+import { safetyBlockOf } from './useGenerationStream'
 import { apiBase } from '@/services/labApi'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 const BASE = apiBase()
 
@@ -199,6 +201,7 @@ export function useLatentLabRecorder(toolType: string) {
   const isRecording = ref(false)
   const recordCount = ref(0)
   const deviceId = useDeviceId()
+  const safetyStore = useSafetyEventStore()
   let mounted = false
 
   async function startSession(): Promise<void> {
@@ -238,6 +241,23 @@ export function useLatentLabRecorder(toolType: string) {
     return lastRunId.value
   }
 
+  /**
+   * A refusal of the platform's check where the run comes in
+   * (latent_lab_recorder_routes, `_recording_intake`) goes where every surface
+   * sends one: the safety window. True where the answer was one. The pictures
+   * a recording carries are the instrument's own, so a refused one is said as
+   * a picture the platform made, not as one somebody brought.
+   */
+  function reportRefusal(err: unknown): boolean {
+    const block = safetyBlockOf(err)
+    if (!block) return false
+    safetyStore.reportBlock(block, {
+      operational: block.reason_key === 'unavailable',
+      generated: true,
+    })
+    return true
+  }
+
   async function record(payload: RecordData): Promise<string | null> {
     // Lazy start: open the sitting on the first actual record
     if (!sessionId.value) await startSession()
@@ -245,6 +265,8 @@ export function useLatentLabRecorder(toolType: string) {
     try {
       return await save(payload)
     } catch (err) {
+      // Refused by the check: nothing was written, and the reader is told why.
+      if (reportRefusal(err)) return null
       // The backend does not know this sitting: it was restarted, or the tab
       // has been open across a deploy. The sitting is opened again and the run
       // written once more - otherwise this tab would record nothing for the
@@ -257,7 +279,9 @@ export function useLatentLabRecorder(toolType: string) {
           try {
             return await save(payload)
           } catch (retryErr) {
-            console.warn('[LatentLabRecorder] Failed to save after reopening:', retryErr)
+            if (!reportRefusal(retryErr)) {
+              console.warn('[LatentLabRecorder] Failed to save after reopening:', retryErr)
+            }
             return null
           }
         }

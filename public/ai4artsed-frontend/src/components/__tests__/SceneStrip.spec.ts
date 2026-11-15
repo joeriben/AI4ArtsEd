@@ -1,9 +1,9 @@
 /**
- * UCD-133 — the capsule strip's own two acts: a capsule stands out when it
- * is driven at, and the prompt it carries goes on through the surface's
- * prompt instrument (the carry event; where it lands is resona.vue's open
- * line). Counts arrive as numbers — the strip has no excluded content to
- * show, and the test pins that it never tries.
+ * The document card's own acts: it shows the summary it was handed, a section
+ * stands out when it is driven at, and its text goes on through the surface's
+ * prompt instrument (the carry event; where it lands is the view's). What the
+ * check withheld arrives as a number: the card has no withheld content to show,
+ * and the test pins that it never tries.
  */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
@@ -23,22 +23,13 @@ const i18n = createI18n({
 const DOC: SceneDocument = {
   docId: 'doc-x',
   title: 'Probe-Programm',
-  capsules: [
-    {
-      anchor: { chapter: 'Kapitel 1', probe: 'Eine Werkstatt, Tische voll Skizzen.' },
-      scene: 'In einer Werkstatt stehen Lernende um einen Tisch.',
-      prompt: 'Ein Bild, das zeigt: In einer Werkstatt stehen Lernende um einen Tisch.',
-      safety: { verdict: 'pass', categories: [] },
-    },
-    {
-      anchor: { chapter: 'Kapitel 2', probe: 'Offene Räume, Material in Reichweite.' },
-      scene: 'An einer Planwand markiert eine Gruppe Arbeitsschritte.',
-      prompt: 'Ein Bild, das zeigt: An einer Planwand markiert eine Gruppe Arbeitsschritte.',
-      safety: { verdict: 'pass', categories: [] },
-    },
+  profile: 'Der Text fordert Werkstätten für alle Schulen.',
+  sections: [
+    { heading: 'Die Werkstatt', body: 'Lernende stehen um einen Tisch.\n- Skizzen\n- Modelle' },
+    { heading: 'Die Planwand', body: 'Eine Gruppe markiert Arbeitsschritte.' },
   ],
-  flagged: 3,
-  discarded: 1,
+  glossary: [{ term: 'Werkstatt', definition: 'Raum für gemeinsames Arbeiten.' }],
+  withheld: 3,
   meta: { analyzedAt: '2026-09-27T16:00:00+00:00', analysisModel: 'mammouth/glm-5.3', analysisLang: 'de' },
 }
 
@@ -54,40 +45,64 @@ beforeEach(() => {
 })
 
 describe('SceneStrip', () => {
-  it('shows the whole document as a strip over the capsules', () => {
+  it('shows the summary: title, profile, a cell per section and one for the glossary', () => {
     const w = open()
-    const cells = w.findAll('.ss-cell')
-    expect(cells).toHaveLength(2)
     expect(w.text()).toContain('Probe-Programm')
-    expect(w.text()).toContain('In einer Werkstatt stehen Lernende um einen Tisch.')
+    expect(w.find('.ss-profile').text()).toBe('Der Text fordert Werkstätten für alle Schulen.')
+    const cells = w.findAll('.ss-cell')
+    expect(cells).toHaveLength(3)
+    expect(cells[0]!.text()).toContain('Die Werkstatt')
+    expect(cells[2]!.text()).toContain('Glossary')
   })
 
-  it('drives at one capsule: it stands out, and the carry event hands its prompt on', async () => {
+  it('shows only its head while the summary runs', () => {
+    const w = mount(SceneStrip, {
+      props: {
+        doc: { docId: '', title: 'a.pdf', profile: '', sections: [], glossary: [], withheld: 0, meta: {} },
+        status: 'Section 2 of 9',
+      },
+      global: { plugins: [i18n] },
+    })
+    expect(w.text()).toContain('a.pdf')
+    expect(w.find('.ss-status').text()).toBe('Section 2 of 9')
+    expect(w.find('.ss-strip').exists()).toBe(false)
+    expect(w.find('.ss-profile').exists()).toBe(false)
+  })
+
+  it('drives at one section: it opens, and the carry event hands its text on', async () => {
     const w = open()
     expect(w.find('.ss-detail').exists()).toBe(false)
     await w.findAll('.ss-cell')[1]!.trigger('click')
-    expect(w.find('.ss-detail').exists()).toBe(true)
-    // The anchor is the capsule's evidence duty: chapter + in-vivo probe.
-    expect(w.text()).toContain('Kapitel 2')
-    expect(w.text()).toContain('Offene Räume, Material in Reichweite.')
+    expect(w.find('.ss-detail').text()).toContain('Eine Gruppe markiert Arbeitsschritte.')
     // A second click on the same cell puts it back.
     await w.findAll('.ss-cell')[1]!.trigger('click')
     expect(w.find('.ss-detail').exists()).toBe(false)
-    // Drive again and carry: the prompt goes on in the surface's own words.
     await w.findAll('.ss-cell')[0]!.trigger('click')
-    const btn = w.find('.ss-carry')
-    expect(btn.exists()).toBe(true)
-    await btn.trigger('click')
-    expect(w.emitted('carry')).toEqual([['Ein Bild, das zeigt: In einer Werkstatt stehen Lernende um einen Tisch.']])
+    await w.find('.ss-carry').trigger('click')
+    expect(w.emitted('carry')).toEqual([['Lernende stehen um einen Tisch.\n- Skizzen\n- Modelle']])
   })
 
-  it('reports excluded sections and discarded capsules as counts, never as content', () => {
+  it('opens the glossary, which carries nothing on', async () => {
     const w = open()
-    const text = w.text()
-    expect(text).toContain('3 sections excluded, protection reasons')
-    expect(text).toContain('1 capsules discarded by the capsule gate')
-    // A flagged segment has no stored content to leak; what the strip shows
-    // of the document is the capsules and the counts, nothing else.
-    expect(w.findAll('.ss-count')).toHaveLength(2)
+    await w.findAll('.ss-cell')[2]!.trigger('click')
+    expect(w.find('.ss-glossary').text()).toContain('Raum für gemeinsames Arbeiten.')
+    expect(w.find('.ss-carry').exists()).toBe(false)
+  })
+
+  it('reports withheld parts as a count, never as content', () => {
+    const w = open()
+    expect(w.text()).toContain('The safety check withheld 3 parts of this summary.')
+    expect(w.findAll('.ss-count')).toHaveLength(1)
+  })
+
+  it('says one withheld part in the singular', () => {
+    const w = open({ ...DOC, withheld: 1 })
+    expect(w.find('.ss-count').text()).toBe('The safety check withheld one part of this summary.')
+  })
+
+  it('gives the day of the analysis in the reader\'s form, not the wire stamp', () => {
+    const w = open()
+    expect(w.text()).not.toContain('T16:00:00')
+    expect(w.text()).toContain('mammouth/glm-5.3')
   })
 })

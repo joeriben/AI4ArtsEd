@@ -22,6 +22,7 @@
  * page does with a token is that page's business.
  */
 import { sseEvents, type SseOptions } from './sseStream'
+import type { SafetyBlock } from '@/composables/useGenerationStream'
 
 /** The closing payload of one turn — the body `POST /api/chat` answered with. */
 export type ChatTurnResult = {
@@ -57,7 +58,7 @@ type ChatEvent =
   | { type: 'discard' }
   | { type: 'withdraw'; text: string }
   | ({ type: 'done' } & Partial<ChatTurnResult>)
-  | { type: 'error'; error?: string; details?: string; status?: number }
+  | { type: 'error'; error?: string; details?: string; status?: number; safety_block?: SafetyBlock }
 
 /**
  * The turn was refused or failed, and the server said so inside the stream.
@@ -67,13 +68,17 @@ type ChatEvent =
  * a distinct type because a caller that used to read a non-2xx body as "no
  * reply" has to keep doing exactly that, and must not confuse it with a stream
  * that was cut. `status` is the code the blocking endpoint would have sent.
+ * A turn the platform's checks refused carries the block message
+ * (`safety_block`, status 403), which the surfaces read with `refusalKeyOf`.
  */
 export class ChatStreamError extends Error {
   status?: number
-  constructor(message: string, status?: number) {
+  safety_block?: SafetyBlock
+  constructor(message: string, status?: number, safetyBlock?: SafetyBlock) {
     super(message)
     this.name = 'ChatStreamError'
     this.status = status
+    this.safety_block = safetyBlock
   }
 }
 
@@ -192,7 +197,8 @@ export async function chatTurn(
           + 'the reply stands:', ev.details || ev.error)
         break
       }
-      throw new ChatStreamError(ev.details || ev.error || 'chat stream error', ev.status)
+      throw new ChatStreamError(ev.details || ev.error || 'chat stream error', ev.status,
+        ev.safety_block)
     }
   }
   if (!done) {

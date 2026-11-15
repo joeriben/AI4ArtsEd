@@ -5,7 +5,8 @@
  * What is held: a round outlives the surface that sent it — a surface is
  * unmounted when its tab is left and a fresh one is built on the way back,
  * and that one must find the round still out —, a column without a model sits
- * the round out, a failed answer is not handed on as the model's own, and Help
+ * the round out, a failed answer is not handed on as the model's own, a refused
+ * message is said in every column and sent to the safety window once, and Help
  * is told the settings the round was SENT with.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -31,6 +32,7 @@ vi.mock('vue-i18n', async (importOriginal) => ({
 
 import { useChatColumns } from '../useChatColumns'
 import { useSystemPromptAcrossModelsStore } from '@/stores/systemPromptAcrossModels'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 function surface(store: ReturnType<typeof useSystemPromptAcrossModelsStore>, recorded: unknown[]) {
   return useChatColumns(store, {
@@ -102,6 +104,30 @@ describe('useChatColumns', () => {
     const r2 = s.sendToAll()
     expect(turns[1]!.body.history).toEqual([])
     turns[1]!.resolve({ reply: 'Z' })
+    await r2
+  })
+
+  it('a refused message is said in every column, and reported once', async () => {
+    const store = useSystemPromptAcrossModelsStore()
+    store.preselect(['a', 'b'])
+    const reported = vi.spyOn(useSafetyEventStore(), 'reportBlock')
+    const s = surface(store, [])
+    s.userInput.value = 'eins'
+    const r1 = s.sendToAll()
+    const block = { checkpoint: 'intake', field: 'message', reason_key: 'personal_data',
+                    reason: 'ein Name' }
+    for (const turn of turns) turn.reject(Object.assign(new Error('safety_blocked'), { safety_block: block }))
+    await r1
+    expect(store.columns.slice(0, 2).map(c => c.messages.map(m => [m.content, !!m.failed]))).toEqual([
+      [['eins', false], ['safetyBlocked.dsgvo', true]],
+      [['eins', false], ['safetyBlocked.dsgvo', true]],
+    ])
+    expect(reported).toHaveBeenCalledTimes(1)
+    // The refused message is not sent again as history.
+    s.userInput.value = 'zwei'
+    const r2 = s.sendToAll()
+    expect(turns.slice(2).map(t => t.body.history)).toEqual([[], []])
+    for (const turn of turns.slice(2)) turn.resolve({ reply: 'R' })
     await r2
   })
 

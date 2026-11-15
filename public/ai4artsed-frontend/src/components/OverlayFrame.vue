@@ -5,15 +5,18 @@
        where they are, and closing the layer is standing on them again).
 
        Dark ground with a blur, a click on the ground closes, Escape closes,
-       `<Teleport to="body">`, z-index 2000. Two sizes: `reading` (800 px wide,
-       90 vh high, the Documentation) and `full` (the window minus 1 rem on each
-       side, the Settings, whose tables keep the width they had as a page).
+       `<Teleport to="body">`, z-index 2000. Three sizes: `reading` (800 px wide,
+       90 vh high, the Documentation), `full` (the window minus 1 rem on each
+       side, the Settings, whose tables keep the width they had as a page), and
+       `screen` (the whole screen where the browser grants its fullscreen mode,
+       else the window, with no ground and no edge around the frame, for a
+       projector: the codes of a course's places, 2026-11-14).
        With a `title` the frame draws its head row (title and ×); without one
        the content brings its own head, and only the × stands in the corner. -->
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div v-if="modelValue" class="modal-overlay" @click="close">
-        <div class="modal-container" :class="{ full: size === 'full' }" @click.stop>
+      <div v-if="modelValue" class="modal-overlay" :class="{ screen: size === 'screen' }" @click="close">
+        <div class="modal-container" :class="{ full: size === 'full', screen: size === 'screen' }" @click.stop>
           <div v-if="title" class="modal-header">
             <h1>{{ title }}</h1>
             <button class="modal-close" @click="close" :title="$t('common.back')">×</button>
@@ -26,13 +29,42 @@
   </Teleport>
 </template>
 
+<script lang="ts">
+/** The browser's fullscreen mode was asked for by `enterScreen` and is still
+ *  wanted. The mode arrives some time after the request (on macOS after an
+ *  animation of about half a second); a frame closed meanwhile leaves it as
+ *  it arrives. */
+let screenWanted = false
+
+/** Asks the browser for its fullscreen mode, for the size `screen`. The page
+ *  that opens the frame calls it in the same click: a browser grants the mode
+ *  only from a gesture at the device. Where a browser offers none (Safari on
+ *  the iPhone) or refuses it, the frame covers the window. A fullscreen mode
+ *  the browser is in already (the user's own, a video's) is left alone. */
+export function enterScreen(): void {
+  const root = document.documentElement
+  if (typeof root.requestFullscreen !== 'function' || document.fullscreenElement) return
+  screenWanted = true
+  root.requestFullscreen().then(
+    () => { if (!screenWanted) exitScreen() },
+    () => { screenWanted = false },
+  )
+}
+
+/** Ends the mode `enterScreen` asked for, arrived or not. */
+function exitScreen(): void {
+  screenWanted = false
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
+}
+</script>
+
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
   modelValue: boolean
   title?: string
-  size?: 'reading' | 'full'
+  size?: 'reading' | 'full' | 'screen'
 }>(), {
   title: '',
   size: 'reading',
@@ -52,12 +84,33 @@ function handleEscape(event: KeyboardEvent) {
   }
 }
 
+/* The size `screen` follows the browser's fullscreen mode the page asked
+   for (`enterScreen`): the frame closes when the browser leaves that mode, by
+   Escape or by its own control, and ends the mode when it is closed by its ×
+   or leaves the page. A mode the page did not ask for is not the frame's. */
+function handleFullscreenChange() {
+  if (props.size !== 'screen' || document.fullscreenElement || !screenWanted) return
+  screenWanted = false
+  if (props.modelValue) close()
+}
+
+function leaveScreen() {
+  if (props.size === 'screen' && screenWanted) exitScreen()
+}
+
+watch(() => props.modelValue, (open) => {
+  if (!open) leaveScreen()
+})
+
 onMounted(() => {
   document.addEventListener('keydown', handleEscape)
+  document.addEventListener('fullscreenchange', handleFullscreenChange)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleEscape)
+  document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  leaveScreen()
 })
 </script>
 
@@ -98,6 +151,24 @@ onUnmounted(() => {
   max-width: none;
   max-height: none;
   height: 100%;
+}
+
+/* `screen`: the whole window, with no ground around the frame and no edge;
+   in the browser's fullscreen mode the window is the screen. */
+.modal-overlay.screen {
+  padding: 0;
+  background: var(--bg-base);
+  backdrop-filter: none;
+}
+
+.modal-container.screen {
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .modal-header {

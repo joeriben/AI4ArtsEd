@@ -3,11 +3,11 @@ One construction of the sheet a card shows on its back.
 
 The frontend's ModelProvenanceCard reads a flat dict: what the config declares
 about the model (publisher, architecture, parameters, licence, training data),
-plus what this particular run did (backend, seed, cfg, steps). It was built
-inline in the streaming route and nowhere else, so every other way into a
-generation — the legacy endpoint the Latent Lab instruments use, the canvas
-executor — produced media with no provenance at all, and the cards over there
-had nothing to turn to.
+plus what this particular run did (backend, seed, cfg, steps, and the model it
+generated with). It was built inline in the streaming route and nowhere else,
+so every other way into a generation — the legacy endpoint the Latent Lab
+instruments use, the canvas executor — produced media with no provenance at
+all, and the cards over there had nothing to turn to.
 
 Adding a second copy at each of those call sites is what this exists to avoid.
 """
@@ -58,13 +58,22 @@ def _config_number(config_params: Dict[str, Any], *keys: str) -> Any:
     return _chunk_default(config_params, keys[0])
 
 
+def takes_no_seed(backend_type: str) -> bool:
+    """Whether a run on this backend uses no seed: a cloud backend the
+    provider table names, and a config model, which writes code with a
+    language model (p5.js, Tone.js). The seed a request carries is not the
+    run's there, and no sheet names it."""
+    from my_app.services.llm_providers import names as provider_names
+    return backend_type == 'config_model' or backend_type in provider_names()
+
+
 def build_model_meta(
     config_obj: Any,
     *,
     seed: Optional[int] = None,
     cfg: Optional[float] = None,
     steps: Optional[int] = None,
-    model_id: Optional[str] = None,
+    model_used: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     The sheet for one run.
@@ -75,12 +84,17 @@ def build_model_meta(
     caller does not know them, the config's own lowercase parameters stand in,
     and after them the defaults of the config's JSON chunk.
 
-    `model_id` is the model the run REACHED, where the chunk reported one. It is
-    a separate fact from the name the config declares, and on the Latent Lab's
-    six raster instruments the two can differ: the backbone is resolved by the
-    size of the card (services/latent_lab_model.py), so a card under 50 GB runs
-    SD 3.5 Medium under a config whose own name says Large. The surface that
-    names what ran reads this one; nothing else changes.
+    `model_used` is the model the run generated with, as the run reported it.
+    Every successful generation that runs a model answers with it
+    (`model_used` in the BackendResponse,
+    devserver/schemas/engine/backend_router.py; the runs that load none are
+    named in devserver/tests/test_model_used_coverage.py), named the way the
+    backend that ran it names it: the file a ComfyUI loader loads, the
+    repository id the GPU service loads from, the model an API request names.
+    It is the only name the provenance card gives the model. A config's
+    `display_name` names the config, which on the Latent Lab's instruments is
+    the instrument ("Concept Algebra (SD 3.5)") and on the Stable Audio
+    presets the preset.
     """
     config_meta = config_obj.meta if config_obj and config_obj.meta else {}
     config_params = config_obj.parameters if config_obj and config_obj.parameters else {}
@@ -92,6 +106,6 @@ def build_model_meta(
         'cfg': cfg if cfg is not None else _config_number(config_params, 'cfg', 'cfg_scale', 'CFG'),
         'steps': steps if steps is not None else _config_number(config_params, 'steps', 'STEPS'),
     })
-    if model_id:
-        meta['model_id'] = model_id
+    if model_used:
+        meta['model_used'] = model_used
     return meta

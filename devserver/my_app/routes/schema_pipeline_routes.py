@@ -25,6 +25,30 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from my_app.services.safety_level_resolver import resolve_safety_level
+from my_app.services.chunk_llm_steps import LlmStepError, run_llm_steps
+from my_app.services.safety_gate import (
+    CHECKPOINT_BEFORE_MODEL,
+    CHECKPOINT_INTAKE,
+    CHECKPOINT_REFUSAL,
+    CHECKPOINT_RESULT,
+    REASON_IMAGE_UNCHECKED,
+    REASON_REFUSAL,
+    REASON_UNAVAILABLE,
+    UNCHECKED_LEVELS,
+    Verdict,
+    check_before_model,
+    check_intake,
+    check_intake_texts,
+    check_result_code,
+    check_result_image,
+    check_result_text,
+    check_result_video,
+    image_reference_cleared,
+    normalise_level,
+    preview_for,
+    safety_block,
+)
+
 # The SSE frame writer every stream in this file uses, and the transport that
 # answers a long run with a connection that keeps breathing. The frame writer
 # lived here until the transport needed it to write its terminal event; a
@@ -42,16 +66,11 @@ from my_app.services.streaming_response import (ANSWER_STREAM_FLAG, STREAM_FLAG,
 from schemas.engine.config_loader import config_loader, config_is_hidden
 from schemas.engine.progress_callback import set_progress_callback
 from schemas.engine.instruction_selector import get_instruction
+from schemas.engine.multi_image_params import multi_images_from
 from schemas.engine.stage_orchestrator import (
-    execute_stage1_safety_unified,
-    execute_stage3_safety,
-    execute_stage3_safety_code,
+    SAFETY_CHECK_UNAVAILABLE_MESSAGE,
     build_safety_message,
-    fast_filter_bilingual_86a,
-    fast_dsgvo_check,
-    llm_personal_data_check,
 )
-from my_app.utils.circuit_breaker import safety_breaker
 
 # No-op tracker to gracefully deprecate OLD ExecutionTracker
 class NoOpTracker:
@@ -298,8 +317,9 @@ def _cancel_comfyui_for(device_id: str):
         import asyncio
         from my_app.services.comfyui_ws_client import get_comfyui_ws_client
         for pid in prompt_ids:
-            asyncio.run(get_comfyui_ws_client().cancel_job(pid))
-            logger.info(f"[GEN-TRACKER] ComfyUI job cancelled: {pid}")
+            # cancel_job logs a cancel ComfyUI did not take, with its cause.
+            if asyncio.run(get_comfyui_ws_client().cancel_job(pid)):
+                logger.info(f"[GEN-TRACKER] ComfyUI job cancelled: {pid}")
     except Exception as e:
         logger.warning(f"[GEN-TRACKER] ComfyUI cancel failed: {e}")
 
@@ -812,6 +832,99 @@ def _fit_encoder_window(clip_text: str, interception_result: str, output_config_
         return interception_result, False, None
 
 
+def _load_adaption_chunk(output_config_name: str):
+    """The chunk that writes this model's adaption, where the output config names
+    one; None where a language model writes it from an instruction."""
+    if pipeline_executor is None:
+        init_schema_engine()
+    output_config_obj = config_loader.get_config(output_config_name)
+    return (getattr(output_config_obj, 'meta', None) or {}).get('adaption_chunk')
+
+
+def _ended_with_its_stream(start_time: float):
+    """The answer of a run whose stream ended while its model worked
+    (`generation_abort.WatchedRun.ended`). It reaches nobody; it stands so that
+    the run ends as cancelled and goes no further, neither as a failure nor
+    into the checks."""
+    return {
+        'success': False,
+        'status': 'cancelled',
+        'error': 'The stream of this run ended; its model work was stopped.',
+        'execution_time_ms': int((_time_module.time() - start_time) * 1000),
+    }, 200
+
+
+def _run_adaption_chunk(chunk_name: str, input_text: str, images: dict, output_config: str,
+                        start_time: float, client_gone: Optional[threading.Event] = None):
+    """The adaption of a model whose maker ships the model that writes it.
+
+    That model reads the pictures the run will hand the image model, so it runs
+    on the card, in a prompt of its own, ahead of the check and the translation.
+    Answers as the route answers. A failure is the run of this chunk failing: no
+    other model is asked in its place.
+
+    Only files this server wrote via /upload/image are read, the rule of the
+    image analysis: what the model reads comes back as words, so any other path
+    would make this route a way to read a picture off the machine.
+
+    The prompt holds the card's one slot, and a page that stopped or closed has
+    no use for its answer: the run has an id of its own, so that the gate's
+    checks see the mark and ComfyUI is told to drop the prompt.
+    """
+    import time
+    from config import UPLOADS_TMP_DIR
+    from my_app.services import generation_abort
+    from my_app.services.local_llm_weights import LOCAL_PREFIX
+    from schemas.engine.backend_router import BackendRequest, BackendType
+
+    uploads = UPLOADS_TMP_DIR.resolve()
+    uploaded = {}
+    for key, path in images.items():
+        resolved = Path(str(path)).resolve()
+        if uploads not in resolved.parents or not resolved.is_file():
+            return {'success': False, 'code': 'image_gone',
+                    'error': f'{key} must point to an uploaded image'}, 400
+        uploaded[key] = str(resolved)
+
+    response = None   # bound only where the work ran
+    config_token = generation_abort.CURRENT_OUTPUT_CONFIG.set(chunk_name)
+    try:
+        with generation_abort.ended_when_its_reader_leaves(
+                client_gone, kind='adaption', label='ADAPTION-CHUNK') as watched:
+            if not watched.ended:
+                response = asyncio.run(pipeline_executor.backend_router.process_request(BackendRequest(
+                    backend_type=BackendType.COMFYUI,
+                    model='',
+                    prompt={},
+                    parameters={'_chunk_name': chunk_name, 'prompt': input_text, **uploaded},
+                )))
+    finally:
+        generation_abort.CURRENT_OUTPUT_CONFIG.reset(config_token)
+
+    if watched.ended or response is None:
+        logger.info(f"[ADAPTION-CHUNK] '{chunk_name}': the stream ended during the adaption; "
+                    f"nothing is answered")
+        return _ended_with_its_stream(start_time)
+
+    if not response.success:
+        logger.error(f"[ADAPTION-CHUNK] '{chunk_name}' failed: {response.error}")
+        payload = {'success': False, 'error': response.error}
+        busy = (response.metadata or {}).get('busy')
+        if busy:
+            payload['code'] = 'gpu_busy'
+            payload['busy'] = _busy_note(busy)
+        return payload, 500
+    return {
+        'success': True,
+        'optimized_prompt': response.content,
+        'optimization_applied': True,
+        'estimated_duration_seconds': _load_estimated_duration(output_config),
+        'execution_time_ms': int((time.time() - start_time) * 1000),
+        'model': f"{LOCAL_PREFIX}{response.metadata.get('model_used', '')}",
+        'shortened_to_window': False,
+    }, 200
+
+
 def _load_optimization_instruction(output_config_name: str):
     """Load optimization_instruction for a given output config.
 
@@ -928,90 +1041,23 @@ def _as_written(frame: str) -> str:
     return frame
 
 
-def _stage1_check_texts(texts, safety_level, user_language, client_gone=None):
-    """Stage 1 over EVERY text the client sent that will reach a model.
-
-    Until 2026-08-29 the gate saw only `input_text`. A `context_prompt` — the
-    meta-prompt a surface lets a visitor edit — went past it. In
-    `execute_stage2` it was even handed to a local model to be TRANSLATED
-    before the gate ran, so the unchecked text had already been in front of a
-    model by the time anything was checked; in the streaming path it reached
-    the pipeline config unchecked. Both are text a visitor typed, on a platform
-    for six- to seventeen-year-olds.
-
-    Checked in the ORIGINAL language, the same as `input_text`: the fast
-    filters are language-aware, and translating first is exactly what put the
-    text in front of a model.
-
-    ONE queue slot for all of them, not one each. Both call sites held exactly
-    one before, and the fast filters answer in about a millisecond unless they
-    hit — a second text costs the SpaCy pass, not a second LLM call.
-
-    `texts` is a list of `(label, text)`. Empty entries are skipped, so a
-    request without a context prompt costs nothing.
-
-    `client_gone` is the leaving signal this platform's stream transport offers
-    work that can give something back by stopping, and this check can: it holds
-    ONE slot of the plant-wide LLM queue for its whole run and then calls a
-    model with it. A visitor who closed the tab left that slot standing until
-    the model answered — measured on 2026-09-05 as 6 free slots going to 5 for
-    a reader who was no longer there. It is read before the queue is entered
-    and again before every text, which are the two points at which stopping
-    costs nothing and hands the slot back.
-
-    Returns `(is_safe, error_message, checks_passed, blocked_label, checked)`,
-    where `checked` maps label to the text the gate returned for it — or `None`
-    where the reader left, which is NO VERDICT and never a pass: a gate that
-    did not run has nothing to say, and nobody to say it to. `None` can only
-    come back where a caller passed the signal at all.
-    """
-    passed = []
-    checked = {}
-    if client_gone is not None and client_gone.is_set():
-        logger.info("[STAGE1] The reader left before the gate took a queue slot")
-        return None
-    with llm_queue_semaphore:
-        for label, text in texts:
-            if not text or not str(text).strip():
-                continue
-            if client_gone is not None and client_gone.is_set():
-                logger.info("[STAGE1] The reader left — %r was not checked and "
-                            "the queue slot goes back now", label)
-                return None
-            is_safe, checked_text, error_message, checks = asyncio.run(
-                execute_stage1_safety_unified(
-                    text=str(text),
-                    safety_level=safety_level,
-                    pipeline_executor=pipeline_executor,
-                    user_language=user_language,
-                )
-            )
-            checked[label] = checked_text
-            for check in checks or []:
-                if check not in passed:  # one text's checks are every text's
-                    passed.append(check)
-            if not is_safe:
-                logger.warning(f"[STAGE1] BLOCKED on {label!r}")
-                return (False, error_message, passed, label, checked)
-    return (True, None, passed, None, checked)
-
-
 def _concept_prompts(concepts):
-    """The prompt of every concept a composable run sent, as stage-1 texts
-    (label, text). `concepts` is the list the client sent, or its JSON."""
+    """The prompt of every concept a composable run sent, with its place in
+    the list: (index, text). `concepts` is the list the client sent, or its
+    JSON."""
     if not concepts:
         return []
     try:
         concepts_list = concepts if isinstance(concepts, list) else json.loads(concepts)
     except (ValueError, TypeError):
-        # Not stage 1's to refuse: the chunk reads the concepts itself and
+        # Not the intake's to refuse: the chunk reads the concepts itself and
         # says what is wrong with them, as it did before 2026-10-10.
         return []
     out = []
     for index, concept in enumerate(concepts_list):
         text = concept.get('prompt', '') if isinstance(concept, dict) else ''
         if text and str(text).strip():
-            out.append((f'concept_{index + 1}', text))
+            out.append((index, text))
     return out
 
 
@@ -1037,6 +1083,57 @@ async def _translate_encoder_text(text: str, label: str, pipeline_executor,
         logger.warning(f'[ENCODER-PROMPT] Translating the {label} failed ({exc}) — '
                        f'it stays in its input language')
     return text
+
+
+async def _translate_for_model(text: str, pipeline_executor, *, device_id: str = None,
+                               translation_instruction: str = None) -> Optional[str]:
+    """The English text a media model receives in place of `text`, or None.
+
+    Where the level or the request has the model receive a translation, this
+    makes it, through the translation config Stage 3 used and in the context
+    every translation into English runs in. The check before the model then
+    reads the text and its translation. Kept for the device as Stage 3 kept it:
+    the same text pressed again on the same device is not translated again.
+    None where the translation failed or came back empty; what follows from
+    that is the caller's, by level.
+    """
+    from schemas.engine.stage_orchestrator import (_get_translation_cache_entry,
+                                                   _update_translation_cache,
+                                                   translation_context)
+    instruction = (translation_instruction or '').strip()
+    cached = _get_translation_cache_entry(device_id)
+    if (cached is not None and cached.get('untranslated') == text
+            and cached.get('instruction', '') == instruction
+            and (cached.get('translated') or '').strip()):
+        logger.info(f"[MODEL-TRANSLATION] Reused for device {device_id}")
+        return cached['translated']
+    try:
+        result = await pipeline_executor.execute_pipeline(
+            'pre_output/translation_en', text,
+            context_override=translation_context(text, translation_instruction))
+    except Exception as exc:
+        if _ended_run():
+            logger.info(f"[MODEL-TRANSLATION] Ended with its run ({exc!r})")
+        else:
+            logger.error(f"[MODEL-TRANSLATION] Failed ({exc!r})")
+        return None
+    translated = (result.final_output or '').strip() if result.success else ''
+    if not translated:
+        if _ended_run():
+            logger.info("[MODEL-TRANSLATION] Ended with its run")
+        else:
+            logger.error("[MODEL-TRANSLATION] Failed or came back empty")
+        return None
+    _update_translation_cache(device_id, text, translated, instruction)
+    return translated
+
+
+def _input_pictures(input_image, multi_images) -> dict:
+    """The pictures a generation hands its model, by field, without the empty ones:
+    `input_image` and the `input_image1, input_image2, ...` of a multi-image run."""
+    pictures = {'input_image': input_image} if input_image else {}
+    pictures.update({name: ref for name, ref in (multi_images or {}).items() if ref})
+    return pictures
 
 
 def _parse_triple_prompt(text: str) -> dict | None:
@@ -1339,14 +1436,27 @@ async def execute_optimization(
             logger.info(f"[OPTIMIZATION] Completed via manipulate chunk: '{response.output_str[:100]}...'")
             return response.output_str
         else:
-            logger.warning(f"[OPTIMIZATION] Failed or empty result: {response.error if hasattr(response, 'error') else 'Unknown'}")
-            return input_text  # Fallback to input
+            if _ended_run():
+                logger.info(f"[OPTIMIZATION] Ended with its run: {getattr(response, 'error', None)}")
+            else:
+                logger.warning(f"[OPTIMIZATION] Failed or empty result: {response.error if hasattr(response, 'error') else 'Unknown'}")
+            return input_text  # Fallback to input; a run that ended answers nothing with it
 
     except Exception as e:
+        if _ended_run():
+            logger.info(f"[OPTIMIZATION] Ended with its run: {e}")
+            return input_text
         logger.error(f"[OPTIMIZATION] Error in manipulate chunk execution: {e}")
         import traceback
         traceback.print_exc()
         return input_text  # Fallback to input
+
+
+def _ended_run() -> bool:
+    """Whether the run in this context has ended (its stream ended, or it was
+    stopped): `generation_abort.current_run_aborted`."""
+    from my_app.services.generation_abort import current_run_aborted
+    return current_run_aborted()
 
 
 def _resolve_interception_config(schema_name):
@@ -1377,6 +1487,17 @@ def _resolve_interception_config(schema_name):
     except Exception as e:
         logger.warning(f"[COURSE-PROMPT] resolver unavailable, using presets only ({e})")
         return pipeline_executor.config_loader.get_config(schema_name)
+
+
+def _kept_texts(config, *, with_context=True):
+    """The texts of a saved perspective (custom:<id>) this run uses, by field,
+    for the intake: course_prompt_resolver.kept_texts. A preset lists nothing
+    and needs nothing of the lab package, which a preset run does without
+    (_resolve_interception_config above)."""
+    if not str(getattr(config, 'name', '') or '').startswith('custom:'):
+        return {}
+    from my_app.services.course_prompt_resolver import kept_texts
+    return kept_texts(config, with_context=with_context)
 
 
 def _passthrough_owed(config, safety_level: str, context_language: str = None) -> bool:
@@ -1415,7 +1536,7 @@ async def execute_stage2_interception(
 
     Args:
         schema_name: Name of the interception config (e.g., "dada", "bauhaus")
-        input_text: User input text (already safety-checked in Stage 1)
+        input_text: User input text (taken in at the intake)
         config: Loaded interception config object
         safety_level: "kids", "youth", "adult", or "research"
         tracker: Optional execution tracker
@@ -1505,13 +1626,18 @@ async def execute_stage2_interception(
     if result.success:
         logger.info(f"[STAGE2-INTERCEPTION] Completed: '{result.final_output[:100]}...'")
     else:
-        logger.error(f"[STAGE2-INTERCEPTION] Failed: {result.error}")
+        if _ended_run():
+            logger.info(f"[STAGE2-INTERCEPTION] Ended with its run: {result.error}")
+        else:
+            logger.error(f"[STAGE2-INTERCEPTION] Failed: {result.error}")
 
     return result
 
 
-class _ClassifierResult:
-    """Lightweight result object compatible with the stage2 handler's expectations."""
+class _Stage2Answer:
+    """A Stage 2 result made here, not by the pipeline, with the fields the
+    stage2 handler reads. The pre-check answers with one: it hands the
+    visitor's text back as it came in."""
     def __init__(self, success: bool, final_output: str, error=None, metadata=None):
         self.success = success
         self.final_output = final_output
@@ -1519,65 +1645,6 @@ class _ClassifierResult:
         self.steps = []
         self.metadata = metadata or {}
         self.execution_time = 0
-
-
-async def execute_stage2_classifier(input_text: str, safety_level: str):
-    """
-    Jugendschutz safety gate — pure classifier, NOT a transformer.
-
-    Asks the safety classifier whether the user's instruction is unsuitable for
-    the running level. Unlike execute_stage2_interception, this does NOT
-    transform the text; where the answer is no, the original input_text is
-    returned 1:1 so it can be forwarded verbatim to generation.
-
-    Use when the user did NOT select a Ring-schema (= no interception wanted)
-    but safety still has to be verified for kids/youth.
-
-    Returns a _ClassifierResult with:
-      - success=True, final_output=input_text unchanged, where the answer is no
-      - success=False, error=<block message>, where it is yes or where there is
-        no answer at all
-    """
-    # The classifier on this card, asked the question of the running level.
-    # This gate used to send the child's own instruction to a CLOUD model and
-    # ask it for one of seven labels (SAFE, UNSAFE_NUDITY, UNSAFE_SEXUAL, ...),
-    # then read the first word of whatever came back. Three things were wrong
-    # with that: the text left the machine, the label set was this file's own
-    # invention and matched no other check in the chain, and the reader took a
-    # token from a free continuation. It is one yes/no question now, answered
-    # here, in the same words the rest of the chain uses.
-    from my_app.services import safety_classifier
-
-    logger.info(f"[STAGE2-CLASSIFIER] Gate for {safety_level}, input={input_text[:80]!r}")
-    verdict = await asyncio.to_thread(
-        safety_classifier.is_unsafe,
-        safety_classifier.policy_for_level(safety_level),
-        input_text,
-    )
-
-    if verdict is None:
-        logger.error("[STAGE2-CLASSIFIER] no verdict — BLOCKING (fail-closed)")
-        return _ClassifierResult(
-            success=False,
-            final_output=None,
-            error="Safety classifier unavailable — blocked for safety.",
-            metadata={'gate': 'classifier', 'status': 'unreachable'},
-        )
-
-    if verdict:
-        logger.warning(f"[STAGE2-CLASSIFIER] UNSAFE for {safety_level}")
-        return _ClassifierResult(
-            success=False,
-            final_output=None,
-            error=f"Content blocked: this instruction is not appropriate for {safety_level}.",
-            metadata={'gate': 'classifier', 'label': 'UNSAFE'},
-        )
-
-    return _ClassifierResult(
-        success=True,
-        final_output=input_text,  # 1:1 pass-through, NO transformation
-        metadata={'gate': 'classifier', 'label': 'SAFE'},
-    )
 
 
 # ============================================================================
@@ -1607,7 +1674,7 @@ async def execute_stage2_with_optimization(
 
     Args:
         schema_name: Name of the interception config (e.g., "dada", "bauhaus")
-        input_text: User input text (already safety-checked in Stage 1)
+        input_text: User input text (taken in at the intake)
         config: Loaded interception config object
         safety_level: "kids", "youth", "adult", or "research"
         output_config: Optional output config name for optimization (e.g., "sd35_large")
@@ -1654,6 +1721,12 @@ async def execute_stage2_with_optimization(
     # Deliberately WITHOUT interception_model: the adaption to an output config
     # is the same operation for every row of a model comparison, and a row whose
     # adaption also changed would say nothing about the interception.
+    # A run that ended during the interception (its stream ended, or it was
+    # stopped) asks no adaption: nobody reads it, and on a local model it
+    # would take the card again.
+    if optimization_instruction and _ended_run():
+        logger.info("[STAGE2] The run ended during the interception; no adaption is asked")
+        optimization_instruction = None
     if optimization_instruction:
         optimized_prompt = await execute_optimization(
             input_text=interception_result,
@@ -1716,9 +1789,9 @@ def _skips_stage2(config, safety_level: str) -> bool:
     song in Stage 2, and Stage 3 then checked the word the chunk handed back,
     "heartmula_generated", instead of the lyrics (probe, 2026-10-01; youth
     takes the same branch). On /pipeline/stage2 with skip_optimization the
-    override led to the classifier gate, which that route now runs for a
-    skipped plan itself. Such a run is gated by Stage 1 and Stage 3 over every
-    text that reaches the model; Stage 3 joins them as /pipeline/direct does.
+    override led to the classifier gate; that gate left the route on
+    2026-11-01. Such a run is checked at the intake, and every text that
+    reaches a model before that model, as on /pipeline/direct.
     Since 2026-10-01 the override fires for no shipped config: every pipeline
     with the flag runs no text model.
     """
@@ -1792,10 +1865,10 @@ def _plan_makes_media(resolved_config) -> bool:
     """Whether a step of this config's plan makes media (_plan_steps).
 
     Stage 2 runs a plan as the interception. A plan that makes media, run
-    there, makes it with nothing checked after Stage 1: an output config posted
-    as `schema`, or the heartmula config on the streamed GET, which ignores
-    the skip flag. Every route that runs Stage 2 refuses such a plan where it
-    would run it.
+    there, makes it with nothing checked after the intake: an output config
+    posted as `schema`, or the heartmula config on the streamed GET, which
+    ignores the skip flag. Every route that runs Stage 2 refuses such a plan
+    where it would run it.
     """
     return any(step[0] == 'media' for step in _plan_steps(resolved_config))
 
@@ -2041,15 +2114,15 @@ def execute_stage2():
     # resolver reads the mark — see the docstring of
     # my_app/services/safety_level_resolver.py. (Until 2026-09-05 the guard there
     # rested on `has_request_context()` alone, which is True on such a worker, so
-    # the promise did not hold.) Stage 1, the kids/youth
-    # classifier gate and the skip_stage2 override all read this value, so it is
-    # taken where the session is rather than wherever the run happens to run.
+    # the promise did not hold.) The intake, the check at the result and the
+    # skip_stage2 override all read this value, so it is taken where the
+    # session is rather than wherever the run happens to run.
     try:
         safety_level = resolve_safety_level()
     except Exception as exc:
         # The resolver documents that it never raises. Where that stops holding,
-        # the level is unknown -- and an unknown level would run Stage 1 and the
-        # kids/youth classifier gate against nothing, so the request ends here.
+        # the level is unknown -- and an unknown level would run the checks
+        # against nothing, so the request ends here.
         # Unguarded, the raise leaves the route entirely and Flask puts its own
         # HTML error page on the wire in place of the cause, which is a page no
         # caller here can read and no log line names.
@@ -2060,10 +2133,11 @@ def execute_stage2():
                      f'({exc}), so nothing was run.',
         }), 500
 
-    # No `client_gone` parameter on the run, and that is a decision rather than
-    # an omission: the run saves what it made, so a run left by its reader still
-    # finishes something. Work that could give something back by stopping asks
-    # for the signal by declaring the parameter; see `streamed_answer`.
+    # The run declares `client_gone`. A local model writing the interception
+    # holds the card's one slot, and the run ends its prompts at ComfyUI when
+    # the reader leaves (generation_abort.ended_when_its_reader_leaves). A
+    # cloud model holds no card and runs to its end. Either way the run checks
+    # and answers nothing for a reader that has left.
     return answered_either_way(data, _run_stage2, data, safety_level,
                                label='STAGE2')
 
@@ -2075,19 +2149,76 @@ def _stage2_refusal(result):
     Read on what the INTERCEPTION model wrote (`interception_result` where the
     adaption ran after it, since the adaption can turn the sentence into an
     English image prompt), and only where a model wrote it: a skipped stage 2,
-    the kids/youth classifier gate, a text the frontend brought along and a
-    passthrough all carry the visitor's own wording, and that is no refusal
-    whatever it says (second review of 2026-10-10)."""
+    the pre-check, a text the frontend brought along and a passthrough all
+    carry the visitor's own wording, and that is no refusal whatever it says
+    (second review of 2026-10-10)."""
     from schemas.engine.instruction_selector import is_safety_refusal
     meta = getattr(result, 'metadata', None) or {}
-    if (meta.get('stage2_skipped') or meta.get('gate')
+    if (meta.get('stage2_skipped') or meta.get('precheck')
             or meta.get('frontend_provided') or meta.get('passthrough')):
         return None
     written = getattr(result, 'interception_result', None) or getattr(result, 'final_output', None)
     return written if is_safety_refusal(written) else None
 
 
-def _run_stage2(data: dict, safety_level: str):
+def _lookup_text(entries):
+    """What a record of Wikipedia lookups shows that the model wrote, as one
+    text: each term, with the model's reason for looking it up where the record
+    carries one, one lookup per line.
+
+    The title, the link and the article beside them are Wikipedia's, not the
+    model's. Empty where nothing was looked up.
+    """
+    lines = []
+    for entry in entries or []:
+        if not isinstance(entry, dict):
+            continue
+        term = str(entry.get('term') or '').strip()
+        why = str(entry.get('why') or '').strip()
+        line = ': '.join(part for part in (term, why) if part)
+        if line:
+            lines.append(line)
+    return '\n'.join(lines)
+
+
+def _stage2_written_texts(result, own_text, *, interception=True):
+    """What a model wrote in this Stage 2, as ``(field, text)``, each text once.
+
+    The interception, the adaption where one ran, and the terms the model looked
+    up on Wikipedia, one per line: the model chose them, and the answer carries
+    them. A text that is the visitor's own (``own_text``) is left out: a skipped
+    Stage 2, the pre-check and a perspective that owes the visitor their wording
+    hand it on as it came in, and it has passed the intake. A structured answer
+    is read as the JSON it leaves as.
+
+    ``interception=False`` leaves the interception out, for an answer that does
+    not carry it: /pipeline/interception answers with the adaption, and the
+    interception was what the adaption was written from. Where no adaption
+    ran, the interception is the adaption and is read under that name.
+    """
+    own = str(own_text or '').strip()
+    seen = {own} if own else set()
+    written = []
+
+    def add(field, value):
+        if value is None:
+            return
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+        if text.strip() and text.strip() not in seen:
+            seen.add(text.strip())
+            written.append((field, text))
+
+    if interception:
+        add('interception', getattr(result, 'interception_result', None))
+    add('optimized_prompt', getattr(result, 'optimized_prompt', None))
+    add('stage2_result', getattr(result, 'final_output', None))
+    looked_up = (getattr(result, 'metadata', None) or {}).get('wikipedia_terms')
+    add('wikipedia_terms', _lookup_text(looked_up) or None)
+    return written
+
+
+def _run_stage2(data: dict, safety_level: str,
+                client_gone: Optional[threading.Event] = None):
     """The Stage 2 run, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
@@ -2105,10 +2236,6 @@ def _run_stage2(data: dict, safety_level: str):
         output_config = data.get('output_config')  # Optional
         user_language = data.get('user_language', 'en')
         skip_optimization = data.get('skip_optimization', False)  # Pre-checks: skip CLIP optimization
-
-        # CRITICAL: Check if frontend provides interception_result
-        # If provided, Stage 2 was already executed - DO NOT run Call 1 again!
-        frontend_interception_result = data.get('interception_result')  # Optional: already executed
 
         # Context editing support (same as /execute)
         context_prompt = data.get('context_prompt')  # Optional: user-edited meta-prompt
@@ -2143,11 +2270,12 @@ def _run_stage2(data: dict, safety_level: str):
                 'success': False,
                 'error': f'Config "{schema_name}" nicht gefunden'
             }, 404
-        # A named model is answered for here -- before Stage 1, before any text
-        # reaches any model. Further down the id would arrive at the backend
-        # router as an unknown prefix and the run would fail as a pipeline error
-        # rather than as the id it is, and a request that runs no interception
-        # step would answer 200 while dropping the model it was handed.
+        # A named model is answered for here -- before the intake, before any
+        # text reaches any model. Further down the id would arrive at the
+        # backend router as an unknown prefix and the run would fail as a
+        # pipeline error rather than as the id it is, and a request that runs no
+        # interception step would answer 200 while dropping the model it was
+        # handed.
         if interception_model:
             refusal = _interception_model_refusal(
                 interception_model, schema_name, config,
@@ -2171,7 +2299,7 @@ def _run_stage2(data: dict, safety_level: str):
         logger.info(f"[STAGE2-ENDPOINT] Starting Stage 2 for schema '{schema_name}'")
 
         # ====================================================================
-        # STAGE 1: PRE-INTERCEPTION (Safety Check)
+        # THE CHECK BEFORE STAGE 2
         # ====================================================================
         # BEFORE the context editing block below, not after it. Until
         # 2026-08-29 the order was the other way round: an edited
@@ -2179,31 +2307,38 @@ def _run_stage2(data: dict, safety_level: str):
         # first and the gate ran afterwards — on `input_text`, never on the
         # context. Two texts came from the visitor, one was checked, and the
         # unchecked one had already reached a model.
-        logger.info(f"[STAGE2-ENDPOINT] Stage 1: Safety Check")
+        intake_start = time.time()
+        checks_passed = []
 
-        stage1_start = time.time()
-
-        is_safe, error_message, checks_passed, blocked_on, checked_map = _stage1_check_texts(
-            [('input_text', input_text), ('context_prompt', context_prompt)],
-            safety_level,
-            user_language,
-        )
-        checked_text = checked_map.get('input_text', input_text)
-
-        stage1_time = (time.time() - stage1_start) * 1000  # ms
-
-        if not is_safe:
-            logger.warning(f"[STAGE2-ENDPOINT] Stage 1 BLOCKED by safety check ({blocked_on})")
+        # The intake: names of living private individuals and addresses with a
+        # house number, in both texts and in the text of a saved perspective the
+        # run uses. A symbol is not stopped here. It reaches the model that
+        # writes Stage 2, whose text is checked at the result below, and what a
+        # media model receives is checked before that model. On the pre-check
+        # no model writes: the text goes back as it came in, and what a
+        # comparison makes of it is checked where that happens. One slot of the
+        # queue: after a name or an address the classifier is asked.
+        logger.info("[STAGE2-ENDPOINT] Intake")
+        with llm_queue_semaphore:
+            intake = check_intake_texts(
+                {'input_text': input_text, 'context_prompt': context_prompt,
+                 **_kept_texts(config, with_context=not context_prompt)},
+                level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[STAGE2-ENDPOINT] Intake BLOCKED ({intake.field})")
             return {
                 'success': False,
-                'error': error_message,
-                'blocked_at_stage': 1,
-                'blocked_on': blocked_on,
+                'error': intake.reason,
+                'safety_block': intake.block(),
                 'safety_level': safety_level,
                 'checks_passed': checks_passed
             }, 403
 
-        logger.info(f"[STAGE2-ENDPOINT] Stage 1 completed: Safety passed")
+        # What Stage 2 reads: the visitor's text, as a string.
+        checked_text = str(input_text)
+        intake_time = (time.time() - intake_start) * 1000  # ms
+
+        logger.info(f"[STAGE2-ENDPOINT] The check before Stage 2 passed")
 
         # ====================================================================
         # CONTEXT EDITING SUPPORT (same pattern as /execute)
@@ -2212,10 +2347,21 @@ def _run_stage2(data: dict, safety_level: str):
         if context_prompt:
             logger.info(f"[STAGE2-ENDPOINT] User edited context in language: {context_language}")
 
-            # Translate to English if needed
+            # Translate to English if needed. Under a run id of its own: a
+            # reader who leaves ends the translation at ComfyUI, and Stage 2
+            # does not run.
             context_prompt_en = context_prompt
             if context_language != 'en':
-                context_prompt_en = _translate_context(context_prompt, context_language, "STAGE2-ENDPOINT")
+                from my_app.services import generation_abort
+                with generation_abort.ended_when_its_reader_leaves(
+                        client_gone, kind='stage2', label='STAGE2-ENDPOINT') as watched_context:
+                    if not watched_context.ended:
+                        context_prompt_en = _translate_context(
+                            context_prompt, context_language, "STAGE2-ENDPOINT")
+                if watched_context.ended:
+                    logger.info("[STAGE2-ENDPOINT] The stream ended during the context "
+                                "translation; Stage 2 does not run")
+                    return _ended_with_its_stream(start_time)
 
             # Create modified config with user-edited context
             logger.info(f"[STAGE2-ENDPOINT] Creating modified config with user-edited context")
@@ -2239,19 +2385,16 @@ def _run_stage2(data: dict, safety_level: str):
         stage2_start = time.time()
 
         # Whether Stage 2 runs at all, after the kids/youth override. The gate
-        # above asked the same question of the same config before Stage 1, so a
-        # request naming a model for a step this run does not have was refused
-        # rather than answered with a model beside an untouched text.
+        # above asked the same question of the same config before the intake,
+        # so a request naming a model for a step this run does not have was
+        # refused rather than answered with a model beside an untouched text.
         skip_stage2 = _skips_stage2(execution_config, safety_level)
 
-        # A pre-check at kids or youth runs its classifier gate whether or not
-        # the plan has a step; a skipped plan used to reach it through the
-        # override (_skips_stage2).
-        if skip_stage2 and not (skip_optimization and safety_level in ('kids', 'youth')):
+        if skip_stage2:
             logger.info(f"[STAGE2-ENDPOINT] Stage 2: SKIPPED (pipeline '{execution_config.pipeline_name}' has skip_stage2=true)")
-            logger.info(f"[STAGE2-ENDPOINT] Stage 2: Passing Stage 1 output directly")
+            logger.info("[STAGE2-ENDPOINT] Stage 2: Passing the checked text on directly")
 
-            # Create mock result - Stage 1 output passed through unchanged
+            # Create mock result - the checked text passed through unchanged
             class MockResult:
                 def __init__(self, output):
                     self.success = True
@@ -2263,29 +2406,16 @@ def _run_stage2(data: dict, safety_level: str):
 
             result = MockResult(checked_text)
         elif skip_optimization:
-            # Pre-check mode: no Ring-schema was selected by the user.
-            # Kids/Youth: run the Jugendschutz gate as a PURE CLASSIFIER (SAFE/UNSAFE_*)
-            # and forward the user's original prompt 1:1 on SAFE. No transformation,
-            # no Refusal-literal in the prompt, so no LLM hallucination can turn
-            # harmless style instructions (e.g. "verwandle in ein Ölgemälde") into
-            # false blocks.
-            # Adult/Research: skip the gate entirely (no safety prefix needed).
-            if safety_level in ('kids', 'youth'):
-                logger.info(f"[STAGE2-ENDPOINT] Stage 2: Safety classifier gate ({safety_level})")
-                # The classifier gate is a model call, so it queues: this
-                # holds llm_queue_semaphore around execute_stage2_classifier.
-                with llm_queue_semaphore:
-                    result = asyncio.run(execute_stage2_classifier(
-                        input_text=checked_text,
-                        safety_level=safety_level,
-                    ))
-            else:
-                logger.info(f"[STAGE2-ENDPOINT] Stage 2: Passing through (no gate for {safety_level})")
-                result = _ClassifierResult(
-                    success=True,
-                    final_output=checked_text,
-                    metadata={'gate': 'bypassed', 'safety_level': safety_level},
-                )
+            # The pre-check: no perspective was chosen, and no model writes.
+            # The visitor's text, which has passed the intake, goes back as it
+            # came in. The model and the language comparison run it as their
+            # gate. Until 2026-11-01 kids and youth asked the classifier the
+            # level's question here; what the comparisons make of the text is
+            # checked where it happens: before each picture's model, and each
+            # translation and the Commons search term at the result.
+            logger.info("[STAGE2-ENDPOINT] Stage 2: Passing the text on (pre-check)")
+            result = _Stage2Answer(success=True, final_output=checked_text,
+                                   metadata={'precheck': True, 'safety_level': safety_level})
         else:
             # No media preferences here, and that is the point of this line. Where
             # they were passed, the shared function derived an output config from
@@ -2299,36 +2429,28 @@ def _run_stage2(data: dict, safety_level: str):
             # This holds llm_queue_semaphore around
             # execute_stage2_with_optimization: the interception, and where an
             # output config was named the adaption after it.
-            with llm_queue_semaphore:
-                result = asyncio.run(execute_stage2_with_optimization(
-                    schema_name=schema_name,
-                    input_text=checked_text,
-                    config=execution_config,  # Use execution_config (may be modified with user context)
-                    safety_level=safety_level,
-                    output_config=output_config,
-                    media_preferences=None,
-                    tracker=None,
-                    user_language=user_language,
-                    interception_model=interception_model
-                ))
+            from my_app.services import generation_abort
+            result = None   # bound only where the work ran
+            with llm_queue_semaphore, generation_abort.ended_when_its_reader_leaves(
+                    client_gone, kind='stage2', label='STAGE2-ENDPOINT') as watched:
+                if not watched.ended:
+                    result = asyncio.run(execute_stage2_with_optimization(
+                        schema_name=schema_name,
+                        input_text=checked_text,
+                        config=execution_config,  # Use execution_config (may be modified with user context)
+                        safety_level=safety_level,
+                        output_config=output_config,
+                        media_preferences=None,
+                        tracker=None,
+                        user_language=user_language,
+                        interception_model=interception_model
+                    ))
+            if watched.ended or result is None:
+                logger.info("[STAGE2-ENDPOINT] The stream ended during Stage 2; "
+                            "nothing is checked or answered")
+                return _ended_with_its_stream(start_time)
 
         stage2_time = (time.time() - stage2_start) * 1000  # ms
-
-        if not result.success and (result.metadata or {}).get('label') == 'UNSAFE':
-            # The kids/youth classifier refused: a block, said as one (403), not
-            # a breakdown (500) that the surfaces read as "nothing came back"
-            # (second review of 2026-10-10).
-            return {
-                'success': False,
-                'status': 'blocked',
-                'error': result.error,
-                'reason': result.error,
-                'stage': 2,
-                'blocked_at_stage': 2,
-                'safety_level': safety_level,
-                'checks_passed': checks_passed,
-                'execution_time_ms': stage2_time
-            }, 403
 
         if not result.success:
             logger.error(f"[STAGE2-ENDPOINT] Stage 2 failed: {result.error}")
@@ -2350,12 +2472,34 @@ def _run_stage2(data: dict, safety_level: str):
                 'status': 'blocked',
                 'error': refusal,
                 'reason': refusal,
-                'stage': 2,
-                'blocked_at_stage': 2,
+                'safety_block': safety_block(CHECKPOINT_REFUSAL, REASON_REFUSAL, refusal,
+                                             'interception'),
                 'safety_level': safety_level,
                 'checks_passed': checks_passed,
                 'execution_time_ms': stage2_time
             }, 403
+
+        # THE RESULT. Every text a model wrote here is checked before it leaves,
+        # in one slot of the queue: each check asks the classifier. Nothing is
+        # reworded. The answer carries the texts as they were written, or it is
+        # withheld as a whole, as a block at stage 2 like the refusal above.
+        written = _stage2_written_texts(result, checked_text)
+        if written:
+            with llm_queue_semaphore:
+                for field, text in written:
+                    verdict = check_result_text(text, level=safety_level, field=field)
+                    if not verdict.passed:
+                        logger.warning(f"[STAGE2-ENDPOINT] Withheld at the result ({field})")
+                        return {
+                            'success': False,
+                            'status': 'blocked',
+                            'error': verdict.reason,
+                            'reason': verdict.reason,
+                            'safety_block': verdict.block(),
+                            'safety_level': safety_level,
+                            'checks_passed': checks_passed,
+                            'execution_time_ms': stage2_time
+                        }, 403
 
         # Extract metadata
         model_used = None
@@ -2375,7 +2519,7 @@ def _run_stage2(data: dict, safety_level: str):
         # `model_used` above is a different string: the backend reports the name
         # it was called with AFTER the prefix was stripped, so it names a model
         # but not a service. Empty where no interception ran at all (a pipeline
-        # with skip_stage2, or the pre-check gate).
+        # with skip_stage2, or the pre-check).
         interception_model_used = _dispatched_interception_model(result)
 
         # Generate session ID for Stage 3-4 continuation
@@ -2412,7 +2556,8 @@ def _run_stage2(data: dict, safety_level: str):
             # input again. False for every run whose interception wrote its own.
             'passthrough': bool((result.metadata or {}).get('passthrough')),
             'execution_time_ms': total_time,
-            'stage1_time_ms': stage1_time,
+            # The check before Stage 2: the intake.
+            'stage1_time_ms': intake_time,
             'stage2_time_ms': stage2_time
         }
 
@@ -2492,22 +2637,40 @@ def optimize_prompt():
             'error': str(exc)
         }), 500
 
-    # No `client_gone` parameter on the run, and that is a decision rather than
-    # an omission: one model call stands behind it and leaving would not end it,
-    # only lose the answer to writing already done. Work that could give
-    # something back by stopping asks for the signal by declaring the parameter;
-    # see `streamed_answer`.
-    return answered_either_way(data, _run_optimize_prompt, data, label='OPTIMIZE')
+    # Resolved HERE, in the thread that serves the request, and handed down: on
+    # a worker of the streamed transport the resolver answers the strictest
+    # level. The intake and the check at the result read this value. An unknown
+    # level would run them against nothing, so a resolver that raises ends the
+    # request, as on /pipeline/stage2.
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        logger.error(f"[OPTIMIZE-ENDPOINT] Error: {exc}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+        }), 500
+
+    # The run declares `client_gone`. Both ways of writing the adaption run
+    # under generation_abort.ended_when_its_reader_leaves: the chunk whose
+    # model reads the pictures (`_run_adaption_chunk`), and the language model
+    # writing it from an instruction. A local model holds the card's one slot,
+    # and its prompt at ComfyUI ends when the reader leaves; a cloud model runs
+    # to its end. Either way the run checks and answers nothing for a reader
+    # that has left.
+    return answered_either_way(data, _run_optimize_prompt, data, safety_level,
+                               label='OPTIMIZE')
 
 
-def _run_optimize_prompt(data):
+def _run_optimize_prompt(data, safety_level, client_gone: Optional[threading.Event] = None):
     """The adaption, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one adaption can be answered either way. It
-    must not reach for ``request``: everything it needs stands in ``data``. No
-    safety level is resolved anywhere on this path, so there is nothing to hoist
-    to the boundary here — this route runs neither Stage 1 nor Stage 3, which is
-    what `tests/test_safety_coverage_map.py` records at `_translate_encoder_text`.
+    must not reach for ``request``: everything it needs stands in ``data``, and
+    the safety level is resolved at the request boundary and passed in. The
+    text to adapt passes the intake before any model reads it, and what a model
+    wrote here is checked at the result before it leaves.
     """
     import time
 
@@ -2534,6 +2697,24 @@ def _run_optimize_prompt(data):
                 'error': 'input_text und output_config sind erforderlich'
             }, 400
 
+        # THE INTAKE. The text to adapt is the visitor's as it stands in the box:
+        # typed, edited, or an interception taken over as it was written. Names
+        # of living private individuals and addresses with a house number; a
+        # text this level's check at the result has passed is no new material
+        # and asks nothing. One slot of the queue, as at the other entries:
+        # after a name or an address the classifier is asked.
+        with llm_queue_semaphore:
+            intake = check_intake_texts({'input_text': input_text}, level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[OPTIMIZE-ENDPOINT] Intake BLOCKED ({intake.field})")
+            return {
+                'success': False,
+                'status': 'blocked',
+                'error': intake.reason,
+                'safety_block': intake.block(),
+                'safety_level': safety_level,
+            }, 403
+
         logger.info(f"[OPTIMIZE-ENDPOINT] Starting optimization for output_config '{output_config}'")
 
         # What the model reads is measured further down, once the adaption has
@@ -2541,6 +2722,41 @@ def _run_optimize_prompt(data):
         # so neither can be judged before the other exists.
         shortened_to_window = False
         window_tokens = None
+
+        # Without pictures this adaption has nothing to read: a caption asked
+        # for a text changed by hand falls through to "unchanged" below.
+        adaption_chunk = _load_adaption_chunk(output_config)
+        images = multi_images_from(data)
+        if adaption_chunk and images:
+            payload, status = _run_adaption_chunk(adaption_chunk, input_text, images,
+                                                  output_config, start_time, client_gone)
+            if status != 200 or not payload.get('success'):
+                return payload, status
+            # What the model wrote here it read off the pictures: a name on a
+            # sign among it reached no intake before this, because the
+            # interception ran on what was typed, and the translator the text
+            # goes to next can be a cloud model. So the caption passes the
+            # intake, as the pictures it was read from did, and then the check
+            # at the result, as every text a model wrote here. The intake
+            # first: a text the result has released is asked nothing more.
+            caption = payload.get('optimized_prompt')
+            with llm_queue_semaphore:
+                verdict = check_intake_texts({'optimized_prompt': caption}, level=safety_level)
+                if verdict.passed:
+                    verdict = check_result_text(caption, level=safety_level,
+                                                field='optimized_prompt')
+            if not verdict.passed:
+                logger.warning(f"[OPTIMIZE-ENDPOINT] The caption of the pictures withheld "
+                               f"({verdict.checkpoint}/{verdict.field})")
+                return {
+                    'success': False,
+                    'status': 'blocked',
+                    'error': verdict.reason,
+                    'safety_block': verdict.block(),
+                    'safety_level': safety_level,
+                    'execution_time_ms': payload.get('execution_time_ms'),
+                }, 403
+            return payload, 200
 
         # Load optimization_instruction from output chunk
         optimization_instruction = _load_optimization_instruction(output_config)
@@ -2585,11 +2801,20 @@ def _run_optimize_prompt(data):
         # the path that would read them is gone.
         logger.info(f"[OPTIMIZE-ENDPOINT] Applying optimization (instruction length: {len(optimization_instruction)}, model: {opt_model or 'default'})")
 
-        optimized = asyncio.run(execute_optimization(
-            input_text=input_text,
-            optimization_instruction=optimization_instruction,
-            model_override=opt_model,
-        ))
+        from my_app.services import generation_abort
+        optimized = None   # bound only where the work ran
+        with generation_abort.ended_when_its_reader_leaves(
+                client_gone, kind='optimize', label='OPTIMIZE-ENDPOINT') as watched:
+            if not watched.ended:
+                optimized = asyncio.run(execute_optimization(
+                    input_text=input_text,
+                    optimization_instruction=optimization_instruction,
+                    model_override=opt_model,
+                ))
+        if watched.ended or optimized is None:
+            logger.info("[OPTIMIZE-ENDPOINT] The stream ended during the adaption; "
+                        "nothing is checked or answered")
+            return _ended_with_its_stream(start_time)
 
         execution_time = int((time.time() - start_time) * 1000)
 
@@ -2627,6 +2852,41 @@ def _run_optimize_prompt(data):
             response_data['condensed_text'] = fitted if shortened_to_window else None
             logger.info(f"[OPTIMIZE-ENDPOINT] CLIP-prompt detected, included interception_result for T5")
 
+        # THE RESULT. What a model wrote here leaves as `optimized_prompt`, and
+        # where the text behind a caption had to be shortened to the window, the
+        # shortened text leaves as `interception_result` and as `condensed_text`.
+        # Each is checked before it leaves, in one slot of the queue, and
+        # nothing is reworded. A sketch is checked as code (an output config is
+        # code by its name, as on the generation routes): its strings can appear
+        # on the surface, and below adult its constructs are held against the
+        # pattern list. The visitor's own text, handed back unchanged, has
+        # passed the intake. A refused text withholds the answer as a whole.
+        writes_code = any(k in str(output_config).lower() for k in ('code', 'p5js', 'tonejs'))
+        own = str(input_text).strip()
+        written = [('optimized_prompt', optimized)]
+        if shortened_to_window:
+            written.append(('interception_result', response_data.get('interception_result')))
+        written = [(field, text) for field, text in written
+                   if isinstance(text, str) and text.strip() not in ('', own)]
+        if written:
+            with llm_queue_semaphore:
+                for field, text in written:
+                    if writes_code and field == 'optimized_prompt':
+                        verdict = check_result_code(text, level=safety_level, field=field)
+                    else:
+                        verdict = check_result_text(text, level=safety_level, field=field)
+                    if verdict.passed:
+                        continue
+                    logger.warning(f"[OPTIMIZE-ENDPOINT] Withheld at the result ({field})")
+                    return {
+                        'success': False,
+                        'status': 'blocked',
+                        'error': verdict.reason,
+                        'safety_block': verdict.block(),
+                        'safety_level': safety_level,
+                        'execution_time_ms': execution_time,
+                    }, 403
+
         return response_data, 200
 
     except Exception as e:
@@ -2649,14 +2909,21 @@ def _run_optimize_prompt(data):
 # place for the checks to fall out of.
 
 
-def execute_pipeline_streaming(data: dict):
+def execute_pipeline_streaming(data: dict, safety_level: str):
     """
     Execute pipeline with SSE streaming
     Architecture: DevServer = Smart Orchestrator | Frontend = Dumb Display
 
     Stages:
-        Stage 1: Safety Check — handled autonomously by MediaInputBox via /safety/quick
-        Stage 2: Interception (streaming, character-by-character)
+        The intake: names and addresses in both texts and in the text of a
+            saved perspective the run uses, on the server
+        Stage 2: Interception (streaming, character-by-character). What the
+            model wrote, its text and its lookups, is checked at the result
+            before it goes out.
+
+    `safety_level` comes from the view, which resolves it on the request
+    thread. Nothing in this run asks the resolver: parts of it run on workers
+    of the stream transport, where the resolver answers the strictest level.
     """
     import time
     import os
@@ -2667,7 +2934,6 @@ def execute_pipeline_streaming(data: dict):
     schema_name = data.get('schema', DEFAULT_INTERCEPTION_CONFIG)
     input_text = data.get('input_text', '')
     context_prompt = data.get('context_prompt', '')
-    safety_level = resolve_safety_level()
     user_language = data.get('user_language', 'de')
     device_id = data.get('device_id')  # For folder structure
 
@@ -2698,6 +2964,10 @@ def execute_pipeline_streaming(data: dict):
     if context_prompt:
         recorder.save_to_prompting_process('context_prompt', context_prompt)
 
+    # Set when this stream ends, however it ends: the interception's prompts
+    # at ComfyUI end with it (run_pipeline below).
+    stream_ended = threading.Event()
+
     try:
         # Initialize schema engine
         if pipeline_executor is None:
@@ -2711,88 +2981,99 @@ def execute_pipeline_streaming(data: dict):
         })
         yield ''  # Force flush
 
+        # The config, before the intake: the text of a saved perspective goes
+        # through it with the texts of the request.
+        config = _resolve_interception_config(schema_name)
+        if not config:
+            # A perspective that is not there, or not this person's to run. The
+            # other two call sites answer this; here it used to fall through into
+            # the executor and arrive as a pipeline crash.
+            logger.warning("[UNIFIED-STREAMING] '%s' did not resolve — denied or gone",
+                           schema_name)
+            raise ValueError(f"Perspective '{schema_name}' is not available")
+        # This stream runs the plan whatever the skip flag says.
+        if _plan_makes_media(config):
+            raise ValueError(_media_plan_refusal(schema_name))
+
         # ====================================================================
-        # STAGE 1: SERVER-SIDE SAFETY GATE
+        # THE INTAKE
         # ====================================================================
-        # SAFETY-QUICK runs on blur/paste in the frontend, but is NOT guaranteed
-        # (e.g. page refresh, cached text, Enter without blur). This server-side
-        # check is the authoritative safety gate — it MUST run before Stage 2.
+        # The quick check in the browser runs on blur and paste, but is NOT
+        # guaranteed to run (a page refresh, cached text, Enter without blur).
+        # This is the check, on the server, before Stage 2: names of living
+        # private individuals and addresses with a house number, in BOTH texts
+        # the client sent and in the text of a saved perspective the run uses.
+        # `context_prompt` goes into the pipeline config below
+        # (`replace(config, context=...)`); until 2026-08-29 it passed the gate
+        # untouched. A symbol is not stopped here: it reaches the model that
+        # writes Stage 2, and what that model writes is checked at the result
+        # below, before it goes out.
         #
-        # Work order A5: this is the SAME stage-1 coverage as every other
-        # entry point, not a private copy. Over the old inline checks this
-        # adds the adult §86a context check and the LLM fallback when SpaCy
-        # is unavailable — the copy skipped the person-name check silently in
-        # that case. (Jugendschutz for kids/youth is the Stage-2 safety
-        # prefix — not part of stage 1.)
-        if safety_level != 'research':
-            # BOTH texts the client sent, not only the prompt. `context_prompt`
-            # is read above and goes into the pipeline config below
-            # (`replace(config, context=...)`); until 2026-08-29 it passed the
-            # gate untouched. Same queue discipline as before — one slot for
-            # the whole check, see `_stage1_check_texts`.
-            #
+        # Research checks nothing (the gate's own list), and there the stream
+        # takes no queue slot and no worker for a check that would answer at
+        # once.
+        checks_run = safety_level not in UNCHECKED_LEVELS
+        if checks_run:
             # It runs on a thread of its own, and a frame goes out every two
-            # seconds while it does. The gate stands in the plant-wide LLM
-            # queue and then calls a model, and nothing at all went out between
-            # `connected` above and `stage_start` below while it did — on a
-            # stream the edge in front of this server cuts after about a
-            # hundred seconds of silence. No event moves: what fills the gap is
-            # an SSE comment, which reaches no reader as an event, and the
-            # block below is written from where it always was, out of what the
-            # check left behind.
-            _stage1 = {}
+            # seconds while it does. The intake stands in the plant-wide LLM
+            # queue and, after a name or an address, calls a model, and nothing
+            # at all would go out between `connected` above and `stage_start`
+            # below while it did — on a stream the edge in front of this server
+            # cuts after about a hundred seconds of silence. What fills the gap
+            # is an SSE comment, which reaches no reader as an event, and the
+            # block below is written out of what the check left behind.
+            _intake = {}
 
-            def _stage1_work(client_gone):
-                """The gate, as a source the shared transport can breathe around.
+            def _intake_work(client_gone):
+                """The intake, as a source the shared transport can breathe around.
 
-                Nothing goes out here: stage 1 writes no event of its own. The
-                yield is what makes this function a GENERATOR, and without one
-                the whole check would run where this function is CALLED — on
-                the request thread, in the silence this wrapping exists to end.
-                An empty chunk puts no byte on the wire, so the frames around
-                it are exactly the frames that were there before.
+                Nothing goes out here: the intake writes no event of its own.
+                The yield is what makes this function a GENERATOR, and without
+                one the whole check would run where this function is CALLED —
+                on the request thread, in the silence this wrapping exists to
+                end. An empty chunk puts no byte on the wire.
 
                 `client_gone` is declared, and the FUNCTION is what goes to the
                 transport below, because that is the only spelling that carries
-                the signal: handed a generator already made, the transport has
-                no signature to read it off. The gate passes it on and gives its
-                queue slot back rather than running out for nobody.
+                the signal. It is read before the queue is entered and again
+                once a slot is held: a reader who closed the tab while the
+                request waited hands the slot back instead of holding it for a
+                check nobody reads.
                 """
-                _stage1['result'] = _stage1_check_texts(
-                    [('input_text', input_text), ('context_prompt', context_prompt)],
-                    safety_level,
-                    user_language,
-                    client_gone=client_gone,
-                )
+                if not client_gone.is_set():
+                    with llm_queue_semaphore:
+                        if not client_gone.is_set():
+                            _intake['verdict'] = check_intake_texts(
+                                {'input_text': input_text, 'context_prompt': context_prompt,
+                                 **_kept_texts(config, with_context=not context_prompt)},
+                                level=safety_level)
                 yield ''
 
-            yield from events_with_heartbeat(_stage1_work,
+            yield from events_with_heartbeat(_intake_work,
                                              label='UNIFIED-STREAMING',
                                              frame=_as_written)
-            if _stage1.get('result') is None:
-                # No verdict, because the reader left and the gate stopped. It
+            intake = _intake.get('verdict')
+            if intake is None:
+                # No verdict, because the reader left before the check ran. It
                 # is not a block and it is not a pass: nothing is recorded and
                 # no event is written, because there is nobody to write to.
-                logger.info("[UNIFIED-STREAMING] Stage 1 stopped — the reader left")
+                logger.info("[UNIFIED-STREAMING] The intake stopped — the reader left")
                 return
-            (is_safe, error_message, checks_passed, blocked_on,
-             _checked) = _stage1['result']
-            if not is_safe:
-                reason = error_message or 'Content blocked by safety check'
-                failed_check = blocked_on or (checks_passed[-1] if checks_passed else 'stage1')
-                logger.warning(f"[UNIFIED-STREAMING] Stage 1 BLOCKED ({failed_check})")
+            if not intake.passed:
+                reason = intake.reason or 'Content blocked by safety check'
+                logger.warning(f"[UNIFIED-STREAMING] Intake BLOCKED ({intake.field})")
                 recorder.save_error(stage=1, error_type='safety_blocked', message=reason,
-                    details={'check': failed_check, 'checks_passed': checks_passed,
+                    details={'check': intake.field, 'reason_key': intake.reason_key,
                              'safety_level': safety_level, 'input_text': input_text})
                 yield generate_sse_event('blocked', {
-                    'stage': 'safety',
                     'reason': reason,
-                    'checks_passed': checks_passed
+                    'safety_block': intake.block(),
+                    'checks_passed': []
                 })
                 yield ''
                 return
 
-        logger.info(f"[UNIFIED-STREAMING] Stage 1: Safety PASSED")
+        logger.info("[UNIFIED-STREAMING] The intake passed")
 
         # ====================================================================
         # STAGE 2: INTERCEPTION (Character-by-Character Streaming)
@@ -2809,19 +3090,6 @@ def execute_pipeline_streaming(data: dict):
         yield ''
 
         logger.info(f"[UNIFIED-STREAMING] Stage 2: Starting Interception streaming")
-
-        # Get config for execution
-        config = _resolve_interception_config(schema_name)
-        if not config:
-            # A perspective that is not there, or not this person's to run. The
-            # other two call sites answer this; here it used to fall through into
-            # the executor and arrive as a pipeline crash.
-            logger.warning("[UNIFIED-STREAMING] '%s' did not resolve — denied or gone",
-                           schema_name)
-            raise ValueError(f"Perspective '{schema_name}' is not available")
-        # This stream runs the plan whatever the skip flag says.
-        if _plan_makes_media(config):
-            raise ValueError(_media_plan_refusal(schema_name))
 
         # Override context if custom context_prompt provided. Use dataclasses.replace so
         # we never mutate the shared cached ResolvedConfig — a direct assignment here
@@ -2862,22 +3130,30 @@ def execute_pipeline_streaming(data: dict):
         from schemas.engine.stage_orchestrator import _detect_input_language
 
         def run_pipeline():
-            result_holder[0] = asyncio.run(pipeline_executor.execute_pipeline(
-                config_name=schema_name,
-                input_text=input_text,
-                user_input=input_text,
-                safety_level=safety_level,
-                tracker=tracker,
-                config_override=config,
-                # Originalsprachen-Verarbeitung, same as the 4-stage route
-                # (execute_stage2_interception): the perspective is rendered in
-                # the language the person actually writes in. This route left it
-                # out, so every perspective here fell back to the platform
-                # default -- and a chained perspective, whose last link goes back
-                # to "source", ended in English whatever had been written.
-                context_language=_detect_input_language(input_text, user_language),
-                run_id=run_id
-            ))
+            from my_app.services import generation_abort
+            with generation_abort.ended_when_its_reader_leaves(
+                    stream_ended, kind='flow_interception',
+                    label='UNIFIED-STREAMING') as watched:
+                # A stream that ended before this thread began has nobody to
+                # answer; nothing reads `result_holder` after it.
+                if watched.ended:
+                    return
+                result_holder[0] = asyncio.run(pipeline_executor.execute_pipeline(
+                    config_name=schema_name,
+                    input_text=input_text,
+                    user_input=input_text,
+                    safety_level=safety_level,
+                    tracker=tracker,
+                    config_override=config,
+                    # Originalsprachen-Verarbeitung, same as the 4-stage route
+                    # (execute_stage2_interception): the perspective is rendered in
+                    # the language the person actually writes in. This route left it
+                    # out, so every perspective here fell back to the platform
+                    # default -- and a chained perspective, whose last link goes back
+                    # to "source", ended in English whatever had been written.
+                    context_language=_detect_input_language(input_text, user_language),
+                    run_id=run_id
+                ))
 
         # Start pipeline in background thread.
         #
@@ -2891,6 +3167,23 @@ def execute_pipeline_streaming(data: dict):
         pipeline_ctx = contextvars.copy_context()
         executor = ThreadPoolExecutor(max_workers=1)
         future = executor.submit(lambda: pipeline_ctx.run(run_pipeline))
+
+        # The lookups' check: what a notice shows that the model wrote is
+        # checked at the result before the notice goes out. One slot of the
+        # queue each, since the classifier is asked; a notice whose text passed
+        # before costs no second question.
+        _lookups = {}
+
+        def _notice_verdict(terms, client_gone):
+            """The check at the result on what one notice shows that the model
+            wrote. None where the reader left before it was asked."""
+            if client_gone.is_set():
+                return None
+            with llm_queue_semaphore:
+                if client_gone.is_set():
+                    return None
+                return check_result_text(_lookup_text(terms), level=safety_level,
+                                         field='wikipedia_lookup')
 
         # Poll for Wikipedia status while pipeline runs (keyed by run_id)
         def _interception_notices(client_gone):
@@ -2910,27 +3203,41 @@ def execute_pipeline_streaming(data: dict):
             written here unchanged, in the same order, with the same payload.
 
             `client_gone` ends the poll where the page went away. The
-            interception itself runs in a pool of its own and cannot be called
-            back, so what stopping gives back is this loop: ten wake-ups a
-            second, for the whole length of a run nobody is watching.
+            interception itself runs in a pool of its own; its prompts at
+            ComfyUI end with this stream (`stream_ended`), and what stopping
+            gives back here is this loop: ten wake-ups a second.
+
+            A notice shows what the model wrote to look something up: the terms
+            and its reason for each. It goes out once that has passed the check
+            at the result; a refusal ends the poll, and the run is answered as a
+            block below. The check can take longer than the rest of the run, so
+            the poll reads the status once more after the run has ended: a
+            lookup completed in that time still goes out, after its check.
             """
             last_wiki_status = None
-            while not future.done() and not client_gone.is_set():
+            while not client_gone.is_set():
+                # Read before the status, so that the pass after the run ended
+                # reads the status the run ended with.
+                finished = future.done()
                 current_status = WIKIPEDIA_STATUS.get(run_id, {})
                 if current_status.get('status') != last_wiki_status:
                     last_wiki_status = current_status.get('status')
-                    if last_wiki_status == 'lookup':
+                    if last_wiki_status in ('lookup', 'complete'):
+                        terms = current_status.get('terms', [])
+                        if checks_run:
+                            verdict = _notice_verdict(terms, client_gone)
+                            if verdict is None:
+                                return
+                            if not verdict.passed:
+                                _lookups['withheld'] = verdict
+                                return
                         yield generate_sse_event('wikipedia_lookup', {
-                            'status': 'start',
-                            'terms': current_status.get('terms', [])
+                            'status': 'start' if last_wiki_status == 'lookup' else 'complete',
+                            'terms': terms
                         })
                         yield ''
-                    elif last_wiki_status == 'complete':
-                        yield generate_sse_event('wikipedia_lookup', {
-                            'status': 'complete',
-                            'terms': current_status.get('terms', [])
-                        })
-                        yield ''
+                if finished:
+                    return
                 time_module.sleep(0.1)  # Poll every 100ms
 
         # The FUNCTION, not a generator already made: that is how a source
@@ -2938,6 +3245,27 @@ def execute_pipeline_streaming(data: dict):
         yield from events_with_heartbeat(_interception_notices,
                                          label='UNIFIED-STREAMING',
                                          frame=_as_written)
+
+        withheld = _lookups.get('withheld')
+        if withheld is not None:
+            # A lookup the check refused: the run is answered as a block at
+            # stage 2, like a refused text. The interception may still be
+            # running. Its prompts at ComfyUI end with this stream
+            # (`stream_ended`), what it writes is not used, and the block
+            # does not wait for it.
+            executor.shutdown(wait=False)
+            WIKIPEDIA_STATUS.pop(run_id, None)
+            logger.warning(f"[UNIFIED-STREAMING] Withheld at the result ({withheld.field})")
+            recorder.save_error(stage=2, error_type='safety_blocked', message=withheld.reason,
+                                details={'blocked_on': withheld.field,
+                                         'reason_key': withheld.reason_key})
+            yield generate_sse_event('blocked', {
+                'reason': withheld.reason,
+                'safety_block': withheld.block(),
+                'checks_passed': []
+            })
+            yield ''
+            return
 
         # Get result
         future.result()  # Raises if thread had exception
@@ -2965,9 +3293,9 @@ def execute_pipeline_streaming(data: dict):
             chunk_count = 1
 
             # The model answered with the refusal the safety prefix asks for:
-            # a block at stage 2, in the event the Flow reads for a stage-1
-            # block. This is the path the Flow generates on; until 2026-10-10
-            # the sentence went on as the interception (finding S-015 of the code review of 2026-10-10).
+            # a block at stage 2, in the `blocked` event, as the intake's block
+            # above. This is the path the Flow generates on; until 2026-10-10
+            # the sentence went on as the interception.
             from schemas.engine.instruction_selector import is_safety_refusal
             model_wrote = not (passthrough_owed and not (result.metadata or {}).get('wikipedia_lookups'))
             if model_wrote and is_safety_refusal(accumulated):
@@ -2975,13 +3303,57 @@ def execute_pipeline_streaming(data: dict):
                 recorder.save_error(stage=2, error_type='safety_blocked', message=accumulated,
                                     details={'blocked_on': 'interception'})
                 yield generate_sse_event('blocked', {
-                    'stage': 2,
-                    'blocked_at_stage': 2,
                     'reason': accumulated,
+                    'safety_block': safety_block(CHECKPOINT_REFUSAL, REASON_REFUSAL,
+                                                 accumulated, 'interception'),
                     'checks_passed': []
                 })
                 yield ''
                 return
+
+            # THE RESULT. What the model wrote is checked before it leaves, on a
+            # thread of its own with frames going out meanwhile, like the
+            # intake. Nothing is reworded: the text goes out as it was written,
+            # or the run is answered as a block at stage 2. The visitor's own
+            # wording, handed on where the perspective owes it, passed the
+            # intake.
+            written = accumulated if isinstance(accumulated, str) else json.dumps(
+                accumulated, ensure_ascii=False)
+            if checks_run and model_wrote and written.strip() != str(input_text).strip():
+                _result = {}
+
+                def _result_work(client_gone):
+                    """The check at the result, as a source the transport can
+                    breathe around. The reader's leaving is read as at the
+                    intake."""
+                    if not client_gone.is_set():
+                        with llm_queue_semaphore:
+                            if not client_gone.is_set():
+                                _result['verdict'] = check_result_text(
+                                    written, level=safety_level, field='interception')
+                    yield ''
+
+                yield from events_with_heartbeat(_result_work,
+                                                 label='UNIFIED-STREAMING',
+                                                 frame=_as_written)
+                verdict = _result.get('verdict')
+                if verdict is None:
+                    logger.info("[UNIFIED-STREAMING] The check at the result stopped "
+                                "— the reader left")
+                    return
+                if not verdict.passed:
+                    logger.warning("[UNIFIED-STREAMING] Withheld at the result (interception)")
+                    recorder.save_error(stage=2, error_type='safety_blocked',
+                                        message=verdict.reason,
+                                        details={'blocked_on': verdict.field,
+                                                 'reason_key': verdict.reason_key})
+                    yield generate_sse_event('blocked', {
+                        'reason': verdict.reason,
+                        'safety_block': verdict.block(),
+                        'checks_passed': []
+                    })
+                    yield ''
+                    return
 
             # Stream the complete response as one chunk
             yield generate_sse_event('chunk', {
@@ -3019,6 +3391,7 @@ def execute_pipeline_streaming(data: dict):
         yield ''
 
     finally:
+        stream_ended.set()
         logger.info(f"[UNIFIED-STREAMING] Cleanup complete for run: {run_id}")
 
 
@@ -3028,17 +3401,21 @@ def execute_pipeline_streaming(data: dict):
 # ============================================================================
 
 
-# What the quick check answers with when it could not be carried out. §86a and
-# DSGVO are legal obligations, so an absent judgement is a refusal here and
-# never a pass. It stands in ONE place because the answer has to be the same
-# refusal whichever way it travels: the blocking branch returns it, and the
-# stream's terminal frame carries it too. The message is German, like every
-# safety reason on this platform; the surface translates it with
-# safetyBlockKey() rather than showing it raw.
+# What the quick check answers with when it could not be carried out. It is the
+# intake: protecting names and addresses is a legal obligation (DSGVO), and at
+# kids and youth a picture is shown only with its verdict, so an absent
+# judgement is a refusal here and never a pass. It stands in ONE place because
+# the answer has to be the same refusal whichever way it travels: the blocking
+# branch returns it, and the stream's terminal frame carries it too. The
+# message is German, like every safety reason on this platform; the surface
+# picks its own sentence by the block message (safetyBlockMessageKey())
+# rather than showing it raw.
 SAFETY_QUICK_FAILURE = {
     'safe': False,
     'checks_passed': [],
     'error_message': 'Sicherheitssystem-Fehler',
+    'safety_block': safety_block(CHECKPOINT_INTAKE, REASON_UNAVAILABLE,
+                                 'Sicherheitssystem-Fehler'),
 }
 
 
@@ -3062,26 +3439,31 @@ def _safety_quick_failure_frame(error: BaseException) -> str:
 @schema_bp.route('/pipeline/safety/quick', methods=['POST'])
 def safety_check_quick():
     """
-    Quick safety check for text (§86a + DSGVO) and uploaded images (VLM).
+    Quick check for a text and for a picture that came in, asked by the browser
+    before it uses them.
 
     Used by MediaInputBox autonomous safety (on blur/paste) and
     ImageUploadWidget (after upload).
 
     Text mode (field: "text"):
-        §86a fast-filter → SpaCy NER → (if PER hit) LLM verify → block/allow
+        The intake (safety_gate.check_intake): the name recogniser and the
+        address pattern look, and after a hit the classifier's name question
+        decides. A symbol is not refused here; what a model is given is
+        checked before the model.
 
     Image mode (field: "image_path"):
-        VLM safety check via GPU Service (kids/youth only, fail-CLOSED)
+        The verdict the picture got where it came in, read and not asked
+        again (kids/youth only, fail-CLOSED); a reference only, see
+        `_run_safety_check_quick`.
 
     Request Body: { "text": "..." } or { "image_path": "/path/to/uploaded.png" }
     Response: { "safe": bool, "checks_passed": [...], "error_message": str|null }
 
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same check; only its way back is
-    different. The image mode reads the picture with a vision model on the GPU
-    service and waits its turn in the plant-wide queue, and the text mode asks a
-    model whenever the name recogniser hits, so this route can be silent for
-    minutes. The edge in front of this server ends a request whose origin has
+    different. The text mode asks a model whenever the name recogniser hits,
+    and that model waits its turn in the plant-wide queue, so this route can be
+    silent for minutes. The edge in front of this server ends a request whose origin has
     sent nothing for about 100 seconds and hands the browser a 524 — and a
     surface that never hears the answer to "may this picture be shown" holds a
     picture nobody has judged.
@@ -3165,107 +3547,47 @@ def _run_safety_check_quick(data, safety_level: str):
         if not data:
             return {'safe': True, 'checks_passed': [], 'error_message': None}, 200
 
-        # IMAGE MODE: VLM safety check for uploaded images
+        # IMAGE MODE: the verdict the picture got where it came in
         image_path = data.get('image_path', '').strip()
         if image_path:
             if safety_level not in ('kids', 'youth'):
                 return {'safe': True, 'checks_passed': ['vlm_skipped'], 'error_message': None}, 200
 
-            from my_app.utils.vlm_safety import vlm_safety_check
-            is_safe, reason, description = vlm_safety_check(image_path, safety_level)
-            if not is_safe:
-                logger.warning(f"[SAFETY-QUICK] VLM image BLOCKED: {reason}")
+            # The picture was judged where it came in: an upload by the upload
+            # route (media_routes.upload_image), a recorded picture at the
+            # result. This reads that verdict, at the level of whoever asks, and
+            # asks no model. It takes a reference only, of the forms
+            # safety_gate.image_reference_cleared reads: an upload's path, id or
+            # address, a recorded picture's address or its path in the run. A
+            # picture sent as data is no reference, and any other path has no
+            # verdict. Until 2026-10-31 this put whatever path the browser named
+            # before the vision model.
+            if not image_reference_cleared(image_path, safety_level):
+                logger.warning(f"[SAFETY-QUICK] picture without a verdict for {safety_level}")
                 return {
                     'safe': False,
-                    'checks_passed': ['vlm_image_check'],
-                    'error_message': reason,
-                    'vlm_description': description
+                    'checks_passed': [],
+                    'error_message': '',
+                    'safety_block': safety_block(CHECKPOINT_INTAKE, REASON_IMAGE_UNCHECKED,
+                                                 field='image'),
                 }, 200
-            return {'safe': True, 'checks_passed': ['vlm_image_check'], 'error_message': None, 'vlm_description': description}, 200
+            return {'safe': True, 'checks_passed': ['image_verdict'], 'error_message': None}, 200
 
-        # TEXT MODE: §86a fast-filter + DSGVO NER
+        # TEXT MODE: the intake, which looks for names and addresses. A symbol
+        # is not refused here: what a model is given is checked before the model.
         text = data.get('text', '').strip()
-        user_language = data.get('user_language', 'de')
         if not text:
             return {'safe': True, 'checks_passed': [], 'error_message': None}, 200
-
-        # Research mode: skip ALL safety checks (text + image)
-        if safety_level == 'research':
-            return {'safe': True, 'checks_passed': ['safety_skip'], 'error_message': None}, 200
-
-        checks_passed = []
-
-        # STEP 1: §86a fast-filter — instant block (language-aware)
-        has_86a, found_86a = fast_filter_bilingual_86a(text, user_language)
-        if has_86a:
-            logger.warning(f"[SAFETY-QUICK] §86a BLOCKED: {found_86a[:3]}")
+        verdict = check_intake(text, level=safety_level, kind='text', field='text')
+        if not verdict.passed:
+            logger.warning(f"[SAFETY-QUICK] refused at the intake ({verdict.reason_key})")
             return {
                 'safe': False,
-                'checks_passed': ['§86a'],
-                'error_message': f'§86a StGB: {", ".join(found_86a[:3])}'
+                'checks_passed': [],
+                'error_message': verdict.reason,
+                'safety_block': verdict.block(),
             }, 200
-        checks_passed.append('§86a')
-
-        # STEP 2: DSGVO SpaCy NER — runs BEFORE age filter to ensure no personal
-        # data leaves local system. This allows age filter to use external LLMs safely.
-        has_pii, found_pii, spacy_ok = fast_dsgvo_check(text)
-        if spacy_ok and has_pii:
-            logger.info(f"[SAFETY-QUICK] NER triggered: {found_pii[:3]} — verifying with LLM")
-            verify_result = llm_personal_data_check(text, found_pii)
-            if verify_result is None:
-                safety_breaker.record_failure()
-                logger.warning(f"[SAFETY-QUICK] DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten. (fail-closed)")
-                return {
-                    'safe': False,
-                    'checks_passed': checks_passed,
-                    'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
-                }, 200
-            elif verify_result:
-                safety_breaker.record_success()
-                logger.warning(f"[SAFETY-QUICK] DSGVO BLOCKED (LLM confirmed): {found_pii[:3]}")
-                return {
-                    'safe': False,
-                    'checks_passed': checks_passed + ['dsgvo_ner', 'dsgvo_llm_verify'],
-                    'error_message': f'DSGVO: {", ".join(found_pii[:3])}'
-                }, 200
-            else:
-                safety_breaker.record_success()
-                logger.info(f"[SAFETY-QUICK] NER false positive (LLM rejected): {found_pii[:3]}")
-        elif not spacy_ok:
-            # SpaCy could not be loaded, so nothing looked for a name. This
-            # branch used to be absent: the route fell through to safe:true,
-            # and this route is the SINGLE gate the board's material intake
-            # asks (useMaterialIntake.ts), which is strictly fail-closed and
-            # therefore trusts that true. A fresh install whose language models
-            # failed to download released every name. The unified Stage-1 path
-            # has had this fallback all along; here it was missing.
-            # Found by an adversarial review on 2026-09-23.
-            logger.warning("[SAFETY-QUICK] SpaCy unavailable → asking the classifier directly")
-            dsgvo_result = llm_personal_data_check(text)
-            if dsgvo_result is None:
-                safety_breaker.record_failure()
-                logger.warning("[SAFETY-QUICK] DSGVO fallback: no verdict (fail-closed)")
-                return {
-                    'safe': False,
-                    'checks_passed': checks_passed,
-                    'error_message': 'DSGVO: Sicherheitsprüfung nicht verfügbar. Bitte GPU Service neustarten.'
-                }, 200
-            safety_breaker.record_success()
-            if dsgvo_result:
-                logger.warning("[SAFETY-QUICK] DSGVO BLOCKED (classifier, no NER)")
-                return {
-                    'safe': False,
-                    'checks_passed': checks_passed + ['dsgvo_llm'],
-                    'error_message': 'DSGVO: Persönliche Daten erkannt'
-                }, 200
-            checks_passed.append('dsgvo_llm')
-
-        if spacy_ok:
-            checks_passed.append('dsgvo_ner')
-
-        # Jugendschutz (kids/youth) is handled by Stage 2 safety prefix — not here.
-
-        return {'safe': True, 'checks_passed': checks_passed, 'error_message': None}, 200
+        return {'safe': True, 'checks_passed': ['intake'], 'error_message': None}, 200
 
     except Exception as e:
         logger.error(f"[SAFETY-QUICK] Error: {e}", exc_info=True)
@@ -3329,14 +3651,20 @@ def _translate_context(context_prompt, context_language, tag, on_translated=None
         result = get_llm_backend().generate(model=model, prompt=translation_prompt)
         translated = result.get("response", "").strip() if result else ""
         if not translated:
-            logger.error(f"[{tag}] Context translation failed, using original")
+            if _ended_run():
+                logger.info(f"[{tag}] Context translation ended with its run")
+            else:
+                logger.error(f"[{tag}] Context translation failed, using original")
             return context_prompt
         logger.info(f"[{tag}] Context translated successfully")
         if on_translated is not None:
             on_translated(translated)
         return translated
     except Exception as e:
-        logger.error(f"[{tag}] Context translation error: {e}")
+        if _ended_run():
+            logger.info(f"[{tag}] Context translation ended with its run: {e}")
+        else:
+            logger.error(f"[{tag}] Context translation error: {e}")
         return context_prompt
 
 
@@ -3437,7 +3765,12 @@ def translate_text():
     translations are therefore worth keeping for good. Only the scopes named in
     services/translation_cache.py are kept; this endpoint takes no credentials,
     and that allowlist is what bounds what can be written to disk here. A set of
-    pieces already in the store reaches no model at all.
+    pieces already in the store reaches no translation model; it is still
+    checked at the result, at the level of whoever asks.
+
+    What the caller sent passes the intake before any model is asked, and what
+    the model wrote is checked at the result before it leaves. A refusal at
+    either answers 403 with the block message (`safety_block`).
 
     With "enable_streaming" the answer travels as the platform's SSE stream
     instead of as one JSON body. It is the same translation; only its way back
@@ -3459,19 +3792,43 @@ def translate_text():
         logger.error(f"[TRANSLATE-ENDPOINT] Error: {exc}")
         return jsonify({'status': 'error', 'error': str(exc)}), 500
 
+    # Resolved HERE, in the thread that serves the request, and handed down: on
+    # a worker of the streamed transport the resolver answers the strictest
+    # level. The intake and the check at the result read this value. An unknown
+    # level would run them against nothing, so a resolver that raises ends the
+    # request, as on /pipeline/stage2.
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        logger.error(f"[TRANSLATE-ENDPOINT] Error: {exc}", exc_info=True)
+        return jsonify({
+            'status': 'error',
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+        }), 500
+
     # No `client_gone` parameter on the run, and that is a decision rather than
     # an omission: one model call stands behind it and leaving would not end it,
     # only lose the answer to a translation already written. Work that could give
     # something back by stopping asks for the signal by declaring the parameter;
     # see `streamed_answer`.
-    return answered_either_way(data, _run_translate, data, label='TRANSLATE')
+    return answered_either_way(data, _run_translate, data, safety_level,
+                               label='TRANSLATE')
 
 
-def _run_translate(data):
+def _run_translate(data, safety_level):
     """The translation, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one translation can be answered either way.
-    It must not reach for ``request``: everything it needs stands in ``data``.
+    It must not reach for ``request``: everything it needs stands in ``data``,
+    and the safety level is the one its view resolved.
+
+    What the caller sent passes the intake before any model is asked. Pieces
+    this server handed out itself, from a corpus it serves, are its own
+    material and do not. What the model wrote is checked at the result before
+    it leaves, and only a set that passed is kept in the store. A piece that
+    comes back as it went is not read again. A refusal at either check answers
+    403 with the block message.
     """
     try:
         if not data:
@@ -3525,17 +3882,65 @@ def _run_translate(data):
             # A store that is missing or broken costs a model call and nothing
             # else. It may never cost the translation itself.
             cache = None
-            translated_texts = None
             try:
                 from my_app.services import translation_cache as cache
-                translated_texts = cache.lookup(scope, cache_lang, texts)
             except Exception as exc:
                 logger.warning(f"[TRANSLATE-ENDPOINT] store unavailable: {exc}")
+
+            # THE INTAKE. Pieces this server handed out itself, from a corpus it
+            # serves, are the platform's material, not the caller's, and ask
+            # nothing (translation_cache.served). Anything else is the caller's
+            # and goes through as one text: names of living private individuals
+            # and addresses with a house number. One slot of the queue, as at
+            # the other entries: after a name or an address the classifier is
+            # asked.
+            if cache is None or not cache.served(scope, texts):
+                with llm_queue_semaphore:
+                    intake = check_intake_texts({'texts': "\n".join(texts)},
+                                                level=safety_level)
+                if not intake.passed:
+                    logger.warning(f"[TRANSLATE-ENDPOINT] Intake BLOCKED ({intake.field})")
+                    return {
+                        'status': 'blocked',
+                        'error': intake.reason,
+                        'safety_block': intake.block(),
+                        'safety_level': safety_level,
+                    }, 403
+
+            translated_texts = None
+            if cache is not None:
+                try:
+                    translated_texts = cache.lookup(scope, cache_lang, texts)
+                except Exception as exc:
+                    logger.warning(f"[TRANSLATE-ENDPOINT] store unavailable: {exc}")
             from_store = translated_texts is not None
             if not from_store:
                 translated_texts = _translate_list(texts, lang_name, style)
-                if cache is not None:
-                    cache.store(scope, cache_lang, texts, translated_texts)
+
+            # THE RESULT, over every piece the model changed; a piece that came
+            # back as it went is the caller's own or the corpus's. One check
+            # over all of them, and a refusal withholds the whole set, because
+            # its pieces belong together. A set out of the store is checked as
+            # well, at the level of whoever is asking now, and only a set that
+            # passed is kept.
+            written = "\n".join(
+                dst for src, dst in zip(texts, translated_texts)
+                if " ".join(dst.split()) != " ".join(src.split())
+            )
+            if written.strip():
+                with llm_queue_semaphore:
+                    verdict = check_result_text(written, level=safety_level,
+                                                field='translated_texts')
+                if not verdict.passed:
+                    logger.warning("[TRANSLATE-ENDPOINT] Withheld at the result (translated_texts)")
+                    return {
+                        'status': 'blocked',
+                        'error': verdict.reason,
+                        'safety_block': verdict.block(),
+                        'safety_level': safety_level,
+                    }, 403
+            if not from_store and cache is not None:
+                cache.store(scope, cache_lang, texts, translated_texts)
             duration_ms = (time.time() - start_time) * 1000
             logger.info(
                 f"[TRANSLATE-ENDPOINT] {len(texts)} items "
@@ -3555,9 +3960,40 @@ def _run_translate(data):
                 'duration_ms': duration_ms
             }, 200
 
+        # THE INTAKE, over the caller's text: names of living private
+        # individuals and addresses with a house number. A text this level's
+        # check at the result has passed, such as a translation sent back to be
+        # translated again, is no new material and asks nothing.
+        with llm_queue_semaphore:
+            intake = check_intake_texts({'text': text}, level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[TRANSLATE-ENDPOINT] Intake BLOCKED ({intake.field})")
+            return {
+                'status': 'blocked',
+                'error': intake.reason,
+                'safety_block': intake.block(),
+                'safety_level': safety_level,
+            }, 403
+
         translated = translate_one(text, target_language)
         if not translated:
             return {'status': 'error', 'error': 'Translation returned empty result'}, 500
+
+        # THE RESULT. A text that came back as it went is the caller's own and
+        # passed the intake; anything else the model wrote is checked before it
+        # leaves.
+        if " ".join(translated.split()) != " ".join(str(text).split()):
+            with llm_queue_semaphore:
+                verdict = check_result_text(translated, level=safety_level,
+                                            field='translated_text')
+            if not verdict.passed:
+                logger.warning("[TRANSLATE-ENDPOINT] Withheld at the result (translated_text)")
+                return {
+                    'status': 'blocked',
+                    'error': verdict.reason,
+                    'safety_block': verdict.block(),
+                    'safety_level': safety_level,
+                }, 403
 
         duration_ms = (time.time() - start_time) * 1000
         logger.info(f"[TRANSLATE-ENDPOINT] Success in {duration_ms:.0f}ms: {translated[:100]}...")
@@ -3642,8 +4078,9 @@ def _finished_segments(pending: str):
         pending = pending[m.end():]
 
 
-def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
-    """The reading as it is written -- one event per piece the model emits.
+def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str,
+                          safety_level: str):
+    """The reading as it is written -- one event per paragraph the model finishes.
 
     The reading frames run to five sections, and a reader needs half a minute
     for them. Handing the text over only at the end leaves the card empty for
@@ -3661,6 +4098,11 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
     says what happened. What the model wrote up to that point stands: this is
     behaviour to look at, not output to hide.
 
+    What the model writes is held until its paragraph is complete, checked at
+    the result at the level the view resolved, and only then handed over. A
+    paragraph the check refuses ends the reading with the block message; what
+    passed before it stays on the page.
+
     The reading itself runs under the shared transport, so the connection keeps
     breathing where the model does not write: before the first token there is a
     vision model to load and a GPU slot to stand in, and between two tokens the
@@ -3670,10 +4112,11 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
     drops for carrying no payload, so no event below moves or changes.
 
     Events:
-        {"type": "token", "text": "..."}
+        {"type": "token", "text": "..."}                     one or more paragraphs
         {"type": "done", "latency_s": 12.3, "char_count": 4711,
          "finish_reason": "stop" | "length" | "repetition"}
         {"type": "error", "error": "...", "model": "..."}   may follow tokens
+        {"type": "blocked", "safety_block": {...}, "model": "..."}   may follow tokens
     """
     import json
     import time
@@ -3682,11 +4125,11 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
     from collections import Counter
 
     # Whether a frame that ENDS this reading has already gone out. The page
-    # (views/vlm_analysis_comparison.vue) closes the card on `done` and marks
-    # it broken on `error`, and after either of them nothing may follow: a
-    # fault raised once the last good frame had left -- the reading's own
-    # connection failing as it was torn down, for instance -- turned a card
-    # that had finished into a card that had failed.
+    # (views/vlm_analysis_comparison.vue) closes the card on `done`, marks it
+    # broken on `error` and withheld on `blocked`, and after any of them
+    # nothing may follow: a fault raised once the last good frame had left --
+    # the reading's own connection failing as it was torn down, for instance --
+    # turned a card that had finished into a card that had failed.
     ended = {'terminally': False}
 
     def _reading_frame(event: dict) -> str:
@@ -3698,7 +4141,7 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
         it is also the one place where "a terminal frame has been written" can
         be recorded without a second opinion about the order.
         """
-        if event.get('type') in ('done', 'error'):
+        if event.get('type') in ('done', 'error', 'blocked'):
             ended['terminally'] = True
         return "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
 
@@ -3722,6 +4165,9 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
         finish_reason = 'stop'
         seen = Counter()
         pending = ''
+        # What the model wrote and the check has not released yet: the
+        # paragraph still being written.
+        held = ''
 
         # Ending the connection, at most once, whichever thread gets there.
         # The lock is what makes "at most once" true, and `_ended` on its own
@@ -3808,7 +4254,23 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
                     return
                 if kind == 'token':
                     collected.append(payload)
-                    yield {'type': 'token', 'text': payload}
+                    # THE RESULT. A paragraph goes out once a blank line has
+                    # closed it and the check has passed it; one question to
+                    # the classifier per paragraph, one slot of the queue each.
+                    held += payload
+                    cut = held.rfind('\n\n')
+                    if cut != -1:
+                        released, held = held[:cut + 2], held[cut + 2:]
+                        with llm_queue_semaphore:
+                            verdict = check_result_text(released, level=safety_level,
+                                                        field='description')
+                        if not verdict.passed:
+                            logger.warning(f"[COMPARE-ANALYZE-IMAGE] the reading by "
+                                           f"{model} was withheld at the result")
+                            yield {'type': 'blocked', 'safety_block': verdict.block(),
+                                   'model': model}
+                            return
+                        yield {'type': 'token', 'text': released}
 
                     pending += payload
                     segments, pending = _finished_segments(pending)
@@ -3851,6 +4313,20 @@ def _stream_image_reading(alias: str, model: str, prompt: str, image_b64: str):
                        'error': f'{model} returned an empty reading',
                        'model': model}
                 return
+
+            # The last paragraph, which no blank line closed, through the same
+            # check before the reading is declared finished.
+            if held:
+                with llm_queue_semaphore:
+                    verdict = check_result_text(held, level=safety_level,
+                                                field='description')
+                if not verdict.passed:
+                    logger.warning(f"[COMPARE-ANALYZE-IMAGE] the reading by {model} "
+                                   f"was withheld at the result")
+                    yield {'type': 'blocked', 'safety_block': verdict.block(),
+                           'model': model}
+                    return
+                yield {'type': 'token', 'text': held}
 
             # Counted untrimmed and in characters, so the page can compare it
             # against what it has without either side trimming differently.
@@ -3913,6 +4389,10 @@ def compare_analyze_image():
         "latency_s": 2.3
     }
 
+    The instruction passes the intake before any model reads the picture, and
+    the reading is checked at the result before it leaves; a refusal answers
+    403 with the block message (`safety_block`), or ends the stream with it.
+
     With "stream": true the answer is text/event-stream instead (see
     _stream_image_reading). Everything that goes wrong before the first token
     -- a missing field, an unknown model, an unreadable file -- still comes
@@ -3928,6 +4408,20 @@ def compare_analyze_image():
     from config import UPLOADS_TMP_DIR, ANALYSIS_TMP_DIR
     from my_app.services.llm_backend import get_llm_backend
 
+    # Resolved HERE, in the thread that serves the request, and handed down to
+    # the stream, whose source runs on a worker where the resolver answers the
+    # strictest level. An unknown level would run the checks against nothing,
+    # so a resolver that raises ends the request.
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        logger.error(f"[COMPARE-ANALYZE-IMAGE] Error: {exc}", exc_info=True)
+        return jsonify({
+            'status': 'error',
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+        }), 500
+
     try:
         data = request.get_json()
         image_path = data.get('image_path')
@@ -3942,6 +4436,22 @@ def compare_analyze_image():
         img_path = _Path(image_path).resolve()
         if UPLOADS_TMP_DIR.resolve() not in img_path.parents or not img_path.is_file():
             return jsonify({'status': 'error', 'error': 'image_path must point to an uploaded image'}), 400
+
+        # THE INTAKE, over the instruction. It stands in a field the visitor
+        # can edit, so what arrives is theirs: names of living private persons
+        # and addresses with a house number. A text this level's checks have
+        # passed asks nothing, so a frame sent unchanged is asked about once.
+        with llm_queue_semaphore:
+            intake = check_intake_texts({'prompt': prompt}, level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[COMPARE-ANALYZE-IMAGE] Intake BLOCKED ({intake.field})")
+            return jsonify({
+                'status': 'blocked',
+                'error': intake.reason,
+                'safety_block': intake.block(),
+                'safety_level': safety_level,
+                'model': model,
+            }), 403
 
         # The shared step, not a copy of it: this one had neither the 64px
         # floor -- an undersized picture went to a runner that rejects it, and
@@ -3984,7 +4494,8 @@ def compare_analyze_image():
             # See the note at the optimization route: the Response is the
             # transport's, so all four streamed routes in this file carry the
             # same mimetype and the same two headers.
-            return sse_response(_stream_image_reading(alias, model, prompt, image_b64))
+            return sse_response(_stream_image_reading(alias, model, prompt, image_b64,
+                                                      safety_level))
 
         # Both stations read the SAME picture: the large reader lives on the
         # transformers backend and takes a file, so the resized frame is written
@@ -4049,6 +4560,20 @@ def compare_analyze_image():
             )
             return jsonify({'status': 'error', 'error': f'{model} returned an empty reading', 'model': model}), 500
 
+        # THE RESULT. The reading is checked before it leaves.
+        with llm_queue_semaphore:
+            verdict = check_result_text(description, level=safety_level, field='description')
+        if not verdict.passed:
+            logger.warning(f"[COMPARE-ANALYZE-IMAGE] the reading by {model} was withheld "
+                           f"at the result")
+            return jsonify({
+                'status': 'blocked',
+                'error': verdict.reason,
+                'safety_block': verdict.block(),
+                'safety_level': safety_level,
+                'model': model,
+            }), 403
+
         return jsonify({
             'status': 'success',
             'description': description,
@@ -4063,91 +4588,139 @@ def compare_analyze_image():
 
 
 # ============================================================================
-# POST-GENERATION VLM SAFETY CHECK
-# Analyzes generated images with a local Vision-Language Model (qwen3-vl:2b)
-# to catch unsafe content that text-based checks cannot predict.
+# THE CHECK AT THE RESULT: THE PICTURES OF A RUN
 # ============================================================================
 
-def _vlm_safety_check_image(recorder, safety_level: str, expect_image: bool = False) -> tuple:
+def _pictures_of_run(recorder, safety_level: str, expect_image: bool = False) -> tuple:
+    """The pictures of a run that the check at the result reads, and what stops
+    the run before any of them is read.
+
+    Returns ([(sequence, path), ...], refusal). EVERY picture of the run is
+    listed, so that each is checked and marked with its own verdict. Until
+    September the check read `get_entity_path('output_image')`, which answers
+    with the FIRST picture of a run, while delivery hands out the LAST by
+    default — so in a run with several pictures, 2..N went out unchecked.
+
+    `refusal` is a block for a run that cannot be checked as it stands, or
+    None. Three cases: a run made as an image run that holds no picture entity
+    (with `expect_image`; without it the run's own record decides, and a
+    sound-only run has no picture to check), a run that holds a 3D model and
+    no preview of it (the model is checked through its preview, and without
+    one there is nothing to check), and a picture whose file is not on disk.
+    None of them is a rating of a picture, and none is written onto one: the
+    entity stays without a verdict, which delivery withholds all the same and
+    a later check can still clear. The pictures that can be read are listed
+    beside such a refusal and are checked all the same.
+
+    The caller asks check_result_image about each listed picture, with the
+    recorder and the entity, so that each verdict lands on its own entity.
     """
-    Post-generation image safety check using a local VLM via GPU Service.
-
-    EVERY picture of the run is held against the check, and each one is marked
-    with its own verdict. Before this, the check read `get_entity_path(
-    'output_image')`, which answers with the FIRST picture of a run, while
-    delivery hands out the LAST by default — so in a run with several pictures,
-    2..N went out unchecked.
-
-    Args:
-        recorder: LivePipelineRecorder holding the run's output entities
-        safety_level: 'kids' or 'youth' (only these trigger the check)
-        expect_image: the caller knows this run produced a picture. With it, a
-            run without a picture entity is an anomaly and BLOCKS; without it,
-            the run's own record decides — a sound-only run has no picture to
-            hold against anything and passes through.
-
-    Returns:
-        (is_safe: bool, reason: str, description: str) for the run as a whole:
-        one unsafe picture blocks the run, as before. The per-picture verdicts
-        are written to the record, and delivery reads them there.
-    """
-    from my_app.utils.vlm_safety import vlm_safety_check, VLM_OPERATIONAL_BLOCK_MESSAGE
-
+    level = normalise_level(safety_level)
     entities = recorder.output_entities('image')
     if not entities:
+        if recorder.output_entities('3d'):
+            logger.error(
+                "[VLM-SAFETY] Run %s holds a 3D model and no preview of it — "
+                "BLOCKING (operational)", recorder.run_id
+            )
+            return [], Verdict(False, CHECKPOINT_RESULT, level, '3d',
+                               REASON_UNAVAILABLE, 'no_preview')
         if expect_image:
             logger.error(
                 "[VLM-SAFETY] Run %s was generated as an image run and holds no "
                 "output_image entity — BLOCKING (operational)", recorder.run_id
             )
-            return (False, 'no_image_entity', '')
+            return [], Verdict(False, CHECKPOINT_RESULT, level, 'image',
+                               REASON_UNAVAILABLE, 'no_image_entity')
         logger.info("[VLM-SAFETY] Run %s holds no picture — nothing to check", recorder.run_id)
-        return (True, '', '')
+        return [], None
 
-    first_refusal = None
+    pictures, refusal = [], None
     for entity in entities:
         sequence = entity.get('sequence')
         filename = entity.get('filename') or ''
         image_path = recorder.unchecked_entity_path_for_checking(entity)
-
         if not filename or not image_path.exists():
             logger.error(
                 "[VLM-SAFETY] Run %s entity %s names %r, which is not on disk — "
                 "BLOCKING (operational)", recorder.run_id, sequence, filename
             )
-            # NOT stamped. The file was unreadable at this moment, which says
-            # nothing about the picture; without a verdict the entity stays
-            # `unchecked` — withheld all the same, and able to be cleared by a
-            # later check, which a `safe=False` stamp would survive.
-            if first_refusal is None:
-                first_refusal = (False, 'file_missing', '')
+            if refusal is None:
+                refusal = Verdict(False, CHECKPOINT_RESULT, level, 'image',
+                                  REASON_UNAVAILABLE, 'file_missing')
             continue
+        pictures.append((sequence, image_path))
+    return pictures, refusal
 
-        is_safe, reason, description = vlm_safety_check(image_path, safety_level)
-        # The two endings this platform keeps apart everywhere else (see
-        # VLM_CONTENT_BLOCK_MESSAGE against VLM_OPERATIONAL_BLOCK_MESSAGE, and
-        # `operational` in the quick check): the check judged the picture, or the
-        # check did not run. Only a judgement is written onto the picture.
-        # Measured over 60 days: 13 operational endings against 2 content ones
-        # in 944 checks — stamping both as `safe=False` would mean that in the
-        # overwhelming majority of blocks a technical fault is recorded, on the
-        # picture and for good, as a rating of what somebody made.
-        if is_safe or reason != VLM_OPERATIONAL_BLOCK_MESSAGE:
-            recorder.mark_entity_safety(
-                sequence, safe=is_safe, reason=reason, description=description
+
+def _videos_of_run(recorder, safety_level: str) -> tuple:
+    """The videos of a run that the check at the result reads, as
+    ([(sequence, path), ...], refusal), the way _pictures_of_run lists the
+    pictures.
+
+    Every video of the run is listed, so that each is asked the video
+    question and carries its own verdict. A video whose file is not on disk is
+    a refusal as a fault, not a rating, and nothing is written onto it; the
+    videos that can be read are listed beside it and are checked all the same.
+    The caller asks check_result_video about each, with the recorder and the
+    entity, so that each verdict lands on its own entity.
+    """
+    level = normalise_level(safety_level)
+    videos, refusal = [], None
+    for entity in recorder.output_entities('video'):
+        sequence = entity.get('sequence')
+        filename = entity.get('filename') or ''
+        video_path = recorder.unchecked_entity_path_for_checking(entity)
+        if not filename or not video_path.exists():
+            logger.error(
+                "[VIDEO-CHECK] Run %s entity %s names %r, which is not on disk — "
+                "BLOCKING (operational)", recorder.run_id, sequence, filename
             )
-        if not is_safe and first_refusal is None:
-            first_refusal = (False, reason, description)
-
-    if first_refusal is not None:
-        return first_refusal
-    return (True, '', '')
+            if refusal is None:
+                refusal = Verdict(False, CHECKPOINT_RESULT, level, 'video',
+                                  REASON_UNAVAILABLE, 'file_missing')
+            continue
+        videos.append((sequence, video_path))
+    return videos, refusal
 
 
 # ============================================================================
 # GENERATION STREAMING (Stage 3 + Stage 4)
 # SSE for real-time badge updates
 # ============================================================================
+
+def _code_entity_of(recorder) -> Optional[int]:
+    """The sequence of the sketch the run recorded last, or None.
+
+    A sketch records under its runtime's name (p5, tonejs). The one a
+    generation has just made is the run's last; a run id pressed again keeps
+    the earlier ones before it.
+    """
+    for entity in reversed(recorder.metadata.get('entities', [])):
+        if entity.get('type') in ('p5', 'tonejs'):
+            return entity.get('sequence')
+    return None
+
+
+def _code_refused(verdict: Verdict, recorder, safety_level: str, run_id: str) -> dict:
+    """Stage 4's answer for a sketch the check at the result refused.
+
+    The block is written into the run's record as well, so that a run whose
+    reader has left still shows why. The code itself is not in the answer.
+    """
+    logger.warning(f"[CODE-CHECK] The check at the result withheld the code of run {run_id} "
+                   f"({verdict.reason_key})")
+    recorder.save_error(stage=3, error_type='safety_blocked', message=verdict.reason,
+                        details={'check': 'result', 'field': verdict.field,
+                                 'reason_key': verdict.reason_key,
+                                 'safety_level': safety_level})
+    return {
+        'success': False,
+        'error': verdict.reason,
+        'safety_block': verdict.block(),
+        'run_id': run_id,
+    }
+
 
 def _reads_two_texts(output_config) -> bool:
     """Whether this output config's chunk takes two texts and reads both itself.
@@ -4166,8 +4739,8 @@ def _reads_two_texts(output_config) -> bool:
 def _second_text_refusal(data: dict, streaming: bool) -> Optional[str]:
     """Why this request's `secondary_text` cannot be served, or None.
 
-    The stream serves it: Stage 1 and Stage 3 for both texts as they were
-    written, and neither handed to the model translated
+    The stream serves it: the intake and the check before the model for both
+    texts as they were written, and neither handed to the model translated
     (execute_generation_streaming).
     The one-body answer has none of that and would drop it unread. A config
     that reads one text would get its prompt untranslated, which is right
@@ -4190,21 +4763,28 @@ def _second_text_refusal(data: dict, streaming: bool) -> Optional[str]:
     return None
 
 
-def execute_generation_streaming(data: dict):
+def execute_generation_streaming(data: dict, safety_level: str):
     """
-    Execute Stage 3 (Translation+Safety) + Stage 4 (Generation) with SSE streaming.
+    The intake and the check before the model, then Stage 4 (Generation), with
+    SSE streaming.
 
     Enables real-time badge updates for Safety and Translation
     before media generation starts.
 
     Events emitted:
         - connected: Initial connection with run_id
-        - stage3_start: Translation + Safety check starting
+        - stage3_start: the checks starting (the event keeps its name)
         - stage3_complete: {was_translated, safe} - triggers badges in frontend
-        - blocked: Content blocked by safety check (stops here)
+        - blocked: stopped at the intake (stage 1), before the model (stage 3)
+          or at the picture (stops here)
         - stage4_start: Media generation starting
         - complete: {media_output, run_id, loras} - final result
         - error: Error occurred
+
+    `safety_level` comes from the view, which resolves it on the request
+    thread. Nothing in this run asks the resolver: the checks, Stage 4 and the
+    check of the picture run on other threads, where the resolver answers the
+    strictest level.
     """
     import time
     import os
@@ -4213,13 +4793,9 @@ def execute_generation_streaming(data: dict):
     prompt = data.get('prompt', '')
     output_config = data.get('output_config')
     seed = data.get('seed')
-    safety_level = resolve_safety_level()
-    user_language = data.get('user_language', 'de')
     alpha_factor = data.get('alpha_factor')
     input_image = data.get('input_image')
-    input_image1 = data.get('input_image1')
-    input_image2 = data.get('input_image2')
-    input_image3 = data.get('input_image3')
+    multi_images = multi_images_from(data)
     input_text = data.get('input_text', '')
     context_prompt = data.get('context_prompt', '')
     interception_result = data.get('interception_result', '')
@@ -4352,10 +4928,12 @@ def execute_generation_streaming(data: dict):
             media_type = 'image'
 
         # SD3.5 hands its adaptation over as one JSON object. It is taken
-        # apart here, BEFORE Stage 3, so that neither braces nor key names
+        # apart here, BEFORE the check, so that neither braces nor key names
         # ever reach an encoder — 116 stored generation prompts carry that
-        # text. Stage 3 sees the assembled caption + long form, so nothing
-        # reaches the model that was not checked.
+        # text. The check reads the caption and the long form each as its
+        # encoder receives it, so nothing reaches the model that was not
+        # checked. The intake reads the prompt as it was sent.
+        sent_prompt = prompt
         encoder_prompts = None if two_texts else _parse_triple_prompt(prompt)
         encoder_long_form = None
         if encoder_prompts:
@@ -4367,170 +4945,182 @@ def execute_generation_streaming(data: dict):
             encoder_long_form = (interception_result or '').strip() or encoder_prompts['t5']
             prompt = _join_encoder_texts(encoder_prompts['clip'], encoder_long_form)
 
-        # Execute Stage 3: Translation + Safety
-        # skip_stage3_translation for comparison mode (raw encoding bias)
-        #
-        # It runs on a thread of its own, and a frame goes out every two
-        # seconds while it does. `stage3_start` above and `stage3_complete`
-        # below are still written HERE, in that order, unchanged; what stood
-        # between them was a translation and a guard model on a card that may
-        # be busy, and the tunnel in front of this server ends a proxied
-        # request that has been silent for about a hundred seconds. What fills
-        # the gap is an SSE comment: no event, no field, nothing a reader of
-        # `data:` frames ever sees. What Stage 3 produced is read back below.
+        # Whether the model receives a translation, as Stage 3 decided it until
+        # 2026-10-31: at kids always, at the other levels where the translation
+        # is forced, which the Flow does for every run. Never where the chunk
+        # reads its texts as written (the song), and never in comparison mode
+        # (skip_stage3_translation), which explores how the model answers the
+        # language the prompt was written in. The two SD3.5 halves are
+        # translated where the translation is forced.
+        if encoder_prompts:
+            translates_for_model = force_translation and not skip_stage3_translation
+        else:
+            translates_for_model = (not two_texts and not skip_stage3_translation
+                                    and (force_translation or safety_level == 'kids'))
+        # Every level but research is checked; where the model receives a text
+        # as written, the check translates it for itself.
+        checked = normalise_level(safety_level) not in UNCHECKED_LEVELS
+
+        # The checks run on a thread of their own, and a frame goes out every
+        # two seconds while they do. `stage3_start` above and `stage3_complete`
+        # below are still written HERE, in that order; what stands between them
+        # is a translation and the classifier, on a card that may be busy, and
+        # the tunnel in front of this server ends a proxied request that has
+        # been silent for about a hundred seconds. What fills the gap is an SSE
+        # comment: no event, no field, nothing a reader of `data:` frames ever
+        # sees. What the checks decided is read back below.
         _stage3 = {}
 
-        def _stage3_work():
-            if two_texts:
-                # The Flow's interception ran Stage 1 on the lyrics as they
-                # were typed; the lyrics sent here are its result, and the
-                # style tags reached no step before this one. Both pass
-                # Stage 1 here, as both did on /pipeline/interception until
-                # 2026-10-06.
-                stage1 = _stage1_check_texts(
-                    [('prompt', prompt), ('secondary_text', secondary_text)],
-                    safety_level, user_language)
-                if not stage1[0]:
-                    _stage3['stage1_refusal'] = stage1
-                    yield ''
+        def _stage3_work(client_gone):
+            """The intake and the check before the model, as a source the
+            shared transport can breathe around.
+
+            Nothing goes out here: the checks write no event of their own. The
+            yield is what makes this function a GENERATOR, and without one the
+            checks would run where this function is called -- on the request
+            thread, in the silence this wrapping exists to end.
+
+            `client_gone` is declared, and the FUNCTION is what goes to the
+            transport below, because that is the only spelling that carries the
+            signal. It is read before the queue is entered, once a slot is held
+            and before the check before the model: a reader who closed the tab
+            hands the slot back, and nothing is translated or asked for nobody.
+            """
+            # The intake: names of living private individuals and addresses
+            # with a house number, in every text this request brings, as it was
+            # sent. One slot of the queue, as Stage 1 held: after a name or an
+            # address the classifier is asked. A text that passed the intake or
+            # the check at the result before is not asked again.
+            if client_gone.is_set():
+                return
+            with llm_queue_semaphore:
+                if client_gone.is_set():
                     return
-                # Both texts reach the chunk as written, so they are checked
-                # as written (as_given); at kids the translation as well.
-                # First the lyrics, whose translation is kept for the device
-                # as an image run keeps its prompt's. Then both together,
-                # joined as /pipeline/interception joined them until
-                # 2026-10-06, so that the classifier reads the style tags
-                # beside the lyrics they go with; that translation is kept
-                # for nobody.
-                safety_result = asyncio.run(execute_stage3_safety(
-                    prompt,
-                    safety_level,
-                    media_type,
-                    pipeline_executor,
-                    user_language=user_language,
-                    device_id=device_id,
-                    as_given=True
-                ))
-                if safety_result.get('safe') and secondary_text.strip():
-                    joint = asyncio.run(execute_stage3_safety(
-                        f'{prompt} | {secondary_text}',
-                        safety_level,
-                        media_type,
-                        pipeline_executor,
-                        user_language=user_language,
-                        as_given=True
-                    ))
-                    if not joint.get('safe'):
-                        safety_result = joint
-            elif skip_stage3_translation:
-                logger.info(f"[GENERATION-STREAMING] Stage 3: Translation SKIPPED (comparison mode), safety only")
-                safety_result = asyncio.run(execute_stage3_safety(
-                    prompt,
-                    safety_level,
-                    media_type,
-                    pipeline_executor,
-                    user_language=user_language,
-                    device_id=device_id,
-                    translation_instruction=translation_instruction
-                ))
-                # Override: use original prompt regardless of translation
-                safety_result['positive_prompt'] = prompt
-            else:
-                safety_result = asyncio.run(execute_stage3_safety(
-                    prompt,
-                    safety_level,
-                    media_type,
-                    pipeline_executor,
-                    user_language=user_language,
-                    device_id=device_id,
-                    force_translation=force_translation,
-                    translation_instruction=translation_instruction
-                ))
+                intake = check_intake_texts(
+                    {'prompt': sent_prompt, 'negative_prompt': negative_prompt,
+                     'secondary_text': secondary_text, 'input_text': input_text,
+                     'context_prompt': context_prompt,
+                     'interception_result': interception_result,
+                     'comparison_original_prompt': comparison_original_prompt},
+                    level=safety_level)
+            _stage3['intake'] = intake
+            if not intake.passed or client_gone.is_set():
+                return
 
-            # Check if translation occurred
-            translated_prompt = safety_result.get('positive_prompt', prompt)
-            was_translated = not skip_stage3_translation and translated_prompt and translated_prompt != prompt
-
-            # Per-encoder assignment. Stage 3 above ruled on caption and long form
-            # together, so nothing reaches an encoder that was not checked; each
-            # half is translated on its own here, because Stage 3 hands back one
-            # string that neither can be cut out of again. A wording difference
-            # between the two is harmless: T5 holds its own 512 positions and is
-            # not aligned with CLIP position by position.
-            encoder_prompt_3 = None
+            # What the model receives and, where that is a translation, the
+            # text it was translated from: the check reads both.
+            originals = {}
             if encoder_prompts:
+                # Each half on its own, because each reaches its encoder on its
+                # own; a wording difference between the two is harmless, as T5
+                # holds its own 512 positions and is not aligned with CLIP
+                # position by position. A failed translation is not fatal here:
+                # the half stays in its input language, and the check translates
+                # it for itself.
                 caption = encoder_prompts['clip']
                 long_form = encoder_long_form
-                if force_translation and not skip_stage3_translation:
+                if translates_for_model:
                     caption = asyncio.run(_translate_encoder_text(
                         caption, 'caption', pipeline_executor,
                         translation_instruction=translation_instruction))
                     long_form = asyncio.run(_translate_encoder_text(
                         long_form, 'interception text', pipeline_executor,
                         translation_instruction=translation_instruction))
-                encoder_prompt_3 = long_form
-                translated_prompt = caption
-                logger.info(f'[ENCODER-PROMPT] CLIP-L/CLIP-G={len(translated_prompt.split())}w, '
-                            f'T5={len(encoder_prompt_3.split())}w')
-
-            _stage3['safety_result'] = safety_result
-            _stage3['translated_prompt'] = translated_prompt
-            _stage3['was_translated'] = was_translated
-            _stage3['encoder_prompt_3'] = encoder_prompt_3
-            # Nothing goes out here, and there is no event to flush: Stage 3
-            # writes none. The yield is what makes this function a GENERATOR,
-            # and without one `_pumped` would be handed a return value where it
-            # expects an iterable -- with the whole of Stage 3 already run, on
-            # the request thread, in the silence this wrapping exists to end.
-            # An empty chunk puts no byte on the wire, which is why the frames
-            # around it are exactly the frames that were there before.
+                    originals = {'prompt': encoder_prompts['clip'], 'prompt_3': encoder_long_form}
+                texts = {'prompt': caption, 'prompt_3': long_form}
+                logger.info(f'[ENCODER-PROMPT] CLIP-L/CLIP-G={len(caption.split())}w, '
+                            f'T5={len(long_form.split())}w')
+            else:
+                texts = {'prompt': prompt}
+                if translates_for_model and isinstance(prompt, str) and prompt.strip():
+                    translated = asyncio.run(_translate_for_model(
+                        prompt, pipeline_executor, device_id=device_id,
+                        translation_instruction=translation_instruction))
+                    if translated is not None:
+                        texts['prompt'] = translated
+                        originals = {'prompt': prompt}
+                    elif safety_level not in ('research', 'adult'):
+                        # Where the model is to receive the translation, a run
+                        # without one stops, as it did in Stage 3: a fault, not
+                        # a rating. At research and adult the model receives
+                        # the text as written.
+                        _stage3['verdict'] = Verdict(
+                            False, CHECKPOINT_BEFORE_MODEL, normalise_level(safety_level),
+                            'prompt', REASON_UNAVAILABLE, SAFETY_CHECK_UNAVAILABLE_MESSAGE)
+                        return
+                if two_texts:
+                    # The style tags are read beside the lyrics they go with,
+                    # as the chunk receives both, joined as
+                    # /pipeline/interception joined them until 2026-10-06.
+                    texts['secondary_text'] = (f'{prompt} | {secondary_text}'
+                                               if secondary_text.strip() else secondary_text)
+            if negative_prompt is not None:
+                texts['negative_prompt'] = negative_prompt
+            _stage3['texts'] = texts
+            _stage3['translated'] = any(texts[name] != text for name, text in originals.items())
+            if client_gone.is_set():
+                return
+            _stage3['verdict'] = check_before_model(
+                texts, level=safety_level, originals=originals,
+                images=_input_pictures(input_image, multi_images),
+                translation_instruction=translation_instruction)
             yield ''
 
-        yield from events_with_heartbeat(_stage3_work(),
+        yield from events_with_heartbeat(_stage3_work,
                                          label='GENERATION-STREAMING',
                                          frame=_as_written)
 
-        if 'stage1_refusal' in _stage3:
-            _safe, stage1_error, stage1_checks, blocked_on, _checked = _stage3['stage1_refusal']
-            logger.warning(f"[GENERATION-STREAMING] Stage 1 BLOCKED on {blocked_on!r} for run {run_id}")
+        intake = _stage3.get('intake')
+        verdict = _stage3.get('verdict')
+        if intake is None or (intake.passed and verdict is None):
+            # No verdict, because the reader left before the checks ran. It is
+            # not a block and it is not a pass: nothing is recorded and no event
+            # is written, because there is nobody to write to.
+            logger.info(f"[GENERATION-STREAMING] The checks stopped — the reader left ({run_id})")
+            return
+
+        if not intake.passed:
+            logger.warning(f"[GENERATION-STREAMING] Intake BLOCKED ({intake.field}) "
+                           f"for run {run_id}")
             if existing_recorder:
                 recorder = existing_recorder
             else:
                 recorder = get_recorder(
                     run_id=run_id, config_name=output_config, safety_level=safety_level,
                     device_id=device_id, base_path=JSON_STORAGE_DIR)
-            recorder.save_error(stage=1, error_type='safety_blocked', message=stage1_error,
-                                details={'blocked_on': blocked_on, 'prompt': prompt,
-                                         'secondary_text': secondary_text})
+            details = {'check': 'intake', 'field': intake.field,
+                       'reason_key': intake.reason_key, 'safety_level': safety_level,
+                       'prompt': prompt}
+            if two_texts:
+                details['secondary_text'] = secondary_text
+            recorder.save_error(stage=1, error_type='safety_blocked', message=intake.reason,
+                                details=details)
             yield generate_sse_event('blocked', {
-                'stage': 1,
-                'reason': stage1_error,
+                'reason': intake.reason,
+                'safety_block': intake.block(),
                 'found_terms': [],
                 'run_id': run_id,
-                'checks_passed': stage1_checks
+                'checks_passed': []
             })
             yield ''
             return
 
-        safety_result = _stage3['safety_result']
-        translated_prompt = _stage3['translated_prompt']
-        was_translated = _stage3['was_translated']
-        encoder_prompt_3 = _stage3['encoder_prompt_3']
+        was_translated = _stage3.get('translated', False)
 
-        # Which models Stage 3 ran on, for the run record. STAGE3_MODEL
-        # translates: at kids, youth and open always, at research and adult
-        # only where the translation is forced and not skipped. The prompt
-        # check is the safety classifier's, and the model that answered names
-        # itself in the result.
+        # Which models the checks ran on, for the run record. STAGE3_MODEL
+        # translates: for the model where it receives a translation, and for
+        # the check at every level but research. The classifier answers the
+        # check at every level but research.
+        from my_app.services.safety_classifier import model_name as safety_model_name
         stage3_models = {}
-        if safety_level not in ('research', 'adult') or (force_translation and not skip_stage3_translation):
+        if checked or translates_for_model:
             stage3_models['stage3_translation'] = STAGE3_MODEL
-        if safety_result.get('model_used'):
-            stage3_models['stage3_safety'] = safety_result['model_used']
+        if checked:
+            stage3_models['stage3_safety'] = safety_model_name()
 
-        if not safety_result['safe']:
-            # BLOCKED by Stage 3
-            logger.warning(f"[GENERATION-STREAMING] Stage 3 BLOCKED for run {run_id} | LLM: {safety_result.get('llm_output', '')}")
+        if not verdict.passed:
+            logger.warning(f"[GENERATION-STREAMING] The check before the model BLOCKED "
+                           f"({verdict.field}) for run {run_id}")
             # Ensure recorder exists for error persistence
             if existing_recorder:
                 recorder = existing_recorder
@@ -4540,31 +5130,35 @@ def execute_generation_streaming(data: dict):
                     device_id=device_id, base_path=JSON_STORAGE_DIR)
             recorder.metadata.setdefault('models_used', {}).update(stage3_models)
             recorder._save_metadata()
-            recorder.save_error(stage=3, error_type='safety_blocked',
-                message=safety_result.get('abort_reason', ''),
-                details={'check': safety_result.get('method'),
-                         'model': safety_result.get('model_used'),
-                         'safety_level': safety_level,
-                         'codes': safety_result.get('found_terms', []),
-                         'llm_output': safety_result.get('llm_output', ''), 'prompt': prompt,
-                         **({'secondary_text': secondary_text} if two_texts else {})})
+            details = {'check': 'before_model', 'field': verdict.field,
+                       'reason_key': verdict.reason_key, 'safety_level': safety_level,
+                       'prompt': prompt}
+            if two_texts:
+                details['secondary_text'] = secondary_text
+            recorder.save_error(stage=3, error_type='safety_blocked', message=verdict.reason,
+                                details=details)
             yield generate_sse_event('blocked', {
-                'stage': 3,
-                'reason': safety_result.get('abort_reason', 'Content blocked by safety check'),
-                'found_terms': safety_result.get('found_terms', []),
-                'llm_output': safety_result.get('llm_output', ''),
+                'reason': verdict.reason,
+                'safety_block': verdict.block(),
+                'found_terms': [],
+                'llm_output': '',
                 'run_id': run_id,
-                'checks_passed': ['translation', safety_result.get('method', 'llm_context_check')]
+                'checks_passed': ['translation'] if was_translated else []
             })
             yield ''
             return
 
-        # Stage 3 complete - send badge trigger event
-        logger.info(f"[GENERATION-STREAMING] Stage 3 PASSED, was_translated={was_translated}")
+        # What the model receives: the prompt, or for SD3.5 the caption, and
+        # the long form T5 reads.
+        texts = _stage3['texts']
+        translated_prompt = texts['prompt']
+        encoder_prompt_3 = texts.get('prompt_3')
+
+        # The checks passed - send badge trigger event
+        logger.info(f"[GENERATION-STREAMING] The checks passed, was_translated={was_translated}")
         stage3_checks = ['translation'] if was_translated else []
-        stage3_method = safety_result.get('method', 'fast_filter')
-        if stage3_method != 'disabled':
-            stage3_checks.append(stage3_method)
+        if checked:
+            stage3_checks.append('llm_safety_check')
         yield generate_sse_event('stage3_complete', {
             'safe': True,
             'was_translated': was_translated,
@@ -4628,9 +5222,12 @@ def execute_generation_streaming(data: dict):
         backend_type = (config_obj.meta.get('backend_type', 'comfyui')
                         if config_obj and config_obj.meta else 'comfyui')
 
-        # The sheet a card shows on its back; see services/model_meta.py.
-        from my_app.services.model_meta import build_model_meta
-        model_meta = build_model_meta(config_obj, seed=seed, cfg=cfg, steps=steps)
+        # The sheet a card shows on its back; see services/model_meta.py. This
+        # one goes out before the run, for the progress view, and knows no
+        # model_used yet; `complete` carries the sheet built after the run.
+        from my_app.services.model_meta import build_model_meta, takes_no_seed
+        model_meta = build_model_meta(config_obj, seed=None if takes_no_seed(backend_type) else seed,
+                                      cfg=cfg, steps=steps)
 
         yield generate_sse_event('stage4_start', {
             'name': 'Media Generation',
@@ -4703,7 +5300,7 @@ def execute_generation_streaming(data: dict):
 
         def _generation_thread():
             try:
-                result_holder[0] = ctx.run(
+                result = ctx.run(
                     asyncio.run,
                     execute_stage4_generation_only(
                         prompt=translated_prompt,
@@ -4718,9 +5315,7 @@ def execute_generation_streaming(data: dict):
                         interception_result=interception_result,
                         interception_config=interception_config,
                         input_image=input_image,
-                        input_image1=input_image1,
-                        input_image2=input_image2,
-                        input_image3=input_image3,
+                        multi_images=multi_images,
                         alpha_factor=alpha_factor,
                         width=width, height=height, steps=steps,
                         cfg=cfg, negative_prompt=negative_prompt,
@@ -4732,9 +5327,23 @@ def execute_generation_streaming(data: dict):
                         lora_course_id=lora_course_id,
                         lora_user_id=lora_user_id,
                         secondary_text=secondary_text,
-                        run_vlm_safety=False  # streaming runs its own VLM check below (avoid duplicate)
+                        # The stream runs the check at the result itself: the
+                        # code just below, the pictures after the loop.
+                        check_at_result=False
                     )
                 )
+                media = (result or {}).get('media_output') or {}
+                if result and result.get('success') and media.get('media_type') == 'code':
+                    # THE CHECK AT THE RESULT for the code of a sketch: on this
+                    # thread and in the run's context, like the generation, so
+                    # that the loop below keeps the stream breathing while it
+                    # runs. Its verdict lands on the code's entity.
+                    code_verdict = ctx.run(lambda: check_result_code(
+                        media.get('code') or '', level=safety_level, recorder=recorder,
+                        entity=_code_entity_of(recorder)))
+                    if not code_verdict.passed:
+                        result = _code_refused(code_verdict, recorder, safety_level, run_id)
+                result_holder[0] = result
             except Exception as e:
                 error_holder[0] = e
             finally:
@@ -4792,11 +5401,23 @@ def execute_generation_streaming(data: dict):
                 if hasattr(item, 'event_type') and item.event_type == 'submitted':
                     _set_comfyui_prompt_id(device_id, item.prompt_id)
                     continue
-                yield generate_sse_event('generation_progress', {
+                preview = (f'data:image/jpeg;base64,{item.preview_base64}'
+                           if item.preview_base64 else None)
+                progress = {
                     'percent': round(item.overall_percent * 100),
-                    'preview': f'data:image/jpeg;base64,{item.preview_base64}' if item.preview_base64 else None,
+                    'preview': preview_for(preview, level=safety_level),
                     'node': item.current_node
-                })
+                }
+                # The phase the executing node names (comfyui_ws_client.node_phase),
+                # 'other' while a node runs that no phase names. The step count
+                # goes with the sampler only, counted over its whole schedule
+                # (run_step), as the diffusers branch below counts it. Other
+                # nodes that report steps (a tiled decode) are left out of it.
+                progress['phase'] = item.phase or 'other'
+                if item.phase == 'denoise':
+                    progress['step'] = item.step
+                    progress['total_steps'] = item.max_steps
+                yield generate_sse_event('generation_progress', progress)
                 yield ''
 
         elif backend_type == 'diffusers':
@@ -4885,7 +5506,10 @@ def execute_generation_streaming(data: dict):
             except Exception as e:
                 logger.warning(f"[GENERATION-STREAMING] encoding_info failed (non-blocking): {e}")
 
-            # Diffusers: poll GPU service progress endpoint
+            # Diffusers: poll GPU service progress endpoint, for THIS run. The
+            # card serves one generation at a time; a run that waits for it
+            # read the steps and the picture of the run that held it, until the
+            # progress was filed by run (2026-10-31).
             gpu_progress_url = f"{config.GPU_SERVICE_URL}/api/diffusers/progress"
             last_step = -1
             _poll_count = 0
@@ -4899,16 +5523,18 @@ def execute_generation_streaming(data: dict):
                     return
                 emitted = False
                 try:
-                    resp = requests.get(gpu_progress_url, timeout=1).json()
+                    resp = requests.get(gpu_progress_url, params={'run_label': run_id},
+                                        timeout=1).json()
                     if resp.get('active') and resp.get('step', 0) != last_step:
                         last_step = resp['step']
                         total = resp.get('total_steps', 1)
                         preview_b64 = resp.get('preview')
+                        preview = f'data:image/jpeg;base64,{preview_b64}' if preview_b64 else None
                         yield generate_sse_event('generation_progress', {
                             'percent': round((last_step / total) * 100) if total > 0 else 0,
                             'step': last_step,
                             'total_steps': total,
-                            'preview': f'data:image/jpeg;base64,{preview_b64}' if preview_b64 else None,
+                            'preview': preview_for(preview, level=safety_level),
                         })
                         yield ''
                         emitted = True
@@ -4932,6 +5558,10 @@ def execute_generation_streaming(data: dict):
                     _touch_generation(device_id)
                     yield heartbeat_comment()
                 time.sleep(1.0)
+            # The steps and the decode are done; what follows (the download,
+            # the check of the result) is no phase of the generation.
+            yield generate_sse_event('generation_progress', {'phase': 'other'})
+            yield ''
 
         else:
             # Other backends (heartmula, stable_audio, openai, etc.): heartbeat only
@@ -4973,6 +5603,20 @@ def execute_generation_streaming(data: dict):
             raise error_holder[0]
         result = result_holder[0]
 
+        if result and result.get('safety_block'):
+            # The check at the result refused the code of the sketch, on the
+            # generation thread above: a block, not a failure, and the code does
+            # not go out.
+            yield generate_sse_event('blocked', {
+                'reason': result.get('error', ''),
+                'safety_block': result.get('safety_block'),
+                'found_terms': [],
+                'run_id': run_id,
+                'checks_passed': ['stage3', 'stage4'],
+            })
+            yield ''
+            return
+
         if not result or not result['success']:
             raise _RunFailed(
                 result.get('error', 'Generation failed') if result else 'Generation returned no result',
@@ -4987,14 +5631,17 @@ def execute_generation_streaming(data: dict):
             yield ''
             return
 
-        # POST-GENERATION VLM SAFETY CHECK (kids/youth only)
+        # THE CHECK AT THE RESULT: every picture and every video of the run
+        # (kids/youth only)
         # Asked of the record, like the chokepoint below: this route suppresses
-        # that one outright (run_vlm_safety=False) to avoid checking twice, so a
+        # that one outright (check_at_result=False) to avoid checking twice, so a
         # condition here that is narrower than the one there leaves a picture
         # with nobody looking at it — which is what happened to the Blender
         # preview a 3D run stores as `output_image`.
         if safety_level in ('kids', 'youth') and (
-                media_type == 'image' or recorder.output_entities('image')):
+                media_type == 'image' or recorder.output_entities('image')
+                or recorder.output_entities('video')
+                or recorder.output_entities('3d')):
             # The check loads models and can sit silent for minutes when cold.
             # A byte-silent stream is closed by the tunnel, and the finished
             # image would be lost with it — so the check runs beside the
@@ -5021,22 +5668,34 @@ def execute_generation_streaming(data: dict):
 
                 The yield is what makes this a GENERATOR, so that the check
                 runs on the transport's thread rather than where this function
-                is called. No `client_gone`: the check is one model call with
-                no point inside it to stop at.
+                is called. No `client_gone`: each picture is one model call
+                with no point inside it to stop at.
                 """
-                try:
-                    r = _vlm_safety_check_image(
-                        recorder, safety_level, expect_image=(media_type == 'image'))
-                except BaseException:
-                    raise
-                _vlm_holder['r'] = r
+                pictures, refusal = _pictures_of_run(
+                    recorder, safety_level, expect_image=(media_type == 'image'))
+                for sequence, path in pictures:
+                    verdict = check_result_image(path, level=safety_level,
+                                                 recorder=recorder, entity=sequence)
+                    if refusal is None and not verdict.passed:
+                        refusal = verdict
+                videos, unread = _videos_of_run(recorder, safety_level)
+                if refusal is None:
+                    refusal = unread
+                for sequence, path in videos:
+                    verdict = check_result_video(path, level=safety_level,
+                                                 recorder=recorder, entity=sequence)
+                    if refusal is None and not verdict.passed:
+                        refusal = verdict
+                _vlm_holder['refusal'] = refusal
                 # Record a block HERE: if the client vanished mid-check,
                 # the route below never resumes, and the course leader
                 # would find a passed-looking image that was never rated.
-                if not r[0]:
-                    _vlm_holder['saved'] = True
-                    recorder.save_error(stage=3, error_type='safety_blocked', message=f'VLM: {r[1]}',
-                        details={'check': 'vlm', 'safety_level': safety_level, 'vlm_reason': r[1], 'vlm_description': r[2]})
+                if refusal is not None:
+                    recorder.save_error(stage=3, error_type='safety_blocked',
+                                        message=f'VLM: {refusal.reason}',
+                                        details={'check': 'vlm', 'safety_level': safety_level,
+                                                 'vlm_reason': refusal.reason,
+                                                 'vlm_description': ''})
                 yield ''
 
             def _beat_and_touch(elapsed: float, nth: int) -> str:
@@ -5064,31 +5723,30 @@ def execute_generation_streaming(data: dict):
                 # transport failing around it. The route's own error frame
                 # below carries it.
                 raise
-            if 'r' not in _vlm_holder:
+            if 'refusal' not in _vlm_holder:
                 # The transport ended without a verdict and without a failure.
                 # No verdict is not a pass.
                 from my_app.utils.vlm_safety import VLM_OPERATIONAL_BLOCK_MESSAGE
                 logger.warning(f"[GENERATION-STREAMING] VLM lookback gave no "
                                f"verdict for run {run_id} — blocking")
                 yield generate_sse_event('blocked', {
-                    'stage': 'vlm_safety',
                     'reason': VLM_OPERATIONAL_BLOCK_MESSAGE,
+                    'safety_block': safety_block(CHECKPOINT_RESULT, REASON_UNAVAILABLE,
+                                                 VLM_OPERATIONAL_BLOCK_MESSAGE, 'image'),
                     'vlm_description': '',
                     'run_id': run_id,
                     'checks_passed': ['stage3', 'stage4', 'vlm_image_check']
                 })
                 yield ''
                 return
-            vlm_safe, vlm_reason, vlm_description = _vlm_holder['r']
-            if not vlm_safe:
-                logger.warning(f"[GENERATION-STREAMING] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
-                if not _vlm_holder.get('saved'):
-                    recorder.save_error(stage=3, error_type='safety_blocked', message=f'VLM: {vlm_reason}',
-                        details={'check': 'vlm', 'safety_level': safety_level, 'vlm_reason': vlm_reason, 'vlm_description': vlm_description})
+            refusal = _vlm_holder['refusal']
+            if refusal is not None:
+                logger.warning(f"[GENERATION-STREAMING] The check at the result withheld "
+                               f"run {run_id}: {refusal.reason}")
                 yield generate_sse_event('blocked', {
-                    'stage': 'vlm_safety',
-                    'reason': vlm_reason,
-                    'vlm_description': vlm_description,
+                    'reason': refusal.reason,
+                    'safety_block': refusal.block(),
+                    'vlm_description': '',
                     'run_id': run_id,
                     'checks_passed': ['stage3', 'stage4', 'vlm_image_check']
                 })
@@ -5102,7 +5760,9 @@ def execute_generation_streaming(data: dict):
             'run_id': result['run_id'],
             'loras': result.get('loras', []),
             'lora_triggers': result.get('lora_triggers', []),
-            'was_translated': was_translated
+            'was_translated': was_translated,
+            # The sheet built after the run, with the model it generated with.
+            'model_meta': result.get('model_meta'),
         })
         yield ''
 
@@ -5335,9 +5995,7 @@ def generation_endpoint():
                 'safety_level': request.args.get('safety_level', 'kids'),
                 'alpha_factor': request.args.get('alpha_factor'),
                 'input_image': request.args.get('input_image'),
-                'input_image1': request.args.get('input_image1'),
-                'input_image2': request.args.get('input_image2'),
-                'input_image3': request.args.get('input_image3'),
+                **multi_images_from(request.args),
                 'input_text': request.args.get('input_text', ''),
                 'context_prompt': request.args.get('context_prompt', ''),
                 'interception_result': request.args.get('interception_result', ''),
@@ -5438,36 +6096,54 @@ def generation_endpoint():
         refusal = _second_text_refusal(data, enable_streaming)
         if refusal:
             return jsonify({'status': 'error', 'error': refusal}), 400
+        # Resolved HERE, on the request thread, for both ways this route
+        # answers; the streamed run takes it as a parameter.
+        safety_level = resolve_safety_level()
         if enable_streaming:
             logger.info("[GENERATION-STREAMING] Streaming mode requested")
             # See the note at the optimization route: the Response is the
             # transport's, headers included.
-            return sse_response(execute_generation_streaming(data))
+            return sse_response(execute_generation_streaming(data, safety_level))
 
         # Non-streaming mode (original behavior)
         # Extract parameters
         prompt = data.get('prompt', '')
         output_config = data.get('output_config')
         seed = data.get('seed')
-        safety_level = resolve_safety_level()
         alpha_factor = data.get('alpha_factor')
         input_image = data.get('input_image')
-        input_image1 = data.get('input_image1')
-        input_image2 = data.get('input_image2')
-        input_image3 = data.get('input_image3')
+        multi_images = multi_images_from(data)
         input_text = data.get('input_text', '')
         context_prompt = data.get('context_prompt', '')
         interception_result = data.get('interception_result', '')
         interception_config = data.get('interception_config', '')
         device_id = data.get('device_id') or f"api_{uuid.uuid4().hex[:12]}"
         provided_run_id = data.get('run_id')
-        user_language = data.get('user_language', 'de')
 
         if not prompt or not output_config:
             return jsonify({'status': 'error', 'error': 'prompt und output_config sind erforderlich'}), 400
 
         logger.info(f"[GENERATION-ENDPOINT] Starting for config '{output_config}'")
         logger.info(f"[GENERATION-ENDPOINT] Prompt (first 100 chars): {prompt[:100]}...")
+
+        # The intake: names of living private individuals and addresses with a
+        # house number, in every text this way takes, as on the stream. One
+        # slot of the queue: after a name or an address the classifier is
+        # asked.
+        with llm_queue_semaphore:
+            intake = check_intake_texts(
+                {'prompt': prompt, 'input_text': input_text,
+                 'context_prompt': context_prompt,
+                 'interception_result': interception_result},
+                level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[GENERATION-ENDPOINT] Intake BLOCKED ({intake.field})")
+            return jsonify({
+                'status': 'blocked',
+                'reason': intake.reason,
+                'safety_block': intake.block(),
+                'found_terms': []
+            }), 403
 
         if pipeline_executor is None:
             init_schema_engine()
@@ -5516,11 +6192,8 @@ def generation_endpoint():
                 interception_result=interception_result,
                 interception_config=interception_config,
                 input_image=input_image,
-                input_image1=input_image1,
-                input_image2=input_image2,
-                input_image3=input_image3,
+                multi_images=multi_images,
                 alpha_factor=alpha_factor,
-                user_language=user_language,
                 # Parameter Injection (replicate seed pattern)
                 width=data.get('width'),
                 height=data.get('height'),
@@ -5536,11 +6209,11 @@ def generation_endpoint():
 
         # Handle result
         if not result['success']:
-            if result.get('blocked'):
+            if result.get('safety_block'):
                 return jsonify({
                     'status': 'blocked',
-                    'stage': 3,
                     'reason': result['error'],
+                    'safety_block': result['safety_block'],
                     'found_terms': result.get('found_terms', [])
                 }), 403
             return jsonify({
@@ -5557,7 +6230,9 @@ def generation_endpoint():
             'run_id': result['run_id'],
             'duration_ms': duration_ms,
             'loras': result.get('loras', []),
-            'was_translated': result.get('was_translated', False)
+            'was_translated': result.get('was_translated', False),
+            # The sheet built after the run, as `complete` carries it.
+            'model_meta': result.get('model_meta'),
         })
 
     except Exception as e:
@@ -5751,14 +6426,13 @@ def _save_output_latent(recorder, output_result, output_config: str, result_seed
             metadata={
                 'config': output_config,
                 'seed': result_seed,
-                # Diffusers answers with `model_id`; on ComfyUI the name that
-                # can decode this latent is the one its chunk declared, which
-                # travels in the latent's own description. `model` there holds
-                # the config's model slot and says DEFAULT.
-                'model': (output_result.metadata.get('model_id')
-                          or ((output_result.metadata.get('latent_meta') or {})
-                              .get('model_id'))
-                          or 'unknown'),
+                # The model that can decode this latent, from the latent's own
+                # description: the GPU service writes it for a Diffusers run,
+                # and on ComfyUI it is the one the chunk's latent_decoder
+                # declares. `model_used` names the file ComfyUI loaded, and no
+                # decoder is keyed by a file.
+                'model': ((output_result.metadata.get('latent_meta') or {})
+                          .get('model_id') or 'unknown'),
                 'format': 'npy',
                 'latent': output_result.metadata.get('latent_meta') or {},
             },
@@ -5888,9 +6562,7 @@ async def execute_stage4_generation_only(
     interception_result: str = '',
     interception_config: str = '',
     input_image: str = None,
-    input_image1: str = None,
-    input_image2: str = None,
-    input_image3: str = None,
+    multi_images: dict = None,
     alpha_factor = None,
     fusion_strategy = None,
     # Generation parameters (all optional, ignored if config doesn't support them)
@@ -5905,10 +6577,13 @@ async def execute_stage4_generation_only(
     secondary_text: str = None,
     prompt_3: str = None,
     keep_latent: bool = False,
-    run_vlm_safety: bool = True,
+    check_at_result: bool = True,
     loras: list = None,
     lora_course_id: int = None,
-    lora_user_id: int = None
+    lora_user_id: int = None,
+    step_results: dict = None,
+    concepts: list = None,
+    combine_at: str = None
 ) -> dict:
     """
     Stage 4 ONLY: Media generation.
@@ -5924,7 +6599,8 @@ async def execute_stage4_generation_only(
         prompt: Ready-to-use prompt (already translated to English if needed)
         output_config: Config ID (e.g., 'sd35_large')
         safety_level: 'kids', 'youth', 'adult', or 'research'. Gates the
-            post-generation VLM image safety check (kids/youth + image output)
+            check at the result: the pictures at kids and youth, the code of a
+            sketch at every level but research
         run_id: Run identifier (required)
         seed: Optional seed (generates random if None)
         recorder: Optional LivePipelineRecorder instance (creates new if None)
@@ -5934,10 +6610,13 @@ async def execute_stage4_generation_only(
         interception_result: Interception output (for recorder)
         interception_config: Interception config ID (for LoRA extraction)
         input_image: Path to input image for img2img
-        input_image1/2/3: Paths for multi-image workflows
+        multi_images: input_image1, input_image2, ... as the request carried them
         alpha_factor: Alpha factor for Surrealizer
         keep_latent: Ask the output chunk to keep the run's final latent as an
             entity of its own. Chunks that have no latent to keep ignore it.
+        check_at_result: Run the check at the result here: on the pictures
+            (kids/youth) and on the code of a sketch. A caller that runs it
+            itself passes False (the stream).
         loras: What the request asks to load, [{name, strength}] — the LoRA
             tiles in the Flow's ring. Resolved at the register together with
             the perspective's own LoRAs; see lora_register.loras_for_run.
@@ -5945,6 +6624,12 @@ async def execute_stage4_generation_only(
             register's release check. None outside a course.
         lora_user_id: The requesting user, for the register's owner path (a
             user is offered what they trained). None when anonymous.
+        step_results: What the workflow's language-model steps wrote
+            (chunk_llm_steps), run by the caller before its check before the
+            model. The chunk reads them like every other custom parameter.
+        concepts: Composable Diffusion's [{prompt, weight}], as the direct
+            route hands them to the chunk. None for every other config.
+        combine_at: Where those concepts are combined (score | conditioning).
 
     Returns:
         {
@@ -6010,6 +6695,11 @@ async def execute_stage4_generation_only(
             recorder.metadata['models_used'] = {}
         recorder.metadata['models_used']['stage4_output'] = output_config
         recorder._save_metadata()
+
+        # Whether this generation takes a picture in. What it makes from one
+        # goes where that one may go (media_ref.may_leave_server).
+        recorder.record_input_image(
+            bool(input_image or multi_images))
 
         # Save context entities
         if input_text:
@@ -6109,9 +6799,18 @@ async def execute_stage4_generation_only(
             custom_params['TEXT_2'] = secondary_text
             custom_params['secondary_text'] = secondary_text
 
+        if concepts is not None:
+            custom_params['concepts'] = json.dumps(concepts)
+        if combine_at is not None:
+            custom_params['combine_at'] = combine_at
+
         # What the register let through, resolved above with the prompt.
         if applied_loras:
             custom_params['loras'] = applied_loras
+        # What the workflow's language-model steps wrote, by the names its
+        # input_mappings read; the caller's check before the model read it.
+        if step_results:
+            custom_params.update(step_results)
 
         # Create context override if we have custom params
         from schemas.engine.pipeline_executor import PipelineContext
@@ -6130,9 +6829,7 @@ async def execute_stage4_generation_only(
             context_override=context_override,
             seed_override=seed,
             input_image=input_image,
-            input_image1=input_image1,
-            input_image2=input_image2,
-            input_image3=input_image3,
+            multi_images=multi_images,
             alpha_factor=alpha_factor
         )
 
@@ -6153,11 +6850,12 @@ async def execute_stage4_generation_only(
         # Cloud APIs don't support seeds — don't pretend they do. A cloud
         # backend is one the provider table names; until 2026-09-12 two names
         # were listed here and the config backed by mammouth kept its seed.
-        from my_app.services.llm_providers import names as provider_names
+        # A config model writes code and takes none either (model_meta.takes_no_seed).
+        from my_app.services.model_meta import takes_no_seed
         config_obj = pipeline_executor.config_loader.get_config(output_config)
         backend_type = (config_obj.meta.get('backend_type', 'comfyui')
                         if config_obj and config_obj.meta else 'comfyui')
-        if backend_type in provider_names():
+        if takes_no_seed(backend_type):
             result_seed = None
 
         # Handle different output types
@@ -6177,6 +6875,16 @@ async def execute_stage4_generation_only(
                     content=output_value.encode('utf-8'),
                     metadata={'config': output_config, 'seed': result_seed, 'format': 'js'}
                 )
+                # THE CHECK AT THE RESULT: the code as it would run in the
+                # browser, for every caller that does not run the check itself
+                # (the stream does). Its verdict lands on the entity, where
+                # delivery reads it, and a refused sketch does not go out.
+                if check_at_result:
+                    code_verdict = check_result_code(
+                        output_value, level=safety_level, recorder=recorder,
+                        entity=_code_entity_of(recorder))
+                    if not code_verdict.passed:
+                        return _code_refused(code_verdict, recorder, safety_level, run_id)
                 media_output = {
                     'media_type': 'code',
                     'url': code_route,
@@ -6222,12 +6930,14 @@ async def execute_stage4_generation_only(
                 'seed': result_seed
             }
 
-        elif output_value in ('diffusers_generated', 'diffusers_archaeology_generated'):
+        elif output_value in ('diffusers_generated', 'diffusers_archaeology_generated',
+                              'diffusers_composable_generated', 'diffusers_attention_generated'):
             # Diffusers backend - image data is base64 encoded.
-            # denoising_archaeology emits its own content-marker but ALSO returns
-            # the final frame in metadata['image_data']; persist it as output_image
-            # so the canvas media endpoint can serve it. (Its per-step frames live
-            # in archaeology_data and are surfaced by the full-pipeline path.)
+            # denoising_archaeology, composable diffusion and attention cartography
+            # emit their own content-marker but ALSO return the final image in
+            # metadata['image_data']; persist it as output_image so the canvas media
+            # endpoint can serve it. (Their per-step frames and maps stay in their
+            # own data and are surfaced by the direct route.)
             image_data_b64 = output_result.metadata.get('image_data')
             if image_data_b64:
                 import base64
@@ -6238,8 +6948,8 @@ async def execute_stage4_generation_only(
                     content=image_bytes,
                     metadata={
                         'config': output_config,
-                        'backend': 'diffusers',
-                        'model': output_result.metadata.get('model_id', 'unknown'),
+                        'backend': _run_backend(output_config),
+                        'model': output_result.metadata.get('model_used', 'unknown'),
                         'seed': result_seed
                     }
                 )
@@ -6450,10 +7160,10 @@ async def execute_stage4_generation_only(
             }
 
         else:
-            # Direct output (OpenAI, Gemini, etc.) — the medium IS the chunk's
+            # Direct output (OpenAI, etc.) — the medium IS the chunk's
             # output. Shared with the direct-run endpoint, which had no such
             # branch until 2026-08-24.
-            await _save_api_media_output(
+            saved = await _save_api_media_output(
                 recorder=recorder,
                 output_value=output_value,
                 media_type=media_type,
@@ -6461,6 +7171,16 @@ async def execute_stage4_generation_only(
                 result_seed=result_seed,
                 log_tag='STAGE4-GEN'
             )
+            # A marker no branch above knows is a medium nothing stored. Handing
+            # out the URL anyway reports success for a card with nothing on it.
+            if not saved:
+                logger.error(f"[STAGE4-GEN] '{output_config}': nothing stored from {str(output_value)[:80]!r}")
+                return {
+                    'success': False,
+                    'error': (f"this path stores nothing from '{output_config}' "
+                              f"(its answer: {str(output_value)[:80]!r})"),
+                    'run_id': run_id
+                }
 
             media_entities = [e for e in recorder.metadata.get('entities', []) if e.get('type') == f'output_{media_type}']
             media_index = len(media_entities) - 1 if media_entities else 0
@@ -6482,13 +7202,13 @@ async def execute_stage4_generation_only(
         logger.info(f"[STAGE4-GEN] Success: {media_output['url']}")
 
         # ====================================================================
-        # POST-GENERATION VLM SAFETY CHECK (images only, kids/youth only)
+        # POST-GENERATION SAFETY CHECK (pictures and videos, kids/youth only)
         # Hoisted to this generation chokepoint so EVERY caller
         # inherits it. Previously Canvas (canvas_executor) and the Stage-4
         # orchestrator path (execute_generation_stage4) skipped it → generated
         # images went unscreened at kids/youth (fail-OPEN). Orchestrating callers
         # that run their OWN VLM check (execute_generation_streaming) pass
-        # run_vlm_safety=False to avoid a duplicate call (costly + the VLM runner
+        # check_at_result=False to avoid a duplicate call (costly + the VLM runner
         # is crash-prone, see B-09).
         # ====================================================================
         # Asked of the run's RECORD, not of the medium it calls itself. A
@@ -6496,22 +7216,41 @@ async def execute_stage4_generation_only(
         # `output_image` — a picture, shown as `thumbnail_url` on every surface,
         # which the old condition on media_type never held against anything.
         # `expect_image` still follows the declared medium: an image run without
-        # a picture is an anomaly, a 3D run without one is ordinary.
-        if run_vlm_safety and safety_level in ('kids', 'youth') and (
-                media_type == 'image' or recorder.output_entities('image')):
-            vlm_safe, vlm_reason, vlm_description = _vlm_safety_check_image(
+        # a picture is an anomaly. A 3D run without its preview happens where
+        # Blender is missing or its render failed; it leaves nothing to clear
+        # the model by, and the listing below withholds it as a fault.
+        if check_at_result and safety_level in ('kids', 'youth') and (
+                media_type == 'image' or recorder.output_entities('image')
+                or recorder.output_entities('video')
+                or recorder.output_entities('3d')):
+            pictures, refusal = _pictures_of_run(
                 recorder, safety_level, expect_image=(media_type == 'image'))
-            if not vlm_safe:
-                logger.warning(f"[STAGE4-GEN] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
-                recorder.save_error(stage=3, error_type='safety_blocked', message=f'VLM: {vlm_reason}',
-                    details={'check': 'vlm', 'safety_level': safety_level, 'vlm_reason': vlm_reason, 'vlm_description': vlm_description})
+            for sequence, path in pictures:
+                verdict = check_result_image(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            videos, unread = _videos_of_run(recorder, safety_level)
+            if refusal is None:
+                refusal = unread
+            for sequence, path in videos:
+                verdict = check_result_video(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            if refusal is not None:
+                logger.warning(f"[STAGE4-GEN] The check at the result withheld run "
+                               f"{run_id}: {refusal.reason}")
+                recorder.save_error(stage=3, error_type='safety_blocked',
+                                    message=f'VLM: {refusal.reason}',
+                                    details={'check': 'vlm', 'safety_level': safety_level,
+                                             'vlm_reason': refusal.reason, 'vlm_description': ''})
                 return {
                     'success': False,
-                    'error': f'safety_blocked: {vlm_reason}',
-                    'blocked': True,
-                    'stage': 'vlm_safety',
-                    'vlm_reason': vlm_reason,
-                    'vlm_description': vlm_description,
+                    'error': f'safety_blocked: {refusal.reason}',
+                    'safety_block': refusal.block(),
+                    'vlm_reason': refusal.reason,
+                    'vlm_description': '',
                     'run_id': run_id
                 }
 
@@ -6525,9 +7264,12 @@ async def execute_stage4_generation_only(
             # the client never sees otherwise: it shows them before the words
             # it sent, in the form they went (`trigger, prompt`).
             'lora_triggers': lora_prefix,
-            # What made this. The canvas collector carries it through to the
-            # card's back side, which had nothing to show without it.
-            'model_meta': build_model_meta(config_obj, seed=result_seed, cfg=cfg, steps=steps),
+            # What made this, with the model the run generated with. The
+            # canvas collector carries it through to the card's back side, and
+            # the streaming route sends it with `complete`.
+            'model_meta': build_model_meta(
+                config_obj, seed=result_seed, cfg=cfg, steps=steps,
+                model_used=(output_result.metadata or {}).get('model_used')),
         }
 
     except Exception as e:
@@ -6554,19 +7296,15 @@ async def execute_generation_stage4(
     interception_result: str = '',
     interception_config: str = '',
     input_image: str = None,
-    input_image1: str = None,
-    input_image2: str = None,
-    input_image3: str = None,
+    multi_images: dict = None,
     alpha_factor = None,
-    skip_stage3: bool = False,
-    user_language: str = 'de',
     **kwargs
 ):
     """
-    Execute Stage 3 (Safety+Translation) + Stage 4 (Generation).
+    The check before the model, then Stage 4 (Generation).
 
-    Legacy function for Lab workflows - orchestrates Stage 3 before calling
-    execute_stage4_generation_only().
+    Legacy function for Lab workflows - runs the check before the model before
+    calling execute_stage4_generation_only().
 
     Uses execute_stage4_generation_only() internally.
     Canvas workflows should call execute_stage4_generation_only() directly.
@@ -6584,9 +7322,8 @@ async def execute_generation_stage4(
         interception_result: Interception output (for recorder)
         interception_config: Interception config ID (for LoRA extraction)
         input_image: Path to input image for img2img
-        input_image1/2/3: Paths for multi-image workflows
+        multi_images: input_image1, input_image2, ... as the request carried them
         alpha_factor: Alpha factor for Surrealizer
-        skip_stage3: If True, skip Stage 3 (translation+safety) - prompt is already ready
         **kwargs: Additional params
 
     Returns:
@@ -6601,7 +7338,7 @@ async def execute_generation_stage4(
             },
             'run_id': str,
             'error': Optional[str],
-            'blocked': Optional[bool]  # True if safety check failed
+            'safety_block': Optional[dict]  # the block message, where a check refused
         }
     """
     import time
@@ -6619,21 +7356,9 @@ async def execute_generation_stage4(
         if device_id is None:
             device_id = f"api_{uuid.uuid4().hex[:12]}"
 
-        # Determine media type from output config
-        if 'code' in output_config.lower() or 'p5js' in output_config.lower() or 'tonejs' in output_config.lower():
-            media_type = 'code'
-        elif 'video' in output_config.lower():
-            media_type = 'video'
-        elif 'audio' in output_config.lower() or 'music' in output_config.lower() or 'ace' in output_config.lower() or 'heartmula' in output_config.lower() or 'tts' in output_config.lower():
-            media_type = 'audio'
-        elif '3d' in output_config.lower():
-            media_type = '3d'
-        else:
-            media_type = 'image'
-
         # Same as in the streaming path: the SD3.5 adaptation arrives as one
-        # JSON object and is taken apart before Stage 3, so that no brace and
-        # no key name ever reaches an encoder.
+        # JSON object and is taken apart before the check, so that no brace
+        # and no key name ever reaches an encoder.
         encoder_prompts = _parse_triple_prompt(prompt)
         encoder_long_form = None
         if encoder_prompts:
@@ -6643,63 +7368,75 @@ async def execute_generation_stage4(
             prompt = _join_encoder_texts(encoder_prompts['clip'], encoder_long_form)
 
         # ====================================================================
-        # STAGE 3: TRANSLATION + PRE-OUTPUT SAFETY
+        # THE CHECK BEFORE THE MODEL
         # ====================================================================
         from schemas.engine.stage_orchestrator import translation_instruction_for
         stage34_translation_instruction = translation_instruction_for(
             _resolve_interception_config(interception_config) if interception_config else None)
-        # The setting as Stage 3 starts, for the run record: the translation
-        # reads it as it begins.
+        # The setting as the translation starts, for the run record: the
+        # translation reads it as it begins.
         from config import STAGE3_MODEL as stage3_model_at_start
-        if skip_stage3:
-            # Prompt is already translated/ready - skip Stage 3
-            translated_prompt = prompt
-            logger.info(f"[STAGE3+4] Stage 3 SKIPPED (skip_stage3=True): {translated_prompt[:100]}...")
-        else:
-            logger.info(f"[STAGE3+4] Stage 3: Translation + Safety (level: {safety_level})")
+        logger.info(f"[STAGE3+4] The check before the model (level: {safety_level})")
 
-            safety_result = await execute_stage3_safety(
-                prompt,
-                safety_level,
-                media_type,
-                pipeline_executor,
-                user_language=user_language,
-                device_id=device_id,
-                translation_instruction=stage34_translation_instruction
-            )
-
-            if not safety_result['safe']:
-                logger.warning(f"[STAGE3+4] Stage 3 BLOCKED")
-                return {
-                    'success': False,
-                    'blocked': True,
-                    'error': safety_result.get('abort_reason', 'Content blocked by safety check'),
-                    'found_terms': safety_result.get('found_terms', []),
-                    'run_id': run_id
-                }
-
-            # Get translated prompt (English) for media generation
-            translated_prompt = safety_result.get('positive_prompt', prompt)
-            logger.info(f"[STAGE3+4] Stage 3 PASSED, translated: {translated_prompt[:100]}...")
-
-        # Per-encoder assignment: the caption goes to both CLIP encoders, the
-        # interception result to T5. Each is translated on its own, because
-        # Stage 3 hands back one string neither can be cut out of again.
-        encoder_prompt_3 = None
+        # What the model receives and, where that is a translation, the text it
+        # was translated from: the check reads both. On this way the model
+        # receives a translation at kids, and the two SD3.5 halves are
+        # translated at every level, as they were with Stage 3. Where the model
+        # receives a text as written, the check translates it for itself.
+        verdict = None
+        originals = {}
         if encoder_prompts:
-            caption = encoder_prompts['clip']
-            long_form = encoder_long_form
-            if not skip_stage3:
-                caption = await _translate_encoder_text(
-                    caption, 'caption', pipeline_executor,
+            # Each half on its own, because each reaches its encoder on its
+            # own; a wording difference between the two is harmless, as T5
+            # holds its own 512 positions and is not aligned with CLIP position
+            # by position. A failed translation is not fatal: the half stays in
+            # its input language.
+            caption = await _translate_encoder_text(
+                encoder_prompts['clip'], 'caption', pipeline_executor,
+                translation_instruction=stage34_translation_instruction)
+            long_form = await _translate_encoder_text(
+                encoder_long_form, 'interception text', pipeline_executor,
+                translation_instruction=stage34_translation_instruction)
+            originals = {'prompt': encoder_prompts['clip'], 'prompt_3': encoder_long_form}
+            texts = {'prompt': caption, 'prompt_3': long_form}
+            logger.info(f'[ENCODER-PROMPT] CLIP-L/CLIP-G={len(caption.split())}w, '
+                        f'T5={len(long_form.split())}w')
+        else:
+            texts = {'prompt': prompt}
+            if safety_level == 'kids' and isinstance(prompt, str) and prompt.strip():
+                translated = await _translate_for_model(
+                    prompt, pipeline_executor, device_id=device_id,
                     translation_instruction=stage34_translation_instruction)
-                long_form = await _translate_encoder_text(
-                    long_form, 'interception text', pipeline_executor,
-                    translation_instruction=stage34_translation_instruction)
-            encoder_prompt_3 = long_form
-            translated_prompt = caption
-            logger.info(f'[ENCODER-PROMPT] CLIP-L/CLIP-G={len(translated_prompt.split())}w, '
-                        f'T5={len(encoder_prompt_3.split())}w')
+                if translated is None:
+                    # A run at kids without its translation stops, as it did in
+                    # Stage 3: a fault, not a rating.
+                    verdict = Verdict(False, CHECKPOINT_BEFORE_MODEL, 'kids', 'prompt',
+                                      REASON_UNAVAILABLE, SAFETY_CHECK_UNAVAILABLE_MESSAGE)
+                else:
+                    texts['prompt'] = translated
+                    originals = {'prompt': prompt}
+        if verdict is None:
+            verdict = check_before_model(
+                texts, level=safety_level, originals=originals,
+                images=_input_pictures(input_image, multi_images),
+                translation_instruction=stage34_translation_instruction)
+        if not verdict.passed:
+            logger.warning(f"[STAGE3+4] The check before the model BLOCKED ({verdict.field})")
+            return {
+                'success': False,
+                'error': verdict.reason,
+                'safety_block': verdict.block(),
+                'found_terms': [],
+                'run_id': run_id
+            }
+
+        # What the model receives: the prompt, or for SD3.5 the caption, and
+        # the long form T5 reads.
+        translated_prompt = texts['prompt']
+        encoder_prompt_3 = texts.get('prompt_3')
+        # Whether a translation is what the model receives (for the badge).
+        was_translated = any(texts[name] != text for name, text in originals.items())
+        logger.info(f"[STAGE3+4] The check before the model PASSED: {translated_prompt[:100]}...")
 
         # Save original prompt for metadata (before translation)
         from config import JSON_STORAGE_DIR
@@ -6712,25 +7449,24 @@ async def execute_generation_stage4(
                 base_path=JSON_STORAGE_DIR
             )
 
-        # Track Stage 3 model usage. STAGE3_MODEL translates -- in Stage 3 at
-        # kids, youth and open, the encoder halves at every level. The prompt
-        # check is the safety classifier's, and the model that answered names
-        # itself in the result; research and adult run no check.
+        # Which models the check ran on, for the run record. STAGE3_MODEL
+        # translates: the SD3.5 halves at every level, and for the check at
+        # every level but research. The classifier answers the check at every
+        # level but research.
+        checked = normalise_level(safety_level) not in UNCHECKED_LEVELS
         if 'models_used' not in recorder.metadata:
             recorder.metadata['models_used'] = {}
-        if not skip_stage3:
-            if safety_level not in ('research', 'adult') or encoder_prompts:
-                recorder.metadata['models_used']['stage3_translation'] = stage3_model_at_start
-            if safety_result.get('model_used'):
-                recorder.metadata['models_used']['stage3_safety'] = safety_result['model_used']
+        if checked or encoder_prompts:
+            recorder.metadata['models_used']['stage3_translation'] = stage3_model_at_start
+        if checked:
+            from my_app.services.safety_classifier import model_name as safety_model_name
+            recorder.metadata['models_used']['stage3_safety'] = safety_model_name()
         recorder._save_metadata()
 
         # Save optimized/final prompt (German, before translation)
         recorder.save_entity('optimized_prompt', prompt)
 
         # Save translation (English, for media generation)
-        # Track if translation actually occurred (for frontend badge)
-        was_translated = translated_prompt and translated_prompt != prompt
         if was_translated:
             recorder.save_entity('translation_en', translated_prompt)
 
@@ -6750,9 +7486,7 @@ async def execute_generation_stage4(
             interception_result=interception_result,
             interception_config=interception_config,
             input_image=input_image,
-            input_image1=input_image1,
-            input_image2=input_image2,
-            input_image3=input_image3,
+            multi_images=multi_images,
             alpha_factor=alpha_factor,
             # Parameter Injection aus kwargs
             width=kwargs.get('width'),
@@ -6785,8 +7519,8 @@ async def execute_generation_stage4(
 @schema_bp.route('/pipeline/direct', methods=['POST'])
 def direct_workflow():
     """
-    Direct-run endpoint — the prompt reaches the model unchanged, WITH Stage 1 +
-    conditional Stage 3/VLM safety.
+    Direct-run endpoint — the prompt reaches the model unchanged, through the
+    three checks.
 
     Lab Architecture: for runs that bypass interception/optimization. Used by the
     Latent Lab instruments, Surrealizer, Direct and the LoRA try-out.
@@ -6798,7 +7532,9 @@ def direct_workflow():
     a comparison would then differ in what the interception made of them instead
     of in what was varied. (/pipeline/legacy, its alias, went on 2026-10-10.)
 
-    Flow: Stage 1 (Safety) → [Stage 3 if kids/youth] → Workflow → [VLM if kids/youth]
+    Flow: the intake → the language-model steps a workflow declares → the
+    check before the model → workflow → the check at the result (pictures,
+    kids and youth). Nothing is checked at research.
 
     Request Body:
     {
@@ -6824,7 +7560,19 @@ def direct_workflow():
     # my_app/services/safety_level_resolver.py. (Until 2026-09-05 the guard
     # there rested on `has_request_context()` alone, which is True on such a
     # worker, so the promise did not hold.)
-    safety_level = resolve_safety_level()
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        # An unknown level would run the checks against nothing, so the
+        # request ends here, with a cause a caller can read in place of
+        # Flask's own error page.
+        logger.error(f"[DIRECT-ENDPOINT] Error: {exc}", exc_info=True)
+        return jsonify({
+            'status': 'error',
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+            'cause': 'safety_level_unresolved',
+        }), 500
 
     # A Latent Lab run says nothing from the moment the request arrives until
     # the image is saved, and two of them are long. Encoder Fusion's Original
@@ -6864,8 +7612,6 @@ def _run_direct_workflow(data: dict, safety_level: str):
         output_config = data.get('output_config')
         seed = data.get('seed')
         alpha_factor = data.get('alpha_factor')
-        user_language = data.get('user_language', 'de')
-        device_id = data.get('device_id')
 
         # LoRA Training: run with an adapter trained at that place. The prompt
         # stays verbatim here, which is the point — with and without the same
@@ -6940,31 +7686,35 @@ def _run_direct_workflow(data: dict, safety_level: str):
             init_schema_engine()
 
         # ====================================================================
-        # STAGE 1: SAFETY CHECK (Server responsibility, always runs)
+        # THE INTAKE
         # ====================================================================
-        logger.info(f"[DIRECT-ENDPOINT] Stage 1: Safety check (level: {safety_level})")
-
-        # Every text the client sent that reaches an encoder, not the prompt
-        # alone: until 2026-10-10 prompt_b, prompt_c, the concepts and the
-        # negative prompt went past this gate (finding S-002 of the code review of 2026-10-10).
-        stage1_texts = [('prompt', prompt), ('prompt_b', prompt_b), ('prompt_c', prompt_c),
-                        ('negative_prompt', negative_prompt)]
-        stage1_texts += _concept_prompts(composable_concepts)
-        is_safe, error_message, checks_passed, blocked_label, _checked = _stage1_check_texts(
-            stage1_texts, safety_level, user_language)
-
-        if not is_safe:
-            logger.warning(f"[DIRECT-ENDPOINT] Stage 1 BLOCKED on {blocked_label!r}: {error_message}")
+        # Names of living private individuals and addresses with a house
+        # number, in every text the client sent that reaches an encoder: the
+        # prompt, the second and third prompt, the negative prompt and the
+        # prompt of every concept. Until 2026-10-10 only the prompt was read.
+        # A symbol is not stopped here; what the model receives is checked
+        # before the model. One slot of the queue, as Stage 1 held: after a
+        # name or an address the classifier is asked.
+        logger.info(f"[DIRECT-ENDPOINT] The intake (level: {safety_level})")
+        concepts = _concept_prompts(composable_concepts)
+        with llm_queue_semaphore:
+            intake = check_intake_texts(
+                {'prompt': prompt, 'prompt_b': prompt_b, 'prompt_c': prompt_c,
+                 'negative_prompt': negative_prompt}, level=safety_level)
+            for index, text in concepts:
+                if not intake.passed:
+                    break
+                intake = check_intake(text, level=safety_level, kind='text',
+                                      field=f'concepts[{index}]')
+        if not intake.passed:
+            logger.warning(f"[DIRECT-ENDPOINT] Intake BLOCKED ({intake.field})")
             return {
                 'status': 'blocked',
-                'stage': 1,
-                'reason': error_message,
-                'error': error_message,
-                'blocked_on': blocked_label,
-                'checks_passed': checks_passed
+                'reason': intake.reason,
+                'error': intake.reason,
+                'safety_block': intake.block(),
+                'checks_passed': []
             }, 403
-
-        logger.info(f"[DIRECT-ENDPOINT] Stage 1 PASSED")
 
         # ====================================================================
         # The automatic T5 expansion that used to sit here is gone.
@@ -7022,50 +7772,64 @@ def _run_direct_workflow(data: dict, safety_level: str):
                 backend_fusion_strategy = 'centered_fade' + fusion_strategy[len(_fusion_base):]
 
         # ====================================================================
-        # STAGE 3: PRE-OUTPUT SAFETY CHECK (kids/youth only)
-        # Llama Guard S1-S13 — blocks harmful prompts before GPU generation
+        # THE WORKFLOW'S LANGUAGE-MODEL STEPS
         # ====================================================================
-        if safety_level in ('kids', 'youth'):
-            logger.info(f"[DIRECT-ENDPOINT] Stage 3: Pre-output safety check (level: {safety_level})")
+        # A workflow whose encoders read texts a language model writes
+        # declares those steps in its chunk (llm_steps): the Surrealization
+        # workflow writes a T5 text and a CLIP text and reads the alpha the T5
+        # text proposes. They run here, after the intake and before the check
+        # below, which reads what they wrote; until 2026-10-31 they ran inside
+        # ComfyUI, after every check. They hold one slot of the queue, as the
+        # interception does. Fail-closed, as the adapted prompts above: a step
+        # that fails or writes no text ends the run.
+        config_object = pipeline_executor.config_loader.get_config(output_config)
+        chunk_name = (getattr(config_object, 'parameters', None) or {}).get('OUTPUT_CHUNK')
+        try:
+            with llm_queue_semaphore:
+                step_results = run_llm_steps(chunk_name, prompt)
+        except LlmStepError as e:
+            logger.error(f"[DIRECT-ENDPOINT] A language-model step of {chunk_name} "
+                         f"failed: {e}")
+            return {
+                'status': 'error',
+                'error': f'A language-model step of the workflow failed: {e}'
+            }, 502
 
-            # Collect all prompts that influence the generated image —
-            # including the machine-written T5 expansion (work order A3)
-            all_prompts = [p for p in [
-                prompt, prompt_b, prompt_c, negative_prompt,
-                surrealizer_clip_prompt, surrealizer_t5_prompt,
-            ] if p and p.strip()]
-
-            # Composable diffusion: extract concept prompts
-            if composable_concepts:
-                concepts_list = composable_concepts if isinstance(composable_concepts, list) else json.loads(composable_concepts)
-                for concept in concepts_list:
-                    cp = concept.get('prompt', '').strip() if isinstance(concept, dict) else ''
-                    if cp and cp not in all_prompts:
-                        all_prompts.append(cp)
-
-            # Single Stage 3 call with all prompts concatenated
-            combined_prompt = ' | '.join(all_prompts)
-            stage3_result = asyncio.run(execute_stage3_safety(
-                combined_prompt,
-                safety_level,
-                'image',
-                pipeline_executor,
-                user_language=user_language,
-                device_id=device_id
-            ))
-
-            if not stage3_result['safe']:
-                abort_reason = stage3_result.get('abort_reason', 'Safety check failed')
-                logger.warning(f"[DIRECT-ENDPOINT] Stage 3 BLOCKED: {abort_reason}")
-                return {
-                    'status': 'blocked',
-                    'stage': 3,
-                    'reason': abort_reason,
-                    'error': abort_reason,
-                    'checks_passed': checks_passed + ['stage3_blocked']
-                }, 403
-
-            logger.info(f"[DIRECT-ENDPOINT] Stage 3 PASSED ({len(all_prompts)} prompt(s) checked)")
+        # ====================================================================
+        # THE CHECK BEFORE THE MODEL
+        # ====================================================================
+        # Every text the model receives, after the last language model has
+        # written: the texts of the intake, the two encoder prompts an LLM
+        # wrote above for the adapted prompts, and the texts the workflow's
+        # steps wrote. The model receives each as written, so the check
+        # translates it itself. At every level; the check itself passes at
+        # research. A text that stands in two fields is read once, under the
+        # first.
+        texts = {'prompt': prompt, 'prompt_b': prompt_b, 'prompt_c': prompt_c,
+                 'negative_prompt': negative_prompt,
+                 **{f'concepts[{index}]': text for index, text in concepts}}
+        if surrealizer_clip_prompt is not None:
+            texts['clip_prompt'] = surrealizer_clip_prompt
+            texts['t5_prompt'] = surrealizer_t5_prompt
+        texts.update({name: value for name, value in step_results.items()
+                      if isinstance(value, str)})
+        for_model = {}
+        for name, text in texts.items():
+            if isinstance(text, str) and text.strip() in {
+                    t.strip() for t in for_model.values() if isinstance(t, str)}:
+                continue
+            for_model[name] = text
+        verdict = check_before_model(for_model, level=safety_level)
+        if not verdict.passed:
+            logger.warning(f"[DIRECT-ENDPOINT] The check before the model BLOCKED "
+                           f"({verdict.field})")
+            return {
+                'status': 'blocked',
+                'reason': verdict.reason,
+                'error': verdict.reason,
+                'safety_block': verdict.block(),
+                'checks_passed': ['intake']
+            }, 403
 
         # Generate run_id
         run_id = generate_run_id()
@@ -7078,6 +7842,9 @@ def _run_direct_workflow(data: dict, safety_level: str):
             safety_level=safety_level,
             base_path=JSON_STORAGE_DIR
         )
+        # A direct workflow takes no picture in: what it makes is made from
+        # words alone (media_ref.may_leave_server).
+        recorder.record_input_image(False)
 
         # Save input text as entity (needed for favorites restore)
         recorder.save_entity(
@@ -7134,6 +7901,9 @@ def _run_direct_workflow(data: dict, safety_level: str):
         if surrealizer_clip_prompt is not None:
             custom_params['clip_prompt'] = surrealizer_clip_prompt
             custom_params['t5_prompt'] = surrealizer_t5_prompt
+        # What the workflow's steps wrote, by the names its input_mappings
+        # read; the check before the model has read the texts among it.
+        custom_params.update(step_results)
         if negative_prompt is not None:
             custom_params['negative_prompt'] = negative_prompt
         if cfg is not None:
@@ -7445,28 +8215,58 @@ def _run_direct_workflow(data: dict, safety_level: str):
                 ))
 
         # ====================================================================
-        # POST-GENERATION VLM SAFETY CHECK (kids/youth only)
-        # Images can emerge unsafe despite safe prompts — VLM catches these
+        # THE CHECK AT THE RESULT: THE PICTURES AND VIDEOS (kids/youth)
         # ====================================================================
-        # Which medium this run produced is decided by its own record, not by
-        # a variable that may never have been assigned on this path:
-        # `api_media_type` above lives in a deeper block. The two sibling call
-        # sites ask the record as well, and additionally pass `expect_image`
-        # where they know the run was started as an image run — which is the
-        # knowledge this path does not have, so a picture-less run passes here
-        # instead of blocking.
+        # Every picture the run stored, the Blender preview of a 3D run
+        # included, and every video, each with its own verdict on its entity,
+        # where delivery reads it. Which medium the run made is decided by its
+        # own record: a run without a picture, a video or a 3D model has
+        # nothing to check here, and a 3D run without its preview is withheld,
+        # since nothing would clear the model. The instruments' data below
+        # carries the same pictures as base64; it leaves only once the stored
+        # pictures have passed. The algebra's reference picture stands in the
+        # answer alone, is stored nowhere, and is checked as it stands there.
+        # The step frames of the Denoising Archaeology leave with the finished
+        # picture's verdict and count as checked with it. One refused picture
+        # or video withholds the run, its frames and its record.
         if safety_level in ('kids', 'youth'):
-            vlm_safe, vlm_reason, vlm_description = _vlm_safety_check_image(recorder, safety_level)
-            if not vlm_safe:
-                logger.warning(f"[DIRECT-ENDPOINT] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
+            pictures, refusal = _pictures_of_run(recorder, safety_level)
+            for sequence, path in pictures:
+                verdict = check_result_image(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            videos, unread = _videos_of_run(recorder, safety_level)
+            if refusal is None:
+                refusal = unread
+            for sequence, path in videos:
+                verdict = check_result_video(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            reference_b64 = (output_result.metadata or {}).get('reference_image')
+            if refusal is None and reference_b64:
+                verdict = check_result_image(reference_b64, level=safety_level,
+                                             field='reference_image')
+                if not verdict.passed:
+                    refusal = verdict
+            if refusal is not None:
+                logger.warning(f"[DIRECT-ENDPOINT] The check at the result withheld run "
+                               f"{run_id}: {refusal.reason}")
+                # Written into the record as well as answered, so that a run
+                # whose reader has left still shows the course leader why.
+                recorder.save_error(
+                    stage=3, error_type='safety_blocked', message=f'VLM: {refusal.reason}',
+                    details={'check': 'vlm', 'safety_level': safety_level,
+                             'vlm_reason': refusal.reason, 'vlm_description': ''})
                 return {
                     'status': 'blocked',
-                    'stage': 'vlm_safety',
-                    'reason': vlm_reason,
-                    'error': vlm_reason,
-                    'vlm_description': vlm_description,
+                    'reason': refusal.reason,
+                    'error': refusal.reason,
+                    'safety_block': refusal.block(),
+                    'vlm_description': '',
                     'run_id': run_id,
-                    'checks_passed': ['stage1', 'stage3', 'generation', 'vlm_blocked']
+                    'checks_passed': ['intake', 'before_model', 'generation', 'vlm_blocked']
                 }, 403
 
         duration_ms = (time.time() - start_time) * 1000
@@ -7508,10 +8308,7 @@ def _run_direct_workflow(data: dict, safety_level: str):
             'model_meta': build_model_meta(
                 pipeline_executor.config_loader.get_config(output_config),
                 seed=result_seed, cfg=cfg, steps=steps,
-                # What the chunk actually loaded. The Latent Lab's raster chunks
-                # resolve their backbone by the card, so this is the only place
-                # the answer says whether Medium or Large made the picture.
-                model_id=(output_result.metadata or {}).get('model_id')),
+                model_used=(output_result.metadata or {}).get('model_used')),
         }
 
         # Latent Lab: Include attention data + image_base64 in response
@@ -7598,7 +8395,7 @@ def _run_direct_workflow(data: dict, safety_level: str):
 
 @schema_bp.route('/pipeline/interception', methods=['POST', 'GET'])
 def interception_pipeline():
-    """Stage 1 (Safety) + Stage 2 (Interception) - Lab Architecture atomic service
+    """The intake and Stage 2 (Interception) - Lab Architecture atomic service
 
     Two opt-ins ask for a stream here, and they carry different things.
 
@@ -7666,6 +8463,31 @@ def interception_pipeline():
                 'error': 'JSON-Request erwartet'
             }), 400
 
+    # Resolved HERE, in the thread that serves the request, and handed down.
+    # Asked from a worker of the streamed transport the resolver answers with
+    # the STRICTEST level plus a warning: that transport MARKS its thread and the
+    # resolver reads the mark — see the docstring of
+    # my_app/services/safety_level_resolver.py. (Until 2026-09-05 the guard there
+    # rested on `has_request_context()` alone, which is True on such a worker, so
+    # the promise did not hold.) Every way this route answers below takes it
+    # from here.
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        # The resolver documents that it never raises. Where that stops holding,
+        # the level is unknown -- and an unknown level would run the checks
+        # against nothing, so the request ends here. Unguarded, the raise leaves
+        # the route entirely and Flask puts its own HTML error page on the wire
+        # in place of the cause, which is a page no caller here can read and no
+        # log line names.
+        logger.error(f"[INTERCEPTION-ENDPOINT] Error: {exc}", exc_info=True)
+        return jsonify({
+            'status': 'error',
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+            'cause': 'safety_level_unresolved',
+        }), 500
+
     # Which of the two streams was asked for, with no guessing between them.
     # "enable_streaming" names the older Stage-1+2 event protocol HERE and the
     # platform's shared answer transport on every other route of this server —
@@ -7703,49 +8525,26 @@ def interception_pipeline():
         # `(payload, http_status)` to hand back. So only the Response comes from
         # the transport here -- one place for the mimetype and the two headers
         # nginx reads, and no second opinion on either.
-        return sse_response(execute_pipeline_streaming(data))
-
-    # Resolved HERE, in the thread that serves the request, and handed down.
-    # Asked from a worker of the streamed transport the resolver answers with
-    # the STRICTEST level plus a warning: that transport MARKS its thread and the
-    # resolver reads the mark — see the docstring of
-    # my_app/services/safety_level_resolver.py. (Until 2026-09-05 the guard there
-    # rested on `has_request_context()` alone, which is True on such a worker, so
-    # the promise did not hold.) Stage 1, Stage 3 and the image
-    # lookback all read this value, so it is taken where the session is rather
-    # than wherever the run happens to run. It stands BELOW the older stream's
-    # branch on purpose: that path has never asked for the level, and putting a
-    # course lookup in front of it would change a request this edit does not touch.
-    try:
-        safety_level = resolve_safety_level()
-    except Exception as exc:
-        # The resolver documents that it never raises. Where that stops holding,
-        # the level is unknown -- and an unknown level would run Stage 1, Stage 3
-        # and the image lookback against nothing, so the request ends here.
-        # Unguarded, the raise leaves the route entirely and Flask puts its own
-        # HTML error page on the wire in place of the cause, which is a page no
-        # caller here can read and no log line names.
-        logger.error(f"[INTERCEPTION-ENDPOINT] Error: {exc}", exc_info=True)
-        return jsonify({
-            'status': 'error',
-            'error': 'The safety level for this request could not be resolved '
-                     f'({exc}), so nothing was run.',
-            'cause': 'safety_level_unresolved',
-        }), 500
+        return sse_response(execute_pipeline_streaming(data, safety_level))
 
     # The one route asked for the stream by the OTHER word: here
     # "enable_streaming" names the older event protocol above.
     #
-    # No `client_gone` parameter on the run, and that is a decision rather than
-    # an omission: the run saves what it made, so a run left by its reader still
-    # finishes something. Work that could give something back by stopping asks
-    # for the signal by declaring the parameter; see `streamed_answer`.
+    # The run declares `client_gone`: a local model writing its interception
+    # holds the card's one slot, and its prompts at ComfyUI end when the
+    # reader leaves (generation_abort.ended_when_its_reader_leaves). A cloud
+    # model holds no card and runs to its end. Stage 3 and Stage 4 do not
+    # start for a reader who has left, and what they hold at ComfyUI ends
+    # when the reader leaves while they run. A stop reaches the run where the
+    # request named an output config, which announces it under its device:
+    # the stop marks the run's id, and the work of every stage runs under it.
     return answered_either_way(data, _run_interception_pipeline, data,
                                safety_level, label='INTERCEPTION',
                                flag=ANSWER_STREAM_FLAG)
 
 
-def _run_interception_pipeline(data: dict, safety_level: str):
+def _run_interception_pipeline(data: dict, safety_level: str,
+                               client_gone: Optional[threading.Event] = None):
     """The whole run, and the ``(payload, http_status)`` it answers with.
 
     Split out of the route so that one run can be answered either way. It must
@@ -7754,12 +8553,14 @@ def _run_interception_pipeline(data: dict, safety_level: str):
     here it would be the strictest level for everyone, which is a different
     judgement from the one the visitor's course asked for.
     """
+    import contextlib
     import random
     from my_app.services import generation_abort
 
     # Read by the `finally` at the end, which takes this run out of the
-    # device tracker whichever way it ended.
-    run_id = device_id = kept = None
+    # device tracker whichever way it ended, and ends the watch over Stage 3
+    # and Stage 4.
+    run_id = device_id = kept = stage34 = None
 
     try:
         schema_name = data.get('schema')
@@ -7776,9 +8577,9 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         # The run has its id and its device from here on, and a run that is
         # to make media is announced at once, the way the generation route
         # announces one (its 'preparing' phase): a stop pressed while the
-        # request is still being read, or while the run is in Stage 1 or
-        # Stage 3, finds it by its device and marks it by its id, and Stage 4
-        # below gives its turn back. Until 2026-10-01 this route was in the
+        # request is still being read, or while the run is in its checks,
+        # finds it by its device and marks it by its id, and Stage 4 below
+        # gives its turn back. Until 2026-10-01 this route was in the
         # tracker at no point, and a stop on the Flow's song cleared the page
         # while the card made the song.
         run_id = generate_run_id()
@@ -7791,9 +8592,7 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         input_image = data.get('input_image')  # Optional: path to uploaded image for img2img
 
         # MULTI-IMAGE support
-        input_image1 = data.get('input_image1')  # Optional: path to first image for multi-image workflows
-        input_image2 = data.get('input_image2')  # Optional: path to second image for multi-image workflows
-        input_image3 = data.get('input_image3')  # Optional: path to third image for multi-image workflows
+        multi_images = multi_images_from(data)
 
         # Stage 2 result support: use frontend-provided interception result
         interception_result = data.get('interception_result')  # Optional: frontend-provided Stage 2 output (if already executed)
@@ -7849,7 +8648,8 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         if _plan_makes_media(config) and not _skips_stage2(config, safety_level):
             return {'status': 'error', 'error': _media_plan_refusal(schema_name)}, 400
 
-        # Check if this is an output config (skip Stage 1-3 for output configs)
+        # An output config and a system pipeline record no input and go on to
+        # no generation here. The intake below reads every request.
         is_output_config = config.meta.get('stage') == 'output'
         is_system_pipeline = config.meta.get('system_pipeline', False)
 
@@ -7891,14 +8691,61 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         recorder.set_state(0, "pipeline_starting")
         logger.info(f"[RECORDER] Initialized LivePipelineRecorder for run {run_id}")
 
-        # Track LLM models used at each stage. Stage 1 checks on the safety
-        # classifier and reports no model back. The Stage 3 entries are added
-        # once Stage 3 has run, stage4_output when the output config is
-        # determined.
+        # Track LLM models used at each stage. The intake asks the safety
+        # classifier and reports no model back. The entries of the check
+        # before the model are added once it has run, stage4_output when the
+        # output config is determined.
         recorder.metadata['models_used'] = {
             'stage2_interception': STAGE2_INTERCEPTION_MODEL,
         }
         recorder._save_metadata()
+        # Whether this run's generation takes a picture in. What it makes from
+        # one goes where that one may go (media_ref.may_leave_server).
+        recorder.record_input_image(
+            bool(input_image or multi_images))
+
+        # ====================================================================
+        # THE INTAKE
+        # ====================================================================
+        # Names of living private individuals and addresses with a house
+        # number, in every text this request brings, as it was sent, and in
+        # the text of a saved perspective it uses, before any of them reaches
+        # a model: the edited context reaches one just below, to be
+        # translated. A symbol is not stopped here. The text Stage 2 writes is
+        # checked at the result, and what a media model receives is checked
+        # before that model. One slot of the queue, as Stage 1 held: after a
+        # name or an address the classifier is asked. A text that passed the
+        # intake or the check at the result at this level before is not asked
+        # again.
+        recorder.set_state(1, "intake")
+        with llm_queue_semaphore:
+            intake = check_intake_texts(
+                {'input_text': input_text, 'context_prompt': context_prompt,
+                 'interception_result': interception_result,
+                 'optimization_result': optimization_result,
+                 'user_input': data.get('user_input'),
+                 **_kept_texts(config, with_context=not context_prompt)},
+                level=safety_level)
+        if not intake.passed:
+            logger.warning(f"[INTERCEPTION] Intake BLOCKED ({intake.field})")
+            recorder.save_error(
+                stage=1,
+                error_type='safety_blocked',
+                message=intake.reason,
+                details={'check': 'intake', 'field': intake.field,
+                         'reason_key': intake.reason_key, 'safety_level': safety_level}
+            )
+            tracker.finalize()
+            return {
+                'status': 'blocked',
+                'schema': schema_name,
+                'error': intake.reason,
+                'reason': intake.reason,
+                'safety_block': intake.block(),
+                'metadata': {
+                    'checks_passed': []
+                }
+            }, 403
 
         # ====================================================================
         # PHASE 2: USER-EDITED CONTEXT HANDLING
@@ -7910,41 +8757,9 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         if context_prompt:
             logger.info(f"[PHASE2] User edited context in language: {context_language}")
 
-            # THE GATE, BEFORE THE TRANSLATION. Until 2026-08-29 the edited
-            # context went to a local model to be translated right here, and
-            # Stage 1 ran ninety lines further down — over `input_text`, never
-            # over this. Two texts came from the visitor, one was checked, and
-            # the unchecked one had already been in front of a model.
-            #
-            # `input_text` keeps its own check where it is: nothing sends it to
-            # a model before that point. This one could not wait.
-            ctx_safe, ctx_error, ctx_checks, _blocked, _checked = _stage1_check_texts(
-                [('context_prompt', context_prompt)],
-                safety_level,
-                user_language,
-            )
-            if not ctx_safe:
-                logger.warning(f"[PHASE2] Stage 1 BLOCKED on the edited context")
-                recorder.save_error(
-                    stage=1,
-                    error_type='safety_blocked',
-                    message=ctx_error,
-                    details={'blocked_on': 'context_prompt'}
-                )
-                return {
-                    'status': 'blocked',
-                    'schema': schema_name,
-                    'error': ctx_error,
-                    'reason': ctx_error,
-                    'stage': 1,
-                    'blocked_reason': ctx_error,
-                    'blocked_stage': 1,
-                    'metadata': {
-                        'stage': 'pre_interception',
-                        'blocked_on': 'context_prompt',
-                        'checks_passed': ctx_checks
-                    }
-                }, 403
+            # The intake above has read it. Until 2026-08-29 the edited context
+            # went to a model to be translated right here, before anything had
+            # checked it.
 
             # Save original language version
             recorder.save_entity(f'context_prompt_{context_language}', context_prompt)
@@ -7959,9 +8774,24 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                     recorder.metadata['models_used']['context_translation'] = STAGE3_MODEL
                     recorder._save_metadata()
 
-                context_prompt_en = _translate_context(
-                    context_prompt, context_language, "PHASE2", on_translated=_record_translation
-                )
+                # Under the route's run id, as Stage 2: a reader who leaves,
+                # or a stop, ends the translation at ComfyUI.
+                with generation_abort.ended_when_its_reader_leaves(
+                        client_gone, kind='interception', label='PHASE2',
+                        run_id=run_id) as watched_context:
+                    if not watched_context.ended:
+                        context_prompt_en = _translate_context(
+                            context_prompt, context_language, "PHASE2",
+                            on_translated=_record_translation)
+                if watched_context.ended:
+                    logger.info(f"[PHASE2] Run {run_id} ended during the context "
+                                f"translation; Stage 2 does not run")
+                    tracker.finalize()
+                    return {
+                        'status': 'cancelled',
+                        'schema': schema_name,
+                        'run_id': run_id,
+                    }, 200
 
             # Create modified config with user-edited context
             logger.info(f"[PHASE2] Creating modified config with user-edited context")
@@ -8007,14 +8837,12 @@ def _run_interception_pipeline(data: dict, safety_level: str):
             current_input = input_text
         else:
             # ====================================================================
-            # STAGE 1: PRE-INTERCEPTION (Translation + Safety)
+            # THE INPUT, INTO THE RECORD
             # ====================================================================
             current_input = input_text
 
             if not is_system_pipeline and not is_output_config:
-                logger.info(f"[4-STAGE] Stage 1: Pre-Interception for '{schema_name}'")
                 tracker.set_stage(1)
-                recorder.set_state(1, "translation_and_safety")
 
                 # Log user input
                 tracker.log_user_input_text(input_text)
@@ -8023,125 +8851,23 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                 recorder.save_entity('input', input_text)
                 logger.info(f"[RECORDER] Saved input entity")
 
-                # Stage 1: Safety Check (No Translation)
-                # LLM QUEUE: Wrap Stage 1 execution
-                logger.info(f"[LLM-QUEUE] Unified Pipeline: Waiting for queue slot...")
-                with llm_queue_semaphore:
-                    logger.info(f"[LLM-QUEUE] Unified Pipeline: Acquired slot, executing Stage 1")
-                    is_safe, checked_text, error_message, checks_passed = asyncio.run(execute_stage1_safety_unified(
-                        input_text,
-                        safety_level,
-                        pipeline_executor,
-                        user_language=user_language
-                    ))
-                logger.info(f"[LLM-QUEUE] Unified Pipeline: Released slot")
-
-                current_input = checked_text
-
-                if not is_safe:
-                    logger.warning(f"[4-STAGE] Stage 1 BLOCKED by safety check")
-
-                    # SESSION 29: Save checked text (even if blocked)
-                    recorder.save_entity('stage1_output', checked_text)
-
-                    # SESSION 29: Save safety error
-                    recorder.save_error(
-                        stage=1,
-                        error_type='safety_blocked',
-                        message=error_message,
-                        details={'codes': ['§86a']}
-                    )
-                    logger.info(f"[RECORDER] Saved stage 1 blocked error")
-
-                    # Log blocked event
-                    tracker.log_stage1_blocked(
-                        blocked_reason='§86a_violation',
-                        blocked_codes=['§86a'],
-                        error_message=error_message
-                    )
-                    tracker.finalize()  # Persist even though blocked
-
-                    # 'blocked', not 'error': the one caller that posts here,
-                    # the Flow's song, reads `blocked` as a refusal and every
-                    # other status as a broken run, and showed this one as
-                    # "Durchlauf abgebrochen".
-                    return {
-                        'status': 'blocked',
-                        'schema': schema_name,
-                        'error': error_message,
-                        'reason': error_message,
-                        'stage': 1,
-                        'blocked_reason': error_message,
-                        'blocked_stage': 1,
-                        'metadata': {
-                            'stage': 'pre_interception',
-                            'safety_codes': ['§86a'],  # Blocked by §86a StGB safety check
-                            'checks_passed': checks_passed
-                        }
-                    }, 403
-
-                # The same gate for every other text of this request that
-                # reaches a model: a Stage 2 result the client hands in,
-                # which stands in for the interception and goes on to Stage 3
-                # and the generator. Until 2026-10-01 a handed-in result
-                # passed no Stage 1.
-                handed_in = [('interception_result', interception_result),
-                             ('optimization_result', optimization_result)]
-                extra_stage1 = [(key, text) for key, text in handed_in
-                                if isinstance(text, str) and text.strip()
-                                and text.strip() != (input_text or '').strip()]
-                if extra_stage1:
-                    (handed_safe, handed_error, handed_checks,
-                     handed_blocked_on, _handed_checked) = _stage1_check_texts(
-                        extra_stage1, safety_level, user_language)
-                    if not handed_safe:
-                        logger.warning(f"[4-STAGE] Stage 1 BLOCKED on {handed_blocked_on!r}")
-                        recorder.save_error(
-                            stage=1,
-                            error_type='safety_blocked',
-                            message=handed_error,
-                            details={'blocked_on': handed_blocked_on}
-                        )
-                        tracker.finalize()
-                        return {
-                            'status': 'blocked',
-                            'schema': schema_name,
-                            'error': handed_error,
-                            'reason': handed_error,
-                            'stage': 1,
-                            'blocked_reason': handed_error,
-                            'blocked_stage': 1,
-                            'metadata': {
-                                'stage': 'pre_interception',
-                                'blocked_on': handed_blocked_on,
-                                'checks_passed': handed_checks
-                            }
-                        }, 403
-
-                # SESSION 29: Save stage1 output and safety results
-                recorder.save_entity('stage1_output', checked_text)
-                recorder.save_entity('safety', {
-                    'safe': True,
-                    'method': 'safety_check',
-                    'codes_checked': ['§86a'],
-                    'safety_level': safety_level
-                })
-                logger.info(f"[RECORDER] Saved stage1 output and safety entities")
-
-                # Note: Stage 1 now only does safety check, no translation
-                # Translation will be moved to Stage 3 (before media generation)
-
             # ====================================================================
             # STAGE 2: INTERCEPTION (Main Pipeline + Optimization)
             # ====================================================================
             tracker.set_stage(2)
             recorder.set_state(2, "interception")
 
+            # The request's own text, which passed the intake: the input, or a
+            # Stage 2 result the request hands in. Where Stage 2 hands it on as
+            # it came, it is not read again at the result.
+            own_text = current_input
+
             # Check if frontend already executed Stage 2 and provides result
             if interception_result or optimization_result:
                 # For code output: use optimization_result (the code), not interception_result (scene description)
                 # For image/audio: use interception_result (the prompt)
                 stage2_output = optimization_result if optimization_result else interception_result
+                own_text = stage2_output
                 logger.info(f"[4-STAGE] Stage 2: Using frontend-provided {'optimization_result (code)' if optimization_result else 'interception_result'} (already executed)")
 
                 # Extract LoRAs from config even when frontend provides result
@@ -8168,14 +8894,14 @@ def _run_interception_pipeline(data: dict, safety_level: str):
 
                 if skip_stage2:
                     logger.info(f"[4-STAGE] Stage 2: SKIPPED (pipeline '{config.pipeline_name}' has skip_stage2=true)")
-                    logger.info(f"[4-STAGE] Stage 2: Passing Stage 1 output directly to Stage 3")
+                    logger.info(f"[4-STAGE] Stage 2: Passing the input directly to Stage 3")
 
                     # Extract LoRAs even when Stage 2 is skipped
                     config_loras = execution_config.meta.get('loras', []) if hasattr(execution_config, 'meta') and execution_config.meta else []
                     if config_loras:
                         logger.info(f"[STAGE2-LORA] Extracted {len(config_loras)} LoRA(s) from config '{schema_name}': {[l['name'] for l in config_loras]}")
 
-                    # Create mock result - Stage 1 output passed through unchanged
+                    # Create mock result - the input passed through unchanged
                     class MockResult:
                         def __init__(self, output, loras=None):
                             self.success = True
@@ -8193,17 +8919,31 @@ def _run_interception_pipeline(data: dict, safety_level: str):
 
                     # Use shared Stage 2 function (eliminates code duplication)
                     media_preferences = config.media_preferences if hasattr(config, 'media_preferences') else None
-                    result = asyncio.run(execute_stage2_with_optimization(
-                        schema_name=schema_name,
-                        input_text=current_input,
-                        config=execution_config,
-                        safety_level=safety_level,
-                        output_config=output_config,
-                        media_preferences=media_preferences,
-                        tracker=tracker,
-                        user_input=data.get('user_input', input_text),
-                        user_language=user_language
-                    ))
+                    result = None   # bound only where the work ran
+                    with generation_abort.ended_when_its_reader_leaves(
+                            client_gone, kind='interception', label='4-STAGE',
+                            run_id=run_id) as watched:
+                        if not watched.ended:
+                            result = asyncio.run(execute_stage2_with_optimization(
+                                schema_name=schema_name,
+                                input_text=current_input,
+                                config=execution_config,
+                                safety_level=safety_level,
+                                output_config=output_config,
+                                media_preferences=media_preferences,
+                                tracker=tracker,
+                                user_input=data.get('user_input', input_text),
+                                user_language=user_language
+                            ))
+                    if watched.ended or result is None:
+                        logger.info(f"[4-STAGE] Run {run_id} ended during Stage 2 (stopped, or "
+                                    f"its stream ended); Stage 3 and Stage 4 do not run")
+                        tracker.finalize()
+                        return {
+                            'status': 'cancelled',
+                            'schema': schema_name,
+                            'run_id': run_id,
+                        }, 200
 
             # Check if pipeline succeeded
             if not result.success:
@@ -8223,9 +8963,9 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                 }, 500
 
             # The model answered with the refusal the safety prefix asks for:
-            # the run stops here as a block at stage 2, the shape of the
-            # stage-1 block above; until 2026-10-10 the sentence went on as
-            # the interception, into stage 3 and the generation (finding S-015 of the code review of 2026-10-10).
+            # the run stops here as a block at stage 2, in the shape of the
+            # intake's block above; until 2026-10-10 the sentence went on as
+            # the interception, into stage 3 and the generation.
             refusal = _stage2_refusal(result)
             if refusal:
                 logger.warning("[4-STAGE] Stage 2 refused by the model; the run stops here")
@@ -8246,15 +8986,40 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                     'schema': schema_name,
                     'error': refusal,
                     'reason': refusal,
-                    'stage': 2,
-                    'blocked_reason': refusal,
-                    'blocked_stage': 2,
-                    'blocked_at_stage': 2,
-                    'metadata': {
-                        'stage': 'interception',
-                        'blocked_on': 'interception',
-                    }
+                    'safety_block': safety_block(CHECKPOINT_REFUSAL, REASON_REFUSAL, refusal,
+                                                 'interception'),
                 }, 403
+
+            # THE RESULT. The text this Stage 2 wrote leaves as the answer's
+            # `final_output`, and the terms the model looked up leave in its
+            # `metadata`: each is checked before it does, in one slot of the
+            # queue, and nothing is reworded. A refused text ends the run as a
+            # block at stage 2, as the refusal above does. Where an adaption ran,
+            # the interception it was written from stays here.
+            written = _stage2_written_texts(result, own_text, interception=False)
+            if written:
+                with llm_queue_semaphore:
+                    for field, text in written:
+                        verdict = check_result_text(text, level=safety_level, field=field)
+                        if verdict.passed:
+                            continue
+                        logger.warning(f"[4-STAGE] Withheld at the result ({field})")
+                        tracker.finalize()
+                        recorder.save_error(
+                            stage=2,
+                            error_type='safety_blocked',
+                            message=verdict.reason,
+                            details={'check': 'result', 'field': field,
+                                     'reason_key': verdict.reason_key,
+                                     'safety_level': safety_level}
+                        )
+                        return {
+                            'status': 'blocked',
+                            'schema': schema_name,
+                            'error': verdict.reason,
+                            'reason': verdict.reason,
+                            'safety_block': verdict.block(),
+                        }, 403
 
             # Extract metadata from pipeline result
             model_used = None
@@ -8290,30 +9055,11 @@ def _run_interception_pipeline(data: dict, safety_level: str):
             })
             logger.info(f"[RECORDER] Saved interception entity")
 
-        # ====================================================================
-        # CONDITIONAL STAGE 3: Post-Interception Safety Check
-        # ====================================================================
-        # Only run Stage 3 if Stage 2 pipeline requires it (prompt_interception type)
-        # Non-transformation pipelines (text_semantic_split, etc.) skip this
-
-        # What this perspective says about carrying its result into English.
-        # `config` is the resolved perspective, kept ones included.
+        # What this perspective says about carrying its result into English,
+        # for the check before the model below. `config` is the resolved
+        # perspective, kept ones included.
         from schemas.engine.stage_orchestrator import translation_instruction_for
         stage4_translation_instruction = translation_instruction_for(config)
-
-        pipeline_def = pipeline_executor.config_loader.get_pipeline(config.pipeline_name)
-        requires_stage3 = pipeline_def.requires_interception_prompt if pipeline_def else True  # Default True for safety
-
-        if requires_stage3 and safety_level != 'research' and isinstance(result.final_output, str):
-            logger.info(f"[4-STAGE] Stage 3: Post-Interception Safety Check (pipeline requires it)")
-            # TODO: Implement Stage 3 safety check on result.final_output here
-            # For now, this is a placeholder - actual implementation in future session
-        else:
-            if not requires_stage3:
-                pipeline_type = pipeline_def.pipeline_type if pipeline_def else 'unknown'
-                logger.info(f"[4-STAGE] Stage 3: SKIPPED (pipeline_type={pipeline_type}, no transformation)")
-            elif not isinstance(result.final_output, str):
-                logger.info(f"[4-STAGE] Stage 3: SKIPPED (structured output, not text string)")
 
         # Response für erfolgreiche Pipeline
         response_data = {
@@ -8331,6 +9077,14 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         # ====================================================================
         # STAGE 3-4 LOOP: Multi-Output Support
         # ====================================================================
+        # Stage 3 and Stage 4 under the run's own id, as Stage 2 was: a reader
+        # who leaves from here on, or a stop, marks it and ends what the run
+        # holds at ComfyUI, and the checks of `is_aborted(run_id)` below act on
+        # the mark. The watch ends before the check at the result, which reads
+        # what was stored whether its reader is still there or not.
+        stage34 = contextlib.ExitStack()
+        stage34.enter_context(generation_abort.ended_when_its_reader_leaves(
+            client_gone, kind='interception', label='4-STAGE', run_id=run_id))
         media_preferences = config.media_preferences or {}
         default_output = media_preferences.get('default_output') if media_preferences else None
         output_configs = media_preferences.get('output_configs', [])
@@ -8382,6 +9136,13 @@ def _run_interception_pipeline(data: dict, safety_level: str):
             for i, output_config_name in enumerate(configs_to_execute):
                 logger.info(f"[4-STAGE] Stage 3-4 Loop iteration {i+1}/{len(configs_to_execute)}: {output_config_name}")
                 tracker.set_loop_iteration(i + 1)
+
+                # Stopped, or its reader left, before this output's Stage 3.
+                if generation_abort.is_aborted(run_id):
+                    logger.info(f"[4-STAGE] Cancelled before Stage 3: {run_id}")
+                    media_outputs.append({'config': output_config_name,
+                                          'status': 'cancelled'})
+                    continue
 
                 # ====================================================================
                 # DETERMINE MEDIA TYPE (needed for both Stage 3 and Stage 4)
@@ -8435,191 +9196,132 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                     logger.info(f"[PHASE4-SEED] User override → using seed {calculated_seed}")
 
                 # ====================================================================
-                # STAGE 3: PRE-OUTPUT SAFETY (per output config)
+                # THE CHECK BEFORE THE MODEL (per output config)
                 # ====================================================================
                 stage_3_blocked = False
 
-                # Skip Stage 3 ONLY if stage4_only=True (fast regeneration)
-                # Note: Stage 3 now includes translation, so it runs even if safety_level='research'
+                # Skipped ONLY if stage4_only=True (fast regeneration), which no
+                # request can set.
                 if not stage4_only:
                     tracker.set_stage(3)
-                    recorder.set_state(3, "pre_output_safety")
-
-                    # SESSION 84: Skip translation for code output (code is already in target format)
-                    # Code output doesn't need translation - it's JavaScript, not natural language
-                    skip_translation = (media_type == 'code')
-                    # The setting as Stage 3 starts, for the run record: the
-                    # translation reads it as it begins, the code check just
-                    # before it asks for its verdict.
+                    recorder.set_state(3, "before_model")
+                    # The setting as the translation starts, for the run record:
+                    # the translation reads it as it begins.
                     from config import STAGE3_MODEL as stage3_model_at_start
 
-                    if skip_translation:
-                        # For code generation: Skip translation, but keep safety check
-                        logger.info(f"[4-STAGE] Stage 3: Skip translation (skip_translation=true), safety only for {output_config_name}")
-
-                        # Use Stage 2 output directly (already in target language)
-                        safety_result = asyncio.run(execute_stage3_safety_code(
-                            result.final_output,
-                            safety_level,
-                            media_type,
-                        ))
-
-                        # Code path: no translation, use Stage 2 output directly
-                        if safety_result['safe']:
-                            safety_result['positive_prompt'] = result.final_output
-                    else:
-                        # Standard path: Translation + Safety
-                        # CLIP-prompt mode: safety-check the interception result (user's own text)
-                        prompt_for_safety = interception_text if triple_prompt_data else result.final_output
+                    # What the model receives and, where that is a translation,
+                    # the text it was translated from: the check reads both. On
+                    # this way the model receives a translation at kids, as it
+                    # did from Stage 3, and the text as written at the other
+                    # levels, where the check translates it for itself. For
+                    # SD3.5 the caption reaches the CLIP encoders as written at
+                    # every level and T5 reads the interception text, translated
+                    # at kids. Code reaches no model here: its output config
+                    # hands the sketch Stage 2 wrote on as it is, and the sketch
+                    # is checked as code at the result, before it leaves.
+                    verdict = None
+                    texts = {}
+                    originals = {}
+                    if media_type != 'code':
                         if triple_prompt_data:
-                            logger.info(f"[4-STAGE] Stage 3: Using interception result for safety+translation (user text → T5)")
-                        logger.info(f"[4-STAGE] Stage 3: Translation + Safety for {output_config_name} (type: {media_type}, level: {safety_level})")
+                            texts = {'prompt': triple_prompt_data['clip'],
+                                     'prompt_3': interception_text}
+                            translated_field = 'prompt_3'
+                        else:
+                            texts = {'prompt': result.final_output}
+                            translated_field = 'prompt'
+                        source = texts[translated_field]
+                        if safety_level == 'kids' and isinstance(source, str) and source.strip():
+                            translated = asyncio.run(_translate_for_model(
+                                source, pipeline_executor, device_id=device_id,
+                                translation_instruction=stage4_translation_instruction))
+                            if translated is None:
+                                # A run at kids without its translation stops,
+                                # as it did in Stage 3: a fault, not a rating.
+                                verdict = Verdict(False, CHECKPOINT_BEFORE_MODEL, 'kids',
+                                                  translated_field, REASON_UNAVAILABLE,
+                                                  SAFETY_CHECK_UNAVAILABLE_MESSAGE)
+                            else:
+                                texts[translated_field] = translated
+                                originals = {translated_field: source}
+                        if verdict is None:
+                            verdict = check_before_model(
+                                texts, level=safety_level, originals=originals,
+                                images=_input_pictures(input_image, multi_images),
+                                translation_instruction=stage4_translation_instruction)
 
-                        safety_result = asyncio.run(execute_stage3_safety(
-                            prompt_for_safety,
-                            safety_level,
-                            media_type,
-                            pipeline_executor,
-                            user_language=user_language,
-                            device_id=device_id,
-                            translation_instruction=stage4_translation_instruction
-                        ))
+                        # Which models the check ran on, for the run record.
+                        # STAGE3_MODEL translates, for the model at kids and
+                        # for the check at every level but research; the
+                        # classifier answers the check at every level but
+                        # research.
+                        if normalise_level(safety_level) not in UNCHECKED_LEVELS:
+                            from my_app.services.safety_classifier import (
+                                model_name as safety_model_name)
+                            models_used = recorder.metadata['models_used']
+                            models_used['stage3_translation'] = stage3_model_at_start
+                            models_used['stage3_safety'] = safety_model_name()
+                            recorder._save_metadata()
 
+                    # A check that could not run because its run ended (the
+                    # watcher cancelled the translation or the check at
+                    # ComfyUI) is no verdict and goes into no record as one.
+                    if (verdict is not None and verdict.operational
+                            and generation_abort.is_aborted(run_id)):
+                        logger.info(f"[4-STAGE] Cancelled during Stage 3: {run_id}")
+                        media_outputs.append({'config': output_config_name,
+                                              'status': 'cancelled',
+                                              'media_type': media_type})
+                        continue
 
-                    # The CLIP caption goes to the model beside the checked
-                    # long form, so it is checked as it reaches it (as_given).
-                    # Only the verdict is read. No device_id: this translation
-                    # is no draft of the visitor's to reuse on the next press.
-                    clip_caption = (triple_prompt_data['clip']
-                                    if triple_prompt_data and not skip_translation
-                                    else None)
-                    if safety_result.get('safe') and clip_caption:
-                        extra_result = asyncio.run(execute_stage3_safety(
-                            clip_caption,
-                            safety_level,
-                            media_type,
-                            pipeline_executor,
-                            user_language=user_language,
-                            as_given=True,
-                        ))
-                        if not extra_result.get('safe'):
-                            safety_result = {
-                                **safety_result,
-                                'safe': False,
-                                'method': extra_result.get('method', safety_result.get('method')),
-                                'abort_reason': extra_result.get('abort_reason'),
-                            }
-
-                    # Which models Stage 3 ran on for this output. STAGE3_MODEL
-                    # translates, except for code and at research and adult; the
-                    # prompt check is the safety classifier's, and the model that
-                    # answered names itself in the result.
-                    if not skip_translation and safety_level not in ('research', 'adult'):
-                        recorder.metadata['models_used']['stage3_translation'] = stage3_model_at_start
-                    if safety_result.get('model_used'):
-                        recorder.metadata['models_used']['stage3_safety'] = safety_result['model_used']
-                    elif skip_translation and safety_result.get('method') in ('llm_context_check', 'llm_check_failed'):
-                        # The code check asks STAGE3_MODEL for its verdict
-                        # (_call_verdict_model) and does not name it.
-                        recorder.metadata['models_used']['stage3_safety'] = stage3_model_at_start
-                    recorder._save_metadata()
-
-                    # Log Stage 3 safety check
-                    tracker.log_stage3_safety_check(
-                        loop_iteration=i + 1,
-                        safe=safety_result['safe'],
-                        method=safety_result.get('method', 'hybrid'),
-                        config_used=output_config_name,
-                        model_used=safety_result.get('model_used'),
-                        backend_type=safety_result.get('backend_type'),
-                        execution_time=safety_result.get('execution_time')
-                    )
-
-                    if not safety_result['safe']:
-                        # Stage 3 blocked for this output
-                        abort_reason = safety_result.get('abort_reason', 'Content blocked by safety filter')
-                        logger.warning(f"[4-STAGE] Stage 3 BLOCKED for {output_config_name}: {abort_reason}")
-
-                        # SESSION 29: Save safety_pre_output result (blocked)
-                        recorder.save_entity('safety_pre_output', {
-                            'safe': False,
-                            'method': safety_result.get('method', 'hybrid'),
-                            'media_type': media_type,
-                            'safety_level': safety_level,
-                            'blocked': True,
-                            'abort_reason': abort_reason
-                        })
-
-                        # SESSION 29: Save stage 3 blocked error
+                    if verdict is not None and not verdict.passed:
+                        logger.warning(f"[4-STAGE] The check before the model BLOCKED "
+                                       f"{output_config_name} ({verdict.field})")
                         recorder.save_error(
                             stage=3,
                             error_type='safety_blocked',
-                            message=abort_reason,
-                            details={'media_type': media_type, 'config': output_config_name}
+                            message=verdict.reason,
+                            details={'check': 'before_model', 'field': verdict.field,
+                                     'reason_key': verdict.reason_key,
+                                     'safety_level': safety_level,
+                                     'media_type': media_type, 'config': output_config_name}
                         )
-                        logger.info(f"[RECORDER] Saved stage 3 blocked error")
-
-                        # Log Stage 3 blocked
-                        tracker.log_stage3_blocked(
-                            loop_iteration=i + 1,
-                            config_used=output_config_name,
-                            abort_reason=abort_reason
-                        )
-
                         media_outputs.append({
                             'config': output_config_name,
                             'status': 'blocked',
-                            'reason': abort_reason,
+                            'reason': verdict.reason,
+                            'safety_block': verdict.block(),
                             'media_type': media_type,  # Add media_type for frontend
                             'safety_level': safety_level
                         })
                         stage_3_blocked = True
                         continue  # Skip Stage 4 for this output
+
+                    # What the model receives, as the check read it.
+                    if media_type == 'code':
+                        prompt_for_media = result.final_output
                     else:
-                        # SESSION 29: Save safety_pre_output result (passed)
-                        recorder.save_entity('safety_pre_output', {
-                            'safe': True,
-                            'method': safety_result.get('method', 'hybrid'),
-                            'media_type': media_type,
-                            'safety_level': safety_level
-                        })
-                        logger.info(f"[RECORDER] Saved safety_pre_output entity")
-
-        # End of skip_preprocessing else block - Stage 1-3 complete
-
-        # ====================================================================
-        # Determine prompt for Stage 4 (use translated text if Stage 3 ran)
-        # ====================================================================
-                # If Stage 3 ran and translated the text, use the English positive_prompt
-                # Otherwise, fallback to Stage 2 output (only if stage4_only=True)
-                if not stage_3_blocked and not stage4_only:
-                    # Stage 3 ran - use translated English text from positive_prompt
-                    translated_prompt = safety_result.get('positive_prompt', result.final_output)
-                    logger.info(f"[4-STAGE] Using translated prompt from Stage 3 for media generation")
-                    logger.info(f"[STAGE3-TRANSLATED] Prompt (first 200 chars): {translated_prompt[:200]}...")
-
-                    if triple_prompt_data:
-                        # CLIP-prompt mode: CLIP-L/G from optimization, T5 = translated interception result
-                        prompt_for_media = triple_prompt_data['clip']
-                        custom_params['prompt_3'] = translated_prompt  # long form, translated by Stage 3
-                        logger.info(f"[ENCODER-PROMPT] Stage 4: CLIP-L/CLIP-G={len(prompt_for_media.split())}w, "
-                                    f"T5={len(translated_prompt.split())}w")
-                    else:
-                        prompt_for_media = translated_prompt
-
-                    # Save translation (English prompt for media generation)
-                    if translated_prompt != result.final_output:
-                        recorder.save_entity('translation_en', translated_prompt)
-                        logger.info(f"[RECORDER] Saved translation_en entity")
+                        prompt_for_media = texts['prompt']
+                        if triple_prompt_data:
+                            custom_params['prompt_3'] = texts['prompt_3']
+                            logger.info(f"[ENCODER-PROMPT] Stage 4: "
+                                        f"CLIP-L/CLIP-G={len(prompt_for_media.split())}w, "
+                                        f"T5={len(texts['prompt_3'].split())}w")
+                        # The English text the model receives, where it
+                        # receives a translation.
+                        if any(texts[name] != text for name, text in originals.items()):
+                            recorder.save_entity('translation_en', texts[translated_field])
+                            logger.info("[RECORDER] Saved translation_en entity")
                 else:
-                    # Stage 3 skipped - use Stage 2 output directly
+                    # The check skipped - use Stage 2 output directly
                     if triple_prompt_data:
                         prompt_for_media = triple_prompt_data['clip']
                         custom_params['prompt_3'] = triple_prompt_data['t5']
-                        logger.info(f"[ENCODER-PROMPT] Stage 4 (no Stage 3): T5 = long form from the adaptation")
+                        logger.info("[ENCODER-PROMPT] Stage 4 (no check): "
+                                    "T5 = long form from the adaptation")
                     else:
                         prompt_for_media = result.final_output
-                    logger.info(f"[4-STAGE] Using Stage 2 output directly (Stage 3 skipped)")
+                    logger.info("[4-STAGE] Using Stage 2 output directly (the check skipped)")
 
         # ====================================================================
         # STAGE 4: OUTPUT (Media Generation)
@@ -8702,9 +9404,7 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                                 context_override=context_override,  # NEW: Pass custom parameters uniformly
                                 seed_override=calculated_seed,  # Phase 4: Intelligent seed
                                 input_image=input_image,  # IMG2IMG support
-                                input_image1=input_image1,  # Multi-image support (image 1)
-                                input_image2=input_image2,  # Multi-image support (image 2, optional)
-                                input_image3=input_image3,  # Multi-image support (image 3, optional)
+                                multi_images=multi_images,
                                 alpha_factor=alpha_factor  # Surrealizer: T5-CLIP fusion alpha (backwards compat)
                             ))
                         finally:
@@ -8935,7 +9635,7 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                                             metadata={
                                                 'config': output_config_name,
                                                 'backend': output_result.metadata.get('backend', 'openrouter'),
-                                                'model': output_result.metadata.get('model', 'unknown'),
+                                                'model': output_result.metadata.get('model_used', 'unknown'),
                                                 'language': 'javascript',
                                                 'framework': code_framework,
                                                 'seed': seed,
@@ -8945,15 +9645,36 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                                         logger.info(f"[STAGE4-CODE] Saved code entity: {saved_filename}")
                                         media_stored = True
 
-                                        # Create media output data for frontend
-                                        media_output_data = {
-                                            'config': output_config_name,
-                                            'status': 'success',
-                                            'media_type': 'code',
-                                            'filename': saved_filename,
-                                            'url': code_route,
-                                            'code': output_value  # Include code in response
-                                        }
+                                        # THE CHECK AT THE RESULT: the code as it
+                                        # would run in the browser. Its verdict
+                                        # lands on the entity, where delivery
+                                        # reads it, and a refused sketch does
+                                        # not go out.
+                                        code_verdict = check_result_code(
+                                            output_value, level=safety_level,
+                                            recorder=recorder,
+                                            entity=_code_entity_of(recorder))
+                                        if code_verdict.passed:
+                                            # Create media output data for frontend
+                                            media_output_data = {
+                                                'config': output_config_name,
+                                                'status': 'success',
+                                                'media_type': 'code',
+                                                'filename': saved_filename,
+                                                'url': code_route,
+                                                'code': output_value  # Include code in response
+                                            }
+                                        else:
+                                            refused = _code_refused(code_verdict, recorder,
+                                                                    safety_level, run_id)
+                                            media_output_data = {
+                                                'config': output_config_name,
+                                                'status': 'blocked',
+                                                'reason': refused['error'],
+                                                'safety_block': refused['safety_block'],
+                                                'media_type': 'code',
+                                                'safety_level': safety_level,
+                                            }
                                     else:
                                         logger.error(f"[STAGE4-CODE] Code generation failed: empty output")
                                         media_stored = False
@@ -9003,7 +9724,7 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                                             metadata={
                                                 'config': output_config_name,
                                                 'backend': 'diffusers',
-                                                'model': output_result.metadata.get('model_id', 'unknown'),
+                                                'model': output_result.metadata.get('model_used', 'unknown'),
                                                 'seed': seed
                                             }
                                         )
@@ -9427,6 +10148,38 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                                 media_output_data['metadata'] = output_result.metadata
                                 media_output_data.update(generator)
                                 media_outputs.append(media_output_data)
+                            elif (media_type in ('image', 'video', '3d') and not media_stored
+                                  and safety_level in ('kids', 'youth')):
+                                # A picture, a video or a 3D model that was not
+                                # stored has no entity for the check at the
+                                # result to read, and its raw output would leave
+                                # unread: a URL, a ComfyUI prompt id, or the
+                                # medium itself as base64 (a 3D model with its
+                                # preview), in the output or in the metadata.
+                                # Withheld as a fault, not a rating, as the check
+                                # withholds one whose file is missing.
+                                unstored = Verdict(False, CHECKPOINT_RESULT,
+                                                   normalise_level(safety_level), media_type,
+                                                   REASON_UNAVAILABLE, 'not_stored')
+                                logger.warning(f"[4-STAGE] A {media_type} of run {run_id} was not "
+                                               f"stored and is withheld ({output_config_name})")
+                                recorder.save_error(
+                                    stage=4,
+                                    error_type='safety_blocked',
+                                    message=unstored.reason,
+                                    details={'check': 'result', 'field': media_type,
+                                             'reason_key': unstored.reason_key,
+                                             'safety_level': safety_level,
+                                             'config': output_config_name}
+                                )
+                                media_outputs.append({
+                                    'config': output_config_name,
+                                    'status': 'blocked',
+                                    'reason': unstored.reason,
+                                    'safety_block': unstored.block(),
+                                    'media_type': media_type,
+                                    'safety_level': safety_level
+                                })
                             else:
                                 # Generic object for image/video/audio
                                 media_outputs.append({
@@ -9477,34 +10230,53 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                 'message': f'No Output-Config for {default_output}'
             }
 
+        # The watch over Stage 3 and Stage 4 ends here.
+        stage34.close()
+
         # ====================================================================
-        # POST-GENERATION IMAGE CHECK (kids/youth)
+        # THE CHECK AT THE RESULT: THE PICTURES AND VIDEOS (kids/youth)
         # ====================================================================
-        # This route saves `output_image` in three places of its own (image
-        # chunks and two Blender previews) and never held any of them against
-        # the check, while its siblings — the stream and the direct route — did.
-        # A picture made here went to a course group unscreened.
-        if safety_level in ('kids', 'youth') and recorder.output_entities('image'):
-            vlm_safe, vlm_reason, vlm_description = _vlm_safety_check_image(
-                recorder, safety_level)
-            if not vlm_safe:
-                logger.warning(
-                    f"[INTERCEPTION] VLM safety BLOCKED for run {run_id}: {vlm_reason}")
+        # Every picture the run stored, the Blender preview of a 3D run
+        # included, and every video, each with its own verdict on its entity,
+        # where delivery reads it. One refused picture or video withholds the
+        # run, and so does a 3D run without its preview, since nothing would
+        # clear the model. One that was not stored was withheld where its
+        # output was answered.
+        if safety_level in ('kids', 'youth') and (
+                recorder.output_entities('image') or recorder.output_entities('video')
+                or recorder.output_entities('3d')):
+            pictures, refusal = _pictures_of_run(recorder, safety_level)
+            for sequence, path in pictures:
+                verdict = check_result_image(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            videos, unread = _videos_of_run(recorder, safety_level)
+            if refusal is None:
+                refusal = unread
+            for sequence, path in videos:
+                verdict = check_result_video(path, level=safety_level,
+                                             recorder=recorder, entity=sequence)
+                if refusal is None and not verdict.passed:
+                    refusal = verdict
+            if refusal is not None:
+                logger.warning(f"[INTERCEPTION] The check at the result withheld run "
+                               f"{run_id}: {refusal.reason}")
                 # Written into the record as well as answered, so that a run
                 # whose reader has left still shows the course leader why.
                 recorder.save_error(
-                    stage=3, error_type='safety_blocked', message=f'VLM: {vlm_reason}',
+                    stage=3, error_type='safety_blocked', message=f'VLM: {refusal.reason}',
                     details={'check': 'vlm', 'safety_level': safety_level,
-                             'vlm_reason': vlm_reason, 'vlm_description': vlm_description})
+                             'vlm_reason': refusal.reason, 'vlm_description': ''})
                 tracker.finalize()
                 return {
                     'status': 'blocked',
-                    'stage': 'vlm_safety',
-                    'reason': vlm_reason,
-                    'error': vlm_reason,
-                    'vlm_description': vlm_description,
+                    'reason': refusal.reason,
+                    'error': refusal.reason,
+                    'safety_block': refusal.block(),
+                    'vlm_description': '',
                     'run_id': run_id,
-                    'checks_passed': ['stage1', 'stage3', 'generation', 'vlm_blocked'],
+                    'checks_passed': ['intake', 'before_model', 'generation', 'vlm_blocked'],
                 }, 403
 
         # One output was asked for and it did not come. The body said 'success'
@@ -9530,9 +10302,7 @@ def _run_interception_pipeline(data: dict, safety_level: str):
                     'run_id': run_id,
                     'error': failed.get('reason'),
                     'reason': failed.get('reason'),
-                    'stage': 3,
-                    'blocked_reason': failed.get('reason'),
-                    'blocked_stage': 3,
+                    'safety_block': failed['safety_block'],
                     'media_output': failed,
                 }, 403
             return {
@@ -9594,6 +10364,8 @@ def _run_interception_pipeline(data: dict, safety_level: str):
         }, 500
 
     finally:
+        if stage34 is not None:
+            stage34.close()
         if kept:
             kept.set()
         _leave_generation(device_id, run_id)
@@ -10015,8 +10787,25 @@ def analyze_image_endpoint():
             "analysis_type": "bildwissenschaftlich",
             "run_id": "uuid"
         }
+
+    A prompt of the caller's own passes the intake before the model reads the
+    picture, and the analysis is checked at the result before it leaves; a
+    refusal answers 403 with the block message (`safety_block`).
     """
     from my_app.utils.image_analysis import analyze_image_from_run
+
+    # Resolved once, here, for the picture's delivery and both checks. An
+    # unknown level would run them against nothing, so a resolver that raises
+    # ends the request.
+    try:
+        safety_level = resolve_safety_level()
+    except Exception as exc:
+        logger.error(f"[IMAGE-ANALYSIS] Error: {exc}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': 'The safety level for this request could not be resolved '
+                     f'({exc}), so nothing was run.',
+        }), 500
 
     try:
         data = request.get_json()
@@ -10035,10 +10824,39 @@ def analyze_image_endpoint():
             valid_types = reading_frames.frame_ids()
             return jsonify({'success': False, 'error': f'Invalid analysis_type. Must be one of: {valid_types}'}), 400
 
+        # THE INTAKE, over a prompt the caller wrote. Without one the frame's
+        # own text is read, which is the platform's and asks nothing.
+        if custom_prompt:
+            with llm_queue_semaphore:
+                intake = check_intake_texts({'prompt': custom_prompt}, level=safety_level)
+            if not intake.passed:
+                logger.warning(f"[IMAGE-ANALYSIS] Intake BLOCKED ({intake.field})")
+                return jsonify({
+                    'success': False,
+                    'status': 'blocked',
+                    'error': intake.reason,
+                    'safety_block': intake.block(),
+                    'safety_level': safety_level,
+                }), 403
+
         logger.info(f"[IMAGE-ANALYSIS] Starting {analysis_type} analysis for run_id: {run_id}")
 
         # Analyze image
-        analysis_text = analyze_image_from_run(run_id, prompt=custom_prompt, analysis_type=analysis_type)
+        analysis_text = analyze_image_from_run(run_id, prompt=custom_prompt, analysis_type=analysis_type,
+                                               level=safety_level)
+
+        # THE RESULT. The analysis is checked before it leaves.
+        with llm_queue_semaphore:
+            verdict = check_result_text(analysis_text, level=safety_level, field='analysis')
+        if not verdict.passed:
+            logger.warning("[IMAGE-ANALYSIS] Withheld at the result")
+            return jsonify({
+                'success': False,
+                'status': 'blocked',
+                'error': verdict.reason,
+                'safety_block': verdict.block(),
+                'safety_level': safety_level,
+            }), 403
 
         return jsonify({
             'success': True,

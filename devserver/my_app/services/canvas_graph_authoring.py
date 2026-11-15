@@ -39,14 +39,12 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # --- Allow-list of generation configIds Resona may wire into a graph ---------
 # Terse labels; keys MUST have a matching devserver/schemas/configs/output/<id>.json.
-# The 10 shipped text->media configs plus the 6 pedagogical Latent-Lab experiments.
+# The 8 shipped text->media configs plus the Latent-Lab experiments a graph can run.
 RESONA_CANVAS_CONFIGS: Dict[str, str] = {
     # Shipped text->media configs
     "sd35_large": "SD3.5 Large — detailed images",
     "flux2": "FLUX.2 — images",
     "flux3": "FLUX 3 Image Klein — images",
-    "gemini_3_pro_image": "Gemini 3 Pro image (€ paid cloud call, cloud)",
-    "gemini_nano_banana_2_1": "Gemini Nano Banana 2.1 image (€ paid cloud call, cloud)",
     "stableaudio_open": "Stable Audio — sound",
     "heartmula_standard": "HeartMuLa — music (lyrics || tags)",
     "wan22_t2v_video_fast": "Wan 2.2 — text-to-video",
@@ -54,11 +52,23 @@ RESONA_CANVAS_CONFIGS: Dict[str, str] = {
     "hunyuan3d_text_to_3d": "Hunyuan3D — text-to-3D",
     # Latent-Lab experiments (pedagogical)
     "surrealization": "Surrealizer — embedding inversion",
-    "concept_algebra": "Concept Algebra — prompt arithmetic",
-    "feature_probing": "Dimension Explorer — embedding dimensions carried from prompt B into A",
-    "composable_diffusion": "Composable Diffusion — AND/NOT composition",
+    "composable_diffusion": "Composable Diffusion — two to five concepts, one text edge each, combined while the image is computed",
     "denoising_archaeology_comfyui": "Denoising Archaeology — interrupted denoising",
     "attention_cartography": "Attention Cartography — attention maps",
+}
+
+# The Latent-Lab instruments a graph cannot run, and why. Both read more than a
+# generation node gives them, so they stay off the list above and an apparatus
+# that names one is told so when it is built.
+PAGE_ONLY_INSTRUMENTS: Dict[str, str] = {
+    "concept_algebra": (
+        "Concept Algebra reads three texts, A minus B plus C, and runs only on its "
+        "own page in the Latent Lab"
+    ),
+    "feature_probing": (
+        "the Dimension Explorer reads two texts and needs a choice of dimensions "
+        "between two passes, and runs only on its own page in the Latent Lab"
+    ),
 }
 
 # Authoring node types Resona may place directly in a graph.
@@ -86,6 +96,19 @@ _PARAM_TYPES = ("seed", "resolution", "quality")
 # Caps.
 MAX_AUTHORED_NODES = 12
 MAX_GENERATION_NODES = 4
+
+# The configs that read several concepts instead of one prompt, and how many.
+# A concept is a text in its own right, so it reaches the generation node the way
+# every text does: on an edge of its own, which lets an interception or a
+# translation stand in front of any one of them. The floor is the chunk's, the
+# ceiling the instrument's (composable_diffusion.vue, MAX_CONCEPTS).
+CONCEPT_CONFIGS: Dict[str, Tuple[int, int]] = {
+    "composable_diffusion": (2, 5),
+    "composable_diffusion_diffusers": (2, 5),
+}
+# The range of the instrument's weight slider, and the places its chunk knows.
+_MIN_CONCEPT_WEIGHT, _MAX_CONCEPT_WEIGHT = -2.0, 2.0
+_COMBINE_PLACES = ("score", "conditioning")
 
 # Convenience-key int ranges for expansion.
 _MIN_SEED = 0
@@ -394,6 +417,84 @@ def _as_int(value: Any) -> Optional[int]:
     return None
 
 
+def _concepts_refusal(node: Dict[str, Any], nodes: List[Dict[str, Any]],
+                      connections: List[Dict[str, Any]],
+                      node_types: Dict[str, str]) -> Optional[str]:
+    """Why this generation node cannot run as written, as far as concepts go.
+
+    Asked here because the alternative is a chunk refusing the run on the group's
+    board, after the apparatus was accepted and the other branches have spent
+    their time: on 2026-11-04 a card failed with "Need at least 2 concepts", for
+    a graph whose one text said "a AND b AND c".
+    """
+    gid = node["id"]
+    limits = CONCEPT_CONFIGS.get(node.get("configId"))
+    keys = [k for k in ("concept_weights", "combine_at") if k in node]
+    if limits is None:
+        if keys:
+            return (
+                f"generation node '{gid}': {' and '.join(keys)} only apply to "
+                f"configId 'composable_diffusion'."
+            )
+        return None
+
+    low, high = limits
+    sources = list(dict.fromkeys(
+        c["sourceId"] for c in connections
+        if c["targetId"] == gid and _output_kind(node_types[c["sourceId"]]) == "text"
+    ))
+    if not low <= len(sources) <= high:
+        return (
+            f"generation node '{gid}': {node.get('configId')} reads {low} to {high} "
+            f"concepts, one per text connected to it, and {len(sources)} are "
+            f"connected. Give each concept its own input node and connect each one "
+            f"to this node; one text stays one concept, whatever words stand in it."
+        )
+
+    empty = [n["id"] for n in nodes if n.get("id") in sources and n.get("type") == "input"
+             and not str(n.get("promptText") or "").strip()]
+    if empty:
+        return (
+            f"generation node '{gid}': input node '{empty[0]}' holds no text, and "
+            f"every concept needs one."
+        )
+
+    weights = node.get("concept_weights")
+    if weights is not None:
+        numbers = isinstance(weights, list) and all(
+            isinstance(w, (int, float)) and not isinstance(w, bool)
+            and _MIN_CONCEPT_WEIGHT <= w <= _MAX_CONCEPT_WEIGHT
+            for w in weights
+        )
+        if not numbers or len(weights) != len(sources):
+            return (
+                f"generation node '{gid}': concept_weights must list {len(sources)} "
+                f"numbers between {_MIN_CONCEPT_WEIGHT} and {_MAX_CONCEPT_WEIGHT}, "
+                f"one per concept, in the order of the connections."
+            )
+
+    place = node.get("combine_at")
+    if place is not None and place not in _COMBINE_PLACES:
+        return (
+            f"generation node '{gid}': combine_at must be one of "
+            f"{', '.join(_COMBINE_PLACES)}."
+        )
+    if place == "conditioning" and weights is not None:
+        # The node interpolates step by step, each concept at its share of the
+        # weight carried so far, and refuses where there is no share to take
+        # (comfyui_nodes/ai4artsed_composable_diffusion.py, _combined_conditioning).
+        carrying = [w for w in weights if w != 0]
+        carried = carrying[0] if carrying else 0
+        cancels = any(abs(sum(carrying[:i + 1])) < 1e-6 for i in range(1, len(carrying)))
+        if not carried or cancels:
+            return (
+                f"generation node '{gid}': under combine_at 'conditioning' the weights "
+                f"must leave a share to interpolate at; these are all 0 or cancel "
+                f"each other out."
+            )
+    return None
+
+
 def validate_and_expand(graph: Any) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
     """
     Validate a Resona-authored graph and expand generation-node convenience keys
@@ -457,6 +558,11 @@ def validate_and_expand(graph: Any) -> Tuple[Optional[Dict[str, Any]], Optional[
         if n.get("type") != "generation":
             continue
         cfg = n.get("configId")
+        if cfg in PAGE_ONLY_INSTRUMENTS:
+            return None, (
+                f"generation node '{n.get('id')}': {PAGE_ONLY_INSTRUMENTS[cfg]}. "
+                f"No graph can run it."
+            )
         if cfg not in RESONA_CANVAS_CONFIGS:
             valid = ", ".join(sorted(RESONA_CANVAS_CONFIGS.keys()))
             return None, (
@@ -735,6 +841,12 @@ def validate_and_expand(graph: Any) -> Tuple[Optional[Dict[str, Any]], Optional[
                         f"generation node '{gid}': fusion_strategy must be one of "
                         f"{', '.join(_FUSION_STRATEGIES)}."
                     )
+
+        # Composable Diffusion's two keys ride inline the same way, and the
+        # executor reads them from the node.
+        refusal = _concepts_refusal(node_copy, nodes, norm_conns, node_types)
+        if refusal:
+            return None, refusal
 
         expanded_nodes.append(node_copy)
 

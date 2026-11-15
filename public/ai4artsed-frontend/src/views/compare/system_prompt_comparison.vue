@@ -96,6 +96,24 @@
              which is why it stands with the model and not behind a fold of its
              own. -->
         <RandomnessAxis v-model="temperature" :disabled="isSending" />
+
+        <!-- The explanation box at the foot of the preparing column, the
+             platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+             heading is the menu title of this surface, its text is
+             `compare.systemprompt.noteBody`, cut into paragraphs at the blank line,
+             and the titles it cites stand under it in LabReferences. -->
+        <aside class="lab-note">
+          <h3>{{ t('latentLab.textLab.tabs.systemprompt.label') }}</h3>
+          <p
+            v-for="(para, i) in t('compare.systemprompt.noteBody').split('\n\n')"
+            :key="i"
+          >{{ para }}</p>
+          <LabReferences
+            :title="t('compare.systemprompt.referencesTitle')"
+            :items="REFERENCES"
+            flat
+          />
+        </aside>
       </section>
 
       <!-- 3 columns. The column and the field in its head are components,
@@ -147,10 +165,48 @@ import ChatColumn from '@/components/ChatColumn.vue'
 import SystemPromptField from '@/components/SystemPromptField.vue'
 import ShellRun from '@/components/ShellRun.vue'
 import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import { SYSTEM_PROMPT_PRESETS } from './system_prompt_presets'
 
 const { t } = useI18n()
+
+/**
+ * The titles the explanation box cites: instruction tuning, sycophancy, the
+ * temperature, and the maker's dated system prompts three presets come from.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Wei et al. (2022)',
+    title: '"Finetuned Language Models Are Zero-Shot Learners"',
+    venue: 'ICLR 2022',
+    doi: 'https://arxiv.org/abs/2109.01652',
+  },
+  {
+    authors: 'Ouyang et al. (2022)',
+    title: '"Training language models to follow instructions with human feedback"',
+    venue: 'NeurIPS 2022',
+    doi: 'https://arxiv.org/abs/2203.02155',
+  },
+  {
+    authors: 'Sharma et al. (2024)',
+    title: '"Towards Understanding Sycophancy in Language Models"',
+    venue: 'ICLR 2024',
+    doi: 'https://arxiv.org/abs/2310.13548',
+  },
+  {
+    authors: 'Holtzman et al. (2020)',
+    title: '"The Curious Case of Neural Text Degeneration"',
+    venue: 'ICLR 2020',
+    doi: 'https://arxiv.org/abs/1904.09751',
+  },
+  {
+    authors: 'Anthropic',
+    title: '"System prompts"',
+    venue: 'Release notes',
+    doi: 'https://platform.claude.com/docs/en/release-notes/system-prompts/overview',
+  },
+]
 const store = useSystemPromptCompareStore()
 const userPreferences = useUserPreferencesStore()
 const deviceId = useDeviceId()

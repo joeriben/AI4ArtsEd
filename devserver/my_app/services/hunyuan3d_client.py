@@ -67,7 +67,8 @@ class Hunyuan3DClient:
         guidance_scale: float = 7.5,
         octree_resolution: int = 256,
     ) -> tuple:
-        """(GLB bytes, the seed the mesh was made with). A run that ended
+        """(GLB bytes, the seed the mesh was made with, the model the run
+        loaded, which the chunk reports as `model_used`). A run that ended
         without a mesh raises BackendGenerationError with the node's own
         sentence, and a card the gate holds for someone else raises
         GpuBusyError, as the service's answers did (the router reads "out of
@@ -92,8 +93,8 @@ class Hunyuan3DClient:
             "image_base64": image_base64,
         }
         try:
-            out, files = LLMClient.run_node_files(NODE_CLASS, inputs,
-                                                  workload=CURRENT_OUTPUT_CONFIG.get() or None)
+            out, files, model_used = LLMClient.run_node_files(
+                NODE_CLASS, inputs, workload=CURRENT_OUTPUT_CONFIG.get() or None)
         except GpuBusyError:
             raise
         except Exception as e:
@@ -105,7 +106,7 @@ class Hunyuan3DClient:
         if mesh is None:
             logger.error(f"[HUNYUAN3D-CLIENT] the run ended without a mesh ({folder})")
             raise BackendGenerationError(f"the run of {NODE_CLASS} ({folder}) ended without a mesh")
-        return mesh.data, int(out.get("seed", actual_seed))
+        return mesh.data, int(out.get("seed", actual_seed)), model_used
 
     async def generate_mesh(
         self,
@@ -119,8 +120,8 @@ class Hunyuan3DClient:
         Generate a 3D mesh from an input image, on ComfyUI.
 
         Returns:
-            Tuple of (GLB bytes, actual_seed); a failed run raises, see
-            generate_mesh_sync
+            Tuple of (GLB bytes, actual_seed, the model the run loaded); a
+            failed run raises, see generate_mesh_sync
         """
         import asyncio
         return await asyncio.to_thread(

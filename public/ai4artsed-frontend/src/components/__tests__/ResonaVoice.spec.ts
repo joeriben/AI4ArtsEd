@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ResonaVoice, { type VoiceUtterance, type VoiceCoupling } from '../ResonaVoice.vue'
+import { splitForSpeech } from '@/composables/useSpeech'
 
 const user = (id: number, text: string): VoiceUtterance => ({ id, role: 'user', text })
 const said = (id: number, text: string): VoiceUtterance => ({ id, role: 'assistant', text, liftable: true })
@@ -110,13 +111,13 @@ function sounding(text: string, index: number, id = 0): VoiceCoupling {
 
 describe('ResonaVoice — one paragraph at a time', () => {
   it('stands only as far as the voice has come', () => {
-    const w = render([said(0, FOUR)], { words: true, coupling: sounding(FOUR, 0) })
+    const w = render([said(0, FOUR)], { coupling: sounding(FOUR, 0) })
     expect(standing(w)).toEqual(['Eins hier.'])
     w.unmount()
   })
 
   it('lets the paragraph grow with the voice, up to the maximum', async () => {
-    const w = render([said(0, FOUR)], { words: true, coupling: sounding(FOUR, 0) })
+    const w = render([said(0, FOUR)], { coupling: sounding(FOUR, 0) })
     await w.setProps({ coupling: sounding(FOUR, 1) })
     await w.setProps({ coupling: sounding(FOUR, 2) })
     expect(standing(w)).toEqual(['Eins hier.', 'Zwei hier.', 'Drei hier.'])
@@ -124,7 +125,7 @@ describe('ResonaVoice — one paragraph at a time', () => {
   })
 
   it('REMOVES the paragraph that stood when the next one is spoken', async () => {
-    const w = render([said(0, FOUR)], { words: true, coupling: sounding(FOUR, 0) })
+    const w = render([said(0, FOUR)], { coupling: sounding(FOUR, 0) })
     await w.setProps({ coupling: sounding(FOUR, 1) })
     await w.setProps({ coupling: sounding(FOUR, 2) })
     await w.setProps({ coupling: sounding(FOUR, 3) })
@@ -133,7 +134,7 @@ describe('ResonaVoice — one paragraph at a time', () => {
   })
 
   it('starts a paragraph where the blank line is, before the maximum', async () => {
-    const w = render([said(0, TWO_PARAS)], { words: true, coupling: sounding(TWO_PARAS, 1) })
+    const w = render([said(0, TWO_PARAS)], { coupling: sounding(TWO_PARAS, 1) })
     expect(standing(w)).toEqual(['Eins hier.', 'Zwei hier.'])
     await w.setProps({ coupling: sounding(TWO_PARAS, 2) })
     expect(standing(w)).toEqual(['Drei hier.'])
@@ -145,7 +146,6 @@ describe('ResonaVoice — one paragraph at a time', () => {
     // to release the entire reply at once, so the paragraph stood there in full
     // and there was nothing left to listen along to.
     const w = render([said(0, FOUR)], {
-      words: true,
       coupling: coupling({ askedKey: 0, blockedKey: 0 }),
     })
     expect(standing(w).length).toBeLessThanOrEqual(1)
@@ -157,7 +157,6 @@ describe('ResonaVoice — one paragraph at a time', () => {
     // piece i are no longer the same thing. The words then go at reading pace —
     // what they may NOT do is stand there complete.
     const w = render([said(0, FOUR)], {
-      words: true,
       coupling: coupling({
         speakingKey: 0,
         piece: { key: 0, index: 0, text: 'Eins hier.', total: 9, durationMs: 900 },
@@ -174,7 +173,6 @@ describe('ResonaVoice — one paragraph at a time', () => {
     vi.useFakeTimers()
     try {
       const w = render([said(0, FOUR)], {
-        words: true,
         streamingId: null,
         coupling: coupling({
           askedKey: 0,
@@ -197,7 +195,6 @@ describe('ResonaVoice — one paragraph at a time', () => {
     // any more, so nothing stands — the preamble used to stand through the
     // whole tool run.
     const w = render([said(0, FOUR)], {
-      words: true,
       streamingId: 0,
       coupling: sounding(FOUR, 2),
     })
@@ -207,12 +204,77 @@ describe('ResonaVoice — one paragraph at a time', () => {
     w.unmount()
   })
 
+  it('clears what stood when the text is taken back with the voice refused by the browser', async () => {
+    // A refused voice is no clock: the reading clock places the words, and a
+    // discarded preamble stood through the whole tool run on that clock. With
+    // the voice off: ResonaVoice.takeback.spec.ts.
+    vi.useFakeTimers()
+    try {
+      const w = render([said(0, FOUR)], {
+        streamingId: 0,
+        coupling: coupling({ askedKey: 0, blockedKey: 0 }),
+      })
+      expect(standing(w)).toEqual(['Eins hier.'])
+      await w.setProps({ trail: [said(0, '')] })
+      expect(standing(w)).toEqual([])
+      w.unmount()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps what stands while a stripped marker takes the next piece away again', async () => {
+    // A parent strips an open marker only once it is complete, so for a moment
+    // the text holds a second piece and then only the first again. On the
+    // reading clock the first piece of a text still arriving is not settled;
+    // what stood is still in the text, and it stays.
+    vi.useFakeTimers()
+    try {
+      const refused = coupling({ askedKey: 0, blockedKey: 0 })
+      const w = render([said(0, 'Eins hier. [GENER')], { streamingId: 0, coupling: refused })
+      expect(standing(w)).toEqual(['Eins hier.'])
+      await w.setProps({ trail: [said(0, 'Eins hier.')] })
+      expect(standing(w)).toEqual(['Eins hier.'])
+      w.unmount()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps what stands when the voice is switched off during its first piece', async () => {
+    vi.useFakeTimers()
+    try {
+      const w = render([said(0, 'Eins hier.')], {
+        streamingId: 0,
+        coupling: coupling({ askedKey: 0 }),
+      })
+      expect(standing(w)).toEqual(['Eins hier.'])
+      await w.setProps({ coupling: null })
+      expect(standing(w)).toEqual(['Eins hier.'])
+      w.unmount()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps a struck draft standing alone under the speech cutter', async () => {
+    // The speech cutter returns an empty text as one empty piece. On the
+    // coupled path that piece cleared the struck draft of a withdrawn reply
+    // and stood up an empty sentence in its place.
+    const draft = 'Eins hier. Zwei hier.'
+    const asked = coupling({ askedKey: 0, segment: splitForSpeech })
+    const w = render([said(0, draft)], { streamingId: 0, coupling: asked })
+    await w.setProps({ trail: [{ ...said(0, ''), withdrawn: [draft] }], coupling: asked })
+    expect(standing(w)).toEqual([draft])
+    expect(w.findAll('.sent-stack .voice-sent.withdrawn')).toHaveLength(1)
+    w.unmount()
+  })
+
   it('replaces a piece that came out differently once the rest had arrived', async () => {
     // While a reply is still arriving, the same cut can yield a different first
     // piece from one moment to the next. What stands has to become what the cut
     // now says, rather than a fragment left over from an earlier pass.
     const w = render([said(0, 'Ein')], {
-      words: true,
       streamingId: null,
       coupling: sounding('Ein', 0),
     })

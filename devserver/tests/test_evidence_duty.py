@@ -167,12 +167,9 @@ def test_prompt_carries_the_duty():
     from my_app.routes.chat_routes import RESONA_CORE_PROMPT, RESONA_PLANNING_BLOCK
     assert "INTERNAL EVIDENCE DUTY" in RESONA_CORE_PROMPT
     assert "[own]" in RESONA_CORE_PROMPT
-    # planning asks after the counterpart because the form depends on it.
-    # Whitespace-normalised: the prompt is hard-wrapped and a reflow must not
-    # silently disarm the check.
-    assert "genuine interest in who is on the other side" in " ".join(
-        RESONA_PLANNING_BLOCK.split()
-    )
+    # The sentence on "genuine interest in who is on the other side" stood in
+    # the paragraph that left the prompt on 2026-11-07 (f707d3f2).
+    assert RESONA_PLANNING_BLOCK.startswith("THE PLANNING SITUATION")
 
 
 # --- the third move: looking is owed, finding is not -----------------------

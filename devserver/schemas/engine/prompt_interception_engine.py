@@ -69,9 +69,17 @@ class PromptInterceptionRequest:
     - model: Which LLM to use
     - debug: Enable debug output
     - unload_model: Unload model after request
-    - parameters: Generation parameters from config (temperature, max_tokens, etc.)
+    - parameters: Generation parameters from config (temperature, enable_thinking,
+      repetition_penalty); an output cap among them is not sent
     - usage_stage: What the usage tracker books this call's tokens under
       (stage1..stage4), set by the executor from the config's meta.stage
+    - loop_once: True passes an answer the local node stopped for looping,
+      with what repeated in it standing in it once (RepetitionGuard.once);
+      False refuses it, as a truncated one is. The Canvas translation,
+      Interception and Model Adaption nodes ask for it
+      (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31); Stage 3 does not, since its
+      word list reads only the translation, and a loop stops a translation
+      before the end of the text.
     """
     input_prompt: str
     input_context: str = ""
@@ -83,6 +91,7 @@ class PromptInterceptionRequest:
     unload_model: bool = False
     parameters: Dict[str, Any] = None
     usage_stage: str = "stage2"
+    loop_once: bool = False
 
     def __post_init__(self):
         if self.parameters is None:
@@ -235,7 +244,7 @@ class PromptInterceptionEngine:
                 dispatched_service = "local"
                 output_text, model_used = await self._call_local_llm(
                     full_prompt, real_model_name, request.debug, request.unload_model,
-                    parameters=params
+                    parameters=params, loop_once=request.loop_once
                 )
             elif provider is not None and provider_entry(provider).get("dialect") == BEDROCK:
                 dispatched_service = provider
@@ -286,7 +295,11 @@ class PromptInterceptionEngine:
             # The request fails as the request it was. No substitute model answers in
             # its place: a caller that asked for one model and silently got another
             # cannot tell the two apart afterwards.
-            logger.error(f"Prompt Interception Fehler: {e}")
+            from my_app.services.generation_abort import current_run_aborted
+            if current_run_aborted():
+                logger.info(f"Prompt Interception ended with its run: {e}")
+            else:
+                logger.error(f"Prompt Interception Fehler: {e}")
             return PromptInterceptionResponse(
                 output_str="", output_float=0.0, output_int=0, output_binary=False,
                 success=False, error=str(e)
@@ -309,7 +322,8 @@ class PromptInterceptionEngine:
         loop; what stood by then is a fragment of the same kind. Raised rather
         than returned, because every caller of this engine reads a raised
         failure as a failed request and a returned string as an intercepted
-        text.
+        text. A request with `loop_once` takes the looped answer in its once
+        form instead (_call_local_llm).
 
         This is held here and not at the two call sites, because two copies of
         one guard are how one of them comes to be forgotten (project rule 13).
@@ -350,10 +364,10 @@ class PromptInterceptionEngine:
         fills in 0.7 for a chat-completions provider, the default this engine
         has always sent there, and leaves the field out for the messages
         dialect, where the model applies its own — quietly sending 0.7 there
-        would change what every existing config on it produces. max_tokens the
-        same: nothing is sent unless a config asks for it, the model's own
-        ceiling is the right ceiling, and where an API requires the field the
-        reader fills in the ceiling, not a budget.
+        would change what every existing config on it produces. max_tokens is
+        not sent, whatever a config names: the model's own ceiling is the
+        right ceiling, and where an API requires the field the reader fills in
+        the ceiling, not a budget.
         """
         entry = provider_entry(provider) or {}
         label = entry.get("label", provider)
@@ -374,7 +388,6 @@ class PromptInterceptionEngine:
                 [{"role": "user", "content": prompt}],
                 model,
                 temperature=params.get("temperature"),
-                max_tokens=params.get("max_tokens"),
                 stage=usage_stage,
                 extra_payload=extra,
             )
@@ -407,7 +420,8 @@ class PromptInterceptionEngine:
         return output_text, model
 
     async def _call_local_llm(self, prompt: str, model: str, debug: bool, unload_model: bool,
-                           parameters: Optional[Dict[str, Any]] = None) -> Tuple[str, str]:
+                           parameters: Optional[Dict[str, Any]] = None,
+                           loop_once: bool = False) -> Tuple[str, str]:
         """One request to a local model: the prompt as the one user message
         of a conversation, through the model's chat template.
 
@@ -435,7 +449,9 @@ class PromptInterceptionEngine:
         answer: content empty is a failed request, as on the cloud branch,
         said with what came instead and why the model stopped; and an
         answer the model did not finish -- the window full, or stopped for
-        looping -- is refused by the same guard.
+        looping -- is refused by the same guard. A request with `loop_once`
+        takes an answer stopped for looping in its once form instead, when the
+        node gave one (RepetitionGuard.once).
         """
         try:
             logger.info(f"[BACKEND] LLM Request: {model}")
@@ -445,8 +461,6 @@ class PromptInterceptionEngine:
             gen_kwargs = {}
             if "temperature" in params:
                 gen_kwargs["temperature"] = params["temperature"]
-            if "max_tokens" in params:
-                gen_kwargs["max_new_tokens"] = params["max_tokens"]
             if "repetition_penalty" in params:
                 gen_kwargs["repetition_penalty"] = params["repetition_penalty"]
             if "enable_thinking" in params:
@@ -484,7 +498,12 @@ class PromptInterceptionEngine:
                 raise Exception(f"LLM returned empty response for {model} "
                                 f"(finish_reason={reason})")
 
-            self._refuse_a_truncated_answer("LLM", model, result)
+            if loop_once and result.get("finish_reason") == "repetition" and result.get("once"):
+                output = result["once"]
+                logger.info(f"[BACKEND] LLM: {model} began to repeat itself; "
+                            f"handed on up to there, the repeated passage once ({len(output)} chars)")
+            else:
+                self._refuse_a_truncated_answer("LLM", model, result)
 
             logger.info(f"[BACKEND] LLM Success: {model} ({len(output)} chars)")
 
@@ -537,7 +556,7 @@ class PromptInterceptionEngine:
             request_body = {
                 "anthropic_version": "bedrock-2023-05-31",
                 # required by this API; a ceiling, not a budget
-                "max_tokens": params.get("max_tokens", _config.ANTHROPIC_MAX_TOKENS_CEILING),
+                "max_tokens": _config.ANTHROPIC_MAX_TOKENS_CEILING,
                 "messages": [
                     {
                         "role": "user",

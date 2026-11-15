@@ -369,7 +369,7 @@ async def execute(
         # WHICH backbone ran, as the Diffusers twin reports it: the surface that
         # names the model reads this and otherwise falls back to the output
         # config's own name, which names the instrument and not a model.
-        'model_id': model_id,
+        'model_used': result.model_used,
         'image_data': image_base64,
         'archaeology_data': {
             'step_images': step_images,

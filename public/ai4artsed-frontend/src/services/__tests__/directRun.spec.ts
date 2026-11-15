@@ -115,9 +115,9 @@ describe('postStreamedRun', () => {
 
   it('validateStatus decides what resolves, for a terminal frame and for a dead stream alike', async () => {
     const accepts = (status: number) => status < 500
-    fetchMock.mockResolvedValueOnce(sseResponse([complete({ blocked: true }, 403)]))
+    fetchMock.mockResolvedValueOnce(sseResponse([complete({ status: 'blocked' }, 403)]))
     expect(await postStreamedRun('/api/x', {}, { validateStatus: accepts })).toEqual({
-      data: { blocked: true },
+      data: { status: 'blocked' },
       status: 403,
     })
     fetchMock.mockResolvedValueOnce({
@@ -168,13 +168,16 @@ describe('the three pipeline routes converted onto this transport', () => {
     // texts was refused stands in the body, and 403 stands in the status. A
     // throw would take one of the two away.
     fetchMock.mockResolvedValueOnce(
-      sseResponse([complete({ success: false, blocked_on: 'context_prompt', error: 'refused' }, 403)])
+      sseResponse([complete({
+        success: false, error: 'refused',
+        safety_block: { checkpoint: 'intake', field: 'context_prompt', reason_key: 'content', reason: 'refused' },
+      }, 403)])
     )
     const res = await postStreamedRun('/api/schema/pipeline/stage2', {}, {
       validateStatus: () => true,
     })
     expect(res.status).toBe(403)
-    expect(res.data.blocked_on).toBe('context_prompt')
+    expect(res.data.safety_block.field).toBe('context_prompt')
   })
 
   it('reads a plain JSON answer from a server without the streaming branch AS the answer', async () => {

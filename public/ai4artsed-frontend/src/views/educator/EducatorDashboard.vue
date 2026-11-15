@@ -78,7 +78,7 @@ onMounted(load)
       <select v-model="newSafety">
         <option value="kids">kids</option>
         <option value="youth">youth</option>
-        <option value="open">open</option>
+        <option value="installation">{{ $t('educator.safetyInstallation') }}</option>
       </select>
       <button class="primary" :disabled="!newTitle.trim() || creating" @click="createCourse">
         {{ $t('educator.createCourse') }}
@@ -92,7 +92,7 @@ onMounted(load)
       <article v-for="c in courses" :key="c.id" class="card" @click="router.push(`/educator/courses/${c.id}`)">
         <h3>{{ c.name }}</h3>
         <p class="meta">
-          {{ $t('educator.safety') }}: {{ c.safety_level }} ·
+          {{ $t('educator.safety') }}: {{ c.safety_level === 'installation' ? $t('educator.safetyInstallation') : c.safety_level }} ·
           {{ $t('educator.placeCount', { n: c.place_count }, c.place_count) }}
         </p>
         <p class="access">

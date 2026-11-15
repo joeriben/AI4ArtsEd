@@ -13,9 +13,11 @@ custom_placeholders, beside the stream every run of the page that generates
 uses: the box showed no queue place for it, a device holding another run as
 "GPU busy", and the check station the checks of the last picture. What that
 route was taught for the song on 2026-10-01 holds on the stream: the lyrics
-the interception handed on and the style tags pass Stage 1, Stage 3 reads
-the lyrics and then both together as the chunk receives them, and nothing
-translates them on the way. The interception route refuses
+the interception handed on and the style tags pass the intake, the check
+before the model reads the lyrics and then both together as the chunk
+receives them, and nothing translates them on the way. Until 2026-10-31
+Stage 1 and Stage 3 stood where those two checks stand. The interception
+route refuses
 custom_placeholders now; its stop and device mechanics stay tested below with
 a media run of another perspective.
 
@@ -34,17 +36,20 @@ import pytest
 from flask import Flask
 
 from my_app.routes import schema_pipeline_routes as R
+from my_app.services.safety_gate import (CHECKPOINT_BEFORE_MODEL, CHECKPOINT_INTAKE,
+                                         REASON_CONTENT, REASON_PERSONAL_DATA, Verdict)
 
 LYRICS = "Ein Haus steht in einer Landschaft."
 STYLE = "folk, acoustic guitar, calm"
-REFUSED_AT_1 = "refuse-at-stage-1"
-REFUSED_AT_3 = "refuse-at-stage-3"
+REFUSED_AT_INTAKE = "refuse-at-the-intake"
+REFUSED_BEFORE_MODEL = "refuse-before-the-model"
 DEVICE = "test-song"
 SONG = "heartmula_standard"
 GENERATION = "/api/schema/pipeline/generation"
-LEVELS = ("kids", "youth", "open", "adult", "research")
-# Read before any fixture replaces it.
+LEVELS = ("kids", "youth", "adult", "research")
+# Read before any fixture replaces them.
 REAL_STAGE4 = R.execute_stage4_generation_only
+REAL_TRANSLATION = R._translate_for_model
 
 
 class _Recorder:
@@ -110,36 +115,43 @@ def _parameters_at_the_router(monkeypatch):
 def song(monkeypatch):
     """The Flow's song on the generation stream, at a chosen level.
 
-    Stage 1 and Stage 3 are stand-ins that record what they read. Stage 3
-    answers a text it was not asked to take as given with a translation of it,
-    so a translated prompt shows where it arrives. Stage 4 is a stand-in that
-    records what it was handed, unless a test puts the real one back.
+    The intake and the check before the model are stand-ins that record what
+    they read and refuse a text that carries their mark. The translation for
+    the model answers with a translation of the text, so a translated prompt
+    shows where it arrives. Stage 4 is a stand-in that records what it was
+    handed, unless a test puts the real one back.
     """
     R.init_schema_engine()
-    seen = {"stage1": [], "stage3": [], "stage4": []}
+    seen = {"intake": [], "before_model": [], "translated": [], "stage4": []}
 
-    async def stage1(text, safety_level, pipeline_executor, user_language='de'):
-        seen["stage1"].append(text)
-        if REFUSED_AT_1 in text:
-            return (False, text, "refused at stage 1", ["stub"])
-        return (True, text, None, ["stub"])
+    def intake(fields, *, level):
+        seen["intake"].append(dict(fields))
+        for name, text in fields.items():
+            if isinstance(text, str) and REFUSED_AT_INTAKE in text:
+                return Verdict(False, CHECKPOINT_INTAKE, level, name, REASON_PERSONAL_DATA,
+                               "refused at the intake")
+        return Verdict(True, CHECKPOINT_INTAKE, level)
 
-    async def stage3(prompt, safety_level, media_type, pipeline_executor, **kw):
-        seen["stage3"].append((prompt, kw))
-        if REFUSED_AT_3 in prompt:
-            return {"safe": False, "method": "stub", "abort_reason": "refused at stage 3"}
-        unchecked = safety_level in ("research", "adult") and not kw.get("force_translation")
-        as_written = kw.get("as_given") or unchecked
-        return {"safe": True, "method": "stub",
-                "positive_prompt": prompt if as_written else f"EN: {prompt}"}
+    def before_model(texts, *, level, originals=(), images=(), translation_instruction=None):
+        seen["before_model"].append((dict(texts), dict(originals)))
+        for name, text in texts.items():
+            if isinstance(text, str) and REFUSED_BEFORE_MODEL in text:
+                return Verdict(False, CHECKPOINT_BEFORE_MODEL, level, name, REASON_CONTENT,
+                               "refused before the model")
+        return Verdict(True, CHECKPOINT_BEFORE_MODEL, level)
+
+    async def translate(text, pipeline_executor, **kw):
+        seen["translated"].append(text)
+        return f"EN: {text}"
 
     async def stage4(**kw):
         seen["stage4"].append(kw)
         return {"success": False, "error": "stub: no model in this test",
                 "run_id": kw.get("run_id")}
 
-    monkeypatch.setattr(R, "execute_stage1_safety_unified", stage1)
-    monkeypatch.setattr(R, "execute_stage3_safety", stage3)
+    monkeypatch.setattr(R, "check_intake_texts", intake)
+    monkeypatch.setattr(R, "check_before_model", before_model)
+    monkeypatch.setattr(R, "_translate_for_model", translate)
     monkeypatch.setattr(R, "execute_stage4_generation_only", stage4)
     monkeypatch.setattr(R, "get_recorder", lambda **kw: _Recorder())
     client = _client()
@@ -169,17 +181,16 @@ def test_the_song_reaches_stage_4_as_written(song, level):
             for kw in seen["stage4"]] == [(LYRICS, STYLE, SONG)]
 
 
-@pytest.mark.parametrize("level", ["research", "adult"])
-def test_no_translation_reaches_the_song_where_the_level_checks_nothing(song, monkeypatch, level):
-    """At research and adult Stage 3 checks nothing, and a forced translation
-    still translates (execute_stage3_safety, the real one here). The Flow
-    forces it for every run; the song's lyrics reach Stage 4 as written."""
-    from schemas.engine import stage_orchestrator as O
-
+@pytest.mark.parametrize("level", LEVELS)
+def test_no_translation_reaches_the_song(song, monkeypatch, level):
+    """The Flow forces the translation for every run, and the translation for
+    the model is the real one here. The song's lyrics reach Stage 4 as
+    written at every level; what the check translates for itself stays in
+    the check."""
     async def translate(*a, **kw):
         return SimpleNamespace(success=True, final_output="TRANSLATED")
 
-    monkeypatch.setattr(R, "execute_stage3_safety", O.execute_stage3_safety)
+    monkeypatch.setattr(R, "_translate_for_model", REAL_TRANSLATION)
     monkeypatch.setattr(R.pipeline_executor, "execute_pipeline", translate)
     _response, seen = song(level)
     assert [kw["prompt"] for kw in seen["stage4"]] == [LYRICS]
@@ -196,51 +207,57 @@ def test_the_chunk_sings_the_lyrics_and_reads_the_style(song, monkeypatch, level
         [data for name, data in _events(response) if name == "error"])
 
 
-@pytest.mark.parametrize("level", ["kids", "youth", "adult"])
-def test_stage_1_reads_the_lyrics_and_the_style(song, level):
+@pytest.mark.parametrize("level", LEVELS)
+def test_the_intake_reads_the_lyrics_and_the_style(song, level):
+    """Handed to the intake at every level; the intake itself lets research
+    pass."""
     _response, seen = song(level)
-    assert seen["stage1"] == [LYRICS, STYLE]
+    assert [(fields["prompt"], fields["secondary_text"])
+            for fields in seen["intake"]] == [(LYRICS, STYLE)]
 
 
 @pytest.mark.parametrize("level", ["kids", "youth"])
-def test_refused_lyrics_stop_the_song_at_stage_1(song, level):
-    response, seen = song(level, lyrics=f"{REFUSED_AT_1} words")
+def test_refused_lyrics_stop_the_song_at_the_intake(song, level):
+    response, seen = song(level, lyrics=f"{REFUSED_AT_INTAKE} words")
     blocked = _blocked(response)
-    assert [(b["stage"], b["reason"]) for b in blocked] == [(1, "refused at stage 1")]
-    assert seen["stage3"] == [] and seen["stage4"] == []
+    assert [(b["reason"], b["safety_block"]["checkpoint"])
+            for b in blocked] == [("refused at the intake", "intake")]
+    assert seen["before_model"] == [] and seen["stage4"] == []
 
 
 @pytest.mark.parametrize("level", ["kids", "youth"])
-def test_a_refused_style_stops_the_song_at_stage_1(song, level):
-    response, seen = song(level, style=f"{REFUSED_AT_1}, drums")
+def test_a_refused_style_stops_the_song_at_the_intake(song, level):
+    response, seen = song(level, style=f"{REFUSED_AT_INTAKE}, drums")
     blocked = _blocked(response)
-    assert [(b["stage"], b["reason"]) for b in blocked] == [(1, "refused at stage 1")]
-    assert seen["stage3"] == [] and seen["stage4"] == []
+    assert [(b["safety_block"]["checkpoint"], b["safety_block"]["field"])
+            for b in blocked] == [("intake", "secondary_text")]
+    assert seen["before_model"] == [] and seen["stage4"] == []
 
 
-@pytest.mark.parametrize("level", ["kids", "youth", "open"])
-def test_stage_3_reads_both_texts_as_the_chunk_receives_them(song, level):
-    """The lyrics first, whose translation is kept for the device as an image
-    run keeps its prompt's; then both together, joined as
-    /pipeline/interception joined them until 2026-10-06, and that
-    translation is kept for nobody."""
+@pytest.mark.parametrize("level", LEVELS)
+def test_the_check_before_the_model_reads_both_texts_as_the_chunk_receives_them(song, level):
+    """The lyrics as written; then the style tags beside the lyrics they go
+    with, joined as /pipeline/interception joined them until 2026-10-06.
+    Nothing was translated for the model, so nothing comes as an original:
+    the check translates for itself where the level is checked."""
     _response, seen = song(level)
-    assert [(text, kw.get("as_given"), kw.get("device_id"))
-            for text, kw in seen["stage3"]] == [
-        (LYRICS, True, DEVICE), (f"{LYRICS} | {STYLE}", True, None)]
+    assert seen["before_model"] == [
+        ({"prompt": LYRICS, "secondary_text": f"{LYRICS} | {STYLE}"}, {})]
 
 
 @pytest.mark.parametrize("level", ["kids", "youth"])
-def test_a_refused_style_stops_the_song_at_stage_3(song, level):
-    response, seen = song(level, style=f"{REFUSED_AT_3}, drums")
-    assert [(b["stage"], b["reason"]) for b in _blocked(response)] == [(3, "refused at stage 3")]
+def test_a_refused_style_stops_the_song_before_the_model(song, level):
+    response, seen = song(level, style=f"{REFUSED_BEFORE_MODEL}, drums")
+    assert [(b["reason"], b["safety_block"]["checkpoint"])
+            for b in _blocked(response)] == [("refused before the model", "before_model")]
     assert seen["stage4"] == []
 
 
-def test_refused_lyrics_stop_the_song_at_stage_3(song):
-    response, seen = song("kids", lyrics=f"{REFUSED_AT_3} words")
-    assert [b["stage"] for b in _blocked(response)] == [3]
-    assert [text for text, _kw in seen["stage3"]] == [f"{REFUSED_AT_3} words"]
+def test_refused_lyrics_stop_the_song_before_the_model(song):
+    response, seen = song("kids", lyrics=f"{REFUSED_BEFORE_MODEL} words")
+    assert [b["safety_block"]["checkpoint"] for b in _blocked(response)] == ["before_model"]
+    assert [texts["prompt"] for texts, _originals in seen["before_model"]] == [
+        f"{REFUSED_BEFORE_MODEL} words"]
     assert seen["stage4"] == []
 
 
@@ -248,8 +265,8 @@ def test_an_empty_style_leaves_the_lyrics_to_the_chunk_as_its_tags(song):
     """HeartMuLa picked by hand with one text: the Flow sends the style empty,
     and the chunk sings no lyrics then but reads the text as its tags."""
     _response, seen = song("kids", style="")
-    assert seen["stage1"] == [LYRICS]
-    assert [text for text, _kw in seen["stage3"]] == [LYRICS]
+    assert [fields["secondary_text"] for fields in seen["intake"]] == [""]
+    assert seen["before_model"] == [({"prompt": LYRICS, "secondary_text": ""}, {})]
     assert [kw["secondary_text"] for kw in seen["stage4"]] == [""]
 
 
@@ -264,20 +281,21 @@ def test_a_song_that_did_not_come_is_an_error(song):
 
 def test_a_run_without_a_second_text_goes_as_before(song):
     """Persona and Resona send their song as one prompt, "lyrics || tags", and
-    no second text: neither the Stage 1 nor the as-given check of this path
-    runs, and the forced translation stands."""
+    no second text: the forced translation stands, and the check before the
+    model reads the translation the model receives beside the text it was
+    made from."""
     _response, seen = song("kids", style=None)
-    assert seen["stage1"] == []
-    assert [(kw.get("as_given"), kw.get("force_translation"))
-            for _text, kw in seen["stage3"]] == [(None, True)]
-    assert [kw["secondary_text"] for kw in seen["stage4"]] == [None]
+    assert seen["translated"] == [LYRICS]
+    assert seen["before_model"] == [({"prompt": f"EN: {LYRICS}"}, {"prompt": LYRICS})]
+    assert [(kw["prompt"], kw["secondary_text"]) for kw in seen["stage4"]] == [
+        (f"EN: {LYRICS}", None)]
 
 
 def test_a_second_text_for_a_config_that_reads_one_is_refused(song):
     response, seen = song("kids", output_config="sd35_large")
     assert response.status_code == 400
     assert "'sd35_large' is no config that reads two texts" in response.get_json()["error"]
-    assert seen == {"stage1": [], "stage3": [], "stage4": []}
+    assert seen == {"intake": [], "before_model": [], "translated": [], "stage4": []}
     assert DEVICE not in R._active_generations
 
 
@@ -330,18 +348,21 @@ def run(monkeypatch):
     """A media request to /pipeline/interception at a chosen level, with every
     check and the generator replaced."""
     R.init_schema_engine()
-    seen = {"stage1": [], "stage3": [], "pipelines": [],
-            "at_stage3": None, "at_stage4": None}
+    seen = {"intake": [], "before_model": [], "pipelines": [],
+            "at_check": None, "at_stage4": None}
 
-    async def stage1(text, safety_level, pipeline_executor, user_language='de'):
-        seen["stage1"].append(text)
-        return (True, text, None, ["stub"])
+    def intake(fields, *, level):
+        seen["intake"].append(dict(fields))
+        return Verdict(True, CHECKPOINT_INTAKE, level)
 
-    async def stage3(prompt, safety_level, media_type, pipeline_executor, **kw):
-        seen["stage3"].append(prompt)
-        if seen["at_stage3"]:
-            seen["at_stage3"]()
-        return {"safe": True, "method": "stub", "positive_prompt": prompt}
+    async def translate_for_model(text, pipeline_executor, **kw):
+        return text
+
+    def before_model(texts, *, level, **kw):
+        seen["before_model"].append(dict(texts))
+        if seen["at_check"]:
+            seen["at_check"]()
+        return Verdict(True, CHECKPOINT_BEFORE_MODEL, level)
 
     async def execute_pipeline(config_name=None, **kw):
         seen["pipelines"].append(config_name)
@@ -351,8 +372,9 @@ def run(monkeypatch):
                                final_output=None, metadata={}, steps=[],
                                execution_time=0)
 
-    monkeypatch.setattr(R, "execute_stage1_safety_unified", stage1)
-    monkeypatch.setattr(R, "execute_stage3_safety", stage3)
+    monkeypatch.setattr(R, "check_intake_texts", intake)
+    monkeypatch.setattr(R, "_translate_for_model", translate_for_model)
+    monkeypatch.setattr(R, "check_before_model", before_model)
     monkeypatch.setattr(R.pipeline_executor, "execute_pipeline", execute_pipeline)
     monkeypatch.setattr(R, "get_recorder", lambda **kw: _Recorder())
     client = _client()
@@ -378,7 +400,7 @@ def test_the_interception_route_takes_no_placeholders(run, value):
     response, seen = run("kids", custom_placeholders=value)
     assert response.status_code == 400
     assert "secondary_text" in response.get_json()["error"]
-    assert seen["pipelines"] == [] and seen["stage1"] == []
+    assert seen["pipelines"] == [] and seen["intake"] == []
 
 
 def test_a_media_run_that_did_not_come_is_not_a_success(run):
@@ -396,7 +418,7 @@ def test_an_output_config_posted_as_schema_is_refused(run, level):
     response, seen = run(level, schema="sd35_large")
     assert response.status_code == 400
     assert "makes media" in response.get_json()["error"]
-    assert seen["pipelines"] == [] and seen["stage1"] == []
+    assert seen["pipelines"] == [] and seen["intake"] == []
 
 
 def _cancel(run):
@@ -437,7 +459,7 @@ def test_a_stop_while_the_medium_is_made_is_answered_as_a_stop(run):
 @pytest.mark.parametrize("level", ["kids", "research"])
 def test_a_stop_during_the_checks_makes_nothing(run, level):
     asked = []
-    run.seen["at_stage3"] = lambda: asked.append(_cancel(run))
+    run.seen["at_check"] = lambda: asked.append(_cancel(run))
     response, seen = run(level)
     assert asked and asked[0] == {"cancelled": True}
     assert seen["pipelines"] == []
@@ -576,82 +598,97 @@ def test_the_plan_reader_tells_media_from_text():
     assert R._plan_runs_no_text_model(loader.get_config("user_defined")) is False
 
 
-def test_a_precheck_at_kids_on_a_skipped_plan_runs_the_classifier(monkeypatch):
-    """/pipeline/stage2 with skip_optimization reached its classifier gate for
-    these plans through the kids/youth override; it runs it itself now."""
+def test_a_precheck_at_kids_on_a_skipped_plan_takes_the_text_in_at_the_intake(monkeypatch):
+    """/pipeline/stage2 with skip_optimization took these plans to a classifier
+    gate until 2026-11-01, first through the kids/youth override and then on
+    its own. The text goes through the intake and comes back as it was sent."""
     R.init_schema_engine()
-    asked = []
+    taken = []
 
-    async def stage1(text, safety_level, pipeline_executor, user_language='de'):
-        return (True, text, None, ["stub"])
+    def intake(fields, *, level):
+        taken.append((dict(fields), level))
+        return Verdict(True, CHECKPOINT_INTAKE, level)
 
-    async def classifier(input_text, safety_level):
-        asked.append((input_text, safety_level))
-        return SimpleNamespace(success=True, final_output=input_text, error=None,
-                               steps=[], metadata={}, execution_time=0)
-
-    monkeypatch.setattr(R, "execute_stage1_safety_unified", stage1)
-    monkeypatch.setattr(R, "execute_stage2_classifier", classifier)
+    monkeypatch.setattr(R, "check_intake_texts", intake)
     monkeypatch.setattr(R, "get_recorder", lambda **kw: _Recorder())
     app = Flask(__name__)
     with app.test_request_context():
-        R._run_stage2({"schema": "latent_lab", "input_text": LYRICS,
-                       "skip_optimization": True, "device_id": DEVICE}, "kids")
-    assert asked == [(LYRICS, "kids")]
+        answer, status = R._run_stage2({"schema": "latent_lab", "input_text": LYRICS,
+                                        "skip_optimization": True, "device_id": DEVICE}, "kids")
+    assert status == 200, answer
+    assert taken == [({"input_text": LYRICS, "context_prompt": None}, "kids")]
+    assert answer["stage2_result"] == LYRICS
 
 
 # ---------------------------------------------------------------------------
-# Stage 3 as given
+# The check before the model, as the song path calls it
 # ---------------------------------------------------------------------------
 
-def _stage3_reading(monkeypatch, refuse=None):
-    """execute_stage3_safety with the translation and the classifier replaced:
-    the translation answers TRANSLATED, the classifier records what it reads
-    and refuses the text named by `refuse`."""
-    import asyncio
-    from schemas.engine import stage_orchestrator as O
-    read = []
+def _check_reading(monkeypatch, refuse=None):
+    """check_before_model with its translation and the classifier replaced:
+    the translation answers TRANSLATED and records what it was asked, the
+    classifier records what it reads and refuses the text named by `refuse`.
+    Until 2026-11-01 Stage 3 read a text the chunk reads itself this way where
+    it was asked for `as_given`, and at youth it read the text alone."""
+    from my_app.services import safety_gate
+    read, translated = [], []
 
-    def classify(text, policy):
-        read.append(text)
-        unsafe = text == refuse
-        return {"safe": not unsafe, "uncoded_unsafe": unsafe, "verdict": True,
-                "model_used": "stub", "execution_time": 0, "llm_output": ""}
+    def translate(text, instruction=None):
+        translated.append(text)
+        return "TRANSLATED"
 
-    class Executor:
-        async def execute_pipeline(self, *a, **kw):
-            return SimpleNamespace(success=True, final_output="TRANSLATED")
+    def ask(policy, document, images=None):
+        read.append(document)
+        return document == refuse
 
-    monkeypatch.setattr(O, "_llm_safety_check_generation", classify)
+    monkeypatch.setattr(safety_gate, "_translate_for_check", translate)
+    monkeypatch.setattr(safety_gate, "_ask", ask)
 
-    def run(level, as_given):
-        return asyncio.run(O.execute_stage3_safety(LYRICS, level, "music", Executor(),
-                                                   as_given=as_given)), read
+    def run(level, texts=None, originals=()):
+        verdict = safety_gate.check_before_model(
+            texts if texts is not None else {"prompt": LYRICS}, level=level, originals=originals)
+        return verdict, read, translated
     return run
 
 
-def test_as_given_at_kids_reads_the_translation_and_the_text(monkeypatch):
-    result, read = _stage3_reading(monkeypatch)("kids", True)
-    assert read == ["TRANSLATED", LYRICS]
-    assert result["safe"] and result["positive_prompt"] == LYRICS
+def _each_question_reads(level, *versions):
+    """What the classifier reads: every version, once per question of the
+    level's chain, its own and every less strict level's (since 2026-11-07)."""
+    from my_app.services import safety_classifier as sc
+    n = len(sc.policies_for_level(level, "prompt"))
+    assert n >= 1
+    return [version for version in versions for _ in range(n)]
 
 
-def test_as_given_at_kids_refuses_a_text_its_translation_passed(monkeypatch):
-    result, read = _stage3_reading(monkeypatch, refuse=LYRICS)("kids", True)
-    assert read == ["TRANSLATED", LYRICS]
-    assert result["safe"] is False
+@pytest.mark.parametrize("level", ["kids", "youth"])
+def test_the_lyrics_as_written_are_read_and_their_translation(monkeypatch, level):
+    """The song path hands the lyrics over as the model receives them, with no
+    original beside them: the check reads them and translates for itself."""
+    verdict, read, translated = _check_reading(monkeypatch)(level)
+    assert translated == [LYRICS]
+    assert read == _each_question_reads(level, LYRICS, "TRANSLATED")
+    assert verdict.passed
 
 
-def test_as_given_at_youth_reads_the_text(monkeypatch):
-    result, read = _stage3_reading(monkeypatch)("youth", True)
-    assert read == [LYRICS]
-    assert result["positive_prompt"] == LYRICS
+@pytest.mark.parametrize("refuse", [LYRICS, "TRANSLATED"])
+def test_a_refusal_of_either_version_stops_the_lyrics(monkeypatch, refuse):
+    verdict, _read, _translated = _check_reading(monkeypatch, refuse=refuse)("kids")
+    assert not verdict.passed
 
 
-def test_without_as_given_kids_reads_the_translation_alone(monkeypatch):
-    result, read = _stage3_reading(monkeypatch)("kids", False)
-    assert read == ["TRANSLATED"]
-    assert result["positive_prompt"] == "TRANSLATED"
+def test_a_translation_the_model_receives_is_read_beside_its_original(monkeypatch):
+    """Where the model receives a translation, the check reads the original
+    and that translation, and translates nothing itself."""
+    verdict, read, translated = _check_reading(monkeypatch)(
+        "kids", texts={"prompt": "TRANSLATED"}, originals={"prompt": LYRICS})
+    assert read == _each_question_reads("kids", LYRICS, "TRANSLATED")
+    assert translated == []
+    assert verdict.passed
+
+
+def test_research_reads_nothing(monkeypatch):
+    verdict, read, translated = _check_reading(monkeypatch)("research")
+    assert verdict.passed and read == [] and translated == []
 
 
 # ---------------------------------------------------------------------------

@@ -96,6 +96,8 @@ def test_an_output_given_as_a_reference_is_read_out_of_the_storage(storage):
             "ref": f"/api/media/image/{made['run_id']}/0",
             "meta": {"model": "sd35_large", "view": "mean"},
         }],
+        # Asked at a level that checks no picture: the first run carries no verdict.
+        level="adult",
     )
 
     metadata = _written(storage, written["run_id"])
@@ -104,6 +106,28 @@ def test_an_output_given_as_a_reference_is_read_out_of_the_storage(storage):
     # The instrument's own word about the output travels as it always did.
     assert images[0]["metadata"]["view"] == "mean"
     assert np.array_equal(_pixels(storage, written["run_id"], images[0]), picture)
+
+
+def test_a_reference_is_copied_only_where_delivery_hands_it_to_the_level(storage):
+    """Copied into a new run, a picture would go out under an address that does
+    not refuse it, so a reference is read at the level of whoever asks. A
+    picture with no verdict is none for kids, and no level counts as kids."""
+    first = lab.LatentLabRecorder("sitting_k", "mean_images", device_id="dev", base_path=storage)
+    made = first.record(
+        parameters={"part": "cell"},
+        outputs=[{"type": "image", "format": "png", "dataBase64": _as_base64(_picture(seed=4))}],
+    )
+    for n, level in enumerate(("kids", None)):
+        second = lab.LatentLabRecorder(f"sitting_l{n}", "mean_images", device_id="dev",
+                                       base_path=storage)
+        written = second.record(
+            parameters={"part": "raster"},
+            outputs=[{"type": "image", "format": "png",
+                      "ref": f"/api/media/image/{made['run_id']}/0"}],
+            level=level,
+        )
+        metadata = _written(storage, written["run_id"])
+        assert find_media_entities(metadata["entities"], "image") == [], level
 
 
 def test_a_reference_that_resolves_to_nothing_costs_its_output_and_not_the_run(storage):
@@ -251,7 +275,8 @@ def test_bytes_taken_through_a_reference_are_copied_exactly_as_they_lie(storage,
 
     # From here the marking ALTERS what it is given, so a picture that went
     # through it and one that did not can be told apart by their bytes.
-    monkeypatch.setattr(lab, "_marked", lambda raw, entity_type, entity_metadata: raw + b"\x00")
+    monkeypatch.setattr(lab, "_marked",
+                        lambda raw, entity_type, entity_metadata, filename: (raw + b"\x00", filename))
 
     second = lab.LatentLabRecorder("sitting_h", "mean_images", device_id="dev", base_path=storage)
     written = second.record(
@@ -263,6 +288,7 @@ def test_bytes_taken_through_a_reference_are_copied_exactly_as_they_lie(storage,
             {"type": "image", "format": "png", "dataBase64": _as_base64(other),
              "meta": {"view": "relief"}},
         ],
+        level="adult",
     )
 
     images = find_media_entities(_written(storage, written["run_id"])["entities"], "image")

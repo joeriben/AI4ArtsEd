@@ -64,6 +64,7 @@ const descriptions = computed<Record<string, string>>(() => ({
   hi: t('languageChips.description.hi'),
   ja: t('languageChips.description.ja'),
   zh: t('languageChips.description.zh'),
+  'zh-hant': t('languageChips.description.zh-hant'),
 }))
 
 const platformLanguages = computed(() =>

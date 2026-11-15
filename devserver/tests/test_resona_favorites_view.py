@@ -64,7 +64,9 @@ def test_favorites_listing_carries_run_id(registry, fav_storage):
             "user_note": "unser Wald",
         }],
     )
-    result = registry.execute("lookup_shared_favorites", {})
+    # Above youth: the run is gone, and below it such a favourite is not listed
+    # (safety_gate.run_opens_at).
+    result = registry.execute("lookup_shared_favorites", {}, level="adult")
     assert "run_id=run_xyz" in result
 
 

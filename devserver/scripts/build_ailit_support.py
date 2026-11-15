@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Which parts of this platform support which measures of the AILit framework,
-and how. One source, five outputs, so nothing drifts:
+and how: the earlier reading, discarded on 2026-11-14 and kept as a marked
+archive file. One source, four outputs:
 
   docs/OECD_AILIT_ABDECKUNG.md               German, by competence and level
   docs/AILIT_ORTE_ZUORDNUNG.md               German, by part of the platform
   docs/AILIT_ZUORDNUNGSTABELLE.md / .tsv     the plain table by part, keyword phrases
-  devserver/my_app/knowledge/ailit_coverage.json   read by build_platform_items.py,
-                                             so Help carries a page's measures
-  devserver/exports/ailit_coverage.sqlite    gitignored, for queries
 
-The table starts from the platform, because its purpose is to inform Help
-about the active page: the rows stand by part, mode, instrument or
-cross-cutting function, and under each part the measures it supports; what no
-part carries closes the table.
+Since 2026-11-06 this mapping is no longer in the agents' path: Help and
+Together read V 1.0 of the use reports (docs/use_reports/v1.0/, built by
+devserver/scripts/build_use_reports.py into
+devserver/my_app/knowledge/use_reports.json). This script no longer writes
+devserver/my_app/knowledge/ailit_coverage.json or the gitignored sqlite file
+devserver/exports/ailit_coverage.sqlite, and the three Markdown documents
+open with a note that says so. docs/ailit/unterstuetzung.tsv stays as the
+record of the earlier reading.
+
+The table starts from the platform: the rows stand by part, mode, instrument
+or cross-cutting function, and under each part the measures it supports; what
+no part carries closes the table.
 
 The question each row answers: does a part of the platform SUPPORT a measure
 the OECD describes, and if so how, and which practical scenario shows it. The
@@ -29,8 +35,6 @@ Reads:  docs/ailit/learner_expectations.tsv   verbatim statements and levels
 Run:    python3 devserver/scripts/build_ailit_support.py
 """
 import csv
-import json
-import sqlite3
 from collections import OrderedDict
 from pathlib import Path
 
@@ -42,8 +46,6 @@ OUT_MD = ROOT / 'docs' / 'OECD_AILIT_ABDECKUNG.md'
 OUT_PLACES = ROOT / 'docs' / 'AILIT_ORTE_ZUORDNUNG.md'
 OUT_TABLE_MD = ROOT / 'docs' / 'AILIT_ZUORDNUNGSTABELLE.md'
 OUT_TABLE_TSV = ROOT / 'docs' / 'AILIT_ZUORDNUNGSTABELLE.tsv'
-OUT_JSON = ROOT / 'devserver' / 'my_app' / 'knowledge' / 'ailit_coverage.json'
-OUT_SQLITE = ROOT / 'devserver' / 'exports' / 'ailit_coverage.sqlite'
 
 LEVELS = ('Basic', 'Intermediate', 'Advanced')
 STATUS = ('ja', 'angepasst', 'nein')
@@ -54,9 +56,6 @@ QUELLE_DE = ('OECD / European Union (2026), *Empowering learners for the age of 
              'Wortlaut und Seitenzahlen in `docs/ailit/learner_expectations.tsv` und '
              '`docs/ailit/classroom_scenarios.tsv`, Herkunft und Lesart in '
              '`docs/ailit/QUELLE.md`.')
-QUELLE_EN = ('OECD / European Union (2026), Empowering learners for the age of AI: '
-             'An AI literacy framework for primary and secondary education, '
-             'OECD Publishing, Paris, https://doi.org/10.1787/65cd27d4-en, CC BY 4.0')
 
 # --- parts of the platform ----------------------------------------------------
 # key -> (name_de, name_en, route, kind). The names are the labels the surface
@@ -106,26 +105,6 @@ P = OrderedDict([
     ('fn_marking',  ('KI-Kennzeichnung', 'AI marking', 'querliegend', 'Funktion')),
     ('fn_shelf',    ('Favoriten', 'Favorites', 'querliegend', 'Funktion')),
 ])
-# The view names (what the frontend sends as "Aktive Ansicht") of the parts
-# that have no entry in the catalogue platform_items.json, so Help can reach
-# their measures through the coverage file (platform_items.place_for_view):
-# the Vue file stems of the four modes, and for the Tokenizer the name the
-# Transformers Lab writes for a tab without a context of its own
-# (latent_text_lab.vue: `latent_text_lab.${activeTab}`). The Overview alone
-# sets no view context and is found by the route the frontend sends instead.
-VIEWS = {
-    'flow': ['x2x_flow'],
-    'workshop': ['resona'],
-    'contest': ['ai_persona'],
-    'canvas': ['canvas_workflow'],
-    'll_tokens': ['latent_text_lab.tokens'],
-}
-# Earlier addresses a page still answers under. The overview was reachable as
-# /latent-lab/intro until 2026-08-23 and keeps working under that address
-# (latent_lab.vue, IDS); the frontend sends the address as it stands.
-ALIASES = {
-    'll_overview': ['/latent-lab/intro'],
-}
 KINDS = (('Modus', 'Modi'), ('Instrument', 'Instrumente'), ('Funktion', 'Querliegende Funktionen'))
 
 # --- the 19 competences ------------------------------------------------------
@@ -488,8 +467,10 @@ def build_md():
          f'**Quelle des Wortlauts:** {QUELLE_DE}\n',
          '**Quelltext.** Quelle ist `docs/ailit/unterstuetzung.tsv`; dort wird geändert, '
          'und `python3 devserver/scripts/build_ailit_support.py` schreibt diese Datei, '
-         '`docs/AILIT_ORTE_ZUORDNUNG.md`, `docs/AILIT_ZUORDNUNGSTABELLE.md` und '
-         '`devserver/my_app/knowledge/ailit_coverage.json` neu.\n']
+         '`docs/AILIT_ORTE_ZUORDNUNG.md` und `docs/AILIT_ZUORDNUNGSTABELLE.md` neu. Bis zum '
+         '2026-11-06 schrieb es auch `devserver/my_app/knowledge/ailit_coverage.json`, die '
+         'Help je Seite las; diese Datei ist am 2026-11-06 entfallen, seither liest Help '
+         '`devserver/my_app/knowledge/use_reports.json`.\n']
     for line in LEGENDE_DE:
         o.append(line + '\n')
     n_sup = sum(1 for k in COMP for lv in LEVELS if by_measure(k, lv)[0]['status'] != 'nein')
@@ -602,8 +583,10 @@ def build_table():
           f'**Quelle des Wortlauts:** {QUELLE_DE}\n',
           'Erzeugt von `devserver/scripts/build_ailit_support.py` aus '
           '`docs/ailit/unterstuetzung.tsv`; dort wird geändert, nicht hier. Daneben liegt '
-          'dieselbe Tabelle als `AILIT_ZUORDNUNGSTABELLE.tsv`, und Help liest sie je Seite '
-          'aus `devserver/my_app/knowledge/ailit_coverage.json`.\n']
+          'dieselbe Tabelle als `AILIT_ZUORDNUNGSTABELLE.tsv`. Bis zum 2026-11-06 schrieb das '
+          'Skript auch `devserver/my_app/knowledge/ailit_coverage.json`, die Help je Seite las; '
+          'diese Datei ist am 2026-11-06 entfallen, seither liest Help '
+          '`devserver/my_app/knowledge/use_reports.json`.\n']
     for kind, titel in KINDS:
         md.append(f'**{titel}.** ' + ' · '.join(
             f'{P[k][0]} {len(part_rows)}' for k, part_rows in groups if P[k][3] == kind) + '\n')
@@ -628,144 +611,30 @@ def build_table():
     return '\n'.join(md) + '\n', head, rows + unsupported
 
 
-# --- JSON for Help ------------------------------------------------------------
-
-def build_json():
-    def place(k):
-        n_de, n_en, route, kind = P[k]
-        return {'key': k, 'name': n_en, 'name_de': n_de, 'route': route, 'kind': kind,
-                'views': VIEWS.get(k, []), 'aliases': ALIASES.get(k, [])}
-
-    def goal(r):
-        # What Help renders per measure (platform_items.goals): the competence,
-        # the level with its verbatim Learner Expectation and page, the verbatim
-        # classroom scenario with its page, then how this part carries the
-        # measure and the practical scenario (German).
-        c = COMP[r['komp']]
-        e = EXP[r['komp']]
-        sc = SCEN[(r['komp'], r['stufe'])]
-        return {'competence': f"{r['komp']} \u2014 {c['label_en']}",
-                'level': r['stufe'], 'page': e['seite'], 'expectation': e[r['stufe']],
-                'classroom': sc['text'], 'classroom_page': sc['seite'],
-                'status': r['status'], 'how_de': r['wie'], 'practice_de': r['szen']}
-
-    by_route = OrderedDict()
-    by_part = OrderedDict()
-    for r in S:
-        if r['status'] == 'nein':
-            continue
-        route = P[r['teil']][2]
-        if route.startswith('/'):
-            by_route.setdefault(route, []).append(goal(r))
-        else:
-            # The cross-cutting functions have no route; Help reaches their
-            # measures by the part's key or name (platform_items.find_place).
-            by_part.setdefault(r['teil'], []).append(goal(r))
-    comps = []
-    for komp, c in COMP.items():
-        e = EXP[komp]
-        comps.append({
-            'code': c['code'], 'label': komp, 'domain': c['domain'], 'number': c['n'],
-            'competence': c['label_en'], 'competence_de': c['label_de'],
-            'key_de': c['kurz_de'], 'page': e['seite'],
-            'levels': {lv: {'expectation': e[lv], 'page': e['seite'],
-                            'classroom': SCEN[(komp, lv)]['text'],
-                            'classroom_page': SCEN[(komp, lv)]['seite'],
-                            'supported': by_measure(komp, lv)[0]['status'] != 'nein'}
-                       for lv in LEVELS},
-        })
-    return {
-        '_source': [
-            f'Framework: {QUELLE_EN}. 19 competences in four domains, 57 Learner Expectations, 57 "In the Classroom" scenarios.',
-            'Verbatim competence statements and Learner Expectations: docs/ailit/learner_expectations.tsv; verbatim classroom scenarios: docs/ailit/classroom_scenarios.tsv, both with page numbers. Provenance and reading rule: docs/ailit/QUELLE.md.',
-            'Support: docs/ailit/unterstuetzung.tsv, one row per classroom scenario and part of the platform that supports it; how_de and practice_de are German.',
-            'by_route: route -> the supported measures of that page as Help renders them (competence, level, page, expectation, classroom, classroom_page, status, how_de, practice_de); by_part: the same for the cross-cutting functions, keyed by part; places carry the view names (views) and the earlier addresses (aliases) of the pages the catalogue platform_items.json has no entry for.',
-            'Built by devserver/scripts/build_ailit_support.py together with docs/OECD_AILIT_ABDECKUNG.md, docs/AILIT_ORTE_ZUORDNUNG.md and docs/AILIT_ZUORDNUNGSTABELLE.md.',
-        ],
-        'frame': {
-            'question': ('Whether a part of this platform supports a measure the AILit framework '
-                         'describes (its "In the Classroom" scenario for a competence and level), '
-                         'how, and which practical scenario shows it. The measures are human-led '
-                         'activities; the platform is judged as a tool for them.'),
-            'status': {'ja': 'the measure runs with this part as described',
-                       'angepasst': "the measure's core keeps, its concrete object is replaced; how_de names the replacement",
-                       'nein': 'no part of the platform serves the measure; why_de says what it needs'},
-            'no_threshold': ('The framework sets no threshold at which a competence would count as '
-                             'covered (p. 25, p. 9) and says its classroom scenarios should be '
-                             'adapted to local contexts (p. 25). This file carries no coverage '
-                             'verdict and no tally.'),
-        },
-        'competences': comps,
-        'places': [place(k) for k in P],
-        # route -> the measures a page supports, ready for Help: read by
-        # build_platform_items.py into the catalogue and by
-        # platform_items.py for the pages the catalogue has no entry for.
-        'by_route': by_route,
-        # part key -> the measures of a cross-cutting function (kind Funktion,
-        # no route of its own), for lookup_place by name.
-        'by_part': by_part,
-        'support': [
-            {'id': r['id'], 'competence': COMP[r['komp']]['code'], 'label': r['komp'],
-             'level': r['stufe'], 'status': r['status'], 'place': place(r['teil']),
-             'how_de': r['wie'], 'practice_de': r['szen'], 'evidence': r['beleg']}
-            for r in S if r['status'] != 'nein'],
-        'unsupported': [
-            {'competence': COMP[r['komp']]['code'], 'label': r['komp'],
-             'level': r['stufe'], 'why_de': r['wie']}
-            for r in S if r['status'] == 'nein'],
-    }
-
-
-# --- SQLite -------------------------------------------------------------------
-
-def build_sqlite(path):
-    if path.exists():
-        path.unlink()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(path)
-    cur = con.cursor()
-    cur.execute('CREATE TABLE kompetenz (label TEXT PRIMARY KEY, code TEXT, domain TEXT, n INTEGER, '
-                'kurz_de TEXT, label_de TEXT, statement_en TEXT, seite TEXT)')
-    cur.execute('CREATE TABLE stufe (label TEXT, stufe TEXT, expectation_en TEXT, classroom_en TEXT, '
-                'seite TEXT, erwartung_stichwort TEXT, massnahme_stichwort TEXT, '
-                'PRIMARY KEY (label, stufe))')
-    cur.execute('CREATE TABLE teil (key TEXT PRIMARY KEY, name_de TEXT, name_en TEXT, route TEXT, art TEXT)')
-    cur.execute('CREATE TABLE unterstuetzung (id TEXT PRIMARY KEY, label TEXT, stufe TEXT, status TEXT, '
-                'teil TEXT, wie_de TEXT, szenario_de TEXT, beleg TEXT)')
-    for komp, c in COMP.items():
-        e = EXP[komp]
-        cur.execute('INSERT INTO kompetenz VALUES (?,?,?,?,?,?,?,?)',
-                    (komp, c['code'], c['domain'], c['n'], c['kurz_de'], c['label_de'],
-                     e['statement'], e['seite']))
-        for i, lv in enumerate(LEVELS):
-            cur.execute('INSERT INTO stufe VALUES (?,?,?,?,?,?,?)',
-                        (komp, lv, e[lv], SCEN[(komp, lv)]['text'], e['seite'],
-                         PHRASES[komp][1][i], MEASURES[(komp, lv)]))
-    for k, (n_de, n_en, route, kind) in P.items():
-        cur.execute('INSERT INTO teil VALUES (?,?,?,?,?)', (k, n_de, n_en, route, kind))
-    for r in S:
-        cur.execute('INSERT INTO unterstuetzung VALUES (?,?,?,?,?,?,?,?)',
-                    (r['id'], r['komp'], r['stufe'], r['status'], r['teil'] or None,
-                     r['wie'], r['szen'] or None, r['beleg'] or None))
-    con.commit()
-    con.close()
+# The note every Markdown document opens with: the mapping left the agents'
+# path on 2026-11-06, and the project lead discarded it on 2026-11-14; the
+# documents stay in the repository as marked archive files.
+RECORD_NOTE = ('> **VERWORFENE ARCHIVDATEI.** Diese Datei gehört zu den Versuchen vor den '
+               'Nutzungsberichten V 1.0, die Help-Texte zu überarbeiten und den Teilen der Plattform '
+               'Kategorien des AILit-Rahmenwerks zuzuordnen. Die Projektleitung hat diese Versuche '
+               'verworfen (`docs/DEVELOPMENT_DECISIONS.md`, Eintrag vom 2026-11-14). Die Datei ist weder '
+               'Quelle noch Abgleich. Maßgeblich sind die Nutzungsberichte V 1.0 in '
+               '`docs/use_reports/v1.0/`. Sie beruhen auf der handlungsorientierten Erkundung der Seiten '
+               '(Lauf vom 2026-11-02/03); auf dieser Grundlage sind die AILit-Kategorien zugeordnet und '
+               'die Unterrichtsszenarien gefunden.\n\n')
 
 
 def main():
-    OUT_MD.write_text(build_md(), encoding='utf-8')
-    OUT_PLACES.write_text(build_places_md(), encoding='utf-8')
+    OUT_MD.write_text(RECORD_NOTE + build_md(), encoding='utf-8')
+    OUT_PLACES.write_text(RECORD_NOTE + build_places_md(), encoding='utf-8')
     table_md, head, rows = build_table()
-    OUT_TABLE_MD.write_text(table_md, encoding='utf-8')
+    OUT_TABLE_MD.write_text(RECORD_NOTE + table_md, encoding='utf-8')
     with OUT_TABLE_TSV.open('w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, delimiter='\t', lineterminator='\n')
         w.writerow(head)
         w.writerows(rows)
-    OUT_JSON.write_text(json.dumps(build_json(), ensure_ascii=False, indent=2) + '\n',
-                        encoding='utf-8')
-    build_sqlite(OUT_SQLITE)
-    for p in (OUT_MD, OUT_PLACES, OUT_TABLE_MD, OUT_TABLE_TSV, OUT_JSON):
+    for p in (OUT_MD, OUT_PLACES, OUT_TABLE_MD, OUT_TABLE_TSV):
         print(f'{p.relative_to(ROOT)}: {p.stat().st_size} B')
-    print(f'{OUT_SQLITE.relative_to(ROOT)}: {OUT_SQLITE.stat().st_size} B (gitignoriert)')
     n = {s: sum(1 for r in S if r['status'] == s) for s in STATUS}
     measures_sup = sum(1 for k in COMP for lv in LEVELS if by_measure(k, lv)[0]['status'] != 'nein')
     parts = sorted({r['teil'] for r in S if r['teil']})

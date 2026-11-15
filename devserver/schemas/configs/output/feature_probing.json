@@ -10,7 +10,8 @@
     "es": "Dimension Explorer",
     "he": "Dimension Explorer",
     "ar": "Dimension Explorer",
-    "bg": "Dimension Explorer"
+    "bg": "Dimension Explorer",
+    "zh-hant": "Dimension Explorer"
   },
   "description": {
     "en": "Embedding analysis with selective dimension transfer. Shows which dimensions encode which semantic differences between two prompts.",
@@ -22,7 +23,8 @@
     "es": "Análisis de embeddings con transferencia selectiva de dimensiones. Muestra qué dimensiones codifican qué diferencias semánticas entre dos prompts.",
     "he": "ניתוח embeddings עם העברה סלקטיבית של ממדים. מראה אילו ממדים מקודדים אילו הבדלים סמנטיים בין שני פרומפטים.",
     "ar": "تحليل التضمينات (embeddings) مع نقل انتقائي للأبعاد. يوضح أي الأبعاد تُرمّز أي فروق دلالية بين وصفين (prompts).",
-    "bg": "Анализ на ембединги с избирателен трансфер на измерения. Показва кои измерения кодират кои семантични разлики между две подкани."
+    "bg": "Анализ на ембединги с избирателен трансфер на измерения. Показва кои измерения кодират кои семантични разлики между две подкани.",
+    "zh-hant": "以選擇性維度轉移進行嵌入分析。顯示哪些維度編碼了兩個提示詞之間的哪些語意差異。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_feature_probing_comfyui"

@@ -10,7 +10,8 @@
     "es": "Flux 2 Condicionamiento visual",
     "he": "Flux 2 התניה חזותית",
     "ar": "Flux 2 التكييف البصري",
-    "bg": "Flux 2 Визуално кондициониране"
+    "bg": "Flux 2 Визуално кондициониране",
+    "zh-hant": "Flux 2 視覺條件控制"
   },
   "description": {
     "en": "Image transformation using Flux 2 Dev's native visual conditioning. The reference image guides generation as attention context — creative transformations, not reproductions.",
@@ -22,7 +23,8 @@
     "es": "Transformación de imágenes utilizando el condicionamiento visual nativo de Flux 2 Dev. La imagen de referencia guía la generación como contexto de atención — transformaciones creativas, no reproducciones.",
     "he": "טרנספורמציית תמונה באמצעות ההתניה החזותית הטבעית של Flux 2 Dev. תמונת הייחוס מנחה את היצירה כהקשר קשב — טרנספורמציות יצירתיות, לא שכפולים.",
     "ar": "تحويل الصور باستخدام التكييف البصري الأصلي لـ Flux 2 Dev. توجّه صورة المرجع عملية التوليد كسياق انتباه — تحويلات إبداعية، وليست إعادة إنتاج.",
-    "bg": "Трансформация на изображения чрез нативното визуално кондициониране на Flux 2 Dev. Референтното изображение насочва генерирането като контекст на внимание — творчески трансформации, а не възпроизвеждания."
+    "bg": "Трансформация на изображения чрез нативното визуално кондициониране на Flux 2 Dev. Референтното изображение насочва генерирането като контекст на внимание — творчески трансформации, а не възпроизвеждания.",
+    "zh-hant": "使用 Flux 2 Dev 原生的視覺條件控制進行圖像轉換。參考圖片作為注意力脈絡來引導生成——是創意的轉換，而不是複製。"
   },
   "category": {
     "en": "Image Transformation",
@@ -34,7 +36,8 @@
     "es": "Transformación de imágenes",
     "he": "טרנספורמציית תמונות",
     "ar": "تحويل الصور",
-    "bg": "Трансформация на изображения"
+    "bg": "Трансформация на изображения",
+    "zh-hant": "圖像轉換"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux2_img2img_diffusers",

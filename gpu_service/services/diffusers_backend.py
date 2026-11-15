@@ -39,18 +39,69 @@ from services.gpu_admission import GpuBusy
 from config import DEFAULT_MODEL_ID
 from services.generation_failure import GenerationFailed
 from services.generation_cancel import (GenerationCancelled,
+                                        current_run_label,
                                         interrupt_if_cancelled,
                                         raise_if_cancelled)
 
 logger = logging.getLogger(__name__)
 
-# Module-level generation progress (thread-safe via GIL for simple dict ops)
-_generation_progress = {"step": 0, "total_steps": 0, "active": False}
+# The progress of each run on the card, filed under its label: the run id
+# every request of the DevServer carries (`run_label`, services/gpu_admission
+# CURRENT_RUN_LABEL). The denoising callbacks run on a thread that copied the
+# request's context (asyncio.to_thread), so they file their steps under the run
+# they work for. Until 2026-10-31 this was one dict for the whole service.
+# Generations queue for the card (`_locked_generate`), and a run waiting behind
+# another one read that run's steps and preview, which the DevServer streamed
+# to its own surface as if they were the waiting run's.
+_IDLE_PROGRESS = {"step": 0, "total_steps": 0, "active": False}
+_progress_lock = threading.Lock()
+_progress_by_run: Dict[str, Dict[str, Any]] = {}
 
 
-def get_generation_progress() -> dict:
-    """Return current generation progress for polling endpoint."""
-    return dict(_generation_progress)
+def _progress_begin(total_steps: int) -> None:
+    """The run this thread works for has reached the card."""
+    label = current_run_label()
+    with _progress_lock:
+        _progress_by_run[label] = {
+            "step": 0, "total_steps": total_steps, "active": True, "preview": None}
+
+
+def _progress_step(step: int, total_steps: int) -> None:
+    """The step the run this thread works for stands at. A run that has left
+    the card is not brought back by a late callback."""
+    label = current_run_label()
+    with _progress_lock:
+        entry = _progress_by_run.get(label)
+        if entry is not None:
+            entry["step"] = step
+            entry["total_steps"] = total_steps
+
+
+def _progress_preview(preview_b64: str) -> None:
+    """The picture the run this thread works for shows so far."""
+    label = current_run_label()
+    with _progress_lock:
+        entry = _progress_by_run.get(label)
+        if entry is not None:
+            entry["preview"] = preview_b64
+
+
+def _progress_done() -> None:
+    """The run this thread works for has left the card."""
+    label = current_run_label()
+    with _progress_lock:
+        _progress_by_run.pop(label, None)
+
+
+def get_generation_progress(run_label: str = "") -> dict:
+    """The progress of the run `run_label`, for its polling.
+
+    A run without a label, and one that is not on the card, read as idle:
+    nobody reads the steps or the picture of a run but its own.
+    """
+    with _progress_lock:
+        entry = _progress_by_run.get(run_label) if run_label else None
+        return dict(entry) if entry is not None else dict(_IDLE_PROGRESS)
 
 
 # === Decomposition Mode: 3×3×3 Intervention Space ===
@@ -1275,8 +1326,7 @@ class DiffusersImageGenerator:
                     # nobody is waiting for any more.
                     if interrupt_if_cancelled(pipe_inst):
                         return callback_kwargs
-                    _generation_progress["step"] = step + 1  # 0-indexed → 1-indexed
-                    _generation_progress["total_steps"] = steps
+                    _progress_step(step + 1, steps)  # 0-indexed → 1-indexed
                     # Decode latents to preview image every 5 steps
                     if step % 5 == 0 or step == steps - 1:
                         try:
@@ -1294,7 +1344,7 @@ class DiffusersImageGenerator:
                                 preview_img = preview_img.resize((256, 256), Image.LANCZOS)
                                 buf = io.BytesIO()
                                 preview_img.save(buf, format="JPEG", quality=40)
-                                _generation_progress["preview"] = base64.b64encode(buf.getvalue()).decode()
+                                _progress_preview(base64.b64encode(buf.getvalue()).decode())
                         except Exception as e:
                             logger.debug(f"[DIFFUSERS] Preview decode failed (non-critical): {e}")
                     if callback:
@@ -1322,7 +1372,7 @@ class DiffusersImageGenerator:
 
                 # Run inference in thread to avoid blocking event loop
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True, "preview": None})
+                    _progress_begin(steps)
                     if loras:
                         self._apply_loras(pipe, loras)
                     try:
@@ -1450,7 +1500,7 @@ class DiffusersImageGenerator:
                     finally:
                         if loras:
                             self._remove_loras(pipe)
-                        _generation_progress.update({"active": False, "preview": None})
+                        _progress_done()
 
                 image = await asyncio.to_thread(self._locked_generate, _generate)
 
@@ -1588,14 +1638,13 @@ class DiffusersImageGenerator:
                 def video_step_callback(pipe_inst, step, timestep, callback_kwargs):
                     if interrupt_if_cancelled(pipe_inst):
                         return callback_kwargs
-                    _generation_progress["step"] = step + 1
-                    _generation_progress["total_steps"] = steps
+                    _progress_step(step + 1, steps)
                     return callback_kwargs
 
                 _guidance_scale_2 = guidance_scale_2
 
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     try:
                         gen_kwargs = {
                             "prompt": prompt,
@@ -1620,7 +1669,7 @@ class DiffusersImageGenerator:
                             raise ValueError("Pipeline returned no video frames")
                         return result.frames[0]
                     finally:
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 frames = await asyncio.to_thread(self._locked_generate, _generate)
 
@@ -1727,15 +1776,14 @@ class DiffusersImageGenerator:
                 def video_step_callback(pipe_inst, step, timestep, callback_kwargs):
                     if interrupt_if_cancelled(pipe_inst):
                         return callback_kwargs
-                    _generation_progress["step"] = step + 1
-                    _generation_progress["total_steps"] = steps
+                    _progress_step(step + 1, steps)
                     return callback_kwargs
 
                 _guidance_scale_2 = guidance_scale_2
                 _pil_image = pil_image
 
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     try:
                         gen_kwargs = {
                             "image": _pil_image,
@@ -1760,7 +1808,7 @@ class DiffusersImageGenerator:
                             raise ValueError("Pipeline returned no video frames")
                         return result.frames[0]
                     finally:
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 frames = await asyncio.to_thread(self._locked_generate, _generate)
 
@@ -2746,7 +2794,7 @@ class DiffusersImageGenerator:
                     return fused_embeds, pooled
 
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     if loras:
                         self._apply_loras(pipe, loras)
                     try:
@@ -2813,8 +2861,7 @@ class DiffusersImageGenerator:
                         _hook_state = {"step": 0}
 
                         def fusion_step_callback(pipe_inst, step, timestep, callback_kwargs):
-                            _generation_progress["step"] = step + 1
-                            _generation_progress["total_steps"] = steps
+                            _progress_step(step + 1, steps)
                             _hook_state["step"] = step + 1
                             if _cfg_interval is not None:
                                 _nxt = step + 1
@@ -2916,7 +2963,7 @@ class DiffusersImageGenerator:
                     finally:
                         if loras:
                             self._remove_loras(pipe)
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 image = await asyncio.to_thread(self._locked_generate, _generate)
 
@@ -3101,7 +3148,7 @@ class DiffusersImageGenerator:
                 )
 
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     device = pipe._execution_device
                     hook_handles = []
 
@@ -3274,8 +3321,7 @@ class DiffusersImageGenerator:
                         def decomp_step_callback(pipe_instance, step, timestep, callback_kwargs):
                             # Fires AFTER step N completes → set state for the NEXT forward pass
                             hook_state["step"] = step + 1
-                            _generation_progress["step"] = step + 1
-                            _generation_progress["total_steps"] = steps
+                            _progress_step(step + 1, steps)
                             if callback:
                                 try:
                                     callback(step, steps, callback_kwargs.get("latents"))
@@ -3307,7 +3353,7 @@ class DiffusersImageGenerator:
                                 h.remove()
                             except Exception as e:
                                 logger.warning(f"[DIFFUSERS-DECOMP] Hook removal error: {e}")
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 image = await asyncio.to_thread(self._locked_generate, _generate)
 
@@ -3514,7 +3560,7 @@ class DiffusersImageGenerator:
                 )
 
                 def _generate():
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     # Install attention capture processors
                     original_processors = install_attention_capture(pipe, store, capture_layers)
 
@@ -3525,8 +3571,7 @@ class DiffusersImageGenerator:
                         # Step 0's forward pass uses the initial current_step=0 (set below).
                         def step_callback(pipe_instance, step, timestep, callback_kwargs):
                             store.current_step = step + 1
-                            _generation_progress["step"] = step + 1
-                            _generation_progress["total_steps"] = steps
+                            _progress_step(step + 1, steps)
                             if callback:
                                 try:
                                     callback(step, steps, callback_kwargs.get("latents"))
@@ -3553,7 +3598,7 @@ class DiffusersImageGenerator:
                         result = pipe(**gen_kwargs)
                         return result.images[0]
                     finally:
-                        _generation_progress["active"] = False
+                        _progress_done()
                         # Always restore original processors
                         restore_attention_processors(pipe, original_processors, capture_layers)
 
@@ -4342,12 +4387,12 @@ class DiffusersImageGenerator:
                         _install_run_scheduler(pipe, scheduler, shift)
                         sched_info["name"] = type(pipe.scheduler).__name__
                         sched_info["order"] = int(getattr(pipe.scheduler, "order", 1) or 1)
-                        _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                        _progress_begin(steps)
 
                         return _run(sched_info["order"])
                     finally:
                         pipe.scheduler = original_scheduler
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 def _run(order):
                     from diffusers.image_processor import VaeImageProcessor
@@ -4356,9 +4401,8 @@ class DiffusersImageGenerator:
                         # `step` counts the pipeline's TIMESTEPS. A second-order
                         # scheduler has 2n-1 of them for n steps, so reporting it
                         # raw would put "49 / 25" -- 196 % -- in front of every
-                        # surface that reads this module-wide progress.
-                        _generation_progress["step"] = min(step // order + 1, steps)
-                        _generation_progress["total_steps"] = steps
+                        # surface that reads this run's progress.
+                        _progress_step(min(step // order + 1, steps), steps)
                         # Thinning has to bite on the STEP, not on the timestep:
                         # per timestep it would drop whole steps of a second-order
                         # run rather than every nth of them.
@@ -4672,7 +4716,7 @@ class DiffusersImageGenerator:
                         retrieve_timesteps, calculate_shift
                     )
 
-                    _generation_progress.update({"step": 0, "total_steps": steps, "active": True})
+                    _progress_begin(steps)
                     start_time = time.time()
 
                     try:
@@ -4741,7 +4785,7 @@ class DiffusersImageGenerator:
                         # === COMPOSABLE DENOISING LOOP ===
                         with torch.no_grad():
                             for step_idx, t in enumerate(timesteps):
-                                _generation_progress["step"] = step_idx
+                                _progress_step(step_idx, steps)
 
                                 timestep_single = t.expand(latents.shape[0])
 
@@ -4776,7 +4820,7 @@ class DiffusersImageGenerator:
                                 if latents.dtype != latents_dtype:
                                     latents = latents.to(latents_dtype)
 
-                        _generation_progress["step"] = steps
+                        _progress_step(steps, steps)
 
                         # === VAE decode ===
                         with torch.no_grad():
@@ -4803,7 +4847,7 @@ class DiffusersImageGenerator:
                             "timing_s": round(elapsed, 1),
                         }
                     finally:
-                        _generation_progress["active"] = False
+                        _progress_done()
 
                 result = await asyncio.to_thread(self._locked_generate, _generate)
                 return result

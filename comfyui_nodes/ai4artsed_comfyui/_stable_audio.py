@@ -384,7 +384,12 @@ def generate_guided(dir_name: str, imagebind_dir: str, image, prompt: str = "",
     moves the latent (x <- x + lambda * grad) before the ordinary denoising
     step. After the warm-up the loop runs unguided.
 
-    Returns {audio, sample_rate, duration_seconds, cosine_similarity, seed}.
+    Returns {audio, sample_rate, duration_seconds, cosine_similarity,
+    cosine_similarity_last_guided_step, guidance_steps_skipped, seed,
+    generation_time_ms}. cosine_similarity is measured on the finished clip,
+    the one returned; cosine_similarity_last_guided_step is the cosine of the
+    x0 prediction at the last guided step, which the loop steered by; None
+    when no guided step took effect.
     """
     import torch.nn.functional as F
     from imagebind.models.imagebind_model import ModalityType
@@ -454,7 +459,7 @@ def generate_guided(dir_name: str, imagebind_dir: str, image, prompt: str = "",
         x = noise
         t = sigmas
         num_steps = t.shape[-1] - 1
-        last_cos_sim = 0.0
+        last_cos_sim = None  # stays None when no guided step takes effect
         skipped_steps = 0
         progress = _progress(num_steps)
         logger.info(f"[AI4ArtsEd StableAudio] Guided: total_steps={total_steps}, "
@@ -530,11 +535,22 @@ def generate_guided(dir_name: str, imagebind_dir: str, image, prompt: str = "",
             audio = pretransform.decode(x.to(pretransform_dtype))
         audio = _postprocess(audio[0])
         audio = audio[:, : int(round(duration_seconds * loaded.sample_rate))]
+        # The number the page shows is the cosine between the picture and the
+        # clip that is returned, normalized and cut to its duration as it is.
+        # The loop's last value was taken from the x0 prediction at the last
+        # guided step, before the remaining steps ran; it is kept beside it
+        # under its own name.
+        with torch.no_grad():
+            ib_input = waveform_to_imagebind_tensor(audio.unsqueeze(0).to(device), loaded.sample_rate)
+            ib_out = ib_model({ModalityType.AUDIO: ib_input})
+            audio_emb = ib_out[ModalityType.AUDIO]  # [B, 1024]
+            final_cos_sim = F.cosine_similarity(audio_emb, image_emb, dim=-1).mean().item()
         return {
             "audio": audio,
             "sample_rate": loaded.sample_rate,
             "duration_seconds": duration_seconds,
-            "cosine_similarity": float(last_cos_sim),
+            "cosine_similarity": float(final_cos_sim),
+            "cosine_similarity_last_guided_step": (float(last_cos_sim) if last_cos_sim is not None else None),
             "guidance_steps_skipped": skipped_steps,
             "seed": seed,
             "generation_time_ms": int((time.time() - t_start) * 1000),

@@ -77,15 +77,6 @@
       "cloud_region": null,
       "preloadable": true,
       "note": "lyrics + tags"
-    },
-    {
-      "id": "gemini_3_pro",
-      "name": "Gemini 3 Pro (€)",
-      "media_type": "image",
-      "publisher": "Google via Mammouth AI",
-      "cloud_region": "EU",
-      "preloadable": false,
-      "note": "text-to-image"
     }
   ],
   "footprints": {
@@ -133,11 +124,6 @@
           "working_vram_gb": 12,
           "fits": true,
           "execution_path": "gpu_service"
-        },
-        "gemini_3_pro": {
-          "working_vram_gb": 0,
-          "fits": true,
-          "execution_path": "cloud"
         }
       }
     },
@@ -146,11 +132,6 @@
       "measured_at": "2026-06-03",
       "measurement_notes": "ComfyUI offload path (sequential cpu offload + VAE tiling). To be measured by tools/measure_workshop_footprints.py.",
       "by_model": {
-        "gemini_3_pro": {
-          "working_vram_gb": 0,
-          "fits": true,
-          "execution_path": "cloud"
-        },
         "heartmula": {
           "working_vram_gb": 10,
           "fits": true,
@@ -201,13 +182,7 @@
       "total_vram_gb": 32,
       "measured_at": null,
       "measurement_notes": "ComfyUI offload path. To be measured.",
-      "by_model": {
-        "gemini_3_pro": {
-          "working_vram_gb": 0,
-          "fits": true,
-          "execution_path": "cloud"
-        }
-      }
+      "by_model": {}
     }
   },
   "safety_baseline_gb": 5.5,

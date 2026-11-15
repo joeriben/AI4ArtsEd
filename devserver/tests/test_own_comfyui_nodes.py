@@ -71,6 +71,12 @@ NOT_CALLED_BY_A_CHUNK: dict = {
     "ai4artsed_switch_promptsafety": _FORKED_WHOLE,
     "ai4artsed_photo_prompt_randomizer": _FORKED_WHOLE,
     "ai4artsed_clean_prompt_randomizer": _FORKED_WHOLE,
+    "ai4artsed_prompt_interception": (
+        "called by no chunk since the Surrealization workflow's three interception "
+        "nodes became steps the platform runs before the check before the model "
+        "(my_app/services/chunk_llm_steps.py): kept as the reference of their call, "
+        "which tests/test_chunk_llm_steps.py runs beside them, and copied with the "
+        "whole package"),
     "ai4artsed_local_llm": ("called by no chunk: the DevServer's local LLM backend queues a "
                             "one-node prompt of it for every local chat, safety check and "
                             "image reading (my_app/services/llm_client.py, NODE_CLASS)"),
@@ -347,16 +353,7 @@ def test_every_node_a_chunk_calls_is_here():
 # An input a chunk writes that its node does not declare. ComfyUI drops it in
 # silence, so an entry here says what is known about the loss, and the entry goes
 # only where correcting it would change a surface this change is not about.
-INPUT_THE_NODE_DROPS: dict = {
-    "ai4artsed_prompt_interception.unload_model": (
-        "found on 2026-09-26 by this test, in schemas/chunks/legacy_surrealization.json "
-        "(config surrealization_legacy), on all three of its interception nodes with "
-        "'yes'/'no'/'yes'. The forked node (comfyui_nodes/ai4artsed_comfyui/"
-        "ai4artsed_prompt_interception.py) declares no such input, so ComfyUI has been "
-        "dropping it: the three local models are not unloaded between the steps, which "
-        "is a VRAM question and leaves the text as it is. Untouched here because the "
-        "legacy workflow is not what this change is about."),
-}
+INPUT_THE_NODE_DROPS: dict = {}
 
 
 def _declared_inputs(path, class_name):

@@ -307,7 +307,8 @@ def test_tools_registered_in_resona_scope_only():
 
 def test_universal_resona_intersection_is_the_grants_only():
     """The tools BOTH agents hold are grants, one at a time: lookup_reference
-    and lookup_interception (2026-07-03), lookup_place (2026-08-11). The
+    and lookup_interception (2026-07-03), lookup_place (2026-08-11),
+    lookup_scenarios and read_scenario (2026-11-06). The
     knowledge tools stay resona-only, the research pair stays universal, and
     nothing else joins this set by accident."""
     from my_app.services.tool_registry import get_tool_registry
@@ -315,7 +316,8 @@ def test_universal_resona_intersection_is_the_grants_only():
     resona = {t["function"]["name"] for t in registry.get_openai_format(scope="resona")}
     universal = {t["function"]["name"] for t in registry.get_openai_format(scope=None)}
     assert resona & universal == {
-        "lookup_reference", "lookup_interception", "lookup_place"}
+        "lookup_reference", "lookup_interception", "lookup_place",
+        "lookup_scenarios", "read_scenario"}
     assert not {"lookup_knowledge", "read_knowledge"} & universal
     assert not {"lookup_research", "read_research"} & resona
 

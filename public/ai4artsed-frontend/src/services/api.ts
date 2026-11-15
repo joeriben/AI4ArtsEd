@@ -44,7 +44,7 @@ export interface PipelineExecuteRequest {
   context_language?: SupportedLanguage // Language of context_prompt
   custom_placeholders?: Record<string, string> // Optional: custom placeholder values for multi-stage workflows
   output_config?: string // Output config for Stage 4 media generation
-  stage4_only?: boolean // Skip Stage 1-3, only execute Stage 4
+  stage4_only?: boolean // Not read by the server: no request skips the checks
   seed?: number // Random seed for reproducible media generation
 }
 

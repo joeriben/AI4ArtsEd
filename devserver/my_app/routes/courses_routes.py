@@ -35,20 +35,21 @@ from my_app.lab.models import (
     CoursePaletteItem, PaletteSourceType, InterceptionPrompt,
 )
 from my_app.lab.auth_service import (
-    current_user, current_course_id, is_course_educator, is_course_member,
+    account_stamp, current_user, current_course_id, is_course_educator, is_course_member,
     require_auth, require_role,
     require_course_access, require_course_owner, require_course_leader,
 )
 from my_app.lab.place_codes import access_open, iso_utc, issue_code
+from my_app.services.favorites_store import drop_owned, editing
+from my_app.services.safety_level_resolver import COURSE_USES_INSTALLATION
 from my_app.utils.url_ids import MAX_ROW_ID
 
 logger = logging.getLogger(__name__)
 courses_bp = Blueprint("courses", __name__, url_prefix="/api/courses")
 
-# Valid course safety levels — anchored to the platform's hardcoded levels
-# (kids | youth | open; see the config schemas kids.json / youth.json /
-# open.json).
-_SAFETY_LEVELS = {"kids", "youth", "open"}
+# What a course may carry: kids or youth, or the installation's level. A course
+# only tightens the installation's level (services/safety_level_resolver.py).
+_SAFETY_LEVELS = {"kids", "youth", COURSE_USES_INSTALLATION}
 
 # Participants never authenticate with a password; store an unusable sentinel
 # so the NOT NULL password_hash column is satisfied and no password can match.
@@ -270,6 +271,7 @@ def remove_educator(course_id: int, user_id: int):
 # Places and the access window (BAUPLAN Entscheid 2 in the form of 2026-09-23)
 #   POST   /:id/places                 make N places; their codes, ONCE
 #   POST   /:id/places/:number/code    replace one place's code; the new one, ONCE
+#   POST   /:id/places/codes           replace every code of the course; the new ones, ONCE
 #   PUT    /:id/access                 open the course to its codes until a moment
 #   DELETE /:id/access                 close it now
 # ---------------------------------------------------------------------------
@@ -357,6 +359,41 @@ def replace_place_code(course_id: int, number: int):
         return jsonify({"error": "the places of this course changed meanwhile; ask again"}), 409
     logger.info("[COURSE-PLACES] course=%s place=%s: new code", course_id, number)
     return jsonify({"place": {**_place_dict(place), "code": code}}), 201
+
+
+@courses_bp.route("/<int:course_id>/places/codes", methods=["POST"])
+@require_course_leader
+def replace_all_codes(course_id: int):
+    """Give every place of the course a new code in one step (2026-11-14).
+
+    The old codes stop at once, and the sessions that entered with them end at
+    their next request. Replacing the codes deletes nothing
+    (docs/DEVELOPMENT_DECISIONS.md, 2026-11-14). A place keeps its number and
+    its account, and with the account what it saved: its perspectives with
+    their versions and palette entries, its drafts, works and LoRA adapters;
+    the replacing of one code keeps them too. A device that enters with the
+    new code reaches the same account. The access window stays. The new codes
+    are in this response and nowhere else.
+    """
+    db = SessionLocal()
+    course = db.get(Course, course_id)
+    if course is None:
+        return jsonify({"error": "not found"}), 404
+    places = db.query(CourseMembership).filter(
+        CourseMembership.course_id == course_id,
+        CourseMembership.place_number.isnot(None),
+        CourseMembership.status == MembershipStatus.active,
+    ).order_by(CourseMembership.place_number).all()
+    try:
+        issued = [{"number": p.place_number, "code": issue_code(db, p)} for p in places]
+        db.commit()
+    except IntegrityError:
+        # Another request gave one of the codes to a place in the same moment;
+        # nothing of this one stands.
+        db.rollback()
+        return jsonify({"error": "the places of this course changed meanwhile; ask again"}), 409
+    logger.info("[COURSE-PLACES] course=%s: all %s codes replaced", course_id, len(issued))
+    return jsonify({"places": issued, "course": _course_dict(course)}), 201
 
 
 @courses_bp.route("/<int:course_id>/access", methods=["PUT"])
@@ -458,6 +495,8 @@ def delete_course(course_id: int):
       3. participant accounts — the places — deleted ONLY if the account is in
          no OTHER course; otherwise just this membership is removed by the
          course cascade. A place belongs to one course, so its account goes.
+      4. the favourites of the accounts that went (favorites_store.drop_owned),
+         as their perspectives go by the cascade.
     Preset JSON files are NEVER touched.
     """
     db = SessionLocal()
@@ -491,6 +530,7 @@ def delete_course(course_id: int):
 
     # 3) Participant-account fate: a participant survives if still in ANY other course.
     removed_accounts = 0
+    gone = []
     for uid in member_user_ids:
         user = db.get(User, uid)
         if user is None or user.role != Role.participant:
@@ -499,10 +539,21 @@ def delete_course(course_id: int):
             CourseMembership.user_id == uid
         ).count()
         if still_enrolled == 0:
+            gone.append((user.id, account_stamp(user)))
             db.delete(user)
             removed_accounts += 1
 
-    db.commit()
+    # 4) Their favourites, which live outside the database. The store is held
+    # from the commit until they are out. A star sent under one of these
+    # accounts before the commit and written after it is kept by its device
+    # (favorites_routes.add_favorite); written in between, it was kept under
+    # the account and taken out with it, and the device kept nothing.
+    with editing():
+        db.commit()
+        dropped = drop_owned(gone)
+    if dropped < 0:
+        logger.error("[COURSE-DELETE] course=%s: the favourites of its places could not be removed",
+                     course_id)
     logger.info("[COURSE-DELETE] course=%s works=%s removed_accounts=%s",
                 course_id, impact["course_works"], removed_accounts)
     return jsonify({

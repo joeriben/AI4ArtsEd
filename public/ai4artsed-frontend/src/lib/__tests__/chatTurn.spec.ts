@@ -20,12 +20,15 @@
  * endings that read as "no response" while they came over the blocking
  * endpoint, and have to keep reading as that.
  *
+ * And a turn the platform's checks refused, which carries the block message.
+ *
  * Nothing here reaches a server: fetch is a stand-in and the wire is written by
  * hand.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { chatTurn, ChatStreamError, ChatNoReplyError } from '../chatTurn'
 import { SseHttpError } from '../sseStream'
+import { refusalKeyOf } from '@/composables/useLabRun'
 
 const fetchMock = vi.fn<typeof fetch>()
 
@@ -202,6 +205,28 @@ describe('a terminal frame that is not a turn', () => {
     expect(err).toBeInstanceOf(ChatStreamError)
     expect((err as ChatStreamError).message).toBe('the model refused')
     expect((err as ChatStreamError).status).toBe(403)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// A turn the platform's checks refused
+// ---------------------------------------------------------------------------
+
+describe("a turn the platform's checks refused", () => {
+  it('carries the block message, which the surfaces read as a refusal', async () => {
+    const block = { checkpoint: 'intake', field: 'message', reason_key: 'personal_data',
+                    reason: 'ein Name' }
+    serves({ type: 'error', error: 'safety_blocked', status: 403, safety_block: block })
+    const err = await chatTurn('/api/chat/stream', {}).catch((e) => e)
+    expect(err).toBeInstanceOf(ChatStreamError)
+    expect((err as ChatStreamError).status).toBe(403)
+    expect((err as ChatStreamError).safety_block).toEqual(block)
+    expect(refusalKeyOf(err)).toBe('safetyBlocked.dsgvo')
+  })
+
+  it('is no refusal where the server ended the turn for another reason', async () => {
+    serves({ type: 'error', error: 'Internal server error', status: 500 })
+    expect(refusalKeyOf(await chatTurn('/api/chat/stream', {}).catch((e) => e))).toBe('')
   })
 })
 

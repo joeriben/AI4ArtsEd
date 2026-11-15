@@ -272,6 +272,7 @@ export const uk = {
       uiModeEffectStructure: 'Інформація на екрані: у простому режимі технічні показники приховані, в експертному видно модель, seed і параметри.',
       uiModeEffectStyle: 'Стиль коментарів до зображень.',
       uiModeNotSafety: 'Це не налаштування фільтра. Що перевіряється і блокується, визначає рівень безпеки нижче.',
+      traditionalChineseZhHant: 'Традиційна китайська (zh-hant)',
     },
     safety: {
       kidsTitle: 'Діти (8–13)',
@@ -331,15 +332,6 @@ export const uk = {
       storedIn: 'Збережено у',
       currentKey: 'Поточний',
       keyOf: 'API-ключ {provider}',
-      frontierImageLabel: 'Зовнішня фронтирна модель зображень',
-      frontierProviderLabel: 'Провайдер',
-      frontierKeyLabel: 'API-ключ наявний',
-      frontierBalanceLabel: 'Баланс Mammouth.ai',
-      frontierUsedUp: {
-        account: 'бюджет облікового запису вичерпано',
-        key: 'бюджет цього API-ключа вичерпано',
-        team: 'бюджет команди вичерпано',
-      },
     },
     save: {
       saveApply: 'Зберегти і застосувати',
@@ -1125,7 +1117,7 @@ export const uk = {
       modelComparison: 'Порівняння моделей',
       differentModelsInterpretSame: 'Різні моделі інтерпретують той самий prompt на основі того самого шумового зображення — і все ж дають цілком різні результати. Порівняння моделей робить видимим, що сама модель є вирішальною змінною, а не лише prompt.',
       currentTopModels: 'Актуальні топові моделі',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — три актуальні моделі у прямому порівнянні.',
+      sd35Large: 'SD 3.5 Large, Flux 2 і Flux 3 Klein у прямому порівнянні.',
       historicalComparison: 'Історичне порівняння',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — три покоління. Як змінювалася генерація зображень рік за роком?',
       temperatureComparison: 'Порівняння температури',
@@ -1921,9 +1913,6 @@ export const uk = {
     working: 'працює…',
     waiting: 'очікування',
     stationFailed: 'ця машина не відповіла',
-    band: {
-      done: 'Усі чотири відповіли',
-    },
     ask: {
       sign: 'Постав запитання!',
       question: 'Що ти насправді чуєш у моїй музиці, і що відбувається з моїм записом на шляху до пісні? Ще хочу знати, що тут варто спробувати.',
@@ -1960,8 +1949,6 @@ export const uk = {
     },
     sung: {
       name: 'Вихід',
-      note: 'Це можна лише почути, а не прочитати. Звір це з написаним текстом.',
-      notKept: 'Це існує, доки ти залишаєшся на сторінці. Це не можна зберегти, додати в обране чи завантажити — це відтворення, а не твір.',
       held: 'обрано вручну — саме це й запускається',
       madeBy: 'створено {model} за {s} с',
       pick: 'Вибір моделі',
@@ -1985,11 +1972,9 @@ export const uk = {
     },
     purpose: 'Тут можна навчитися двох речей: навмисно провокувати певний результат заспіваним чи зіграним вводом, і при цьому зустрітися з власними засобами вираження й кліше сприйняття. А також виявити, що ШІ часто щось вигадує, навіть коли є лише тиша, і що зовсім різні записи часто дають дуже подібні, кліше­подібні результати.',
     run: {
-      name: 'Старт',
       start: 'Надіслати запис через чотири машини',
       took: 'відповіла за {s} с',
     },
-    stationFailedNamed: '{station} — ця машина не відповіла',
     story: 'Це грайливе дослідження того, що ШІ розуміє — і не розуміє — у музичних і культурних питаннях. Сторінка слухає через мікрофон, намагається розпізнати спів і мовлення, потім звукові ситуації та стилі, і зрештою відтворити їх заново: ланцюг перекладів, повний втрат перекладу й артефактів, який можна пережити як криве дзеркало.',
   },
   latentLabOverview: {
@@ -2910,9 +2895,9 @@ export const uk = {
       models: {
         label: 'Моделі',
         small: 'малі моделі',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1.7B і 4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1.7B і 4B',
         large: 'великі моделі',
-        largeNote: 'OLMo 2 і 3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — від 7 до 12B',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — від 7 до 14B',
         family: 'родина моделей',
         familyNote: 'розміри родини Qwen, від 1,7B до 14B',
         history: 'модель у часі',
@@ -3272,6 +3257,7 @@ export const uk = {
       error: 'Помилка з\'єднання',
       modelLabel: 'Модель',
       defaultModel: 'За замовчуванням (Налаштування)',
+      localModel: 'локально',
       modelNotDownloaded: '(не завантажено)',
       install: {
         downloadCta: 'Завантажити ({mb} МБ)',
@@ -3397,6 +3383,7 @@ export const uk = {
         ko: 'Корейська',
         tr: 'Турецька',
         uk: 'Українська',
+        'zh-hant': 'Традиційна китайська',
       },
       piper: {
         voiceLabel: 'Голос',
@@ -3513,7 +3500,6 @@ export const uk = {
         sd35_large: 'SD 3.5 Large читає промпт через три текстові кодувальники: CLIP-L і CLIP-G, натреновані на парах зображення й підпису (Radford et al. 2021; Cherti et al. 2023), і T5-XXL, натренований лише на тексті (Raffel et al. 2020). Стаття Stability AI про архітектуру (Esser et al. 2024) називає цілі: «improving text comprehension, typography, and human preference ratings». В оцінюванні статті типографіка означає, наскільки точно зображення відтворює написаний текст.',
         sd35_large_turbo: 'SD 3.5 Large Turbo читає промпт через ті самі три текстові кодувальники, що й SD 3.5 Large — CLIP-L, CLIP-G і T5-XXL (Stability AI 2024, картка моделі). Чого Stability AI хотіла від Turbo, сказано в анонсі: «A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps» (Stability AI 2024, анонс).',
         flux2: 'Flux 2 читає промпт через мовну модель vision-language моделі (VLM). Black Forest Labs називає, що додає VLM: «The VLM brings real world knowledge and contextual understanding» (Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image — це модель зображень Google «Nano Banana Pro». Google пише: «Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.» (Google 2025).',
       },
       referencesTitle: 'Джерела',
     },
@@ -3535,8 +3521,8 @@ export const uk = {
     languagesLabel: 'Мови',
     modelNote: {
       noteBody: {
-        current: 'SD 3.5 Large будували, щоб точно слідувати промпту і ставити в зображення розбірливе письмо. FLUX.2 будували для роботи, яка повторюється: той самий персонаж, продукт чи стиль, утриманий одразу на щонайбільше десяти референсних зображеннях. Його реліз стверджує, що «складна типографіка, інфографіка, меми та UI-макети з розбірливим дрібним текстом тепер надійно працюють у продакшені».\n\nGemini 3 Pro Image побудовано на Gemini 3, загальній моделі. Зображення може спиратися на запит у Google Search, тож картка рецепта чи погодна графіка може нести актуальну інформацію. Google заявляє про розбірливий текст усередині зображення кількома мовами.',
-        history: 'Stable Diffusion працює у стисненому представленні зображення, а не на його пікселях. Її стаття ставила за мету зробити тренування можливим на обмежених обчислювальних ресурсах — проти сотень GPU-днів, яких коштує модель, що працює прямо на пікселях.\n\nSDXL будували заради візуальної точності: втричі більша мережа зображення, другий текстовий кодувальник, кілька співвідношень сторін і заявка у власній статті зрівнятися із закритими генераторами зображень 2023 року. Стаття SD 3.5 називає інші цілі: «покращення розуміння тексту, типографіки та оцінок людських уподобань». Типографіка — це письмо всередині зображення; розуміння тексту — це те, чи отримує промпт, який називає кілька речей, їх усі.',
+        current: 'Stability AI обіцяє для SD 3.5 Large, що він точно слідує промпту і ставить письмо в зображення (2024, картка моделі та сторінка релізу). Реліз Flux 2 стверджує: «Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.»\n\nСеред ключових можливостей Flux 3 Klein картка моделі від Black Forest Labs (2026) називає: «Text rendering within generated images.»',
+        history: 'Stable Diffusion працює у стисненому представленні зображення, а не на його пікселях. Її стаття ставила за мету зробити тренування можливим на обмежених обчислювальних ресурсах — проти сотень GPU-днів, яких коштує модель, що працює прямо на пікселях.\n\nСтаття про SDXL називає метою синтез зображень високої роздільної здатності й заявляє, що досягає закритих генераторів зображень 2023 року. Стаття про архітектуру SD 3.5 називає: «improving text comprehension, typography, and human preference ratings». Типографіка є письмом усередині зображення.',
       },
       referencesTitle: 'Джерела',
     },

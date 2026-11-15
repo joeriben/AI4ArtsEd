@@ -10,7 +10,8 @@
     "es": "Flux 3 Klein",
     "he": "Flux 3 Klein",
     "ar": "Flux 3 Klein",
-    "bg": "Flux 3 Klein"
+    "bg": "Flux 3 Klein",
+    "zh-hant": "Flux 3 Klein"
   },
   "description": {
     "en": "Image generation with FLUX 3 Image Klein and the Qwen3-VL-4B text encoder via ComfyUI.",
@@ -22,7 +23,8 @@
     "es": "Generación de imágenes con FLUX 3 Image Klein y el codificador de texto Qwen3-VL-4B a través de ComfyUI.",
     "he": "יצירת תמונות באמצעות FLUX 3 Image Klein עם מקודד הטקסט Qwen3-VL-4B דרך ComfyUI.",
     "ar": "توليد الصور باستخدام FLUX 3 Image Klein مع مُرمِّز النص Qwen3-VL-4B عبر ComfyUI.",
-    "bg": "Генериране на изображения с FLUX 3 Image Klein и текстов енкодер Qwen3-VL-4B през ComfyUI."
+    "bg": "Генериране на изображения с FLUX 3 Image Klein и текстов енкодер Qwen3-VL-4B през ComfyUI.",
+    "zh-hant": "透過 ComfyUI，使用 FLUX 3 Image Klein 與 Qwen3-VL-4B 文字編碼器生成圖像。"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_flux3",

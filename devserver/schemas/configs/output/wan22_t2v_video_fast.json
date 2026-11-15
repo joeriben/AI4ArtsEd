@@ -10,7 +10,8 @@
     "es": "Wan 2.2 T2V 14B Rápido",
     "he": "Wan 2.2 T2V 14B מהיר",
     "ar": "Wan 2.2 T2V 14B سريع",
-    "bg": "Wan 2.2 T2V 14B Бърз"
+    "bg": "Wan 2.2 T2V 14B Бърз",
+    "zh-hant": "Wan 2.2 T2V 14B 快速版"
   },
   "description": {
     "en": "Fast text-to-video using Wan 2.2 14B FP8 with LightX2V 4-step acceleration",
@@ -22,7 +23,8 @@
     "es": "Generación rápida de texto a vídeo con Wan 2.2 14B FP8 y aceleración LightX2V de 4 pasos.",
     "he": "יצירת טקסט-לווידאו מהירה באמצעות Wan 2.2 14B FP8 עם האצת LightX2V בת 4 שלבים.",
     "ar": "توليد سريع من نص إلى فيديو باستخدام Wan 2.2 14B FP8 مع تسريع LightX2V بأربع خطوات.",
-    "bg": "Бързо генериране на видео от текст с Wan 2.2 14B FP8 и ускорение LightX2V с 4 стъпки."
+    "bg": "Бързо генериране на видео от текст с Wan 2.2 14B FP8 и ускорение LightX2V с 4 стъпки.",
+    "zh-hant": "使用 Wan 2.2 14B FP8 搭配 LightX2V 4 步加速的快速文字轉影片"
   },
   "category": {
     "en": "Video Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de vídeo",
     "he": "יצירת וידאו",
     "ar": "توليد الفيديو",
-    "bg": "Генериране на видео"
+    "bg": "Генериране на видео",
+    "zh-hant": "影片生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_video_wan22_t2v_fast",

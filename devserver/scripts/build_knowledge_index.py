@@ -11,7 +11,8 @@ exports under exports/knowledge_library/**) into
 Schema (BIBLIOTHEK.md §5 + build brief):
     docs(doc_id PK, title, authors, year, lang, tier, sparten_json, themen_json,
          lizenz, url, status, owner_key, card_md, source_path, bereich, hinweis,
-         analyzed_at, analysis_lang, analysis_model)
+         analyzed_at, analysis_lang, analysis_model, seitenzahlen, checks, review,
+         status_reason)
     chunks(chunk_id PK, doc_id, section_path, heading, context_txt, body_md,
            tokens_est)
     glossary(term, definition, doc_refs_json, curated)
@@ -26,6 +27,7 @@ the COMPACT Markdown format the Verdichtung (knowledge_processing.py) writes:
     ## PROFIL   (the positioning digest — indexed as the "card")
     ## WISSEN   (### <Abschnitt de> subsections = the condensed knowledge units;
                  each ends in a <!-- quelle: … --> review anchor, stripped here)
+    ## LITERATUR (the source's bibliography, entries verbatim; one chunk)
     ## GLOSSAR  (- **term** — definition)
 Full source text is NEVER present in the library, so it is never indexed and
 never reaches the model (BIBLIOTHEK.md §3 core rule).
@@ -140,10 +142,10 @@ def _unquote(s: str) -> str:
     return s
 
 
-# The three level-2 markers the compact Verdichtung form emits. Only these start
+# The level-2 markers the compact Verdichtung form emits. Only these start
 # a new top section — a WISSEN body legitimately carries its own ### subsection
 # headings, which are handled by _parse_wissen_chunks, NOT as top boundaries.
-_TOP_SECTION_KEYS = {"PROFIL", "WISSEN", "GLOSSAR"}
+_TOP_SECTION_KEYS = {"PROFIL", "WISSEN", "LITERATUR", "GLOSSAR"}
 
 
 def _split_top_sections(md: str) -> Dict[str, str]:
@@ -218,7 +220,6 @@ def _parse_wissen_chunks(wissen_md: str) -> List[Dict[str, Any]]:
             buf.append(line)
     _flush()
     return chunks
-    return chunks
 
 
 # ---------------------------------------------------------------------------
@@ -241,6 +242,13 @@ def load_document(md_path: Path, owner_key: Optional[str] = None) -> Optional[Di
     card_md = _strip_html_comments(sections.get("PROFIL", "")).strip()
     glossary = _parse_glossary(sections.get("GLOSSAR", ""))
     chunks = _parse_wissen_chunks(sections.get("WISSEN", ""))
+    # The source's bibliography is one chunk of its own (section LITERATUR),
+    # so read_knowledge(doc_id, section="LITERATUR") hands out the references.
+    literatur = _strip_html_comments(sections.get("LITERATUR", "")).strip()
+    if literatur:
+        chunks.append({"section_path": "LITERATUR", "heading": "LITERATUR",
+                       "context_txt": "", "body_md": literatur,
+                       "tokens_est": _est_tokens(literatur)})
 
     return {
         "doc_id": doc_id,
@@ -270,6 +278,18 @@ def load_document(md_path: Path, owner_key: Optional[str] = None) -> Optional[Di
         "analyzed_at": fm.get("analyzed_at", ""),
         "analysis_lang": fm.get("analysis_lang", ""),
         "analysis_model": fm.get("analysis_model", ""),
+        # Which numbering the file's page references use (gedruckt / pdf /
+        # keine); absent on files written before 2026-11-13.
+        "seitenzahlen": fm.get("seitenzahlen", ""),
+        # The gate's two reasons (knowledge_processing.process_document):
+        # the checks' label and the adversarial review's label, e.g.
+        # "failed: lists (1 of 15 lists/tables incomplete)". The curation
+        # list shows them beside a draft; absent on older files.
+        "checks": fm.get("checks", ""),
+        "review": fm.get("review", ""),
+        # Why the document is a draft (gate_status): checks, review,
+        # no_review, release, operator; "" on a published file.
+        "status_reason": fm.get("status_reason", ""),
         "card_md": card_md,
         "source_path": str(md_path),
         "glossary": glossary,
@@ -332,7 +352,11 @@ CREATE TABLE docs (
     hinweis      TEXT,
     analyzed_at    TEXT,
     analysis_lang  TEXT,
-    analysis_model TEXT
+    analysis_model TEXT,
+    seitenzahlen   TEXT,
+    checks         TEXT,
+    review         TEXT,
+    status_reason  TEXT
 );
 
 CREATE TABLE chunks (
@@ -403,8 +427,8 @@ def build(db_path: Path, docs: List[Dict[str, Any]]) -> Dict[str, int]:
             con.execute(
                 "INSERT INTO docs (doc_id,title,authors,year,lang,tier,sparten_json,"
                 "themen_json,lizenz,url,status,owner_key,card_md,source_path,bereich,hinweis,"
-                "analyzed_at,analysis_lang,analysis_model) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "analyzed_at,analysis_lang,analysis_model,seitenzahlen,checks,review,status_reason) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
                     d["doc_id"], d["title"], d["authors"], str(d["year"]), d["lang"],
                     d["tier"], json.dumps(d["sparten"], ensure_ascii=False),
@@ -412,7 +436,9 @@ def build(db_path: Path, docs: List[Dict[str, Any]]) -> Dict[str, int]:
                     d["status"], d["owner_key"], d["card_md"], d["source_path"],
                     d.get("bereich", ""), d.get("hinweis", ""),
                     d.get("analyzed_at", ""), d.get("analysis_lang", ""),
-                    d.get("analysis_model", ""),
+                    d.get("analysis_model", ""), d.get("seitenzahlen", ""),
+                    d.get("checks", ""), d.get("review", ""),
+                    d.get("status_reason", ""),
                 ),
             )
 

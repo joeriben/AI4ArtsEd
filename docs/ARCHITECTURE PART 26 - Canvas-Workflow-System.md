@@ -29,7 +29,7 @@ The Canvas Workflow System is a visual node-based workflow builder for creating 
 1. **Visual Programming**: Drag-and-drop nodes, connect with lines
 2. **DAG Execution**: Directed Acyclic Graph traversal (no cycles currently)
 3. **Fan-out Support**: One source can connect to multiple targets (parallel execution)
-4. **Safety Transparent**: Stage 1/3 safety handled automatically by DevServer
+4. **Safety Transparent**: No node is a check. The server checks the board at the intake, what a model writes for a node at the result, and what a media model receives before the model (Part 01, section 1.7)
 5. **Streaming Progress**: Real-time SSE updates during execution
 
 ### Default Workflow Structure
@@ -300,7 +300,7 @@ as written); `Text:` with the input.
 **Notes**:
 - Parameter nodes don't propagate through workflow
 - Only affects connected Generation nodes
-- Ignored by API-based backends (GPT-Image, Gemini)
+- Ignored by API-based backends (GPT-Image)
 
 ---
 
@@ -829,16 +829,16 @@ Parameter Nodes (source)     Workflow Nodes           Generation
 
 ### Parameter Support by Backend
 
-| Parameter | SD3.5 | Flux2 | GPT-Image | Gemini | ACEnet | Wan22 |
-|-----------|:-----:|:-----:|:---------:|:------:|:------:|:-----:|
-| `seed` | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `width` | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
-| `height` | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
-| `steps` | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `cfg` | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `negative_prompt` | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Parameter | SD3.5 | Flux2 | GPT-Image | ACEnet | Wan22 |
+|-----------|:-----:|:-----:|:---------:|:------:|:-----:|
+| `seed` | ✅ | ✅ | ❌ | ✅ | ✅ |
+| `width` | ✅ | ✅ | ❌ | ❌ | ✅ |
+| `height` | ✅ | ✅ | ❌ | ❌ | ✅ |
+| `steps` | ✅ | ✅ | ❌ | ✅ | ✅ |
+| `cfg` | ✅ | ✅ | ❌ | ✅ | ✅ |
+| `negative_prompt` | ✅ | ✅ | ❌ | ❌ | ✅ |
 
-**Note**: API-based backends (GPT-Image, Gemini) use different parameter systems and ignore ComfyUI-style parameters.
+**Note**: API-based backends (GPT-Image) use different parameter systems and ignore ComfyUI-style parameters.
 
 ### useGenerationStream Integration
 

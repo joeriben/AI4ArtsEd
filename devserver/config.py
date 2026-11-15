@@ -42,6 +42,13 @@ GPU_ADMISSION_ACQUIRE_TIMEOUT_S = float(os.environ.get("GPU_ADMISSION_ACQUIRE_TI
 # measured a few. Replaced by a moving average of real holds, and REPORTED only:
 # nobody is turned away on an estimate.
 GPU_ADMISSION_ASSUMED_RUN_S = float(os.environ.get("GPU_ADMISSION_ASSUMED_RUN_S", "90"))
+# The margin the forecast adds to the measured duration of the run on the
+# card: a share of the measurement, never less than the floor. The countdown
+# runs to measurement plus margin, and the wait turns unknown past that
+# rather than the moment the run goes over its measurement. 300 s gets 75 s;
+# 8 s gets the floor, a quarter of eight seconds being two (2026-11-02).
+GPU_ADMISSION_FORECAST_BUFFER_SHARE = float(os.environ.get("GPU_ADMISSION_FORECAST_BUFFER_SHARE", "0.25"))
+GPU_ADMISSION_FORECAST_BUFFER_MIN_S = float(os.environ.get("GPU_ADMISSION_FORECAST_BUFFER_MIN_S", "15"))
 # Generously above the worst delay a heartbeat can suffer on a busy thread
 # pool: a lease reaped while its generation is still running means two
 # processes allocate at once, which is the failure this whole gate exists to
@@ -150,6 +157,14 @@ _SETTINGS_DEFAULTS = {
     # the bottom of reload_user_settings). The UNESCO corpus is public / not
     # DSGVO-critical, so a strong cloud model is appropriate — NOT a tiny local.
     'KNOWLEDGE_PROCESSING_MODEL': '',
+    # How much the condensing model reasons per call (BIBLIOTHEK.md §3), sent
+    # as OpenRouter's unified request field {"reasoning": {"effort": ...}}
+    # (knowledge_processing.default_llm_fn) and only to a candidate on
+    # OpenRouter. Empty: the field is not sent and the model reasons as long
+    # as it likes -- on 2026-11-12 that was a median of 30k output tokens per
+    # call with glm-5.3 (issue #138). Not shown on the settings page; set in
+    # user_settings.json by hand, which a save from the page keeps.
+    'KNOWLEDGE_REASONING_EFFORT': 'high',
     # Query translation for the library search (cross-lingual recall): a
     # micro-task served by the LOCAL Ollama line via the GPU service —
     # llm_service cannot route provider-prefixed cloud models.
@@ -158,6 +173,13 @@ _SETTINGS_DEFAULTS = {
     'RESONA_MODEL': '',
     'CODING_MODEL': '',
     'IMAGE_ANALYSIS_MODEL': '',
+    # The image model that describes the figures of a library document
+    # (knowledge_processing.describe_figures). Empty: the condensing model
+    # where it reads images, else IMAGE_ANALYSIS_MODEL
+    # (knowledge_processing.figure_model, read at call time). The settings page
+    # does not show it; it is set in user_settings.json by hand, as
+    # RESONA_VIEW_VLM_MODEL is, and a save from the page keeps it.
+    'KNOWLEDGE_IMAGE_MODEL': '',
     'SAFETY_MODEL': '',
     # The model of Resona's look at images, where it is not the look's own
     # default. llm_service.view_vlm_model reads it straight from
@@ -261,6 +283,35 @@ KNOWLEDGE_INDEX_DB = DEVSERVER_EXPORTS_DIR / "knowledge_index.sqlite"           
 KNOWLEDGE_GLOSSARY_OVERRIDES = DEVSERVER_JSON_DIR / "knowledge_glossary_overrides.json"  # operator glossary redaction
 KNOWLEDGE_INGEST_SCRIPT = DEVSERVER_DIR / "scripts" / "knowledge_ingest.py"
 KNOWLEDGE_INDEX_SCRIPT = DEVSERVER_DIR / "scripts" / "build_knowledge_index.py"
+
+# Source PDFs of a corpus run (2026-11-12), outside the project folder:
+# operator/<bereich>/<doc_id>.pdf, research/<doc_id>.pdf, unesco/<doc_id>.pdf
+# and ZUORDNUNG_ZOTERO.tsv (tier, bereich, doc_id, …). Read only; the library
+# runner (scripts/knowledge_run.py) and the retention step take it from here
+# unless given --source-root.
+KNOWLEDGE_SOURCE_ROOT = Path(os.environ.get(
+    "AI4ARTSED_KNOWLEDGE_SOURCE_ROOT",
+    str(Path.home() / "ai4artsed_knowledge_db"),
+))
+# Extraction intermediates of a corpus run (raw text, blocks, exported
+# figures), outside the repository: <root>/<tier>/<doc_id>.raw.md,
+# <doc_id>.blocks.json, <doc_id>.figures/. Temporary for non-CC documents;
+# scripts/knowledge_retention.py lists and removes them.
+KNOWLEDGE_WORK_ROOT = Path(os.environ.get(
+    "AI4ARTSED_KNOWLEDGE_WORK_ROOT",
+    str(Path.home() / "ai4artsed_knowledge_work"),
+))
+# Copyright check of a condensation (knowledge_checks.check_verbatim_share):
+# a word run of at least this many words found in the source counts as
+# verbatim; the share of verbatim words in the output may not exceed the
+# ceiling. These two numbers are the only copyright quantity. The share is
+# measured on the text: the source's lists, the LITERATUR section and the
+# figure descriptions are not counted, and a table of contents is removed
+# before the model reads the source (clean_blocks). Ceiling 20 %
+# (Projektleitung, 13.11.2026, raised from 15 % together with leaving the
+# lists out; „20% Text. Bildbeschreibungen zählen nicht dazu.“).
+KNOWLEDGE_VERBATIM_MIN_WORDS = 7
+KNOWLEDGE_VERBATIM_MAX_SHARE = 0.20
 
 # Interpreter for the OFFLINE ingest (Docling + torch live in a separate venv so
 # they are NEVER a devserver runtime dependency, BIBLIOTHEK.md §3). Default is
@@ -453,7 +504,8 @@ ESPEAK_LOUDNESS_LUFS = float(
 # sentence (measured 2026-09-17); the card is never touched.
 #
 # Every platform language has an installed voice — Hebrew, which Supertonic
-# lacks, and Bulgarian and Ukrainian, which VoxCPM2 answers in English.
+# lacks, and Bulgarian and Ukrainian, which VoxCPM2 answers in English — except
+# Traditional Chinese (zh-hant, since 2026-10-29), which has none yet.
 PIPER_ENABLED = os.environ.get("PIPER_ENABLED", "true").lower() == "true"
 
 # The binary of that environment, and the directory of .onnx voices beside

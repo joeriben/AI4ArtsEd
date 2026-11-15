@@ -10,7 +10,8 @@
     "es": "Imagen a 3D (Hunyuan3D-2)",
     "he": "מתמונה לתלת-ממד (Hunyuan3D-2)",
     "ar": "من صورة إلى ثلاثي الأبعاد (Hunyuan3D-2)",
-    "bg": "Изображение в 3D (Hunyuan3D-2)"
+    "bg": "Изображение в 3D (Hunyuan3D-2)",
+    "zh-hant": "圖片轉 3D（Hunyuan3D-2）"
   },
   "description": {
     "en": "Generate textured 3D models from images using Hunyuan3D-2",
@@ -22,7 +23,8 @@
     "es": "Genera modelos 3D texturizados a partir de imágenes con Hunyuan3D-2",
     "he": "יצירת מודלים תלת-ממדיים עם מרקם מתוך תמונות באמצעות Hunyuan3D-2",
     "ar": "توليد نماذج ثلاثية الأبعاد ذات ملمس من الصور باستخدام Hunyuan3D-2",
-    "bg": "Генериране на текстурирани 3D модели от изображения с Hunyuan3D-2"
+    "bg": "Генериране на текстурирани 3D модели от изображения с Hunyuan3D-2",
+    "zh-hant": "使用 Hunyuan3D-2 從圖片生成帶紋理的 3D 模型"
   },
   "category": {
     "en": "3D Generation",
@@ -34,7 +36,8 @@
     "es": "Generación 3D",
     "he": "יצירת תלת-ממד",
     "ar": "توليد ثلاثي الأبعاد",
-    "bg": "3D генериране"
+    "bg": "3D генериране",
+    "zh-hant": "3D 生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_3d_hunyuan3d",

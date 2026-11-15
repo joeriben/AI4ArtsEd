@@ -136,3 +136,18 @@ def test_system_prompt_carries_no_addressee_outside_quotation(resona_prompt):
         "around it puts the figure back. Remove the address rather than adding "
         "a rule against the I:\n  " + "\n  ".join(offenders)
     )
+
+
+@pytest.mark.parametrize("level", ["kids", "youth", "adult"])
+def test_the_instruction_on_the_safety_level_carries_no_addressee(level):
+    """The instruction closes the system message of every chat since
+    2026-11-14. It is added to the message after the composed prompt, so the
+    test of the composed prompt above does not see it."""
+    from my_app.routes.chat_routes import level_instruction
+    text = _normalize(level_instruction(level))
+    offenders = ["…" + text[max(0, m.start() - 70):m.end() + 70].strip() + "…"
+                 for m in PERSON.finditer(text)]
+    assert not offenders, (
+        "The instruction on the safety level addresses the model:\n  "
+        + "\n  ".join(offenders)
+    )

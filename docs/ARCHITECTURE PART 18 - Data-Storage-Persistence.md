@@ -166,9 +166,14 @@ exports/json/              # PRIMARY LOCATION
 - `02_translation.txt` - Translated text
 - `04_interception.txt` - Transformed prompt
 
-**JSON Entities:**
+**JSON Entities** (written by `/pipeline/interception` before the three checks of Part 01,
+section 1.7; no check writes an entity of its own now):
 - `03_safety.json` - Stage 1 safety check results
 - `05_safety_pre_output.json` - Stage 3 safety check results
+
+The check at the result writes its verdict on a picture or on code onto that picture's or
+that code's entity, under `safety` in the entity's metadata
+(`pipeline_recorder.SAFETY_VERDICT_KEY`). Delivery reads it there.
 
 **Media Entities:**
 - `06_output_image.png` - Generated image
@@ -243,24 +248,12 @@ scope for these repairs, and both scripts refuse them.
 ### Real-Time State Tracking
 
 ```python
-# Update state throughout pipeline
-recorder.update_state(
-    stage=1,
-    step='translation_and_safety',
-    progress='1/6'
-)
-
-recorder.update_state(
-    stage=2,
-    step='interception',
-    progress='3/6'
-)
-
-recorder.update_state(
-    stage=4,
-    step='media_generation',
-    progress='5/6'
-)
+# Update state throughout pipeline (/pipeline/interception). The progress is
+# counted from the saved entities against expected_outputs.
+recorder.set_state(1, "intake")
+recorder.set_state(2, "interception")
+recorder.set_state(3, "before_model")
+recorder.set_state(4, "media_generation")
 ```
 
 ### Integration
@@ -281,10 +274,8 @@ recorder = get_recorder(
 
 # Save entities throughout pipeline
 recorder.save_entity('input', input_text, metadata={...})
-recorder.save_entity('translation', translation_output)
-recorder.save_entity('safety', safety_result)
 recorder.save_entity('interception', interception_output)
-recorder.save_entity('safety_pre_output', safety_result)
+recorder.save_entity('translation_en', translated_prompt)  # where the model receives a translation
 # Media downloaded and saved by LivePipelineRecorder directly
 await recorder.download_and_save_media(prompt_id, media_type='image')
 ```
@@ -333,7 +324,7 @@ Frontend (text_transformation.vue)
 POST /interception ────────────────────────────┐
        │                                       │
        │  Backend: get_recorder(run_id=new)    │
-       │  Saves: input, safety, interception   │
+       │  Saves: input, interception           │
        │                                       │
        ▼                                       │
 Response: { run_id: "run_xxx_abc", ... }       │
@@ -377,7 +368,6 @@ recorder = get_recorder(
 # /interception endpoint
 recorder = get_recorder(run_id=run_id, ...)
 recorder.save_entity('input', input_text)
-recorder.save_entity('safety', safety_result)
 recorder.save_entity('interception', interception_result)
 # Return run_id to frontend
 
@@ -418,7 +408,6 @@ Different backends return outputs in different formats. The `/generation` endpoi
 |---------|--------------|----------|
 | SwarmUI (SD3.5) | `swarmui_generated` + `image_paths` | Download via SwarmUI API |
 | ComfyUI Workflow (QWEN, FLUX2) | `workflow_generated` + `filesystem_path` | Read from local filesystem |
-| OpenRouter (Gemini) | Base64 inline or URL | Decode base64 / fetch URL |
 | OpenAI (GPT-Image) | Base64 data URI | Strip prefix, decode base64 |
 
 ```python
@@ -628,7 +617,7 @@ The unified run folder now contains ALL data needed for research analysis:
 exports/json/YYYY-MM-DD/{run_id}/
 ├── 01_input.txt              # Original user input (German)
 ├── 02_context_prompt.txt     # Meta-prompt/pedagogical rules (user-editable!)
-├── 03_safety.txt             # Stage 1 safety result
+├── 03_safety.txt             # Stage 1 safety result (before the three checks)
 ├── 04_interception.txt       # Transformed text (German)
 ├── 05_translation_en.txt     # English translation for media generation (NEW!)
 ├── 06_optimized_prompt.txt   # Final prompt
@@ -656,27 +645,33 @@ New `models_used` field tracks which LLM was used at each pipeline stage:
 }
 ```
 
-- `stage3_translation`: the model Stage 3 asked to translate (`STAGE3_MODEL` as set when
-  Stage 3 starts), where it did — at research and adult only when the translation is
-  forced. A failed attempt counts. The entry records the setting, not a model the
-  translation reports, so a change of the setting can put the wrong model in it: a
-  translation reused from the one-hour cache that was made under an earlier setting, and
-  the two SD3.5 encoder halves, which are translated after the check.
-- `stage3_safety`: the model the check asked, whether or not it answered — the safety
-  classifier (`SAFETY_MODEL`), which names itself in the result; for generated code on
-  `/pipeline/interception`, `STAGE3_MODEL`, which the code check asks. Blocked runs in the
-  Flow and on `/pipeline/interception` carry both as well; `/pipeline/generation` keeps no
-  record of a blocked run. A Flow run that stops between the check and the generation —
-  stopped by the visitor, or turned away because the device still has a generation
-  running — records no Stage 3 model.
+- `stage3_translation`: the translation model (`STAGE3_MODEL`), where it was asked: for
+  the check before the model, which reads an English version of the text at every level
+  but research, and for a model that receives a translation. A failed attempt counts.
+  The entry records the setting, not a model the translation reports, so a change of the
+  setting can put the wrong model in it, for instance for a translation reused from the
+  one-hour cache that was made under an earlier setting.
+- `stage3_safety`: the safety classifier the check before the model asked, as the setting
+  `SAFETY_MODEL` names it, whether or not it answered; at every level but research.
+  Blocked runs in the Flow and on `/pipeline/interception` carry both as well;
+  `/pipeline/generation` keeps no record of a blocked run. A Flow run that stops between
+  the check and the generation — stopped by the visitor, or turned away because the
+  device still has a generation running — records no Stage 3 model. On
+  `/pipeline/interception` generated code reaches no model after Stage 2: it is checked at
+  the result and records no model here; its verdict stands on its entity.
 - `context_translation`: the model that translated a visitor-edited context
   (`/pipeline/interception`, Phase 2).
 
 Records written before 2026-09-26 differ: `/pipeline/generation` wrote
 `stage3_safety` = `STAGE3_MODEL`, and `/pipeline/interception` wrote `stage1_safety` =
-`STAGE1_TEXT_MODEL`. Since the check chain moved to the classifier (494a659c, 2026-09-24),
+`STAGE1_TEXT_MODEL`. Since the check chain moved to the classifier (2026-09-24),
 both name a translation model, not the model that checked. Flow runs recorded no Stage 3
 model, and their blocked-run error named `llamaguard` as the check.
+
+Records written before the three checks (Part 01, section 1.7) differ as well:
+`stage3_translation` was recorded at adult only when the translation was forced, and for
+generated code on `/pipeline/interception` `stage3_safety` named `STAGE3_MODEL`, which the
+code check asked then.
 
 This enables:
 - **Reproducibility:** Know exact model versions used

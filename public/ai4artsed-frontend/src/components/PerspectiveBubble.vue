@@ -31,17 +31,20 @@
   `keptColor()` in `stores/keptPerspectives.ts`; the surface passes it in, so no
   second palette is opened here.
 
-  A third face since 2026-09-21: a SIGN. A LoRA is shown as the same disc with
-  the net (`LoraGlyph`) on a dark ground instead of a picture or a colour — a
-  LoRA has no picture of its own, and a colour would make it read as a kept
-  perspective. The host puts the sign into the default slot; the disc draws the
+  A third face since 2026-09-21: a SIGN. A LoRA without a picture of its own
+  (`loraPicture` in `stores/loras.ts`) is shown as the same disc with the net
+  (`LoraGlyph`) on a dark ground instead of a colour, which would make it read
+  as a kept perspective. The host puts the
+  sign into the default slot; the disc draws the
   ground and centres it. The ring the zone draws takes its colour from
   `readColor` (the amber of the perspectives unless the host says otherwise:
   the Flow gives a LoRA tile its own violet), so one rule draws every ring.
 
   A picture by address since 2026-10-02 (`src`): a ready-made Canvas workflow
   is chosen on the same ring (components/canvas/CanvasPresetOverlay.vue) and
-  wears a picture its own result made, which is no config's preview. With
+  wears a picture its own result made, which is no config's preview; so does
+  a LoRA that has one (in the chooser since 2026-10-30, as a tile on the
+  board since 2026-10-31). With
   neither a picture, a colour nor a sign the disc shows its light ground — the
   empty board in the middle of that ring.
 -->
@@ -75,7 +78,8 @@ const props = withDefaults(
     configId?: string
     /**
      * A picture by address, for a disc that is no config: a ready-made Canvas
-     * workflow wears what its own result looked like. Set, it stands instead
+     * workflow wears what its own result looked like, a LoRA its preview
+     * picture. Set, it stands instead
      * of the config preview.
      */
     src?: string

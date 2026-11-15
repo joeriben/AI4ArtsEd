@@ -111,7 +111,7 @@ async def execute(
         # WHICH backbone ran — this instrument has two, an MMDiT and a U-Net, and
         # the MMDiT is Medium or Large by the size of the card. Without this the
         # answer names the output config instead, which names neither.
-        'model_id': model_id,
+        'model_used': model_id,
         'image_data': result['image_base64'],
         'archaeology_data': {
             'step_images': result['step_images'],

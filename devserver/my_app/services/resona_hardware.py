@@ -19,7 +19,8 @@ useAnimationProgress.ts so the figures match the edutainment minigames exactly:
     Wh per second   = watts / 3600
     g CO2 per second = (Wh/s / 1000) * CO2_PER_KWH_GRAMS
     tree            : a tree reabsorbs TREE_G_CO2_PER_HOUR grams per hour
-CO2_PER_KWH_GRAMS = 400 is the German-grid average also hardcoded in
+CO2_PER_KWH_GRAMS = 400 is the platform's rounded working value for the
+German grid (sources at the constant below), also hardcoded in
 settings_routes.get_gpu_realtime and documented in
 docs/ARCHITECTURE PART 15 - Key-Design-Decisions.md.
 """
@@ -32,7 +33,22 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 # Energy assumptions — kept identical to the frontend energy model so the
-# platform speaks one voice. German electricity grid average (~2024).
+# platform speaks one voice.
+#
+# CO2_PER_KWH_GRAMS is the platform's rounded working value for the German
+# electricity grid. Source: Umweltbundesamt, Icha & Lauf (2026), "Entwicklung
+# der spezifischen Treibhausgas-Emissionen des deutschen Strommix in den Jahren
+# 1990 - 2025", Climate Change 16/2026, https://www.umweltbundesamt.de/publikationen/entwicklung-der-spezifischen-treibhausgas-0
+# For 2024 (preliminary data) it gives 353 g CO2/kWh for the electricity mix
+# (CO2 only) and 414 g CO2-equivalent/kWh including the upstream chain; for
+# 2025 (estimated data) 344 g CO2/kWh and 406 g CO2-equivalent/kWh. 400 lies
+# between the CO2 value for the mix and the CO2-equivalent value including the
+# upstream chain, in both years.
+#
+# TREE_G_CO2_PER_HOUR: the Arbor Day Foundation, "The Value of Trees",
+# https://www.arborday.org/value, states that a single mature tree can absorb over 48 pounds
+# of CO2 per year. 48 lb is about 21.8 kg per year, or 2.49 g per hour. The
+# platform rounds to 22 kg per year, which gives 2.51 g per hour.
 CO2_PER_KWH_GRAMS = 400
 TREE_G_CO2_PER_HOUR = 2.51
 

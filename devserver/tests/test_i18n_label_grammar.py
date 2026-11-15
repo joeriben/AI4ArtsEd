@@ -187,6 +187,12 @@ WH_INITIAL = {
     "ar": re.compile(r"^(ما(?!\s*دام)|ماذا|لماذا|كيف|أين|متى|كم)" + HE_AR_WORD_END),
     "bg": re.compile(r"^(Какво|Защо|Как|Кой|Коя|Кое|Кои|Къде|Кога|Що|Колко"
                      r"|Откъде|Чий|Чия|Чие|Кого)\b", re.I),
+    # Chinese has no word boundary to anchor on, so the list holds only compounds
+    # that open a question and nothing else: 幾 alone would fire on 幾何 (geometry).
+    # Followed by 都 or 也 the same words are indefinite, not interrogative:
+    # 什麼都不會保留 is "nothing is kept".
+    "zhHant": re.compile(r"^(為什麼|為何|什麼|甚麼|如何|怎麼|怎樣|哪些|哪個|哪裡|哪一"
+                         r"|何時|何處|何謂|誰|多少|幾個|幾種|是否)(?![都也])"),
 }
 
 # A closed question needs no interrogative and often carries no mark: "Is the operation
@@ -207,6 +213,8 @@ AUX_INITIAL = {
 # Turkish marks a yes/no question with an enclitic at the end, not a word at the front.
 AUX_TRAILING = {
     "tr": re.compile(r"\b(mı|mi|mu|mü)\s*\??$", re.I),
+    # Chinese closes a yes/no question with the particle 嗎.
+    "zhHant": re.compile(r"嗎\s*[?？]?$"),
 }
 
 # An article, one to three words, then a relative pronoun or a participle.

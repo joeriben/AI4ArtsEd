@@ -256,3 +256,93 @@ class TestImageUploadReducedGate:
                     content_type="multipart/form-data")
         audit = tmp / "knowledge_uploads" / "upload_gate_audit.log"
         assert audit.exists()
+
+
+# ---------------------------------------------------------------------------
+# DOCX through the upload route and the reprocess route. The enqueue is
+# captured: these tests cover the gate, the stored original and the job
+# spec, not a Docling run.
+# ---------------------------------------------------------------------------
+
+def _capture_enqueue(monkeypatch):
+    from my_app.services import knowledge_ingest_service as jobs
+
+    calls = []
+
+    def enqueue(**kw):
+        calls.append(kw)
+        return f"job-{len(calls)}"
+    monkeypatch.setattr(jobs, "enqueue_ingest", enqueue)
+    return calls
+
+
+class TestDocxUpload:
+    def test_a_docx_is_stored_as_docx_and_enqueued(self, app_client, monkeypatch):
+        from test_upload_gate import mk_docx
+
+        client, _, config, _ = app_client
+        calls = _capture_enqueue(monkeypatch)
+        r = _upload_pdf(client, mk_docx(), filename="aufsatz.docx")
+        assert r.status_code == 200, r.get_json()
+        doc_id = r.get_json()["doc_id"]
+        stored = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator" / f"{doc_id}.docx"
+        assert stored.exists()
+        assert [c["source_file"] for c in calls] == [stored]
+        assert calls[0]["source_md"] is None
+
+    def test_a_docx_with_a_macro_stores_nothing(self, app_client, monkeypatch):
+        from test_upload_gate import mk_docx
+
+        client, _, _, tmp = app_client
+        calls = _capture_enqueue(monkeypatch)
+        data = mk_docx(extra={"word/vbaProject.bin": b"\x00" * 16})
+        r = _upload_pdf(client, data, filename="aufsatz.docx")
+        assert r.status_code == 400
+        assert r.get_json()["error"] == ug.reject_message(ug.REASON_MACRO)
+        assert calls == []
+        assert list((tmp / "resources" / "knowledge_originals").rglob("*")) == []
+
+    def test_a_pdf_named_docx_is_not_a_docx(self, app_client, monkeypatch):
+        client, _, _, _ = app_client
+        _capture_enqueue(monkeypatch)
+        r = _upload_pdf(client, mk_pdf(), filename="aufsatz.docx")
+        assert r.status_code == 400
+        assert r.get_json()["error"] == ug.reject_message(ug.REASON_NOT_DOCX)
+
+    def test_reprocess_finds_the_stored_docx(self, app_client, monkeypatch):
+        from test_upload_gate import mk_docx
+
+        client, _, config, _ = app_client
+        calls = _capture_enqueue(monkeypatch)
+        doc_id = "ein-aufsatz"
+        tier_o = Path(config.KNOWLEDGE_TIER_O_DIR)
+        tier_o.mkdir(parents=True, exist_ok=True)
+        (tier_o / f"{doc_id}.md").write_text(
+            f"---\nid: {doc_id}\ntitel: \"Ein Aufsatz\"\ntier: O\nstatus: draft\n"
+            "status_reason: release\n---\n\n# Ein Aufsatz\n", encoding="utf-8")
+        ops = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator"
+        ops.mkdir(parents=True)
+        (ops / f"{doc_id}.docx").write_bytes(mk_docx())
+        r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
+        assert r.status_code == 200, r.get_json()
+        assert calls[0]["source_file"] == ops / f"{doc_id}.docx"
+
+    def test_reprocess_gates_the_stored_docx(self, app_client, monkeypatch):
+        from test_upload_gate import mk_docx
+
+        client, _, config, _ = app_client
+        calls = _capture_enqueue(monkeypatch)
+        doc_id = "ein-aufsatz"
+        tier_o = Path(config.KNOWLEDGE_TIER_O_DIR)
+        tier_o.mkdir(parents=True, exist_ok=True)
+        (tier_o / f"{doc_id}.md").write_text(
+            f"---\nid: {doc_id}\ntitel: \"Ein Aufsatz\"\ntier: O\nstatus: draft\n---\n\n"
+            "# Ein Aufsatz\n", encoding="utf-8")
+        ops = Path(config.KNOWLEDGE_ORIGINALS_DIR) / "operator"
+        ops.mkdir(parents=True)
+        (ops / f"{doc_id}.docx").write_bytes(
+            mk_docx(extra={"word/embeddings/oleObject1.bin": b"\x00"}))
+        r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
+        assert r.status_code == 400
+        assert r.get_json()["error"] == ug.reject_message(ug.REASON_EMBEDDED_FILE)
+        assert calls == []

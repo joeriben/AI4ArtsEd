@@ -24,7 +24,9 @@ to its members stays the leader's decision (the CoursePaletteItem palette).
 
 Safety is NOT affected: kids/youth prefixes are prepended later in
 instruction_selector.get_instruction(), regardless of where `context` came from —
-so a kept prompt CANNOT bypass safety.
+so a kept prompt CANNOT bypass safety. Its own text is the user's material: it
+passes the intake where it is written (interception_prompts_routes) and again
+where a run uses it (`kept_texts`), at the run's level.
 """
 from __future__ import annotations
 
@@ -96,6 +98,39 @@ def course_prompts_enabled() -> bool:
     the custom branch, not a behavioural fork for presets.
     """
     return os.environ.get("AI4ARTSED_COURSE_PROMPTS", "1") != "0"
+
+
+def kept_texts(config, *, with_context: bool = True) -> dict:
+    """The texts of a saved perspective a run uses, by field, for the intake.
+
+    A saved perspective ("custom:<id>") is the user's material. Its texts
+    passed the intake where they were written; a run that uses it puts them
+    through the intake again, at the run's own level, with the texts of the
+    request. That reaches a text kept before the intake existed, one kept at a
+    level that checks nothing, and one that reaches another member's run
+    through a course palette. A text the intake has passed at a level costs no
+    second call there.
+
+    An i18n context is listed language by language, as `context_text[<lang>]`.
+    With `with_context=False` the context is left out: the request replaces it
+    with an edited one, which the intake reads under its own name. The task
+    instruction is listed either way. Today a run that replaces the context
+    drops it too, because `dataclasses.replace` copies only fields and the task
+    instruction is an attribute (`_build_from_prompt`); the check does not rely
+    on that. A preset is the platform's text and lists nothing.
+    """
+    if config is None or parse_style_key(getattr(config, "name", "") or "")[0] != "custom":
+        return {}
+    texts = {}
+    context = getattr(config, "context", None) if with_context else None
+    if isinstance(context, dict):
+        texts.update({f"context_text[{lang}]": text for lang, text in context.items()})
+    elif context is not None:
+        texts["context_text"] = context
+    task_instruction = getattr(config, "task_instruction", None)
+    if task_instruction is not None:
+        texts["task_instruction"] = task_instruction
+    return texts
 
 
 class CoursePromptResolver:

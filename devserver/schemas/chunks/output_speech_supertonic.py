@@ -75,7 +75,7 @@ DEFAULTS = {
 # voice (/api/speech) does not pass Stage 3 and never did.
 #
 # The fail-closed guard below stays as it is: an absent or unknown level blocks.
-ALLOWED_SAFETY_LEVELS = ("kids", "youth", "open", "adult", "research")
+ALLOWED_SAFETY_LEVELS = ("kids", "youth", "adult", "research")
 
 
 async def execute(
@@ -201,7 +201,7 @@ async def execute(
         f"[CHUNK:supertonic] {len(text)} chars | language={lang} | level={level} "
         f"| seed={actual_seed}")
 
-    wav, used_seed, used_voice, f0_hz = await backend.synthesize(
+    wav, used_seed, used_voice, f0_hz, model_used = await backend.synthesize(
         text=text, language=lang, voice=voice, seed=actual_seed,
         mix=parsed_mix, steps=steps, speed=speed)
 
@@ -217,6 +217,7 @@ async def execute(
         "chunk_name": "output_speech_supertonic",
         "media_type": "audio",
         "backend": "supertonic",
+        "model_used": model_used,
         "seed": used_seed,
         "voice": used_voice,
         # The register this run actually landed on, measured off the audio that

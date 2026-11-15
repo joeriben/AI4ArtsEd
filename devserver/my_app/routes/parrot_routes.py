@@ -9,8 +9,10 @@ Silly Parrot routes — /api/parrot/*
 The recording is never a work: it is staged outside the export store, read
 by the stations, and the input file is deleted the moment the chain ends.
 Nothing here creates a run, a media-store entry, a favourite or an export,
-and /sung deliberately serves inline with no attachment disposition — the
-piece is to be heard once, not collected. See services/parrot_service.py.
+and /sung deliberately serves inline, never as an attachment: the piece is to
+be heard once, not collected. The file name it sends is the stored one, which
+carries `_ai_generated` where the disclosure did not get into the sound. See
+services/parrot_service.py.
 """
 
 import json
@@ -18,6 +20,7 @@ import logging
 import os
 
 from flask import Blueprint, Response, jsonify, request, send_file
+from my_app.services.safety_level_resolver import resolve_safety_level
 
 logger = logging.getLogger(__name__)
 
@@ -112,11 +115,15 @@ def stream_chain(recording_id: str):
     # and the chain routes itself. See resolve_singer.
     singer = request.args.get('config') or None
     recording_path = os.path.join(directory, "recording.wav")
+    # Resolved here, on the thread that serves the request. The stream below
+    # runs after this view has returned, when the request is gone, and the
+    # checks of the stations need the level.
+    level = resolve_safety_level()
 
     def generate():
         try:
             for event in run_chain(recording_path, language=language,
-                                   reading=reading, singer=singer):
+                                   reading=reading, singer=singer, level=level):
                 yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
         except Exception as e:
             logger.error(f"[PARROT] chain failed for {recording_id}: {e}", exc_info=True)
@@ -138,7 +145,7 @@ def stream_chain(recording_id: str):
 
 @parrot_bp.route('/sung/<recording_id>', methods=['GET'])
 def sung(recording_id: str):
-    """Serve the generated audio inline. No attachment, no filename to save."""
+    """Serve the generated audio inline, never as an attachment, under its stored name."""
     from my_app.services.parrot_service import recording_dir
 
     directory = recording_dir(recording_id)
@@ -149,11 +156,18 @@ def sung(recording_id: str):
     # audio/mpeg makes them silent in the browser.
     types = {"mp3": "audio/mpeg", "wav": "audio/wav",
              "flac": "audio/flac", "ogg": "audio/ogg"}
+    # `sung_ai_generated.<ext>` where the disclosure did not get into the sound
+    # (services/media_marking.mark_for_disk).
+    from my_app.services.watermark_service import UNMARKED_SUFFIX
+
     path = None
     for ext, mime in types.items():
-        candidate = os.path.join(directory, "sung." + ext)
-        if os.path.isfile(candidate):
-            path, mimetype = candidate, mime
+        for stem in ("sung", "sung" + UNMARKED_SUFFIX):
+            candidate = os.path.join(directory, stem + "." + ext)
+            if os.path.isfile(candidate):
+                path, mimetype = candidate, mime
+                break
+        if path is not None:
             break
     if path is None:
         return jsonify({"success": False, "error": "nothing sung yet"}), 404

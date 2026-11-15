@@ -250,7 +250,7 @@ async def execute(
         'image_data': image_base64,
         'media_type': 'image',
         'backend': 'comfyui',
-        'model_id': model_id,
+        'model_used': result.model_used,
         'seed': seed,
         'composable_data': {
             'concept_count': len(concepts),

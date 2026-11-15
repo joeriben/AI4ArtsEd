@@ -8,7 +8,10 @@
   Places (2026-09-23): a course has numbered places, one per device, and each
   place has a code of five characters. The platform keeps only the code's
   hash, so a code is shown once, right after it is made, and is copied or
-  printed as slips from there. A code enters its course while the access
+  printed as slips from there. Since 2026-11-14 every code of the course can
+  be replaced at once, and each place keeps what it saved; and the codes shown
+  once stand full screen for a projector
+  (components/PlaceCodesBoard.vue). A code enters its course while the access
   window is open (`access_until`). The platform keeps no name for a place:
   which person uses which device is the institution's own record.
 
@@ -34,6 +37,9 @@ import {
 import { useKeptPerspectivesStore } from '../../stores/keptPerspectives'
 import { useI18n } from 'vue-i18n'
 import SurfaceConfirm from '../../components/SurfaceConfirm.vue'
+import OverlayFrame, { enterScreen } from '../../components/OverlayFrame.vue'
+import { signInAddress } from '../../lib/placeCodesBoard'
+import PlaceCodesBoard from '../../components/PlaceCodesBoard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -48,7 +54,9 @@ const newCoLeader = ref('')
 
 // places
 /** The codes made on this visit of the page. Each one is shown only here, so a
- *  later action adds to the list and takes nothing out of it. */
+ *  later action adds to the list and takes nothing out of it; replacing every
+ *  code at once leaves the new codes alone in it, as the old ones enter
+ *  nothing any more. */
 const revealed = ref<IssuedPlace[]>([])
 const deviceCount = ref<number | ''>(1)
 const accessUntilInput = ref('')        // datetime-local, this browser's time zone
@@ -57,6 +65,11 @@ const copied = ref(false)
 /** The number of the place whose code waits for the leader's yes before it
  *  is replaced. */
 const replacing = ref<number | null>(null)
+/** Every code of the course waits for the leader's yes before it is
+ *  replaced. */
+const replacingAll = ref(false)
+/** The codes shown once, full screen for a projector. */
+const showBoard = ref(false)
 
 const places = computed<CoursePlace[]>(() => course.value?.places ?? [])
 const deviceCountValid = computed(() => {
@@ -272,6 +285,13 @@ function initialAccessUntil(c: Course): string {
   return toLocalInput(d)
 }
 
+/** Whether the server itself answered a failed request, with its own line.
+ *  Without that answer a request that gives codes may have given them all
+ *  the same: what is lost is the answer, which carried the new codes. */
+function serverAnswered(e: unknown): boolean {
+  return typeof (e as { response?: { data?: { error?: unknown } } } | null)?.response?.data?.error === 'string'
+}
+
 /** A failed place request in words: the server's own line, the status it
  *  answered with, or that the server gave no answer. */
 function placesError(e: any): string {
@@ -351,8 +371,15 @@ async function issueCode(p: CoursePlace) {
     reveal([{ number: data.place.number, code: data.place.code }])
     p.has_code = data.place.has_code
     p.code_issued_at = data.place.code_issued_at
-  } catch (e: any) {
-    error.value = placesError(e)
+  } catch (e) {
+    const cause = placesError(e)
+    if (!serverAnswered(e)) {
+      // The place may have its new code: the list keeps no code of it that
+      // may enter nothing any more, and the page reads the places anew.
+      revealed.value = revealed.value.filter((q) => q.number !== p.number)
+      await load()
+    }
+    error.value = cause
   } finally {
     placesBusy.value = false
   }
@@ -364,6 +391,7 @@ async function issueCode(p: CoursePlace) {
  *  its buttons there. */
 function askIssueCode(p: CoursePlace) {
   if (showDeleteModal.value) return
+  replacingAll.value = false
   if (p.has_code) replacing.value = p.number
   else issueCode(p)
 }
@@ -374,6 +402,47 @@ async function replaceConfirmed() {
   const p = places.value.find((q) => q.number === replacing.value)
   replacing.value = null
   if (p) await issueCode(p)
+}
+
+/** Every place a new code at once (2026-11-14). A device that entered with
+ *  an old code is signed out; each place keeps what it saved. */
+function askReplaceAll() {
+  if (showDeleteModal.value) return
+  replacing.value = null
+  replacingAll.value = true
+}
+
+async function replaceAllConfirmed() {
+  replacingAll.value = false
+  placesBusy.value = true
+  error.value = null
+  try {
+    const { data } = await coursesApi.replaceAllCodes(courseId)
+    revealed.value = [...data.places].sort((a, b) => a.number - b.number)
+    copied.value = false
+    await load()
+  } catch (e) {
+    const cause = placesError(e)
+    if (!serverAnswered(e)) {
+      // The codes may have been replaced all the same: the list and the board
+      // keep no code that may enter nothing any more, and the page reads the
+      // places anew.
+      revealed.value = []
+      showBoard.value = false
+      await load()
+    }
+    error.value = cause
+  } finally {
+    placesBusy.value = false
+  }
+}
+
+/** The browser's fullscreen mode is asked for in this click: a browser grants
+ *  it only from a gesture at the device (components/OverlayFrame.vue). */
+function openBoard() {
+  if (!revealed.value.length) return
+  enterScreen()
+  showBoard.value = true
 }
 
 async function copyCodes() {
@@ -423,7 +492,7 @@ function printSlips() {
     return
   }
   const name = esc(course.value.name)
-  const where = esc(t('educator.slipSignIn', { address: `${location.host}/login` }))
+  const where = esc(t('educator.slipSignIn', { address: signInAddress() }))
   const slips = revealed.value
     .map((p) =>
       `<div class="slip"><div class="head">${name} · ${esc(t('educator.placeLabel', { n: p.number }))}</div>` +
@@ -440,11 +509,13 @@ function printSlips() {
 // ---- delete course ---------------------------------------------------------
 async function openDeleteModal() {
   replacing.value = null
+  replacingAll.value = false
   busy.value = true
   try {
     deletionImpact.value = (await coursesApi.deletionImpact(courseId)).data.impact
     deleteConfirmText.value = ''
     replacing.value = null          // a row opened while the impact was read
+    replacingAll.value = false
     showDeleteModal.value = true
   } finally {
     busy.value = false
@@ -490,7 +561,7 @@ async function confirmDelete() {
       <select v-model="course.safety_level" @change="saveSettings">
         <option value="kids">kids</option>
         <option value="youth">youth</option>
-        <option value="open">open</option>
+        <option value="installation">{{ $t('educator.safetyInstallation') }}</option>
       </select>
       <label class="check">
         <input type="checkbox" v-model="course.educator_can_view_participant_works" @change="saveSettings" />
@@ -538,6 +609,7 @@ async function confirmDelete() {
         <div class="row">
           <button class="ghost" @click="copyCodes">{{ copied ? $t('educator.copied') : $t('educator.copy') }}</button>
           <button class="ghost" @click="printSlips">{{ $t('educator.print') }}</button>
+          <button class="ghost" @click="openBoard">{{ $t('educator.fullscreen') }}</button>
         </div>
         <p class="once">{{ $t('educator.codesShownOnce', { n: revealed.length }, revealed.length) }}</p>
       </div>
@@ -553,6 +625,11 @@ async function confirmDelete() {
           </button>
         </li>
       </ul>
+      <div v-if="places.length" class="row all-codes">
+        <button class="ghost" :disabled="placesBusy" @click="askReplaceAll">
+          {{ $t('educator.replaceAllCodes') }}
+        </button>
+      </div>
       <p class="help">{{ $t('educator.placesHelp') }}</p>
     </section>
 
@@ -662,6 +739,24 @@ async function confirmDelete() {
       @confirm="replaceConfirmed"
       @cancel="replacing = null"
     />
+
+    <!-- Every code at once (2026-11-14), asked in the same row. -->
+    <SurfaceConfirm
+      v-if="replacingAll"
+      :text="$t('educator.replaceAllCodesConfirm', { n: places.length }, places.length)"
+      :yes="$t('educator.replaceAllCodes')"
+      :cancel="$t('common.cancel')"
+      danger
+      :disabled="placesBusy"
+      over-app
+      @confirm="replaceAllConfirmed"
+      @cancel="replacingAll = false"
+    />
+
+    <!-- The codes shown once, full screen for a projector. -->
+    <OverlayFrame v-model="showBoard" size="screen">
+      <PlaceCodesBoard v-if="showBoard" :course-name="course.name" :places="revealed" />
+    </OverlayFrame>
   </div>
 </template>
 
@@ -702,6 +797,8 @@ input:focus, select:focus { outline: none; border-color: #4caf50; }
 .roster.place-rows .name { flex: 0 0 auto; min-width: 72px; }
 .place-rows .issued { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
 .place-rows button { margin-left: auto; }
+/* the button ends where the buttons of the rows above end, 8 px inside */
+.all-codes { justify-content: flex-end; padding-inline-end: 8px; }
 .ghost.small { padding: 4px 10px; font-size: 0.8rem; }
 .ghost:disabled { opacity: 0.4; cursor: not-allowed; }
 

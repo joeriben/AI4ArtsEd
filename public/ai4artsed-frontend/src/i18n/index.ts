@@ -9,6 +9,7 @@ import { es } from './es'
 import { he } from './he'
 import { ar } from './ar'
 import { bg } from './bg'
+import { zhHant } from './zhHant'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'ar', label: 'العربية', dir: 'rtl' as const },
@@ -21,6 +22,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'tr', label: 'Türkçe', dir: 'ltr' as const },
   { code: 'uk', label: 'Українська', dir: 'ltr' as const },
   { code: 'ko', label: '한국어', dir: 'ltr' as const },
+  { code: 'zh-hant', label: '繁體中文', dir: 'ltr' as const },
 ] as const
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code']
@@ -39,7 +41,7 @@ export function getLanguageDir(code: string): 'ltr' | 'rtl' {
   return lang?.dir ?? 'ltr'
 }
 
-const messages = { de, en, tr, ko, uk, fr, es, he, ar, bg }
+const messages = { de, en, tr, ko, uk, fr, es, he, ar, bg, 'zh-hant': zhHant }
 
 // Cast locale to SupportedLanguage so vue-i18n accepts all supported languages
 // (ko/tr messages are intentionally partial — fallbackLocale handles gaps)

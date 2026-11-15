@@ -369,6 +369,7 @@ def start_run(nodes: list, connections: list,
         run_id=run_id,
         workflow={"name": name or '', "nodes": nodes, "connections": connections},
         device_id=device_id,
+        safety_level=safety_level,
     )
     started_at = _now()
     with _JOBS_COND:

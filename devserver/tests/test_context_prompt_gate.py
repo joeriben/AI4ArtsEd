@@ -17,14 +17,18 @@ Zwei Arten von Pruefung stehen hier, weil zwei Dinge schiefgehen koennen:
    Rueckgabewert. Ein Test, der nur den Helfer aufruft, haette ihn nicht
    gefunden.
 
-Der Reiz ist `swastika` in einem beschreibenden Satz — derselbe, den
-`test_86a_word_boundaries.py` benutzt. Bei kids/youth ist das ein Hartblock
-ohne Modellaufruf, also schnell und ohne Wackeln.
+Das Tor ist auf allen drei Wegen der Eingang, seit dem 2026-11-01 auch auf der
+Vorpruefung. Er haelt Namen lebender Privatpersonen und Adressen an, kein
+Kennzeichen; der Reiz ist deshalb ein Name in einem beschreibenden Satz.
+Namenserkennung und Namensfrage stehen hier fest, so dass kein Modell gefragt
+wird. Was der Eingang selbst entscheidet, prueft test_safety_gate.py.
 """
 
 import re
 import sys
 from pathlib import Path
+
+import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
@@ -32,46 +36,66 @@ sys.path.insert(0, str(REPO))
 ROUTES = REPO / "my_app" / "routes" / "schema_pipeline_routes.py"
 
 HARMLOS = "Ein Haus steht in einer Landschaft."
-BLOCKT = "a swastika painted on the door"
+NAME = "Max Mustermann"
+BLOCKT = "Ein Bild von Max Mustermann vor seinem Haus."
 
 
 # --------------------------------------------------------------- 1. beide Texte
 
-def _check(texts, level="kids"):
-    from my_app.routes.schema_pipeline_routes import _stage1_check_texts
-    return _stage1_check_texts(texts, level, "de")
+@pytest.fixture
+def namenspruefung(monkeypatch):
+    """Namenserkennung und Namensfrage, festgelegt: erkannt wird NAME, und die
+    Namensfrage bejaht ihn. Gibt die Texte zurueck, die die Erkennung gesehen
+    hat."""
+    from my_app.services import safety_gate
+    from schemas.engine import stage_orchestrator
+    gesehen = []
+
+    def erkennung(text):
+        gesehen.append(text)
+        return (NAME in text, [NAME] if NAME in text else [], True)
+
+    monkeypatch.setattr(stage_orchestrator, "fast_dsgvo_check", erkennung)
+    monkeypatch.setattr(stage_orchestrator, "llm_personal_data_check",
+                        lambda text, names=None: NAME in text)
+    # Der Eingang merkt sich, was er durchgelassen hat; ein Text aus einem
+    # anderen Test soll hier nicht als bekannt gelten.
+    safety_gate._RELEASED.clear()
+    yield gesehen
+    safety_gate._RELEASED.clear()
+
+
+def _check(fields, level="kids"):
+    from my_app.routes.schema_pipeline_routes import check_intake_texts
+    return check_intake_texts(fields, level=level)
 
 
 class TestBeideTexte:
-    def test_harmlos_geht_durch(self):
-        ok, err, _checks, blocked, _checked = _check(
-            [("input_text", HARMLOS), ("context_prompt", HARMLOS)])
-        assert ok, (err, blocked)
+    def test_harmlos_geht_durch(self, namenspruefung):
+        verdict = _check({"input_text": HARMLOS, "context_prompt": HARMLOS})
+        assert verdict.passed, verdict
 
-    def test_reiz_im_input_text_blockt(self):
-        ok, _err, _checks, blocked, _checked = _check(
-            [("input_text", BLOCKT), ("context_prompt", HARMLOS)])
-        assert not ok
-        assert blocked == "input_text"
+    def test_reiz_im_input_text_blockt(self, namenspruefung):
+        verdict = _check({"input_text": BLOCKT, "context_prompt": HARMLOS})
+        assert not verdict.passed
+        assert verdict.field == "input_text"
 
-    def test_reiz_im_context_prompt_blockt(self):
+    def test_reiz_im_context_prompt_blockt(self, namenspruefung):
         """Der Fall, der bis zum 2026-08-29 durchlief."""
-        ok, _err, _checks, blocked, _checked = _check(
-            [("input_text", HARMLOS), ("context_prompt", BLOCKT)])
-        assert not ok
-        assert blocked == "context_prompt"
+        verdict = _check({"input_text": HARMLOS, "context_prompt": BLOCKT})
+        assert not verdict.passed
+        assert verdict.field == "context_prompt"
 
-    def test_leerer_kontext_kostet_nichts(self):
-        ok, _err, _checks, blocked, checked = _check(
-            [("input_text", HARMLOS), ("context_prompt", "")])
-        assert ok and blocked is None
-        assert "context_prompt" not in checked
+    def test_leerer_kontext_kostet_nichts(self, namenspruefung):
+        verdict = _check({"input_text": HARMLOS, "context_prompt": ""})
+        assert verdict.passed
+        assert namenspruefung == [HARMLOS]
 
-    def test_research_hebt_das_tor_auf(self):
-        """Unveraendertes Verhalten: research ueberspringt Stage 1 ganz."""
-        ok, _err, _checks, blocked, _checked = _check(
-            [("input_text", BLOCKT)], level="research")
-        assert ok and blocked is None
+    def test_research_hebt_das_tor_auf(self, namenspruefung):
+        """Unveraendertes Verhalten: auf research prueft der Eingang nichts."""
+        verdict = _check({"input_text": BLOCKT}, level="research")
+        assert verdict.passed
+        assert namenspruefung == []
 
 
 # ------------------------------------------------------------- 2. Reihenfolge
@@ -95,12 +119,14 @@ class TestReihenfolge:
         # edge's 100-second cut, and the body moved out of the view function to
         # get there. Same path, same order, a different function to read it in.
         # Since 2026-10-10 the translation itself stands in `_translate_context`;
-        # what this reads is the order of the two calls in the run.
+        # what this reads is the order of the two calls in the run. Since
+        # 2026-10-31 the check there is the intake, and since 2026-11-01 on the
+        # pre-check too.
         body = _funktion("_run_stage2")
-        tor = body.index("_stage1_check_texts")
+        tor = body.index("check_intake_texts(")
         uebersetzung = body.index("_translate_context(")
         assert tor < uebersetzung, (
-            "Die Stage-1-Pruefung steht wieder HINTER der Kontext-Uebersetzung. "
+            "Der Eingang steht wieder HINTER der Kontext-Uebersetzung. "
             "Damit war der bearbeitete Kontext bei einem Modell, bevor ihn "
             "irgendetwas geprueft hat.")
 
@@ -110,8 +136,9 @@ class TestReihenfolge:
         # langer Lauf den 100-Sekunden-Schnitt der Kante ueberlebt, und der
         # Rumpf zog dafuer aus der View-Funktion aus. Gleicher Weg, gleiche
         # Reihenfolge, eine andere Funktion zum Nachlesen.
+        # Since 2026-10-31 the check there is the intake.
         body = _funktion("_run_interception_pipeline")
-        tor = body.index("_stage1_check_texts")
+        tor = body.index("check_intake_texts(")
         uebersetzung = body.index("_translate_context(")
         assert tor < uebersetzung, (
             "Dieselbe Reihenfolge wie in execute_stage2, und derselbe Grund.")
@@ -142,8 +169,8 @@ class TestReihenfolge:
                      "execute_pipeline_streaming"):
             body = _funktion(name)
             assert "context_prompt" in body, name
-            assert "_stage1_check_texts" in body, (
+            assert "check_intake_texts(" in body, (
                 "%s liest einen context_prompt, reicht ihn aber nicht an das "
                 "Tor" % name)
-            assert "'context_prompt'), " in body or "('context_prompt'," in body, (
+            assert "'context_prompt': context_prompt" in body, (
                 "%s ruft das Tor, gibt ihm aber den Kontext nicht mit" % name)

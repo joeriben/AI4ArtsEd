@@ -95,7 +95,7 @@ async def execute(
         'image_data': result['image_base64'],
         'media_type': 'image',
         'backend': 'diffusers',
-        'model_id': model_id,
+        'model_used': model_id,
         'seed': result['seed'],
         'composable_data': {
             'concept_count': result['concept_count'],

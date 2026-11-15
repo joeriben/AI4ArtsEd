@@ -6,6 +6,10 @@ import { ref } from 'vue'
  * Usage:
  *   const { isOpen, onToggle } = useDetailsState('my_key', false)
  *   <details :open="isOpen" @toggle="onToggle">
+ *
+ * `setOpen` opens or closes the section from code and stores that: a section
+ * that is not rendered (yet) fires no `toggle`, so `onToggle` would never store
+ * the change.
  */
 export function useDetailsState(key: string, defaultOpen = false) {
   const stored = localStorage.getItem(key)
@@ -17,5 +21,10 @@ export function useDetailsState(key: string, defaultOpen = false) {
     localStorage.setItem(key, String(details.open))
   }
 
-  return { isOpen, onToggle }
+  function setOpen(open: boolean) {
+    isOpen.value = open
+    localStorage.setItem(key, String(open))
+  }
+
+  return { isOpen, onToggle, setOpen }
 }

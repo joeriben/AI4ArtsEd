@@ -107,6 +107,7 @@ def init_db() -> None:
     _ensure_columns()
     _ensure_indexes()
     _drop_columns()
+    _ensure_course_levels()
     _migrate_places()
 
 
@@ -205,6 +206,34 @@ _DROPPED_COLUMNS = (
     ("courses", "access_key_expires_at"),
     ("courses", "join_code", "ix_courses_join_code"),
 )
+
+
+def _ensure_course_levels() -> None:
+    """Rewrite the level `open` of a course as COURSE_USES_INSTALLATION.
+
+    The platform has had no level open since 2026-11-01, and a course that
+    carried it runs at the installation's level
+    (services/safety_level_resolver.py). The rewrite finds nothing once it has
+    run, so it runs at every start; a failure is logged, never raised, for the
+    reason `_ensure_columns` gives, and the course then runs at the strictest
+    level, as at any value the resolver does not know.
+    """
+    from sqlalchemy import text
+
+    from my_app.services.safety_level_resolver import COURSE_USES_INSTALLATION
+
+    try:
+        with engine.begin() as con:
+            moved = con.execute(
+                text("UPDATE courses SET safety_level = :level "
+                     "WHERE lower(trim(safety_level)) = 'open'"),
+                {"level": COURSE_USES_INSTALLATION},
+            ).rowcount
+        if moved:
+            logger.info(f"[LAB-DB] {moved} course(s) at the level open now run at "
+                        "the installation's level")
+    except Exception as e:
+        logger.warning(f"[LAB-DB] course levels not rewritten: {e}")
 
 
 def _column_names(cur, table: str) -> set:

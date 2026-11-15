@@ -16,6 +16,10 @@ Serving from our origin also means the answer is ours. The service returns only
 raster types (never image/svg+xml, which is a scriptable document), and this
 route adds a CSP that keeps the response from doing anything at all if a type
 ever slips through.
+
+And the answer depends on who asks. At kids and youth the second endpoint hands
+out only pictures a search at that level or a stricter one released: the
+reference is a URL anybody can pack, and the archive is not age-filtered.
 """
 
 from __future__ import annotations
@@ -27,6 +31,7 @@ from typing import Optional
 from flask import Blueprint, Response, jsonify, request
 
 from my_app.services import commons_service
+from my_app.services.safety_gate import check_intake, delivery_block
 from my_app.services.streaming_response import answered_either_way, object_body
 
 logger = logging.getLogger(__name__)
@@ -42,11 +47,13 @@ def lookup():
     and ``error``. The first three are results and the frontend renders each
     differently; ``error`` says the archive or the model could not be reached and
     is deliberately NOT folded into the other two, so an outage is never shown as
-    a finding about the participant's prompt.
+    a finding about the participant's prompt. Where the safety check stops the
+    search, the answer is 403 with the block message.
 
     Commons is not age-filtered, so the effective safety level of this session
-    goes down with the request: at kids and youth every picture is checked before
-    it is shown.
+    goes down with the request. The prompt passes the intake, and the search
+    term a model makes of it is checked at the result before it is shown or
+    searched; at kids and youth every picture is checked before it is shown.
 
     With "enable_streaming" the answer travels as this platform's SSE stream
     instead of as one JSON body, and of everything on this server this is the
@@ -158,6 +165,14 @@ def _run_lookup(data: dict, safety_level: str,
     if len(prompt) > commons_service.MAX_PROMPT_CHARS:
         return {"success": False, "error": "prompt too long"}, 413
 
+    # The intake, at the route: the comparison page asks for the row only after
+    # its own gate took the prompt in, but this route answers any caller. The
+    # text goes in as the page sent it, which is the text that gate took in, so
+    # a prompt it passed at this level costs nothing here.
+    verdict = check_intake(raw, level=safety_level, kind="text", field="prompt")
+    if not verdict.passed:
+        return _stopped(verdict)
+
     limit = data.get("limit", commons_service.MAX_IMAGES)
     try:
         limit = max(1, min(int(limit), commons_service.MAX_IMAGES))
@@ -172,12 +187,21 @@ def _run_lookup(data: dict, safety_level: str,
         result = commons_service.lookup_for_prompt(prompt, limit=limit,
                                                    safety_level=safety_level,
                                                    client_gone=client_gone)
+    except commons_service.SearchTermRefused as refused:
+        return _stopped(refused.verdict)
     except Exception as exc:  # noqa: BLE001 - the row degrades, the page does not
         logger.error(f"[COMMONS] Lookup failed: {exc}", exc_info=True)
         return {"success": True, "state": "error", "term": None, "images": []}, 200
 
     result["success"] = True
     return result, 200
+
+
+def _stopped(verdict):
+    """A search the safety check stopped, as the block message: on the transport
+    the caller asked for, like every other answer of the run."""
+    return {"success": False, "error": "safety_blocked",
+            "safety_block": verdict.block()}, 403
 
 
 @commons_bp.route("/image/<path:ref>", methods=["GET"])
@@ -187,10 +211,34 @@ def image(ref: str):
     ``ref`` is the packed URL from the lookup answer. Anything that does not
     decode to an https URL on an allowed Wikimedia host is refused before a
     request is made.
+
+    At kids and youth a picture goes out only where a search at the level of
+    whoever asks, or at a stricter one, released it
+    (``commons_service.released_for``); the other levels check no pictures. The
+    server keeps that list in memory, so a page that stayed open across a
+    restart gets its pictures back with its next search.
     """
     url = commons_service.decode_image_ref(ref)
     if not url:
         return jsonify({"success": False, "error": "invalid image reference"}), 400
+
+    # Resolved here, in the view, as the lookup resolves it.
+    from my_app.services.safety_level_resolver import resolve_safety_level
+    try:
+        level = resolve_safety_level()
+    except Exception as exc:  # noqa: BLE001 - guarded as the lookup's is
+        # Without a level no release can be read, and the picture is not
+        # handed out.
+        logger.error(f"[COMMONS] Safety level could not be resolved: {exc}",
+                     exc_info=True)
+        return jsonify({
+            "success": False,
+            "error": "This picture could not be checked: the safety level "
+                     f"could not be resolved ({exc})",
+        }), 500
+    if not commons_service.released_for(url, level):
+        return jsonify({"success": False, "error": "safety_blocked",
+                        "safety_block": delivery_block("unchecked")}), 403
 
     fetched = commons_service.fetch_image_bytes(url)
     if not fetched:
@@ -206,6 +254,10 @@ def image(ref: str):
     # never changes. X-Immutable-Asset is the app's own marker for exactly that
     # (my_app/__init__.py, add_cache_headers) and keeps the development no-store
     # rule from re-fetching three pictures on every render.
-    response.headers["Cache-Control"] = "public, max-age=86400"
+    #
+    # `private`: whether this answer goes out depends on the level of whoever
+    # asks, so only the asking browser may keep it. A shared cache in front of
+    # this server would hand it to every later caller without that question.
+    response.headers["Cache-Control"] = "private, max-age=86400"
     response.headers["X-Immutable-Asset"] = "1"
     return response

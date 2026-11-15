@@ -327,7 +327,7 @@ async def execute(
         'image_data': image,
         'media_type': 'image',
         'backend': 'comfyui',
-        'model_id': model_id,
+        'model_used': result.model_used,
         'seed': seed,
         'parameters': {
             'width': w,

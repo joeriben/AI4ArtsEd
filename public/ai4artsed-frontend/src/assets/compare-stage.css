@@ -130,7 +130,14 @@
   }
 }
 
-/* One column: the box and nothing about what stands in it. */
+/* One column: the box and nothing about what stands in it.
+   Since 2026-11-07 the preparing column of every instrument on the Latent Lab's
+   frame (`.lab-work`, assets/flow-stage.css; 23 surfaces) carries this box as
+   well, by the project lead's judgement of that day on the two column designs:
+   „auch abgesehen von den unterschiedlcihen Breiten sind hier ncoh sehr unterschiedliceh Spaltendesigns. Ich denke die grau hinterlegte ist visuell klarer, wenn die schwarze Variante auch "schicker" sein mag.“
+   The text cell of a run grid (`.lab-readcell`, assets/flow-stage.css) draws the
+   same box with a rule of its own; docs/ELEMENT_STRUCTURE_REGISTRY.md carries
+   that as to-consolidate. */
 .cmp-column {
   min-height: 0;
   padding: 10px 12px;
@@ -265,6 +272,16 @@
 .cmp-pick-row > select option {
   background: var(--surface-2);
   color: rgba(255, 255, 255, 0.85);
+}
+
+/* A list of models: a model's line with its facts („Qwen 3.5 (China 2026) 9b
+   lokal") is longer than any column is wide, and a select takes the width of
+   its longest option unless it is allowed to shrink. The column heads of
+   Model Comparison (Transformers Lab) and the drop-downs of Custom in the
+   Language Model Comparison (Latent Lab). The preset list of System Prompts
+   keeps its width as it has it. */
+.cmp-pick-row.cmp-pick-fluid > select {
+  min-width: 0;
 }
 
 /* „New conversation", under the message field. Not `.clear-btn`: that is the

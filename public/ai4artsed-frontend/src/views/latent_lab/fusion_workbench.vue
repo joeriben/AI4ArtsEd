@@ -41,7 +41,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The prompt field of Encoder Fusion, taken over whole
@@ -290,6 +290,24 @@
               {{ t('latentLab.workbench.emptyHint') }}
             </p>
             <p v-if="errorMessage" class="lab-prep-err">{{ errorMessage }}</p>
+
+            <!-- The explanation box at the foot of the preparing column, the
+                 platform's `.lab-note` (docs/ELEMENT_STRUCTURE_REGISTRY.md). Its
+                 heading is the menu title of this surface, its text is
+                 `latentLab.workbench.noteBody`, cut into paragraphs at the blank line,
+                 and the titles it cites stand under it in LabReferences. -->
+            <aside class="lab-note">
+              <h3>{{ t('latentLab.imageLab.tabs.workbench.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.workbench.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
+              <LabReferences
+                :title="t('latentLab.workbench.referencesTitle')"
+                :items="REFERENCES"
+                flat
+              />
+            </aside>
           </section>
 
           <!-- The raster: one column per value of X, one row per value of Y, at
@@ -305,9 +323,14 @@
               }"
             >
               <div class="lab-grid-col">
-                <div class="lab-grid-head fw-corner">
-                  {{ paramLabel(yAxis.param) }} \ {{ paramLabel(xAxis.param) }}
-                </div>
+                <!-- The corner names the two axes by the letters their blocks in
+                     the preparing column carry (`latentLab.workbench.axisX` /
+                     `axisY`, the same Latin letters in every language). Until
+                     2026-11-07 it carried the two full names on one line, and
+                     that line set the width of the row-name column: 209 px for
+                     „Entrauschungsfenster \ α (Fusionsstärke)“ against 77 px for
+                     the widest row name, at 1210 x 834. -->
+                <div class="lab-grid-head fw-corner">Y \ X</div>
                 <div class="lab-series">
                   <div v-for="yv in yAxis.values" :key="`r${yv}`" class="lab-grid-rowname" :title="valueLabel(yAxis.param, yv)">
                     {{ trunc(valueLabel(yAxis.param, yv), 18) }}
@@ -353,6 +376,7 @@
 
 <script setup lang="ts">
 import ColumnFold from '@/components/ColumnFold.vue'
+import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import { ref, computed, watch, onBeforeUnmount, type Ref, type WritableComputedRef } from 'vue'
 import MediaGridCell from '@/components/MediaGridCell.vue'
 import ShellRun from '@/components/ShellRun.vue'
@@ -367,7 +391,13 @@ import ChipSelect, { type ChipOption } from '@/components/ChipSelect.vue'
 import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
 import RangeTrack, { type RangeSelection, type RangeMark } from '@/components/RangeTrack.vue'
 import { useI18n } from 'vue-i18n'
-import { generationErrorFor as labErrorText, refusalKeyOf, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import {
+  generationErrorFor as labErrorText,
+  refusalKeyOf,
+  reportRefusal,
+  interceptPrompt,
+  perspectiveFailureText,
+} from '@/composables/useLabRun'
 import { downloadMedia } from '@/lib/downloadMedia'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
@@ -380,6 +410,44 @@ import { useFavoritesStore } from '@/stores/favorites'
 import { apiBase } from '@/services/labApi'
 
 const { t } = useI18n()
+
+/**
+ * The titles the explanation box cites: the architecture of Stable Diffusion
+ * 3.5, classifier-free guidance, the division of the run by noise level, and
+ * what the two encoders were trained on.
+ */
+const REFERENCES: LabReference[] = [
+  {
+    authors: 'Esser et al. (2024)',
+    title: '"Scaling Rectified Flow Transformers for High-Resolution Image Synthesis"',
+    venue: 'ICML 2024',
+    doi: 'https://arxiv.org/abs/2403.03206',
+  },
+  {
+    authors: 'Ho & Salimans (2022)',
+    title: '"Classifier-Free Diffusion Guidance"',
+    venue: 'NeurIPS 2021 Workshop on Deep Generative Models and Downstream Applications',
+    doi: 'https://arxiv.org/abs/2207.12598',
+  },
+  {
+    authors: 'Choi et al. (2022)',
+    title: '"Perception Prioritized Training of Diffusion Models"',
+    venue: 'CVPR 2022',
+    doi: 'https://arxiv.org/abs/2204.00227',
+  },
+  {
+    authors: 'Radford et al. (2021)',
+    title: '"Learning Transferable Visual Models From Natural Language Supervision"',
+    venue: 'ICML 2021, PMLR 139, 8748–8763',
+    doi: 'https://arxiv.org/abs/2103.00020',
+  },
+  {
+    authors: 'Raffel et al. (2020)',
+    title: '"Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"',
+    venue: 'JMLR 21(140), 1–67',
+    doi: 'https://arxiv.org/abs/1910.10683',
+  },
+]
 
 /** What this surface asks the server for, named once. */
 const OUTPUT_CONFIG = 'fusion_workbench'
@@ -793,7 +861,11 @@ async function expandT5(text: string): Promise<void> {
       errorMessage.value = resp.data?.error || t('latentLab.workbench.t5ExpandFailed')
     }
   } catch (e) {
-    errorMessage.value = (e as Error).message || t('latentLab.workbench.t5ExpandFailed')
+    // A refusal of the prompt or of what the expander wrote goes to the safety
+    // window as well, and says which kind it was.
+    errorMessage.value = reportRefusal(e)
+      ? t(refusalKeyOf(e))
+      : (e as Error).message || t('latentLab.workbench.t5ExpandFailed')
   } finally {
     const nb = { ...t5Busy.value }
     delete nb[text]
@@ -1018,10 +1090,10 @@ async function runSweep(): Promise<void> {
       doneCount.value++
     }
   } catch (err: unknown) {
-    // A refusal is not a fault, and it says which kind it was.
-    const key = refusalKeyOf(err)
-    errorMessage.value = key
-      ? t(key)
+    // A refusal is not a fault: it goes to the safety window, and the line says
+    // which kind it was. A refused cell ends the sweep, as a failed one does.
+    errorMessage.value = reportRefusal(err)
+      ? t(refusalKeyOf(err))
       : labErrorText(t, err)
   } finally {
     isRunning.value = false

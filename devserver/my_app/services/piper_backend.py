@@ -457,10 +457,12 @@ class PiperBackend:
         length_scale: Optional[float] = None,
         noise_w: Optional[float] = None,
         **kwargs,
-    ) -> Tuple[bytes, str, float]:
+    ) -> Tuple[bytes, str, float, str]:
         """Speak `text` verbatim.
 
-        Returns (WAV bytes, what spoke it, measured f0 in Hz). The f0 is read
+        Returns (WAV bytes, what spoke it, measured f0 in Hz, the voice model
+        that spoke, by its file stem, which the chunk reports as
+        `model_used`). Every Piper voice is a model of its own. The f0 is read
         off the audio being handed back, by the same procedure the other three
         synthesisers are measured with — the number is a measurement, never
         anything that was asked for.
@@ -556,7 +558,7 @@ class PiperBackend:
         spoke = f"{model.key} / {speaker[0]}" if speaker else model.key
 
         logger.info(f"[PIPER] {len(wav)} bytes ({spoke}, {f0_hz:.0f} Hz)")
-        return wav, spoke, f0_hz
+        return wav, spoke, f0_hz, model.key
 
 
 _backend: Optional[PiperBackend] = None

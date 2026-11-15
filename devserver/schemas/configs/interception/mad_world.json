@@ -11,7 +11,8 @@
     "es": "mundo loco",
     "he": "עולם משוגע",
     "ar": "عالم مجنون",
-    "bg": "луд свят"
+    "bg": "луд свят",
+    "zh-hant": "瘋狂世界"
   },
   "description": {
     "en": "Responds to input from a world in which familiar meanings, explanations, and orders no longer hold. Uses language, logic, and form as damaged but still operative materials, bringing out the absurd tensions evoked by the input. The result may appear playful, humorous, or sober, but always exposes the fragility of sense-making rather than repairing it.",
@@ -22,6 +23,7 @@
     "he": "מגיב לקלט מתוך עולם שבו משמעויות, הסברים וסדרים מוכרים כבר אינם מחזיקים. משתמש בשפה, לוגיקה וצורה כחומרים פגועים אך עדיין פעילים, מביא את המתחים האבסורדיים שהקלט מעלה. התוצאה עשויה להיראות שובבה, הומוריסטית או מפוכחת, אך תמיד חושפת את שבירות יצירת המשמעות.",
     "ar": "يستجيب للمدخل من عالم لم تعد المعاني والتفسيرات والأنظمة المألوفة فيه صالحة. يستخدم اللغة والمنطق والشكل كمواد تالفة لكنها لا تزال تعمل، مُبرزاً التوترات العبثية التي يستحضرها المدخل. قد تبدو النتيجة مرحة أو فكاهية أو رصينة، لكنها تكشف دائماً عن هشاشة صنع المعنى بدلاً من إصلاحها.",
     "bg": "Отговаря на входа от свят, в който познатите значения, обяснения и порядки вече не важат. Използва езика, логиката и формата като повредени, но все още работещи материали, извличайки абсурдните напрежения, предизвикани от входа. Резултатът може да изглежда игрив, хумористичен или трезвен, но винаги разкрива крехкостта на създаването на смисъл, вместо да го поправя.",
+    "zh-hant": "從一個熟悉的意義、解釋與秩序都不再成立的世界回應輸入內容。把語言、邏輯與形式當作受損但仍可運作的材料，帶出輸入內容所喚起的荒謬張力。結果可能顯得好玩、幽默或冷靜，但總是揭露意義建構的脆弱，而不是去修補它。",
     "tr": "Tanıdık anlamların, açıklamaların ve düzenlerin artık geçerli olmadığı bir dünyadan girdiye yanıt verir. Dili, mantığı ve formu hasarlı ama hâlâ işler malzemeler olarak kullanarak girdinin uyandırdığı absürt gerilimleri ortaya çıkarır. Sonuç oyunsu, mizahi veya sade görünebilir, ancak her zaman anlam üretiminin kırılganlığını onarmak yerine ifşa eder.",
     "ko": "친숙한 의미, 설명, 질서가 더 이상 유효하지 않은 세계에서 입력에 응답합니다. 언어, 논리, 형태를 손상되었지만 여전히 작동하는 재료로 사용하여 입력이 환기하는 부조리한 긴장을 드러냅니다. 결과는 장난스럽거나 유머러스하거나 냉정하게 보일 수 있지만, 항상 의미 만들기의 취약성을 복구하기보다는 노출합니다."
   },
@@ -31,6 +33,7 @@
     "he": "עמדות",
     "ar": "المواقف",
     "bg": "Нагласи",
+    "zh-hant": "態度",
     "tr": "Tutumlar",
     "ko": "태도",
     "uk": "Ставлення",

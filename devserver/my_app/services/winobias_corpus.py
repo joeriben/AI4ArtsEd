@@ -32,7 +32,7 @@ Two pools, by safety level:
 
   kids          the sixty pairs vetted by hand, shipped in config/winobias_curated.json.
                 No download needed, and the same sixty every time.
-  youth, open   every pair that passes the check above, drawn afresh per run with
+  every other   every pair that passes the check above, drawn afresh per run with
                 a reported seed, the way Bias Archaeology draws its situations.
 """
 

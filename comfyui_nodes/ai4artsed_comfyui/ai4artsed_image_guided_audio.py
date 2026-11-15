@@ -54,6 +54,7 @@ class ai4artsed_image_guided_audio:
             "ui": {
                 "audio": [announced],
                 "cosine_similarity": [out["cosine_similarity"]],
+                "cosine_similarity_last_guided_step": [out["cosine_similarity_last_guided_step"]],
                 "guidance_steps_skipped": [out["guidance_steps_skipped"]],
                 "generation_time_ms": [out["generation_time_ms"]],
                 "seed": [out["seed"]],

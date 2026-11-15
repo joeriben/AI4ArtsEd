@@ -272,6 +272,7 @@ export const ko = {
       uiModeEffectStructure: '화면에 표시되는 정보: 쉬움에서는 기술적 수치가 숨겨지고, 전문가에서는 모델, 시드, 매개변수가 표시됩니다.',
       uiModeEffectStyle: '이미지 코멘트의 문체.',
       uiModeNotSafety: '이것은 필터 설정이 아닙니다. 무엇을 검사하고 차단할지는 아래의 안전 등급에서 결정됩니다.',
+      traditionalChineseZhHant: '번체 중국어 (zh-hant)',
     },
     safety: {
       kidsTitle: '어린이 (8–13)',
@@ -331,15 +332,6 @@ export const ko = {
       storedIn: '저장 위치',
       currentKey: '현재',
       keyOf: '{provider} API 키',
-      frontierImageLabel: '외부 프런티어 이미지 모델',
-      frontierProviderLabel: '프로바이더',
-      frontierKeyLabel: 'API 키 있음',
-      frontierBalanceLabel: 'Mammouth.ai 잔액',
-      frontierUsedUp: {
-        account: '계정 예산 소진',
-        key: '이 API 키의 예산 소진',
-        team: '팀 예산 소진',
-      },
     },
     save: {
       saveApply: '저장 및 적용',
@@ -1125,7 +1117,7 @@ export const ko = {
       modelComparison: '모델 비교',
       differentModelsInterpretSame: '서로 다른 모델들은 동일한 노이즈 이미지를 기반으로 동일한 prompt를 해석하지만 — 전혀 다른 결과를 만들어 냅니다. 모델 비교는 prompt뿐 아니라 모델 자체가 결정적인 변수임을 드러내 보여줍니다.',
       currentTopModels: '현재의 최상위 모델',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — 현재의 세 모델을 직접 비교합니다.',
+      sd35Large: 'SD 3.5 Large, Flux 2, Flux 3 Klein을 직접 비교합니다.',
       historicalComparison: '역사적 비교',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — 세 세대. 이미지 생성은 해마다 어떻게 변화해 왔을까요?',
       temperatureComparison: '온도 비교',
@@ -1927,9 +1919,6 @@ export const ko = {
     working: '작동 중…',
     waiting: '대기 중',
     stationFailed: '이 기계는 응답하지 않았습니다',
-    band: {
-      done: '네 대 모두 응답했습니다',
-    },
     ask: {
       sign: '물어보세요!',
       question: '제 음악에서 실제로 무엇을 들을 수 있나요? 제 녹음이 노래가 되는 과정에서 무슨 일이 일어나나요? 여기서 무엇을 시도해볼 만한지도 알고 싶습니다.',
@@ -1966,8 +1955,6 @@ export const ko = {
     },
     sung: {
       name: '출력',
-      note: '이것은 들을 수만 있고 읽을 수는 없습니다. 쓰인 글과 나란히 놓고 견주어 보세요.',
-      notKept: '이것은 이 페이지에 머무르는 동안만 존재합니다. 저장하거나 즐겨찾기에 담거나 다운로드할 수 없습니다 — 이것은 작품이 아니라 재연입니다.',
       held: '직접 선택함 — 이것이 실행됩니다',
       madeBy: '{model}이(가) {s}초 만에 만듦',
       pick: '모델 선택',
@@ -1991,11 +1978,9 @@ export const ko = {
     },
     purpose: '이곳에서 배울 수 있는 것은 두 가지입니다: 노래하거나 연주한 입력으로 특정한 출력을 의도적으로 이끌어내는 것, 그리고 그 과정에서 자신만의 표현 수단과 지각의 클리셰를 마주하는 것입니다. 그리고 AI는 침묵밖에 없을 때조차 종종 무언가를 지어낸다는 것, 전혀 다른 녹음들이 매우 비슷하고 상투적인 결과를 만들어내는 경우가 많다는 것을 발견하는 것입니다.',
     run: {
-      name: '시작',
       start: '녹음을 네 개의 기계로 보내기',
       took: '{s}초 만에 응답',
     },
-    stationFailedNamed: '{station} — 이 기계는 응답하지 않았습니다',
     story: '이곳은 AI가 음악적, 문화적 사안에 대해 무엇을 이해하고 — 또 무엇을 오해하는지 놀이하듯 탐구하는 곳입니다. 이 페이지는 마이크를 통해 듣고, 노래와 말소리를 인식하려 시도한 뒤, 사운드 상황과 스타일을 인식하고, 마지막으로 그것을 다시 만들어냅니다: 번역 손실과 인공물로 가득한 일련의 번역 과정이며, 마치 왜곡 거울처럼 경험할 수 있습니다.',
   },
   latentLabOverview: {
@@ -2102,7 +2087,7 @@ export const ko = {
           posNote: '[[토큰]]의 자리 번호',
           ctrlNote: '제어 [[토큰]]',
           fourNote: '한 낱말이 두 [[토큰]]이 됩니다',
-          langHead: '이 플랫폼의 열 개 언어로 된 같은 문장을 [[토큰]]으로 자른 결과:',
+          langHead: '이 플랫폼의 언어 중 열 개로 된 같은 문장을 [[토큰]]으로 자른 결과:',
           langs: 'en¦영어¦22\nhe¦히브리어¦25\nes¦스페인어¦30\nde¦독일어¦31\nko¦한국어¦31\nfr¦프랑스어¦35\ntr¦터키어¦35\nar¦아랍어¦36\nbg¦불가리아어¦47\nuk¦우크라이나어¦56',
           langNote: '같은 문장에 대해 AI 모델은 우크라이나어에서\n영어보다 두 배 넘는 [[토큰]]을\n씁니다.\n“집”에 해당하는 낱말은 이 언어들 가운데\n여덟 개에서 하나의 [[토큰]]입니다. 불가리아어와\n우크라이나어에서는 셋입니다.',
           embLabel: '[[임베딩]]: 모든 [[토큰]]에 그 숫자열이 주어집니다. 그럼으로써 당신의 텍스트가 숫자 속에 임베딩됩니다.',
@@ -2930,9 +2915,9 @@ export const ko = {
         history: '시간에 따른 모델',
         historyNote: '한 계열, 한 크기, 다섯 세대: Qwen 7B(2023)부터 Qwen3 8B(2025)까지',
         small: '소형 모델',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1.7B와 4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1.7B와 4B',
         large: '대형 모델',
-        largeNote: 'OLMo 2와 3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — 7B부터 12B까지',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7B부터 14B까지',
       },
       error: {
         gpuUnreachable: 'GPU 서비스에 연결할 수 없습니다. 실행 중인가요?',
@@ -3278,6 +3263,7 @@ export const ko = {
       error: '연결 오류',
       modelLabel: '모델',
       defaultModel: '기본 (설정)',
+      localModel: '로컬',
       modelNotDownloaded: '(다운로드 안됨)',
       temperatureValue: 'T = {v}',
       install: {
@@ -3402,6 +3388,7 @@ export const ko = {
         ko: '한국어',
         tr: '터키어',
         uk: '우크라이나어',
+        'zh-hant': '번체 중국어',
       },
       piper: {
         languageLabel: '언어',
@@ -3524,8 +3511,8 @@ export const ko = {
     languagesLabel: '언어',
     modelNote: {
       noteBody: {
-        current: 'SD 3.5 Large는 프롬프트를 가깝게 따르고 읽을 수 있는 글자를 그림 안에 넣도록 만들어졌습니다(Stability AI 2024, 모델 카드와 공개 페이지). Flux 2는 같은 인물, 제품 또는 스타일을 한 번에 최대 열 장의 참조 그림에 걸쳐 유지하도록 만들어졌습니다. 그 공개 문서는 이렇게 주장합니다: “복잡한 타이포그래피, 인포그래픽, 밈, 그리고 읽을 수 있는 작은 글자가 들어간 UI 목업이 이제 프로덕션에서 안정적으로 작동한다.”\n\nGoogle이 “Nano Banana Pro”라고 부르는 Gemini 3 Pro Image는 Google의 모델 Gemini 3 Pro 위에 세워졌습니다. Google에 따르면 Gemini 3 Pro Image는 그림을 위해 Google 검색 질의를 끌어다 쓸 수 있어서, 날씨 그래픽이 최신 정보를 담을 수 있습니다. Google은 그림 안의 읽을 수 있는 글자가 여러 언어로 나온다고 밝힙니다.',
-        history: 'SD 1.5는 그림의 압축된 표현 위에서 작동합니다. 그 논문은, 픽셀 위에서 직접 작동하는 모델이 흔히 드는 수백 GPU-일에 맞서, 제한된 연산 자원에서도 학습이 가능하도록 하는 것을 목표로 밝힙니다.\n\nSDXL은 고해상도 이미지 합성을 위해 만들어졌습니다: 세 배 큰 이미지 네트워크, 두 번째 텍스트 인코더, 여러 화면비, 그리고 2023년의 비공개 이미지 생성기에 도달한다는 자기 논문의 주장입니다. SD 3.5의 아키텍처 논문은 이렇게 이름 짓습니다: “텍스트 이해, 타이포그래피, 그리고 사람의 선호 평가를 개선하는 것”. 타이포그래피는 그림 안에 쓰인 글자입니다.',
+        current: 'Stability AI는 SD 3.5 Large가 프롬프트를 가깝게 따르고 그림 안에 글자를 넣는다고 약속합니다(2024, 모델 카드와 공개 페이지). Flux 2의 공개 문서는 이렇게 주장합니다: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nBlack Forest Labs의 모델 카드(2026)는 Flux 3 Klein의 주요 특징 가운데 이렇게 꼽습니다: “Text rendering within generated images.”',
+        history: 'SD 1.5는 그림의 압축된 표현 위에서 작동합니다. 그 논문은, 픽셀 위에서 직접 작동하는 모델이 흔히 드는 수백 GPU-일에 맞서, 제한된 연산 자원에서도 학습이 가능하도록 하는 것을 목표로 밝힙니다.\n\nSDXL에 관한 논문은 고해상도 이미지 합성을 목표로 밝히고 2023년의 비공개 이미지 생성기에 도달한다고 주장합니다. SD 3.5의 아키텍처 논문은 이렇게 이름 짓습니다: “improving text comprehension, typography, and human preference ratings”. 타이포그래피는 그림 안에 쓰인 글자입니다.',
       },
       referencesTitle: '출처',
     },
@@ -3534,7 +3521,6 @@ export const ko = {
         sd35_large: 'SD 3.5 Large는 프롬프트를 세 텍스트 인코더로 읽습니다: 그림과 캡션의 짝으로 학습된 CLIP-L과 CLIP-G(Radford et al. 2021; Cherti et al. 2023), 그리고 텍스트만으로 학습된 T5-XXL(Raffel et al. 2020)입니다. Stability AI의 아키텍처 논문(Esser et al. 2024)은 이 설계를 “텍스트 이해, 타이포그래피, 그리고 사람의 선호 평가를 개선하는 것”이라고 밝힙니다. 그 논문의 평가에서 타이포그래피는 그림이 쓰인 글자를 얼마나 정확히 보여 주는가입니다.',
         sd35_large_turbo: 'SD 3.5 Large Turbo는 SD 3.5 Large와 같은 세 텍스트 인코더 CLIP-L, CLIP-G, T5-XXL로 프롬프트를 읽습니다(Stability AI 2024, 모델 카드). Stability AI가 Turbo에 원한 것은 공개 문서에 이렇게 적혀 있습니다: “Stable Diffusion 3.5 Large의 증류판으로, 단 4스텝만에 프롬프트 준수도가 뛰어난 고품질 이미지를 만들어낸다”(Stability AI 2024, 공개 페이지).',
         flux2: 'Flux 2는 비전-언어 모델(VLM)의 언어 모델로 프롬프트를 읽습니다. Black Forest Labs는 VLM이 더하는 것을 이렇게 밝힙니다: “VLM은 현실 세계에 대한 지식과 맥락 이해를 가져온다”(Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image는 Google의 이미지 모델 “Nano Banana Pro”입니다. Google은 이렇게 밝힙니다: “Gemini 3 Pro 위에 세워진 Nano Banana Pro는 Gemini의 최신 추론 능력과 현실 세계에 대한 지식을 사용해 그 어느 때보다 정보를 잘 시각화한다.”(Google 2025)',
       },
       referencesTitle: '출처',
     },

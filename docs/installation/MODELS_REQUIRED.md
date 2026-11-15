@@ -24,16 +24,16 @@ Complete inventory of all AI models used by the platform.
 
 | Category | Size | Purpose |
 |----------|------|---------|
-| **Local language models** (`<repo>/dlbackend/ComfyUI/models/llm/`) | ~232 GB if every alias in the table is kept locally | Stage 1–3 LLM, image reading, the model lists of System Prompts and Image Understanding |
+| **Local language models** (`<repo>/dlbackend/ComfyUI/models/llm/`) | ~486 GB if every alias in the table is kept locally, the Latent Text Lab's rows included | Stage 1–3 LLM, image reading, the model lists of System Prompts and Image Understanding |
 | **Safety classifier** (`<repo>/llama-server-models/shieldstral-3b/`) | 4.5 GB | The safety checks of prompts, images and person names |
 | **HuggingFace cache** (`~/.cache/huggingface/hub/`) | ~119 GB | Diffusers image and video generation, encoders (auto-downloaded on first use) |
-| **HuggingFace text models** (`~/.cache/huggingface/hub/`) | ~235 GB | Bias Archaeology 1 + 2 / Latent Text Lab |
+| **HuggingFace text models** (`~/.cache/huggingface/hub/`) | ~286 GB, linked into `models/llm/` and counted in the line above | Bias Archaeology 1 + 2 / Latent Text Lab |
 | **ComfyUI models** (`<repo>/dlbackend/ComfyUI/models/`) | ~500 GB | ComfyUI generation pipeline |
 | **Media stations** (`<repo>/dlbackend/ComfyUI/models/<station>/`) | ~105 GB for every alias of the table, plus ~16 GB in the HF cache | Stable Audio 3, ImageBind, MMAudio, HeartMuLa, Hunyuan3D 2, the media readers (section 1a) |
 | **GPU Service Weights** (`gpu_service/weights/`, `ext_weights/`) | ~6 GB | MMAudio, the GPU service's copy (section 4; until stage 8) |
 | **HeartMuLa** (`~/ai/heartlib/ckpt/`) | ~21 GB | Music generation checkpoint, the GPU service's copy (section 3; until stage 8) |
 | **Speech synthesis** (`~/.cache/supertonic3/`, HF cache, `~/ai/piper/`) | ~10 GB | Four text-to-speech systems: the platform's voice and three heard against it |
-| **Total** (worst case, all models present) | **~750 GB** | |
+| **Total** (worst case, all models present) | **~1.3 TB** | |
 
 A minimal install with one chat model + the safety classifier + an image reader + only
 the configs you actually plan to run is far smaller (typically 50–200 GB).
@@ -68,6 +68,21 @@ release. Loading an FP8 checkpoint needs `accelerate` in ComfyUI's venv
 `install_comfyui_nodes.sh` when the package is linked); a card below compute
 capability 8.9 gets the weights dequantised to BF16 by transformers, at BF16 size.
 
+**Models ComfyUI implements itself (Qwen 3.5 and 3.8).** ComfyUI v0.44.2 carries its
+own implementation of these models (`comfy/text_encoders/qwen35.py`), and the node
+runs them on it when the file the table names under `comfy_weights` lies in
+`<repo>/dlbackend/ComfyUI/models/text_encoders/`
+(`comfyui_nodes/ai4artsed_comfyui/_comfy_llm.py`). Without the file the model answers
+through transformers, as every other model of the table does. `./convert_llm_weights.sh`
+writes the files from the installed folders, after `./download_llm_models.sh`: the
+27 B models from the maker's FP8 release into ComfyUI's 8-bit format (`mxfp8`, 31.6 GB
+each; `qwen3.8:27b` also has a 4-bit `nvfp4` file of 20.1 GB, written on request with
+`./convert_llm_weights.sh qwen3.8:27b nvfp4`), the 9 B and 4 B models as their BF16
+weights in one file (19.3 GB and 9.3 GB). The 8- and 4-bit formats are computed on the
+card under a lease of the DevServer's gate, so the DevServer has to run. The files are
+additional disk space beside the folders under `models/llm/`, which the conversion
+and the Latent Text Lab keep reading.
+
 The table below is the whole of `devserver/config/local_llm_weights.json`, which is
 the single source of truth: an alias that is not there cannot be installed or run,
 and a chat model or an image reader added there appears by itself, with its Download
@@ -87,11 +102,20 @@ column is the folder ComfyUI lists.**
 | `qwen3:1.7b` | `Qwen/Qwen3-1.7B` | `Qwen--Qwen3-1.7B` | 4.1 GB |  |
 | `devstral:24b` | `mistralai/Devstral-Small-2-24B-Instruct-2512` | `mistralai--Devstral-Small-2-24B-Instruct-2512` | 25.8 GB | reads images |
 | `ministral3:3b` | `mistralai/Ministral-3-3B-Instruct-2512` | `mistralai--Ministral-3-3B-Instruct-2512` | 4.7 GB | reads images |
+| `mistral-nemo:12b` | `mistralai/Mistral-Nemo-Instruct-2407` | `mistralai--Mistral-Nemo-Instruct-2407` | 24.5 GB |  |
 | `gemma-3-4b` | `google/gemma-3-4b-it` | `google--gemma-3-4b-it` | 8.6 GB | gated: needs `HF_TOKEN`; reads images |
 | `smollm3:3b` | `HuggingFaceTB/SmolLM3-3B` | `HuggingFaceTB--SmolLM3-3B` | 6.2 GB |  |
 | `llama3.2:3b` | `meta-llama/Llama-3.2-3B-Instruct` | `meta-llama--Llama-3.2-3B-Instruct` | 6.4 GB | gated: needs `HF_TOKEN` |
 | `eurollm:1.7b` | `utter-project/EuroLLM-1.7B-Instruct` | `utter-project--EuroLLM-1.7B-Instruct` | 3.3 GB |  |
 | `granite3.1:2b` | `ibm-granite/granite-3.1-2b-instruct` | `ibm-granite--granite-3.1-2b-instruct` | 5.1 GB |  |
+| `apertus:8b` | `swiss-ai/Apertus-8B-Instruct-2509` | `swiss-ai--Apertus-8B-Instruct-2509` | 16.1 GB |  |
+| `qwen3:14b` | `Qwen/Qwen3-14B` | `Qwen--Qwen3-14B` | 29.5 GB |  |
+| `qwen3:8b` | `Qwen/Qwen3-8B` | `Qwen--Qwen3-8B` | 16.4 GB |  |
+| `qwen2.5:7b` | `Qwen/Qwen2.5-7B-Instruct` | `Qwen--Qwen2.5-7B-Instruct` | 15.2 GB |  |
+| `qwen2:7b` | `Qwen/Qwen2-7B-Instruct` | `Qwen--Qwen2-7B-Instruct` | 15.2 GB |  |
+| `qwen1.5:7b` | `Qwen/Qwen1.5-7B-Chat` | `Qwen--Qwen1.5-7B-Chat` | 15.4 GB | Tongyi Qianwen licence |
+| `phi3.5:3.8b` | `microsoft/Phi-3.5-mini-instruct` | `microsoft--Phi-3.5-mini-instruct` | 7.6 GB |  |
+| `olmo3:7b` | `allenai/Olmo-3-7B-Instruct` | `allenai--Olmo-3-7B-Instruct` | 14.6 GB |  |
 
 ### Image readers, and the former safety model
 
@@ -114,7 +138,26 @@ a model its registry declares a classifier: where `SAFETY_MODEL` still names
 `llama-guard3:1b` or `llama-guard3:latest`, every check that asks the classifier blocks
 without its answer (the Wikimedia Commons row drops the picture instead). Set it to
 `shieldstral:3b` (below).
-All entries together are 232 GB; a working install holds a few of them.
+All entries together, the Latent Text Lab's below included, are 486 GB; a working
+install holds a few of them.
+
+### Latent Text Lab only (`chat_capable` false)
+
+The members of the Latent Text Lab's rows (the entries' `text_rows`, section 2b) that no
+comparison surface offers. Seven members have been offered since 2026-11-15 and stand
+in the table above; why the others stay here is in the table's note and in
+`docs/DEVELOPMENT_DECISIONS.md` (2026-11-15). `download_textlab_models.sh` fetches them; where one is
+installed, the role fields of the settings page's model table and the Canvas offer it,
+as they offer every installed alias.
+
+| Alias | HuggingFace repo | Folder under `models/llm/` | Size | Notes |
+|-------|------------------|----------------------------|-----:|-------|
+| `ministral3:14b` | `mistralai/Ministral-3-14B-Instruct-2512` | `mistralai--Ministral-3-14B-Instruct-2512` | 15.7 GB | FP8; reads images; `offered: false` |
+| `ministral3:8b` | `mistralai/Ministral-3-8B-Instruct-2512` | `mistralai--Ministral-3-8B-Instruct-2512` | 10.4 GB | FP8; reads images; `offered: false` |
+| `gemma-4-12b` | `google/gemma-4-12B-it` | `google--gemma-4-12B-it` | 23.9 GB | reads images; `offered: false` |
+| `gemma-4-e4b` | `google/gemma-4-E4B-it` | `google--gemma-4-E4B-it` | 16.0 GB | reads images; offered as an image reader since 2026-11-14 |
+| `gemma-2-2b` | `google/gemma-2-2b-it` | `google--gemma-2-2b-it` | 5.2 GB | gated: needs `HF_TOKEN` |
+| `nemotron-nano:9b` | `nvidia/NVIDIA-Nemotron-Nano-9B-v2` | `nvidia--NVIDIA-Nemotron-Nano-9B-v2` | 17.8 GB |  |
 
 ### Safety classifier (GPU service, not in this table)
 
@@ -301,11 +344,11 @@ transformers — a GGUF station cannot give them that.
 Stored at `~/.cache/huggingface/hub/`.
 
 ```bash
-./download_textlab_models.sh                 # all three scenarios, ~215 GB
+./download_textlab_models.sh                 # all three scenarios, ~286 GB
 SCENARIOS=mixed ./download_textlab_models.sh # one of them
 ```
 
-The script reads the list from `devserver/config/text_presets.json`, which is
+The script reads the list from the entries' `text_rows` in `devserver/config/local_llm_weights.json`, which is
 also where the surface gets it from — there is no second copy to drift.
 
 The two instruments offer **four lineups**, built out of three scenarios in the
@@ -327,7 +370,7 @@ config:
 | OLMo 3 7B          | `allenai/Olmo-3-7B-Instruct`             | ~14 GB |
 | Apertus 8B         | `swiss-ai/Apertus-8B-Instruct-2509`       | ~16 GB |
 | Nemotron Nano 9B   | `nvidia/NVIDIA-Nemotron-Nano-9B-v2`      | ~18 GB |
-| Qwen3.5 9B         | `Qwen/Qwen3.5-9B`                         | ~18 GB |
+| Qwen3.5 9B         | `Qwen/Qwen3.5-9B`                         | ~19 GB |
 | Gemma 4 12B        | `google/gemma-4-12B-it`                   | ~24 GB |
 | Ministral 3 14B    | `mistralai/Ministral-3-14B-Instruct-2512` | ~14 GB (FP8) |
 
@@ -340,35 +383,34 @@ config:
 | Qwen3 8B   | `Qwen/Qwen3-8B`   | ~16 GB |
 | Qwen3 14B  | `Qwen/Qwen3-14B`  | ~28 GB |
 
-### "model over time" — one family, one size, five generations
+### "model over time" — one family, one size class, five generations
 
-The only lineup made of BASE models: over five generations the instruction tuning
-is what changed most and most unevenly, so the base model is the closer thing to
-"the same model, later".
+Post-trained models of one size class, in the order of the generations, of the
+size of the other lineups' members: in a course several devices share one card,
+and every change of model loads it anew. Qwen3.6 and Qwen3.8 have no dense model
+below 27B, so the lineup ends at Qwen3.5. All five run in BF16.
 
 | Model | HF ID | Size (bf16) |
 |-------|-------|-------------|
-| Qwen 7B (08/2023)    | `Qwen/Qwen-7B`    | ~15 GB |
-| Qwen1.5 7B (02/2024) | `Qwen/Qwen1.5-7B` | ~15 GB |
-| Qwen2 7B (06/2024)   | `Qwen/Qwen2-7B`   | ~15 GB |
-| Qwen2.5 7B (09/2024) | `Qwen/Qwen2.5-7B` | ~15 GB |
-| Qwen3 8B (04/2025)   | `Qwen/Qwen3-8B`   | ~16 GB |
+| Qwen1.5 7B (02/2024) | `Qwen/Qwen1.5-7B-Chat`     | ~15 GB |
+| Qwen2 7B (06/2024)   | `Qwen/Qwen2-7B-Instruct`   | ~15 GB |
+| Qwen2.5 7B (09/2024) | `Qwen/Qwen2.5-7B-Instruct` | ~15 GB |
+| Qwen3 8B (04/2025)   | `Qwen/Qwen3-8B`            | ~16 GB |
+| Qwen3.5 9B (02/2026) | `Qwen/Qwen3.5-9B`          | ~19 GB |
 
-**Total unique: 17 repositories, ~235 GB bf16** (Qwen3 4B and 8B each stand in two
-lineups and are fetched once).
+**Total unique: 15 repositories, ~223 GB** (Qwen3 1.7B, 4B and 8B and Qwen3.5 9B
+each stand in two lineups and are fetched once).
 
-### Two repositories need something beyond the script
+### Beyond the script
 
 `meta-llama/Llama-3.2-3B-Instruct` is **gated** — accept its licence once in a
 browser, then make a token available (`hf auth login`, or export `HF_TOKEN`).
 Without it that one repo fails and the rest still download.
 
-`Qwen/Qwen-7B` (08/2023) ships **its own loading code**: transformers refuses to
-build it unless the service is allowed to execute the Python file that comes with
-the repo (`trust_remote_code`). Downloading is harmless, nothing is executed by
-the script — but until that is decided, a run over "model over time" stops at
-this first model. The four later Qwen generations need nothing of the kind; from
-Qwen1.5 on the architecture is part of transformers itself.
+An entry of the language-model table marked `trust_remote_code` ships its
+architecture as code in its repository; ComfyUI's loader of that table executes
+none, so the script leaves it out and the surfaces name it as missing. No entry of
+that table carries it since 2026-11-08.
 
 ### Why pre-download at all
 
@@ -667,7 +709,7 @@ Diffusers GPU service is unavailable.
 
 | File | Size |
 |------|------|
-| `qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` (optional) | 18.8 GB |
+| `qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` | 18.8 GB |
 | `qwen3vl_4b_bf16.safetensors` | 8.9 GB |
 
 ### vae/ (~5.4 GB)
@@ -728,11 +770,11 @@ Hugging Face token has to accept the licence on that page before
 
 | File | Size | Notes |
 |------|------|-------|
-| `diffusion_models/flux3-image-klein-bf16.safetensors` | 11.1 GB | Distilled checkpoint; what the output config `flux3` loads (16 steps, cfg 1) |
+| `diffusion_models/flux3-image-klein-bf16.safetensors` | 11.1 GB | Distilled checkpoint; what the output configs `flux3` and `flux3_multi` load (16 steps, cfg 1) |
 | `text_encoders/qwen3vl_4b_bf16.safetensors` | 8.9 GB | Qwen3-VL-4B-Instruct, loaded with `CLIPLoader` type `flux3` |
+| `text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` | 18.8 GB | BFL's prompt upsampler; `flux3_multi` runs it, `flux3` does not |
 | `vae/Flux/flux2-vae.safetensors` | 321 MB | FLUX.2's VAE, the same file the Flux 2 workflows load, byte-identical to the VAE in BFL's own `black-forest-labs/flux-3-image-klein`. Where it is missing, `./download_flux3.sh` fetches it from [Comfy-Org/flux2-dev](https://huggingface.co/Comfy-Org/flux2-dev/blob/main/split_files/vae/flux2-vae.safetensors), as `./download_flux2.sh` does |
 | `diffusion_models/flux3-image-klein-base-bf16.safetensors` | 11.1 GB | Optional (`--base`): undistilled, 50 steps, cfg 3.5; no output config uses it |
-| `text_encoders/qwen3.5_9b_flux3_prompt_upsampler_bf16.safetensors` | 18.8 GB | Optional (`--upsampler`): BFL's prompt upsampler; no output config uses it |
 
 The repository also holds smaller variants: int8 for both transformers
 (`*-int8-convrot`), the text encoder and the upsampler (`*_int8_convrot`), NVFP4
@@ -832,8 +874,7 @@ re-query availability with `force_refresh=true`.
 `<repo>/dlbackend/ComfyUI/models/`. After it finishes, all three video output
 configs (`ltx_video`, `wan22_t2v_video_fast`, `wan22_i2v_video`) have every
 file they need. For Flux 2, run `./download_flux2.sh` (adds ~70 GB); for
-FLUX 3 Image Klein, `./download_flux3.sh` (adds ~20 GB, ~50 GB with `--base`
-and `--upsampler`). Everything
+FLUX 3 Image Klein, `./download_flux3.sh` (adds ~39 GB, ~50 GB with `--base`). Everything
 else (Qwen Image, ACE-Step, decorative LoRAs, Wan 2.2 TI2V-5B) is downloaded
 manually based on which output_configs you plan to enable.
 

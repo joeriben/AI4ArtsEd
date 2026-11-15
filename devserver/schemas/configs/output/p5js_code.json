@@ -10,7 +10,8 @@
     "es": "P5.js Generación de código",
     "he": "P5.js יצירת קוד",
     "ar": "P5.js توليد الكود",
-    "bg": "P5.js Генериране на код"
+    "bg": "P5.js Генериране на код",
+    "zh-hant": "P5.js 程式碼生成"
   },
   "description": {
     "en": "Generates executable P5.js JavaScript code from layered scene descriptions. Creates interactive visual sketches using geometric primitives and additive construction.",
@@ -22,7 +23,8 @@
     "es": "Genera código JavaScript de P5.js ejecutable a partir de descripciones de escena en capas. Crea bocetos visuales interactivos utilizando primitivas geométricas y construcción aditiva.",
     "he": "יוצר קוד P5.js JavaScript הניתן להרצה מתוך תיאורי סצנה מרובדים. יוצר סקיצות חזותיות אינטראקטיביות באמצעות צורות גאומטריות בסיסיות ובנייה תוספתית.",
     "ar": "يولّد كود P5.js JavaScript قابلًا للتنفيذ من أوصاف مشهد متعددة الطبقات. يُنشئ رسومات تخطيطية بصرية تفاعلية باستخدام أشكال هندسية أساسية وبناء تراكمي (إضافي).",
-    "bg": "Генерира изпълним P5.js JavaScript код от многослойни описания на сцена. Създава интерактивни визуални скици чрез геометрични примитиви и адитивна конструкция."
+    "bg": "Генерира изпълним P5.js JavaScript код от многослойни описания на сцена. Създава интерактивни визуални скици чрез геометрични примитиви и адитивна конструкция.",
+    "zh-hant": "從分層的場景描述生成可執行的 P5.js JavaScript 程式碼。使用幾何基本圖形與疊加式建構，建立互動式的視覺草圖。"
   },
   "category": {
     "en": "Vector Graphics",
@@ -34,7 +36,8 @@
     "es": "Gráficos vectoriales",
     "he": "גרפיקה וקטורית",
     "ar": "رسومات متجهة",
-    "bg": "Векторна графика"
+    "bg": "Векторна графика",
+    "zh-hant": "向量圖形"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_code_p5js",

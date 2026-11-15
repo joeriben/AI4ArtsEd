@@ -23,7 +23,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 import i18n from '@/i18n'
-import { failureKey } from '@/composables/useGenerationStream'
+import { failureKey, safetyBlockKeyForEvent } from '@/composables/useGenerationStream'
 import {
   useInterceptionSeries,
   SERIES_SEED,
@@ -228,6 +228,28 @@ describe('the adaption a series asks for once per cell', () => {
     expect(generation).not.toHaveBeenCalled()
   })
 
+  it('says a refused adaption in its cell, the way a refused picture says it', async () => {
+    const block = {
+      checkpoint: 'result',
+      field: 'optimized_prompt',
+      reason_key: 'content',
+      reason: 'withheld',
+    }
+    answerOn(
+      OPTIMIZE,
+      streamed({ success: false, status: 'blocked', error: 'withheld', safety_block: block }, 403)
+    )
+
+    await series.startRun()
+
+    const cell = series.gridColumns.value[0]!.cells.find((c) => c.key === CELL)!
+    expect(cell.failed).toBe(false)
+    expect(cell.blockedKey).toBe(safetyBlockKeyForEvent({ block }))
+    expect(series.cellNote(cell)).toBe(i18n.global.t(safetyBlockKeyForEvent({ block })))
+    expect(generation).not.toHaveBeenCalled()
+    expect(series.adapted.value[CELL]).toBeUndefined()
+  })
+
   it('ends the cell when the adaption came back empty', async () => {
     answerOn(OPTIMIZE, streamed({ success: true, optimized_prompt: '   ' }))
 
@@ -323,14 +345,14 @@ describe('a refusal of one row', () => {
   it('at the gate, of the line, holds the whole series back', async () => {
     queued.clear()
     answerOn(STAGE2, streamed({
-      success: false, status: 'blocked', error: 'Kids-Filter: nicht erlaubt',
-      blocked_at_stage: 1, checks_passed: ['fast_filter'],
+      success: false, error: 'nicht erlaubt', checks_passed: ['fast_filter'],
+      safety_block: { checkpoint: 'intake', field: 'input_text', reason_key: 'symbol', reason: 'nicht erlaubt' },
     }, 403))
 
     await series.startRun()
 
     expect(sentTimesTo(STAGE2)).toBe(1)
-    expect(series.errorMessage.value).not.toBe('')
+    expect(series.errorMessage.value).toBe(i18n.global.t('safetyBlocked.para86a'))
     expect(sentTimesTo(OPTIMIZE)).toBe(0)
   })
 
@@ -360,7 +382,11 @@ describe('a refusal of one row', () => {
     queued.clear()
     answerOn(STAGE2, streamed({
       success: false, status: 'blocked', error: 'the model refused under the prefix',
-      reason: 'the model refused under the prefix', blocked_at_stage: 2, checks_passed: [],
+      safety_block: {
+        checkpoint: 'refusal', field: 'interception', reason_key: 'refusal',
+        reason: 'the model refused under the prefix',
+      },
+      checks_passed: [],
     }, 403))
     answerOn(STAGE2, streamed({ success: true, interception_result: WRITTEN }))
 
@@ -370,4 +396,84 @@ describe('a refusal of one row', () => {
     expect(series.errorMessage.value).toBe('')
     expect(sentTimesTo(OPTIMIZE)).toBeGreaterThan(0)
   })
+
+  it('of its own perspective, at the gate, belongs to its row', async () => {
+    // The gate refused the PERSPECTIVE this row sent, not the line (the block
+    // message's `field`): a fact about the row, which stops nothing else.
+    series.release()
+    host.unmount()
+    const OWN: SeriesRow = {
+      ...WITH_A_PERSPECTIVE,
+      request: { schema: 'dada', contextPrompt: 'a perspective of its own' },
+    }
+    const ANOTHER: SeriesRow = { ...WITH_A_PERSPECTIVE, key: 'bauhaus', label: 'bauhaus', request: { schema: 'bauhaus' } }
+    const Host = defineComponent({
+      setup(_props, { expose }) {
+        const s = useInterceptionSeries({
+          line: () => LINE,
+          rows: () => [REFERENCE, OWN, ANOTHER],
+          columns: () => [COLUMN],
+          sourceView: 'test',
+        })
+        expose({ s })
+        return () => null
+      },
+    })
+    host = mount(Host, { global: { plugins: [i18n] } })
+    series = (host.vm as any).s
+    queued.clear()
+    answerOn(STAGE2, streamed({
+      success: false, error: 'refused',
+      safety_block: { checkpoint: 'intake', field: 'context_prompt', reason_key: 'content', reason: 'refused' },
+    }, 403))
+    answerOn(STAGE2, streamed({ success: true, interception_result: WRITTEN }))
+
+    await series.startRun()
+
+    expect(sentTimesTo(STAGE2)).toBe(2)
+    expect(series.errorMessage.value).toBe('')
+    expect(sentTimesTo(OPTIMIZE)).toBeGreaterThan(0)
+  })
+
+  it.each(['context_text', 'context_text[de]', 'task_instruction'])(
+    'of the saved perspective it names, at the gate, belongs to its row (%s)',
+    async (field) => {
+      // The gate refused the text of the SAVED perspective this row names
+      // (`custom:<id>`): a fact about the row, like the text a row sends.
+      series.release()
+      host.unmount()
+      const SAVED: SeriesRow = { ...WITH_A_PERSPECTIVE, request: { schema: 'custom:7' } }
+      const ANOTHER: SeriesRow = {
+        ...WITH_A_PERSPECTIVE, key: 'bauhaus', label: 'bauhaus', request: { schema: 'bauhaus' },
+      }
+      const Host = defineComponent({
+        setup(_props, { expose }) {
+          const s = useInterceptionSeries({
+            line: () => LINE,
+            rows: () => [REFERENCE, SAVED, ANOTHER],
+            columns: () => [COLUMN],
+            sourceView: 'test',
+          })
+          expose({ s })
+          return () => null
+        },
+      })
+      host = mount(Host, { global: { plugins: [i18n] } })
+      series = (host.vm as any).s
+      queued.clear()
+      answerOn(STAGE2, streamed({
+        success: false, error: 'refused',
+        safety_block: {
+          checkpoint: 'intake', field, reason_key: 'personal_data', reason: 'refused',
+        },
+      }, 403))
+      answerOn(STAGE2, streamed({ success: true, interception_result: WRITTEN }))
+
+      await series.startRun()
+
+      expect(sentTimesTo(STAGE2)).toBe(2)
+      expect(series.errorMessage.value).toBe('')
+      expect(sentTimesTo(OPTIMIZE)).toBeGreaterThan(0)
+    },
+  )
 })

@@ -23,6 +23,13 @@
     "the connection and not of a model behind it; the reader builds the request",
     "without the image. Absent means the question is open and a measurement decides.",
     "",
+    "prompt_cache (optional): true where the connection takes the cache marker",
+    "(cache_control) on a text block of a message, so that a request prefix sent",
+    "again within the marker's lifetime is read from the provider's cache. Elsewhere",
+    "the reader removes the marker and joins the text blocks of that message",
+    "(llm_providers.without_cache_markers). OpenRouter documents the marker for the",
+    "models that cache (openrouter.ai/docs/features/prompt-caching, read 2026-11-13).",
+    "",
     "thinking_off_payload (optional): request fields the pipeline engine adds when a",
     "config switched thinking off, for a provider whose reasoning models cannot be",
     "told to stop reasoning but can be told to keep it short.",
@@ -74,7 +81,8 @@
       "key_prefix": "sk-",
       "account_api": "openrouter",
       "key_url": "https://eu.openrouter.ai/api/v1/key",
-      "credits_url": "https://eu.openrouter.ai/api/v1/credits"
+      "credits_url": "https://eu.openrouter.ai/api/v1/credits",
+      "prompt_cache": true
     },
     "anthropic": {
       "label": "Anthropic",
@@ -82,7 +90,8 @@
       "api_url": "https://api.anthropic.com/v1/messages",
       "env_var": "ANTHROPIC_API_KEY",
       "key_file": "anthropic.key",
-      "key_prefix": "sk-"
+      "key_prefix": "sk-",
+      "prompt_cache": true
     },
     "openai": {
       "label": "OpenAI",

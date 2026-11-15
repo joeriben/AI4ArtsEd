@@ -68,10 +68,13 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from my_app.services.watermark_service import UNMARKED_SUFFIX  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 EXPORTS = REPO / "exports" / "json"
-NAMED = re.compile(r"^(\d+)_(.+)\.([A-Za-z0-9]+)$")
+# The type is the stem without `_ai_generated`: a file stored so is of its type
+# all the same (watermark_service.UNMARKED_SUFFIX).
+NAMED = re.compile(r"^(\d+)_(.+?)(?:" + re.escape(UNMARKED_SUFFIX) + r")?\.([A-Za-z0-9]+)$")
 
 #: Every entity type an ordinary run writes into `final/`. A stem outside this
 #: set is not something this script knows how to name, and the run is refused.

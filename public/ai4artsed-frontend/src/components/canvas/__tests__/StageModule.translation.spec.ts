@@ -97,3 +97,38 @@ describe('StageModule — translation target language', () => {
     expect((languageSelect(wrapper).element as HTMLSelectElement).value).toBe('en')
   })
 })
+
+describe('StageModule — a failed translation', () => {
+  const ERROR = 'the provider refused the request'
+  const expected = (lang: string, cause = ERROR) =>
+    i18n.global.t('compare.translationFailed', { lang, cause })
+
+  /** The node as it stands now, and the result of its last run. */
+  function failed(fields: Partial<CanvasNode>, result: { language?: string | null }) {
+    const node = translationNode(fields)
+    const wrapper = mount(StageModule, {
+      props: { node, selected: false, executionResult: { type: 'translation', output: '', error: ERROR, ...result } },
+      global: { plugins: [i18n] },
+    })
+    return wrapper.findAll('p.module-error').at(-1)!.text()
+  }
+
+  it('names a listed language by the label its select shows', () => {
+    expect(failed({ translationLanguage: 'qu' }, { language: 'qu' })).toBe(expected('Runasimi'))
+    expect(failed({ translationLanguage: 'ja' }, { language: 'ja' })).toBe(expected('日本語'))
+  })
+
+  it('names the language the run sent, not the one the node shows since', () => {
+    expect(failed({ translationLanguage: 'es' }, { language: 'qu' })).toBe(expected('Runasimi'))
+    expect(failed({ translationPrompt: 'Translate into rhymes.' }, { language: 'en' })).toBe(expected('English'))
+  })
+
+  it('names a language written in free text as written', () => {
+    expect(failed({ translationLanguage: 'Ladin' }, { language: 'Ladin' })).toBe(expected('Ladin'))
+  })
+
+  it('says only what the engine said where the run named no language', () => {
+    expect(failed({ translationPrompt: 'Translate into rhymes.' }, { language: null })).toBe(ERROR)
+    expect(failed({ translationLanguage: 'qu' }, {})).toBe(ERROR)
+  })
+})

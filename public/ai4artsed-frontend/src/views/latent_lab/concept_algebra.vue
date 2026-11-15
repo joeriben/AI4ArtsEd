@@ -1,5 +1,5 @@
 <!--
-  Concept Algebra — the word arithmetic of Mikolov et al., done on a diffusion
+  Concept Algebra — the word arithmetic of Mikolov, Yih & Zweig (2013), done on a diffusion
   model's conditioning: A minus B plus C, and the picture that comes out of the
   sum.
 
@@ -37,7 +37,7 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="lab-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column lab-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The whole calculation, ready to pick: one entry fills all three
@@ -147,6 +147,11 @@
             <p v-if="perspectiveError" class="lab-prep-err">{{ perspectiveError }}</p>
 
             <aside class="lab-note">
+              <h3>{{ t('latentLab.imageLab.tabs.algebra.label') }}</h3>
+              <p
+                v-for="(para, i) in t('latentLab.algebra.noteBody').split('\n\n')"
+                :key="i"
+              >{{ para }}</p>
               <LabReferences
                 flat
                 :title="t('latentLab.algebra.referencesTitle')"
@@ -241,21 +246,36 @@ import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { apiBase } from '@/services/labApi'
 
 /**
- * The word arithmetic is Mikolov et al.'s, and Liu et al. is what carries it
- * over to a diffusion model's conditioning.
+ * Mikolov, Yih & Zweig (2013) is the primary source for the vector offset:
+ * they answer "a is to b as c is to ?" with the word vector nearest to
+ * b - a + c, and their example is king - man + woman, nearest to queen. The
+ * NeurIPS 2013 paper by Mikolov et al. that stood here before uses
+ * Madrid - Spain + France and carries no king/queen example. Liu et al. (2022)
+ * was removed: that paper composes the denoiser's scores at every step, which
+ * the Composable Diffusion instrument runs. This instrument computes
+ * A - s1*B + s2*C once on the encoder output, before the run.
+ * Linzen (2016) measured, without excluding the input words, that the
+ * nearest neighbour of b - a + c was b in 93% of the cases; the help text's
+ * sentence on what such a subtraction leaves in place rests on it.
  */
 const REFERENCES: LabReference[] = [
   {
-    authors: 'Mikolov et al. (2013)',
-    title: '"Distributed Representations of Words and Phrases and their Compositionality"',
-    venue: 'NeurIPS 2013',
-    doi: 'https://doi.org/10.48550/arXiv.1310.4546',
+    authors: 'Mikolov, Yih & Zweig (2013)',
+    title: '"Linguistic Regularities in Continuous Space Word Representations"',
+    venue: 'NAACL-HLT 2013',
+    doi: 'https://aclanthology.org/N13-1090/',
   },
   {
-    authors: 'Liu et al. (2022)',
-    title: '"Compositional Visual Generation with Composable Diffusion Models"',
-    venue: 'ECCV 2022',
-    doi: 'https://doi.org/10.1007/978-3-031-19803-8_12',
+    authors: 'Linzen (2016)',
+    title: '"Issues in evaluating semantic spaces using word analogies"',
+    venue: 'RepEval 2016, ACL Anthology W16-2503',
+    doi: 'https://doi.org/10.18653/v1/W16-2503',
+  },
+  {
+    authors: 'Wang, Gui, Negrea & Veitch (2023)',
+    title: '"Concept Algebra for (Score-Based) Text-Controlled Generative Models"',
+    venue: 'NeurIPS 2023',
+    doi: 'https://arxiv.org/abs/2302.03693',
   },
 ]
 

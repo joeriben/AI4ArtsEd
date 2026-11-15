@@ -130,7 +130,7 @@ def test_the_block_is_stated_once(name):
 def test_no_voice_carries_a_name_for_itself(name):
     prompt = build_system_prompt(context=VOICES[name], language="de")
     # The modes note names pages, not selves; a page label is not a self-name.
-    modes = _build_resona_modules_context()
+    modes = _build_resona_modules_context("de")
     if modes and modes in prompt:
         prompt = prompt.replace(modes, " ")
     found = [n for n in RETIRED_NAMES if n in prompt]

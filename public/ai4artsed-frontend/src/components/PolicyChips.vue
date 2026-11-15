@@ -15,7 +15,7 @@
 
   The colour reads the WAIT, not who is waiting: next in line
   or under a minute green, anything past that amber, a card held by a training
-  red. Red is the state where waiting stops being the right word — the queue
+  red, a wait nobody can name none. Red is the state where waiting stops being the right word — the queue
   is not moving, and the visitor is better off doing something else.
 
   The panel carries the only frame; the four cells are flat tints on one grid,
@@ -148,10 +148,9 @@ const dsgvoTitle = computed(() => {
   return t(key)
 })
 
-// The four levels that have a colour and a wording. `open` is a level the
-// platform can hold (services/safety_level_resolver.py, and a course can be
-// set to it) but no colour and no wording have been given for it — it falls
-// through to amber and carries the level's own name until they are.
+// The four levels, each with a colour and a wording
+// (services/safety_level_resolver.py). A value outside them falls through to
+// amber and carries its own name.
 const LEVEL_TONES: Record<string, 'available' | 'caution' | 'unavailable'> = {
   kids: 'available',
   youth: 'available',
@@ -194,7 +193,9 @@ const filterTitle = computed(() =>
 const queueOk = ref(false)
 /** The place — this session's own where it has one, else the next press's. */
 const queuePlace = ref<number | null>(null)
-/** Seconds until that place reaches the card; null where nothing was measured. */
+/** Seconds until that place reaches the card; null where no wait can be
+ *  named: nothing measured for a run ahead, or the run on the card past its
+ *  measurement and the buffer. */
 const queueWaitS = ref<number | null>(null)
 /** Whether the place belongs to a run of this session's or to a press not made. */
 const queueMine = ref(false)
@@ -263,7 +264,8 @@ const queueUnderMinute = computed(
 
 /**
  * The colour reads the WAIT, not who is waiting:
- * next in line or under a minute is green, anything past that amber, and a
+ * next in line or under a minute is green, anything past that amber, an
+ * unknown wait none, and a
  * card held by a training — or a wait the gate would no longer hold a place
  * for — red. Both cells take the same one: the column is one statement, and
  * two colours in it would read as two.
@@ -274,6 +276,9 @@ const queueUnderMinute = computed(
 const queueTone = computed(() => {
   if (queuePlace.value === null) return 'idle'
   if (queueBlock.value) return 'unavailable'
+  // An unknown wait takes no colour: green under "unknown" would read as
+  // "fine" about a wait nobody can name (2026-11-02).
+  if (queueWaitS.value === null) return 'idle'
   if (queuePlace.value <= 1 || queueUnderMinute.value) return 'available'
   return 'caution'
 })
@@ -285,11 +290,14 @@ const queuePlaceLabel = computed(() =>
 /**
  * The wait in the column's own unit. Under five seconds nothing was measured
  * and under a minute a whole-minute figure would round the wait to zero, which
- * reads as "now" — so both are said as less than a minute, and only an
- * unmeasured wait gets the dash.
+ * reads as "now" — so both are said as less than a minute. A place whose
+ * wait nobody can name says "unknown", the supplied wording of 2026-11-02.
+ * The dash stays for the card that cannot be seen at all, where the place
+ * cell carries it too.
  */
 const queueTimeLabel = computed(() => {
-  if (queuePlace.value === null || queueWaitS.value === null) return '\u2014'
+  if (queuePlace.value === null) return '\u2014'
+  if (queueWaitS.value === null) return t('policyChips.queueUnknown')
   if (queueUnderMinute.value) return t('policyChips.queueUnderMinute')
   return durationLabel(t, queueWaitS.value) || t('policyChips.queueUnderMinute')
 })

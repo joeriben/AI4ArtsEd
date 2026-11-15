@@ -54,6 +54,13 @@ import config
 from my_app.routes import chat_routes
 from my_app.routes import settings_routes
 from my_app.routes import schema_pipeline_routes as R
+from my_app.services.safety_gate import (
+    CHECKPOINT_INTAKE,
+    CHECKPOINT_RESULT,
+    REASON_CONTENT,
+    REASON_PERSONAL_DATA,
+    Verdict,
+)
 from schemas.engine import prompt_interception_engine as engine_module
 from schemas.engine.pipeline_executor import PipelineContext, PipelineStep
 from schemas.engine.backend_router import (
@@ -76,8 +83,7 @@ GUARD_SCHEMA = "pre_interception/safety_llamaguard"
 # the encoders as it stands — so a test about the adaption cannot be put on
 ADAPTION_OUTPUT_CONFIG = "p5js_code"
 HARMLESS = "Ein Haus steht in einer Landschaft."
-BLOCKED = "a swastika painted on the door"
-KIDS_PREFIX = "SAFETY (ages 8-13): This output generates media for children."
+KIDS_PREFIX = "SAFETY: This output generates media for children."
 
 # Named, not resolved: the point of these tests is that the id the caller writes
 # is the id that arrives, so it must not come from the same place the code reads.
@@ -225,7 +231,7 @@ class TestTheRestHoldsStill:
 
     def test_the_youth_prefix_is_in_it(self):
         _result, request = _intercept(interception_model=CHOSEN, safety_level="youth")
-        assert "SAFETY (ages 14-18)" in request.prompt
+        assert "SAFETY: This output generates media for older adolescents." in request.prompt
 
     def test_the_input_text_is_in_it(self):
         _result, request = _intercept(interception_model=CHOSEN)
@@ -266,16 +272,22 @@ def offers(monkeypatch):
 
 
 @pytest.fixture
-def stage1_waved_through(monkeypatch):
-    """Stage 1 answers safe, and records that it was asked at all."""
+def checks_waved_through(monkeypatch):
+    """The checks answer safe, and record that they were asked at all: the
+    intake and the check at the result."""
     calls = []
 
-    def _check(texts, level, lang):
-        calls.append(texts)
-        return (True, None, [], None, {'input_text': HARMLESS})
+    def _intake(fields, *, level):
+        calls.append(fields)
+        return Verdict(True, CHECKPOINT_INTAKE, level)
+
+    def _result(text, *, level, field="text"):
+        calls.append(text)
+        return Verdict(True, CHECKPOINT_RESULT, level, field)
 
     monkeypatch.setattr(R, "resolve_safety_level", lambda: "kids")
-    monkeypatch.setattr(R, "_stage1_check_texts", _check)
+    monkeypatch.setattr(R, "check_intake_texts", _intake)
+    monkeypatch.setattr(R, "check_result_text", _result)
     return calls
 
 
@@ -286,7 +298,7 @@ def captured_stage2(monkeypatch):
 
     async def _capture(**kwargs):
         seen.update(kwargs)
-        return R._ClassifierResult(success=True, final_output="done")
+        return R._Stage2Answer(success=True, final_output="done")
 
     monkeypatch.setattr(R, "execute_stage2_with_optimization", _capture)
     return seen
@@ -314,7 +326,7 @@ class TestTheEndpoint:
         assert response.status_code == 400
 
     def test_an_offered_model_reaches_stage_2(self, client, offers,
-                                              stage1_waved_through, captured_stage2):
+                                              checks_waved_through, captured_stage2):
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'interception_model': CHOSEN,
@@ -323,26 +335,53 @@ class TestTheEndpoint:
         assert captured_stage2.get('interception_model') == CHOSEN
 
     def test_without_the_field_stage_2_is_told_nothing(self, client,
-                                                       stage1_waved_through, captured_stage2):
+                                                       checks_waved_through, captured_stage2):
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
         })
         assert response.status_code == 200, response.get_data(as_text=True)
         assert captured_stage2.get('interception_model') is None
 
-    def test_the_safety_gate_still_stands(self, client, offers, monkeypatch):
-        """A named model is not a way past Stage 1.
+    def test_the_intake_still_stands(self, client, offers, monkeypatch):
+        """A named model is not a way past the intake: a refused text ends the
+        request before the chosen model writes anything."""
+        wrote = []
 
-        The stimulus is the one test_86a_word_boundaries.py uses: at kids level
-        it is a hard block, decided by the fast filter without any model call.
-        """
+        async def _stage2(**kwargs):
+            wrote.append(kwargs)
+            return R._Stage2Answer(success=True, final_output="done")
+
         monkeypatch.setattr(R, "resolve_safety_level", lambda: "kids")
+        monkeypatch.setattr(R, "check_intake_texts", lambda fields, *, level: Verdict(
+            False, CHECKPOINT_INTAKE, level, "input_text", REASON_PERSONAL_DATA, "a name"))
+        monkeypatch.setattr(R, "execute_stage2_with_optimization", _stage2)
         response = client.post('/api/schema/pipeline/stage2', json={
-            'schema': SCHEMA, 'input_text': BLOCKED,
+            'schema': SCHEMA, 'input_text': HARMLESS,
             'interception_model': CHOSEN,
         })
         assert response.status_code == 403
-        assert response.get_json()['blocked_at_stage'] == 1
+        assert response.get_json()['safety_block']['checkpoint'] == 'intake'
+        assert wrote == []
+
+    def test_the_check_at_the_result_still_stands(self, client, offers, monkeypatch):
+        """Nor past the check at the result: what the chosen model wrote does
+        not leave when the check refuses it."""
+        async def _stage2(**kwargs):
+            return R._Stage2Answer(success=True, final_output="a text the check refuses")
+
+        monkeypatch.setattr(R, "resolve_safety_level", lambda: "kids")
+        monkeypatch.setattr(R, "check_intake_texts",
+                            lambda fields, *, level: Verdict(True, CHECKPOINT_INTAKE, level))
+        monkeypatch.setattr(R, "check_result_text", lambda text, *, level, field="text": Verdict(
+            False, CHECKPOINT_RESULT, level, field, REASON_CONTENT, "not for this level"))
+        monkeypatch.setattr(R, "execute_stage2_with_optimization", _stage2)
+        response = client.post('/api/schema/pipeline/stage2', json={
+            'schema': SCHEMA, 'input_text': HARMLESS,
+            'interception_model': CHOSEN,
+        })
+        assert response.status_code == 403
+        assert response.get_json()['safety_block']['checkpoint'] == 'result'
+        assert "a text the check refuses" not in response.get_data(as_text=True)
 
 
 # ------------------------------------------------- what the field may contain
@@ -368,7 +407,7 @@ class TestTheFieldIsText:
         assert response.get_json()['cause'] == 'not_a_string'
 
     @pytest.mark.parametrize("empty", ["", "   ", None])
-    def test_an_empty_value_counts_as_no_value(self, client, stage1_waved_through,
+    def test_an_empty_value_counts_as_no_value(self, client, checks_waved_through,
                                                captured_stage2, empty):
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
@@ -562,14 +601,14 @@ class TestWhyTheModelCannotRun:
         assert response.get_json()['cause'] == 'not_installed'
 
 
-# ------------------------------------------- the gate stands before Stage 1
+# ------------------------------------------ the gate stands before the intake
 
 class TestTheGateComesFirst:
-    def test_stage_1_is_not_asked_about_a_model_that_cannot_run(
-            self, client, offers, stage1_waved_through):
+    def test_the_intake_is_not_asked_about_a_model_that_cannot_run(
+            self, client, offers, checks_waved_through):
         """A refused model costs no safety check and no model call.
 
-        Stage 1 reaches a model of its own. A request that is going to be
+        The intake reaches a model of its own. A request that is going to be
         refused for its model must be refused before anything is spent on it.
         """
         response = client.post('/api/schema/pipeline/stage2', json={
@@ -578,14 +617,14 @@ class TestTheGateComesFirst:
         })
         assert response.status_code == 400
         assert UNLISTED in response.get_json()['error']
-        assert stage1_waved_through == [], "Stage 1 ran for a request that was refused"
+        assert checks_waved_through == [], "a check ran for a request that was refused"
 
 
 # ------------------------------------- a preset that runs no interception step
 
 class TestThePresetMustRunTheStep:
     def test_an_interception_preset_passes(self, client, offers,
-                                           stage1_waved_through, captured_stage2):
+                                           checks_waved_through, captured_stage2):
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'interception_model': CHOSEN,
@@ -593,7 +632,7 @@ class TestThePresetMustRunTheStep:
         assert response.status_code == 200, response.get_data(as_text=True)
 
     def test_a_preset_that_skips_stage_2_is_refused(self, client, offers,
-                                                    stage1_waved_through):
+                                                    checks_waved_through):
         """It would answer 200 and drop the model on the floor.
 
         Six presets build no chunk at all — the vector and latent instruments
@@ -612,7 +651,7 @@ class TestThePresetMustRunTheStep:
         assert response.get_json()['cause'] == 'no_interception_step'
 
     def test_a_plan_with_a_chunk_on_another_role_is_refused(
-            self, client, offers, stage1_waved_through, monkeypatch):
+            self, client, offers, checks_waved_through, monkeypatch):
         """The parameter names the interception step, not every step.
 
         A plan holding a second chunk on another model role would run that step
@@ -633,8 +672,8 @@ class TestThePresetMustRunTheStep:
         assert "interception step only" in message
         assert response.get_json()['cause'] == 'no_interception_step'
 
-    def test_the_pre_check_path_is_refused(self, client, offers, stage1_waved_through):
-        """It runs a classifier, not an interception. Nothing writes anything."""
+    def test_the_pre_check_path_is_refused(self, client, offers, checks_waved_through):
+        """It hands the text on; nothing writes anything."""
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'skip_optimization': True,
@@ -645,12 +684,8 @@ class TestThePresetMustRunTheStep:
         assert response.get_json()['cause'] == 'no_interception_step'
 
     def test_the_pre_check_path_without_a_model_still_runs(
-            self, client, stage1_waved_through, monkeypatch):
+            self, client, checks_waved_through):
         """The refusal is about the model, not about the path."""
-        async def _classifier(**kwargs):
-            return R._ClassifierResult(success=True, final_output=HARMLESS)
-
-        monkeypatch.setattr(R, "execute_stage2_classifier", _classifier)
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'skip_optimization': True,
@@ -715,7 +750,7 @@ def wikipedia_says(monkeypatch):
 
 class TestTheResponseIsTruthful:
     def test_the_dispatched_model_wins_over_the_requested_one(
-            self, client, offers, stage1_waved_through, stubbed_router):
+            self, client, offers, checks_waved_through, stubbed_router):
         """The frontend compares what it asked for against what ran.
 
         Which only says something while the second half is post-dispatch. The
@@ -732,7 +767,7 @@ class TestTheResponseIsTruthful:
         assert response.get_json()['interception_model'] == DISPATCHED
 
     def test_without_a_dispatch_report_the_asked_for_model_stands(
-            self, client, offers, stage1_waved_through, stubbed_router):
+            self, client, offers, checks_waved_through, stubbed_router):
         stubbed_router(dispatched_model=None)
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
@@ -741,7 +776,7 @@ class TestTheResponseIsTruthful:
         assert response.status_code == 200, response.get_data(as_text=True)
         assert response.get_json()['interception_model'] == CHOSEN
 
-    def test_the_lookups_travel_with_the_answer(self, client, stage1_waved_through,
+    def test_the_lookups_travel_with_the_answer(self, client, checks_waved_through,
                                                 monkeypatch):
         """A text resting on retrieved articles is a different kind of text.
 
@@ -752,7 +787,7 @@ class TestTheResponseIsTruthful:
                      {'term': 'Weimar', 'lang': 'en', 'found': False}]
 
         async def _looked_things_up(**kwargs):
-            return R._ClassifierResult(
+            return R._Stage2Answer(
                 success=True, final_output="done",
                 metadata={'wikipedia_lookups': len(looked_up),
                           'wikipedia_terms': looked_up},
@@ -767,7 +802,7 @@ class TestTheResponseIsTruthful:
         assert body['wikipedia_lookups'] == 2
         assert body['wikipedia_terms'] == looked_up
 
-    def test_a_run_without_lookups_says_so(self, client, stage1_waved_through,
+    def test_a_run_without_lookups_says_so(self, client, checks_waved_through,
                                            captured_stage2):
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
@@ -782,7 +817,7 @@ class TestTheResponseIsTruthful:
 
 class TestTheAdaptionKeepsItsModel:
     def test_the_adaption_runs_on_the_platform_model(
-            self, client, offers, stage1_waved_through, stubbed_router, monkeypatch):
+            self, client, offers, checks_waved_through, stubbed_router, monkeypatch):
         """The media adaption runs on the platform's model for every row.
 
         A row whose adaption had also changed would say nothing about the
@@ -813,7 +848,7 @@ class TestTheAdaptionKeepsItsModel:
             "rows stop being comparable.")
 
     def test_the_interception_itself_did_run_on_the_choice(
-            self, client, offers, stage1_waved_through, stubbed_router, monkeypatch):
+            self, client, offers, checks_waved_through, stubbed_router, monkeypatch):
         """The other half of the pair: the choice reaches the step it is for."""
         backend = stubbed_router()
 
@@ -933,7 +968,7 @@ class TestTheEngineNamesTheBranchThatRan:
                                                        monkeypatch):
         engine = engine_module.PromptInterceptionEngine()
 
-        async def _local(prompt, model, debug, unload_model, parameters=None):
+        async def _local(prompt, model, debug, unload_model, parameters=None, loop_once=False):
             return "an intercepted text", model
 
         monkeypatch.setattr(engine, "_call_local_llm", _local)
@@ -956,7 +991,7 @@ class TestTheEngineNamesTheBranchThatRan:
                             lambda: [])
         engine = engine_module.PromptInterceptionEngine()
 
-        async def _local(prompt, model, debug, unload_model, parameters=None):
+        async def _local(prompt, model, debug, unload_model, parameters=None, loop_once=False):
             return "an intercepted text", model
 
         monkeypatch.setattr(engine, "_call_local_llm", _local)
@@ -1041,7 +1076,7 @@ class TestThePresetsOwnModel:
     it, would have gone wherever the request pointed.
     """
 
-    def test_a_bound_preset_is_refused(self, client, offers, stage1_waved_through,
+    def test_a_bound_preset_is_refused(self, client, offers, checks_waved_through,
                                        monkeypatch):
         R.init_schema_engine()
         base = R.pipeline_executor.config_loader.get_config(SCHEMA)
@@ -1056,10 +1091,10 @@ class TestThePresetsOwnModel:
         assert "binds its own model" in message
         assert SCHEMA in message
         assert response.get_json()['cause'] == 'preset_binds_model'
-        assert stage1_waved_through == [], "Stage 1 ran for a request that was refused"
+        assert checks_waved_through == [], "a check ran for a request that was refused"
 
     def test_a_preset_of_another_stage_is_refused(self, client, offers,
-                                                  stage1_waved_through, monkeypatch):
+                                                  checks_waved_through, monkeypatch):
         R.init_schema_engine()
         base = R.pipeline_executor.config_loader.get_config(SCHEMA)
         elsewhere = replace(base, meta={**(base.meta or {}), 'stage': 'pre_interception'})
@@ -1073,7 +1108,7 @@ class TestThePresetsOwnModel:
         assert response.get_json()['cause'] == 'not_interception_preset'
 
     def test_a_preset_that_says_nothing_about_its_stage_still_passes(
-            self, client, offers, stage1_waved_through, captured_stage2, monkeypatch):
+            self, client, offers, checks_waved_through, captured_stage2, monkeypatch):
         """Four shipped presets name no stage. Silence is not another stage."""
         R.init_schema_engine()
         base = R.pipeline_executor.config_loader.get_config(SCHEMA)
@@ -1087,7 +1122,7 @@ class TestThePresetsOwnModel:
         assert response.status_code == 200, response.get_data(as_text=True)
 
     def test_the_shipped_guard_preset_is_refused_through_the_resolver(
-            self, client, offers, stage1_waved_through):
+            self, client, offers, checks_waved_through):
         """Not a fabricated object: the file, through the route's own resolver."""
         R.init_schema_engine()
         guard = R.pipeline_executor.config_loader.get_config(GUARD_SCHEMA)
@@ -1102,14 +1137,14 @@ class TestThePresetsOwnModel:
         assert GUARD_SCHEMA in message
         assert "binds its own model" in message
         assert response.get_json()['cause'] == 'preset_binds_model'
-        assert stage1_waved_through == [], "Stage 1 ran for a request that was refused"
+        assert checks_waved_through == [], "a check ran for a request that was refused"
 
 
 # ---------------------------------------- a run that writes no interception
 
 class TestTheRunHasToWriteSomething:
     def test_a_pipeline_that_skips_stage_2_is_refused(self, client, offers,
-                                                      stage1_waved_through, monkeypatch):
+                                                      checks_waved_through, monkeypatch):
         """The flag is the pipeline's; the value that decides is the effective one."""
         R.init_schema_engine()
         base = R.pipeline_executor.config_loader.get_config(SCHEMA)
@@ -1117,7 +1152,7 @@ class TestTheRunHasToWriteSomething:
         assert R.pipeline_executor.config_loader.get_pipeline(SKIP_STAGE2_PIPELINE), \
             f"the '{SKIP_STAGE2_PIPELINE}' pipeline is not loadable"
         monkeypatch.setattr(R, "_resolve_interception_config", lambda name: skipping)
-        monkeypatch.setattr(R, "resolve_safety_level", lambda: "open")
+        monkeypatch.setattr(R, "resolve_safety_level", lambda: "adult")
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'interception_model': CHOSEN,
@@ -1127,7 +1162,7 @@ class TestTheRunHasToWriteSomething:
         assert response.get_json()['cause'] == 'no_interception_step'
 
     def test_the_same_pipeline_runs_the_step_for_kids(self, client, offers,
-                                                      stage1_waved_through,
+                                                      checks_waved_through,
                                                       captured_stage2, monkeypatch):
         """Kids and youth override the flag, and then the step DOES run.
 
@@ -1147,7 +1182,7 @@ class TestTheRunHasToWriteSomething:
         assert captured_stage2.get('interception_model') == CHOSEN
 
     def test_a_preset_that_may_hand_the_input_back_is_not_refused(
-            self, client, offers, stage1_waved_through, captured_stage2):
+            self, client, offers, checks_waved_through, captured_stage2):
         """"Your Call!" is where the comparison has the most to show.
 
         Whether the prompt comes back unchanged is decided by what the model
@@ -1167,7 +1202,7 @@ class TestTheRunHasToWriteSomething:
         assert captured_stage2.get('interception_model') == CHOSEN
 
     def test_the_same_preset_with_a_context_is_an_interception(
-            self, client, offers, stage1_waved_through, captured_stage2):
+            self, client, offers, checks_waved_through, captured_stage2):
         """A context in the request is something to write with, so it passes."""
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': PASSTHROUGH_SCHEMA, 'input_text': HARMLESS,
@@ -1183,7 +1218,7 @@ class TestTheRunHasToWriteSomething:
 
 class TestAChunkTemplateThatWouldNotLoad:
     def test_a_missing_template_is_a_state_of_this_installation(
-            self, client, offers, stage1_waved_through, monkeypatch):
+            self, client, offers, checks_waved_through, monkeypatch):
         """Skipped, it read as a preset that runs no interception step.
 
         Which is said about the preset -- and the preset is whole; a file is
@@ -1206,7 +1241,7 @@ class TestAChunkTemplateThatWouldNotLoad:
         assert MISSING_CHUNK in message, "the answer names the template it wanted"
         assert "could not be loaded" in message
         assert response.get_json()['cause'] == 'chunk_template_missing'
-        assert stage1_waved_through == [], "Stage 1 ran for a request that was refused"
+        assert checks_waved_through == [], "a check ran for a request that was refused"
 
 
 # --------------------------------- every way of being refused, one word each
@@ -1267,7 +1302,7 @@ def _cause_no_interception_step_pipeline(monkeypatch):
     base = R.pipeline_executor.config_loader.get_config(SCHEMA)
     skipping = replace(base, pipeline_name=SKIP_STAGE2_PIPELINE, chunks=['manipulate'])
     monkeypatch.setattr(R, "_resolve_interception_config", lambda name: skipping)
-    monkeypatch.setattr(R, "resolve_safety_level", lambda: "open")
+    monkeypatch.setattr(R, "resolve_safety_level", lambda: "adult")
     return {'interception_model': CHOSEN}
 
 
@@ -1334,7 +1369,7 @@ class TestEveryRefusalNamesItsCause:
         "expected_cause,expected_status,setup", REFUSAL_PATHS,
         ids=[f.__name__[len('_cause_'):] for _c, _s, f in REFUSAL_PATHS])
     def test_the_answer_carries_a_known_cause(
-            self, client, monkeypatch, stage1_waved_through,
+            self, client, monkeypatch, checks_waved_through,
             expected_cause, expected_status, setup):
         payload = setup(monkeypatch)
         response = client.post('/api/schema/pipeline/stage2', json={
@@ -1347,7 +1382,7 @@ class TestEveryRefusalNamesItsCause:
             f"the answer named {body.get('cause')!r}, which nothing can read"
         assert body['cause'] == expected_cause
         assert body['error'], "the sentence stands beside the cause, not instead of it"
-        assert stage1_waved_through == [], "Stage 1 ran for a request that was refused"
+        assert checks_waved_through == [], "a check ran for a request that was refused"
 
     def test_the_list_of_causes_is_the_list_of_paths(self):
         """Both directions: no word without a path, no path without a word.
@@ -1364,25 +1399,37 @@ class TestEveryRefusalNamesItsCause:
 
 class TestTheQueue:
     def test_the_stage_2_call_is_held_in_the_queue(self, client, offers,
-                                                   stage1_waved_through, monkeypatch):
-        """Every other entry point to a Stage-2 model call queues; so does this."""
+                                                   checks_waved_through, monkeypatch):
+        """Every other entry point to a Stage-2 model call queues; so does
+        this, and so do the two checks around it, each in a slot of its own."""
         gate = _CountingGate()
         held = []
 
+        def _intake(fields, *, level):
+            held.append(("intake", gate.depth))
+            return Verdict(True, CHECKPOINT_INTAKE, level)
+
+        def _result(text, *, level, field="text"):
+            held.append(("result", gate.depth))
+            return Verdict(True, CHECKPOINT_RESULT, level, field)
+
         async def _capture(**kwargs):
-            held.append(gate.depth)
-            return R._ClassifierResult(success=True, final_output="done")
+            held.append(("stage2", gate.depth))
+            return R._Stage2Answer(success=True, final_output="done")
 
         monkeypatch.setattr(R, "llm_queue_semaphore", gate)
+        monkeypatch.setattr(R, "check_intake_texts", _intake)
+        monkeypatch.setattr(R, "check_result_text", _result)
         monkeypatch.setattr(R, "execute_stage2_with_optimization", _capture)
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': SCHEMA, 'input_text': HARMLESS,
             'interception_model': CHOSEN,
         })
         assert response.status_code == 200, response.get_data(as_text=True)
-        assert held == [1], "the Stage-2 call ran outside the queue"
-        assert gate.entered == 1
-        assert gate.max_depth == 1, "the queue was entered twice in one request"
+        assert held == [("intake", 1), ("stage2", 1), ("result", 1)], \
+            "a model call of this request ran outside the queue"
+        assert gate.entered == 3
+        assert gate.max_depth == 1, "the queue was entered twice at once in one request"
         assert gate.depth == 0, "the queue was not released"
 
 
@@ -1390,7 +1437,7 @@ class TestTheQueue:
 
 class TestTheLookupsAreRecorded:
     def test_a_run_through_the_executor_reports_what_it_looked_up(
-            self, client, stage1_waved_through, stubbed_router, wikipedia_says):
+            self, client, checks_waved_through, stubbed_router, wikipedia_says):
         """Not a mocked result handed to the endpoint: the executor's own record.
 
         The model emits markers, the lookup runs, and the second pass writes with
@@ -1448,7 +1495,7 @@ class TestTheLookupsAreRecorded:
         try:
             result = asyncio.run(executor._execute_recursive_pipeline_steps(
                 SCHEMA, [PipelineStep(step_id='loop', chunk_name='manipulate')],
-                context, resolved_config=recursive, safety_level='open',
+                context, resolved_config=recursive, safety_level='adult',
             ))
         finally:
             executor._execute_single_step = original
@@ -1458,7 +1505,7 @@ class TestTheLookupsAreRecorded:
         assert result.metadata['wikipedia_lookups'] == 2
 
     def test_one_term_in_two_languages_is_two_entries(
-            self, client, stage1_waved_through, stubbed_router, wikipedia_says):
+            self, client, checks_waved_through, stubbed_router, wikipedia_says):
         """Two asks, two HTTP lookups -- and, recorded from the results, one entry.
 
         lookup() lowercases the code and puts its fallback in place of one it
@@ -1498,7 +1545,7 @@ class TestTheLookupsAreRecorded:
         assert body['wikipedia_lookups'] == 2
 
     def test_the_same_term_written_twice_is_one_entry(
-            self, client, stage1_waved_through, stubbed_router, wikipedia_says):
+            self, client, checks_waved_through, stubbed_router, wikipedia_says):
         """One ask: the second marker is the first one again, in other letters.
 
         The record and the fetch normalise the pair the same way, so what the
@@ -1528,7 +1575,7 @@ class TestTheLookupsAreRecorded:
         assert body['wikipedia_lookups'] == 1
 
     def test_a_lookup_that_came_back_with_nothing_says_so(
-            self, client, stage1_waved_through, stubbed_router, wikipedia_says):
+            self, client, checks_waved_through, stubbed_router, wikipedia_says):
         """An ask that found no article is still an ask, and it is marked."""
         from my_app.services.wikipedia_service import WikipediaResult
 
@@ -1549,7 +1596,7 @@ class TestTheLookupsAreRecorded:
         ]
 
     def test_the_model_cannot_write_the_record_of_its_own_research(
-            self, client, offers, stage1_waved_through, stubbed_router):
+            self, client, offers, checks_waved_through, stubbed_router):
         """Every step's output is JSON-parsed into custom_placeholders, key by key.
 
         With the record living in that dict, a model answering with the key
@@ -1573,7 +1620,7 @@ class TestTheLookupsAreRecorded:
         assert body['interception_result'] == HARMLESS
 
     def test_the_bookkeeping_does_not_travel_into_the_next_request(
-            self, client, stage1_waved_through, stubbed_router, wikipedia_says):
+            self, client, checks_waved_through, stubbed_router, wikipedia_says):
         """Every custom placeholder is injected into every chunk's parameters.
 
         So a record kept there was sent to the model along with the text, in the
@@ -1611,7 +1658,7 @@ class TestThePassthroughIsSaidInTheAnswer:
     """
 
     def test_a_run_that_looked_nothing_up_hands_the_input_back(
-            self, client, offers, stage1_waved_through, stubbed_router):
+            self, client, offers, checks_waved_through, stubbed_router):
         stubbed_router(dispatched_model=DISPATCHED)
         response = client.post('/api/schema/pipeline/stage2', json={
             'schema': PASSTHROUGH_SCHEMA, 'input_text': HARMLESS,
@@ -1626,7 +1673,7 @@ class TestThePassthroughIsSaidInTheAnswer:
             "the model that was asked is named -- beside a text it did not write")
 
     def test_a_run_that_looked_something_up_keeps_what_it_wrote(
-            self, client, offers, stage1_waved_through, stubbed_router,
+            self, client, offers, checks_waved_through, stubbed_router,
             wikipedia_says):
         """The same preset, the same request, and a model that went looking.
 
@@ -1655,7 +1702,7 @@ class TestThePassthroughIsSaidInTheAnswer:
         assert body['wikipedia_lookups'] == 1
 
     def test_with_an_output_config_the_answer_carries_input_and_adaption(
-            self, client, offers, stage1_waved_through, stubbed_router, monkeypatch):
+            self, client, offers, checks_waved_through, stubbed_router, monkeypatch):
         """passthrough is the INTERCEPTION step's answer, not the whole run's.
 
         Where an output_config is named, the adaption runs on what the
@@ -1686,7 +1733,7 @@ class TestThePassthroughIsSaidInTheAnswer:
             "stage2_result is the adaption here, not the input")
 
     def test_a_preset_that_owes_nothing_says_so_too(
-            self, client, offers, stage1_waved_through, stubbed_router):
+            self, client, offers, checks_waved_through, stubbed_router):
         """The field stands on every answer, not only where it is true."""
         stubbed_router()
         response = client.post('/api/schema/pipeline/stage2', json={

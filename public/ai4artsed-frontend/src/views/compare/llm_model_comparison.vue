@@ -109,6 +109,7 @@ import { useDeviceId } from '@/composables/useDeviceId'
 import { useChatModels } from '@/composables/useChatModels'
 import { useModelInstall } from '@/composables/useModelInstall'
 import { chatTurn, ChatStreamError, ChatNoReplyError } from '@/lib/chatTurn'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { SseHttpError } from '@/lib/sseStream'
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import GenerationButton from '@/components/GenerationButton.vue'
@@ -258,6 +259,8 @@ async function callChatWithModel(
     })
     return data.reply || null
   } catch (e) {
+    // A refusal of the platform's checks is said as one, by the round.
+    if (refusalKeyOf(e)) throw e
     // Three endings that this function read as "no reply" while it called the
     // blocking endpoint, and the column showed as such: a turn the server
     // itself ended (a non-2xx JSON body then, an event in the stream now), a
@@ -291,6 +294,9 @@ async function sendToAll() {
 
   colLoading.value = [true, true, true]
 
+  // The columns are sent the same message, and a refusal of it is explained in
+  // the safety window once per round, not once per column.
+  let reported = false
   const promises = store.columns.map(async (col, idx) => {
     try {
       const history = col.messages
@@ -298,8 +304,13 @@ async function sendToAll() {
         .map(m => ({ role: m.role, content: m.content }))
       const reply = await callChatWithModel(text, history, col.modelId)
       store.addMessage(idx, 'assistant', reply || t('compare.shared.noResponse'))
-    } catch {
-      store.addMessage(idx, 'assistant', t('compare.shared.error'))
+    } catch (e) {
+      const refusal = refusalKeyOf(e)
+      if (refusal && !reported) {
+        reported = true
+        reportRefusal(e)
+      }
+      store.addMessage(idx, 'assistant', refusal ? t(refusal) : t('compare.shared.error'))
     } finally {
       colLoading.value[idx] = false
       scrollColumn(idx)

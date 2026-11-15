@@ -13,6 +13,7 @@ import type { CanvasWorkflow, StageType, RandomPromptPreset, PhotoFilmType, Mode
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext, FocusHint } from '@/composables/usePageContext'
 import { useFavoritesStore } from '@/stores/favorites'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 import { useDeviceId } from '@/composables/useDeviceId'
 import {
   CANVAS_FILE_ACCEPT,
@@ -33,7 +34,8 @@ import {
 } from '@/lib/canvasPresets'
 import { lensContext } from '@/lib/lensContext'
 import { useChatModels } from '@/composables/useChatModels'
-import { lineupMembers, registerLoaded } from '@/composables/useModelRegister'
+import { lineupMembers, fillableLineup, registerLoaded } from '@/composables/useModelRegister'
+import { onSettingsApplied } from '@/lib/settingsApplied'
 
 const { t, locale } = useI18n()
 const canvasStore = useCanvasStore()
@@ -71,6 +73,14 @@ onMounted(async () => {
   // Load available configs
   configsLoaded = canvasStore.loadAllConfigs()
   await configsLoaded
+})
+
+// The settings are an overlay (App.vue): the board stands while they change
+// which models it may offer, and its lists, read when it was entered, would go
+// on offering the provider from before, and sending to it.
+const offSettingsApplied = onSettingsApplied(() => {
+  void canvasStore.loadLLMModels(true)
+  void canvasStore.loadVisionModels()
 })
 
 // Auto-expand drawer when collector output arrives
@@ -367,19 +377,35 @@ function handlePickEmpty() {
   canvasStore.newWorkflow()
 }
 
-// What a lineup of the Latent Lab reaches here is read off the chat list, as the
-// Language Model Comparison reads it.
-const { models: chatModels, refresh: refreshChatModels } = useChatModels()
+// What a lineup of the Latent Lab reaches here is read off what the settings
+// choose (useChatModels.chosenModels), as the Latent Lab's lineups read it; a
+// lineup that reaches nothing here gives way to the first that does
+// (`fillableLineup`), as Interception across Models opens.
+const { chosenModels: chatModels, refresh: refreshChatModels } = useChatModels()
 
 async function handlePickPreset(preset: CanvasPreset) {
   const pick = ++pickCount
   let workflow: CanvasWorkflow
   try {
-    await Promise.all([configsLoaded, refreshChatModels(), registerLoaded()])
+    // The board's own lists are asked at the same moment as the lineup's: a
+    // member is kept only where the board offers it (`offered`), and two lists
+    // from either side of a provider switch name two providers' ids. Asked
+    // here, too, so a request from before that never answers holds no pick.
+    const [, , boardListArrived] = await Promise.all([
+      configsLoaded, refreshChatModels(), canvasStore.loadLLMModels(true), registerLoaded(),
+      canvasStore.loadVisionModels(),
+    ])
+    // Without the board's list of this moment (or a newer one) no member
+    // could be kept, and the preset would open on blank models without a word.
+    if (!boardListArrived) throw new Error("the board's list of language models did not arrive")
+    // One list for every node, as the board's lists are: one that answers
+    // while the preset is being opened (an install completing asks anew)
+    // would fill half its places from another list.
+    const offeredNow = chatModels.value
     workflow = await openPreset(preset, {
       llmModels: canvasStore.llmModels,
       visionModels: canvasStore.visionModels,
-      lineupMembers: (id) => lineupMembers(id, chatModels.value),
+      lineupMembers: (id) => lineupMembers(fillableLineup(id, offeredNow), offeredNow),
       lensContext: (id) => lensContext(id, locale.value),
       t: (key, args) => (args ? t(key, args) : t(key)),
       locale: locale.value,
@@ -484,7 +510,14 @@ async function handleKeepWorkflow() {
   if (keeping.value) return
   const kept = canvasStore.keptBoard
   if (isKept.value && kept) {
-    await favoritesStore.removeFavorite(kept.runId, deviceId)
+    // Held like keeping: a second press while the removal is out kept the
+    // board as a new run, and both stood where the removal failed.
+    keeping.value = true
+    try {
+      await favoritesStore.removeFavorite(kept.runId, deviceId)
+    } finally {
+      keeping.value = false
+    }
     return
   }
   // A kept workflow under a preset's name would stand in the favourites beside
@@ -507,6 +540,14 @@ async function handleKeepWorkflow() {
       body: JSON.stringify({ workflow, device_id: deviceId }),
     })
     const body = await answer.json().catch(() => ({}))
+    if (body.safety_block) {
+      // Refused at the intake: the safety window says why, in the reader's
+      // language, and the board is not kept.
+      useSafetyEventStore().reportBlock(body.safety_block, {
+        operational: body.safety_block.reason_key === 'unavailable',
+      })
+      return
+    }
     if (!answer.ok || !body.run_id) {
       throw new Error(body.error || `${answer.status} ${answer.statusText}`)
     }
@@ -559,7 +600,7 @@ watch(
       return
     }
     const favorite = favoritesStore.favorites.find(f => f.run_id === restoreData.run_id)
-    const own = !!favorite && (!favorite.device_id || favorite.device_id === deviceId)
+    const own = favorite?.may_change === true
     canvasStore.setKeptBoard(
       favorite?.media_type === 'canvas' && own ? { runId: favorite.run_id, state: boardState() } : null
     )
@@ -615,6 +656,7 @@ watch(pageContext, (ctx) => {
 }, { immediate: true, deep: true })
 
 onUnmounted(() => {
+  offSettingsApplied()
   pageContextStore.clearContext()
   if (highlightTimer) clearTimeout(highlightTimer)
 })

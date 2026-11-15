@@ -11,7 +11,8 @@
     "es": "Técnico",
     "he": "טכני",
     "ar": "تقني",
-    "bg": "Технически"
+    "bg": "Технически",
+    "zh-hant": "技術性"
   },
   "description": {
     "en": "Translates everything into cold engineering language. Living beings become mechanical assemblies, emotions become operational states, and poetry becomes technical specifications.",
@@ -22,6 +23,7 @@
     "he": "מתרגם הכל לשפת הנדסה קרה. יצורים חיים הופכים למכלולים מכניים, רגשות הופכים למצבי הפעלה ושירה הופכת למפרטים טכניים.",
     "ar": "يترجم كل شيء إلى لغة هندسية باردة. تصبح الكائنات الحية تجميعات ميكانيكية، وتتحول العواطف إلى حالات تشغيلية، وتصبح الشعرية مواصفات تقنية.",
     "bg": "Превежда всичко на студен инженерен език. Живите същества стават механични сборки, емоциите — оперативни състояния, а поезията — технически спецификации.",
+    "zh-hant": "把一切轉譯成冰冷的工程語言。生物變成機械元件，情緒變成運作狀態，詩變成技術規格。",
     "tr": "Her şeyi soğuk mühendislik diline çevirir. Canlı varlıklar mekanik montajlara, duygular işletim durumlarına ve şiir teknik özelliklere dönüşür.",
     "ko": "모든 것을 차가운 공학 언어로 번역합니다. 생명체는 기계 조립체가 되고, 감정은 작동 상태가 되며, 시는 기술 사양이 됩니다."
   },
@@ -31,6 +33,7 @@
     "he": "טרנספורמציות יצירתיות",
     "ar": "التحولات الإبداعية",
     "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
     "tr": "Yaratıcı Dönüşümler",
     "ko": "창의적 변환",
     "uk": "Творчі перетворення",

@@ -12,7 +12,7 @@ the move to ComfyUI it posted to the GPU service's /api/heartmula/*.
 
 import logging
 import random
-from typing import Optional
+from typing import Optional, Tuple
 
 from my_app.services.gpu_lease_client import GpuBusyError, BackendGenerationError
 from my_app.utils.response_reason import reason_line
@@ -89,8 +89,9 @@ class HeartMuLaClient:
         max_audio_length_ms: int = 240000,
         seed: Optional[int] = None,
         output_format: str = "mp3",
-    ) -> bytes:
-        """The song as bytes in `output_format`. A run that ended without
+    ) -> Tuple[bytes, str]:
+        """(The song as bytes in `output_format`, the model the run loaded,
+        which the chunk reports as `model_used`). A run that ended without
         one raises BackendGenerationError with the node's own sentence, and
         a card the gate holds for someone else raises GpuBusyError, as the
         service's answers did (the router reads "out of memory" and "device
@@ -118,8 +119,8 @@ class HeartMuLaClient:
             "preload_only": False,
         }
         try:
-            _out, files = LLMClient.run_node_files(NODE_CLASS, inputs,
-                                                   workload=CURRENT_OUTPUT_CONFIG.get() or None)
+            _out, files, model_used = LLMClient.run_node_files(
+                NODE_CLASS, inputs, workload=CURRENT_OUTPUT_CONFIG.get() or None)
         except GpuBusyError:
             raise
         except Exception as e:
@@ -131,7 +132,7 @@ class HeartMuLaClient:
         if sound is None:
             logger.error(f"[HEARTMULA-CLIENT] the run ended without a song ({folder})")
             raise BackendGenerationError(f"the run of {NODE_CLASS} ({folder}) ended without a song")
-        return sound.data
+        return sound.data, model_used
 
     async def generate_music(
         self,
@@ -143,9 +144,9 @@ class HeartMuLaClient:
         max_audio_length_ms: int = 240000,
         seed: Optional[int] = None,
         output_format: str = "mp3"
-    ) -> Optional[bytes]:
-        """Generate music. Returns audio bytes; a failed run raises, see
-        generate_music_sync."""
+    ) -> Tuple[bytes, str]:
+        """Generate music. Returns (audio bytes, the model the run loaded); a
+        failed run raises, see generate_music_sync."""
         import asyncio
         return await asyncio.to_thread(
             self.generate_music_sync, lyrics, tags, temperature, topk, cfg_scale,

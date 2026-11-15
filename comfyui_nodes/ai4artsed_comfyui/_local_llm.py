@@ -574,6 +574,27 @@ class _Finite(LogitsProcessor):
         return scores
 
 
+class _Presence(LogitsProcessor):
+    """The presence penalty of a maker's sampling set (_comfy_llm.
+    maker_sampling) on the transformers way, which has none of its own: a
+    token the answer has written at least once loses `penalty` from its
+    score, as ComfyUI applies it (comfy/text_encoders/llama.py,
+    apply_penalty). The prompt's tokens are not counted; ComfyUI's mask
+    starts empty as well."""
+
+    def __init__(self, prompt_len: int, penalty: float):
+        self.prompt_len = prompt_len
+        self.penalty = penalty
+
+    def __call__(self, input_ids, scores):
+        written = input_ids[:, self.prompt_len:]
+        if written.shape[1] == 0:
+            return scores
+        seen = torch.zeros_like(scores, dtype=torch.bool)
+        seen.scatter_(1, written.to(scores.device), True)
+        return torch.where(seen, scores - self.penalty, scores)
+
+
 class _Spoken:
     """The pieces of an answer outside its think block, for the stream.
 
@@ -585,27 +606,57 @@ class _Spoken:
     templates of Qwen 3.5 and 3.8 end the prompt with the opener, so the
     model's own text begins inside the block and carries only the closer.
     The whole answer is partitioned the same way at the end (generate).
+    What the last piece held back stands in `held`, for the repetition
+    guard, which counts the block apart from the answer.
+
+    Gemma 4 marks its block with other tags: it opens it itself with
+    <|channel>, the channel's name ('thought') on the same line, and closes
+    it with <channel|>; both are added tokens too. Its template never opens
+    the block in the prompt, so only the first pair is ever read off a
+    prompt's tail (`opened`). Inside the text both pairs are walked, and a
+    block ends at the closer of the opener that began it.
     """
     OPEN, CLOSE = "<think>", "</think>"
+    PAIRS = ((OPEN, CLOSE), ("<|channel>", "<channel|>"))
 
     def __init__(self, in_think: bool = False):
         self.in_think = in_think
+        self.close = self.CLOSE
+        self.held = ""
 
     def feed(self, piece: str) -> str:
         out = ""
+        self.held = ""
         while piece:
             if self.in_think:
-                _head, tag, piece = piece.partition(self.CLOSE)
+                head, tag, piece = piece.partition(self.close)
+                self.held += head
                 if not tag:
                     return out
                 self.in_think = False
             else:
-                head, tag, piece = piece.partition(self.OPEN)
+                head, close, piece = _open(piece)
                 out += head
-                if not tag:
+                if close is None:
                     return out
-                self.in_think = True
+                self.in_think, self.close = True, close
         return out
+
+
+# The name Gemma 4 gives its thinking channel, on the opener's line. It names
+# the block and is no part of what was thought.
+_GEMMA_CHANNEL = "thought\n"
+
+
+def _open(text: str) -> Tuple[str, Optional[str], str]:
+    """`text` cut at its earliest opener of either pair: what stands before
+    it, the closer that ends the block it opens (None where no opener stands
+    in it), and what follows the opener."""
+    found = [(text.find(o), o, c) for o, c in _Spoken.PAIRS if o in text]
+    if not found:
+        return text, None, ""
+    at, opener, close = min(found)
+    return text[:at], close, text[at + len(opener):]
 
 
 def _partition(text: str, opened: bool) -> Tuple[str, Optional[str]]:
@@ -618,18 +669,18 @@ def _partition(text: str, opened: bool) -> Tuple[str, Optional[str]]:
     closed is thinking on both sides, and a closer without an opener is
     ordinary text on both sides."""
     spoken, thought = "", ""
-    in_think, rest = opened, text
+    in_think, close, rest = opened, _Spoken.CLOSE, text
     while rest:
         if in_think:
-            head, tag, rest = rest.partition(_Spoken.CLOSE)
-            thought += head
+            head, tag, rest = rest.partition(close)
+            thought += head if close == _Spoken.CLOSE else head.removeprefix(_GEMMA_CHANNEL)
             if not tag:
                 break
             in_think = False
         else:
-            head, tag, rest = rest.partition(_Spoken.OPEN)
+            head, close, rest = _open(rest)
             spoken += head
-            if not tag:
+            if close is None:
                 break
             in_think = True
     return spoken.strip(), (thought.strip() or None)
@@ -667,14 +718,19 @@ def generate(dir_name: str,
              seed: Optional[int] = None,
              context_tokens: int = DEFAULT_CONTEXT_TOKENS,
              on_token: Optional[Callable[[str], None]] = None,
-             enable_thinking: bool = True) -> Dict[str, Any]:
+             enable_thinking: bool = True,
+             weights_format: Optional[str] = None) -> Dict[str, Any]:
     """One answer of a local model, on the card under ComfyUI's management.
 
     Returns {"content", "thinking", "finish_reason", "prompt_tokens",
-    "completion_tokens"}. finish_reason is "stop" when the model came to its
-    own end, "length" when the answer reached the context window, "repetition"
-    when it began to loop and was stopped for it. What the model wrote up to
-    that point stands. When ComfyUI is told to interrupt, the generation stops
+    "completion_tokens", "once"}. finish_reason is "stop" when the model came
+    to its own end, "length" when the answer reached the context window,
+    "repetition" when it began to loop and was stopped for it. What the model
+    wrote up to that point stands in "content"; "once" then holds the answer
+    outside the think block with what repeated in it standing in it once
+    (RepetitionGuard.once), for a caller that takes a stopped answer. It is ""
+    for an answer the guard did not stop, and for a raw prompt, whose text is
+    never cut into answer and block. When ComfyUI is told to interrupt, the generation stops
     at the next token and this raises the executor's own interruption, which
     it reports as execution_interrupted.
 
@@ -706,6 +762,20 @@ def generate(dir_name: str,
     platform's safety check and its translations were written against. One
     of the two, never both. A raw completion is handed back whole: no chat
     template opened a think block, so none is cut off.
+
+    A model whose row in the weights table names a file in ComfyUI's format
+    ("comfy_weights"), with that file installed, answers on ComfyUI's own
+    implementation of it (_comfy_llm); every other model answers through
+    transformers, below. The call and the answer are the same on both ways.
+    `weights_format` picks one of the formats the table names for the model
+    (the 4-bit file beside the 8-bit one); without it the table's default
+    answers.
+
+    A model whose row carries its maker's sampling ("sampling",
+    _comfy_llm.maker_sampling) samples a chat with the think block with it
+    on either way; `temperature` and `repetition_penalty` are then not
+    used, and the log says so. A chat without the think block, a raw prompt
+    and a call at temperature 0 keep them.
     """
     from transformers import LogitsProcessorList, StoppingCriteriaList, TextIteratorStreamer
 
@@ -734,6 +804,26 @@ def generate(dir_name: str,
             raise ValueError("a raw prompt takes no pictures; use messages")
         if getattr(_read_config(weights_path(dir_name)), "vision_config", None) is None:
             raise ValueError(f"{dir_name} reads no pictures, and {len(pils)} were attached")
+    from . import _comfy_llm
+    # The maker's sampling for a chat with the think block, where the
+    # model's row in the table carries it: it replaces the caller's
+    # temperature and repetition penalty. A chat without the block, a raw
+    # prompt and a call at temperature 0 (greedy, no draw) keep the caller's.
+    maker = None
+    if prompt is None and enable_thinking and temperature > 0:
+        maker = _comfy_llm.maker_sampling(dir_name)
+    if maker is not None:
+        sent = "none" if repetition_penalty is None else f"{float(repetition_penalty):g}"
+        logger.info(f"[AI4ArtsEd LLM] {dir_name} samples with its maker's set for the thinking mode ("
+                    + ", ".join(f"{key} {value:g}" for key, value in maker.items())
+                    + f"); the caller sent temperature {float(temperature):g}, "
+                    f"repetition penalty {sent}")
+        temperature, repetition_penalty = maker["temperature"], maker["repetition_penalty"]
+    comfy_file = _comfy_llm.weights_file(dir_name, weights_format)
+    if comfy_file is not None:
+        return _comfy_llm.generate(dir_name, comfy_file, messages, pils, prompt,
+                                   temperature, repetition_penalty, seed,
+                                   int(context_tokens), on_token, bool(enable_thinking), maker)
     built = get_built(dir_name)
 
     # Held for the length of the call: two generations on the same module
@@ -785,7 +875,10 @@ def generate(dir_name: str,
             max_new_tokens=max_new,
             streamer=streamer,
             stopping_criteria=StoppingCriteriaList([stop]),
-            logits_processor=LogitsProcessorList([_Finite(dir_name, prompt_len)]),
+            logits_processor=LogitsProcessorList(
+                [_Finite(dir_name, prompt_len)]
+                + ([_Presence(prompt_len, maker["presence_penalty"])]
+                   if maker is not None and maker["presence_penalty"] else [])),
             do_sample=temperature > 0,
             pad_token_id=built.tokenizer.pad_token_id if built.tokenizer.pad_token_id is not None
             else built.tokenizer.eos_token_id,
@@ -797,6 +890,12 @@ def generate(dir_name: str,
             gen_kwargs["temperature"] = float(temperature)
         if repetition_penalty is not None:
             gen_kwargs["repetition_penalty"] = float(repetition_penalty)
+        if maker is not None:
+            gen_kwargs.update(top_k=int(maker["top_k"]), top_p=maker["top_p"])
+            if maker["min_p"] > 0:
+                # transformers adds its min-p filter for any value it is
+                # given, 0 included, and 0 filters nothing.
+                gen_kwargs["min_p"] = maker["min_p"]
 
         failure: List[BaseException] = []
 
@@ -814,24 +913,32 @@ def generate(dir_name: str,
         guard = RepetitionGuard()
         spoken = _Spoken(in_think=opened)
         pieces: List[str] = []
+        # The answer up to the piece that made the guard fire, for `once`:
+        # what the streamer still delivers after the stop is not part of it.
+        answered: List[str] = []
         for piece in streamer:
             if not piece:
                 continue
             pieces.append(piece)
+            # The answer outside its think block, and in spoken.held what the
+            # block took of this piece; a raw completion has no block.
+            answer = spoken.feed(piece) if prompt is None else piece
             if on_token is not None:
                 # The stream carries the answer outside its think block, and
                 # never the end-of-turn token, which the streamer decodes as
                 # text (skip_special_tokens=False keeps the think tags, and
                 # with them everything else that is special).
-                shown = spoken.feed(piece) if prompt is None else piece
+                shown = answer
                 for eos in built.eos_texts:
                     if eos:
                         shown = shown.replace(eos, "")
                 if shown:
                     on_token(shown)
-            if guard.feed(piece):
-                stop.repetition.set()
-                logger.info(f"[AI4ArtsEd LLM] {dir_name} repeated {guard.describe()} and was stopped")
+            if not stop.repetition.is_set():
+                answered.append(answer)
+                if guard.feed_split(piece, answer, spoken.held):
+                    stop.repetition.set()
+                    logger.info(f"[AI4ArtsEd LLM] {dir_name} repeated {guard.describe()} and was stopped")
         worker.join()
         if failure:
             raise failure[0]
@@ -859,4 +966,5 @@ def generate(dir_name: str,
         "finish_reason": finish,
         "prompt_tokens": prompt_len,
         "completion_tokens": stop.generated,
+        "once": guard.once(_strip_eos("".join(answered), built.eos_texts)) if prompt is None else "",
     }

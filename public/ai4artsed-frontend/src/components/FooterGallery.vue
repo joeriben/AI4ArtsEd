@@ -151,10 +151,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useFavoritesStore, type FavoriteItem, type RestoreData } from '@/stores/favorites'
+import { useLabAuthStore } from '@/stores/labAuth'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { asSeed } from '@/composables/useSeedAutomatic'
 import { FAVORITE_DT } from '@/composables/useMaterialIntake'
@@ -177,6 +178,7 @@ import type { CanvasWorkflow } from '@/types/canvas'
 const { t, locale } = useI18n()
 const router = useRouter()
 const favoritesStore = useFavoritesStore()
+const auth = useLabAuthStore()
 const galleryGridRef = ref<HTMLElement | null>(null)
 
 // Computed from store
@@ -632,11 +634,13 @@ async function removeShown() {
 }
 
 /**
- * Whose favourite is this? Mirrors `_may_change` in favorites_routes.py:
- * one without an owner predates per-user favourites and stays removable.
+ * Whose favourite is this? The server says so (`may_change`, from
+ * `_may_change` in favorites_routes.py): a favourite belongs to the account it
+ * was kept under, and one without an owner stays removable. Read off the list
+ * as it stands: a run opened large holds the entry from before the last load.
  */
 function canRemove(favorite: FavoriteItem): boolean {
-  return !favorite.device_id || favorite.device_id === currentDeviceId.value
+  return favoritesStore.isFavorited(favorite.run_id)
 }
 
 async function handleRemove(favorite: FavoriteItem) {
@@ -647,6 +651,33 @@ async function handleRemove(favorite: FavoriteItem) {
 onMounted(() => {
   favoritesStore.loadFavorites(currentDeviceId.value)
 })
+
+/**
+ * A favourite belongs to the account it was kept under (favorites_routes.py,
+ * `_asker`, 2026-11-14). A sign-in or a sign-out changes the account without
+ * reloading the page, and so does the end of a place's sign-in, which the
+ * page learns while the account still stands in the header (stores/labAuth.ts,
+ * `endedPlace`): the strip asks again what is whose.
+ */
+watch(
+  [() => auth.user?.id ?? null, () => auth.endedPlace],
+  () => {
+    favoritesStore.loadFavorites(currentDeviceId.value, true)
+  }
+)
+
+/**
+ * What the strip lists also depends on the course's safety level, which a
+ * leader changes with the course. The account stays the same, and so do its
+ * stars and removals still out: a load asked afresh dropped them, and the
+ * answer showed a star lit whose removal was out.
+ */
+watch(
+  () => auth.activeCourseId,
+  () => {
+    favoritesStore.loadFavorites(currentDeviceId.value)
+  }
+)
 </script>
 
 <style scoped>

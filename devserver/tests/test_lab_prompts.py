@@ -97,6 +97,27 @@ def client(app):
     return app.test_client()
 
 
+@pytest.fixture(autouse=True)
+def the_intake_passes(monkeypatch):
+    """What a perspective is given passes the intake, and what a dry run
+    writes passes the result; their own tests stand at the end of this file.
+    Here every check passes and none asks a model. check_intake stands in
+    where a route calls it and inside check_intake_texts."""
+    from my_app.routes import interception_prompts_routes as IPR
+    from my_app.services import safety_gate as SG
+    from my_app.services.safety_gate import CHECKPOINT_INTAKE, CHECKPOINT_RESULT, Verdict
+
+    def passed(material, *, level, kind, field):
+        return Verdict(True, CHECKPOINT_INTAKE, level, field)
+
+    def written(text, *, level, field="text"):
+        return Verdict(True, CHECKPOINT_RESULT, level, field)
+
+    monkeypatch.setattr(IPR, "check_intake", passed)
+    monkeypatch.setattr(SG, "check_intake", passed)
+    monkeypatch.setattr(IPR, "check_result_text", written)
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -742,24 +763,33 @@ def test_a_course_can_only_offer_what_the_chooser_can_show(client):
 # ---------------------------------------------------------------------------
 # the dry run answers the model's refusal as the block it is
 # ---------------------------------------------------------------------------
-def _preview_with(client, monkeypatch, output, metadata=None):
+def _stage2_answers(monkeypatch, output, metadata=None):
+    """Stage 2 standing in for the dry run: it answers `output`. The list it
+    returns records (style key, sample, level) of every run it is asked for."""
     import types
     from my_app.routes import schema_pipeline_routes as SPR
-    from schemas.engine.instruction_selector import SAFETY_REFUSAL_SENTENCE  # noqa: F401
     monkeypatch.setattr(SPR, "init_schema_engine", lambda: None)
-    monkeypatch.setattr(SPR, "_stage1_check_texts",
-                        lambda texts, level, lang: (True, None, ["stub"], None, {}))
+    asked = []
 
-    async def interception(*a, **kw):
+    async def interception(schema_name, input_text, config, safety_level, **kw):
+        asked.append((schema_name, input_text, safety_level))
         return types.SimpleNamespace(success=True, final_output=output,
                                      metadata=dict(metadata or {}), error=None)
 
     monkeypatch.setattr(SPR, "execute_stage2_interception", interception)
+    return asked
+
+
+def _preview(client, pid, sample="ein Haus am See", **extra):
+    return client.post(f"/api/interception-prompts/{pid}/preview",
+                       json={"sample_input": sample, **extra})
+
+
+def _preview_with(client, monkeypatch, output, metadata=None):
+    _stage2_answers(monkeypatch, output, metadata)
     _make_user(M.Role.educator, "edu_preview")
     _login(client, "edu_preview")
-    pid = _keep(client).get_json()["prompt"]["id"]
-    return client.post(f"/api/interception-prompts/{pid}/preview",
-                       json={"sample_input": "ein Haus am See"})
+    return _preview(client, _keep(client).get_json()["prompt"]["id"])
 
 
 def test_the_preview_answers_the_models_refusal_as_a_block(client, monkeypatch):
@@ -770,7 +800,8 @@ def test_the_preview_answers_the_models_refusal_as_a_block(client, monkeypatch):
     resp = _preview_with(client, monkeypatch, SAFETY_REFUSAL_SENTENCE)
     assert resp.status_code == 403, resp.get_json()
     body = resp.get_json()
-    assert body["blocked_at_stage"] == 2
+    assert body["safety_block"]["checkpoint"] == "refusal"
+    assert body["safety_block"]["reason_key"] == "refusal"
     assert SAFETY_REFUSAL_SENTENCE.rstrip(".") in body["error"]
 
 
@@ -778,3 +809,290 @@ def test_the_preview_hands_a_written_perspective_on(client, monkeypatch):
     resp = _preview_with(client, monkeypatch, "a house by the lake, listed as smells")
     assert resp.status_code == 200, resp.get_json()
     assert resp.get_json()["output"] == "a house by the lake, listed as smells"
+
+
+# ---------------------------------------------------------------------------
+# the intake: what a perspective is given, where it is written and where a
+# run uses it
+# ---------------------------------------------------------------------------
+REFUSED = "refuse-this-text"
+
+
+@pytest.fixture
+def intake(client, monkeypatch):
+    """check_intake standing in, for a person signed in at youth: it records
+    (field, text, level) and refuses a text that carries REFUSED."""
+    from my_app.routes import interception_prompts_routes as IPR
+    from my_app.services import safety_gate as SG
+    from my_app.services.safety_gate import CHECKPOINT_INTAKE, REASON_PERSONAL_DATA, Verdict
+    seen = []
+
+    def check(material, *, level, kind, field):
+        seen.append((field, material, level))
+        if REFUSED in str(material or ""):
+            return Verdict(False, CHECKPOINT_INTAKE, level, field, REASON_PERSONAL_DATA,
+                           "a name")
+        return Verdict(True, CHECKPOINT_INTAKE, level, field)
+
+    monkeypatch.setattr(IPR, "check_intake", check)
+    monkeypatch.setattr(SG, "check_intake", check)
+    monkeypatch.setattr(IPR, "resolve_safety_level", lambda: "youth")
+    _make_user(M.Role.educator, "edu_intake")
+    _login(client, "edu_intake")
+    return seen
+
+
+def _read(seen):
+    """What the intake was handed, by field."""
+    return {field: text for field, text, _level in seen if text is not None}
+
+
+def _kept_ids(client):
+    return [p["id"] for p in client.get("/api/interception-prompts").get_json()["prompts"]]
+
+
+def test_keeping_one_checks_its_name_its_text_and_its_task(client, intake):
+    resp = _keep(client, text="Write it as a list of smells.", name="Smells",
+                 task_instruction="List, do not tell.")
+    assert resp.status_code == 201, resp.get_json()
+    assert _read(intake) == {"name": "Smells", "context_text": "Write it as a list of smells.",
+                             "task_instruction": "List, do not tell."}
+    assert {level for *_, level in intake} == {"youth"}
+
+
+@pytest.mark.parametrize("field", ["name", "context_text", "task_instruction"])
+def test_a_refused_text_keeps_nothing(client, intake, field):
+    body = {"name": "Smells", "context_text": "Write it as smells.", "task_instruction": "List."}
+    body[field] = f"{body[field]} {REFUSED}"
+    resp = _keep(client, text=body["context_text"], name=body["name"],
+                 task_instruction=body["task_instruction"])
+    assert resp.status_code == 403
+    assert resp.get_json()["safety_block"] == {"checkpoint": "intake", "field": field,
+                                               "reason_key": "personal_data",
+                                               "reason": "a name"}
+    assert _kept_ids(client) == []
+
+
+def test_a_text_in_several_languages_is_checked_language_by_language(client, intake):
+    resp = _keep(client, text={"de": "Als Liste.", "en": "As a list."}, name="Two")
+    assert resp.status_code == 201, resp.get_json()
+    assert _read(intake) == {"name": "Two", "context_text[de]": "Als Liste.",
+                             "context_text[en]": "As a list."}
+    resp = _keep(client, text={"de": "Als Liste.", "en": REFUSED}, name="Three")
+    assert resp.status_code == 403
+    assert resp.get_json()["safety_block"]["field"] == "context_text[en]"
+
+
+def test_an_edit_checks_what_it_writes_and_a_refused_one_changes_nothing(client, intake):
+    pid = _keep(client, text="First wording", name="Edited").get_json()["prompt"]["id"]
+    intake.clear()
+    resp = client.put(f"/api/interception-prompts/{pid}", json={"context_text": "Second wording"})
+    assert resp.status_code == 200, resp.get_json()
+    assert _read(intake) == {"context_text": "Second wording"}
+
+    resp = client.put(f"/api/interception-prompts/{pid}",
+                      json={"name": "Renamed", "context_text": REFUSED})
+    assert resp.status_code == 403
+    kept = client.get(f"/api/interception-prompts/{pid}").get_json()["prompt"]
+    assert (kept["name"], kept["context_text"]) == ("Edited", "Second wording")
+    versions = client.get(f"/api/interception-prompts/{pid}/versions").get_json()["versions"]
+    assert [v["context_text"] for v in versions] == ["First wording"]
+
+
+def test_saving_a_preset_checks_what_is_handed_in_and_not_the_presets_own(client, intake):
+    resp = client.post("/api/interception-prompts/from-preset",
+                       json={"preset_name": PRESET, "name": "Reworded",
+                             "context_text": "Only my own words."})
+    assert resp.status_code == 201, resp.get_json()
+    assert _read(intake) == {"name": "Reworded", "context_text": "Only my own words."}
+
+    intake.clear()
+    resp = client.post("/api/interception-prompts/from-preset",
+                       json={"preset_name": PRESET, "name": "As it is"})
+    assert resp.status_code == 201, resp.get_json()
+    assert _read(intake) == {"name": "As it is"}
+
+
+def test_a_copy_checks_the_text_and_the_name_it_carries(client, intake):
+    pid = _keep(client, text="Look at it sideways.", name="Sideways",
+                task_instruction="Turn it.").get_json()["prompt"]["id"]
+    intake.clear()
+    resp = client.post(f"/api/interception-prompts/{pid}/fork", json={})
+    assert resp.status_code == 201, resp.get_json()
+    assert _read(intake) == {"name": "Sideways (copy)", "context_text": "Look at it sideways.",
+                             "task_instruction": "Turn it."}
+
+
+def test_a_copy_of_a_text_kept_before_the_intake_is_refused(client, intake):
+    """A row kept before the intake existed, or at a level that checks
+    nothing, is checked where it is copied."""
+    owner = SessionLocal().query(M.User).filter_by(username="edu_intake").one().id
+    pid = _kept_row(owner, text=f"Look at {REFUSED}.")
+    resp = client.post(f"/api/interception-prompts/{pid}/fork", json={"name": "Copy"})
+    assert resp.status_code == 403
+    assert resp.get_json()["safety_block"]["field"] == "context_text"
+    assert _kept_ids(client) == [pid]
+
+
+def test_going_back_to_a_version_checks_what_it_restores(client, intake):
+    pid = _keep(client, text="First wording", name="Back").get_json()["prompt"]["id"]
+    client.put(f"/api/interception-prompts/{pid}", json={"context_text": "Second wording"})
+    intake.clear()
+    resp = client.post(f"/api/interception-prompts/{pid}/revert/1")
+    assert resp.status_code == 200, resp.get_json()
+    assert _read(intake) == {"name": "Back", "context_text": "First wording"}
+
+
+def test_a_version_kept_before_the_intake_is_not_restored(client, intake):
+    owner = SessionLocal().query(M.User).filter_by(username="edu_intake").one().id
+    pid = _keep(client, text="Second wording", name="Back").get_json()["prompt"]["id"]
+    db = SessionLocal()
+    db.add(M.PromptVersion(prompt_id=pid, version_no=1, name="Back",
+                           context_text=f"First {REFUSED}", parameters={}, created_by=owner))
+    db.commit()
+    resp = client.post(f"/api/interception-prompts/{pid}/revert/1")
+    assert resp.status_code == 403
+    kept = client.get(f"/api/interception-prompts/{pid}").get_json()["prompt"]
+    assert kept["context_text"] == "Second wording"
+    versions = client.get(f"/api/interception-prompts/{pid}/versions").get_json()["versions"]
+    assert [v["version_no"] for v in versions] == [1]
+
+
+def test_going_back_to_the_preset_checks_nothing(client, intake):
+    """The preset's text is the platform's."""
+    p = client.post("/api/interception-prompts/from-preset",
+                    json={"preset_name": PRESET, "name": "Mine again",
+                          "context_text": "my words"}).get_json()["prompt"]
+    intake.clear()
+    resp = client.post(f"/api/interception-prompts/{p['id']}/revert-to-preset")
+    assert resp.status_code == 200, resp.get_json()
+    assert intake == []
+
+
+def test_a_run_lists_the_text_of_a_saved_perspective_for_the_intake():
+    from my_app.services.course_prompt_resolver import kept_texts
+    owner = _make_user(M.Role.educator, "edu_kept")
+    user = SessionLocal().get(M.User, owner)
+    pid = _kept_row(owner, text="Look at it sideways.")
+    cfg = course_prompt_resolver.get_config(make_custom_style_key(pid), user=user)
+    assert kept_texts(cfg) == {"context_text": "Look at it sideways."}
+    assert kept_texts(cfg, with_context=False) == {}
+    assert kept_texts(course_prompt_resolver.get_config(PRESET)) == {}
+    assert kept_texts(None) == {}
+
+
+def test_a_saved_perspective_lists_each_language_and_its_task():
+    from my_app.services.course_prompt_resolver import kept_texts
+    owner = _make_user(M.Role.educator, "edu_kept")
+    user = SessionLocal().get(M.User, owner)
+    db = SessionLocal()
+    p = M.InterceptionPrompt(owner_id=owner, name="Two", base_config=BLANK,
+                             pipeline="text_transformation",
+                             context_text={"de": "Als Liste.", "en": "As a list."},
+                             task_instruction="List, do not tell.", parameters={})
+    db.add(p)
+    db.commit()
+    cfg = course_prompt_resolver.get_config(make_custom_style_key(p.id), user=user)
+    assert kept_texts(cfg) == {"context_text[de]": "Als Liste.",
+                               "context_text[en]": "As a list.",
+                               "task_instruction": "List, do not tell."}
+    assert kept_texts(cfg, with_context=False) == {"task_instruction": "List, do not tell."}
+
+
+# ---------------------------------------------------------------------------
+# the dry run: the sample and the perspective's text at the intake, what the
+# model wrote at the result
+# ---------------------------------------------------------------------------
+@pytest.fixture
+def result(monkeypatch):
+    """check_result_text standing in: it records (field, text, level) and
+    withholds a text that carries REFUSED."""
+    from my_app.routes import interception_prompts_routes as IPR
+    from my_app.services.safety_gate import CHECKPOINT_RESULT, REASON_CONTENT, Verdict
+    seen = []
+
+    def check(text, *, level, field="text"):
+        seen.append((field, text, level))
+        if REFUSED in text:
+            return Verdict(False, CHECKPOINT_RESULT, level, field, REASON_CONTENT,
+                           "not at this level")
+        return Verdict(True, CHECKPOINT_RESULT, level, field)
+
+    monkeypatch.setattr(IPR, "check_result_text", check)
+    return seen
+
+
+def test_a_preview_checks_the_sample_and_the_kept_text(client, intake, result, monkeypatch):
+    asked = _stage2_answers(monkeypatch, "a house by the lake, listed as smells")
+    pid = _keep(client, text="Write it as a list of smells.", name="Smells",
+                task_instruction="List, do not tell.").get_json()["prompt"]["id"]
+    intake.clear()
+    resp = _preview(client, pid)
+    assert resp.status_code == 200, resp.get_json()
+    assert _read(intake) == {"sample_input": "ein Haus am See",
+                             "context_text": "Write it as a list of smells.",
+                             "task_instruction": "List, do not tell."}
+    assert {level for *_, level in intake} == {"youth"}
+    assert asked == [(f"custom:{pid}", "ein Haus am See", "youth")]
+    assert result == [("output", "a house by the lake, listed as smells", "youth")]
+    assert resp.get_json()["output"] == "a house by the lake, listed as smells"
+
+
+@pytest.mark.parametrize("field", ["sample_input", "context_text"])
+def test_a_preview_refused_at_the_intake_reaches_no_model(client, intake, result,
+                                                            monkeypatch, field):
+    """The sample, or a text kept before the intake existed: either stops the
+    dry run before Stage 2."""
+    asked = _stage2_answers(monkeypatch, "a house by the lake")
+    owner = SessionLocal().query(M.User).filter_by(username="edu_intake").one().id
+    kept = f"Look at {REFUSED}." if field == "context_text" else "Look at it sideways."
+    sample = f"ein Haus {REFUSED}" if field == "sample_input" else "ein Haus am See"
+    resp = _preview(client, _kept_row(owner, text=kept), sample)
+    assert resp.status_code == 403
+    body = resp.get_json()
+    assert body["safety_block"] == {"checkpoint": "intake", "field": field,
+                                    "reason_key": "personal_data", "reason": "a name"}
+    assert asked == [] and result == []
+
+
+def test_what_a_preview_wrote_is_withheld_when_refused(client, intake, result, monkeypatch):
+    _stage2_answers(monkeypatch, f"a house {REFUSED}")
+    resp = _preview(client, _keep(client).get_json()["prompt"]["id"])
+    assert resp.status_code == 403
+    body = resp.get_json()
+    assert body["safety_block"] == {"checkpoint": "result", "field": "output",
+                                    "reason_key": "content", "reason": "not at this level"}
+    assert "output" not in body
+    assert result == [("output", f"a house {REFUSED}", "youth")]
+
+
+def test_a_structured_preview_is_read_as_the_json_it_leaves_as(client, intake, result,
+                                                                monkeypatch):
+    _stage2_answers(monkeypatch, {"title": "Haus", "lines": ["am See"]})
+    resp = _preview(client, _keep(client).get_json()["prompt"]["id"])
+    assert resp.status_code == 200, resp.get_json()
+    assert resp.get_json()["output"] == {"title": "Haus", "lines": ["am See"]}
+    assert result == [("output", '{"title": "Haus", "lines": ["am See"]}', "youth")]
+
+
+def test_a_sample_handed_back_unchanged_is_not_read_at_the_result(client, intake, result,
+                                                                   monkeypatch):
+    _stage2_answers(monkeypatch, " ein Haus am See \n")
+    resp = _preview(client, _keep(client).get_json()["prompt"]["id"])
+    assert resp.status_code == 200, resp.get_json()
+    assert result == []
+
+
+@pytest.mark.parametrize("asked_for, checked_at", [("kids", "kids"), ("research", "youth")])
+def test_a_preview_is_checked_at_the_level_it_runs_at(client, intake, result, monkeypatch,
+                                                      asked_for, checked_at):
+    """A dry run may tighten the level its session stands at and never loosen
+    it; its checks run at the level it runs at."""
+    asked = _stage2_answers(monkeypatch, "a house by the lake")
+    pid = _keep(client).get_json()["prompt"]["id"]
+    intake.clear()
+    resp = _preview(client, pid, safety_level=asked_for)
+    assert resp.status_code == 200, resp.get_json()
+    assert {level for *_, level in intake} == {checked_at}
+    assert [level for *_, level in result] == [checked_at]
+    assert [level for *_, level in asked] == [checked_at]

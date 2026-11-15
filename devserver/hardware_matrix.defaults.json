@@ -26,17 +26,20 @@
       "EXTERNAL_LLM_PROVIDER": "mistral",
       "DSGVO_CONFORMITY": true,
       "models": {
-        "STAGE1_TEXT_MODEL": "mistral/mistral-large-latest",
-        "STAGE2_INTERCEPTION_MODEL": "mistral/mistral-large-latest",
-        "STAGE2_OPTIMIZATION_MODEL": "mistral/mistral-large-latest",
-        "STAGE3_MODEL": "mistral/mistral-large-latest",
-        "CHAT_HELPER_MODEL": "mistral/mistral-large-latest",
-        "RESONA_MODEL": "mistral/mistral-large-latest",
-        "PERSONA_MODEL": "mistral/mistral-large-latest",
-        "CODING_MODEL": "mistral/codestral-latest"
+        "STAGE1_TEXT_MODEL": "mistral/mistral-large-4-0",
+        "STAGE2_INTERCEPTION_MODEL": "mistral/zai-glm-5-3",
+        "STAGE2_OPTIMIZATION_MODEL": "mistral/zai-glm-5-3",
+        "STAGE3_MODEL": "mistral/mistral-large-4-0",
+        "CHAT_HELPER_MODEL": "mistral/zai-glm-5-3",
+        "RESONA_MODEL": "mistral/zai-glm-5-3",
+        "PERSONA_MODEL": "mistral/zai-glm-5-3",
+        "KNOWLEDGE_PROCESSING_MODEL": "mistral/zai-glm-5-3",
+        "CODING_MODEL": "mistral/mistral-large-4-0"
       },
-      "DSGVO_NOTE": "Recorded as compliant. Source: provider data processing addendum, https://legal.mistral.ai/terms/data-processing-addendum",
-      "FALLBACK_ENABLED": true
+      "DSGVO_NOTE": "Recorded as compliant. Source: provider data processing addendum, https://legal.mistral.ai/terms/data-processing-addendum. Regional inference: all inference traffic runs on the EU endpoint api.eu.mistral.ai (devserver/config/llm_providers.json), so Mistral commits to EU processing for eligible requests (docs.mistral.ai/inference/regional-inference, read 2026-09-27). Zero Data Retention is a separate control and not (yet) recorded here: it must be requested from Mistral support for the organization (help.mistral.ai article 347612); status visible under Admin > API > Privacy. The platform calls only the stateless /v1/chat/completions, which ZDR covers; Agents/Batch/Files — outside ZDR — are not used.",
+      "FALLBACK_ENABLED": true,
+      "VISION_DELEGATE_MODEL": "mistral/mistral-medium-3-5",
+      "VISION_DELEGATE_NOTE": "Mistral serves no model that both sees and reasons: zai-glm-5-3 reasons and is blind, mistral-medium-3-5 sees and answers 400 to a request for reasoning mode. A role that needs both is filled by the pair. The reasoning model keeps the turn and commissions this one through look_at_image, as often as it has questions; an uploaded or camera picture is looked at on this server instead, whatever stands here."
     },
     "anthropic": {
       "label": "Anthropic Direct API",
@@ -90,9 +93,9 @@
       "FALLBACK_ENABLED": false
     },
     "mammouth": {
-      "label": "Mammouth AI (EU, DSGVO)",
+      "label": "Mammouth AI",
       "EXTERNAL_LLM_PROVIDER": "mammouth",
-      "DSGVO_CONFORMITY": true,
+      "DSGVO_CONFORMITY": null,
       "models": {
         "STAGE1_TEXT_MODEL": "mammouth/claude-sonnet-5",
         "STAGE2_INTERCEPTION_MODEL": "mammouth/claude-sonnet-5",
@@ -107,8 +110,8 @@
         "gemini-3.6-flash",
         "glm-5.2"
       ],
-      "DSGVO_NOTE": "Recorded as compliant. Source: provider privacy policy, https://info.mammouth.ai/docs/privacy-policy/",
-      "FALLBACK_ENABLED": true,
+      "DSGVO_NOTE": "Nothing is recorded here in either direction. The entry that called this compliant rested on the provider's privacy policy; it was withdrawn on 2026-11-07 and the question is open.",
+      "FALLBACK_ENABLED": false,
       "chat_models": [
         "mammouth/mistral-large-3",
         "mammouth/deepseek-v4-pro",

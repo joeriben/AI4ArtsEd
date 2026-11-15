@@ -6,6 +6,36 @@
     <p class="section-intro" style="opacity: 0.7; font-style: italic;">{{ t('docs.guideLatentLab.availableAtAllSafety') }}</p>
     <p class="section-intro" style="opacity: 0.7;">{{ t('docs.guideLatentLab.theLatentLabOrganized') }}</p>
 
+    <!-- ==================== CULTURAL KNOWLEDGE & STEREOTYPES ==================== -->
+    <h3 class="lab-section-heading">{{ t('latentLab.tabs.compare') }}</h3>
+
+    <!-- Bias Archaeology -->
+    <div class="experiment-card bias-archaeology">
+      <h3>{{ t('docs.guideLatentLab.biasArchaeology') }}</h3>
+      <div class="experiment-what">
+        <strong>{{ t('docs.guideLatentLab.whatHappensHere8') }}</strong>
+        <p>{{ t('docs.guideLatentLab.bbqSituationsThatLeaveItOpen') }}</p>
+      </div>
+      <div class="experiment-why">
+        <strong>{{ t('docs.guideLatentLab.whyRevealing5') }}</strong>
+        <p>{{ t('docs.guideLatentLab.whyTheThirdAnswerCounts') }}</p>
+      </div>
+      <div class="experiment-example">
+        <strong>{{ t('docs.guideLatentLab.example2') }}</strong>
+        {{ t('docs.guideLatentLab.bbqExampleFourWay') }}
+      </div>
+
+      <button class="deep-dive-toggle" @click="showBiasDetail = !showBiasDetail">
+        {{ t('docs.guideLatentLab.technicalDetails6') }}
+        <span class="toggle-arrow">{{ showBiasDetail ? '\u25b2' : '\u25bc' }}</span>
+      </button>
+
+      <div v-if="showBiasDetail" class="deep-dive-content">
+        <h4>{{ t('docs.guideLatentLab.howTheBenchmarkIsBuilt') }}</h4>
+        <p>{{ t('docs.guideLatentLab.basedParrishEtAl2022') }}</p>
+      </div>
+    </div>
+
     <!-- ==================== IMAGE LAB ==================== -->
     <h3 class="lab-section-heading">Diffusion Lab</h3>
 
@@ -253,33 +283,6 @@
         <h4>{{ t('docs.guideLatentLab.steeringVectorExtraction') }}</h4>
         <p>{{ t('docs.guideLatentLab.forEachContrastPair') }}</p>
         <p>{{ t('docs.guideLatentLab.differentLayersInfluence') }}</p>
-      </div>
-    </div>
-
-    <!-- Bias Archaeology -->
-    <div class="experiment-card bias-archaeology">
-      <h3>{{ t('docs.guideLatentLab.biasArchaeology') }}</h3>
-      <div class="experiment-what">
-        <strong>{{ t('docs.guideLatentLab.whatHappensHere8') }}</strong>
-        <p>{{ t('docs.guideLatentLab.bbqSituationsThatLeaveItOpen') }}</p>
-      </div>
-      <div class="experiment-why">
-        <strong>{{ t('docs.guideLatentLab.whyRevealing5') }}</strong>
-        <p>{{ t('docs.guideLatentLab.whyTheThirdAnswerCounts') }}</p>
-      </div>
-      <div class="experiment-example">
-        <strong>{{ t('docs.guideLatentLab.example2') }}</strong>
-        {{ t('docs.guideLatentLab.bbqExampleFourWay') }}
-      </div>
-
-      <button class="deep-dive-toggle" @click="showBiasDetail = !showBiasDetail">
-        {{ t('docs.guideLatentLab.technicalDetails6') }}
-        <span class="toggle-arrow">{{ showBiasDetail ? '\u25b2' : '\u25bc' }}</span>
-      </button>
-
-      <div v-if="showBiasDetail" class="deep-dive-content">
-        <h4>{{ t('docs.guideLatentLab.howTheBenchmarkIsBuilt') }}</h4>
-        <p>{{ t('docs.guideLatentLab.basedParrishEtAl2022') }}</p>
       </div>
     </div>
 

@@ -21,8 +21,9 @@ def test_the_training_routes_answer_an_error_as_error():
     as_message = [line.strip() for line in source.splitlines()
                   if re.search(r'\{"message": .*\}\), (4|5)\d\d$', line)]
     assert as_message == [], as_message
-    # Seventeen said message until today; three said error already.
-    assert len(re.findall(r'jsonify\(\{"error": .*\}\), (4|5)\d\d$', source, flags=re.M)) == 20
+    # Seventeen said message until today; three said error already; one is
+    # the block message of material the intake refused.
+    assert len(re.findall(r'jsonify\(\{"error": .*\}\), (4|5)\d\d$', source, flags=re.M)) == 21
     # A success still says what happened.
     assert '"message": "Training started"' in source
     assert '"message": "Training stopped"' in source

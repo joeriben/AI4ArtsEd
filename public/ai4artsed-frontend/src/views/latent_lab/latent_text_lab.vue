@@ -8,6 +8,10 @@
   wrapper lost the model panel, the contrast-pair editor and some 600 lines of
   style along with it.
 
+  Two of the six, Bias Research 1 and 2, stand in the column under Cultural
+  Knowledge & Stereotypes since 2026-11-06. What moved is the category, not the
+  file: this one renders them as before.
+
   Page context is set here only for the instruments that do not set their own —
   Representation Engineering, System Prompts and Model Comparison each own
   theirs, because they have something to put in it.

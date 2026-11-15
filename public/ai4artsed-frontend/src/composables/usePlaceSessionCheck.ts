@@ -6,6 +6,8 @@
  * every 30 seconds while its window is in front, and at once when the window
  * comes back to the front (stores/labAuth.ts, `checkPlaceSession`).
  * components/PlaceSignInEnded.vue, in App.vue, shows the row that says so.
+ * The same interval asks, for a leader or an admin, whether the server
+ * still holds the course the page shows (`checkLeaderSession`, 2026-11-14).
  */
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -20,12 +22,16 @@ export function usePlaceSessionCheck() {
 
   /** The window came back to the front: a question already out answers it. */
   function checkInFront(): void {
-    if (document.visibilityState === 'visible') void auth.checkPlaceSession()
+    if (document.visibilityState !== 'visible') return
+    void auth.checkPlaceSession()
+    void auth.checkLeaderSession()
   }
 
   /** The interval asks anew, even while a question is out. */
   function checkOnTime(): void {
-    if (document.visibilityState === 'visible') void auth.checkPlaceSession(true)
+    if (document.visibilityState !== 'visible') return
+    void auth.checkPlaceSession(true)
+    void auth.checkLeaderSession(true)
   }
 
   onMounted(() => {

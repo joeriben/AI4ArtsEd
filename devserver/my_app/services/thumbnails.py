@@ -151,6 +151,15 @@ def build_thumbnail(source: Path, target: Path, kind: str, px: int = THUMBNAIL_P
                 logger.warning("[THUMBS] ffmpeg could not read a frame from %s: %s",
                                source.name, result.stderr.decode('utf-8', 'replace')[:200])
                 return False
+            # A frame is a fresh JPEG with nothing in it. The miniature of a
+            # marked film carries the marking on, as the miniature of a marked
+            # picture does above, with the value the film carries.
+            from my_app.services.watermark_service import (
+                disclosed_source_type, watermark_image_bytes,
+            )
+            value = disclosed_source_type(source.read_bytes())
+            if value:
+                tmp.write_bytes(watermark_image_bytes(tmp.read_bytes(), {"digital_source_type": value}))
         else:
             return False
         os.replace(str(tmp), str(target))
@@ -164,6 +173,18 @@ def build_thumbnail(source: Path, target: Path, kind: str, px: int = THUMBNAIL_P
                 tmp.unlink()
             except OSError:
                 pass
+
+
+def served_thumbnail_name(thumb: Path) -> str:
+    """The name a miniature goes out under: its cache name, with `_ai_generated`
+    where the disclosure is not in it (rule of 2026-11-14; a miniature of a
+    file that carries none carries none either)."""
+    from my_app.services.watermark_service import carries_disclosure, unmarked_filename
+    try:
+        marked = carries_disclosure(thumb.read_bytes())
+    except OSError:
+        marked = False
+    return thumb.name if marked else unmarked_filename(thumb.name)
 
 
 def cached_thumbnail(source: Path, kind: str, key: str, px: int = THUMBNAIL_PX) -> Optional[Path]:

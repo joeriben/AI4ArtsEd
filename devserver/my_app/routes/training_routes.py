@@ -5,7 +5,9 @@ import subprocess
 import requests
 from typing import List
 from flask import Blueprint, request, jsonify, Response, stream_with_context
-from my_app.services.training_service import training_service
+from my_app.services.safety_gate import check_intake, check_intake_texts
+from my_app.services.safety_level_resolver import resolve_safety_level
+from my_app.services.training_service import PicturesRefused, training_service
 
 # Define Blueprint
 training_bp = Blueprint('training', __name__)
@@ -135,6 +137,12 @@ def clear_vram():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
+def _refused(verdict):
+    """The answer to material the intake refused: the block message, which
+    names the field and the kind of refusal."""
+    return jsonify({"error": "safety_blocked", "safety_block": verdict.block()}), 403
+
+
 class _FileWrapper:
     """What create_project reads from an upload: a name and a stream."""
     def __init__(self, storage):
@@ -150,13 +158,20 @@ def describe_images():
     by one and are read back from /describe/<token>. What a model writes here
     is what the trainer learns the images as, so it is shown before a run
     starts rather than written into a file nobody opens.
+
+    The images pass the intake and the sentences the check at the result,
+    both at the level resolved here (stage_and_describe). A refused image
+    answers 403 with the block message, and none of its handful is kept.
     """
     try:
         if 'images' not in request.files:
             return jsonify({"error": "No images provided"}), 400
         wrapped = [_FileWrapper(f) for f in request.files.getlist('images')]
         token = request.form.get('token') or None
-        return jsonify(training_service.stage_and_describe(wrapped, token=token))
+        level = resolve_safety_level()
+        return jsonify(training_service.stage_and_describe(wrapped, token=token, level=level))
+    except PicturesRefused as e:
+        return _refused(e.verdict)
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
@@ -176,7 +191,15 @@ def describe_status(token):
 
 @training_bp.route('/api/training/start', methods=['POST'])
 def start_training():
+    """Start a run on the images the request brings, or on those staged for
+    describing (staging_token) with the sentences as they now stand.
+
+    Project name, trigger words and sentences pass the intake here; the
+    images pass it in create_project, before anything of an earlier project
+    of the same name is deleted. Both at the level resolved here.
+    """
     try:
+        level = resolve_safety_level()
         project_name = request.form.get('project_name')
         trigger_word = request.form.get('trigger_word', '')
         staging_token = request.form.get('staging_token') or None
@@ -201,6 +224,15 @@ def start_training():
                 return jsonify({"error": "No images provided"}), 400
             wrapped_images = [_FileWrapper(f) for f in request.files.getlist('images')]
 
+        verdict = check_intake_texts(
+            {"project_name": project_name, "trigger_word": trigger_word}, level=level)
+        if not verdict.passed:
+            return _refused(verdict)
+        for i, caption in enumerate(captions or []):
+            verdict = check_intake(caption, level=level, kind="text", field=f"captions[{i}]")
+            if not verdict.passed:
+                return _refused(verdict)
+
         # Who trains, and in which course: a participant's course is the
         # session's, an educator names the one they lead (the platform's rule
         # for a course named by the client, `lora_register.session_scope`).
@@ -216,7 +248,7 @@ def start_training():
         result = training_service.create_project(
             project_name, wrapped_images, trigger_word,
             staging_token=staging_token, captions=captions,
-            owner_id=owner_id, course_id=course_id,
+            owner_id=owner_id, course_id=course_id, level=level,
         )
         
         success = training_service.start_training_process(project_name)
@@ -226,6 +258,8 @@ def start_training():
             
         return jsonify({"message": "Training started", "details": result})
 
+    except PicturesRefused as e:
+        return _refused(e.verdict)
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:

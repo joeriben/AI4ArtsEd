@@ -57,10 +57,10 @@ import requests
 # stood here named a register in the GPU service that was removed on 2026-09-09.
 from config import ANTHROPIC_MAX_TOKENS_CEILING, LLM_TIMEOUT
 from my_app.services.streaming_response import note_dispatch
-from my_app.services.usage_tracker import get_usage_tracker, extract_usage
+from my_app.services.usage_tracker import get_usage_tracker, extract_usage, extract_cache_usage
 from my_app.services.llm_providers import (
     CHAT_COMPLETIONS, MESSAGES, credentials, names as provider_names,
-    provider as provider_entry,
+    provider as provider_entry, without_cache_markers,
 )
 
 logger = logging.getLogger(__name__)
@@ -110,15 +110,17 @@ def _inject_image_into_messages(messages: list, image_b64: str, provider_format:
     for i in range(len(result) - 1, -1, -1):
         if result[i].get('role') == 'user':
             text_content = result[i].get('content', '')
+            # A message that already is a list of blocks (one carrying a
+            # cache marker, 2026-11-13) keeps its blocks; the picture follows them.
+            blocks = (list(text_content) if isinstance(text_content, list)
+                      else [{"type": "text", "text": text_content}])
 
             if provider_format == 'openai':
-                result[i]['content'] = [
-                    {"type": "text", "text": text_content},
+                result[i]['content'] = blocks + [
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
                 ]
             elif provider_format == 'anthropic':
-                result[i]['content'] = [
-                    {"type": "text", "text": text_content},
+                result[i]['content'] = blocks + [
                     {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}}
                 ]
 
@@ -760,22 +762,29 @@ def _stream_sse(provider: str, api_url: str, headers: dict, payload: dict,
                             f"(stop_reason=refusal)")
         raise Exception(f"{provider} returned empty response for model {model}")
 
+    cache_read = cache_write = 0
     if answer.usage:
         inp, out = extract_usage(answer.usage, provider)
+        cache_read, cache_write = extract_cache_usage(answer.usage, provider)
         if inp or out:
             get_usage_tracker().log(model=model, provider=provider,
-                                    stage=stage, input_tokens=inp, output_tokens=out)
+                                    stage=stage, input_tokens=inp, output_tokens=out,
+                                    cache_read_tokens=cache_read,
+                                    cache_write_tokens=cache_write)
 
+    cache_note = (f", cache read={cache_read} written={cache_write}"
+                  if cache_read or cache_write else "")
     logger.info(f"{tag} {provider} stream: {len(answer.content)} chars, "
                 f"tool_calls={len(tool_calls) if tool_calls else 0}, "
-                f"finish_reason={answer.finish_reason}")
+                f"finish_reason={answer.finish_reason}{cache_note}")
     yield ("result", {"content": answer.content, "thinking": answer.thinking or None,
                       "tool_calls": tool_calls, "finish_reason": answer.finish_reason})
 
 
 def _stream_openai_style(provider: str, messages: list, model: str, temperature: float,
                          max_tokens: Optional[int], tools: list = None, image_b64: str = None,
-                         stage: str = "chat", extra_payload: Optional[dict] = None):
+                         stage: str = "chat", extra_payload: Optional[dict] = None,
+                         tool_choice: Optional[str] = None):
     """Yield ('token', text) as the answer is written, then ('result', dict).
 
     Everything after the request is the opener above; what stands here is the
@@ -813,8 +822,19 @@ def _stream_openai_style(provider: str, messages: list, model: str, temperature:
     }
     if max_tokens is not None:
         payload["max_tokens"] = max_tokens
+    if provider == "mistral" and temperature == 0:
+        # Mistral refuses a temperature of 0 unless top_p is 1 as well: 400,
+        # "top_p must be 1 when using greedy sampling" (code 3054), measured
+        # on mistral-large-4-0 on 2026-11-14 (issue #148). Greedy decoding takes the
+        # likeliest token whatever top_p is, so the field changes nothing
+        # but the refusal.
+        payload["top_p"] = 1
     if tools:
         payload["tools"] = tools
+        # "none" keeps the tools in the request and withholds their use
+        # (2026-11-08): a history with tool calls stays well formed.
+        if tool_choice:
+            payload["tool_choice"] = tool_choice
 
     yield from _stream_sse(provider, api_url, headers, payload,
                            _ChatCompletionsGrammar(), model, stage)
@@ -919,7 +939,8 @@ def _stream_anthropic_style(provider: str, messages: list, model: str,
                             temperature: Optional[float] = None,
                             max_tokens: Optional[int] = None, tools: list = None,
                             stage: str = "chat", image_b64: Optional[str] = None,
-                            extra_payload: Optional[dict] = None):
+                            extra_payload: Optional[dict] = None,
+                            tool_choice: Optional[str] = None):
     """The same, for a provider that speaks Anthropic's messages API.
 
     What stands here is where the two dialects part: /v1/messages instead of
@@ -962,6 +983,9 @@ def _stream_anthropic_style(provider: str, messages: list, model: str,
         payload["temperature"] = temperature
     if effective_tools:
         payload["tools"] = effective_tools
+        # This dialect writes the choice as an object (2026-11-08).
+        if tool_choice:
+            payload["tool_choice"] = {"type": tool_choice}
 
     yield from _stream_sse(provider, api_url, headers, payload,
                            _MessagesGrammar(), model, stage)
@@ -1031,7 +1055,8 @@ def call_anthropic_style(provider: str, messages: list, model: str,
 def stream_chat(provider: str, messages: list, model: str,
                 temperature: Optional[float] = None, max_tokens: Optional[int] = None,
                 tools: list = None, image_b64: Optional[str] = None,
-                stage: str = "chat", extra_payload: Optional[dict] = None):
+                stage: str = "chat", extra_payload: Optional[dict] = None,
+                tool_choice: Optional[str] = None):
     """Yield ('token', text)… ('result', dict) from a provider named by the table.
 
     A caller — the chat surface, the pipeline engine, the image check — names
@@ -1058,6 +1083,14 @@ def stream_chat(provider: str, messages: list, model: str,
     model behind it, applied where the request is built so that no caller
     can pass it by. A provider whose entry says "bedrock" is not reached
     here at all; its callers keep the AWS SDK path.
+
+    tool_choice is sent only together with tools; "none" keeps the tools in
+    the request and withholds their use (2026-11-08).
+
+    A cache marker on a text block (llm_providers.CACHE_MARKER) reaches only
+    a provider whose entry says "prompt_cache": true. Every other one gets
+    the message without the marker and, where it was all text, as one string
+    -- the same floor as the picture's, for the same reason (2026-11-13).
     """
     entry = provider_entry(provider)
     if entry is None:
@@ -1067,15 +1100,18 @@ def stream_chat(provider: str, messages: list, model: str,
     if image_b64 and entry.get("image_input") is False:
         logger.info(f"[{stage}] {label}: image withheld, this connection takes none")
         image_b64 = None
+    if not entry.get("prompt_cache"):
+        messages = without_cache_markers(messages)
     if dialect == CHAT_COMPLETIONS:
         yield from _stream_openai_style(
             provider, messages, model, 0.7 if temperature is None else temperature,
             max_tokens, tools=tools, image_b64=image_b64, stage=stage,
-            extra_payload=extra_payload)
+            extra_payload=extra_payload, tool_choice=tool_choice)
     elif dialect == MESSAGES:
         yield from _stream_anthropic_style(
             provider, messages, model, temperature=temperature, max_tokens=max_tokens,
-            tools=tools, stage=stage, image_b64=image_b64, extra_payload=extra_payload)
+            tools=tools, stage=stage, image_b64=image_b64, extra_payload=extra_payload,
+            tool_choice=tool_choice)
     else:
         raise Exception(f"{label} speaks '{dialect}', which is not reached over HTTP here")
 

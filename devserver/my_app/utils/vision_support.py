@@ -22,7 +22,8 @@ IMAGE_MAX_SIZE = 768
 IMAGE_MIN_SIZE = 64
 
 
-def prepare_image_b64(image_source: Optional[str] = None, run_id: Optional[str] = None) -> Optional[str]:
+def prepare_image_b64(image_source: Optional[str] = None, run_id: Optional[str] = None,
+                      *, level) -> Optional[str]:
     """
     Resolve an image source to a base64-encoded JPEG string.
 
@@ -35,6 +36,8 @@ def prepare_image_b64(image_source: Optional[str] = None, run_id: Optional[str] 
         image_source: Any media reference (path, /api/media/... URL, upload id)
                       or a data:image/... URL
         run_id: Run ID from LivePipelineRecorder (used if image_source is None)
+        level: The level of whoever the picture is read for. A run's picture
+               resolves only where delivery hands it to that level.
 
     Returns:
         Base64-encoded JPEG string, or None if it does not resolve
@@ -48,7 +51,7 @@ def prepare_image_b64(image_source: Optional[str] = None, run_id: Optional[str] 
     if isinstance(ref, str) and ref.startswith('data:image'):
         return strip_data_url(ref)
     try:
-        return load_image_b64(ref)
+        return load_image_b64(ref, level=level)
     except MediaRefError as e:
         logger.warning(f"[VISION] {e}")
         return None
@@ -191,9 +194,12 @@ def ask_about_image(image_b64: str, question: str, for_model: str = "",
       * otherwise the platform's vision channel, which runs locally.
 
     `may_leave_server` is the caller's statement about THIS picture, never a
-    property of the model. An uploaded or camera image stays here whatever any
-    preset says (DEVELOPMENT_DECISIONS 2026-03-25), so its caller passes False
-    and the local channel answers.
+    property of the model (media_ref.may_leave_server). An uploaded or camera
+    image stays here whatever any preset says (DEVELOPMENT_DECISIONS
+    2026-03-25), and so do a picture made from one and a picture whose origin
+    the caller does not know: its caller passes False and the local channel
+    answers. The delegate is a provider's model, so it is asked
+    only where the picture may leave.
     """
     question = (question or "").strip()
     if not question:

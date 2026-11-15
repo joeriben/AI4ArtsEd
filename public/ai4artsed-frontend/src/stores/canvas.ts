@@ -7,6 +7,7 @@ import { readSseFrames } from '@/lib/sseStream'
 import { canvasFileStem, givenName } from '@/lib/canvasFile'
 import { nodeDefaults } from '@/lib/canvasNodeDefaults'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
+import type { SafetyBlock } from '@/composables/useGenerationStream'
 import type {
   CanvasNode,
   CanvasConnection,
@@ -30,6 +31,61 @@ import {
  *  authored node can carry anything in the field. */
 function languageUnwritten(node: CanvasNode): boolean {
   return typeof node.translationLanguage === 'string' && !node.translationLanguage.trim()
+}
+
+/** What a load may do with the answer it got (`latestOnly`). */
+interface LoadAnswer {
+  /** Lays the answer down, unless one from a later load lies there already. */
+  take: () => boolean
+  /** Whether an answer from a later load lies there already. */
+  overtaken: () => boolean
+}
+
+/**
+ * A list loader whose waiters get the latest answer. The board asks for its
+ * lists on entering, after the settings were applied and when a ready-made
+ * workflow is opened (views/canvas_workflow.vue). An answer that arrives after
+ * one from a later load is dropped, so one asked for before a provider switch
+ * is never laid over one asked for since -- and a later load that fails leaves
+ * the answer before it standing. Whoever waits is let go once no load as new
+ * as its own or newer could still lay down a list newer than the one lying
+ * there -- so a load that never answers holds nobody once a later one has
+ * answered -- and is told whether that list is as new as the one it asked for:
+ * returning with a dropped answer, or before a newer one, would return before
+ * the list. useChatModels does the same for the chat list.
+ */
+function latestOnly<A extends unknown[]>(
+  load: (answer: LoadAnswer, ...args: A) => Promise<void>,
+): (...args: A) => Promise<boolean> {
+  let asked = 0
+  let taken = 0
+  const out = new Set<number>()
+  let waiting: Array<{ mine: number; release: () => void }> = []
+  return (...args: A) => {
+    const mine = ++asked
+    out.add(mine)
+    const answer: LoadAnswer = {
+      take: () => {
+        if (mine <= taken) return false
+        taken = mine
+        return true
+      },
+      overtaken: () => mine <= taken,
+    }
+    const waiter = new Promise<boolean>(resolve => {
+      waiting.push({ mine, release: () => resolve(taken >= mine) })
+    })
+    const settled = () => {
+      out.delete(mine)
+      waiting = waiting.filter(w => {
+        for (const load of out) if (load >= w.mine && load > taken) return true
+        w.release()
+        return false
+      })
+    }
+    load(answer, ...args).then(settled, settled)
+    return waiter
+  }
 }
 
 /**
@@ -723,11 +779,16 @@ export const useCanvasStore = defineStore('canvas', () => {
   // ============================================================================
 
   /**
-   * Load available LLM models from backend
+   * Load available LLM models from backend. `quiet`: asked again while the
+   * board stands -- after the settings were applied, when a ready-made
+   * workflow is opened -- without the board's loading overlay; a failure then
+   * leaves the list as it was.
    */
-  async function loadLLMModels() {
-    isLoading.value = true
-    error.value = null
+  const loadLLMModels = latestOnly(async (answer: LoadAnswer, quiet?: boolean) => {
+    if (!quiet) {
+      isLoading.value = true
+      error.value = null
+    }
 
     try {
       const response = await fetch('/api/canvas/llm-models')
@@ -735,15 +796,19 @@ export const useCanvasStore = defineStore('canvas', () => {
         throw new Error(`Failed to load LLM models: ${response.statusText}`)
       }
       const data = await response.json()
-      llmModels.value = data.models || []
-      console.log(`[Canvas] Loaded ${llmModels.value.length} LLM models`)
+      if (answer.take()) {
+        llmModels.value = data.models || []
+        console.log(`[Canvas] Loaded ${llmModels.value.length} LLM models`)
+      }
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to load LLM models'
       console.error('[Canvas] Error loading LLM models:', err)
+      if (!quiet && !answer.overtaken()) {
+        error.value = err instanceof Error ? err.message : 'Failed to load LLM models'
+      }
     } finally {
-      isLoading.value = false
+      if (!quiet) isLoading.value = false
     }
-  }
+  })
 
   /**
    * Load available output/generation configs from backend
@@ -771,20 +836,22 @@ export const useCanvasStore = defineStore('canvas', () => {
   /**
    * Load available Vision models from backend
    */
-  async function loadVisionModels() {
+  const loadVisionModels = latestOnly(async (answer: LoadAnswer) => {
     try {
       const response = await fetch('/api/canvas/vision-models')
       if (!response.ok) {
         throw new Error(`Failed to load vision models: ${response.statusText}`)
       }
       const data = await response.json()
-      visionModels.value = data.models || []
-      console.log(`[Canvas] Loaded ${visionModels.value.length} vision models`)
+      if (answer.take()) {
+        visionModels.value = data.models || []
+        console.log(`[Canvas] Loaded ${visionModels.value.length} vision models`)
+      }
     } catch (err) {
       console.error('[Canvas] Error loading vision models:', err)
       // Non-critical - don't set error state
     }
-  }
+  })
 
   /**
    * Load all configs
@@ -1007,13 +1074,10 @@ export const useCanvasStore = defineStore('canvas', () => {
                     node_id: string
                     node_type: string
                     error: string
-                    blocked?: {
-                      stage: number | string
-                      reason: string
-                      found_terms?: string[]
-                      vlm_description?: string | null
-                      operational?: boolean
-                    }
+                    /** The block message of a node the checks refused. */
+                    safety_block?: SafetyBlock
+                    /** What the image check saw, where it refused a picture. */
+                    vlm_description?: string | null
                   }>
                   results?: Record<string, unknown>
                   collectorOutput?: typeof collectorOutput.value
@@ -1034,12 +1098,12 @@ export const useCanvasStore = defineStore('canvas', () => {
                 console.error('[Canvas] Execution error:', data.message)
                 // A refusal of the platform's checks goes where every surface
                 // sends one: the safety window, in the reader's language.
-                const block = (data.errors || []).find(e => e.blocked)?.blocked
-                if (block) {
-                  useSafetyEventStore().reportBlock(
-                    block.stage, block.reason, block.found_terms || [],
-                    block.vlm_description || undefined, !!block.operational,
-                  )
+                const refused = (data.errors || []).find(e => e.safety_block)
+                if (refused?.safety_block) {
+                  useSafetyEventStore().reportBlock(refused.safety_block, {
+                    vlmDescription: refused.vlm_description || undefined,
+                    operational: refused.safety_block.reason_key === 'unavailable',
+                  })
                 }
                 startBubbleAnimation()
                 break
@@ -1149,6 +1213,13 @@ export const useCanvasStore = defineStore('canvas', () => {
         }
         if (data.error) {
           console.error(`[Canvas] Batch run ${data.run_index} error:`, data.error)
+        }
+        // A refusal of the platform's checks, of the board or of one run, goes
+        // where every surface sends one: the safety window, in the reader's language.
+        if (data.safety_block) {
+          useSafetyEventStore().reportBlock(data.safety_block, {
+            operational: data.safety_block.reason_key === 'unavailable',
+          })
         }
         if (data.export_paths) {
           // Batch complete

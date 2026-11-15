@@ -56,7 +56,7 @@ Llama-Guard 3:1B (~1.5 GB) + qwen3-vl:2b (~2.5 GB), gleichzeitig resident währe
 
 - **Lokale Pädagogik**: SD3.5 **Medium** via Diffusers mit FP8-T5-Encoder und dual_alpha-Fusion — passt knapp in 16 GB (~14–15 GB inkl. Fusion-Overhead).
 - **Safety**: Vollständig **via Cloud** (Mammouth/IONOS). Lokale Ollama-Safety-LMs nicht installiert.
-- **Cloud für Große**: SD3.5 Large, Flux 2, Wan2.2 Video → GPT-Image-1 / Gemini / Cloud.
+- **Cloud für Große**: SD3.5 Large, Flux 2, Wan2.2 Video → GPT-Image-1 / Cloud.
 - **Lokale Audio**: HeartMuLa (3B, ~5 GB), Stable Audio — optional; bei paralleler Nutzung VRAM-Engpass.
 - **12 GB VRAM und weniger** → **Werkraum empfohlen**, nicht dieses Profil.
 

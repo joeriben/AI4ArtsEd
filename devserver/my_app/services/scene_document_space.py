@@ -3,7 +3,9 @@
 A PDF a group brings into the flow is NOT a Tier-O operator document — no
 draft/publish, no library. It is summarised the way the library condenses a
 document (scene_ingest_service), and the summary hangs on the session (the
-canvas session id, used as the journal id) and VERFÄLLT MIT DER SITZUNG.
+canvas session id, used as the journal id). The session id carries the date,
+so a session ends at midnight UTC; the summary stays stored, and
+`scene_ingest_service.take_summary` finds it again for the same file.
 Storage layout (all gitignored under devserver exports, same idiom as the
 knowledge uploads):
 
@@ -15,9 +17,11 @@ instead (image-prompt capsules, removed that day). It has no summary.json,
 counts as absent here, and a new run of the same file replaces it.
 
 NEVER stored here: PDF raw bytes, full-text MD (both live only in the FIFO
-worker's job-scoped workdir and are deleted at job end). Deleting
-the journal (resona delete route) drops its document space with it — the
-space dies with the session.
+worker's job-scoped workdir and are deleted at job end, or at the next backend
+start for a job a restart ended). Deleting a journal (resona delete route)
+drops its document space with it. A device's first journal carries the device
+id, which is that day's flow session id, so Resona's "New dialog" reaches the
+space of that flow session too.
 """
 
 from __future__ import annotations
@@ -26,9 +30,10 @@ import json
 import re
 import threading
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from config import EXPORTS_DIR
+from my_app.services.safety_level_resolver import SAFETY_LEVELS_STRICTEST_FIRST
 
 SCENE_DOCUMENTS_DIR = EXPORTS_DIR / "scene_documents"
 
@@ -61,6 +66,11 @@ def _doc_dir(journal_id: str, doc_id: str) -> Optional[Path]:
     return jd / d
 
 
+def doc_id_for(raw_hash: str) -> str:
+    """The id a document has in every session: it comes from the file's bytes."""
+    return f"doc-{raw_hash[:12]}"
+
+
 def store_document(journal_id: str, doc_id: str, *,
                    summary: Dict[str, Any],
                    meta: Dict[str, Any]) -> Optional[Path]:
@@ -86,23 +96,90 @@ def store_document(journal_id: str, doc_id: str, *,
     return d
 
 
+def _read_stored(d: Path) -> Optional[Tuple[Dict[str, Any], Dict[str, Any]]]:
+    """A document's metadata and summary, read as one: `store_document` writes
+    the two under the same lock, so a reader never pairs the metadata of one
+    version with the summary of another. None where either file is missing or
+    unreadable."""
+    with _LOCK:
+        try:
+            meta = json.loads((d / "document.json").read_text(encoding="utf-8"))
+            summary = json.loads((d / "summary.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+    return meta, summary
+
+
 def get_document(journal_id: str, doc_id: str) -> Optional[Dict[str, Any]]:
     """One document's stored view: meta + the summary the card shows. Parts
     the safety check withheld were never stored; `n_withheld` counts them.
     None for a document the space does not hold, and for one stored in the
     capsule format before 2026-09-28 (no summary.json)."""
     d = _doc_dir(journal_id, doc_id)
-    if d is None or not (d / "document.json").exists() \
-            or not (d / "summary.json").exists():
+    stored = None if d is None else _read_stored(d)
+    if stored is None:
         return None
-    meta = json.loads((d / "document.json").read_text(encoding="utf-8"))
-    summary = json.loads((d / "summary.json").read_text(encoding="utf-8"))
+    meta, summary = stored
     return {
         "doc_id": doc_id,
         "meta": meta,
         "summary": summary,
         "n_withheld": int(meta.get("n_withheld", 0)),
     }
+
+
+def find_summary(raw_hash: str, *, lang: str,
+                 safety_level: str) -> Optional[Tuple[Dict[str, Any], Dict[str, Any]]]:
+    """Metadata and summary of a stored summary of exactly this file in `lang`,
+    from any session, or None when there is none a session at `safety_level`
+    can start from.
+
+    The search runs over all sessions because the session id carries the date:
+    searching one session found nothing the next day, and one browser had the
+    same PDF summarised on 30.10., 01.11., 05.11. and 06.11. It answers only to
+    someone who hands in the file.
+
+    A record without a level we know does not count. Neither does one from a
+    stricter level that withheld parts: this session may see what that copy
+    lost, and a new run gives it that. Among the others the one from the loosest
+    level is taken, because it withheld the least. What of it may be shown here
+    is the check's to say (`scene_ingest_service.take_summary`).
+    """
+    best: Optional[Tuple[Dict[str, Any], Dict[str, Any]]] = None
+    best_rank = -1
+    session_rank = SAFETY_LEVELS_STRICTEST_FIRST.index(safety_level)
+    for meta_p in SCENE_DOCUMENTS_DIR.glob(f"*/{doc_id_for(raw_hash)}/document.json"):
+        stored = _read_stored(meta_p.parent)
+        if stored is None:
+            continue
+        meta = stored[0]
+        level = meta.get("safety_level")
+        if (meta.get("doc_hash") != raw_hash or meta.get("analysis_lang") != lang
+                or level not in SAFETY_LEVELS_STRICTEST_FIRST):
+            continue
+        rank = SAFETY_LEVELS_STRICTEST_FIRST.index(level)
+        if rank < session_rank and int(meta.get("n_withheld", 0)) > 0:
+            continue
+        if rank > best_rank:
+            best, best_rank = stored, rank
+    return best
+
+
+def checked_for(meta: Dict[str, Any], safety_level: str) -> bool:
+    """Whether a stored document was checked at `safety_level` or a stricter
+    one: a summary checked at a looser level was never asked this level's
+    question."""
+    level = meta.get("safety_level")
+    if level not in SAFETY_LEVELS_STRICTEST_FIRST \
+            or safety_level not in SAFETY_LEVELS_STRICTEST_FIRST:
+        return False
+    return (SAFETY_LEVELS_STRICTEST_FIRST.index(level)
+            <= SAFETY_LEVELS_STRICTEST_FIRST.index(safety_level))
+
+
+def stricter_level(a: str, b: str) -> str:
+    """The stricter of two known levels."""
+    return min(a, b, key=SAFETY_LEVELS_STRICTEST_FIRST.index)
 
 
 def list_documents(journal_id: str) -> List[Dict[str, Any]]:
@@ -133,8 +210,9 @@ def list_documents(journal_id: str) -> List[Dict[str, Any]]:
 
 
 def delete_journal_space(journal_id: str) -> int:
-    """Drop a whole session's document space (journal delete hook — the space
-    verfällt mit der Sitzung). Returns the number of removed document dirs."""
+    """Drop a whole session's document space (journal delete hook). A session
+    that handed in the same file keeps its own copy. Returns the number of
+    removed document dirs."""
     jd = _journal_dir(journal_id)
     if jd is None or not jd.exists():
         return 0
@@ -146,8 +224,9 @@ def delete_journal_space(journal_id: str) -> int:
 
 
 def delete_document(journal_id: str, doc_id: str) -> bool:
-    """Remove ONE document's space entry (fresh upload of the same file becomes
-    analysable again). Returns True when something was removed."""
+    """Remove ONE document's space entry. A fresh upload of the same file is
+    summarised again unless another session holds a summary of it. Returns True
+    when something was removed."""
     d = _doc_dir(journal_id, doc_id)
     if d is None or not d.exists():
         return False

@@ -11,7 +11,8 @@
     "es": "Bauhaus",
     "he": "באוהאוס",
     "ar": "الباوهاوس",
-    "bg": "Баухаус"
+    "bg": "Баухаус",
+    "zh-hant": "包浩斯"
   },
   "description": {
     "en": "Reduces everything to basic geometric shapes and primary colors. Focuses on function and clear structure, stripping away decoration.",
@@ -22,6 +23,7 @@
     "he": "מצמצם הכל לצורות גיאומטריות בסיסיות וצבעים ראשוניים. מתמקד בפונקציה ומבנה ברור, תוך הסרת כל קישוט.",
     "ar": "يُختزل كل شيء إلى أشكال هندسية أساسية وألوان أولية. يركّز على الوظيفة والبنية الواضحة مع تجريد أي زخرفة.",
     "bg": "Свежда всичко до основни геометрични форми и основни цветове. Фокусира се върху функцията и ясната структура, премахвайки декорацията.",
+    "zh-hant": "把一切簡化為基本幾何形狀與原色。著重功能與清楚的結構，去除裝飾。",
     "tr": "Her şeyi temel geometrik şekillere ve ana renklere indirger. Süslemeyi soyundurarak işlev ve net yapıya odaklanır.",
     "ko": "모든 것을 기본 기하학적 형태와 원색으로 환원합니다. 장식을 제거하고 기능과 명확한 구조에 집중합니다."
   },
@@ -31,6 +33,7 @@
     "he": "היסטוריית האמנות",
     "ar": "تاريخ الفن",
     "bg": "История на изкуството",
+    "zh-hant": "藝術史",
     "tr": "Sanat Tarihi",
     "ko": "미술사",
     "uk": "Історія мистецтва",

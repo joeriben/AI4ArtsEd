@@ -53,6 +53,16 @@ except Exception as _e:
     import logging
     logging.getLogger(__name__).error(f"[AI4ArtsEd] card route stays unregistered: {_e}")
 
+# The language models that run on ComfyUI's own implementation (_comfy_llm.py)
+# read their tokens along through the stop list of its decode loops, which was
+# checked against one ComfyUI release. Imported here so that another release
+# is said in the log when the package comes up, before the first answer.
+try:
+    from . import _comfy_llm  # noqa: F401
+except Exception as _e:
+    import logging
+    logging.getLogger(__name__).error(f"[AI4ArtsEd] ComfyUI's own language models stay unread: {_e}")
+
 NODE_CLASS_MAPPINGS = {
     "ai4artsed_text_remix": ai4artsed_text_remix,
     "ai4artsed_random_instruction_generator": ai4artsed_random_instruction_generator,

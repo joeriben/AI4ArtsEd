@@ -272,6 +272,7 @@ export const he = {
       uiModeEffectStructure: 'מידע על המסך: קל מסתיר את הנתונים הטכניים, מומחה מציג מודל, seed ופרמטרים.',
       uiModeEffectStyle: 'סגנון ההערות על התמונות.',
       uiModeNotSafety: 'זו אינה הגדרת סינון. מה נבדק ונחסם נקבע על ידי רמת הבטיחות למטה.',
+      traditionalChineseZhHant: 'סינית מסורתית (zh-hant)',
     },
     safety: {
       kidsTitle: 'ילדים (8–13)',
@@ -331,15 +332,6 @@ export const he = {
       storedIn: 'מאוחסן ב',
       currentKey: 'נוכחי',
       keyOf: 'מפתח API של {provider}',
-      frontierImageLabel: 'מודל תמונה חיצוני מהחזית',
-      frontierProviderLabel: 'ספק',
-      frontierKeyLabel: 'מפתח API קיים',
-      frontierBalanceLabel: 'יתרת Mammouth.ai',
-      frontierUsedUp: {
-        account: 'תקציב החשבון נוצל',
-        key: 'תקציב מפתח ה-API הזה נוצל',
-        team: 'תקציב הצוות נוצל',
-      },
     },
     save: {
       saveApply: 'שמור והחל',
@@ -1125,7 +1117,7 @@ export const he = {
       modelComparison: 'השוואת מודלים',
       differentModelsInterpretSame: 'מודלים שונים מפרשים את אותו ה-prompt על בסיס אותה תמונת רעש — ובכל זאת מייצרים תוצאות שונות לחלוטין. השוואת המודלים חושפת שהמודל עצמו הוא משתנה מכריע, לא רק ה-prompt.',
       currentTopModels: 'מודלים מובילים עכשוויים',
-      sd35Large: 'SD 3.5 Large, Flux 2, Gemini 3 Pro — שלושה מודלים עכשוויים בהשוואה ישירה.',
+      sd35Large: 'SD 3.5 Large, Flux 2 ו-Flux 3 Klein בהשוואה ישירה.',
       historicalComparison: 'השוואה היסטורית',
       sd152022: 'SD 1.5 (2022), SDXL (2023), SD 3.5 Large (2024) — שלושה דורות. כיצד השתנתה יצירת התמונות משנה לשנה?',
       temperatureComparison: 'השוואת טמפרטורה',
@@ -1925,9 +1917,6 @@ export const he = {
     working: 'עובד…',
     waiting: 'ממתין',
     stationFailed: 'המכונה הזו לא ענתה',
-    band: {
-      done: 'כל הארבע ענו',
-    },
     ask: {
       sign: 'יש שאלה?',
       question: 'מה אתה באמת יכול לשמוע מהמוזיקה שלי, ומה קורה להקלטה שלי בדרך אל השיר? הייתי גם רוצה לדעת מה כדאי לנסות כאן.',
@@ -1964,8 +1953,6 @@ export const he = {
     },
     sung: {
       name: 'פלט',
-      note: 'את זה אפשר רק לשמוע, לא לקרוא. כדאי להעמיד את זה מול הטקסט שנכתב.',
-      notKept: 'זה קיים כל עוד נשארים בעמוד. לא ניתן לשמור, לסמן כמועדף או להוריד — זו הפקה מחדש, לא יצירה.',
       held: 'נבחר ידנית — זה מה שרץ',
       madeBy: 'נוצר על ידי {model}, תוך {s} שניות',
       pick: 'בחירת המודל',
@@ -1989,11 +1976,9 @@ export const he = {
     },
     purpose: 'שני דברים אפשר ללמוד כאן: לעורר במכוון פלט מסוים באמצעות קלט מושר או מנוגן, ולפגוש בכך את אמצעי הביטוי שלכם ואת הקלישאות של התפיסה. ולגלות שבינה מלאכותית ממציאה לעיתים קרובות משהו גם כשאין דבר מלבד שקט, וכי הקלטות שונות לגמרי מייצרות לעיתים קרובות תוצאות דומות מאוד וקלישאתיות.',
     run: {
-      name: 'התחלה',
       start: 'שלחו את ההקלטה דרך ארבע המכונות',
       took: 'ענתה תוך {s} שניות',
     },
-    stationFailedNamed: '{station} — המכונה הזו לא ענתה',
     story: 'זהו חקר משחקי של מה שבינה מלאכותית מבינה — ולא מבינה — בענייני מוזיקה ותרבות. הדף מאזין דרך המיקרופון, מנסה לזהות שירה ודיבור, ולאחר מכן מצבי צליל וסגנונות, ולבסוף לבנות אותם מחדש: שרשרת של תרגומים מלאה באובדני תרגום וארטיפקטים, שאפשר לחוות כמו במראה מעוותת.',
   },
   latentLabOverview: {
@@ -2119,7 +2104,7 @@ export const he = {
           posNote: 'מספרי המקום של ה[[טוקנים]]',
           ctrlNote: '[[טוקן]] בקרה',
           fourNote: 'מילה אחת הופכת לשני [[טוקנים]]',
-          langHead: 'אותו משפט בעשר השפות של הפלטפורמה הזאת, חתוך ל[[טוקנים]]:',
+          langHead: 'אותו משפט בעשר משפות הפלטפורמה הזאת, חתוך ל[[טוקנים]]:',
           langs: 'en¦אנגלית¦22\nhe¦עברית¦25\nes¦ספרדית¦30\nde¦גרמנית¦31\nko¦קוריאנית¦31\nfr¦צרפתית¦35\ntr¦טורקית¦35\nar¦ערבית¦36\nbg¦בולגרית¦47\nuk¦אוקראינית¦56',
           langNote: 'עבור אותו משפט מודל ה-AI זקוק\nליותר מפי שניים [[טוקנים]] באוקראינית\nמאשר באנגלית.\nהמילה “בית” היא [[טוקן]] אחד בשמונה\nמהשפות האלה. בבולגרית\nובאוקראינית היא שלושה.',
           embLabel: '[[הטמעה]]: כל [[טוקן]] מקבל את סדרת המספרים שלו. הטקסט שלך מוטמע בכך במספרים.',
@@ -2925,9 +2910,9 @@ export const he = {
       models: {
         label: 'מודלים',
         small: 'מודלים קטנים',
-        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Phi 3.5 mini, Qwen3 1.7B ו-4B',
+        smallNote: 'Gemma 2 2B, Llama 3.2 3B, Qwen3 1.7B ו-4B',
         large: 'מודלים גדולים',
-        largeNote: 'OLMo 2 ו-3, Nemotron Nano 9B, DeepSeek 7B, Mistral NeMo 12B — 7 עד 12B',
+        largeNote: 'OLMo 3 7B, Apertus 8B, Nemotron Nano 9B, Qwen3.5 9B, Gemma 4 12B, Ministral 3 14B — 7 עד 14B',
         family: 'משפחת מודלים',
         familyNote: 'הגדלים של משפחת Qwen, 1.7B עד 14B',
         history: 'מודל במרוצת הזמן',
@@ -3282,6 +3267,7 @@ export const he = {
       error: 'שגיאת חיבור',
       modelLabel: 'מודל',
       defaultModel: 'ברירת מחדל (הגדרות)',
+      localModel: 'מקומי',
       modelNotDownloaded: '(לא הורד)',
       install: {
         downloadCta: 'הורד ({mb} MB)',
@@ -3406,6 +3392,7 @@ export const he = {
         ko: 'קוריאנית',
         tr: 'טורקית',
         uk: 'אוקראינית',
+        'zh-hant': 'סינית מסורתית',
       },
       piper: {
         voiceLabel: 'קול',
@@ -3534,8 +3521,8 @@ export const he = {
     languagesLabel: 'שפות',
     modelNote: {
       noteBody: {
-        current: 'SD 3.5 Large נבנה כדי לעקוב אחר הפרומפט מקרוב ולהציב כתב קריא בתוך התמונה. FLUX.2 נבנה לעבודה שחוזרת על עצמה: אותה דמות, אותו מוצר או אותו סגנון נשמרים על פני עד עשר תמונות ייחוס בבת אחת. הודעת השחרור שלו טוענת ש“טיפוגרפיה מורכבת, אינפוגרפיקה, ממים ומוקאפים של ממשק עם טקסט דק וקריא עובדים כעת באופן אמין בסביבת ייצור”.\n\nGemini 3 Pro Image בנוי על Gemini 3, המודל הכללי. תמונה יכולה להישען על שאילתת Google Search, ולכן כרטיס מתכון או גרפיקת מזג אוויר יכולים לשאת מידע עדכני. Google מציינת טקסט קריא בתוך התמונה בכמה שפות.',
-        history: 'Stable Diffusion פועל בייצוג דחוס של התמונה ולא על הפיקסלים שלה. המאמר שלו הציב לעצמו למטרה לאפשר אימון על משאבי חישוב מוגבלים, לעומת מאות ימי GPU שעולה מודל שפועל ישירות על פיקסלים.\n\nSDXL נבנה למען נאמנות חזותית: רשת תמונה גדולה פי שלושה, מקודד טקסט שני, כמה יחסי גובה-רוחב, והטענה במאמר שלו עצמו להשתוות למחוללי התמונות הסגורים של 2023. המאמר של SD 3.5 נוקב במטרות אחרות: “שיפור הבנת הטקסט, הטיפוגרפיה ודירוגי ההעדפה האנושיים”. טיפוגרפיה היא הכתב שבתוך התמונה; הבנת טקסט היא השאלה האם פרומפט הנוקב בכמה דברים מקבל את כולם.',
+        current: 'Stability AI מבטיחה על SD 3.5 Large שהוא עוקב אחר הפרומפט מקרוב ומציב כתב בתוך התמונה (2024, כרטיס המודל ועמוד השחרור). הודעת השחרור של Flux 2 טוענת: “Complex typography, infographics, memes and UI mockups with legible fine text now work reliably in production.”\n\nבין התכונות המרכזיות של Flux 3 Klein, כרטיס המודל של Black Forest Labs (2026) מציין: “Text rendering within generated images.”',
+        history: 'Stable Diffusion פועל בייצוג דחוס של התמונה ולא על הפיקסלים שלה. המאמר שלו הציב לעצמו למטרה לאפשר אימון על משאבי חישוב מוגבלים, לעומת מאות ימי GPU שעולה מודל שפועל ישירות על פיקסלים.\n\nהמאמר על SDXL נוקב בסינתזת תמונות ברזולוציה גבוהה כמטרתו וטוען להשתוות למחוללי התמונות הסגורים של 2023. המאמר על הארכיטקטורה של SD 3.5 נוקב: “improving text comprehension, typography, and human preference ratings”. טיפוגרפיה היא הכתב שבתוך התמונה.',
       },
       referencesTitle: 'מקורות',
     },
@@ -3544,7 +3531,6 @@ export const he = {
         sd35_large: 'SD 3.5 Large קורא את הפרומפט דרך שלושה מקודדי טקסט: CLIP-L ו-CLIP-G, שאומנו על זוגות של תמונות וכיתובים (Radford et al. 2021; Cherti et al. 2023), ו-T5-XXL, שאומן על טקסט בלבד (Raffel et al. 2020). המאמר של Stability AI על הארכיטקטורה (Esser et al. 2024) מציג את המטרה כ-“improving text comprehension, typography, and human preference ratings”. בהערכת המאמר, טיפוגרפיה משמעה עד כמה נאמנה התמונה משחזרת טקסט כתוב.',
         sd35_large_turbo: 'SD 3.5 Large Turbo קורא את הפרומפט דרך אותם שלושה מקודדי טקסט כמו SD 3.5 Large, CLIP-L, CLIP-G ו-T5-XXL (Stability AI 2024, כרטיס המודל). מה ש-Stability AI רצתה מ-Turbo כתוב בהודעת השחרור: “A distilled version of Stable Diffusion 3.5 Large generates high-quality images with exceptional prompt adherence in just 4 steps” (Stability AI 2024, עמוד ההשקה).',
         flux2: 'Flux 2 קורא את הפרומפט דרך מודל השפה של מודל ראייה-שפה (VLM). Black Forest Labs מציינת מה ה-VLM מוסיף: “The VLM brings real world knowledge and contextual understanding” (Black Forest Labs 2025).',
-        gemini_3_pro_image: 'Gemini 3 Pro Image הוא מודל התמונות של Google, “Nano Banana Pro”. Google כותבת: “Built on Gemini 3 Pro, Nano Banana Pro uses Gemini\'s state-of-the-art reasoning and real-world knowledge to visualize information better than ever before.” (Google 2025).',
       },
       referencesTitle: 'מקורות',
     },

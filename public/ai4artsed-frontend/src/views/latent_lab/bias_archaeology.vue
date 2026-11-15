@@ -41,7 +41,7 @@
   the same sample for every model in that run. What a LEVEL is offered is
   another matter: at the kids level four categories are offered, and within them
   the situations that turn on drugs, alcohol, violence, weapons, crime, terror,
-  mental illness or sex are kept back; below the open level, kids and youth
+  mental illness or sex are kept back; at kids and youth
   alike, six further situations are kept back in every category. Those
   screens sit in the service (`bbq_corpus.KIDS_EXCLUDE_THEMES`
   and `MINORS_EXCLUDE_THEMES`), and so does the category list - what a Vue file
@@ -70,14 +70,18 @@
     <div class="lab-main">
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
-          <section class="ba-text lab-col col-fold-host" :class="{ folded }" :style="{ paddingBottom: axisFromBottom + 'px' }">
+          <section class="cmp-column ba-text lab-col col-fold-host" :class="{ folded }" :style="{ marginBottom: axisFromBottom + 'px' }">
             <ColumnFold v-model:folded="folded" />
 
             <!-- The models that did not answer, each named with its cause. The
                  run goes on with the next model, so the other rows still fill.
                  At the head: this column scrolls at 1210 x 834 (docs/
-                 ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`). -->
-            <p ref="failLine" class="lab-prep-err at-head">{{ failures.join(' ') }}</p>
+                 ELEMENT_STRUCTURE_REGISTRY.md, `.lab-prep-err`).
+                 Since 2026-11-07 the line stands only while it has something
+                 to say; empty, it held one line of room at the head, and the
+                 picker and the slider under it are disabled while a run goes, so
+                 what the line pushes down is the rest of the column. -->
+            <p v-if="failures.length" ref="failLine" class="lab-prep-err at-head">{{ failures.join(' ') }}</p>
 
             <!-- Which models are asked. It stood in the band's first node as an
                  interactive FlowNodeHead until 2026-08-21; here it is the
@@ -180,13 +184,13 @@
                     <rect :x="b.x" :y="b.y" :width="b.w" :height="b.h" :class="['ba-bar', b.k, { 'lab-hit': b.hit }]" />
                     <text v-if="s.ambig > 0" :x="b.cx" :y="b.y - 5" class="ba-count" text-anchor="middle">{{ b.v }}</text>
                   </g>
-                  <text :x="sx(si)" :y="PLOT_B + 18" class="ba-name" text-anchor="middle">{{ s.label }}</text>
-                  <text v-if="s.ambig > 0" :x="sx(si)" :y="PLOT_B + 36" class="ba-score" text-anchor="middle">
+                  <ModelAxisLabel :x="sx(si)" :y="PLOT_B + 18" :label="s.label" />
+                  <text v-if="s.ambig > 0" :x="sx(si)" :y="PLOT_B + 36 + nameDrop" class="ba-score" text-anchor="middle">
                     {{ t('latentLab.textLab.bias.score', { v: signed(biasScore(s)) }) }}
                   </text>
                   <!-- Its own history, on its own line: at five models a slot is
                        166 px wide and both together came to 180. -->
-                  <text v-if="s.ambig > 0 && typicalOf(s) !== null" :x="sx(si)" :y="PLOT_B + 52" class="ba-typical" text-anchor="middle">
+                  <text v-if="s.ambig > 0 && typicalOf(s) !== null" :x="sx(si)" :y="PLOT_B + 52 + nameDrop" class="ba-typical" text-anchor="middle">
                     {{ t('latentLab.textLab.bias.typical', { m: signed(typicalOf(s)!) }) }}
                   </text>
                 </g>
@@ -209,8 +213,12 @@ import ShellRun from '@/components/ShellRun.vue'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 
 import ModelPicker from '@/components/ModelPicker.vue'
+import ModelAxisLabel from '@/components/ModelAxisLabel.vue'
+import { modelLabelDrop } from '@/lib/modelAxisLabel'
 import MarkedSlider, { type SliderMark } from '@/components/MarkedSlider.vue'
 import { useSafetyLevelStore } from '@/stores/safetyLevel'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
+import { safetyBlockOf } from '@/composables/useGenerationStream'
 import { bringFailureIntoView, generationErrorFor } from '@/composables/useLabRun'
 
 /**
@@ -229,13 +237,15 @@ const REFERENCES: LabReference[] = [
 
 const { t, locale } = useI18n()
 const safety = useSafetyLevelStore()
+const safetyStore = useSafetyEventStore()
 
 /* ---------------------------------------------------------------------------
    Which models are compared. The row itself is `components/ModelPicker.vue`,
    because it stood twice — once here and once in Bias Archäologie 2 — and
    because the preset it offers is now a preset over a selection rather than a
-   fixed set. What arrives here is only the lineup, smallest
-   first; the model identifiers stay data on their way from the service.
+   fixed set. What arrives here is only the lineup, smallest first or, for
+   the generations, in their order; the model identifiers stay data on their
+   way from the service.
    --------------------------------------------------------------------------- */
 interface Member { id: string; label: string; vram: number }
 
@@ -410,12 +420,15 @@ const shownAnswers = computed(() => {
    what comes back. A question someone else has already read in this language
    reaches no model at all.
    --------------------------------------------------------------------------- */
-const uiLang = computed(() => String(locale.value || 'en').split('-')[0] ?? 'en')
+const uiLang = computed(() => String(locale.value || 'en'))
 const translations = ref<Record<string, string[]>>({})
 /* One request per case, not one per reason to want it: the store is only
    written when the answer arrives, so mount and watcher fired six calls for
    the first case. */
 const pending = new Set<string>()
+/* A case whose translation the server held back is not asked for again in
+   this language: the answer would be the same refusal, said once more. */
+const withheld = new Set<string>()
 
 const shownTranslation = computed(() => translations.value[asked.value?.id ?? ''] ?? null)
 const needsTranslation = computed(() => uiLang.value !== 'en')
@@ -429,7 +442,8 @@ const shownAnswersTr = computed(() => {
 })
 
 async function ensureTranslation(it: BbqItem | null) {
-  if (!it || uiLang.value === 'en' || translations.value[it.id] || pending.has(it.id)) return
+  if (!it || uiLang.value === 'en' || translations.value[it.id] || pending.has(it.id)
+    || withheld.has(it.id)) return
   pending.add(it.id)
   const parts = [it.context, it.question, ...it.answers]
   try {
@@ -447,15 +461,22 @@ async function ensureTranslation(it: BbqItem | null) {
     if (Array.isArray(out) && out.length === parts.length) {
       translations.value = { ...translations.value, [it.id]: out }
     }
-  } catch {
-    /* The English stands. A missing translation is not a failed run. */
+  } catch (e) {
+    // The English stands. A missing translation is not a failed run; one the
+    // server held back is said where every block on this platform is said,
+    // while its question is still the one on screen.
+    const refused = safetyBlockOf(e)
+    if (refused) {
+      withheld.add(it.id)
+      if (asked.value?.id === it.id) safetyStore.reportBlock(refused)
+    }
   } finally {
     pending.delete(it.id)
   }
 }
 
 watch(asked, it => { ensureTranslation(it) })
-watch(uiLang, () => { translations.value = {}; ensureTranslation(asked.value) })
+watch(uiLang, () => { translations.value = {}; withheld.clear(); ensureTranslation(asked.value) })
 
 /* ---------------------------------------------------------------------------
    The run. Each model is asked in batches, so the graph has something to draw
@@ -506,13 +527,20 @@ const VH = ref(420)
 let ro: ResizeObserver | null = null
 
 const PAD_L = 34, PAD_R = 16, PLOT_T = 14
-/** Room under the axis for the name, the score and the reference under it. */
-const PLOT_B = computed(() => Math.max(PLOT_T + 40, VH.value - 62))
+/**
+ * Room under the axis for the name, the score and the reference under it, and
+ * for the second line of a name where one of the lineup has it (the date of a
+ * generation; `lib/modelAxisLabel.ts`).
+ */
+const nameDrop = computed(() => modelLabelDrop(series.value.map(s => s.label)))
+const PLOT_B = computed(() => Math.max(PLOT_T + 40, VH.value - 62 - nameDrop.value))
 
 /**
  * How far the x axis stands above the foot of its column. The drawing surface
  * reaches to the bottom of the right column, so this is also how far the LEFT
- * column has to stop short for its last box to close flush with that axis.
+ * column's box has to stop short to close flush with that axis: a margin since
+ * the column box of 2026-11-07 (padding until then, when the column had no box
+ * and its last note closed on the line).
  */
 const axisFromBottom = computed(() => Math.round(VH.value - PLOT_B.value))
 
@@ -848,7 +876,6 @@ const folded = ref(false)
 .ba-ax { stroke: rgba(255, 255, 255, 0.18); }
 .ba-grid { stroke: rgba(255, 255, 255, 0.05); }
 .ba-tick { fill: rgba(255, 255, 255, 0.36); font-size: var(--flow-fs-sub); }
-.ba-name { fill: rgba(255, 255, 255, 0.75); font-size: var(--flow-fs-label); }
 .ba-count { fill: rgba(255, 255, 255, 0.42); font-size: var(--flow-fs-sub); }
 .ba-bar.stereo { fill: #c96a5c; }
 .ba-bar.unknown { fill: #7ec89a; }

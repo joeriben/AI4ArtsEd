@@ -139,7 +139,7 @@
               :model-meta="slotStreams[idx]?.modelMeta ?? null"
               :duration-ms="slotStreams[idx]?.stage4DurationMs ?? 0"
               :facts="slotFacts(idx)"
-              :is-favorited="slots[idx]?.isFavorited ?? false"
+              :is-favorited="!!slots[idx]?.runId && favoritesStore.isFavorited(slots[idx]!.runId!)"
               :note="slotNote(slots[idx])"
               @toggle-favorite="slots[idx] && toggleSlotFavorite(slots[idx]!)"
               @forward="slots[idx] && forwardToPage(slots[idx]!)"
@@ -186,7 +186,7 @@ import ShellRun from '@/components/ShellRun.vue'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 import InterceptionPresetOverlay from '@/components/InterceptionPresetOverlay.vue'
 import WikimediaFoundRow, { type FoundImage, type FoundState } from '@/components/WikimediaFoundRow.vue'
-import { failureKey, safetyBlockKey, useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
+import { failureKey, safetyBlockKeyForEvent, safetyBlockOf, useGenerationStream, type GenerationResult } from '@/composables/useGenerationStream'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { postStreamedRun } from '@/services/directRun'
@@ -205,7 +205,7 @@ const deviceId = useDeviceId()
 // --- Model presets ---
 const PRESETS = {
   history: ['sd15', 'sdxl', 'sd35_large'],
-  current: ['sd35_large', 'flux2', 'gemini_3_pro_image'],
+  current: ['sd35_large', 'flux2', 'flux3'],
 } as const
 
 type PresetKey = keyof typeof PRESETS
@@ -216,14 +216,15 @@ type PresetKey = keyof typeof PRESETS
  * in above.
  *
  * Which models a surface offers is a didactic decision and not a catalogue
- * listing, so nothing is added here without one. Every entry but two stands
- * in a set above. CommonCanvas XL C is one exception, ordered after SDXL,
+ * listing, so nothing is added here without one. Every entry but one stands
+ * in a set above. CommonCanvas XL C is the exception, ordered after SDXL,
  * whose architecture it shares: it is
  * trained on ~70 million Creative Commons-licensed images and on nothing
  * else (CommonCatalog, arXiv:2310.16825), where the SDXL beside it is not.
- * Flux 3 Klein is the other, ordered after Flux 2: FLUX 3 Image Klein, Black
- * Forest Labs' model of 2026, offered since 2026-10-18 wherever Flux 2 stands
- * in the Latent Lab, with Flux 2 kept beside it.
+ * Flux 3 Klein stands after Flux 2: FLUX 3 Image Klein, Black Forest Labs'
+ * model of 2026, offered since 2026-10-18 wherever Flux 2 stands in the Latent
+ * Lab, with Flux 2 kept beside it. Since 2026-11-04 it stands in the current
+ * set, where Gemini 3 Pro stood until the Gemini image models left the platform.
  */
 const CATALOGUE: { id: string; label: string }[] = [
   { id: 'sd15', label: 'SD 1.5 (2022)' },
@@ -232,7 +233,6 @@ const CATALOGUE: { id: string; label: string }[] = [
   { id: 'sd35_large', label: 'SD 3.5 Large (2024)' },
   { id: 'flux2', label: 'Flux 2' },
   { id: 'flux3', label: 'Flux 3 Klein' },
-  { id: 'gemini_3_pro_image', label: 'Gemini 3 Pro (\u20AC)' },
 ]
 
 /** How many columns the stage carries. */
@@ -242,12 +242,7 @@ const MIN_MODELS = 2
 
 
 // --- State ---
-// One press runs every model of the active preset — here that is ONE picture
-// per model, and this is the single place on the platform where Gemini 3 Pro
-// may stand in a preselection (it is only one picture each). Everywhere
-// else it is chosen by hand,
-// because everywhere else a press multiplies it — the census alone runs it once
-// per context. Its name carries the € all the same.
+// One press runs every model of the active preset, one picture per model.
 //
 // The surface opens with the HISTORICAL row, which is also the
 // upper of the two fields: three years of one family, all of them weights this
@@ -260,11 +255,10 @@ const MIN_MODELS = 2
 const selected = ref<string[]>([...PRESETS.history])
 
 /**
- * A set as it can run here. Gemini 3 Pro stands in the current set and runs
- * through Mammouth AI; where that account holds no key or no
- * credit (docs/DEVELOPMENT_DECISIONS.md) it is switched off, and the set writes
- * the two it has left. A selection that holds it lets it go further down,
- * where the columns are.
+ * A set as it can run here. A cloud model in a set is switched off where its
+ * provider holds no key or no credit (services/provider_account.py), and the
+ * set writes the models it has left. A selection that holds it lets it go
+ * further down, where the columns are.
  */
 const { askWhenShown, accountMissing, accountParams, leaveOutAccountMissing } = useModelAvailability()
 askWhenShown()
@@ -347,9 +341,9 @@ const REFERENCES: Record<PresetKey, LabReference[]> = {
       venue: 'bfl.ai, 25 November 2025',
     },
     {
-      authors: 'Google (2025)',
-      title: 'Introducing Nano Banana Pro',
-      venue: 'blog.google, 20 November 2025',
+      authors: 'Black Forest Labs (2026)',
+      title: 'FLUX 3 Image Klein, model card',
+      venue: 'huggingface.co/black-forest-labs/flux-3-image-klein',
     },
   ],
 }
@@ -434,7 +428,7 @@ interface ModelSlot {
   /**
    * A refusal, as an i18n KEY. The service answers in German developer wording,
    * and a cell that showed it raw would put that in front of a visitor in every
-   * language — `safetyBlockKey()` turns it into something the page can say.
+   * language — the sentence comes from the block message's `reason_key` instead.
    */
   blockedKey: string | null
   /** Nothing came back. A hole in a comparison must read as a hole, not as a cell still to come. */
@@ -448,7 +442,6 @@ interface ModelSlot {
   failedKey: string | null
   /** The values the sentence of `failedKey` names (a provider, say). */
   failedParams?: Record<string, string>
-  isFavorited: boolean
   /** What ran, held at the moment it ran — the field above stays writable. */
   prompt: string
   seed: number | null
@@ -532,10 +525,8 @@ function applyExample(item: { fill: string[] }) {
 // --- Slot actions ---
 async function toggleSlotFavorite(slot: ModelSlot) {
   if (!slot.runId) return
-  const success = await favoritesStore.toggleFavorite(slot.runId, 'image', deviceId, 'anonymous', 'compare')
-  if (success) {
-    slot.isFavorited = !slot.isFavorited
-  }
+  // The star reads the store (`isFavorited`), which follows a sign-in.
+  await favoritesStore.toggleFavorite(slot.runId, 'image', deviceId, 'anonymous', 'compare')
 }
 
 function forwardToPage(slot: ModelSlot) {
@@ -661,6 +652,15 @@ async function lookupFoundImages(prompt: string) {
     const res = await postStreamedRun('/api/commons/lookup', { prompt },
                                       { baseUrl, validateStatus: () => true })
     if (token !== foundRunToken) return
+    // The safety check stopped the search: the prompt at the intake, or the
+    // search term a model made of it, which is then not shown. The row says so,
+    // and the comparison above runs on. A check that gave no answer is an
+    // outage and is said as one.
+    const block = res.status === 403 ? safetyBlockOf(res.data) : null
+    if (block) {
+      foundState.value = block.reason_key === 'unavailable' ? 'error' : 'blocked'
+      return
+    }
     if (res.status >= 400) { foundState.value = 'error'; return }
     const data = res.data
     foundTerm.value = data.term ?? null
@@ -697,16 +697,19 @@ async function startComparison() {
 
   const baseUrl = apiBase()
 
-  // Stage 2 Jugendschutz gate — check before generating any images. The platform's perspective call,
-  // on the passthrough perspective and without an adaptation: a refusal
-  // arrives as the block it is (status blocked, stage 2) and goes where every
-  // block on this platform goes; an answer that wrote nothing says so under
-  // the field. Until 2026-10-10 this matched the refusal sentence's wording
-  // itself, from a copy of the backend's constant (finding S-015 of the code review of 2026-10-10).
+  // The gate before any picture: the platform's pre-check, which takes the
+  // prompt in at the intake and hands it back as it came in. What the
+  // comparison makes of the prompt is checked where that happens: what each
+  // model receives before that model, and the Commons search term at the
+  // result. A refusal arrives as the block it is and goes where every block
+  // on this platform goes; an answer that wrote nothing says so under the
+  // field. Until 2026-10-10 this matched the refusal sentence's wording
+  // itself, from a copy of the backend's constant (finding S-015 of the code
+  // review of 2026-10-10).
   try {
     const outcome = await interceptPrompt('user_defined', userPrompt.value, null, { skipOptimization: true })
     if ('refusedKey' in outcome) {
-      safetyStore.reportBlock(outcome.blockedAtStage || 2, outcome.reason || t('mediaInput.contentBlocked'), [])
+      safetyStore.reportBlock(outcome.block)
       isGenerating.value = false
       return
     }
@@ -741,7 +744,6 @@ async function startComparison() {
     blockedKey: null,
     failed: false,
     failedKey: null,
-    isFavorited: false,
     prompt: ranPrompt,
     seed,
     createdAt: null,
@@ -789,7 +791,7 @@ async function startComparison() {
           slot.runId = result.run_id || null
           slot.createdAt = Date.now()
         } else if (result.status === 'blocked') {
-          slot.blockedKey = safetyBlockKey(result.blocked_reason, result.blocked_stage)
+          slot.blockedKey = safetyBlockKeyForEvent({ block: result.safety_block })
         } else {
           // error, cancelled, busy, and a success that carried no picture: all
           // four are a hole in the row, and a cell left untouched would keep the

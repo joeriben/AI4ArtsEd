@@ -457,7 +457,7 @@ def test_the_generation_route_still_streams_for_the_older_word_alone(
     """The word this route DOES serve, unchanged. The generator is stood in
     for: this file settles which protocol a body asks for, and there is one
     GPU on this machine."""
-    def stand_in(data):
+    def stand_in(data, safety_level):
         yield "event: connected\ndata: {}\n\n"
 
     monkeypatch.setattr(schema_pipeline_routes,

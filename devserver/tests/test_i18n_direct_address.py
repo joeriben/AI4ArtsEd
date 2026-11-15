@@ -115,6 +115,10 @@ ADDRESS_SLOTS = {
 
 ADDRESS = re.compile(r"\b(Ihr|Euch|Euer|Du|Dein)\b")
 
+# The surname Du in a reference, 'Du, Li and Mordatch (2020)', is no address:
+# a capitalised Du followed in the same clause by a year in parentheses is a citation.
+CITED_SURNAME = re.compile(r"\bDu\b(?=[^.;]{0,60}\(\d{4}[a-z]?\))")
+
 # The shapes a reason takes in these files. A comment block that matches none
 # of these documents nothing.
 DOCUMENTED_REASON = re.compile(
@@ -165,7 +169,6 @@ ADDRESS_DEBT = {
     ("de", "latentLab.flowLogic.transformer.prompt.sysExample"),
     ("de", "latentLab.flowLogic.transformer.prompt.you"),
     ("de", "latentLab.flowLogic.transformer.vectors.embLabel"),
-    ("de", "latentLab.loraReach.story"),
     ("de", "latentLab.probing.techText"),
     ("de", "latentLab.textLab.bias.noteBody"),
     ("de", "latentLab.textLab.tokens.cutHead"),
@@ -347,7 +350,8 @@ def check_content(lang, source, label=None):
     lines = source.splitlines()
     ancestors = _ancestor_map(source)
     for dotted, value, num in entries:
-        if not ADDRESS.search(value):
+        if not any(not (m.group(1) == "Du" and CITED_SURNAME.match(value, m.start()))
+                   for m in ADDRESS.finditer(value)):
             continue
         if (lang, dotted) in ADDRESS_DEBT:
             continue

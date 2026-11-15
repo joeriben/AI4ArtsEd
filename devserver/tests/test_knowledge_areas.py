@@ -49,22 +49,28 @@ Etwas mehr Fliesstext, damit der Struktur-Chunker mindestens einen inhaltstragen
 
 
 def _stub_llm(temperature: float = 0.2):
-    """Deterministic stand-in for the provider-routed LLM (schema JSON for Map,
+    """Deterministic stand-in for the provider-routed LLM (a Markdown summary,
     plain text for the PROFIL Reduce). Identical to test_knowledge_curation."""
     import json as _json
 
     def _fn(system: str, user: str, max_tokens: int):
+        if "REFUTE" in system:   # the adversarial review: nothing to refute
+            return _json.dumps({"omissions": [], "distortions": [], "additions": []})
         if "PROFIL" in system:
             return ("Das Dokument behandelt dekoloniale Kunstpaedagogik und "
                     "kulturelle Resilienz und baut auf vorhandenen Diskursen auf. "
                     "Anwendbar in medialer und performativer Praxis.")
-        return _json.dumps({
-            "section_title": "Massnahmen",
-            "digest": "- drei Schritte\n- Mindestalter 12\n- Evaluation alle 6 Monate\nBeispiel: 30 Teilnehmende, 2025.",
-            "terms": [{"term": "kulturelle Resilienz", "definition": "Widerstandsfaehigkeit kultureller Praxis"}],
-        }, ensure_ascii=False)
+        return _STUB_SUMMARY
 
     return _fn
+
+
+# The summary the stub answers with: Markdown, as the summary call asks for it.
+_STUB_SUMMARY = (
+    "## Einleitung\n\nBetreiberdokument zu dekolonialer Kunstpaedagogik.\n\n"
+    "## Abschnitt\n\nMassnahme in drei Schritten, Mindestalter 12, Evaluation alle "
+    "6 Monate; Projekt mit 30 Teilnehmenden 2025.\n\n"
+    "## TERMS\n\n- **kulturelle Resilienz**: Widerstandsfaehigkeit kultureller Praxis")
 
 
 @pytest.fixture()
@@ -542,14 +548,11 @@ def test_areas_counts_published_and_total(app_client):
 
 
 # ===========================================================================
-# 5) Reprocess carries status + bereich forward (2026-07-09 fix): a FRESH
-# upload always starts draft, but re-running Verdichtung on an ALREADY
-# ingested doc (POST /items/<id>/reprocess, no re-upload) must preserve its
-# CURRENT status/bereich. Before this fix every reprocess unconditionally
-# reset status to draft -- on the owner's planned ~30-document bulk
-# re-analysis that would have silently unpublished everything already
-# published. No test exercised this route before; this is new coverage, not
-# a fix for one of the 20 regressed tests.
+# 5) Reprocess carries bereich forward and lets the gate decide the status
+# (knowledge_processing.gate_status, 2026-11-13): a reprocess whose checks
+# and review pass is published; a draft the operator set, or a fresh upload
+# not yet released, stays a draft; every draft names its reason in the front
+# matter (`status_reason`).
 # ===========================================================================
 
 def test_reprocess_preserves_published_status_and_bereich(app_client):
@@ -571,17 +574,88 @@ def test_reprocess_preserves_published_status_and_bereich(app_client):
 
     after = client.get(f"/api/knowledge/items/{doc_id}").get_json()
     assert after["status"] == "published", after   # NOT reset to draft
+    assert after["status_reason"] == ""
     assert after["bereich"] == aid                   # carried over
 
 
-def test_reprocess_preserves_draft_status(app_client):
+def test_reprocess_with_failed_checks_lands_as_draft(app_client, monkeypatch):
+    """A published document keeps `published` only through passed checks: a
+    reprocess whose summary copies its source above the verbatim ceiling (and
+    keeps copying when the copied passages are sent back) is set to draft, and
+    the front matter names the failed check."""
+    import json as _json
+    import my_app.services.knowledge_processing as kp
     client, _, _, config = app_client
     doc_id = _ingest_into(client, aid=None)
-    assert client.get(f"/api/knowledge/items/{doc_id}").get_json()["status"] == "draft"
+    assert client.post(f"/api/knowledge/items/{doc_id}/status",
+                       json={"status": "published"}).status_code == 200
+    copied = _MINI_MD.split("## Abschnitt\n\n", 1)[1].strip()
 
+    def _copying_llm(temperature: float = 0.2):
+        def _fn(system: str, user: str, max_tokens: int):
+            if "REFUTE" in system:
+                return _json.dumps({"omissions": [], "distortions": [], "additions": []})
+            if "PROFIL" in system:
+                return "Das Dokument behandelt dekoloniale Kunstpaedagogik."
+            return f"## Einleitung\n\nBetreiberdokument.\n\n## Abschnitt\n\n{copied}"
+        return _fn
+
+    monkeypatch.setattr(kp, "default_llm_fn", _copying_llm, raising=False)
     r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
     assert r.status_code == 200, r.get_json()
     end = _poll_job(client, r.get_json()["job_id"])
     assert end is not None and end["state"] == "done", end
 
-    assert client.get(f"/api/knowledge/items/{doc_id}").get_json()["status"] == "draft"
+    after = client.get(f"/api/knowledge/items/{doc_id}").get_json()
+    assert after["status"] == "draft", after
+    md = (Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md").read_text(encoding="utf-8")
+    assert "verbatim_share" in md.split("\n---", 1)[0]   # the failed check, in the front matter
+
+
+def _reprocess(client, doc_id):
+    r = client.post(f"/api/knowledge/items/{doc_id}/reprocess")
+    assert r.status_code == 200, r.get_json()
+    end = _poll_job(client, r.get_json()["job_id"])
+    assert end is not None and end["state"] == "done", end
+    return client.get(f"/api/knowledge/items/{doc_id}").get_json()
+
+
+def test_a_fresh_upload_waits_for_release_also_through_a_reprocess(app_client):
+    client, _, _, config = app_client
+    doc_id = _ingest_into(client, aid=None)
+    item = client.get(f"/api/knowledge/items/{doc_id}").get_json()
+    assert item["status"] == "draft" and "release" in item["status_reason"], item
+
+    after = _reprocess(client, doc_id)
+    assert after["status"] == "draft" and "release" in after["status_reason"], after
+
+
+def test_the_operators_draft_names_the_operator_and_survives_a_reprocess(app_client):
+    client, _, _, config = app_client
+    doc_id = _ingest_into(client, aid=None)
+    assert client.post(f"/api/knowledge/items/{doc_id}/status",
+                       json={"status": "published"}).status_code == 200
+    assert client.get(f"/api/knowledge/items/{doc_id}").get_json()["status_reason"] == ""
+    assert client.post(f"/api/knowledge/items/{doc_id}/status",
+                       json={"status": "draft"}).status_code == 200
+    md = (Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md").read_text(encoding="utf-8")
+    assert "\nstatus: draft\nstatus_reason: operator\n" in md.split("\n---", 1)[0] + "\n"
+
+    after = _reprocess(client, doc_id)
+    assert after["status"] == "draft" and "operator" in after["status_reason"], after
+
+
+def test_a_reprocess_publishes_a_draft_without_a_hold(app_client):
+    """The Monster case: a draft written before the reason was recorded is
+    published once its checks and review pass."""
+    client, _, _, config = app_client
+    doc_id = _ingest_into(client, aid=None)
+    path = Path(config.KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md"
+    md = path.read_text(encoding="utf-8")
+    fm, body = md.split("\n---", 1)
+    fm = "\n".join(line for line in fm.split("\n") if not line.startswith("status_reason:"))
+    path.write_text(fm + "\n---" + body, encoding="utf-8")
+    assert client.get(f"/api/knowledge/items/{doc_id}").get_json()["status_reason"] == ""
+
+    after = _reprocess(client, doc_id)
+    assert after["status"] == "published" and after["status_reason"] == "", after

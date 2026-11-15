@@ -179,22 +179,24 @@ function openChooser() {
   justify-content: center;
 }
 
-/* 88 px, not the 62 it was: the name stands ACROSS the disc (`CircleTitle`), and
+/* 86 px, not the 62 it was: the name stands ACROSS the disc (`CircleTitle`), and
    that is sized to the disc — at 62 px the longer names came out at 9.6 px and
    filled the circle from rim to rim over the picture. The flow board gives the
-   same disc 144 px, which is why the name reads there. 88 px is the largest that
-   still puts THREE in a row of the preparation column (3 x 88 + 2 x 8 = 280 of
-   303 px) and lifts the name to about 15 px (2026-09-06). */
+   same disc 144 px, which is why the name reads there. 86 px is the largest that
+   still puts THREE in a row of the preparation column (3 x 86 + 2 x 8 = 274 of
+   the 277 px the column box leaves inside the 303 px column at 1210 x 834) and
+   lifts the name to about 15 px (2026-09-06; 88 px until the box of 2026-11-07,
+   when the column had 303 px inside). */
 .pp-pick {
   position: relative;
-  width: 88px;
+  width: 86px;
 }
 
 /* One more. It is the plus of a list and not the free sign of a surface
    (components/IntakePlus.vue is that one), so it is drawn as the empty place a
    disc would take. */
 .pp-add {
-  width: 88px;
+  width: 86px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 1px dashed rgb(var(--surface-4-rgb) / 0.9);

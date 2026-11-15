@@ -34,13 +34,32 @@ def _members():
     return seen
 
 
-# One member the loader runs, standing in for the model a surface names;
-# one that is absent from this machine in the tests; one that runs nowhere
-# (its row entry says trust_remote_code). All read off the table.
+# One member the loader runs, standing in for the model a surface names, and
+# one that is absent from this machine in the tests, both read off the table;
+# one that runs nowhere (its entry says trust_remote_code), which no entry of
+# the table is since 2026-11-08 and the `held` fixture adds.
 MEMBER = next(m["id"] for m in _members() if not m.get("trust_remote_code"))
 MEMBER_DIR = MEMBER.replace("/", "--")
 ABSENT = next(m["id"] for m in _members() if m["id"] != MEMBER and not m.get("trust_remote_code"))
-HELD = next(m["id"] for m in _members() if m.get("trust_remote_code"))
+HELD = "owner/held-7b"
+
+
+@pytest.fixture
+def held(monkeypatch):
+    """The table with one more member, on the last place of its first row,
+    whose architecture ships as code in its repository."""
+    import copy
+    from my_app.services import local_llm_weights
+    table = copy.deepcopy(local_llm_weights.register())
+    row = next(iter(table["text_rows"]))
+    table["text_rows"][row].append("held")
+    table["models"]["held:7b"] = {
+        "repo": HELD, "dir": HELD.replace("/", "--"), "display_name": "Held 7B",
+        "chat_capable": False, "vision": False, "size_gb": 15.4,
+        "params_b": 7.0, "vram_gb": 16.0, "revision": "0" * 40, "trust_remote_code": True,
+        "text_rows": {row: {"key": "held", "description": "Held 7B"}}}
+    monkeypatch.setattr(local_llm_weights, "_table", lambda: table)
+    return HELD
 
 
 # ---------------------------------------------------------------------------
@@ -134,7 +153,7 @@ def test_a_model_off_the_rows_or_without_weights_is_refused_before_the_node(prob
     node = _Node({})
     monkeypatch.setattr(probes, "_run_node", node)
     off = probes.bias_probe("nobody/nothing", ["p1"])
-    assert off["http_status"] == 400 and "text_presets.json" in off["error"]
+    assert off["http_status"] == 400 and "local_llm_weights.json" in off["error"]
     absent = probes.bias_probe(ABSENT, ["p1"])
     assert absent["http_status"] == 503 and ABSENT.replace("/", "--") in absent["error"]
     assert node.calls == []
@@ -179,7 +198,7 @@ def test_the_bbq_probe_rotates_the_answers_and_sums_per_answer(probes, monkeypat
 
     node = _Node(answer)
     monkeypatch.setattr(probes, "_run_node", node)
-    out = probes.bbq_probe(MEMBER, ["Age-1", "Age-2"], category="Age", level="open")
+    out = probes.bbq_probe(MEMBER, ["Age-1", "Age-2"], category="Age", level="adult")
     assert "error" not in out, out
     (_, inputs), = node.calls
     assert node.workloads == ["text:bbq-probe"]
@@ -286,6 +305,95 @@ def test_the_model_rows_say_installed_missing_and_the_fit(monkeypatch):
     assert text_presets.dir_name(MEMBER) == MEMBER_DIR
     assert text_presets.dir_name("nobody/nothing") is None
 
+
+
+def test_the_pseudo_row_all_holds_every_member_once_with_its_rows_and_the_default(held, monkeypatch):
+    """What the Representation Engineering surface reads: every member of
+    every row once, keyed by its folder, smallest first, each with the rows
+    and keys it stands under, and the member the surface starts on."""
+    from my_app.services import text_presets
+    table = json.loads(text_presets.TABLE_FILE.read_text(encoding="utf-8"))
+    rows = text_presets.scenarios()
+    default = table["models"][table["representation_engineering_default"]]["repo"]
+    members = _members()
+    absent = next(m["id"] for m in members if m["id"] != default and not m.get("trust_remote_code"))
+    monkeypatch.setattr(text_presets, "is_installed", lambda model_id: model_id != absent)
+    monkeypatch.setattr(text_presets, "_card_gb", lambda: 24.0)
+    out = text_presets.listing(text_presets.ALL)
+    assert out["scenario"] == "all" and out["available_scenarios"] == list(rows)
+    listed = {**out["presets"], **out["missing"]}
+    assert len(listed) == len(out["presets"]) + len(out["missing"]) == len(members)
+    assert all(key == m["id"].replace("/", "--") == m["dir"] for key, m in listed.items())
+    assert set(out["presets"]) == {m["id"].replace("/", "--") for m in members
+                                   if m["id"] != absent and not m.get("trust_remote_code")}
+    assert all(not m["installed"] or m["held_back"] for m in out["missing"].values())
+    assert "trust_remote_code" in out["missing"][held.replace("/", "--")]["held_back"]
+    for part in (out["presets"], out["missing"]):
+        order = [(m["params_b"], m["vram_gb"], m["id"]) for m in part.values()]
+        assert order == sorted(order)
+    for m in listed.values():
+        assert list(zip(m["rows"], m["keys"])) == [(r, k) for r, ms in rows.items()
+                                                   for k, x in ms.items() if x["id"] == m["id"]]
+    # A member that stands on two rows names both; the table holds at least
+    # one such member (Qwen3 4B, on qwen and mixed).
+    names = list(rows)
+    shared = [(a, b, ids) for i, a in enumerate(names) for b in names[i + 1:]
+              if (ids := {x["id"] for x in rows[a].values()} & {x["id"] for x in rows[b].values()})]
+    assert shared
+    for a, b, ids in shared:
+        for model_id in ids:
+            assert {a, b} <= set(listed[model_id.replace("/", "--")]["rows"])
+    assert out["default"] == default and out["default_key"] == default.replace("/", "--")
+    monkeypatch.setattr(text_presets, "is_installed", lambda model_id: model_id != default)
+    out = text_presets.listing(text_presets.ALL)
+    assert out["default"] == default and out["default_key"] is None
+    assert default.replace("/", "--") in out["missing"]
+
+
+def test_the_rows_are_read_off_the_one_table_of_local_models(held):
+    """Since 2026-11-08 the rows stand in config/local_llm_weights.json: no
+    second table (rule 13), every member an entry there with its places on
+    the rows, found by its repository and by its alias alike."""
+    from my_app.services import local_llm_weights, text_presets
+    assert text_presets.TABLE_FILE == local_llm_weights.TABLE_FILE
+    assert not (text_presets.DEVSERVER_ROOT / "config" / "text_presets.json").exists()
+    table = local_llm_weights.register()
+    rows = text_presets.scenarios()
+    assert list(rows) == list(table["text_rows"])
+    for row, keys in table["text_rows"].items():
+        assert list(rows[row]) == keys, row
+    places = set()
+    for alias, e in table["models"].items():
+        for row, place in (e.get("text_rows") or {}).items():
+            assert row in table["text_rows"], (alias, row)
+            assert (row, place["key"]) not in places, (alias, row, place["key"])
+            places.add((row, place["key"]))
+            assert place["description"], (alias, row)
+            assert isinstance(e.get("params_b"), (int, float)), alias
+            assert isinstance(e.get("vram_gb"), (int, float)), alias
+            member = rows[row][place["key"]]
+            assert member["id"] == e["repo"] and member["alias"] == alias
+            assert member["description"] == place["description"]
+        if e.get("text_rows"):
+            for name in (e["repo"], alias, local_llm_weights.LOCAL_PREFIX + alias):
+                assert text_presets.dir_name(name) == e["dir"], name
+                assert text_presets.member_of(name)["id"] == e["repo"], name
+        else:
+            assert text_presets.dir_name(e["repo"]) is None and text_presets.dir_name(alias) is None
+        if e.get("trust_remote_code"):
+            # It runs nowhere, so no comparison surface offers it either.
+            assert not e["chat_capable"], alias
+        if e.get("text_rows") and not e["chat_capable"] and e["vision"]:
+            # A member of the rows that reads images reaches the Image
+            # Understanding list (it filters on vision, not on chat_capable)
+            # only where it is offered, which waits for its run on the card.
+            # Gemma 4 E4B had that run on 2026-11-14 and is offered as an
+            # image reader since (the table's note; commit 5e58c9c1).
+            assert e.get("offered") is False or alias == "gemma-4-e4b", alias
+    assert table["models"][table["representation_engineering_default"]].get("text_rows")
+    # A request body can carry anything; what is no string is on no row.
+    for odd in (5, None, ["a"], {"id": "a"}):
+        assert text_presets.dir_name(odd) is None and text_presets.member_of(odd) is None
 
 
 def test_the_text_routes_and_the_status_reach_no_gpu_service_for_the_moved_doors():
@@ -506,8 +614,8 @@ def test_the_package_names_no_model_and_registers_the_two_nodes():
             assert org not in text, (f, org)
 
 
-def test_a_member_the_loader_runs_nowhere_is_held_back_and_refused(probes, monkeypatch):
-    """The table's trust_remote_code member: on its row with the reason, in
+def test_a_member_the_loader_runs_nowhere_is_held_back_and_refused(probes, held, monkeypatch):
+    """A trust_remote_code member (the `held` fixture): on its row with the reason, in
     no picker's `presets` even when its weights are there, and refused with
     a 422 before the node."""
     from my_app.services import text_presets, winobias_corpus
@@ -633,6 +741,64 @@ def test_steered_runs_every_strength_off_one_seed_and_hangs_no_hook_at_zero(pack
     with pytest.raises(RuntimeError, match="no decoder layer"):
         probes.steered(built, hf, torch.device("cpu"), "p one", torch.ones(4), layer_idx=0,
                        alphas=[0.0], max_new_tokens=2, temperature=0.0, seed=11)
+
+
+def test_the_decoder_stack_is_found_under_both_shapes(package):
+    """A text-only model keeps its stack at model.layers, the multimodal
+    classes at model.language_model.layers."""
+    probes, torch = package
+    stack = torch.nn.ModuleList([torch.nn.Identity() for _ in range(2)])
+    text_only = types.SimpleNamespace(model=types.SimpleNamespace(layers=stack))
+    multimodal = types.SimpleNamespace(model=types.SimpleNamespace(
+        language_model=types.SimpleNamespace(layers=stack)))
+    neither = types.SimpleNamespace(model=types.SimpleNamespace(vision_tower=stack))
+    assert probes._decoder_layers(text_only) == list(stack)
+    assert probes._decoder_layers(multimodal) == list(stack)
+    assert probes._decoder_layers(neither) is None
+    assert probes._decoder_layers(types.SimpleNamespace()) is None
+
+
+def test_the_steering_direction_takes_the_dtype_of_the_state_it_is_added_to(package):
+    """A model whose first parameter is float32 while its stack computes in
+    bf16: the hooked layer's output stays bf16 and is moved by the strength
+    times the direction. The fake generate runs the hooked layer once, so
+    the hook body runs."""
+    probes, torch = package
+    direction = torch.tensor([1.0, -2.0, 0.25, 3.0])
+    state = torch.full((1, 2, 4), 0.5, dtype=torch.bfloat16)
+
+    class _Layer(torch.nn.Module):
+        def __init__(self, as_tuple):
+            super().__init__()
+            self.as_tuple = as_tuple
+
+        def forward(self, x):
+            return (x, None) if self.as_tuple else x
+
+    for as_tuple in (True, False):
+        seen = []
+
+        class _HF(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.p = torch.nn.Parameter(torch.zeros(1, dtype=torch.float32))
+                self.model = types.SimpleNamespace(language_model=types.SimpleNamespace(
+                    layers=torch.nn.ModuleList([_Layer(as_tuple) for _ in range(3)])))
+
+            def generate(self, input_ids, attention_mask=None, **kw):
+                out = self.model.language_model.layers[1](state)
+                seen.append(out[0] if isinstance(out, tuple) else out)
+                return torch.cat([input_ids, torch.zeros((1, 1), dtype=input_ids.dtype)], dim=1)
+
+        hf = _HF()
+        assert next(hf.parameters()).dtype == torch.float32
+        probes.steered(_built(torch, _Tok(), 3, 4), hf, torch.device("cpu"), "p one", direction,
+                       layer_idx=2, alphas=[0.0, 1.5, -1.5], max_new_tokens=2, temperature=0.0, seed=3)
+        assert [s.dtype for s in seen] == [torch.bfloat16] * 3
+        assert torch.equal(seen[0], state)
+        for got, strength in zip(seen[1:], (1.5, -1.5)):
+            assert torch.equal(got, state + strength * direction.to(torch.bfloat16))
+        assert not hf.model.language_model.layers[1]._forward_hooks
 
 
 def test_the_nodes_read_their_inputs_and_refuse_what_is_no_list(package, monkeypatch):

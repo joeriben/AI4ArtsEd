@@ -7,7 +7,10 @@
  * answer (a second German fragment and three English literals beside it), a
  * copy of the backend's constant; the
  * backend now answers a block at stage 2
- * (finding S-015 of the code review of 2026-10-10). The gate asks for the interception alone, no adaptation.
+ * (finding S-015 of the code review of 2026-10-10). The gate asks for the
+ * pre-check, on which no model writes: the server takes the text in at the
+ * intake and hands it back as it came in, and a refusal there is the
+ * intake's.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
@@ -25,7 +28,7 @@ vi.mock('@/services/labApi', () => ({ apiBase: () => '' }))
 import { interceptPrompt } from '../useLabRun'
 
 // The reason the backend carries is the model's own sentence; any text does
-// here, because the block is read off the status, never off the wording.
+// here, because the block is read off its block message, never off the wording.
 const SENTENCE = 'The model declined this prompt.'
 
 beforeEach(() => {
@@ -33,14 +36,14 @@ beforeEach(() => {
 })
 
 describe('the stage-2 gate of the comparison surfaces', () => {
-  it('asks for the interception alone when told to skip the adaptation', async () => {
-    answer = { status: 200, data: { success: true, stage2_result: 'a house, written' } }
+  it('asks for the pre-check when told to skip the adaptation', async () => {
+    answer = { status: 200, data: { success: true, stage2_result: 'a house' } }
     const outcome = await interceptPrompt('user_defined', 'a house', null, { skipOptimization: true })
     expect(posted).toEqual([{
       path: '/api/schema/pipeline/stage2',
       body: expect.objectContaining({ schema: 'user_defined', input_text: 'a house', skip_optimization: true }),
     }])
-    expect(outcome).toEqual({ written: 'a house, written' })
+    expect(outcome).toEqual({ written: 'a house' })
   })
 
   it('sends no skip where none was asked for', async () => {
@@ -50,11 +53,19 @@ describe('the stage-2 gate of the comparison surfaces', () => {
   })
 
   it("reads the backend's block at stage 2 as a refusal", async () => {
+    const block = { checkpoint: 'refusal', field: 'interception', reason_key: 'refusal', reason: SENTENCE }
     answer = {
       status: 403,
-      data: { success: false, status: 'blocked', reason: SENTENCE, error: SENTENCE, stage: 2, blocked_at_stage: 2 },
+      data: { success: false, status: 'blocked', error: SENTENCE, safety_block: block },
     }
+    const outcome = await interceptPrompt('bauhaus', 'something', null)
+    expect(outcome).toEqual({ refusedKey: 'safetyBlocked.generic', block })
+  })
+
+  it('says a refusal at the gate in the sentence its block message names', async () => {
+    const block = { checkpoint: 'intake', field: 'input_text', reason_key: 'personal_data', reason: SENTENCE }
+    answer = { status: 403, data: { success: false, error: SENTENCE, safety_block: block } }
     const outcome = await interceptPrompt('user_defined', 'something', null, { skipOptimization: true })
-    expect(outcome).toEqual({ refusedKey: 'safetyBlocked.generic', blockedAtStage: 2, reason: SENTENCE })
+    expect(outcome).toEqual({ refusedKey: 'safetyBlocked.dsgvo', block })
   })
 })

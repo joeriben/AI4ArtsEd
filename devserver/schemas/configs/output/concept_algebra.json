@@ -10,7 +10,8 @@
     "es": "Álgebra de conceptos",
     "he": "אלגברת מושגים",
     "ar": "جبر المفاهيم",
-    "bg": "Концептуална алгебра"
+    "bg": "Концептуална алгебра",
+    "zh-hant": "概念代數"
   },
   "description": {
     "en": "Vector arithmetic on text embeddings: A - B + C.",
@@ -22,7 +23,8 @@
     "es": "Aritmética vectorial sobre embeddings de texto: A - B + C.",
     "he": "אריתמטיקה וקטורית על embeddings של טקסט: A - B + C.",
     "ar": "حساب متجهي على تضمينات النص (embeddings): A - B + C.",
-    "bg": "Векторна аритметика върху текстови ембединги: A - B + C."
+    "bg": "Векторна аритметика върху текстови ембединги: A - B + C.",
+    "zh-hant": "對文字嵌入進行向量運算：A - B + C。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_concept_algebra_comfyui"

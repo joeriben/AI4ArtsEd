@@ -165,13 +165,9 @@ finished being read at the moment it is finished being spoken. Inside the
 sentence a single word is placed proportionally, not aligned — and the error
 cannot accumulate, because every sentence starts from a newly measured span.
 
-**Who waits and who does not.** The coupling carries a `pace` flag
-(`components/ResonaVoice.vue`):
-
-| Surface | `pace` | Why |
-|---|---|---|
-| Workshop, "speech and writing" | true (default) | writing and speaking are one thing there; a sentence appearing before it is spoken would be two |
-| Contesting (`views/ai_persona.vue`) | **false** | the machine answers in one turn and what it says is read; metered at speaking pace, the last sentence of an eight-sentence answer stood about a minute after the answer had arrived |
+**Who waits.** The coupling applies on every surface whose voice speaks:
+Contesting, and the workshop while the main-menu switch is on. Where no voice
+speaks, the words keep their reading pace (`components/ResonaVoice.vue`).
 
 ## 6. The switch
 
@@ -184,19 +180,18 @@ the feed — `speak()` asks `isAvailable` before an utterance, the feed asks it
 before every piece (since 2026-09-18, when a reply began to be spoken while it
 is written), and everything that offers to speak asks it — so a surface cannot
 keep a voice the listener has silenced, and no figure carries its own copy of
-the question. Where a surface has its own way with the voice (the
-workshop's writing and speaking modes), that choice sits under this one.
+the question.
 
-The switch never reaches the server: it decides whether **this browser** hears
-the platform, and nothing else. Safety roles and captioning run on their own
-paths in the backend and see none of it.
+The switch reaches the server only as `voice_mode` in the chat requests of
+Contesting and the workshop (§8), for the GIVEN VOICE sentence; safety roles and
+captioning see none of it.
 
 ## 7. The surfaces
 
 | Surface | Speaks | Notes |
 |---|---|---|
 | Contesting (`ai_persona.vue`) | automatically, every reply | words stand whole (§5); replay by tap |
-| Workshop (`resona.vue`) | by the listener's mode: speech / speech and writing / writing | mode switch hidden when no voice is available |
+| Workshop (`resona.vue`) | automatically, every reply, while the switch is on | words always stand; replay by tap |
 | Help (`ChatOverlay.vue`) | automatically, every answer | closing the panel stops it |
 | Comparison surfaces | no | they return before the voice note is assembled, deliberately |
 
@@ -212,7 +207,7 @@ The state sentence is real, not assumed: it comes from
 as the status endpoint. Absent a declared mode the sentence is silence — the
 honest default, since most surfaces offer no way to hear anything. Surfaces
 that do declare: contesting sends `on_request`, or `text` when the listener has
-switched the voice off; the workshop sends the listener's mode.
+switched the voice off; the workshop sends `both`, or `text` when the listener has switched the voice off.
 
 **Two passages were struck (`6ac593ab`) and must not return:** that a
 chosen voice "would set a person", and the 60-percent rule with its reasoning.

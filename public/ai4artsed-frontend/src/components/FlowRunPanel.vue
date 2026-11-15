@@ -9,8 +9,8 @@
 
   It owns the row and the small boxes in it. What a station IS stays with the
   page — every page has its own chain, and this component never learns any of
-  them. The foot is a slot: x2x-flow puts the card's live energy figures there,
-  a page with nothing to put there leaves it out and the line does not appear.
+  them. The foot is a slot: x2x-flow puts the way to stop the run there, a
+  page with nothing to put there leaves it out and the line does not appear.
 -->
 <template>
   <div class="gr">

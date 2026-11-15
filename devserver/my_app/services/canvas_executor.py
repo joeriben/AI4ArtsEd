@@ -20,7 +20,15 @@ import asyncio
 import random
 import time
 from typing import Dict, List, Any, Optional, Generator, Tuple
+from my_app.services.chunk_llm_steps import LlmStepError, run_llm_steps
+from my_app.services.pipeline_recorder import IMAGE_CHECKED_LEVELS
+from my_app.services.canvas_graph_authoring import CONCEPT_CONFIGS
 from my_app.services.safety_level_resolver import STRICTEST
+from my_app.services.safety_gate import (
+    CHECKPOINT_INTAKE, CHECKPOINT_REFUSAL, REASON_IMAGE_UNCHECKED, REASON_REFUSAL, Verdict,
+    check_before_model, check_intake, check_result_text, image_reference_cleared,
+    normalise_level, safety_block,
+)
 
 from schemas.engine.prompt_interception_engine import PromptInterceptionEngine, PromptInterceptionRequest
 from my_app.services.translation_instruction import (
@@ -229,60 +237,99 @@ NODE_TYPE_LABELS = {
 MAX_TOTAL_EXECUTIONS = 50
 
 
-def canvas_stage3_verdict(prompt: str, secondary_text: Optional[str], safety_level: str,
-                          lang: Optional[str], device_id: Optional[str]) -> Optional[Dict[str, Any]]:
-    """The flow's Stage 3 on what a Canvas generation is about to receive; None if it may.
+# The texts a board's nodes carry: what its language models read (the node
+# methods below), what a generation receives, and the titles the drawer and
+# the favourites show. The board is recorded with every run (workflow.json) and
+# kept by the star (canvas_routes.keep_workflow), so each of them is the user's
+# material, whether a node of this run reads it or not.
+BOARD_TEXTS = ('promptText', 'contextPrompt', 'translationPrompt', 'translationLanguage',
+               'evaluationPrompt', 'comparisonCriteria', 'randomPromptSystemPrompt',
+               'imageEvaluationPrompt', 'title')
 
-    The flow checks every text before it reaches a media model
-    (execute_generation_stage4); the Canvas calls Stage 4 alone, and until
-    2026-10-02 nothing on it looked at such a text, whichever node wrote it --
-    an input wired straight to a video model went through unread at every
-    level. Here the same function is asked at every level, as the flow asks
-    it, and decides as it does there: at kids, youth and open it translates for
-    its own check, filters §86a and asks the safety classifier the level's
-    question; at adult and research it lets the text pass unasked.
 
-    Only the verdict is read. What the generation receives is what the board
-    wired to it -- translating is a node of its own here -- so every text is
-    checked as given (`as_given`): at kids the classifier reads the
-    translation AND the text the model will get, never the translation alone.
+def board_intake(nodes, *, level, workflow=None,
+                 with_inputs=True) -> Tuple[Verdict, Optional[Dict[str, Any]]]:
+    """The intake of a board, on the server, before any of it runs or is kept.
 
-    A check that cannot run refuses, as one that runs without a verdict does,
-    and stops only the node that asked.
+    The board's name and description and every text of BOARD_TEXTS on every
+    node go through check_intake, named workflow[<key>] and nodes[<id>].<key>.
+    With `with_inputs` False the prompts of the input nodes are left out: a
+    batch of prompts replaces them, and each of its prompts is read for its
+    own run.
+
+    At kids and youth a picture on the board needs a pass that answers for the
+    level, as the check before the model asks of a picture: the verdict of its
+    upload, or the verdict on the run that made it. A picture without one is
+    refused here, not judged; uploaded again, it goes through the upload's own
+    intake at the level of the run.
+
+    Returns the first block and the node it stands on (None for the board's
+    own texts), or a pass and None. Until 2026-10-31 no check read a board's
+    texts before it ran: the Canvas had no Stage 1.
+    """
+    sent = workflow if isinstance(workflow, dict) else {}
+    for key in ('name', 'description'):
+        verdict = check_intake(sent.get(key), level=level, kind="text",
+                               field=f"workflow[{key}]")
+        if not verdict.passed:
+            return verdict, None
+    checked = normalise_level(level)
+    for node in nodes or []:
+        if not isinstance(node, dict):
+            continue
+        node_id = node.get('id')
+        for key in BOARD_TEXTS:
+            if key == 'promptText' and node.get('type') == 'input' and not with_inputs:
+                continue
+            verdict = check_intake(node.get(key), level=level, kind="text",
+                                   field=f"nodes[{node_id}].{key}")
+            if not verdict.passed:
+                return verdict, node
+        image = node.get('imageData')
+        path = image.get('image_path') if isinstance(image, dict) else None
+        if (path and checked in IMAGE_CHECKED_LEVELS
+                and not image_reference_cleared(path, checked)):
+            logger.warning(f"[Canvas] The picture of node {node_id} carries no verdict "
+                           f"for {checked}; refused at the intake")
+            return Verdict(False, CHECKPOINT_INTAKE, checked, f"nodes[{node_id}].imageData",
+                           REASON_IMAGE_UNCHECKED, ""), node
+    return Verdict(True, CHECKPOINT_INTAKE, checked), None
+
+
+def intake_refusal(verdict, node) -> Dict[str, Any]:
+    """The `error` event of a board the intake refused, shaped as the event of
+    a failed run (canvas_run_service): the refused node is its one error and
+    its one result. A text of the board itself names no node."""
+    reason = verdict.reason or 'Content blocked by safety check'
+    block = verdict.block()
+    node_id = node.get('id') if node else None
+    node_type = node.get('type') if node else None
+    event = {'message': reason, 'safety_block': block,
+             'errors': [{'node_id': node_id, 'node_type': node_type, 'error': reason,
+                         'safety_block': block}],
+             'results': {}}
+    if node_id is not None:
+        event['results'][node_id] = {'type': node_type, 'output': None, 'error': reason,
+                                     'safety_block': block}
+    return event
+
+
+def _output_chunk(config_id) -> Optional[str]:
+    """The chunk an output config runs (OUTPUT_CHUNK), or None.
+
+    None runs no language-model step. Where the chunk does declare steps, the
+    backend then refuses the run (backend_router), so nothing reaches a model
+    that the check before it has not read.
     """
     try:
         import my_app.routes.schema_pipeline_routes as spr
-        from schemas.engine.stage_orchestrator import execute_stage3_safety
-
         if spr.pipeline_executor is None:
             spr.init_schema_engine()
-        result: Dict[str, Any] = {'safe': True}
-        # The prompt's translation is kept for the device, as the flow keeps
-        # it; the second text's is not (no device_id), as the flow keeps none
-        # of a text it checks beside the prompt -- it would push the prompt's
-        # out of the one place the device has.
-        for text, device in ((prompt, device_id), (secondary_text, None)):
-            if not text:
-                continue
-            # Stage 3 names its medium for its log only; there is no more to it.
-            result = asyncio.run(execute_stage3_safety(
-                text, safety_level, 'canvas', spr.pipeline_executor,
-                user_language=lang or 'de', device_id=device, as_given=True,
-            ))
-            if not result.get('safe'):
-                break
+        config = spr.pipeline_executor.config_loader.get_config(config_id)
     except Exception as e:
-        logger.error(f"[Canvas] Stage 3 could not run: {e}", exc_info=True)
-        return {'stage': 3, 'reason': f'the safety check could not run: {e}',
-                'found_terms': [], 'operational': True}
-    if result.get('safe'):
+        logger.warning(f"[Canvas] The output config '{config_id}' could not be read: {e}")
         return None
-    return {
-        'stage': 3,
-        'reason': result.get('abort_reason') or 'Content blocked by safety check',
-        'found_terms': result.get('found_terms') or [],
-        'operational': result.get('method') in ('llm_check_failed', 'translation_failed'),
-    }
+    return (getattr(config, 'parameters', None) or {}).get('OUTPUT_CHUNK')
 
 
 class CanvasWorkflowExecutor:
@@ -435,9 +482,10 @@ class CanvasWorkflowExecutor:
             node_error = (self.results.get(node_id) or {}).get('error')
             if node_error:
                 entry = {'node_id': node_id, 'node_type': node_type, 'error': node_error}
-                blocked = (self.results.get(node_id) or {}).get('blocked')
-                if blocked:
-                    entry['blocked'] = blocked
+                # The block message and what the image check saw.
+                for key in ('safety_block', 'vlm_description'):
+                    if (self.results.get(node_id) or {}).get(key):
+                        entry[key] = self.results[node_id][key]
                 self.node_errors.append(entry)
                 logger.error(f"[Canvas Executor] Node {node_id} failed ({node_error}) — downstream nodes will not run")
                 continue
@@ -448,6 +496,20 @@ class CanvasWorkflowExecutor:
 
         logger.info(f"[Canvas Executor] Complete. {self.execution_count} executions, {len(self.collector_items)} collected")
         logger.info(f"[Canvas Executor] Trace: {' -> '.join(self.execution_trace)}")
+
+        # A concept config the queue left short of a text ran nothing and has no
+        # result, so the run would end as a success without its picture: a branch
+        # behind an evaluation that took the other path is enough for that.
+        for node in self.nodes:
+            node_id = node.get('id')
+            if (node.get('type') == 'generation' and node.get('configId') in CONCEPT_CONFIGS
+                    and node_id not in self.results and self.generation_text_inputs.get(node_id)):
+                delivered = {ti.get('source') for ti in self.generation_text_inputs[node_id]}
+                missing = [s for s in self._text_sources(node_id) if s not in delivered]
+                error = f"did not run: no text arrived from {', '.join(map(str, missing))}"
+                self.results[node_id] = {'type': 'generation', 'output': None, 'error': error,
+                                         'configId': node.get('configId')}
+                self.node_errors.append({'node_id': node_id, 'node_type': 'generation', 'error': error})
 
         # Fail-closed epilogue: nodes stuck waiting because an upstream branch
         # failed get an explicit error instead of a silent 'waiting' status.
@@ -520,6 +582,23 @@ class CanvasWorkflowExecutor:
             return {'type': 'text', 'preview': preview}
         return {'type': 'unknown'}
 
+    def _withheld(self, node_id: str, node_type: str, text: str, **shape) -> bool:
+        """Whether the check at the result withholds what a model wrote for this node.
+
+        Asked before the text is kept, shown or handed on, at the run's level.
+        A withheld text goes nowhere: the node stops its branch with the
+        block, as a node that failed does. `shape` is the rest of the result
+        the board reads for this node. The text itself is never changed.
+        """
+        verdict = check_result_text(text, level=self.safety_level, field=node_type)
+        if verdict.passed:
+            return False
+        logger.warning(f"[Canvas Executor] {node_type} {node_id}: withheld at the result")
+        self.results[node_id] = {'type': node_type, **shape,
+                                 'error': verdict.reason or 'Content blocked by safety check',
+                                 'safety_block': verdict.block()}
+        return True
+
     def _execute_node(
         self,
         node: Dict[str, Any],
@@ -554,7 +633,7 @@ class CanvasWorkflowExecutor:
         elif node_type == 'quality':
             return self._execute_quality(node, node_id)
         elif node_type == 'generation':
-            return self._execute_generation(node, node_id, input_data, connection_label)
+            return self._execute_generation(node, node_id, input_data, connection_label, source_node_id)
         elif node_type == 'evaluation':
             return self._execute_evaluation(node, node_id, input_data)
         elif node_type == 'image_evaluation':
@@ -691,7 +770,11 @@ class CanvasWorkflowExecutor:
                 analysis_type=preset,
                 model=vision_model,
                 index=input_data.get('index'),
+                level=self.safety_level,
             )
+            if self._withheld(node_id, 'image_evaluation', analysis_text, output='',
+                              metadata={'preset': preset}, model=vision_model):
+                return '', 'text', None
 
             self.results[node_id] = {
                 'type': 'image_evaluation',
@@ -758,6 +841,9 @@ class CanvasWorkflowExecutor:
         )
         response = asyncio.run(self.engine.process_request(req))
         output = response.output_str if response.success else ''
+        if output and self._withheld(node_id, 'random_prompt', output, output='',
+                                     preset=preset, model=response.model_used):
+            return '', 'text', None
 
         self.results[node_id] = {
             'type': 'random_prompt', 'output': output,
@@ -801,9 +887,9 @@ class CanvasWorkflowExecutor:
         # on verbatim (config_loader.wants_passthrough).
         # The flow still runs the step so a Wikipedia lookup can overrule the
         # wording; this node does no lookups, so the run could only ever end in
-        # the passthrough, and the model is not asked at all. The age check is
-        # not this step's: it runs where the text meets the
-        # media model, in _execute_generation, as Stage 3 does in the flow.
+        # the passthrough, and the model is not asked at all. The check before
+        # the model is not this step's: it runs where the text meets the media
+        # model, in _execute_generation.
         if not (context_prompt or '').strip():
             # A node that names a perspective and carries none of its words is
             # not the empty zone: its text did not arrive (a failed fetch on
@@ -832,12 +918,18 @@ class CanvasWorkflowExecutor:
         # (PLACEHOLDER_CLAUSE); here the clause rides on the instruction, since
         # the engine assembles this prompt itself and writes the Context last.
         from schemas.engine.instruction_selector import get_instruction, get_placeholder_clause
+        # A model that begins to repeat itself is stopped by the repetition
+        # guard of the ComfyUI node, and the text goes on with what repeated in
+        # it standing in it once, as at the translation node
+        # (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31).
+        # The refusal check below reads that form.
         req = PromptInterceptionRequest(
             input_prompt=input_data, style_prompt=context_prompt,
             task_instruction=(get_instruction('transformation',
                                               safety_level=self.safety_level)
                               + get_placeholder_clause(input_data, 'Prompt')),
-            model=llm_model, debug=True
+            model=llm_model, debug=True,
+            loop_once=True,
         )
         response = asyncio.run(self.engine.process_request(req))
         output = response.output_str if response.success else ''
@@ -845,9 +937,15 @@ class CanvasWorkflowExecutor:
         # The refusal the safety prefix asks for is a block of this node, not
         # its text (finding S-015 of the code review of 2026-10-10).
         from schemas.engine.instruction_selector import is_safety_refusal
+        refusal = None
         if is_safety_refusal(output):
             logger.warning(f"[Canvas Executor] Interception refused by the model ({node_id})")
             error, output = output, ''
+            # Said as a block, where the board reads one, as the flow says it.
+            refusal = safety_block(CHECKPOINT_REFUSAL, REASON_REFUSAL, error, 'interception')
+        elif output and self._withheld(node_id, 'interception', output, output='',
+                                       model=response.model_used, config_id=config_used):
+            return '', 'text', None
 
         self.results[node_id] = {
             'type': 'interception', 'output': output,
@@ -855,6 +953,8 @@ class CanvasWorkflowExecutor:
             'model': response.model_used,
             'config_id': config_used,
         }
+        if refusal:
+            self.results[node_id]['safety_block'] = refusal
         if output:
             self.recorder.save_entity(node_id=node_id, node_type='interception', content=output,
                                      metadata={'model': response.model_used, 'config_id': config_used})
@@ -884,17 +984,35 @@ class CanvasWorkflowExecutor:
             parts.append(f"Target language: {language_name(language)}")
         parts.append(f"Text:\n{str(input_data).strip()}")
         prompt = "\n\n".join(parts)
+        # No reasoning for a translation, as for Stage 3's
+        # (pre_output/translation_en) and the adaption node below. Without the
+        # flag a local Qwen 3.8 thought on every call by its template's default
+        # (2026-10-29: 3,932 characters of thinking and no translation).
+        # A model that begins to repeat itself is stopped by the repetition
+        # guard of the ComfyUI node, and the translation goes on with what
+        # repeated in it standing in it once, with no error
+        # (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31).
         req = PromptInterceptionRequest(
             input_prompt=input_data, prebuilt_prompt=prompt,
-            model=llm_model, debug=True
+            model=llm_model, debug=True,
+            parameters={'enable_thinking': False},
+            loop_once=True,
         )
         response = asyncio.run(self.engine.process_request(req))
         output = response.output_str if response.success else ''
+        if output and self._withheld(node_id, 'translation', output, output='',
+                                     model=response.model_used):
+            return '', 'text', None
 
         self.results[node_id] = {
             'type': 'translation', 'output': output,
             'error': response.error if not response.success else None,
-            'model': response.model_used
+            'model': response.model_used,
+            # The language this run sent, as the node names it: a code or a
+            # name written in free text; None where an own instruction names its
+            # language itself. The node's error line reads it here, since the
+            # node's fields can have changed since the run.
+            'language': language or None,
         }
         if output:
             self.recorder.save_entity(node_id=node_id, node_type='translation', content=output,
@@ -944,14 +1062,23 @@ class CanvasWorkflowExecutor:
 
         model = (_load_optimization_model(config_id)
                  or _configured_canvas_model('STAGE2_INTERCEPTION_MODEL'))
+        # A model that begins to repeat itself is stopped by the repetition
+        # guard of the ComfyUI node, and the text goes on with what repeated in
+        # it standing in it once, as at the translation node
+        # (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31).
         req = PromptInterceptionRequest(
             input_prompt=input_data, input_context='', style_prompt=instruction,
             task_instruction=get_instruction('prompt_optimization'),
             model=model, debug=True, unload_model=False,
             parameters={'enable_thinking': False},
+            loop_once=True,
         )
         response = asyncio.run(self.engine.process_request(req))
         output = response.output_str if response.success else ''
+        if output and self._withheld(node_id, 'model_adaption', output, output='',
+                                     model=response.model_used, config_id=config_id,
+                                     adapted=False):
+            return '', 'text', None
 
         self.results[node_id] = {
             'type': 'model_adaption', 'output': output,
@@ -1021,8 +1148,37 @@ class CanvasWorkflowExecutor:
         logger.info(f"[Canvas Executor] Quality: steps={steps}, cfg={cfg}")
         return output, 'quality', None
 
+    def _text_sources(self, node_id: str) -> List[str]:
+        """The nodes whose text this node reads, once each, in the order of its edges."""
+        parameter_types = {'seed', 'resolution', 'quality'}
+        return list(dict.fromkeys(
+            inc.get('source') for inc in self.incoming.get(node_id, [])
+            if self.node_map.get(inc.get('source'), {}).get('type') not in parameter_types
+        ))
+
+    def _concepts(self, node: Dict[str, Any], node_id: str) -> Tuple[List[Dict[str, Any]], List[str]]:
+        """The texts that reached this node as concepts, and the sources that sent none.
+
+        In the order of the edges: `concept_weights` is written in that order, and
+        the branches finish in whatever order they finish. The latest text of a
+        source counts, so a loop that comes round again replaces its concept
+        instead of adding one.
+        """
+        latest = {ti.get('source'): ti['text'] for ti in self.generation_text_inputs[node_id]}
+        weights = node.get('concept_weights') or []
+        concepts, empty = [], []
+        for index, source in enumerate(self._text_sources(node_id)):
+            text = (latest.get(source) or '').strip()
+            if text:
+                concepts.append({'prompt': text,
+                                 'weight': weights[index] if index < len(weights) else 1.0})
+            else:
+                empty.append(source)
+        return concepts, empty
+
     def _execute_generation(self, node: Dict[str, Any], node_id: str, input_data: Any,
-                             connection_label: Optional[str] = None) -> Tuple[Any, str, Optional[Dict[str, Any]]]:
+                             connection_label: Optional[str] = None,
+                             source_node_id: Optional[str] = None) -> Tuple[Any, str, Optional[Dict[str, Any]]]:
         from my_app.routes.schema_pipeline_routes import execute_stage4_generation_only
 
         config_id = node.get('configId')
@@ -1044,14 +1200,21 @@ class CanvasWorkflowExecutor:
         if isinstance(input_data, str):
             self.generation_text_inputs[node_id].append({
                 'label': connection_label,
+                'source': source_node_id,
                 'text': input_data
             })
 
         current_count = len(self.generation_text_inputs[node_id])
         logger.info(f"[Canvas Executor] Generation: {current_count}/{expected_text} text inputs")
 
-        # Wait until all text inputs have been accumulated
-        if expected_text > 1 and current_count < expected_text:
+        # Wait until all text inputs have been accumulated. A concept config waits
+        # for every SOURCE: a node fed by two texts answers twice, so a count of
+        # arrivals would fire it on one concept and that source's second answer.
+        if config_id in CONCEPT_CONFIGS:
+            delivered = {ti.get('source') for ti in self.generation_text_inputs[node_id]}
+            if not delivered.issuperset(self._text_sources(node_id)):
+                return None, 'image', {'waiting': True}
+        elif expected_text > 1 and current_count < expected_text:
             return None, 'image', {'waiting': True}
 
         # --- All inputs received: determine primary and secondary ---
@@ -1073,6 +1236,27 @@ class CanvasWorkflowExecutor:
                 if len(text_inputs) > 1 and secondary_text is None:
                     secondary_text = text_inputs[1]['text']
 
+        # A config that reads concepts takes every text as one of them. The line
+        # is what Stage 3 reads, all concepts together as the direct route checks
+        # them, and what the run and the card's back record: the form the
+        # instrument writes its concepts in (composable_diffusion.vue, conceptLine).
+        concepts = None
+        if config_id in CONCEPT_CONFIGS:
+            concepts, empty = self._concepts(node, node_id)
+            low, high = CONCEPT_CONFIGS[config_id]
+            refusal = None
+            if empty:
+                refusal = f"no text arrived from {', '.join(map(str, empty))}, and every concept needs one"
+            elif not low <= len(concepts) <= high:
+                refusal = (f"{config_id} reads {low} to {high} concepts, one per text "
+                           f"connected to it, and {len(concepts)} are connected")
+            if refusal:
+                self.results[node_id] = {'type': 'generation', 'output': None, 'error': refusal,
+                                         'configId': config_id}
+                return None, 'image', None
+            prompt_data = ' + '.join(c['prompt'] for c in concepts)
+            secondary_text = None
+
         if secondary_text:
             logger.info(f"[Canvas Executor] Generation: primary={len(prompt_data or '')} chars, secondary={len(secondary_text)} chars")
 
@@ -1080,11 +1264,46 @@ class CanvasWorkflowExecutor:
             self.results[node_id] = {'type': 'generation', 'output': None, 'error': 'No input'}
             return None, 'image', None
 
-        blocked = self._stage3_check(prompt_data, secondary_text)
-        if blocked:
-            self.results[node_id] = {'type': 'generation', 'output': None, 'error': blocked['reason'],
-                                     'configId': config_id, 'blocked': blocked}
-            logger.warning(f"[Canvas Executor] Generation {node_id}: refused at stage 3")
+        # The workflow's language-model steps, where its chunk declares any
+        # (chunk_llm_steps): the Surrealization workflow writes the texts its
+        # encoders read. They run here, before the check below, as on the
+        # direct route; a step that fails ends the node.
+        try:
+            step_results = run_llm_steps(_output_chunk(config_id), prompt_data)
+        except LlmStepError as e:
+            error = f'A language-model step of the workflow failed: {e}'
+            self.results[node_id] = {'type': 'generation', 'output': None, 'error': error,
+                                     'configId': config_id}
+            logger.error(f"[Canvas Executor] Generation {node_id}: {error}")
+            return None, 'image', None
+
+        # The check before the model, on every text it receives, after the last
+        # language model has written: the prompt, the second text and what the
+        # workflow's steps wrote. The model receives each as the board wired
+        # it, so the check translates it itself. At every level; the check
+        # itself passes at research. A text in two fields is read once.
+        texts = {'prompt': prompt_data, 'secondary_text': secondary_text}
+        if concepts:
+            # Composable Diffusion from a graph: every concept as the chunk
+            # receives it, named as the direct route names them.
+            texts.update({f'concepts[{i}]': c['prompt'] for i, c in enumerate(concepts)})
+        texts.update({name: value for name, value in step_results.items()
+                      if isinstance(value, str)})
+        for_model = {}
+        for name, text in texts.items():
+            if isinstance(text, str) and text.strip() in {
+                    t.strip() for t in for_model.values() if isinstance(t, str)}:
+                continue
+            for_model[name] = text
+        verdict = check_before_model(for_model, level=self.safety_level)
+        if not verdict.passed:
+            reason = verdict.reason or 'Content blocked by safety check'
+            self.results[node_id] = {
+                'type': 'generation', 'output': None, 'error': reason, 'configId': config_id,
+                'safety_block': verdict.block(),
+            }
+            logger.warning(f"[Canvas Executor] Generation {node_id}: refused before the model "
+                           f"({verdict.field})")
             return None, 'image', None
 
         # Ensure connected parameter nodes have executed (lazy dependency resolution)
@@ -1148,7 +1367,10 @@ class CanvasWorkflowExecutor:
                 cfg=generation_cfg,
                 secondary_text=secondary_text,
                 alpha_factor=node.get('alpha_factor'),
-                fusion_strategy=node.get('fusion_strategy')
+                fusion_strategy=node.get('fusion_strategy'),
+                step_results=step_results,
+                concepts=concepts,
+                combine_at=node.get('combine_at')
             ))
             if gen_result['success']:
                 output = gen_result['media_output']
@@ -1192,24 +1414,15 @@ class CanvasWorkflowExecutor:
                 return output, 'image', None
             else:
                 self.results[node_id] = {'type': 'generation', 'output': None, 'error': gen_result.get('error'), 'configId': config_id}
-                if gen_result.get('blocked'):
+                if gen_result.get('safety_block'):
                     # The picture check after generation (kids/youth): the
                     # board shows it in the platform's safety window.
-                    self.results[node_id]['blocked'] = {
-                        'stage': gen_result.get('stage') or 'vlm_safety',
-                        'reason': gen_result.get('vlm_reason') or gen_result.get('error') or '',
-                        'found_terms': [],
-                        'vlm_description': gen_result.get('vlm_description'),
-                    }
+                    self.results[node_id]['safety_block'] = gen_result['safety_block']
+                    self.results[node_id]['vlm_description'] = gen_result.get('vlm_description')
                 return None, 'image', None
         except Exception as e:
             self.results[node_id] = {'type': 'generation', 'output': None, 'error': str(e), 'configId': config_id}
             return None, 'image', None
-
-    def _stage3_check(self, prompt: str, secondary_text: Optional[str]) -> Optional[Dict[str, Any]]:
-        """The flow's Stage 3 on what this run's generation is about to receive."""
-        return canvas_stage3_verdict(prompt, secondary_text, self.safety_level,
-                                     self.lang, self.device_id)
 
     def _execute_evaluation(self, node: Dict[str, Any], node_id: str, input_data: Any) -> Tuple[str, str, Dict[str, Any]]:
         llm_model = node.get('llmModel') or _configured_canvas_model('STAGE2_INTERCEPTION_MODEL')
@@ -1270,6 +1483,14 @@ class CanvasWorkflowExecutor:
 
         if score is not None and (score < 0 or score > 10):
             score = None
+
+        # What the board shows of the model's answer is the commentary; the
+        # score decides the path and is no text of its own.
+        if commentary and self._withheld(
+                node_id, 'evaluation', commentary,
+                outputs={'pass': '', 'fail': '', 'commentary': ''},
+                metadata={'binary': None, 'score': None, 'active_path': None}):
+            return '', 'text', {'binary': None, 'score': None, 'active_path': None}
 
         binary_result = score >= 5.0 if score is not None else False
         active_path = 'pass' if binary_result else 'fail'
@@ -1382,6 +1603,11 @@ Strukturiere deine Antwort klar und beziehe dich auf die Text-Nummern."""
         )
         response = asyncio.run(self.engine.process_request(req))
         output = response.output_str if response.success else ''
+        if output and self._withheld(
+                node_id, 'comparison_evaluator', output, output='', model=response.model_used,
+                metadata={'input_count': len(inputs_list),
+                          'sources': [inp['source'] for inp in inputs_list]}):
+            return '', 'text', None
 
         self.results[node_id] = {
             'type': 'comparison_evaluator', 'output': output,

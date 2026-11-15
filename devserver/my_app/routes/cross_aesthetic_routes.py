@@ -18,6 +18,12 @@ Until stage 6 of the move to ComfyUI these routes
 forwarded to the GPU service's routes of the same paths. The JSON shapes are
 the ones the surfaces read then, unchanged.
 
+What the user wrote passes the intake, and what the node receives passes the
+check before the model, at the level the view resolved (services/safety_gate):
+the texts as written, and a picture only with a verdict that answers for that
+level. The poles and the neutral prompt are the axis table's own words and are
+not asked. The sound itself is not checked; that check is still open.
+
 Endpoints, below the blueprint's prefix /api/cross_aesthetic:
 - GET  available          - which instruments can run, and what each runs
 - GET  semantic_axes      - the axis vocabulary of the synth
@@ -37,6 +43,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from flask import Blueprint, jsonify
 
+from my_app.services.safety_gate import check_before_model, check_intake_texts
+from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.streaming_response import (answered_either_way,
                                                 note_dispatch,
                                                 object_body,
@@ -184,7 +192,7 @@ def _run_node(class_type: str, inputs: dict, model_alias: Optional[str]):
     from my_app.services.llm_client import LLMClient
     note_dispatch(model_alias, local=True)
     try:
-        return LLMClient.run_node_files(class_type, inputs)
+        return LLMClient.run_node_files(class_type, inputs)[:2]
     finally:
         note_dispatch(None, local=True)
 
@@ -254,11 +262,33 @@ def _image_base64_of(data: dict) -> Tuple[Optional[str], Optional[Tuple[dict, in
         return None, ({"success": False, "error": f"Image read failed: {e}"}, 400)
 
 
-def _synth_post(data: dict, mode: str):
+def _picture_for_check(data: dict, image_b64: Optional[str]) -> Dict[str, str]:
+    """The picture as the check before the model finds its verdict. An upload
+    is named by its path, and the check reads the verdict the upload keeps
+    beside it; a picture the body carries as data is new material, and the
+    check judges it itself."""
+    if not image_b64:
+        return {}
+    if data.get('image_path'):
+        return {"image_path": str(data.get('image_path'))}
+    return {"image_base64": image_b64}
+
+
+def _refusal(verdict) -> Tuple[dict, int]:
+    """The answer to material a check did not let through: ``success`` first,
+    as the pages read it, and the block message, which says where it stopped
+    and why (safety_gate.Verdict.block). Nothing has run."""
+    logger.warning(f"[CROSS-AESTHETIC] refused at {verdict.checkpoint} "
+                   f"({verdict.field or '-'}: {verdict.reason_key})")
+    return {"success": False, "error": "safety_blocked", "safety_block": verdict.block()}, 403
+
+
+def _synth_post(data: dict, level: str, mode: str):
     """The synth (mode "synth" or "multi_axis"), and the ``(payload,
     http_status)`` it answers with. It must not reach for ``request``: the
     body is read at the request boundary and passed in, and a streamed
-    answer runs this on a thread of its own."""
+    answer runs this on a thread of its own. So is the level, which the view
+    resolves: off the request thread the resolver answers the strictest."""
     from my_app.services import local_media_weights, stable_audio_tier
     data = without_transport_flags(data)
     if mode == "synth" and not data.get('prompt_a'):
@@ -296,6 +326,16 @@ def _synth_post(data: dict, mode: str):
         }
     except ValueError as e:
         return {"success": False, "error": str(e)}, 400
+    # The encoder receives the user's texts as written.
+    verdict = check_intake_texts({"prompt_a": inputs["prompt_a"],
+                                  "prompt_b": inputs["prompt_b"],
+                                  "base_prompt": inputs["base_prompt"]}, level=level)
+    if verdict.passed:
+        verdict = check_before_model({"prompt_a": inputs["prompt_a"],
+                                      "prompt_b": inputs["prompt_b"],
+                                      "base_prompt": inputs["base_prompt"]}, level=level)
+    if not verdict.passed:
+        return _refusal(verdict)
     try:
         out, files = _run_node(SYNTH_NODE, inputs, alias)
     except Exception as e:
@@ -318,7 +358,7 @@ def _synth_post(data: dict, mode: str):
     return _watermarked(payload), 200
 
 
-def _guided_post(data: dict):
+def _guided_post(data: dict, level: str):
     """ImageBind gradient guidance, and the ``(payload, http_status)``."""
     from my_app.services import media_stations
     data = without_transport_flags(data)
@@ -347,6 +387,12 @@ def _guided_post(data: dict):
         }
     except ValueError as e:
         return {"success": False, "error": str(e)}, 400
+    verdict = check_intake_texts({"prompt": inputs["prompt"]}, level=level)
+    if verdict.passed:
+        verdict = check_before_model({"prompt": inputs["prompt"]}, level=level,
+                                     images=_picture_for_check(data, image_b64))
+    if not verdict.passed:
+        return _refusal(verdict)
     try:
         out, files = _run_node(GUIDED_NODE, inputs, ib_alias)
     except Exception as e:
@@ -358,13 +404,14 @@ def _guided_post(data: dict):
         "success": True,
         "audio_base64": sound,
         "cosine_similarity": out.get("cosine_similarity"),
+        "cosine_similarity_last_guided_step": out.get("cosine_similarity_last_guided_step"),
         "guidance_steps_skipped": out.get("guidance_steps_skipped"),
         "generation_time_ms": out.get("generation_time_ms"),
         "seed": out.get("seed"),
     }), 200
 
 
-def _mmaudio_post(data: dict):
+def _mmaudio_post(data: dict, level: str):
     """MMAudio from an image and/or a text, and the ``(payload, http_status)``."""
     from my_app.services import media_stations
     data = without_transport_flags(data)
@@ -391,6 +438,14 @@ def _mmaudio_post(data: dict):
         }
     except ValueError as e:
         return {"success": False, "error": str(e)}, 400
+    verdict = check_intake_texts({"prompt": inputs["prompt"],
+                                  "negative_prompt": inputs["negative_prompt"]}, level=level)
+    if verdict.passed:
+        verdict = check_before_model({"prompt": inputs["prompt"],
+                                      "negative_prompt": inputs["negative_prompt"]},
+                                     level=level, images=_picture_for_check(data, image_b64))
+    if not verdict.passed:
+        return _refusal(verdict)
     try:
         out, files = _run_node(MMAUDIO_NODE, inputs, mm_alias)
     except Exception as e:
@@ -442,14 +497,15 @@ def semantic_axes():
 
 @cross_aesthetic_bp.route('/synth', methods=['POST'])
 def synth():
-    return _streamed_post(_synth_post, 'CROSS-AESTHETIC-SYNTH', "synth")
+    return _streamed_post(_synth_post, 'CROSS-AESTHETIC-SYNTH', resolve_safety_level(), "synth")
 
 
 @cross_aesthetic_bp.route('/image_guided_audio', methods=['POST'])
 def image_guided_audio():
-    return _streamed_post(_guided_post, 'CROSS-AESTHETIC-IMAGE-GUIDED-AUDIO')
+    return _streamed_post(_guided_post, 'CROSS-AESTHETIC-IMAGE-GUIDED-AUDIO',
+                          resolve_safety_level())
 
 
 @cross_aesthetic_bp.route('/mmaudio', methods=['POST'])
 def mmaudio():
-    return _streamed_post(_mmaudio_post, 'CROSS-AESTHETIC-MMAUDIO')
+    return _streamed_post(_mmaudio_post, 'CROSS-AESTHETIC-MMAUDIO', resolve_safety_level())

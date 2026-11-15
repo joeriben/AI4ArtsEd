@@ -11,7 +11,8 @@
     "es": "Sensible",
     "he": "רגיש",
     "ar": "حساس",
-    "bg": "Чувствителен"
+    "bg": "Чувствителен",
+    "zh-hant": "細膩"
   },
   "description": {
     "en": "Sensitive exploration is about paying close attention to what happens between things, images, sounds, or movements. Instead of looking at single objects, it notices transitions, small changes, and shifts. Rather than explaining or fixing meanings, it stays open and responds through an aesthetic form. The result does not have to be finished or clear.",
@@ -22,6 +23,7 @@
     "he": "חקירה רגישה עוסקת בתשומת לב קרובה למה שקורה בין דברים, תמונות, צלילים או תנועות. במקום להסתכל על עצמים בודדים, מבחינה במעברים, שינויים קטנים ותזוזות. במקום להסביר או לקבע משמעויות, נשארת פתוחה ומגיבה דרך צורה אסתטית. התוצאה אינה חייבת להיות מוגמרת או ברורה.",
     "ar": "الاستكشاف الحساس يتعلق بالانتباه الدقيق لما يجري بين الأشياء والصور والأصوات أو الحركات. بدلاً من النظر إلى أشياء منفردة، يلاحظ الانتقالات والتغييرات الصغيرة والتحولات. بدلاً من شرح المعاني أو تثبيتها، يظل منفتحاً ويستجيب من خلال شكل جمالي. النتيجة لا يجب أن تكون مكتملة أو واضحة.",
     "bg": "Чувствителното изследване е свързано с внимателно наблюдаване на това, което се случва между нещата, изображенията, звуците или движенията. Вместо да се гледат отделни обекти, то забелязва преходите, малките промени и измествания. Вместо да обяснява или фиксира значения, остава отворено и отговаря чрез естетична форма. Резултатът не трябва да е завършен или ясен.",
+    "zh-hant": "細膩的探索，是仔細留意事物、圖像、聲音或動作之間發生了什麼。它不看單一的物件，而是注意轉變、細小的變化與位移。它不解釋、也不固定意義，而是保持開放，並透過一種美學形式來回應。結果不必完整，也不必清楚。",
     "tr": "Duyarlı keşif, şeyler, görüntüler, sesler veya hareketler arasında neler olduğuna yakından dikkat etmekle ilgilidir. Tek nesnelere bakmak yerine geçişleri, küçük değişimleri ve kaymaları fark eder. Anlamları açıklamak veya sabitleştirmek yerine açık kalır ve estetik bir biçimle yanıt verir. Sonucun tamamlanmış veya net olması gerekmez.",
     "ko": "섬세한 탐구는 사물, 이미지, 소리 또는 움직임 사이에서 일어나는 일에 세심하게 주의를 기울이는 것입니다. 개별 객체를 바라보는 대신 전환, 미세한 변화, 이동을 알아차립니다. 의미를 설명하거나 고정하기보다 열린 상태를 유지하고 미적 형식을 통해 반응합니다. 결과가 완성되거나 명확할 필요는 없습니다."
   },
@@ -31,6 +33,7 @@
     "he": "עמדות",
     "ar": "المواقف",
     "bg": "Нагласи",
+    "zh-hant": "態度",
     "tr": "Tutumlar",
     "ko": "태도",
     "uk": "Ставлення",

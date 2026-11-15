@@ -27,7 +27,7 @@ def test_the_wait_is_the_configured_comfyui_timeout(monkeypatch, tmp_path):
 
     monkeypatch.setattr(ws, "get_comfyui_ws_client", lambda *a, **k: Client())
     recorder = pipeline_recorder.get_recorder(
-        "run_timeout_test", config_name="c", safety_level="open", device_id="dev",
+        "run_timeout_test", config_name="c", safety_level="adult", device_id="dev",
         base_path=tmp_path)
     out = asyncio.run(recorder.download_and_save_from_comfyui("p-1", "video", "wan22"))
     assert out is None

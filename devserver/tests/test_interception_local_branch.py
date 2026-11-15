@@ -72,9 +72,10 @@ TRANSLATION = "A house stands in a landscape, surrounded by farmland, nature and
 
 
 def _run(engine, prompt="Translate this: " + PROMPT, model="local/a-model:9b",
-         parameters=None):
+         parameters=None, loop_once=False):
     return asyncio.run(engine.process_request(engine_module.PromptInterceptionRequest(
         input_prompt="", prebuilt_prompt=prompt, model=model, parameters=parameters,
+        loop_once=loop_once,
     )))
 
 
@@ -122,6 +123,18 @@ class TestThePromptGoesAsOneUserMessage:
         assert call["temperature"] == 0.2
         assert call["repetition_penalty"] == 1.5
 
+    def test_a_cap_a_config_names_does_not_go_with_the_call(self, offline_engine):
+        """Until 2026-11-08 the engine passed a config's max_tokens to the
+        client as max_new_tokens, and the client dropped it before the node;
+        no JSON config named one. A cap stops the answer mid-sentence, or
+        inside the train of thought before any content."""
+        engine, backend = offline_engine(_answer())
+        _run(engine, parameters={"max_tokens": 512, "temperature": 0.2})
+        call = backend.chat_calls[0]
+        assert "max_new_tokens" not in call
+        assert "max_tokens" not in call
+        assert call["temperature"] == 0.2
+
 
 class TestWhatIsNotAnAnswerIsRefused:
     @pytest.mark.parametrize("finish_reason", ["repetition", "length", "stop"])
@@ -167,6 +180,48 @@ class TestWhatIsNotAnAnswerIsRefused:
         response = _run(engine)
         assert not response.success
         assert "finish_reason=repetition" in response.error
+
+
+class TestALoopPassesOnceWhereTheCallerAsks:
+    """The Canvas translation, Interception and Model Adaption nodes: no
+    error for a loop, the repeated text stands once
+    (docs/DEVELOPMENT_DECISIONS.md, 2026-10-31). The request says so
+    (`loop_once`)."""
+
+    LOOPED = dict(content="kuyu, kanki, " * 10, finish_reason="repetition")
+
+    def test_a_request_that_says_nothing_refuses(self):
+        """The refusal is the default: Stage 3 and every other request that
+        does not set the flag."""
+        assert engine_module.PromptInterceptionRequest(input_prompt="").loop_once is False
+
+    def test_the_once_form_is_the_answer(self, offline_engine):
+        answer = _answer(**self.LOOPED)
+        answer["once"] = "kuyu, kanki,"
+        engine, _ = offline_engine(answer)
+        response = _run(engine, loop_once=True)
+        assert response.success
+        assert response.output_str == "kuyu, kanki,"
+
+    def test_without_the_request_it_is_refused(self, offline_engine):
+        answer = _answer(**self.LOOPED)
+        answer["once"] = "kuyu, kanki,"
+        engine, _ = offline_engine(answer)
+        response = _run(engine)
+        assert not response.success
+        assert "finish_reason=repetition" in response.error
+
+    def test_without_a_once_form_it_is_refused(self, offline_engine):
+        """The node gives none for a loop in the think block."""
+        engine, _ = offline_engine(_answer(**self.LOOPED))
+        response = _run(engine, loop_once=True)
+        assert not response.success
+
+    def test_a_truncated_answer_is_refused_all_the_same(self, offline_engine):
+        engine, _ = offline_engine(_answer(content="A house stands in a", finish_reason="length"))
+        response = _run(engine, loop_once=True)
+        assert not response.success
+        assert "finish_reason=length" in response.error
 
 
 class TestTheTranslationAsksForNoReasoning:

@@ -407,12 +407,12 @@ async def execute(
 **Design Principle:** Pipelines define HOW to process (structure), NOT WHAT to process (content).
 
 **Key Field - `input_requirements`:**
-Declares what inputs the pipeline expects. DevServer uses this for Stage 1 orchestration:
+Declares what inputs the pipeline expects. `GET /api/config/<config_id>/pipeline` hands it out:
 - `{"texts": 1}` - One text input (most configs: dada, bauhaus, overdrive, etc.)
 - `{"texts": 2}` - Two text inputs (music_generation for AceStep: tags + lyrics)
 - Future: `{"texts": 1, "images": 1}` for inpainting/img2img pipelines
 
-DevServer reads this field and runs appropriate Stage 1 processing (translation + safety) for each input before executing the main pipeline.
+No check reads this field. What the intake checks is described in Part 01, section 1.7.
 
 ---
 
@@ -458,8 +458,7 @@ DevServer reads this field and runs appropriate Stage 1 processing (translation 
   "context": "You are an artist working in the spirit of Dadaism. Your task is to...",
 
   "parameters": {
-    "temperature": 0.7,
-    "max_tokens": 2048
+    "temperature": 0.7
   },
 
   "media_preferences": {
@@ -500,9 +499,9 @@ The `context` field contains the **complete instruction text** (formerly called 
 
 **Key Field - `meta.stage`:**
 The `stage` field identifies which stage of the 4-Stage Architecture this config belongs to:
-- `"pre_interception"` - Stage 1 configs (translation, safety checks before main pipeline)
+- `"pre_interception"` - Stage 1 configs. The one left, `safety_llamaguard`, is called by no route; the intake is `safety_gate.check_intake()` (Part 01, section 1.7)
 - `"interception"` - Stage 2 configs (main transformation: dada, bauhaus, overdrive, etc.)
-- `"pre_output"` - Stage 3 configs (safety checks before media generation)
+- `"pre_output"` - Stage 3 configs: `translation_en`, the translation into English (`schema_pipeline_routes.py`, `speech_routes.py`). The check before the model is `safety_gate.check_before_model()`
 - `"output"` - Stage 4 configs (media generation: sd35_large, gpt5_image, stableaudio_open, etc.)
 
 This field helps DevServer orchestrate the correct flow and enables future organization (e.g., moving output configs to separate folder).

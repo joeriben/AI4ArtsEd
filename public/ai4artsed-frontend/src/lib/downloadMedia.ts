@@ -26,11 +26,71 @@ export async function downloadMedia(url: string, filename: string): Promise<stri
     const answer = await fetch(url)
     if (!answer.ok) throw new Error(`${answer.status} ${answer.statusText}`)
     const blob = await answer.blob()
-    return downloadBlob(blob, withExtensionOf(filename, blob.type))
+    const named = withExtensionOf(filename, blob.type)
+    // A file the server hands out says in its name whether the AI-origin
+    // disclosure is in it. Bytes the page holds (a `data:` or `blob:` address)
+    // were named by no server, so the bytes decide; every surface that hands
+    // such an address over hands a medium a run generated.
+    const unmarked = HELD_ADDRESS.test(url)
+      ? !(await carriesDisclosure(blob))
+      : servedUnmarked(answer)
+    return downloadBlob(blob, unmarked ? unmarkedName(named) : named)
   } catch (err) {
     console.error(`[download] ${filename} from ${url}:`, err)
     return (err as Error)?.message || String(err)
   }
+}
+
+/**
+ * What a file's name carries when the AI-origin disclosure is not in its bytes
+ * (rule of 2026-11-14). The server stores such a file under that name
+ * (watermark_service.UNMARKED_SUFFIX) and says it when it hands the file out;
+ * `downloadMedia` puts it into the name the surface chose.
+ */
+export const UNMARKED_SUFFIX = '_ai_generated'
+
+/** An address whose bytes the page already holds: no server names them. */
+const HELD_ADDRESS = /^(data|blob):/i
+
+/**
+ * The two IPTC DigitalSourceType values the platform writes
+ * (watermark_service._KNOWN_SOURCE_TYPES). Every carrier holds them as plain
+ * UTF-8, so finding one in the bytes is the test, here as on the server.
+ */
+const DISCLOSURE_VALUES = [
+  'http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia',
+  'http://cv.iptc.org/newscodes/digitalsourcetype/algorithmicMedia',
+].map((value) => new TextEncoder().encode(value))
+
+/** Whether the AI-origin disclosure is in these bytes (watermark_service.carries_disclosure). */
+export async function carriesDisclosure(blob: Blob): Promise<boolean> {
+  const bytes = new Uint8Array(await blob.arrayBuffer())
+  return DISCLOSURE_VALUES.some((value) => containsBytes(bytes, value))
+}
+
+function containsBytes(hay: Uint8Array, needle: Uint8Array): boolean {
+  const first = needle[0] ?? 0
+  let at = hay.indexOf(first)
+  while (at !== -1 && at + needle.length <= hay.length) {
+    let i = 1
+    while (i < needle.length && hay[at + i] === needle[i]) i += 1
+    if (i === needle.length) return true
+    at = hay.indexOf(first, at + 1)
+  }
+  return false
+}
+
+/** `filename` with UNMARKED_SUFFIX before its extension, once. */
+export function unmarkedName(filename: string): string {
+  const dot = filename.lastIndexOf('.')
+  const stem = dot > 0 ? filename.slice(0, dot) : filename
+  const ext = dot > 0 ? filename.slice(dot) : ''
+  return stem.endsWith(UNMARKED_SUFFIX) ? filename : `${stem}${UNMARKED_SUFFIX}${ext}`
+}
+
+/** Whether the server named what it served as carrying no disclosure. */
+export function servedUnmarked(answer: Response): boolean {
+  return (answer.headers?.get('Content-Disposition') ?? '').includes(UNMARKED_SUFFIX)
 }
 
 /**

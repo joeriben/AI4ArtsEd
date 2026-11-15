@@ -64,6 +64,60 @@ def test_the_optional_fields_have_the_shape_their_readers_test_for():
                         "max_output_tokens", "timeout"}
             assert reserved.isdisjoint(p["thinking_off_payload"]), \
                 f"{name}: thinking_off_payload carries a reserved field"
+        if "prompt_cache" in p:
+            assert isinstance(p["prompt_cache"], bool), f"{name}: prompt_cache"
+
+
+# ---------------------------------------------------------------------------
+# The prompt-cache marker (2026-11-13)
+# ---------------------------------------------------------------------------
+
+def _marked(text="DOC", marker=None):
+    return {"type": "text", "text": text,
+            lp.CACHE_MARKER: marker or {"type": "ephemeral"}}
+
+
+def test_the_cache_marker_is_taken_where_the_table_says_so_and_nowhere_else():
+    assert lp.takes_cache_markers("openrouter") is True
+    assert lp.takes_cache_markers("anthropic") is True
+    for name in lp.names():
+        assert lp.takes_cache_markers(name) is bool(lp.provider(name).get("prompt_cache"))
+    assert lp.takes_cache_markers(None) is False
+    assert lp.takes_cache_markers("") is False
+    assert lp.takes_cache_markers("no-such-provider") is False
+
+
+def test_a_marked_text_message_becomes_the_string_it_would_have_been():
+    """The blocks are joined as they stand, in order: the text a connection
+    without the marker gets is the text the caller wrote."""
+    messages = [{"role": "user", "content": [_marked("DOC\n\n"),
+                                             {"type": "text", "text": "TASK"}]}]
+    assert lp.without_cache_markers(messages) == [{"role": "user", "content": "DOC\n\nTASK"}]
+
+
+def test_a_message_without_a_marker_is_passed_on_untouched():
+    plain = {"role": "user", "content": "hallo"}
+    listed = {"role": "user", "content": [{"type": "text", "text": "a"},
+                                          {"type": "image_url", "image_url": {"url": "x"}}]}
+    system = {"role": "system", "content": "S"}
+    out = lp.without_cache_markers([system, plain, listed])
+    assert out == [system, plain, listed]
+    assert out[2] is listed
+
+
+def test_a_marked_list_with_a_picture_keeps_its_blocks_and_loses_the_marker():
+    image = {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,QUJD"}}
+    messages = [{"role": "user", "content": [_marked("DOC"), image]}]
+    assert lp.without_cache_markers(messages) == [
+        {"role": "user", "content": [{"type": "text", "text": "DOC"}, image]}]
+
+
+def test_removing_the_marker_leaves_the_callers_message_as_it_was():
+    block = _marked("DOC", {"type": "ephemeral", "ttl": "1h"})
+    message = {"role": "user", "content": [block]}
+    lp.without_cache_markers([message])
+    assert message["content"][0] is block
+    assert block[lp.CACHE_MARKER] == {"type": "ephemeral", "ttl": "1h"}
 
 
 def test_table_and_register_name_the_same_providers():

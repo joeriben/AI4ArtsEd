@@ -157,6 +157,16 @@ REMOTE_CONSUMERS = {
         os.path.join(DEVSERVER_SERVICES, "comfyui_ws_client.py"),
     os.path.join("comfyui_nodes", "ai4artsed_comfyui", "_text_probes.py"):
         os.path.join(DEVSERVER_SERVICES, "comfyui_ws_client.py"),
+    # The same answer on ComfyUI's own implementation of the model (Qwen 3.5
+    # and 3.8, _comfy_llm, 2026-11-10): _local_llm.generate branches to it
+    # inside the same node, so the prompt and its lease are the ones above.
+    os.path.join("comfyui_nodes", "ai4artsed_comfyui", "_comfy_llm.py"):
+        os.path.join(DEVSERVER_SERVICES, "comfyui_ws_client.py"),
+    # The converter that writes those models' weights in ComfyUI's format
+    # quantizes on the card, in a process of its own under ComfyUI's Python.
+    # It takes the lease itself, in stdlib, and ends when the gate gives none.
+    os.path.join("devserver", "scripts", "convert_llm_for_comfyui.py"):
+        os.path.join("devserver", "scripts", "convert_llm_for_comfyui.py"),
     # The media stations (stage 6): Stable Audio 3 and the synth over its
     # conditioning space, ImageBind for the guided generation, MMAudio,
     # HeartMuLa, Hunyuan3D 2 and the media readers. Each puts its weights on
@@ -217,6 +227,7 @@ SUBPROCESS_STARTERS = {
     "espeak_backend.py": "speech on the CPU",
     "piper_backend.py": "speech on the CPU: the `piper` binary of its own venv, no CUDA provider",
     "post_production_service.py": "ffmpeg, on the CPU",
+    "knowledge_extract.py": "pdftotext (poppler) reads the PDF text layer, on the CPU",
     "thumbnails.py": "image scaling, on the CPU",
     "watermark_service.py": "image compositing, on the CPU",
     "resona_hardware.py": "reads what hardware is present",

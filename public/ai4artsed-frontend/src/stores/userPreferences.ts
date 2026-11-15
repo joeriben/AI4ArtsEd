@@ -123,8 +123,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', () => {
    *
    * ONE switch for the whole surface, not one per figure: it is one voice, and
    * somebody who does not want to be spoken to does not want it from Help
-   * either. Where a surface has its own way with the voice — the workshop's
-   * writing and speaking modes — that choice sits under this one.
+   * either.
    *
    * It says nothing about whether speech is possible: an installation can have
    * it switched off or be below the safety level for it, and then nothing

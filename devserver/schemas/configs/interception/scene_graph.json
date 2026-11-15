@@ -12,7 +12,8 @@
     "es": "Grafo de escena",
     "he": "גרף סצנה",
     "ar": "الرسم البياني للمشهد",
-    "bg": "Граф на сцената"
+    "bg": "Граф на сцената",
+    "zh-hant": "場景圖"
   },
   "description": {
     "en": "Decomposes your description into objects and their relationships — spatial, emotional, contrasting — then weaves them into a richly structured image prompt.",
@@ -24,7 +25,8 @@
     "es": "Descompone tu descripción en objetos y sus relaciones — espaciales, emocionales, contrastantes — y luego los teje en un prompt de imagen ricamente estructurado.",
     "he": "מפרק את התיאור שלך לאובייקטים וליחסים ביניהם — מרחביים, רגשיים, מנוגדים — ואז אורג אותם לכדי פרומפט תמונה עשיר ומובנה.",
     "ar": "يفكك وصفك إلى عناصر (objects) وعلاقات بينها — مكانية، عاطفية، متباينة — ثم ينسجها في نص توجيهي (prompt) للصورة غني البنية.",
-    "bg": "Разлага твоето описание на обекти и техните връзки — пространствени, емоционални, контрастни — и после ги вплита в богато структуриран промпт за изображение."
+    "bg": "Разлага твоето описание на обекти и техните връзки — пространствени, емоционални, контрастни — и после ги вплита в богато структуриран промпт за изображение.",
+    "zh-hant": "把你的描述拆解成物件以及物件之間的關係——空間的、情感的、對比的——再將它們編織成結構豐富的圖像提示詞。"
   },
   "category": {
     "en": "Creative Transformations",
@@ -36,7 +38,8 @@
     "es": "Transformaciones creativas",
     "he": "טרנספורמציות יצירתיות",
     "ar": "تحولات إبداعية",
-    "bg": "Творчески трансформации"
+    "bg": "Творчески трансформации",
+    "zh-hant": "創意轉化"
   },
   "properties": [
     "semantics"

@@ -28,7 +28,8 @@ from flask import Blueprint, request, jsonify
 
 from my_app.lab.db import SessionLocal
 from my_app.lab.models import User, Role, CourseEducator, CourseMembership, PromptVersion
-from my_app.lab.auth_service import current_user, require_role, hash_password
+from my_app.lab.auth_service import account_stamp, current_user, require_role, hash_password
+from my_app.services.favorites_store import drop_owned, editing
 
 logger = logging.getLogger(__name__)
 admin_users_bp = Blueprint("admin_users", __name__, url_prefix="/api/admin/users")
@@ -220,7 +221,9 @@ def delete_user(user_id: int):
 
     Refuses to delete your own account. User-owned rows (courses they lead via
     CourseEducator, memberships, prompts, works, drafts) are removed by the
-    User -> * ON DELETE CASCADE in models.py. Preset JSON files are never touched.
+    User -> * ON DELETE CASCADE in models.py, and its favourites, which live
+    outside the database, by favorites_store.drop_owned. Preset JSON files are
+    never touched.
 
     NOTE: deleting an educator who solely owns courses also cascades those
     courses; the UI should warn.
@@ -251,8 +254,15 @@ def delete_user(user_id: int):
         {User.created_by: None}, synchronize_session=False)
     db.query(PromptVersion).filter(PromptVersion.created_by == user_id).update(
         {PromptVersion.created_by: None}, synchronize_session=False)
+    owner = (target.id, account_stamp(target))
     db.delete(target)
-    db.commit()
+    # The store is held from the commit until its favourites are out, as in
+    # courses_routes.delete_course.
+    with editing():
+        db.commit()
+        dropped = drop_owned([owner])
+    if dropped < 0:
+        logger.error("[ADMIN-USER-DELETE] user=%s: its favourites could not be removed", user_id)
     logger.info("[ADMIN-USER-DELETE] user=%s role=%s led_courses=%s memberships=%s",
                 user_id, target.role.value, led, memberships)
     return jsonify({"success": True}), 200

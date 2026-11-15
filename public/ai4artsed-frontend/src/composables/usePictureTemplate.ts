@@ -18,6 +18,7 @@
 import { computed, ref, watch, onBeforeUnmount, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { failureKey } from '@/composables/useGenerationStream'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { postStreamedRun } from '@/services/directRun'
 import { type ReadingFrame } from '@/data/readingFrames'
 import { apiBase } from '@/services/labApi'
@@ -141,6 +142,13 @@ export function usePictureTemplate(text: Ref<string>) {
       if (res.status >= 200 && res.status < 300 && data?.success && read) {
         templateOrigin.value = { imagePath: path, frame: usedFrame, text: read }
         text.value = read
+        return
+      }
+      // The platform's checks refused the picture or what was read of it. That
+      // is said as the refusal it is, on this line and in the safety window,
+      // and never as a reading that failed.
+      if (res.status === 403 && reportRefusal(data)) {
+        readingFailedKey.value = refusalKeyOf(data)
         return
       }
       // A reader that answered without a reading is the one case that has no

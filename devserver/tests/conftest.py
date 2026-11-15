@@ -65,3 +65,25 @@ def apparatus_exports_stay_out_of_the_record(tmp_path, monkeypatch):
         except Exception:
             pass
     yield
+
+
+@pytest.fixture
+def chat_checks_pass(monkeypatch):
+    """The chat's checks, passing everything, for tests of the turn itself.
+
+    What the checks decide is tested in test_chat_checks.py; a test about the
+    turn's history, its tools or its stream must not ask a classifier.
+    """
+    from my_app.routes import chat_routes
+    from my_app.services.safety_gate import CHECKPOINT_INTAKE, CHECKPOINT_RESULT, Verdict
+    monkeypatch.setattr(chat_routes, "check_intake_texts",
+                        lambda fields, *, level, kind="text":
+                        Verdict(True, CHECKPOINT_INTAKE, level))
+    monkeypatch.setattr(chat_routes, "check_intake",
+                        lambda material, *, level, kind, field:
+                        Verdict(True, CHECKPOINT_INTAKE, level, field))
+    monkeypatch.setattr(chat_routes, "check_result_text",
+                        lambda text, *, level, field="text":
+                        Verdict(True, CHECKPOINT_RESULT, level, field))
+    monkeypatch.setattr(chat_routes, "remember_chat_reply",
+                        lambda text, *, level: None)

@@ -3,7 +3,7 @@
 
 Why this exists: the Latent Lab instruments and the comparison modes explain
 themselves ON the page, in the i18n catalogue, and nowhere else. Help never
-sees any of it — the handbook knows eleven pages by name and not one of these
+sees any of it — the handbook knew eleven pages by name and not one of these
 twenty-four. Once those texts are taken off the pages, the descriptions are
 gone with them, so they are moved here first and the pages are emptied after.
 
@@ -18,9 +18,18 @@ Source of the wording: public/ai4artsed-frontend/src/i18n/en.ts, the authored
 catalogue — never de.ts, which is derived from it. Nothing is rewritten here;
 this is a move, not an edit. What the pages said is what the file says.
 
+The names are the labels the items carry on the page (NAME_KEY), read from
+every catalogue the frontend ships: the `messages` object in
+public/ai4artsed-frontend/src/i18n/index.ts, read the way en.ts is read. Each
+item carries them as `names: {<language>: <label>}`; `name` stays the handle
+the tools find an item by. Where a catalogue holds no string of its own for a
+label, the frontend shows the one of its `fallbackLocale`, and `names` carries
+that one for the language. No label is written here.
+
 Run: python3 devserver/scripts/build_platform_items.py
 """
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -28,8 +37,12 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 EN_TS = REPO / "public/ai4artsed-frontend/src/i18n/en.ts"
+# Which catalogues the frontend ships, under which language code, and which
+# one it falls back to.
+I18N_INDEX = EN_TS.parent / "index.ts"
 OUT = REPO / "devserver/my_app/knowledge/platform_items.json"
-AILIT = REPO / "devserver/my_app/knowledge/ailit_coverage.json"
+# Read only to check that every route of the use reports reaches Help.
+USE_REPORTS = REPO / "devserver/my_app/knowledge/use_reports.json"
 
 # id -> (parent, name, route, i18n prefix)
 # The instrument lists are the tab arrays actually rendered:
@@ -63,7 +76,10 @@ ITEMS = [
     ("interception.poles",            "interception",      "Aesthetic Poles",        "/latent-lab/aesthetic-poles", "latentLab.interception.poles"),
     ("latent_lab.image",              "latent_lab",        "Diffusion Lab",          None, "latentLab.imageLab"),
     ("latent_lab.image.archaeology",  "latent_lab.image",  "Denoising Archaeology",  "/latent-lab/denoising-archaeology", "latentLab.archaeology"),
-    ("latent_lab.image.mean",         "latent_lab.image",  "Mean Images",            "/latent-lab/mean-images", "latentLab.meanImages"),
+    # In Cultural Knowledge & Stereotypes, where the column shows it
+    # (latent_lab.vue, GROUPS: `mean` under `compare`). The id stays, per the
+    # note at the top of this list.
+    ("latent_lab.image.mean",         "compare",           "Mean Images",            "/latent-lab/mean-images", "latentLab.meanImages"),
     ("latent_lab.image.attention",    "latent_lab.image",  "Attention Cartography",  "/latent-lab/attention-cartography", "latentLab.attention"),
     ("latent_lab.image.fusion",       "latent_lab.image",  "Encoder Fusion",         "/latent-lab/encoder-fusion", "surrealizer"),
     ("latent_lab.image.probing",      "latent_lab.image",  "Dimension Explorer",     "/latent-lab/dimension-explorer", "latentLab.probing"),
@@ -72,12 +88,19 @@ ITEMS = [
     ("latent_lab.image.workbench",    "latent_lab.image",  "Encoder Fusion Workbench", "/latent-lab/fusion-workbench", "latentLab.workbench"),
     ("latent_lab.text",               "latent_lab",        "Transformers Lab",       None, "latentLab.textLab"),
     ("latent_lab.text.repeng",        "latent_lab.text",   "Representation Engineering", "/latent-lab/representation-engineering", "latentLab.textLab.repeng"),
-    ("latent_lab.text.bias",          "latent_lab.text",   "Bias Archaeology 1",       "/latent-lab/bias-archaeology", "latentLab.textLab.bias"),
-    ("latent_lab.text.coref",         "latent_lab.text",   "Bias Archaeology 2",       "/latent-lab/coreference-test", None),
+    # Moved to the comparison category on 2026-11-06: the column shows them under
+    # Cultural Knowledge & Stereotypes. The ids stay, per the note at the top.
+    ("latent_lab.text.bias",          "compare",           "Bias Research 1",          "/latent-lab/bias-archaeology", "latentLab.textLab.bias"),
+    ("latent_lab.text.coref",         "compare",           "Bias Research 2",          "/latent-lab/coreference-test", None),
     # Moved here from Comparison Modes on 2026-08-22. The id keeps its old
     # prefix on purpose — chat_routes.py and the lookup_place tool address an
     # item by id, and only the parent moved.
     ("compare.systemprompt",          "latent_lab.text",   "System Prompts",         "/latent-lab/system-prompts", None),
+    # The two entries under System Prompts in the column (views/latent_lab.vue,
+    # GROUPS: textlab), in its order. The first carries the name of the image
+    # models' Model Comparison (`compare.tabs.model`).
+    ("latent_lab.text.systemprompt_models", "latent_lab.text", "Model Comparison", "/latent-lab/system-prompt-across-models", "latentLab.textLab.systempromptModels"),
+    ("latent_lab.text.tokens",        "latent_lab.text",   "Tokenizer",              "/latent-lab/tokenization", "latentLab.textLab.tokens"),
     ("latent_lab.crossmodal",         "latent_lab",        "Crossmodal Lab",         None, "latentLab.crossmodal"),
     ("latent_lab.crossmodal.synth",   "latent_lab.crossmodal", "Latent Audio Synth", "/latent-lab/audio-synth", "latentLab.crossmodal.synth"),
     ("latent_lab.crossmodal.mmaudio", "latent_lab.crossmodal", "MMAudio",            "/latent-lab/mmaudio", "latentLab.crossmodal.mmaudio"),
@@ -91,6 +114,47 @@ ITEMS = [
     # a finished adapter through the with-trigger / without-trigger protocol.
     ("latent_lab.lora.reach",         "training",          "LoRA Explorer",         "/latent-lab/lora-explorer", "latentLab.loraReach"),
 ]
+
+# id -> the i18n key of the label the item carries where a visitor sees it:
+# its entry in the Latent Lab column (views/latent_lab.vue: the per-item key in
+# GROUPS, otherwise I18N_ROOT + ".<entry>.label"), the category heading over a
+# group (latentLab.tabs), and the Latent Lab tile of the start page.
+NAME_KEY = {
+    "latent_lab": "landing.features.latentLab.title",
+    "compare": "latentLab.tabs.compare",
+    "compare.model": "compare.tabs.model",
+    "compare.language": "compare.tabs.language",
+    "compare.vlm_analysis": "compare.tabs.vlm-analysis",
+    "compare.voice": "compare.tabs.voice",
+    "latent_lab.image.census": "compare.tabs.census",
+    "interception": "latentLab.tabs.interception",
+    "interception.models": "latentLab.interception.tabs.interception-models.label",
+    "interception.template": "latentLab.interception.tabs.interception-template.label",
+    "interception.poles": "latentLab.interception.tabs.interception-poles.label",
+    "latent_lab.image": "latentLab.tabs.image",
+    "latent_lab.image.archaeology": "latentLab.imageLab.tabs.archaeology.label",
+    "latent_lab.image.mean": "latentLab.imageLab.tabs.mean.label",
+    "latent_lab.image.attention": "latentLab.imageLab.tabs.attention.label",
+    "latent_lab.image.fusion": "latentLab.imageLab.tabs.fusion.label",
+    "latent_lab.image.probing": "latentLab.imageLab.tabs.probing.label",
+    "latent_lab.image.algebra": "latentLab.imageLab.tabs.algebra.label",
+    "latent_lab.image.composable": "latentLab.imageLab.tabs.composable.label",
+    "latent_lab.image.workbench": "latentLab.imageLab.tabs.workbench.label",
+    "latent_lab.text": "latentLab.tabs.textlab",
+    "latent_lab.text.repeng": "latentLab.textLab.tabs.repeng.label",
+    "latent_lab.text.bias": "latentLab.textLab.tabs.bias.label",
+    "latent_lab.text.coref": "latentLab.textLab.tabs.coref.label",
+    "compare.systemprompt": "latentLab.textLab.tabs.systemprompt.label",
+    "latent_lab.text.systemprompt_models": "compare.tabs.model",
+    "latent_lab.text.tokens": "latentLab.textLab.tabs.tokens.label",
+    "latent_lab.crossmodal": "latentLab.tabs.crossmodal",
+    "latent_lab.crossmodal.synth": "latentLab.crossmodal.tabs.synth.label",
+    "latent_lab.crossmodal.mmaudio": "latentLab.crossmodal.tabs.mmaudio.label",
+    "latent_lab.crossmodal.guidance": "latentLab.crossmodal.tabs.guidance.label",
+    "latent_lab.crossmodal.reenactment": "coverBand.modeTitle",
+    "training": "latentLab.loraLab.tabs.lora.label",
+    "latent_lab.lora.reach": "latentLab.loraLab.tabs.reach.label",
+}
 
 # The comparison tabs have no explanation block of their own; the single
 # sentence each one carries lives in the activation text of its dormant panel.
@@ -106,6 +170,20 @@ COMPARE_ACTIVATION = {
 # carries three descriptions on the page since 2026-08-26; the single
 # activation sentence above is not what it says about itself.
 PAGE_TEXT = {
+    # These three comparison pages have no block prefix; their address stands
+    # outside their block, under compare.address.<name>.
+    "compare.model": (
+        ("what", ("compare.address.model.story",)),
+        ("how", ("compare.address.model.purpose",)),
+    ),
+    "compare.language": (
+        ("what", ("compare.address.language.story",)),
+        ("how", ("compare.address.language.purpose",)),
+    ),
+    "compare.vlm_analysis": (
+        ("what", ("compare.address.vlm-analysis.story",)),
+        ("how", ("compare.address.vlm-analysis.purpose",)),
+    ),
     # What the about box at the head of LoRA Training said about duration and
     # about blocking other runs. The box is gone and its information moves to
     # Help; the two lines stay in en.ts and reach a visitor here.
@@ -125,6 +203,13 @@ PAGE_TEXT = {
 # i18n key -> field on the item. Left of the arrow is the catalogue, right is
 # what the field is FOR, so a later reader does not have to know the catalogue.
 FIELDS = [
+    # The Latent Lab instruments written since 2026-09 name these two blocks
+    # `story` and `purpose`; without them their pages explain themselves to a
+    # visitor and say nothing at all to Help. Where a block carries both, the
+    # address wins: it is what the page says about itself on arrival, and the
+    # explain* texts are the older in-page copy.
+    ("story", "what"),
+    ("purpose", "how"),
     ("headerSubtitle", "brief"),
     ("explainWhatText", "what"),
     ("explainHowText", "how"),
@@ -135,11 +220,6 @@ FIELDS = [
     # differently; only this one instrument has these keys.
     ("infoDescription", "what"),
     ("purposeText", "how"),
-    # The Latent Lab instruments written since 2026-09 name these two blocks
-    # `story` and `purpose`; without them their pages explain themselves to a
-    # visitor and say nothing at all to Help.
-    ("story", "what"),
-    ("purpose", "how"),
     # A page that states its own limit says it in its own field. Decomposition
     # was the one that did (removed 2026-09-19); the field stays for the next.
     ("infoDisclaimer", "limits"),
@@ -169,10 +249,10 @@ TAB_BRIEF = {
 }
 
 
-def load_en() -> dict:
-    """en.ts is a plain object literal behind a TS export — node reads it as it
-    is written, which no regex over the file would do safely."""
-    src = EN_TS.read_text(encoding="utf-8").replace("export const en =", "module.exports =", 1)
+def load_catalogue(path: Path, export: str) -> dict:
+    """A catalogue is a plain object literal behind a TS export — node reads it
+    as it is written, which no regex over the file would do safely."""
+    src = path.read_text(encoding="utf-8").replace(f"export const {export} =", "module.exports =", 1)
     with tempfile.NamedTemporaryFile("w", suffix=".cjs", delete=False, encoding="utf-8") as f:
         f.write(src)
         tmp = f.name
@@ -182,6 +262,51 @@ def load_en() -> dict:
     )
     Path(tmp).unlink(missing_ok=True)
     return json.loads(out.stdout)
+
+
+def load_en() -> dict:
+    return load_catalogue(EN_TS, "en")
+
+
+def shipped_catalogues() -> tuple:
+    """(code -> (file, export name), fallback code), read from i18n/index.ts:
+    the `messages` object handed to createI18n, the imports that fill it, and
+    its `fallbackLocale`. Raises ValueError when index.ts no longer has that
+    shape."""
+    src = I18N_INDEX.read_text(encoding="utf-8")
+    files = dict(re.findall(r"import \{ (\w+) \} from '\./(\w+)'", src))
+    messages = re.search(r"const messages = \{([^}]*)\}", src)
+    fallback = re.search(r"fallbackLocale: '([\w-]+)'", src)
+    if not messages or not fallback:
+        raise ValueError(f"{I18N_INDEX.relative_to(REPO)}: no `messages` object or no fallbackLocale")
+    out = {}
+    for entry in messages.group(1).split(","):
+        code, _, export = entry.strip().partition(":")
+        code = code.strip().strip("'\"")
+        export = export.strip() or code
+        if not code:
+            continue
+        if export not in files:
+            raise ValueError(f"{I18N_INDEX.relative_to(REPO)}: `{export}` is not imported")
+        out[code] = (I18N_INDEX.parent / f"{files[export]}.ts", export)
+    if fallback.group(1) not in out:
+        raise ValueError(f"{I18N_INDEX.relative_to(REPO)}: fallbackLocale is not a shipped catalogue")
+    return out, fallback.group(1)
+
+
+def names_for(key: str, catalogues: dict, fallback: str):
+    """The label at `key` in every catalogue, as the frontend resolves it: a
+    string a catalogue holds is shown as it is, and where the key is missing
+    the fallback catalogue's string is shown. None when the fallback catalogue
+    has no string there either."""
+    base = at(catalogues[fallback], key)
+    if not isinstance(base, str):
+        return None
+    out = {}
+    for code, cat in catalogues.items():
+        value = at(cat, key)
+        out[code] = value if isinstance(value, str) else base
+    return out
 
 
 def at(root: dict, path: str):
@@ -204,49 +329,41 @@ def previous() -> dict:
     return {i["id"]: i.get("technical") or {} for i in data.get("items", [])}
 
 
+def check_use_reports(routed: set) -> bool:
+    """Every route of the use reports reaches Help: by its catalogue item, or
+    as one of the record's `places` (platform_items.place_for_view /
+    place_for_route). Prints the routes that do neither. A missing record is
+    reported and passes; an unreadable or malformed one fails."""
+    if not USE_REPORTS.exists():
+        print(f"{USE_REPORTS.relative_to(REPO)} is missing; build it with devserver/scripts/build_use_reports.py")
+        return True
+    try:
+        reports = json.loads(USE_REPORTS.read_text(encoding="utf-8"))
+        placed = {p.get("route") for p in reports.get("places") or []}
+        stray = [r.get("route") for r in reports.get("instruments") or []
+                 if r.get("route") not in routed and r.get("route") not in placed]
+    except (ValueError, AttributeError, TypeError) as e:
+        print(f"{USE_REPORTS.relative_to(REPO)} cannot be read: {e}; nothing written")
+        return False
+    if stray:
+        print("use-report routes with neither an item nor a place: " + ", ".join(stray))
+    return True
 
-def load_ailit() -> dict:
-    """route -> the measures of the AILit framework this place supports, in
-    the framework's own wording.
-
-    Help was asked what a page is FOR in educational terms and had nothing to
-    answer with: the AILit assignments lived in two Markdown views and a JSON
-    no line of code read. They are joined here by route, so the entry for the
-    page somebody stands on carries the measures a course leader can run there
-    with this page as the tool: the verbatim Learner Expectation and the
-    verbatim "In the Classroom" scenario with their pages in the framework,
-    then how this page carries the measure and a practical scenario of this
-    platform (both German). Built by devserver/scripts/build_ailit_support.py.
-    """
-    # A missing or hollow coverage file is an error, not an empty result: the
-    # build would otherwise write a catalogue in which every measure is gone,
-    # exit 0, and the next commit would carry that loss without a word.
-    if not AILIT.exists():
-        raise SystemExit(
-            f"{AILIT.relative_to(REPO)} is missing; refusing to write a catalogue "
-            "without its measures. Build it with devserver/scripts/build_ailit_support.py."
-        )
-    data = json.loads(AILIT.read_text(encoding="utf-8"))
-    by_route = data.get("by_route") or {}
-    if not data.get("competences") or not any(by_route.values()):
-        raise SystemExit(
-            f"{AILIT.relative_to(REPO)} carries no competences or no measures in "
-            "by_route; refusing to write a catalogue without its measures."
-        )
-    # The coverage file already carries the measures per route in the shape
-    # platform_items.goals() renders (competence, level, page, expectation,
-    # classroom, classroom_page, status, how_de, practice_de); the same dicts
-    # serve the pages the catalogue has no entry for (platform_items.place_for_view).
-    return {route: list(goals) for route, goals in by_route.items()
-            if route.startswith("/") and goals}
 
 def main() -> int:
     en = load_en()
+    try:
+        shipped, fallback = shipped_catalogues()
+    except ValueError as e:
+        print(f"{e}; nothing written")
+        return 1
+    catalogues = {code: en if path == EN_TS else load_catalogue(path, export)
+                  for code, (path, export) in shipped.items()}
     kept_before = previous()
-    ailit = load_ailit()
     items = []
     empty = []
     kept = []
+    unnamed = []
     for item_id, parent, name, route, prefix in ITEMS:
         block = at(en, prefix) if prefix else None
         technical = {}
@@ -284,6 +401,11 @@ def main() -> int:
             for field, value in (kept_before.get(item_id) or {}).items():
                 technical.setdefault(field, value)
         entry = {"id": item_id, "parent": parent, "name": name}
+        names = names_for(NAME_KEY[item_id], catalogues, fallback) if item_id in NAME_KEY else None
+        if names is None:
+            unnamed.append(item_id)
+        else:
+            entry["names"] = names
         if route:
             entry["route"] = route
         if prefix:
@@ -301,44 +423,30 @@ def main() -> int:
             if missing:
                 kept.append(item_id)
         entry["technical"] = technical
-        goals = ailit.get(route) if route else None
-        if goals:
-            entry["ailit"] = {
-                "framework": ("AILit — Empowering learners for the age of AI, "
-                              "OECD / European Union (2026), "
-                              "https://doi.org/10.1787/65cd27d4-en, CC BY 4.0"),
-                "goals": goals,
-            }
         items.append(entry)
         if not technical:
             empty.append(item_id)
 
+    if unnamed:
+        print("no label in the fallback catalogue for: " + ", ".join(unnamed) + "; nothing written")
+        return 1
+    if not check_use_reports({i.get("route") for i in items}):
+        return 1
     OUT.write_text(json.dumps({
         "_source": [
             "Wording: public/ai4artsed-frontend/src/i18n/en.ts, moved unchanged. Nothing here is rewritten.",
             "Where a page carries no authored text, the wording stands here and only here; the build keeps it, field by field.",
             "Item list: the tab arrays actually rendered in image_lab.vue, latent_text_lab.vue, crossmodal_lab.vue, compare_hub.vue.",
+            "names: the label each item carries on the page, from every catalogue in public/ai4artsed-frontend/src/i18n/index.ts; where a catalogue has no string of its own, the string of the frontend's fallbackLocale, as the frontend shows it. name: the handle the tools find an item by.",
             "Built by devserver/scripts/build_platform_items.py. Re-run it after the catalogue changes.",
             "The per-page annotations (what a page is about and what is learned on it) are not in here yet.",
-            "AI-literacy measures per route: devserver/my_app/knowledge/ailit_coverage.json, joined by route. Verbatim Learner Expectations and 'In the Classroom' scenarios (OECD/EU 2026, CC BY 4.0); which page supports which measure, and how, is this platform's own reading (docs/ailit/QUELLE.md).",
+            "Teaching scenarios and the AI-literacy mapping per route: devserver/my_app/knowledge/use_reports.json (the versioned use reports), joined by route at runtime in platform_items.py; not carried in this file since 2026-11-06.",
         ],
         "items": items,
     }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
     filled = len(items) - len(empty)
     print(f"{OUT.relative_to(REPO)}: {len(items)} items, {filled} carry text")
-    with_ailit = sum(1 for i in items if i.get("ailit"))
-    print(f"AI-literacy measures attached to {with_ailit} of {len(items)} items")
-    # A coverage route with no item is served by the coverage file itself
-    # (platform_items.place_for_view / place_for_route: the modes and the two
-    # lab pages without an info box). Say which, every time: a renamed route
-    # on either side would otherwise drop a page's measures and lower the
-    # count above by one, which nobody reads.
-    routed = {i.get("route") for i in items}
-    unmatched = {r: len(g) for r, g in ailit.items() if r not in routed}
-    if unmatched:
-        print("coverage routes without an item, served from the coverage file: "
-              + ", ".join(f"{r} ({n})" for r, n in sorted(unmatched.items())))
     if kept:
         print("kept the existing wording for: " + ", ".join(kept))
     if empty:

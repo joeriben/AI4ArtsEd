@@ -69,6 +69,10 @@ ARGUMENTS = {
     "checkpoint": "OfficialStableDiffusion/sd3.5_large.safetensors",
     "clip_prompt": "a house",
     "concepts": [{"prompt": "a house", "weight": 1.0}],
+    # Where Composable Diffusion combines its concepts (since 2026-11-04).
+    "combine_at": "conditioning",
+    # Feature probing: whether every dimension is measured (since 2026-11-04).
+    "measure_all": False,
     "encoder": "all",
     "every_n": 1,
     # The surrealizer chunk's fusion line (since 876ee3ba, 2026-09-15): the
@@ -378,7 +382,8 @@ NODE_FILE = DEVSERVER.parent / "comfyui_nodes" / "ai4artsed_sd3_conditioning.py"
 # text reaches the encoder.
 FUSION_LINE = {
     "legacy_surrealization.json":
-        "its CLIP text is made inside ComfyUI by ai4artsed_prompt_interception",
+        "its CLIP text is written by a language model on the platform, before the "
+        "check before the model, and reaches node 6 through input_mappings",
     "output_vector_fusion_clip_sd35.json":
         "its prompt parts sit on PrimitiveString nodes, and one CLIPTextEncode "
         "feeds CLIP and T5 from the same field",

@@ -4,15 +4,20 @@ Knowledge-library ingest JOB service (Tier O, Settings curation).
 A tiny in-process job runner for operator document ingest (BIBLIOTHEK.md §9),
 rewired for the Verdichtungs-Umbau (2026-07-04). Each job runs THREE steps:
 
-  1. Docling -> RAW Markdown, via knowledge_ingest.py in the Docling venv
-     (KNOWLEDGE_INGEST_PYTHON). PDF -> convert; already-Markdown -> passthrough
-     (no torch). The raw MD is a gitignored re-processing intermediate under
-     resources/knowledge_originals/operator/<doc_id>.raw.md.
-  2. Verdichtung, IN-PROCESS: knowledge_processing.process_document() reads the
-     raw MD + the operator metadata and writes the COMPACT library file
-     (front-matter + ## PROFIL + ## WISSEN + ## GLOSSAR) to the Tier-O dir as a
-     draft. This step uses the platform's own provider routing (call_chat_helper,
-     role KNOWLEDGE_PROCESSING_MODEL) — no second server, no Docling.
+  1. Docling -> blocks, figures and RAW Markdown, via knowledge_ingest.py in
+     the Docling venv (KNOWLEDGE_INGEST_PYTHON). PDF -> convert; already-
+     Markdown -> passthrough (no torch). The intermediates are gitignored and
+     live under resources/knowledge_originals/operator/: <doc_id>.raw.md,
+     <doc_id>.blocks.json, <doc_id>.figures/.
+  2. Condensation, IN-PROCESS: knowledge_extract checks the blocks against the
+     stored PDF (pdftotext) and repairs what Docling lost;
+     knowledge_processing.process_document() condenses them with the operator
+     metadata into the COMPACT library file (front-matter + ## PROFIL +
+     ## WISSEN + ## GLOSSAR) in the Tier-O dir, and the checks
+     (knowledge_checks) write <doc_id>.checks.json beside it. A failed check
+     keeps the file a draft. This step uses the platform's own provider
+     routing (call_chat_helper, role KNOWLEDGE_PROCESSING_MODEL) — no second
+     server, no Docling.
   3. Reindex, via build_knowledge_index.py (KNOWLEDGE_INDEX_PYTHON), so the new
      draft is immediately curatable.
 
@@ -49,9 +54,11 @@ imports the converter lazily, so that path never reaches the card.
 from __future__ import annotations
 
 import contextlib
+import json
 import logging
 import os
 import re
+import shutil
 import subprocess
 import threading
 import uuid
@@ -59,7 +66,7 @@ from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 from queue import Queue
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +117,7 @@ def _set(job_id: str, **fields: Any) -> None:
 
 def _is_cancelled(job_id: str) -> bool:
     """True if a cancel was requested for this job (the worker polls this at
-    phase boundaries and hands a bound version to the Verdichtung Map loop)."""
+    phase boundaries and hands a bound version to the Verdichtung's summary loop)."""
     with _JOBS_LOCK:
         job = _JOBS.get(job_id)
         ev = job.get("_cancel") if job else None
@@ -134,7 +141,7 @@ def request_cancel(job_id: str) -> Dict[str, Any]:
         is already cancelled when it pops it from the FIFO (we cannot cheaply
         remove an arbitrary id from a Queue, so we tombstone instead).
       * running -> set the cancel Event (the worker checks it at every phase
-        boundary and between Verdichtung Map calls) AND terminate() any live
+        boundary and between the Verdichtung's summary calls) AND terminate() any live
         Docling/reindex subprocess so a long external step stops promptly.
       * done | error | cancelled -> nothing to cancel (ok=False).
     """
@@ -157,7 +164,7 @@ def request_cancel(job_id: str) -> Dict[str, Any]:
             proc = job.get("_proc")
             # terminate the in-flight subprocess (if the running step is Docling
             # or reindex); the Verdichtung step has no subprocess and is caught
-            # by the Event poll in its Map loop instead.
+            # by the Event poll in its summary loop instead.
             if proc is not None and proc.poll() is None:
                 try:
                     proc.terminate()
@@ -175,7 +182,7 @@ def enqueue_ingest(
     doc_id: str,
     title: str,
     lizenz: str,
-    source_pdf: Optional[Path] = None,
+    source_file: Optional[Path] = None,
     source_md: Optional[Path] = None,
     autor: str = "",
     year: Optional[int] = None,
@@ -185,25 +192,30 @@ def enqueue_ingest(
     themen: str = "",
     bereich: str = "",
     hinweis: str = "",
+    pdf_seiten: str = "",
     tier: str = "o",
-    status: str = "draft",
+    hold: str = "release",
     reprocess: bool = False,
     cleanup_paths: Optional[List[Path]] = None,
     raw_hash: str = "",
 ) -> str:
     """Register a Tier-O ingest job and return its job_id. Exactly one of
-    source_pdf / source_md must be given. The job runs asynchronously through
+    source_file (a stored PDF or DOCX original, which Docling converts) /
+    source_md must be given. The job runs asynchronously through
     the FIFO worker (Docling -> Verdichtung -> reindex); poll get_job(job_id)
     for progress.
 
     `lang` defaults to "" (empty): the Verdichtung detects the document's
     source language itself (identify_bibliographic) and never assumes German.
-    `status` defaults to "draft" (a fresh upload always starts as a draft); the
-    reprocess route passes the item's CURRENT status so a re-analysis of an
-    already-published document does not silently unpublish it. NOTE: `status`
-    is NOT a reliable signal for "is this a reprocess?" -- a reprocess of a
-    still-`draft` document also passes status="draft", identical to a fresh
-    upload's default.
+    `hold` is the reason the condensation stays a draft even when its checks
+    and review pass (knowledge_processing.gate_status): "release" by default,
+    since a fresh upload stays a draft until the operator releases it
+    (BIBLIOTHEK.md §9); the reprocess route passes "" (a passing reprocess is
+    published) or "operator" for a document the operator set to draft.
+
+    `pdf_seiten` ("111-137") makes the document the part of the PDF on those
+    pages, a chapter of a volume (knowledge_extract.restrict_to_pages); the
+    front matter carries it, and a reprocess passes it on.
 
     `reprocess` defaults to False (a fresh upload). Only reprocess_item()
     passes reprocess=True. This is the ONLY thing _finish_cancelled uses to
@@ -224,9 +236,12 @@ def enqueue_ingest(
             "created_at": _now(),
             "started_at": None,
             "finished_at": None,
+            # What the gate decided for the written file, once there is one:
+            # {"status", "status_reason", "checks", "review"} (_run_verdichtung).
+            "outcome": None,
             "_log": deque(maxlen=_LOG_MAX),
             # Cancellation plumbing (BIBLIOTHEK.md §9 curation): an Event the
-            # worker polls at phase boundaries + inside the Verdichtung Map loop,
+            # worker polls at phase boundaries + inside the Verdichtung's summary loop,
             # and a live Popen handle for the running subprocess step (Docling /
             # reindex) so a cancel can terminate() it. Both are internal (never
             # in the public view). _proc is guarded by _JOBS_LOCK.
@@ -234,7 +249,7 @@ def enqueue_ingest(
             "_proc": None,
             # spec below is consumed by the worker, then dropped from the view.
             "_spec": {
-                "source_pdf": str(source_pdf) if source_pdf else None,
+                "source_file": str(source_file) if source_file else None,
                 "source_md": str(source_md) if source_md else None,
                 "doc_id": doc_id,
                 "title": title,
@@ -247,8 +262,9 @@ def enqueue_ingest(
                 "themen": themen,
                 "bereich": bereich,
                 "hinweis": hinweis,
+                "pdf_seiten": pdf_seiten,
                 "tier": tier,
-                "status": status,
+                "hold": hold,
                 "reprocess": reprocess,
                 "cleanup_paths": [str(p) for p in (cleanup_paths or [])],
                 # Stage A (UCD-131): raw-bytes SHA-256 of the uploaded source,
@@ -293,6 +309,7 @@ def _public_view(job: Dict[str, Any], log_tail: int) -> Dict[str, Any]:
         "created_at": job["created_at"],
         "started_at": job["started_at"],
         "finished_at": job["finished_at"],
+        "outcome": job.get("outcome"),
         "log_tail": log,
     }
 
@@ -370,7 +387,7 @@ def _run_job(job_id: str) -> None:
         _cleanup(spec)
         return
     # _run_verdichtung returns None in two distinct cases that must NOT be
-    # conflated: (a) an operator abort caught inside the Map loop
+    # conflated: (a) an operator abort caught inside the summary loop
     # (ProcessingCancelled) -- a real cancellation, handled by _finish_cancelled
     # (which also removes THIS run's partial draft, if any); (b) a FATAL sanity-
     # check failure (result.fatal non-empty) -- _run_verdichtung has already
@@ -449,11 +466,13 @@ def _finish_cancelled(job_id: str, spec: Dict[str, Any], raw_out: Path) -> None:
       * FRESH UPLOAD (spec["reprocess"] is False -- upload_document()'s only
         mode): <doc_id>.md under KNOWLEDGE_TIER_O_DIR, if it exists at all, is
         at most a partial draft THIS run just started writing -- a half-baked
-        file that must not linger as if it were a real, curatable document.
-        raw_out (resources/knowledge_originals/operator/<doc_id>.raw.md) is a
-        re-processing intermediate THIS run just produced. Both are removed.
+        file that must not linger as if it were a real, curatable document
+        (with its <doc_id>.checks.json). raw_out (resources/knowledge_originals/
+        operator/<doc_id>.raw.md) and the extraction beside it (<doc_id>.
+        blocks.json, <doc_id>.figures/) are intermediates THIS run just
+        produced. All of them are removed.
         The original upload (resources/knowledge_originals/operator/
-        <doc_id>.pdf) is DELIBERATELY kept: cancelling ingest must not lose
+        <doc_id>.pdf or .docx) is DELIBERATELY kept: cancelling ingest must not lose
         the operator's source, so re-uploading or a future restart of
         processing stays possible.
 
@@ -465,7 +484,7 @@ def _finish_cancelled(job_id: str, spec: Dict[str, Any], raw_out: Path) -> None:
         original ingest, and passes that SAME path as source_md -- Docling
         then runs as a passthrough with input==output. For documents ingested
         from an already-Markdown original, raw_out is the ONLY stored copy of
-        the source: there is no <doc_id>.pdf fallback. Removing either file
+        the source: there is no <doc_id>.pdf/.docx fallback. Removing either file
         here would destroy operator data with no way back, so on a reprocess
         we remove NEITHER -- only the temp inputs the route staged
         (cleanup_paths; normally empty for a reprocess, since its source is
@@ -489,19 +508,26 @@ def _finish_cancelled(job_id: str, spec: Dict[str, Any], raw_out: Path) -> None:
     removed: List[str] = []
 
     draft = Path(KNOWLEDGE_TIER_O_DIR) / f"{doc_id}.md"
-    try:
-        if draft.exists():
-            draft.unlink()
-            removed.append(draft.name)
-    except OSError as e:
-        _append_log(job_id, f"could not remove partial draft {draft}: {e}")
+    for path in (draft, draft.with_name(doc_id + ".checks.json")):
+        try:
+            if path.exists():
+                path.unlink()
+                removed.append(path.name)
+        except OSError as e:
+            _append_log(job_id, f"could not remove partial draft {path}: {e}")
 
-    try:
-        if raw_out and raw_out.exists():
-            raw_out.unlink()
-            removed.append(raw_out.name)
-    except OSError as e:
-        _append_log(job_id, f"could not remove raw intermediate {raw_out}: {e}")
+    if raw_out:
+        for path in (raw_out, raw_out.with_name(doc_id + ".blocks.json"),
+                     raw_out.with_name(doc_id + ".figures")):
+            try:
+                if path.is_dir():
+                    shutil.rmtree(path)
+                    removed.append(path.name + "/")
+                elif path.exists():
+                    path.unlink()
+                    removed.append(path.name)
+            except OSError as e:
+                _append_log(job_id, f"could not remove intermediate {path}: {e}")
 
     _cleanup(spec)
     if removed:
@@ -547,22 +573,22 @@ def _run_docling(job_id: str, spec: Dict[str, Any], raw_out: Path) -> int:
         return 127
     cmd = [str(interp), str(KNOWLEDGE_INGEST_SCRIPT),
            "--doc-id", spec["doc_id"], "--raw-out", str(raw_out)]
-    converts_pdf = False
+    converts = False
     if spec.get("source_md"):
         cmd += ["--md", spec["source_md"]]
-    elif spec.get("source_pdf"):
-        cmd += [spec["source_pdf"]]
-        converts_pdf = True
+    elif spec.get("source_file"):
+        cmd += [spec["source_file"]]
+        converts = True
     else:
-        _append_log(job_id, "no source PDF/MD in job spec")
+        _append_log(job_id, "no source PDF/DOCX/MD in job spec")
         return 2
     _append_log(job_id, "$ " + " ".join(cmd))
-    if converts_pdf:
+    if converts:
         _append_log(job_id, "waiting for the GPU slot (a generation in flight "
                             "finishes first)…")
     slot = (gpu_lease_sync(kind="docling", model_id="docling", required_mb=0,
                            label=f"Docling: {spec['doc_id']}")
-            if converts_pdf else contextlib.nullcontext())
+            if converts else contextlib.nullcontext())
     with slot:
         if _is_cancelled(job_id):
             # The cancel arrived while this job stood in the gate's queue, where
@@ -573,24 +599,22 @@ def _run_docling(job_id: str, spec: Dict[str, Any], raw_out: Path) -> int:
         return _stream_subprocess(job_id, cmd)
 
 
-def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Optional[Path]:
-    """In-process Verdichtung: raw MD + operator metadata -> compact draft file
-    in the Tier-O dir. Returns the written path, or None in TWO distinct cases
-    the caller (_run_job) must not conflate: (a) the operator aborted inside the
-    Map loop (ProcessingCancelled, caught here so the caller does not depend on
-    the exception class identity — which matters under a test reload of
-    knowledge_processing; in production kp is never reloaded), or (b) the
-    Verdichtung's own sanity check found a FATAL condition (result.fatal
-    non-empty, e.g. an all-404 provider outage) — in that case this function has
-    already logged the reasons and set the job to state="error", and crucially
-    wrote NOTHING, so the caller must not run _finish_cancelled (which would
-    delete a partial draft that does not exist here, and would mislabel the
-    error as a cancellation). Only case (a) sets the job's cancel Event, so
-    _is_cancelled(job_id) tells the two apart."""
-    from config import KNOWLEDGE_TIER_O_DIR
+def needs_bibliographic_call(front_matter: Dict[str, Any]) -> bool:
+    """True when build_front_matter makes the identify_bibliographic call."""
+    return any(not str(front_matter.get(k, "")).strip()
+               for k in ("titel", "autor", "jahr", "sprache"))
+
+
+def build_front_matter(spec: Dict[str, Any], raw_md: str,
+                       log: Callable[[str], None] = lambda _m: None,
+                       *, identify: bool = True, llm: Any = None) -> Dict[str, Any]:
+    """The front matter of a condensation from the job spec, with the blank
+    bibliographic fields filled by identify_bibliographic (one LLM call, with
+    `llm` or the production path, when any of titel/autor/jahr/sprache is
+    blank and `identify` is set). Used by _run_verdichtung and by
+    scripts/knowledge_run.py, whose dry run passes identify=False."""
     from my_app.services import knowledge_processing as kp
 
-    raw_md = raw_out.read_text(encoding="utf-8")
     tier = (spec.get("tier") or "o").strip().lower()
     front_matter = {
         "id": spec["doc_id"],
@@ -605,10 +629,10 @@ def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Option
         "themen": [t.strip() for t in (spec.get("themen") or "").split(",") if t.strip()],
         "lizenz": spec.get("lizenz") or "",
         "url": spec.get("url") or "",
-        # Fresh upload starts as a draft (BIBLIOTHEK.md §9); a reprocess carries
-        # the item's CURRENT status forward via spec["status"] so re-analysing a
-        # published document does not silently unpublish it.
-        "status": spec.get("status") or "draft",
+        # Until the gate decides: process_document sets status and
+        # status_reason from the checks, the review and spec["hold"]
+        # (knowledge_processing.gate_status).
+        "status": "draft",
     }
     # bereich (operator area id) + hinweis (operator per-document note) are single
     # scalar strings; only add them when set so the front-matter of an area-less
@@ -617,6 +641,9 @@ def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Option
         front_matter["bereich"] = spec["bereich"].strip()
     if (spec.get("hinweis") or "").strip():
         front_matter["hinweis"] = spec["hinweis"].strip()
+    # The PDF pages of a document that is part of the file; only set for one.
+    if str(spec.get("pdf_seiten") or "").strip():
+        front_matter["pdf_seiten"] = str(spec["pdf_seiten"]).strip()
 
     # --- Bibliographic identification (2026-07-05): fill titel/autor/jahr/quelle
     # the OPERATOR left blank from the document's real bibliography (title page +
@@ -626,20 +653,16 @@ def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Option
     # seeds front_matter BEFORE the (deliberately LLM-metadata-free) Verdichtung
     # engine runs. The operator's own input always wins — only blank fields are
     # filled. Best-effort: any failure leaves front_matter untouched and the
-    # engine's deterministic paratext fallback still fills the title.
+    # engine's fallback (the first heading of the extraction) still fills the title.
     # sprache is included here (unlike the other fields) even though the
     # operator never fills it in via a form: it must be RE-DETECTED on every
     # run (including reprocess) rather than trusted from spec, so a stale/wrong
     # value never survives untouched (Defect 1c).
-    need_biblio = any(
-        not str(front_matter.get(k, "")).strip()
-        for k in ("titel", "autor", "jahr", "sprache")
-    )
-    if need_biblio:
+    if identify and needs_bibliographic_call(front_matter):
         try:
             rec = kp.identify_bibliographic(
                 raw_md, hinweis=str(front_matter.get("hinweis", "") or ""),
-                doc_id=str(spec.get("doc_id", "") or ""))
+                doc_id=str(spec.get("doc_id", "") or ""), llm=llm)
             verdikt = []
             if not str(front_matter.get("titel", "")).strip() and rec.composed_titel:
                 front_matter["titel"] = rec.composed_titel
@@ -656,25 +679,63 @@ def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Option
             if not str(front_matter.get("sprache", "")).strip() and rec.sprache:
                 front_matter["sprache"] = rec.sprache
                 verdikt.append(f"sprache={rec.sprache!r}")
-            _append_log(
-                job_id,
-                "bibliografische Identifikation (conf=%s): %s"
-                % (rec.confidence, ", ".join(verdikt) or "keine Felder ergänzt"),
-            )
+            log("bibliografische Identifikation (conf=%s): %s"
+                % (rec.confidence, ", ".join(verdikt) or "keine Felder ergänzt"))
         except Exception as e:  # noqa: BLE001 - identity is best-effort, never fatal
-            _append_log(job_id, f"bibliografische Identifikation übersprungen: {e}")
+            log(f"bibliografische Identifikation übersprungen: {e}")
+    return front_matter
+
+
+def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Optional[Path]:
+    """In-process condensation: extraction (blocks.json, else the raw MD) +
+    operator metadata -> compact file in the Tier-O dir, a draft unless every
+    check passed and the caller carried `published` forward. Returns the written path, or None in TWO distinct cases
+    the caller (_run_job) must not conflate: (a) the operator aborted inside the
+    summary loop (ProcessingCancelled, caught here so the caller does not depend on
+    the exception class identity — which matters under a test reload of
+    knowledge_processing; in production kp is never reloaded), or (b) the
+    Verdichtung's own sanity check found a FATAL condition (result.fatal
+    non-empty, e.g. an all-404 provider outage) — in that case this function has
+    already logged the reasons and set the job to state="error", and crucially
+    wrote NOTHING, so the caller must not run _finish_cancelled (which would
+    delete a partial draft that does not exist here, and would mislabel the
+    error as a cancellation). Only case (a) sets the job's cancel Event, so
+    _is_cancelled(job_id) tells the two apart."""
+    from config import KNOWLEDGE_TIER_O_DIR
+    from my_app.services import knowledge_processing as kp
+
+    raw_md = raw_out.read_text(encoding="utf-8")
+    front_matter = build_front_matter(spec, raw_md, lambda m: _append_log(job_id, m))
 
     def _progress(msg: str) -> None:
         _append_log(job_id, msg)
 
-    # Poll this job's cancel Event between Map calls so an operator abort during
+    # Poll this job's cancel Event between summary calls so an operator abort during
     # the (potentially many-call) Verdichtung takes effect within one unit. The
     # abort surfaces as kp.ProcessingCancelled, caught here and reported to the
     # caller as a None return (no partial draft is written in that case).
+    extraction = _load_extraction(job_id, spec, raw_out, raw_md)
+    figures = extraction.figures_to_describe()
+    descriptions = {}
+    if figures:
+        # One image-model call per figure the screening keeps
+        # (knowledge_extract.screen_figures); a figure left without a
+        # description stays pending and the gate keeps the document a draft.
+        # The lease (rule 15) is taken per call, not here: a local image model
+        # is one prompt of ComfyUI's node, and comfyui_ws_client.submit_and_track
+        # holds this process's gate lease around each prompt, load and forward
+        # in one admission (knowledge_processing.describe_figures).
+        _append_log(job_id, f"Bildbeschreibungen: {len(figures)} Abbildungen")
+        descriptions = kp.describe_figures(extraction, front_matter.get("sprache") or None)
+        _append_log(job_id, f"Bildbeschreibungen: {len(descriptions)} von {len(figures)} beschrieben")
+    if _is_cancelled(job_id):
+        _append_log(job_id, "Verdichtung abgebrochen vor der Verdichtung")
+        return None
     try:
         result = kp.process_document(
-            raw_md, front_matter, progress=_progress,
+            extraction, front_matter, progress=_progress,
             cancel_check=lambda: _is_cancelled(job_id),
+            figure_descriptions=descriptions, hold=spec.get("hold", kp.STATUS_REASON_RELEASE),
         )
     except kp.ProcessingCancelled as c:
         _append_log(job_id, f"Verdichtung {c}")
@@ -696,17 +757,79 @@ def _run_verdichtung(job_id: str, spec: Dict[str, Any], raw_out: Path) -> Option
              finished_at=_now())
         return None
 
-    out_dir = Path(KNOWLEDGE_TIER_O_DIR)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{spec['doc_id']}.md"
-    out_path.write_text(result.markdown, encoding="utf-8")
+    out_path = kp.write_library_file(
+        result, Path(KNOWLEDGE_TIER_O_DIR) / f"{spec['doc_id']}.md", extraction,
+        extra={"source": _source_record(spec, extraction)})
+    _set(job_id, outcome={"status": result.status, "status_reason": result.status_reason,
+                          "checks": result.checks,
+                          "review": (result.review or {}).get("label", "")})
     _append_log(
         job_id,
-        f"compact file: {result.compact_chars} chars ({result.ratio:.1%} of raw), "
-        f"{result.n_emitted_sections} Abschnitte, {result.n_missing_sections} FEHLEND, "
-        f"{result.n_glossary} Glossar",
+        f"compact file: {result.compact_chars} chars from {result.source_chars} "
+        f"source chars, {result.n_units} units, {result.n_emitted_sections} Abschnitte, "
+        f"{result.n_missing_sections} FEHLEND, {result.n_glossary} Glossar; "
+        f"status {result.status}"
+        + (f" ({result.status_reason})" if result.status_reason else "")
+        + f", checks {result.checks}, "
+        f"review {(result.review or {}).get('label', 'none')}",
     )
     return out_path
+
+
+def _load_extraction(job_id: str, spec: Dict[str, Any], raw_out: Path, raw_md: str):
+    """The extraction the condensation reads: Docling's blocks beside raw_out
+    (<doc_id>.blocks.json), checked against the stored original (a PDF page
+    by page, a DOCX against its paragraphs); for
+    an already-Markdown source (an MD upload, or the raw.md of a document
+    whose original was Markdown), which has no blocks, the Markdown itself
+    (no page numbers). A PDF or DOCX that Docling converted in this job and that has
+    no block export is an error, never condensed from its Markdown: that
+    would drop the page numbers, the figures and the integrity check
+    without a word."""
+    from my_app.services import knowledge_extract as kx
+    from my_app.services.knowledge_library import operator_original
+    blocks = raw_out.with_name(spec["doc_id"] + ".blocks.json")
+    if not blocks.exists():
+        if spec.get("source_file"):
+            raise RuntimeError(f"Docling wrote no block export ({blocks.name}) "
+                               f"for {Path(spec['source_file']).name}")
+        _append_log(job_id, "no block export: condensing the Markdown source "
+                            "(no page numbers, no figures)")
+        return kx.from_markdown(raw_md)
+    original = (Path(spec["source_file"]) if spec.get("source_file")
+                else operator_original(spec["doc_id"]))
+    extraction = kx.extract_with_integrity(
+        blocks, original if original is not None and original.exists() else None,
+        kx.parse_page_range(spec.get("pdf_seiten")))
+    integ = extraction.integrity
+    _append_log(job_id, f"extraction: {extraction.pages} pages, "
+                        f"{len(extraction.blocks)} blocks, "
+                        f"{len(extraction.figures())} figures "
+                        f"({len(integ.figures_screened)} pictures without content removed); "
+                        f"integrity: "
+                        f"{len(integ.gaps)} gaps, {len(integ.unrepaired)} unrepaired"
+                        + (f" ({integ.reason})" if integ.reason else ""))
+    return extraction
+
+
+def _source_record(spec: Dict[str, Any], extraction) -> Dict[str, Any]:
+    """The provenance of the condensation for its sidecar: the original
+    (name, size, SHA-256 of the whole file) and, for a document that is part
+    of it, its PDF pages as `pdf_seiten`."""
+    import hashlib
+    record: Dict[str, Any] = {}
+    original = extraction.source_file
+    if original is not None:
+        h = hashlib.sha256()
+        with Path(original).open("rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        record.update({"source": Path(original).name, "bytes": Path(original).stat().st_size,
+                       "sha256": h.hexdigest()})
+    if extraction.pdf_range:
+        from my_app.services.knowledge_extract import format_page_range
+        record["pdf_seiten"] = format_page_range(extraction.pdf_range)
+    return record
 
 
 def _front_scalar(md_text: str, key: str) -> str:
@@ -727,7 +850,8 @@ def _apply_composed_doc_id(job_id: str, spec: Dict[str, Any],
     id once Verdichtung has written the draft and
     identify_bibliographic has resolved titel/autor/jahr into it. Moves the draft
     .md, rewrites its `id:` front-matter, and renames the stored originals
-    (<id>.pdf, <id>.raw.md) so a later re-verdichtung still finds the source.
+    (<id>.pdf or .docx, <id>.raw.md) so a later re-verdichtung still finds
+    the source.
     Returns the (possibly new) (draft, raw.md) paths. Reprocess is EXEMPT -- an
     already-published id is never renamed. Best-effort: any snag leaves the
     provisional id in place (never fatal)."""
@@ -735,6 +859,7 @@ def _apply_composed_doc_id(job_id: str, spec: Dict[str, Any],
         return out_path, raw_out
     from my_app.services import knowledge_processing as kp
     from config import KNOWLEDGE_TIER_O_DIR, KNOWLEDGE_ORIGINALS_DIR
+    from my_app.services.knowledge_library import ORIGINAL_SUFFIXES
     old_id = str(spec["doc_id"])
     text = out_path.read_text(encoding="utf-8")
     new_id = kp.compose_doc_id(
@@ -756,14 +881,28 @@ def _apply_composed_doc_id(job_id: str, spec: Dict[str, Any],
     new_md = out_dir / (final + ".md")
     new_md.write_text(text2, encoding="utf-8")
     out_path.unlink()
+    old_checks = out_path.with_name(old_id + ".checks.json")
+    if old_checks.exists():
+        old_checks.rename(new_md.with_name(final + ".checks.json"))
     ops = Path(KNOWLEDGE_ORIGINALS_DIR) / "operator"
     new_raw = raw_out
     for src, dst in ((raw_out, ops / (final + ".raw.md")),
-                     (ops / (old_id + ".pdf"), ops / (final + ".pdf"))):
+                     *((ops / (old_id + sfx), ops / (final + sfx))
+                       for sfx in ORIGINAL_SUFFIXES),
+                     (ops / (old_id + ".blocks.json"), ops / (final + ".blocks.json")),
+                     (ops / (old_id + ".figures"), ops / (final + ".figures"))):
         if src.exists():
             src.rename(dst)
             if src == raw_out:
                 new_raw = dst
+    blocks = ops / (final + ".blocks.json")
+    if blocks.exists():
+        # blocks.json names its figures folder; keep that name in step.
+        data = json.loads(blocks.read_text(encoding="utf-8"))
+        if data.get("figures_dir"):
+            data["figures_dir"] = final + ".figures"
+            blocks.write_text(json.dumps(data, ensure_ascii=False, indent=1),
+                              encoding="utf-8")
     spec["doc_id"] = final
     _set(job_id, doc_id=final)
     _append_log(job_id, "doc_id: %s -> %s (Author-Year-Title)" % (old_id, final))

@@ -46,6 +46,7 @@ from my_app.services.resona_hardware import (
 # set of images went undescribed was gone. One implementation for every direct
 # consumer of those endpoints.
 from my_app.services.llm_client import _body_reason
+from my_app.services.safety_gate import check_intake, check_result_text
 
 # The run-length range this place states to whoever stands in front of it
 # (i18n training.info.limitationDuration). The estimate before a run spans
@@ -130,6 +131,16 @@ LOG_DIR = TRAINING_LOG_DIR
 DATASET_BASE_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+
+class PicturesRefused(Exception):
+    """A picture of a training set did not pass the intake; `verdict` says
+    which one and why."""
+
+    def __init__(self, verdict):
+        super().__init__(verdict.reason_key)
+        self.verdict = verdict
+
 
 def _safe_project_name(project_name: str) -> str:
     """Der Projektname, wie er ein Verzeichnis heissen darf.
@@ -363,7 +374,8 @@ class TrainingService:
         logger.info(f"Auto-Config for {vram_gb}GB VRAM: {params}")
         return params
 
-    def stage_and_describe(self, images: List[Any], token: Optional[str] = None) -> Dict[str, Any]:
+    def stage_and_describe(self, images: List[Any], token: Optional[str] = None, *,
+                           level: str) -> Dict[str, Any]:
         """Take the dropped images and let a model say what it sees on each.
 
         The sentence written here is what the trainer learns the images AS, so
@@ -374,8 +386,15 @@ class TrainingService:
         With a token, the images join a set that is already here and only the
         new ones are described — dropping a second handful must not cost the
         first handful's minutes on the card again.
+
+        `level` is the level of the request. The images pass the intake at it
+        before any of them is kept, and a refused one refuses its handful
+        (PicturesRefused); a set that is already here stays as it was. Each
+        sentence is checked at the result at the same level before it is
+        shown.
         """
         suffixes = self._checked_suffixes(images)
+        self._take_in_pictures(images, level)
 
         state = self._descriptions.get(token) if token else None
         if state is not None and (STAGING_DIR / token).is_dir():
@@ -395,22 +414,29 @@ class TrainingService:
             name = f"{i:03d}{suffix}"
             with open(staged / name, "wb") as buffer:
                 shutil.copyfileobj(img.file, buffer)
-            item = {"file": name, "caption": None, "failed": False}
+            item = {"file": name, "caption": None, "failed": False, "withheld": False}
             state["items"].append(item)
             fresh.append(item)
 
         state["running"] = True
-        thread = threading.Thread(target=self._describe_staged, args=(token, fresh), daemon=True)
+        thread = threading.Thread(
+            target=self._describe_staged, args=(token, fresh, level), daemon=True)
         thread.start()
 
         return {"token": token, "running": True, "items": state["items"]}
 
-    def _describe_staged(self, token: str, items: List[Dict[str, Any]]):
+    def _describe_staged(self, token: str, items: List[Dict[str, Any]], level: str):
         """Fill the given images with sentences, one at a time.
 
         An image the model could not answer for keeps a null caption and is
         marked: an empty field and a failed field mean different things to
         whoever is about to correct them.
+
+        A sentence is checked at the result, at the level of the request that
+        dropped the images, before it is set where the list is read. One the
+        check refuses is not shown, and its image is marked withheld. One the
+        check gave no answer for is not shown either, and its image counts as
+        one the model could not answer for.
         """
         state = self._descriptions.get(token)
         if not state:
@@ -422,13 +448,24 @@ class TrainingService:
                     item["failed"] = True
                     continue
                 try:
-                    item["caption"] = self._describe_image(staged / item["file"])
+                    caption = self._describe_image(staged / item["file"])
                 except Exception as e:
                     logger.warning(
                         "[TRAINING] describing %s failed: %s%s",
                         item["file"], e, _body_reason(getattr(e, "response", None)),
                     )
                     item["failed"] = True
+                    continue
+                field = f"captions[{state['items'].index(item)}]"
+                verdict = check_result_text(caption, level=level, field=field)
+                if verdict.passed:
+                    item["caption"] = caption
+                elif verdict.operational:
+                    logger.warning("[TRAINING] the description of %s could not be checked: %s",
+                                   item["file"], verdict.reason)
+                    item["failed"] = True
+                else:
+                    item["withheld"] = True
         finally:
             state["running"] = False
 
@@ -454,6 +491,21 @@ class TrainingService:
             suffixes.append(suffix)
         return suffixes
 
+    def _take_in_pictures(self, pictures: List[Any], level: str) -> None:
+        """Every picture through the intake at `level`, before any of them is
+        kept: an upload by its bytes, a staged file by its path. A picture
+        that passed at this level before costs nothing. Raises PicturesRefused
+        for the first one that does not pass."""
+        for i, picture in enumerate(pictures):
+            if isinstance(picture, Path):
+                material = picture
+            else:
+                material = picture.file.read()
+                picture.file.seek(0)
+            verdict = check_intake(material, level=level, kind="image", field=f"images[{i}]")
+            if not verdict.passed:
+                raise PicturesRefused(verdict)
+
     def _sweep_staging(self):
         """Staged images are somebody's photographs and nothing else removes
         them; a set that was never started goes after STAGING_MAX_AGE_SECONDS."""
@@ -472,7 +524,8 @@ class TrainingService:
                        staging_token: Optional[str] = None,
                        captions: Optional[List[str]] = None,
                        owner_id: Optional[int] = None,
-                       course_id: Optional[int] = None):
+                       course_id: Optional[int] = None,
+                       *, level: str):
         """Prepares dataset and config for a new training project.
 
         With a staging token the images are already here and already described;
@@ -482,6 +535,12 @@ class TrainingService:
 
         `owner_id` and `course_id` are who was logged in at this place and the
         course that was active; both go into the register row (issue #70).
+
+        Every picture the training learns from passes the intake at `level`,
+        the level of the request that starts it, before anything of an
+        earlier project of the same name is deleted: the uploaded ones, or the
+        staged ones, which cost nothing again where the describing took them
+        in at this level. A refused picture raises PicturesRefused.
         """
         if self._training_status["is_training"]:
             raise Exception("Training already in progress")
@@ -516,6 +575,12 @@ class TrainingService:
         # is checked here — before anything is deleted.
         suffixes = [] if staged is not None else self._checked_suffixes(images)
 
+        # What the training learns from passes the intake before anything of
+        # an earlier project of this name is deleted.
+        staged_files = [] if staged is None else sorted(
+            p for p in staged.iterdir() if p.suffix.lower() in CAPTION_IMAGE_EXTS)
+        self._take_in_pictures(staged_files if staged is not None else images, level)
+
         if project_dir.exists():
             shutil.rmtree(project_dir)
         final_image_dir.mkdir(parents=True, exist_ok=True)
@@ -526,10 +591,6 @@ class TrainingService:
             # 3a. The images are already here and already described. The
             #     sentences are the caller's, corrected or not; the trigger is
             #     put in front of them here, where it belongs.
-            staged_files = sorted(
-                p for p in staged.iterdir()
-                if p.suffix.lower() in CAPTION_IMAGE_EXTS
-            )
             texts = list(captions or [])
             for i, src in enumerate(staged_files):
                 dest = final_image_dir / src.name

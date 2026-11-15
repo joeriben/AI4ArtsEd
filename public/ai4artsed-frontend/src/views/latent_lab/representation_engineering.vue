@@ -58,23 +58,36 @@
       <div class="lab-stage">
         <div class="lab-work" :class="{ folded }">
           <!-- LEFT: everything that prepares a run. -->
-          <section class="re-prep lab-col col-fold-host" :class="{ folded }">
+          <section class="cmp-column re-prep lab-col col-fold-host" :class="{ folded }">
             <ColumnFold v-model:folded="folded" />
 
-            <!-- Which model is read. Chips, not a drop-down: four short
-                 names that fit on one line, and a list of four says more about
-                 itself standing open than folded behind a click. The `aside`
-                 carries what the name leaves out - how much of the card the
-                 model asks for, or the form it would have to be squeezed into
-                 to fit at all. -->
+            <!-- Which model is read. A drop-down since 2026-11-08, at the
+                 project lead's word: the list grew from the four sizes of one
+                 family to every model of the Text Lab's three rows, about
+                 twenty. Four chips said more standing open than folded behind a
+                 click; twenty do not. Each line carries after the name what
+                 the name leaves out - how much of the card the model asks
+                 for, or that it is too large for this card. A model that does
+                 not fit stays selectable, as it was among the chips. -->
             <div class="lab-pick-label">{{ t('latentLab.textLab.modelPanel.presetLabel') }}</div>
-            <ChipSelect
-              :model-value="selectedPreset"
-              :options="modelChoices"
-              :columns="4"
-              :disabled="running"
-              @update:model-value="v => (selectedPreset = v as string)"
-            />
+            <div v-if="modelChoices.length > 0" class="cmp-pick-row cmp-pick-fluid">
+              <select
+                :value="selectedPreset"
+                :disabled="running"
+                :aria-label="t('latentLab.textLab.modelPanel.presetLabel')"
+                @change="selectedPreset = ($event.target as HTMLSelectElement).value"
+              >
+                <option
+                  v-for="o in modelChoices"
+                  :key="o.value"
+                  :value="o.value"
+                  :title="o.title"
+                >{{ o.label }}</option>
+              </select>
+            </div>
+            <!-- The list did not come: the line says why, in the route's own
+                 words, as the HTTP status, or as the network's error. -->
+            <p v-else-if="presetsError" class="lab-prep-err quiet">{{ presetsError }}</p>
 
             <div class="re-pairs">
               <div class="lab-pick-label re-pairs-head">{{ t('latentLab.textLab.repeng.pairsTitle') }}</div>
@@ -157,56 +170,85 @@
                    parameters, so no flat picture can carry all three at once.
                    Rather than arrange them by hand, the backend projects them
                    onto the plane the reading itself picks out (the first two
-                   right singular vectors) and says how much of the spread that
-                   plane keeps. An arrow's LENGTH is how much of that difference
-                   the picture holds; what leaves the plane shortens it.
+                   right singular vectors). A grey arrow is the pair's
+                   difference projected into that plane, in the layer's own
+                   units; how far it reaches along the green arrow is
+                   `projection`, the pair's travel along the common direction.
+                   The green arrow is the vector the platform adds to the
+                   layer's output while the model writes, `direction_norm` x
+                   strength, so it moves with the axis under the drawing.
+                   `direction_norm` is the mean of |projection| over all pairs,
+                   so at strength 1 the green arrow is as long as the grey
+                   arrows reach along it on average. A pair at about 90 degrees
+                   to the direction has no arrow (see `rays`) and still counts
+                   in that mean.
 
-                   This replaces the bar that stood here for a day: how tight the
-                   fan is IS `explained_variance`, so the bar said a second time
-                   what the picture says once. -->
+                   Until 2026-11-07 every arrow had the same length (radius 46)
+                   and the green one was fixed; the picture carried the angles
+                   alone. Now a grey arrow's length measures the pair's
+                   in-plane difference, its reach along the green arrow the
+                   pair's travel, and the green arrow's length the strength set
+                   on the axis. Project lead, 2026-11-07 (paraphrased; verbatim
+                   in docs/DEVELOPMENT_DECISIONS.md, entry of that day): each
+                   single arrow stands for one pair, and the whole vector gives
+                   an impression of the strength and orientation of a
+                   "direction" that is not humanly traceable and can only be
+                   read off the text result; the slider value enters as effect
+                   strength. -->
               <figure v-if="fan.length" class="re-fan">
                 <figcaption>
                   {{ fanLabelParts[0] }}<em>{{ t('latentLab.textLab.repeng.fanLabelEmph') }}</em>{{ fanLabelParts[1] }}
                 </figcaption>
                 <!-- Half the height it had before, and the same angles: the
-                     box went from 300x210 to 300x105, so at a given column
+                     box went from 300x210 to 300x105 (277x105 since 2026-11-07), so at a given column
                      width the drawing takes half the room. The prompt below it
                      is what the whole surface is a test OF, and it has to be in
                      sight without scrolling. -->
-                <svg viewBox="0 0 300 105" role="img" :aria-label="fanAria">
+                <svg :viewBox="`0 0 ${FAN_W} ${FAN_H}`" role="img" :aria-label="fanAria">
                   <defs>
+                    <!-- Heads in user units, not in stroke widths: in stroke
+                         widths they were 7.7 and 12.5 px, longer than a short
+                         arrow, which then disappeared under its own head. -->
                     <marker id="re-arrow" viewBox="0 0 8 8" refX="7" refY="4"
-                            markerWidth="5.5" markerHeight="5.5" orient="auto">
+                            markerUnits="userSpaceOnUse"
+                            markerWidth="7" markerHeight="7" orient="auto">
                       <path d="M0 0 L8 4 L0 8 z" fill="rgb(255 255 255 / 0.5)" />
                     </marker>
                     <marker id="re-arrow-lead" viewBox="0 0 8 8" refX="7" refY="4"
-                            markerWidth="5" markerHeight="5" orient="auto">
+                            markerUnits="userSpaceOnUse"
+                            markerWidth="8" markerHeight="8" orient="auto">
                       <path d="M0 0 L8 4 L0 8 z" fill="#7ec89a" />
                     </marker>
                   </defs>
-                  <!-- what they have in common, pointing at the runs. It is
-                       drawn FIRST so the pair arrows lie on top of it: a pair
+                  <!-- the push at the chosen strength, pointing at the runs. It
+                       is drawn FIRST so the pair arrows lie on top of it: a pair
                        that agrees closely with the common direction runs along
                        the same line, and drawn underneath it disappeared -
                        which hid exactly the case the drawing is there to
                        show. -->
-                  <line x1="36" y1="52" x2="82" y2="52" stroke="#7ec89a"
+                  <line v-if="lead" :x1="OX" :y1="OY" :x2="lead.x2" :y2="OY" stroke="#7ec89a"
                         stroke-width="2.5" marker-end="url(#re-arrow-lead)" />
                   <!-- each pair's difference, at the angle the projection gives it -->
                   <g v-for="a in fan" :key="a.idx">
                     <line
-                      x1="36" y1="52" :x2="a.x" :y2="a.y"
+                      :x1="OX" :y1="OY" :x2="a.x" :y2="a.y"
                       stroke="rgb(255 255 255 / 0.5)"
                       stroke-width="1.4"
                       marker-end="url(#re-arrow)"
                     />
                     <text :x="a.lx" :y="a.ly" class="re-fan-n">{{ a.idx + 1 }}</text>
                   </g>
-                  <text x="96" y="49" class="re-fan-cap">{{ t('latentLab.textLab.repeng.fanCommonA') }}</text>
-                  <text x="96" y="61" class="re-fan-cap">{{ t('latentLab.textLab.repeng.fanCommonB') }}</text>
-                  <circle cx="36" cy="52" r="2.5" fill="rgb(255 255 255 / 0.7)" />
+                  <circle :cx="OX" :cy="OY" r="2.5" fill="rgb(255 255 255 / 0.7)" />
                 </svg>
-                <div class="re-fan-note">{{ t('latentLab.textLab.repeng.fanSpread') }}</div>
+                <!-- fanCommonA and fanCommonB were the two lines at the
+                     arrow's tip; here they are printed as one line, in key
+                     order. They stay two keys because every language file
+                     already carries both halves, and a translator sees them
+                     side by side in en.ts. -->
+                <div class="re-fan-note re-fan-lead">
+                  <b class="re-cell-glyph">→</b>
+                  {{ t('latentLab.textLab.repeng.fanCommonA') }} {{ t('latentLab.textLab.repeng.fanCommonB') }}
+                </div>
               </figure>
             </div>
 
@@ -224,7 +266,7 @@
               <MarkedSlider
                 v-model="alpha"
                 :min="0.5"
-                :max="3"
+                :max="ALPHA_MAX"
                 :step="0.1"
                 :marks="alphaMarks"
                 :disabled="running"
@@ -298,7 +340,7 @@
                column keeps its place while they do, which is the whole reason
                the scrolling sits here and not on the page. -->
           <section class="re-runs">
-            <div class="re-rows">
+            <div class="lab-runrows">
             <!-- Before the first press the row STANDS THERE, dimmed and
                  empty, with its three heads and the settings it would run with:
                  an instrument whose result side is blank until something
@@ -310,20 +352,20 @@
             <div
               v-for="row in displayRows"
               :key="row.id"
-              class="re-row"
+              class="lab-runrow"
               :class="{ 'is-preview': row.preview }"
             >
-              <div class="re-row-head">
-                <span class="re-row-prompt">{{ row.prompt }}</span>
-                <span class="re-row-meta">
-                  {{ t('latentLab.textLab.repeng.strengthShort') }} <b>{{ row.strength.toFixed(1) }}</b>
+              <div class="lab-runrow-head">
+                <span class="lab-runrow-prompt">{{ row.prompt }}</span>
+                <span class="lab-runrow-meta">
+                  {{ t('latentLab.textLab.repeng.strengthShort') }}: <b>{{ row.strength.toFixed(1) }}</b>
                 </span>
-                <span class="re-row-meta">
-                  {{ t('latentLab.textLab.repeng.targetLayerLabel') }}
+                <span class="lab-runrow-meta">
+                  {{ t('latentLab.textLab.repeng.targetLayerLabel') }}:
                   <b>{{ row.layer === null ? '—' : row.layer }}</b>
                 </span>
-                <span class="re-row-meta">
-                  {{ t('compare.control.seedLabel') }}
+                <span class="lab-runrow-meta">
+                  {{ t('compare.control.seedLabel') }}:
                   <b>{{ row.seed === null ? '—' : row.seed }}</b>
                 </span>
               </div>
@@ -366,11 +408,11 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ShellRun from '@/components/ShellRun.vue'
 import { postStreamedRun } from '@/services/directRun'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import LabReferences, { type LabReference } from '@/components/LabReferences.vue'
 
 import MediaInputBox from '@/components/MediaInputBox.vue'
 import PromptExamples from '@/components/PromptExamples.vue'
-import ChipSelect from '@/components/ChipSelect.vue'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { useAppClipboard } from '@/composables/useAppClipboard'
@@ -408,51 +450,81 @@ function showError(msg: string) {
 interface PresetInfo {
   id: string
   vram_gb: number
+  params_b?: number
   description: string
   suggested_quant?: string | null
+  rows?: string[]
 }
 
 const presets = ref<Record<string, PresetInfo>>({})
-const selectedPreset = ref('small')
+// A folder name from the service's list; empty until the list has come.
+const selectedPreset = ref('')
 
 const activeModelId = computed(() => {
   const preset = selectedPreset.value ? presets.value[selectedPreset.value] : undefined
   return preset ? preset.id : ''
 })
 
+/**
+ * Every text model of the Text Lab, off the service: the members of all three
+ * rows once, keyed by folder name. The list starts on the table's
+ * `representation_engineering_default`, the model the repetition guard and the
+ * strength scale were set on; where that one is not installed, on the first.
+ */
+// Why the list did not come; empty while it stands or is on its way.
+const presetsError = ref('')
+
 async function fetchPresets() {
   try {
-    const resp = await fetch(`${apiBase()}/api/text/presets?scenario=qwen`)
-    if (!resp.ok) return
+    const resp = await fetch(`${apiBase()}/api/text/presets?scenario=all`)
+    if (!resp.ok) {
+      // A refusal of the route arrives here as a status, with its cause in
+      // the body's `error`: 400 for an unknown row, 503 while ComfyUI's card
+      // cannot be read, 500 while the table cannot be read.
+      let reason = `HTTP ${resp.status}`
+      try {
+        const body = await resp.json()
+        if (body && typeof body.error === 'string' && body.error) reason = body.error
+      } catch { /* no JSON body: the status is all there is */ }
+      presetsError.value = reason
+      return
+    }
     const data = await resp.json()
     presets.value = data.presets || {}
+    presetsError.value = ''
     const keys = Object.keys(presets.value)
-    if (keys.length && !presets.value[selectedPreset.value]) selectedPreset.value = keys[0]!
-  } catch { /* GPU service may not be running */ }
+    if (keys.length && !presets.value[selectedPreset.value]) {
+      const start = data.default_key as string | null | undefined
+      selectedPreset.value = start && presets.value[start] ? start : keys[0]!
+    }
+  } catch (e) {
+    // Only a network failure or an answer that is no JSON lands here.
+    presetsError.value = e instanceof Error ? e.message : String(e)
+  }
 }
 
 /**
- * The models as chips, smallest first.
+ * The models as the lines of the drop-down, smallest first.
  *
- * The name on the chip is the tail of the id the service reports, never a
+ * The name on a line is the tail of the id the service reports, never a
  * literal in this file: the platform forbids model identifiers in code, and a
  * hand-written name is one deployment away from naming something that is no
- * longer there. What the name leaves out goes in the `aside` - the size of the
- * card the model wants, or, where it would have to be squeezed, the form of the
- * squeeze.
+ * longer there. After the name stands what it leaves out - the size of the
+ * card the model wants, or that it is too large for this card. The service
+ * orders the list already; the sort here keeps the view independent of the
+ * order of the JSON keys.
  */
 const modelChoices = computed(() =>
   Object.entries(presets.value)
-    .sort((a, b) => (a[1].vram_gb ?? 0) - (b[1].vram_gb ?? 0))
+    .sort((a, b) =>
+      (a[1].params_b ?? 0) - (b[1].params_b ?? 0) || (a[1].vram_gb ?? 0) - (b[1].vram_gb ?? 0))
     .map(([key, info]) => ({
       value: key,
-      label: info.id.split('/').pop() ?? info.id,
-      aside:
-        info.suggested_quant === null || info.suggested_quant === undefined
-          ? t('latentLab.textLab.modelPanel.wontFit')
-          : info.suggested_quant === 'bf16'
-            ? `${info.vram_gb} GB`
-            : `\u2192${info.suggested_quant}`,
+      label: `${info.id.split('/').pop() ?? info.id} \u00b7 ${
+        info.suggested_quant === 'bf16'
+          ? `${info.vram_gb} GB`
+          : t('latentLab.textLab.modelPanel.wontFit')
+      }`,
       title: info.description,
     }))
 )
@@ -580,73 +652,204 @@ watch(contrastPairs, () => {
 interface PairReading {
   positive: string
   negative: string
+  /**
+   * dot(difference, direction): how far the pair travels along the common
+   * direction, signed, in the layer's own units.
+   */
+  projection: number
   agreement: number
-  /** Along the steering direction, as a unit vector in the drawing's plane. */
+  /**
+   * The pair's unit difference d/|d| projected into the plane of the first two
+   * singular vectors, so (plane_x, plane_y) has length at most 1: plane_x along
+   * the steering direction, plane_y across it.
+   */
   plane_x?: number
-  /** Across it, in the same plane. */
   plane_y?: number
 }
-const reading = ref<PairReading[] | null>(null)
+/**
+ * One reading: the pairs, and the push the hook adds at strength 1
+ * (`direction_norm`, the mean of the pairs' |projection|). One ref, so every
+ * place that drops the reading drops both.
+ */
+interface Reading {
+  pairs: PairReading[]
+  directionNorm: number | null
+}
+const reading = ref<Reading | null>(null)
 
 
 
 /**
  * The fan, in the SVG's own coordinates.
  *
- * The backend hands back each difference as a unit vector in the plane of the
- * first two singular vectors: x along the steering direction, y across it. Here
- * that becomes a line from the origin at (36, 52) in a box 300 by 105.
+ * The backend hands back each pair's unit difference projected into the plane
+ * of the first two singular vectors: x along the steering direction, y across
+ * it. Here that becomes a line from the origin at (OX, OY) in a box FAN_W by
+ * FAN_H.
  */
 /** Half the angle at which two numbers still read as two. */
 const LABEL_GAP = 0.20
 
-const fan = computed(() => {
-  const src = reading.value
-  if (!src) return []
-  const rays: Array<{ idx: number; ux: number; uy: number; ang: number }> = []
-  src.forEach((r, idx) => {
-    if (typeof r.plane_x !== 'number' || typeof r.plane_y !== 'number') return
-    const len = Math.hypot(r.plane_x, r.plane_y)
-    if (len < 1e-6) return
-    rays.push({
+/* The drawing's geometry, read by the template and by the computations below,
+   so the two cannot drift apart. */
+const FAN_W = 277, FAN_H = 105        // the SVG box; 277 = the width inside the column box at 1210 x 834 (300 until 2026-11-07)
+const OX = 36, OY = 52                // origin of every arrow
+const FAN_MARGIN = 4                  // nothing drawn closer to an edge
+const LABEL_ROOM = 14                 // room along a ray past its tip for the pair's number
+const HEAD_ROOM = 8                   // room past the green tip for its arrowhead
+const ALPHA_MAX = 3                   // the axis's top; also the slider's max
+
+/**
+ * One pair's arrow before scaling: its in-plane difference in the layer's units
+ * (length `len` along the unit direction `ux`, `uy`), its drawn angle `ang`, and
+ * `travel`, the signed `projection`. `base` is the longest arrow of the pairs
+ * at nearly the same angle, itself included, and `rank` how many of those come
+ * before it: the two place its number.
+ */
+interface Ray {
+  idx: number; len: number; ux: number; uy: number; ang: number
+  travel: number; base: number; rank: number
+}
+
+/*
+ * A grey arrow is the pair's difference projected into the plane of the first
+ * two singular vectors, in the layer's own units. The backend gives
+ * projection = dot(d, direction) and (plane_x, plane_y) = the unit difference
+ * d/|d| projected into that plane, a vector of length at most 1. So
+ * |d| = projection / plane_x, and the in-plane difference is
+ * (projection, |d| * plane_y): how far the arrow reaches along the green arrow
+ * is exactly `projection`, the pair's travel along the common direction.
+ * A pair at about 90 degrees to the direction (plane_x near 0) gives no |d|
+ * from the reading and has no arrow; it is the one pair the drawing leaves out
+ * while `direction_norm` still counts it.
+ *
+ * Two pairs at nearly the same angle is the GOOD case - it says the two differ
+ * in the same respect - and it put their two numbers in one place, where they
+ * read as one smudge. Pairs within LABEL_GAP of each other form a group; every
+ * number of a group stands beyond the group's LONGEST arrow, one notch further
+ * out than the nearest earlier pair's number, so the order down the ray is the
+ * order of the pairs and a shorter later pair's number does not land on an
+ * earlier one's. The notch is a chain in pair order: a pair with no earlier
+ * pair within LABEL_GAP stands at notch 0, any other one notch past the
+ * highest of those. None of this depends on the scale.
+ */
+const rays = computed<Ray[]>(() => {
+  const raw: Array<Omit<Ray, 'base' | 'rank'>> = []
+  ;(reading.value?.pairs || []).forEach((r, idx) => {
+    if (typeof r.plane_x !== 'number' || typeof r.plane_y !== 'number'
+        || typeof r.projection !== 'number') return
+    const c = r.plane_x, s = r.plane_y, p = r.projection
+    if (Math.abs(c) < 1e-6) return    // at ~90 degrees: |d| is not derivable from the reading
+    const dn = p / c                  // |d|, the full length of the pair's difference
+    if (!(dn > 0)) return             // same sign by construction; anything else is degenerate
+    const vx = p, vy = dn * s         // the in-plane difference; vx IS the travel along the direction
+    const len = Math.hypot(vx, vy)
+    if (len < 1e-9) return
+    raw.push({
       idx,
-      ux: r.plane_x / len,
-      uy: -r.plane_y / len, // SVG counts y downwards
-      ang: Math.atan2(r.plane_y, r.plane_x),
+      len,
+      ux: vx / len,
+      uy: -vy / len, // SVG counts y downwards
+      ang: Math.atan2(s, c),
+      travel: p,
     })
   })
-  // Every arrow at the same radius, the common one included: a longer arrow
-  // for the common part would say the opposite of what its share is, and a
-  // shorter one for a difference that leaves the plane would say something
-  // about this drawing rather than about the pairs.
-  const R = 46
-  return rays.map((a, i) => {
-    // Two pairs at nearly the same angle is the GOOD case - it says the two
-    // differ in the same respect - and it put their two numbers in one place,
-    // where they read as one smudge. Each further number on an occupied angle
-    // steps one notch out along its own arrow, so the order down the ray is the
-    // order of the pairs.
-    const crowd = rays.slice(0, i).filter(b => {
-      const d = Math.abs(a.ang - b.ang) % (2 * Math.PI)
-      return Math.min(d, 2 * Math.PI - d) < LABEL_GAP
-    }).length
-    const LR = R + 11 + crowd * 10
+  const near = (a: { ang: number }, b: { ang: number }) => {
+    const d = Math.abs(a.ang - b.ang) % (2 * Math.PI)
+    return Math.min(d, 2 * Math.PI - d) < LABEL_GAP
+  }
+  const ranks: number[] = []
+  raw.forEach((a, i) => {
+    let rank = 0
+    for (let j = 0; j < i; j++) {
+      if (near(a, raw[j]!)) rank = Math.max(rank, ranks[j]! + 1)
+    }
+    ranks.push(rank)
+  })
+  return raw.map((a, i) => ({
+    ...a,
+    base: Math.max(...raw.filter(b => near(a, b)).map(b => b.len)),
+    rank: ranks[i]!,
+  }))
+})
+
+/*
+ * Pixels per unit of the layer, one scale per reading: the largest at which
+ * every grey arrow with its number, the numbers stacked beyond a group's
+ * longest arrow included, and the green arrow at ALPHA_MAX stay inside the box.
+ * The scale does not read the slider, so the slider moves the green arrow and
+ * nothing else. A bound below zero counts as zero, and a scale of zero leaves
+ * the fan empty. No reading of three pairs gets there: three stacked numbers
+ * need 34 px of room, the box has 48 px above and below the origin and 233 px
+ * to the right (260 until 2026-11-07), and the backend turns the direction so
+ * that the pairs cannot all point into the 32 px on the left.
+ */
+const fanScale = computed(() => {
+  const rs = rays.value
+  if (!rs.length) return 0
+  const VERT = Math.min(OY, FAN_H - OY) - FAN_MARGIN
+  let k = Infinity
+  for (const a of rs) {
+    const ROOM = LABEL_ROOM + a.rank * 10
+    const bounds: number[] = []
+    if (Math.abs(a.uy) > 1e-9) bounds.push((VERT / Math.abs(a.uy) - ROOM) / a.base)
+    if (a.ux > 1e-9) bounds.push(((FAN_W - OX - FAN_MARGIN) / a.ux - ROOM) / a.base)
+    if (a.ux < -1e-9) bounds.push(((OX - FAN_MARGIN) / -a.ux - ROOM) / a.base)
+    for (const b of bounds) k = Math.min(k, Math.max(0, b))
+  }
+  const dn = reading.value?.directionNorm
+  if (typeof dn === 'number' && dn > 0) {
+    k = Math.min(k, (FAN_W - OX - FAN_MARGIN - HEAD_ROOM) / (ALPHA_MAX * dn))
+  }
+  return Number.isFinite(k) && k > 0 ? k : 0
+})
+
+/*
+ * The green arrow: the vector the platform adds to the layer's output while
+ * the model writes (the hook's push), `direction_norm` x strength, along the
+ * common direction. It grows and shrinks with the axis under the drawing.
+ * `direction_norm` is the mean of |projection| over all pairs, so at strength 1
+ * the green arrow is as long as the grey arrows reach along it on average.
+ */
+const lead = computed(() => {
+  const dn = reading.value?.directionNorm
+  const k = fanScale.value
+  if (typeof dn !== 'number' || dn <= 0 || k <= 0) return null
+  return { x2: OX + k * alphaMagnitude.value * dn }
+})
+
+const fan = computed(() => {
+  const k = fanScale.value
+  if (k <= 0) return []
+  // Until 2026-11-07 every arrow had the same length (radius 46) and the green
+  // one was fixed; the picture carried the angles alone. Now each arrow is the
+  // pair's in-plane difference at the one scale of this reading, and its reach
+  // along the green arrow is the pair's travel.
+  return rays.value.map(a => {
+    const R = k * a.len
+    const LR = k * a.base + 11 + a.rank * 10
     return {
       idx: a.idx,
-      x: 36 + R * a.ux,
-      y: 52 + R * a.uy,
-      lx: 36 + LR * a.ux - 3,
-      ly: 52 + LR * a.uy + 3,
+      x: OX + R * a.ux,
+      y: OY + R * a.uy,
+      lx: OX + LR * a.ux - 3,
+      ly: OY + LR * a.uy + 3,
     }
   })
 })
 
+/*
+ * Per drawn pair: its angle in the plane, and its travel along the direction
+ * relative to the push at strength 1; then the strength now set.
+ */
 const fanAria = computed(() => {
-  const parts = (reading.value || []).map((r, i) =>
-    typeof r.agreement === 'number'
-      ? `${i + 1}: ${Math.round((Math.acos(Math.min(1, Math.max(-1, r.agreement))) * 180) / Math.PI)}°`
-      : '')
-  return `${t('latentLab.textLab.repeng.fanLabel', { d: t('latentLab.textLab.repeng.fanLabelEmph') })} — ${parts.filter(Boolean).join(', ')}`
+  const dn = reading.value?.directionNorm
+  const parts = rays.value.map(a => {
+    const deg = Math.round((a.ang * 180) / Math.PI)
+    const rel = typeof dn === 'number' && dn > 0 ? ` ${(a.travel / dn).toFixed(1)}×` : ''
+    return `${a.idx + 1}: ${deg}°${rel}`
+  })
+  return `${t('latentLab.textLab.repeng.fanLabel', { d: t('latentLab.textLab.repeng.fanLabelEmph') })} — ${parts.join(', ')}; ${t('latentLab.textLab.repeng.strengthShort')} ${alpha.value.toFixed(1)}`
 })
 
 /**
@@ -708,7 +911,7 @@ const alphaMarks = computed<SliderMark[]>(() => [
   { value: '0.5', pct: 0, label: t('latentLab.textLab.repeng.alphaMark05') },
   { value: '1.25', pct: 30, label: t('latentLab.textLab.repeng.alphaMark1') },
   { value: '2', pct: 60, label: t('latentLab.textLab.repeng.alphaMark2') },
-  { value: '3', pct: 100, label: t('latentLab.textLab.repeng.alphaMark3') },
+  { value: String(ALPHA_MAX), pct: 100, label: t('latentLab.textLab.repeng.alphaMark3') },
 ])
 /** The axis holds a distance; the two directions are the outer columns. */
 const alphaMagnitude = computed(() => Math.abs(alpha.value))
@@ -832,6 +1035,9 @@ async function startRun() {
   const live = rows.value[0]!
   const rowId = live.id
 
+  // The strengths are asked one request each, with the same texts: a refusal
+  // comes back from every one of them and is said once.
+  let refused = false
   try {
     await Promise.all(alphas.map(async (a, i) => {
       try {
@@ -853,6 +1059,14 @@ async function startRun() {
           temperature: TEMPERATURE,
           seed,
         }, { baseUrl: apiBase(), validateStatus: () => true })
+        if (refusalKeyOf(data)) {
+          if (!refused) {
+            refused = true
+            reportRefusal(data)
+            showError(t(refusalKeyOf(data)))
+          }
+          return
+        }
         if (data.error) { showError(data.error); return }
 
         // The axis is the same in all three answers - the same pairs at the
@@ -860,7 +1074,12 @@ async function startRun() {
         // answer lands first is the one that puts it on the surface.
         if (live.layer === null) {
           live.layer = data.target_layer
-          if (Array.isArray(data.pair_projections)) reading.value = data.pair_projections
+          if (Array.isArray(data.pair_projections)) {
+            reading.value = {
+              pairs: data.pair_projections,
+              directionNorm: typeof data.direction_norm === 'number' ? data.direction_norm : null,
+            }
+          }
 
           labRecord({
             parameters: {
@@ -872,6 +1091,7 @@ async function startRun() {
             results: {
               pair_agreement: data.pair_agreement,
               explained_variance: data.explained_variance,
+              direction_norm: data.direction_norm,
             },
           })
         }
@@ -938,7 +1158,7 @@ const folded = ref(false)
    hand left it. The preparing column takes its own scrolling for its own sake:
    at 553 px of frame its content runs to 974. */
 .re { display: flex; flex-direction: column; height: 100%; min-height: 0; }
-.re-prep { overflow-y: auto; padding-right: 4px; }
+.re-prep { overflow-y: auto; }
 
 .error-banner {
   margin: 0 16px 8px;
@@ -997,7 +1217,8 @@ const folded = ref(false)
 }
 .re-fan svg { width: 100%; height: auto; overflow: visible; }
 .re-fan-n { font-size: 9px; fill: rgb(255 255 255 / 0.5); }
-.re-fan-cap { font-size: 9px; fill: #7ec89a; }
+.re-fan-lead { display: flex; align-items: baseline; gap: 6px; }
+.re-fan-lead .re-cell-glyph { font-size: 12px; }
 .re-pair-n {
   grid-column: 1;
   grid-row: 1 / span 2;
@@ -1041,35 +1262,11 @@ const folded = ref(false)
 /* --- right column ------------------------------------------------------ */
 .re-runs { display: flex; flex-direction: column; gap: 18px; min-height: 0; }
 
-/* Only the rows travel. The column that prepares a run stands still while they
-   do, so the pairs and the axis stay where a hand left them. */
-.re-rows {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding-right: 6px;
-}
-
-.re-row { display: flex; flex-direction: column; gap: 6px; }
-
-/* What all cells of this row share, said once. */
-.re-row-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 16px;
-  font-size: var(--flow-fs-sub);
-  color: rgba(255, 255, 255, 0.5);
-}
-.re-row-prompt { color: rgba(255, 255, 255, 0.75); }
-.re-row-meta b {
-  font-weight: 400;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  color: rgba(255, 255, 255, 0.7);
-}
+/* The rows, their scrolling box, the head of a row and the dimmed row before
+   the first press are the lab's run rows (`.lab-runrows`, assets/flow-stage.css),
+   shared with MMAudio since 2026-11-02. Only the rows travel: the column that
+   prepares a run stands still while they do, so the pairs and the axis stay
+   where a hand left them. */
 
 /* Three columns of the same width: two cells side by side differ in the
    strength and in nothing else, and equal width is part of saying that. The
@@ -1123,10 +1320,9 @@ const folded = ref(false)
 /* An empty cell still has to be a cell, or the row reads as three headings. */
 .re-text-wait { min-height: 84px; }
 
-/* The row before the first press: everything at half weight, because it says
-   what WOULD happen and nothing that did. */
-.re-row.is-preview { opacity: 0.45; }
-.re-row.is-preview .re-cell { background: var(--surface-1); }
+/* In the row before the first press (`.lab-runrow.is-preview`, shared) the
+   cells also sink to the panel tone. */
+.lab-runrow.is-preview .re-cell { background: var(--surface-1); }
 
 .re-again {
   align-self: flex-start;

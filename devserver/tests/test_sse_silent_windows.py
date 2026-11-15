@@ -26,6 +26,12 @@ stubbed to take a known time, not by reading:
   * /pipeline/generate/stream (GET, diffusers), between `stage4_start` and the
     first beat of the progress loop: the station reads the encoders.
 
+Since 2026-10-31 the intake stands where the Stage-1 gate stood, with the same
+slot in the queue and, after a name or an address, a model. A sixth stretch came
+with it: the check at the result, between the interception and `chunk`, and a
+seventh: the reading's check of each paragraph before it leaves. All are held
+to the same two claims.
+
 Two claims, the sibling files' own, and the reading of the wire is theirs too.
 
   * THE CONNECTION KEEPS BREATHING. Asserted by HOLDING the work and counting
@@ -59,6 +65,9 @@ import pytest
 
 from my_app.routes import schema_pipeline_routes as spr
 from my_app.services import streaming_response as transport
+from my_app.services.safety_gate import (CHECKPOINT_BEFORE_MODEL, CHECKPOINT_INTAKE,
+                                         CHECKPOINT_RESULT, REASON_PERSONAL_DATA,
+                                         Verdict)
 # The reading of the wire is the sibling file's, once -- `frames_of` calls a
 # frame a comment because it begins with ':', `no_comment_carries_a_payload`
 # says the other half, and `kept_breathing` holds both halves of the first
@@ -94,8 +103,8 @@ class StubRecorder:
     metadata: dict = {"entities": []}
     # A record that does not say what level it was made under is judged by the
     # strictest one, whatever the request asks for — so a stand-in has to say.
-    # These runs are made at the level `resolve_safety_level` is stubbed to.
-    safety_level: str = "open"
+    # These runs are made at GENERATION_LEVEL.
+    safety_level: str = "adult"
 
     def pictures_awaiting_a_verdict(self):
         """Nothing: this stand-in records no entity at all."""
@@ -170,6 +179,11 @@ def breathes_once_and_stops(events, *, label, frame, **_writers):
 # the two interception generators — GET /pipeline/interception, /pipeline/optimize
 # ---------------------------------------------------------------------------
 
+# The level each stream runs at, as its view would hand it in.
+INTERCEPTION_LEVEL = "kids"
+GENERATION_LEVEL = "adult"
+
+
 def _wire_interception(monkeypatch, pipeline_gate):
     """Every backend the interception stream reaches for, replaced."""
     from schemas.engine import config_loader as cl
@@ -178,13 +192,15 @@ def _wire_interception(monkeypatch, pipeline_gate):
         async def execute_pipeline(self, *a, **kw):
             return held_on(pipeline_gate, StubRunResult)()
 
-    monkeypatch.setattr(spr, "resolve_safety_level", lambda: "kids")
     monkeypatch.setattr(spr, "pipeline_executor", StubExecutor())
     monkeypatch.setattr(spr, "get_recorder", lambda **kw: StubRecorder())
     monkeypatch.setattr(spr, "_resolve_interception_config",
                         lambda name: StubConfig(name=name))
     monkeypatch.setattr(cl, "resolve_context_language", lambda *a, **kw: "")
     monkeypatch.setattr(cl, "wants_passthrough", lambda *a, **kw: False)
+    # The intake and the check at the result pass, each the moment it is asked.
+    monkeypatch.setattr(spr, "check_intake_texts", lambda *a, **kw: INTAKE_PASSED)
+    monkeypatch.setattr(spr, "check_result_text", lambda *a, **kw: RESULT_PASSED)
 
 
 def _interception_data():
@@ -192,16 +208,17 @@ def _interception_data():
             "device_id": "stand-in-device", "user_language": "de"}
 
 
-STAGE1_PASSED = (True, None, ["stand_in"], None, {})
+INTAKE_PASSED = Verdict(True, CHECKPOINT_INTAKE, INTERCEPTION_LEVEL)
+RESULT_PASSED = Verdict(True, CHECKPOINT_RESULT, INTERCEPTION_LEVEL, "interception")
 
 
-def window_the_stage_1_gate(monkeypatch):
+def window_the_intake(monkeypatch):
     """Between `connected` and `stage_start`: one slot in the plant-wide LLM
-    queue, then a model."""
+    queue, then, after a name or an address, a model."""
     gate = threading.Event()
     _wire_interception(monkeypatch, Opened())
-    monkeypatch.setattr(spr, "_stage1_check_texts", held_on(gate, STAGE1_PASSED))
-    return spr.execute_pipeline_streaming(_interception_data()), gate, 2
+    monkeypatch.setattr(spr, "check_intake_texts", held_on(gate, INTAKE_PASSED))
+    return spr.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL), gate, 2
 
 
 def window_the_interception(monkeypatch):
@@ -209,12 +226,21 @@ def window_the_interception(monkeypatch):
     only on a Wikipedia lookup, so an ordinary run wrote nothing at all."""
     gate = threading.Event()
     _wire_interception(monkeypatch, gate)
-    monkeypatch.setattr(spr, "_stage1_check_texts",
-                        held_on(Opened(), STAGE1_PASSED))
-    # Three, because the open Stage-1 gate above contributes the transport's
-    # single pre-wait beat: at least two of the beats counted have to come from
-    # the window under test.
-    return spr.execute_pipeline_streaming(_interception_data()), gate, 3
+    # Three, because the open intake above contributes the transport's single
+    # pre-wait beat: at least two of the beats counted have to come from the
+    # window under test.
+    return spr.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL), gate, 3
+
+
+def window_the_check_at_the_result(monkeypatch):
+    """Between the interception and `chunk`: the check at the result, one slot
+    in the queue and then the classifier."""
+    gate = threading.Event()
+    _wire_interception(monkeypatch, Opened())
+    monkeypatch.setattr(spr, "check_result_text", held_on(gate, RESULT_PASSED))
+    # Four: the open intake and the open interception before it each contribute
+    # the transport's single pre-wait beat.
+    return spr.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL), gate, 4
 
 
 
@@ -222,9 +248,17 @@ def window_the_interception(monkeypatch):
 # the reading — POST /compare/analyze-image with "stream"
 # ---------------------------------------------------------------------------
 
+# The level the reading runs at, as its view would hand it in, and the check at
+# the result passing each paragraph the moment it is asked.
+READING_LEVEL = "kids"
+READING_PASSED = Verdict(True, CHECKPOINT_RESULT, READING_LEVEL, "description")
+
+
 def _wire_the_reading(monkeypatch, before_first, between_two):
-    """A vision model that writes two pieces, each behind a gate of its own."""
+    """A vision model that writes two paragraphs, each behind a gate of its own."""
     from my_app.services import llm_backend as lb
+
+    monkeypatch.setattr(spr, "check_result_text", lambda *a, **kw: READING_PASSED)
 
     class StubStream:
         def __init__(self):
@@ -232,9 +266,9 @@ def _wire_the_reading(monkeypatch, before_first, between_two):
 
         def __iter__(self):
             assert before_first.wait(30.0), "the gate was never opened"
-            yield ("token", "a house")
+            yield ("token", "a house\n\n")
             assert between_two.wait(30.0), "the gate was never opened"
-            yield ("token", " at the edge of a field")
+            yield ("token", "at the edge of a field")
             yield ("done", "stop")
 
         def close(self):
@@ -250,16 +284,29 @@ def window_before_the_first_piece(monkeypatch):
     """A vision model to load and a GPU slot to stand in, before it writes."""
     gate = threading.Event()
     _wire_the_reading(monkeypatch, gate, Opened())
-    return spr._stream_image_reading("alias", "a model", "read this", "b64"), gate, 2
+    return spr._stream_image_reading("alias", "a model", "read this", "b64",
+                                     READING_LEVEL), gate, 2
 
 
 def window_between_two_pieces(monkeypatch):
     """A model that has written and then stops for as long as it stops."""
     gate = threading.Event()
     _wire_the_reading(monkeypatch, Opened(), gate)
-    # Three: the first piece has already gone out past the transport's pre-wait
-    # beat, so two of the counted beats still have to come from this window.
-    return spr._stream_image_reading("alias", "a model", "read this", "b64"), gate, 3
+    # Three: the first paragraph has already gone out past the transport's
+    # pre-wait beat, so two of the counted beats still have to come from this
+    # window.
+    return spr._stream_image_reading("alias", "a model", "read this", "b64",
+                                     READING_LEVEL), gate, 3
+
+
+def window_the_check_of_a_paragraph(monkeypatch):
+    """A paragraph the model has finished, held until the check at the result
+    has read it: one slot in the queue and then the classifier."""
+    gate = threading.Event()
+    _wire_the_reading(monkeypatch, Opened(), Opened())
+    monkeypatch.setattr(spr, "check_result_text", held_on(gate, READING_PASSED))
+    return spr._stream_image_reading("alias", "a model", "read this", "b64",
+                                     READING_LEVEL), gate, 2
 
 
 # ---------------------------------------------------------------------------
@@ -301,17 +348,20 @@ def _wire_the_generation(monkeypatch, encode_gate, model_id="stand-in/model"):
         def get(self, *a, **kw):
             raise RuntimeError("the progress endpoint is not part of this test")
 
-    async def checked(*a, **kw):
-        return {"safe": True, "positive_prompt": "ein satz", "method": "stand_in"}
+    async def translated(text, *a, **kw):
+        return text
 
     async def generated(**kw):
         return {"success": True, "run_id": kw.get("run_id"), "loras": [],
                 "media_output": {"media_type": "image", "url": "stand-in"}}
 
-    monkeypatch.setattr(spr, "resolve_safety_level", lambda: "open")
     monkeypatch.setattr(spr, "pipeline_executor", StubExecutor())
     monkeypatch.setattr(spr, "get_recorder", lambda **kw: StubRecorder())
-    monkeypatch.setattr(spr, "execute_stage3_safety", checked)
+    monkeypatch.setattr(spr, "check_intake_texts",
+                        lambda fields, *, level: Verdict(True, CHECKPOINT_INTAKE, level))
+    monkeypatch.setattr(spr, "check_before_model",
+                        lambda texts, *, level, **kw: Verdict(True, CHECKPOINT_BEFORE_MODEL, level))
+    monkeypatch.setattr(spr, "_translate_for_model", translated)
     monkeypatch.setattr(spr, "execute_stage4_generation_only", generated)
     monkeypatch.setattr(spr, "_announce_generation", lambda *a, **kw: None)
     monkeypatch.setattr(spr, "_release_generation", lambda *a, **kw: None)
@@ -334,9 +384,9 @@ def window_reading_the_encoders(monkeypatch):
     station encodes the prompt before it can answer."""
     gate = threading.Event()
     _wire_the_generation(monkeypatch, gate)
-    # Three: Stage 3 above is already wrapped and open, and contributes the
+    # Three: the checks above are already wrapped and open, and contribute the
     # transport's single pre-wait beat.
-    return spr.execute_generation_streaming(_generation_data()), gate, 3
+    return spr.execute_generation_streaming(_generation_data(), GENERATION_LEVEL), gate, 3
 
 
 # ---------------------------------------------------------------------------
@@ -344,10 +394,12 @@ def window_reading_the_encoders(monkeypatch):
 # ---------------------------------------------------------------------------
 
 WINDOWS = {
-    "the Stage-1 gate of the interception stream": window_the_stage_1_gate,
+    "the intake of the interception stream": window_the_intake,
     "the interception itself": window_the_interception,
+    "the check at the result of the interception stream": window_the_check_at_the_result,
     "the reading before its first piece": window_before_the_first_piece,
     "the reading between two pieces": window_between_two_pieces,
+    "the reading's check of a paragraph": window_the_check_of_a_paragraph,
     "the encoders being read before stage 4": window_reading_the_encoders,
 }
 
@@ -408,17 +460,20 @@ def test_the_interception_stream_writes_the_frames_it_always_wrote(monkeypatch):
 
 
 
-def test_the_reading_writes_the_pieces_it_always_wrote(monkeypatch):
+def test_the_reading_writes_its_paragraphs(monkeypatch):
+    """Since the check at the result the reading leaves one paragraph at a
+    time, each once it is checked. The text, and the count the page holds
+    against it, are what they were."""
     body = frames_of_an_open_run(monkeypatch, window_before_the_first_piece)
 
     payloads = event_payloads(body)
     assert [p["type"] for p in payloads] == ["token", "token", "done"]
-    assert "".join(p["text"] for p in payloads if p["type"] == "token") == \
-        "a house at the edge of a field"
+    assert [p["text"] for p in payloads if p["type"] == "token"] == \
+        ["a house\n\n", "at the edge of a field"]
     assert payloads[-1]["finish_reason"] == "stop"
     # Counted as it left this server, which is what the page holds its own
     # count against.
-    assert payloads[-1]["char_count"] == len("a house at the edge of a field")
+    assert payloads[-1]["char_count"] == len("a house\n\nat the edge of a field")
     no_comment_carries_a_payload(body)
 
 
@@ -428,7 +483,9 @@ def test_the_generation_stream_still_says_what_the_encoders_read(monkeypatch):
     body = frames_of_an_open_run(monkeypatch, window_reading_the_encoders)
 
     assert event_names(body) == ["connected", "stage3_start", "stage3_complete",
-                                 "stage4_start", "encoding_info", "complete"]
+                                 "stage4_start", "encoding_info",
+                                 # The end of the diffusers steps and decode.
+                                 "generation_progress", "complete"]
     encoding = [p for p in event_payloads(body) if "token_count" in p]
     assert encoding == [ENCODING_INFO]
     no_comment_carries_a_payload(body)
@@ -446,30 +503,29 @@ def test_a_station_that_says_nothing_about_the_encoders_leaves_the_run_alone(
 
     _wire_the_generation(monkeypatch, Opened())
     monkeypatch.setattr(spr.requests, "post", lambda *a, **kw: Refused())
-    body = "".join(spr.execute_generation_streaming(_generation_data()))
+    body = "".join(spr.execute_generation_streaming(_generation_data(), GENERATION_LEVEL))
 
     assert event_names(body) == ["connected", "stage3_start", "stage3_complete",
-                                 "stage4_start", "complete"]
+                                 "stage4_start", "generation_progress", "complete"]
 
 
-def test_a_refusal_by_stage_1_still_ends_the_stream_where_it_always_did(
+def test_a_refusal_at_the_intake_ends_the_stream_where_stage_1_did(
         monkeypatch):
-    """The path the wrapping had to leave alone. What the gate decided is now
-    read back out of the worker's result, and a refusal has to reach the same
-    `blocked` event, with the same fields, and stop the run there."""
+    """The path the wrapping had to leave alone. What the intake decided is
+    read back out of the worker's result, and a refusal reaches the `blocked`
+    event Stage 1 wrote, and stops the run there."""
     _wire_interception(monkeypatch, Opened())
-    monkeypatch.setattr(
-        spr, "_stage1_check_texts",
-        lambda *a, **kw: (False, "Kids-Filter: nicht erlaubt", ["fast_filter"],
-                          "input_text", {}))
+    refused = Verdict(False, CHECKPOINT_INTAKE, INTERCEPTION_LEVEL, "input_text",
+                      REASON_PERSONAL_DATA, "Name einer Privatperson")
+    monkeypatch.setattr(spr, "check_intake_texts", lambda *a, **kw: refused)
 
-    body = "".join(spr.execute_pipeline_streaming(_interception_data()))
+    body = "".join(spr.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL))
 
     assert event_names(body) == ["connected", "blocked"]
     blocked = event_payloads(body)[-1]
-    assert blocked["stage"] == "safety"
-    assert blocked["reason"] == "Kids-Filter: nicht erlaubt"
-    assert blocked["checks_passed"] == ["fast_filter"]
+    assert blocked["reason"] == "Name einer Privatperson"
+    assert blocked["safety_block"] == refused.block()
+    assert blocked["checks_passed"] == []
 
 
 def test_an_interception_that_raised_still_arrives_as_the_error_event(
@@ -483,10 +539,8 @@ def test_an_interception_that_raised_still_arrives_as_the_error_event(
 
     _wire_interception(monkeypatch, Opened())
     monkeypatch.setattr(spr, "pipeline_executor", Broken())
-    monkeypatch.setattr(spr, "_stage1_check_texts",
-                        held_on(Opened(), STAGE1_PASSED))
 
-    body = "".join(spr.execute_pipeline_streaming(_interception_data()))
+    body = "".join(spr.execute_pipeline_streaming(_interception_data(), INTERCEPTION_LEVEL))
 
     assert event_names(body) == ["connected", "stage_start", "error"]
     assert "the station was not there" in event_payloads(body)[-1]["message"]
@@ -519,7 +573,8 @@ def test_a_reading_whose_page_went_away_stops_and_releases_the_model(monkeypatch
     monkeypatch.setattr(lb, "get_llm_backend",
                         lambda: type("B", (), {"chat_stream": lambda self, **kw: StubStream()})())
 
-    stream = spr._stream_image_reading("alias", "a model", "read this", "b64")
+    stream = spr._stream_image_reading("alias", "a model", "read this", "b64",
+                                       READING_LEVEL)
     next(stream)                      # the first breath
     stream.close()                    # the page goes away
     let_go.set()                      # and only now does the model write again

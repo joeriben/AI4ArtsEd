@@ -14,10 +14,13 @@ and a reindex afterwards whenever the library changed:
 
   1. fetch    arXiv PDF or a direct pdf_url -> resources/knowledge_originals/research/
               (entries carrying local_pdf are operator copies and are never fetched)
-  2. raw      PDF -> <doc_id>.raw.md via knowledge_ingest.py (Docling, needs the
-              knowledge venv - this phase re-executes itself there)
-  3. condense raw Markdown -> library/research/<doc_id>.md via the platform's own
-              Verdichtung (my_app/services/knowledge_processing.py)
+  2. raw      PDF -> <doc_id>.blocks.json, <doc_id>.figures/ and <doc_id>.raw.md
+              via knowledge_ingest.py (Docling, in the knowledge venv)
+  3. condense blocks (checked against the PDF) -> library/research/<doc_id>.md
+              via the platform's own condensation
+              (my_app/services/knowledge_processing.py); the checks go to
+              <doc_id>.checks.json beside it, and a failed check keeps the
+              file a draft
 
 Title/authors/year come from the document itself via the platform's own
 identify_bibliographic (which returns nothing rather than inventing); entries
@@ -151,6 +154,10 @@ def raw_path(e: Dict[str, Any]) -> Path:
     return ORIGINALS / f"{e['doc_id']}.raw.md"
 
 
+def blocks_path(e: Dict[str, Any]) -> Path:
+    return ORIGINALS / f"{e['doc_id']}.blocks.json"
+
+
 def out_path(e: Dict[str, Any]) -> Path:
     return LIBRARY / f"{e['doc_id']}.md"
 
@@ -179,7 +186,7 @@ def phase_fetch(e: Dict[str, Any], force: bool) -> bool:
 
 def phase_raw(e: Dict[str, Any], force: bool) -> bool:
     raw = raw_path(e)
-    if raw.exists() and not force:
+    if raw.exists() and blocks_path(e).exists() and not force:
         return True
     pdf = pdf_path(e)
     if not pdf.exists():
@@ -205,12 +212,13 @@ def phase_condense(e: Dict[str, Any], force: bool) -> bool:
     if out.exists() and not force:
         return True
     raw = raw_path(e)
-    if not raw.exists():
-        log(f"  no raw Markdown for {e['doc_id']}")
+    if not raw.exists() or not blocks_path(e).exists():
+        log(f"  no extraction (raw Markdown + blocks) for {e['doc_id']}")
         return False
 
     os.chdir(DEVSERVER)
     from my_app.services import knowledge_processing as kp
+    from my_app.services.knowledge_extract import extract_with_integrity
 
     raw_md = raw.read_text(encoding="utf-8")
     llm = kp.default_llm_fn()
@@ -238,20 +246,24 @@ def phase_condense(e: Dict[str, Any], force: bool) -> bool:
         "themen": e.get("themen", ["ai"]),
         "lizenz": e.get("lizenz", ""),
         "url": meta.get("url") or e.get("url", ""),
-        "status": "published",
     }
+    extraction = extract_with_integrity(blocks_path(e), pdf_path(e))
+    # The research library is filled by the maintainer from a hand-made
+    # manifest, no operator release stands between: the gate alone decides
+    # the status (knowledge_processing.gate_status).
     res = kp.process_document(
-        raw_md, front_matter,
-        llm=llm, mode=e.get("mode", "essay"), target_lang="en",
+        extraction, front_matter,
+        llm=llm, target_lang="en",
         progress=lambda m: log("     " + m),
+        hold="",
     )
     if res.fatal:
         log("  FATAL (nothing written): " + "; ".join(res.fatal))
         return False
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(res.markdown, encoding="utf-8")
-    log(f"  -> {out.name}  ratio={res.ratio:.3f}  {res.n_emitted_sections}/{res.n_content_sections} sections"
-        f"  glossar={res.n_glossary}  model={res.analysis_model}")
+    kp.write_library_file(res, out, extraction)
+    log(f"  -> {out.name}  {res.compact_chars}/{res.source_chars} chars  "
+        f"{res.n_emitted_sections}/{res.n_units} units  glossar={res.n_glossary}  "
+        f"status={res.status} {res.status_reason}  checks={res.checks}  model={res.analysis_model}")
     for w in res.warnings:
         log("  WARN: " + w)
     return True

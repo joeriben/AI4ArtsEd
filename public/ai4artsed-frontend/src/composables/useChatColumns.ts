@@ -16,7 +16,13 @@ import { useI18n } from 'vue-i18n'
 import { chatTurn, ChatStreamError, ChatNoReplyError } from '@/lib/chatTurn'
 import { SseHttpError } from '@/lib/sseStream'
 import { historyOf, type ColumnMessage, type HistoryTurn } from '@/lib/chatColumns'
-import { generationErrorFor, interceptPrompt, perspectiveFailureText } from '@/composables/useLabRun'
+import {
+  generationErrorFor,
+  interceptPrompt,
+  perspectiveFailureText,
+  refusalKeyOf,
+  reportRefusal,
+} from '@/composables/useLabRun'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { apiBase } from '@/services/labApi'
 
@@ -122,6 +128,8 @@ export function useChatColumns<S>(store: ChatColumnsStore, opts: ChatColumnsOpti
       const data = await chatTurn(`${apiBase()}/api/chat/stream`, body)
       return data.reply || null
     } catch (e) {
+      // A refusal of the platform's checks is said as one, by the round.
+      if (refusalKeyOf(e)) throw e
       // Three endings that this call read as "no reply" while it went to the
       // blocking endpoint, and the column showed as such: a turn the server
       // itself ended (a non-2xx JSON body then, an event in the stream now), a
@@ -156,6 +164,9 @@ export function useChatColumns<S>(store: ChatColumnsStore, opts: ChatColumnsOpti
       store.loading[idx] = true
     }
 
+    // The columns are sent the same message, and a refusal of it is explained
+    // in the safety window once per round, not once per column.
+    let reported = false
     await Promise.allSettled(round.map(async (idx) => {
       try {
         // Everything before the message just added.
@@ -163,8 +174,15 @@ export function useChatColumns<S>(store: ChatColumnsStore, opts: ChatColumnsOpti
         const reply = await takeTurn(opts.body(idx, text, history))
         if (reply) store.addMessage(idx, 'assistant', reply)
         else store.addMessage(idx, 'assistant', t('compare.shared.noResponse'), true)
-      } catch {
-        store.addMessage(idx, 'assistant', t('compare.shared.error'), true)
+      } catch (e) {
+        // A refused turn stands as a failed line: it is said in the column, and
+        // the history leaves it and the message before it out.
+        const refusal = refusalKeyOf(e)
+        if (refusal && !reported) {
+          reported = true
+          reportRefusal(e)
+        }
+        store.addMessage(idx, 'assistant', refusal ? t(refusal) : t('compare.shared.error'), true)
       } finally {
         store.loading[idx] = false
       }

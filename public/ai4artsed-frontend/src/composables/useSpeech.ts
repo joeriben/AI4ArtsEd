@@ -33,6 +33,7 @@
 import { computed, ref, type Ref } from 'vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { apiBase } from '@/services/labApi'
+import { reportRefusal } from '@/composables/useLabRun'
 
 /** Whatever the caller uses to identify one utterance among its own. */
 export type SpeechKey = string | number
@@ -141,6 +142,15 @@ const DEBUG = debugWanted()
 let debugBox: HTMLElement | null = null
 
 export function speechTrace(line: string) { trace(line) }
+
+/** The JSON body of an answer, or null where it has none. */
+async function bodyOf(response: Response): Promise<unknown> {
+  try {
+    return await response.json()
+  } catch {
+    return null
+  }
+}
 
 function trace(line: string) {
   if (!DEBUG || typeof document === 'undefined') return
@@ -432,6 +442,9 @@ export function useSpeech() {
         // indistinguishable from "nothing was said" unless it is written down.
         console.warn(`[SPEECH] /api/speech returned ${response.status}`)
         trace(`  Server antwortet ${response.status}`)
+        // A refusal of the platform's checks goes where every surface sends
+        // one, the safety window. The piece is not spoken.
+        reportRefusal(await bodyOf(response))
         return null
       }
       return await response.blob()
@@ -630,6 +643,9 @@ export function useSpeech() {
         }
         const blob = await clips[i]!
         if (mine !== generation) { trace('  verworfen: inzwischen ueberholt'); return }
+        // Read again once the clip is in: a piece that was still being made
+        // when the switch went off is not played.
+        if (!isAvailable.value) { trace('  still: die Stimme ist ausgeschaltet'); releaseAudio(); quiet(); return }
         head = i
         topUp(i + 1)
         if (!blob) { quiet(); return }
@@ -836,7 +852,7 @@ export function useSpeech() {
  * the SAME text the surface stands up, so that the cut is the same — and
  * `whole` once with the closing text. `end()` drops the turn that is live
  * without a word, for a turn that turns out not to be spoken after all
- * (writing mode, restored history, nothing spoken in it).
+ * (voice switched off, restored history, nothing spoken in it).
  *
  * @param language  read when a turn begins, so the turn is spoken in the
  *                  surface's language of that moment

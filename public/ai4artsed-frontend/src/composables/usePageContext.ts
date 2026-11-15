@@ -91,7 +91,8 @@ export const DEFAULT_FOCUS_HINT: FocusHint = {
  * One thing a page offers, held up by Träshy as a sign.
  *
  * The point is that the explanation does NOT stand in the page taking fixed
- * vertical room. Träshy already receives the interface reference and the page
+ * vertical room. Träshy already receives the page's use report (or its
+ * handbook entry) and the page
  * context, so a page hands over at most a question, never an answer — there is
  * no second copy of the text to keep in step with the first.
  */

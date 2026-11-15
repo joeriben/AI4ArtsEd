@@ -15,9 +15,9 @@ import type { ReadingFrame } from '@/data/readingFrames'
  * Available stage/node types in the canvas
  *
  * NOTE: Safety is NOT a user-visible node!
- * - Stage 1 Safety: Automatic in /pipeline/interception
- * - Stage 3 Safety: Automatic per output-config
- * DevServer handles all safety transparently.
+ * The server checks the board at the intake, what a model writes for a node
+ * at the result, and what a media model receives before the model
+ * (devserver/my_app/services/safety_gate.py).
  *
  * Evaluation and display nodes carry the decision logic.
  */
@@ -185,7 +185,7 @@ export interface NodeTypeDefinition {
  * - Collector: Fan-in collector for parallel outputs (Media Collector)
  *
  * IMPORTANT: Safety is NOT a node!
- * DevServer handles Stage 1 + Stage 3 safety automatically.
+ * DevServer runs the checks itself (see StageType above).
  */
 export const NODE_TYPE_DEFINITIONS: NodeTypeDefinition[] = [
   {
@@ -607,6 +607,10 @@ export interface LLMModelSummary {
   id: string
   /** Display name */
   name: string
+  /** The register's name for the model (devserver/config/model_register.json),
+   *  which is not always the last segment of the id. Absent from a server
+   *  that does not send it yet. */
+  register?: string
   /** Provider (openai, anthropic, google, local) */
   provider: string
   /** Model capabilities/description */

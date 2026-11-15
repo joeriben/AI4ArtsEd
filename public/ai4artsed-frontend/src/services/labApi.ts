@@ -25,7 +25,9 @@ const cfg = { withCredentials: true } as const
 
 // ---- types -----------------------------------------------------------------
 export type Role = 'admin' | 'educator' | 'participant'
-export type SafetyLevel = 'kids' | 'youth' | 'open'
+// What a course carries: kids or youth, or `installation` for a course that
+// runs at the installation's level (services/safety_level_resolver.py).
+export type SafetyLevel = 'kids' | 'youth' | 'installation'
 
 export interface AdminUser {
   id: number
@@ -137,6 +139,10 @@ export const coursesApi = {
   replacePlaceCode: (id: number, number: number) =>
     axios.post<{ place: CoursePlace & { code: string } }>(
       `${apiBase()}/api/courses/${id}/places/${number}/code`, {}, cfg),
+  // every place a new code at once; each place keeps what it saved (2026-11-14)
+  replaceAllCodes: (id: number) =>
+    axios.post<{ places: IssuedPlace[]; course: Course }>(
+      `${apiBase()}/api/courses/${id}/places/codes`, {}, cfg),
 
   // the access window: the codes enter the course until `until`
   openAccess: (id: number, until: string) =>

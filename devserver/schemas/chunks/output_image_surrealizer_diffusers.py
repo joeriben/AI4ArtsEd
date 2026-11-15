@@ -124,7 +124,7 @@ async def execute(
         'image_data': base64.b64encode(image_bytes).decode('utf-8'),
         'media_type': 'image',
         'backend': 'diffusers',
-        'model_id': model_id,
+        'model_used': model_id,
         'seed': seed,
         'parameters': {
             'width': w,

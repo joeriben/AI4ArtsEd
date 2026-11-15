@@ -41,6 +41,13 @@ def vlm(monkeypatch):
                         lambda b64: "a red square on white ground")
 
 
+@pytest.fixture()
+def cleared(monkeypatch):
+    """Every upload carries a pass for every level (safety_gate.upload_cleared_for)."""
+    from my_app.services import safety_gate
+    monkeypatch.setattr(safety_gate, "upload_cleared_for", lambda upload_id, level: True)
+
+
 def _ctx(allowed):
     return {"device_id": "dev-vu-test", "run_id": None,
             "brought_upload_ids": allowed}
@@ -80,7 +87,7 @@ def test_allowlisted_id_with_no_file_on_disk(registry, uploads_dir):
     assert "no longer on disk" in result
 
 
-def test_allowlisted_id_is_viewed_and_normalized(registry, uploads_dir, vlm):
+def test_allowlisted_id_is_viewed_and_normalized(registry, uploads_dir, vlm, cleared):
     _write_png(uploads_dir / f"{UUID_A}.png")
     result = registry.execute("view_upload", {"upload_id": UUID_A.upper()},
                               context=_ctx([UUID_A]))
@@ -91,7 +98,7 @@ def test_allowlisted_id_is_viewed_and_normalized(registry, uploads_dir, vlm):
     assert "a red square on white ground" in result
 
 
-def test_vision_channel_silence_is_an_error(registry, uploads_dir, monkeypatch):
+def test_vision_channel_silence_is_an_error(registry, uploads_dir, monkeypatch, cleared):
     from my_app.services.llm_service import llm_service
     monkeypatch.setattr(llm_service, "describe_image_neutral", lambda b64: None)
     _write_png(uploads_dir / f"{UUID_A}.png")
@@ -101,7 +108,8 @@ def test_vision_channel_silence_is_an_error(registry, uploads_dir, monkeypatch):
     assert "vision channel did not answer" in result
 
 
-def test_undecodable_file_never_reaches_the_vision_model(registry, uploads_dir, monkeypatch):
+def test_undecodable_file_never_reaches_the_vision_model(registry, uploads_dir, monkeypatch,
+                                                         cleared):
     """Bytes that are not an image must fail at the read, not be shipped to the
     VLM as if they were a picture — that confusion is what silently broke every
     Canvas image reading."""
@@ -112,7 +120,7 @@ def test_undecodable_file_never_reaches_the_vision_model(registry, uploads_dir, 
     (uploads_dir / f"{UUID_A}.png").write_bytes(b"not-really-a-png")
     result = registry.execute("view_upload", {"upload_id": UUID_A},
                               context=_ctx([UUID_A]))
-    assert result.startswith("Error reading the image file")
+    assert result.startswith(f"Error: the brought file '{UUID_A}' is not looked at")
     assert seen == []
 
 

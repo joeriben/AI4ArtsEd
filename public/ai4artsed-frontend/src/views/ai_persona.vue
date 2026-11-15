@@ -26,7 +26,7 @@
         :is-executing="box.stream.isExecuting.value"
         :progress="box.stream.generationProgress.value"
         :preview-image="box.stream.previewImage.value"
-        :is-favorited="box.isFavorited"
+        :is-favorited="starOf(box)"
         :model-meta="box.stream.modelMeta.value"
         :stage4-duration-ms="box.stream.stage4DurationMs.value"
         @image-click="showBox(box)"
@@ -82,7 +82,6 @@
           :speak="speakState"
           :coupling="voiceCoupling"
           :line-empty="!userInput && !isLoading"
-          :words="true"
           :sounding="isSounding"
           :preparing="isPreparing"
           :blocked="isBlocked"
@@ -135,6 +134,8 @@ import { usePersonaChatStore } from '@/stores/personaChat'
 import { usePageContextStore } from '@/stores/pageContext'
 import type { PageContext } from '@/composables/usePageContext'
 import { sseEvents } from '@/lib/sseStream'
+import { ChatStreamError } from '@/lib/chatTurn'
+import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
 import { useDeviceId } from '@/composables/useDeviceId'
 import { useSpeech, useSpokenTurn, primeSpeech, splitForSpeech, type SpeechKey } from '@/composables/useSpeech'
 import { useGenerationStream } from '@/composables/useGenerationStream'
@@ -194,13 +195,20 @@ function closeFullscreen() {
   fullscreenImage.value = null
 }
 
+/** Whether the run of a box is kept by whoever asks. The store says so
+ *  (`isFavorited`), and it follows a sign-in or a sign-out; the box's own
+ *  field only travels with the box when the board is kept. */
+function starOf(box: MediaBox): boolean {
+  return !!box.runId && favoritesStore.isFavorited(box.runId)
+}
+
 /** The record of a box: on its card's back and beside its picture, one object. */
 function backOf(box: MediaBox): MediaBack {
   return {
     mediaType: box.mediaType,
     runId: box.runId,
     mediaUrl: box.outputUrl || undefined,
-    isFavorited: box.isFavorited,
+    isFavorited: starOf(box),
     prompt: box.prompt,
     configId: box.configId,
     createdAt: box.createdAt,
@@ -704,7 +712,7 @@ function syncBoxToStore(box: MediaBox) {
     w: g.w,
     h: g.h,
     outputUrl: box.outputUrl, mediaType: box.mediaType,
-    runId: box.runId, isFavorited: box.isFavorited,
+    runId: box.runId, isFavorited: starOf(box),
     prompt: box.prompt, configId: box.configId, createdAt: box.createdAt,
   })
 }
@@ -726,7 +734,7 @@ async function toggleFavorite(id: string) {
     'persona'
   )
   if (success) {
-    box.isFavorited = !box.isFavorited
+    box.isFavorited = starOf(box)
     triggerRef(mediaBoxes)
     syncBoxToStore(box)
   }
@@ -867,8 +875,6 @@ function buildAvailableConfigs(): string {
     'sd35_large — Stable Diffusion 3.5 Large (image)',
     'flux2 — FLUX.2 (image)',
     'flux3 — FLUX 3 Image Klein (image)',
-    'gemini_3_pro_image — Gemini 3 Pro image generation (cloud, EU, DSGVO via Mammouth)',
-    'gemini_nano_banana_2_1 — Gemini Nano Banana 2.1 image generation (paid cloud call; cloud, EU, DSGVO via Mammouth)',
     'stableaudio_open — Stable Audio 3 (audio/sound)',
     'heartmula_standard — HeartMuLa (music, dual input: lyrics || tags, e.g. [GENERATE: heartmula_standard | [Verse] Hello world... || pop,upbeat,piano])',
 'wan22_t2v_video_fast — Wan 2.2 video (video)',
@@ -917,8 +923,8 @@ function extractGenerateMarkers(content: string): Array<{ configId: string; prom
   return markers
 }
 
-function addMessage(role: 'user' | 'assistant', content: string) {
-  personaChat.addMessage(role, content)
+function addMessage(role: 'user' | 'assistant', content: string): number {
+  return personaChat.addMessage(role, content)
 }
 
 /**
@@ -963,7 +969,10 @@ async function callChat(
     if (ev.type === 'token') onToken(ev.text || '')
     else if (ev.type === 'discard') onToken('\u0000')
     else if (ev.type === 'done') done = ev
-    else if (ev.type === 'error') throw new Error(ev.details || ev.error || 'chat stream error')
+    else if (ev.type === 'error') {
+      throw new ChatStreamError(ev.details || ev.error || 'chat stream error', ev.status,
+        ev.safety_block)
+    }
   }
   // Half a sentence is not this surface's to present as an answer: it shows the
   // reply whole, with nowhere to say that it stopped. Ending the turn is what it
@@ -984,12 +993,13 @@ async function sendMessage() {
   // read and the surface is in use — it goes, instead of standing under the
   // exchange with the words of both laid over each other.
   platformVoice.value?.clear()
-  addMessage('user', text)
+  const sentId = addMessage('user', text)
   userInput.value = ''
   isLoading.value = true
 
   const history = messages.value
     .slice(0, -1) // Exclude the just-added user message (it goes as 'message')
+    .filter(m => !m.refused)
     .map(m => ({ role: m.role, content: m.content }))
   // The line is put up empty and grows: what the machine writes is read while
   // it is being written, here as on the workshop surface.
@@ -1012,8 +1022,18 @@ async function sendMessage() {
         spawnGeneration(marker.configId, marker.prompt)
       }
     }
-  } catch {
-    personaChat.setContent(replyId, t('persona.connectionError'))
+  } catch (e) {
+    // A refusal is said on the line and explained in the safety window. A
+    // message the intake refused is not sent again as history.
+    const refusal = refusalKeyOf(e)
+    if (refusal) {
+      const block = reportRefusal(e)
+      if (block?.checkpoint === 'intake' && block.field === 'message') {
+        const sent = messages.value.find(m => m.id === sentId)
+        if (sent) sent.refused = true
+      }
+    }
+    personaChat.setContent(replyId, refusal ? t(refusal) : t('persona.connectionError'))
   } finally {
     streamingId.value = null
     isLoading.value = false

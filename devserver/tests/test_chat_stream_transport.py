@@ -150,7 +150,7 @@ def test_the_heartbeat_carries_no_payload_and_so_reaches_no_consumer():
 def test_the_chat_stream_writes_while_the_turn_is_silent(app, monkeypatch):
     """The route itself, at its own cadence, against a turn that says nothing
     for longer than that cadence."""
-    def silent_turn(data):
+    def silent_turn(data, level):
         time.sleep(2.5)
         yield {"type": "token", "text": "hi"}
         yield DONE
@@ -179,7 +179,7 @@ def test_all_five_event_types_arrive_unchanged_and_in_order(app, monkeypatch):
          "generated_media": [{"intent_id": "i1"}]},
         {"type": "error", "error": "Internal server error", "details": "why", "status": 500},
     ]
-    monkeypatch.setattr(chat_routes, "_chat_events", lambda data: iter(events))
+    monkeypatch.setattr(chat_routes, "_chat_events", lambda data, level: iter(events))
 
     with app.test_request_context("/api/chat/stream", json={"message": "x"}):
         _, body = drain(chat_routes.chat_stream())
@@ -192,7 +192,7 @@ def test_all_five_event_types_arrive_unchanged_and_in_order(app, monkeypatch):
 def test_a_turn_that_raises_still_ends_as_an_error_event_after_what_it_wrote(app, monkeypatch):
     """The failure travels inside the stream, because the status line has long
     gone — and everything the turn produced before it goes out first."""
-    def turn(data):
+    def turn(data, level):
         yield {"type": "token", "text": "half a sentence"}
         raise RuntimeError("the turn fell over")
 
@@ -210,7 +210,7 @@ def test_the_blocking_endpoint_still_drains_the_same_turn(app, monkeypatch):
     """POST /api/chat is unchanged: it eats the same generator and answers with
     the closing payload, minus the marker only the stream needs."""
     monkeypatch.setattr(chat_routes, "_chat_events",
-                        lambda data: iter([{"type": "token", "text": "f"}, DONE]))
+                        lambda data, level: iter([{"type": "token", "text": "f"}, DONE]))
     with app.test_request_context("/api/chat", json={"message": "x"}):
         response = chat_routes.chat()
 
@@ -230,7 +230,7 @@ def test_the_turn_still_stands_in_the_request_that_started_it(app, monkeypatch):
     """
     from flask import request as flask_request
 
-    def turn(data):
+    def turn(data, level):
         yield {"type": "token", "text": flask_request.path}
         yield {**DONE, "reply": flask_request.json["message"]}
 

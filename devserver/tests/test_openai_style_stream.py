@@ -551,7 +551,8 @@ def test_usage_from_the_final_chunk_reaches_the_ledger(provider, ledger):
     ]))
     run()
     assert ledger.entries == [{"model": MODEL, "provider": PROVIDER, "stage": "chat",
-                               "input_tokens": 41, "output_tokens": 7}]
+                               "input_tokens": 41, "output_tokens": 7,
+                               "cache_read_tokens": 0, "cache_write_tokens": 0}]
 
 
 def test_the_caller_names_the_stage_it_books_under(provider, ledger):
@@ -586,6 +587,21 @@ def test_a_cap_passed_by_a_caller_is_forwarded(provider, ledger):
     list(oss._stream_openai_style(PROVIDER, [{"role": "user", "content": "hi"}],
                                   MODEL, 0.7, 64000))
     assert provider.requests[0]["max_tokens"] == 64000
+
+
+def test_mistral_asked_for_temperature_0_is_sent_top_p_1(provider, ledger, monkeypatch):
+    """Mistral answers a temperature of 0 without top_p 1 with a 400 (code
+    3054). Only Mistral and only temperature 0 get the field."""
+    monkeypatch.setitem(oss._OPENAI_STYLE_PROVIDERS, "mistral", lambda: (provider.url, "test-key"))
+    done = [sse(chunk({"content": "x"})), sse(chunk({}, finish="stop"))]
+    for name, temperature in (("mistral", 0.0), ("mistral", 0.2), (PROVIDER, 0.0)):
+        provider.script(sse_ok(done))
+        list(oss._stream_openai_style(name, [{"role": "user", "content": "hi"}],
+                                      MODEL, temperature, None))
+    greedy_mistral, warm_mistral, greedy_other = provider.requests
+    assert (greedy_mistral["temperature"], greedy_mistral["top_p"]) == (0.0, 1)
+    assert "top_p" not in warm_mistral
+    assert "top_p" not in greedy_other
 
 
 def test_stream_options_refused_with_400_causes_exactly_one_re_open(provider, ledger):
@@ -1174,7 +1190,8 @@ def test_anthropic_usage_from_both_places_reaches_the_ledger(anthropic_provider,
     run_anthropic(stage="stage2")
     assert ledger.entries == [{"model": MODEL, "provider": ANTHROPIC_PROVIDER,
                                "stage": "stage2", "input_tokens": 41,
-                               "output_tokens": 7}]
+                               "output_tokens": 7,
+                               "cache_read_tokens": 0, "cache_write_tokens": 0}]
 
 
 def test_an_anthropic_answer_that_says_nothing_at_all_raises(anthropic_provider, ledger):
@@ -1507,4 +1524,95 @@ def test_stream_chat_withholds_the_picture_from_a_connection_that_takes_none(mon
     finally:
         p.close()
     assert sent["messages"] == [{"role": "user", "content": "was ist das?"}]
+
+
+# ---------------------------------------------------------------------------
+# The prompt-cache marker (2026-11-13)
+# ---------------------------------------------------------------------------
+# A text block may carry "cache_control". It reaches a provider whose table
+# entry says "prompt_cache": true as it stands; every other one gets the
+# message without it, and the reader books what the provider read from and
+# wrote to its cache.
+
+MARKER = {"type": "ephemeral", "ttl": "1h"}
+
+
+def _marked_messages():
+    return [{"role": "user", "content": [
+        {"type": "text", "text": "DOC\n\n", "cache_control": dict(MARKER)},
+        {"type": "text", "text": "TASK"},
+    ]}]
+
+
+def test_a_connection_without_prompt_cache_gets_the_text_without_the_marker(provider, ledger):
+    from my_app.services import llm_providers as lp
+    assert not lp.provider(PROVIDER).get("prompt_cache")
+    provider.script(sse_ok([sse(chunk({"content": "x"}, finish="stop"))]))
+    oss.call_chat(PROVIDER, _marked_messages(), MODEL)
+    assert provider.requests[0]["messages"] == [{"role": "user", "content": "DOC\n\nTASK"}]
+
+
+def test_openrouter_gets_the_marker_as_it_stands(monkeypatch, ledger):
+    p = _Provider()
+    monkeypatch.setitem(oss._OPENAI_STYLE_PROVIDERS, "openrouter", lambda: (p.url, "test-key"))
+    try:
+        p.script(sse_ok([sse(chunk({"content": "x"}, finish="stop"))]))
+        oss.call_chat("openrouter", _marked_messages(), MODEL)
+        sent = p.requests[0]
+    finally:
+        p.close()
+    assert sent["messages"] == _marked_messages()
+
+
+def test_the_messages_dialect_gets_the_marker_as_it_stands(anthropic_provider, ledger):
+    anthropic_provider.script(sse_anthropic([text_block(), text_delta("x"), *anthropic_end()]))
+    oss.call_chat(ANTHROPIC_PROVIDER, _marked_messages(), MODEL)
+    sent = anthropic_provider.requests[0]
+    assert sent["messages"] == _marked_messages()
+    assert "system" not in sent
+
+
+def test_a_picture_follows_the_blocks_of_a_marked_message(anthropic_provider, ledger):
+    anthropic_provider.script(sse_anthropic([text_block(), text_delta("x"), *anthropic_end()]))
+    oss.call_chat(ANTHROPIC_PROVIDER, _marked_messages(), MODEL, image_b64="QUJD")
+    content = anthropic_provider.requests[0]["messages"][0]["content"]
+    assert content[:2] == _marked_messages()[0]["content"]
+    assert content[2]["source"]["data"] == "QUJD"
+    assert len(content) == 3
+
+
+def test_openrouter_cache_counts_reach_the_ledger(monkeypatch, ledger):
+    p = _Provider()
+    monkeypatch.setitem(oss._OPENAI_STYLE_PROVIDERS, "openrouter", lambda: (p.url, "test-key"))
+    try:
+        p.script(sse_ok([
+            sse(chunk({"content": "kurz"})),
+            sse(chunk({}, finish="stop")),
+            sse(chunk(usage={"prompt_tokens": 5000, "completion_tokens": 7,
+                             "prompt_tokens_details": {"cached_tokens": 4000,
+                                                       "cache_write_tokens": 0}})),
+        ]))
+        oss.call_chat("openrouter", _marked_messages(), MODEL)
+    finally:
+        p.close()
+    assert ledger.entries == [{"model": MODEL, "provider": "openrouter", "stage": "chat",
+                               "input_tokens": 5000, "output_tokens": 7,
+                               "cache_read_tokens": 4000, "cache_write_tokens": 0}]
+
+
+def test_messages_cache_counts_are_added_to_the_whole_prompt(anthropic_provider, ledger):
+    """input_tokens on this dialect counts only what follows the last marker;
+    the ledger's input_tokens is the whole prompt on both dialects."""
+    anthropic_provider.script(sse_anthropic([
+        anth({"type": "message_start", "message": {"usage": {
+            "input_tokens": 12, "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 3000, "output_tokens": 1}}}),
+        text_block(), text_delta("kurz"),
+        *anthropic_end(output_tokens=7),
+    ]))
+    run_anthropic(stage="knowledge")
+    assert ledger.entries == [{"model": MODEL, "provider": ANTHROPIC_PROVIDER,
+                               "stage": "knowledge", "input_tokens": 3012,
+                               "output_tokens": 7,
+                               "cache_read_tokens": 0, "cache_write_tokens": 3000}]
 

@@ -19,7 +19,13 @@
 import { nextTick, type Ref } from 'vue'
 import { apiBase } from '@/services/labApi'
 import { postStreamedRun } from '@/services/directRun'
-import { blockedReason, classifyError, safetyBlockKey } from '@/composables/useGenerationStream'
+import {
+  classifyError,
+  safetyBlockMessageKey,
+  safetyBlockOf,
+  type SafetyBlock,
+} from '@/composables/useGenerationStream'
+import { useSafetyEventStore } from '@/stores/safetyEvent'
 
 /**
  * One POST to a cross-aesthetic route, streamed.
@@ -34,7 +40,7 @@ import { blockedReason, classifyError, safetyBlockKey } from '@/composables/useG
  * `error.response.status` the code it sent it with (services/directRun.ts).
  * Until 2026-09-05 this accepted every status and threw a bare
  * `new Error("Error 503: …")` in its place, and a bare Error carries neither —
- * so `blockedReason` could not see a refusal and `generationErrorFor` could not
+ * so no refusal could be read off it and `generationErrorFor` could not
  * see a cause, and every failure on these surfaces read "Something went wrong.
  * Please try again."
  */
@@ -51,9 +57,10 @@ export async function apiPost(path: string, body: Record<string, unknown>): Prom
  * the instrument that ASKED, handed over as its own template ref.
  *
  * It stands at the head of the preparing column (`.lab-prep-err`,
- * docs/ELEMENT_STRUCTURE_REGISTRY.md), and on these three surfaces that column
- * SCROLLS: it is longer than any window, 971 to 1234 px against 469 at
- * 900 x 700. The trigger is in the bar and stands still whatever the column
+ * docs/ELEMENT_STRUCTURE_REGISTRY.md), and that column SCROLLS: on the Latent
+ * Audio Synth it runs 794 to 1480 px against 469 at 900 x 700 with the
+ * instrument rail open (measured 2026-11-03; on the three instruments of the
+ * Crossmodal Lab 971 to 1234 px on 2026-09-05). The trigger is in the bar and stands still whatever the column
  * does, so someone who had scrolled down to the step count and then pressed it
  * got the answer at y −171 — above everything that was on the screen (measured
  * 2026-09-05). Putting the line at the head only helps if the column is at its
@@ -192,26 +199,31 @@ export function generationErrorKeyFor(failure: unknown): GenerationErrorKey {
  * '' where the answer is no refusal — the platform's own reasons are German
  * developer strings and are never shown raw.
  *
- * It reads what a run brings back from `/api/schema/pipeline/direct`, where the
- * stage orchestrator marks a refused run `status: 'blocked'` and names the
- * stage that refused. **The cross-aesthetic routes carry no content check at
- * all** — neither devserver/my_app/routes/cross_aesthetic_routes.py, which only
- * forwards, nor gpu_service/routes/cross_aesthetic_routes.py — so nothing they
- * answer can ever be a refusal, and the three instruments that post there no
- * longer ask this question. They asked it until 2026-09-05, which is worse than
- * not asking: a reader that looks like a safety check and can never fire says
- * the check is there.
+ * It reads what a run brings back from `/api/schema/pipeline/direct`, from
+ * the three routes of the Crossmodal Lab (`/api/cross_aesthetic/*`), from the
+ * Fusion Workbench (`/api/fusion_workbench/*`), from the variants of Mean
+ * Images, from the speech route (`/api/speech`), from the stations of
+ * Re-enactment and from a chat turn (`/api/chat/stream`), where a refused run
+ * or turn carries the block message (`safety_block`).
  */
 export function refusalKeyOf(err: unknown): string {
-  const reason = blockedReason(err)
-  if (!reason) return ''
   // An axios error carries the payload under `response.data`; a streamed
-  // `GenerationResult` IS the payload and names the stage `blocked_stage`.
-  // Read both, or the picture check's refusal reads as the prompt's.
-  type Payload = { stage?: string | number; blocked_stage?: string | number }
-  const e = err as Payload & { response?: { data?: Payload } }
-  const d = e?.response?.data ?? e
-  return safetyBlockKey(reason, d?.stage ?? d?.blocked_stage)
+  // `GenerationResult` IS the payload. Both carry the block message.
+  const block = safetyBlockOf(err)
+  return block ? safetyBlockMessageKey(block) : ''
+}
+
+/**
+ * A refusal of the platform's checks, sent where every surface sends one: the
+ * safety window. Returns the block message, or null where the failure is no
+ * refusal; the instrument's own line says it with `refusalKeyOf`.
+ */
+export function reportRefusal(failure: unknown): SafetyBlock | null {
+  const block = safetyBlockOf(failure)
+  if (block) {
+    useSafetyEventStore().reportBlock(block, { operational: block.reason_key === 'unavailable' })
+  }
+  return block
 }
 
 /**
@@ -242,10 +254,10 @@ export function clamp(v: unknown, lo: number, hi: number, fallback: number): num
 export type InterceptionOutcome =
   /** `structured` where the answer was not a string (a two-part prompt), written as JSON. */
   | { written: string; structured?: true }
-  /** The safety check refused the text: the KEY of the sentence that says so, the
-   *  stage that refused where the answer names one, and the reason as the server
-   *  wrote it (German; for the platform's own block banner, never for the line). */
-  | { refusedKey: string; blockedAtStage?: number; reason: string }
+  /** The safety check refused the text: the KEY of the sentence that says so, and
+   *  the block message as the server sent it (for the platform's own safety
+   *  window, never for the line). */
+  | { refusedKey: string; block: SafetyBlock }
   /** The server refused or failed: the status it answered with, and what it
    *  said where it said anything (the route's own `error`). */
   | { failed: number; said?: string }
@@ -256,31 +268,25 @@ export type InterceptionOutcome =
  * A refusal of the written line, as the KEY of the sentence that says so in the
  * reader's language. Null where the answer is no refusal.
  *
- * Unlike `/api/cross_aesthetic/*`, `/api/schema/pipeline/stage2` IS checked:
- * Stage 1 runs over the text before any model writes on it, and a refusal comes
- * back 403 with `{success: false, error: <the German reason>, blocked_at_stage:
- * 1}` (devserver/my_app/routes/schema_pipeline_routes.py). Until 2026-09-05
- * every status past 400 was read as a failure here, so a participant whose text
- * the check refused read "Nothing came back from the perspective (403)." and
- * was never told that it had been refused, in any language. The other spelling
- * the platform uses for a block (`status: 'blocked'` beside `reason`) is read
- * as well, so a payload of either shape arrives.
+ * `/api/schema/pipeline/stage2` is checked: the intake takes the texts in
+ * before any model writes on them, and what a model wrote is checked before
+ * the answer leaves. A refusal comes back 403 with the block message
+ * (`safety_block`) in its body
+ * (devserver/my_app/routes/schema_pipeline_routes.py). Until 2026-09-05 every
+ * status past 400 was read as a failure here, so a participant whose text the
+ * check refused read "Nothing came back from the perspective (403)." and was
+ * never told that it had been refused, in any language.
  *
- * The reason itself stays out of sight: the backend writes those sentences in
+ * The reason in it stays out of sight: the backend writes those sentences in
  * German and only in German, and two of them are developer strings that would
- * put the matched terms back on the screen. `safetyBlockKey` says which of the
- * sentences the platform has for a refusal this one is.
+ * put the matched terms back on the screen. `safetyBlockMessageKey` says which
+ * of the sentences the platform has for a refusal this one is.
  */
 type Refusal = Extract<InterceptionOutcome, { refusedKey: string }>
 
 function refusalOf(data: unknown): Refusal | null {
-  const carried = blockedReason(data)
-  const d = data as { blocked_at_stage?: unknown; error?: unknown; stage?: string | number }
-  const blockedAtStage = typeof d?.blocked_at_stage === 'number' ? d.blocked_at_stage : undefined
-  if (carried) return { refusedKey: safetyBlockKey(carried, d?.stage), blockedAtStage, reason: carried }
-  if (d?.blocked_at_stage === undefined || d?.blocked_at_stage === null) return null
-  const reason = typeof d.error === 'string' ? d.error : ''
-  return { refusedKey: safetyBlockKey(reason, d.blocked_at_stage as number), blockedAtStage, reason }
+  const block = safetyBlockOf(data)
+  return block ? { refusedKey: safetyBlockMessageKey(block), block } : null
 }
 
 export async function interceptPrompt(
@@ -289,9 +295,9 @@ export async function interceptPrompt(
   deviceId: string | null,
   extra: { userLanguage?: string; skipOptimization?: boolean } = {},
 ): Promise<InterceptionOutcome> {
-  // `skipOptimization`: the interception alone, no adaptation to a medium.
-  // The comparison surfaces run the passthrough perspective this way as
-  // their stage-2 gate; a refusal arrives as the block it is.
+  // `skipOptimization`: the pre-check. No model writes: the server takes the
+  // text in at the intake and hands it back as it came in. The comparison
+  // surfaces run it as their gate; a refusal arrives as the block it is.
   const res = await postStreamedRun('/api/schema/pipeline/stage2', {
     schema,
     input_text: text,

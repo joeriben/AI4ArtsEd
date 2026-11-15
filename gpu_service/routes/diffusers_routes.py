@@ -62,9 +62,15 @@ def _get_backend():
 
 @diffusers_bp.route('/api/diffusers/progress', methods=['GET'])
 def generation_progress():
-    """Current generation step progress for frontend polling."""
+    """The denoising progress of ONE run, for the DevServer's polling.
+
+    `run_label` names the run, as every generation request names it. Without
+    it, and for a run that is not on the card, the answer is idle: a run that
+    waits for the card never reads the steps and the picture of the run that
+    holds it.
+    """
     from services.diffusers_backend import get_generation_progress
-    return jsonify(get_generation_progress())
+    return jsonify(get_generation_progress(request.args.get('run_label', '')))
 
 
 @diffusers_bp.route('/api/diffusers/cancel', methods=['POST'])

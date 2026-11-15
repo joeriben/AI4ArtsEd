@@ -15,8 +15,8 @@
   explanation box only refers, and the title with its DOI stands underneath.
 
   ONLY VALIDATED TITLES. A source whose method the instrument does not actually
-  run is removed rather than listed - see feature_probing.vue, whose three
-  references failed exactly that check and stay out.
+  run is removed rather than listed. feature_probing.vue now carries five
+  references, listed in docs/analysis/ERKLAERKAESTEN_GRUNDLAGEN_2026-11-07.md, section 2.5.
 
   The bibliography is NOT i18n: authors, titles and venues are the same in every
   language and are passed as `items` from the view. Only the summary is a key.
@@ -52,7 +52,7 @@
           target="_blank"
           rel="noopener"
           class="ref-doi"
-        >DOI</a>
+        >{{ linkLabel(ref.doi) }}</a>
         <span v-if="ref.licence" class="ref-licence">{{ ref.licence }}</span>
       </li>
     </ul>
@@ -62,7 +62,11 @@
 <script setup lang="ts">
 import { useDetailsState } from '@/composables/useDetailsState'
 
-/** One entry. `venue` and `doi` are optional - an arXiv preprint has neither. */
+/**
+ * One entry. `venue` and `doi` are optional - an arXiv preprint has neither.
+ * `doi` is the link: a doi.org address where the work has one, otherwise the
+ * page that carries it (an anthology, a publisher, an institution).
+ */
 export interface LabReference {
   authors: string
   title: string
@@ -89,6 +93,19 @@ const props = defineProps<{
 }>()
 
 const { isOpen, onToggle } = useDetailsState(props.storageKey ?? '')
+
+/**
+ * The link's label: "DOI" for a doi.org address, otherwise the host of the
+ * page, so that a plain URL is not labelled as a DOI it does not have.
+ */
+function linkLabel(href: string): string {
+  if (/^https?:\/\/(dx\.)?doi\.org\//.test(href)) return 'DOI'
+  try {
+    return new URL(href).hostname.replace(/^www\./, '')
+  } catch {
+    return href
+  }
+}
 </script>
 
 <style scoped>

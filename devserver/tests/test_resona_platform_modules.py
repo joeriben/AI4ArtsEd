@@ -124,12 +124,88 @@ def test_note_reaches_the_resona_system_prompt():
     assert "/latent-lab" in prompt and "/compare" in prompt
 
 
+def test_places_inside_a_module_are_named_in_the_conversation_language(monkeypatch):
+    """The pages inside Compare come from the catalogue, in the language of the
+    conversation, and the stale hand-written tab names are gone."""
+    import my_app.routes.chat_routes as cr
+
+    monkeypatch.setattr(cr, "_MODULES_CACHE", {})
+    resona = {"resona_mode": True, "resona_situation": "workshop"}
+    de = build_system_prompt(context=resona, language="de")
+    assert "Stereotypen-Analyse (Stereotype Analysis)" in de
+    assert "Sprachverständnis (Language Understanding)" in de
+    assert "Culture Bias" not in de
+    en = build_system_prompt(context=resona, language="en")
+    assert "Stereotype Analysis" in en
+    assert "Stereotypen-Analyse" not in en
+    assert "(Stereotype Analysis)" not in en
+    assert "Culture Bias" not in en
+
+
+def test_the_note_is_cached_per_language(monkeypatch):
+    import my_app.routes.chat_routes as cr
+
+    monkeypatch.setattr(cr, "_MODULES_CACHE", {})
+    de = cr._build_resona_modules_context("de")
+    en = cr._build_resona_modules_context("en")
+    assert de != en
+    assert set(cr._MODULES_CACHE) == {"de", "en"}
+    assert cr._build_resona_modules_context("de") is cr._MODULES_CACHE["de"]
+    assert "Stereotypen-Analyse (Stereotype Analysis)" in cr._MODULES_CACHE["de"]
+    assert "Stereotypen-Analyse" not in cr._MODULES_CACHE["en"]
+
+
+def test_an_unshipped_language_code_falls_to_german_and_adds_no_cache_entry(monkeypatch):
+    """The cache is keyed by the conversation language; a code the platform
+    does not ship is no language, so the prompt and the page names both fall
+    to German and the cache stays bounded to the shipped codes."""
+    import my_app.routes.chat_routes as cr
+
+    monkeypatch.setattr(cr, "_MODULES_CACHE", {})
+    assert cr._conversation_language(None, "xx") == "de"
+    assert cr._conversation_language({"language": "zz"}, None) == "de"
+    assert cr._conversation_language(None, "zh-hant") == "zh-hant"
+    assert cr._conversation_language({"language": "en"}, None) == "en"
+    resona = {"resona_mode": True, "resona_situation": "workshop"}
+    for code in ("xx", "", None, "DE", "de-DE"):
+        prompt = build_system_prompt(context=resona, language=code)
+        assert "Stereotypen-Analyse (Stereotype Analysis)" in prompt, code
+    assert set(cr._MODULES_CACHE) == {"de"}
+
+
+def test_the_latent_lab_note_keeps_its_groups(monkeypatch):
+    """The column has groups with pages inside them; the note says so, one
+    line per group, each page named once. Mean Images stands where the column
+    shows it, under Cultural Knowledge & Stereotypes."""
+    import my_app.routes.chat_routes as cr
+
+    monkeypatch.setattr(cr, "_MODULES_CACHE", {})
+    note = cr._build_resona_modules_context("en")
+    block = note.split("- Latent Lab (/latent-lab)", 1)[1].split("\n- ", 1)[0]
+    inside = block.split("  built on research", 1)[0]
+    group_lines = [ln for ln in inside.split("\n") if ln.startswith("    ")]
+    heads = [ln.strip().split(": ", 1)[0] for ln in group_lines]
+    assert heads == ["Cultural Knowledge & Stereotypes", "Prompt Interception Lab",
+                     "Diffusion Lab", "Transformers Lab", "Crossmodal Lab",
+                     "LoRA Training"], heads
+    cultural = group_lines[0]
+    for page in ("Mean Images", "Stereotype Analysis", "Bias Research 1", "Voice Comparison"):
+        assert page in cultural, (page, cultural)
+    assert "Mean Images" not in group_lines[2], group_lines[2]
+    listed = "\n".join(group_lines)
+    for page in ("Mean Images", "Stereotype Analysis", "Concept Algebra",
+                 "Re-enactment (also at /cover-band)", "Encoder Fusion (also at /surrealizer)",
+                 "LoRA Explorer"):
+        assert listed.count(page) == 1, (page, listed.count(page))
+    assert "inside it: Flow Logic (/latent-lab/overview)" in inside
+
+
 def test_note_follows_the_registry(monkeypatch):
     """The prompt must not carry a second, hand-written copy of the inventory:
     what the registry says is what she is told."""
     import my_app.routes.chat_routes as cr
 
-    monkeypatch.setattr(cr, "_MODULES_CACHE", None)
+    monkeypatch.setattr(cr, "_MODULES_CACHE", {})
     from my_app.routes.chat_routes import RESONA_CORE_PROMPT
 
     registry = json.loads(_MODULES_PATH.read_text(encoding="utf-8"))

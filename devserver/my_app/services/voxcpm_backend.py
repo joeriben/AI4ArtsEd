@@ -58,8 +58,10 @@ SUPPORTED_LANGUAGES = ("ar", "de", "en", "es", "fr", "he", "ko", "tr")
 
 # Not in that list, and answered with an English rendering of the same sentence
 # rather than with a refusal. Kept next to the line above so the two cannot
-# drift: together they are the platform's ten.
-UNVOICED_PLATFORM_LANGUAGES = ("bg", "uk")
+# drift: together they are the platform's languages. Traditional Chinese
+# (zh-hant, a platform language since 2026-10-29) is not offered here: whether
+# the model speaks it has not been heard on this installation.
+UNVOICED_PLATFORM_LANGUAGES = ("bg", "uk", "zh-hant")
 
 
 class UnvoicedLanguageError(RuntimeError):
@@ -236,10 +238,12 @@ class VoxCPMBackend:
         cfg_value: Optional[float] = None,
         inference_timesteps: Optional[int] = None,
         **kwargs,
-    ) -> Tuple[bytes, str, float]:
+    ) -> Tuple[bytes, str, float, str]:
         """Speak `text` verbatim.
 
-        Returns (WAV bytes, what was asked for, measured f0 in Hz). What was
+        Returns (WAV bytes, what was asked for, measured f0 in Hz, the model
+        the worker loaded, as its /health names it, which the chunk reports as
+        `model_used`). What was
         asked for is the description exactly as it was sent, so the label
         always names what the model actually received. The f0 is
         read off the audio being handed back, by the same procedure the other
@@ -309,8 +313,12 @@ class VoxCPMBackend:
         # language stays out of a value that every reader is shown.
         spoke = described
 
+        # The worker names the model it loaded (voxcpm_service/server.py,
+        # MODEL_ID); "" where it cannot be asked any more.
+        model_used = ((await asyncio.to_thread(self._health)) or {}).get("model") or ""
+
         logger.info(f"[VOXCPM] {len(wav)} bytes ({f0_hz:.0f} Hz)")
-        return wav, spoke, f0_hz
+        return wav, spoke, f0_hz, model_used
 
 
 _backend: Optional[VoxCPMBackend] = None

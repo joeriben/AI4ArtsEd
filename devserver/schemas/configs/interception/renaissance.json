@@ -11,7 +11,8 @@
     "es": "Renacimiento",
     "he": "רנסאנס",
     "ar": "عصر النهضة",
-    "bg": "Ренесанс"
+    "bg": "Ренесанс",
+    "zh-hant": "文藝復興"
   },
   "description": {
     "en": "Creates descriptions using Renaissance principles: balanced composition, mathematical proportion, and harmonious light. Focuses on order, human dignity, and perspective.",
@@ -22,6 +23,7 @@
     "he": "יוצר תיאורים באמצעות עקרונות הרנסאנס: קומפוזיציה מאוזנת, פרופורציה מתמטית ואור הרמוני. מתמקד בסדר, כבוד האדם ופרספקטיבה.",
     "ar": "يُنشئ أوصافاً بالاستناد إلى مبادئ عصر النهضة: التأليف المتوازن والتناسب الرياضي والضوء المتناسق. يركّز على النظام وكرامة الإنسان والمنظور.",
     "bg": "Създава описания, използвайки принципи на Ренесанса: балансирана композиция, математическа пропорция и хармонична светлина. Фокусира се върху реда, човешкото достойнство и перспективата.",
+    "zh-hant": "依照文藝復興的原則創作描述：均衡的構圖、數學比例與和諧的光線。著重秩序、人性尊嚴與透視。",
     "tr": "Renaissance ilkeleri kullanarak betimler oluşturur: dengeli kompozisyon, matematiksel oran ve uyumlu ışık. Düzen, insan onuru ve perspektife odaklanır.",
     "ko": "르네상스 원칙을 사용하여 묘사를 만듭니다: 균형 잡힌 구도, 수학적 비례, 조화로운 빛. 질서, 인간 존엄성, 원근법에 초점을 맞춥니다."
   },
@@ -31,6 +33,7 @@
     "he": "היסטוריית האמנות",
     "ar": "تاريخ الفن",
     "bg": "История на изкуството",
+    "zh-hant": "藝術史",
     "tr": "Sanat Tarihi",
     "ko": "미술사",
     "uk": "Історія мистецтва",

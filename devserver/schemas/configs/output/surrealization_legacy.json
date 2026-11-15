@@ -10,7 +10,8 @@
     "es": "Alucinación (Legacy)",
     "he": "הזיה (Legacy)",
     "ar": "هلوسة (Legacy)",
-    "bg": "Халюцинация (Legacy)"
+    "bg": "Халюцинация (Legacy)",
+    "zh-hant": "幻覺（舊版）"
   },
   "description": {
     "en": "Complex surrealist image generation using legacy ComfyUI workflow. This workflow cannot be decomposed into DevServer's chunk system due to its intricate node connections and custom processing logic.",
@@ -22,7 +23,8 @@
     "es": "Generación de imágenes surrealistas complejas mediante un flujo de trabajo ComfyUI legacy. Este flujo de trabajo no se puede descomponer en el sistema de chunks de DevServer debido a sus conexiones de nodos intrincadas y su lógica de procesamiento personalizada.",
     "he": "יצירת תמונות סוריאליסטיות מורכבות באמצעות תהליך עבודה legacy של ComfyUI. לא ניתן לפרק תהליך עבודה זה למערכת ה-chunk של DevServer בשל חיבורי הצמתים המורכבים שלו והלוגיקת העיבוד המותאמת אישית.",
     "ar": "توليد صور سريالية معقدة باستخدام مسار عمل legacy في ComfyUI. لا يمكن تفكيك مسار العمل هذا إلى نظام chunk الخاص بـ DevServer بسبب اتصالات العقد (nodes) المعقدة ومنطق المعالجة المخصص.",
-    "bg": "Сложно сюрреалистично генериране на изображения чрез legacy работен процес на ComfyUI. Този работен процес не може да бъде разложен в chunk системата на DevServer поради сложните си връзки между възли и персонализираната си логика на обработка."
+    "bg": "Сложно сюрреалистично генериране на изображения чрез legacy работен процес на ComfyUI. Този работен процес не може да бъде разложен в chunk системата на DevServer поради сложните си връзки между възли и персонализираната си логика на обработка.",
+    "zh-hant": "使用舊版 ComfyUI 工作流程生成複雜的超現實圖像。由於節點連線錯綜複雜且有自訂的處理邏輯，這個工作流程無法拆解進 DevServer 的 chunk 系統。"
   },
   "parameters": {
     "OUTPUT_CHUNK": "legacy_surrealization"

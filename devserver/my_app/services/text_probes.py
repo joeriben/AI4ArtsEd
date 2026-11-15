@@ -58,7 +58,7 @@ def _dir_or_refusal(model_id: str):
     (None, the refusal)."""
     d = text_presets.dir_name(model_id)
     if d is None:
-        return None, _refusal(f"{model_id} is on no row of the Text Lab (config/text_presets.json)", 400)
+        return None, _refusal(f"{model_id} is on no row of the Text Lab ('text_rows' in config/local_llm_weights.json)", 400)
     why = text_presets.held_back(model_id)
     if why:
         return None, _refusal(f"{model_id} {why}", 422)

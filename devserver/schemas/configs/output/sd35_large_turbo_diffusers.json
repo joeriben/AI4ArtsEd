@@ -10,7 +10,8 @@
     "es": "Stable Diffusion 3.5 Large Turbo",
     "he": "Stable Diffusion 3.5 Large Turbo",
     "ar": "Stable Diffusion 3.5 Large Turbo",
-    "bg": "Stable Diffusion 3.5 Large Turbo"
+    "bg": "Stable Diffusion 3.5 Large Turbo",
+    "zh-hant": "Stable Diffusion 3.5 Large Turbo"
   },
   "description": {
     "en": "Fast image generation using SD3.5 Large Turbo - 4-step distilled model for near-instant results",
@@ -22,7 +23,8 @@
     "es": "Generación rápida de imágenes con SD3.5 Large Turbo - modelo destilado de 4 pasos para resultados casi instantáneos",
     "he": "יצירת תמונות מהירה באמצעות SD3.5 Large Turbo - מודל מזוקק בן 4 צעדים לתוצאות כמעט מיידיות",
     "ar": "توليد صور سريع باستخدام SD3.5 Large Turbo - نموذج مُقطَّر من 4 خطوات لنتائج شبه فورية",
-    "bg": "Бързо генериране на изображения с SD3.5 Large Turbo - дестилиран модел с 4 стъпки за почти мигновени резултати"
+    "bg": "Бързо генериране на изображения с SD3.5 Large Turbo - дестилиран модел с 4 стъпки за почти мигновени резултати",
+    "zh-hant": "使用 SD3.5 Large Turbo 快速生成圖像——4 步蒸餾模型，幾乎即時產出結果"
   },
   "category": {
     "en": "Image Generation",
@@ -34,7 +36,8 @@
     "es": "Generación de imágenes",
     "he": "יצירת תמונות",
     "ar": "توليد الصور",
-    "bg": "Генериране на изображения"
+    "bg": "Генериране на изображения",
+    "zh-hant": "圖像生成"
   },
   "parameters": {
     "OUTPUT_CHUNK": "output_image_sd35_turbo_diffusers",
@@ -104,7 +107,8 @@
           "es": "Mismos sesgos que SD3.5 Large — codificadores CLIP entrenados con datos web en inglés",
           "he": "אותן הטיות כמו ב-SD3.5 Large — מקודדי CLIP אומנו על נתוני רשת באנגלית",
           "ar": "نفس تحيزات SD3.5 Large — مُرمِّزات CLIP مدرَّبة على بيانات ويب إنجليزية",
-          "bg": "Същите отклонения като SD3.5 Large — енкодерите на CLIP са обучени с англоезични уеб данни"
+          "bg": "Същите отклонения като SD3.5 Large — енкодерите на CLIP са обучени с англоезични уеб данни",
+          "zh-hant": "與 SD3.5 Large 相同的偏見——CLIP 編碼器以英語網路資料訓練"
         },
         {
           "en": "Distillation may amplify dominant modes (most common outputs become more likely)",
@@ -116,7 +120,8 @@
           "es": "La destilación puede amplificar los modos dominantes (los resultados más comunes se vuelven más probables)",
           "he": "זיקוק (distillation) עלול להגביר דפוסים דומיננטיים (התוצרים הנפוצים ביותר הופכים סבירים יותר)",
           "ar": "قد يعزز التقطير (distillation) الأنماط السائدة (تصبح المخرجات الأكثر شيوعاً أكثر احتمالاً)",
-          "bg": "Дестилацията може да усили доминиращите режими (най-честите резултати стават по-вероятни)"
+          "bg": "Дестилацията може да усили доминиращите режими (най-честите резултати стават по-вероятни)",
+          "zh-hant": "蒸餾可能放大主要模式（最常見的輸出會變得更可能出現）"
         }
       ],
       "known_gaps": [
@@ -130,7 +135,8 @@
           "es": "La destilación en 4 pasos cambia diversidad por velocidad — menos variación visual que el modelo base",
           "he": "זיקוק בארבעה צעדים מוותר על גיוון לטובת מהירות — פחות שונות חזותית מהמודל הבסיסי",
           "ar": "التقطير بأربع خطوات يقايض التنوع بالسرعة — تباين بصري أقل من النموذج الأساسي",
-          "bg": "4-стъпковата дестилация разменя разнообразие за скорост — по-малко визуално разнообразие от базовия модел"
+          "bg": "4-стъпковата дестилация разменя разнообразие за скорост — по-малко визуално разнообразие от базовия модел",
+          "zh-hant": "4 步蒸餾以多樣性換取速度——視覺變化比基礎模型少"
         },
         {
           "en": "Same gaps as SD3.5 Large for non-Latin scripts and non-Western visual traditions",
@@ -142,7 +148,8 @@
           "es": "Mismas carencias que SD3.5 Large en escrituras no latinas y tradiciones visuales no occidentales",
           "he": "אותם פערים כמו ב-SD3.5 Large בכתבים שאינם לטיניים ובמסורות חזותיות שאינן מערביות",
           "ar": "نفس فجوات SD3.5 Large في الأنظمة الكتابية غير اللاتينية والتقاليد البصرية غير الغربية",
-          "bg": "Същите пропуски като SD3.5 Large по отношение на нелатинските писмености и незападните визуални традиции"
+          "bg": "Същите пропуски като SD3.5 Large по отношение на нелатинските писмености и незападните визуални традиции",
+          "zh-hant": "在非拉丁文字與非西方視覺傳統方面，與 SD3.5 Large 有相同的缺口"
         }
       ]
     },

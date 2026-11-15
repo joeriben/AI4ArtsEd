@@ -11,6 +11,9 @@
         <!-- Easy: the short view -->
         <template v-if="uiMode === 'easy'">
           <div class="provenance-kids">
+            <p v-if="modelName" class="kids-line" :title="modelUsed">
+              <span class="kids-label">{{ t('provenance.modelInline') }}</span> {{ modelName }}
+            </p>
             <p v-if="meta?.publisher" class="kids-line">
               <span class="kids-label">{{ t('provenance.madeBy') }}</span> {{ meta.publisher }}
             </p>
@@ -27,6 +30,10 @@
         <!-- Medium + Expert: full card -->
         <template v-else>
           <div class="model-specs">
+            <div v-if="modelName" class="spec-row">
+              <span class="spec-label">{{ t('provenance.model') }}</span>
+              <span class="spec-value" :title="modelUsed">{{ modelName }}</span>
+            </div>
             <div v-if="meta?.publisher" class="spec-row">
               <span class="spec-label">{{ t('provenance.publisher') }}</span>
               <span class="spec-value">{{ meta.publisher }}</span>
@@ -99,6 +106,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import infoIcon from '@/assets/icons/info_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg'
 import { useUiModeStore } from '@/stores/uiMode'
+import { modelShort } from '@/lib/modelPlace'
 
 interface ProvenanceData {
   training_data_disclosed?: boolean
@@ -127,8 +135,19 @@ const expanded = ref(false)
 
 const provenance = computed<ProvenanceData | null>(() => props.meta?.provenance ?? null)
 
+// Which model the sheet is about: the one the run reports it generated with
+// (`model_used`, devserver/my_app/services/model_meta.py), read the way
+// lib/modelPlace.ts reads a model for the model-place bar (`modelShort`), the
+// whole value on hover. A config's display_name names the config, which on
+// the Latent Lab's instruments is the instrument; it does not name the model.
+// A run that reported none shows no model row.
+const modelUsed = computed<string>(() => props.meta?.model_used || '')
+const modelName = computed<string>(() => (modelUsed.value ? modelShort(modelUsed.value) : ''))
+
 const hasProvenance = computed(() => !!provenance.value)
-const hasBasicMeta = computed(() => !!props.meta?.publisher || !!props.meta?.fair_culture)
+const hasBasicMeta = computed(
+  () => !!modelName.value || !!props.meta?.publisher || !!props.meta?.fair_culture,
+)
 
 const biases = computed(() => {
   if (!provenance.value?.known_biases) return []

@@ -6,13 +6,13 @@ the rep-engineering and bias-probe endpoints.
 Stage 5 of the move to ComfyUI: the coreference contrast, BBQ, Representation
 Engineering and the model row are answered from services/text_probes and
 services/text_presets (one prompt of a node of the platform's package on
-ComfyUI; the table config/text_presets.json), the tokenizer doors from
+ComfyUI; the table config/local_llm_weights.json), the tokenizer doors from
 ComfyUI's HTTP routes. The routes no surface named (models, load, unload,
 embedding, interpolate, attention, contrast-control, generate, variations,
 layers) were struck in stage 8.
 
 Endpoints:
-- GET  /api/text/presets - List available model presets
+- GET  /api/text/presets - List available model presets (?scenario=<row>, or all for every member of every row)
 - POST /api/text/tokenize - Cut a text into tokens (no GPU, no model)
 - GET  /api/text/tokenizers - Which tokenizers this machine has
 - POST /api/text/encoder-rows - Which piece stands in which row at CLIP and T5 (no GPU, no model)
@@ -24,6 +24,13 @@ Endpoints:
 - POST /api/text/bbq-record - keep one finished model series
 - GET  /api/text/bbq-stats - the platform's own history of the bias score
 - GET  /api/text/bias-corpus - the pairs one run walks, without running a model
+
+The checks of the platform: every text a person sends passes the intake before
+anything reads it, the tokenizer and the encoder rows included, although no
+model sees what they cut. What Representation Engineering writes passes the
+result check before it is shown. The coreference contrast and BBQ write no text:
+they read which of the given answers a model prefers, and what they return is
+the corpus's text and that choice. The level is resolved in each view.
 """
 
 import logging
@@ -33,6 +40,8 @@ from pathlib import Path
 
 from flask import Blueprint, request, jsonify
 
+from my_app.services.safety_gate import check_intake_texts, check_result_text
+from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.streaming_response import answered_either_way
 
 logger = logging.getLogger(__name__)
@@ -59,6 +68,15 @@ def _tokenizer_catalogue() -> list:
         return json.load(f)["tokenizers"]
 
 
+def _refusal(verdict):
+    """The answer to a text a check did not let through, as ``(payload,
+    http_status)``: the block message says where it stopped and why
+    (safety_gate.Verdict.block)."""
+    logger.warning(f"[TEXT-ROUTES] refused at {verdict.checkpoint} "
+                   f"({verdict.field or '-'}: {verdict.reason_key})")
+    return {"success": False, "error": "safety_blocked", "safety_block": verdict.block()}, 403
+
+
 def _catalogue_or_refusal():
     """(rows, None) or (None, the 500 to answer with)."""
     try:
@@ -76,8 +94,9 @@ def _catalogue_or_refusal():
 
 @text_bp.route('/presets', methods=['GET'])
 def list_presets():
-    """One row of the Text Lab's models: the installed members, the missing
-    ones, and whether each fits the card."""
+    """One row of the Text Lab's models, or with scenario=all every member
+    of every row once: the installed members, the missing ones, and whether
+    each fits the card. An unknown row is answered 400."""
     from my_app.services import text_presets
     from my_app.services.gpu_card import CardUnreadable
     scenario = request.args.get("scenario", "qwen")
@@ -114,6 +133,12 @@ def tokenize_text():
 
     if not text or not model_id:
         return jsonify({"error": "text and model_id required"}), 400
+    # The text is the user's material. It passes the intake before it is cut,
+    # although the cut reads a vocabulary file and no model sees the text.
+    verdict = check_intake_texts({"text": text}, level=resolve_safety_level())
+    if not verdict.passed:
+        payload, status = _refusal(verdict)
+        return jsonify(payload), status
     catalogue, refusal = _catalogue_or_refusal()
     if refusal is not None:
         return refusal
@@ -165,6 +190,11 @@ def encoder_rows():
     text = data.get("text")
     if not isinstance(text, str) or not text.strip():
         return jsonify({"error": "text required"}), 400
+    # The text is the user's material: it passes the intake before it is cut.
+    verdict = check_intake_texts({"text": text}, level=resolve_safety_level())
+    if not verdict.passed:
+        payload, status = _refusal(verdict)
+        return jsonify(payload), status
 
     from schemas.engine.comfyui_chunk_support import T5_LENGTH
     client = _get_client()
@@ -194,11 +224,24 @@ def rep_engineering():
     # The work names no `client_gone` parameter, and that is a decision rather
     # than an omission: one upstream call stands behind it and leaving would not
     # end it, only lose the answer to a probe already run.
-    return answered_either_way(data, _run_rep_engineering, data,
+    #
+    # The level is resolved here, on the request thread: a streamed answer runs
+    # the work on a thread of its own, where the resolver would answer with the
+    # strictest level.
+    level = resolve_safety_level()
+    return answered_either_way(data, _run_rep_engineering, data, level,
                                label='TEXT-REP-ENGINEERING')
 
 
-def _run_rep_engineering(data):
+def _pair_texts(pairs) -> str:
+    """The texts of the contrast pairs, one per line, as the intake reads them."""
+    if not isinstance(pairs, list):
+        return ""
+    return "\n".join(str(pair.get(side) or "") for pair in pairs if isinstance(pair, dict)
+                     for side in ("positive", "negative"))
+
+
+def _run_rep_engineering(data, level):
     """The concept directions, and the ``(payload, http_status)`` they answer with.
 
     Split from the route so that one call can be answered either way. It must
@@ -206,6 +249,14 @@ def _run_rep_engineering(data):
     passed in, and a streamed answer runs this on a thread of its own.
     """
     from my_app.services import text_probes
+    # The pairs and the text to continue are the user's material: they pass
+    # the intake before the model reads them.
+    verdict = check_intake_texts({
+        "contrast_pairs": _pair_texts(data.get("contrast_pairs")),
+        "test_text": data.get("test_text"),
+    }, level=level)
+    if not verdict.passed:
+        return _refusal(verdict)
     result = text_probes.rep_engineering(
         contrast_pairs=data.get("contrast_pairs"),
         model_id=data.get("model_id"),
@@ -220,6 +271,13 @@ def _run_rep_engineering(data):
 
     if "error" in result:
         return result, result.get("http_status", 500)
+    # What the model wrote at each strength is shown, so it passes the result
+    # check first. One refused text refuses the whole answer, the reading of
+    # the axis included.
+    for generation in result.get("generations") or []:
+        verdict = check_result_text(generation.get("text"), level=level, field="generations")
+        if not verdict.passed:
+            return _refusal(verdict)
     return result, 200
 
 
@@ -251,18 +309,13 @@ def _run_bias_probe(data):
     return result, 200
 
 
-def _bbq_level() -> str:
-    """The safety level this installation runs at, resolved HERE.
-
-    Never taken from the request. What a course at the kids level is offered -
-    which categories, and which situations inside them - is decided by the
-    level, and a client that could name its own level could hand a group of
-    children material its course does not allow. The screen itself lives in
-    services/bbq_corpus.py (KIDS_CATEGORIES, KIDS_EXCLUDE); the list in the
-    Vue file only decides what a dropdown shows.
-    """
-    from my_app.services.safety_level_resolver import resolve_safety_level
-    return resolve_safety_level()
+# The level of the BBQ routes is resolved in each view and never taken from
+# the request. What a course at the kids level is offered - which categories,
+# and which situations inside them - is decided by the level, and a client that
+# could name its own level could hand a group of children material its course
+# does not allow. The screen itself lives in services/bbq_corpus.py
+# (KIDS_CATEGORIES, KIDS_EXCLUDE); the list in the Vue file only decides what a
+# dropdown shows.
 
 
 @text_bp.route('/bbq-probe', methods=['POST'])
@@ -276,8 +329,8 @@ def bbq_probe():
     # The level is resolved HERE and handed down. A streamed answer runs the
     # work on a thread of its own, where there is no request to resolve it from
     # — and a level that failed to resolve would be the one thing on this route
-    # that must never be got wrong (see `_bbq_level`).
-    level = _bbq_level()
+    # that must never be got wrong (see the note above).
+    level = resolve_safety_level()
     return answered_either_way(data, _run_bbq_probe, data, level,
                                label='TEXT-BBQ-PROBE')
 
@@ -302,7 +355,7 @@ def _run_bbq_probe(data, level):
 def bbq_overview():
     """What is in the benchmark, without running a model."""
     from my_app.services import text_probes
-    return jsonify(text_probes.bbq_overview(_bbq_level()))
+    return jsonify(text_probes.bbq_overview(resolve_safety_level()))
 
 
 @text_bp.route('/bbq-sample', methods=['GET'])
@@ -314,7 +367,7 @@ def bbq_sample():
         request.args.get('category', 'Gender_identity'),
         int(request.args.get('situations', 30)),
         int(seed) if seed not in (None, '') else None,
-        _bbq_level(),
+        resolve_safety_level(),
     )
     if "error" in result:
         # 403 where the level is not offered the category, 503 where the
@@ -368,7 +421,6 @@ def bias_corpus():
     whole checked pool. A client that asked for its own level could otherwise
     hand a group material its course does not allow.
     """
-    from my_app.services.safety_level_resolver import resolve_safety_level
     level = resolve_safety_level()
     try:
         pairs = int(request.args.get('pairs', 60))

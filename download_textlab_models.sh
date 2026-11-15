@@ -8,19 +8,21 @@
 # where ComfyUI's loader reads it since stage 5 of the move to ComfyUI
 # (comfyui_nodes/ai4artsed_comfyui/_local_llm.py). Nothing is copied.
 #
-# The list is NOT written out here. It is read from
-# devserver/config/text_presets.json, which is where the surfaces get it from
+# The list is NOT written out here. It is read from the one table of local
+# language models, devserver/config/local_llm_weights.json (the entries'
+# 'text_rows', since 2026-11-08), which is where the surfaces get it from
 # as well: a model identifier is data, and a second copy in a shell script
 # would drift from the first the day someone changes a lineup.
 #
-#   qwen     ~56 GB   one family across its sizes (Qwen3 1.7B / 4B / 8B / 14B)
-#   mixed    ~93 GB   the small models of four makers plus five 7-12B models
-#   history  ~60 GB   one family at one size over five generations (2023-2025)
+#   qwen     ~58 GB   one family across its sizes (Qwen3 1.7B / 4B / 8B / 14B)
+#   mixed   ~190 GB   different makers at three sizes (2-4B, 7-9B, 12-14B)
+#   history  ~82 GB   one family in one size class (7-9B) over five
+#                     generations (2024-2026)
 #
-# Roughly 210 GB for all three, less where they overlap (Qwen3 4B and 8B stand
-# in two scenarios each and are fetched once).
+# Roughly 286 GB for all three (Qwen3 4B, Qwen3 8B and Qwen3.5 9B each stand
+# in two scenarios and are fetched once).
 #
-# Pick scenarios with SCENARIOS, e.g. for the small lineup alone:
+# Pick scenarios with SCENARIOS, e.g. for the mixed row alone:
 #   SCENARIOS=mixed ./download_textlab_models.sh
 #
 # Idempotent: an existing, complete snapshot is left alone, an interrupted one
@@ -52,19 +54,17 @@
 # takes the repo up again, and a partial file survives, so it resumes where it
 # stopped. FETCH_TIMEOUT stays as an absolute ceiling, 0 for none.
 #
-# TWO REPOS NEED SOMETHING BEYOND THIS SCRIPT:
+# BEYOND THIS SCRIPT:
 #
 #   meta-llama/Llama-3.2-3B-Instruct is GATED — accept its licence once in a
 #   browser, then make a token available (`hf auth login`, or export HF_TOKEN).
 #   Without it this one repo fails and the rest still download.
 #
-#   Qwen/Qwen-7B (08/2023, the first member of the time series) ships its own
-#   loading code. It is the one entry in the catalogue that carries
-#   `trust_remote_code`, and it carries a pinned `revision` with it — see the
-#   note in devserver/config/text_presets.json. ComfyUI's loader executes no
-#   repository code, so this script leaves the member out and says so; the
-#   surfaces name it as missing with the same reason. It is fetched once the
-#   loader allows it for this one entry.
+#   An entry that carries `trust_remote_code` ships its architecture as code
+#   in its repository. ComfyUI's language-model loader executes no repository code, so this
+#   script leaves such a member out and says so; the surfaces name it as
+#   missing with the same reason. No entry carries it since 2026-11-08, when
+#   Qwen/Qwen-7B left the history row.
 #
 # Without this download the surfaces offer the members that ARE installed and
 # name the rest as missing (/api/text/presets); nothing is fetched on first use.
@@ -114,8 +114,7 @@ echo "Scenarios: $SCENARIOS  |  gleichzeitig: $FETCH_WORKERS"
 SELECTED="$(cd "$SCRIPT_DIR/devserver" && "$VENV/bin/python" - "$SCRIPT_DIR" "$SCENARIOS" <<'PY'
 import sys, os, json
 from my_app.services import text_presets
-with open(os.path.join(sys.argv[1], "devserver", "config", "text_presets.json"), encoding="utf-8") as f:
-    rows = json.load(f)["scenarios"]
+rows = text_presets.scenarios()
 
 wanted = [s.strip() for s in sys.argv[2].split(",") if s.strip()]
 unknown = [s for s in wanted if s not in rows]
